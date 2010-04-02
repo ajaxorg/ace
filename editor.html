@@ -9,9 +9,24 @@
 	
 	<style type="text/css" media="screen">
 	
+	#virtual_container {
+	  position: absolute;
+	  border: 1px solid black;
+	  overflow-x: auto;
+	  overflow-y: hidden;	  
+	  width: 600px;
+	  height: 400px;
+	}
+	
+	#virtual_container.focus {
+	  border: 1px solid #327fbd;;
+	}
+	
 	#container {
 	  position: absolute;
-	  border: 1px solid black;	  
+	  left: 630px;
+	  border: 1px solid black;
+	  overflow: auto;
 	  width: 600px;
 	  height: 400px;
 	}
@@ -22,12 +37,11 @@
 	
 	.canvas {
 	  position: absolute;
-	  width: 600px;
-	  height: 400px;
-	  overflow-x: auto;
-	  overflow-y: auto;
+    overflow: hidden;
 	  font-family: Courier New;
 	  white-space: nowrap;
+	  -webkit-box-sizing: border-box;
+	  box-sizing: border-box;	  
 	}
 		
 	.composition {
@@ -53,6 +67,9 @@
 	
 </head>
 <body>
+    
+    <div id="virtual_container">    
+    </div>
     
     <div id="container">    
     </div>
@@ -99,6 +116,14 @@ function preventDefault (e)
   else
     e.returnValue = false;
 }
+
+inherits = function (ctor, superCtor) {
+  var tempCtor = function(){};
+  tempCtor.prototype = superCtor.prototype;
+  ctor.super_ = superCtor.prototype;
+  ctor.prototype = new tempCtor();
+  ctor.prototype.constructor = ctor;
+};
 
 function TextInput(parentNode, host) {
   
@@ -243,9 +268,16 @@ function Editor(renderer)
     return preventDefault(e);
   });
   
+  addListener(container, "mousewheel", function(e) {
+    var delta = e.wheelDeltaY;
+    self.renderer.scrollToY(self.renderer.getScrollTop() - (delta/10));
+    return preventDefault(e);
+  });
+  
   this.row = 0;
   this.col = 0;
   this.lines = [""];
+  renderer.setLines(this.lines);
   
   this.draw();
 }
@@ -254,7 +286,7 @@ Editor.prototype =
 {
   draw : function()
   {
-    this.renderer.draw(this.lines);
+    this.renderer.draw();
     this.renderer.updateCursor(this.row, this.col);
   },
   
@@ -314,6 +346,7 @@ Editor.prototype =
     }
     
     this.draw();
+    this.renderer.scrollCursorIntoView();
   },
   
   removeRight : function()
@@ -331,6 +364,7 @@ Editor.prototype =
     }
     
     this.draw();
+    this.renderer.scrollCursorIntoView();
   },
   
   removeLeft : function()
@@ -342,9 +376,9 @@ Editor.prototype =
       if (this.row !== 0) 
       {
         var prevLine = this.lines[this.row-1] || ""
-        this.lines[this.row-1] = currentLine + prevLine;
+        this.lines[this.row-1] = prevLine + currentLine;
         this.lines.splice(this.row, 1);
-        this.row -! 1;
+        this.row -= 1;
         this.col = prevLine.length;
       }
     }
@@ -355,6 +389,7 @@ Editor.prototype =
     }
     
     this.draw();
+    this.renderer.scrollCursorIntoView();
   },  
   
   onCompositionStart : function()
@@ -374,10 +409,12 @@ Editor.prototype =
   
   moveUp : function() {
     this.moveBy(-1, 0);
+    this.renderer.scrollCursorIntoView();
   },
 
   moveDown : function() {
     this.moveBy(1, 0);
+    this.renderer.scrollCursorIntoView();
   },
 
   moveLeft : function()
@@ -386,8 +423,10 @@ Editor.prototype =
       if (this.row > 0) {
         this.moveTo(this.row-1, this.lines[this.row-1].length);
       }
+    } else {
+      this.moveBy(0, -1);
     }
-    this.moveBy(0, -1);
+    this.renderer.scrollCursorIntoView();
   },
 
   moveRight : function() 
@@ -398,15 +437,19 @@ Editor.prototype =
       }
     } else {
       this.moveBy(0, 1);
-    }    
+    }
+    this.renderer.scrollCursorIntoView(); 
   },
   
-  moveLineStart : function() {
+  moveLineStart : function() 
+  {
     this.moveTo(this.row, 0);
+    this.renderer.scrollCursorIntoView();
   },
   
   moveLineEnd : function() {
     this.moveTo(this.row, this.lines[this.row].length);
+    this.renderer.scrollCursorIntoView();
   },
   
   moveBy : function(rows, chars) {
@@ -442,6 +485,10 @@ function DumbRenderer(containerId)
 
 DumbRenderer.prototype =
 {
+  setLines : function(lines) {
+    this.lines = lines;
+  },
+  
   getContainerElement : function() {
     return this.container;
   },
@@ -465,13 +512,19 @@ DumbRenderer.prototype =
     this.canvas.removeChild(measureNode);
   },
   
-  draw : function(lines)
+  getLongestLineWidth : function(lines)
   {
-    // TODO HACK
-    var longestLine = this.canvas.clientWidth;
+    var longestLine = this.container.clientWidth;
     for (var i=0; i < lines.length; i++) {
       longestLine = Math.max(longestLine, (lines[i].length * this.characterWidth));
-    }
+    }    
+    return longestLine;
+  },
+  
+  draw : function()
+  {
+    var lines = this.lines;
+    var longestLine = this.getLongestLineWidth(lines);
     
     var html = [];
     for (var i=0; i < lines.length; i++) 
@@ -490,51 +543,64 @@ DumbRenderer.prototype =
     };
     this.canvas.innerHTML = html.join("");
     
-    this.canvas.appendChild(this.cursor)
+    this.canvas.appendChild(this.cursor);
   },
   
   updateCursor : function(row, column) 
   {
-    var left = column * this.characterWidth;
-    var top = row * this.lineHeight;
+    var left = this.cursorLeft = column * this.characterWidth;
+    var top = this.cursorTop = row * this.lineHeight;
     
     this.cursor.style.left = left + "px";
     this.cursor.style.top = top + "px";
     
     this.canvas.appendChild(this.cursor);
+  },
+  
+  getScrollTop : function() {
+    return this.container.scrollTop;
+  },
+  
+  scrollToY : function(scrollTop) {
+    return this.container.scrollTop = scrollTop;
+  },
+  
+  scrollCursorIntoView : function()
+  {
+    var left = this.cursorLeft;
+    var top = this.cursorTop;
     
-    if (this.canvas.scrollLeft > left) {
-      this.canvas.scrollLeft = left;
+    if (this.container.scrollLeft > left) {
+      this.container.scrollLeft = left;
     }
     
-    if (this.canvas.scrollLeft + this.canvas.clientWidth < left + this.characterWidth) {
-      this.canvas.scrollLeft = left + this.characterWidth - this.canvas.clientWidth;
+    if (this.container.scrollLeft + this.container.clientWidth < left + this.characterWidth) {
+      this.container.scrollLeft = left + this.characterWidth - this.container.clientWidth;
     }
 
-    if (this.canvas.scrollTop > top) {
-      this.canvas.scrollTop = top;
+    if (this.container.scrollTop > top) {
+      this.container.scrollTop = top;
     }
     
-    if (this.canvas.scrollTop + this.canvas.clientHeight < top + this.lineHeight) {
-      this.canvas.scrollTop = top + this.lineHeight - this.canvas.clientHeight;
-    }    
+    if (this.container.scrollTop + this.container.clientHeight < top + this.lineHeight) {
+      this.container.scrollTop = top + this.lineHeight - this.container.clientHeight;
+    }
   },
   
   screenToTextCoordinates : function(pageX, pageY)
   {
-    var canvas = this.canvas;
-    var canvasPos = canvas.getBoundingClientRect();
-    
-    if (pageX < canvasPos.left || pageX > canvasPos.right) {
-      row = null;
-    } else {    
-      var row = Math.floor((pageY + canvas.scrollTop - canvasPos.top) / this.lineHeight);
-    }
+    var canvasPos = this.container.getBoundingClientRect();
     
     if (pageY < canvasPos.top || pageY > canvasPos.bottom) {
+      row = null;
+    } else {    
+      var row = Math.floor((pageY + this.container.scrollTop - canvasPos.top) / this.lineHeight);
+    }
+
+    if (pageX < canvasPos.left || pageX > canvasPos.right) {
       col = null;
     } else {
-      var col = Math.floor((pageX + canvas.scrollLeft - canvasPos.left) / this.characterWidth);
+      var col = Math.floor((pageX + this.container.scrollLeft - canvasPos.left) / this.characterWidth);
     }
     
     return {
@@ -568,12 +634,132 @@ DumbRenderer.prototype =
   hideComposition : function() {
     if (this.composition.parentNode) {
       this.container.removeChild(this.composition);
-    }    
+    }
   }
 }
 
 
-new Editor(new DumbRenderer("container"), "text");
+function VirtualRenderer(containerId)
+{
+  DumbRenderer.call(this, containerId);
+  this.scrollTop = 0;
+  this.firstRow = 0;
+}
+inherits(VirtualRenderer, DumbRenderer);
+
+VirtualRenderer.prototype.draw = function() 
+{    
+  var lines = this.lines;
+  
+  var offset = this.scrollTop % this.lineHeight;
+  var minHeight = this.container.clientHeight + offset;
+  
+  var longestLine = this.getLongestLineWidth(lines);
+    
+  this.canvas.style.marginTop = (-offset) + "px";
+  this.canvas.style.height = minHeight + "px";
+  this.canvas.style.width = longestLine + "px";
+  
+  var lineCount = Math.ceil(minHeight / this.lineHeight);
+  this.firstRow = firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
+  var lastRow = Math.min(lines.length, firstRow+lineCount);
+  
+  var html = [];
+  for (var i=firstRow; i<lastRow; i++)
+  {
+    html.push(
+      "<div class='line ",
+      i % 2 == 0 ? "even" : "odd",
+      "' style='height:" + this.lineHeight + "px;",
+      "width:", longestLine, "px'>",
+      lines[i].
+        replace(/&/g, "&amp;").
+        replace(/</g, "&lt;").
+        replace(/\s/g, "&nbsp;"),
+      "</div>"
+    );
+  }
+  
+  this.canvas.innerHTML = html.join("");
+  
+  this.updateCursor(this.cursorRow, this.cursorColumn);
+}
+
+VirtualRenderer.prototype.updateCursor = function(row, column)
+{
+  this.cursorRow = row;
+  this.cursorColumn = column;
+  
+  var left = this.cursorLeft = column * this.characterWidth;
+  var top = this.cursorTop = row * this.lineHeight;
+
+  this.cursor.style.left = left + "px";
+  this.cursor.style.top = (top - (this.firstRow * this.lineHeight)) + "px";  
+
+  this.canvas.appendChild(this.cursor);
+};
+
+VirtualRenderer.prototype.scrollCursorIntoView = function()
+{
+  var left = this.cursorLeft;
+  var top = this.cursorTop;
+  
+  if (this.getScrollTop() > top) {
+    this.scrollToY(top);
+  }
+  
+  if (this.getScrollTop() + this.container.clientHeight < top + this.lineHeight) {
+    this.scrollToY(top + this.lineHeight - this.container.clientHeight);
+  }  
+  
+  if (this.container.scrollLeft > left) {
+    this.container.scrollLeft = left;
+  }
+  
+  if (this.container.scrollLeft + this.container.clientWidth < left + this.characterWidth) {
+    this.container.scrollLeft = left + this.characterWidth - this.container.clientWidth;
+  }
+},
+
+VirtualRenderer.prototype.getScrollTop = function() {
+  return this.scrollTop;
+};
+
+VirtualRenderer.prototype.scrollToY = function(scrollTop)
+{
+  var maxHeight = this.lines.length * this.lineHeight - this.container.offsetHeight;
+  var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
+  
+  if (this.scrollTop !== scrollTop) {
+    this.scrollTop = scrollTop;
+    this.draw();
+  }
+};
+
+VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) 
+{
+  var canvasPos = this.container.getBoundingClientRect();
+    
+  if (pageX < canvasPos.left || pageX > canvasPos.right) {
+    col = null;
+  } else {
+    var col = Math.floor((pageX + this.container.scrollLeft - canvasPos.left) / this.characterWidth);
+  }
+  
+  if (pageY < canvasPos.top || pageY > canvasPos.bottom) {
+    row = null;
+  } else {    
+    var row = Math.floor((pageY + this.scrollTop - canvasPos.top) / this.lineHeight);
+  }
+  
+  return {
+    row: row,
+    column: col      
+  }
+}
+
+new Editor(new VirtualRenderer("virtual_container"));
+new Editor(new DumbRenderer("container"));
   
 </script>
 
