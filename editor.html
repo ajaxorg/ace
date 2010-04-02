@@ -11,25 +11,25 @@
 	
 	#container {
 	  position: absolute;
+	  border: 1px solid black;	  
 	  width: 600px;
+	  height: 400px;
 	}
 	
-	#canvas {
+	#container.focus {
+	  border: 1px solid #327fbd;;
+	}
+	
+	.canvas {
 	  position: absolute;
-	  border: 1px solid black;
-    margin: 4px;
-	  width: 590px;
+	  width: 600px;
 	  height: 400px;
 	  overflow-x: auto;
 	  overflow-y: auto;
 	  font-family: Courier New;
 	  white-space: nowrap;
 	}
-	
-	#canvas.focus {
-	  border: 1px solid #327fbd;;
-	}
-	
+		
 	.composition {
 	  position: absolute;
 	  text-decoration: underline;
@@ -55,7 +55,6 @@
 <body>
     
     <div id="container">    
-        <div id="canvas"></div>
     </div>
     
 <script type="text/javascript" charset="utf-8">
@@ -229,13 +228,13 @@ function KeyBinding(element, host)
   });
 };
 
-function Editor(containerId, canvasId) 
+function Editor(renderer) 
 {
-  this.container = document.getElementById(containerId);
-  this.canvas = document.getElementById(canvasId);
+  var container = renderer.getContainerElement();
+  this.renderer = renderer;
   
   var textInput = new TextInput(container, this);
-  new KeyBinding(this.container, this);
+  new KeyBinding(container, this);
   
   var self = this;
   addListener(container, "mousedown", function(e) {
@@ -244,16 +243,6 @@ function Editor(containerId, canvasId)
     return preventDefault(e);
   });
   
-  this.measureSizes();
-  
-  this.composition = document.createElement("div");
-  this.composition.className = "composition";
-  this.composition.style.height = this.lineHeight + "px";  
-  
-  this.cursor = document.createElement("div");
-  this.cursor.className = "cursor";
-  this.cursor.style.height = this.lineHeight + "px";  
-  
   this.row = 0;
   this.col = 0;
   this.lines = [""];
@@ -261,103 +250,30 @@ function Editor(containerId, canvasId)
   this.draw();
 }
 
-Editor.prototype = {
-  
-  measureSizes : function()
-  {
-    var measureNode = document.createElement("div");
-    var style = measureNode.style;
-    style.width = style.height = "auto";
-    style.left = style.top = "-1000px";
-    style.visibility = "hidden";
-    style.position = "absolute";
-    style.overflow = "visible";
-      
-    measureNode.innerHTML = "X<br>X";
-    this.canvas.appendChild(measureNode);
-    
-    this.lineHeight = Math.round(measureNode.offsetHeight / 2);
-    this.characterWidth = measureNode.offsetWidth;
-      
-    this.canvas.removeChild(measureNode);
-  },
-  
+Editor.prototype = 
+{
   draw : function()
   {
-    if (this.cursor.parentNode) {
-      this.canvas.removeChild(this.cursor);
-    }
-
-    // TODO HACK
-    var longestLine = this.canvas.clientWidth;
-    for (var i=0; i < this.lines.length; i++) {
-      longestLine = Math.max(longestLine, (this.lines[i].length * this.characterWidth));
-    }
-    
-    var html = [];
-    for (var i=0; i < this.lines.length; i++) 
-    {
-      html.push(
-        "<div class='line ",
-        i % 2 == 0 ? "even" : "odd",
-        "' style='height:" + this.lineHeight + "px;",
-        "width:", longestLine, "px'>",
-        this.lines[i].
-          replace(/&/g, "&amp;").
-          replace(/</g, "&lt;").
-          replace(/\s/g, "&nbsp;"),
-        "</div>"
-      );
-    };
-    this.canvas.innerHTML = html.join("");
-    
-    this.updateCursor();
+    this.renderer.draw(this.lines);
+    this.renderer.updateCursor(this.row, this.col);
   },
   
-  updateCursor : function() 
-  {
-    var left = this.col * this.characterWidth;
-    var top = this.row * this.lineHeight;
-    
-    this.cursor.style.left = left + "px";
-    this.cursor.style.top = top + "px";
-    
-    this.canvas.appendChild(this.cursor);
-    
-    if (this.canvas.scrollLeft > left) {
-      this.canvas.scrollLeft = left;
-    }
-    
-    if (this.canvas.scrollLeft + this.canvas.clientWidth < left + this.characterWidth) {
-      this.canvas.scrollLeft = left + this.characterWidth - this.canvas.clientWidth;
-    }
-
-    if (this.canvas.scrollTop > top) {
-      this.canvas.scrollTop = top;
-    }
-    
-    if (this.canvas.scrollTop + this.canvas.clientHeight < top + this.lineHeight) {
-      this.canvas.scrollTop = top + this.lineHeight - this.canvas.clientHeight;
-    }    
+  updateCursor : function() {
+    this.renderer.updateCursor(this.row, this.col);
   },
   
   onFocus : function() {
-    this.canvas.className = "focus";
+    this.renderer.visualizeFocus();
   },
   
   onBlur : function() {
-    this.canvas.className = "";
+    this.renderer.visualizeBlur();
   },
   
   placeCursorToMouse : function(pageX, pageY)
   {
-    var canvas = this.canvas;
-    var canvasPos = canvas.getBoundingClientRect();
-    
-    var row = Math.floor((pageY + canvas.scrollTop - canvasPos.top) / this.lineHeight);
-    var col = Math.floor((pageX + canvas.scrollLeft - canvasPos.left) / this.characterWidth);
-    
-    this.moveTo(row, col)
+    var pos = this.renderer.screenToTextCoordinates(pageX, pageY);    
+    this.moveTo(pos.row, pos.column);
   },
   
   onTextInput: function(text)
@@ -443,25 +359,16 @@ Editor.prototype = {
   
   onCompositionStart : function()
   {      
-    setText(this.composition, "");
-    
-    this.composition.style.left = (this.col * this.characterWidth) + "px";
-    this.composition.style.top = (this.row * this.lineHeight) + "px";    
-    
+    this.renderer.showComposition(this.row, this.col);
     this.onTextInput(" ");
-    
-    this.canvas.appendChild(this.composition);
   },
   
   onCompositionUpdate : function(text) {
-    setText(this.composition, text);
+    this.renderer.setCompositionText(text);
   },
   
   onCompositionEnd : function() {
-    if (this.composition.parentNode) {
-      this.canvas.removeChild(this.composition);
-    }
-    
+    this.renderer.hideComposition();
     this.removeLeft();
   },
   
@@ -473,7 +380,8 @@ Editor.prototype = {
     this.moveBy(1, 0);
   },
 
-  moveLeft : function() {
+  moveLeft : function()
+  {
     if (this.col == 0) {
       if (this.row > 0) {
         this.moveTo(this.row-1, this.lines[this.row-1].length);
@@ -513,7 +421,159 @@ Editor.prototype = {
   }  
 }
 
-new Editor("container", "canvas", "text");
+
+function DumbRenderer(containerId) 
+{
+  this.container = document.getElementById(containerId);
+  this.canvas = document.createElement("div");
+  this.canvas.className = "canvas";
+  this.container.appendChild(this.canvas);
+  
+  this._measureSizes();  
+  
+  this.composition = document.createElement("div");
+  this.composition.className = "composition";
+  this.composition.style.height = this.lineHeight + "px";  
+  
+  this.cursor = document.createElement("div");
+  this.cursor.className = "cursor";
+  this.cursor.style.height = this.lineHeight + "px";  
+}
+
+DumbRenderer.prototype =
+{
+  getContainerElement : function() {
+    return this.container;
+  },
+
+  _measureSizes : function()
+  {
+    var measureNode = document.createElement("div");
+    var style = measureNode.style;
+    style.width = style.height = "auto";
+    style.left = style.top = "-1000px";
+    style.visibility = "hidden";
+    style.position = "absolute";
+    style.overflow = "visible";
+      
+    measureNode.innerHTML = "X<br>X";
+    this.canvas.appendChild(measureNode);
+    
+    this.lineHeight = Math.round(measureNode.offsetHeight / 2);
+    this.characterWidth = measureNode.offsetWidth;
+      
+    this.canvas.removeChild(measureNode);
+  },
+  
+  draw : function(lines)
+  {
+    // TODO HACK
+    var longestLine = this.canvas.clientWidth;
+    for (var i=0; i < lines.length; i++) {
+      longestLine = Math.max(longestLine, (lines[i].length * this.characterWidth));
+    }
+    
+    var html = [];
+    for (var i=0; i < lines.length; i++) 
+    {
+      html.push(
+        "<div class='line ",
+        i % 2 == 0 ? "even" : "odd",
+        "' style='height:" + this.lineHeight + "px;",
+        "width:", longestLine, "px'>",
+        lines[i].
+          replace(/&/g, "&amp;").
+          replace(/</g, "&lt;").
+          replace(/\s/g, "&nbsp;"),
+        "</div>"
+      );
+    };
+    this.canvas.innerHTML = html.join("");
+    
+    this.canvas.appendChild(this.cursor)
+  },
+  
+  updateCursor : function(row, column) 
+  {
+    var left = column * this.characterWidth;
+    var top = row * this.lineHeight;
+    
+    this.cursor.style.left = left + "px";
+    this.cursor.style.top = top + "px";
+    
+    this.canvas.appendChild(this.cursor);
+    
+    if (this.canvas.scrollLeft > left) {
+      this.canvas.scrollLeft = left;
+    }
+    
+    if (this.canvas.scrollLeft + this.canvas.clientWidth < left + this.characterWidth) {
+      this.canvas.scrollLeft = left + this.characterWidth - this.canvas.clientWidth;
+    }
+
+    if (this.canvas.scrollTop > top) {
+      this.canvas.scrollTop = top;
+    }
+    
+    if (this.canvas.scrollTop + this.canvas.clientHeight < top + this.lineHeight) {
+      this.canvas.scrollTop = top + this.lineHeight - this.canvas.clientHeight;
+    }    
+  },
+  
+  screenToTextCoordinates : function(pageX, pageY)
+  {
+    var canvas = this.canvas;
+    var canvasPos = canvas.getBoundingClientRect();
+    
+    if (pageX < canvasPos.left || pageX > canvasPos.right) {
+      row = null;
+    } else {    
+      var row = Math.floor((pageY + canvas.scrollTop - canvasPos.top) / this.lineHeight);
+    }
+    
+    if (pageY < canvasPos.top || pageY > canvasPos.bottom) {
+      col = null;
+    } else {
+      var col = Math.floor((pageX + canvas.scrollLeft - canvasPos.left) / this.characterWidth);
+    }
+    
+    return {
+      row: row,
+      column: col      
+    }    
+  },
+  
+  visualizeFocus : function() {
+    this.container.className = "focus";
+  },
+  
+  visualizeBlur : function() {
+    this.container.className = "";
+  },
+  
+  showComposition : function(row, column)
+  {
+    setText(this.composition, "");
+    
+    this.composition.style.left = (column * this.characterWidth+1) + "px";
+    this.composition.style.top = (row * this.lineHeight+1) + "px";    
+      
+    this.container.appendChild(this.composition);
+  },
+  
+  setCompositionText : function(text) {
+    setText(this.composition, text);
+  },
+  
+  hideComposition : function() {
+    if (this.composition.parentNode) {
+      this.container.removeChild(this.composition);
+    }    
+  }
+}
+
+
+new Editor(new DumbRenderer("container"), "text");
   
 </script>
 
