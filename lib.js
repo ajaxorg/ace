@@ -46,3 +46,30 @@ inherits = function (ctor, superCtor) {
   ctor.prototype = new tempCtor();
   ctor.prototype.constructor = ctor;
 };
+
+getInnerWidth = function(element)
+{  
+  return (
+    parseInt(computedStyle(element, "paddingLeft")) +
+    parseInt(computedStyle(element, "paddingRight")) +
+    element.clientWidth
+  );  
+};
+
+getInnerHeight = function(element)
+{  
+  return (
+    parseInt(computedStyle(element, "paddingTop")) +
+    parseInt(computedStyle(element, "paddingBottom")) +
+    element.clientHeight
+  );  
+};
+
+computedStyle = function(element, style) 
+{
+  if (window.getComputedStyle) {
+    return (window.getComputedStyle(element, null))[style];
+  } else {
+    return element.currentStyle[style];
+  }
+}
