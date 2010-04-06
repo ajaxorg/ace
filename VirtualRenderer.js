@@ -1,6 +1,7 @@
 function VirtualRenderer(containerId)
 {
   DumbRenderer.call(this, containerId);
+  
   this.scrollTop = 0;
   this.firstRow = 0;
   
@@ -24,6 +25,7 @@ function VirtualRenderer(containerId)
     update: this.updateMarkers
   });
 }
+
 inherits(VirtualRenderer, DumbRenderer);
 
 VirtualRenderer.prototype.draw = function() 

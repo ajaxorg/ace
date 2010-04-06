@@ -168,6 +168,7 @@ function Editor(doc, renderer)
   addListener(container, "mousedown", function(e) {
     textInput.focus();
     self.placeCursorToMouse(e.pageX, e.pageY);
+    self.renderer.scrollCursorIntoView();
     return preventDefault(e);
   });
   
