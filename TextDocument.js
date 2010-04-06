@@ -117,7 +117,20 @@ TextDocument.prototype =
       };
     }
   },
-        
+  
+  getTextRange : function(range)
+  {
+    if (range.start.row == range.end.row) {
+      return this.lines[range.start.row].substring(range.start.column, range.end.column);
+    } else {
+      return (
+        this.lines[range.start.row].substring(range.start.column) +
+        this.lines.slice(range.start.row+1, range.end.row+1) + 
+        this.lines[range.end.row].substring(0, range.end.column)
+      );
+    }
+  },
+   
   remove : function(range)
   {
     var firstRow = range.start.row;

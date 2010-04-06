@@ -8,6 +8,21 @@ function VirtualRenderer(containerId)
     row: 0,
     column: 0
   };
+  
+  this.layers = [];
+  this.layers.push({
+    element: this.canvas,
+    update: this.updateLines
+  });
+
+  this.markerEl = document.createElement("div");
+  this.markerEl.className = "markers";
+  this.container.appendChild(this.markerEl);
+  
+  this.layers.push({
+    element: this.markerEl,
+    update: this.updateMarkers
+  });
 }
 inherits(VirtualRenderer, DumbRenderer);
 
@@ -19,15 +34,27 @@ VirtualRenderer.prototype.draw = function()
   var minHeight = this.container.clientHeight + offset;
   
   var longestLine = this.getLongestLineWidth(lines);
-    
-  this.canvas.style.marginTop = (-offset) + "px";
-  this.canvas.style.height = minHeight + "px";
-  this.canvas.style.width = longestLine + "px";
-  
   var lineCount = Math.ceil(minHeight / this.lineHeight);
   this.firstRow = firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
   var lastRow = Math.min(lines.length, firstRow+lineCount);
-  
+
+  for (var i=0; i < this.layers.length; i++) 
+  {
+    var layer = this.layers[i];
+
+    var style = layer.element.style;    
+    style.marginTop = (-offset) + "px";
+    style.height = minHeight + "px";
+    style.width = longestLine + "px";
+
+    layer.update.call(this, layer.element, firstRow, lastRow, longestLine);    
+  };
+
+  this.updateCursor(this.cursorPos);
+}
+
+VirtualRenderer.prototype.updateLines = function(element, firstRow, lastRow, width)
+{
   var html = [];
   for (var i=firstRow; i<lastRow; i++)
   {
@@ -35,16 +62,14 @@ VirtualRenderer.prototype.draw = function()
       "<div class='line ",
       i % 2 == 0 ? "even" : "odd",
       "' style='height:" + this.lineHeight + "px;",
-      "width:", longestLine, "px'>"
+      "width:", width, "px'>"
     );
     this.renderLine(html, i),
     html.push("</div>");
   }
   
-  this.canvas.innerHTML = html.join("");
-  
-  this.updateCursor(this.cursorPos);
-}
+  element.innerHTML = html.join("");  
+};
 
 VirtualRenderer.prototype.renderLine = function(stringBuilder, row)
 {
@@ -64,6 +89,67 @@ VirtualRenderer.prototype.renderLine = function(stringBuilder, row)
       stringBuilder.push(output);
     }
   };
+};
+
+VirtualRenderer.prototype.updateMarkers = function(element, firstRow, lastRow, width)
+{
+  var html = [];
+  for (var key in this.markers) 
+  {
+    var marker = this.markers[key];
+    var range = marker.range;
+    
+    if (range.start.row !== range.end.row)
+    {
+      if (range.start.row >= firstRow && range.start.row <= lastRow)
+      {
+        html.push(
+          "<div class='", marker.clazz, "' style='",
+          "height:", this.lineHeight, "px;",
+          "width:", width - (range.start.column * this.characterWidth), "px;",
+          "top:", (range.start.row-firstRow)  * this.lineHeight, "px;",        
+          "left:", range.start.column * this.characterWidth, "px;'></div>"
+        );
+      }
+        
+      if (range.end.row >= firstRow && range.end.row <= lastRow)
+      {
+        html.push(
+          "<div class='", marker.clazz, "' style='",
+          "height:", this.lineHeight, "px;",
+          "top:", (range.end.row-firstRow) * this.lineHeight, "px;",
+          "width:", range.end.column * this.characterWidth, "px;'></div>"
+        );
+      };
+      
+      for (var row=range.start.row+1; row < range.end.row; row++)
+      {
+        if (row >= firstRow && row <= lastRow)
+        {
+          html.push(
+            "<div class='", marker.clazz, "' style='",
+            "height:", this.lineHeight, "px;",
+            "width:", width, "px;",
+            "top:", (row-firstRow) * this.lineHeight, "px;'></div>"
+          );
+        }
+      };
+    }
+    else
+    {
+      if (range.start.row >= firstRow && range.start.row <= lastRow)
+      {
+        html.push(
+          "<div class='", marker.clazz, "' style='",
+          "height:", this.lineHeight, "px;",
+          "width:", (range.end.column - range.start.column) * this.characterWidth, "px;",
+          "top:", (range.start.row-firstRow)  * this.lineHeight, "px;",        
+          "left:", range.start.column * this.characterWidth, "px;'></div>"
+        );
+      }
+    }
+  }
+  element.innerHTML = html.join("");
 };
 
 VirtualRenderer.prototype.updateCursor = function(position)

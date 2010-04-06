@@ -13,7 +13,10 @@ function DumbRenderer(containerId)
   
   this.cursor = document.createElement("div");
   this.cursor.className = "cursor";
-  this.cursor.style.height = this.lineHeight + "px";  
+  this.cursor.style.height = this.lineHeight + "px";
+  
+  this.markers = {};
+  this._markerId = 1;
 }
 
 DumbRenderer.prototype =
@@ -165,6 +168,38 @@ DumbRenderer.prototype =
   
   visualizeBlur : function() {
     this.container.className = "";
+  },
+  
+  addMarker : function(range, clazz)
+  {
+    var id = this._markerId++;
+    this.markers[id] = {
+      range: range,
+      type: "line",
+      clazz: clazz
+    };
+    
+    this.draw();
+    
+    return id;
+  },
+  
+  removeMarker : function(markerId) 
+  {
+    var marker = this.markers[markerId];
+    if (marker) {
+      delete(this.markers[markerId]);
+      this.draw();
+    }
+  },
+  
+  updateMarker : function(markerId, range)
+  {
+    var marker = this.markers[markerId];
+    if (marker) {
+      marker.range = range;
+      this.draw(); 
+    }   
   },
   
   showComposition : function(position)

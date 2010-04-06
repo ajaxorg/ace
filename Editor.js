@@ -39,11 +39,25 @@ function TextInput(parentNode, host) {
     host.onCompositionEnd();
     onTextInput();
   }
+  
+  var onCopy = function() {
+    text.value = host.getCopyText();
+    text.select();
+  }
+  
+  var onCut = function() {
+    text.value = host.getCopyText();
+    host.onCut();
+    text.select();    
+  }
 
   addListener(text, "keypress", onTextInput, false);
   addListener(text, "textInput", onTextInput, false);
-  addListener(text, "paste", onTextInput, false);
+  addListener(text, "paste", onTextInput, false);  
   addListener(text, "propertychange", onTextInput, false);
+
+  addListener(text, "copy", onCopy, false);  
+  addListener(text, "cut", onCut, false);  
 
   addListener(text, "compositionstart", onCompositionStart, false);
   addListener(text, "compositionupdate", onCompositionUpdate, false);
@@ -84,6 +98,12 @@ function KeyBinding(element, host)
   addListener(element, "keydown", function(e)
   {
     var key = e.keyCode;
+
+    // TODO
+    /*
+    if (!e.shiftKey) {
+      host.clearSelection();
+    }*/
     
     switch (key) 
     {      
@@ -96,11 +116,21 @@ function KeyBinding(element, host)
         return stopEvent(e);
         
       case keys.LEFT:
-        host.moveLeft();
+        if (e.metaKey) {
+          host.moveLineStart();
+        } else {
+          host.moveLeft();
+        }
         return stopEvent(e);
         
       case keys.RIGHT:
-        host.moveRight();
+        if (e.metaKey) {
+          host.moveLineEnd();
+        } else if (e.shiftKey) {
+          host.selectRight();
+        } else {   
+          host.moveRight();
+        }
         return stopEvent(e);
         
       case keys.POS1:
@@ -147,13 +177,17 @@ function Editor(doc, renderer)
     return preventDefault(e);
   });
   
-  this.cursor = {
-    row: 0,
-    column: 0
-  }
   this.doc = doc;
   renderer.setDocument(doc);
   
+  this.cursor = {
+    row: 0,
+    column: 0
+  };
+  
+  this.selectionRange = null;  
+  this.selection = null;
+    
   this.draw();
 }
 
@@ -177,6 +211,25 @@ Editor.prototype =
   onBlur : function() {
     this.renderer.hideCursor();
     this.renderer.visualizeBlur();
+  },
+  
+  getCopyText : function() 
+  {
+    if (this.selectionRange) {
+      return this.doc.getTextRange(this.selectionRange);
+    } else {
+      return "";
+    }
+  },
+  
+  onCut : function()
+  {
+    if (this.selectionRange)
+    {
+      this.cursor = this.doc.remove(this.selectionRange);
+      this.clearSelection();
+      this.draw();
+    }
   },
   
   placeCursorToMouse : function(pageX, pageY)
@@ -287,6 +340,40 @@ Editor.prototype =
   moveLineEnd : function() {
     this.moveTo(this.cursor.row, this.doc.getLine(this.cursor.row).length);
     this.renderer.scrollCursorIntoView();
+  },
+  
+  clearSelection : function() 
+  {
+    this.selectionRange = null;
+    if (this.selection) {
+      this.renderer.removeMarker(this.selection);
+      this.selection = null;
+    } 
+  },
+  
+  selectRight : function()
+  {
+    if (!this.selectionRange) {
+      this.selectionRange = {
+        start: {
+          row: this.cursor.row,
+          column: this.cursor.column
+        }
+      }
+    }
+    
+    this.moveRight();
+    
+    this.selectionRange.end = {
+      row: this.cursor.row,
+      column: this.cursor.column
+    }
+    
+    if (this.selection) {
+      this.renderer.updateMarker(this.selection, this.selectionRange);
+    } else {
+      this.selection = this.renderer.addMarker(this.selectionRange, "selection");
+    }
   },
   
   moveBy : function(rows, chars) {

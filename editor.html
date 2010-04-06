@@ -11,7 +11,7 @@
 	
 	#virtual_container {
 	  position: absolute;
-	  padding: 3px;
+	  /*padding: 3px;*/
 	  border: 1px solid black;
 	  overflow-x: auto;
 	  overflow-y: hidden;	  
@@ -37,6 +37,7 @@
 	}
 	
 	.canvas {
+	  z-index: 2;
 	  position: absolute;
     overflow: hidden;
 	  font-family: Monaco, "Courier New";
@@ -62,7 +63,7 @@
 	}
 	
 	.line.odd {
-	  background: #FAFAFA;
+	  /*background: #FAFAFA;*/
 	}
 
   .keyword {
@@ -76,6 +77,15 @@
   .comment {
     font-style: italic;
     color: rgb(0, 102, 255);
+  }
+  
+  .markers {
+    z-index: 1;
+  }
+  
+  .selection {
+    position: absolute;
+    background: rgba(77, 151, 255, 0.33);
   }
 	</style>
 	
