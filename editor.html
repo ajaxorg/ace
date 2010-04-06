@@ -11,7 +11,6 @@
 	
 	#virtual_container {
 	  position: absolute;
-	  /*padding: 3px;*/
 	  border: 1px solid black;
 	  overflow-x: auto;
 	  overflow-y: hidden;	  
@@ -41,7 +40,7 @@
 	  position: absolute;
     overflow: hidden;
 	  font-family: Monaco, "Courier New";
-	  font-size: 14px;
+	  font-size: 12px;
 	  white-space: nowrap;
 	  -webkit-box-sizing: border-box;
 	  box-sizing: border-box;
@@ -81,6 +80,7 @@
   }
   
   .markers {
+    position: absolute;
     z-index: 1;
   }
   
@@ -88,12 +88,12 @@
     position: absolute;
     background: rgba(77, 151, 255, 0.33);
   }
+  
 	</style>
 	
 	<script src="lib.js" type="text/javascript" charset="utf-8"></script>
 	<script src="TextDocument.js" type="text/javascript" charset="utf-8"></script>	
 	<script src="Editor.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="DumbRenderer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="VirtualRenderer.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
@@ -107,7 +107,6 @@
 <script type="text/javascript" charset="utf-8">
 
 new Editor(new TextDocument("Juhu Kinners"), new VirtualRenderer("virtual_container"));
-new Editor(new TextDocument("Juhu Kinners"), new DumbRenderer("container"));
   
 </script>
 

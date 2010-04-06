@@ -1,10 +1,27 @@
 function VirtualRenderer(containerId)
 {
-  DumbRenderer.call(this, containerId);
+  this.container = document.getElementById(containerId);
+  this.canvas = document.createElement("div");
   
+  this.canvas.className = "canvas";
+  this.container.appendChild(this.canvas);
+  
+  this._measureSizes();  
+  
+  this.composition = document.createElement("div");
+  this.composition.className = "composition";
+  this.composition.style.height = this.lineHeight + "px";  
+  
+  this.cursor = document.createElement("div");
+  this.cursor.className = "cursor";
+  this.cursor.style.height = this.lineHeight + "px";
+  
+  this.markers = {};
+  this._markerId = 1;
+    
   this.scrollTop = 0;
   this.firstRow = 0;
-  
+    
   this.cursorPos = {
     row: 0,
     column: 0
@@ -23,10 +40,45 @@ function VirtualRenderer(containerId)
   this.layers.push({
     element: this.markerEl,
     update: this.updateMarkers
-  });
+  });  
 }
 
-inherits(VirtualRenderer, DumbRenderer);
+VirtualRenderer.prototype.setDocument = function(doc) {
+  this.lines = doc.lines;
+  this.doc = doc;
+};
+
+VirtualRenderer.prototype.getContainerElement = function() {
+  return this.container;
+};
+
+VirtualRenderer.prototype._measureSizes = function()
+{
+  var measureNode = document.createElement("div");
+  var style = measureNode.style;
+  style.width = style.height = "auto";
+  style.left = style.top = "-1000px";
+  style.visibility = "hidden";
+  style.position = "absolute";
+  style.overflow = "visible";
+    
+  measureNode.innerHTML = "X<br>X";
+  this.canvas.appendChild(measureNode);
+  
+  this.lineHeight = Math.round(measureNode.offsetHeight / 2);
+  this.characterWidth = measureNode.offsetWidth;
+    
+  this.canvas.removeChild(measureNode);
+};
+
+VirtualRenderer.prototype.getLongestLineWidth = function(lines)
+{
+  var longestLine = this.container.clientWidth;
+  for (var i=0; i < lines.length; i++) {
+    longestLine = Math.max(longestLine, (lines[i].length * this.characterWidth));
+  }    
+  return longestLine;
+};
 
 VirtualRenderer.prototype.draw = function() 
 {    
@@ -93,6 +145,7 @@ VirtualRenderer.prototype.renderLine = function(stringBuilder, row)
   };
 };
 
+
 VirtualRenderer.prototype.updateMarkers = function(element, firstRow, lastRow, width)
 {
   var html = [];
@@ -154,6 +207,38 @@ VirtualRenderer.prototype.updateMarkers = function(element, firstRow, lastRow, w
   element.innerHTML = html.join("");
 };
 
+VirtualRenderer.prototype.addMarker = function(range, clazz)
+{
+  var id = this._markerId++;
+  this.markers[id] = {
+    range: range,
+    type: "line",
+    clazz: clazz
+  };
+  
+  this.draw();
+  
+  return id;
+};
+
+VirtualRenderer.prototype.removeMarker = function(markerId) 
+{
+  var marker = this.markers[markerId];
+  if (marker) {
+    delete(this.markers[markerId]);
+    this.draw();
+  }
+};
+
+VirtualRenderer.prototype.updateMarker = function(markerId, range)
+{
+  var marker = this.markers[markerId];
+  if (marker) {
+    marker.range = range;
+    this.draw(); 
+  }   
+};
+
 VirtualRenderer.prototype.updateCursor = function(position)
 {
   this.cursorPos = {
@@ -170,6 +255,20 @@ VirtualRenderer.prototype.updateCursor = function(position)
   if (this.cursorVisible) {
     this.canvas.appendChild(this.cursor);
   }
+};
+
+VirtualRenderer.prototype.hideCursor = function() 
+{
+  this.cursorVisible = true;
+  if (this.cursor.parentNode) {
+    this.cursor.parentNode.removeChild(this.cursor);
+  }
+};
+
+VirtualRenderer.prototype.showCursor = function()
+{
+  this.cursorVisible = true;
+  this.canvas.appendChild(this.cursor);
 };
 
 VirtualRenderer.prototype.scrollCursorIntoView = function()
@@ -228,5 +327,33 @@ VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY)
   return {
     row: row,
     column: col      
+  }
+};
+
+VirtualRenderer.prototype.visualizeFocus = function() {
+  this.container.className = "focus";
+};
+
+VirtualRenderer.prototype.visualizeBlur = function() {
+  this.container.className = "";
+};
+
+VirtualRenderer.prototype.showComposition = function(position)
+{
+  setText(this.composition, "");
+  
+  this.composition.style.left = (position.column * this.characterWidth+1) + "px";
+  this.composition.style.top = (position.row * this.lineHeight+1) + "px";    
+    
+  this.container.appendChild(this.composition);
+};
+
+VirtualRenderer.prototype.setCompositionText = function(text) {
+  setText(this.composition, text);
+};
+
+VirtualRenderer.prototype.hideComposition = function() {
+  if (this.composition.parentNode) {
+    this.container.removeChild(this.composition);
   }
 };
