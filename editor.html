@@ -9,26 +9,15 @@
 	
 	<style type="text/css" media="screen">
 	
-	#virtual_container {
+	#container {
 	  position: absolute;
 	  border: 1px solid black;
 	  overflow-x: auto;
 	  overflow-y: hidden;	  
-	  width: 600px;
-	  height: 400px;
-	}
-	
-	#virtual_container.focus {
-	  border: 1px solid #327fbd;;
-	}
-	
-	#container {
-	  position: absolute;
-	  left: 630px;
-	  border: 1px solid black;
-	  overflow: auto;
-	  width: 600px;
-	  height: 400px;
+	  top: 5px;
+	  right: 5px;
+	  bottom: 5px;
+	  left: 5px;
 	}
 	
 	#container.focus {
@@ -98,15 +87,17 @@
 </head>
 <body>
     
-    <div id="virtual_container">    
-    </div>
-    
     <div id="container">    
     </div>
     
 <script type="text/javascript" charset="utf-8">
 
-new Editor(new TextDocument("Juhu Kinners"), new VirtualRenderer("virtual_container"));
+var editor = new Editor(new TextDocument("Juhu Kinners"), new VirtualRenderer("container"));
+
+window.onresize = function() {
+  console.log("resize");
+  editor.resize();
+}
   
 </script>
 

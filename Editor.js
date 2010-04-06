@@ -200,6 +200,10 @@ Editor.prototype =
     this.renderer.updateCursor(this.cursor);
   },
   
+  resize : function() {
+    this.renderer.draw();
+  },
+  
   updateCursor : function() {
     this.renderer.updateCursor(this.cursor);
   },
