@@ -1,8 +1,9 @@
 function VirtualRenderer(containerId)
 {
   this.container = document.getElementById(containerId);
-  this.canvas = document.createElement("div");
+  this.container.className += "editor";
   
+  this.canvas = document.createElement("div");
   this.canvas.className = "canvas";
   this.container.appendChild(this.canvas);
   
@@ -331,11 +332,11 @@ VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY)
 };
 
 VirtualRenderer.prototype.visualizeFocus = function() {
-  this.container.className = "focus";
+  this.container.className = "editor focus";
 };
 
 VirtualRenderer.prototype.visualizeBlur = function() {
-  this.container.className = "";
+  this.container.className = "editor";
 };
 
 VirtualRenderer.prototype.showComposition = function(position)

@@ -1,0 +1,64 @@
+.editor {
+  position: absolute;
+  border: 1px solid black;
+  overflow-x: auto;
+  overflow-y: hidden;	  
+}
+
+.editor.focus {
+  border: 1px solid #327fbd;;
+}
+
+.editor .canvas {
+  z-index: 2;
+  position: absolute;
+  overflow: hidden;
+  font-family: Monaco, "Courier New";
+  font-size: 12px;
+  white-space: nowrap;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: text;
+}
+	
+.composition {
+  position: absolute;
+  text-decoration: underline;
+}
+
+.cursor {
+  position: absolute;
+  width: 1px;
+  background: black;
+}
+
+.line {
+  white-space: nowrap;
+}
+
+.line.odd {
+  /*background: #FAFAFA;*/
+}
+
+.keyword {
+  color: blue;
+}
+
+.string {
+  color: rgb(3, 106, 7);
+}
+
+.comment {
+  font-style: italic;
+  color: rgb(0, 102, 255);
+}
+
+.editor .markers {
+  position: absolute;
+  z-index: 1;
+}
+
+.selection {
+  position: absolute;
+  background: rgba(77, 151, 255, 0.33);
+}
