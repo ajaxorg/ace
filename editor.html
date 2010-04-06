@@ -295,10 +295,12 @@ Editor.prototype =
   },
   
   onFocus : function() {
+    this.renderer.showCursor();
     this.renderer.visualizeFocus();
   },
   
   onBlur : function() {
+    this.renderer.hideCursor();
     this.renderer.visualizeBlur();
   },
   
@@ -554,6 +556,22 @@ DumbRenderer.prototype =
     this.cursor.style.left = left + "px";
     this.cursor.style.top = top + "px";
     
+    if (this.cursorVisible) {
+      this.canvas.appendChild(this.cursor);
+    }
+  },
+  
+  hideCursor : function() 
+  {
+    this.cursorVisible = true;
+    if (this.cursor.parentNode) {
+      this.cursor.parentNode.removeChild(this.cursor);
+    }
+  },
+  
+  showCursor : function()
+  {
+    this.cursorVisible = true;
     this.canvas.appendChild(this.cursor);
   },
   
