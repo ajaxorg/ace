@@ -74,6 +74,22 @@ computedStyle = function(element, style)
   }
 }
 
+scrollbarHeight = function() {
+  var el = document.createElement("div");
+  var style = el.style;
+  
+  style.position = "absolute";
+  style.left = "-10000px";
+  style.overflow = "scroll";
+  style.height = "100px";
+  
+  document.body.appendChild(el);
+  var height = el.offsetHeight - el.clientHeight;
+  document.body.removeChild(el);
+  
+  return height;
+}
+
 bind = function(fcn, context) {
   return function() {
     return fcn.apply(context, arguments);

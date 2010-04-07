@@ -3,14 +3,24 @@ function VirtualRenderer(containerId)
   this.container = document.getElementById(containerId);
   this.container.className += "editor";
   
-  var textLayer = this.textLayer = new TextLayer(this.container);
+  this.scroller = document.createElement("div");
+  this.scroller.className = "scroller";
+  this.container.appendChild(this.scroller);
+  
+  this.gutter = document.createElement("div");
+  this.gutter.className = "gutter";
+  this.container.appendChild(this.gutter);
+
+  this.gutterLayer = new GutterLayer(this.gutter);  
+  this.markerLayer = new MarkerLayer(this.scroller);
+
+  var textLayer = this.textLayer = new TextLayer(this.scroller);
   this.canvas = textLayer.element;
   
   this.characterWidth = textLayer.getCharacterWidth();
   this.lineHeight = textLayer.getLineHeight(); 
   
-  this.cursorLayer = new CursorLayer(this.container);
-  this.markerLayer = new MarkerLayer(this.container);
+  this.cursorLayer = new CursorLayer(this.scroller);
   
   this.layers = [this.markerLayer, textLayer, this.cursorLayer];
   
@@ -68,6 +78,10 @@ VirtualRenderer.prototype.draw = function()
 
     layer.update(layerConfig);    
   };
+  
+  this.gutterLayer.element.style.marginTop = (-offset) + "px";
+  this.gutterLayer.element.style.height =  minHeight + "px";
+  this.gutterLayer.update(layerConfig);
 }
 
 VirtualRenderer.prototype.addMarker = function(range, clazz) {
@@ -103,16 +117,16 @@ VirtualRenderer.prototype.scrollCursorIntoView = function()
     this.scrollToY(top);
   }
   
-  if (this.getScrollTop() + this.container.clientHeight < top + this.lineHeight) {
-    this.scrollToY(top + this.lineHeight - this.container.clientHeight);
+  if (this.getScrollTop() + this.scroller.clientHeight < top + this.lineHeight) {
+    this.scrollToY(top + this.lineHeight - this.scroller.clientHeight);
   }  
   
-  if (this.container.scrollLeft > left) {
-    this.container.scrollLeft = left;
+  if (this.scroller.scrollLeft > left) {
+    this.scroller.scrollLeft = left;
   }
   
-  if (this.container.scrollLeft + this.container.clientWidth < left + this.characterWidth) {
-    this.container.scrollLeft = left + this.characterWidth - this.container.clientWidth;
+  if (this.scroller.scrollLeft + this.scroller.clientWidth < left + this.characterWidth) {
+    this.scroller.scrollLeft = left + this.characterWidth - this.scroller.clientWidth;
   }
 },
 
@@ -122,7 +136,7 @@ VirtualRenderer.prototype.getScrollTop = function() {
 
 VirtualRenderer.prototype.scrollToY = function(scrollTop)
 {
-  var maxHeight = this.lines.length * this.lineHeight - this.container.offsetHeight;
+  var maxHeight = this.lines.length * this.lineHeight - this.scroller.offsetHeight;
   var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
   
   if (this.scrollTop !== scrollTop) {
@@ -133,9 +147,9 @@ VirtualRenderer.prototype.scrollToY = function(scrollTop)
 
 VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) 
 {
-  var canvasPos = this.container.getBoundingClientRect();
+  var canvasPos = this.scroller.getBoundingClientRect();
     
-  var col = Math.floor((pageX + this.container.scrollLeft - canvasPos.left) / this.characterWidth);
+  var col = Math.floor((pageX + this.scroller.scrollLeft - canvasPos.left) / this.characterWidth);
   var row = Math.floor((pageY + this.scrollTop - canvasPos.top) / this.lineHeight);
   
   return {
