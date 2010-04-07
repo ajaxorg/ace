@@ -2,12 +2,29 @@ function TextDocument(text)
 {
   this.lines = this._split(text);
   this.modified = true;
+  
+  this.listeners = [];
 }
 
 TextDocument.prototype = 
 {
   _split : function(text) {
     return text.split(/[\n\r]/)
+  },
+  
+  addChangeListener : function(listener) {
+    this.listeners.push(listener);
+  },
+  
+  fireChangeEvent : function(firstRow, lastRow) 
+  {
+    if (lastRow === undefined) {
+      lastRow = this.lines.length-1;
+    }
+    
+    for (var i=0; i < this.listeners.length; i++) {
+      this.listeners[i](firstRow, lastRow);
+    };
   },
   
   getWidth : function()
@@ -104,7 +121,17 @@ TextDocument.prototype =
     }
   },
   
-  insert : function(position, text) 
+  insert : function(position, text)
+  {
+    var end = this._insert(position, text);
+    this.fireChangeEvent(
+      position.row, 
+      position.row == end.row ? position.row : undefined
+    );
+    return end;
+  },
+  
+  _insert : function(position, text) 
   {
     this.modified = true;
     
@@ -154,6 +181,17 @@ TextDocument.prototype =
    
   remove : function(range)
   {
+    var end = this._remove(range);
+    
+    this.fireChangeEvent(
+      range.start.row, 
+      range.end.row == range.start.row ? range.start.row : undefined
+    );
+    return end;
+  },
+  
+  _remove : function(range)
+  {
     this.modified = true;
     
     var firstRow = range.start.row;
@@ -170,11 +208,19 @@ TextDocument.prototype =
   
   replace : function(range, text)
   {
-    this.remove(range);
+    this._remove(range);
     if (text) {
-      return this.insert(range.start, text);
+      var end = this._insert(range.start, text);
     } else {
-      return range.start;
+      end = range.start;
     }
+    
+    var lastRemoved = range.end.column == 0 ? range.end.column-1 : range.end.column;
+    this.fireChangeEvent(
+      range.start.row, 
+      lastRemoved == end.row ? lastRemoved : undefined
+    );
+    
+    return end;
   }
 }

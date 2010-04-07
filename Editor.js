@@ -120,6 +120,9 @@ function Editor(doc, renderer)
   addListener(container, "mousewheel", bind(this.onMouseWheel, this));
   
   this.doc = doc;
+  doc.addChangeListener(function(startRow, endRow) {
+    console.log(startRow, endRow);
+  });
   renderer.setDocument(doc);
   
   this.cursor = {
@@ -229,10 +232,11 @@ Editor.prototype =
   {      
     if (this.hasSelection())
     {
-      this.cursor = this.doc.remove(this.getSelectionRange());
+      this.cursor = this.doc.replace(this.getSelectionRange(), text);
       this.clearSelection();
+    } else {
+      this.cursor = this.doc.insert(this.cursor, text);
     }
-    this.cursor = this.doc.insert(this.cursor, text);        
     this.draw();
     this.renderer.scrollCursorIntoView();
   },
