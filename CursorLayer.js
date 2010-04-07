@@ -24,12 +24,23 @@ CursorLayer.prototype.hideCursor = function()
   if (this.cursor.parentNode) {
     this.cursor.parentNode.removeChild(this.cursor);
   }
+  clearInterval(this.blinkId);
 };
 
 CursorLayer.prototype.showCursor = function()
 {
   this.isVisible = true;
   this.element.appendChild(this.cursor);
+
+  var cursor = this.cursor;
+  cursor.style.visibility = "visible";
+  
+  this.blinkId = setInterval(function() {
+    cursor.style.visibility = "hidden";
+    setTimeout(function() {
+      cursor.style.visibility = "visible";
+    }, 400);
+  }, 1000);
 };
 
 CursorLayer.prototype.getPixelPosition = function() {
