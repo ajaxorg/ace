@@ -231,15 +231,6 @@ VirtualRenderer.prototype.removeMarker = function(markerId)
   }
 };
 
-VirtualRenderer.prototype.updateMarker = function(markerId, range)
-{
-  var marker = this.markers[markerId];
-  if (marker) {
-    marker.range = range;
-    this.draw(); 
-  }   
-};
-
 VirtualRenderer.prototype.updateCursor = function(position)
 {
   this.cursorPos = {

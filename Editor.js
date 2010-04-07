@@ -505,10 +505,9 @@ Editor.prototype =
     }
     
     if (this.selection) {
-      this.renderer.updateMarker(this.selection, this.getSelectionRange());
-    } else {
-      this.selection = this.renderer.addMarker(this.getSelectionRange(), "selection");
+      this.renderer.removeMarker(this.selection);
     }
+    this.selection = this.renderer.addMarker(this.getSelectionRange(), "selection");
   },
   
   selectUp : function() {
