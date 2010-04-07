@@ -1,11 +1,29 @@
-function TextDocument(text) {
+function TextDocument(text)
+{
   this.lines = this._split(text);
+  this.modified = true;
 }
 
 TextDocument.prototype = 
 {
   _split : function(text) {
     return text.split(/[\n\r]/)
+  },
+  
+  getWidth : function()
+  {
+    if (this.modified) 
+    {
+      this.modified = false;
+      
+      var lines = this.lines;
+      var longestLine = 0;
+      for (var i=0; i < lines.length; i++) {
+        longestLine = Math.max(longestLine, lines[i].length);
+      }  
+      this.width = longestLine;
+    }
+    return this.width;
   },
   
   getLine : function(row) {
@@ -72,8 +90,24 @@ TextDocument.prototype =
     return this.lines.length;
   },
   
+  getTextRange : function(range)
+  {
+    if (range.start.row == range.end.row) {
+      return this.lines[range.start.row].substring(range.start.column, range.end.column);
+    } else {
+      var lines = [];
+      lines.push(this.lines[range.start.row].substring(range.start.column));
+      lines.push.apply(lines, this.lines.slice(range.start.row+1, range.end.row+1));
+      lines.push(this.lines[range.end.row].substring(0, range.end.column));
+      
+      return lines.join("\n");
+    }
+  },
+  
   insert : function(position, text) 
   {
+    this.modified = true;
+    
     var newLines = this._split(text);
     
     if (text == "\n") 
@@ -117,23 +151,11 @@ TextDocument.prototype =
       };
     }
   },
-  
-  getTextRange : function(range)
-  {
-    if (range.start.row == range.end.row) {
-      return this.lines[range.start.row].substring(range.start.column, range.end.column);
-    } else {
-      var lines = [];
-      lines.push(this.lines[range.start.row].substring(range.start.column));
-      lines.push.apply(lines, this.lines.slice(range.start.row+1, range.end.row+1));
-      lines.push(this.lines[range.end.row].substring(0, range.end.column));
-      
-      return lines.join("\n");
-    }
-  },
    
   remove : function(range)
   {
+    this.modified = true;
+    
     var firstRow = range.start.row;
     var lastRow = range.end.row;
     

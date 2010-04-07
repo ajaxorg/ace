@@ -25,6 +25,7 @@ function VirtualRenderer(containerId)
 VirtualRenderer.prototype.setDocument = function(doc)
 {
   this.lines = doc.lines;
+  this.doc = doc;
   this.textLayer.setDocument(doc);
 };
 
@@ -32,23 +33,18 @@ VirtualRenderer.prototype.getContainerElement = function() {
   return this.container;
 };
 
-VirtualRenderer.prototype.getLongestLineWidth = function(lines)
-{
-  var longestLine = this.container.clientWidth;
-  for (var i=0; i < lines.length; i++) {
-    longestLine = Math.max(longestLine, (lines[i].length * this.characterWidth));
-  }    
-  return longestLine;
-};
-
 VirtualRenderer.prototype.draw = function() 
 {    
   var lines = this.lines;
   
   var offset = this.scrollTop % this.lineHeight;
-  var minHeight = this.container.clientHeight + offset;
+  var minHeight = this.scroller.clientHeight + offset;
   
-  var longestLine = this.getLongestLineWidth(lines);
+  var longestLine = Math.max(
+    this.scroller.clientWidth, 
+    this.doc.getWidth() * this.characterWidth
+  );
+  
   var lineCount = Math.ceil(minHeight / this.lineHeight);
   var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
   var lastRow = Math.min(lines.length, firstRow+lineCount);
