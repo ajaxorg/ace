@@ -73,3 +73,9 @@ computedStyle = function(element, style)
     return element.currentStyle[style];
   }
 }
+
+bind = function(fcn, context) {
+  return function() {
+    return fcn.apply(context, arguments);
+  }
+}

@@ -90,7 +90,8 @@ var keys = {
   END: 35,
   DELETE: 46,
   BACKSPACE: 8,
-  TAB: 9
+  TAB: 9,
+  A: 65
 }
 
 function KeyBinding(element, host)
@@ -98,54 +99,88 @@ function KeyBinding(element, host)
   addListener(element, "keydown", function(e)
   {
     var key = e.keyCode;
-
-    // TODO
-    /*
-    if (!e.shiftKey) {
-      host.clearSelection();
-    }*/
     
     switch (key) 
-    {      
+    { 
+      case keys.A:
+        if (e.metaKey) 
+        {
+          host.selectAll();
+          return stopEvent(e);
+        }
+        break;
+        
       case keys.UP:
-        host.moveUp();
+        if (e.shiftKey) {
+          host.selectUp();
+        } else {
+          host.clearSelection();
+          host.moveUp();
+        }
         return stopEvent(e);
         
       case keys.DOWN:
-        host.moveDown();
+        if (e.shiftKey) {
+          host.selectDown();
+        } else {
+          host.clearSelection();
+          host.moveDown();
+        }
         return stopEvent(e);
         
       case keys.LEFT:
-        if (e.metaKey) {
+        if (e.metaKey && e.shiftKey) {
+          host.selectLineStart();
+        } else if (e.metaKey) {
+          host.clearSelection();
           host.moveLineStart();
+        } else if (e.shiftKey) {
+          host.selectLeft();
         } else {
+          host.clearSelection();
           host.moveLeft();
         }
         return stopEvent(e);
         
       case keys.RIGHT:
-        if (e.metaKey) {
+        if (e.metaKey && e.shiftKey) {
+          host.selectLineEnd();
+        } else if (e.metaKey) {
+          host.clearSelection();
           host.moveLineEnd();
         } else if (e.shiftKey) {
           host.selectRight();
-        } else {   
+        } else {
+          host.clearSelection();
           host.moveRight();
         }
         return stopEvent(e);
         
       case keys.POS1:
-        host.moveLineStart();
+        if (e.shiftKey) {
+          host.selectLineStart();
+        } else {
+          host.clearSelection();
+          host.moveLineStart();
+        }
         return stopEvent(e);
 
       case keys.END:
-        host.moveLineEnd();
+        if (e.shiftKey) {
+          host.selectLineEnd();
+        } else {
+          host.clearSelection();
+          host.moveLineEnd();
+        }
         return stopEvent(e);
                   
       case keys.DELETE:
+        host.clearSelection();
         host.removeRight();
         return stopEvent(e);
         
       case keys.BACKSPACE:
+        host.clearSelection();
         host.removeLeft();
         return stopEvent(e);
         
@@ -164,19 +199,8 @@ function Editor(doc, renderer)
   var textInput = new TextInput(container, this);
   new KeyBinding(container, this);
   
-  var self = this;
-  addListener(container, "mousedown", function(e) {
-    textInput.focus();
-    self.placeCursorToMouse(e.pageX, e.pageY);
-    self.renderer.scrollCursorIntoView();
-    return preventDefault(e);
-  });
-  
-  addListener(container, "mousewheel", function(e) {
-    var delta = e.wheelDeltaY;
-    self.renderer.scrollToY(self.renderer.getScrollTop() - (delta/10));
-    return preventDefault(e);
-  });
+  addListener(container, "mousedown", bind(this.onMouseDown, this));
+  addListener(container, "mousewheel", bind(this.onMouseWheel, this));
   
   this.doc = doc;
   renderer.setDocument(doc);
@@ -186,7 +210,8 @@ function Editor(doc, renderer)
     column: 0
   };
   
-  this.selectionRange = null;  
+  this.selectionAnchor = null;  
+  this.selectionLead = null;
   this.selection = null;
     
   this.draw();
@@ -218,10 +243,29 @@ Editor.prototype =
     this.renderer.visualizeBlur();
   },
   
+  onMouseDown : function(e) 
+  {
+    this.textInput.focus();
+    
+    var pos = this.renderer.screenToTextCoordinates(pageX, pageY);    
+    this.moveTo(pos.row, pos.column);
+    this.setSelectionAnchor(pos.row, pos.column);
+    
+    this.renderer.scrollCursorIntoView();
+    return preventDefault(e);
+  },
+  
+  onMouseWheel : function(e) 
+  {
+    var delta = e.wheelDeltaY;
+    this.renderer.scrollToY(this.renderer.getScrollTop() - (delta/10));
+    return preventDefault(e);
+  },
+  
   getCopyText : function() 
   {
-    if (this.selectionRange) {
-      return this.doc.getTextRange(this.selectionRange);
+    if (this.hasSelection()) {
+      return this.doc.getTextRange(this.getSelectionRange());
     } else {
       return "";
     }
@@ -229,29 +273,24 @@ Editor.prototype =
   
   onCut : function()
   {
-    if (this.selectionRange)
+    if (this.hasSelection())
     {
-      this.cursor = this.doc.remove(this.selectionRange);
+      this.cursor = this.doc.remove(this.getSelectionRange());
       this.clearSelection();
       this.draw();
     }
   },
   
-  placeCursorToMouse : function(pageX, pageY)
-  {
-    var pos = this.renderer.screenToTextCoordinates(pageX, pageY);    
-    this.moveTo(pos.row, pos.column);
-  },
-  
   onTextInput: function(text)
-  {    
+  {        
     this.cursor = this.doc.insert(this.cursor, text);    
+    this.clearSelection();
     this.draw();
     this.renderer.scrollCursorIntoView();
   },
   
   removeRight : function()
-  {
+  {    
     var rangeEnd = {
       row: this.cursor.row,
       column: this.cursor.column + 1
@@ -347,38 +386,108 @@ Editor.prototype =
     this.renderer.scrollCursorIntoView();
   },
   
+  hasSelection : function() {
+    return !!this.selectionLead;
+  },
+  
+  setSelectionAnchor : function(row, column)
+  {
+    this.selectionAnchor = {
+      row: row,
+      column: column
+    };
+    
+    this.selectionLead = null;
+  },
+  
+  getSelectionRange : function()
+  {
+    var anchor = this.selectionAnchor;
+    var lead = this.selectionLead;
+    
+    if (!anchor) {
+      return null;
+    } else {
+      if (anchor.row > lead.row || (anchor.row == lead.row && anchor.column > lead.column)) {
+        return {
+          start: lead,
+          end: anchor
+        }
+      } else {
+        return {
+          start: anchor,
+          end: lead
+        }        
+      }
+    }
+  },
+  
   clearSelection : function() 
   {
-    this.selectionRange = null;
+    this.selectionLead = null;
+    this.selectionAnchor = null;
+    
     if (this.selection) {
       this.renderer.removeMarker(this.selection);
       this.selection = null;
     } 
   },
   
-  selectRight : function()
+  selectAll : function()
   {
-    if (!this.selectionRange) {
-      this.selectionRange = {
-        start: {
-          row: this.cursor.row,
-          column: this.cursor.column
-        }
+    var lastRow = this.doc.getLength()-1;    
+    this.setSelectionAnchor(lastRow, this.doc.getLine(lastRow).length);
+        
+    this._moveSelection(function() {
+      this.moveTo(0, 0);
+    });
+  },
+  
+  _moveSelection : function(mover)
+  {
+    if (!this.selectionAnchor) {
+      this.selectionAnchor = {
+        row: this.cursor.row,
+        column: this.cursor.column
       }
     }
     
-    this.moveRight();
+    mover.call(this);
     
-    this.selectionRange.end = {
+    this.selectionLead = {
       row: this.cursor.row,
       column: this.cursor.column
     }
     
     if (this.selection) {
-      this.renderer.updateMarker(this.selection, this.selectionRange);
+      this.renderer.updateMarker(this.selection, this.getSelectionRange());
     } else {
-      this.selection = this.renderer.addMarker(this.selectionRange, "selection");
+      this.selection = this.renderer.addMarker(this.getSelectionRange(), "selection");
     }
+  },
+  
+  selectUp : function() {
+    this._moveSelection(this.moveUp);
+  },
+  
+  selectDown : function() {
+    this._moveSelection(this.moveDown);
+  },
+  
+  selectRight : function() {
+    this._moveSelection(this.moveRight);
+  },
+  
+  selectLeft : function() {
+    this._moveSelection(this.moveLeft);
+  },
+  
+  selectLineStart : function() {
+    this._moveSelection(this.moveLineStart);
+  },
+  
+  selectLineEnd : function() {
+    this._moveSelection(this.moveLineEnd);
   },
   
   moveBy : function(rows, chars) {

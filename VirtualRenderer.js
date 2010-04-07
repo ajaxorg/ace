@@ -41,7 +41,7 @@ function VirtualRenderer(containerId)
   this.layers.push({
     element: this.markerEl,
     update: this.updateMarkers
-  });  
+  });
 }
 
 VirtualRenderer.prototype.setDocument = function(doc) {
