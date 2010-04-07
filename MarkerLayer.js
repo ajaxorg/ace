@@ -50,9 +50,9 @@ MarkerLayer.prototype.update = function(config)
         html.push(
           "<div class='", marker.clazz, "' style='",
           "height:", config.lineHeight, "px;",
-          "width:", config.width - (range.start.column * config.characterWidth), "px;",
+          "width:", Math.round(config.width - (range.start.column * config.characterWidth)), "px;",
           "top:", (range.start.row-config.firstRow)  * config.lineHeight, "px;",        
-          "left:", range.start.column * config.characterWidth, "px;'></div>"
+          "left:", Math.round(range.start.column * config.characterWidth), "px;'></div>"
         );
       }
         
@@ -62,7 +62,7 @@ MarkerLayer.prototype.update = function(config)
           "<div class='", marker.clazz, "' style='",
           "height:", config.lineHeight, "px;",
           "top:", (range.end.row-config.firstRow) * config.lineHeight, "px;",
-          "width:", range.end.column * config.characterWidth, "px;'></div>"
+          "width:", Math.round(range.end.column * config.characterWidth), "px;'></div>"
         );
       };
       
@@ -86,9 +86,9 @@ MarkerLayer.prototype.update = function(config)
         html.push(
           "<div class='", marker.clazz, "' style='",
           "height:", config.lineHeight, "px;",
-          "width:", (range.end.column - range.start.column) * config.characterWidth, "px;",
+          "width:", Math.round((range.end.column - range.start.column) * config.characterWidth), "px;",
           "top:", (range.start.row-config.firstRow)  * config.lineHeight, "px;",        
-          "left:", range.start.column * config.characterWidth, "px;'></div>"
+          "left:", Math.round(range.start.column * config.characterWidth), "px;'></div>"
         );
       }
     }

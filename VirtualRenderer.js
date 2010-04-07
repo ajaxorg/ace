@@ -52,7 +52,7 @@ VirtualRenderer.prototype.draw = function()
   
   var longestLine = Math.max(
     this.scroller.clientWidth, 
-    this.doc.getWidth() * this.characterWidth
+    Math.round(this.doc.getWidth() * this.characterWidth)
   );
   
   var lineCount = Math.ceil(minHeight / this.lineHeight);
@@ -126,7 +126,7 @@ VirtualRenderer.prototype.scrollCursorIntoView = function()
   }
   
   if (this.scroller.scrollLeft + this.scroller.clientWidth < left + this.characterWidth) {
-    this.scroller.scrollLeft = left + this.characterWidth - this.scroller.clientWidth;
+    this.scroller.scrollLeft = Math.round(left + this.characterWidth - this.scroller.clientWidth);
   }
 },
 
@@ -136,7 +136,7 @@ VirtualRenderer.prototype.getScrollTop = function() {
 
 VirtualRenderer.prototype.scrollToY = function(scrollTop)
 {
-  var maxHeight = this.lines.length * this.lineHeight - this.scroller.offsetHeight;
+  var maxHeight = this.lines.length * this.lineHeight - this.scroller.clientHeight;
   var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
   
   if (this.scrollTop !== scrollTop) {

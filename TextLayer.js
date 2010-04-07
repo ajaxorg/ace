@@ -30,11 +30,14 @@ TextLayer.prototype._measureSizes = function()
   style.position = "absolute";
   style.overflow = "visible";
     
-  measureNode.innerHTML = "X<br>X";
+  measureNode.innerHTML = new Array(1000).join("Xy");
   this.element.appendChild(measureNode);
   
-  this.lineHeight = Math.round(measureNode.offsetHeight / 2);
-  this.characterWidth = measureNode.offsetWidth;
+  // in FF 3.6 monospace fonts can have a fixed sub pixel width.
+  // that's why we have to measure many characters
+  // Note: characterWidth can be a float!
+  this.lineHeight = measureNode.offsetHeight;
+  this.characterWidth = measureNode.offsetWidth / 2000;
     
   this.element.removeChild(measureNode);
 };

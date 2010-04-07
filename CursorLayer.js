@@ -50,8 +50,8 @@ CursorLayer.prototype.getPixelPosition = function() {
 CursorLayer.prototype.update = function(config)
 {
   if (!this.position) return;
-  
-  var cursorLeft = this.position.column * config.characterWidth;
+
+  var cursorLeft = Math.round(this.position.column * config.characterWidth);
   var cursorTop = this.position.row * config.lineHeight;
   
   this.pixelPos = {
