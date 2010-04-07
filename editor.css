@@ -1,11 +1,11 @@
 .editor {
   position: absolute;
-  border: 1px solid black;
+  border: 2px solid rgb(159, 159, 159);
   overflow: hidden;
 }
 
 .editor.focus {
-  border: 1px solid #327fbd;;
+  border: 2px solid #327fbd;;
 }
 
 .scroller {
