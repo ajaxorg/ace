@@ -123,11 +123,12 @@ TextDocument.prototype =
     if (range.start.row == range.end.row) {
       return this.lines[range.start.row].substring(range.start.column, range.end.column);
     } else {
-      return (
-        this.lines[range.start.row].substring(range.start.column) +
-        this.lines.slice(range.start.row+1, range.end.row+1) + 
-        this.lines[range.end.row].substring(0, range.end.column)
-      );
+      var lines = [];
+      lines.push(this.lines[range.start.row].substring(range.start.column));
+      lines.push.apply(lines, this.lines.slice(range.start.row+1, range.end.row+1));
+      lines.push(this.lines[range.end.row].substring(0, range.end.column));
+      
+      return lines.join("\n");
     }
   },
    

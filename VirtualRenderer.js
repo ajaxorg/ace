@@ -3,73 +3,33 @@ function VirtualRenderer(containerId)
   this.container = document.getElementById(containerId);
   this.container.className += "editor";
   
-  this.canvas = document.createElement("div");
-  this.canvas.className = "canvas";
-  this.container.appendChild(this.canvas);
+  var textLayer = this.textLayer = new TextLayer(this.container);
+  this.canvas = textLayer.element;
   
-  this._measureSizes();  
+  this.characterWidth = textLayer.getCharacterWidth();
+  this.lineHeight = textLayer.getLineHeight(); 
   
-  this.composition = document.createElement("div");
-  this.composition.className = "composition";
-  this.composition.style.height = this.lineHeight + "px";  
+  this.cursorLayer = new CursorLayer(this.container);
+  this.markerLayer = new MarkerLayer(this.container);
   
-  this.cursor = document.createElement("div");
-  this.cursor.className = "cursor";
-  this.cursor.style.height = this.lineHeight + "px";
+  this.layers = [this.markerLayer, textLayer, this.cursorLayer];
   
-  this.markers = {};
-  this._markerId = 1;
-    
   this.scrollTop = 0;
-  this.firstRow = 0;
     
   this.cursorPos = {
     row: 0,
     column: 0
   };
-  
-  this.layers = [];
-  this.layers.push({
-    element: this.canvas,
-    update: this.updateLines
-  });
-
-  this.markerEl = document.createElement("div");
-  this.markerEl.className = "markers";
-  this.container.appendChild(this.markerEl);
-  
-  this.layers.push({
-    element: this.markerEl,
-    update: this.updateMarkers
-  });
 }
 
-VirtualRenderer.prototype.setDocument = function(doc) {
+VirtualRenderer.prototype.setDocument = function(doc)
+{
   this.lines = doc.lines;
-  this.doc = doc;
+  this.textLayer.setDocument(doc);
 };
 
 VirtualRenderer.prototype.getContainerElement = function() {
   return this.container;
-};
-
-VirtualRenderer.prototype._measureSizes = function()
-{
-  var measureNode = document.createElement("div");
-  var style = measureNode.style;
-  style.width = style.height = "auto";
-  style.left = style.top = "-1000px";
-  style.visibility = "hidden";
-  style.position = "absolute";
-  style.overflow = "visible";
-    
-  measureNode.innerHTML = "X<br>X";
-  this.canvas.appendChild(measureNode);
-  
-  this.lineHeight = Math.round(measureNode.offsetHeight / 2);
-  this.characterWidth = measureNode.offsetWidth;
-    
-  this.canvas.removeChild(measureNode);
 };
 
 VirtualRenderer.prototype.getLongestLineWidth = function(lines)
@@ -90,8 +50,16 @@ VirtualRenderer.prototype.draw = function()
   
   var longestLine = this.getLongestLineWidth(lines);
   var lineCount = Math.ceil(minHeight / this.lineHeight);
-  this.firstRow = firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
+  var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
   var lastRow = Math.min(lines.length, firstRow+lineCount);
+
+  var layerConfig = this.layerConfig = {
+    width: longestLine,
+    firstRow: firstRow,
+    lastRow: lastRow,
+    lineHeight: this.lineHeight,
+    characterWidth: this.characterWidth
+  };
 
   for (var i=0; i < this.layers.length; i++) 
   {
@@ -102,171 +70,38 @@ VirtualRenderer.prototype.draw = function()
     style.height = minHeight + "px";
     style.width = longestLine + "px";
 
-    layer.update.call(this, layer.element, firstRow, lastRow, longestLine);    
+    layer.update(layerConfig);    
   };
-
-  this.updateCursor(this.cursorPos);
 }
 
-VirtualRenderer.prototype.updateLines = function(element, firstRow, lastRow, width)
-{
-  var html = [];
-  for (var i=firstRow; i<lastRow; i++)
-  {
-    html.push(
-      "<div class='line ",
-      i % 2 == 0 ? "even" : "odd",
-      "' style='height:" + this.lineHeight + "px;",
-      "width:", width, "px'>"
-    );
-    this.renderLine(html, i),
-    html.push("</div>");
-  }
-  
-  element.innerHTML = html.join("");  
+VirtualRenderer.prototype.addMarker = function(range, clazz) {
+  return this.markerLayer.addMarker(range, clazz);
 };
 
-VirtualRenderer.prototype.renderLine = function(stringBuilder, row)
-{
-  var tokens = this.doc.getLineTokens(row);
-  for (var i=0; i < tokens.length; i++)
-  {
-    var token = tokens[i];
-
-    var output = token.value.
-      replace(/&/g, "&amp;").
-      replace(/</g, "&lt;").
-      replace(/\s/g, "&nbsp;");
-    
-    if (token.type !== "text") {
-      stringBuilder.push("<span class='", token.type, "'>", output, "</span>");
-    } else {
-      stringBuilder.push(output);
-    }
-  };
+VirtualRenderer.prototype.removeMarker = function(markerId) {
+  this.markerLayer.removeMarker(markerId);
 };
 
-
-VirtualRenderer.prototype.updateMarkers = function(element, firstRow, lastRow, width)
+VirtualRenderer.prototype.updateCursor = function(position) 
 {
-  var html = [];
-  for (var key in this.markers) 
-  {
-    var marker = this.markers[key];
-    var range = marker.range;
-    
-    if (range.start.row !== range.end.row)
-    {
-      if (range.start.row >= firstRow && range.start.row <= lastRow)
-      {
-        html.push(
-          "<div class='", marker.clazz, "' style='",
-          "height:", this.lineHeight, "px;",
-          "width:", width - (range.start.column * this.characterWidth), "px;",
-          "top:", (range.start.row-firstRow)  * this.lineHeight, "px;",        
-          "left:", range.start.column * this.characterWidth, "px;'></div>"
-        );
-      }
-        
-      if (range.end.row >= firstRow && range.end.row <= lastRow)
-      {
-        html.push(
-          "<div class='", marker.clazz, "' style='",
-          "height:", this.lineHeight, "px;",
-          "top:", (range.end.row-firstRow) * this.lineHeight, "px;",
-          "width:", range.end.column * this.characterWidth, "px;'></div>"
-        );
-      };
-      
-      for (var row=range.start.row+1; row < range.end.row; row++)
-      {
-        if (row >= firstRow && row <= lastRow)
-        {
-          html.push(
-            "<div class='", marker.clazz, "' style='",
-            "height:", this.lineHeight, "px;",
-            "width:", width, "px;",
-            "top:", (row-firstRow) * this.lineHeight, "px;'></div>"
-          );
-        }
-      };
-    }
-    else
-    {
-      if (range.start.row >= firstRow && range.start.row <= lastRow)
-      {
-        html.push(
-          "<div class='", marker.clazz, "' style='",
-          "height:", this.lineHeight, "px;",
-          "width:", (range.end.column - range.start.column) * this.characterWidth, "px;",
-          "top:", (range.start.row-firstRow)  * this.lineHeight, "px;",        
-          "left:", range.start.column * this.characterWidth, "px;'></div>"
-        );
-      }
-    }
-  }
-  element.innerHTML = html.join("");
+  this.cursorLayer.setCursor(position);
+  this.cursorLayer.update(this.layerConfig);
 };
 
-VirtualRenderer.prototype.addMarker = function(range, clazz)
-{
-  var id = this._markerId++;
-  this.markers[id] = {
-    range: range,
-    type: "line",
-    clazz: clazz
-  };
-  
-  this.draw();
-  
-  return id;
+VirtualRenderer.prototype.hideCursor = function() {
+  this.cursorLayer.hideCursor();
 };
 
-VirtualRenderer.prototype.removeMarker = function(markerId) 
-{
-  var marker = this.markers[markerId];
-  if (marker) {
-    delete(this.markers[markerId]);
-    this.draw();
-  }
-};
-
-VirtualRenderer.prototype.updateCursor = function(position)
-{
-  this.cursorPos = {
-    row: position.row,
-    column: position.column
-  }
-  
-  var left = this.cursorLeft = position.column * this.characterWidth;
-  var top = this.cursorTop = position.row * this.lineHeight;
-
-  this.cursor.style.left = left + "px";
-  this.cursor.style.top = (top - (this.firstRow * this.lineHeight)) + "px";  
-
-  if (this.cursorVisible) {
-    this.canvas.appendChild(this.cursor);
-  }
-};
-
-VirtualRenderer.prototype.hideCursor = function() 
-{
-  this.cursorVisible = true;
-  if (this.cursor.parentNode) {
-    this.cursor.parentNode.removeChild(this.cursor);
-  }
-};
-
-VirtualRenderer.prototype.showCursor = function()
-{
-  this.cursorVisible = true;
-  this.canvas.appendChild(this.cursor);
+VirtualRenderer.prototype.showCursor = function() {
+  this.cursorLayer.showCursor();
 };
 
 VirtualRenderer.prototype.scrollCursorIntoView = function()
 {
-  var left = this.cursorLeft;
-  var top = this.cursorTop;
+  var pos = this.cursorLayer.getPixelPosition();
+  
+  var left = pos.left
+  var top = pos.top;
   
   if (this.getScrollTop() > top) {
     this.scrollToY(top);
@@ -321,22 +156,11 @@ VirtualRenderer.prototype.visualizeBlur = function() {
   this.container.className = "editor";
 };
 
-VirtualRenderer.prototype.showComposition = function(position)
-{
-  setText(this.composition, "");
-  
-  this.composition.style.left = (position.column * this.characterWidth+1) + "px";
-  this.composition.style.top = (position.row * this.lineHeight+1) + "px";    
-    
-  this.container.appendChild(this.composition);
+VirtualRenderer.prototype.showComposition = function(position) {
 };
 
 VirtualRenderer.prototype.setCompositionText = function(text) {
-  setText(this.composition, text);
 };
 
 VirtualRenderer.prototype.hideComposition = function() {
-  if (this.composition.parentNode) {
-    this.container.removeChild(this.composition);
-  }
 };

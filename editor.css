@@ -58,6 +58,11 @@
   z-index: 1;
 }
 
+.editor .cursor-layer {
+  position: absolute;
+  z-index: 3;
+}
+
 .selection {
   position: absolute;
   background: rgba(77, 151, 255, 0.33);

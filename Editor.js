@@ -277,7 +277,7 @@ Editor.prototype =
     };
     
     capture(this.container, onMouseSelection, onMouseSelectionEnd);
-    var timerId = setInterval(onSelectionInterval, 100);
+    var timerId = setInterval(onSelectionInterval, 20);
         
     return preventDefault(e);
   },
@@ -437,6 +437,8 @@ Editor.prototype =
   
   setSelectionAnchor : function(row, column)
   {
+    this.clearSelection();
+    
     this.selectionAnchor = {
       row: Math.min(this.doc.getLength()-1, Math.max(0, row)),
       column: Math.min(this.doc.getLine(this.cursor.row).length, Math.max(0, column))
