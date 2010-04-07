@@ -1,7 +1,7 @@
 function MarkerLayer(parentEl)
 {
   this.element = document.createElement("div");
-  this.element.className = "markers";
+  this.element.className = "layer marker-layer";
   parentEl.appendChild(this.element);
   
   this.markers = {};

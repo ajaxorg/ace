@@ -1,7 +1,7 @@
 function TextLayer(parentEl)
 {
   this.element = document.createElement("div");
-  this.element.className = "canvas";
+  this.element.className = "layer text-layer";
   parentEl.appendChild(this.element);
   
   this._measureSizes();

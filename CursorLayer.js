@@ -1,7 +1,7 @@
 function CursorLayer(parentEl)
 {
   this.element = document.createElement("div");
-  this.element.className = "cursor-layer";
+  this.element.className = "layer cursor-layer";
   parentEl.appendChild(this.element); 
   
   this.cursor = document.createElement("div");

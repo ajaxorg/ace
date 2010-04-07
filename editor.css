@@ -1,29 +1,61 @@
 .editor {
   position: absolute;
   border: 1px solid black;
-  overflow-x: scroll;
-  overflow-y: hidden;	  
+  overflow: hidden;
 }
 
 .editor.focus {
   border: 1px solid #327fbd;;
 }
 
-.editor .canvas {
-  z-index: 2;
+.scroller {
   position: absolute;
-  overflow: hidden;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  overflow-x: scroll;
+  overflow-y: hidden;	    
+}
+
+.gutter {
+  position: absolute;
+  width: 50px;
+  top: 0px;
+  bottom: 0px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  
+  background: rgb(227, 227, 227);
+  border-right: 1px solid rgb(159, 159, 159);	 
+  color: rgb(136, 136, 136);
   font-family: Monaco, "Courier New";
-  font-size: 12px;
+  font-size: 12px;  
+  
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;  
+}
+
+.layer {
+  position: absolute;
+  overflow: hidden;  
   white-space: nowrap;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  cursor: text;
 }
-	
-.composition {
-  position: absolute;
-  text-decoration: underline;
+
+.gutter-layer {
+  right: 0;
+  text-align: right;
+  padding-right: 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.text-layer {
+  font-family: Monaco, "Courier New";
+  font-size: 12px;
+  cursor: text;
 }
 
 .cursor {
@@ -36,34 +68,20 @@
   white-space: nowrap;
 }
 
-.line.odd {
-  /*background: #FAFAFA;*/
-}
-
-.keyword {
+.line .keyword {
   color: blue;
 }
 
-.string {
+.line .string {
   color: rgb(3, 106, 7);
 }
 
-.comment {
+.line .comment {
   font-style: italic;
   color: rgb(0, 102, 255);
 }
 
-.editor .markers {
-  position: absolute;
-  z-index: 1;
-}
-
-.editor .cursor-layer {
-  position: absolute;
-  z-index: 3;
-}
-
-.selection {
+.marker-layer .selection {
   position: absolute;
   background: rgba(77, 151, 255, 0.33);
 }
