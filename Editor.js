@@ -174,14 +174,14 @@ function KeyBinding(element, host)
         }
         return stopEvent(e);
                   
-      case keys.DELETE:
-        host.clearSelection();
+      case keys.DELETE:        
         host.removeRight();
+        host.clearSelection();
         return stopEvent(e);
         
-      case keys.BACKSPACE:
-        host.clearSelection();
+      case keys.BACKSPACE:        
         host.removeLeft();
+        host.clearSelection();
         return stopEvent(e);
         
       case keys.TAB:
@@ -196,7 +196,7 @@ function Editor(doc, renderer)
   var container = renderer.getContainerElement();
   this.renderer = renderer;
   
-  var textInput = new TextInput(container, this);
+  this.textInput = new TextInput(container, this);
   new KeyBinding(container, this);
   
   addListener(container, "mousedown", bind(this.onMouseDown, this));
@@ -247,14 +247,41 @@ Editor.prototype =
   {
     this.textInput.focus();
     
-    var pos = this.renderer.screenToTextCoordinates(pageX, pageY);    
+    var pos = this.renderer.screenToTextCoordinates(e.pageX, e.pageY);    
     this.moveTo(pos.row, pos.column);
     this.setSelectionAnchor(pos.row, pos.column);
-    
     this.renderer.scrollCursorIntoView();
+  
+    var _self = this;
+    var mousePageX, mousePageY;
+    
+    var onMouseSelection = function(e) {
+      mousePageX = e.pageX;
+      mousePageY = e.pageY; 
+    };
+  
+    var onMouseSelectionEnd = function() {
+      clearInterval(timerId);
+    };
+    
+    var onSelectionInterval = function() 
+    {
+      if (mousePageX === undefined || mousePageY === undefined) return;
+      
+      selectionLead = _self.renderer.screenToTextCoordinates(mousePageX, mousePageY);
+      
+      _self._moveSelection(function() {
+        _self.moveTo(selectionLead.row, selectionLead.column);
+      });
+      _self.renderer.scrollCursorIntoView();      
+    };
+    
+    capture(this.container, onMouseSelection, onMouseSelectionEnd);
+    var timerId = setInterval(onSelectionInterval, 100);
+        
     return preventDefault(e);
   },
-  
+    
   onMouseWheel : function(e) 
   {
     var delta = e.wheelDeltaY;
@@ -282,24 +309,35 @@ Editor.prototype =
   },
   
   onTextInput: function(text)
-  {        
-    this.cursor = this.doc.insert(this.cursor, text);    
-    this.clearSelection();
+  {      
+    if (this.hasSelection())
+    {
+      this.cursor = this.doc.remove(this.getSelectionRange());
+      this.clearSelection();
+    }
+    this.cursor = this.doc.insert(this.cursor, text);        
     this.draw();
     this.renderer.scrollCursorIntoView();
   },
   
   removeRight : function()
-  {    
-    var rangeEnd = {
-      row: this.cursor.row,
-      column: this.cursor.column + 1
+  {
+    if (this.hasSelection()) 
+    {
+      this.cursor = this.doc.remove(this.getSelectionRange());
     }
-    if (rangeEnd.column > this.doc.getLine(this.cursor.row).length) {
-      rangeEnd.row += 1;
-      rangeEnd.column = 0;
+    else
+    {
+      var rangeEnd = {
+        row: this.cursor.row,
+        column: this.cursor.column + 1
+      }
+      if (rangeEnd.column > this.doc.getLine(this.cursor.row).length) {
+        rangeEnd.row += 1;
+        rangeEnd.column = 0;
+      }
+      this.doc.remove({start: this.cursor, end: renageEnd});      
     }
-    this.doc.remove({start: this.cursor, end: renageEnd});
     
     this.draw();
     this.renderer.scrollCursorIntoView();
@@ -307,20 +345,27 @@ Editor.prototype =
   
   removeLeft : function()
   {
-    if (this.cursor.row == 0 && this.cursor.column == 0) {
-      return;
-    }
-    
-    var rangeStart = {
-      row: this.cursor.row,
-      column: this.cursor.column + -1
-    }
-    if (rangeStart.column < 0) 
+    if (this.hasSelection()) 
     {
-      rangeStart.row -= 1;
-      rangeStart.column = this.doc.getLine(this.cursor.row-1).length;
+      this.cursor = this.doc.remove(this.getSelectionRange());
     }
-    this.cursor = this.doc.remove({start: rangeStart, end: this.cursor});
+    else
+    {    
+      if (this.cursor.row == 0 && this.cursor.column == 0) {
+        return;
+      }
+    
+      var rangeStart = {
+        row: this.cursor.row,
+        column: this.cursor.column + -1
+      }
+      if (rangeStart.column < 0) 
+      {
+        rangeStart.row -= 1;
+        rangeStart.column = this.doc.getLine(this.cursor.row-1).length;
+      }
+      this.cursor = this.doc.remove({start: rangeStart, end: this.cursor});
+    }
     
     this.draw();
     this.renderer.scrollCursorIntoView();
@@ -393,8 +438,8 @@ Editor.prototype =
   setSelectionAnchor : function(row, column)
   {
     this.selectionAnchor = {
-      row: row,
-      column: column
+      row: Math.min(this.doc.getLength()-1, Math.max(0, row)),
+      column: Math.min(this.doc.getLine(this.cursor.row).length, Math.max(0, column))
     };
     
     this.selectionLead = null;

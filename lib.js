@@ -79,3 +79,26 @@ bind = function(fcn, context) {
     return fcn.apply(context, arguments);
   }
 }
+
+capture = function(el, eventHandler, releaseCaptureHandler)
+{
+  function onMouseMove(e) 
+  {    
+    eventHandler(e);
+    e.stopPropagation();
+  }
+  
+  function onMouseUp(e) 
+  {
+    eventHandler && eventHandler(e);
+    releaseCaptureHandler && releaseCaptureHandler();
+
+    document.removeEventListener("mousemove", onMouseMove, true);
+    document.removeEventListener("mouseup", onMouseUp, true);
+    
+    e.stopPropagation();
+  }
+  
+  document.addEventListener("mousemove", onMouseMove, true);
+  document.addEventListener("mouseup", onMouseUp, true);
+}

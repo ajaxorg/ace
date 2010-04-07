@@ -313,17 +313,8 @@ VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY)
 {
   var canvasPos = this.container.getBoundingClientRect();
     
-  if (pageX < canvasPos.left || pageX > canvasPos.right) {
-    col = null;
-  } else {
-    var col = Math.floor((pageX + this.container.scrollLeft - canvasPos.left) / this.characterWidth);
-  }
-  
-  if (pageY < canvasPos.top || pageY > canvasPos.bottom) {
-    row = null;
-  } else {    
-    var row = Math.floor((pageY + this.scrollTop - canvasPos.top) / this.lineHeight);
-  }
+  var col = Math.floor((pageX + this.container.scrollLeft - canvasPos.left) / this.characterWidth);
+  var row = Math.floor((pageY + this.scrollTop - canvasPos.top) / this.lineHeight);
   
   return {
     row: row,
