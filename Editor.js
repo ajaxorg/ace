@@ -194,7 +194,7 @@ Editor.prototype =
     };
     
     capture(this.container, onMouseSelection, onMouseSelectionEnd);
-    var timerId = setInterval(onSelectionInterval, 20);
+    var timerId = setInterval(onSelectionInterval, 20 );
         
     return preventDefault(e);
   },

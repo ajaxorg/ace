@@ -1,7 +1,7 @@
 .editor {
   position: absolute;
   border: 1px solid black;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;	  
 }
 
@@ -28,7 +28,7 @@
 
 .cursor {
   position: absolute;
-  width: 1px;
+  width: 2px;
   background: black;
 }
 
