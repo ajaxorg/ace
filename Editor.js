@@ -13,7 +13,7 @@ var keys = {
 
 function KeyBinding(element, host)
 {
-  addListener(element, "keydown", function(e)
+  lib.addListener(element, "keydown", function(e)
   {
     var key = e.keyCode;
     
@@ -23,7 +23,7 @@ function KeyBinding(element, host)
         if (e.metaKey) 
         {
           host.selectAll();
-          return stopEvent(e);
+          return lib.stopEvent(e);
         }
         break;
         
@@ -33,7 +33,7 @@ function KeyBinding(element, host)
         } else {
           host.navigateUp();
         }
-        return stopEvent(e);
+        return lib.stopEvent(e);
         
       case keys.DOWN:
         if (e.shiftKey) {
@@ -41,7 +41,7 @@ function KeyBinding(element, host)
         } else {
           host.navigateDown();
         }
-        return stopEvent(e);
+        return lib.stopEvent(e);
         
       case keys.LEFT:
         if (e.metaKey && e.shiftKey) {
@@ -53,7 +53,7 @@ function KeyBinding(element, host)
         } else {
           host.navigateLeft();
         }
-        return stopEvent(e);
+        return lib.stopEvent(e);
         
       case keys.RIGHT:
         if (e.metaKey && e.shiftKey) {
@@ -65,7 +65,7 @@ function KeyBinding(element, host)
         } else {
           host.navigateRight();
         }
-        return stopEvent(e);
+        return lib.stopEvent(e);
         
       case keys.POS1:
         if (e.shiftKey) {
@@ -73,7 +73,7 @@ function KeyBinding(element, host)
         } else {
           host.navigateLineStart();
         }
-        return stopEvent(e);
+        return lib.stopEvent(e);
 
       case keys.END:
         if (e.shiftKey) {
@@ -81,19 +81,19 @@ function KeyBinding(element, host)
         } else {
           host.navigateLineEnd();
         }
-        return stopEvent(e);
+        return lib.stopEvent(e);
                   
       case keys.DELETE:        
         host.removeRight();
-        return stopEvent(e);
+        return lib.stopEvent(e);
         
       case keys.BACKSPACE:        
         host.removeLeft();
-        return stopEvent(e);
+        return lib.stopEvent(e);
         
       case keys.TAB:
         host.onTextInput("    ");
-        return stopEvent(e);
+        return lib.stopEvent(e);
     }
   });
 };
@@ -106,13 +106,13 @@ function Editor(doc, renderer)
   this.textInput = new TextInput(container, this);
   new KeyBinding(container, this);
   
-  addListener(container, "mousedown", bind(this.onMouseDown, this));
-  addListener(container, "dblclick", bind(this.onMouseDoubleClick, this));
-  addMouseWheelListener(container, bind(this.onMouseWheel, this));
-  addTripleClickListener(container, bind(this.selectCurrentLine, this));
+  lib.addListener(container, "mousedown", lib.bind(this.onMouseDown, this));
+  lib.addListener(container, "dblclick", lib.bind(this.onMouseDoubleClick, this));
+  lib.addMouseWheelListener(container, lib.bind(this.onMouseWheel, this));
+  lib.addTripleClickListener(container, lib.bind(this.selectCurrentLine, this));
   
   this.doc = doc;
-  doc.addChangeListener(bind(this.onDocumentChange, this));
+  doc.addChangeListener(lib.bind(this.onDocumentChange, this));
   renderer.setDocument(doc);
   
   this.cursor = {
@@ -184,10 +184,10 @@ function Editor(doc, renderer)
       _self.renderer.scrollCursorIntoView();      
     };
     
-    capture(this.container, onMouseSelection, onMouseSelectionEnd);
+    lib.capture(this.container, onMouseSelection, onMouseSelectionEnd);
     var timerId = setInterval(onSelectionInterval, 20 );
         
-    return preventDefault(e);
+    return lib.preventDefault(e);
   },
   
   onMouseDoubleClick : function(e)
@@ -233,7 +233,7 @@ function Editor(doc, renderer)
   {
     var delta = e.wheel;
     this.renderer.scrollToY(this.renderer.getScrollTop() - (delta * 15));
-    return preventDefault(e);
+    return lib.preventDefault(e);
   },
   
   getCopyText : function() 

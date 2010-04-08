@@ -51,23 +51,23 @@ function TextInput(parentNode, host) {
     text.select();    
   }
 
-  addListener(text, "keypress", onTextInput, false);
-  addListener(text, "textInput", onTextInput, false);
-  addListener(text, "paste", onTextInput, false);  
-  addListener(text, "propertychange", onTextInput, false);
+  lib.addListener(text, "keypress", onTextInput, false);
+  lib.addListener(text, "textInput", onTextInput, false);
+  lib.addListener(text, "paste", onTextInput, false);  
+  lib.addListener(text, "propertychange", onTextInput, false);
 
-  addListener(text, "copy", onCopy, false);  
-  addListener(text, "cut", onCut, false);  
+  lib.addListener(text, "copy", onCopy, false);  
+  lib.addListener(text, "cut", onCut, false);  
 
-  addListener(text, "compositionstart", onCompositionStart, false);
-  addListener(text, "compositionupdate", onCompositionUpdate, false);
-  addListener(text, "compositionend", onCompositionEnd, false);
+  lib.addListener(text, "compositionstart", onCompositionStart, false);
+  lib.addListener(text, "compositionupdate", onCompositionUpdate, false);
+  lib.addListener(text, "compositionend", onCompositionEnd, false);
   
-  addListener(text, "blur", function() {
+  lib.addListener(text, "blur", function() {
     host.onBlur();
   }, false);
   
-  addListener(text, "focus", function() {
+  lib.addListener(text, "focus", function() {
     host.onFocus();
   }, false);
   
