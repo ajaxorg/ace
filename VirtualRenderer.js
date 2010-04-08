@@ -36,7 +36,10 @@ VirtualRenderer.prototype.setDocument = function(doc)
 {
   this.lines = doc.lines;
   this.doc = doc;
-  this.textLayer.setDocument(doc);
+};
+
+VirtualRenderer.prototype.setTokenizer = function(tokenizer) {
+  this.textLayer.setTokenizer(tokenizer);
 };
 
 VirtualRenderer.prototype.getContainerElement = function() {

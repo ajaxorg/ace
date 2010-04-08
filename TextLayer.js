@@ -7,9 +7,8 @@ function TextLayer(parentEl)
   this._measureSizes();
 }
 
-TextLayer.prototype.setDocument = function(doc) {
-  this.lines = doc.lines;
-  this.doc = doc;
+TextLayer.prototype.setTokenizer = function(tokenizer) {
+  this.tokenizer = tokenizer;
 };
 
 TextLayer.prototype.getLineHeight = function() {
@@ -62,7 +61,7 @@ TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow)
 TextLayer.prototype.update = function(config)
 {
   var html = [];
-  for (var i=config.firstRow; i<config.lastRow; i++)
+  for (var i=config.firstRow; i<=config.lastRow; i++)
   {
     html.push(
       "<div class='line ",
@@ -79,7 +78,7 @@ TextLayer.prototype.update = function(config)
 
 TextLayer.prototype.renderLine = function(stringBuilder, row)
 {
-  var tokens = this.doc.getLineTokens(row);
+  var tokens = this.tokenizer.getTokens(row);
   for (var i=0; i < tokens.length; i++)
   {
     var token = tokens[i];

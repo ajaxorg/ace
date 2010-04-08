@@ -115,6 +115,10 @@ function Editor(doc, renderer)
   doc.addChangeListener(lib.bind(this.onDocumentChange, this));
   renderer.setDocument(doc);
   
+  this.tokenizer = new BackgroundTokenizer(lib.bind(this.onTokenizerUpdate, this));
+  this.tokenizer.setLines(doc.lines);
+  renderer.setTokenizer(this.tokenizer);
+  
   this.cursor = {
     row: 0,
     column: 0
@@ -147,9 +151,16 @@ function Editor(doc, renderer)
     this.renderer.visualizeBlur();
   },
   
-  onDocumentChange : function(startRow, endRow) {
+  onDocumentChange : function(startRow, endRow)
+  {
+    this.tokenizer.start(startRow);
     this.renderer.updateLines(startRow, endRow);
-  },  
+  },
+  
+  onTokenizerUpdate : function(startRow, endRow) {
+    console.log("token update", startRow, endRow);
+    this.renderer.updateLines(startRow, endRow);
+  },
   
   onMouseDown : function(e) 
   {
