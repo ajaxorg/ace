@@ -130,22 +130,28 @@ capture = function(el, eventHandler, releaseCaptureHandler)
   document.addEventListener("mouseup", onMouseUp, true);
 }
 
+function autoRemoveListener(el, type, callback, timeout)
+{
+  var listener = function(e)
+  {
+    clearTimeout(timeoutId);
+    remove();
+    callback(e);
+  }
+
+  var remove = function() {
+    removeListener(el, type, listener);
+  };
+
+  addListener(el, type, listener);  
+  var timeoutId = setTimeout(remove, timeout);  
+}
+
 function addTripleClickListener(el, callback)
 {
-  addListener(el, "dblclick", function() 
-  {  
-    var listener = function(e)
-    {
-      clearTimeout(timeoutId);
-      remove();
-      callback(e);
-    }
-  
-    var remove = function() {
-      removeListener(el, "click", listener);
-    };
-  
-    addListener(el, "click", listener);  
-    var timeoutId = setTimeout(remove, 300);  
+  addListener(el, "mousedown", function() { 
+    autoRemoveListener(el, "mousedown", function() {
+      autoRemoveListener(el, "mousedown", callback, 300);
+    }, 300);
   });
 }
