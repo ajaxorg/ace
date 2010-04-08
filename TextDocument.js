@@ -110,7 +110,7 @@ TextDocument.prototype =
     } else {
       var lines = [];
       lines.push(this.lines[range.start.row].substring(range.start.column));
-      lines.push.apply(lines, this.lines.slice(range.start.row+1, range.end.row+1));
+      lines.push.apply(lines, this.lines.slice(range.start.row+1, range.end.row));
       lines.push(this.lines[range.end.row].substring(0, range.end.column));
       
       return lines.join("\n");
