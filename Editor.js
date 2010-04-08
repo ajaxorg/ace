@@ -108,7 +108,7 @@ function Editor(doc, renderer)
   
   addListener(container, "mousedown", bind(this.onMouseDown, this));
   addListener(container, "dblclick", bind(this.onMouseDoubleClick, this));
-  addListener(container, "mousewheel", bind(this.onMouseWheel, this));
+  addMouseWheelListener(container, bind(this.onMouseWheel, this));
   addTripleClickListener(container, bind(this.selectCurrentLine, this));
   
   this.doc = doc;
@@ -231,8 +231,8 @@ function Editor(doc, renderer)
   
   onMouseWheel : function(e) 
   {
-    var delta = e.wheelDeltaY;
-    this.renderer.scrollToY(this.renderer.getScrollTop() - (delta/10));
+    var delta = e.wheel;
+    this.renderer.scrollToY(this.renderer.getScrollTop() - (delta * 15));
     return preventDefault(e);
   },
   

@@ -130,6 +130,16 @@ capture = function(el, eventHandler, releaseCaptureHandler)
   document.addEventListener("mouseup", onMouseUp, true);
 }
 
+function addMouseWheelListener(el, callback)
+{
+  var listener = function(e) {
+    e.wheel = (e.wheelDelta) ? e.wheelDelta / 120 : -(e.detail || 0) / 3;
+    callback(e);
+  }
+  addListener(el, "DOMMouseScroll", listener);
+  addListener(el, "mousewheel", listener);
+};
+
 function autoRemoveListener(el, type, callback, timeout)
 {
   var listener = function(e)
