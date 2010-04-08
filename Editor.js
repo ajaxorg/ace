@@ -117,6 +117,7 @@ function Editor(doc, renderer)
   new KeyBinding(container, this);
   
   addListener(container, "mousedown", bind(this.onMouseDown, this));
+  addListener(container, "dblclick", bind(this.onMouseDoubleClick, this));
   addListener(container, "mousewheel", bind(this.onMouseWheel, this));
   addTripleClickListener(container, bind(this.selectCurrentLine, this));
   
@@ -202,7 +203,46 @@ Editor.prototype =
         
     return preventDefault(e);
   },
+  
+  onMouseDoubleClick : function(e)
+  {   
+    var line = this.doc.getLine(this.cursor.row);
+    var column = this.cursor.column;
     
+    var tokenRe = /[a-zA-Z0-9_]+/g;
+    var nonTokenRe = /[^a-zA-Z0-9_]+/g;
+    
+    var inToken = false;
+    if (column > 0) {
+      inToken = !!line.charAt(column-1).match(tokenRe);
+    }
+
+    if (!inToken) {
+      inToken = !!line.charAt(column).match(tokenRe);
+    }
+    
+    var re = inToken ? tokenRe : nonTokenRe;
+
+    var start = column;
+    if (start > 0) 
+    {
+      do {
+        start--;
+      } while (start >= 0 && line.charAt(start).match(re))
+      start++;
+    }
+    
+    var end = column;
+    while (end < line.length && line.charAt(end).match(re)) {
+      end++;
+    }
+    
+    this.setSelectionAnchor(this.cursor.row, start);
+    this._moveSelection(function() {
+      this.moveTo(this.cursor.row, end);
+    });
+  },
+  
   onMouseWheel : function(e) 
   {
     var delta = e.wheelDeltaY;
