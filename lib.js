@@ -3,9 +3,20 @@ function addListener(elem, type, callback) {
     return elem.addEventListener(type, callback, false);
   }
   if (elem.attachEvent) {
-    elem.attachEvent("on" + type, function() {
+    var wrapper = function() {
       callback(window.event);
-    });
+    }
+    callback.$$wrapper = wrapper;
+    elem.attachEvent("on" + type, wrapper);
+  }
+}
+
+function removeListener(elem, type, callback) {
+  if (elem.removeEventListener) {
+    return elem.removeEventListener(type, callback, false);
+  }
+  if (elem.detachEvent) {
+    elem.detachEvent("on" + type, callback.$$wrapper || callback);
   }
 }
 
@@ -117,4 +128,24 @@ capture = function(el, eventHandler, releaseCaptureHandler)
   
   document.addEventListener("mousemove", onMouseMove, true);
   document.addEventListener("mouseup", onMouseUp, true);
+}
+
+function addTripleClickListener(el, callback)
+{
+  addListener(el, "dblclick", function() 
+  {  
+    var listener = function(e)
+    {
+      clearTimeout(timeoutId);
+      remove();
+      callback(e);
+    }
+  
+    var remove = function() {
+      removeListener(el, "click", listener);
+    };
+  
+    addListener(el, "click", listener);  
+    var timeoutId = setTimeout(remove, 300);  
+  });
 }

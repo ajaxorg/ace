@@ -118,6 +118,7 @@ function Editor(doc, renderer)
   
   addListener(container, "mousedown", bind(this.onMouseDown, this));
   addListener(container, "mousewheel", bind(this.onMouseWheel, this));
+  addTripleClickListener(container, bind(this.selectCurrentLine, this));
   
   this.doc = doc;
   doc.addChangeListener(function(startRow, endRow) {
@@ -457,14 +458,30 @@ Editor.prototype =
     this._moveSelection(this.moveLineEnd);
   },
   
+  selectCurrentLine : function() 
+  {
+    this.setSelectionAnchor(this.cursor.row, 0);
+    this._moveSelection(function() {
+      this.moveTo(this.cursor.row+1, 0);
+    });
+  },
+  
   moveBy : function(rows, chars) {
     this.moveTo(this.cursor.row+rows, this.cursor.column+chars);
   },
   
   moveTo : function(row, column) 
   {
-    this.cursor.row = Math.min(this.doc.getLength()-1, Math.max(0, row));
-    this.cursor.column = Math.min(this.doc.getLine(this.cursor.row).length, Math.max(0, column));
+    if (row >= this.doc.getLength()) {
+      this.cursor.row = this.doc.getLength()-1;
+      this.cursor.column = this.doc.getLine(this.cursor.row).length;
+    } else if (row < 0) {
+      this.cursor.row = 0;
+      this.cursor.column = 0;
+    } else {
+      this.cursor.row = row;
+      this.cursor.column = Math.min(this.doc.getLine(this.cursor.row).length, Math.max(0, column));      
+    }
     this.updateCursor();
   }  
 }
