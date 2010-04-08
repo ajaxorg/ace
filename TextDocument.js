@@ -18,10 +18,6 @@ TextDocument.prototype =
   
   fireChangeEvent : function(firstRow, lastRow) 
   {
-    if (lastRow === undefined) {
-      lastRow = this.lines.length-1;
-    }
-    
     for (var i=0; i < this.listeners.length; i++) {
       this.listeners[i](firstRow, lastRow);
     };

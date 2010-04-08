@@ -43,6 +43,26 @@ VirtualRenderer.prototype.getContainerElement = function() {
   return this.container;
 };
 
+VirtualRenderer.prototype.updateLines = function(firstRow, lastRow)
+{
+  var layerConfig = this.layerConfig;
+  
+  // if the first row is below the viewport -> ignore it
+  if (firstRow > layerConfig.lastRow+1) {
+    return;
+  }
+  
+  // if the last row is unknow -> redraw everything
+  if (lastRow === undefined) 
+  {
+    this.draw()
+    return;
+  }
+  
+  // else update only the changed rows
+  this.textLayer.updateLines(layerConfig, firstRow, lastRow);
+};
+
 VirtualRenderer.prototype.draw = function() 
 {    
   var lines = this.lines;

@@ -122,41 +122,33 @@ function Editor(doc, renderer)
   addTripleClickListener(container, bind(this.selectCurrentLine, this));
   
   this.doc = doc;
-  doc.addChangeListener(function(startRow, endRow) {
-    console.log(startRow, endRow);
-  });
+  doc.addChangeListener(bind(this.onDocumentChange, this));
   renderer.setDocument(doc);
   
   this.cursor = {
     row: 0,
     column: 0
-  };
-  
-  this.selectionAnchor = null;  
-  this.selectionLead = null;
-  this.selection = null;
-    
-  this.draw();
-}
+    };
 
-Editor.prototype = 
-{
-  draw : function()
-  {
+    this.selectionAnchor = null;  
+    this.selectionLead = null;
+    this.selection = null;
+
     this.renderer.draw();
-    this.renderer.updateCursor(this.cursor);
-  },
-  
-  resize : function() {
-    this.renderer.draw();
-  },
-  
-  updateCursor : function() {
-    this.renderer.updateCursor(this.cursor);
-  },
-  
-  onFocus : function() {
-    this.renderer.showCursor();
+  }
+
+  Editor.prototype = 
+  {  
+    resize : function() {
+      this.renderer.draw();
+    },
+
+    updateCursor : function() {
+      this.renderer.updateCursor(this.cursor);
+    },
+
+    onFocus : function() {
+      this.renderer.showCursor();
     this.renderer.visualizeFocus();
   },
   
@@ -164,6 +156,10 @@ Editor.prototype =
     this.renderer.hideCursor();
     this.renderer.visualizeBlur();
   },
+  
+  onDocumentChange : function(startRow, endRow) {
+    this.renderer.updateLines(startRow, endRow);
+  },  
   
   onMouseDown : function(e) 
   {
@@ -265,7 +261,7 @@ Editor.prototype =
     {
       this.cursor = this.doc.remove(this.getSelectionRange());
       this.clearSelection();
-      this.draw();
+      this.renderer.updateCursor(this.cursor);
     }
   },
   
@@ -278,7 +274,7 @@ Editor.prototype =
     } else {
       this.cursor = this.doc.insert(this.cursor, text);
     }
-    this.draw();
+    this.renderer.updateCursor(this.cursor);
     this.renderer.scrollCursorIntoView();
   },
   
@@ -287,6 +283,7 @@ Editor.prototype =
     if (this.hasSelection()) 
     {
       this.cursor = this.doc.remove(this.getSelectionRange());
+      this.renderer.updateCursor(this.cursor);
     }
     else
     {
@@ -301,7 +298,6 @@ Editor.prototype =
       this.doc.remove({start: this.cursor, end: renageEnd});      
     }
     
-    this.draw();
     this.renderer.scrollCursorIntoView();
   },
   
@@ -329,7 +325,7 @@ Editor.prototype =
       this.cursor = this.doc.remove({start: rangeStart, end: this.cursor});
     }
     
-    this.draw();
+    this.renderer.updateCursor(this.cursor);
     this.renderer.scrollCursorIntoView();
   },  
   

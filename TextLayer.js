@@ -42,6 +42,23 @@ TextLayer.prototype._measureSizes = function()
   this.element.removeChild(measureNode);
 };
 
+TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow)
+{
+  var first = Math.max(firstRow, layerConfig.firstRow);
+  var last = Math.min(lastRow, layerConfig.lastRow);
+  
+  var lineElements = this.element.childNodes;
+  
+  for (var i=first; i <= last; i++)
+  {    
+    var html = [];
+    this.renderLine(html, i);
+    
+    var lineElement = lineElements[i-layerConfig.firstRow];
+    lineElement.innerHTML = html.join("");
+  };
+};
+
 TextLayer.prototype.update = function(config)
 {
   var html = [];
