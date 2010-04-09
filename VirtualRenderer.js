@@ -46,6 +46,14 @@ VirtualRenderer.prototype.getContainerElement = function() {
   return this.container;
 };
 
+VirtualRenderer.prototype.getFirstVisibleRow = function() {
+  return this.layerConfig.firstRow || 0;
+};
+
+VirtualRenderer.prototype.getLastVisibleRow = function() {
+  return this.layerConfig.lastRow || 0;
+};
+
 VirtualRenderer.prototype.updateLines = function(firstRow, lastRow)
 {
   var layerConfig = this.layerConfig;
@@ -156,6 +164,10 @@ VirtualRenderer.prototype.scrollCursorIntoView = function()
 VirtualRenderer.prototype.getScrollTop = function() {
   return this.scrollTop;
 };
+
+VirtualRenderer.prototype.scrollToRow = function(row) {
+  this.scrollToY(row*this.lineHeight);
+}
 
 VirtualRenderer.prototype.scrollToY = function(scrollTop)
 {

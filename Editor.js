@@ -3,6 +3,8 @@ var keys = {
   RIGHT: 39,
   DOWN: 40,  
   LEFT: 37,
+  PAGEUP: 33,
+  PAGEDOWN: 34,
   POS1: 36,
   END: 35,
   DELETE: 46,
@@ -66,6 +68,14 @@ function KeyBinding(element, host)
           host.navigateRight();
         }
         return lib.stopEvent(e);
+        
+      case keys.PAGEDOWN:
+        host.scrollPageDown();
+        return lib.stopEvent(e);
+        
+      case keys.PAGEUP:
+        host.scrollPageUp();
+        return lib.stopEvent(e);        
         
       case keys.POS1:
         if (e.shiftKey) {
@@ -348,6 +358,26 @@ function Editor(doc, renderer)
   onCompositionEnd : function() {
     this.renderer.hideComposition();
     this.removeLeft();
+  },
+  
+  getPageDownRow : function() {
+    return this.renderer.getLastVisibleRow() - 1;
+  },
+  
+  getPageUpRow : function()
+  {
+    var firstRow = this.renderer.getFirstVisibleRow(); 
+    var lastRow = this.renderer.getLastVisibleRow();
+    
+    return firstRow - (lastRow-firstRow) + 1;       
+  },
+  
+  scrollPageDown : function() {
+    this.renderer.scrollToRow(this.getPageDownRow());
+  },
+
+  scrollPageUp : function() {
+    this.renderer.scrollToRow(this.getPageUpRow());
   },
   
   navigateUp : function() 
