@@ -158,7 +158,6 @@ function Editor(doc, renderer)
   },
   
   onTokenizerUpdate : function(startRow, endRow) {
-    console.log("token update", startRow, endRow);
     this.renderer.updateLines(startRow, endRow);
   },
   

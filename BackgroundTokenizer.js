@@ -71,7 +71,11 @@ BackgroundTokenizer.prototype.getTokens = function(row)
   if (this.lines[row]) {
     return this.lines[row].tokens;
   } else {
-    return getLineTokens(this.textLines[row] || "", "start").tokens;
+    var state = "start";
+    if (row > 0 && this.lines[row-1]) {
+      state = this.lines[row-1].state;
+    }
+    return getLineTokens(this.textLines[row] || "", state).tokens;
   }
 };
 
@@ -101,14 +105,98 @@ var keywords = {
   "with" : 1
 };
 
-getLineTokens = function(line, state)
+getLineTokens = function(line, startState)
 {
-  var tokens = [];
+  var rules = {
+    start :
+    [
+      {
+        token: "comment",
+        regex: "\\/\\/.*$"
+      },
+      {
+        token: "comment", // multi line comment in one line
+        regex: "\\/\\*.*?\\*\\/"
+      },
+      {
+        token: "comment", // multi line comment in several lines
+        regex: "\\/\\*.*$",
+        next: "comment"
+      },
+      {
+        token: "string", // single line
+        regex: '["][^"]*["]'
+      },
+      {
+        token: "string", // single line
+        regex: "['][^']*[']"
+      },
+      {
+        token: "number", // hex
+        regex: "0[xX][0-9a-fA-F]+\\b"
+      },      
+      {
+        token: "number", // float
+        regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+      },
+      {
+        token: function(value)
+        {
+          if (keywords[value]) {
+            return "keyword";
+          } else {
+            return "identifier"
+          }
+        },
+        regex: "[a-zA-Z_][a-zA-Z0-9_]*\\b"
+      },
+      {
+        token: function(value) {
+          //return parens[value];
+          return "text";
+        },
+        regex: "[\\[\\]\\(\\)\\{\\}]"
+      },
+      {
+        token: "text",
+        regex: "\\s+"
+      }
+    ],
+    "comment":
+    [
+      {
+        token: "comment", // closing comment
+        regex: ".*?\\*\\/",
+        next: "start"
+      },
+      {
+        token: "comment", // comment spanning whole line
+        regex: ".+"
+      }
+    ]
+  };
   
-  var re = /(?:(\s+)|("[^"]*")|('[^']*')|([\[\]\(\)\{\}])|([a-zA-Z_][a-zA-Z0-9_]*)|(\/\/.*)|(.))/g
-  re.lastIndex = 0;
+  var regExps = {};
+  for (var key in rules)
+  {
+    var state = rules[key];
+    var ruleRegExps = [];
+    
+    for (var i=0; i < state.length; i++) {
+      ruleRegExps.push(state[i].regex);
+    };
+    
+    regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
+  }
 
-  var match;
+  
+  var currentState = startState;
+  var state = rules[currentState];  
+  var re = regExps[currentState];
+  re.lastIndex = 0;
+  
+  var match, tokens = [];
+  
   while (match = re.exec(line))
   {
     var token = {
@@ -116,19 +204,38 @@ getLineTokens = function(line, state)
       value: match[0]
     }
     
-    if (match[2] || match[3]) {
-      token.type = "string";
-    } else if (match[5] && keywords[match[5]]) {
-      token.type = "keyword";
-    } else if (match[6]) {
-      token.type = "comment";
-    }
+    //console.log(match);
+    
+    for (var i=0; i < state.length; i++) 
+    {
+      if (match[i+1])
+      {
+        if (typeof state[i].token == "function") {
+          token.type = state[i].token(match[0]);
+        } else {
+          token.type = state[i].token;
+        }
+        
+        if (state[i].next && state[i].next !== currentState) 
+        {
+          currentState = state[i].next;
+          var state = rules[currentState];  
+          var lastIndex = re.lastIndex;
+          
+          var re = regExps[currentState];
+          re.lastIndex = lastIndex;
+        }
+        break;
+      }
+    };
     
     tokens.push(token);
   };
   
+  //console.log(tokens, currentState)
+  
   return {
     tokens: tokens,
-    state: "start"
+    state: currentState
   }
 };
