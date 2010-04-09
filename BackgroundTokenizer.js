@@ -107,6 +107,9 @@ var keywords = {
 
 getLineTokens = function(line, startState)
 {
+  // regexp must not have capturing parentheses
+  // regexps are ordered -> the first match is used
+  
   var rules = {
     start :
     [
@@ -117,20 +120,30 @@ getLineTokens = function(line, startState)
       {
         token: "comment", // multi line comment in one line
         regex: "\\/\\*.*?\\*\\/"
-      },
+      },      
       {
-        token: "comment", // multi line comment in several lines
+        token: "comment", // multi line comment start
         regex: "\\/\\*.*$",
         next: "comment"
       },
       {
         token: "string", // single line
-        regex: '["][^"]*["]'
+        regex: '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
       },
       {
+        token: "string", // multi line string start
+        regex: '["].*\\\\$',
+        next: "qqstring"
+      },      
+      {
         token: "string", // single line
-        regex: "['][^']*[']"
+        regex: "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
       },
+      {
+        token: "string", // multi line string start
+        regex: "['].*\\\\$",
+        next: "qstring"
+      },    
       {
         token: "number", // hex
         regex: "0[xX][0-9a-fA-F]+\\b"
@@ -173,7 +186,31 @@ getLineTokens = function(line, startState)
         token: "comment", // comment spanning whole line
         regex: ".+"
       }
-    ]
+    ],
+    "qqstring":
+    [
+      {
+        token: "string",
+        regex: '(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
+        next: "start"
+      },
+      {
+        token: "string",
+        regex: '.+'
+      }
+    ],
+    "qstring":
+    [
+      {
+        token: "string",
+        regex: "(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
+        next: "start"
+      },
+      {
+        token: "string",
+        regex: '.+'
+      }
+    ]    
   };
   
   var regExps = {};
@@ -197,12 +234,19 @@ getLineTokens = function(line, startState)
   
   var match, tokens = [];
   
+  var lastIndex = 0;
+  
   while (match = re.exec(line))
   {
     var token = {
       type: "text",
       value: match[0]
     }
+    
+    if (re.lastIndex == lastIndex) {
+      throw new Error("tokenizer error")
+    }
+    lastIndex = re.lastIndex;
     
     //console.log(match);
     
