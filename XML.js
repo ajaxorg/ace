@@ -18,6 +18,11 @@ XML.RULES = {
       regex: "<\\?.*?\\?>"
     },
     {
+      token: "comment",
+      regex: "<\\!--",
+      next: "comment"
+    },
+    {
       token: "text", // opening tag
       regex: "<",
       next: "tag"
@@ -65,11 +70,24 @@ XML.RULES = {
       next: "start"
     },
     {
-      token: "string",
+      token: "text",
       regex: "\\s+"
     },
     {
       token: "text",
+      regex: ".+"
+    }
+  ],
+  
+  comment:
+  [
+    {
+      token: "comment",
+      regex: ".*?-->",
+      next: "start"
+    },
+    {
+      token: "comment",
       regex: ".+"
     }
   ]
