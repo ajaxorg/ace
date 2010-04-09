@@ -85,6 +85,10 @@
   color: rgb(0, 0, 205);
 }
 
+.line .xml_pe {
+  color: rgb(104, 104, 91);
+}
+
 .marker-layer .selection {
   position: absolute;
   background: rgba(77, 151, 255, 0.33);

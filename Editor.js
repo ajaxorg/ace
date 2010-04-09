@@ -115,7 +115,11 @@ function Editor(doc, renderer)
   doc.addChangeListener(lib.bind(this.onDocumentChange, this));
   renderer.setDocument(doc);
   
-  this.tokenizer = new BackgroundTokenizer(lib.bind(this.onTokenizerUpdate, this));
+  this.tokenizer = new BackgroundTokenizer(
+    new Tokenizer(XML.RULES),
+    lib.bind(this.onTokenizerUpdate, this)
+  );
+  
   this.tokenizer.setLines(doc.lines);
   renderer.setTokenizer(this.tokenizer);
   
