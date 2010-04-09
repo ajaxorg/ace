@@ -8,7 +8,7 @@ function GutterLayer(parentEl)
 GutterLayer.prototype.update = function(config)
 {
   var html = [];
-  for (var i=config.firstRow; i<config.lastRow; i++)
+  for (var i=config.firstRow; i<=config.lastRow; i++)
   {
     html.push(
       "<div class='gutter-cell' style='height:" + config.lineHeight + "px;'>",

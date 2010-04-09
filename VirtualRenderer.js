@@ -88,7 +88,7 @@ VirtualRenderer.prototype.draw = function()
   
   var lineCount = Math.ceil(minHeight / this.lineHeight);
   var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
-  var lastRow = Math.min(lines.length, firstRow+lineCount);
+  var lastRow = Math.min(lines.length, firstRow+lineCount)-1;
 
   var layerConfig = this.layerConfig = {
     width: longestLine,
@@ -97,7 +97,7 @@ VirtualRenderer.prototype.draw = function()
     lineHeight: this.lineHeight,
     characterWidth: this.characterWidth
   };
-
+  
   for (var i=0; i < this.layers.length; i++) 
   {
     var layer = this.layers[i];
