@@ -19,8 +19,8 @@ ace.TextInput = function(parentNode, host) {
                     host.onTextInput(text.value);
                 text.value = "";
             }
-        }, 0)
-    }
+        }, 0);
+    };
 
     var onCompositionStart = function(e) {
         inCompostion = true;
@@ -31,28 +31,28 @@ ace.TextInput = function(parentNode, host) {
 
         host.onCompositionStart();
         setTimeout(onCompositionUpdate, 0);
-    }
+    };
 
     var onCompositionUpdate = function() {
         host.onCompositionUpdate(text.value);
-    }
+    };
 
     var onCompositionEnd = function() {
         inCompostion = false;
         host.onCompositionEnd();
         onTextInput();
-    }
+    };
 
     var onCopy = function() {
         text.value = host.getCopyText();
         text.select();
-    }
+    };
 
     var onCut = function() {
         text.value = host.getCopyText();
         host.onCut();
         text.select();
-    }
+    };
 
     ace.addListener(text, "keypress", onTextInput, false);
     ace.addListener(text, "textInput", onTextInput, false);
@@ -77,9 +77,9 @@ ace.TextInput = function(parentNode, host) {
 
     this.focus = function() {
         text.focus();
-    }
+    };
 
     this.blur = function() {
         this.blur();
-    }
+    };
 };

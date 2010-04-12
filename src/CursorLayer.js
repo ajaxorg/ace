@@ -10,7 +10,7 @@ ace.CursorLayer = function(parentEl) {
     this.cursor.className = "cursor";
 
     this.isVisible = false;
-}
+};
 
 ace.CursorLayer.prototype.setCursor = function(position) {
     this.position = {
@@ -47,7 +47,7 @@ ace.CursorLayer.prototype.getPixelPosition = function() {
         left : 0,
         top : 0
     };
-}
+};
 
 ace.CursorLayer.prototype.update = function(config) {
     if (!this.position)

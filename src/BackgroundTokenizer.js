@@ -45,7 +45,7 @@ ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete) {
 
         self.onUpdate(startLine, textLines.length - 1);
         self.onComplete();
-    }
+    };
 };
 
 ace.BackgroundTokenizer.prototype.setLines = function(textLines) {

@@ -33,9 +33,9 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
         var token = {
             type : "text",
             value : match[0]
-        }
+        };
 
-        if (re.lastIndex == lastIndex) { throw new Error("tokenizer error") }
+        if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
         lastIndex = re.lastIndex;
 
         // console.log(match);
@@ -71,5 +71,5 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
     return {
         tokens : tokens,
         state : currentState
-    }
+    };
 };

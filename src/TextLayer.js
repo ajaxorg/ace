@@ -7,7 +7,7 @@ ace.TextLayer = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this._measureSizes();
-}
+};
 
 ace.TextLayer.prototype.setTokenizer = function(tokenizer) {
     this.tokenizer = tokenizer;

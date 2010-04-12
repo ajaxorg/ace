@@ -47,5 +47,37 @@ var NavigationTest = TestCase("NavigationTest", {
         editor.navigateFileStart();
         
         assertEquals(0, editor.getFirstVisibleRow());
+    },
+    
+    "test: move selection lead to end of file" : function() {
+        var editor = new ace.Editor(this.createTextDocument(200, 10),
+                                    new MockRenderer());
+        
+        editor.moveCursorTo(100, 5);
+        editor.selectFileEnd();
+        
+        var selection = editor.getSelectionRange();
+        
+        assertEquals(100, selection.start.row);        
+        assertEquals(5, selection.start.column); 
+        
+        assertEquals(199, selection.end.row);        
+        assertEquals(10, selection.end.column);        
+    },
+    
+    "test: move selection lead to start of file" : function() {
+        var editor = new ace.Editor(this.createTextDocument(200, 10),
+                                    new MockRenderer());
+        
+        editor.moveCursorTo(100, 5);
+        editor.selectFileStart();
+        
+        var selection = editor.getSelectionRange();
+                
+        assertEquals(0, selection.start.row);        
+        assertEquals(0, selection.start.column);        
+
+        assertEquals(100, selection.end.row);        
+        assertEquals(5, selection.end.column); 
     }    
 });

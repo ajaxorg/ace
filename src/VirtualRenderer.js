@@ -32,7 +32,7 @@ ace.VirtualRenderer = function(container) {
         row : 0,
         column : 0
     };
-}
+};
 
 ace.VirtualRenderer.prototype.setDocument = function(doc) {
     this.lines = doc.lines;
@@ -63,7 +63,7 @@ ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow) {
 
     // if the last row is unknow -> redraw everything
     if (lastRow === undefined) {
-        this.draw()
+        this.draw();
         return;
     }
 
@@ -108,7 +108,7 @@ ace.VirtualRenderer.prototype.draw = function() {
     this.gutterLayer.element.style.marginTop = (-offset) + "px";
     this.gutterLayer.element.style.height = minHeight + "px";
     this.gutterLayer.update(layerConfig);
-}
+};
 
 ace.VirtualRenderer.prototype.addMarker = function(range, clazz) {
     return this.markerLayer.addMarker(range, clazz);
@@ -134,7 +134,7 @@ ace.VirtualRenderer.prototype.showCursor = function() {
 ace.VirtualRenderer.prototype.scrollCursorIntoView = function() {
     var pos = this.cursorLayer.getPixelPosition();
 
-    var left = pos.left
+    var left = pos.left;
     var top = pos.top;
 
     if (this.getScrollTop() > top) {
@@ -163,7 +163,7 @@ ace.VirtualRenderer.prototype.getScrollTop = function() {
 
 ace.VirtualRenderer.prototype.scrollToRow = function(row) {
     this.scrollToY(row * this.lineHeight);
-}
+};
 
 ace.VirtualRenderer.prototype.scrollToY = function(scrollTop) {
     var maxHeight = this.lines.length * this.lineHeight
@@ -187,7 +187,7 @@ ace.VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) {
     return {
         row : row,
         column : col
-    }
+    };
 };
 
 ace.VirtualRenderer.prototype.visualizeFocus = function() {

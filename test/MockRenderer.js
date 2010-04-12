@@ -1,16 +1,16 @@
 MockRenderer = function() {
     this.container = document.createElement("div");
     this.cursor = {
-        row: 0,
-        column: 0
-    }
-    
+        row : 0,
+        column : 0
+    };
+
     this.visibleRowCount = 20;
-    
+
     this.layerConfig = {
-        firstVisibleRow: 0,
-        lastVisibleRow: this.visibleRowCount,
-    }
+        firstVisibleRow : 0,
+        lastVisibleRow : this.visibleRowCount
+    };
 };
 
 
@@ -41,18 +41,22 @@ MockRenderer.prototype.updateCursor = function(position) {
 MockRenderer.prototype.scrollCursorIntoView = function() {
     if (this.cursor.row < this.layerConfig.firstVisibleRow) {
         this.scrollToRow(this.cursor.row);
-    } else if (this.cursor.row > this.layerConfig.lastVisibleRow) {
+    }
+    else if (this.cursor.row > this.layerConfig.lastVisibleRow) {
         this.scrollToRow(this.cursor.row);
     }
 };
 
 MockRenderer.prototype.scrollToRow = function(row) {
-    var row = Math.min(this.lines.length - this.visibleRowCount, Math.max(0, row));
+    var row = Math.min(this.lines.length - this.visibleRowCount, Math.max(0,
+                                                                          row));
     this.layerConfig.firstVisibleRow = row;
     this.layerConfig.lastVisibleRow = row + this.visibleRowCount;
-}
+};
 
 
 MockRenderer.prototype.draw = function() {
 };
 
+MockRenderer.prototype.addMarker = function() {
+};

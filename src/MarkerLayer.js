@@ -8,7 +8,7 @@ ace.MarkerLayer = function(parentEl) {
 
     this.markers = {};
     this._markerId = 1;
-}
+};
 
 ace.MarkerLayer.prototype.addMarker = function(range, clazz) {
     var id = this._markerId++;

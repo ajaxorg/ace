@@ -6,10 +6,10 @@ ace.TextDocument = function(text) {
     this.modified = true;
 
     this.listeners = [];
-}
+};
 
 ace.TextDocument.prototype._split = function(text) {
-    return text.split(/[\n\r]/)
+    return text.split(/[\n\r]/);
 };
 
 ace.TextDocument.prototype.addChangeListener = function(listener) {
@@ -67,37 +67,6 @@ ace.TextDocument.prototype.keywords = {
     "with" : 1
 };
 
-ace.TextDocument.prototype.getLineTokens = function(row) {
-    var tokens = [];
-
-    var re = /(?:(\s+)|("[^"]*")|('[^']*')|([\[\]\(\)\{\}])|([a-zA-Z_][a-zA-Z0-9_]*)|(\/\/.*)|(.))/g
-    re.lastIndex = 0;
-
-    var match;
-    var line = this.getLine(row);
-    while (match = re.exec(line)) {
-        var token = {
-            type : "text",
-            value : match[0]
-        }
-
-        if (match[2] || match[3]) {
-            token.type = "string";
-        }
-        else if (match[5] && this.keywords[match[5]]) {
-            token.type = "keyword";
-        }
-        else if (match[6]) {
-            token.type = "comment";
-        }
-
-        tokens.push(token);
-    }
-    ;
-
-    return tokens;
-};
-
 ace.TextDocument.prototype.getLength = function() {
     return this.lines.length;
 };
@@ -148,7 +117,7 @@ ace.TextDocument.prototype._insert = function(position, text) {
         return {
             row : position.row,
             column : position.column + text.length
-        }
+        };
     }
     else {
         var line = this.lines[position.row] || "";
@@ -159,7 +128,7 @@ ace.TextDocument.prototype._insert = function(position, text) {
                 + line.substring(position.column);
 
         if (newLines.length > 2) {
-            var args = [ position.row + 1, 0 ]
+            var args = [ position.row + 1, 0 ];
             args.push.apply(args, newLines.slice(1, -1));
             this.lines.splice.apply(this.lines, args);
         }
@@ -209,4 +178,4 @@ ace.TextDocument.prototype.replace = function(range, text) {
             : undefined);
 
     return end;
-}
+};

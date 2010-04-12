@@ -5,7 +5,7 @@ ace.GutterLayer = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "layer gutter-layer";
     parentEl.appendChild(this.element);
-}
+};
 
 ace.GutterLayer.prototype.update = function(config) {
     var html = [];
