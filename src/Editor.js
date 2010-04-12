@@ -15,7 +15,8 @@ var keys = {
     DELETE : 46,
     BACKSPACE : 8,
     TAB : 9,
-    A : 65
+    A : 65,
+    D: 68
 };
 
 var KeyBinding = function(element, host) {
@@ -26,6 +27,13 @@ var KeyBinding = function(element, host) {
             case keys.A:
                 if (e.metaKey) {
                     host.selectAll();
+                    return ace.stopEvent(e);
+                }
+                break;
+
+            case keys.D:
+                if (e.metaKey) {
+                    host.removeLine();
                     return ace.stopEvent(e);
                 }
                 break;
@@ -165,7 +173,7 @@ ace.Editor = function(doc, renderer) {
     ace.addListener(container, "dblclick", ace
             .bind(this.onMouseDoubleClick, this));
     ace.addMouseWheelListener(container, ace.bind(this.onMouseWheel, this));
-    ace.addTripleClickListener(container, ace.bind(this.selectCurrentLine,
+    ace.addTripleClickListener(container, ace.bind(this.selectLine,
                                                    this));
 
     this.doc = doc;
@@ -221,7 +229,7 @@ ace.Editor.prototype.onMouseDown = function(e) {
     this.textInput.focus();
 
     var pos = this.renderer.screenToTextCoordinates(e.pageX, e.pageY);
-    this.moveCursorTo(pos.row, pos.column);
+    this.moveCursorToPosition(pos);
     this.setSelectionAnchor(pos.row, pos.column);
     this.renderer.scrollCursorIntoView();
 
@@ -245,7 +253,7 @@ ace.Editor.prototype.onMouseDown = function(e) {
                                                                mousePageY);
 
         _self._moveSelection(function() {
-            _self.moveCursorTo(selectionLead.row, selectionLead.column);
+            _self.moveCursorToPosition(selectionLead);
         });
         _self.renderer.scrollCursorIntoView();
     };
@@ -311,79 +319,57 @@ ace.Editor.prototype.getCopyText = function() {
 
 ace.Editor.prototype.onCut = function() {
     if (this.hasSelection()) {
-        this.cursor = this.doc.remove(this.getSelectionRange());
+        this.moveCursorToPosition(this.doc.remove(this.getSelectionRange()));
         this.clearSelection();
-        this.renderer.updateCursor(this.cursor);
     }
 };
 
 ace.Editor.prototype.onTextInput = function(text) {
     if (this.hasSelection()) {
-        this.cursor = this.doc.replace(this.getSelectionRange(), text);
+        this.moveCursorToPosition(this.doc.replace(this.getSelectionRange(), text));
         this.clearSelection();
     }
     else {
-        this.cursor = this.doc.insert(this.cursor, text);
+        this.moveCursorToPosition(this.doc.insert(this.cursor, text));
     }
-    this.renderer.updateCursor(this.cursor);
     this.renderer.scrollCursorIntoView();
 };
 
 ace.Editor.prototype.removeRight = function() {
-    if (this.hasSelection()) {
-        this.cursor = this.doc.remove(this.getSelectionRange());
-        this.renderer.updateCursor(this.cursor);
-        this.clearSelection();
+    if (!this.hasSelection()) {
+        this.selectRight();
     }
-    else {
-        var rangeEnd = {
-            row : this.cursor.row,
-            column : this.cursor.column + 1
-        };
-        if (rangeEnd.column > this.doc.getLine(this.cursor.row).length) {
-            rangeEnd.row += 1;
-            rangeEnd.column = 0;
-        }
-        this.doc.remove( {
-            start : this.cursor,
-            end : renageEnd
-        });
-    }
+    this.moveCursorToPosition(this.doc.remove(this.getSelectionRange()));
+    this.clearSelection();
 
     this.renderer.scrollCursorIntoView();
 };
 
-        ace.Editor.prototype.removeLeft = function() {
-            if (this.hasSelection()) {
-                this.cursor = this.doc.remove(this.getSelectionRange());
-                this.clearSelection();
-            }
-            else {
-                if (this.cursor.row == 0 && this.cursor.column == 0) { return; }
+ace.Editor.prototype.removeLeft = function() {
+    if (!this.hasSelection()) {
+        this.selectLeft();
+    }
+    this.moveCursorToPosition(this.doc.remove(this.getSelectionRange()));
+    this.clearSelection();
 
-                var rangeStart = {
-                    row : this.cursor.row,
-                    column : this.cursor.column + -1
-                };
-                if (rangeStart.column < 0) {
-                    rangeStart.row -= 1;
-                    rangeStart.column = this.doc
-                            .getLine(this.cursor.row - 1).length;
-                }
-                this.cursor = this.doc.remove( {
-                    start : rangeStart,
-                    end : this.cursor
-                });
-            }
+    this.renderer.scrollCursorIntoView();
+},
 
-            this.renderer.updateCursor(this.cursor);
-            this.renderer.scrollCursorIntoView();
-        },
+ace.Editor.prototype.removeLine = function() {
+    this.selectLine();
+    this.moveCursorToPosition(this.doc.remove(this.getSelectionRange()));
+    this.clearSelection();
 
-        ace.Editor.prototype.onCompositionStart = function() {
-            this.renderer.showComposition(this.cursor);
-            this.onTextInput(" ");
-        };
+    if (this.cursor.row == this.doc.getLength() - 1) {
+        this.removeLeft();
+        this.moveCursorLineStart();
+    }
+};
+
+ace.Editor.prototype.onCompositionStart = function() {
+    this.renderer.showComposition(this.cursor);
+    this.onTextInput(" ");
+};
 
 ace.Editor.prototype.onCompositionUpdate = function(text) {
     this.renderer.setCompositionText(text);
@@ -440,7 +426,7 @@ ace.Editor.prototype.navigateDown = function() {
 ace.Editor.prototype.navigateLeft = function() {
     if (this.hasSelection()) {
         var selectionStart = this.getSelectionRange().start;
-        this.moveCursorTo(selectionStart.row, selectionStart.column);
+        this.moveCursorToPosition(selectionStart);
     }
     else {
         this.moveCursorLeft();
@@ -453,7 +439,7 @@ ace.Editor.prototype.navigateLeft = function() {
 ace.Editor.prototype.navigateRight = function() {
     if (this.hasSelection()) {
         var selectionEnd = this.getSelectionRange().end;
-        this.moveCursorTo(selectionEnd.row, selectionEnd.column);
+        this.moveCursorToPosition(selectionEnd);
     }
     else {
         this.moveCursorRight();
@@ -603,6 +589,11 @@ ace.Editor.prototype.moveCursorWordLeft = function() {
 
 ace.Editor.prototype.moveCursorBy = function(rows, chars) {
     this.moveCursorTo(this.cursor.row + rows, this.cursor.column + chars);
+};
+
+
+ace.Editor.prototype.moveCursorToPosition = function(position) {
+    this.moveCursorTo(position.row, position.column);
 };
 
 ace.Editor.prototype.moveCursorTo = function(row, column) {
@@ -774,7 +765,7 @@ ace.Editor.prototype.selectWordLeft = function() {
     this._moveSelection(this.moveCursorWordLeft);
 };
 
-ace.Editor.prototype.selectCurrentLine = function() {
+ace.Editor.prototype.selectLine = function() {
     this.setSelectionAnchor(this.cursor.row, 0);
     this._moveSelection(function() {
         this.moveCursorTo(this.cursor.row + 1, 0);

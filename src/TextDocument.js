@@ -12,6 +12,10 @@ ace.TextDocument.prototype._split = function(text) {
     return text.split(/[\n\r]/);
 };
 
+ace.TextDocument.prototype.toString = function() {
+    return this.lines.join("\n");
+};
+
 ace.TextDocument.prototype.addChangeListener = function(listener) {
     this.listeners.push(listener);
 };
@@ -19,8 +23,7 @@ ace.TextDocument.prototype.addChangeListener = function(listener) {
 ace.TextDocument.prototype.fireChangeEvent = function(firstRow, lastRow) {
     for ( var i = 0; i < this.listeners.length; i++) {
         this.listeners[i](firstRow, lastRow);
-    }
-    ;
+    };
 };
 
 ace.TextDocument.prototype.getWidth = function() {
@@ -141,12 +144,12 @@ ace.TextDocument.prototype._insert = function(position, text) {
 };
 
 ace.TextDocument.prototype.remove = function(range) {
-    var end = this._remove(range);
+    this._remove(range);
 
     this.fireChangeEvent(range.start.row,
                          range.end.row == range.start.row ? range.start.row
                                  : undefined);
-    return end;
+    return range.start;
 };
 
 ace.TextDocument.prototype._remove = function(range) {

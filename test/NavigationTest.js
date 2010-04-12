@@ -6,19 +6,12 @@ var NavigationTest = TestCase("NavigationTest",
         return new ace.TextDocument(text);
     },
 
-    assertPosition : function(row, column, cursor) {
-        assertEquals(row, cursor.row);
-        assertEquals(column, cursor.column);
-    },
-
-    // End of file, start of files tests
-
     "test: navigate to end of file should place the cursor on last row and column" : function() {
         var editor = new ace.Editor(this.createTextDocument(200, 10),
                 new MockRenderer());
 
         editor.navigateFileEnd();
-        this.assertPosition(199, 10, editor.getCursorPosition());
+        assertPosition(199, 10, editor.getCursorPosition());
     },
 
     "test: navigate to end of file should scroll the last line into view" : function() {
@@ -37,7 +30,7 @@ var NavigationTest = TestCase("NavigationTest",
                 new MockRenderer());
 
         editor.navigateFileStart();
-        this.assertPosition(0, 0, editor.getCursorPosition());
+        assertPosition(0, 0, editor.getCursorPosition());
     },
 
     "test: navigate to start of file should scroll the first row into view" : function() {
@@ -59,8 +52,8 @@ var NavigationTest = TestCase("NavigationTest",
 
         var selection = editor.getSelectionRange();
 
-        this.assertPosition(100, 5, selection.start);
-        this.assertPosition(199, 10, selection.end);
+        assertPosition(100, 5, selection.start);
+        assertPosition(199, 10, selection.end);
     },
 
     "test: move selection lead to start of file" : function() {
@@ -72,8 +65,8 @@ var NavigationTest = TestCase("NavigationTest",
 
         var selection = editor.getSelectionRange();
 
-        this.assertPosition(0, 0, selection.start);
-        this.assertPosition(100, 5, selection.end);
+        assertPosition(0, 0, selection.start);
+        assertPosition(100, 5, selection.end);
     },
 
     "test: navigate word right" : function() {
@@ -82,38 +75,38 @@ var NavigationTest = TestCase("NavigationTest",
         var editor = new ace.Editor(doc, new MockRenderer());
 
         editor.navigateDown();
-        this.assertPosition(1, 0, editor.getCursorPosition());
+        assertPosition(1, 0, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 1, editor.getCursorPosition());
+        assertPosition(1, 1, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 5, editor.getCursorPosition());
+        assertPosition(1, 5, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 6, editor.getCursorPosition());
+        assertPosition(1, 6, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 13, editor.getCursorPosition());
+        assertPosition(1, 13, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 15, editor.getCursorPosition());
+        assertPosition(1, 15, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 18, editor.getCursorPosition());
+        assertPosition(1, 18, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 20, editor.getCursorPosition());
+        assertPosition(1, 20, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 22, editor.getCursorPosition());
+        assertPosition(1, 22, editor.getCursorPosition());
 
         editor.navigateWordRight();
-        this.assertPosition(1, 23, editor.getCursorPosition());
+        assertPosition(1, 23, editor.getCursorPosition());
 
         // wrap line
         editor.navigateWordRight();
-        this.assertPosition(2, 0, editor.getCursorPosition());
+        assertPosition(2, 0, editor.getCursorPosition());
     },
 
     "test: select word right if cursor in word" : function() {
@@ -123,7 +116,7 @@ var NavigationTest = TestCase("NavigationTest",
         editor.moveCursorTo(0, 2);
 
         editor.navigateWordRight();
-        this.assertPosition(0, 4, editor.getCursorPosition());
+        assertPosition(0, 4, editor.getCursorPosition());
     },
 
     "test: navigate word left" : function() {
@@ -133,38 +126,38 @@ var NavigationTest = TestCase("NavigationTest",
 
         editor.navigateDown();
         editor.navigateLineEnd();
-        this.assertPosition(1, 23, editor.getCursorPosition());
+        assertPosition(1, 23, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 22, editor.getCursorPosition());
+        assertPosition(1, 22, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 20, editor.getCursorPosition());
+        assertPosition(1, 20, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 18, editor.getCursorPosition());
+        assertPosition(1, 18, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 15, editor.getCursorPosition());
+        assertPosition(1, 15, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 13, editor.getCursorPosition());
+        assertPosition(1, 13, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 6, editor.getCursorPosition());
+        assertPosition(1, 6, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 5, editor.getCursorPosition());
+        assertPosition(1, 5, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 1, editor.getCursorPosition());
+        assertPosition(1, 1, editor.getCursorPosition());
 
         editor.navigateWordLeft();
-        this.assertPosition(1, 0, editor.getCursorPosition());
+        assertPosition(1, 0, editor.getCursorPosition());
 
         // wrap line
         editor.navigateWordLeft();
-        this.assertPosition(0, 2, editor.getCursorPosition());
+        assertPosition(0, 2, editor.getCursorPosition());
     },
 
     "test: select word left if cursor in word" : function() {
@@ -174,7 +167,7 @@ var NavigationTest = TestCase("NavigationTest",
         editor.moveCursorTo(0, 8);
 
         editor.navigateWordLeft();
-        this.assertPosition(0, 5, editor.getCursorPosition());
+        assertPosition(0, 5, editor.getCursorPosition());
     },
 
     "test: select word right and select" : function() {
@@ -186,8 +179,8 @@ var NavigationTest = TestCase("NavigationTest",
 
         var selection = editor.getSelectionRange();
 
-        this.assertPosition(0, 0, selection.start);
-        this.assertPosition(0, 4, selection.end);
+        assertPosition(0, 0, selection.start);
+        assertPosition(0, 4, selection.end);
     },
 
     "test: select word left and select" : function() {
@@ -199,7 +192,7 @@ var NavigationTest = TestCase("NavigationTest",
 
         var selection = editor.getSelectionRange();
 
-        this.assertPosition(0, 0, selection.start);
-        this.assertPosition(0, 3, selection.end);
+        assertPosition(0, 0, selection.start);
+        assertPosition(0, 3, selection.end);
     }
 });

@@ -58,5 +58,8 @@ MockRenderer.prototype.scrollToRow = function(row) {
 MockRenderer.prototype.draw = function() {
 };
 
+MockRenderer.prototype.updateLines = function(startRow, endRow) {
+};
+
 MockRenderer.prototype.addMarker = function() {
 };
