@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Editor</title>
+	<meta name="author" content="Fabian Jakobs">
+	
+	<style type="text/css" media="screen">
+	
+	#container {  
+	  top: 0px;
+	  right: 0px;
+	  bottom: 0px;
+	  left: 0px;
+	}
+  
+	</style>
+	<link rel="stylesheet" href="../css/editor.css" type="text/css" charset="utf-8">
+	
+	<script src="../src/lib.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/TextDocument.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/JavaScript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/XML.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/Tokenizer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/BackgroundTokenizer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/CursorLayer.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/GutterLayer.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/TextLayer.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/MarkerLayer.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/TextInput.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/Editor.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/VirtualRenderer.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    
+    <div id="container">    
+    </div>
+    
+<script type="text/javascript" charset="utf-8">
+
+var editor = new Editor(new TextDocument("Juhu Kinners"), new VirtualRenderer("container"));
+
+window.onresize = function() {
+  editor.resize();
+}
+  
+</script>
+
+</body>
+</html>
