@@ -155,7 +155,15 @@ var KeyBinding = function(element, host) {
                 return ace.stopEvent(e);
 
             case keys.TAB:
-                host.onTextInput("    ");
+                if (host.hasMultiLineSelection()) {
+                    if (e.shiftKey) {
+                        host.blockOutdent();
+                    } else {
+                        host.blockIndent();
+                    }
+                } else {
+                    host.onTextInput("    ");
+                }
                 return ace.stopEvent(e);
         }
     });
@@ -364,6 +372,38 @@ ace.Editor.prototype.removeLine = function() {
         this.removeLeft();
         this.moveCursorLineStart();
     }
+};
+
+ace.Editor.prototype.blockIndent = function(indentString) {
+    if (!this.hasSelection()) {
+        return;
+    };
+
+    var range = this.getSelectionRange();
+
+    var indentString = indentString || "    ";
+    this.doc.indentRows(range, indentString);
+
+    this.setSelectionAnchor(range.start.row, range.start.column + indentString.length);
+    this._moveSelection(function() {
+        this.moveCursorTo(range.end.row, range.end.column + indentString.length);
+    });
+};
+
+ace.Editor.prototype.blockOutdent = function(indentString) {
+    if (!this.hasSelection()) {
+        return;
+    };
+
+    var range = this.getSelectionRange();
+
+    var indentString = indentString || "    ";
+    var removedColumns = this.doc.outdentRows(range, indentString);
+
+    this.setSelectionAnchor(range.start.row, range.start.column - removedColumns);
+    this._moveSelection(function() {
+        this.moveCursorTo(range.end.row, range.end.column - removedColumns);
+    });
 };
 
 ace.Editor.prototype.onCompositionStart = function() {
@@ -623,6 +663,15 @@ ace.Editor.prototype.getCursorPosition = function() {
 
 ace.Editor.prototype.hasSelection = function() {
     return !!this.selectionLead;
+};
+
+ace.Editor.prototype.hasMultiLineSelection = function() {
+    if (!this.hasSelection()) {
+        return false;
+    }
+
+    var range = this.getSelectionRange();
+    return (range.start.row !== range.end.row);
 };
 
 ace.Editor.prototype.setSelectionAnchor = function(row, column) {

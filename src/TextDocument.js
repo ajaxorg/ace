@@ -182,3 +182,27 @@ ace.TextDocument.prototype.replace = function(range, text) {
 
     return end;
 };
+
+ace.TextDocument.prototype.indentRows = function(range, indentString) {
+  for (var i=range.start.row; i<= range.end.row; i++) {
+      this.lines[i] = indentString + this.getLine(i);
+  }
+  this.fireChangeEvent(range.start.row, range.end.row);
+};
+
+ace.TextDocument.prototype.outdentRows = function(range, indentString) {
+    outdentLength = indentString.length;
+
+    for (var i=range.start.row; i<= range.end.row; i++) {
+        if (this.getLine(i).substr(0, outdentLength) !== indentString) {
+            return 0;
+        }
+    }
+
+    for (var i=range.start.row; i<= range.end.row; i++) {
+        this.lines[i] = this.getLine(i).substring(outdentLength);
+    }
+
+    this.fireChangeEvent(range.start.row, range.end.row);
+    return outdentLength;
+};

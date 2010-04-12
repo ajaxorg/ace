@@ -30,5 +30,48 @@ var TextEditTest = TestCase("TextEditTest",
 
         assertEquals("a\nb", doc.toString());
         assertPosition(1, 0, editor.getCursorPosition());
+    },
+
+    "test: indent block" : function() {
+        var doc = new ace.TextDocument(["a12345", "b12345", "c12345"].join("\n"));
+        var editor = new ace.Editor(doc, new MockRenderer());
+
+        editor.moveCursorTo(1, 3);
+        editor.selectDown();
+
+        editor.blockIndent("    ");
+
+        assertEquals(["a12345", "    b12345", "    c12345"].join("\n"),
+                     doc.toString());
+
+        var selection = editor.getSelectionRange();
+        assertPosition(1, 7, selection.start);
+        assertPosition(2, 7, selection.end);
+    },
+
+    "test: outdent block" : function() {
+        var doc = new ace.TextDocument(["    a12345", "  b12345", "    c12345"].join("\n"));
+        var editor = new ace.Editor(doc, new MockRenderer());
+
+        editor.moveCursorTo(0, 3);
+        editor.selectDown();
+        editor.selectDown();
+
+        editor.blockOutdent("  ");
+        assertEquals(["  a12345", "b12345", "  c12345"].join("\n"),
+                     doc.toString());
+
+        var selection = editor.getSelectionRange();
+        assertPosition(0, 1, selection.start);
+        assertPosition(2, 1, selection.end);
+
+
+        editor.blockOutdent("  ");
+        assertEquals(["  a12345", "b12345", "  c12345"].join("\n"),
+                doc.toString());
+
+        var selection = editor.getSelectionRange();
+        assertPosition(0, 1, selection.start);
+        assertPosition(2, 1, selection.end);
     }
 });
