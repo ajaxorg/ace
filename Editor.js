@@ -70,11 +70,19 @@ function KeyBinding(element, host)
         return lib.stopEvent(e);
         
       case keys.PAGEDOWN:
-        host.scrollPageDown();
+        if (e.shiftKey) {
+          host.selectPageDown();
+        } else {
+          host.scrollPageDown();
+        }
         return lib.stopEvent(e);
         
       case keys.PAGEUP:
-        host.scrollPageUp();
+        if (e.shiftKey) {
+          host.selectPageUp();
+        } else {
+          host.scrollPageUp();
+        }
         return lib.stopEvent(e);        
         
       case keys.POS1:
@@ -360,6 +368,14 @@ function Editor(doc, renderer)
     this.removeLeft();
   },
   
+  getFirstVisibleRow : function() {
+    return this.renderer.getFirstVisibleRow();
+  },
+  
+  getLastVisibleRow : function() {
+    return this.renderer.getLastVisibleRow();
+  },
+  
   getPageDownRow : function() {
     return this.renderer.getLastVisibleRow() - 1;
   },
@@ -598,6 +614,30 @@ function Editor(doc, renderer)
   
   selectLineEnd : function() {
     this._moveSelection(this.moveCursorLineEnd);
+  },
+  
+  selectPageDown : function()
+  {
+    var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
+    var row = this.getPageDownRow() + Math.round(visibleRows / 2);
+    
+    this.scrollPageDown();
+    
+    this._moveSelection(function() {
+      this.moveCursorTo(row, this.cursor.column);
+    });
+  },
+
+  selectPageUp : function()
+  {
+    var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
+    var row = this.getPageUpRow() + Math.round(visibleRows / 2);
+    
+    this.scrollPageUp();
+    
+    this._moveSelection(function() {
+      this.moveCursorTo(row, this.cursor.column);
+    });
   },
   
   selectCurrentLine : function() 
