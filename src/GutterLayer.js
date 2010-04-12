@@ -1,11 +1,13 @@
-function GutterLayer(parentEl)
+if (!window.ace) ace = {};
+
+ace.GutterLayer = function(parentEl)
 {
   this.element = document.createElement("div");
   this.element.className = "layer gutter-layer";
   parentEl.appendChild(this.element);
 }
 
-GutterLayer.prototype.update = function(config)
+ace.GutterLayer.prototype.update = function(config)
 {
   var html = [];
   for (var i=config.firstRow; i<=config.lastRow; i++)

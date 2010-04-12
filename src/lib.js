@@ -1,8 +1,8 @@
+if (!window.ace) ace = {};
+
 (function() {
 
-window.lib = {};
-
-lib.addListener = function(elem, type, callback) {
+ace.addListener = function(elem, type, callback) {
   if (elem.addEventListener) {
     return elem.addEventListener(type, callback, false);
   }
@@ -15,7 +15,7 @@ lib.addListener = function(elem, type, callback) {
   }
 }
 
-lib.removeListener = function(elem, type, callback) {
+ace.removeListener = function(elem, type, callback) {
   if (elem.removeEventListener) {
     return elem.removeEventListener(type, callback, false);
   }
@@ -24,7 +24,7 @@ lib.removeListener = function(elem, type, callback) {
   }
 }
 
-lib.setText = function(elem, text) {
+ace.setText = function(elem, text) {
   if (elem.innerText !== undefined) {
     elem.innerText = text;
   }
@@ -33,20 +33,20 @@ lib.setText = function(elem, text) {
   }
 }    
     
-lib.stopEvent = function(e) {
-  lib.stopPropagation(e);
-  lib.preventDefault(e);
+ace.stopEvent = function(e) {
+  ace.stopPropagation(e);
+  ace.preventDefault(e);
   return false;
 }
 
-lib.stopPropagation = function(e) {
+ace.stopPropagation = function(e) {
   if (e.stopPropagation)
     e.stopPropagation();
   else
     e.cancelBubble = true;
 }
 
-lib.preventDefault = function(e)
+ace.preventDefault = function(e)
 {
   if (e.preventDefault)
     e.preventDefault();
@@ -54,7 +54,7 @@ lib.preventDefault = function(e)
     e.returnValue = false;
 }
 
-lib.inherits = function(ctor, superCtor) {
+ace.inherits = function(ctor, superCtor) {
   var tempCtor = function(){};
   tempCtor.prototype = superCtor.prototype;
   ctor.super_ = superCtor.prototype;
@@ -62,25 +62,25 @@ lib.inherits = function(ctor, superCtor) {
   ctor.prototype.constructor = ctor;
 };
 
-lib.getInnerWidth = function(element)
+ace.getInnerWidth = function(element)
 {  
   return (
-    parseInt(lib.computedStyle(element, "paddingLeft")) +
-    parseInt(lib.computedStyle(element, "paddingRight")) +
+    parseInt(ace.computedStyle(element, "paddingLeft")) +
+    parseInt(ace.computedStyle(element, "paddingRight")) +
     element.clientWidth
   );  
 };
 
-lib.getInnerHeight = function(element)
+ace.getInnerHeight = function(element)
 {  
   return (
-    parseInt(lib.computedStyle(element, "paddingTop")) +
-    parseInt(lib.computedStyle(element, "paddingBottom")) +
+    parseInt(ace.computedStyle(element, "paddingTop")) +
+    parseInt(ace.computedStyle(element, "paddingBottom")) +
     element.clientHeight
   );  
 };
 
-lib.computedStyle = function(element, style) 
+ace.computedStyle = function(element, style) 
 {
   if (window.getComputedStyle) {
     return (window.getComputedStyle(element, null))[style];
@@ -89,7 +89,7 @@ lib.computedStyle = function(element, style)
   }
 }
 
-lib.scrollbarHeight = function() {
+ace.scrollbarHeight = function() {
   var el = document.createElement("div");
   var style = el.style;
   
@@ -105,13 +105,13 @@ lib.scrollbarHeight = function() {
   return height;
 }
 
-lib.bind = function(fcn, context) {
+ace.bind = function(fcn, context) {
   return function() {
     return fcn.apply(context, arguments);
   }
 }
 
-lib.capture = function(el, eventHandler, releaseCaptureHandler)
+ace.capture = function(el, eventHandler, releaseCaptureHandler)
 {
   function onMouseMove(e) 
   {    
@@ -134,17 +134,17 @@ lib.capture = function(el, eventHandler, releaseCaptureHandler)
   document.addEventListener("mouseup", onMouseUp, true);
 }
 
-lib.addMouseWheelListener = function(el, callback)
+ace.addMouseWheelListener = function(el, callback)
 {
   var listener = function(e) {
     e.wheel = (e.wheelDelta) ? e.wheelDelta / 120 : -(e.detail || 0) / 3;
     callback(e);
   }
-  lib.addListener(el, "DOMMouseScroll", listener);
-  lib.addListener(el, "mousewheel", listener);
+  ace.addListener(el, "DOMMouseScroll", listener);
+  ace.addListener(el, "mousewheel", listener);
 };
 
-lib.autoremoveListener = function(el, type, callback, timeout)
+ace.autoremoveListener = function(el, type, callback, timeout)
 {
   var listener = function(e)
   {
@@ -154,18 +154,18 @@ lib.autoremoveListener = function(el, type, callback, timeout)
   }
 
   var remove = function() {
-    lib.removeListener(el, type, listener);
+    ace.removeListener(el, type, listener);
   };
 
-  lib.addListener(el, type, listener);  
+  ace.addListener(el, type, listener);  
   var timeoutId = setTimeout(remove, timeout);  
 }
 
-lib.addTripleClickListener = function(el, callback)
+ace.addTripleClickListener = function(el, callback)
 {
-  lib.addListener(el, "mousedown", function() { 
-    lib.autoremoveListener(el, "mousedown", function() {
-      lib.autoremoveListener(el, "mousedown", callback, 300);
+  ace.addListener(el, "mousedown", function() { 
+    ace.autoremoveListener(el, "mousedown", function() {
+      ace.autoremoveListener(el, "mousedown", callback, 300);
     }, 300);
   });
 }

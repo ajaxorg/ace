@@ -1,5 +1,6 @@
+if (!window.ace) ace = {};
 
-function Tokenizer(rules)
+ace.Tokenizer = function(rules)
 {
   this.rules = rules;
   
@@ -17,7 +18,7 @@ function Tokenizer(rules)
   }
 };
 
-Tokenizer.prototype.getLineTokens = function(line, startState)
+ace.Tokenizer.prototype.getLineTokens = function(line, startState)
 {
   var currentState = startState;
   var state = this.rules[currentState];  

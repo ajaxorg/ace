@@ -1,4 +1,6 @@
-function TextInput(parentNode, host) {
+if (!window.ace) ace = {};
+
+ace.TextInput = function(parentNode, host) {
   
   var text = document.createElement("textarea");
   var style = text.style;
@@ -51,23 +53,23 @@ function TextInput(parentNode, host) {
     text.select();    
   }
 
-  lib.addListener(text, "keypress", onTextInput, false);
-  lib.addListener(text, "textInput", onTextInput, false);
-  lib.addListener(text, "paste", onTextInput, false);  
-  lib.addListener(text, "propertychange", onTextInput, false);
+  ace.addListener(text, "keypress", onTextInput, false);
+  ace.addListener(text, "textInput", onTextInput, false);
+  ace.addListener(text, "paste", onTextInput, false);  
+  ace.addListener(text, "propertychange", onTextInput, false);
 
-  lib.addListener(text, "copy", onCopy, false);  
-  lib.addListener(text, "cut", onCut, false);  
+  ace.addListener(text, "copy", onCopy, false);  
+  ace.addListener(text, "cut", onCut, false);  
 
-  lib.addListener(text, "compositionstart", onCompositionStart, false);
-  lib.addListener(text, "compositionupdate", onCompositionUpdate, false);
-  lib.addListener(text, "compositionend", onCompositionEnd, false);
+  ace.addListener(text, "compositionstart", onCompositionStart, false);
+  ace.addListener(text, "compositionupdate", onCompositionUpdate, false);
+  ace.addListener(text, "compositionend", onCompositionEnd, false);
   
-  lib.addListener(text, "blur", function() {
+  ace.addListener(text, "blur", function() {
     host.onBlur();
   }, false);
   
-  lib.addListener(text, "focus", function() {
+  ace.addListener(text, "focus", function() {
     host.onFocus();
   }, false);
   

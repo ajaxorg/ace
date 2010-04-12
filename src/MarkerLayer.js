@@ -1,4 +1,6 @@
-function MarkerLayer(parentEl)
+if (!window.ace) ace = {};
+
+ace.MarkerLayer = function(parentEl)
 {
   this.element = document.createElement("div");
   this.element.className = "layer marker-layer";
@@ -8,7 +10,7 @@ function MarkerLayer(parentEl)
   this._markerId = 1;
 }
 
-MarkerLayer.prototype.addMarker = function(range, clazz)
+ace.MarkerLayer.prototype.addMarker = function(range, clazz)
 {
   var id = this._markerId++;
   this.markers[id] = {
@@ -21,7 +23,7 @@ MarkerLayer.prototype.addMarker = function(range, clazz)
   return id;
 };
 
-MarkerLayer.prototype.removeMarker = function(markerId) 
+ace.MarkerLayer.prototype.removeMarker = function(markerId) 
 {
   var marker = this.markers[markerId];
   if (marker) {
@@ -30,7 +32,7 @@ MarkerLayer.prototype.removeMarker = function(markerId)
   }
 };
 
-MarkerLayer.prototype.update = function(config)
+ace.MarkerLayer.prototype.update = function(config)
 {
   var config = config || this.config;
   if (!config) return;

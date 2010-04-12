@@ -1,4 +1,6 @@
-function TextLayer(parentEl)
+if (!window.ace) ace = {};
+
+ace.TextLayer = function(parentEl)
 {
   this.element = document.createElement("div");
   this.element.className = "layer text-layer";
@@ -7,19 +9,19 @@ function TextLayer(parentEl)
   this._measureSizes();
 }
 
-TextLayer.prototype.setTokenizer = function(tokenizer) {
+ace.TextLayer.prototype.setTokenizer = function(tokenizer) {
   this.tokenizer = tokenizer;
 };
 
-TextLayer.prototype.getLineHeight = function() {
+ace.TextLayer.prototype.getLineHeight = function() {
   return this.lineHeight;
 };
 
-TextLayer.prototype.getCharacterWidth = function() {
+ace.TextLayer.prototype.getCharacterWidth = function() {
   return this.characterWidth;
 };
 
-TextLayer.prototype._measureSizes = function()
+ace.TextLayer.prototype._measureSizes = function()
 {
   var measureNode = document.createElement("div");
   var style = measureNode.style;
@@ -41,7 +43,7 @@ TextLayer.prototype._measureSizes = function()
   this.element.removeChild(measureNode);
 };
 
-TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow)
+ace.TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow)
 {
   var first = Math.max(firstRow, layerConfig.firstRow);
   var last = Math.min(lastRow, layerConfig.lastRow);
@@ -58,7 +60,7 @@ TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow)
   };
 };
 
-TextLayer.prototype.update = function(config)
+ace.TextLayer.prototype.update = function(config)
 {
   var html = [];
   for (var i=config.firstRow; i<=config.lastRow; i++)
@@ -76,7 +78,7 @@ TextLayer.prototype.update = function(config)
   this.element.innerHTML = html.join("");  
 };
 
-TextLayer.prototype.renderLine = function(stringBuilder, row)
+ace.TextLayer.prototype.renderLine = function(stringBuilder, row)
 {
   var tokens = this.tokenizer.getTokens(row);
   for (var i=0; i < tokens.length; i++)

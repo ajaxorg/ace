@@ -40,7 +40,8 @@
     
 <script type="text/javascript" charset="utf-8">
 
-var editor = new Editor(new TextDocument("Juhu Kinners"), new VirtualRenderer("container"));
+var container = document.getElementById("container");
+var editor = new ace.Editor(new ace.TextDocument("Juhu Kinners"), new ace.VirtualRenderer(container));
 
 window.onresize = function() {
   editor.resize();

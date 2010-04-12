@@ -1,6 +1,8 @@
+if (!window.ace) ace = {};
+
 (function() {
 
-window.JavaScript = {};
+ace.JavaScript = {};
 
 var keywords = {
   "break" : 1,
@@ -31,7 +33,7 @@ var keywords = {
 // regexp must not have capturing parentheses
 // regexps are ordered -> the first match is used
 
-JavaScript.RULES = {
+ace.JavaScript.RULES = {
   start :
   [
     {

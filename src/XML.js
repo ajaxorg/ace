@@ -1,11 +1,13 @@
+if (!window.ace) ace = {};
+
 (function() {
 
-window.XML = {};
+ace.XML = {};
 
 // regexp must not have capturing parentheses
 // regexps are ordered -> the first match is used
 
-XML.RULES = {
+ace.XML.RULES = {
   start :
   [
     {

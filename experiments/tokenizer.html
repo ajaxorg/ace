@@ -32,7 +32,7 @@ button.onclick = function()
     console.log("update", firstLine, lastLine);
   };
   
-  var tokenizer = new BackgroundTokenizer(new Tokenizer(JavaScript.RULES), onUpdate, onComplete);
+  var tokenizer = new ace.BackgroundTokenizer(new ace.Tokenizer(ace.JavaScript.RULES), onUpdate, onComplete);
   tokenizer.setLines(text.value.split(/[\n\r]/));
   tokenizer.start();
 }

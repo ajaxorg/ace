@@ -1,4 +1,6 @@
-function BackgroundTokenizer(tokenizer, onUpdate, onComplete)
+if (!window.ace) ace = {};
+
+ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete)
 {
   this.running = false;
   this.textLines = [];
@@ -47,7 +49,7 @@ function BackgroundTokenizer(tokenizer, onUpdate, onComplete)
   }
 };
 
-BackgroundTokenizer.prototype.setLines = function(textLines)
+ace.BackgroundTokenizer.prototype.setLines = function(textLines)
 {
   this.textLines = textLines;
   this.lines = [];
@@ -55,7 +57,7 @@ BackgroundTokenizer.prototype.setLines = function(textLines)
   this.stop();    
 };
 
-BackgroundTokenizer.prototype.start = function(startRow)
+ace.BackgroundTokenizer.prototype.start = function(startRow)
 {
   this.currentLine = Math.min(startRow || 0, this.currentLine, this.textLines.length);
   this.lines.splice(startRow, this.lines.length);
@@ -67,11 +69,11 @@ BackgroundTokenizer.prototype.start = function(startRow)
   }
 };
 
-BackgroundTokenizer.prototype.stop = function() {
+ace.BackgroundTokenizer.prototype.stop = function() {
   this.running = false;
 };
 
-BackgroundTokenizer.prototype.getTokens = function(row)
+ace.BackgroundTokenizer.prototype.getTokens = function(row)
 {
   if (this.lines[row]) {
     return this.lines[row].tokens;

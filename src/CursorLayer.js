@@ -1,4 +1,6 @@
-function CursorLayer(parentEl)
+if (!window.ace) ace = {};
+
+ace.CursorLayer = function(parentEl)
 {
   this.element = document.createElement("div");
   this.element.className = "layer cursor-layer";
@@ -10,7 +12,7 @@ function CursorLayer(parentEl)
   this.isVisible = false;
 }
 
-CursorLayer.prototype.setCursor = function(position)
+ace.CursorLayer.prototype.setCursor = function(position)
 {
   this.position = {
     row: position.row,
@@ -18,7 +20,7 @@ CursorLayer.prototype.setCursor = function(position)
   };
 };
 
-CursorLayer.prototype.hideCursor = function() 
+ace.CursorLayer.prototype.hideCursor = function() 
 {
   this.isVisible = false;
   if (this.cursor.parentNode) {
@@ -27,7 +29,7 @@ CursorLayer.prototype.hideCursor = function()
   clearInterval(this.blinkId);
 };
 
-CursorLayer.prototype.showCursor = function()
+ace.CursorLayer.prototype.showCursor = function()
 {
   this.isVisible = true;
   this.element.appendChild(this.cursor);
@@ -43,11 +45,11 @@ CursorLayer.prototype.showCursor = function()
   }, 1000);
 };
 
-CursorLayer.prototype.getPixelPosition = function() {
+ace.CursorLayer.prototype.getPixelPosition = function() {
   return this.pixelPos || {left: 0, top:0};
 }
 
-CursorLayer.prototype.update = function(config)
+ace.CursorLayer.prototype.update = function(config)
 {
   if (!this.position) return;
 

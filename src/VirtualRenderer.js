@@ -1,6 +1,8 @@
-function VirtualRenderer(containerId)
+if (!window.ace) ace = {};
+
+ace.VirtualRenderer = function(container)
 {
-  this.container = document.getElementById(containerId);
+  this.container = container;
   this.container.className += "editor";
   
   this.scroller = document.createElement("div");
@@ -11,16 +13,16 @@ function VirtualRenderer(containerId)
   this.gutter.className = "gutter";
   this.container.appendChild(this.gutter);
 
-  this.gutterLayer = new GutterLayer(this.gutter);  
-  this.markerLayer = new MarkerLayer(this.scroller);
+  this.gutterLayer = new ace.GutterLayer(this.gutter);  
+  this.markerLayer = new ace.MarkerLayer(this.scroller);
 
-  var textLayer = this.textLayer = new TextLayer(this.scroller);
+  var textLayer = this.textLayer = new ace.TextLayer(this.scroller);
   this.canvas = textLayer.element;
   
   this.characterWidth = textLayer.getCharacterWidth();
   this.lineHeight = textLayer.getLineHeight(); 
   
-  this.cursorLayer = new CursorLayer(this.scroller);
+  this.cursorLayer = new ace.CursorLayer(this.scroller);
   
   this.layers = [this.markerLayer, textLayer, this.cursorLayer];
   
@@ -32,29 +34,29 @@ function VirtualRenderer(containerId)
   };
 }
 
-VirtualRenderer.prototype.setDocument = function(doc)
+ace.VirtualRenderer.prototype.setDocument = function(doc)
 {
   this.lines = doc.lines;
   this.doc = doc;
 };
 
-VirtualRenderer.prototype.setTokenizer = function(tokenizer) {
+ace.VirtualRenderer.prototype.setTokenizer = function(tokenizer) {
   this.textLayer.setTokenizer(tokenizer);
 };
 
-VirtualRenderer.prototype.getContainerElement = function() {
+ace.VirtualRenderer.prototype.getContainerElement = function() {
   return this.container;
 };
 
-VirtualRenderer.prototype.getFirstVisibleRow = function() {
+ace.VirtualRenderer.prototype.getFirstVisibleRow = function() {
   return this.layerConfig.firstRow || 0;
 };
 
-VirtualRenderer.prototype.getLastVisibleRow = function() {
+ace.VirtualRenderer.prototype.getLastVisibleRow = function() {
   return this.layerConfig.lastRow || 0;
 };
 
-VirtualRenderer.prototype.updateLines = function(firstRow, lastRow)
+ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow)
 {
   var layerConfig = this.layerConfig;
   
@@ -74,7 +76,7 @@ VirtualRenderer.prototype.updateLines = function(firstRow, lastRow)
   this.textLayer.updateLines(layerConfig, firstRow, lastRow);
 };
 
-VirtualRenderer.prototype.draw = function() 
+ace.VirtualRenderer.prototype.draw = function() 
 {    
   var lines = this.lines;
   
@@ -115,29 +117,29 @@ VirtualRenderer.prototype.draw = function()
   this.gutterLayer.update(layerConfig);
 }
 
-VirtualRenderer.prototype.addMarker = function(range, clazz) {
+ace.VirtualRenderer.prototype.addMarker = function(range, clazz) {
   return this.markerLayer.addMarker(range, clazz);
 };
 
-VirtualRenderer.prototype.removeMarker = function(markerId) {
+ace.VirtualRenderer.prototype.removeMarker = function(markerId) {
   this.markerLayer.removeMarker(markerId);
 };
 
-VirtualRenderer.prototype.updateCursor = function(position) 
+ace.VirtualRenderer.prototype.updateCursor = function(position) 
 {
   this.cursorLayer.setCursor(position);
   this.cursorLayer.update(this.layerConfig);
 };
 
-VirtualRenderer.prototype.hideCursor = function() {
+ace.VirtualRenderer.prototype.hideCursor = function() {
   this.cursorLayer.hideCursor();
 };
 
-VirtualRenderer.prototype.showCursor = function() {
+ace.VirtualRenderer.prototype.showCursor = function() {
   this.cursorLayer.showCursor();
 };
 
-VirtualRenderer.prototype.scrollCursorIntoView = function()
+ace.VirtualRenderer.prototype.scrollCursorIntoView = function()
 {
   var pos = this.cursorLayer.getPixelPosition();
   
@@ -161,15 +163,15 @@ VirtualRenderer.prototype.scrollCursorIntoView = function()
   }
 },
 
-VirtualRenderer.prototype.getScrollTop = function() {
+ace.VirtualRenderer.prototype.getScrollTop = function() {
   return this.scrollTop;
 };
 
-VirtualRenderer.prototype.scrollToRow = function(row) {
+ace.VirtualRenderer.prototype.scrollToRow = function(row) {
   this.scrollToY(row*this.lineHeight);
 }
 
-VirtualRenderer.prototype.scrollToY = function(scrollTop)
+ace.VirtualRenderer.prototype.scrollToY = function(scrollTop)
 {
   var maxHeight = this.lines.length * this.lineHeight - this.scroller.clientHeight;
   var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
@@ -180,7 +182,7 @@ VirtualRenderer.prototype.scrollToY = function(scrollTop)
   }
 };
 
-VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) 
+ace.VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) 
 {
   var canvasPos = this.scroller.getBoundingClientRect();
     
@@ -193,19 +195,19 @@ VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY)
   }
 };
 
-VirtualRenderer.prototype.visualizeFocus = function() {
+ace.VirtualRenderer.prototype.visualizeFocus = function() {
   this.container.className = "editor focus";
 };
 
-VirtualRenderer.prototype.visualizeBlur = function() {
+ace.VirtualRenderer.prototype.visualizeBlur = function() {
   this.container.className = "editor";
 };
 
-VirtualRenderer.prototype.showComposition = function(position) {
+ace.VirtualRenderer.prototype.showComposition = function(position) {
 };
 
-VirtualRenderer.prototype.setCompositionText = function(text) {
+ace.VirtualRenderer.prototype.setCompositionText = function(text) {
 };
 
-VirtualRenderer.prototype.hideComposition = function() {
+ace.VirtualRenderer.prototype.hideComposition = function() {
 };
