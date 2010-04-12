@@ -20,6 +20,8 @@ function BackgroundTokenizer(tokenizer, onUpdate, onComplete)
     var startLine = self.currentLine;
     var textLines = self.textLines;
 
+    var processedLines = 0;
+    
     while (self.currentLine < textLines.length)
     {
       var line = textLines[self.currentLine];
@@ -27,10 +29,12 @@ function BackgroundTokenizer(tokenizer, onUpdate, onComplete)
       var state = self.currentLine == 0 ? "start" : self.lines[self.currentLine-1].state;      
       self.lines[self.currentLine] = self.tokenizer.getLineTokens(line, state);
 
-      if ((new Date()-workerStart) > 80)
+      // only check every 30 lines
+      processedLines += 1;
+      if ((processedLines % 30 == 0) && (new Date()-workerStart) > 20)
       {
         self.onUpdate(startLine, self.currentLine);
-        return setTimeout(self._worker, 20);
+        return setTimeout(self._worker, 10);
       }
       
       self.currentLine++;      
