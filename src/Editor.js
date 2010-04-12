@@ -34,7 +34,9 @@ var KeyBinding = function(element, host)
         break;
         
       case keys.UP:
-        if (e.shiftKey) {
+        if (e.metaKey) {
+          host.navigateFileStart();
+        } if (e.shiftKey) {
           host.selectUp();
         } else {
           host.navigateUp();
@@ -42,9 +44,11 @@ var KeyBinding = function(element, host)
         return ace.stopEvent(e);
         
       case keys.DOWN:
-        if (e.shiftKey) {
+        if (e.metaKey) {
+          host.navigateFileEnd();
+        } if (e.shiftKey) {
           host.selectDown();
-        } else {
+        } else{
           host.navigateDown();
         }
         return ace.stopEvent(e);
@@ -391,11 +395,15 @@ ace.Editor.prototype.getPageUpRow = function()
 };
 
 ace.Editor.prototype.scrollPageDown = function() {
-  this.renderer.scrollToRow(this.getPageDownRow());
+  this.scrollToRow(this.getPageDownRow());
 };
 
 ace.Editor.prototype.scrollPageUp = function() {
   this.renderer.scrollToRow(this.getPageUpRow());
+};
+
+ace.Editor.prototype.scrollToRow = function(row) {
+    this.renderer.scrollToRow(row);
 };
 
 ace.Editor.prototype.navigateUp = function() 
@@ -451,6 +459,20 @@ ace.Editor.prototype.navigateLineEnd = function()
   this.renderer.scrollCursorIntoView();
 };
 
+ace.Editor.prototype.navigateFileEnd = function() 
+{
+    this.clearSelection();
+    this.moveCursorFileEnd();
+    this.renderer.scrollCursorIntoView();
+},
+
+ace.Editor.prototype.navigateFileStart = function() 
+{
+    this.clearSelection();
+    this.moveCursorFileStart();
+    this.renderer.scrollCursorIntoView();
+},
+
 ace.Editor.prototype.moveCursorUp = function() {
   this.moveCursorBy(-1, 0);
 };
@@ -479,18 +501,24 @@ ace.Editor.prototype.moveCursorRight = function()
   } else {
     this.moveCursorBy(0, 1);
   }
-  this.renderer.scrollCursorIntoView(); 
 };
 
-ace.Editor.prototype.moveCursorLineStart = function() 
-{
+ace.Editor.prototype.moveCursorLineStart = function() {
   this.moveCursorTo(this.cursor.row, 0);
-  this.renderer.scrollCursorIntoView();
 };
 
 ace.Editor.prototype.moveCursorLineEnd = function() {
   this.moveCursorTo(this.cursor.row, this.doc.getLine(this.cursor.row).length);
-  this.renderer.scrollCursorIntoView();
+};
+
+ace.Editor.prototype.moveCursorFileEnd = function() {
+    var row = this.doc.getLength() - 1;
+    var column = this.doc.getLine(row).length;
+    this.moveCursorTo(row, column);
+};
+
+ace.Editor.prototype.moveCursorFileStart = function() {
+    this.moveCursorTo(0, 0);
 };
 
 ace.Editor.prototype.moveCursorBy = function(rows, chars) {
@@ -510,6 +538,14 @@ ace.Editor.prototype.moveCursorTo = function(row, column)
     this.cursor.column = Math.min(this.doc.getLine(this.cursor.row).length, Math.max(0, column));      
   }
   this.updateCursor();    
+};
+
+ace.Editor.prototype.getCursorPosition = function()
+{
+    return {
+        row: this.cursor.row,
+        column: this.cursor.column
+    }
 };
 
 ace.Editor.prototype.hasSelection = function() {
