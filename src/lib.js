@@ -97,6 +97,10 @@ if (!window.ace)
         return height;
     };
 
+    ace.stringReverse = function(string) {
+        return string.split("").reverse().join("");
+    };
+
     ace.bind = function(fcn, context) {
         return function() {
             return fcn.apply(context, arguments);
