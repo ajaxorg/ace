@@ -31,8 +31,6 @@ ace.Editor = function(doc, renderer) {
         column : 0
     };
 
-
-
     this.selectionAnchor = null;
     this.selectionLead = null;
     this.selection = null;
@@ -40,7 +38,9 @@ ace.Editor = function(doc, renderer) {
     this.renderer.draw();
 };
 
-ace.Editor.prototype.resize = function() {
+ace.Editor.prototype.resize = function()
+{
+    this.renderer.scrollToY(this.renderer.getScrollTop());
     this.renderer.draw();
 };
 
@@ -636,7 +636,7 @@ ace.Editor.prototype._moveSelection = function(mover) {
         this.renderer.removeMarker(this.selection);
     }
     this.selection = this.renderer.addMarker(this.getSelectionRange(),
-                                             "selection");
+                                             "selection", "text");
     this.renderer.scrollCursorIntoView();
 };
 

@@ -37,6 +37,7 @@ ace.VirtualRenderer = function(container) {
 ace.VirtualRenderer.prototype.setDocument = function(doc) {
     this.lines = doc.lines;
     this.doc = doc;
+    this.markerLayer.setDocument(doc);
 };
 
 ace.VirtualRenderer.prototype.setTokenizer = function(tokenizer) {
