@@ -1,11 +1,11 @@
-MockRenderer = function() {
+MockRenderer = function(visibleRowCount) {
     this.container = document.createElement("div");
     this.cursor = {
         row : 0,
         column : 0
     };
 
-    this.visibleRowCount = 20;
+    this.visibleRowCount = visibleRowCount || 20;
 
     this.layerConfig = {
         firstVisibleRow : 0,

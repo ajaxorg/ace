@@ -194,5 +194,55 @@ var NavigationTest = TestCase("NavigationTest",
 
         assertPosition(0, 0, selection.start);
         assertPosition(0, 3, selection.end);
+    },
+
+    "test: goto hidden line should scroll the line into the middle of the viewport" : function() {
+        var editor = new ace.Editor(this.createTextDocument(200, 5),
+                new MockRenderer());
+
+        editor.navigateTo(0, 0);
+        editor.gotoLine(100);
+        assertPosition(100, 0, editor.getCursorPosition());
+        assertEquals(90, editor.getFirstVisibleRow());
+
+        editor.navigateTo(100, 0);
+        editor.gotoLine(10);
+        assertPosition(10, 0, editor.getCursorPosition());
+        assertEquals(0, editor.getFirstVisibleRow());
+
+        editor.navigateTo(100, 0);
+        editor.gotoLine(5);
+        assertPosition(5, 0, editor.getCursorPosition());
+        assertEquals(0, editor.getFirstVisibleRow());
+
+        editor.navigateTo(100, 0);
+        editor.gotoLine(0);
+        assertPosition(0, 0, editor.getCursorPosition());
+        assertEquals(0, editor.getFirstVisibleRow());
+
+        editor.navigateTo(0, 0);
+        editor.gotoLine(190);
+        assertPosition(190, 0, editor.getCursorPosition());
+        assertEquals(180, editor.getFirstVisibleRow());
+
+        editor.navigateTo(0, 0);
+        editor.gotoLine(195);
+        assertPosition(195, 0, editor.getCursorPosition());
+        assertEquals(180, editor.getFirstVisibleRow());
+    },
+
+    "test: goto visible line should only move the cursor and not scroll": function() {
+        var editor = new ace.Editor(this.createTextDocument(200, 5),
+                new MockRenderer());
+
+        editor.navigateTo(0, 0);
+        editor.gotoLine(11);
+        assertPosition(11, 0, editor.getCursorPosition());
+        assertEquals(0, editor.getFirstVisibleRow());
+
+        editor.navigateTo(30, 0);
+        editor.gotoLine(32);
+        assertPosition(32, 0, editor.getCursorPosition());
+        assertEquals(30, editor.getFirstVisibleRow());
     }
 });

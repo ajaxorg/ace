@@ -16,7 +16,8 @@ var keys = {
     BACKSPACE : 8,
     TAB : 9,
     A : 65,
-    D: 68
+    D: 68,
+    L: 76
 };
 
 ace.KeyBinding = function(element, host) {
@@ -35,6 +36,16 @@ ace.KeyBinding = function(element, host) {
                 if (e.metaKey) {
                     host.removeLine();
                     return ace.stopEvent(e);
+                }
+                break;
+
+            case keys.L:
+                if (e.metaKey) {
+                    var line = parseInt(prompt("Enter line number:"));
+                    if (!isNaN(line)) {
+                        host.gotoLine(line);
+                        return ace.stopEvent(e);
+                    }
                 }
                 break;
 

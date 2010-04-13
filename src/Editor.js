@@ -21,7 +21,7 @@ ace.Editor = function(doc, renderer) {
     renderer.setDocument(doc);
 
     this.tokenizer = new ace.BackgroundTokenizer(new ace.Tokenizer(
-            ace.XML.RULES), ace.bind(this.onTokenizerUpdate, this));
+            ace.JavaScript.RULES), ace.bind(this.onTokenizerUpdate, this));
 
     this.tokenizer.setLines(doc.lines);
     renderer.setTokenizer(this.tokenizer);
@@ -30,6 +30,8 @@ ace.Editor = function(doc, renderer) {
         row : 0,
         column : 0
     };
+
+
 
     this.selectionAnchor = null;
     this.selectionLead = null;
@@ -260,6 +262,14 @@ ace.Editor.prototype.getLastVisibleRow = function() {
     return this.renderer.getLastVisibleRow();
 };
 
+ace.Editor.prototype.isRowVisible = function(row) {
+    return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
+};
+
+ace.Editor.prototype.getVisibleRowCount = function() {
+    return this.getLastVisibleRow() - this.getFirstVisibleRow() + 1;
+};
+
 ace.Editor.prototype.getPageDownRow = function() {
     return this.renderer.getLastVisibleRow() - 1;
 };
@@ -281,6 +291,12 @@ ace.Editor.prototype.scrollPageUp = function() {
 
 ace.Editor.prototype.scrollToRow = function(row) {
     this.renderer.scrollToRow(row);
+};
+
+ace.Editor.prototype.navigateTo = function(row, column) {
+    this.clearSelection();
+    this.moveCursorTo(row, column);
+    this.renderer.scrollCursorIntoView();
 };
 
 ace.Editor.prototype.navigateUp = function() {
@@ -486,6 +502,13 @@ ace.Editor.prototype.moveCursorTo = function(row, column) {
     this.updateCursor();
 };
 
+ace.Editor.prototype.gotoLine = function(lineNumber) {
+    this.moveCursorTo(lineNumber, 0);
+    if (!this.isRowVisible(this.cursor.row)) {
+        this.scrollToRow(lineNumber - Math.floor(this.getVisibleRowCount() / 2));
+    }
+},
+
 ace.Editor.prototype.getCursorPosition = function() {
     return {
         row : this.cursor.row,
@@ -609,8 +632,7 @@ ace.Editor.prototype.selectLineEnd = function() {
 };
 
 ace.Editor.prototype.selectPageDown = function() {
-    var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
-    var row = this.getPageDownRow() + Math.round(visibleRows / 2);
+    var row = this.getPageDownRow() + Math.floor(this.getVisibleRowCount() / 2);
 
     this.scrollPageDown();
 
