@@ -90,6 +90,98 @@ ace.TextDocument.prototype.getTextRange = function(range) {
     }
 };
 
+ace.TextDocument.prototype.findMatchingBracket = function(position) {
+    if (position.column == 0) return null;
+
+    var charBeforeCursor = this.getLine(position.row).charAt(position.column-1);
+    if (charBeforeCursor == "") return null;
+
+    var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
+    if (!match) {
+        return null;
+    }
+
+    if (match[1]) {
+        return this._findClosingBracket(match[1], position);
+    } else {
+        return this._findOpeningBracket(match[2], position);
+    }
+};
+
+ace.TextDocument.prototype._brackets = {
+    ")": "(",
+    "(": ")",
+    "]": "[",
+    "[": "]",
+    "{": "}",
+    "}": "{"
+};
+
+ace.TextDocument.prototype._findOpeningBracket = function(bracket, position) {
+    var openBracket = this._brackets[bracket];
+
+    var column = position.column - 2;
+    var row = position.row;
+    var depth = 1;
+
+    var line = this.getLine(row);
+
+    while (true) {
+        while(column >= 0) {
+            var char = line.charAt(column);
+            if (char == openBracket) {
+                depth -= 1;
+                if (depth == 0) {
+                    return {row: row, column: column};
+                }
+            }
+            else if (char == bracket) {
+                depth +=1;
+            }
+            column -= 1;
+        }
+        row -=1;
+        if (row < 0) break;
+
+        var line = this.getLine(row);
+        var column = line.length-1;
+    }
+    return null;
+};
+
+ace.TextDocument.prototype._findClosingBracket = function(bracket, position) {
+    var closingBracket = this._brackets[bracket];
+
+    var column = position.column;
+    var row = position.row;
+    var depth = 1;
+
+    var line = this.getLine(row);
+    var lineCount = this.getLength();
+
+    while (true) {
+        while(column < line.length) {
+            var char = line.charAt(column);
+            if (char == closingBracket) {
+                depth -= 1;
+                if (depth == 0) {
+                    return {row: row, column: column};
+                }
+            }
+            else if (char == bracket) {
+                depth +=1;
+            }
+            column += 1;
+        }
+        row +=1;
+        if (row >= lineCount) break;
+
+        var line = this.getLine(row);
+        var column = 0;
+    }
+    return null;
+};
+
 ace.TextDocument.prototype.insert = function(position, text) {
     var end = this._insert(position, text);
     this.fireChangeEvent(position.row, position.row == end.row ? position.row

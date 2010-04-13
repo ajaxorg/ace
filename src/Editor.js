@@ -46,7 +46,40 @@ ace.Editor.prototype.resize = function() {
 
 ace.Editor.prototype.updateCursor = function() {
     this.renderer.updateCursor(this.cursor);
+    this._highlightBrackets();
 };
+
+ace.Editor.prototype._highlightBrackets = function() {
+
+    if (this._bracketHighlight) {
+        this.renderer.removeMarker(this._bracketHighlight);
+        this._bracketHighlight = null;
+    }
+
+    if (this._highlightPending) {
+        return;
+    }
+
+    // perform highlight async to not block the browser during navigation
+    var self = this;
+    this._highlightPending = true;
+    setTimeout(function() {
+        self._highlightPending = false;
+
+        var pos = self.doc.findMatchingBracket(self.cursor);
+        if (pos) {
+            range = {
+                start: pos,
+                end: {
+                    row: pos.row,
+                    column: pos.column+1
+                }
+            };
+            self._bracketHighlight = self.renderer.addMarker(range, "bracket");
+        }
+    }, 10);
+};
+
 
 ace.Editor.prototype.onFocus = function() {
     this.renderer.showCursor();
