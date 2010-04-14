@@ -47,5 +47,35 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
 
         var comment = this.mode.toggleCommentLines(doc, range);
         assertEquals(["////  abc", "////cde", "//fg"].join("\n"), doc.toString());
+    },
+
+    "test: auto indent after opening brace" : function() {
+        var doc = new ace.TextDocument(["if () {"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc, this.mode);
+
+        editor.navigateLineEnd();
+        editor.onTextInput("\n");
+
+        assertEquals(["if () {", editor.getTabString()].join("\n"), doc.toString());
+    },
+
+    "test: no auto indent after opening brace in multi line comment" : function() {
+        var doc = new ace.TextDocument(["/*if () {"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc, this.mode);
+
+        editor.navigateLineEnd();
+        editor.onTextInput("\n");
+
+        assertEquals(["/*if () {", ""].join("\n"), doc.toString());
+    },
+
+    "test: no auto indent should add to existing indent" : function() {
+        var doc = new ace.TextDocument(["    if () {"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc, this.mode);
+
+        editor.navigateLineEnd();
+        editor.onTextInput("\n");
+
+        assertEquals(["    if () {", "    " + editor.getTabString()].join("\n"), doc.toString());
     }
 });

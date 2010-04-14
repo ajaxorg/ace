@@ -12,3 +12,24 @@ ace.mode.JavaScript.prototype.toggleCommentLines = function(doc, range) {
     };
     return addedRows;
 };
+
+ace.mode.JavaScript.prototype.increaseIndentPatterns = {
+    "start" : /^(\s*).*[\{\(\[]\s*$/
+};
+
+ace.mode.JavaScript.prototype.getNextLineIndent = function(line, state, tab) {
+    var re = this.increaseIndentPatterns[state];
+    if (!re) return
+
+    var match = line.match(re);
+    if (match) {
+        return (match[1] || "") + tab;
+    }
+
+    var match = line.match(/^(\s+).*$/);
+    if (match) {
+        return match[1];
+    }
+
+    return "";
+};

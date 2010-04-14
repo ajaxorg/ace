@@ -44,6 +44,8 @@ var TextEditTest = TestCase("TextEditTest",
         assertEquals(["a12345", "    b12345", "    c12345"].join("\n"),
                      doc.toString());
 
+        assertPosition(2, 7, editor.getCursorPosition());
+
         var selection = editor.getSelectionRange();
         assertPosition(1, 7, selection.start);
         assertPosition(2, 7, selection.end);
@@ -61,6 +63,8 @@ var TextEditTest = TestCase("TextEditTest",
         assertEquals(["  a12345", "b12345", "  c12345"].join("\n"),
                      doc.toString());
 
+        assertPosition(2, 1, editor.getCursorPosition());
+
         var selection = editor.getSelectionRange();
         assertPosition(0, 1, selection.start);
         assertPosition(2, 1, selection.end);
@@ -73,6 +77,17 @@ var TextEditTest = TestCase("TextEditTest",
         var selection = editor.getSelectionRange();
         assertPosition(0, 1, selection.start);
         assertPosition(2, 1, selection.end);
+    },
+
+    "test: outent without a selection should update cursor" : function() {
+        var doc = new ace.TextDocument("        12");
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(0, 3);
+        editor.blockOutdent("  ");
+
+        assertEquals("      12", doc.toString());
+        assertPosition(0, 1, editor.getCursorPosition());
     },
 
     "test: comment lines should perserve selection" : function() {

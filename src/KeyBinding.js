@@ -179,14 +179,12 @@ ace.KeyBinding = function(element, host) {
                 return ace.stopEvent(e);
 
             case keys.TAB:
-                if (host.hasMultiLineSelection()) {
-                    if (e.shiftKey) {
-                        host.blockOutdent();
-                    } else {
-                        host.blockIndent();
-                    }
+                if (e.shiftKey) {
+                    host.blockOutdent();
+                } else if (host.hasMultiLineSelection()) {
+                    host.blockIndent();
                 } else {
-                    host.onTextInput("    ");
+                    host.onTextInput(host.getTabString());
                 }
                 return ace.stopEvent(e);
         }

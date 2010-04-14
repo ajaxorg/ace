@@ -221,13 +221,38 @@ ace.Editor.prototype.onCut = function() {
 
 ace.Editor.prototype.onTextInput = function(text) {
     if (this.hasSelection()) {
-        this.moveCursorToPosition(this.doc.replace(this.getSelectionRange(), text));
+        var end = this.doc.replace(this.getSelectionRange(), text);
         this.clearSelection();
     }
     else {
-        this.moveCursorToPosition(this.doc.insert(this.cursor, text));
+        var end = this.doc.insert(this.cursor, text);
     }
+
+    // multi line insert
+    var row = this.cursor.row;
+    if (row !== end.row) {
+        var line = this.doc.getLine(row);
+        var lineState = this.bgTokenizer.getState(row);
+        var indent = this.mode.getNextLineIndent(line, lineState, this.getTabString());
+        if (indent) {
+            var indentRange = {
+                start: {
+                    row: row+1,
+                    column: 0
+                },
+                end : end
+            };
+            end.column += this.doc.indentRows(indentRange, indent);
+        }
+    }
+
+    this.moveCursorToPosition(end);
     this.renderer.scrollCursorIntoView();
+};
+
+
+ace.Editor.prototype.getTabString = function() {
+    return "    ";
 };
 
 ace.Editor.prototype.removeRight = function() {
@@ -262,18 +287,14 @@ ace.Editor.prototype.removeLine = function() {
 };
 
 ace.Editor.prototype.blockIndent = function(indentString) {
-    if (!this.hasSelection()) return;
-
-    var indentString = indentString || "    ";
+    var indentString = indentString || this.getTabString();
     var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
 
     this.shiftSelection(addedColumns);
 };
 
 ace.Editor.prototype.blockOutdent = function(indentString) {
-    if (!this.hasSelection()) return;
-
-    var indentString = indentString || "    ";
+    var indentString = indentString || this.getTabString();
     var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
     this.shiftSelection(addedColumns);
@@ -626,7 +647,10 @@ ace.Editor.prototype.getSelectionAnchor = function() {
             column: this.selectionAnchor.column
         };
     } else {
-        return null;
+        return {
+            row: this.cursor.row,
+            column: this.cursor.column
+        };
     }
 };
 
@@ -637,12 +661,18 @@ ace.Editor.prototype.getSelectionLead = function() {
             column: this.selectionLead.column
         };
     } else {
-        return null;
+        return {
+            row: this.cursor.row,
+            column: this.cursor.column
+        };
     }
 };
 
 ace.Editor.prototype.shiftSelection = function(columns) {
-    if (!this.hasSelection()) return;
+    if (!this.hasSelection()) {
+        this.moveCursorTo(this.cursor.row, this.cursor.column + columns);
+        return;
+    };
 
     var anchor = this.getSelectionAnchor();
     var lead = this.getSelectionLead();

@@ -77,14 +77,20 @@ ace.BackgroundTokenizer.prototype.stop = function() {
 };
 
 ace.BackgroundTokenizer.prototype.getTokens = function(row) {
-    if (this.lines[row]) {
-        return this.lines[row].tokens;
-    }
-    else {
+    return this._tokenizeRow(row).tokens;
+};
+
+ace.BackgroundTokenizer.prototype.getState = function(row) {
+    return this._tokenizeRow(row).state;
+};
+
+ace.BackgroundTokenizer.prototype._tokenizeRow = function(row) {
+    if (!this.lines[row]) {
         var state = "start";
         if (row > 0 && this.lines[row - 1]) {
             state = this.lines[row - 1].state;
         }
-        return this.tokenizer.getLineTokens(this.textLines[row] || "", state).tokens;
+        this.lines[row] = this.tokenizer.getLineTokens(this.textLines[row] || "", state);
     }
+    return this.lines[row];
 };

@@ -17,3 +17,7 @@ ace.mode.Text.prototype.getTokenizer = function() {
 ace.mode.Text.prototype.toggleCommentLines = function(doc, range) {
     return 0;
 };
+
+ace.mode.Text.prototype.getNextLineIndent = function(line, state, tab) {
+    return "";
+};

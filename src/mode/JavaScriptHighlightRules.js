@@ -76,8 +76,8 @@ ace.mode.JavaScriptHighlightRules = function() {
             token : function(value) {
                 // return parens[value];
             return "text";
-        },
-        regex : "[\\[\\]\\(\\)\\{\\}]"
+            },
+            regex : "[\\[\\]\\(\\)\\{\\}]"
         }, {
             token : "text",
             regex : "\\s+"
