@@ -31,5 +31,37 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
         assertPosition(0, 0, doc.findMatchingBracket({row: 1, column: 1}));
         assertPosition(0, 2, doc.findMatchingBracket({row: 1, column: 2}));
         assertPosition(0, 1, doc.findMatchingBracket({row: 1, column: 3}));
+    },
+
+    "test: move lines down" : function() {
+        var doc = new ace.TextDocument(["1", "2", "3", "4"].join("\n"));
+
+        doc.moveLinesDown(0, 1);
+        assertEquals(["3", "1", "2", "4"].join("\n"), doc.toString());
+
+        doc.moveLinesDown(1, 2);
+        assertEquals(["3", "4", "1", "2"].join("\n"), doc.toString());
+
+        doc.moveLinesDown(2, 3);
+        assertEquals(["3", "4", "1", "2"].join("\n"), doc.toString());
+
+        doc.moveLinesDown(2, 2);
+        assertEquals(["3", "4", "2", "1"].join("\n"), doc.toString());
+    },
+
+    "test: move lines up" : function() {
+        var doc = new ace.TextDocument(["1", "2", "3", "4"].join("\n"));
+
+        doc.moveLinesUp(2, 3);
+        assertEquals(["1", "3", "4", "2"].join("\n"), doc.toString());
+
+        doc.moveLinesUp(1, 2);
+        assertEquals(["3", "4", "1", "2"].join("\n"), doc.toString());
+
+        doc.moveLinesUp(0, 1);
+        assertEquals(["3", "4", "1", "2"].join("\n"), doc.toString());
+
+        doc.moveLinesUp(2, 2);
+        assertEquals(["3", "1", "4", "2"].join("\n"), doc.toString());
     }
 });

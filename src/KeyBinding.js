@@ -57,13 +57,16 @@ ace.KeyBinding = function(element, host) {
                 break;
 
             case keys.UP:
-                if (e.metaKey && e.shiftKey) {
+                if (e.altKey) {
+                    host.moveLinesUp();
+                }
+                else if (e.metaKey && e.shiftKey) {
                     host.selectFileStart();
                 }
                 else if (e.metaKey) {
                     host.navigateFileStart();
                 }
-                if (e.shiftKey) {
+                else if (e.shiftKey) {
                     host.selectUp();
                 }
                 else {
@@ -72,13 +75,16 @@ ace.KeyBinding = function(element, host) {
                 return ace.stopEvent(e);
 
             case keys.DOWN:
-                if (e.metaKey && e.shiftKey) {
+                if (e.altKey) {
+                    host.moveLinesDown();
+                }
+                else if (e.metaKey && e.shiftKey) {
                     host.selectFileEnd();
                 }
                 else if (e.metaKey) {
                     host.navigateFileEnd();
                 }
-                if (e.shiftKey) {
+                else if (e.shiftKey) {
                     host.selectDown();
                 }
                 else {

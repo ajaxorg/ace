@@ -302,3 +302,29 @@ ace.TextDocument.prototype.outdentRows = function(range, indentString) {
     this.fireChangeEvent(range.start.row, range.end.row);
     return -outdentLength;
 };
+
+ace.TextDocument.prototype.moveLinesUp = function(firstRow, lastRow) {
+    if (firstRow <= 0) return 0;
+
+    var removed = this.lines.splice(firstRow, lastRow-firstRow+1);
+
+    var args = [firstRow - 1, 0];
+    args.push.apply(args, removed);
+    this.lines.splice.apply(this.lines, args);
+
+    this.fireChangeEvent(firstRow-1, lastRow);
+    return -1;
+};
+
+ace.TextDocument.prototype.moveLinesDown = function(firstRow, lastRow) {
+    if (lastRow >= this.lines.length-1) return 0;
+
+    var removed = this.lines.splice(firstRow, lastRow-firstRow+1);
+
+    var args = [firstRow + 1, 0];
+    args.push.apply(args, removed);
+    this.lines.splice.apply(this.lines, args);
+
+    this.fireChangeEvent(firstRow, lastRow+1);
+    return 1;
+};

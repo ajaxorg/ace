@@ -107,5 +107,71 @@ var TextEditTest = TestCase("TextEditTest",
         var selection = editor.getSelectionRange();
         assertPosition(0, 0, selection.start);
         assertPosition(1, 1, selection.end);
+    },
+
+    "test: move lines down should select moved lines" : function() {
+        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(0, 1);
+        editor.selectDown();
+
+        editor.moveLinesDown();
+        assertEquals(["33", "11", "22", "44"].join("\n"), doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
+        assertPosition(3, 0, editor.getSelectionAnchor());
+        assertPosition(1, 0, editor.getSelectionLead());
+
+        editor.moveLinesDown();
+        assertEquals(["33", "44", "11", "22"].join("\n"), doc.toString());
+        assertPosition(2, 0, editor.getCursorPosition());
+        assertPosition(3, 2, editor.getSelectionAnchor());
+        assertPosition(2, 0, editor.getSelectionLead());
+
+        // moving again should have no effect
+        editor.moveLinesDown();
+        assertEquals(["33", "44", "11", "22"].join("\n"), doc.toString());
+        assertPosition(2, 0, editor.getCursorPosition());
+        assertPosition(3, 2, editor.getSelectionAnchor());
+        assertPosition(2, 0, editor.getSelectionLead());
+    },
+
+    "test: move lines up should select moved lines" : function() {
+        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(2, 1);
+        editor.selectDown();
+
+        editor.moveLinesUp();
+        assertEquals(["11", "33", "44", "22"].join("\n"), doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
+        assertPosition(3, 0, editor.getSelectionAnchor());
+        assertPosition(1, 0, editor.getSelectionLead());
+
+        editor.moveLinesUp();
+        assertEquals(["33", "44", "11", "22"].join("\n"), doc.toString());
+        assertPosition(0, 0, editor.getCursorPosition());
+        assertPosition(2, 0, editor.getSelectionAnchor());
+        assertPosition(0, 0, editor.getSelectionLead());
+    },
+
+    "test: move line without active selection should move cursor to start of the moved line" : function()
+    {
+        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(1, 1);
+        editor.clearSelection();
+
+        editor.moveLinesDown();
+        assertEquals(["11", "33", "22", "44"].join("\n"), doc.toString());
+        assertPosition(2, 0, editor.getCursorPosition());
+
+        editor.clearSelection();
+
+        editor.moveLinesUp();
+        assertEquals(["11", "22", "33", "44"].join("\n"), doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
     }
 });

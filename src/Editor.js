@@ -288,6 +288,35 @@ ace.Editor.prototype.toggleCommentLines = function() {
     this.shiftSelection(addedColumns);
 };
 
+ace.Editor.prototype.moveLinesDown = function() {
+    this._moveLines(function(firstRow, lastRow) {
+        return this.doc.moveLinesDown(firstRow, lastRow);
+    });
+};
+
+ace.Editor.prototype.moveLinesUp = function() {
+    this._moveLines(function(firstRow, lastRow) {
+        return this.doc.moveLinesUp(firstRow, lastRow);
+    });
+};
+
+ace.Editor.prototype._moveLines = function(mover) {
+    var range = this.getSelectionRange();
+    var firstRow = range.start.row;
+    var lastRow = range.end.row;
+    if (range.end.column == 0 && (range.start.row !== range.end.row)) {
+        lastRow -= 1;
+    }
+
+    var linesMoved = mover.call(this, firstRow, lastRow);
+
+    this.setSelectionAnchor(lastRow+linesMoved+1, 0);
+    this._moveSelection(function() {
+        this.moveCursorTo(firstRow+linesMoved, 0);
+    });
+};
+
+
 ace.Editor.prototype.onCompositionStart = function() {
     this.renderer.showComposition(this.cursor);
     this.onTextInput(" ");
@@ -532,21 +561,27 @@ ace.Editor.prototype.moveCursorToPosition = function(position) {
     this.moveCursorTo(position.row, position.column);
 };
 
-ace.Editor.prototype.moveCursorTo = function(row, column) {
+ace.Editor.prototype._clipPositionToDocument = function(row, column) {
+    var pos = {};
+
     if (row >= this.doc.getLength()) {
-        this.cursor.row = this.doc.getLength() - 1;
-        this.cursor.column = this.doc.getLine(this.cursor.row).length;
+        pos.row = this.doc.getLength() - 1;
+        pos.column = this.doc.getLine(pos.row).length;
     }
     else if (row < 0) {
-        this.cursor.row = 0;
-        this.cursor.column = 0;
+        pos.row = 0;
+        pos.column = 0;
     }
     else {
-        this.cursor.row = row;
-        this.cursor.column = Math
-                .min(this.doc.getLine(this.cursor.row).length, Math
-                        .max(0, column));
+        pos.row = row;
+        pos.column = Math.min(this.doc.getLine(pos.row).length,
+                Math.max(0, column));
     }
+    return pos;
+};
+
+ace.Editor.prototype.moveCursorTo = function(row, column) {
+    this.cursor = this._clipPositionToDocument(row, column);
     this.updateCursor();
 };
 
@@ -580,12 +615,7 @@ ace.Editor.prototype.hasMultiLineSelection = function() {
 ace.Editor.prototype.setSelectionAnchor = function(row, column) {
     this.clearSelection();
 
-    this.selectionAnchor = {
-        row : Math.min(this.doc.getLength() - 1, Math.max(0, row)),
-        column : Math.min(this.doc.getLine(this.cursor.row).length, Math
-                .max(0, column))
-    };
-
+    this.selectionAnchor = this._clipPositionToDocument(row, column);
     this.selectionLead = null;
 };
 
@@ -624,26 +654,21 @@ ace.Editor.prototype.shiftSelection = function(columns) {
 };
 
 ace.Editor.prototype.getSelectionRange = function() {
-    var anchor = this.selectionAnchor;
-    var lead = this.selectionLead;
+    var anchor = this.selectionAnchor || this.cursor;
+    var lead = this.selectionLead || this.cursor;
 
-    if (!anchor) {
-        return null;
+    if (anchor.row > lead.row
+            || (anchor.row == lead.row && anchor.column > lead.column)) {
+        return {
+            start : lead,
+            end : anchor
+        };
     }
     else {
-        if (anchor.row > lead.row
-                || (anchor.row == lead.row && anchor.column > lead.column)) {
-            return {
-                start : lead,
-                end : anchor
-            };
-        }
-        else {
-            return {
-                start : anchor,
-                end : lead
-            };
-        }
+        return {
+            start : anchor,
+            end : lead
+        };
     }
 };
 
