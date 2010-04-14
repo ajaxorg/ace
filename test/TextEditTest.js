@@ -2,7 +2,7 @@ var TextEditTest = TestCase("TextEditTest",
 {
     "test: delete line from the middle" : function() {
         var doc = new ace.TextDocument(["a", "b", "c", "d"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
         editor.removeLine();
@@ -13,7 +13,7 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: delete first line" : function() {
         var doc = new ace.TextDocument(["a", "b", "c"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.removeLine();
 
@@ -23,7 +23,7 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: delete last" : function() {
         var doc = new ace.TextDocument(["a", "b", "c"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(2, 1);
         editor.removeLine();
@@ -34,7 +34,7 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: indent block" : function() {
         var doc = new ace.TextDocument(["a12345", "b12345", "c12345"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 3);
         editor.selectDown();
@@ -51,7 +51,7 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: outdent block" : function() {
         var doc = new ace.TextDocument(["    a12345", "  b12345", "    c12345"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 3);
         editor.selectDown();

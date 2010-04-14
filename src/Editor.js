@@ -1,8 +1,11 @@
 ace.provide("ace.Editor");
 
-ace.Editor = function(doc, renderer) {
+ace.Editor = function(renderer, doc, mode) {
     var container = renderer.getContainerElement();
     this.renderer = renderer;
+
+    this.setDocument(doc || new ace.TextDocument(""));
+    this.setMode(mode || new ace.mode.Text());
 
     this.textInput = new ace.TextInput(container, this);
     new ace.KeyBinding(container, this);
@@ -15,16 +18,6 @@ ace.Editor = function(doc, renderer) {
     ace.addTripleClickListener(container, ace.bind(this.selectLine,
                                                    this));
 
-    this.doc = doc;
-    doc.addChangeListener(ace.bind(this.onDocumentChange, this));
-    renderer.setDocument(doc);
-
-    this.tokenizer = new ace.BackgroundTokenizer(new ace.Tokenizer(
-            ace.JavaScript.RULES), ace.bind(this.onTokenizerUpdate, this));
-
-    this.tokenizer.setLines(doc.lines);
-    renderer.setTokenizer(this.tokenizer);
-
     this.cursor = {
         row : 0,
         column : 0
@@ -35,6 +28,31 @@ ace.Editor = function(doc, renderer) {
     this.selection = null;
 
     this.renderer.draw();
+};
+
+ace.Editor.prototype.setDocument = function(doc) {
+    // TODO: document change is not yet supported
+    if (this.doc) {
+        throw new Error("TODO: document change is not yet supported");
+    }
+
+    this.doc = doc;
+    doc.addChangeListener(ace.bind(this.onDocumentChange, this));
+    this.renderer.setDocument(doc);
+};
+
+ace.Editor.prototype.setMode = function(mode) {
+    // TODO: mode change is not yet supported
+    if (this.mode) {
+        throw new Error("TODO: mode change is not yet supported");
+    }
+
+    this.mode = mode;
+
+    this.tokenizer = new ace.BackgroundTokenizer(mode.getTokenizer(), ace.bind(this.onTokenizerUpdate, this));
+
+    this.tokenizer.setLines(this.doc.lines);
+    this.renderer.setTokenizer(this.tokenizer);
 };
 
 ace.Editor.prototype.resize = function()

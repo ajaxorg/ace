@@ -13,6 +13,14 @@ ace.provide = function(namespace) {
     }
 };
 
+ace.inherits = function(ctor, superCtor) {
+    var tempCtor = function() {};
+    tempCtor.prototype = superCtor.prototype;
+    ctor.super_ = superCtor.prototype;
+    ctor.prototype = new tempCtor();
+    ctor.prototype.constructor = ctor;
+};
+
 ace.addListener = function(elem, type, callback) {
     if (elem.addEventListener) {
         return elem.addEventListener(type, callback, false);
@@ -62,14 +70,6 @@ ace.preventDefault = function(e) {
         e.preventDefault();
     else
         e.returnValue = false;
-};
-
-ace.inherits = function(ctor, superCtor) {
-    var tempCtor = function() {};
-    tempCtor.prototype = superCtor.prototype;
-    ctor.super_ = superCtor.prototype;
-    ctor.prototype = new tempCtor();
-    ctor.prototype.constructor = ctor;
 };
 
 ace.getInnerWidth = function(element) {

@@ -20,9 +20,12 @@
 	<link rel="stylesheet" href="../css/editor.css" type="text/css" charset="utf-8">
 	
 	<script src="../src/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/Text.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/JavaScript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/JavaScriptHighlightRules.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/Xml.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/XmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/TextDocument.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/JavaScript.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/XML.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/Tokenizer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/BackgroundTokenizer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/CursorLayer.js" type="text/javascript" charset="utf-8"></script>	
@@ -42,7 +45,11 @@
 <script type="text/javascript" charset="utf-8">
 
 var container = document.getElementById("container");
-var editor = new ace.Editor(new ace.TextDocument("Juhu Kinners"), new ace.VirtualRenderer(container));
+var editor = new ace.Editor(
+    new ace.VirtualRenderer(container),
+    new ace.TextDocument("Juhu Kinners"),
+    new ace.mode.JavaScript()
+);
 
 window.onresize = function() {
   editor.resize();

@@ -7,16 +7,16 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: navigate to end of file should place the cursor on last row and column" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 10),
-                new MockRenderer());
+        var doc = this.createTextDocument(200, 10);
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.navigateFileEnd();
         assertPosition(199, 10, editor.getCursorPosition());
     },
 
     "test: navigate to end of file should scroll the last line into view" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 10),
-                new MockRenderer());
+        var doc = this.createTextDocument(200, 10);
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.navigateFileEnd();
         var cursor = editor.getCursorPosition();
@@ -26,16 +26,16 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: navigate to start of file should place the cursor on the first row and column" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 10),
-                new MockRenderer());
+        var doc = this.createTextDocument(200, 10);
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.navigateFileStart();
         assertPosition(0, 0, editor.getCursorPosition());
     },
 
     "test: navigate to start of file should scroll the first row into view" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 10),
-                new MockRenderer());
+        var doc = this.createTextDocument(200, 10);
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.scrollToRow(editor.getLastVisibleRow() + 20);
         editor.navigateFileStart();
@@ -44,8 +44,8 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: move selection lead to end of file" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 10),
-                new MockRenderer());
+        var doc = this.createTextDocument(200, 10);
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(100, 5);
         editor.selectFileEnd();
@@ -57,8 +57,8 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: move selection lead to start of file" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 10),
-                new MockRenderer());
+        var doc = this.createTextDocument(200, 10);
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(100, 5);
         editor.selectFileStart();
@@ -72,7 +72,7 @@ var NavigationTest = TestCase("NavigationTest",
     "test: navigate word right" : function() {
         var doc = new ace.TextDocument( ["ab",
                 " Juhu Kinners (abc, 12)", " cde"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.navigateDown();
         assertPosition(1, 0, editor.getCursorPosition());
@@ -111,7 +111,7 @@ var NavigationTest = TestCase("NavigationTest",
 
     "test: select word right if cursor in word" : function() {
         var doc = new ace.TextDocument("Juhu Kinners");
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 2);
 
@@ -122,7 +122,7 @@ var NavigationTest = TestCase("NavigationTest",
     "test: navigate word left" : function() {
         var doc = new ace.TextDocument( ["ab",
                                          " Juhu Kinners (abc, 12)", " cde"].join("\n"));
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.navigateDown();
         editor.navigateLineEnd();
@@ -162,7 +162,7 @@ var NavigationTest = TestCase("NavigationTest",
 
     "test: select word left if cursor in word" : function() {
         var doc = new ace.TextDocument("Juhu Kinners");
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 8);
 
@@ -172,7 +172,7 @@ var NavigationTest = TestCase("NavigationTest",
 
     "test: select word right and select" : function() {
         var doc = new ace.TextDocument("Juhu Kinners");
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 0);
         editor.selectWordRight();
@@ -185,7 +185,7 @@ var NavigationTest = TestCase("NavigationTest",
 
     "test: select word left and select" : function() {
         var doc = new ace.TextDocument("Juhu Kinners");
-        var editor = new ace.Editor(doc, new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 3);
         editor.selectWordLeft();
@@ -197,8 +197,7 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: goto hidden line should scroll the line into the middle of the viewport" : function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 5),
-                new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), this.createTextDocument(200, 5));
 
         editor.navigateTo(0, 0);
         editor.gotoLine(100);
@@ -232,8 +231,7 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: goto visible line should only move the cursor and not scroll": function() {
-        var editor = new ace.Editor(this.createTextDocument(200, 5),
-                new MockRenderer());
+        var editor = new ace.Editor(new MockRenderer(), this.createTextDocument(200, 5));
 
         editor.navigateTo(0, 0);
         editor.gotoLine(11);
