@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.CursorLayer");
 
 ace.CursorLayer = function(parentEl) {
     this.element = document.createElement("div");

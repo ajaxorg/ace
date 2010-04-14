@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.TextDocument");
 
 ace.TextDocument = function(text) {
     this.lines = this._split(text);

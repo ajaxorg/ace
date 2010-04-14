@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.VirtualRenderer");
 
 ace.VirtualRenderer = function(container) {
     this.container = container;

@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.MarkerLayer");
 
 ace.MarkerLayer = function(parentEl) {
     this.element = document.createElement("div");

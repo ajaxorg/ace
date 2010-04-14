@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.TextLayer");
 
 ace.TextLayer = function(parentEl) {
     this.element = document.createElement("div");

@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.GutterLayer");
 
 ace.GutterLayer = function(parentEl) {
     this.element = document.createElement("div");

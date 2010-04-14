@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.Editor");
 
 ace.Editor = function(doc, renderer) {
     var container = renderer.getContainerElement();

@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.BackgroundTokenizer");
 
 ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete) {
     this.running = false;

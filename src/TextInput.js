@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.TextInput");
 
 ace.TextInput = function(parentNode, host) {
 

@@ -1,5 +1,4 @@
-if (!window.ace)
-    ace = {};
+ace.provide("ace.Tokenizer");
 
 ace.Tokenizer = function(rules) {
     this.rules = rules;
