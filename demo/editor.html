@@ -9,11 +9,24 @@
 	
 	<style type="text/css" media="screen">
 	
+	body {
+		margin: 0;
+		padding: 0;
+		font: sans-serif;
+	}
+	
 	#container {  
-	  top: 0px;
-	  right: 0px;
-	  bottom: 0px;
-	  left: 0px;
+	  	top: 30px;
+	  	right: 0px;
+	  	bottom: 0px;
+	  	left: 0px;
+	}
+	
+	#controls {
+		width: 100%;
+		height: 30px;
+		border: 1px solid black;
+		margin: 0;
 	}
   
 	</style>
@@ -39,21 +52,51 @@
 </head>
 <body>
     
+    <table id="controls">
+    	<tr>
+    	<td>
+    	  <label for="mode">Mode:</label>
+    	  <select id="mode" size="1">
+    	    <option value="text">Plain Text</option>
+    	    <option value="javascript">JavaScript</option>
+    	    <option value="xml">XML</option>    	   
+    	  </select>
+    	</td>
+    	</tr>
+    </table>
+
     <div id="container">    
     </div>
     
 <script type="text/javascript" charset="utf-8">
 
+var modeEl = document.getElementById("mode");
+modeEl.onchange = function() {
+	editor.setMode(getMode());
+};
+
+var modes = {
+    text: new ace.mode.Text(),
+    xml: new ace.mode.Xml(),
+    javascript: new ace.mode.JavaScript()
+};
+
+function getMode() {
+    return modes[modeEl.value]; 
+}
+
 var container = document.getElementById("container");
 var editor = new ace.Editor(
     new ace.VirtualRenderer(container),
     new ace.TextDocument("Juhu Kinners"),
-    new ace.mode.JavaScript()
+    getMode()
 );
 
 window.onresize = function() {
   editor.resize();
-}
+};
+
+
   
 </script>
 

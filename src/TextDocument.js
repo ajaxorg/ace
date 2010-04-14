@@ -89,6 +89,10 @@ ace.TextDocument.prototype.getTextRange = function(range) {
     }
 };
 
+ace.TextDocument.prototype.getLines = function(firstRow, lastRow) {
+    return this.lines.slice(firstRow, lastRow+1);
+};
+
 ace.TextDocument.prototype.findMatchingBracket = function(position) {
     if (position.column == 0) return null;
 
@@ -279,6 +283,7 @@ ace.TextDocument.prototype.indentRows = function(range, indentString) {
       this.lines[i] = indentString + this.getLine(i);
   }
   this.fireChangeEvent(range.start.row, range.end.row);
+  return indentString.length;
 };
 
 ace.TextDocument.prototype.outdentRows = function(range, indentString) {
@@ -295,5 +300,5 @@ ace.TextDocument.prototype.outdentRows = function(range, indentString) {
     }
 
     this.fireChangeEvent(range.start.row, range.end.row);
-    return outdentLength;
+    return -outdentLength;
 };

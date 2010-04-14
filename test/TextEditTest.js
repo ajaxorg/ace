@@ -73,5 +73,39 @@ var TextEditTest = TestCase("TextEditTest",
         var selection = editor.getSelectionRange();
         assertPosition(0, 1, selection.start);
         assertPosition(2, 1, selection.end);
+    },
+
+    "test: comment lines should perserve selection" : function() {
+        var doc = new ace.TextDocument(["  abc", "cde"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc, new ace.mode.JavaScript());
+
+        editor.moveCursorTo(0, 2);
+        editor.selectDown();
+
+        editor.toggleCommentLines();
+
+        assertEquals(["//  abc", "//cde"].join("\n"), doc.toString());
+
+        var selection = editor.getSelectionRange();
+        assertPosition(0, 4, selection.start);
+        assertPosition(1, 4, selection.end);
+    },
+
+    "test: uncomment lines should perserve selection" : function() {
+        var doc = new ace.TextDocument(["//  abc", "//cde"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc, new ace.mode.JavaScript());
+
+        editor.moveCursorTo(0, 1);
+        editor.selectDown();
+        editor.selectRight();
+        editor.selectRight();
+
+        editor.toggleCommentLines();
+
+        assertEquals(["  abc", "cde"].join("\n"), doc.toString());
+
+        var selection = editor.getSelectionRange();
+        assertPosition(0, 0, selection.start);
+        assertPosition(1, 1, selection.end);
     }
 });

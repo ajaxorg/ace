@@ -47,6 +47,13 @@ ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete) {
     };
 };
 
+ace.BackgroundTokenizer.prototype.setTokenizer = function(tokenizer) {
+    this.tokenizer = tokenizer;
+    this.lines = [];
+
+    this.start(0);
+};
+
 ace.BackgroundTokenizer.prototype.setLines = function(textLines) {
     this.textLines = textLines;
     this.lines = [];

@@ -16,7 +16,8 @@ var keys = {
     TAB : 9,
     A : 65,
     D: 68,
-    L: 76
+    L: 76,
+    "7": 55
 };
 
 ace.KeyBinding = function(element, host) {
@@ -46,6 +47,13 @@ ace.KeyBinding = function(element, host) {
                         return ace.stopEvent(e);
                     }
                 }
+                break;
+
+            case keys["7"]:
+                if (e.metaKey) {
+                    host.toggleCommentLines();
+                    return ace.stopEvent(e);
+                };
                 break;
 
             case keys.UP:

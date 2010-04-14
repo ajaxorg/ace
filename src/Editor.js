@@ -4,8 +4,8 @@ ace.Editor = function(renderer, doc, mode) {
     var container = renderer.getContainerElement();
     this.renderer = renderer;
 
-    this.setDocument(doc || new ace.TextDocument(""));
     this.setMode(mode || new ace.mode.Text());
+    this.setDocument(doc || new ace.TextDocument(""));
 
     this.textInput = new ace.TextInput(container, this);
     new ace.KeyBinding(container, this);
@@ -39,20 +39,23 @@ ace.Editor.prototype.setDocument = function(doc) {
     this.doc = doc;
     doc.addChangeListener(ace.bind(this.onDocumentChange, this));
     this.renderer.setDocument(doc);
+
+    this.bgTokenizer.setLines(this.doc.lines);
 };
 
 ace.Editor.prototype.setMode = function(mode) {
-    // TODO: mode change is not yet supported
-    if (this.mode) {
-        throw new Error("TODO: mode change is not yet supported");
-    }
 
     this.mode = mode;
+    var tokenizer = mode.getTokenizer();
 
-    this.tokenizer = new ace.BackgroundTokenizer(mode.getTokenizer(), ace.bind(this.onTokenizerUpdate, this));
+    if (!this.bgTokenizer) {
+        var onUpdate = ace.bind(this.onTokenizerUpdate, this);
+        this.bgTokenizer = new ace.BackgroundTokenizer(tokenizer, onUpdate);
+    } else {
+        this.bgTokenizer.setTokenizer(tokenizer);
+    }
 
-    this.tokenizer.setLines(this.doc.lines);
-    this.renderer.setTokenizer(this.tokenizer);
+    this.renderer.setTokenizer(this.bgTokenizer);
 };
 
 ace.Editor.prototype.resize = function()
@@ -109,7 +112,7 @@ ace.Editor.prototype.onBlur = function() {
 };
 
 ace.Editor.prototype.onDocumentChange = function(startRow, endRow) {
-    this.tokenizer.start(startRow);
+    this.bgTokenizer.start(startRow);
     this.renderer.updateLines(startRow, endRow);
 };
 
@@ -259,35 +262,30 @@ ace.Editor.prototype.removeLine = function() {
 };
 
 ace.Editor.prototype.blockIndent = function(indentString) {
-    if (!this.hasSelection()) {
-        return;
-    };
-
-    var range = this.getSelectionRange();
+    if (!this.hasSelection()) return;
 
     var indentString = indentString || "    ";
-    this.doc.indentRows(range, indentString);
+    var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
 
-    this.setSelectionAnchor(range.start.row, range.start.column + indentString.length);
-    this._moveSelection(function() {
-        this.moveCursorTo(range.end.row, range.end.column + indentString.length);
-    });
+    this.shiftSelection(addedColumns);
 };
 
 ace.Editor.prototype.blockOutdent = function(indentString) {
-    if (!this.hasSelection()) {
-        return;
-    };
-
-    var range = this.getSelectionRange();
+    if (!this.hasSelection()) return;
 
     var indentString = indentString || "    ";
-    var removedColumns = this.doc.outdentRows(range, indentString);
+    var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
-    this.setSelectionAnchor(range.start.row, range.start.column - removedColumns);
-    this._moveSelection(function() {
-        this.moveCursorTo(range.end.row, range.end.column - removedColumns);
-    });
+    this.shiftSelection(addedColumns);
+};
+
+ace.Editor.prototype.toggleCommentLines = function() {
+    if (!this.hasSelection()) return;
+
+    var selection = this.getSelectionRange();
+    var addedColumns = this.mode.toggleCommentLines(this.doc, selection);
+
+    this.shiftSelection(addedColumns);
 };
 
 ace.Editor.prototype.onCompositionStart = function() {
@@ -589,6 +587,40 @@ ace.Editor.prototype.setSelectionAnchor = function(row, column) {
     };
 
     this.selectionLead = null;
+};
+
+ace.Editor.prototype.getSelectionAnchor = function() {
+    if (this.selectionAnchor) {
+        return {
+            row: this.selectionAnchor.row,
+            column: this.selectionAnchor.column
+        };
+    } else {
+        return null;
+    }
+};
+
+ace.Editor.prototype.getSelectionLead = function() {
+    if (this.selectionLead) {
+        return {
+            row: this.selectionLead.row,
+            column: this.selectionLead.column
+        };
+    } else {
+        return null;
+    }
+};
+
+ace.Editor.prototype.shiftSelection = function(columns) {
+    if (!this.hasSelection()) return;
+
+    var anchor = this.getSelectionAnchor();
+    var lead = this.getSelectionLead();
+
+    this.setSelectionAnchor(anchor.row, anchor.column + columns);
+    this._moveSelection(function() {
+        this.moveCursorTo(lead.row, lead.column + columns);
+    });
 };
 
 ace.Editor.prototype.getSelectionRange = function() {

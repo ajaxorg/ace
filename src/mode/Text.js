@@ -1,9 +1,19 @@
 ace.provide("ace.mode.Text");
 
 ace.mode.Text = function() {
-    this.$tokenizer = new ace.Tokenizer({});
+    var rules = {
+        "start" : [ {
+            token : "text",
+            regex : ".+"
+        } ]
+    };
+    this.$tokenizer = new ace.Tokenizer(rules);
 };
 
 ace.mode.Text.prototype.getTokenizer = function() {
     return this.$tokenizer;
+};
+
+ace.mode.Text.prototype.toggleCommentLines = function(doc, range) {
+    return 0;
 };
