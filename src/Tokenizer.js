@@ -14,7 +14,7 @@ ace.Tokenizer = function(rules) {
         ;
 
         this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(")
-                + ")|(.))", "g");
+                + ")|(.+))", "g");
     }
 };
 

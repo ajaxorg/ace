@@ -19,14 +19,14 @@ ace.mode.XmlHighlightRules = function() {
             next : "comment"
         }, {
             token : "text", // opening tag
-            regex : "<",
+            regex : "<\\/?",
             next : "tag"
         }, {
             token : "text",
             regex : "\\s+"
         }, {
             token : "text",
-            regex : ".+"
+            regex : "[^<]+"
         } ],
 
         tag : [ {
