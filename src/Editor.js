@@ -10,13 +10,10 @@ ace.Editor = function(renderer, doc, mode) {
     this.textInput = new ace.TextInput(container, this);
     new ace.KeyBinding(container, this);
 
-    ace.addListener(container, "mousedown", ace
-            .bind(this.onMouseDown, this));
-    ace.addListener(container, "dblclick", ace
-            .bind(this.onMouseDoubleClick, this));
+    ace.addListener(container, "mousedown", ace.bind(this.onMouseDown, this));
+    ace.addListener(container, "dblclick", ace.bind(this.onMouseDoubleClick, this));
+    ace.addTripleClickListener(container, ace.bind(this.onMouseTripleClick, this));
     ace.addMouseWheelListener(container, ace.bind(this.onMouseWheel, this));
-    ace.addTripleClickListener(container, ace.bind(this.selection.selectLine,
-                                                   this.selection));
 
     this.selectionMarker = null;
     this._blockScrolling = false;
@@ -176,9 +173,7 @@ ace.Editor.prototype.onMouseDown = function(e) {
         selectionLead = _self.renderer.screenToTextCoordinates(mousePageX,
                                                                mousePageY);
 
-        _self.selection._moveSelection(function() {
-            _self.moveCursorToPosition(selectionLead);
-        });
+        _self.selection.selectToPosition(selectionLead);
         _self.renderer.scrollCursorIntoView();
     };
 
@@ -188,11 +183,12 @@ ace.Editor.prototype.onMouseDown = function(e) {
     return ace.preventDefault(e);
 };
 
-ace.Editor.prototype.tokenRe = /^[\w\d]+/g;
-ace.Editor.prototype.nonTokenRe = /^[^\w\d]+/g;
-
 ace.Editor.prototype.onMouseDoubleClick = function(e) {
     this.selection.selectWord();
+};
+
+ace.Editor.prototype.onMouseTripleClick = function(e) {
+    this.selection.selectLine();
 };
 
 ace.Editor.prototype.onMouseWheel = function(e) {

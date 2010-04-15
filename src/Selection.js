@@ -114,6 +114,12 @@ ace.Selection.prototype._moveSelection = function(mover) {
     this.updateSelection();
 };
 
+ace.Selection.prototype.selectToPosition = function(pos) {
+    this._moveSelection(function() {
+        this.moveCursorToPosition(pos);
+    });
+};
+
 ace.Selection.prototype.selectUp = function() {
     this._moveSelection(this.moveCursorUp);
 };
