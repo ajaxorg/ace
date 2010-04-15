@@ -96,7 +96,41 @@ window.onresize = function() {
   editor.resize();
 };
 
+ace.addListener(container, "dragover", function(e) {
+  return ace.preventDefault(e);
+});
 
+ace.addListener(container, "drop", function(e) {
+  try {
+    var file = e.dataTransfer.files[0];
+  } catch(e) {
+    return ace.stopEvent();
+  }
+  
+  if (window.FileReader) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      editor.clearSelection();
+      editor.moveCursorTo(0, 0);
+      editor.selectFileEnd();
+      
+      var mode = "text";
+      if (/^.*\.js$/i.test(file.name)) {
+        mode = "javascript";
+      } else if (/^.*\.xml$/i.test(file.name)) {
+        mode = "xml";
+      }      
+      
+      editor.onTextInput(reader.result);
+      
+      modeEl.value = mode;      
+      editor.setMode(modes[mode]);
+    }
+    reader.readAsText(file);
+  }
+  
+  return ace.preventDefault(e);
+});
   
 </script>
 
