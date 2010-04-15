@@ -205,6 +205,43 @@ ace.Selection.prototype.selectWordLeft = function() {
     this._moveSelection(this.moveCursorWordLeft);
 };
 
+ace.Selection.prototype.selectWord = function() {
+    var cursor = this.cursor;
+
+    var line = this.doc.getLine(cursor.row);
+    var column = cursor.column;
+
+    var inToken = false;
+    if (column > 0) {
+        inToken = !!line.charAt(column - 1).match(this.tokenRe);
+    }
+
+    if (!inToken) {
+        inToken = !!line.charAt(column).match(this.tokenRe);
+    }
+
+    var re = inToken ? this.tokenRe : this.nonTokenRe;
+
+    var start = column;
+    if (start > 0) {
+        do {
+            start--;
+        }
+        while (start >= 0 && line.charAt(start).match(re));
+        start++;
+    }
+
+    var end = column;
+    while (end < line.length && line.charAt(end).match(re)) {
+        end++;
+    }
+
+    this.setSelectionAnchor(cursor.row, start);
+    this._moveSelection(function() {
+        this.moveCursorTo(cursor.row, end);
+    });
+};
+
 ace.Selection.prototype.selectLine = function() {
     this.setSelectionAnchor(this.cursor.row, 0);
     this._moveSelection(function() {

@@ -34,7 +34,7 @@ ace.Editor.prototype.setDocument = function(doc) {
 
     this.doc = doc;
 
-    doc.addChangeListener(ace.bind(this.onDocumentChange, this));
+    doc.addEventListener("change", ace.bind(this.onDocumentChange, this));
     this.renderer.setDocument(doc);
 
     this.selection = doc.getSelection();
@@ -192,41 +192,7 @@ ace.Editor.prototype.tokenRe = /^[\w\d]+/g;
 ace.Editor.prototype.nonTokenRe = /^[^\w\d]+/g;
 
 ace.Editor.prototype.onMouseDoubleClick = function(e) {
-    var cursor = this.selection.getCursor();
-
-    var line = this.doc.getLine(cursor.row);
-    var column = cursor.column;
-
-    var inToken = false;
-    if (column > 0) {
-        inToken = !!line.charAt(column - 1).match(this.tokenRe);
-    }
-
-    if (!inToken) {
-        inToken = !!line.charAt(column).match(this.tokenRe);
-    }
-
-    var re = inToken ? this.tokenRe : this.nonTokenRe;
-
-    var start = column;
-    if (start > 0) {
-        do {
-            start--;
-        }
-        while (start >= 0 && line.charAt(start).match(re));
-        start++;
-    }
-
-    var end = column;
-    while (end < line.length && line.charAt(end).match(re)) {
-        end++;
-    }
-
-    var selection = this.selection;
-    selection.setSelectionAnchor(cursor.row, start);
-    selection._moveSelection(function() {
-        selection.moveCursorTo(cursor.row, end);
-    });
+    this.selection.selectWord();
 };
 
 ace.Editor.prototype.onMouseWheel = function(e) {

@@ -173,5 +173,48 @@ var SelectionTest = TestCase("SelectionTest",
 
         assertPosition(0, 0, range.start);
         assertPosition(0, 3, range.end);
+    },
+
+    "test: select word with cursor in word should select the word" : function() {
+        var doc = new ace.TextDocument("Juhu Kinners 123");
+        var selection = doc.getSelection();
+
+        selection.moveCursorTo(0, 8);
+        selection.selectWord();
+
+        var range = selection.getRange();
+        assertPosition(0, 5, range.start);
+        assertPosition(0, 12, range.end);
+    },
+
+    "test: select word with cursor betwen white space and word should select the word" : function() {
+        var doc = new ace.TextDocument("Juhu Kinners");
+        var selection = doc.getSelection();
+
+        selection.moveCursorTo(0, 4);
+        selection.selectWord();
+
+        var range = selection.getRange();
+        assertPosition(0, 0, range.start);
+        assertPosition(0, 4, range.end);
+
+        selection.moveCursorTo(0, 5);
+        selection.selectWord();
+
+        var range = selection.getRange();
+        assertPosition(0, 5, range.start);
+        assertPosition(0, 12, range.end);
+    },
+
+    "test: select word with cursor in white space should select white space" : function() {
+        var doc = new ace.TextDocument("Juhu  Kinners");
+        var selection = doc.getSelection();
+
+        selection.moveCursorTo(0, 5);
+        selection.selectWord();
+
+        var range = selection.getRange();
+        assertPosition(0, 4, range.start);
+        assertPosition(0, 6, range.end);
     }
 });
