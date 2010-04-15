@@ -44,6 +44,7 @@ ace.Editor.prototype.setDocument = function(doc) {
 };
 
 ace.Editor.prototype.setMode = function(mode) {
+    if (this.mode == mode) return;
 
     this.mode = mode;
     var tokenizer = mode.getTokenizer();

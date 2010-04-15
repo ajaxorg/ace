@@ -19,11 +19,12 @@ ace.mode.JavaScript.prototype.increaseIndentPatterns = {
 
 ace.mode.JavaScript.prototype.getNextLineIndent = function(line, state, tab) {
     var re = this.increaseIndentPatterns[state];
-    if (!re) return
 
-    var match = line.match(re);
-    if (match) {
-        return (match[1] || "") + tab;
+    if (re) {
+        var match = line.match(re);
+        if (match) {
+            return (match[1] || "") + tab;
+        }
     }
 
     var match = line.match(/^(\s+).*$/);

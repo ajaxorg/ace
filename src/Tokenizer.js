@@ -10,11 +10,10 @@ ace.Tokenizer = function(rules) {
 
         for ( var i = 0; i < state.length; i++) {
             ruleRegExps.push(state[i].regex);
-        }
-        ;
+        };
 
         this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(")
-                + ")|(.+))", "g");
+                + ")|(.))", "g");
     }
 };
 
@@ -37,7 +36,7 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
         if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
         lastIndex = re.lastIndex;
 
-        // console.log(match);
+//        window.LOG && console.log(match);
 
         for ( var i = 0; i < state.length; i++) {
             if (match[i + 1]) {
@@ -58,14 +57,12 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
                 }
                 break;
             }
-        }
-        ;
+        };
 
         tokens.push(token);
-    }
-    ;
+    };
 
-    // console.log(tokens, currentState)
+//    window.LOG && console.log(tokens, currentState);
 
     return {
         tokens : tokens,
