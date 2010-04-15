@@ -6,7 +6,7 @@ ace.Selection = function(doc) {
     this.$initEvents();
 
     this.clearSelection();
-    this.cursor = {
+    this.selectionLead = {
         row: 0,
         column: 0
     };
@@ -22,7 +22,7 @@ ace.Selection.prototype.updateSelection = function() {
 };
 
 ace.Selection.prototype.isEmpty = function() {
-    return (this.selectionLead == null);
+    return (this.selectionAnchor == null);
 };
 
 ace.Selection.prototype.isMultiLine = function() {
@@ -35,47 +35,30 @@ ace.Selection.prototype.isMultiLine = function() {
 };
 
 ace.Selection.prototype.getCursor = function() {
-    return this.cursor;
+    return this.selectionLead;
 };
 
 ace.Selection.prototype.setSelectionAnchor = function(row, column) {
     this.clearSelection();
 
     this.selectionAnchor = this._clipPositionToDocument(row, column);
-    this.selectionLead = null;
 };
 
 ace.Selection.prototype.getSelectionAnchor = function() {
     if (this.selectionAnchor) {
-        return {
-            row: this.selectionAnchor.row,
-            column: this.selectionAnchor.column
-        };
+        return this._clone(this.selectionAnchor);
     } else {
-        return {
-            row: this.cursor.row,
-            column: this.cursor.column
-        };
+        return this._clone(this.selectionLead);
     }
 };
 
 ace.Selection.prototype.getSelectionLead = function() {
-    if (this.selectionLead) {
-        return {
-            row: this.selectionLead.row,
-            column: this.selectionLead.column
-        };
-    } else {
-        return {
-            row: this.cursor.row,
-            column: this.cursor.column
-        };
-    }
+    return this._clone(this.selectionLead);
 };
 
 ace.Selection.prototype.shiftSelection = function(columns) {
     if (this.isEmpty()) {
-        this.moveCursorTo(this.cursor.row, this.cursor.column + columns);
+        this.moveCursorTo(this.selectionLead.row, this.selectionLead.column + columns);
         return;
     };
 
@@ -89,8 +72,8 @@ ace.Selection.prototype.shiftSelection = function(columns) {
 };
 
 ace.Selection.prototype.getRange = function() {
-    var anchor = this.selectionAnchor || this.cursor;
-    var lead = this.selectionLead || this.cursor;
+    var anchor = this.selectionAnchor || this.selectionLead;
+    var lead = this.selectionLead;
 
     if (anchor.row > lead.row
             || (anchor.row == lead.row && anchor.column > lead.column)) {
@@ -108,7 +91,6 @@ ace.Selection.prototype.getRange = function() {
 };
 
 ace.Selection.prototype.clearSelection = function() {
-    this.selectionLead = null;
     this.selectionAnchor = null;
     this.updateSelection();
 };
@@ -125,19 +107,10 @@ ace.Selection.prototype.selectAll = function() {
 
 ace.Selection.prototype._moveSelection = function(mover) {
     if (!this.selectionAnchor) {
-        this.selectionAnchor = {
-            row : this.cursor.row,
-            column : this.cursor.column
-        };
+        this.selectionAnchor = this._clone(this.selectionLead);
     }
 
     mover.call(this);
-
-    this.selectionLead = {
-        row : this.cursor.row,
-        column : this.cursor.column
-    };
-
     this.updateSelection();
 };
 
@@ -171,7 +144,7 @@ ace.Selection.prototype.selectPageDown = function() {
     this.scrollPageDown();
 
     this._moveSelection(function() {
-        this.moveCursorTo(row, this.cursor.column);
+        this.moveCursorTo(row, this.selectionLead.column);
     });
 };
 
@@ -182,7 +155,7 @@ ace.Selection.prototype.selectPageUp = function() {
     this.scrollPageUp();
 
     this._moveSelection(function() {
-        this.moveCursorTo(row, this.cursor.column);
+        this.moveCursorTo(row, this.selectionLead.column);
     });
 };
 
@@ -206,7 +179,7 @@ ace.Selection.prototype.selectWordLeft = function() {
 };
 
 ace.Selection.prototype.selectWord = function() {
-    var cursor = this.cursor;
+    var cursor = this.selectionLead;
 
     var line = this.doc.getLine(cursor.row);
     var column = cursor.column;
@@ -243,9 +216,9 @@ ace.Selection.prototype.selectWord = function() {
 };
 
 ace.Selection.prototype.selectLine = function() {
-    this.setSelectionAnchor(this.cursor.row, 0);
+    this.setSelectionAnchor(this.selectionLead.row, 0);
     this._moveSelection(function() {
-        this.moveCursorTo(this.cursor.row + 1, 0);
+        this.moveCursorTo(this.selectionLead.row + 1, 0);
     });
 };
 
@@ -258,10 +231,10 @@ ace.Selection.prototype.moveCursorDown = function() {
 };
 
 ace.Selection.prototype.moveCursorLeft = function() {
-    if (this.cursor.column == 0) {
-        if (this.cursor.row > 0) {
-            this.moveCursorTo(this.cursor.row - 1, this.doc
-                    .getLine(this.cursor.row - 1).length);
+    if (this.selectionLead.column == 0) {
+        if (this.selectionLead.row > 0) {
+            this.moveCursorTo(this.selectionLead.row - 1, this.doc
+                    .getLine(this.selectionLead.row - 1).length);
         }
     }
     else {
@@ -270,9 +243,9 @@ ace.Selection.prototype.moveCursorLeft = function() {
 };
 
 ace.Selection.prototype.moveCursorRight = function() {
-    if (this.cursor.column == this.doc.getLine(this.cursor.row).length) {
-        if (this.cursor.row < this.doc.getLength() - 1) {
-            this.moveCursorTo(this.cursor.row + 1, 0);
+    if (this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
+        if (this.selectionLead.row < this.doc.getLength() - 1) {
+            this.moveCursorTo(this.selectionLead.row + 1, 0);
         }
     }
     else {
@@ -281,12 +254,12 @@ ace.Selection.prototype.moveCursorRight = function() {
 };
 
 ace.Selection.prototype.moveCursorLineStart = function() {
-    this.moveCursorTo(this.cursor.row, 0);
+    this.moveCursorTo(this.selectionLead.row, 0);
 };
 
 ace.Selection.prototype.moveCursorLineEnd = function() {
-    this.moveCursorTo(this.cursor.row,
-                      this.doc.getLine(this.cursor.row).length);
+    this.moveCursorTo(this.selectionLead.row,
+                      this.doc.getLine(this.selectionLead.row).length);
 };
 
 ace.Selection.prototype.moveCursorFileEnd = function() {
@@ -300,8 +273,8 @@ ace.Selection.prototype.moveCursorFileStart = function() {
 };
 
 ace.Selection.prototype.moveCursorWordRight = function() {
-    var row = this.cursor.row;
-    var column = this.cursor.column;
+    var row = this.selectionLead.row;
+    var column = this.selectionLead.column;
     var line = this.doc.getLine(row);
     var rightOfCursor = line.substring(column);
 
@@ -326,8 +299,8 @@ ace.Selection.prototype.moveCursorWordRight = function() {
 };
 
 ace.Selection.prototype.moveCursorWordLeft = function() {
-    var row = this.cursor.row;
-    var column = this.cursor.column;
+    var row = this.selectionLead.row;
+    var column = this.selectionLead.column;
     var line = this.doc.getLine(row);
     var leftOfCursor = ace.stringReverse(line.substring(0, column));
 
@@ -352,7 +325,7 @@ ace.Selection.prototype.moveCursorWordLeft = function() {
 };
 
 ace.Selection.prototype.moveCursorBy = function(rows, chars) {
-    this.moveCursorTo(this.cursor.row + rows, this.cursor.column + chars);
+    this.moveCursorTo(this.selectionLead.row + rows, this.selectionLead.column + chars);
 };
 
 
@@ -361,7 +334,7 @@ ace.Selection.prototype.moveCursorToPosition = function(position) {
 };
 
 ace.Selection.prototype.moveCursorTo = function(row, column) {
-    this.cursor = this._clipPositionToDocument(row, column);
+    this.selectionLead = this._clipPositionToDocument(row, column);
     this.updateCursor();
 };
 
