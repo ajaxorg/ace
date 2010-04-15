@@ -6,7 +6,11 @@ ace.TextDocument = function(text) {
     this.selection = new ace.Selection(this);
 
     this.listeners = [];
+
+    this.$initEvents();
 };
+ace.mixin(ace.TextDocument.prototype, ace.MEventEmitter);
+
 
 ace.TextDocument.prototype._split = function(text) {
     return text.split(/[\n\r]/);
@@ -20,14 +24,12 @@ ace.TextDocument.prototype.getSelection = function() {
     return this.selection;
 };
 
-ace.TextDocument.prototype.addChangeListener = function(listener) {
-    this.listeners.push(listener);
-};
-
 ace.TextDocument.prototype.fireChangeEvent = function(firstRow, lastRow) {
-    for ( var i = 0; i < this.listeners.length; i++) {
-        this.listeners[i](firstRow, lastRow);
+    var data = {
+        firstRow: firstRow,
+        lastRow: lastRow
     };
+    this.$dispatchEvent("change", { data: data});
 };
 
 ace.TextDocument.prototype.getWidth = function() {
