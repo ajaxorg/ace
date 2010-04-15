@@ -67,7 +67,7 @@ ace.MarkerLayer.prototype.update = function(config) {
         }
 
         if (range.start.row !== range.end.row) {
-            if (marker.type == "line") {
+            if (marker.type == "text") {
                 this.drawTextMarker(html, range, marker.clazz, config);
             } else {
                 this.drawMultiLineMarker(html, range, marker.clazz, config);

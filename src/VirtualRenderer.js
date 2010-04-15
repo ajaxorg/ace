@@ -111,8 +111,8 @@ ace.VirtualRenderer.prototype.draw = function() {
     this.gutterLayer.update(layerConfig);
 };
 
-ace.VirtualRenderer.prototype.addMarker = function(range, clazz) {
-    return this.markerLayer.addMarker(range, clazz);
+ace.VirtualRenderer.prototype.addMarker = function(range, clazz, type) {
+    return this.markerLayer.addMarker(range, clazz, type);
 };
 
 ace.VirtualRenderer.prototype.removeMarker = function(markerId) {

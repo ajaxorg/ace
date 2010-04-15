@@ -21,6 +21,8 @@ ace.Editor = function(renderer, doc, mode) {
     this.renderer.draw();
     this.onCursorChange();
     this.onSelectionChange();
+
+    this._initialized = true;
 };
 
 ace.Editor.prototype.setDocument = function(doc) {
@@ -69,6 +71,10 @@ ace.Editor.prototype.setMode = function(mode) {
     }
 
     this.renderer.setTokenizer(this.bgTokenizer);
+
+    if (this._initialized) {
+        this.renderer.draw();
+    }
 };
 
 
@@ -79,7 +85,6 @@ ace.Editor.prototype.resize = function()
 };
 
 ace.Editor.prototype._highlightBrackets = function() {
-
     if (this._bracketHighlight) {
         this.renderer.removeMarker(this._bracketHighlight);
         this._bracketHighlight = null;
@@ -146,7 +151,8 @@ ace.Editor.prototype.onSelectionChange = function() {
 
     if (!this.selection.isEmpty()) {
         var range = this.selection.getRange();
-        this.selectionMarker = this.renderer.addMarker(range, "selection", "text");
+        var style = this.getSelectionStyle();
+        this.selectionMarker = this.renderer.addMarker(range, "selection", style);
     }
 
     this.onCursorChange();
@@ -254,6 +260,18 @@ ace.Editor.prototype.onTextInput = function(text) {
 
     this.moveCursorToPosition(end);
     this.renderer.scrollCursorIntoView();
+};
+
+ace.Editor.prototype._selectionStyle = "line";
+ace.Editor.prototype.setSelectionStyle = function(style) {
+    if (this._selectionStyle == style) return;
+
+    this._selectionStyle = style;
+    this.onSelectionChange();
+};
+
+ace.Editor.prototype.getSelectionStyle = function() {
+    return this._selectionStyle;
 };
 
 ace.Editor.prototype.removeRight = function() {

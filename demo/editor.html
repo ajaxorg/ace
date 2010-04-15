@@ -55,16 +55,20 @@
 <body>
     
     <table id="controls">
-    	<tr>
-    	<td>
-    	  <label for="mode">Mode:</label>
-    	  <select id="mode" size="1">
-    	    <option value="text">Plain Text</option>
-    	    <option value="javascript">JavaScript</option>
-    	    <option value="xml">XML</option>    	   
-    	  </select>
-    	</td>
-    	</tr>
+      <tr>
+        <td>
+        <label for="mode">Mode:</label>
+        <select id="mode" size="1">
+          <option value="text">Plain Text</option>
+          <option value="javascript">JavaScript</option>
+          <option value="xml">XML</option>    	   
+        </select>
+      </td>
+      <td>
+        <label for="select_style">Full line selections</label>
+        <input type="checkbox" name="select_style" id="select_style" checked>        
+      </td>
+      </tr>
     </table>
 
     <div id="container">    
@@ -86,6 +90,16 @@ var modes = {
 function getMode() {
     return modes[modeEl.value]; 
 }
+
+var selectEl = document.getElementById("select_style");
+selectEl.onchange = function() {
+	if (selectEl.checked) {
+	  editor.setSelectionStyle("line");
+	} else {
+	  editor.setSelectionStyle("text");
+	}
+};
+
 
 var container = document.getElementById("container");
 var editor = new ace.Editor(
