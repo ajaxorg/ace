@@ -3,6 +3,7 @@ ace.provide("ace.TextDocument");
 ace.TextDocument = function(text) {
     this.lines = this._split(text);
     this.modified = true;
+    this.selection = new ace.Selection(this);
 
     this.listeners = [];
 };
@@ -13,6 +14,10 @@ ace.TextDocument.prototype._split = function(text) {
 
 ace.TextDocument.prototype.toString = function() {
     return this.lines.join("\n");
+};
+
+ace.TextDocument.prototype.getSelection = function() {
+    return this.selection;
 };
 
 ace.TextDocument.prototype.addChangeListener = function(listener) {

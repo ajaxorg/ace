@@ -20,21 +20,22 @@ var keys = {
     "7": 55
 };
 
-ace.KeyBinding = function(element, host) {
+ace.KeyBinding = function(element, editor) {
     ace.addListener(element, "keydown", function(e) {
         var key = e.keyCode;
+        var selection = editor.getSelection();
 
         switch (key) {
             case keys.A:
                 if (e.metaKey) {
-                    host.selectAll();
+                    selection.selectAll();
                     return ace.stopEvent(e);
                 }
                 break;
 
             case keys.D:
                 if (e.metaKey) {
-                    host.removeLine();
+                    editor.removeLine();
                     return ace.stopEvent(e);
                 }
                 break;
@@ -43,7 +44,7 @@ ace.KeyBinding = function(element, host) {
                 if (e.metaKey) {
                     var line = parseInt(prompt("Enter line number:"));
                     if (!isNaN(line)) {
-                        host.gotoLine(line);
+                        editor.gotoLine(line);
                         return ace.stopEvent(e);
                     }
                 }
@@ -51,140 +52,140 @@ ace.KeyBinding = function(element, host) {
 
             case keys["7"]:
                 if (e.metaKey) {
-                    host.toggleCommentLines();
+                    editor.toggleCommentLines();
                     return ace.stopEvent(e);
                 };
                 break;
 
             case keys.UP:
                 if (e.altKey) {
-                    host.moveLinesUp();
+                    editor.moveLinesUp();
                 }
                 else if (e.metaKey && e.shiftKey) {
-                    host.selectFileStart();
+                    selection.selectFileStart();
                 }
                 else if (e.metaKey) {
-                    host.navigateFileStart();
+                    editor.navigateFileStart();
                 }
                 else if (e.shiftKey) {
-                    host.selectUp();
+                    selection.selectUp();
                 }
                 else {
-                    host.navigateUp();
+                    editor.navigateUp();
                 }
                 return ace.stopEvent(e);
 
             case keys.DOWN:
                 if (e.altKey) {
-                    host.moveLinesDown();
+                    editor.moveLinesDown();
                 }
                 else if (e.metaKey && e.shiftKey) {
-                    host.selectFileEnd();
+                    selection.selectFileEnd();
                 }
                 else if (e.metaKey) {
-                    host.navigateFileEnd();
+                    editor.navigateFileEnd();
                 }
                 else if (e.shiftKey) {
-                    host.selectDown();
+                    selection.selectDown();
                 }
                 else {
-                    host.navigateDown();
+                    editor.navigateDown();
                 }
                 return ace.stopEvent(e);
 
             case keys.LEFT:
                 if (e.altKey && e.shiftKey) {
-                    host.selectWordLeft();
+                    selection.selectWordLeft();
                 }
                 else if (e.altKey) {
-                    host.navigateWordLeft();
+                    editor.navigateWordLeft();
                 }
                 else if (e.metaKey && e.shiftKey) {
-                    host.selectLineStart();
+                    selection.selectLineStart();
                 }
                 else if (e.metaKey) {
-                    host.navigateLineStart();
+                    editor.navigateLineStart();
                 }
                 else if (e.shiftKey) {
-                    host.selectLeft();
+                    selection.selectLeft();
                 }
                 else {
-                    host.navigateLeft();
+                    editor.navigateLeft();
                 }
                 return ace.stopEvent(e);
 
             case keys.RIGHT:
                 if (e.altKey && e.shiftKey) {
-                    host.selectWordRight();
+                    selection.selectWordRight();
                 }
                 else if (e.altKey) {
-                    host.navigateWordRight();
+                    editor.navigateWordRight();
                 }
                 else if (e.metaKey && e.shiftKey) {
-                    host.selectLineEnd();
+                    selection.selectLineEnd();
                 }
                 else if (e.metaKey) {
-                    host.navigateLineEnd();
+                    editor.navigateLineEnd();
                 }
                 else if (e.shiftKey) {
-                    host.selectRight();
+                    selection.selectRight();
                 }
                 else {
-                    host.navigateRight();
+                    editor.navigateRight();
                 }
                 return ace.stopEvent(e);
 
             case keys.PAGEDOWN:
                 if (e.shiftKey) {
-                    host.selectPageDown();
+                    selection.selectPageDown();
                 }
                 else {
-                    host.scrollPageDown();
+                    editor.scrollPageDown();
                 }
                 return ace.stopEvent(e);
 
             case keys.PAGEUP:
                 if (e.shiftKey) {
-                    host.selectPageUp();
+                    selection.selectPageUp();
                 }
                 else {
-                    host.scrollPageUp();
+                    editor.scrollPageUp();
                 }
                 return ace.stopEvent(e);
 
             case keys.POS1:
                 if (e.shiftKey) {
-                    host.selectLineStart();
+                    selection.selectLineStart();
                 }
                 else {
-                    host.navigateLineStart();
+                    editor.navigateLineStart();
                 }
                 return ace.stopEvent(e);
 
             case keys.END:
                 if (e.shiftKey) {
-                    host.selectLineEnd();
+                    selection.selectLineEnd();
                 }
                 else {
-                    host.navigateLineEnd();
+                    editor.navigateLineEnd();
                 }
                 return ace.stopEvent(e);
 
             case keys.DELETE:
-                host.removeRight();
+                editor.removeRight();
                 return ace.stopEvent(e);
 
             case keys.BACKSPACE:
-                host.removeLeft();
+                editor.removeLeft();
                 return ace.stopEvent(e);
 
             case keys.TAB:
                 if (e.shiftKey) {
-                    host.blockOutdent();
-                } else if (host.hasMultiLineSelection()) {
-                    host.blockIndent();
+                    editor.blockOutdent();
+                } else if (selection.isMultiLineSelection()) {
+                    editor.blockIndent();
                 } else {
-                    host.onTextInput(host.getTabString());
+                    editor.onTextInput("\t");
                 }
                 return ace.stopEvent(e);
         }

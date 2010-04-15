@@ -53,8 +53,7 @@ ace.TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow) {
 
         var lineElement = lineElements[i - layerConfig.firstRow];
         lineElement.innerHTML = html.join("");
-    }
-    ;
+    };
 };
 
 ace.TextLayer.prototype.update = function(config) {
@@ -84,6 +83,5 @@ ace.TextLayer.prototype.renderLine = function(stringBuilder, row) {
         else {
             stringBuilder.push(output);
         }
-    }
-    ;
+    };
 };

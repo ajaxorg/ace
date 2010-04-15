@@ -21,6 +21,12 @@ ace.inherits = function(ctor, superCtor) {
     ctor.prototype.constructor = ctor;
 };
 
+ace.mixin = function(obj, mixin) {
+    for (var key in mixin) {
+        obj[key] = mixin[key];
+    }
+};
+
 ace.addListener = function(elem, type, callback) {
     if (elem.addEventListener) {
         return elem.addEventListener(type, callback, false);
@@ -110,6 +116,22 @@ ace.scrollbarHeight = function() {
 ace.stringReverse = function(string) {
     return string.split("").reverse().join("");
 };
+
+if (Array.prototype.indexOf) {
+    ace.arrayIndexOf = function(array, searchElement) {
+        return array.indexOf(searchElement);
+    };
+}
+else {
+    ace.arrayIndexOf = function(array, searchElement) {
+        for (var i=0; i<array.length; i++) {
+            if (array[i] == searchElement) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
 
 ace.bind = function(fcn, context) {
     return function() {
