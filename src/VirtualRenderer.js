@@ -37,6 +37,7 @@ ace.VirtualRenderer.prototype.setDocument = function(doc) {
     this.lines = doc.lines;
     this.doc = doc;
     this.markerLayer.setDocument(doc);
+    this.textLayer.setTabSize(doc.getTabSize());
 };
 
 ace.VirtualRenderer.prototype.setTokenizer = function(tokenizer) {

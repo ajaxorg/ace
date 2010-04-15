@@ -34,6 +34,11 @@ ace.Editor.prototype.setDocument = function(doc) {
     doc.addEventListener("change", ace.bind(this.onDocumentChange, this));
     this.renderer.setDocument(doc);
 
+    var self = this;
+    doc.addEventListener("changeTabSize", function() {
+        self.renderer.draw();
+    });
+
     this.selection = doc.getSelection();
 
     var onCursorChange = ace.bind(this.onCursorChange, this);
@@ -41,6 +46,7 @@ ace.Editor.prototype.setDocument = function(doc) {
 
     var onSelectionChange = ace.bind(this.onSelectionChange, this);
     this.selection.addEventListener("changeSelection", onSelectionChange);
+
 
     this.bgTokenizer.setLines(this.doc.lines);
 };
@@ -216,8 +222,8 @@ ace.Editor.prototype.onCut = function() {
 ace.Editor.prototype.onTextInput = function(text) {
     var cursor = this.getCursorPosition();
 
-    if (this.getUseSoftTabs()) {
-        text = text.replace(/\t/g, this.getTabString());
+    if (this.doc.getUseSoftTabs()) {
+        text = text.replace(/\t/g, this.doc.getTabString());
     }
 
     if (!this.selection.isEmpty()) {
@@ -233,7 +239,7 @@ ace.Editor.prototype.onTextInput = function(text) {
     if (row !== end.row) {
         var line = this.doc.getLine(row);
         var lineState = this.bgTokenizer.getState(row);
-        var indent = this.mode.getNextLineIndent(line, lineState, this.getTabString());
+        var indent = this.mode.getNextLineIndent(line, lineState, this.doc.getTabString());
         if (indent) {
             var indentRange = {
                 start: {
@@ -248,37 +254,6 @@ ace.Editor.prototype.onTextInput = function(text) {
 
     this.moveCursorToPosition(end);
     this.renderer.scrollCursorIntoView();
-};
-
-
-ace.Editor.prototype.getTabString = function() {
-    if (this.getUseSoftTabs()) {
-        return new Array(this.getTabSize()+1).join(" ");
-    }
-    return "\t";
-};
-
-ace.Editor.prototype._useSoftTabs = true;
-ace.Editor.prototype.setUseSoftTabs = function(useSoftTabs) {
-    if (this._useSoftTabs === useSoftTabs) return;
-
-    this._useSoftTabs = useSoftTabs;
-};
-
-ace.Editor.prototype.getUseSoftTabs = function() {
-    return this._useSoftTabs;
-};
-
-ace.Editor.prototype._tabSize = 4;
-ace.Editor.prototype.setTabSize = function(tabSize) {
-    if (this._tabSize === tabSize) return;
-
-    this._tabSize = tabSize;
-    this.renderer.draw();
-};
-
-ace.Editor.prototype.getTabSize = function() {
-    return this._tabSize;
 };
 
 ace.Editor.prototype.removeRight = function() {
@@ -309,14 +284,14 @@ ace.Editor.prototype.removeLine = function() {
 };
 
 ace.Editor.prototype.blockIndent = function(indentString) {
-    var indentString = indentString || this.getTabString();
+    var indentString = indentString || this.doc.getTabString();
     var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
 
     this.selection.shiftSelection(addedColumns);
 };
 
 ace.Editor.prototype.blockOutdent = function(indentString) {
-    var indentString = indentString || this.getTabString();
+    var indentString = indentString || this.doc.getTabString();
     var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
     this.selection.shiftSelection(addedColumns);

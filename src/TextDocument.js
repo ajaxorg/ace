@@ -32,6 +32,36 @@ ace.TextDocument.prototype.fireChangeEvent = function(firstRow, lastRow) {
     this.$dispatchEvent("change", { data: data});
 };
 
+ace.TextDocument.prototype.getTabString = function() {
+    if (this.getUseSoftTabs()) {
+        return new Array(this.getTabSize()+1).join(" ");
+    }
+    return "\t";
+};
+
+ace.TextDocument.prototype._useSoftTabs = true;
+ace.TextDocument.prototype.setUseSoftTabs = function(useSoftTabs) {
+    if (this._useSoftTabs === useSoftTabs) return;
+
+    this._useSoftTabs = useSoftTabs;
+};
+
+ace.TextDocument.prototype.getUseSoftTabs = function() {
+    return this._useSoftTabs;
+};
+
+ace.TextDocument.prototype._tabSize = 4;
+ace.TextDocument.prototype.setTabSize = function(tabSize) {
+    if (this._tabSize === tabSize) return;
+
+    this._tabSize = tabSize;
+    this.$dispatchEvent("changeTabSize");
+};
+
+ace.TextDocument.prototype.getTabSize = function() {
+    return this._tabSize;
+};
+
 ace.TextDocument.prototype.getWidth = function() {
     if (this.modified) {
         this.modified = false;
@@ -48,32 +78,6 @@ ace.TextDocument.prototype.getWidth = function() {
 
 ace.TextDocument.prototype.getLine = function(row) {
     return this.lines[row] || "";
-};
-
-ace.TextDocument.prototype.keywords = {
-    "break" : 1,
-    "case" : 1,
-    "catch" : 1,
-    "continue" : 1,
-    "default" : 1,
-    "delete" : 1,
-    "do" : 1,
-    "else" : 1,
-    "finally" : 1,
-    "for" : 1,
-    "function" : 1,
-    "if" : 1,
-    "in" : 1,
-    "instanceof" : 1,
-    "new" : 1,
-    "return" : 1,
-    "switch" : 1,
-    "throw" : 1,
-    "try" : 1,
-    "typeof" : 1,
-    "var" : 1,
-    "while" : 1,
-    "with" : 1
 };
 
 ace.TextDocument.prototype.getLength = function() {

@@ -6,6 +6,7 @@ ace.TextLayer = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this._measureSizes();
+    this._tabString = " ";
 };
 
 ace.TextLayer.prototype.setTokenizer = function(tokenizer) {
@@ -41,6 +42,10 @@ ace.TextLayer.prototype._measureSizes = function() {
     this.element.removeChild(measureNode);
 };
 
+ace.TextLayer.prototype.setTabSize = function(tabSize) {
+    this._tabString = new Array(tabSize+1).join("&nbsp;");
+};
+
 ace.TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow) {
     var first = Math.max(firstRow, layerConfig.firstRow);
     var last = Math.min(lastRow, layerConfig.lastRow);
@@ -73,8 +78,11 @@ ace.TextLayer.prototype.renderLine = function(stringBuilder, row) {
     for ( var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
 
-        var output = token.value.replace(/&/g, "&amp;").replace(/</g, "&lt;")
-                .replace(/\s/g, "&nbsp;");
+        var output = token.value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/\t/g, this._tabString)
+            .replace(/\s/g, "&nbsp;");
 
         if (token.type !== "text") {
             stringBuilder.push("<span class='", token.type, "'>", output,

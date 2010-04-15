@@ -56,7 +56,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
         editor.navigateLineEnd();
         editor.onTextInput("\n");
 
-        assertEquals(["if () {", editor.getTabString()].join("\n"), doc.toString());
+        assertEquals(["if () {", doc.getTabString()].join("\n"), doc.toString());
     },
 
     "test: no auto indent after opening brace in multi line comment" : function() {
@@ -76,6 +76,6 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
         editor.navigateLineEnd();
         editor.onTextInput("\n");
 
-        assertEquals(["    if () {", "    " + editor.getTabString()].join("\n"), doc.toString());
+        assertEquals(["    if () {", "    " + doc.getTabString()].join("\n"), doc.toString());
     }
 });

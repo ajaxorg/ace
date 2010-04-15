@@ -194,13 +194,13 @@ var TextEditTest = TestCase("TextEditTest",
         var doc = new ace.TextDocument("");
         var editor = new ace.Editor(new MockRenderer(), doc);
 
-        editor.setTabSize(2);
-        editor.setUseSoftTabs(true);
+        doc.setTabSize(2);
+        doc.setUseSoftTabs(true);
 
         editor.onTextInput("\t");
         assertEquals("  ", doc.toString());
 
-        editor.setTabSize(5);
+        doc.setTabSize(5);
         editor.onTextInput("\t");
         assertEquals("       ", doc.toString());
     },
@@ -209,7 +209,7 @@ var TextEditTest = TestCase("TextEditTest",
         var doc = new ace.TextDocument("");
         var editor = new ace.Editor(new MockRenderer(), doc);
 
-        editor.setUseSoftTabs(false);
+        doc.setUseSoftTabs(false);
 
         editor.onTextInput("\t");
         assertEquals("\t", doc.toString());
