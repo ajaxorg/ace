@@ -38,6 +38,8 @@
 	<script src="../src/mode/JavaScriptHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/Html.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/HtmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/Css.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/CssHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/Xml.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/XmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/MEventEmitter.js" type="text/javascript" charset="utf-8"></script>
@@ -65,6 +67,7 @@
           <option value="javascript">JavaScript</option>
           <option value="xml">XML</option>
           <option value="html">HTML</option>
+          <option value="css">CSS</option>
         </select>
       </td>
       <td>
@@ -92,6 +95,7 @@ var modes = {
     text: new ace.mode.Text(),
     xml: new ace.mode.Xml(),
     html: new ace.mode.Html(),
+    css: new ace.mode.Css(),
     javascript: new ace.mode.JavaScript()
 };
 
@@ -138,15 +142,17 @@ ace.addListener(container, "drop", function(e) {
   if (window.FileReader) {
     var reader = new FileReader();
     reader.onload = function(e) {
-      editor.clearSelection();
-      editor.moveCursorTo(0, 0);
-      editor.selectFileEnd();
+      editor.getSelection().selectAll();
       
       var mode = "text";
       if (/^.*\.js$/i.test(file.name)) {
         mode = "javascript";
       } else if (/^.*\.xml$/i.test(file.name)) {
         mode = "xml";
+      } else if (/^.*\.html$/i.test(file.name)) {
+        mode = "html";
+      } else if (/^.*\.css$/i.test(file.name)) {
+        mode = "css";
       }      
       
       editor.onTextInput(reader.result);

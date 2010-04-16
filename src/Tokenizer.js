@@ -39,7 +39,7 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
         if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
         lastIndex = re.lastIndex;
 
-//        window.LOG && jstestdriver.console.log(currentState, match);
+        window.LOG && jstestdriver.console.log(currentState, match);
 
         for ( var i = 0; i < state.length; i++) {
             if (match[i + 1]) {
@@ -79,7 +79,7 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
         tokens.push(token);
     }
 
-//    window.LOG && jstestdriver.console.log(tokens, currentState);
+    window.LOG && jstestdriver.console.log(tokens, currentState);
 
     return {
         tokens : tokens,

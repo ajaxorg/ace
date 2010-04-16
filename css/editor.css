@@ -33,7 +33,7 @@
   font-size: 12px;  
   
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;  
+  box-sizing: border-box;
 }
 
 .layer {
@@ -72,6 +72,18 @@
 
 .line .keyword {
   color: blue;
+}
+
+.line .buildin-constant {
+  color: rgb(88, 72, 246);
+}
+
+.line .library-constant {
+  color: rgb(6, 150, 14);
+}
+
+.line .buildin-function {
+  color: rgb(60, 76, 114);
 }
 
 .line .string {
