@@ -80,7 +80,15 @@
 
 .line .comment {
   font-style: italic;
+  color: rgb(76, 136, 107);
+}
+
+.line .doc-comment {
   color: rgb(0, 102, 255);
+}
+
+.line .doc-comment-tag {
+  color: rgb(128, 159, 191);
 }
 
 .line .number {

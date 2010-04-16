@@ -13,17 +13,22 @@ ace.mode.JavaScript.prototype.toggleCommentLines = function(doc, range) {
     return addedRows;
 };
 
-ace.mode.JavaScript.prototype.increaseIndentPatterns = {
-    "start" : /^(\s*).*[\{\(\[]\s*$/
-};
-
 ace.mode.JavaScript.prototype.getNextLineIndent = function(line, state, tab) {
-    var re = this.increaseIndentPatterns[state];
-
-    if (re) {
+    if (state == "start") {
+        var re = /^(\s*).*[\{\(\[]\s*$/;
         var match = line.match(re);
         if (match) {
             return (match[1] || "") + tab;
+        }
+    } else if (state == "doc-comment") {
+        var re = /^(\s*)(\/?)\*.*$/;
+        var match = line.match(re);
+        if (match) {
+            var indent = match[1];
+            if (match[2]) {
+                indent += " ";
+            }
+            return indent + "* ";
         }
     }
 

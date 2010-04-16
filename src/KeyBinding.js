@@ -188,7 +188,7 @@ ace.KeyBinding = function(element, editor) {
             case keys.TAB:
                 if (e.shiftKey) {
                     editor.blockOutdent();
-                } else if (selection.isMultiLineSelection()) {
+                } else if (selection.isMultiLine()) {
                     editor.blockIndent();
                 } else {
                     editor.onTextInput("\t");

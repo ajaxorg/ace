@@ -27,11 +27,14 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
 
     var lastIndex = 0;
 
+    var token = {
+        type: null,
+        value: ""
+    };
+
     while (match = re.exec(line)) {
-        var token = {
-            type : "text",
-            value : match[0]
-        };
+        var type = "text";
+        var value = match[0];
 
         if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
         lastIndex = re.lastIndex;
@@ -41,10 +44,10 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
         for ( var i = 0; i < state.length; i++) {
             if (match[i + 1]) {
                 if (typeof state[i].token == "function") {
-                    token.type = state[i].token(match[0]);
+                    type = state[i].token(match[0]);
                 }
                 else {
-                    token.type = state[i].token;
+                    type = state[i].token;
                 }
 
                 if (state[i].next && state[i].next !== currentState) {
@@ -59,8 +62,22 @@ ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
             }
         };
 
-        tokens.push(token);
+        if (token.type !== type) {
+            if (token.type) {
+                tokens.push(token);
+            }
+            token = {
+                type: type,
+                value: value
+            };
+        } else {
+            token.value += value;
+        }
     };
+
+    if (token.type) {
+        tokens.push(token);
+    }
 
 //    window.LOG && console.log(tokens, currentState);
 

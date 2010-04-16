@@ -32,15 +32,16 @@ ace.mode.JavaScriptHighlightRules = function() {
     // regexps are ordered -> the first match is used
 
     this._rules = {
-        start : [ {
+        "start" : [ {
             token : "comment",
             regex : "\\/\\/.*$"
         }, {
-            token : "comment", // multi line comment in one line
-            regex : "\\/\\*.*?\\*\\/"
+            token : "doc-comment", // doc comment
+            regex : "\\/\\*\\*",
+            next : "doc-comment"
         }, {
-            token : "comment", // multi line comment start
-            regex : "\\/\\*.*$",
+            token : "comment", // multi line comment
+            regex : "\\/\\*",
             next : "comment"
         }, {
             token : "string", // single line
@@ -82,6 +83,23 @@ ace.mode.JavaScriptHighlightRules = function() {
             token : "text",
             regex : "\\s+"
         } ],
+        "doc-comment" : [ {
+            token : "doc-comment", // closing comment
+            regex : "\\*\\/",
+            next : "start"
+        }, {
+            token : "doc-comment-tag",
+            regex : "@[\\w\\d_]+"
+        }, {
+            token : "doc-comment",
+            regex : "\s+"
+        }, {
+            token : "doc-comment",
+            regex : "[^@\\*]+"
+        }, {
+            token : "doc-comment",
+            regex : "."
+        }],
         "comment" : [ {
             token : "comment", // closing comment
             regex : ".*?\\*\\/",

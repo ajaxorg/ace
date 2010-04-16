@@ -50,32 +50,23 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: auto indent after opening brace" : function() {
-        var doc = new ace.TextDocument(["if () {"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc, this.mode);
-
-        editor.navigateLineEnd();
-        editor.onTextInput("\n");
-
-        assertEquals(["if () {", doc.getTabString()].join("\n"), doc.toString());
+        assertEquals("  ", this.mode.getNextLineIndent("if () {", "start", "  "));
     },
 
     "test: no auto indent after opening brace in multi line comment" : function() {
-        var doc = new ace.TextDocument(["/*if () {"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc, this.mode);
-
-        editor.navigateLineEnd();
-        editor.onTextInput("\n");
-
-        assertEquals(["/*if () {", ""].join("\n"), doc.toString());
+        assertEquals("", this.mode.getNextLineIndent("/*if () {", "  "));
     },
 
     "test: no auto indent should add to existing indent" : function() {
-        var doc = new ace.TextDocument(["    if () {"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc, this.mode);
+        assertEquals("      ", this.mode.getNextLineIndent("    if () {", "start", "  "));
+        assertEquals("    ", this.mode.getNextLineIndent("    cde", "start", "  "));
+    },
 
-        editor.navigateLineEnd();
-        editor.onTextInput("\n");
-
-        assertEquals(["    if () {", "    " + doc.getTabString()].join("\n"), doc.toString());
+    "test: special indent in doc comments" : function() {
+        assertEquals(" * ", this.mode.getNextLineIndent("/**", "doc-comment", " "));
+        assertEquals("   * ", this.mode.getNextLineIndent("  /**", "doc-comment", " "));
+        assertEquals(" * ", this.mode.getNextLineIndent(" *", "doc-comment", " "));
+        assertEquals("    * ", this.mode.getNextLineIndent("    *", "doc-comment", " "));
+        assertEquals("  ", this.mode.getNextLineIndent("  abc", "doc-comment", " "));
     }
 });
