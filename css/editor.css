@@ -53,12 +53,14 @@
 }
 
 .text-layer {
+  z-index: 2;
   font-family: Monaco, "Courier New", monospace;
   font-size: 12px;
   cursor: text;
 }
 
 .cursor {
+  z-index: 3;
   position: absolute;
   width: 2px;
   background: black;
@@ -89,13 +91,25 @@
   color: rgb(104, 104, 91);
 }
 
+.marker-layer {
+	z-index: 1;
+}
+
 .marker-layer .selection {
   position: absolute;
-  background: rgba(77, 151, 255, 0.33);
+  z-index: 2;
+  background: rgb(181, 213, 255);
 }
 
 .marker-layer .bracket {
   position: absolute;
+  z-index: 3;
   margin: -1px 0 0 -1px;
   border: 1px solid rgb(192, 192, 192);
+}
+
+.marker-layer .active_line {
+  position: absolute;
+  z-index: 1;
+  background: rgb(232, 242, 254);
 }

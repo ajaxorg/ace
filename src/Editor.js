@@ -15,7 +15,8 @@ ace.Editor = function(renderer, doc, mode) {
     ace.addTripleClickListener(container, ace.bind(this.onMouseTripleClick, this));
     ace.addMouseWheelListener(container, ace.bind(this.onMouseWheel, this));
 
-    this.selectionMarker = null;
+    this._selectionMarker = null;
+    this._highlightLineMarker = null;
     this._blockScrolling = false;
 
     this.renderer.draw();
@@ -141,18 +142,41 @@ ace.Editor.prototype.onCursorChange = function() {
     if (!this._blockScrolling) {
         this.renderer.scrollCursorIntoView();
     }
+    this._updateHighlightActiveLine();
+};
+
+ace.Editor.prototype._updateHighlightActiveLine = function() {
+    if (this._highlightLineMarker) {
+        this.renderer.removeMarker(this._highlightLineMarker);
+    }
+    this._highlightLineMarker = null;
+
+    if (this.getHighlightActiveLine() && !this.selection.isMultiLine()) {
+        var cursor = this.getCursorPosition();
+        var range = {
+            start: {
+                row: cursor.row,
+                column: 0
+            },
+            end: {
+                row: cursor.row+1,
+                column: 0
+            }
+        };
+        this._highlightLineMarker = this.renderer.addMarker(range, "active_line", "line");
+    }
 };
 
 ace.Editor.prototype.onSelectionChange = function() {
-    if (this.selectionMarker) {
-        this.renderer.removeMarker(this.selectionMarker);
+    if (this._selectionMarker) {
+        this.renderer.removeMarker(this._selectionMarker);
     }
-    this.selectionMarker = null;
+    this._selectionMarker = null;
 
     if (!this.selection.isEmpty()) {
         var range = this.selection.getRange();
         var style = this.getSelectionStyle();
-        this.selectionMarker = this.renderer.addMarker(range, "selection", style);
+        this._selectionMarker = this.renderer.addMarker(range, "selection", style);
     }
 
     this.onCursorChange();
@@ -272,6 +296,18 @@ ace.Editor.prototype.setSelectionStyle = function(style) {
 
 ace.Editor.prototype.getSelectionStyle = function() {
     return this._selectionStyle;
+};
+
+ace.Editor.prototype._highlightActiveLine = true;
+ace.Editor.prototype.setHighlightActiveLine = function(shouldHighlight) {
+    if (this._highlightActiveLine == shouldHighlight) return;
+
+    this._highlightActiveLine = shouldHighlight;
+    this._updateHighlightActiveLine();
+};
+
+ace.Editor.prototype.getHighlightActiveLine = function() {
+    return this._highlightActiveLine;
 };
 
 ace.Editor.prototype.removeRight = function() {

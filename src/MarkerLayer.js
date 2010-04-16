@@ -54,8 +54,8 @@ ace.MarkerLayer.prototype.update = function(config) {
 
         if (range.end.row > config.lastRow) {
             range.end = {
-                row: config.lastRow,
-                column: this.doc.getLine(config.lastRow).length
+                row: config.lastRow+1,
+                column: 0
             };
         }
 

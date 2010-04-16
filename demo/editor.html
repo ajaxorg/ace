@@ -68,6 +68,10 @@
         <label for="select_style">Full line selections</label>
         <input type="checkbox" name="select_style" id="select_style" checked>        
       </td>
+      <td>
+        <label for="highlight_active">Highlight active line</label>
+        <input type="checkbox" name="highlight_active" id="highlight_active" checked>        
+      </td>
       </tr>
     </table>
 
@@ -100,6 +104,10 @@ selectEl.onchange = function() {
 	}
 };
 
+var selectEl = document.getElementById("highlight_active");
+selectEl.onchange = function() {
+	editor.setHighlightActiveLine(!!selectEl.checked);
+};
 
 var container = document.getElementById("container");
 var editor = new ace.Editor(
