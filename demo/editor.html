@@ -36,6 +36,8 @@
 	<script src="../src/mode/Text.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/JavaScript.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/JavaScriptHighlightRules.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/Html.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/mode/HtmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/Xml.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/XmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/MEventEmitter.js" type="text/javascript" charset="utf-8"></script>
@@ -61,7 +63,8 @@
         <select id="mode" size="1">
           <option value="text">Plain Text</option>
           <option value="javascript">JavaScript</option>
-          <option value="xml">XML</option>    	   
+          <option value="xml">XML</option>
+          <option value="html">HTML</option>
         </select>
       </td>
       <td>
@@ -88,6 +91,7 @@ modeEl.onchange = function() {
 var modes = {
     text: new ace.mode.Text(),
     xml: new ace.mode.Xml(),
+    html: new ace.mode.Html(),
     javascript: new ace.mode.JavaScript()
 };
 

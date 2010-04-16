@@ -14,7 +14,7 @@ ace.mode.Text.prototype.getTokenizer = function() {
     return this.$tokenizer;
 };
 
-ace.mode.Text.prototype.toggleCommentLines = function(doc, range) {
+ace.mode.Text.prototype.toggleCommentLines = function(doc, range, state) {
     return 0;
 };
 

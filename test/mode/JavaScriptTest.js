@@ -21,7 +21,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
             end: {row: 1, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range);
+        var comment = this.mode.toggleCommentLines(doc, range, "start");
         assertEquals(["//  abc", "//cde", "fg"].join("\n"), doc.toString());
     },
 
@@ -33,7 +33,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
             end: {row: 1, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range);
+        var comment = this.mode.toggleCommentLines(doc, range, "start");
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
 
@@ -45,7 +45,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
             end: {row: 2, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range);
+        var comment = this.mode.toggleCommentLines(doc, range, "start");
         assertEquals(["////  abc", "////cde", "//fg"].join("\n"), doc.toString());
     },
 

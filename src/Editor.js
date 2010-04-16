@@ -344,7 +344,8 @@ ace.Editor.prototype.toggleCommentLines = function() {
     if (this.selection.isEmpty()) return;
 
     var range = this.getSelectionRange();
-    var addedColumns = this.mode.toggleCommentLines(this.doc, range);
+    var state = this.bgTokenizer.getState(this.getCursorPosition().row);
+    var addedColumns = this.mode.toggleCommentLines(this.doc, range, state);
 
     this.selection.shiftSelection(addedColumns);
 };

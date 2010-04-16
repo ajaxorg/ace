@@ -5,7 +5,7 @@ ace.mode.JavaScript = function() {
 };
 ace.inherits(ace.mode.JavaScript, ace.mode.Text);
 
-ace.mode.JavaScript.prototype.toggleCommentLines = function(doc, range) {
+ace.mode.JavaScript.prototype.toggleCommentLines = function(doc, range, state) {
     var addedRows = doc.outdentRows(range, "//");
     if (addedRows == 0) {
         var addedRows = doc.indentRows(range, "//");
