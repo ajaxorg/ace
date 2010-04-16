@@ -129,8 +129,8 @@ ace.Editor.prototype.onBlur = function() {
 
 ace.Editor.prototype.onDocumentChange = function(e) {
     var data = e.data;
-    this.bgTokenizer.start(data.startRow);
-    this.renderer.updateLines(data.startRow, data.endRow);
+    this.bgTokenizer.start(data.firstRow);
+    this.renderer.updateLines(data.firstRow, data.endRow);
 };
 
 ace.Editor.prototype.onTokenizerUpdate = function(e) {

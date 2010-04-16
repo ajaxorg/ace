@@ -22,8 +22,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
 
             var state = self.currentLine == 0 ? "start"
                     : self.lines[self.currentLine - 1].state;
-            self.lines[self.currentLine] = self.tokenizer.getLineTokens(line,
-                                                                        state);
+            self.lines[self.currentLine] = self.tokenizer.getLineTokens(line, state);
 
             // only check every 30 lines
             processedLines += 1;
@@ -69,11 +68,12 @@ ace.BackgroundTokenizer.prototype.fireUpdateEvent = function(firstRow, lastRow) 
 ace.BackgroundTokenizer.prototype.start = function(startRow) {
     this.currentLine = Math.min(startRow || 0, this.currentLine,
                                 this.textLines.length);
-    this.lines.splice(startRow, this.lines.length);
+
+    this.lines.splice(this.currentLine, this.lines.length);
 
     if (!this.running) {
-        this.running = true;
-        setTimeout(this._worker, 50);
+        clearTimeout(this.running);
+        this.running = setTimeout(this._worker, 50);
     }
 };
 
