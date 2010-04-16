@@ -35,7 +35,7 @@ ace.KeyBinding = function(element, editor) {
 
             case keys.D:
                 if (e.metaKey) {
-                    editor.removeLine();
+                    editor.removeLines();
                     return ace.stopEvent(e);
                 }
                 break;
@@ -58,7 +58,10 @@ ace.KeyBinding = function(element, editor) {
                 break;
 
             case keys.UP:
-                if (e.altKey) {
+                if (e.altKey && e.metaKey ) {
+                    editor.copyLinesUp();
+                }
+                else if (e.altKey) {
                     editor.moveLinesUp();
                 }
                 else if (e.metaKey && e.shiftKey) {
@@ -76,7 +79,10 @@ ace.KeyBinding = function(element, editor) {
                 return ace.stopEvent(e);
 
             case keys.DOWN:
-                if (e.altKey) {
+                if (e.altKey && e.metaKey ) {
+                    editor.copyLinesDown();
+                }
+                else if (e.altKey) {
                     editor.moveLinesDown();
                 }
                 else if (e.metaKey && e.shiftKey) {

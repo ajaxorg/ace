@@ -5,9 +5,36 @@ var TextEditTest = TestCase("TextEditTest",
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
-        editor.removeLine();
+        editor.removeLines();
 
         assertEquals("a\nc\nd", doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
+
+        editor.removeLines();
+
+        assertEquals("a\nd", doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
+
+        editor.removeLines();
+
+        assertEquals("a\n", doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
+
+        editor.removeLines();
+
+        assertEquals("a\n", doc.toString());
+        assertPosition(1, 0, editor.getCursorPosition());
+    },
+
+    "test: delete multiple selected lines" : function() {
+        var doc = new ace.TextDocument(["a", "b", "c", "d"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(1, 1);
+        editor.getSelection().selectDown();
+
+        editor.removeLines();
+        assertEquals("a\nd", doc.toString());
         assertPosition(1, 0, editor.getCursorPosition());
     },
 
@@ -15,7 +42,7 @@ var TextEditTest = TestCase("TextEditTest",
         var doc = new ace.TextDocument(["a", "b", "c"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
-        editor.removeLine();
+        editor.removeLines();
 
         assertEquals("b\nc", doc.toString());
         assertPosition(0, 0, editor.getCursorPosition());
@@ -26,10 +53,10 @@ var TextEditTest = TestCase("TextEditTest",
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(2, 1);
-        editor.removeLine();
+        editor.removeLines();
 
-        assertEquals("a\nb", doc.toString());
-        assertPosition(1, 0, editor.getCursorPosition());
+        assertEquals("a\nb\n", doc.toString());
+        assertPosition(2, 0, editor.getCursorPosition());
     },
 
     "test: indent block" : function() {
@@ -188,6 +215,36 @@ var TextEditTest = TestCase("TextEditTest",
         editor.moveLinesUp();
         assertEquals(["11", "22", "33", "44"].join("\n"), doc.toString());
         assertPosition(1, 0, editor.getCursorPosition());
+    },
+
+    "test: copy lines down should select lines and place cursor at the selection start" : function() {
+        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(1, 1);
+        editor.getSelection().selectDown();
+
+        editor.copyLinesDown();
+        assertEquals(["11", "22", "33", "22", "33", "44"].join("\n"), doc.toString());
+
+        assertPosition(3, 0, editor.getCursorPosition());
+        assertPosition(5, 0, editor.getSelection().getSelectionAnchor());
+        assertPosition(3, 0, editor.getSelection().getSelectionLead());
+    },
+
+    "test: copy lines up should select lines and place cursor at the selection start" : function() {
+        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(1, 1);
+        editor.getSelection().selectDown();
+
+        editor.copyLinesUp();
+        assertEquals(["11", "22", "33", "22", "33", "44"].join("\n"), doc.toString());
+
+        assertPosition(1, 0, editor.getCursorPosition());
+        assertPosition(3, 0, editor.getSelection().getSelectionAnchor());
+        assertPosition(1, 0, editor.getSelection().getSelectionLead());
     },
 
     "test: input a tab with soft tab should convert it to spaces" : function() {

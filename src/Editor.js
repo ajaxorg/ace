@@ -290,17 +290,6 @@ ace.Editor.prototype.removeLeft = function() {
     this.clearSelection();
 };
 
-ace.Editor.prototype.removeLine = function() {
-    this.selection.selectLine();
-    this.moveCursorToPosition(this.doc.remove(this.getSelectionRange()));
-    this.clearSelection();
-
-    if (this.getCursorPosition().row == this.doc.getLength() - 1) {
-        this.removeLeft();
-        this.selection.moveCursorLineStart();
-    }
-};
-
 ace.Editor.prototype.blockIndent = function(indentString) {
     var indentString = indentString || this.doc.getTabString();
     var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
@@ -324,6 +313,15 @@ ace.Editor.prototype.toggleCommentLines = function() {
     this.selection.shiftSelection(addedColumns);
 };
 
+ace.Editor.prototype.removeLines = function() {
+    var rows = this._getSelectedRows();
+    this.selection.setSelectionAnchor(rows.last+1, 0);
+    this.selection.selectTo(rows.first, 0);
+
+    this.doc.remove(this.getSelectionRange());
+    this.clearSelection();
+};
+
 ace.Editor.prototype.moveLinesDown = function() {
     this._moveLines(function(firstRow, lastRow) {
         return this.doc.moveLinesDown(firstRow, lastRow);
@@ -336,7 +334,33 @@ ace.Editor.prototype.moveLinesUp = function() {
     });
 };
 
+ace.Editor.prototype.copyLinesUp = function() {
+    this._moveLines(function(firstRow, lastRow) {
+        this.doc.duplicateLines(firstRow, lastRow);
+        return 0;
+    });
+};
+
+ace.Editor.prototype.copyLinesDown = function() {
+    this._moveLines(function(firstRow, lastRow) {
+        return this.doc.duplicateLines(firstRow, lastRow);
+    });
+};
+
+
 ace.Editor.prototype._moveLines = function(mover) {
+    var rows = this._getSelectedRows();
+
+    var linesMoved = mover.call(this, rows.first, rows.last);
+
+    var selection = this.selection;
+    selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
+    selection._moveSelection(function() {
+        selection.moveCursorTo(rows.first+linesMoved, 0);
+    });
+};
+
+ace.Editor.prototype._getSelectedRows = function() {
     var range = this.getSelectionRange();
     var firstRow = range.start.row;
     var lastRow = range.end.row;
@@ -344,15 +368,11 @@ ace.Editor.prototype._moveLines = function(mover) {
         lastRow -= 1;
     }
 
-    var linesMoved = mover.call(this, firstRow, lastRow);
-
-    var selection = this.selection;
-    selection.setSelectionAnchor(lastRow+linesMoved+1, 0);
-    selection._moveSelection(function() {
-        selection.moveCursorTo(firstRow+linesMoved, 0);
-    });
+    return {
+        first: firstRow,
+        last: lastRow
+    };
 };
-
 
 ace.Editor.prototype.onCompositionStart = function() {
     this.renderer.showComposition(this.getCursorPosition());

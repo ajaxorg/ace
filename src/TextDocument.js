@@ -92,10 +92,8 @@ ace.TextDocument.prototype.getTextRange = function(range) {
     else {
         var lines = [];
         lines.push(this.lines[range.start.row].substring(range.start.column));
-        lines.push.apply(lines, this.lines.slice(range.start.row + 1,
-                                                 range.end.row));
+        lines.push.apply(lines, this.getLines(range.start.row+1, range.end.row-1));
         lines.push(this.lines[range.end.row].substring(0, range.end.column));
-
         return lines.join("\n");
     }
 };
@@ -203,6 +201,12 @@ ace.TextDocument.prototype.insert = function(position, text) {
     return end;
 };
 
+ace.TextDocument.prototype._insertLines = function(row, lines) {
+    var args = [row, 0];
+    args.push.apply(args, lines);
+    this.lines.splice.apply(this.lines, args);
+},
+
 ace.TextDocument.prototype._insert = function(position, text) {
     this.modified = true;
 
@@ -237,9 +241,7 @@ ace.TextDocument.prototype._insert = function(position, text) {
                 + line.substring(position.column);
 
         if (newLines.length > 2) {
-            var args = [ position.row + 1, 0 ];
-            args.push.apply(args, newLines.slice(1, -1));
-            this.lines.splice.apply(this.lines, args);
+            this._insertLines(position.row + 1, newLines.slice(1, -1));
         }
 
         return {
@@ -318,10 +320,7 @@ ace.TextDocument.prototype.moveLinesUp = function(firstRow, lastRow) {
     if (firstRow <= 0) return 0;
 
     var removed = this.lines.splice(firstRow, lastRow-firstRow+1);
-
-    var args = [firstRow - 1, 0];
-    args.push.apply(args, removed);
-    this.lines.splice.apply(this.lines, args);
+    this._insertLines(firstRow-1, removed);
 
     this.fireChangeEvent(firstRow-1, lastRow);
     return -1;
@@ -331,11 +330,26 @@ ace.TextDocument.prototype.moveLinesDown = function(firstRow, lastRow) {
     if (lastRow >= this.lines.length-1) return 0;
 
     var removed = this.lines.splice(firstRow, lastRow-firstRow+1);
-
-    var args = [firstRow + 1, 0];
-    args.push.apply(args, removed);
-    this.lines.splice.apply(this.lines, args);
+    this._insertLines(firstRow+1, removed);
 
     this.fireChangeEvent(firstRow, lastRow+1);
     return 1;
 };
+
+ace.TextDocument.prototype.duplicateLines = function(firstRow, lastRow) {
+    var firstRow = this._clipRowToDocument(firstRow);
+    var lastRow = this._clipRowToDocument(lastRow);
+
+    var lines = this.getLines(firstRow, lastRow);
+    this._insertLines(firstRow, lines);
+
+    var addedRows = lastRow - firstRow + 1;
+    this.fireChangeEvent(firstRow, lastRow+addedRows);
+
+    return addedRows;
+};
+
+ace.TextDocument.prototype._clipRowToDocument = function(row) {
+    return Math.max(0, Math.min(row, this.lines.length-1));
+};
+

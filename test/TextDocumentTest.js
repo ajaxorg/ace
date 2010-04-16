@@ -63,5 +63,26 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
 
         doc.moveLinesUp(2, 2);
         assertEquals(["3", "1", "4", "2"].join("\n"), doc.toString());
+    },
+
+    "test: duplicate lines" : function() {
+        var doc = new ace.TextDocument(["1", "2", "3", "4"].join("\n"));
+
+        doc.duplicateLines(1, 2);
+        assertEquals(["1", "2", "3", "2", "3", "4"].join("\n"), doc.toString());
+    },
+
+    "test: duplicate last line" : function() {
+        var doc = new ace.TextDocument(["1", "2", "3"].join("\n"));
+
+        doc.duplicateLines(2, 2);
+        assertEquals(["1", "2", "3", "3"].join("\n"), doc.toString());
+    },
+
+    "test: duplicate first line" : function() {
+        var doc = new ace.TextDocument(["1", "2", "3"].join("\n"));
+
+        doc.duplicateLines(0, 0);
+        assertEquals(["1", "1", "2", "3"].join("\n"), doc.toString());
     }
 });
