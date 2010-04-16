@@ -1,16 +1,11 @@
 ace.provide("ace.BackgroundTokenizer");
 
-ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete) {
+ace.BackgroundTokenizer = function(tokenizer) {
     this.running = false;
     this.textLines = [];
     this.lines = [];
     this.currentLine = 0;
     this.tokenizer = tokenizer;
-
-    this.onUpdate = onUpdate || function(firstLine, lastLine) {
-    };
-    this.onComplete = onComplete || function() {
-    };
 
     var self = this;
     this._worker = function() {
@@ -33,7 +28,7 @@ ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete) {
             // only check every 30 lines
             processedLines += 1;
             if ((processedLines % 30 == 0) && (new Date() - workerStart) > 20) {
-                self.onUpdate(startLine, self.currentLine);
+                self.fireUpdateEvent(startLine, self.currentLine);
                 return setTimeout(self._worker, 10);
             }
 
@@ -42,10 +37,12 @@ ace.BackgroundTokenizer = function(tokenizer, onUpdate, onComplete) {
 
         self.running = false;
 
-        self.onUpdate(startLine, textLines.length - 1);
-        self.onComplete();
+        self.fireUpdateEvent(startLine, textLines.length - 1);
     };
+
+    this.$initEvents();
 };
+ace.mixin(ace.BackgroundTokenizer.prototype, ace.MEventEmitter);
 
 ace.BackgroundTokenizer.prototype.setTokenizer = function(tokenizer) {
     this.tokenizer = tokenizer;
@@ -59,6 +56,14 @@ ace.BackgroundTokenizer.prototype.setLines = function(textLines) {
     this.lines = [];
 
     this.stop();
+};
+
+ace.BackgroundTokenizer.prototype.fireUpdateEvent = function(firstRow, lastRow) {
+    var data = {
+        first: firstRow,
+        last: lastRow
+    };
+    this.$dispatchEvent("update", {data: data});
 };
 
 ace.BackgroundTokenizer.prototype.start = function(startRow) {

@@ -66,7 +66,8 @@ ace.Editor.prototype.setMode = function(mode) {
 
     if (!this.bgTokenizer) {
         var onUpdate = ace.bind(this.onTokenizerUpdate, this);
-        this.bgTokenizer = new ace.BackgroundTokenizer(tokenizer, onUpdate);
+        this.bgTokenizer = new ace.BackgroundTokenizer(tokenizer);
+        this.bgTokenizer.addEventListener("update", onUpdate);
     } else {
         this.bgTokenizer.setTokenizer(tokenizer);
     }
@@ -126,13 +127,15 @@ ace.Editor.prototype.onBlur = function() {
     this.renderer.visualizeBlur();
 };
 
-ace.Editor.prototype.onDocumentChange = function(startRow, endRow) {
-    this.bgTokenizer.start(startRow);
-    this.renderer.updateLines(startRow, endRow);
+ace.Editor.prototype.onDocumentChange = function(e) {
+    var data = e.data;
+    this.bgTokenizer.start(data.startRow);
+    this.renderer.updateLines(data.startRow, data.endRow);
 };
 
-ace.Editor.prototype.onTokenizerUpdate = function(startRow, endRow) {
-    this.renderer.updateLines(startRow, endRow);
+ace.Editor.prototype.onTokenizerUpdate = function(e) {
+    var rows = e.data;
+    this.renderer.updateLines(rows.first, rows.last);
 };
 
 ace.Editor.prototype.onCursorChange = function() {
