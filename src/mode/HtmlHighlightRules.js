@@ -22,6 +22,10 @@ ace.mode.HtmlHighlightRules = function() {
             regex : "<(?=\s*script)",
             next : "script"
         }, {
+            token : "text",
+            regex : "<(?=\s*style)",
+            next : "css"
+        }, {
             token : "text", // opening tag
             regex : "<\\/?",
             next : "tag"
@@ -37,6 +41,24 @@ ace.mode.HtmlHighlightRules = function() {
             token : "text",
             regex : ">",
             next : "js-start"
+        }, {
+            token : "keyword",
+            regex : "[-_a-zA-Z0-9:]+"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token : "string",
+            regex : '".*?"'
+        }, {
+            token : "string",
+            regex : "'.*?'"
+        } ],
+
+        css : [ {
+            token : "text",
+            regex : ">",
+            next : "css-start"
         }, {
             token : "keyword",
             regex : "[-_a-zA-Z0-9:]+"
@@ -96,6 +118,14 @@ ace.mode.HtmlHighlightRules = function() {
     this._rules["js-start"].unshift({
         token: "text",
         regex: "<\\/(?=script)",
+        next: "tag"
+    });
+
+    var cssRules = new ace.mode.CssHighlightRules().getRules();
+    this._addRules(cssRules, "css-");
+    this._rules["css-start"].unshift({
+        token: "text",
+        regex: "<\\/(?=style)",
         next: "tag"
     });
 };
