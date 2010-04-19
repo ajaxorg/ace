@@ -77,8 +77,8 @@ ace.VirtualRenderer.prototype.onResize = function()
 ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow) {
     var layerConfig = this.layerConfig;
 
-    // if the first row is below the viewport -> ignore it
     if (firstRow > layerConfig.lastRow + 1) { return; }
+    if (lastRow < layerConfig.firstRow) { return; }
 
     // if the last row is unknow -> redraw everything
     if (lastRow === undefined) {

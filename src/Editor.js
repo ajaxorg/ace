@@ -130,7 +130,7 @@ ace.Editor.prototype.onBlur = function() {
 ace.Editor.prototype.onDocumentChange = function(e) {
     var data = e.data;
     this.bgTokenizer.start(data.firstRow);
-    this.renderer.updateLines(data.firstRow, data.endRow);
+    this.renderer.updateLines(data.firstRow, data.lastRow);
 };
 
 ace.Editor.prototype.onTokenizerUpdate = function(e) {

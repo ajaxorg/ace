@@ -32,7 +32,16 @@ ace.CursorLayer.prototype.showCursor = function() {
 
     var cursor = this.cursor;
     cursor.style.visibility = "visible";
+    this.restartTimer();
+};
 
+ace.CursorLayer.prototype.restartTimer = function() {
+    clearInterval(this.blinkId);
+    if (!this.isVisible) {
+        return;
+    }
+
+    var cursor = this.cursor;
     this.blinkId = setInterval(function() {
         cursor.style.visibility = "hidden";
         setTimeout(function() {
@@ -68,4 +77,5 @@ ace.CursorLayer.prototype.update = function(config) {
     if (this.isVisible) {
         this.element.appendChild(this.cursor);
     }
+    this.restartTimer();
 };
