@@ -10,7 +10,7 @@ ace.GutterLayer.prototype.update = function(config) {
     var html = [];
     for ( var i = config.firstRow; i <= config.lastRow; i++) {
         html.push("<div class='gutter-cell' style='height:" + config.lineHeight
-                + "px;'>", i, "</div>");
+                + "px;'>", (i+1), "</div>");
         html.push("</div>");
     }
 

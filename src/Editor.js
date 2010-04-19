@@ -496,11 +496,11 @@ ace.Editor.prototype.moveCursorToPosition = function(pos) {
 
 ace.Editor.prototype.gotoLine = function(lineNumber) {
     this._blockScrolling = true;
-    this.moveCursorTo(lineNumber, 0);
+    this.moveCursorTo(lineNumber-1, 0);
     this._blockScrolling = false;
 
     if (!this.isRowVisible(this.getCursorPosition().row)) {
-        this.scrollToRow(lineNumber - Math.floor(this.getVisibleRowCount() / 2));
+        this.scrollToRow(lineNumber - 1 - Math.floor(this.getVisibleRowCount() / 2));
     }
 },
 
