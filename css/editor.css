@@ -1,114 +1,43 @@
 .editor {
   position: absolute;
-  border: 2px solid rgb(159, 159, 159);
   overflow: hidden;
-}
-
-.editor.focus {
-  border: 2px solid #327fbd;;
 }
 
 .scroller {
   position: absolute;
-  left: 50px;
-  right: 0;
-  bottom: 0;
-  top: 0;
   overflow-x: scroll;
   overflow-y: hidden;	    
 }
 
 .gutter {
   position: absolute;
-  width: 50px;
-  top: 0px;
-  bottom: 0px;
   overflow-x: scroll;
   overflow-y: hidden;
-  
-  background: rgb(227, 227, 227);
-  border-right: 1px solid rgb(159, 159, 159);	 
-  color: rgb(136, 136, 136);
-  font-family: Monaco, "Courier New";
-  font-size: 12px;  
-  
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
 }
 
 .layer {
   position: absolute;
   overflow: hidden;  
   white-space: nowrap;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.gutter-layer {
-  right: 0;
-  text-align: right;
-  padding-right: 10px;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
 }
 
 .text-layer {
   z-index: 2;
   font-family: Monaco, "Courier New", monospace;
-  font-size: 12px;
   cursor: text;
+}
+
+.cursor-layer {
+  z-index: 3;
 }
 
 .cursor {
   z-index: 3;
   position: absolute;
-  width: 2px;
-  background: black;
 }
 
 .line {
   white-space: nowrap;
-}
-
-.line .keyword {
-  color: blue;
-}
-
-.line .buildin-constant {
-  color: rgb(88, 72, 246);
-}
-
-.line .library-constant {
-  color: rgb(6, 150, 14);
-}
-
-.line .buildin-function {
-  color: rgb(60, 76, 114);
-}
-
-.line .string {
-  color: rgb(3, 106, 7);
-}
-
-.line .comment {
-  font-style: italic;
-  color: rgb(76, 136, 107);
-}
-
-.line .doc-comment {
-  color: rgb(0, 102, 255);
-}
-
-.line .doc-comment-tag {
-  color: rgb(128, 159, 191);
-}
-
-.line .number {
-  color: rgb(0, 0, 205);
-}
-
-.line .xml_pe {
-  color: rgb(104, 104, 91);
 }
 
 .marker-layer {
@@ -118,18 +47,14 @@
 .marker-layer .selection {
   position: absolute;
   z-index: 2;
-  background: rgb(181, 213, 255);
 }
 
 .marker-layer .bracket {
   position: absolute;
   z-index: 3;
-  margin: -1px 0 0 -1px;
-  border: 1px solid rgb(192, 192, 192);
 }
 
 .marker-layer .active_line {
   position: absolute;
   z-index: 1;
-  background: rgb(232, 242, 254);
 }

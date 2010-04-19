@@ -9,16 +9,20 @@
 	
 	<style type="text/css" media="screen">
 	
+	html {
+		height: 100%;
+	}
+	
 	body {
 		margin: 0;
 		padding: 0;
 		font: sans-serif;
+		height: 100%;
+		width: 100%;
 	}
 	
 	#container {  
 	  	top: 30px;
-	  	right: 0px;
-	  	bottom: 0px;
 	  	left: 0px;
 	}
 	
@@ -31,6 +35,7 @@
   
 	</style>
 	<link rel="stylesheet" href="../css/editor.css" type="text/css" charset="utf-8">
+	<link rel="stylesheet" href="../css/tm.css" type="text/css" charset="utf-8">
 	
 	<script src="../src/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/mode/Text.js" type="text/javascript" charset="utf-8"></script>
@@ -124,9 +129,14 @@ var editor = new ace.Editor(
     getMode()
 );
 
-window.onresize = function() {
-  editor.resize();
+function onResize() {
+    container.style.width = (document.documentElement.clientWidth - 4) + "px";
+    container.style.height = (document.documentElement.clientHeight - 30 - 4) + "px";     
+	editor.resize();    
 };
+
+window.onresize = onResize;
+onResize();
 
 ace.addListener(container, "dragover", function(e) {
   return ace.preventDefault(e);

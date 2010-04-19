@@ -31,6 +31,8 @@ ace.VirtualRenderer = function(container) {
         row : 0,
         column : 0
     };
+
+    this.onResize();
 };
 
 ace.VirtualRenderer.prototype.setDocument = function(doc) {
@@ -54,6 +56,22 @@ ace.VirtualRenderer.prototype.getFirstVisibleRow = function() {
 
 ace.VirtualRenderer.prototype.getLastVisibleRow = function() {
     return this.layerConfig.lastRow || 0;
+};
+
+ace.VirtualRenderer.prototype.onResize = function()
+{
+    var height = ace.getInnerHeight(this.container);
+    this.gutter.style.height = height + "px";
+    this.scroller.style.height = height + "px";
+
+    var width = ace.getInnerWidth(this.container);
+    var gutterWidth = this.gutter.offsetWidth;
+    this.scroller.style.left = gutterWidth + "px";
+    this.scroller.style.width = Math.max(0, width - gutterWidth) + "px";
+
+    if (this.doc) {
+        this.scrollToY(this.getScrollTop());
+    }
 };
 
 ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow) {

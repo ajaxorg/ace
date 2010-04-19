@@ -82,10 +82,8 @@ ace.Editor.prototype.setMode = function(mode) {
 };
 
 
-ace.Editor.prototype.resize = function()
-{
-    this.renderer.scrollToY(this.renderer.getScrollTop());
-    this.renderer.draw();
+ace.Editor.prototype.resize = function() {
+    this.renderer.onResize();
 };
 
 ace.Editor.prototype._highlightBrackets = function() {
@@ -190,7 +188,10 @@ ace.Editor.prototype.onSelectionChange = function() {
 ace.Editor.prototype.onMouseDown = function(e) {
     this.textInput.focus();
 
-    var pos = this.renderer.screenToTextCoordinates(e.pageX, e.pageY);
+    var pageX = ace.getDocumentX(e);
+    var pageY = ace.getDocumentY(e);
+
+    var pos = this.renderer.screenToTextCoordinates(pageX, pageY);
     this.moveCursorToPosition(pos);
     this.selection.setSelectionAnchor(pos.row, pos.column);
     this.renderer.scrollCursorIntoView();
@@ -199,8 +200,8 @@ ace.Editor.prototype.onMouseDown = function(e) {
     var mousePageX, mousePageY;
 
     var onMouseSelection = function(e) {
-        mousePageX = e.pageX;
-        mousePageY = e.pageY;
+        mousePageX = ace.getDocumentX(e);
+        mousePageY = ace.getDocumentY(e);
     };
 
     var onMouseSelectionEnd = function() {
