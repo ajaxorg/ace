@@ -73,6 +73,7 @@ ace.BackgroundTokenizer.prototype.start = function(startRow) {
 
     if (!this.running) {
         clearTimeout(this.running);
+        // pretty long delay to prevent the tokenizer from interfering with the user
         this.running = setTimeout(this._worker, 200);
     }
 };
