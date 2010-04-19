@@ -13,7 +13,7 @@ ace.mixin(ace.TextDocument.prototype, ace.MEventEmitter);
 
 
 ace.TextDocument.prototype._split = function(text) {
-    return text.split(/[\n\r]/);
+    return text.split(/\r\n|\r|\n/);
 };
 
 ace.TextDocument.prototype.toString = function() {
@@ -212,7 +212,7 @@ ace.TextDocument.prototype._insert = function(position, text) {
 
     var newLines = this._split(text);
 
-    if (text == "\n") {
+    if (this._isNewLine(text)) {
         var line = this.lines[position.row] || "";
         this.lines[position.row] = line.substring(0, position.column);
         this.lines.splice(position.row + 1, 0, line.substring(position.column));
@@ -249,6 +249,10 @@ ace.TextDocument.prototype._insert = function(position, text) {
             column : newLines[newLines.length - 1].length
         };
     }
+};
+
+ace.TextDocument.prototype._isNewLine = function(text) {
+    return (text == "\r\n" || text == "\r" || text == "\n");
 };
 
 ace.TextDocument.prototype.remove = function(range) {

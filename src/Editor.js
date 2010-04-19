@@ -2,6 +2,7 @@ ace.provide("ace.Editor");
 
 ace.Editor = function(renderer, doc, mode) {
     var container = renderer.getContainerElement();
+    this.container = container;
     this.renderer = renderer;
 
     this.setMode(mode || new ace.mode.Text());
@@ -25,6 +26,7 @@ ace.Editor = function(renderer, doc, mode) {
 
     this._initialized = true;
 };
+
 
 ace.Editor.prototype.setDocument = function(doc) {
     // TODO: document change is not yet supported

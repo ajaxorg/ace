@@ -21,45 +21,23 @@
   
 </div>
 
+<script src="../src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 
 var el = document.getElementById("juhu");
 
-el.addEventListener("mousedown", function(e) {  
-  el.innerHTML = e.pageX + " " + e.pageY;
-  capture(
+ace.addListener(el, "mousedown", function(e) {  
+  el.innerHTML = ace.getDocumentX(e) + " " + ace.getDocumentY(e);
+  ace.capture(
     el,
     function(e) {
-      el.innerHTML = e.pageX + " " + e.pageY;
+      el.innerHTML = ace.getDocumentX(e) + " " + ace.getDocumentY(e);
     }, function() {
       el.innerHTML = "";
     }
   );
 });
 
-
-function capture(el, eventHandler, releaseCaptureHandler)
-{
-  function onMouseMove(e) 
-  {    
-    eventHandler(e);
-    e.stopPropagation();
-  }
-  
-  function onMouseUp(e) 
-  {
-    eventHandler && eventHandler(e);
-    releaseCaptureHandler && releaseCaptureHandler();
-
-    document.removeEventListener("mousemove", onMouseMove, true);
-    document.removeEventListener("mouseup", onMouseUp, true);
-    
-    e.stopPropagation();
-  }
-  
-  document.addEventListener("mousemove", onMouseMove, true);
-  document.addEventListener("mouseup", onMouseUp, true);
-}
 
   
 </script>

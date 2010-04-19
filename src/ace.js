@@ -139,25 +139,69 @@ ace.bind = function(fcn, context) {
     };
 };
 
-ace.capture = function(el, eventHandler, releaseCaptureHandler) {
-    function onMouseMove(e) {
-        eventHandler(e);
-        e.stopPropagation();
+ace.getDocumentX = function(event) {
+    if (event.clientX) {
+        var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+        return event.clientX + scrollLeft;
+    } else {
+        return event.pageX;
     }
-
-    function onMouseUp(e) {
-        eventHandler && eventHandler(e);
-        releaseCaptureHandler && releaseCaptureHandler();
-
-        document.removeEventListener("mousemove", onMouseMove, true);
-        document.removeEventListener("mouseup", onMouseUp, true);
-
-        e.stopPropagation();
-    }
-
-    document.addEventListener("mousemove", onMouseMove, true);
-    document.addEventListener("mouseup", onMouseUp, true);
 };
+
+ace.getDocumentY = function(event) {
+    if (event.clientY) {
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        return event.clientY + scrollTop;
+    } else {
+        return event.pageX;
+    }
+};
+
+if (document.documentElement.setCapture) {
+    ace.capture = function(el, eventHandler, releaseCaptureHandler) {
+        function onMouseMove(e) {
+            eventHandler(e);
+            return ace.stopPropagation(e);
+        }
+
+        function onReleaseCapture(e) {
+            eventHandler && eventHandler(e);
+            releaseCaptureHandler && releaseCaptureHandler();
+
+            ace.removeListener(el, "mousemove", eventHandler);
+            ace.removeListener(el, "mouseup", onReleaseCapture);
+            ace.removeListener(el, "losecapture", onReleaseCapture);
+
+            el.releaseCapture();
+        }
+
+        ace.addListener(el, "mousemove", eventHandler);
+        ace.addListener(el, "mouseup", onReleaseCapture);
+        ace.addListener(el, "losecapture", onReleaseCapture);
+        el.setCapture();
+    };
+}
+else {
+    ace.capture = function(el, eventHandler, releaseCaptureHandler) {
+        function onMouseMove(e) {
+            eventHandler(e);
+            e.stopPropagation();
+        }
+
+        function onMouseUp(e) {
+            eventHandler && eventHandler(e);
+            releaseCaptureHandler && releaseCaptureHandler();
+
+            document.removeEventListener("mousemove", onMouseMove, true);
+            document.removeEventListener("mouseup", onMouseUp, true);
+
+            e.stopPropagation();
+        }
+
+        document.addEventListener("mousemove", onMouseMove, true);
+        document.addEventListener("mouseup", onMouseUp, true);
+    };
+}
 
 ace.addMouseWheelListener = function(el, callback) {
     var listener = function(e) {
