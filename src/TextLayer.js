@@ -64,7 +64,7 @@ ace.TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow) {
 ace.TextLayer.prototype.update = function(config) {
     var html = [];
     for ( var i = config.firstRow; i <= config.lastRow; i++) {
-        html.push("<div style='height:" + this.lineHeight + "px;", "width:",
+        html.push("<div class='line' style='height:" + this.lineHeight + "px;", "width:",
                   config.width, "px'>");
         this.renderLine(html, i), html.push("</div>");
     }
