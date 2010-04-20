@@ -37,5 +37,16 @@ var JavaScriptTokenizerTest = new TestCase("mode.JavaScriptTokenizerTest", {
         assertEquals("doc-comment", tokens[0].type);
         assertEquals("doc-comment-tag", tokens[1].type);
         assertEquals("doc-comment", tokens[2].type);
+    },
+
+    "test: tokenize parens" : function() {
+        var line = "[{( )}]";
+
+        var tokens = this.tokenizer.getLineTokens(line, "start").tokens;
+
+        assertEquals(3, tokens.length);
+        assertEquals("lparen", tokens[0].type);
+        assertEquals("text", tokens[1].type);
+        assertEquals("rparen", tokens[2].type);
     }
 });

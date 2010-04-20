@@ -24,5 +24,14 @@ var CssTest = new TestCase("mode.CssTest", {
 
         assertEquals(1, tokens.length);
         assertEquals("number", tokens[0].type);
+    },
+
+    "test: tokenize parens" : function() {
+        var tokens = this.tokenizer.getLineTokens("{()}", "start").tokens;
+
+        assertEquals(3, tokens.length);
+        assertEquals("lparen", tokens[0].type);
+        assertEquals("text", tokens[1].type);
+        assertEquals("rparen", tokens[2].type);
     }
 });

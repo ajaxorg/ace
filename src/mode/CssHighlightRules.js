@@ -142,6 +142,12 @@ ace.mode.CssHighlightRules = function() {
             token : "number", // hex3 color
             regex : "#[a-fA-F0-9]{3}"
         }, {
+            token : "lparen",
+            regex : "\{"
+        }, {
+            token : "rparen",
+            regex : "\}"
+        }, {
             token : function(value) {
                 if (properties[value.toLowerCase()]) {
                     return "buildin-constant";

@@ -74,11 +74,11 @@ ace.mode.JavaScriptHighlightRules = function() {
             },
             regex : "[a-zA-Z_][a-zA-Z0-9_]*\\b"
         }, {
-            token : function(value) {
-                // return parens[value];
-            return "text";
-            },
-            regex : "[\\[\\]\\(\\)\\{\\}]"
+            token : "lparen",
+            regex : "[\\[\\(\\{]"
+        }, {
+            token : "rparen",
+            regex : "[\\]\\)\\}]"
         }, {
             token : "text",
             regex : "\\s+"

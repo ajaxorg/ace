@@ -21,3 +21,12 @@ ace.mode.Text.prototype.toggleCommentLines = function(doc, range, state) {
 ace.mode.Text.prototype.getNextLineIndent = function(line, state, tab) {
     return "";
 };
+
+ace.mode.Text.prototype.$getIndent = function(line) {
+    var match = line.match(/^(\s+)/);
+    if (match) {
+        return match[1];
+    }
+
+    return "";
+};
