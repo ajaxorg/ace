@@ -1,6 +1,6 @@
-ace.provide("ace.CursorLayer");
+ace.provide("ace.layer.Cursor");
 
-ace.CursorLayer = function(parentEl) {
+ace.layer.Cursor = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "layer cursor-layer";
     parentEl.appendChild(this.element);
@@ -11,14 +11,14 @@ ace.CursorLayer = function(parentEl) {
     this.isVisible = false;
 };
 
-ace.CursorLayer.prototype.setCursor = function(position) {
+ace.layer.Cursor.prototype.setCursor = function(position) {
     this.position = {
         row : position.row,
         column : position.column
     };
 };
 
-ace.CursorLayer.prototype.hideCursor = function() {
+ace.layer.Cursor.prototype.hideCursor = function() {
     this.isVisible = false;
     if (this.cursor.parentNode) {
         this.cursor.parentNode.removeChild(this.cursor);
@@ -26,7 +26,7 @@ ace.CursorLayer.prototype.hideCursor = function() {
     clearInterval(this.blinkId);
 };
 
-ace.CursorLayer.prototype.showCursor = function() {
+ace.layer.Cursor.prototype.showCursor = function() {
     this.isVisible = true;
     this.element.appendChild(this.cursor);
 
@@ -35,7 +35,7 @@ ace.CursorLayer.prototype.showCursor = function() {
     this.restartTimer();
 };
 
-ace.CursorLayer.prototype.restartTimer = function() {
+ace.layer.Cursor.prototype.restartTimer = function() {
     clearInterval(this.blinkId);
     if (!this.isVisible) {
         return;
@@ -50,14 +50,14 @@ ace.CursorLayer.prototype.restartTimer = function() {
     }, 1000);
 };
 
-ace.CursorLayer.prototype.getPixelPosition = function() {
+ace.layer.Cursor.prototype.getPixelPosition = function() {
     return this.pixelPos || {
         left : 0,
         top : 0
     };
 };
 
-ace.CursorLayer.prototype.update = function(config) {
+ace.layer.Cursor.prototype.update = function(config) {
     if (!this.position)
         return;
 

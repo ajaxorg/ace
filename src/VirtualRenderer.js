@@ -12,16 +12,16 @@ ace.VirtualRenderer = function(container) {
     this.gutter.className = "gutter";
     this.container.appendChild(this.gutter);
 
-    this.gutterLayer = new ace.GutterLayer(this.gutter);
-    this.markerLayer = new ace.MarkerLayer(this.scroller);
+    this.gutterLayer = new ace.layer.Gutter(this.gutter);
+    this.markerLayer = new ace.layer.Marker(this.scroller);
 
-    var textLayer = this.textLayer = new ace.TextLayer(this.scroller);
+    var textLayer = this.textLayer = new ace.layer.Text(this.scroller);
     this.canvas = textLayer.element;
 
     this.characterWidth = textLayer.getCharacterWidth();
     this.lineHeight = textLayer.getLineHeight();
 
-    this.cursorLayer = new ace.CursorLayer(this.scroller);
+    this.cursorLayer = new ace.layer.Cursor(this.scroller);
 
     this.layers = [ this.markerLayer, textLayer, this.cursorLayer ];
 

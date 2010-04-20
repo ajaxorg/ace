@@ -52,10 +52,10 @@
 	<script src="../src/TextDocument.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/Tokenizer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/BackgroundTokenizer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/CursorLayer.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/GutterLayer.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/TextLayer.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/MarkerLayer.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/layer/Cursor.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/layer/Gutter.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/layer/Text.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="../src/layer/Marker.js" type="text/javascript" charset="utf-8"></script>	
 	<script src="../src/TextInput.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/KeyBinding.js" type="text/javascript" charset="utf-8"></script>	
 	<script src="../src/Editor.js" type="text/javascript" charset="utf-8"></script>	
@@ -113,6 +113,15 @@
 
     <script type="text/editor" id="htmltext"><html>
 <head>
+
+<style type="text/css">
+.text-layer {
+    font-family: Monaco, "Courier New", monospace;
+    font-size: 12px;
+    cursor: text;
+}
+</style>
+
 </head>
 <body>
     <h1 style="color:red">Juhu Kinners</h1>

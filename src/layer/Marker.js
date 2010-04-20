@@ -1,6 +1,6 @@
-ace.provide("ace.MarkerLayer");
+ace.provide("ace.layer.Marker");
 
-ace.MarkerLayer = function(parentEl) {
+ace.layer.Marker = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "layer marker-layer";
     parentEl.appendChild(this.element);
@@ -9,11 +9,11 @@ ace.MarkerLayer = function(parentEl) {
     this._markerId = 1;
 };
 
-ace.MarkerLayer.prototype.setDocument = function(doc) {
+ace.layer.Marker.prototype.setDocument = function(doc) {
     this.doc = doc;
 };
 
-ace.MarkerLayer.prototype.addMarker = function(range, clazz, type) {
+ace.layer.Marker.prototype.addMarker = function(range, clazz, type) {
     var id = this._markerId++;
     this.markers[id] = {
         range : range,
@@ -25,7 +25,7 @@ ace.MarkerLayer.prototype.addMarker = function(range, clazz, type) {
     return id;
 };
 
-ace.MarkerLayer.prototype.removeMarker = function(markerId) {
+ace.layer.Marker.prototype.removeMarker = function(markerId) {
     var marker = this.markers[markerId];
     if (marker) {
         delete (this.markers[markerId]);
@@ -33,7 +33,7 @@ ace.MarkerLayer.prototype.removeMarker = function(markerId) {
     }
 };
 
-ace.MarkerLayer.prototype.update = function(config) {
+ace.layer.Marker.prototype.update = function(config) {
     var config = config || this.config;
     if (!config)
         return;
@@ -80,7 +80,7 @@ ace.MarkerLayer.prototype.update = function(config) {
     this.element.innerHTML = html.join("");
 };
 
-ace.MarkerLayer.prototype.drawTextMarker = function(stringBuilder, range, clazz, layerConfig) {
+ace.layer.Marker.prototype.drawTextMarker = function(stringBuilder, range, clazz, layerConfig) {
 
     // selection start
     var row = range.start.row;
@@ -108,7 +108,7 @@ ace.MarkerLayer.prototype.drawTextMarker = function(stringBuilder, range, clazz,
     }
 };
 
-ace.MarkerLayer.prototype.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+ace.layer.Marker.prototype.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig) {
 
     var height = layerConfig.lineHeight;
     var width = Math.round(layerConfig.width - (range.start.column * layerConfig.characterWidth));
@@ -144,7 +144,7 @@ ace.MarkerLayer.prototype.drawMultiLineMarker = function(stringBuilder, range, c
     }
 };
 
-ace.MarkerLayer.prototype.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+ace.layer.Marker.prototype.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig) {
 
     var height = layerConfig.lineHeight;
     var width = Math.round((range.end.column - range.start.column) * layerConfig.characterWidth);

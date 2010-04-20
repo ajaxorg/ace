@@ -1,6 +1,6 @@
-ace.provide("ace.TextLayer");
+ace.provide("ace.layer.Text");
 
-ace.TextLayer = function(parentEl) {
+ace.layer.Text = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "layer text-layer";
     parentEl.appendChild(this.element);
@@ -9,19 +9,19 @@ ace.TextLayer = function(parentEl) {
     this._tabString = " ";
 };
 
-ace.TextLayer.prototype.setTokenizer = function(tokenizer) {
+ace.layer.Text.prototype.setTokenizer = function(tokenizer) {
     this.tokenizer = tokenizer;
 };
 
-ace.TextLayer.prototype.getLineHeight = function() {
+ace.layer.Text.prototype.getLineHeight = function() {
     return this.lineHeight;
 };
 
-ace.TextLayer.prototype.getCharacterWidth = function() {
+ace.layer.Text.prototype.getCharacterWidth = function() {
     return this.characterWidth;
 };
 
-ace.TextLayer.prototype._measureSizes = function() {
+ace.layer.Text.prototype._measureSizes = function() {
     var measureNode = document.createElement("div");
     var style = measureNode.style;
     style.width = style.height = "auto";
@@ -42,11 +42,11 @@ ace.TextLayer.prototype._measureSizes = function() {
     this.element.removeChild(measureNode);
 };
 
-ace.TextLayer.prototype.setTabSize = function(tabSize) {
+ace.layer.Text.prototype.setTabSize = function(tabSize) {
     this._tabString = new Array(tabSize+1).join("&nbsp;");
 };
 
-ace.TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow) {
+ace.layer.Text.prototype.updateLines = function(layerConfig, firstRow, lastRow) {
     var first = Math.max(firstRow, layerConfig.firstRow);
     var last = Math.min(lastRow, layerConfig.lastRow);
 
@@ -61,7 +61,7 @@ ace.TextLayer.prototype.updateLines = function(layerConfig, firstRow, lastRow) {
     };
 };
 
-ace.TextLayer.prototype.update = function(config) {
+ace.layer.Text.prototype.update = function(config) {
     var html = [];
     for ( var i = config.firstRow; i <= config.lastRow; i++) {
         html.push("<div class='line' style='height:" + this.lineHeight + "px;", "width:",
@@ -72,7 +72,7 @@ ace.TextLayer.prototype.update = function(config) {
     this.element.innerHTML = html.join("");
 };
 
-ace.TextLayer.prototype.renderLine = function(stringBuilder, row) {
+ace.layer.Text.prototype.renderLine = function(stringBuilder, row) {
     var tokens = this.tokenizer.getTokens(row);
     for ( var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
