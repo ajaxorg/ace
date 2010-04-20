@@ -7,11 +7,17 @@ ace.Editor = function(renderer, doc) {
 
     this.textInput = new ace.TextInput(container, this);
     new ace.KeyBinding(container, this);
+    var self = this;
+    ace.addListener(container, "mousedown", function(e) {
+        self.focus();
+        return ace.stopEvent(e);
+    });
 
-    ace.addListener(container, "mousedown", ace.bind(this.onMouseDown, this));
-    ace.addListener(container, "dblclick", ace.bind(this.onMouseDoubleClick, this));
-    ace.addTripleClickListener(container, ace.bind(this.onMouseTripleClick, this));
-    ace.addMouseWheelListener(container, ace.bind(this.onMouseWheel, this));
+    var mouseTarget = renderer.getMouseEventTarget();
+    ace.addListener(mouseTarget, "mousedown", ace.bind(this.onMouseDown, this));
+    ace.addListener(mouseTarget, "dblclick", ace.bind(this.onMouseDoubleClick, this));
+    ace.addTripleClickListener(mouseTarget, ace.bind(this.onMouseTripleClick, this));
+    ace.addMouseWheelListener(mouseTarget, ace.bind(this.onMouseWheel, this));
 
     this._selectionMarker = null;
     this._highlightLineMarker = null;
@@ -196,8 +202,6 @@ ace.Editor.prototype.onDocumentModeChange = function() {
 
 
 ace.Editor.prototype.onMouseDown = function(e) {
-    this.focus();
-
     var pageX = ace.getDocumentX(e);
     var pageY = ace.getDocumentY(e);
 

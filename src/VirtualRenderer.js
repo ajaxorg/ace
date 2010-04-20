@@ -25,6 +25,9 @@ ace.VirtualRenderer = function(container) {
 
     this.layers = [ this.markerLayer, textLayer, this.cursorLayer ];
 
+    this.scrollBar = new ace.ScrollBar(container);
+    this.scrollBar.addEventListener("scroll", ace.bind(this.onScroll, this));
+
     this.scrollTop = 0;
 
     this.cursorPos = {
@@ -50,6 +53,10 @@ ace.VirtualRenderer.prototype.getContainerElement = function() {
     return this.container;
 };
 
+ace.VirtualRenderer.prototype.getMouseEventTarget = function() {
+    return this.scroller;
+};
+
 ace.VirtualRenderer.prototype.getFirstVisibleRow = function() {
     return this.layerConfig.firstRow || 0;
 };
@@ -63,15 +70,27 @@ ace.VirtualRenderer.prototype.onResize = function()
     var height = ace.getInnerHeight(this.container);
     this.gutter.style.height = height + "px";
     this.scroller.style.height = height + "px";
+    this.scrollBar.setHeight(height);
 
     var width = ace.getInnerWidth(this.container);
     var gutterWidth = this.gutter.offsetWidth;
     this.scroller.style.left = gutterWidth + "px";
-    this.scroller.style.width = Math.max(0, width - gutterWidth) + "px";
+    this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
 
     if (this.doc) {
+        this._updateScrollBar();
         this.scrollToY(this.getScrollTop());
+        this.draw();
     }
+};
+
+ace.VirtualRenderer.prototype.onScroll = function(e) {
+    this.scrollToY(e.data);
+};
+
+ace.VirtualRenderer.prototype._updateScrollBar = function() {
+    this.scrollBar.setInnerHeight(this.doc.getLength() * this.lineHeight);
+    this.scrollBar.setScrollTop(this.scrollTop);
 };
 
 ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow) {
@@ -80,7 +99,7 @@ ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow) {
     if (firstRow > layerConfig.lastRow + 1) { return; }
     if (lastRow < layerConfig.firstRow) { return; }
 
-    // if the last row is unknow -> redraw everything
+    // if the last row is unknown -> redraw everything
     if (lastRow === undefined) {
         this.draw();
         return;
@@ -96,9 +115,7 @@ ace.VirtualRenderer.prototype.draw = function() {
     var offset = this.scrollTop % this.lineHeight;
     var minHeight = this.scroller.clientHeight + offset;
 
-    var longestLine = Math.max(this.scroller.clientWidth, Math.round(this.doc
-            .getWidth()
-            * this.characterWidth));
+    var longestLine = Math.max(this.scroller.clientWidth, Math.round(this.doc.getWidth() * this.characterWidth));
 
     var lineCount = Math.ceil(minHeight / this.lineHeight);
     var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
@@ -121,12 +138,13 @@ ace.VirtualRenderer.prototype.draw = function() {
         style.width = longestLine + "px";
 
         layer.update(layerConfig);
-    }
-    ;
+    };
 
     this.gutterLayer.element.style.marginTop = (-offset) + "px";
     this.gutterLayer.element.style.height = minHeight + "px";
     this.gutterLayer.update(layerConfig);
+
+    this._updateScrollBar();
 };
 
 ace.VirtualRenderer.prototype.addMarker = function(range, clazz, type) {
@@ -191,6 +209,7 @@ ace.VirtualRenderer.prototype.scrollToY = function(scrollTop) {
 
     if (this.scrollTop !== scrollTop) {
         this.scrollTop = scrollTop;
+        this._updateScrollBar();
         this.draw();
     }
 };

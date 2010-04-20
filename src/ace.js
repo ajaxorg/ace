@@ -97,20 +97,20 @@ ace.computedStyle = function(element, style) {
     }
 };
 
-ace.scrollbarHeight = function() {
+ace.scrollbarWidth = function(parent) {
     var el = document.createElement("div");
     var style = el.style;
 
     style.position = "absolute";
     style.left = "-10000px";
     style.overflow = "scroll";
-    style.height = "100px";
+    style.width = "100px";
 
-    document.body.appendChild(el);
-    var height = el.offsetHeight - el.clientHeight;
+    (parent || document.body).appendChild(el);
+    var width = el.offsetWidth - el.clientWidth;
     document.body.removeChild(el);
 
-    return height;
+    return width;
 };
 
 ace.stringReverse = function(string) {
