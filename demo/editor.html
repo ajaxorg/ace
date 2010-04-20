@@ -19,17 +19,21 @@
 		font: sans-serif;
 		height: 100%;
 		width: 100%;
+		font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana;
+		font-size: 12px;
+		background: rgb(14, 98, 165);
+		color: white;
 	}
 	
-	#container {  
-	  	top: 30px;
+	#editor {  
+	  	top: 55px;
 	  	left: 0px;
+	  	background: white;
 	}
 	
 	#controls {
 		width: 100%;
-		height: 30px;
-		border: 1px solid black;
+		height: 55px;
 		margin: 0;
 	}
   
@@ -92,10 +96,13 @@
         <label for="highlight_active">Highlight active line</label>
         <input type="checkbox" name="highlight_active" id="highlight_active" checked>        
       </td>
+      <td align="right">
+		<img src="logo.png"></img>        
+      </td>
       </tr>
     </table>
 
-    <div id="container">    
+    <div id="editor">    
     </div>
     
     <script type="text/editor" id="jstext">function foo(items) {
@@ -202,13 +209,13 @@ activeEl.onchange = function() {
 	editor.setHighlightActiveLine(!!activeEl.checked);
 };
 
-var container = document.getElementById("container");
+var container = document.getElementById("editor");
 var editor = new ace.Editor(new ace.VirtualRenderer(container));
 onDocChange();
 
 function onResize() {
     container.style.width = (document.documentElement.clientWidth - 4) + "px";
-    container.style.height = (document.documentElement.clientHeight - 30 - 4) + "px";     
+    container.style.height = (document.documentElement.clientHeight - 55 - 4) + "px";     
 	editor.resize();    
 };
 

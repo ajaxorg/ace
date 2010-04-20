@@ -38,6 +38,7 @@
   z-index: 2;
   font-family: Monaco, "Courier New", monospace;
   cursor: text;
+  color: black;
 }
 
 .cursor-layer {
