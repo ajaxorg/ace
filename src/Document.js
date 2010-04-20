@@ -80,6 +80,18 @@ ace.Document.prototype.getMode = function() {
     return this._mode;
 };
 
+ace.Document.prototype._scrollTop = 0;
+ace.Document.prototype.setScrollTopRow = function(scrollTopRow) {
+    if (this._scrollTop === scrollTopRow) return;
+
+    this._scrollTop = scrollTopRow;
+    this.$dispatchEvent("changeScrollTop");
+};
+
+ace.Document.prototype.getScrollTopRow = function() {
+    return this._scrollTop;
+};
+
 ace.Document.prototype.getWidth = function() {
     if (this.modified) {
         this.modified = false;

@@ -38,6 +38,8 @@ ace.Editor.prototype.setDocument = function(doc) {
         var selection = this.doc.getSelection();
         this.selection.removeEventListener("changeCursor", this._onCursorChange);
         this.selection.removeEventListener("changeSelection", this._onSelectionChange);
+
+        this.doc.setScrollTopRow(this.renderer.getScrollTopRow());
     }
 
     this.doc = doc;
@@ -66,6 +68,7 @@ ace.Editor.prototype.setDocument = function(doc) {
     this.renderer.draw();
     this.onCursorChange();
     this.onSelectionChange();
+    this.renderer.scrollToRow(doc.getScrollTopRow());
 };
 
 ace.Editor.prototype.getDocument = function() {

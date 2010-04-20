@@ -198,6 +198,10 @@ ace.VirtualRenderer.prototype.getScrollTop = function() {
     return this.scrollTop;
 };
 
+ace.VirtualRenderer.prototype.getScrollTopRow = function() {
+    return this.scrollTop / this.lineHeight;
+};
+
 ace.VirtualRenderer.prototype.scrollToRow = function(row) {
     this.scrollToY(row * this.lineHeight);
 };
