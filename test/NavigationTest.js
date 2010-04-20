@@ -31,32 +31,32 @@ var NavigationTest = TestCase("NavigationTest",
         var editor = new ace.Editor(new MockRenderer(), this.createTextDocument(200, 5));
 
         editor.navigateTo(0, 0);
-        editor.gotoLine(100);
+        editor.gotoLine(101);
         assertPosition(100, 0, editor.getSelection().getCursor());
         assertEquals(90, editor.getFirstVisibleRow());
 
         editor.navigateTo(100, 0);
-        editor.gotoLine(10);
+        editor.gotoLine(11);
         assertPosition(10, 0, editor.getSelection().getCursor());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(100, 0);
-        editor.gotoLine(5);
+        editor.gotoLine(6);
         assertPosition(5, 0, editor.getSelection().getCursor());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(100, 0);
-        editor.gotoLine(0);
+        editor.gotoLine(1);
         assertPosition(0, 0, editor.getSelection().getCursor());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(0, 0);
-        editor.gotoLine(190);
+        editor.gotoLine(191);
         assertPosition(190, 0, editor.getSelection().getCursor());
         assertEquals(180, editor.getFirstVisibleRow());
 
         editor.navigateTo(0, 0);
-        editor.gotoLine(195);
+        editor.gotoLine(196);
         assertPosition(195, 0, editor.getSelection().getCursor());
         assertEquals(180, editor.getFirstVisibleRow());
     },
@@ -65,12 +65,12 @@ var NavigationTest = TestCase("NavigationTest",
         var editor = new ace.Editor(new MockRenderer(), this.createTextDocument(200, 5));
 
         editor.navigateTo(0, 0);
-        editor.gotoLine(11);
+        editor.gotoLine(12);
         assertPosition(11, 0, editor.getSelection().getCursor());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(30, 0);
-        editor.gotoLine(32);
+        editor.gotoLine(33);
         assertPosition(32, 0, editor.getSelection().getCursor());
         assertEquals(30, editor.getFirstVisibleRow());
     }
