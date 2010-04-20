@@ -1,12 +1,9 @@
 ace.provide("ace.Editor");
 
-ace.Editor = function(renderer, doc, mode) {
+ace.Editor = function(renderer, doc) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
-
-    this.setMode(mode || new ace.mode.Text());
-    this.setDocument(doc || new ace.TextDocument(""));
 
     this.textInput = new ace.TextInput(container, this);
     new ace.KeyBinding(container, this);
@@ -20,67 +17,58 @@ ace.Editor = function(renderer, doc, mode) {
     this._highlightLineMarker = null;
     this._blockScrolling = false;
 
-    this.renderer.draw();
-    this.onCursorChange();
-    this.onSelectionChange();
-
-    this._initialized = true;
+    this.setDocument(doc || new ace.TextDocument(""));
 };
 
 
 ace.Editor.prototype.setDocument = function(doc) {
-    // TODO: document change is not yet supported
+    if (this.doc == doc) return;
+
     if (this.doc) {
-        throw new Error("TODO: document change is not yet supported");
+        this.doc.removeEventListener("change", this._onDocumentChange);
+        this.doc.removeEventListener("changeMode", this._onDocumentModeChange);
+        this.doc.removeEventListener("changeTabSize", this._onDocumentChangeTabSize);
+
+        var selection = this.doc.getSelection();
+        this.selection.removeEventListener("changeCursor", this._onCursorChange);
+        this.selection.removeEventListener("changeSelection", this._onSelectionChange);
     }
 
     this.doc = doc;
 
-    doc.addEventListener("change", ace.bind(this.onDocumentChange, this));
+    this._onDocumentChange = ace.bind(this.onDocumentChange, this);
+    doc.addEventListener("change", this._onDocumentChange);
     this.renderer.setDocument(doc);
 
-    var self = this;
-    doc.addEventListener("changeTabSize", function() {
-        self.renderer.draw();
-    });
+    this._onDocumentModeChange = ace.bind(this.onDocumentModeChange, this);
+    doc.addEventListener("changeMode", this._onDocumentModeChange);
+
+    this._onDocumentChangeTabSize = ace.bind(this.renderer.draw, this.renderer);
+    doc.addEventListener("changeTabSize", this._onDocumentChangeTabSize);
 
     this.selection = doc.getSelection();
 
-    var onCursorChange = ace.bind(this.onCursorChange, this);
-    this.selection.addEventListener("changeCursor", onCursorChange);
+    this._onCursorChange = ace.bind(this.onCursorChange, this);
+    this.selection.addEventListener("changeCursor", this._onCursorChange);
 
-    var onSelectionChange = ace.bind(this.onSelectionChange, this);
-    this.selection.addEventListener("changeSelection", onSelectionChange);
+    this._onSelectionChange = ace.bind(this.onSelectionChange, this);
+    this.selection.addEventListener("changeSelection", this._onSelectionChange);
 
-
+    this.onDocumentModeChange();
     this.bgTokenizer.setLines(this.doc.lines);
+
+    this.renderer.draw();
+    this.onCursorChange();
+    this.onSelectionChange();
+};
+
+ace.Editor.prototype.getDocument = function() {
+    return this.doc;
 };
 
 ace.Editor.prototype.getSelection = function() {
     return this.selection;
 };
-
-ace.Editor.prototype.setMode = function(mode) {
-    if (this.mode == mode) return;
-
-    this.mode = mode;
-    var tokenizer = mode.getTokenizer();
-
-    if (!this.bgTokenizer) {
-        var onUpdate = ace.bind(this.onTokenizerUpdate, this);
-        this.bgTokenizer = new ace.BackgroundTokenizer(tokenizer);
-        this.bgTokenizer.addEventListener("update", onUpdate);
-    } else {
-        this.bgTokenizer.setTokenizer(tokenizer);
-    }
-
-    this.renderer.setTokenizer(this.bgTokenizer);
-
-    if (this._initialized) {
-        this.renderer.draw();
-    }
-};
-
 
 ace.Editor.prototype.resize = function() {
     this.renderer.onResize();
@@ -116,6 +104,9 @@ ace.Editor.prototype._highlightBrackets = function() {
     }, 10);
 };
 
+ace.Editor.prototype.focus = function() {
+    this.textInput.focus();
+};
 
 ace.Editor.prototype.onFocus = function() {
     this.renderer.showCursor();
@@ -185,8 +176,27 @@ ace.Editor.prototype.onSelectionChange = function() {
     this.onCursorChange();
 };
 
+ace.Editor.prototype.onDocumentModeChange = function() {
+    var mode = this.doc.getMode();
+
+    this.mode = mode;
+    var tokenizer = mode.getTokenizer();
+
+    if (!this.bgTokenizer) {
+        var onUpdate = ace.bind(this.onTokenizerUpdate, this);
+        this.bgTokenizer = new ace.BackgroundTokenizer(tokenizer);
+        this.bgTokenizer.addEventListener("update", onUpdate);
+    } else {
+        this.bgTokenizer.setTokenizer(tokenizer);
+    }
+
+    this.renderer.setTokenizer(this.bgTokenizer);
+    this.renderer.draw();
+};
+
+
 ace.Editor.prototype.onMouseDown = function(e) {
-    this.textInput.focus();
+    this.focus();
 
     var pageX = ace.getDocumentX(e);
     var pageY = ace.getDocumentY(e);

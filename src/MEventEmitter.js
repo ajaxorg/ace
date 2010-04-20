@@ -6,7 +6,7 @@ ace.MEventEmitter.$initEvents = function() {
 
 ace.MEventEmitter.$dispatchEvent = function(eventName, e) {
     var listeners = this._eventRegistry[eventName];
-    if (!listeners) return;
+    if (!listeners || !listeners.length) return;
 
     var e = e || {};
     e.type = eventName;
@@ -23,5 +23,16 @@ ace.MEventEmitter.addEventListener = function(eventName, callback) {
     }
     if (ace.arrayIndexOf(listeners, callback) == -1) {
         listeners.push(callback);
+    }
+};
+
+ace.MEventEmitter.removeEventListener = function(eventName, callback) {
+    var listeners = this._eventRegistry[eventName];
+    if (!listeners) {
+      return;
+    }
+    var index = ace.arrayIndexOf(listeners, callback);
+    if (index !== -1) {
+        listeners.splice(index, 1);
     }
 };

@@ -66,6 +66,14 @@
     <table id="controls">
       <tr>
         <td>
+        <label for="doc">Document:</label>
+        <select id="doc" size="1">
+          <option value="js">JS Document</option>
+          <option value="html">HTML Document</option>
+          <option value="css">CSS Document</option>
+        </select>
+      </td>
+        <td>
         <label for="mode">Mode:</label>
         <select id="mode" size="1">
           <option value="text">Plain Text</option>
@@ -89,11 +97,73 @@
     <div id="container">    
     </div>
     
+    <script type="text/editor" id="jstext">function foo(items) {
+    for (var i=0; i<items.length; i++) {
+        alert(items[i] + "juhu";
+    }
+} 
+    </script>
+
+    <script type="text/editor" id="csstext">.text-layer {
+    font-family: Monaco, "Courier New", monospace;
+    font-size: 12px;
+    cursor: text;
+}
+    </script>
+
+    <script type="text/editor" id="htmltext"><html>
+<head>
+</head>
+<body>
+    <h1 style="color:red">Juhu Kinners</h1>
+</body>
+</html>
+    </script>
+    
 <script type="text/javascript" charset="utf-8">
+
+var docs = {}
+docs.js = new ace.TextDocument(document.getElementById("jstext").innerHTML);
+docs.js.setMode(new ace.mode.JavaScript());
+docs.css = new ace.TextDocument(document.getElementById("csstext").innerHTML);
+docs.css.setMode(new ace.mode.Css());
+docs.html = new ace.TextDocument(document.getElementById("htmltext").innerHTML);
+docs.html.setMode(new ace.mode.Html());
+
+var docEl = document.getElementById("doc");
+
+function onDocChange() {
+  var doc = getDoc();
+  editor.setDocument(doc);
+  
+  var mode = doc.getMode();
+  if (mode instanceof ace.mode.JavaScript) {
+    modeEl.value = "javascript"
+  }
+  else if (mode instanceof ace.mode.Css) {
+    modeEl.value = "css"
+  }
+  else if (mode instanceof ace.mode.Html) {
+    modeEl.value = "html"
+  }
+  else if (mode instanceof ace.mode.Xml) {
+    modeEl.value = "xml"
+  }
+  else {
+    modeEl.value = "text"
+  }
+  
+  editor.focus();
+}
+docEl.onchange = onDocChange;
+
+function getDoc() {
+  return docs[docEl.value];
+}
 
 var modeEl = document.getElementById("mode");
 modeEl.onchange = function() {
-	editor.setMode(getMode());
+	editor.getDocument().setMode(getMode());
 };
 
 var modes = {
@@ -117,17 +187,14 @@ selectEl.onchange = function() {
 	}
 };
 
-var selectEl = document.getElementById("highlight_active");
-selectEl.onchange = function() {
-	editor.setHighlightActiveLine(!!selectEl.checked);
+var activeEl = document.getElementById("highlight_active");
+activeEl.onchange = function() {
+	editor.setHighlightActiveLine(!!activeEl.checked);
 };
 
 var container = document.getElementById("container");
-var editor = new ace.Editor(
-    new ace.VirtualRenderer(container),
-    new ace.TextDocument("Juhu Kinners"),
-    getMode()
-);
+var editor = new ace.Editor(new ace.VirtualRenderer(container));
+onDocChange();
 
 function onResize() {
     container.style.width = (document.documentElement.clientWidth - 4) + "px";

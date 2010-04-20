@@ -1,16 +1,19 @@
 ace.provide("ace.TextDocument");
 
-ace.TextDocument = function(text) {
+ace.TextDocument = function(text, mode) {
+    this.$initEvents();
+
     this.lines = this._split(text);
     this.modified = true;
     this.selection = new ace.Selection(this);
 
     this.listeners = [];
-
-    this.$initEvents();
+    if (mode) {
+        this.setMode(mode);
+    }
 };
-ace.mixin(ace.TextDocument.prototype, ace.MEventEmitter);
 
+ace.mixin(ace.TextDocument.prototype, ace.MEventEmitter);
 
 ace.TextDocument.prototype._split = function(text) {
     return text.split(/\r\n|\r|\n/);
@@ -60,6 +63,21 @@ ace.TextDocument.prototype.setTabSize = function(tabSize) {
 
 ace.TextDocument.prototype.getTabSize = function() {
     return this._tabSize;
+};
+
+ace.TextDocument.prototype._mode = null;
+ace.TextDocument.prototype.setMode = function(mode) {
+    if (this._mode === mode) return;
+
+    this._mode = mode;
+    this.$dispatchEvent("changeMode");
+};
+
+ace.TextDocument.prototype.getMode = function() {
+    if (!this._mode) {
+        this._mode = new ace.mode.Text();
+    }
+    return this._mode;
 };
 
 ace.TextDocument.prototype.getWidth = function() {

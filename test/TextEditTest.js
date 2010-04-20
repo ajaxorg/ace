@@ -118,8 +118,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: comment lines should perserve selection" : function() {
-        var doc = new ace.TextDocument(["  abc", "cde"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc, new ace.mode.JavaScript());
+        var doc = new ace.TextDocument(["  abc", "cde"].join("\n"), new ace.mode.JavaScript());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 2);
         editor.getSelection().selectDown();
@@ -134,8 +134,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: uncomment lines should perserve selection" : function() {
-        var doc = new ace.TextDocument(["//  abc", "//cde"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc, new ace.mode.JavaScript());
+        var doc = new ace.TextDocument(["//  abc", "//cde"].join("\n"), new ace.mode.JavaScript());
+        var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 1);
         editor.getSelection().selectDown();
