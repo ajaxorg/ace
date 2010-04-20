@@ -364,9 +364,18 @@ ace.Editor.prototype.blockOutdent = function(indentString) {
 };
 
 ace.Editor.prototype.toggleCommentLines = function() {
-    if (this.selection.isEmpty()) return;
+    var rows = this._getSelectedRows();
 
-    var range = this.getSelectionRange();
+    var range = {
+        start: {
+            row: rows.first,
+            column: 0
+        },
+        end: {
+            row: rows.last,
+            column: 0
+        }
+    };
     var state = this.bgTokenizer.getState(this.getCursorPosition().row);
     var addedColumns = this.mode.toggleCommentLines(this.doc, range, state);
 
