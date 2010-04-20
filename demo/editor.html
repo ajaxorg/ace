@@ -53,7 +53,7 @@
 	<script src="../src/mode/XmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/MEventEmitter.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/Selection.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/TextDocument.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/Document.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/Tokenizer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/BackgroundTokenizer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/layer/Cursor.js" type="text/javascript" charset="utf-8"></script>	
@@ -140,11 +140,11 @@
 <script type="text/javascript" charset="utf-8">
 
 var docs = {}
-docs.js = new ace.TextDocument(document.getElementById("jstext").innerHTML);
+docs.js = new ace.Document(document.getElementById("jstext").innerHTML);
 docs.js.setMode(new ace.mode.JavaScript());
-docs.css = new ace.TextDocument(document.getElementById("csstext").innerHTML);
+docs.css = new ace.Document(document.getElementById("csstext").innerHTML);
 docs.css.setMode(new ace.mode.Css());
-docs.html = new ace.TextDocument(document.getElementById("htmltext").innerHTML);
+docs.html = new ace.Document(document.getElementById("htmltext").innerHTML);
 docs.html.setMode(new ace.mode.Html());
 
 var docEl = document.getElementById("doc");

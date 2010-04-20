@@ -1,7 +1,7 @@
 var TextEditTest = TestCase("TextEditTest",
 {
     "test: delete line from the middle" : function() {
-        var doc = new ace.TextDocument(["a", "b", "c", "d"].join("\n"));
+        var doc = new ace.Document(["a", "b", "c", "d"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
@@ -27,7 +27,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: delete multiple selected lines" : function() {
-        var doc = new ace.TextDocument(["a", "b", "c", "d"].join("\n"));
+        var doc = new ace.Document(["a", "b", "c", "d"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
@@ -39,7 +39,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: delete first line" : function() {
-        var doc = new ace.TextDocument(["a", "b", "c"].join("\n"));
+        var doc = new ace.Document(["a", "b", "c"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.removeLines();
@@ -49,7 +49,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: delete last" : function() {
-        var doc = new ace.TextDocument(["a", "b", "c"].join("\n"));
+        var doc = new ace.Document(["a", "b", "c"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(2, 1);
@@ -60,7 +60,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: indent block" : function() {
-        var doc = new ace.TextDocument(["a12345", "b12345", "c12345"].join("\n"));
+        var doc = new ace.Document(["a12345", "b12345", "c12345"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 3);
@@ -79,7 +79,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: outdent block" : function() {
-        var doc = new ace.TextDocument(["    a12345", "  b12345", "    c12345"].join("\n"));
+        var doc = new ace.Document(["    a12345", "  b12345", "    c12345"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 3);
@@ -107,7 +107,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: outent without a selection should update cursor" : function() {
-        var doc = new ace.TextDocument("        12");
+        var doc = new ace.Document("        12");
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 3);
@@ -118,7 +118,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: comment lines should perserve selection" : function() {
-        var doc = new ace.TextDocument(["  abc", "cde"].join("\n"), new ace.mode.JavaScript());
+        var doc = new ace.Document(["  abc", "cde"].join("\n"), new ace.mode.JavaScript());
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 2);
@@ -134,7 +134,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: uncomment lines should perserve selection" : function() {
-        var doc = new ace.TextDocument(["//  abc", "//cde"].join("\n"), new ace.mode.JavaScript());
+        var doc = new ace.Document(["//  abc", "//cde"].join("\n"), new ace.mode.JavaScript());
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 1);
@@ -152,7 +152,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: move lines down should select moved lines" : function() {
-        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 1);
@@ -179,7 +179,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: move lines up should select moved lines" : function() {
-        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(2, 1);
@@ -200,7 +200,7 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: move line without active selection should move cursor to start of the moved line" : function()
     {
-        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
@@ -218,7 +218,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: copy lines down should select lines and place cursor at the selection start" : function() {
-        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
@@ -233,7 +233,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: copy lines up should select lines and place cursor at the selection start" : function() {
-        var doc = new ace.TextDocument(["11", "22", "33", "44"].join("\n"));
+        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
@@ -248,7 +248,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: input a tab with soft tab should convert it to spaces" : function() {
-        var doc = new ace.TextDocument("");
+        var doc = new ace.Document("");
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         doc.setTabSize(2);
@@ -263,7 +263,7 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: input tab without soft tabs should keep the tab character" : function() {
-        var doc = new ace.TextDocument("");
+        var doc = new ace.Document("");
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         doc.setUseSoftTabs(false);

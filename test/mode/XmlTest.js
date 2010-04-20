@@ -14,7 +14,7 @@ var XmlTest = new TestCase("mode.XmlTest", {
     },
 
     "test: toggle comment lines should not do anything" : function() {
-        var doc = new ace.TextDocument(["  abc", "cde", "fg"].join("\n"));
+        var doc = new ace.Document(["  abc", "cde", "fg"].join("\n"));
 
         var range =  {
             start: {row: 0, column: 3},

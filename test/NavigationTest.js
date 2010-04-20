@@ -3,7 +3,7 @@ var NavigationTest = TestCase("NavigationTest",
     createTextDocument : function(rows, cols) {
         var line = new Array(cols + 1).join("a");
         var text = new Array(rows).join(line + "\n") + line;
-        return new ace.TextDocument(text);
+        return new ace.Document(text);
     },
 
     "test: navigate to end of file should scroll the last line into view" : function() {

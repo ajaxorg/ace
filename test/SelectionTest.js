@@ -3,7 +3,7 @@ var SelectionTest = TestCase("SelectionTest",
     createTextDocument : function(rows, cols) {
         var line = new Array(cols + 1).join("a");
         var text = new Array(rows).join(line + "\n") + line;
-        return new ace.TextDocument(text);
+        return new ace.Document(text);
     },
 
     "test: move cursor to end of file should place the cursor on last row and column" : function() {
@@ -49,7 +49,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: move cursor word right" : function() {
-        var doc = new ace.TextDocument( ["ab",
+        var doc = new ace.Document( ["ab",
                 " Juhu Kinners (abc, 12)", " cde"].join("\n"));
         var selection = doc.getSelection();
 
@@ -89,7 +89,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word right if cursor in word" : function() {
-        var doc = new ace.TextDocument("Juhu Kinners");
+        var doc = new ace.Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 2);
@@ -99,7 +99,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: moveCursor word left" : function() {
-        var doc = new ace.TextDocument( ["ab",
+        var doc = new ace.Document( ["ab",
                                          " Juhu Kinners (abc, 12)", " cde"].join("\n"));
         var selection = doc.getSelection();
 
@@ -140,7 +140,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word left if cursor in word" : function() {
-        var doc = new ace.TextDocument("Juhu Kinners");
+        var doc = new ace.Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 8);
@@ -150,7 +150,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word right and select" : function() {
-        var doc = new ace.TextDocument("Juhu Kinners");
+        var doc = new ace.Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 0);
@@ -163,7 +163,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word left and select" : function() {
-        var doc = new ace.TextDocument("Juhu Kinners");
+        var doc = new ace.Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 3);
@@ -176,7 +176,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word with cursor in word should select the word" : function() {
-        var doc = new ace.TextDocument("Juhu Kinners 123");
+        var doc = new ace.Document("Juhu Kinners 123");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 8);
@@ -188,7 +188,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word with cursor betwen white space and word should select the word" : function() {
-        var doc = new ace.TextDocument("Juhu Kinners");
+        var doc = new ace.Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 4);
@@ -207,7 +207,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word with cursor in white space should select white space" : function() {
-        var doc = new ace.TextDocument("Juhu  Kinners");
+        var doc = new ace.Document("Juhu  Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 5);

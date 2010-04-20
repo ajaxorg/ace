@@ -23,7 +23,7 @@ ace.Editor = function(renderer, doc) {
     this._highlightLineMarker = null;
     this._blockScrolling = false;
 
-    this.setDocument(doc || new ace.TextDocument(""));
+    this.setDocument(doc || new ace.Document(""));
 };
 
 

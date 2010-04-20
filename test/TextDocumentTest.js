@@ -1,7 +1,7 @@
 var TextDocumentTest = new TestCase("TextDocumentTest", {
 
    "test: find matching opening bracket" : function() {
-        var doc = new ace.TextDocument(["(()(", "())))"].join("\n"));
+        var doc = new ace.Document(["(()(", "())))"].join("\n"));
 
         assertPosition(0, 1, doc.findMatchingBracket({row: 0, column: 3}));
         assertPosition(1, 0, doc.findMatchingBracket({row: 1, column: 2}));
@@ -11,7 +11,7 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
     },
 
     "test: find matching closing bracket" : function() {
-        var doc = new ace.TextDocument(["(()(", "())))"].join("\n"));
+        var doc = new ace.Document(["(()(", "())))"].join("\n"));
 
         assertPosition(1, 1, doc.findMatchingBracket({row: 1, column: 1}));
         assertPosition(1, 1, doc.findMatchingBracket({row: 1, column: 1}));
@@ -22,7 +22,7 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
     },
 
     "test: match different bracket types" : function() {
-        var doc = new ace.TextDocument(["({[", ")]}"].join("\n"));
+        var doc = new ace.Document(["({[", ")]}"].join("\n"));
 
         assertPosition(1, 0, doc.findMatchingBracket({row: 0, column: 1}));
         assertPosition(1, 2, doc.findMatchingBracket({row: 0, column: 2}));
@@ -34,7 +34,7 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
     },
 
     "test: move lines down" : function() {
-        var doc = new ace.TextDocument(["1", "2", "3", "4"].join("\n"));
+        var doc = new ace.Document(["1", "2", "3", "4"].join("\n"));
 
         doc.moveLinesDown(0, 1);
         assertEquals(["3", "1", "2", "4"].join("\n"), doc.toString());
@@ -50,7 +50,7 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
     },
 
     "test: move lines up" : function() {
-        var doc = new ace.TextDocument(["1", "2", "3", "4"].join("\n"));
+        var doc = new ace.Document(["1", "2", "3", "4"].join("\n"));
 
         doc.moveLinesUp(2, 3);
         assertEquals(["1", "3", "4", "2"].join("\n"), doc.toString());
@@ -66,21 +66,21 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
     },
 
     "test: duplicate lines" : function() {
-        var doc = new ace.TextDocument(["1", "2", "3", "4"].join("\n"));
+        var doc = new ace.Document(["1", "2", "3", "4"].join("\n"));
 
         doc.duplicateLines(1, 2);
         assertEquals(["1", "2", "3", "2", "3", "4"].join("\n"), doc.toString());
     },
 
     "test: duplicate last line" : function() {
-        var doc = new ace.TextDocument(["1", "2", "3"].join("\n"));
+        var doc = new ace.Document(["1", "2", "3"].join("\n"));
 
         doc.duplicateLines(2, 2);
         assertEquals(["1", "2", "3", "3"].join("\n"), doc.toString());
     },
 
     "test: duplicate first line" : function() {
-        var doc = new ace.TextDocument(["1", "2", "3"].join("\n"));
+        var doc = new ace.Document(["1", "2", "3"].join("\n"));
 
         doc.duplicateLines(0, 0);
         assertEquals(["1", "1", "2", "3"].join("\n"), doc.toString());

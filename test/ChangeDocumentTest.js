@@ -1,8 +1,8 @@
 var ChangeDocumentTest = new TestCase("ChangeDocumentTest", {
 
     setUp : function() {
-        this.doc1 = new ace.TextDocument(["abc", "def"].join("\n"));
-        this.doc2 = new ace.TextDocument(["ghi", "jkl"].join("\n"));
+        this.doc1 = new ace.Document(["abc", "def"].join("\n"));
+        this.doc2 = new ace.Document(["ghi", "jkl"].join("\n"));
         this.editor = new ace.Editor(new MockRenderer());
     },
 

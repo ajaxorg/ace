@@ -14,7 +14,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: toggle comment lines should prepend '//' to each line" : function() {
-        var doc = new ace.TextDocument(["  abc", "cde", "fg"].join("\n"));
+        var doc = new ace.Document(["  abc", "cde", "fg"].join("\n"));
 
         var range =  {
             start: {row: 0, column: 3},
@@ -26,7 +26,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: toggle comment on commented lines should remove leading '//' chars" : function() {
-        var doc = new ace.TextDocument(["//  abc", "//cde", "fg"].join("\n"));
+        var doc = new ace.Document(["//  abc", "//cde", "fg"].join("\n"));
 
         var range =  {
             start: {row: 0, column: 3},
@@ -38,7 +38,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: toggle comment on multiple lines with one commented line prepend '//' to each line" : function() {
-        var doc = new ace.TextDocument(["//  abc", "//cde", "fg"].join("\n"));
+        var doc = new ace.Document(["//  abc", "//cde", "fg"].join("\n"));
 
         var range =  {
             start: {row: 0, column: 3},
