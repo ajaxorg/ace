@@ -10,7 +10,7 @@ ace.Editor = function(renderer, doc) {
     var self = this;
     ace.addListener(container, "mousedown", function(e) {
         self.focus();
-        return ace.stopEvent(e);
+        return ace.preventDefault(e);
     });
 
     var mouseTarget = renderer.getMouseEventTarget();
@@ -115,6 +115,10 @@ ace.Editor.prototype._highlightBrackets = function() {
 
 ace.Editor.prototype.focus = function() {
     this.textInput.focus();
+};
+
+ace.Editor.prototype.blur = function() {
+    this.textInput.blur();
 };
 
 ace.Editor.prototype.onFocus = function() {

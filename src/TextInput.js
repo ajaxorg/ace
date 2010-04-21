@@ -79,6 +79,6 @@ ace.TextInput = function(parentNode, host) {
     };
 
     this.blur = function() {
-        this.blur();
+        text.blur();
     };
 };
