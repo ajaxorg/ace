@@ -16,12 +16,23 @@ ace.mode.JavaScript.prototype.toggleCommentLines = function(doc, range, state) {
 ace.mode.JavaScript.prototype.getNextLineIndent = function(line, state, tab) {
     var indent = this.$getIndent(line);
 
+    var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+    var tokens = tokenizedLine.tokens;
+    var endState = tokenizedLine.state;
+
+    if (tokens.length && tokens[tokens.length-1].type == "comment") {
+        return indent;
+    }
+
     if (state == "start") {
         var match = line.match(/^.*[\{\(\[]\s*$/);
         if (match) {
             indent += tab;
         }
     } else if (state == "doc-comment") {
+        if (endState == "start") {
+            return "";
+        }
         var match = line.match(/^\s*(\/?)\*/);
         if (match) {
             if (match[1]) {

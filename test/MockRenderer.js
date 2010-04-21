@@ -26,6 +26,10 @@ MockRenderer.prototype.getContainerElement = function() {
     return this.container;
 };
 
+MockRenderer.prototype.getMouseEventTarget = function() {
+    return this.container;
+};
+
 MockRenderer.prototype.setDocument = function(doc) {
     this.lines = doc.lines;
 };
@@ -54,6 +58,9 @@ MockRenderer.prototype.scrollToRow = function(row) {
     this.layerConfig.lastVisibleRow = row + this.visibleRowCount;
 };
 
+MockRenderer.prototype.getScrollTopRow = function() {
+  return this.layerConfig.firstVisibleRow;
+};
 
 MockRenderer.prototype.draw = function() {
 };

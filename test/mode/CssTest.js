@@ -29,5 +29,6 @@ var CssTest = new TestCase("mode.CssTest", {
 
     "test: no indent increase after { in a comment" : function() {
         assertEquals("   ", this.mode.getNextLineIndent("   /*{", "start", "  "));
+        assertEquals("   ", this.mode.getNextLineIndent("   /*{  ", "start", "  "));
     }
 });

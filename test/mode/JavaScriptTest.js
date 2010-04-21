@@ -54,7 +54,13 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: no auto indent after opening brace in multi line comment" : function() {
-        assertEquals("", this.mode.getNextLineIndent("/*if () {", "  "));
+        assertEquals("", this.mode.getNextLineIndent("/*if () {", "start", "  "));
+        assertEquals("  ", this.mode.getNextLineIndent("  abcd", "comment", "  "));
+    },
+
+    "test: no auto indent after opening brace in single line comment" : function() {
+        assertEquals("", this.mode.getNextLineIndent("//if () {", "start", "  "));
+        assertEquals("  ", this.mode.getNextLineIndent("  //if () {", "start", "  "));
     },
 
     "test: no auto indent should add to existing indent" : function() {
@@ -68,5 +74,14 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
         assertEquals(" * ", this.mode.getNextLineIndent(" *", "doc-comment", " "));
         assertEquals("    * ", this.mode.getNextLineIndent("    *", "doc-comment", " "));
         assertEquals("  ", this.mode.getNextLineIndent("  abc", "doc-comment", " "));
+    },
+
+    "test: no indent after doc comments" : function() {
+        assertEquals("", this.mode.getNextLineIndent("   */", "doc-comment", "  "));
     }
+
+//    "test: outdent if first non WS character in line is a closing brace" : function() {
+//        assertEquals("", this.mode.getNextLineIndent(")", "start", "  "));
+//        assertEquals("  ", this.mode.getNextLineIndent("  )", "start", "  "));
+//    }
 });
