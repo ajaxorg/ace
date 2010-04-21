@@ -28,7 +28,7 @@ ace.ScrollBar.prototype.getWidth = function() {
 };
 
 ace.ScrollBar.prototype.setHeight = function(height) {
-    this.element.style.height = (height - this.width) + "px";
+    this.element.style.height = Math.max(0, height - this.width) + "px";
 };
 
 ace.ScrollBar.prototype.setInnerHeight = function(height) {
