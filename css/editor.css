@@ -15,14 +15,14 @@
   overflow-y: hidden;
 }
 
-.editor .scrollbar {
+.editor .sb {
   position: absolute;
   overflow-x: hidden;
   overflow-y: scroll;
   right: 0;
 }
 
-.editor .scrollbar div {
+.editor .sb div {
   position: absolute;
   width: 1px;
   left: -10px;

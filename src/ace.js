@@ -78,6 +78,31 @@ ace.preventDefault = function(e) {
         e.returnValue = false;
 };
 
+
+ace.hasCssClass = function(el, name) {
+    var classes = el.className.split(/\s*/g);
+    return ace.arrayIndexOf(classes, name) !== -1; 
+};
+
+
+ace.addCssClass = function(el, name) {
+    if (!ace.hasCssClass(el, name)) {
+        el.className += " " + name;
+    }
+};
+
+ace.removeCssClass = function(el, name) {
+    var classes = el.className.split(/\s+/g);
+    while (true) {
+        var index = ace.arrayIndexOf(classes, name);
+        if (index == -1) {
+            break;
+        }
+        classes.splice(index, 1);
+    }
+    el.className = classes.join(" ");
+};
+
 ace.getInnerWidth = function(element) {
     return (parseInt(ace.computedStyle(element, "paddingLeft"))
             + parseInt(ace.computedStyle(element, "paddingRight")) + element.clientWidth);

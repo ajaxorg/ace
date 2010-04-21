@@ -4,7 +4,7 @@ ace.ScrollBar = function(parent) {
     this.$initEvents();
 
     this.element = document.createElement("div");
-    this.element.className = "scrollbar";
+    this.element.className = "sb";
 
     this.inner = document.createElement("div");
     this.element.appendChild(this.inner);

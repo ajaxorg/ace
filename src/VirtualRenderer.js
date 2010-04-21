@@ -2,7 +2,7 @@ ace.provide("ace.VirtualRenderer");
 
 ace.VirtualRenderer = function(container) {
     this.container = container;
-    this.container.className += " editor";
+    ace.addCssClass(this.container, "editor");
 
     this.scroller = document.createElement("div");
     this.scroller.className = "scroller";
@@ -233,11 +233,11 @@ ace.VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) {
 };
 
 ace.VirtualRenderer.prototype.visualizeFocus = function() {
-    //this.container.className = "editor focus";
+    ace.addCssClass(this.container, "focus");
 };
 
 ace.VirtualRenderer.prototype.visualizeBlur = function() {
-    //this.container.className = "editor";
+    ace.removeCssClass(this.container, "focus");
 };
 
 ace.VirtualRenderer.prototype.showComposition = function(position) {
