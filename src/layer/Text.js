@@ -6,10 +6,13 @@ ace.layer.Text = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this.$measureSizes();
-    this.$tabString = " ";
 };
 
 (function() {
+
+//    this.ENTER_CHAR = "&para;";
+    this.ENTER_CHAR = "&not;";
+    this.TAB_CHAR = "&#x2023;";
 
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;
@@ -44,11 +47,27 @@ ace.layer.Text = function(parentEl) {
         this.element.removeChild(measureNode);
     };
 
-    this.setTabSize = function(tabSize) {
-        this.$tabString = new Array(tabSize+1).join("&nbsp;");
+    this.setDocument = function(doc) {
+        this.doc = doc;
+    };
+
+    this.$showInvisibles = true;
+    this.setShowInvisibles = function(showInvisibles) {
+        this.$showInvisibles = showInvisibles;
+    };
+
+    this.$computeTabString = function() {
+        var tabSize = this.doc.getTabSize();
+        if (this.$showInvisibles) {
+            this.$tabString = "<span class='invisible'>" + this.TAB_CHAR + new Array(tabSize).join("&nbsp;") + "</span>";
+        } else {
+            this.$tabString = new Array(tabSize+1).join("&nbsp;");
+        }
     };
 
     this.updateLines = function(layerConfig, firstRow, lastRow) {
+        this.$computeTabString();
+
         var first = Math.max(firstRow, layerConfig.firstRow);
         var last = Math.min(lastRow, layerConfig.lastRow);
 
@@ -64,6 +83,8 @@ ace.layer.Text = function(parentEl) {
     };
 
     this.update = function(config) {
+        this.$computeTabString();
+
         var html = [];
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
             html.push("<div class='line' style='height:" + this.lineHeight + "px;", "width:",
@@ -82,20 +103,20 @@ ace.layer.Text = function(parentEl) {
             var output = token.value
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
-                //.replace(/\t/g, "&#x2023;   ")
-                .replace(/\t/g, this.$tabString)
-                .replace(/\s/g, "&nbsp;");
+                .replace(/ /g, "&nbsp;")
+                .replace(/\t/g, this.$tabString);
+            // TODO: proper space matching!
 
             if (token.type !== "text") {
-                stringBuilder.push("<span class='", token.type, "'>", output,
-                                   "</span>");
+                stringBuilder.push("<span class='", token.type, "'>", output, "</span>");
             }
             else {
                 stringBuilder.push(output);
             }
         };
-        // TODO: show invisibles
-        //stringBuilder.push("&para;");
+
+        if (this.$showInvisibles)
+            stringBuilder.push("<span class='invisible'>" + this.ENTER_CHAR + "</span>");
     };
 
 }).call(ace.layer.Text.prototype);

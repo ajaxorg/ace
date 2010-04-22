@@ -44,11 +44,17 @@ ace.VirtualRenderer = function(container) {
         this.lines = doc.lines;
         this.doc = doc;
         this.markerLayer.setDocument(doc);
-        this.textLayer.setTabSize(doc.getTabSize());
+        this.textLayer.setDocument(doc);
     };
 
     this.setTokenizer = function(tokenizer) {
         this.textLayer.setTokenizer(tokenizer);
+    };
+
+    this.$showInvisibles = true;
+    this.setShowInvisibles = function(showInvisibles) {
+        this.$showInvisibles = showInvisibles;
+        this.textLayer.setShowInvisibles(showInvisibles);
     };
 
     this.getContainerElement = function() {
@@ -117,7 +123,10 @@ ace.VirtualRenderer = function(container) {
         var offset = this.scrollTop % this.lineHeight;
         var minHeight = this.scroller.clientHeight + offset;
 
-        var longestLine = Math.max(this.scroller.clientWidth, Math.round(this.doc.getWidth() * this.characterWidth));
+        var charCount = this.doc.getWidth();
+        if (this.$showInvisibles)
+            charCount += 1;
+        var longestLine = Math.max(this.scroller.clientWidth, Math.round(charCount * this.characterWidth));
 
         var lineCount = Math.ceil(minHeight / this.lineHeight);
         var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
@@ -150,6 +159,8 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.addMarker = function(range, clazz, type) {
+        range.start = this.$documentToScreenPosition(range.start);
+        range.end = this.$documentToScreenPosition(range.end);
         return this.markerLayer.addMarker(range, clazz, type);
     };
 
@@ -158,8 +169,61 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.updateCursor = function(position) {
-        this.cursorLayer.setCursor(position);
+        this.cursorLayer.setCursor(this.$documentToScreenPosition(position));
         this.cursorLayer.update(this.layerConfig);
+    };
+
+    this.$documentToScreenPosition = function(pos) {
+        return {
+            row: pos.row,
+            column: this.$documentToScreenColumn(pos.row, pos.column)
+        };
+    };
+
+    this.$documentToScreenColumn = function(row, docColumn) {
+        var tabSize = this.doc.getTabSize();
+
+        var screenColumn = 0;
+        var remaining = docColumn;
+
+        var line = this.doc.getLine(row).split(/\t/g);
+        for (var i=0; i<line.length; i++) {
+            var len = line[i].length;
+            if (remaining > len) {
+                remaining -= (len + 1);
+                screenColumn += len + tabSize;
+            }
+            else {
+                screenColumn += remaining;
+                break;
+            }
+        }
+        return screenColumn;
+    };
+
+    this.$screenToDocumentColumn = function(row, screenColumn) {
+        var tabSize = this.doc.getTabSize();
+
+        var docColumn = 0;
+        var remaining = screenColumn;
+
+        var line = this.doc.getLine(row).split(/\t/g);
+        for (var i=0; i<line.length; i++) {
+            var len = line[i].length;
+            if (remaining >= len + tabSize) {
+                remaining -= (len + tabSize);
+                docColumn += (len + 1);
+            }
+            else if (remaining > len){
+                docColumn += len;
+                break;
+            }
+            else {
+                docColumn += remaining;
+                break;
+            }
+        }
+        return docColumn;
     };
 
     this.hideCursor = function() {
@@ -230,7 +294,7 @@ ace.VirtualRenderer = function(container) {
 
         return {
             row : row,
-            column : col
+            column : this.$screenToDocumentColumn(row, col)
         };
     };
 

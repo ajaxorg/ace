@@ -338,6 +338,20 @@ ace.Editor = function(renderer, doc) {
         return this.$highlightActiveLine;
     };
 
+    this.$showInvisibles = true;
+    this.setShowInvisibles = function(showInvisibles) {
+        showInvisibles = !!showInvisibles;
+        if (this.$showInvisibles == showInvisibles) return;
+
+        this.$showInvisibles = showInvisibles;
+        this.renderer.setShowInvisibles(showInvisibles);
+        this.renderer.draw();
+    };
+
+    this.getShowInvisibles = function() {
+        return this.showInvisibles;
+    };
+
     this.removeRight = function() {
         if (this.selection.isEmpty()) {
             this.selection.selectRight();
