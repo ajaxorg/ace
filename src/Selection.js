@@ -16,14 +16,6 @@ ace.Selection = function(doc) {
 
     ace.implement(this, ace.MEventEmitter);
 
-    this.updateCursor = function() {
-        this.$dispatchEvent("changeCursor", { data: this.getCursor() });
-    };
-
-    this.updateSelection = function() {
-        this.$dispatchEvent("changeSelection", {});
-    };
-
     this.isEmpty = function() {
         return (this.selectionAnchor == null);
     };
@@ -94,8 +86,10 @@ ace.Selection = function(doc) {
     };
 
     this.clearSelection = function() {
-        this.selectionAnchor = null;
-        this.updateSelection();
+        if (this.selectionAnchor) {
+            this.selectionAnchor = null;
+            this.$dispatchEvent("changeSelection", {});
+        }
     };
 
 
@@ -109,12 +103,22 @@ ace.Selection = function(doc) {
     };
 
     this.$moveSelection = function(mover) {
+        var changed = false;
+
         if (!this.selectionAnchor) {
+            changed = true;
             this.selectionAnchor = this.$clone(this.selectionLead);
         }
 
+        var cursor = this.$clone(this.selectionLead);
         mover.call(this);
-        this.updateSelection();
+
+        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
+            changed = true;
+        }
+
+        if (changed)
+            this.$dispatchEvent("changeSelection", {});
     };
 
     this.selectTo = function(row, column) {
@@ -349,8 +353,12 @@ ace.Selection = function(doc) {
     };
 
     this.moveCursorTo = function(row, column) {
-        this.selectionLead = this.$clipPositionToDocument(row, column);
-        this.updateCursor();
+        var cursor = this.$clipPositionToDocument(row, column);
+
+        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
+            this.selectionLead = cursor;
+            this.$dispatchEvent("changeCursor", { data: this.getCursor() });
+        }
     };
 
     this.moveCursorUp = function() {

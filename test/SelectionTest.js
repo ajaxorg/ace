@@ -216,5 +216,35 @@ var SelectionTest = TestCase("SelectionTest",
         var range = selection.getRange();
         assertPosition(0, 4, range.start);
         assertPosition(0, 6, range.end);
+    },
+
+    "test: moving cursor should fire a 'changeCursor' event" : function() {
+        var doc = new ace.Document("Juhu  Kinners");
+        var selection = doc.getSelection();
+
+        selection.moveCursorTo(0, 5);
+
+        var called = false;
+        selection.addEventListener("changeCursor", function() {
+           called = true;
+        });
+
+        selection.moveCursorTo(0, 6);
+        assertTrue(called);
+    },
+
+    "test: calling setCursor with the same position should not fire an event": function() {
+        var doc = new ace.Document("Juhu  Kinners");
+        var selection = doc.getSelection();
+
+        selection.moveCursorTo(0, 5);
+
+        var called = false;
+        selection.addEventListener("changeCursor", function() {
+           called = true;
+        });
+
+        selection.moveCursorTo(0, 5);
+        assertFalse(called);
     }
 });

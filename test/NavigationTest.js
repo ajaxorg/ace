@@ -21,7 +21,7 @@ var NavigationTest = TestCase("NavigationTest",
         var doc = this.createTextDocument(200, 10);
         var editor = new ace.Editor(new MockRenderer(), doc);
 
-        editor.scrollToRow(editor.getLastVisibleRow() + 20);
+        editor.moveCursorTo(editor.getLastVisibleRow() + 20);
         editor.navigateFileStart();
 
         assertEquals(0, editor.getFirstVisibleRow());
