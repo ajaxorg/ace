@@ -5,8 +5,8 @@ ace.layer.Text = function(parentEl) {
     this.element.className = "layer text-layer";
     parentEl.appendChild(this.element);
 
-    this._measureSizes();
-    this._tabString = " ";
+    this.$measureSizes();
+    this.$tabString = " ";
 };
 
 (function() {
@@ -23,7 +23,7 @@ ace.layer.Text = function(parentEl) {
         return this.characterWidth;
     };
 
-    this._measureSizes = function() {
+    this.$measureSizes = function() {
         var measureNode = document.createElement("div");
         var style = measureNode.style;
         style.width = style.height = "auto";
@@ -45,7 +45,7 @@ ace.layer.Text = function(parentEl) {
     };
 
     this.setTabSize = function(tabSize) {
-        this._tabString = new Array(tabSize+1).join("&nbsp;");
+        this.$tabString = new Array(tabSize+1).join("&nbsp;");
     };
 
     this.updateLines = function(layerConfig, firstRow, lastRow) {
@@ -83,7 +83,7 @@ ace.layer.Text = function(parentEl) {
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 //.replace(/\t/g, "&#x2023;   ")
-                .replace(/\t/g, this._tabString)
+                .replace(/\t/g, this.$tabString)
                 .replace(/\s/g, "&nbsp;");
 
             if (token.type !== "text") {

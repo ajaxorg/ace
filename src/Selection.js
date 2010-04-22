@@ -44,19 +44,19 @@ ace.Selection = function(doc) {
     this.setSelectionAnchor = function(row, column) {
         this.clearSelection();
 
-        this.selectionAnchor = this._clipPositionToDocument(row, column);
+        this.selectionAnchor = this.$clipPositionToDocument(row, column);
     };
 
     this.getSelectionAnchor = function() {
         if (this.selectionAnchor) {
-            return this._clone(this.selectionAnchor);
+            return this.$clone(this.selectionAnchor);
         } else {
-            return this._clone(this.selectionLead);
+            return this.$clone(this.selectionLead);
         }
     };
 
     this.getSelectionLead = function() {
-        return this._clone(this.selectionLead);
+        return this.$clone(this.selectionLead);
     };
 
     this.shiftSelection = function(columns) {
@@ -69,7 +69,7 @@ ace.Selection = function(doc) {
         var lead = this.getSelectionLead();
 
         this.setSelectionAnchor(anchor.row, anchor.column + columns);
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(lead.row, lead.column + columns);
         });
     };
@@ -103,14 +103,14 @@ ace.Selection = function(doc) {
         var lastRow = this.doc.getLength() - 1;
         this.setSelectionAnchor(lastRow, this.doc.getLine(lastRow).length);
 
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(0, 0);
         });
     };
 
-    this._moveSelection = function(mover) {
+    this.$moveSelection = function(mover) {
         if (!this.selectionAnchor) {
-            this.selectionAnchor = this._clone(this.selectionLead);
+            this.selectionAnchor = this.$clone(this.selectionLead);
         }
 
         mover.call(this);
@@ -118,39 +118,39 @@ ace.Selection = function(doc) {
     };
 
     this.selectTo = function(row, column) {
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(row, column);
         });
     };
 
     this.selectToPosition = function(pos) {
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorToPosition(pos);
         });
     };
 
     this.selectUp = function() {
-        this._moveSelection(this.moveCursorUp);
+        this.$moveSelection(this.moveCursorUp);
     };
 
     this.selectDown = function() {
-        this._moveSelection(this.moveCursorDown);
+        this.$moveSelection(this.moveCursorDown);
     };
 
     this.selectRight = function() {
-        this._moveSelection(this.moveCursorRight);
+        this.$moveSelection(this.moveCursorRight);
     };
 
     this.selectLeft = function() {
-        this._moveSelection(this.moveCursorLeft);
+        this.$moveSelection(this.moveCursorLeft);
     };
 
     this.selectLineStart = function() {
-        this._moveSelection(this.moveCursorLineStart);
+        this.$moveSelection(this.moveCursorLineStart);
     };
 
     this.selectLineEnd = function() {
-        this._moveSelection(this.moveCursorLineEnd);
+        this.$moveSelection(this.moveCursorLineEnd);
     };
 
     this.selectPageDown = function() {
@@ -158,7 +158,7 @@ ace.Selection = function(doc) {
 
         this.scrollPageDown();
 
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(row, this.selectionLead.column);
         });
     };
@@ -169,28 +169,28 @@ ace.Selection = function(doc) {
 
         this.scrollPageUp();
 
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(row, this.selectionLead.column);
         });
     };
 
     this.selectFileEnd = function() {
-        this._moveSelection(this.moveCursorFileEnd);
+        this.$moveSelection(this.moveCursorFileEnd);
     };
 
     this.selectFileStart = function() {
-        this._moveSelection(this.moveCursorFileStart);
+        this.$moveSelection(this.moveCursorFileStart);
     };
 
     this.tokenRe = /^[\w\d]+/g;
     this.nonTokenRe = /^[^\w\d]+/g;
 
     this.selectWordRight = function() {
-        this._moveSelection(this.moveCursorWordRight);
+        this.$moveSelection(this.moveCursorWordRight);
     };
 
     this.selectWordLeft = function() {
-        this._moveSelection(this.moveCursorWordLeft);
+        this.$moveSelection(this.moveCursorWordLeft);
     };
 
     this.selectWord = function() {
@@ -225,14 +225,14 @@ ace.Selection = function(doc) {
         }
 
         this.setSelectionAnchor(cursor.row, start);
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(cursor.row, end);
         });
     };
 
     this.selectLine = function() {
         this.setSelectionAnchor(this.selectionLead.row, 0);
-        this._moveSelection(function() {
+        this.$moveSelection(function() {
             this.moveCursorTo(this.selectionLead.row + 1, 0);
         });
     };
@@ -349,7 +349,7 @@ ace.Selection = function(doc) {
     };
 
     this.moveCursorTo = function(row, column) {
-        this.selectionLead = this._clipPositionToDocument(row, column);
+        this.selectionLead = this.$clipPositionToDocument(row, column);
         this.updateCursor();
     };
 
@@ -357,7 +357,7 @@ ace.Selection = function(doc) {
         this.moveCursorBy(-1, 0);
     };
 
-    this._clipPositionToDocument = function(row, column) {
+    this.$clipPositionToDocument = function(row, column) {
         var pos = {};
 
         if (row >= this.doc.getLength()) {
@@ -376,7 +376,7 @@ ace.Selection = function(doc) {
         return pos;
     };
 
-    this._clone = function(pos) {
+    this.$clone = function(pos) {
         return {
             row: pos.row,
             column: pos.column

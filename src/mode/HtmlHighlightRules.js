@@ -5,7 +5,7 @@ ace.mode.HtmlHighlightRules = function() {
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
 
-    this._rules = {
+    this.$rules = {
         start : [ {
             token : "text",
             regex : "<\\!\\[CDATA\\[",
@@ -114,16 +114,16 @@ ace.mode.HtmlHighlightRules = function() {
     };
 
     var jsRules = new ace.mode.JavaScriptHighlightRules().getRules();
-    this._addRules(jsRules, "js-");
-    this._rules["js-start"].unshift({
+    this.$addRules(jsRules, "js-");
+    this.$rules["js-start"].unshift({
         token: "text",
         regex: "<\\/(?=script)",
         next: "tag"
     });
 
     var cssRules = new ace.mode.CssHighlightRules().getRules();
-    this._addRules(cssRules, "css-");
-    this._rules["css-start"].unshift({
+    this.$addRules(cssRules, "css-");
+    this.$rules["css-start"].unshift({
         token: "text",
         regex: "<\\/(?=style)",
         next: "tag"
@@ -132,7 +132,7 @@ ace.mode.HtmlHighlightRules = function() {
 
 (function() {
 
-    this._addRules = function(rules, prefix) {
+    this.$addRules = function(rules, prefix) {
         for (var key in rules) {
             var state = rules[key];
             for (var i=0; i<state.length; i++) {
@@ -141,12 +141,12 @@ ace.mode.HtmlHighlightRules = function() {
                     rule.next = prefix + rule.next;
                 }
             }
-            this._rules[prefix + key] = state;
+            this.$rules[prefix + key] = state;
         }
     };
 
     this.getRules = function() {
-        return this._rules;
+        return this.$rules;
     };
 
 }).call(ace.mode.HtmlHighlightRules.prototype);

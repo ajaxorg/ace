@@ -31,7 +31,7 @@ ace.mode.JavaScriptHighlightRules = function() {
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
 
-    this._rules = {
+    this.$rules = {
         "start" : [ {
             token : "comment",
             regex : "\\/\\/.*$"
@@ -130,7 +130,7 @@ ace.mode.JavaScriptHighlightRules = function() {
 (function() {
 
     this.getRules = function() {
-        return this._rules;
+        return this.$rules;
     };
 
 }).call(ace.mode.JavaScriptHighlightRules.prototype);

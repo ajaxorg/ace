@@ -19,9 +19,9 @@ ace.Editor = function(renderer, doc) {
     ace.addTripleClickListener(mouseTarget, ace.bind(this.onMouseTripleClick, this));
     ace.addMouseWheelListener(mouseTarget, ace.bind(this.onMouseWheel, this));
 
-    this._selectionMarker = null;
-    this._highlightLineMarker = null;
-    this._blockScrolling = false;
+    this.$selectionMarker = null;
+    this.$highlightLineMarker = null;
+    this.$blockScrolling = false;
 
     this.setDocument(doc || new ace.Document(""));
 };
@@ -32,36 +32,36 @@ ace.Editor = function(renderer, doc) {
         if (this.doc == doc) return;
 
         if (this.doc) {
-            this.doc.removeEventListener("change", this._onDocumentChange);
-            this.doc.removeEventListener("changeMode", this._onDocumentModeChange);
-            this.doc.removeEventListener("changeTabSize", this._onDocumentChangeTabSize);
+            this.doc.removeEventListener("change", this.$onDocumentChange);
+            this.doc.removeEventListener("changeMode", this.$onDocumentModeChange);
+            this.doc.removeEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
             var selection = this.doc.getSelection();
-            this.selection.removeEventListener("changeCursor", this._onCursorChange);
-            this.selection.removeEventListener("changeSelection", this._onSelectionChange);
+            this.selection.removeEventListener("changeCursor", this.$onCursorChange);
+            this.selection.removeEventListener("changeSelection", this.$onSelectionChange);
 
             this.doc.setScrollTopRow(this.renderer.getScrollTopRow());
         }
 
         this.doc = doc;
 
-        this._onDocumentChange = ace.bind(this.onDocumentChange, this);
-        doc.addEventListener("change", this._onDocumentChange);
+        this.$onDocumentChange = ace.bind(this.onDocumentChange, this);
+        doc.addEventListener("change", this.$onDocumentChange);
         this.renderer.setDocument(doc);
 
-        this._onDocumentModeChange = ace.bind(this.onDocumentModeChange, this);
-        doc.addEventListener("changeMode", this._onDocumentModeChange);
+        this.$onDocumentModeChange = ace.bind(this.onDocumentModeChange, this);
+        doc.addEventListener("changeMode", this.$onDocumentModeChange);
 
-        this._onDocumentChangeTabSize = ace.bind(this.renderer.draw, this.renderer);
-        doc.addEventListener("changeTabSize", this._onDocumentChangeTabSize);
+        this.$onDocumentChangeTabSize = ace.bind(this.renderer.draw, this.renderer);
+        doc.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
         this.selection = doc.getSelection();
 
-        this._onCursorChange = ace.bind(this.onCursorChange, this);
-        this.selection.addEventListener("changeCursor", this._onCursorChange);
+        this.$onCursorChange = ace.bind(this.onCursorChange, this);
+        this.selection.addEventListener("changeCursor", this.$onCursorChange);
 
-        this._onSelectionChange = ace.bind(this.onSelectionChange, this);
-        this.selection.addEventListener("changeSelection", this._onSelectionChange);
+        this.$onSelectionChange = ace.bind(this.onSelectionChange, this);
+        this.selection.addEventListener("changeSelection", this.$onSelectionChange);
 
         this.onDocumentModeChange();
         this.bgTokenizer.setLines(this.doc.lines);
@@ -84,21 +84,21 @@ ace.Editor = function(renderer, doc) {
         this.renderer.onResize();
     };
 
-    this._highlightBrackets = function() {
-        if (this._bracketHighlight) {
-            this.renderer.removeMarker(this._bracketHighlight);
-            this._bracketHighlight = null;
+    this.$highlightBrackets = function() {
+        if (this.$bracketHighlight) {
+            this.renderer.removeMarker(this.$bracketHighlight);
+            this.$bracketHighlight = null;
         }
 
-        if (this._highlightPending) {
+        if (this.$highlightPending) {
             return;
         }
 
         // perform highlight async to not block the browser during navigation
         var self = this;
-        this._highlightPending = true;
+        this.$highlightPending = true;
         setTimeout(function() {
-            self._highlightPending = false;
+            self.$highlightPending = false;
 
             var pos = self.doc.findMatchingBracket(self.getCursorPosition());
             if (pos) {
@@ -109,7 +109,7 @@ ace.Editor = function(renderer, doc) {
                         column: pos.column+1
                     }
                 };
-                self._bracketHighlight = self.renderer.addMarker(range, "bracket");
+                self.$bracketHighlight = self.renderer.addMarker(range, "bracket");
             }
         }, 10);
     };
@@ -144,20 +144,20 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.onCursorChange = function() {
-        this._highlightBrackets();
+        this.$highlightBrackets();
         this.renderer.updateCursor(this.getCursorPosition());
 
-        if (!this._blockScrolling) {
+        if (!this.$blockScrolling) {
             this.renderer.scrollCursorIntoView();
         }
-        this._updateHighlightActiveLine();
+        this.$updateHighlightActiveLine();
     };
 
-    this._updateHighlightActiveLine = function() {
-        if (this._highlightLineMarker) {
-            this.renderer.removeMarker(this._highlightLineMarker);
+    this.$updateHighlightActiveLine = function() {
+        if (this.$highlightLineMarker) {
+            this.renderer.removeMarker(this.$highlightLineMarker);
         }
-        this._highlightLineMarker = null;
+        this.$highlightLineMarker = null;
 
         if (this.getHighlightActiveLine() && !this.selection.isMultiLine()) {
             var cursor = this.getCursorPosition();
@@ -171,20 +171,20 @@ ace.Editor = function(renderer, doc) {
                     column: 0
                 }
             };
-            this._highlightLineMarker = this.renderer.addMarker(range, "active_line", "line");
+            this.$highlightLineMarker = this.renderer.addMarker(range, "active_line", "line");
         }
     };
 
     this.onSelectionChange = function() {
-        if (this._selectionMarker) {
-            this.renderer.removeMarker(this._selectionMarker);
+        if (this.$selectionMarker) {
+            this.renderer.removeMarker(this.$selectionMarker);
         }
-        this._selectionMarker = null;
+        this.$selectionMarker = null;
 
         if (!this.selection.isEmpty()) {
             var range = this.selection.getRange();
             var style = this.getSelectionStyle();
-            this._selectionMarker = this.renderer.addMarker(range, "selection", style);
+            this.$selectionMarker = this.renderer.addMarker(range, "selection", style);
         }
 
         this.onCursorChange();
@@ -314,28 +314,28 @@ ace.Editor = function(renderer, doc) {
         this.renderer.scrollCursorIntoView();
     };
 
-    this._selectionStyle = "line";
+    this.$selectionStyle = "line";
     this.setSelectionStyle = function(style) {
-        if (this._selectionStyle == style) return;
+        if (this.$selectionStyle == style) return;
 
-        this._selectionStyle = style;
+        this.$selectionStyle = style;
         this.onSelectionChange();
     };
 
     this.getSelectionStyle = function() {
-        return this._selectionStyle;
+        return this.$selectionStyle;
     };
 
-    this._highlightActiveLine = true;
+    this.$highlightActiveLine = true;
     this.setHighlightActiveLine = function(shouldHighlight) {
-        if (this._highlightActiveLine == shouldHighlight) return;
+        if (this.$highlightActiveLine == shouldHighlight) return;
 
-        this._highlightActiveLine = shouldHighlight;
-        this._updateHighlightActiveLine();
+        this.$highlightActiveLine = shouldHighlight;
+        this.$updateHighlightActiveLine();
     };
 
     this.getHighlightActiveLine = function() {
-        return this._highlightActiveLine;
+        return this.$highlightActiveLine;
     };
 
     this.removeRight = function() {
@@ -369,7 +369,7 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.toggleCommentLines = function() {
-        var rows = this._getSelectedRows();
+        var rows = this.$getSelectedRows();
 
         var range = {
             start: {
@@ -388,7 +388,7 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.removeLines = function() {
-        var rows = this._getSelectedRows();
+        var rows = this.$getSelectedRows();
         this.selection.setSelectionAnchor(rows.last+1, 0);
         this.selection.selectTo(rows.first, 0);
 
@@ -397,44 +397,44 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.moveLinesDown = function() {
-        this._moveLines(function(firstRow, lastRow) {
+        this.$moveLines(function(firstRow, lastRow) {
             return this.doc.moveLinesDown(firstRow, lastRow);
         });
     };
 
     this.moveLinesUp = function() {
-        this._moveLines(function(firstRow, lastRow) {
+        this.$moveLines(function(firstRow, lastRow) {
             return this.doc.moveLinesUp(firstRow, lastRow);
         });
     };
 
     this.copyLinesUp = function() {
-        this._moveLines(function(firstRow, lastRow) {
+        this.$moveLines(function(firstRow, lastRow) {
             this.doc.duplicateLines(firstRow, lastRow);
             return 0;
         });
     };
 
     this.copyLinesDown = function() {
-        this._moveLines(function(firstRow, lastRow) {
+        this.$moveLines(function(firstRow, lastRow) {
             return this.doc.duplicateLines(firstRow, lastRow);
         });
     };
 
 
-    this._moveLines = function(mover) {
-        var rows = this._getSelectedRows();
+    this.$moveLines = function(mover) {
+        var rows = this.$getSelectedRows();
 
         var linesMoved = mover.call(this, rows.first, rows.last);
 
         var selection = this.selection;
         selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
-        selection._moveSelection(function() {
+        selection.$moveSelection(function() {
             selection.moveCursorTo(rows.first+linesMoved, 0);
         });
     };
 
-    this._getSelectedRows = function() {
+    this.$getSelectedRows = function() {
         var range = this.getSelectionRange();
         var firstRow = range.start.row;
         var lastRow = range.end.row;
@@ -526,9 +526,9 @@ ace.Editor = function(renderer, doc) {
 
 
     this.gotoLine = function(lineNumber) {
-        this._blockScrolling = true;
+        this.$blockScrolling = true;
         this.moveCursorTo(lineNumber-1, 0);
-        this._blockScrolling = false;
+        this.$blockScrolling = false;
 
         if (!this.isRowVisible(this.getCursorPosition().row)) {
             this.scrollToRow(lineNumber - 1 - Math.floor(this.getVisibleRowCount() / 2));

@@ -5,7 +5,7 @@ ace.mode.XmlHighlightRules = function() {
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
 
-    this._rules = {
+    this.$rules = {
         start : [ {
             token : "text",
             regex : "<\\!\\[CDATA\\[",
@@ -73,7 +73,7 @@ ace.mode.XmlHighlightRules = function() {
 (function() {
 
     this.getRules = function() {
-        return this._rules;
+        return this.$rules;
     };
 
 }).call(ace.mode.XmlHighlightRules.prototype);

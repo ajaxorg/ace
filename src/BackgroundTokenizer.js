@@ -8,7 +8,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
     this.tokenizer = tokenizer;
 
     var self = this;
-    this._worker = function() {
+    this.$worker = function() {
         if (!self.running) { return; }
 
         var workerStart = new Date();
@@ -28,7 +28,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
             processedLines += 1;
             if ((processedLines % 30 == 0) && (new Date() - workerStart) > 20) {
                 self.fireUpdateEvent(startLine, self.currentLine);
-                return setTimeout(self._worker, 10);
+                return setTimeout(self.$worker, 10);
             }
 
             self.currentLine++;
@@ -77,7 +77,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
         if (!this.running) {
             clearTimeout(this.running);
             // pretty long delay to prevent the tokenizer from interfering with the user
-            this.running = setTimeout(this._worker, 200);
+            this.running = setTimeout(this.$worker, 200);
         }
     };
 
@@ -86,14 +86,14 @@ ace.BackgroundTokenizer = function(tokenizer) {
     };
 
     this.getTokens = function(row) {
-        return this._tokenizeRow(row).tokens;
+        return this.$tokenizeRow(row).tokens;
     };
 
     this.getState = function(row) {
-        return this._tokenizeRow(row).state;
+        return this.$tokenizeRow(row).state;
     };
 
-    this._tokenizeRow = function(row) {
+    this.$tokenizeRow = function(row) {
         if (!this.lines[row]) {
             var state = "start";
             if (row > 0 && this.lines[row - 1]) {

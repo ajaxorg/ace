@@ -6,7 +6,7 @@ ace.layer.Marker = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this.markers = {};
-    this._markerId = 1;
+    this.$markerId = 1;
 };
 
 (function() {
@@ -16,7 +16,7 @@ ace.layer.Marker = function(parentEl) {
     };
 
     this.addMarker = function(range, clazz, type) {
-        var id = this._markerId++;
+        var id = this.$markerId++;
         this.markers[id] = {
             range : range,
             type : type || "line",

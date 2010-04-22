@@ -3,11 +3,11 @@ ace.provide("ace.MEventEmitter");
 ace.MEventEmitter = function() {
 
     this.$initEvents = function() {
-        this._eventRegistry = {};
+        this.$eventRegistry = {};
     };
 
     this.$dispatchEvent = function(eventName, e) {
-        var listeners = this._eventRegistry[eventName];
+        var listeners = this.$eventRegistry[eventName];
         if (!listeners || !listeners.length) return;
 
         var e = e || {};
@@ -19,9 +19,9 @@ ace.MEventEmitter = function() {
     };
 
     this.addEventListener = function(eventName, callback) {
-        var listeners = this._eventRegistry[eventName];
+        var listeners = this.$eventRegistry[eventName];
         if (!listeners) {
-          var listeners = this._eventRegistry[eventName] = [];
+          var listeners = this.$eventRegistry[eventName] = [];
         }
         if (ace.arrayIndexOf(listeners, callback) == -1) {
             listeners.push(callback);
@@ -29,7 +29,7 @@ ace.MEventEmitter = function() {
     };
 
     this.removeEventListener = function(eventName, callback) {
-        var listeners = this._eventRegistry[eventName];
+        var listeners = this.$eventRegistry[eventName];
         if (!listeners) {
           return;
         }

@@ -73,7 +73,7 @@ ace.mode.CssHighlightRules = function() {
         return re.join("");
     }
 
-    this._rules = {
+    this.$rules = {
         "start" : [ {
             token : "comment", // multi line comment
             regex : "\\/\\*",
@@ -178,7 +178,7 @@ ace.mode.CssHighlightRules = function() {
 (function() {
 
     this.getRules = function() {
-        return this._rules;
+        return this.$rules;
     };
 
 }).call(ace.mode.CssHighlightRules.prototype);

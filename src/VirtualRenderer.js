@@ -80,7 +80,7 @@ ace.VirtualRenderer = function(container) {
         this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
 
         if (this.doc) {
-            this._updateScrollBar();
+            this.$updateScrollBar();
             this.scrollToY(this.getScrollTop());
             this.draw();
         }
@@ -90,7 +90,7 @@ ace.VirtualRenderer = function(container) {
         this.scrollToY(e.data);
     };
 
-    this._updateScrollBar = function() {
+    this.$updateScrollBar = function() {
         this.scrollBar.setInnerHeight(this.doc.getLength() * this.lineHeight);
         this.scrollBar.setScrollTop(this.scrollTop);
     };
@@ -146,7 +146,7 @@ ace.VirtualRenderer = function(container) {
         this.gutterLayer.element.style.height = minHeight + "px";
         this.gutterLayer.update(layerConfig);
 
-        this._updateScrollBar();
+        this.$updateScrollBar();
     };
 
     this.addMarker = function(range, clazz, type) {
@@ -215,7 +215,7 @@ ace.VirtualRenderer = function(container) {
 
         if (this.scrollTop !== scrollTop) {
             this.scrollTop = scrollTop;
-            this._updateScrollBar();
+            this.$updateScrollBar();
             this.draw();
         }
     };

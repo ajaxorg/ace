@@ -3,7 +3,7 @@ ace.provide("ace.Document");
 ace.Document = function(text, mode) {
     this.$initEvents();
 
-    this.lines = this._split(text);
+    this.lines = this.$split(text);
     this.modified = true;
     this.selection = new ace.Selection(this);
 
@@ -17,7 +17,7 @@ ace.Document = function(text, mode) {
 
     ace.implement(this, ace.MEventEmitter);
 
-    this._split = function(text) {
+    this.$split = function(text) {
         return text.split(/\r\n|\r|\n/);
     };
 
@@ -44,54 +44,54 @@ ace.Document = function(text, mode) {
         return "\t";
     };
 
-    this._useSoftTabs = false;
+    this.$useSoftTabs = false;
     this.setUseSoftTabs = function(useSoftTabs) {
-        if (this._useSoftTabs === useSoftTabs) return;
+        if (this.$useSoftTabs === useSoftTabs) return;
 
-        this._useSoftTabs = useSoftTabs;
+        this.$useSoftTabs = useSoftTabs;
     };
 
     this.getUseSoftTabs = function() {
-        return this._useSoftTabs;
+        return this.$useSoftTabs;
     };
 
-    this._tabSize = 4;
+    this.$tabSize = 4;
     this.setTabSize = function(tabSize) {
-        if (this._tabSize === tabSize) return;
+        if (this.$tabSize === tabSize) return;
 
-        this._tabSize = tabSize;
+        this.$tabSize = tabSize;
         this.$dispatchEvent("changeTabSize");
     };
 
     this.getTabSize = function() {
-        return this._tabSize;
+        return this.$tabSize;
     };
 
-    this._mode = null;
+    this.$mode = null;
     this.setMode = function(mode) {
-        if (this._mode === mode) return;
+        if (this.$mode === mode) return;
 
-        this._mode = mode;
+        this.$mode = mode;
         this.$dispatchEvent("changeMode");
     };
 
     this.getMode = function() {
-        if (!this._mode) {
-            this._mode = new ace.mode.Text();
+        if (!this.$mode) {
+            this.$mode = new ace.mode.Text();
         }
-        return this._mode;
+        return this.$mode;
     };
 
-    this._scrollTop = 0;
+    this.$scrollTop = 0;
     this.setScrollTopRow = function(scrollTopRow) {
-        if (this._scrollTop === scrollTopRow) return;
+        if (this.$scrollTop === scrollTopRow) return;
 
-        this._scrollTop = scrollTopRow;
+        this.$scrollTop = scrollTopRow;
         this.$dispatchEvent("changeScrollTop");
     };
 
     this.getScrollTopRow = function() {
-        return this._scrollTop;
+        return this.$scrollTop;
     };
 
     this.getWidth = function() {
@@ -146,13 +146,13 @@ ace.Document = function(text, mode) {
         }
 
         if (match[1]) {
-            return this._findClosingBracket(match[1], position);
+            return this.$findClosingBracket(match[1], position);
         } else {
-            return this._findOpeningBracket(match[2], position);
+            return this.$findOpeningBracket(match[2], position);
         }
     };
 
-    this._brackets = {
+    this.$brackets = {
         ")": "(",
         "(": ")",
         "]": "[",
@@ -161,8 +161,8 @@ ace.Document = function(text, mode) {
         "}": "{"
     };
 
-    this._findOpeningBracket = function(bracket, position) {
-        var openBracket = this._brackets[bracket];
+    this.$findOpeningBracket = function(bracket, position) {
+        var openBracket = this.$brackets[bracket];
 
         var column = position.column - 2;
         var row = position.row;
@@ -193,8 +193,8 @@ ace.Document = function(text, mode) {
         return null;
     };
 
-    this._findClosingBracket = function(bracket, position) {
-        var closingBracket = this._brackets[bracket];
+    this.$findClosingBracket = function(bracket, position) {
+        var closingBracket = this.$brackets[bracket];
 
         var column = position.column;
         var row = position.row;
@@ -227,24 +227,24 @@ ace.Document = function(text, mode) {
     };
 
     this.insert = function(position, text) {
-        var end = this._insert(position, text);
+        var end = this.$insert(position, text);
         this.fireChangeEvent(position.row, position.row == end.row ? position.row
                 : undefined);
         return end;
     };
 
-    this._insertLines = function(row, lines) {
+    this.$insertLines = function(row, lines) {
         var args = [row, 0];
         args.push.apply(args, lines);
         this.lines.splice.apply(this.lines, args);
     },
 
-    this._insert = function(position, text) {
+    this.$insert = function(position, text) {
         this.modified = true;
 
-        var newLines = this._split(text);
+        var newLines = this.$split(text);
 
-        if (this._isNewLine(text)) {
+        if (this.$isNewLine(text)) {
             var line = this.lines[position.row] || "";
             this.lines[position.row] = line.substring(0, position.column);
             this.lines.splice(position.row + 1, 0, line.substring(position.column));
@@ -273,7 +273,7 @@ ace.Document = function(text, mode) {
                     + line.substring(position.column);
 
             if (newLines.length > 2) {
-                this._insertLines(position.row + 1, newLines.slice(1, -1));
+                this.$insertLines(position.row + 1, newLines.slice(1, -1));
             }
 
             return {
@@ -283,12 +283,12 @@ ace.Document = function(text, mode) {
         }
     };
 
-    this._isNewLine = function(text) {
+    this.$isNewLine = function(text) {
         return (text == "\r\n" || text == "\r" || text == "\n");
     };
 
     this.remove = function(range) {
-        this._remove(range);
+        this.$remove(range);
 
         this.fireChangeEvent(range.start.row,
                              range.end.row == range.start.row ? range.start.row
@@ -296,7 +296,7 @@ ace.Document = function(text, mode) {
         return range.start;
     };
 
-    this._remove = function(range) {
+    this.$remove = function(range) {
         this.modified = true;
 
         var firstRow = range.start.row;
@@ -311,9 +311,9 @@ ace.Document = function(text, mode) {
     };
 
     this.replace = function(range, text) {
-        this._remove(range);
+        this.$remove(range);
         if (text) {
-            var end = this._insert(range.start, text);
+            var end = this.$insert(range.start, text);
         }
         else {
             end = range.start;
@@ -356,7 +356,7 @@ ace.Document = function(text, mode) {
         if (firstRow <= 0) return 0;
 
         var removed = this.lines.splice(firstRow, lastRow-firstRow+1);
-        this._insertLines(firstRow-1, removed);
+        this.$insertLines(firstRow-1, removed);
 
         this.fireChangeEvent(firstRow-1, lastRow);
         return -1;
@@ -366,18 +366,18 @@ ace.Document = function(text, mode) {
         if (lastRow >= this.lines.length-1) return 0;
 
         var removed = this.lines.splice(firstRow, lastRow-firstRow+1);
-        this._insertLines(firstRow+1, removed);
+        this.$insertLines(firstRow+1, removed);
 
         this.fireChangeEvent(firstRow, lastRow+1);
         return 1;
     };
 
     this.duplicateLines = function(firstRow, lastRow) {
-        var firstRow = this._clipRowToDocument(firstRow);
-        var lastRow = this._clipRowToDocument(lastRow);
+        var firstRow = this.$clipRowToDocument(firstRow);
+        var lastRow = this.$clipRowToDocument(lastRow);
 
         var lines = this.getLines(firstRow, lastRow);
-        this._insertLines(firstRow, lines);
+        this.$insertLines(firstRow, lines);
 
         var addedRows = lastRow - firstRow + 1;
         this.fireChangeEvent(firstRow, lastRow+addedRows);
@@ -385,7 +385,7 @@ ace.Document = function(text, mode) {
         return addedRows;
     };
 
-    this._clipRowToDocument = function(row) {
+    this.$clipRowToDocument = function(row) {
         return Math.max(0, Math.min(row, this.lines.length-1));
     };
 
