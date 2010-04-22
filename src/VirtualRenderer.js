@@ -38,213 +38,217 @@ ace.VirtualRenderer = function(container) {
     this.onResize();
 };
 
-ace.VirtualRenderer.prototype.setDocument = function(doc) {
-    this.lines = doc.lines;
-    this.doc = doc;
-    this.markerLayer.setDocument(doc);
-    this.textLayer.setTabSize(doc.getTabSize());
-};
+(function() {
 
-ace.VirtualRenderer.prototype.setTokenizer = function(tokenizer) {
-    this.textLayer.setTokenizer(tokenizer);
-};
+    this.setDocument = function(doc) {
+        this.lines = doc.lines;
+        this.doc = doc;
+        this.markerLayer.setDocument(doc);
+        this.textLayer.setTabSize(doc.getTabSize());
+    };
 
-ace.VirtualRenderer.prototype.getContainerElement = function() {
-    return this.container;
-};
+    this.setTokenizer = function(tokenizer) {
+        this.textLayer.setTokenizer(tokenizer);
+    };
 
-ace.VirtualRenderer.prototype.getMouseEventTarget = function() {
-    return this.scroller;
-};
+    this.getContainerElement = function() {
+        return this.container;
+    };
 
-ace.VirtualRenderer.prototype.getFirstVisibleRow = function() {
-    return this.layerConfig.firstRow || 0;
-};
+    this.getMouseEventTarget = function() {
+        return this.scroller;
+    };
 
-ace.VirtualRenderer.prototype.getLastVisibleRow = function() {
-    return this.layerConfig.lastRow || 0;
-};
+    this.getFirstVisibleRow = function() {
+        return this.layerConfig.firstRow || 0;
+    };
 
-ace.VirtualRenderer.prototype.onResize = function()
-{
-    var height = ace.getInnerHeight(this.container);
-    this.gutter.style.height = height + "px";
-    this.scroller.style.height = height + "px";
-    this.scrollBar.setHeight(height);
+    this.getLastVisibleRow = function() {
+        return this.layerConfig.lastRow || 0;
+    };
 
-    var width = ace.getInnerWidth(this.container);
-    var gutterWidth = this.gutter.offsetWidth;
-    this.scroller.style.left = gutterWidth + "px";
-    this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+    this.onResize = function()
+    {
+        var height = ace.getInnerHeight(this.container);
+        this.gutter.style.height = height + "px";
+        this.scroller.style.height = height + "px";
+        this.scrollBar.setHeight(height);
 
-    if (this.doc) {
+        var width = ace.getInnerWidth(this.container);
+        var gutterWidth = this.gutter.offsetWidth;
+        this.scroller.style.left = gutterWidth + "px";
+        this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+
+        if (this.doc) {
+            this._updateScrollBar();
+            this.scrollToY(this.getScrollTop());
+            this.draw();
+        }
+    };
+
+    this.onScroll = function(e) {
+        this.scrollToY(e.data);
+    };
+
+    this._updateScrollBar = function() {
+        this.scrollBar.setInnerHeight(this.doc.getLength() * this.lineHeight);
+        this.scrollBar.setScrollTop(this.scrollTop);
+    };
+
+    this.updateLines = function(firstRow, lastRow) {
+        var layerConfig = this.layerConfig;
+
+        if (firstRow > layerConfig.lastRow + 1) { return; }
+        if (lastRow < layerConfig.firstRow) { return; }
+
+        // if the last row is unknown -> redraw everything
+        if (lastRow === undefined) {
+            this.draw();
+            return;
+        }
+
+        // else update only the changed rows
+        this.textLayer.updateLines(layerConfig, firstRow, lastRow);
+    };
+
+    this.draw = function() {
+        var lines = this.lines;
+
+        var offset = this.scrollTop % this.lineHeight;
+        var minHeight = this.scroller.clientHeight + offset;
+
+        var longestLine = Math.max(this.scroller.clientWidth, Math.round(this.doc.getWidth() * this.characterWidth));
+
+        var lineCount = Math.ceil(minHeight / this.lineHeight);
+        var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
+        var lastRow = Math.min(lines.length, firstRow + lineCount) - 1;
+
+        var layerConfig = this.layerConfig = {
+            width : longestLine,
+            firstRow : firstRow,
+            lastRow : lastRow,
+            lineHeight : this.lineHeight,
+            characterWidth : this.characterWidth
+        };
+
+        for ( var i = 0; i < this.layers.length; i++) {
+            var layer = this.layers[i];
+
+            var style = layer.element.style;
+            style.marginTop = (-offset) + "px";
+            style.height = minHeight + "px";
+            style.width = longestLine + "px";
+
+            layer.update(layerConfig);
+        };
+
+        this.gutterLayer.element.style.marginTop = (-offset) + "px";
+        this.gutterLayer.element.style.height = minHeight + "px";
+        this.gutterLayer.update(layerConfig);
+
         this._updateScrollBar();
-        this.scrollToY(this.getScrollTop());
-        this.draw();
-    }
-};
-
-ace.VirtualRenderer.prototype.onScroll = function(e) {
-    this.scrollToY(e.data);
-};
-
-ace.VirtualRenderer.prototype._updateScrollBar = function() {
-    this.scrollBar.setInnerHeight(this.doc.getLength() * this.lineHeight);
-    this.scrollBar.setScrollTop(this.scrollTop);
-};
-
-ace.VirtualRenderer.prototype.updateLines = function(firstRow, lastRow) {
-    var layerConfig = this.layerConfig;
-
-    if (firstRow > layerConfig.lastRow + 1) { return; }
-    if (lastRow < layerConfig.firstRow) { return; }
-
-    // if the last row is unknown -> redraw everything
-    if (lastRow === undefined) {
-        this.draw();
-        return;
-    }
-
-    // else update only the changed rows
-    this.textLayer.updateLines(layerConfig, firstRow, lastRow);
-};
-
-ace.VirtualRenderer.prototype.draw = function() {
-    var lines = this.lines;
-
-    var offset = this.scrollTop % this.lineHeight;
-    var minHeight = this.scroller.clientHeight + offset;
-
-    var longestLine = Math.max(this.scroller.clientWidth, Math.round(this.doc.getWidth() * this.characterWidth));
-
-    var lineCount = Math.ceil(minHeight / this.lineHeight);
-    var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
-    var lastRow = Math.min(lines.length, firstRow + lineCount) - 1;
-
-    var layerConfig = this.layerConfig = {
-        width : longestLine,
-        firstRow : firstRow,
-        lastRow : lastRow,
-        lineHeight : this.lineHeight,
-        characterWidth : this.characterWidth
     };
 
-    for ( var i = 0; i < this.layers.length; i++) {
-        var layer = this.layers[i];
-
-        var style = layer.element.style;
-        style.marginTop = (-offset) + "px";
-        style.height = minHeight + "px";
-        style.width = longestLine + "px";
-
-        layer.update(layerConfig);
+    this.addMarker = function(range, clazz, type) {
+        return this.markerLayer.addMarker(range, clazz, type);
     };
 
-    this.gutterLayer.element.style.marginTop = (-offset) + "px";
-    this.gutterLayer.element.style.height = minHeight + "px";
-    this.gutterLayer.update(layerConfig);
-
-    this._updateScrollBar();
-};
-
-ace.VirtualRenderer.prototype.addMarker = function(range, clazz, type) {
-    return this.markerLayer.addMarker(range, clazz, type);
-};
-
-ace.VirtualRenderer.prototype.removeMarker = function(markerId) {
-    this.markerLayer.removeMarker(markerId);
-};
-
-ace.VirtualRenderer.prototype.updateCursor = function(position) {
-    this.cursorLayer.setCursor(position);
-    this.cursorLayer.update(this.layerConfig);
-};
-
-ace.VirtualRenderer.prototype.hideCursor = function() {
-    this.cursorLayer.hideCursor();
-};
-
-ace.VirtualRenderer.prototype.showCursor = function() {
-    this.cursorLayer.showCursor();
-};
-
-ace.VirtualRenderer.prototype.scrollCursorIntoView = function() {
-    var pos = this.cursorLayer.getPixelPosition();
-
-    var left = pos.left;
-    var top = pos.top;
-
-    if (this.getScrollTop() > top) {
-        this.scrollToY(top);
-    }
-
-    if (this.getScrollTop() + this.scroller.clientHeight < top
-            + this.lineHeight) {
-        this.scrollToY(top + this.lineHeight - this.scroller.clientHeight);
-    }
-
-    if (this.scroller.scrollLeft > left) {
-        this.scroller.scrollLeft = left;
-    }
-
-    if (this.scroller.scrollLeft + this.scroller.clientWidth < left
-            + this.characterWidth) {
-        this.scroller.scrollLeft = Math.round(left + this.characterWidth
-                - this.scroller.clientWidth);
-    }
-},
-
-ace.VirtualRenderer.prototype.getScrollTop = function() {
-    return this.scrollTop;
-};
-
-ace.VirtualRenderer.prototype.getScrollTopRow = function() {
-    return this.scrollTop / this.lineHeight;
-};
-
-ace.VirtualRenderer.prototype.scrollToRow = function(row) {
-    this.scrollToY(row * this.lineHeight);
-};
-
-ace.VirtualRenderer.prototype.scrollToY = function(scrollTop) {
-    var maxHeight = this.lines.length * this.lineHeight
-            - this.scroller.clientHeight;
-    var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
-
-    if (this.scrollTop !== scrollTop) {
-        this.scrollTop = scrollTop;
-        this._updateScrollBar();
-        this.draw();
-    }
-};
-
-ace.VirtualRenderer.prototype.screenToTextCoordinates = function(pageX, pageY) {
-    var canvasPos = this.scroller.getBoundingClientRect();
-
-    var col = Math.floor((pageX + this.scroller.scrollLeft - canvasPos.left)
-            / this.characterWidth);
-    var row = Math.floor((pageY + this.scrollTop - canvasPos.top)
-            / this.lineHeight);
-
-    return {
-        row : row,
-        column : col
+    this.removeMarker = function(markerId) {
+        this.markerLayer.removeMarker(markerId);
     };
-};
 
-ace.VirtualRenderer.prototype.visualizeFocus = function() {
-    ace.addCssClass(this.container, "focus");
-};
+    this.updateCursor = function(position) {
+        this.cursorLayer.setCursor(position);
+        this.cursorLayer.update(this.layerConfig);
+    };
 
-ace.VirtualRenderer.prototype.visualizeBlur = function() {
-    ace.removeCssClass(this.container, "focus");
-};
+    this.hideCursor = function() {
+        this.cursorLayer.hideCursor();
+    };
 
-ace.VirtualRenderer.prototype.showComposition = function(position) {
-};
+    this.showCursor = function() {
+        this.cursorLayer.showCursor();
+    };
 
-ace.VirtualRenderer.prototype.setCompositionText = function(text) {
-};
+    this.scrollCursorIntoView = function() {
+        var pos = this.cursorLayer.getPixelPosition();
 
-ace.VirtualRenderer.prototype.hideComposition = function() {
-};
+        var left = pos.left;
+        var top = pos.top;
+
+        if (this.getScrollTop() > top) {
+            this.scrollToY(top);
+        }
+
+        if (this.getScrollTop() + this.scroller.clientHeight < top
+                + this.lineHeight) {
+            this.scrollToY(top + this.lineHeight - this.scroller.clientHeight);
+        }
+
+        if (this.scroller.scrollLeft > left) {
+            this.scroller.scrollLeft = left;
+        }
+
+        if (this.scroller.scrollLeft + this.scroller.clientWidth < left
+                + this.characterWidth) {
+            this.scroller.scrollLeft = Math.round(left + this.characterWidth
+                    - this.scroller.clientWidth);
+        }
+    },
+
+    this.getScrollTop = function() {
+        return this.scrollTop;
+    };
+
+    this.getScrollTopRow = function() {
+        return this.scrollTop / this.lineHeight;
+    };
+
+    this.scrollToRow = function(row) {
+        this.scrollToY(row * this.lineHeight);
+    };
+
+    this.scrollToY = function(scrollTop) {
+        var maxHeight = this.lines.length * this.lineHeight
+                - this.scroller.clientHeight;
+        var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
+
+        if (this.scrollTop !== scrollTop) {
+            this.scrollTop = scrollTop;
+            this._updateScrollBar();
+            this.draw();
+        }
+    };
+
+    this.screenToTextCoordinates = function(pageX, pageY) {
+        var canvasPos = this.scroller.getBoundingClientRect();
+
+        var col = Math.floor((pageX + this.scroller.scrollLeft - canvasPos.left)
+                / this.characterWidth);
+        var row = Math.floor((pageY + this.scrollTop - canvasPos.top)
+                / this.lineHeight);
+
+        return {
+            row : row,
+            column : col
+        };
+    };
+
+    this.visualizeFocus = function() {
+        ace.addCssClass(this.container, "focus");
+    };
+
+    this.visualizeBlur = function() {
+        ace.removeCssClass(this.container, "focus");
+    };
+
+    this.showComposition = function(position) {
+    };
+
+    this.setCompositionText = function(text) {
+    };
+
+    this.hideComposition = function() {
+    };
+
+}).call(ace.VirtualRenderer.prototype);

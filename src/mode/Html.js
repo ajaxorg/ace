@@ -8,30 +8,34 @@ ace.mode.Html = function() {
 };
 ace.inherits(ace.mode.Html, ace.mode.Text);
 
-ace.mode.Html.prototype.toggleCommentLines = function(doc, range, state) {
-    var split = state.split("js-");
-    if (!split[0] && split[1]) {
-        return this._js.toggleCommentLines(doc, range, state);
-    }
+(function() {
 
-    var split = state.split("css-");
-    if (!split[0] && split[1]) {
-        return this._css.toggleCommentLines(doc, range, state);
-    }
+    this.toggleCommentLines = function(doc, range, state) {
+        var split = state.split("js-");
+        if (!split[0] && split[1]) {
+            return this._js.toggleCommentLines(doc, range, state);
+        }
 
-    return 0;
-};
+        var split = state.split("css-");
+        if (!split[0] && split[1]) {
+            return this._css.toggleCommentLines(doc, range, state);
+        }
 
-ace.mode.Html.prototype.getNextLineIndent = function(line, state, tab) {
-    var split = state.split("js-");
-    if (!split[0] && split[1]) {
-        return this._js.getNextLineIndent(line, split[1], tab);
-    }
+        return 0;
+    };
 
-    var split = state.split("css-");
-    if (!split[0] && split[1]) {
-        return this._css.getNextLineIndent(line, split[1], tab);
-    }
+    this.getNextLineIndent = function(line, state, tab) {
+        var split = state.split("js-");
+        if (!split[0] && split[1]) {
+            return this._js.getNextLineIndent(line, split[1], tab);
+        }
 
-    return "";
-};
+        var split = state.split("css-");
+        if (!split[0] && split[1]) {
+            return this._css.getNextLineIndent(line, split[1], tab);
+        }
+
+        return "";
+    };
+
+}).call(ace.mode.Html.prototype);

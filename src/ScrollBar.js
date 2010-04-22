@@ -17,24 +17,28 @@ ace.ScrollBar = function(parent) {
     ace.addListener(this.element, "scroll", ace.bind(this.onScroll, this));
 };
 
-ace.mixin(ace.ScrollBar.prototype, ace.MEventEmitter);
+(function() {
 
-ace.ScrollBar.prototype.onScroll = function() {
-  this.$dispatchEvent("scroll", {data: this.element.scrollTop});
-};
+    ace.mixin(ace.ScrollBar.prototype, ace.MEventEmitter);
 
-ace.ScrollBar.prototype.getWidth = function() {
-    return this.width;
-};
+    this.onScroll = function() {
+      this.$dispatchEvent("scroll", {data: this.element.scrollTop});
+    };
 
-ace.ScrollBar.prototype.setHeight = function(height) {
-    this.element.style.height = Math.max(0, height - this.width) + "px";
-};
+    this.getWidth = function() {
+        return this.width;
+    };
 
-ace.ScrollBar.prototype.setInnerHeight = function(height) {
-    this.inner.style.height = height + "px";
-};
+    this.setHeight = function(height) {
+        this.element.style.height = Math.max(0, height - this.width) + "px";
+    };
 
-ace.ScrollBar.prototype.setScrollTop = function(scrollTop) {
-    this.element.scrollTop = scrollTop;
-};
+    this.setInnerHeight = function(height) {
+        this.inner.style.height = height + "px";
+    };
+
+    this.setScrollTop = function(scrollTop) {
+        this.element.scrollTop = scrollTop;
+    };
+
+}).call(ace.ScrollBar.prototype);

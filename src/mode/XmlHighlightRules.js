@@ -70,6 +70,10 @@ ace.mode.XmlHighlightRules = function() {
     };
 };
 
-ace.mode.XmlHighlightRules.prototype.getRules = function() {
-    return this._rules;
-};
+(function() {
+
+    this.getRules = function() {
+        return this._rules;
+    };
+
+}).call(ace.mode.XmlHighlightRules.prototype);

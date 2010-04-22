@@ -130,20 +130,23 @@ ace.mode.HtmlHighlightRules = function() {
     });
 };
 
+(function() {
 
-ace.mode.HtmlHighlightRules.prototype._addRules = function(rules, prefix) {
-    for (var key in rules) {
-        var state = rules[key];
-        for (var i=0; i<state.length; i++) {
-            var rule = state[i];
-            if (rule.next) {
-                rule.next = prefix + rule.next;
+    this._addRules = function(rules, prefix) {
+        for (var key in rules) {
+            var state = rules[key];
+            for (var i=0; i<state.length; i++) {
+                var rule = state[i];
+                if (rule.next) {
+                    rule.next = prefix + rule.next;
+                }
             }
+            this._rules[prefix + key] = state;
         }
-        this._rules[prefix + key] = state;
-    }
-};
+    };
 
-ace.mode.HtmlHighlightRules.prototype.getRules = function() {
-    return this._rules;
-};
+    this.getRules = function() {
+        return this._rules;
+    };
+
+}).call(ace.mode.HtmlHighlightRules.prototype);

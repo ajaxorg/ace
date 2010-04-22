@@ -1,26 +1,9 @@
 ace.provide("ace.KeyBinding");
 
-(function() {
-
-var keys = {
-    UP : 38,
-    RIGHT : 39,
-    DOWN : 40,
-    LEFT : 37,
-    PAGEUP : 33,
-    PAGEDOWN : 34,
-    POS1 : 36,
-    END : 35,
-    DELETE : 46,
-    BACKSPACE : 8,
-    TAB : 9,
-    A : 65,
-    D: 68,
-    L: 76,
-    "7": 55
-};
-
 ace.KeyBinding = function(element, editor) {
+
+    var keys = this.keys;
+
     ace.addListener(element, "keydown", function(e) {
         var key = e.keyCode;
         var selection = editor.getSelection();
@@ -198,4 +181,22 @@ ace.KeyBinding = function(element, editor) {
     });
 };
 
-})();
+(function() {
+    this.keys = {
+        UP : 38,
+        RIGHT : 39,
+        DOWN : 40,
+        LEFT : 37,
+        PAGEUP : 33,
+        PAGEDOWN : 34,
+        POS1 : 36,
+        END : 35,
+        DELETE : 46,
+        BACKSPACE : 8,
+        TAB : 9,
+        A : 65,
+        D: 68,
+        L: 76,
+        "7": 55
+    };
+}).call(ace.KeyBinding.prototype);

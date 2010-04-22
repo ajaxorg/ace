@@ -17,72 +17,76 @@ ace.Tokenizer = function(rules) {
     }
 };
 
-ace.Tokenizer.prototype.getLineTokens = function(line, startState) {
-    var currentState = startState;
-    var state = this.rules[currentState];
-    var re = this.regExps[currentState];
-    re.lastIndex = 0;
+(function() {
 
-    var match, tokens = [];
+    this.getLineTokens = function(line, startState) {
+        var currentState = startState;
+        var state = this.rules[currentState];
+        var re = this.regExps[currentState];
+        re.lastIndex = 0;
 
-    var lastIndex = 0;
+        var match, tokens = [];
 
-    var token = {
-        type: null,
-        value: ""
-    };
+        var lastIndex = 0;
 
-    while (match = re.exec(line)) {
-        var type = "text";
-        var value = match[0];
+        var token = {
+            type: null,
+            value: ""
+        };
 
-        if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
-        lastIndex = re.lastIndex;
+        while (match = re.exec(line)) {
+            var type = "text";
+            var value = match[0];
 
-        window.LOG && jstestdriver.console.log(currentState, match);
+            if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
+            lastIndex = re.lastIndex;
 
-        for ( var i = 0; i < state.length; i++) {
-            if (match[i + 1]) {
-                if (typeof state[i].token == "function") {
-                    type = state[i].token(match[0]);
+            window.LOG && jstestdriver.console.log(currentState, match);
+
+            for ( var i = 0; i < state.length; i++) {
+                if (match[i + 1]) {
+                    if (typeof state[i].token == "function") {
+                        type = state[i].token(match[0]);
+                    }
+                    else {
+                        type = state[i].token;
+                    }
+
+                    if (state[i].next && state[i].next !== currentState) {
+                        currentState = state[i].next;
+                        var state = this.rules[currentState];
+                        var lastIndex = re.lastIndex;
+
+                        var re = this.regExps[currentState];
+                        re.lastIndex = lastIndex;
+                    }
+                    break;
                 }
-                else {
-                    type = state[i].token;
-                }
+            };
 
-                if (state[i].next && state[i].next !== currentState) {
-                    currentState = state[i].next;
-                    var state = this.rules[currentState];
-                    var lastIndex = re.lastIndex;
-
-                    var re = this.regExps[currentState];
-                    re.lastIndex = lastIndex;
+            if (token.type !== type) {
+                if (token.type) {
+                    tokens.push(token);
                 }
-                break;
+                token = {
+                    type: type,
+                    value: value
+                };
+            } else {
+                token.value += value;
             }
         };
 
-        if (token.type !== type) {
-            if (token.type) {
-                tokens.push(token);
-            }
-            token = {
-                type: type,
-                value: value
-            };
-        } else {
-            token.value += value;
+        if (token.type) {
+            tokens.push(token);
         }
+
+        window.LOG && jstestdriver.console.log(tokens, currentState);
+
+        return {
+            tokens : tokens,
+            state : currentState
+        };
     };
 
-    if (token.type) {
-        tokens.push(token);
-    }
-
-    window.LOG && jstestdriver.console.log(tokens, currentState);
-
-    return {
-        tokens : tokens,
-        state : currentState
-    };
-};
+}).call(ace.Tokenizer.prototype);

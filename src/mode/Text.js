@@ -10,23 +10,27 @@ ace.mode.Text = function() {
     this.$tokenizer = new ace.Tokenizer(rules);
 };
 
-ace.mode.Text.prototype.getTokenizer = function() {
-    return this.$tokenizer;
-};
+(function() {
 
-ace.mode.Text.prototype.toggleCommentLines = function(doc, range, state) {
-    return 0;
-};
+    this.getTokenizer = function() {
+        return this.$tokenizer;
+    };
 
-ace.mode.Text.prototype.getNextLineIndent = function(line, state, tab) {
-    return "";
-};
+    this.toggleCommentLines = function(doc, range, state) {
+        return 0;
+    };
 
-ace.mode.Text.prototype.$getIndent = function(line) {
-    var match = line.match(/^(\s+)/);
-    if (match) {
-        return match[1];
-    }
+    this.getNextLineIndent = function(line, state, tab) {
+        return "";
+    };
 
-    return "";
-};
+    this.$getIndent = function(line) {
+        var match = line.match(/^(\s+)/);
+        if (match) {
+            return match[1];
+        }
+
+        return "";
+    };
+
+}).call(ace.mode.Text.prototype);

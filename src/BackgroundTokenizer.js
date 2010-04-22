@@ -41,62 +41,67 @@ ace.BackgroundTokenizer = function(tokenizer) {
 
     this.$initEvents();
 };
-ace.mixin(ace.BackgroundTokenizer.prototype, ace.MEventEmitter);
 
-ace.BackgroundTokenizer.prototype.setTokenizer = function(tokenizer) {
-    this.tokenizer = tokenizer;
-    this.lines = [];
+(function(){
 
-    this.start(0);
-};
+    ace.mixin(this, ace.MEventEmitter);
 
-ace.BackgroundTokenizer.prototype.setLines = function(textLines) {
-    this.textLines = textLines;
-    this.lines = [];
+    this.setTokenizer = function(tokenizer) {
+        this.tokenizer = tokenizer;
+        this.lines = [];
 
-    this.stop();
-};
-
-ace.BackgroundTokenizer.prototype.fireUpdateEvent = function(firstRow, lastRow) {
-    var data = {
-        first: firstRow,
-        last: lastRow
+        this.start(0);
     };
-    this.$dispatchEvent("update", {data: data});
-};
 
-ace.BackgroundTokenizer.prototype.start = function(startRow) {
-    this.currentLine = Math.min(startRow || 0, this.currentLine,
-                                this.textLines.length);
+    this.setLines = function(textLines) {
+        this.textLines = textLines;
+        this.lines = [];
 
-    this.lines.splice(this.currentLine, this.lines.length);
+        this.stop();
+    };
 
-    if (!this.running) {
-        clearTimeout(this.running);
-        // pretty long delay to prevent the tokenizer from interfering with the user
-        this.running = setTimeout(this._worker, 200);
-    }
-};
+    this.fireUpdateEvent = function(firstRow, lastRow) {
+        var data = {
+            first: firstRow,
+            last: lastRow
+        };
+        this.$dispatchEvent("update", {data: data});
+    };
 
-ace.BackgroundTokenizer.prototype.stop = function() {
-    this.running = false;
-};
+    this.start = function(startRow) {
+        this.currentLine = Math.min(startRow || 0, this.currentLine,
+                                    this.textLines.length);
 
-ace.BackgroundTokenizer.prototype.getTokens = function(row) {
-    return this._tokenizeRow(row).tokens;
-};
+        this.lines.splice(this.currentLine, this.lines.length);
 
-ace.BackgroundTokenizer.prototype.getState = function(row) {
-    return this._tokenizeRow(row).state;
-};
-
-ace.BackgroundTokenizer.prototype._tokenizeRow = function(row) {
-    if (!this.lines[row]) {
-        var state = "start";
-        if (row > 0 && this.lines[row - 1]) {
-            state = this.lines[row - 1].state;
+        if (!this.running) {
+            clearTimeout(this.running);
+            // pretty long delay to prevent the tokenizer from interfering with the user
+            this.running = setTimeout(this._worker, 200);
         }
-        this.lines[row] = this.tokenizer.getLineTokens(this.textLines[row] || "", state);
-    }
-    return this.lines[row];
-};
+    };
+
+    this.stop = function() {
+        this.running = false;
+    };
+
+    this.getTokens = function(row) {
+        return this._tokenizeRow(row).tokens;
+    };
+
+    this.getState = function(row) {
+        return this._tokenizeRow(row).state;
+    };
+
+    this._tokenizeRow = function(row) {
+        if (!this.lines[row]) {
+            var state = "start";
+            if (row > 0 && this.lines[row - 1]) {
+                state = this.lines[row - 1].state;
+            }
+            this.lines[row] = this.tokenizer.getLineTokens(this.textLines[row] || "", state);
+        }
+        return this.lines[row];
+    };
+
+}).call(ace.BackgroundTokenizer.prototype);

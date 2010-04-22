@@ -5,42 +5,46 @@ ace.mode.JavaScript = function() {
 };
 ace.inherits(ace.mode.JavaScript, ace.mode.Text);
 
-ace.mode.JavaScript.prototype.toggleCommentLines = function(doc, range, state) {
-    var addedRows = doc.outdentRows(range, "//");
-    if (addedRows == 0) {
-        var addedRows = doc.indentRows(range, "//");
+(function() {
+
+    this.toggleCommentLines = function(doc, range, state) {
+        var addedRows = doc.outdentRows(range, "//");
+        if (addedRows == 0) {
+            var addedRows = doc.indentRows(range, "//");
+        };
+        return addedRows;
     };
-    return addedRows;
-};
 
-ace.mode.JavaScript.prototype.getNextLineIndent = function(line, state, tab) {
-    var indent = this.$getIndent(line);
+    this.getNextLineIndent = function(line, state, tab) {
+        var indent = this.$getIndent(line);
 
-    var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
-    var tokens = tokenizedLine.tokens;
-    var endState = tokenizedLine.state;
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+        var tokens = tokenizedLine.tokens;
+        var endState = tokenizedLine.state;
 
-    if (tokens.length && tokens[tokens.length-1].type == "comment") {
-        return indent;
-    }
-
-    if (state == "start") {
-        var match = line.match(/^.*[\{\(\[]\s*$/);
-        if (match) {
-            indent += tab;
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {
+            return indent;
         }
-    } else if (state == "doc-comment") {
-        if (endState == "start") {
-            return "";
-        }
-        var match = line.match(/^\s*(\/?)\*/);
-        if (match) {
-            if (match[1]) {
-                indent += " ";
+
+        if (state == "start") {
+            var match = line.match(/^.*[\{\(\[]\s*$/);
+            if (match) {
+                indent += tab;
             }
-            indent += "* ";
+        } else if (state == "doc-comment") {
+            if (endState == "start") {
+                return "";
+            }
+            var match = line.match(/^\s*(\/?)\*/);
+            if (match) {
+                if (match[1]) {
+                    indent += " ";
+                }
+                indent += "* ";
+            }
         }
-    }
 
-    return indent;
-};
+        return indent;
+    };
+
+}).call(ace.mode.JavaScript.prototype);

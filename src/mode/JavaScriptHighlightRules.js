@@ -127,6 +127,10 @@ ace.mode.JavaScriptHighlightRules = function() {
     };
 };
 
-ace.mode.JavaScriptHighlightRules.prototype.getRules = function() {
-    return this._rules;
-};
+(function() {
+
+    this.getRules = function() {
+        return this._rules;
+    };
+
+}).call(ace.mode.JavaScriptHighlightRules.prototype);
