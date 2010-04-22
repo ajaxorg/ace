@@ -15,7 +15,7 @@ ace.Document = function(text, mode) {
 
 (function() {
 
-    ace.mixin(ace.Document.prototype, ace.MEventEmitter);
+    ace.implement(this, ace.MEventEmitter);
 
     this._split = function(text) {
         return text.split(/\r\n|\r|\n/);

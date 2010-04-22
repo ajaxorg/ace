@@ -1,38 +1,41 @@
 ace.provide("ace.MEventEmitter");
 
-ace.MEventEmitter.$initEvents = function() {
-    this._eventRegistry = {};
-};
+ace.MEventEmitter = function() {
 
-ace.MEventEmitter.$dispatchEvent = function(eventName, e) {
-    var listeners = this._eventRegistry[eventName];
-    if (!listeners || !listeners.length) return;
+    this.$initEvents = function() {
+        this._eventRegistry = {};
+    };
 
-    var e = e || {};
-    e.type = eventName;
+    this.$dispatchEvent = function(eventName, e) {
+        var listeners = this._eventRegistry[eventName];
+        if (!listeners || !listeners.length) return;
 
-    for (var i=0; i<listeners.length; i++) {
-        listeners[i](e);
-    }
-};
+        var e = e || {};
+        e.type = eventName;
 
-ace.MEventEmitter.addEventListener = function(eventName, callback) {
-    var listeners = this._eventRegistry[eventName];
-    if (!listeners) {
-      var listeners = this._eventRegistry[eventName] = [];
-    }
-    if (ace.arrayIndexOf(listeners, callback) == -1) {
-        listeners.push(callback);
-    }
-};
+        for (var i=0; i<listeners.length; i++) {
+            listeners[i](e);
+        }
+    };
 
-ace.MEventEmitter.removeEventListener = function(eventName, callback) {
-    var listeners = this._eventRegistry[eventName];
-    if (!listeners) {
-      return;
-    }
-    var index = ace.arrayIndexOf(listeners, callback);
-    if (index !== -1) {
-        listeners.splice(index, 1);
-    }
+    this.addEventListener = function(eventName, callback) {
+        var listeners = this._eventRegistry[eventName];
+        if (!listeners) {
+          var listeners = this._eventRegistry[eventName] = [];
+        }
+        if (ace.arrayIndexOf(listeners, callback) == -1) {
+            listeners.push(callback);
+        }
+    };
+
+    this.removeEventListener = function(eventName, callback) {
+        var listeners = this._eventRegistry[eventName];
+        if (!listeners) {
+          return;
+        }
+        var index = ace.arrayIndexOf(listeners, callback);
+        if (index !== -1) {
+            listeners.splice(index, 1);
+        }
+    };
 };

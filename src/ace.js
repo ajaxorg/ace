@@ -21,10 +21,8 @@ ace.inherits = function(ctor, superCtor) {
     ctor.prototype.constructor = ctor;
 };
 
-ace.mixin = function(obj, mixin) {
-    for (var key in mixin) {
-        obj[key] = mixin[key];
-    }
+ace.implement = function(proto, mixin) {
+    mixin.call(proto);
 };
 
 ace.addListener = function(elem, type, callback) {
@@ -81,7 +79,7 @@ ace.preventDefault = function(e) {
 
 ace.hasCssClass = function(el, name) {
     var classes = el.className.split(/\s*/g);
-    return ace.arrayIndexOf(classes, name) !== -1; 
+    return ace.arrayIndexOf(classes, name) !== -1;
 };
 
 

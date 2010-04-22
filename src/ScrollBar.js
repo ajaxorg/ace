@@ -19,7 +19,7 @@ ace.ScrollBar = function(parent) {
 
 (function() {
 
-    ace.mixin(ace.ScrollBar.prototype, ace.MEventEmitter);
+    ace.implement(this, ace.MEventEmitter);
 
     this.onScroll = function() {
       this.$dispatchEvent("scroll", {data: this.element.scrollTop});

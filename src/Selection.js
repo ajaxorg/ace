@@ -14,7 +14,7 @@ ace.Selection = function(doc) {
 
 (function() {
 
-    ace.mixin(ace.Selection.prototype, ace.MEventEmitter);
+    ace.implement(this, ace.MEventEmitter);
 
     this.updateCursor = function() {
         this.$dispatchEvent("changeCursor", { data: this.getCursor() });

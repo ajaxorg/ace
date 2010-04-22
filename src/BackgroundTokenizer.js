@@ -44,7 +44,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
 
 (function(){
 
-    ace.mixin(this, ace.MEventEmitter);
+    ace.implement(this, ace.MEventEmitter);
 
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;

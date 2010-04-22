@@ -1,7 +1,7 @@
 var EventEmitter = function() {
     this.$initEvents();
 };
-ace.mixin(EventEmitter.prototype, ace.MEventEmitter);
+ace.implement(EventEmitter.prototype, ace.MEventEmitter);
 
 var EventEmitterTest = new TestCase("EventEmitterTest", {
     "test: dispatch event with no data" : function() {
