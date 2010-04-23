@@ -120,20 +120,35 @@ ace.computedStyle = function(element, style) {
     }
 };
 
-ace.scrollbarWidth = function(parent) {
-    var el = document.createElement("div");
-    var style = el.style;
+ace.scrollbarWidth = function() {
+
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+
+    var outer = document.createElement("div");
+    var style = outer.style;
 
     style.position = "absolute";
     style.left = "-10000px";
+    style.overflow = "hidden";
+    style.width = "200px";
+    style.height = "150px";
+
+    outer.appendChild(inner);
+    document.body.appendChild(outer);
+    var noScrollbar = inner.offsetWidth;
+
     style.overflow = "scroll";
-    style.width = "100px";
+    var withScrollbar = inner.offsetWidth;
 
-    (parent || document.body).appendChild(el);
-    var width = el.offsetWidth - el.clientWidth;
-    document.body.removeChild(el);
+    if (noScrollbar == withScrollbar) {
+        withScrollbar = outer.clientWidth;
+    }
 
-    return width;
+    document.body.removeChild(outer);
+
+    return noScrollbar-withScrollbar;
 };
 
 ace.stringReverse = function(string) {
