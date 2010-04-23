@@ -115,7 +115,7 @@ ace.layer.Text = function(parentEl) {
             }
         };
 
-        if (this.$showInvisibles)
+        if (this.$showInvisibles && row !== this.doc.getLength() - 1)
             stringBuilder.push("<span class='invisible'>" + this.ENTER_CHAR + "</span>");
     };
 
