@@ -271,6 +271,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.onCut = function() {
+        if (this.$readOnly)
+            return;
+
         if (!this.selection.isEmpty()) {
             this.moveCursorToPosition(this.doc.remove(this.getSelectionRange()));
             this.clearSelection();
@@ -278,6 +281,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.onTextInput = function(text) {
+        if (this.$readOnly)
+            return;
+
         var cursor = this.getCursorPosition();
 
         text = text.replace("\t", this.doc.getTabString());
@@ -350,7 +356,19 @@ ace.Editor = function(renderer, doc) {
         return this.showInvisibles;
     };
 
+    this.$readOnly = false;
+    this.setReadOnly = function(readOnly) {
+        this.$readOnly = readOnly;
+    };
+
+    this.getReadOnly = function() {
+        return this.readOnly;
+    };
+
     this.removeRight = function() {
+        if (this.$readOnly)
+            return;
+
         if (this.selection.isEmpty()) {
             this.selection.selectRight();
         }
@@ -359,6 +377,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.removeLeft = function() {
+        if (this.$readOnly)
+            return;
+
         if (this.selection.isEmpty()) {
             this.selection.selectLeft();
         }
@@ -367,6 +388,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.blockIndent = function(indentString) {
+        if (this.$readOnly)
+            return;
+
         var indentString = indentString || this.doc.getTabString();
         var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
 
@@ -374,6 +398,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.blockOutdent = function(indentString) {
+        if (this.$readOnly)
+            return;
+
         var indentString = indentString || this.doc.getTabString();
         var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
@@ -381,6 +408,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.toggleCommentLines = function() {
+        if (this.$readOnly)
+            return;
+
         var rows = this.$getSelectedRows();
 
         var range = {
@@ -400,6 +430,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.removeLines = function() {
+        if (this.$readOnly)
+            return;
+
         var rows = this.$getSelectedRows();
         this.selection.setSelectionAnchor(rows.last+1, 0);
         this.selection.selectTo(rows.first, 0);
@@ -409,18 +442,27 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.moveLinesDown = function() {
+        if (this.$readOnly)
+            return;
+
         this.$moveLines(function(firstRow, lastRow) {
             return this.doc.moveLinesDown(firstRow, lastRow);
         });
     };
 
     this.moveLinesUp = function() {
+        if (this.$readOnly)
+            return;
+
         this.$moveLines(function(firstRow, lastRow) {
             return this.doc.moveLinesUp(firstRow, lastRow);
         });
     };
 
     this.copyLinesUp = function() {
+        if (this.$readOnly)
+            return;
+
         this.$moveLines(function(firstRow, lastRow) {
             this.doc.duplicateLines(firstRow, lastRow);
             return 0;
@@ -428,6 +470,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.copyLinesDown = function() {
+        if (this.$readOnly)
+            return;
+
         this.$moveLines(function(firstRow, lastRow) {
             return this.doc.duplicateLines(firstRow, lastRow);
         });
