@@ -10,9 +10,11 @@ ace.layer.Text = function(parentEl) {
 
 (function() {
 
-//    this.ENTER_CHAR = "&para;";
-    this.ENTER_CHAR = "&not;";
-    this.TAB_CHAR = "&#x2023;";
+//    this.EOF_CHAR = "&para;";
+    this.EOF_CHAR = "&para;";
+    this.EOL_CHAR = "&not;";
+//    this.TAB_CHAR = "&#x2023;";
+    this.TAB_CHAR = "&rarr;";
 
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;
@@ -59,7 +61,12 @@ ace.layer.Text = function(parentEl) {
     this.$computeTabString = function() {
         var tabSize = this.doc.getTabSize();
         if (this.$showInvisibles) {
-            this.$tabString = "<span class='invisible'>" + this.TAB_CHAR + new Array(tabSize).join("&nbsp;") + "</span>";
+            var halfTab = (tabSize) / 2;
+            this.$tabString = "<span class='invisible'>"
+                + new Array(Math.floor(halfTab)).join("&nbsp;")
+                + this.TAB_CHAR
+                + new Array(Math.ceil(halfTab)+1).join("&nbsp;")
+                + "</span>";
         } else {
             this.$tabString = new Array(tabSize+1).join("&nbsp;");
         }
@@ -103,7 +110,7 @@ ace.layer.Text = function(parentEl) {
             var output = token.value
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
-                .replace(/\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000/g, "&nbsp;")
+                .replace(/[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/g, "&nbsp;")
                 .replace(/\t/g, this.$tabString);
 
             if (token.type !== "text") {
@@ -114,8 +121,13 @@ ace.layer.Text = function(parentEl) {
             }
         };
 
-        if (this.$showInvisibles && row !== this.doc.getLength() - 1)
-            stringBuilder.push("<span class='invisible'>" + this.ENTER_CHAR + "</span>");
+        if (this.$showInvisibles) {
+            if (row !== this.doc.getLength() - 1) {
+                stringBuilder.push("<span class='invisible'>" + this.EOL_CHAR + "</span>");
+            } else {
+                stringBuilder.push("<span class='invisible'>" + this.EOF_CHAR + "</span>");
+            }
+        }
     };
 
 }).call(ace.layer.Text.prototype);
