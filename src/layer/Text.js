@@ -103,9 +103,8 @@ ace.layer.Text = function(parentEl) {
             var output = token.value
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
-                .replace(/ /g, "&nbsp;")
+                .replace(/\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000/g, "&nbsp;")
                 .replace(/\t/g, this.$tabString);
-            // TODO: proper space matching!
 
             if (token.type !== "text") {
                 stringBuilder.push("<span class='", token.type, "'>", output, "</span>");
