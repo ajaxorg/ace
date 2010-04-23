@@ -40,8 +40,9 @@ ace.Document = function(text, mode) {
     this.getTabString = function() {
         if (this.getUseSoftTabs()) {
             return new Array(this.getTabSize()+1).join(" ");
+        } else {
+            return "\t";
         }
-        return "\t";
     };
 
     this.$useSoftTabs = false;

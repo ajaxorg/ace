@@ -280,9 +280,8 @@ ace.Editor = function(renderer, doc) {
     this.onTextInput = function(text) {
         var cursor = this.getCursorPosition();
 
-        if (this.doc.getUseSoftTabs()) {
-            text = text.replace(/\t/g, this.doc.getTabString());
-        }
+        text = text.replace("\t", this.doc.getTabString());
+        console.log(this.doc.getTabString().length);
 
         if (!this.selection.isEmpty()) {
             var end = this.doc.replace(this.getSelectionRange(), text);
