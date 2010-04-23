@@ -53,26 +53,25 @@ ace.TextInput = function(parentNode, host) {
         text.select();
     };
 
-    ace.addListener(text, "keypress", onTextInput, false);
-    ace.addListener(text, "textInput", onTextInput, false);
-    ace.addListener(text, "paste", onTextInput, false);
-    ace.addListener(text, "propertychange", onTextInput, false);
+    ace.addListener(text, "keypress", onTextInput);
+    ace.addListener(text, "textInput", onTextInput);
+    ace.addListener(text, "paste", onTextInput);
+    ace.addListener(text, "propertychange", onTextInput);
 
-    ace.addListener(text, "copy", onCopy, false);
-    ace.addListener(text, "cut", onCut, false);
+    ace.addListener(text, "copy", onCopy);
+    ace.addListener(text, "cut", onCut);
 
-    ace.addListener(text, "compositionstart", onCompositionStart, false);
-    ace.addListener(text, "compositionupdate", onCompositionUpdate, false);
-    ace.addListener(text, "compositionend", onCompositionEnd, false);
+    ace.addListener(text, "compositionstart", onCompositionStart);
+    ace.addListener(text, "compositionupdate", onCompositionUpdate);
+    ace.addListener(text, "compositionend", onCompositionEnd);
 
     ace.addListener(text, "blur", function() {
         host.onBlur();
-    }, false);
+    });
 
     ace.addListener(text, "focus", function() {
         host.onFocus();
-    }, false);
-
+    });
 
     this.focus = function() {
         text.focus();
