@@ -281,7 +281,6 @@ ace.Editor = function(renderer, doc) {
         var cursor = this.getCursorPosition();
 
         text = text.replace("\t", this.doc.getTabString());
-        console.log(this.doc.getTabString().length);
 
         if (!this.selection.isEmpty()) {
             var end = this.doc.replace(this.getSelectionRange(), text);
