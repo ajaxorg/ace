@@ -157,27 +157,6 @@ ace.Selection = function(doc) {
         this.$moveSelection(this.moveCursorLineEnd);
     };
 
-    this.selectPageDown = function() {
-        var row = this.getPageDownRow() + Math.floor(this.getVisibleRowCount() / 2);
-
-        this.scrollPageDown();
-
-        this.$moveSelection(function() {
-            this.moveCursorTo(row, this.selectionLead.column);
-        });
-    };
-
-    this.selectPageUp = function() {
-        var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
-        var row = this.getPageUpRow() + Math.round(visibleRows / 2);
-
-        this.scrollPageUp();
-
-        this.$moveSelection(function() {
-            this.moveCursorTo(row, this.selectionLead.column);
-        });
-    };
-
     this.selectFileEnd = function() {
         this.$moveSelection(this.moveCursorFileEnd);
     };

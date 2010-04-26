@@ -547,6 +547,28 @@ ace.Editor = function(renderer, doc) {
         return firstRow - (lastRow - firstRow) + 1;
     };
 
+    this.selectPageDown = function() {
+        var row = this.getPageDownRow() + Math.floor(this.getVisibleRowCount() / 2);
+
+        this.scrollPageDown();
+
+        var selection = this.getSelection();
+        selection.$moveSelection(function() {
+            selection.moveCursorTo(row, selection.getSelectionLead().column);
+        });
+    };
+
+    this.selectPageUp = function() {
+        var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
+        var row = this.getPageUpRow() + Math.round(visibleRows / 2);
+
+        this.scrollPageUp();
+
+        var selection = this.getSelection();
+        selection.$moveSelection(function() {
+            selection.moveCursorTo(row, selection.getSelectionLead().column);
+        });
+    };
 
     this.scrollPageDown = function() {
         this.scrollToRow(this.getPageDownRow());
