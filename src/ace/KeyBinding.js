@@ -2,201 +2,216 @@ ace.provide("ace.KeyBinding");
 
 ace.KeyBinding = function(element, editor) {
 
+    this.editor = editor;
     var keys = this.keys;
 
+    var self = this;
     ace.addKeyListener(element, function(e) {
-        var key = e.keyCode;
-        var selection = editor.getSelection();
+        var key = [];
+        if (e.ctrlKey || e.metaKey) {
+            key.push("Control");
+        }
+        if (e.altKey) {
+            key.push("Alt");
+        }
+        if (e.shiftKey) {
+            key.push("Shift");
+        }
+        key.push(keys[e.keyCode] || String.fromCharCode(e.keyCode));
 
-        switch (key) {
-            case keys.A:
-                if (e.metaKey) {
-                    selection.selectAll();
-                    return ace.stopEvent(e);
-                }
-                break;
-
-            case keys.D:
-                if (e.metaKey) {
-                    editor.removeLines();
-                    return ace.stopEvent(e);
-                }
-                break;
-
-            case keys.L:
-                if (e.metaKey) {
-                    var line = parseInt(prompt("Enter line number:"));
-                    if (!isNaN(line)) {
-                        editor.gotoLine(line);
-                        return ace.stopEvent(e);
-                    }
-                }
-                break;
-
-            case keys["7"]:
-                if (e.metaKey) {
-                    editor.toggleCommentLines();
-                    return ace.stopEvent(e);
-                };
-                break;
-
-            case keys.UP:
-                if (e.altKey && e.metaKey ) {
-                    editor.copyLinesUp();
-                }
-                else if (e.altKey) {
-                    editor.moveLinesUp();
-                }
-                else if (e.metaKey && e.shiftKey) {
-                    selection.selectFileStart();
-                }
-                else if (e.metaKey) {
-                    editor.navigateFileStart();
-                }
-                else if (e.shiftKey) {
-                    selection.selectUp();
-                }
-                else {
-                    editor.navigateUp();
-                }
-                return ace.stopEvent(e);
-
-            case keys.DOWN:
-                if (e.altKey && e.metaKey ) {
-                    editor.copyLinesDown();
-                }
-                else if (e.altKey) {
-                    editor.moveLinesDown();
-                }
-                else if (e.metaKey && e.shiftKey) {
-                    selection.selectFileEnd();
-                }
-                else if (e.metaKey) {
-                    editor.navigateFileEnd();
-                }
-                else if (e.shiftKey) {
-                    selection.selectDown();
-                }
-                else {
-                    editor.navigateDown();
-                }
-                return ace.stopEvent(e);
-
-            case keys.LEFT:
-                if (e.altKey && e.shiftKey) {
-                    selection.selectWordLeft();
-                }
-                else if (e.altKey) {
-                    editor.navigateWordLeft();
-                }
-                else if (e.metaKey && e.shiftKey) {
-                    selection.selectLineStart();
-                }
-                else if (e.metaKey) {
-                    editor.navigateLineStart();
-                }
-                else if (e.shiftKey) {
-                    selection.selectLeft();
-                }
-                else {
-                    editor.navigateLeft();
-                }
-                return ace.stopEvent(e);
-
-            case keys.RIGHT:
-                if (e.altKey && e.shiftKey) {
-                    selection.selectWordRight();
-                }
-                else if (e.altKey) {
-                    editor.navigateWordRight();
-                }
-                else if (e.metaKey && e.shiftKey) {
-                    selection.selectLineEnd();
-                }
-                else if (e.metaKey) {
-                    editor.navigateLineEnd();
-                }
-                else if (e.shiftKey) {
-                    selection.selectRight();
-                }
-                else {
-                    editor.navigateRight();
-                }
-                return ace.stopEvent(e);
-
-            case keys.PAGEDOWN:
-                if (e.shiftKey) {
-                    selection.selectPageDown();
-                }
-                else {
-                    editor.scrollPageDown();
-                }
-                return ace.stopEvent(e);
-
-            case keys.PAGEUP:
-                if (e.shiftKey) {
-                    selection.selectPageUp();
-                }
-                else {
-                    editor.scrollPageUp();
-                }
-                return ace.stopEvent(e);
-
-            case keys.POS1:
-                if (e.shiftKey) {
-                    selection.selectLineStart();
-                }
-                else {
-                    editor.navigateLineStart();
-                }
-                return ace.stopEvent(e);
-
-            case keys.END:
-                if (e.shiftKey) {
-                    selection.selectLineEnd();
-                }
-                else {
-                    editor.navigateLineEnd();
-                }
-                return ace.stopEvent(e);
-
-            case keys.DELETE:
-                editor.removeRight();
-                return ace.stopEvent(e);
-
-            case keys.BACKSPACE:
-                editor.removeLeft();
-                return ace.stopEvent(e);
-
-            case keys.TAB:
-                if (e.shiftKey) {
-                    editor.blockOutdent();
-                } else if (selection.isMultiLine()) {
-                    editor.blockIndent();
-                } else {
-                    editor.onTextInput("\t");
-                }
-                return ace.stopEvent(e);
+        var command = self[key.join("-")];
+        if (command) {
+            self.selection = editor.getSelection();
+            command.call(self);
+            return ace.stopEvent(e);
         }
     });
 };
 
 (function() {
     this.keys = {
-        UP : 38,
-        RIGHT : 39,
-        DOWN : 40,
-        LEFT : 37,
-        PAGEUP : 33,
-        PAGEDOWN : 34,
-        POS1 : 36,
-        END : 35,
-        DELETE : 46,
-        BACKSPACE : 8,
-        TAB : 9,
-        A : 65,
-        D: 68,
-        L: 76,
-        "7": 55
+        8: "Backspace",
+        9: "Tab",
+        16: "Shift",
+        17: "Control",
+        18: "Alt",
+        33: "PageUp",
+        34: "PageDown",
+        35: "End",
+        36: "Home",
+        37: "Left",
+        38: "Up",
+        39: "Right",
+        40: "Down",
+        46: "Delete",
+        91: "Meta"
     };
+
+    this["Control-A"] = function() {
+        this.selection.selectAll();
+    };
+
+    this["Control-D"] = function() {
+        this.editor.removeLines();
+    };
+
+    this["Control-L"] = function() {
+        var line = parseInt(prompt("Enter line number:"));
+        if (!isNaN(line)) {
+            this.editor.gotoLine(line);
+        }
+    };
+
+    this["Control-7"] = function() {
+        this.editor.toggleCommentLines();
+    };
+
+    this["Control-Alt-Up"] = function() {
+        this.editor.copyLinesUp();
+    };
+
+    this["Alt-Up"] = function() {
+        this.editor.moveLinesUp();
+    };
+
+    this["Control-Shift-Up"] = function() {
+        this.selection.selectFileStart();
+    };
+
+    this["Control-Up"] = function() {
+        this.editor.navigateFileStart();
+    };
+
+    this["Shift-Up"] = function() {
+        this.selection.selectUp();
+    };
+
+    this["Up"] = function() {
+        this.editor.navigateUp();
+    };
+
+    this["Control-Alt-Down"] = function() {
+        this.editor.copyLinesDown();
+    };
+
+    this["Alt-Down"] = function() {
+        this.editor.moveLinesDown();
+    };
+
+    this["Control-Shift-Down"] = function() {
+        this.selection.selectFileEnd();
+    };
+
+    this["Control-Down"] = function() {
+        this.editor.navigateFileEnd();
+    };
+
+    this["Shift-Down"] = function() {
+        this.selection.selectDown();
+    };
+
+    this["Down"] = function() {
+        this.editor.navigateDown();
+    };
+
+    this["Alt-Shift-Left"] = function() {
+        this.selection.selectWordLeft();
+    };
+
+    this["Alt-Left"] = function() {
+        this.editor.navigateWordLeft();
+    };
+
+    this["Control-Shift-Left"] = function() {
+        this.selection.selectLineStart();
+    };
+
+    this["Control-Left"] = function() {
+        this.editor.navigateLineStart();
+    };
+
+    this["Shift-Left"] = function() {
+        this.selection.selectLeft();
+    };
+
+    this["Left"] = function() {
+        this.editor.navigateLeft();
+    };
+
+    this["Alt-Shift-Right"] = function() {
+        this.selection.selectWordRight();
+    };
+
+    this["Alt-Right"] = function() {
+        this.editor.navigateWordRight();
+    };
+
+    this["Control-Shift-Right"] = function() {
+        this.selection.selectLineEnd();
+    };
+
+    this["Control-Right"] = function() {
+        this.editor.navigateLineEnd();
+    };
+
+    this["Shift-Right"] = function() {
+        this.selection.selectRight();
+    };
+
+    this["Right"] = function() {
+        this.editor.navigateRight();
+    };
+
+    this["Shift-PageDown"] = function() {
+        this.editor.selectPageDown();
+    };
+
+    this["PageDown"] = function() {
+        this.editor.scrollPageDown();
+    };
+
+    this["Shift-PageUp"] = function() {
+        this.editor.selectPageUp();
+    };
+
+    this["PageUp"] = function() {
+        this.editor.scrollPageUp();
+    };
+
+    this["Shift-Home"] = function() {
+        this.selection.selectLineStart();
+    };
+
+    this["Home"] = function() {
+        this.editor.navigateLineStart();
+    };
+
+    this["Shift-End"] = function() {
+        this.selection.selectLineEnd();
+    };
+
+    this["End"] = function() {
+        this.editor.navigateLineEnd();
+    };
+
+    this["Delete"] = function() {
+        this.editor.removeRight();
+    };
+
+    this["Backspace"] = function() {
+        this.editor.removeLeft();
+    };
+
+    this["Shift-Tab"] = function() {
+        this.editor.blockOutdent();
+    };
+
+    this["Tab"] = function() {
+        if (this.selection.isMultiLine()) {
+            this.editor.blockIndent();
+        } else {
+            this.editor.onTextInput("\t");
+        }
+    };
+
 }).call(ace.KeyBinding.prototype);
