@@ -1,6 +1,6 @@
-ace.provide("ace.Range");
+require.def("ace/Range", function() {
 
-ace.Range = function(startRow, startColumn, endRow, endColumn) {
+var Range = function(startRow, startColumn, endRow, endColumn) {
     this.start = {
         row: startRow,
         column: startColumn
@@ -73,7 +73,7 @@ ace.Range = function(startRow, startColumn, endRow, endColumn) {
                 column: 0
             };
         }
-        return ace.Range.fromPoints(start || this.start, end || this.end);
+        return Range.fromPoints(start || this.start, end || this.end);
     };
 
     this.extend = function(row, column) {
@@ -86,7 +86,7 @@ ace.Range = function(startRow, startColumn, endRow, endColumn) {
         else
             var end = {row: row, column: column};
 
-        return ace.Range.fromPoints(start || this.start, end || this.end);
+        return Range.fromPoints(start || this.start, end || this.end);
     };
 
     this.isEmpty = function() {
@@ -98,19 +98,22 @@ ace.Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     this.clone = function() {
-        return ace.Range.fromPoints(this.start, this.end);
+        return Range.fromPoints(this.start, this.end);
     };
 
     this.toScreenRange = function(doc) {
-        return new ace.Range(
+        return new Range(
             this.start.row, doc.documentToScreenColumn(this.start.row, this.start.column),
             this.end.row, doc.documentToScreenColumn(this.end.row, this.end.column)
         );
     };
 
-}).call(ace.Range.prototype);
+}).call(Range.prototype);
 
 
-ace.Range.fromPoints = function(start, end) {
-    return new ace.Range(start.row, start.column, end.row, end.column);
+Range.fromPoints = function(start, end) {
+    return new Range(start.row, start.column, end.row, end.column);
 };
+
+return Range;
+})

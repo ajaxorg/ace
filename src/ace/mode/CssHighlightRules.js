@@ -1,6 +1,10 @@
-ace.provide("ace.mode.CssHighlightRules");
+require.def("ace/mode/CssHighlightRules",
+     [
+         "ace/ace",
+         "ace/mode/TextHighlightRules"
+     ], function(ace, TextHighlightRules) {
 
-ace.mode.CssHighlightRules = function() {
+var CssHighlightRules = function() {
 
     var properties = ace.arrayToMap(
         ("azimuth|background-attachment|background-color|background-image|" +
@@ -178,4 +182,7 @@ ace.mode.CssHighlightRules = function() {
     };
 };
 
-ace.inherits(ace.mode.CssHighlightRules, ace.mode.TextHighlightRules);
+ace.inherits(CssHighlightRules, TextHighlightRules);
+
+return CssHighlightRules;
+});

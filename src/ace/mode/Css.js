@@ -1,10 +1,17 @@
-ace.provide("ace.mode.Css");
+require.def("ace/mode/Css",
+    [
+        "ace/ace",
+        "ace/mode/Text",
+        "ace/Tokenizer",
+        "ace/mode/CssHighlightRules",
+        "ace/mode/MatchingBraceOutdent"
+    ], function(ace, TextMode, Tokenizer, CssHighlightRules, MatchingBraceOutdent) {
 
-ace.mode.Css = function() {
-    this.$tokenizer = new ace.Tokenizer(new ace.mode.CssHighlightRules().getRules());
-    this.$outdent = new ace.mode.MatchingBraceOutdent();
+var Css = function() {
+    this.$tokenizer = new Tokenizer(new CssHighlightRules().getRules());
+    this.$outdent = new MatchingBraceOutdent();
 };
-ace.inherits(ace.mode.Css, ace.mode.Text);
+ace.inherits(Css, TextMode);
 
 (function() {
 
@@ -33,4 +40,7 @@ ace.inherits(ace.mode.Css, ace.mode.Text);
         return this.$outdent.autoOutdent(doc, row);
     };
 
-}).call(ace.mode.Css.prototype);
+}).call(Css.prototype);
+
+return Css;
+});

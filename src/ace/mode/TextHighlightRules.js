@@ -1,6 +1,6 @@
-ace.provide("ace.mode.TextHighlightRules");
+require.def("ace/mode/TextHighlightRules", [], function() {
 
-ace.mode.TextHighlightRules = function() {
+var TextHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
@@ -34,4 +34,7 @@ ace.mode.TextHighlightRules = function() {
         return this.$rules;
     };
 
-}).call(ace.mode.TextHighlightRules.prototype);
+}).call(TextHighlightRules.prototype);
+
+return TextHighlightRules;
+});

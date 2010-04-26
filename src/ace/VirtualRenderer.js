@@ -1,6 +1,14 @@
-ace.provide("ace.VirtualRenderer");
+require.def("ace/VirtualRenderer",
+    [
+         "ace/ace",
+         "ace/layer/Gutter",
+         "ace/layer/Marker",
+         "ace/layer/Text",
+         "ace/layer/Cursor",
+         "ace/ScrollBar"
+    ], function(ace, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar) {
 
-ace.VirtualRenderer = function(container) {
+var VirtualRenderer = function(container) {
     this.container = container;
     ace.addCssClass(this.container, "ace_editor");
 
@@ -16,20 +24,20 @@ ace.VirtualRenderer = function(container) {
     this.content.style.position = "absolute";
     this.scroller.appendChild(this.content);
 
-    this.$gutterLayer = new ace.layer.Gutter(this.$gutter);
-    this.$markerLayer = new ace.layer.Marker(this.content);
+    this.$gutterLayer = new GutterLayer(this.$gutter);
+    this.$markerLayer = new MarkerLayer(this.content);
 
-    var textLayer = this.$textLayer = new ace.layer.Text(this.content);
+    var textLayer = this.$textLayer = new TextLayer(this.content);
     this.canvas = textLayer.element;
 
     this.characterWidth = textLayer.getCharacterWidth();
     this.lineHeight = textLayer.getLineHeight();
 
-    this.$cursorLayer = new ace.layer.Cursor(this.content);
+    this.$cursorLayer = new CursorLayer(this.content);
 
     this.layers = [ this.$markerLayer, textLayer, this.$cursorLayer ];
 
-    this.scrollBar = new ace.ScrollBar(container);
+    this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", ace.bind(this.onScroll, this));
 
     this.scrollTop = 0;
@@ -335,4 +343,7 @@ ace.VirtualRenderer = function(container) {
     this.hideComposition = function() {
     };
 
-}).call(ace.VirtualRenderer.prototype);
+}).call(VirtualRenderer.prototype);
+
+return VirtualRenderer;
+});

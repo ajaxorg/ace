@@ -1,6 +1,6 @@
-ace.provide("ace.layer.Text");
+require.def("ace/layer/Text", ["ace/ace", "ace/MEventEmitter"], function(ace, MEventEmitter) {
 
-ace.layer.Text = function(parentEl) {
+var Text = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_text-layer";
     parentEl.appendChild(this.element);
@@ -11,7 +11,7 @@ ace.layer.Text = function(parentEl) {
 
 (function() {
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.EOF_CHAR = "&para;";
     this.EOL_CHAR = "&not;";
@@ -180,4 +180,7 @@ ace.layer.Text = function(parentEl) {
         }
     };
 
-}).call(ace.layer.Text.prototype);
+}).call(Text.prototype);
+
+return Text;
+});

@@ -1,6 +1,6 @@
-ace.provide("ace.UndoManager");
+require.def("ace/UndoManager", function() {
 
-ace.UndoManager = function() {
+var UndoManager = function() {
     this.$undoStack = [];
     this.$redoStack = [];
 };
@@ -32,4 +32,7 @@ ace.UndoManager = function() {
         }
     };
 
-}).call(ace.UndoManager.prototype);
+}).call(UndoManager.prototype);
+
+return UndoManager;
+});

@@ -1,10 +1,17 @@
-ace.provide("ace.Document");
+require.def("ace/Document",
+    [
+        "ace/ace",
+        "ace/MEventEmitter",
+        "ace/Selection",
+        "ace/mode/Text",
+        "ace/Range"
+    ], function(ace, MEventEmitter, Selection, TextMode, Range) {
 
-ace.Document = function(text, mode) {
+var Document = function(text, mode) {
     this.modified = true;
     this.lines = [];
-    this.selection = new ace.Selection(this);
-    this.$breakpoints = [];
+    this.selection = new Selection(this);
+    this.$breakpoints = [];    
 
     this.listeners = [];
     if (mode) {
@@ -20,7 +27,7 @@ ace.Document = function(text, mode) {
 
 (function() {
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.$undoManager = null;
 
@@ -182,7 +189,7 @@ ace.Document = function(text, mode) {
 
     this.getMode = function() {
         if (!this.$mode) {
-            this.$mode = new ace.mode.Text();
+            this.$mode = new TextMode();
         }
         return this.$mode;
     };
@@ -370,7 +377,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 action: "insertText",
-                range: new ace.Range(row, 0, row + lines.length, 0),
+                range: new Range(row, 0, row + lines.length, 0),
                 text: lines.join(nl) + nl
             });
             this.$informUndoManager.schedule();
@@ -430,7 +437,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 action: "insertText",
-                range: ace.Range.fromPoints(position, end),
+                range: Range.fromPoints(position, end),
                 text: text
             });
             this.$informUndoManager.schedule();
@@ -546,7 +553,7 @@ ace.Document = function(text, mode) {
             }
         }
 
-        var deleteRange = new ace.Range(0, 0, 0, outdentLength);
+        var deleteRange = new Range(0, 0, 0, outdentLength);
 
         for (var i=range.start.row; i<= range.end.row; i++)
         {
@@ -643,4 +650,7 @@ ace.Document = function(text, mode) {
         return docColumn;
     };
 
-}).call(ace.Document.prototype);
+}).call(Document.prototype);
+
+return Document;
+});

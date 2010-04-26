@@ -1,0 +1,97 @@
+.editor {
+  border: 2px solid rgb(159, 159, 159);
+}
+
+.editor.focus {
+  border: 2px solid #327fbd;;
+}
+
+.gutter {
+  width: 40px;
+  background: rgb(227, 227, 227);
+  border-right: 1px solid rgb(159, 159, 159);	 
+  color: rgb(136, 136, 136);
+  font-family: Monaco, "Courier New";
+  font-size: 11px;  
+}
+
+.gutter-layer {
+  right: 10px;
+  text-align: right;
+}
+
+.text-layer {
+  font-family: Monaco, "Courier New", monospace;
+  font-size: 11px;
+  cursor: text;
+}
+
+.cursor {
+  width: 1px;
+  background: black;
+}
+
+.line .keyword {
+  color: rgb(127, 0, 85);
+}
+
+.line .buildin-constant {
+  color: rgb(88, 72, 246);
+}
+
+.line .library-constant {
+  color: rgb(6, 150, 14);
+}
+
+.line .buildin-function {
+  color: rgb(60, 76, 114);
+}
+
+.line .string {
+  color: rgb(42, 0, 255);
+}
+
+.line .comment {
+  color: rgb(63, 127, 95);
+}
+
+.line .doc-comment {
+  color: rgb(63, 95, 191);
+}
+
+.line .doc-comment-tag {
+  color: rgb(127, 159, 191);
+}
+
+.line .number {
+}
+
+.line .tag {
+	color: rgb(63, 127, 127);
+}
+
+.line .attribute {
+	color: rbg(127, 0, 127);
+}
+
+.line .attribute-value {
+	font-style: italic;
+	color: rbg(42, 0, 255);
+}
+
+.line .xml_pe {
+  color: rgb(104, 104, 91);
+}
+
+.marker-layer .selection {
+  background: rgb(181, 213, 255);
+}
+
+.marker-layer .bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid rgb(192, 192, 192);
+}
+
+.marker-layer .active_line {
+  background: rgb(232, 242, 254);
+}

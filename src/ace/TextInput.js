@@ -1,6 +1,6 @@
-ace.provide("ace.TextInput");
+require.def("ace/TextInput", ["ace/ace"], function(ace) {
 
-ace.TextInput = function(parentNode, host) {
+var TextInput = function(parentNode, host) {
 
     var text = document.createElement("textarea");
     var style = text.style;
@@ -81,3 +81,6 @@ ace.TextInput = function(parentNode, host) {
         text.blur();
     };
 };
+
+return TextInput;
+});

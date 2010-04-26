@@ -1,6 +1,12 @@
-ace.provide("ace.mode.HtmlHighlightRules");
+require.def("ace/mode/HtmlHighlightRules",
+    [
+        "ace/ace",
+        "ace/mode/CssHighlightRules",
+        "ace/mode/JavaScriptHighlightRules",
+        "ace/mode/TextHighlightRules"
+    ], function(ace, CssHighlightRules, JavaScriptHighlightRules, TextHighlightRules) {
 
-ace.mode.HtmlHighlightRules = function() {
+var HtmlHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
@@ -113,7 +119,7 @@ ace.mode.HtmlHighlightRules = function() {
         } ]
     };
 
-    var jsRules = new ace.mode.JavaScriptHighlightRules().getRules();
+    var jsRules = new JavaScriptHighlightRules().getRules();
     this.addRules(jsRules, "js-");
     this.$rules["js-start"].unshift({
         token: "text",
@@ -121,7 +127,7 @@ ace.mode.HtmlHighlightRules = function() {
         next: "tag"
     });
 
-    var cssRules = new ace.mode.CssHighlightRules().getRules();
+    var cssRules = new CssHighlightRules().getRules();
     this.addRules(cssRules, "css-");
     this.$rules["css-start"].unshift({
         token: "text",
@@ -129,4 +135,8 @@ ace.mode.HtmlHighlightRules = function() {
         next: "tag"
     });
 };
-ace.inherits(ace.mode.HtmlHighlightRules, ace.mode.TextHighlightRules);
+
+ace.inherits(HtmlHighlightRules, TextHighlightRules);
+
+return HtmlHighlightRules;
+});

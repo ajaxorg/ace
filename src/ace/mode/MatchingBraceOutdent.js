@@ -1,6 +1,6 @@
-ace.provide("ace.mode.MatchingBraceOutdent");
+require.def("ace/mode/MatchingBraceOutdent", [], function() {
 
-ace.mode.MatchingBraceOutdent = function() {};
+var MatchingBraceOutdent = function() {};
 
 (function() {
 
@@ -37,4 +37,7 @@ ace.mode.MatchingBraceOutdent = function() {};
         return "";
     };
 
-}).call(ace.mode.MatchingBraceOutdent.prototype);
+}).call(MatchingBraceOutdent.prototype);
+
+return MatchingBraceOutdent;
+});

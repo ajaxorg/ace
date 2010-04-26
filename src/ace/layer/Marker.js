@@ -1,6 +1,6 @@
-ace.provide("ace.layer.Marker");
+require.def("ace/layer/Marker", [], function() {
 
-ace.layer.Marker = function(parentEl) {
+var Marker = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_marker-layer";
     parentEl.appendChild(this.element);
@@ -142,4 +142,7 @@ ace.layer.Marker = function(parentEl) {
         );
     };
 
-}).call(ace.layer.Marker.prototype);
+}).call(Marker.prototype);
+
+return Marker;
+});

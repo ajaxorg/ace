@@ -1,6 +1,6 @@
-ace.provide("ace.Tokenizer");
+require.def("ace/Tokenizer", [], function() {
 
-ace.Tokenizer = function(rules) {
+var Tokenizer = function(rules) {
     this.rules = rules;
 
     this.regExps = {};
@@ -89,4 +89,7 @@ ace.Tokenizer = function(rules) {
         };
     };
 
-}).call(ace.Tokenizer.prototype);
+}).call(Tokenizer.prototype);
+
+return Tokenizer;
+});

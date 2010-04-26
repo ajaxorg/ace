@@ -1,7 +1,6 @@
-ace.provide("ace.KeyBinding");
+require.def("ace/KeyBinding", ["ace/ace"], function(ace) {
 
-ace.KeyBinding = function(element, editor, config) {
-
+var KeyBinding = function(element, editor, config) {
     this.editor = editor;
     this.setConfig(config);
     var keys = this.keys;
@@ -211,4 +210,7 @@ ace.KeyBinding = function(element, editor, config) {
         }
     };
 
-}).call(ace.KeyBinding.prototype);
+}).call(KeyBinding.prototype);
+
+return KeyBinding;
+});

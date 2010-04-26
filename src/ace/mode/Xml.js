@@ -1,9 +1,16 @@
-ace.provide("ace.mode.Xml");
+require.def("ace/mode/Xml",
+    [
+        "ace/ace",
+        "ace/mode/Text",
+        "ace/Tokenizer",
+        "ace/mode/XmlHighlightRules"
+    ], function(ace, TextMode, Tokenizer, XmlHighlightRules) {
 
-ace.mode.Xml = function() {
-    this.$tokenizer = new ace.Tokenizer(new ace.mode.XmlHighlightRules().getRules());
+var Xml = function() {
+    this.$tokenizer = new Tokenizer(new XmlHighlightRules().getRules());
 };
-ace.inherits(ace.mode.Xml, ace.mode.Text);
+
+ace.inherits(Xml, TextMode);
 
 (function() {
 
@@ -11,4 +18,7 @@ ace.inherits(ace.mode.Xml, ace.mode.Text);
         return this.$getIndent(line);
     };
 
-}).call(ace.mode.Xml.prototype);
+}).call(Xml.prototype);
+
+return Xml;
+});

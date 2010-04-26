@@ -1,6 +1,10 @@
-ace.provide("ace.mode.XmlHighlightRules");
+require.def("ace/mode/XmlHighlightRules",
+    [
+        "ace/ace",
+        "ace/mode/TextHighlightRules"
+    ], function(ace, TextHighlightRules) {
 
-ace.mode.XmlHighlightRules = function() {
+var XmlHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
@@ -69,4 +73,8 @@ ace.mode.XmlHighlightRules = function() {
         } ]
     };
 };
-ace.inherits(ace.mode.XmlHighlightRules, ace.mode.TextHighlightRules);
+
+ace.inherits(XmlHighlightRules, TextHighlightRules);
+
+return XmlHighlightRules;
+});

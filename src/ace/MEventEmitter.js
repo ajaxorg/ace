@@ -1,8 +1,8 @@
-ace.provide("ace.MEventEmitter");
+require.def("ace/MEventEmitter", ["ace/ace"], function(ace) {
 
-ace.MEventEmitter = function() {
+    var MEventEmitter = {}
 
-    this.$dispatchEvent = function(eventName, e) {
+    MEventEmitter.$dispatchEvent = function(eventName, e) {
         this.$eventRegistry = this.$eventRegistry || {};
 
         var listeners = this.$eventRegistry[eventName];
@@ -16,7 +16,7 @@ ace.MEventEmitter = function() {
         }
     };
 
-    this.addEventListener = function(eventName, callback) {
+    MEventEmitter.addEventListener = function(eventName, callback) {
         this.$eventRegistry = this.$eventRegistry || {};
 
         var listeners = this.$eventRegistry[eventName];
@@ -28,7 +28,7 @@ ace.MEventEmitter = function() {
         }
     };
 
-    this.removeEventListener = function(eventName, callback) {
+    MEventEmitter.removeEventListener = function(eventName, callback) {
         this.$eventRegistry = this.$eventRegistry || {};
 
         var listeners = this.$eventRegistry[eventName];
@@ -40,4 +40,6 @@ ace.MEventEmitter = function() {
             listeners.splice(index, 1);
         }
     };
-};
+
+    return MEventEmitter;
+});

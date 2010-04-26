@@ -1,8 +1,14 @@
-ace.provide("ace.mode.JavaScriptHighlightRules");
+require.def("ace/mode/JavaScriptHighlightRules",
+     [
+         "ace/ace",
+         "ace/mode/DocCommentHighlightRules",
+         "ace/mode/TextHighlightRules"
+     ], function(ace, DocCommentHighlightRules, TextHighlightRules) {
 
-ace.mode.JavaScriptHighlightRules = function() {
 
-    var docComment = new ace.mode.DocCommentHighlightRules();
+JavaScriptHighlightRules = function() {
+
+    var docComment = new DocCommentHighlightRules();
 
     var keywords = {
         "break" : 1,
@@ -32,6 +38,7 @@ ace.mode.JavaScriptHighlightRules = function() {
 
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
+
     this.$rules = {
         "start" : [ {
             token : "comment",
@@ -111,4 +118,8 @@ ace.mode.JavaScriptHighlightRules = function() {
     this.addRules(docComment.getRules(), "doc-");
     this.$rules["doc-start"][0].next = "start";
 };
-ace.inherits(ace.mode.JavaScriptHighlightRules, ace.mode.TextHighlightRules);
+
+ace.inherits(JavaScriptHighlightRules, TextHighlightRules);
+
+return JavaScriptHighlightRules;
+});

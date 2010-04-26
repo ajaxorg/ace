@@ -1,16 +1,18 @@
-(function() {
+require.def("ace/lib/lang", function() {
 
-    this.stringReverse = function(string) {
+    var lang = {};
+    
+    lang.stringReverse = function(string) {
         return string.split("").reverse().join("");
     };
 
     if (Array.prototype.indexOf) {
-        this.arrayIndexOf = function(array, searchElement) {
+        lang.arrayIndexOf = function(array, searchElement) {
             return array.indexOf(searchElement);
         };
     }
     else {
-        this.arrayIndexOf = function(array, searchElement) {
+        lang.arrayIndexOf = function(array, searchElement) {
             for (var i=0; i<array.length; i++) {
                 if (array[i] == searchElement) {
                     return i;
@@ -20,11 +22,11 @@
         };
     }
 
-    this.isArray = function(value) {
+    lang.isArray = function(value) {
         return Object.prototype.toString.call(value) == "[object Array]";
     };
 
-    this.copyObject = function(obj) {
+    lang.copyObject = function(obj) {
         var copy = {};
         for (var key in obj) {
             copy[key] = obj[key];
@@ -62,13 +64,13 @@
         return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
     };
 
-    this.bind = function(fcn, context) {
+    lang.bind = function(fcn, context) {
         return function() {
             return fcn.apply(context, arguments);
         };
     };
 
-    this.deferredCall = function(fcn) {
+    lang.deferredCall = function(fcn) {
 
         var timer = null;
         var callback = function() {
@@ -84,7 +86,7 @@
           },
 
           call: function() {
-              this.cancel();
+              lang.cancel();
               fcn();
           },
 
@@ -95,4 +97,5 @@
       };
     };
 
-}).call(ace);
+    return lang;
+});

@@ -1,6 +1,6 @@
-ace.provide("ace.layer.Cursor");
+require.def("ace/layer/Cursor", ["ace/ace"], function(ace) {
 
-ace.layer.Cursor = function(parentEl) {
+var Cursor = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_cursor-layer";
     parentEl.appendChild(this.element);
@@ -92,4 +92,7 @@ ace.layer.Cursor = function(parentEl) {
         this.restartTimer();
     };
 
-}).call(ace.layer.Cursor.prototype);
+}).call(Cursor.prototype);
+
+return Cursor;
+});
