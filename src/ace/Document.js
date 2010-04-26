@@ -381,7 +381,7 @@ ace.Document = function(text, mode) {
         this.$insertLines(firstRow, lines);
 
         var addedRows = lastRow - firstRow + 1;
-        this.fireChangeEvent(firstRow, lastRow+addedRows);
+        this.fireChangeEvent(firstRow);
 
         return addedRows;
     };
