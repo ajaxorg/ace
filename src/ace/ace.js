@@ -273,3 +273,21 @@ ace.addTripleClickListener = function(el, callback) {
         }, 300);
     });
 };
+
+ace.addKeyListener = function(el, callback) {
+  var lastDown = null;
+
+  ace.addListener(el, "keydown", function(e) {
+      lastDown = e.keyCode;
+      return callback(e);
+  });
+
+  ace.addListener(el, "keypress", function(e) {
+      var keyId = e.keyCode;
+      if (lastDown !== keyId) {
+          return callback(e);
+      } else {
+          lastDown = null;
+      }
+  });
+};

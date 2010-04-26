@@ -4,7 +4,7 @@ ace.KeyBinding = function(element, editor) {
 
     var keys = this.keys;
 
-    ace.addListener(element, "keydown", function(e) {
+    ace.addKeyListener(element, function(e) {
         var key = e.keyCode;
         var selection = editor.getSelection();
 
