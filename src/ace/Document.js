@@ -3,7 +3,7 @@ ace.provide("ace.Document");
 ace.Document = function(text, mode) {
     this.$initEvents();
 
-    this.lines = this.$split(text);
+    this.lines = [];
     this.modified = true;
     this.selection = new ace.Selection(this);
 
@@ -11,6 +11,8 @@ ace.Document = function(text, mode) {
     if (mode) {
         this.setMode(mode);
     }
+
+    this.insert({row: 0, column: 0}, text);
 };
 
 (function() {
@@ -22,7 +24,7 @@ ace.Document = function(text, mode) {
     };
 
     this.toString = function() {
-        return this.lines.join("\n");
+        return this.lines.join(this.$getNewLineCharacter());
     };
 
     this.getSelection = function() {
@@ -66,6 +68,41 @@ ace.Document = function(text, mode) {
 
     this.getTabSize = function() {
         return this.$tabSize;
+    };
+
+    this.$detectNewLine = function(text) {
+        var match = text.match(/^.*?(\r?\n)/m);
+        console.log(match);
+        if (match) {
+            this.$autoNewLine = match[1];
+        } else {
+            this.$autoNewLine = "\n";
+        }
+    };
+
+    this.$getNewLineCharacter = function() {
+      switch (this.$newLineMode) {
+          case "windows":
+              return "\r\n";
+
+          case "unix":
+              return "\n";
+
+          case "auto":
+              return this.$autoNewLine;
+      }
+    },
+
+    this.$autoNewLine = "\n";
+    this.$newLineMode = "auto";
+    this.setNewLineMode = function(newLineMode) {
+        if (this.$newLineMode === newLineMode) return;
+
+        this.$newLineMode = newLineMode;
+    };
+
+    this.getNewLineMode = function() {
+        return this.$newLineMode;
     };
 
     this.$mode = null;
@@ -127,7 +164,7 @@ ace.Document = function(text, mode) {
             lines.push(this.lines[range.start.row].substring(range.start.column));
             lines.push.apply(lines, this.getLines(range.start.row+1, range.end.row-1));
             lines.push(this.lines[range.end.row].substring(0, range.end.column));
-            return lines.join("\n");
+            return lines.join(this.$getNewLineCharacter());
         }
     };
 
@@ -242,6 +279,9 @@ ace.Document = function(text, mode) {
 
     this.$insert = function(position, text) {
         this.modified = true;
+        if (this.lines.length <= 1) {
+            this.$detectNewLine(text);
+        }
 
         var newLines = this.$split(text);
 

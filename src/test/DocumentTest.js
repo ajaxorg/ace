@@ -84,5 +84,44 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
 
         doc.duplicateLines(0, 0);
         assertEquals(["1", "1", "2", "3"].join("\n"), doc.toString());
+    },
+
+    "test: should handle unix style new lines" : function() {
+        var doc = new ace.Document(["1", "2", "3"].join("\n"));
+        assertEquals(["1", "2", "3"].join("\n"), doc.toString());
+    },
+
+    "test: should handle windows style new lines" : function() {
+        var doc = new ace.Document(["1", "2", "3"].join("\r\n"));
+        doc.setNewLineMode("unix");
+        assertEquals(["1", "2", "3"].join("\n"), doc.toString());
+    },
+
+    "test: set new line mode to 'windows' should use '\r\n' as new lines": function() {
+        var doc = new ace.Document(["1", "2", "3"].join("\n"));
+        doc.setNewLineMode("windows");
+        assertEquals(["1", "2", "3"].join("\r\n"), doc.toString());
+    },
+
+    "test: set new line mode to 'unix' should use '\n' as new lines": function() {
+        var doc = new ace.Document(["1", "2", "3"].join("\r\n"));
+        doc.setNewLineMode("unix");
+        assertEquals(["1", "2", "3"].join("\n"), doc.toString());
+    },
+
+    "test: set new line mode to 'auto' should use detect the incoming nl type": function() {
+        var doc = new ace.Document(["1", "2", "3"].join("\n"));
+        doc.setNewLineMode("auto");
+        assertEquals(["1", "2", "3"].join("\n"), doc.toString());
+
+        var doc = new ace.Document(["1", "2", "3"].join("\r\n"));
+        doc.setNewLineMode("auto");
+        assertEquals(["1", "2", "3"].join("\r\n"), doc.toString());
+
+        doc.replace({
+            start: {row: 0, column: 0},
+            end: {row: 2, column: 1}
+        }, ["4", "5", "6"].join("\n"));
+        assertEquals(["4", "5", "6"].join("\n"), doc.toString());
     }
 });
