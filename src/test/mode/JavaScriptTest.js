@@ -69,15 +69,15 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: special indent in doc comments" : function() {
-        assertEquals(" * ", this.mode.getNextLineIndent("/**", "doc-comment", " "));
-        assertEquals("   * ", this.mode.getNextLineIndent("  /**", "doc-comment", " "));
-        assertEquals(" * ", this.mode.getNextLineIndent(" *", "doc-comment", " "));
-        assertEquals("    * ", this.mode.getNextLineIndent("    *", "doc-comment", " "));
-        assertEquals("  ", this.mode.getNextLineIndent("  abc", "doc-comment", " "));
+        assertEquals(" * ", this.mode.getNextLineIndent("/**", "doc-start", " "));
+        assertEquals("   * ", this.mode.getNextLineIndent("  /**", "doc-start", " "));
+        assertEquals(" * ", this.mode.getNextLineIndent(" *", "doc-start", " "));
+        assertEquals("    * ", this.mode.getNextLineIndent("    *", "doc-start", " "));
+        assertEquals("  ", this.mode.getNextLineIndent("  abc", "doc-start", " "));
     },
 
     "test: no indent after doc comments" : function() {
-        assertEquals("", this.mode.getNextLineIndent("   */", "doc-comment", "  "));
+        assertEquals("", this.mode.getNextLineIndent("   */", "doc-start", "  "));
     }
 
 //    "test: outdent if first non WS character in line is a closing brace" : function() {

@@ -1,13 +1,7 @@
 ace.provide("ace.mode.Text");
 
 ace.mode.Text = function() {
-    var rules = {
-        "start" : [ {
-            token : "text",
-            regex : ".+"
-        } ]
-    };
-    this.$tokenizer = new ace.Tokenizer(rules);
+    this.$tokenizer = new ace.Tokenizer(new ace.mode.TextHighlightRules().getRules());
 };
 
 (function() {

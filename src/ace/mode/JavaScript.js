@@ -31,7 +31,7 @@ ace.inherits(ace.mode.JavaScript, ace.mode.Text);
             if (match) {
                 indent += tab;
             }
-        } else if (state == "doc-comment") {
+        } else if (state == "doc-start") {
             if (endState == "start") {
                 return "";
             }

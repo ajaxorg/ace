@@ -69,11 +69,4 @@ ace.mode.XmlHighlightRules = function() {
         } ]
     };
 };
-
-(function() {
-
-    this.getRules = function() {
-        return this.$rules;
-    };
-
-}).call(ace.mode.XmlHighlightRules.prototype);
+ace.inherits(ace.mode.XmlHighlightRules, ace.mode.TextHighlightRules);

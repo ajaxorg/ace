@@ -72,7 +72,6 @@ ace.Document = function(text, mode) {
 
     this.$detectNewLine = function(text) {
         var match = text.match(/^.*?(\r?\n)/m);
-        console.log(match);
         if (match) {
             this.$autoNewLine = match[1];
         } else {

@@ -175,10 +175,4 @@ ace.mode.CssHighlightRules = function() {
     };
 };
 
-(function() {
-
-    this.getRules = function() {
-        return this.$rules;
-    };
-
-}).call(ace.mode.CssHighlightRules.prototype);
+ace.inherits(ace.mode.CssHighlightRules, ace.mode.TextHighlightRules);

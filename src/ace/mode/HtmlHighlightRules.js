@@ -114,7 +114,7 @@ ace.mode.HtmlHighlightRules = function() {
     };
 
     var jsRules = new ace.mode.JavaScriptHighlightRules().getRules();
-    this.$addRules(jsRules, "js-");
+    this.addRules(jsRules, "js-");
     this.$rules["js-start"].unshift({
         token: "text",
         regex: "<\\/(?=script)",
@@ -122,31 +122,11 @@ ace.mode.HtmlHighlightRules = function() {
     });
 
     var cssRules = new ace.mode.CssHighlightRules().getRules();
-    this.$addRules(cssRules, "css-");
+    this.addRules(cssRules, "css-");
     this.$rules["css-start"].unshift({
         token: "text",
         regex: "<\\/(?=style)",
         next: "tag"
     });
 };
-
-(function() {
-
-    this.$addRules = function(rules, prefix) {
-        for (var key in rules) {
-            var state = rules[key];
-            for (var i=0; i<state.length; i++) {
-                var rule = state[i];
-                if (rule.next) {
-                    rule.next = prefix + rule.next;
-                }
-            }
-            this.$rules[prefix + key] = state;
-        }
-    };
-
-    this.getRules = function() {
-        return this.$rules;
-    };
-
-}).call(ace.mode.HtmlHighlightRules.prototype);
+ace.inherits(ace.mode.HtmlHighlightRules, ace.mode.TextHighlightRules);

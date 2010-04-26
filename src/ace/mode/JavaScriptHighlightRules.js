@@ -2,6 +2,8 @@ ace.provide("ace.mode.JavaScriptHighlightRules");
 
 ace.mode.JavaScriptHighlightRules = function() {
 
+    var docComment = new ace.mode.DocCommentHighlightRules();
+
     var keywords = {
         "break" : 1,
         "case" : 1,
@@ -30,16 +32,13 @@ ace.mode.JavaScriptHighlightRules = function() {
 
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
-
     this.$rules = {
         "start" : [ {
             token : "comment",
             regex : "\\/\\/.*$"
-        }, {
-            token : "doc-comment", // doc comment
-            regex : "\\/\\*\\*",
-            next : "doc-comment"
-        }, {
+        },
+        docComment.getStartRule("doc-start"),
+        {
             token : "comment", // multi line comment
             regex : "\\/\\*",
             next : "comment"
@@ -83,23 +82,6 @@ ace.mode.JavaScriptHighlightRules = function() {
             token : "text",
             regex : "\\s+"
         } ],
-        "doc-comment" : [ {
-            token : "doc-comment", // closing comment
-            regex : "\\*\\/",
-            next : "start"
-        }, {
-            token : "doc-comment-tag",
-            regex : "@[\\w\\d_]+"
-        }, {
-            token : "doc-comment",
-            regex : "\s+"
-        }, {
-            token : "doc-comment",
-            regex : "[^@\\*]+"
-        }, {
-            token : "doc-comment",
-            regex : "."
-        }],
         "comment" : [ {
             token : "comment", // closing comment
             regex : ".*?\\*\\/",
@@ -125,12 +107,8 @@ ace.mode.JavaScriptHighlightRules = function() {
             regex : '.+'
         } ]
     };
+
+    this.addRules(docComment.getRules(), "doc-");
+    this.$rules["doc-start"][0].next = "start";
 };
-
-(function() {
-
-    this.getRules = function() {
-        return this.$rules;
-    };
-
-}).call(ace.mode.JavaScriptHighlightRules.prototype);
+ace.inherits(ace.mode.JavaScriptHighlightRules, ace.mode.TextHighlightRules);
