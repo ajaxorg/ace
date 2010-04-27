@@ -102,6 +102,11 @@ ace.Selection = function(doc) {
         });
     };
 
+    this.setSelectionRange = function(range) {
+        this.setSelectionAnchor(range.start.row, range.start.column);
+        this.selectTo(range.end.row, range.end.column);
+    };
+
     this.$moveSelection = function(mover) {
         var changed = false;
 

@@ -30,21 +30,21 @@ ace.KeyBinding = function(element, editor) {
 
 (function() {
     this.keys = {
-        8: "Backspace",
-        9: "Tab",
-        16: "Shift",
-        17: "Control",
-        18: "Alt",
-        33: "PageUp",
-        34: "PageDown",
-        35: "End",
-        36: "Home",
-        37: "Left",
-        38: "Up",
-        39: "Right",
-        40: "Down",
-        46: "Delete",
-        91: "Meta"
+        8 : "Backspace",
+        9 : "Tab",
+        16 : "Shift",
+        17 : "Control",
+        18 : "Alt",
+        33 : "PageUp",
+        34 : "PageDown",
+        35 : "End",
+        36 : "Home",
+        37 : "Left",
+        38 : "Up",
+        39 : "Right",
+        40 : "Down",
+        46 : "Delete",
+        91 : "Meta"
     };
 
     this["Control-A"] = function() {
@@ -64,6 +64,19 @@ ace.KeyBinding = function(element, editor) {
 
     this["Control-7"] = function() {
         this.editor.toggleCommentLines();
+    };
+
+    this["Control-K"] = function() {
+        this.editor.findNext();
+    };
+
+    this["Control-Shift-K"] = function() {
+        this.editor.findPrevious();
+    };
+
+    this["Control-F"] = function() {
+        var needle = prompt("Find:");
+        this.editor.find(needle);
     };
 
     this["Control-Alt-Up"] = function() {
@@ -209,7 +222,8 @@ ace.KeyBinding = function(element, editor) {
     this["Tab"] = function() {
         if (this.selection.isMultiLine()) {
             this.editor.blockIndent();
-        } else {
+        }
+        else {
             this.editor.onTextInput("\t");
         }
     };

@@ -21,6 +21,12 @@ ace.inherits = function(ctor, superCtor) {
     ctor.prototype.constructor = ctor;
 };
 
+ace.mixin = function(obj, mixin) {
+    for (var key in mixin) {
+        obj[key] = mixin[key];
+    }
+};
+
 ace.implement = function(proto, mixin) {
     mixin.call(proto);
 };
@@ -173,6 +179,10 @@ else {
 
 ace.isArray = function(value) {
     return Object.prototype.toString.call(value) == "[object Array]";
+};
+
+ace.escapeRegExp = function(str) {
+    return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
 };
 
 ace.bind = function(fcn, context) {

@@ -23,6 +23,10 @@ ace.Editor = function(renderer, doc) {
     this.$highlightLineMarker = null;
     this.$blockScrolling = false;
 
+    this.$search = new ace.Search().set({
+        wrap: true
+    });
+
     this.setDocument(doc || new ace.Document(""));
 };
 
@@ -687,4 +691,33 @@ ace.Editor = function(renderer, doc) {
         this.clearSelection();
         this.selection.moveCursorWordLeft();
     };
+
+    this.find = function(needle) {
+        this.clearSelection();
+        this.$search.set({needle: needle});
+        this.findNext();
+    },
+
+    this.findNext = function() {
+        this.$find(false);
+    };
+
+    this.findPrevious = function() {
+        this.$find(true);
+    };
+
+    this.$find = function(backwards) {
+        if (!this.selection.isEmpty()) {
+            this.$search.set({needle: this.doc.getTextRange(this.getSelectionRange())});
+        }
+
+        this.$search.set({
+            backwards: backwards
+        });
+
+        var range = this.$search.find(this.doc);
+        if (range)
+            this.selection.setSelectionRange(range);
+    };
+
 }).call(ace.Editor.prototype);
