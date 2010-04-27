@@ -10,11 +10,10 @@ ace.layer.Text = function(parentEl) {
 
 (function() {
 
-//    this.EOF_CHAR = "&para;";
     this.EOF_CHAR = "&para;";
     this.EOL_CHAR = "&not;";
-//    this.TAB_CHAR = "&#x2023;";
     this.TAB_CHAR = "&rarr;";
+    this.SPACE_CHAR = "&middot;";
 
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;
@@ -104,13 +103,27 @@ ace.layer.Text = function(parentEl) {
 
     this.renderLine = function(stringBuilder, row) {
         var tokens = this.tokenizer.getTokens(row);
+
+        if (this.$showInvisibles) {
+            var self = this;
+            var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]+/g;
+            var spaceReplace = function(space) {
+                var space = new Array(space.length+1).join(self.SPACE_CHAR);
+                return "<span class='invisible'>" + space + "</span>";
+            };
+        }
+        else {
+            var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/g;
+            var spaceReplace = "&nbsp;";
+        }
+
         for ( var i = 0; i < tokens.length; i++) {
             var token = tokens[i];
 
             var output = token.value
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
-                .replace(/[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/g, "&nbsp;")
+                .replace(spaceRe, spaceReplace)
                 .replace(/\t/g, this.$tabString);
 
             if (token.type !== "text") {
