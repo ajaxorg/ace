@@ -10,12 +10,19 @@ ace.mode.Text = function() {
         return this.$tokenizer;
     };
 
-    this.toggleCommentLines = function(doc, range, state) {
+    this.toggleCommentLines = function(state, doc, range) {
         return 0;
     };
 
-    this.getNextLineIndent = function(line, state, tab) {
+    this.getNextLineIndent = function(state, line, tab) {
         return "";
+    };
+
+    this.checkOutdent = function(state, line, input) {
+        return false;
+    };
+
+    this.autoOutdent = function(state, doc, row) {
     };
 
     this.$getIndent = function(line) {

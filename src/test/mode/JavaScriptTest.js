@@ -14,74 +14,90 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: toggle comment lines should prepend '//' to each line" : function() {
-        var doc = new ace.Document(["  abc", "cde", "fg"].join("\n"));
+        var doc = new ace.Document(["  abc", "cde", "fg"]);
 
         var range =  {
             start: {row: 0, column: 3},
             end: {row: 1, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range, "start");
+        var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["//  abc", "//cde", "fg"].join("\n"), doc.toString());
     },
 
     "test: toggle comment on commented lines should remove leading '//' chars" : function() {
-        var doc = new ace.Document(["//  abc", "//cde", "fg"].join("\n"));
+        var doc = new ace.Document(["//  abc", "//cde", "fg"]);
 
         var range =  {
             start: {row: 0, column: 3},
             end: {row: 1, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range, "start");
+        var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
 
     "test: toggle comment on multiple lines with one commented line prepend '//' to each line" : function() {
-        var doc = new ace.Document(["//  abc", "//cde", "fg"].join("\n"));
+        var doc = new ace.Document(["//  abc", "//cde", "fg"]);
 
         var range =  {
             start: {row: 0, column: 3},
             end: {row: 2, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range, "start");
+        var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["////  abc", "////cde", "//fg"].join("\n"), doc.toString());
     },
 
     "test: auto indent after opening brace" : function() {
-        assertEquals("  ", this.mode.getNextLineIndent("if () {", "start", "  "));
+        assertEquals("  ", this.mode.getNextLineIndent("start", "if () {", "  "));
     },
 
     "test: no auto indent after opening brace in multi line comment" : function() {
-        assertEquals("", this.mode.getNextLineIndent("/*if () {", "start", "  "));
-        assertEquals("  ", this.mode.getNextLineIndent("  abcd", "comment", "  "));
+        assertEquals("", this.mode.getNextLineIndent("start", "/*if () {", "  "));
+        assertEquals("  ", this.mode.getNextLineIndent("comment", "  abcd", "  "));
     },
 
     "test: no auto indent after opening brace in single line comment" : function() {
-        assertEquals("", this.mode.getNextLineIndent("//if () {", "start", "  "));
-        assertEquals("  ", this.mode.getNextLineIndent("  //if () {", "start", "  "));
+        assertEquals("", this.mode.getNextLineIndent("start", "//if () {", "  "));
+        assertEquals("  ", this.mode.getNextLineIndent("start", "  //if () {", "  "));
     },
 
     "test: no auto indent should add to existing indent" : function() {
-        assertEquals("      ", this.mode.getNextLineIndent("    if () {", "start", "  "));
-        assertEquals("    ", this.mode.getNextLineIndent("    cde", "start", "  "));
+        assertEquals("      ", this.mode.getNextLineIndent("start", "    if () {", "  "));
+        assertEquals("    ", this.mode.getNextLineIndent("start", "    cde", "  "));
     },
 
     "test: special indent in doc comments" : function() {
-        assertEquals(" * ", this.mode.getNextLineIndent("/**", "doc-start", " "));
-        assertEquals("   * ", this.mode.getNextLineIndent("  /**", "doc-start", " "));
-        assertEquals(" * ", this.mode.getNextLineIndent(" *", "doc-start", " "));
-        assertEquals("    * ", this.mode.getNextLineIndent("    *", "doc-start", " "));
-        assertEquals("  ", this.mode.getNextLineIndent("  abc", "doc-start", " "));
+        assertEquals(" * ", this.mode.getNextLineIndent("doc-start", "/**", " "));
+        assertEquals("   * ", this.mode.getNextLineIndent("doc-start", "  /**", " "));
+        assertEquals(" * ", this.mode.getNextLineIndent("doc-start", " *", " "));
+        assertEquals("    * ", this.mode.getNextLineIndent("doc-start", "    *", " "));
+        assertEquals("  ", this.mode.getNextLineIndent("doc-start", "  abc", " "));
     },
 
     "test: no indent after doc comments" : function() {
-        assertEquals("", this.mode.getNextLineIndent("   */", "doc-start", "  "));
+        assertEquals("", this.mode.getNextLineIndent("doc-start", "   */", "  "));
+    },
+
+    "test: trigger outdent if line is space and new text starts with closing brace" : function() {
+        assertTrue(this.mode.checkOutdent("start", "   ", " }"));
+        assertFalse(this.mode.checkOutdent("start", " a  ", " }"));
+        assertFalse(this.mode.checkOutdent("start", "", "}"));
+        assertFalse(this.mode.checkOutdent("start", "   ", "a }"));
+        assertFalse(this.mode.checkOutdent("start", "   }", "}"));
+    },
+
+    "test: auto outdent should indent the line with the same indent as the line with the matching opening brace" : function() {
+        var doc = new ace.Document(["  function foo() {", "    bla", "    }"]);
+        this.mode.autoOutdent("start", doc, 2);
+        assertEquals("  }", doc.getLine(2));
+    },
+
+    "test: no auto outdent if no matching brace is found" : function() {
+        var doc = new ace.Document(["  function foo()", "    bla", "    }"]);
+        this.mode.autoOutdent("start", doc, 2);
+        assertEquals("    }", doc.getLine(2));
     }
 
-//    "test: outdent if first non WS character in line is a closing brace" : function() {
-//        assertEquals("", this.mode.getNextLineIndent(")", "start", "  "));
-//        assertEquals("  ", this.mode.getNextLineIndent("  )", "start", "  "));
-//    }
 });

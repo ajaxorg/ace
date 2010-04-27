@@ -12,7 +12,11 @@ ace.Document = function(text, mode) {
         this.setMode(mode);
     }
 
-    this.insert({row: 0, column: 0}, text);
+    if (ace.isArray(text)) {
+        this.$insertLines(0, text);
+    } else {
+        this.$insert({row: 0, column: 0}, text);
+    }
 };
 
 (function() {
@@ -149,6 +153,10 @@ ace.Document = function(text, mode) {
         return this.lines[row] || "";
     };
 
+    this.getLines = function(firstRow, lastRow) {
+        return this.lines.slice(firstRow, lastRow+1);
+    };
+
     this.getLength = function() {
         return this.lines.length;
     };
@@ -165,10 +173,6 @@ ace.Document = function(text, mode) {
             lines.push(this.lines[range.end.row].substring(0, range.end.column));
             return lines.join(this.$getNewLineCharacter());
         }
-    };
-
-    this.getLines = function(firstRow, lastRow) {
-        return this.lines.slice(firstRow, lastRow+1);
     };
 
     this.findMatchingBracket = function(position) {

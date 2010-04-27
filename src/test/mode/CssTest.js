@@ -12,23 +12,23 @@ var CssTest = new TestCase("mode.CssTest", {
             end: {row: 1, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range, "start");
+        var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
 
 
     "test: lines should keep indentation" : function() {
-        assertEquals("   ", this.mode.getNextLineIndent("   abc", "start", "  "));
-        assertEquals("\t", this.mode.getNextLineIndent("\tabc", "start", "  "));
+        assertEquals("   ", this.mode.getNextLineIndent("start", "   abc", "  "));
+        assertEquals("\t", this.mode.getNextLineIndent("start", "\tabc", "  "));
     },
 
     "test: new line after { should increase indent" : function() {
-        assertEquals("     ", this.mode.getNextLineIndent("   abc{", "start", "  "));
-        assertEquals("\t  ", this.mode.getNextLineIndent("\tabc  { ", "start", "  "));
+        assertEquals("     ", this.mode.getNextLineIndent("start", "   abc{", "  "));
+        assertEquals("\t  ", this.mode.getNextLineIndent("start", "\tabc  { ", "  "));
     },
 
     "test: no indent increase after { in a comment" : function() {
-        assertEquals("   ", this.mode.getNextLineIndent("   /*{", "start", "  "));
-        assertEquals("   ", this.mode.getNextLineIndent("   /*{  ", "start", "  "));
+        assertEquals("   ", this.mode.getNextLineIndent("start", "   /*{", "  "));
+        assertEquals("   ", this.mode.getNextLineIndent("start", "   /*{  ", "  "));
     }
 });

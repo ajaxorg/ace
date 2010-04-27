@@ -171,6 +171,10 @@ else {
     };
 }
 
+ace.isArray = function(value) {
+    return Object.prototype.toString.call(value) == "[object Array]";
+};
+
 ace.bind = function(fcn, context) {
     return function() {
         return fcn.apply(context, arguments);

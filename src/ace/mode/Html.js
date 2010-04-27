@@ -10,32 +10,44 @@ ace.inherits(ace.mode.Html, ace.mode.Text);
 
 (function() {
 
-    this.toggleCommentLines = function(doc, range, state) {
-        var split = state.split("js-");
-        if (!split[0] && split[1]) {
-            return this.$js.toggleCommentLines(doc, range, state);
-        }
-
-        var split = state.split("css-");
-        if (!split[0] && split[1]) {
-            return this.$css.toggleCommentLines(doc, range, state);
-        }
-
-        return 0;
+    this.toggleCommentLines = function(state, doc, range) {
+        return this.$delegate("toggleCommentLines", arguments, function() {
+            return 0;
+        });
     };
 
-    this.getNextLineIndent = function(line, state, tab) {
+    this.getNextLineIndent = function(state, line, tab) {
+        return this.$delegate("getNextLineIndent", arguments, function() {
+            return "";
+        });
+    };
+
+    this.checkOutdent = function(state, line, input) {
+        return this.$delegate("checkOutdent", arguments, function() {
+            return false;
+        });
+    };
+
+    this.autoOutdent = function(state, doc, row) {
+        return this.$delegate("autoOutdent", arguments);
+    };
+
+    this.$delegate = function(method, args, defaultHandler) {
+        var state = args[0];
         var split = state.split("js-");
+
         if (!split[0] && split[1]) {
-            return this.$js.getNextLineIndent(line, split[1], tab);
+            args[0] = split[1];
+            return this.$js[method].apply(this.$js, args);
         }
 
         var split = state.split("css-");
         if (!split[0] && split[1]) {
-            return this.$css.getNextLineIndent(line, split[1], tab);
+            args[0] = split[1];
+            return this.$css[method].apply(this.$css, args);
         }
 
-        return "";
+        return defaultHandler ? defaultHandler() : undefined;
     };
 
 }).call(ace.mode.Html.prototype);

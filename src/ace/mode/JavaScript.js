@@ -2,12 +2,13 @@ ace.provide("ace.mode.JavaScript");
 
 ace.mode.JavaScript = function() {
     this.$tokenizer = new ace.Tokenizer(new ace.mode.JavaScriptHighlightRules().getRules());
+    this.$outdent = new ace.mode.MatchingBraceOutdent();
 };
 ace.inherits(ace.mode.JavaScript, ace.mode.Text);
 
 (function() {
 
-    this.toggleCommentLines = function(doc, range, state) {
+    this.toggleCommentLines = function(state, doc, range) {
         var addedRows = doc.outdentRows(range, "//");
         if (addedRows == 0) {
             var addedRows = doc.indentRows(range, "//");
@@ -15,7 +16,7 @@ ace.inherits(ace.mode.JavaScript, ace.mode.Text);
         return addedRows;
     };
 
-    this.getNextLineIndent = function(line, state, tab) {
+    this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
 
         var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
@@ -45,6 +46,14 @@ ace.inherits(ace.mode.JavaScript, ace.mode.Text);
         }
 
         return indent;
+    };
+
+    this.checkOutdent = function(state, line, input) {
+        return this.$outdent.checkOutdent(line, input);
+    };
+
+    this.autoOutdent = function(state, doc, row) {
+        return this.$outdent.autoOutdent(doc, row);
     };
 
 }).call(ace.mode.JavaScript.prototype);

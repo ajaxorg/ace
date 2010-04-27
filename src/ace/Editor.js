@@ -285,23 +285,25 @@ ace.Editor = function(renderer, doc) {
             return;
 
         var cursor = this.getCursorPosition();
-
         text = text.replace("\t", this.doc.getTabString());
 
         if (!this.selection.isEmpty()) {
-            var end = this.doc.replace(this.getSelectionRange(), text);
+            var cursor = this.doc.remove(this.getSelectionRange());
             this.clearSelection();
         }
-        else {
-            var end = this.doc.insert(cursor, text);
-        }
+
+        var lineState = this.bgTokenizer.getState(cursor.row-1);
+        var shouldOutdent = this.mode.checkOutdent(lineState, this.doc.getLine(cursor.row), text);
+
+        var end = this.doc.insert(cursor, text);
+
+        var row = cursor.row;
+        var line = this.doc.getLine(row);
+        var lineState = this.bgTokenizer.getState(row);
 
         // multi line insert
-        var row = cursor.row;
         if (row !== end.row) {
-            var line = this.doc.getLine(row);
-            var lineState = this.bgTokenizer.getState(row);
-            var indent = this.mode.getNextLineIndent(line, lineState, this.doc.getTabString());
+            var indent = this.mode.getNextLineIndent(lineState, line, this.doc.getTabString());
             if (indent) {
                 var indentRange = {
                     start: {
@@ -311,6 +313,10 @@ ace.Editor = function(renderer, doc) {
                     end : end
                 };
                 end.column += this.doc.indentRows(indentRange, indent);
+            }
+        } else {
+            if (shouldOutdent) {
+                end.column += this.mode.autoOutdent(lineState, this.doc, row);
             }
         }
 
@@ -424,7 +430,7 @@ ace.Editor = function(renderer, doc) {
             }
         };
         var state = this.bgTokenizer.getState(this.getCursorPosition().row);
-        var addedColumns = this.mode.toggleCommentLines(this.doc, range, state);
+        var addedColumns = this.mode.toggleCommentLines(state, this.doc, range);
 
         this.selection.shiftSelection(addedColumns);
     };

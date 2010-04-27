@@ -5,19 +5,19 @@ var TextTest = new TestCase("mode.TextTest", {
     },
 
     "test: toggle comment lines should not do anything" : function() {
-        var doc = new ace.Document(["  abc", "cde", "fg"].join("\n"));
+        var doc = new ace.Document(["  abc", "cde", "fg"]);
 
         var range =  {
             start: {row: 0, column: 3},
             end: {row: 1, column: 1}
         };
 
-        var comment = this.mode.toggleCommentLines(doc, range, "start");
+        var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
 
 
     "text: lines should not be indented" : function() {
-        assertEquals("", this.mode.getNextLineIndent("   abc", "  "));
+        assertEquals("", this.mode.getNextLineIndent("start", "   abc", "  "));
     }
 });
