@@ -47,7 +47,7 @@ ace.Document = function(text, mode) {
         }
     };
 
-    this.$useSoftTabs = false;
+    this.$useSoftTabs = true;
     this.setUseSoftTabs = function(useSoftTabs) {
         if (this.$useSoftTabs === useSoftTabs) return;
 
