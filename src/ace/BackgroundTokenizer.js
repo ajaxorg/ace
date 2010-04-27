@@ -18,20 +18,15 @@ ace.BackgroundTokenizer = function(tokenizer) {
         var processedLines = 0;
 
         while (self.currentLine < textLines.length) {
-            var line = textLines[self.currentLine];
-
-            var state = self.currentLine == 0 ? "start"
-                    : self.lines[self.currentLine - 1].state;
-            self.lines[self.currentLine] = self.tokenizer.getLineTokens(line, state);
+            self.lines[self.currentLine] = self.$tokenizeRow(self.currentLine);
+            self.currentLine++;
 
             // only check every 30 lines
             processedLines += 1;
             if ((processedLines % 30 == 0) && (new Date() - workerStart) > 20) {
-                self.fireUpdateEvent(startLine, self.currentLine);
+                self.fireUpdateEvent(startLine, self.currentLine-1);
                 return setTimeout(self.$worker, 10);
             }
-
-            self.currentLine++;
         }
 
         self.running = false;
@@ -95,11 +90,16 @@ ace.BackgroundTokenizer = function(tokenizer) {
 
     this.$tokenizeRow = function(row) {
         if (!this.lines[row]) {
-            var state = "start";
+            var state = null;
             if (row > 0 && this.lines[row - 1]) {
                 state = this.lines[row - 1].state;
             }
-            this.lines[row] = this.tokenizer.getLineTokens(this.textLines[row] || "", state);
+            var tokens = this.tokenizer.getLineTokens(this.textLines[row] || "", state || "start");
+            if (state) {
+                this.lines[row] = tokens;
+            } else {
+                return tokens;
+            }
         }
         return this.lines[row];
     };

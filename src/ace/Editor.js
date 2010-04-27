@@ -65,6 +65,7 @@ ace.Editor = function(renderer, doc) {
 
         this.onDocumentModeChange();
         this.bgTokenizer.setLines(this.doc.lines);
+        this.bgTokenizer.start(0);
 
         this.renderer.draw();
         this.onCursorChange();
