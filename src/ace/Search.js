@@ -27,62 +27,105 @@ ace.Search.SELECTION = 2;
             return null;
 
         if (this.$options.backwards) {
-            return this.$findBackward(doc);
+            var iterator = this.$backwardMatchIterator(doc);
         } else {
-            return this.$findForward(doc);
-        }
-    };
-
-    this.$findForward = function(doc) {
-        var re = this.$assembleRegExp();
-        var match = null;
-        var matchedRow = -1;
-
-        this.$forwardLineIterator(doc).forEach(function(line, startIndex, row) {
-            re.lastIndex = startIndex;
-            match = re.exec(line);
-
-            if (match) {
-                matchedRow = row;
-                return true;
-            }
-        });
-
-        if (!match)
-            return null;
-
-        return this.$rangeFromMatch(matchedRow, match.index, match[0].length);
-    };
-
-    this.$findBackward = function(doc) {
-        var re = this.$assembleRegExp();
-
-        var found = false;
-        var lastOffset = 0;
-        var lastRow = -1;
-        var match = "";
-
-        this.$backwardLineIterator(doc).forEach(function(line, startIndex, row) {
-            if (startIndex) {
-                line = line.substring(startIndex);
-            }
-            line.replace(re, function(str, offset) {
-                match = str;
-                found = true;
-                lastOffset = startIndex + offset;
-                lastRow = row;
-                return str;
-            });
-
-            if (found) return true;
-        });
-
-        if (!found) {
-            return null;
+            var iterator = this.$forwardMatchIterator(doc);
         }
 
-        return this.$rangeFromMatch(lastRow, lastOffset, match.length);
+        var firstRange = null;
+        iterator.forEach(function(range) {
+            firstRange = range;
+            return true;
+        });
+
+        return firstRange;
     };
+
+    this.findAll = function(doc) {
+        var needle = this.$options.needle;
+        if (!this.$options.needle)
+            return [];
+
+        if (this.$options.backwards) {
+            var iterator = this.$backwardMatchIterator(doc);
+        } else {
+            var iterator = this.$forwardMatchIterator(doc);
+        }
+
+        var ranges = [];
+        iterator.forEach(function(range) {
+            ranges.push(range);
+        });
+
+        return ranges;
+    };
+
+    this.$forwardMatchIterator = function(doc) {
+        var re = this.$assembleRegExp();
+        var self = this;
+
+        return {
+            forEach: function(callback) {
+                self.$forwardLineIterator(doc).forEach(function(line, startIndex, row) {
+                    if (startIndex) {
+                        line = line.substring(startIndex);
+                    }
+
+                    var matches = [];
+
+                    line.replace(re, function(str, offset) {
+                        matches.push({
+                            str: str,
+                            offset: startIndex + offset
+                        });
+                        return str;
+                    });
+
+                    for (var i=0; i<matches.length; i++) {
+                        var match = matches[i];
+                        var range = self.$rangeFromMatch(row, match.offset, match.str.length);
+                        if (callback(range))
+                            return true;
+                    }
+
+                });
+            }
+        };
+    };
+
+    this.$backwardMatchIterator = function(doc) {
+        var re = this.$assembleRegExp();
+        var self = this;
+
+        return {
+            forEach: function(callback) {
+                self.$backwardLineIterator(doc).forEach(function(line, startIndex, row) {
+                    if (startIndex) {
+                        line = line.substring(startIndex);
+                    }
+
+                    var matches = [];
+
+                    line.replace(re, function(str, offset) {
+                        matches.push({
+                            str: str,
+                            offset: startIndex + offset
+                        });
+                        return str;
+                    });
+
+                    for (var i=matches.length-1; i>= 0; i--) {
+                        var match = matches[i];
+                        var range = self.$rangeFromMatch(row, match.offset, match.str.length);
+                        if (callback(range))
+                            return true;
+                    }
+                });
+            }
+        };
+    };
+
+
 
     this.$rangeFromMatch = function(row, column, length) {
         var range = {
@@ -99,7 +142,12 @@ ace.Search.SELECTION = 2;
     };
 
     this.$assembleRegExp = function() {
-        var needle = ace.escapeRegExp(this.$options.needle);
+        if (this.$options.regExp) {
+            var needle = this.$options.needle;
+        } else {
+            var needle = ace.escapeRegExp(this.$options.needle);
+        }
+
         if (this.$options.wholeWord) {
             needle = "\\b" + needle + "\\b";
         }

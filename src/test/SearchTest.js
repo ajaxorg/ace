@@ -203,5 +203,53 @@ var SearchTest = new TestCase("SearchTest", {
         var range = search.find(doc);
         assertPosition(2, 0, range.start);
         assertPosition(2, 4, range.end);
+    },
+
+    "test: find using a regular expression" : function() {
+        var doc = new ace.Document(["abc123 123 cd", "abc"]);
+
+        var search = new ace.Search().set({
+            needle: "\\d+",
+            regExp: true
+        });
+
+        var range = search.find(doc);
+        assertPosition(0, 3, range.start);
+        assertPosition(0, 6, range.end);
+    },
+
+    "test: find using a regular expression and whole word" : function() {
+        var doc = new ace.Document(["abc123 123 cd", "abc"]);
+
+        var search = new ace.Search().set({
+            needle: "\\d+\\b",
+            regExp: true,
+            wholeWord: true
+        });
+
+        var range = search.find(doc);
+        assertPosition(0, 7, range.start);
+        assertPosition(0, 10, range.end);
+    },
+
+    "test: find all matches in selection" : function() {
+        var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
+
+        var search = new ace.Search().set({
+            needle: "uh",
+            wrap: true,
+            scope: ace.Search.SELECTION
+        });
+
+        doc.getSelection().setSelectionAnchor(0, 2);
+        doc.getSelection().selectTo(3, 2);
+
+        var ranges = search.findAll(doc);
+
+        assertEquals(2, ranges.length);
+        assertPosition(1, 1, ranges[0].start);
+        assertPosition(1, 3, ranges[0].end);
+        assertPosition(2, 1, ranges[1].start);
+        assertPosition(2, 3, ranges[1].end);
     }
 });
