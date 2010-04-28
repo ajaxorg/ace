@@ -26,6 +26,7 @@ var SearchTest = new TestCase("SearchTest", {
         });
 
         var range = search.find(doc);
+        console.log(range)
         assertPosition(1, 5, range.start);
         assertPosition(1, 12, range.end);
     },
@@ -126,5 +127,51 @@ var SearchTest = new TestCase("SearchTest", {
         var range = search.find(doc);
         assertPosition(0, 5, range.start);
         assertPosition(0, 9, range.end);
+    },
+
+    "test: find in selection": function() {
+        var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
+        doc.getSelection().setSelectionAnchor(1, 0);
+        doc.getSelection().selectTo(3, 5);
+
+        var search = new ace.Search().set({
+            needle: "juhu",
+            wrap: true,
+            scope: ace.Search.SELECTION
+        });
+
+        var range = search.find(doc);
+        assertPosition(1, 0, range.start);
+        assertPosition(1, 4, range.end);
+
+        doc.getSelection().setSelectionAnchor(0, 2);
+        doc.getSelection().selectTo(3, 2);
+
+        var range = search.find(doc);
+        assertPosition(1, 0, range.start);
+        assertPosition(1, 4, range.end);
+    },
+
+    "test: find backwards in selection": function() {
+        var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
+
+        var search = new ace.Search().set({
+            needle: "juhu",
+            wrap: true,
+            backwards: true,
+            scope: ace.Search.SELECTION
+        });
+
+        doc.getSelection().setSelectionAnchor(0, 2);
+        doc.getSelection().selectTo(3, 2);
+
+        var range = search.find(doc);
+        assertPosition(2, 0, range.start);
+        assertPosition(2, 4, range.end);
+
+        doc.getSelection().setSelectionAnchor(0, 2);
+        doc.getSelection().selectTo(1, 2);
+
+        assertEquals(null, search.find(doc));
     }
 });

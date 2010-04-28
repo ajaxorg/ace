@@ -6,7 +6,8 @@ ace.Search = function() {
         backwards: false,
         wrap: false,
         caseSensitive: false,
-        wholeWord: false
+        wholeWord: false,
+        scope: ace.Search.ALL
     };
 };
 
@@ -32,6 +33,71 @@ ace.Search.SELECTION = 2;
         }
     };
 
+    this.$findForward = function(doc) {
+        var re = this.$assembleRegExp();
+        var match = null;
+        var matchedRow = -1;
+
+        this.$forwardLineIterator(doc).forEach(function(line, startIndex, row) {
+            re.lastIndex = startIndex;
+            match = re.exec(line);
+
+            if (match) {
+                matchedRow = row;
+                return true;
+            }
+        });
+
+        if (!match)
+            return null;
+
+        return this.$rangeFromMatch(matchedRow, match.index, match[0].length);
+    };
+
+    this.$findBackward = function(doc) {
+        var re = this.$assembleRegExp();
+
+        var found = false;
+        var lastOffset = 0;
+        var lastRow = -1;
+        var match = "";
+
+        this.$backwardLineIterator(doc).forEach(function(line, startIndex, row) {
+            if (startIndex) {
+                line = line.substring(startIndex);
+            }
+            line.replace(re, function(str, offset) {
+                match = str;
+                found = true;
+                lastOffset = startIndex + offset;
+                lastRow = row;
+                return str;
+            });
+
+            if (found) return true;
+        });
+
+        if (!found) {
+            return null;
+        }
+
+        return this.$rangeFromMatch(lastRow, lastOffset, match.length);
+    };
+
+    this.$rangeFromMatch = function(row, column, length) {
+        var range = {
+            start: {
+                row: row,
+                column: column
+            },
+            end: {
+                row: row,
+                column: column + length
+            }
+        };
+        return range;
+    };
+
     this.$assembleRegExp = function() {
         var needle = ace.escapeRegExp(this.$options.needle);
         if (this.$options.wholeWord) {
@@ -47,110 +113,98 @@ ace.Search.SELECTION = 2;
         return re;
     };
 
-    this.$findForward = function(doc) {
+    this.$forwardLineIterator = function(doc) {
+        var searchSelection = this.$options.scope == ace.Search.SELECTION;
+
+        var range = doc.getSelection().getRange();
         var start = doc.getSelection().getCursor();
-        var row = start.row;
-        var column = start.column;
 
-        var startRow = row;
+        var firstRow = searchSelection ? range.start.row : 0;
+        var firstColumn = searchSelection ? range.start.column : 0;
+        var lastRow = searchSelection ? range.end.row : doc.getLength() - 1;
 
-        var line = doc.getLine(row);
-        var wrapped = false;
+        var wrap = this.$options.wrap;
 
-        var re = this.$assembleRegExp();
-        re.lastIndex = column;
-
-        do {
-            var match = re.exec(line);
-            if (!match) {
-                if (row == startRow && wrapped) {
-                    return null;
-                }
-
-                row++;
-
-                if (row >= doc.getLength()) {
-                    if (this.$options.wrap) {
-                        row = 0;
-                        wrapped = true;
-                    } else {
-                        return null;
-                    }
-                }
-
-                line = doc.getLine(row);
-                re.lastIndex = 0;
+        function getLine(row) {
+            var line = doc.getLine(row);
+            if (searchSelection && row == range.end.row) {
+                line = line.substring(0, range.end.column);
             }
-        } while(!match);
+            return line;
+        }
 
-        var range = {
-            start: {
-                row: row,
-                column: match.index
-            },
-            end: {
-                row: row,
-                column: match.index + match[0].length
+        return {
+            forEach: function(callback) {
+                var row = start.row;
+
+                var line = getLine(row);
+                startIndex = start.column;
+
+                while (!callback(line, startIndex, row)) {
+
+                    row++;
+                    startIndex = 0;
+
+                    if (row > lastRow) {
+                        if (wrap) {
+                            row = firstRow;
+                            startIndex = firstColumn;
+                        } else {
+                            return;
+                        }
+                    }
+
+                    if (row == start.row)
+                        return;
+
+                    var line = getLine(row);
+                }
             }
         };
-        return range;
     };
 
-    this.$findBackward = function(doc) {
-        var start = doc.getSelection().getRange().start;
-        var row = start.row;
-        var column = start.column;
+    this.$backwardLineIterator = function(doc) {
+        var searchSelection = this.$options.scope == ace.Search.SELECTION;
 
-        var startRow = row;
+        var range = doc.getSelection().getRange();
+        var start = searchSelection ? range.end : range.start;
 
-        var line = doc.getLine(row).substring(0, column);
-        var wrapped = false;
+        var firstRow = searchSelection ? range.start.row : 0;
+        var firstColumn = searchSelection ? range.start.column : 0;
+        var lastRow = searchSelection ? range.end.row : doc.getLength() - 1;
 
-        var re = this.$assembleRegExp();
+        var wrap = this.$options.wrap;
 
-        var found = false;
-        var lastOffset = 0;
-        var match = "";
+        return {
+            forEach : function(callback) {
+                var row = start.row;
 
-        do {
-            line.replace(re, function(str, offset) {
-                match = str;
-                found = true;
-                lastOffset = offset;
-                return str;
-            });
+                var line = doc.getLine(row).substring(0, start.column);
+                var startIndex = 0;
 
-            if (!found) {
-                if (row == startRow && wrapped) {
-                    return null;
-                }
+                while (!callback(line, startIndex, row)) {
 
-                row--;
+                    row--;
+                    var startIndex = 0;
 
-                if (row < 0) {
-                    if (this.$options.wrap) {
-                        row = doc.getLength() - 1;
-                        wrapped = true;
-                    } else {
+                    if (row < firstRow) {
+                        if (wrap) {
+                            row = lastRow;
+                        } else {
+                            return null;
+                        }
+                    }
+
+                    if (row == start.row)
                         return null;
+
+                    line = doc.getLine(row);
+                    if (searchSelection && row == firstRow) {
+                        startIndex = firstColumn;
                     }
                 }
-
-                line = doc.getLine(row);
-            }
-        } while(!found);
-
-        var range = {
-            start: {
-                row: row,
-                column: lastOffset
-            },
-            end: {
-                row: row,
-                column: lastOffset + match.length
             }
         };
-        return range;
     };
 
 }).call(ace.Search.prototype);
