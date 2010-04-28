@@ -112,6 +112,7 @@ ace.layer.Marker = function(parentEl) {
 
     this.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig) {
 
+        // from selection start to the end of the line
         var height = layerConfig.lineHeight;
         var width = Math.round(layerConfig.width - (range.start.column * layerConfig.characterWidth));
         var top = (range.start.row - layerConfig.firstRow) * layerConfig.lineHeight;
@@ -125,6 +126,7 @@ ace.layer.Marker = function(parentEl) {
             "left:", left, "px;'></div>"
         );
 
+        // from start of the last line to the selection end
         var top = (range.end.row - layerConfig.firstRow) * layerConfig.lineHeight;
         var width = Math.round(range.end.column * layerConfig.characterWidth);
 
@@ -135,15 +137,18 @@ ace.layer.Marker = function(parentEl) {
             "width:", width, "px;'></div>"
         );
 
-        for (var row = range.start.row + 1; row < range.end.row; row++) {
-            var top = (row - layerConfig.firstRow) * layerConfig.lineHeight;
-            stringBuilder.push(
-                "<div class='", clazz, "' style='",
-                "height:", height, "px;",
-                "width:", layerConfig.width, "px;",
-                "top:", top, "px;'></div>"
-            );
-        }
+        // all the complete lines
+        var height = (range.end.row - range.start.row - 1) * layerConfig.lineHeight;
+        if (height < 0)
+            return;
+        var top = (range.start.row + 1 - layerConfig.firstRow) * layerConfig.lineHeight;
+
+        stringBuilder.push(
+            "<div class='", clazz, "' style='",
+            "height:", height, "px;",
+            "width:", layerConfig.width, "px;",
+            "top:", top, "px;'></div>"
+        );
     };
 
     this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig) {
