@@ -26,7 +26,6 @@ var SearchTest = new TestCase("SearchTest", {
         });
 
         var range = search.find(doc);
-        console.log(range)
         assertPosition(1, 5, range.start);
         assertPosition(1, 12, range.end);
     },
@@ -173,5 +172,36 @@ var SearchTest = new TestCase("SearchTest", {
         doc.getSelection().selectTo(1, 2);
 
         assertEquals(null, search.find(doc));
+    },
+
+    "test: edge case - match directly before the cursor" : function() {
+        var doc = new ace.Document(["123", "123", "juhu"]);
+
+        var search = new ace.Search().set({
+            needle: "juhu",
+            wrap: true
+        });
+
+        doc.getSelection().moveCursorTo(2, 5);
+
+        var range = search.find(doc);
+        assertPosition(2, 0, range.start);
+        assertPosition(2, 4, range.end);
+    },
+
+    "test: edge case - match backwards directly after the cursor" : function() {
+        var doc = new ace.Document(["123", "123", "juhu"]);
+
+        var search = new ace.Search().set({
+            needle: "juhu",
+            wrap: true,
+            backwards: true
+        });
+
+        doc.getSelection().moveCursorTo(2, 0);
+
+        var range = search.find(doc);
+        assertPosition(2, 0, range.start);
+        assertPosition(2, 4, range.end);
     }
 });

@@ -140,7 +140,13 @@ ace.Search.SELECTION = 2;
                 var line = getLine(row);
                 startIndex = start.column;
 
+                var stop = false;
+
                 while (!callback(line, startIndex, row)) {
+
+                    if (stop) {
+                        return;
+                    }
 
                     row++;
                     startIndex = 0;
@@ -155,7 +161,7 @@ ace.Search.SELECTION = 2;
                     }
 
                     if (row == start.row)
-                        return;
+                        stop = true;
 
                     var line = getLine(row);
                 }
@@ -181,8 +187,12 @@ ace.Search.SELECTION = 2;
 
                 var line = doc.getLine(row).substring(0, start.column);
                 var startIndex = 0;
+                var stop = false;
 
                 while (!callback(line, startIndex, row)) {
+
+                    if (stop)
+                        return;
 
                     row--;
                     var startIndex = 0;
@@ -191,16 +201,19 @@ ace.Search.SELECTION = 2;
                         if (wrap) {
                             row = lastRow;
                         } else {
-                            return null;
+                            return;
                         }
                     }
 
                     if (row == start.row)
-                        return null;
+                        stop = true;
 
                     line = doc.getLine(row);
-                    if (searchSelection && row == firstRow) {
-                        startIndex = firstColumn;
+                    if (searchSelection) {
+                        if (row == firstRow)
+                            startIndex = firstColumn;
+                        else if (row == lastRow)
+                            line = line.substring(0, range.end.column);
                     }
                 }
             }
