@@ -62,7 +62,8 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.getMouseEventTarget = function() {
-        return this.scroller;
+        // return top most layer
+        return this.cursorLayer.element;
     };
 
     this.getFirstVisibleRow = function() {

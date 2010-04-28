@@ -29,20 +29,19 @@
 }
 
 .layer {
+  z-index: 0;
   position: absolute;
   overflow: hidden;  
   white-space: nowrap;
 }
 
 .text-layer {
-  z-index: 2;
   font-family: Monaco, "Courier New", monospace;
   cursor: text;
   color: black;
 }
 
 .cursor-layer {
-  z-index: 3;
 }
 
 .cursor {
@@ -55,7 +54,6 @@
 }
 
 .marker-layer {
-	z-index: 1;
 }
 
 .marker-layer .selection {
