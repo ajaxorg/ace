@@ -255,7 +255,7 @@ ace.addListener(container, "drop", function(e) {
       editor.onTextInput(reader.result);
       
       modeEl.value = mode;      
-      editor.setMode(modes[mode]);
+      editor.getDocument().setMode(modes[mode]);
     }
     reader.readAsText(file);
   }
