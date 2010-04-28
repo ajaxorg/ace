@@ -698,6 +698,21 @@ ace.Editor = function(renderer, doc) {
       this.selection.setSelectionRange(range);
     },
 
+    this.replaceAll = function(replacement) {
+        this.clearSelection();
+        this.selection.moveCursorTo(0, 0);
+
+        var ranges = this.$search.findAll(this.doc);
+        if (!ranges.length)
+            return;
+
+        for (var i=0; i<ranges.length; i++) {
+            var range = ranges[i];
+            range.end = this.doc.replace(range, replacement);
+        }
+        this.selection.setSelectionRange(range);
+    },
+
     this.find = function(needle) {
         this.clearSelection();
         this.$search.set({needle: needle});

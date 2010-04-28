@@ -22,7 +22,6 @@ ace.Search.SELECTION = 2;
     };
 
     this.find = function(doc) {
-        var needle = this.$options.needle;
         if (!this.$options.needle)
             return null;
 
@@ -42,7 +41,6 @@ ace.Search.SELECTION = 2;
     };
 
     this.findAll = function(doc) {
-        var needle = this.$options.needle;
         if (!this.$options.needle)
             return [];
 
