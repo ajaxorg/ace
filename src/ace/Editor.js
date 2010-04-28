@@ -692,6 +692,12 @@ ace.Editor = function(renderer, doc) {
         this.selection.moveCursorWordLeft();
     };
 
+    this.replace = function(replacement) {
+      var range = this.getSelectionRange();
+      range.end = this.doc.replace(range, replacement);
+      this.selection.setSelectionRange(range);
+    },
+
     this.find = function(needle) {
         this.clearSelection();
         this.$search.set({needle: needle});
