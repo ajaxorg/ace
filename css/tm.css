@@ -27,10 +27,14 @@
 }
 
 .cursor {
-  width: 2px;
-  background: black;
+  border-left: 2px solid black;
 }
 
+.cursor.overwrite {
+  border-left: 0px;
+  border-bottom: 1px solid black;
+}
+        
 .line .invisible {
   color: rgb(191, 191, 191);
 }

@@ -150,7 +150,7 @@ ace.Editor = function(renderer, doc) {
 
     this.onCursorChange = function() {
         this.$highlightBrackets();
-        this.renderer.updateCursor(this.getCursorPosition());
+        this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
 
         if (!this.$blockScrolling) {
             this.renderer.scrollCursorIntoView();
@@ -295,6 +295,15 @@ ace.Editor = function(renderer, doc) {
         if (!this.selection.isEmpty()) {
             var cursor = this.doc.remove(this.getSelectionRange());
             this.clearSelection();
+        } else if (this.$overwrite){
+            var range = {
+                start: cursor,
+                end: {
+                  row: cursor.row,
+                  column: cursor.column + text.length
+                }
+            };
+            this.doc.remove(range);
         }
 
         var lineState = this.bgTokenizer.getState(cursor.row-1);
@@ -327,6 +336,25 @@ ace.Editor = function(renderer, doc) {
 
         this.moveCursorToPosition(end);
         this.renderer.scrollCursorIntoView();
+    };
+
+    this.$overwrite = false;
+    this.setOverwrite = function(overwrite) {
+        if (this.$overwrite == overwrite) return;
+
+        this.$overwrite = overwrite;
+
+        this.$blockScrolling = true;
+        this.onCursorChange();
+        this.$blockScrolling = false;
+    };
+
+    this.getOverwrite = function() {
+        return this.$overwrite;
+    };
+
+    this.toggleOverwrite = function() {
+        this.setOverwrite(!this.$overwrite);
     };
 
     this.$selectionStyle = "line";

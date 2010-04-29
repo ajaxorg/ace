@@ -169,8 +169,8 @@ ace.VirtualRenderer = function(container) {
         this.markerLayer.removeMarker(markerId);
     };
 
-    this.updateCursor = function(position) {
-        this.cursorLayer.setCursor(this.$documentToScreenPosition(position));
+    this.updateCursor = function(position, overwrite) {
+        this.cursorLayer.setCursor(this.$documentToScreenPosition(position), overwrite);
         this.cursorLayer.update(this.layerConfig);
     };
 

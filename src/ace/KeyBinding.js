@@ -43,6 +43,7 @@ ace.KeyBinding = function(element, editor) {
         38 : "Up",
         39 : "Right",
         40 : "Down",
+        45 : "Insert",
         46 : "Delete",
         91 : "Meta"
     };
@@ -77,6 +78,10 @@ ace.KeyBinding = function(element, editor) {
     this["Control-F"] = function() {
         var needle = prompt("Find:");
         this.editor.find(needle);
+    };
+
+    this["Insert"] = function() {
+        this.editor.toggleOverwrite();
     };
 
     this["Control-Alt-Up"] = function() {

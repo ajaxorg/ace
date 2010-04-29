@@ -13,11 +13,16 @@ ace.layer.Cursor = function(parentEl) {
 
 (function() {
 
-    this.setCursor = function(position) {
+    this.setCursor = function(position, overwrite) {
         this.position = {
             row : position.row,
             column : position.column
         };
+        if (overwrite) {
+            ace.addCssClass(this.cursor, "overwrite");
+        } else {
+            ace.removeCssClass(this.cursor, "overwrite");
+        }
     };
 
     this.hideCursor = function() {
@@ -74,6 +79,7 @@ ace.layer.Cursor = function(parentEl) {
         this.cursor.style.left = cursorLeft + "px";
         this.cursor.style.top = (cursorTop - (config.firstRow * config.lineHeight))
                 + "px";
+        this.cursor.style.width = config.characterWidth + "px";
         this.cursor.style.height = config.lineHeight + "px";
 
         if (this.isVisible) {
