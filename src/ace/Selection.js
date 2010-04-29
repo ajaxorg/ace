@@ -17,7 +17,9 @@ ace.Selection = function(doc) {
     ace.implement(this, ace.MEventEmitter);
 
     this.isEmpty = function() {
-        return (this.selectionAnchor == null);
+        return (this.selectionAnchor == null ||
+            (this.selectionAnchor.row == this.selectionLead.row &&
+             this.selectionAnchor.column == this.selectionLead.column));
     };
 
     this.isMultiLine = function() {
