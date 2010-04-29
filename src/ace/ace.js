@@ -84,7 +84,7 @@ ace.preventDefault = function(e) {
 
 
 ace.hasCssClass = function(el, name) {
-    var classes = el.className.split(/\s*/g);
+    var classes = el.className.split(/\s+/g);
     return ace.arrayIndexOf(classes, name) !== -1;
 };
 
