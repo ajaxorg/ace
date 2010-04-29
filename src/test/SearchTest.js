@@ -232,6 +232,19 @@ var SearchTest = new TestCase("SearchTest", {
         assertPosition(0, 10, range.end);
     },
 
+    "test: use regular expressions with capture groups": function() {
+        var doc = new ace.Document(["  ab: 12px", "  <h1 abc"]);
+
+        var search = new ace.Search().set({
+            needle: "(\\d+)",
+            regExp: true
+        });
+
+        var range = search.find(doc);
+        assertPosition(0, 6, range.start);
+        assertPosition(0, 8, range.end);
+    },
+
     "test: find all matches in selection" : function() {
         var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
 
@@ -251,5 +264,41 @@ var SearchTest = new TestCase("SearchTest", {
         assertPosition(1, 3, ranges[0].end);
         assertPosition(2, 1, ranges[1].start);
         assertPosition(2, 3, ranges[1].end);
+    },
+
+    "test: replace() should return the replacement if the input matches the needle" : function() {
+        var search = new ace.Search().set({
+            needle: "juhu"
+        });
+
+        assertEquals("kinners", search.replace("juhu", "kinners"));
+        assertEquals(null, search.replace("", "kinners"));
+        assertEquals(null, search.replace(" juhu", "kinners"));
+
+        // regexp replacement
+    },
+
+    "test: replace with a RegExp search" : function() {
+        var search = new ace.Search().set({
+            needle: "\\d+",
+            regExp: true
+        });
+
+        assertEquals("kinners", search.replace("123", "kinners"));
+        assertEquals("kinners", search.replace("01234", "kinners"));
+        assertEquals(null, search.replace("", "kinners"));
+        assertEquals(null, search.replace("a12", "kinners"));
+        assertEquals(null, search.replace("12a", "kinners"));
+    },
+
+    "test: replace with RegExp match and capture groups" : function() {
+        var search = new ace.Search().set({
+            needle: "ab(\\d\\d)",
+            regExp: true
+        });
+
+        assertEquals("cd12", search.replace("ab12", "cd$1"));
+        assertEquals("-ab12-", search.replace("ab12", "-$&-"));
+        assertEquals("$", search.replace("ab12", "$$"));
     }
 });

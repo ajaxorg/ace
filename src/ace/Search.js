@@ -7,7 +7,8 @@ ace.Search = function() {
         wrap: false,
         caseSensitive: false,
         wholeWord: false,
-        scope: ace.Search.ALL
+        scope: ace.Search.ALL,
+        regExp: false
     };
 };
 
@@ -58,6 +59,20 @@ ace.Search.SELECTION = 2;
         return ranges;
     };
 
+    this.replace = function(input, replacement) {
+        var re = this.$assembleRegExp();
+        var match = re.exec(input);
+        if (match && match[0].length == input.length) {
+            if (this.$options.regExp) {
+                return input.replace(re, replacement);
+            } else {
+                return replacement;
+            }
+        } else {
+            return null;
+        }
+    };
+
     this.$forwardMatchIterator = function(doc) {
         var re = this.$assembleRegExp();
         var self = this;
@@ -71,7 +86,8 @@ ace.Search.SELECTION = 2;
 
                     var matches = [];
 
-                    line.replace(re, function(str, offset) {
+                    line.replace(re, function(str) {
+                        var offset = arguments[arguments.length-2];
                         matches.push({
                             str: str,
                             offset: startIndex + offset

@@ -693,9 +693,9 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.replace = function(replacement) {
-      var range = this.getSelectionRange();
-      range.end = this.doc.replace(range, replacement);
-      this.selection.setSelectionRange(range);
+      var range = this.$tryReplace(this.getSelectionRange(), replacement);
+      if (range !== null)
+          this.selection.setSelectionRange(range);
     },
 
     this.replaceAll = function(replacement) {
@@ -708,10 +708,21 @@ ace.Editor = function(renderer, doc) {
 
         for (var i=0; i<ranges.length; i++) {
             var range = ranges[i];
-            range.end = this.doc.replace(range, replacement);
+            this.$tryReplace(range, replacement);
         }
         this.selection.setSelectionRange(range);
     },
+
+    this.$tryReplace = function(range, replacement) {
+        var input = this.doc.getTextRange(range);
+        var replacement = this.$search.replace(input, replacement);
+        if (replacement !== null) {
+            range.end = this.doc.replace(range, replacement);
+            return range;
+        } else {
+            return null;
+        }
+    };
 
     this.find = function(needle) {
         this.clearSelection();
