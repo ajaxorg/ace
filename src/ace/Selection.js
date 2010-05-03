@@ -17,7 +17,7 @@ ace.Selection = function(doc) {
     ace.implement(this, ace.MEventEmitter);
 
     this.isEmpty = function() {
-        return (this.selectionAnchor == null ||
+        return (!this.selectionAnchor ||
             (this.selectionAnchor.row == this.selectionLead.row &&
              this.selectionAnchor.column == this.selectionLead.column));
     };
@@ -37,7 +37,6 @@ ace.Selection = function(doc) {
 
     this.setSelectionAnchor = function(row, column) {
         this.clearSelection();
-
         this.selectionAnchor = this.$clipPositionToDocument(row, column);
     };
 

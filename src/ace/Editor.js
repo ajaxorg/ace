@@ -306,6 +306,8 @@ ace.Editor = function(renderer, doc) {
             this.doc.remove(range);
         }
 
+        this.clearSelection();
+
         var lineState = this.bgTokenizer.getState(cursor.row-1);
         var shouldOutdent = this.mode.checkOutdent(lineState, this.doc.getLine(cursor.row), text);
 
