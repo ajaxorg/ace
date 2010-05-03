@@ -23,6 +23,8 @@ ace.Document = function(text, mode) {
 
     ace.implement(this, ace.MEventEmitter);
 
+    this.$undoManager = null;
+
     this.$split = function(text) {
         return text.split(/\r\n|\r|\n/);
     };
@@ -42,6 +44,33 @@ ace.Document = function(text, mode) {
         };
         this.$dispatchEvent("change", { data: data});
     };
+
+    this.setUndoManager = function(undoManager) {
+        this.$undoManager = undoManager;
+        this.$deltas = [];
+
+        if (this.$informUndoManager) {
+            this.$informUndoManager.cancel();
+        }
+
+        if (undoManager) {
+            undoManager.setDocument(this);
+            var self = this;
+            this.$informUndoManager = ace.deferredCall(function() {
+                undoManager.notify(self.$deltas);
+                self.$deltas = [];
+            });
+        }
+    };
+
+    this.$defaultUndoManager = {
+        undo: function() {},
+        redo: function() {}
+    };
+
+    this.getUndoManager = function() {
+        return this.$undoManager || this.$defaultUndoManager;
+    },
 
     this.getTabString = function() {
         if (this.getUseSoftTabs()) {
@@ -267,8 +296,8 @@ ace.Document = function(text, mode) {
         return null;
     };
 
-    this.insert = function(position, text) {
-        var end = this.$insert(position, text);
+    this.insert = function(position, text, fromUndo) {
+        var end = this.$insert(position, text, fromUndo);
         this.fireChangeEvent(position.row, position.row == end.row ? position.row
                 : undefined);
         return end;
@@ -278,9 +307,28 @@ ace.Document = function(text, mode) {
         var args = [row, 0];
         args.push.apply(args, lines);
         this.lines.splice.apply(this.lines, args);
+
+        if (this.$undoManager) {
+            var nl = this.$getNewLineCharacter();
+            this.$deltas.push({
+                type: "insert",
+                range: {
+                    start: {
+                        row: row,
+                        column: 0
+                    },
+                    end: {
+                        row: row + lines.length,
+                        column: 0
+                    }
+                },
+                text: lines.join(nl) + nl
+            });
+            this.$informUndoManager.schedule();
+        }
     },
 
-    this.$insert = function(position, text) {
+    this.$insert = function(position, text, fromUndo) {
         this.modified = true;
         if (this.lines.length <= 1) {
             this.$detectNewLine(text);
@@ -293,7 +341,7 @@ ace.Document = function(text, mode) {
             this.lines[position.row] = line.substring(0, position.column);
             this.lines.splice(position.row + 1, 0, line.substring(position.column));
 
-            return {
+            var end = {
                 row : position.row + 1,
                 column : 0
             };
@@ -303,7 +351,7 @@ ace.Document = function(text, mode) {
             this.lines[position.row] = line.substring(0, position.column) + text
                     + line.substring(position.column);
 
-            return {
+            var end = {
                 row : position.row,
                 column : position.column + text.length
             };
@@ -320,27 +368,56 @@ ace.Document = function(text, mode) {
                 this.$insertLines(position.row + 1, newLines.slice(1, -1));
             }
 
-            return {
+            var end = {
                 row : position.row + newLines.length - 1,
                 column : newLines[newLines.length - 1].length
             };
         }
+
+        if (!fromUndo && this.$undoManager) {
+            var nl = this.$getNewLineCharacter();
+            this.$deltas.push({
+                type: "insert",
+                range: {
+                    start: ace.copyObject(position),
+                    end: ace.copyObject(end)
+                },
+                text: text
+            });
+            this.$informUndoManager.schedule();
+        }
+
+        return end;
     };
 
     this.$isNewLine = function(text) {
         return (text == "\r\n" || text == "\r" || text == "\n");
     };
 
-    this.remove = function(range) {
-        this.$remove(range);
+    this.remove = function(range, fromUndo) {
+        this.$remove(range, fromUndo);
 
         this.fireChangeEvent(range.start.row,
                              range.end.row == range.start.row ? range.start.row
                                      : undefined);
+
         return range.start;
     };
 
-    this.$remove = function(range) {
+    this.$remove = function(range, fromUndo) {
+        if (!fromUndo && this.$undoManager) {
+            var nl = this.$getNewLineCharacter();
+            this.$deltas.push({
+                type: "remove",
+                range: {
+                    start: ace.copyObject(range.start),
+                    end: ace.copyObject(range.end)
+                },
+                text: this.getTextRange(range)
+            });
+            this.$informUndoManager.schedule();
+        }
+
         this.modified = true;
 
         var firstRow = range.start.row;
@@ -351,8 +428,37 @@ ace.Document = function(text, mode) {
 
         this.lines.splice(firstRow, lastRow - firstRow + 1, row);
 
+
         return range.start;
     };
+
+    this.undoChanges = function(deltas) {
+        this.selection.clearSelection();
+        for (var i=0; i<deltas.length; i++) {
+            var delta = deltas[i];
+            if (delta.type == "insert") {
+                this.remove(delta.range, true);
+                this.selection.moveCursorToPosition(delta.range.start);
+            } else {
+                this.insert(delta.range.start, delta.text, true);
+                this.selection.setSelectionRange(delta.range);
+            }
+        }
+    },
+
+    this.redoChanges = function(deltas) {
+        this.selection.clearSelection();
+        for (var i=0; i<deltas.length; i++) {
+            var delta = deltas[i];
+            if (delta.type == "insert") {
+                this.insert(delta.range.start, delta.text, true);
+                this.selection.setSelectionRange(delta.range);
+            } else {
+                this.remove(delta.range, true);
+                this.selection.moveCursorToPosition(delta.range.start);
+            }
+        }
+    },
 
     this.replace = function(range, text) {
         this.$remove(range);
@@ -372,8 +478,8 @@ ace.Document = function(text, mode) {
     };
 
     this.indentRows = function(range, indentString) {
-      for (var i=range.start.row; i<= range.end.row; i++) {
-          this.lines[i] = indentString + this.getLine(i);
+      for (var row=range.start.row; row<= range.end.row; row++) {
+          this.$insert({row: row, column:0}, indentString);
       }
       this.fireChangeEvent(range.start.row, range.end.row);
       return indentString.length;
@@ -388,8 +494,20 @@ ace.Document = function(text, mode) {
             }
         }
 
-        for (var i=range.start.row; i<= range.end.row; i++) {
-            this.lines[i] = this.getLine(i).substring(outdentLength);
+        var deleteRange = {
+            start: {
+                column: 0
+            },
+            end: {
+                column: outdentLength
+            }
+        };
+
+        for (var i=range.start.row; i<= range.end.row; i++)
+        {
+            deleteRange.start.row = i;
+            deleteRange.end.row = i;
+            this.$remove(deleteRange);
         }
 
         this.fireChangeEvent(range.start.row, range.end.row);

@@ -780,4 +780,12 @@ ace.Editor = function(renderer, doc) {
             this.selection.setSelectionRange(range);
     };
 
+    this.undo = function() {
+        this.doc.getUndoManager().undo();
+    };
+
+    this.redo = function() {
+        this.doc.getUndoManager().redo();
+    };
+
 }).call(ace.Editor.prototype);

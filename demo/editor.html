@@ -60,6 +60,7 @@
 	<script src="../src/ace/MEventEmitter.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/ace/Search.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/ace/Selection.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../src/ace/UndoManager.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/ace/Document.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/ace/Tokenizer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../src/ace/BackgroundTokenizer.js" type="text/javascript" charset="utf-8"></script>
@@ -149,10 +150,15 @@
 var docs = {}
 docs.js = new ace.Document(document.getElementById("jstext").innerHTML);
 docs.js.setMode(new ace.mode.JavaScript());
+docs.js.setUndoManager(new ace.UndoManager());
+
 docs.css = new ace.Document(document.getElementById("csstext").innerHTML);
 docs.css.setMode(new ace.mode.Css());
+docs.css.setUndoManager(new ace.UndoManager());
+
 docs.html = new ace.Document(document.getElementById("htmltext").innerHTML);
 docs.html.setMode(new ace.mode.Html());
+docs.html.setUndoManager(new ace.UndoManager());
 
 var docEl = document.getElementById("doc");
 

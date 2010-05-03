@@ -80,6 +80,18 @@ ace.KeyBinding = function(element, editor) {
         this.editor.find(needle);
     };
 
+    this["Control-Z"] = function() {
+      this.editor.undo();
+    };
+
+    this["Control-Shift=Z"] = function() {
+        this.editor.redo();
+    };
+
+    this["Control-Y"] = function() {
+        this.editor.redo();
+    };
+
     this["Insert"] = function() {
         this.editor.toggleOverwrite();
     };
