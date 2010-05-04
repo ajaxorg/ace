@@ -14,13 +14,19 @@
   Juhu Kinners
 </div>
 
-<script src="../src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../src/ace/lib/core.js" type="text/javascript" charset="utf-8"></script>
+<script src="../src/ace/lib/event.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 
 var el = document.getElementById("juhu");
 ace.addTripleClickListener(el, function() {
   console.log("triple");
-})
+});
+
+ace.addListener(el, "selectstart", function(e) {
+    return ace.preventDefault(e);
+});
+
   
 </script>
 
