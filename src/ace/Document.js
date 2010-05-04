@@ -304,6 +304,9 @@ ace.Document = function(text, mode) {
     };
 
     this.$insertLines = function(row, lines) {
+        if (lines.length == 0)
+            return;
+
         var args = [row, 0];
         args.push.apply(args, lines);
         this.lines.splice.apply(this.lines, args);
@@ -320,6 +323,9 @@ ace.Document = function(text, mode) {
     },
 
     this.$insert = function(position, text, fromUndo) {
+        if (text.length == 0)
+            return;
+
         this.modified = true;
         if (this.lines.length <= 1) {
             this.$detectNewLine(text);
@@ -383,6 +389,9 @@ ace.Document = function(text, mode) {
     };
 
     this.remove = function(range, fromUndo) {
+        if (range.isEmpty())
+            return;
+
         this.$remove(range, fromUndo);
 
         this.fireChangeEvent(range.start.row,
@@ -393,6 +402,9 @@ ace.Document = function(text, mode) {
     };
 
     this.$remove = function(range, fromUndo) {
+        if (range.isEmpty())
+            return;
+
         if (!fromUndo && this.$undoManager) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
