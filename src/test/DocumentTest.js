@@ -134,35 +134,33 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
         editor.removeLines();
         var step1 = doc.toString();
         assertEquals("222\n333", step1);
-        // call normally async code now
         doc.$informUndoManager.call();
 
         editor.removeLines();
         var step2 = doc.toString();
         assertEquals("333", step2);
-        // call normally async code now
         doc.$informUndoManager.call();
 
         editor.removeLines();
         var step3 = doc.toString();
         assertEquals("", step3);
-        // call normally async code now
         doc.$informUndoManager.call();
 
 
         undoManager.undo();
+        doc.$informUndoManager.call();
         assertEquals(step2, doc.toString());
 
         undoManager.undo();
+        doc.$informUndoManager.call();
         assertEquals(step1, doc.toString());
 
         undoManager.undo();
+        doc.$informUndoManager.call();
         assertEquals(initialText, doc.toString());
 
         undoManager.undo();
+        doc.$informUndoManager.call();
         assertEquals(initialText, doc.toString());
-
-//        undoManager.redo();
-//        assertEquals(removedText, doc.toString());
     }
 });

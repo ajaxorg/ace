@@ -57,7 +57,8 @@ ace.Document = function(text, mode) {
             undoManager.setDocument(this);
             var self = this;
             this.$informUndoManager = ace.deferredCall(function() {
-                undoManager.notify(self.$deltas);
+                if (self.$deltas.length > 0)
+                    undoManager.notify(self.$deltas);
                 self.$deltas = [];
             });
         }
@@ -303,7 +304,7 @@ ace.Document = function(text, mode) {
         return end;
     };
 
-    this.$insertLines = function(row, lines) {
+    this.$insertLines = function(row, lines, fromUndo) {
         if (lines.length == 0)
             return;
 
@@ -311,7 +312,7 @@ ace.Document = function(text, mode) {
         args.push.apply(args, lines);
         this.lines.splice.apply(this.lines, args);
 
-        if (this.$undoManager) {
+        if (!fromUndo && this.$undoManager) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 type: "insert",
@@ -359,10 +360,10 @@ ace.Document = function(text, mode) {
             var lastLine = newLines[newLines.length - 1] + line.substring(position.column);
 
             this.lines[position.row] = firstLine;
-            this.$insertLines(position.row + 1, [lastLine]);
+            this.$insertLines(position.row + 1, [lastLine], fromUndo);
 
             if (newLines.length > 2) {
-                this.$insertLines(position.row + 1, newLines.slice(1, -1));
+                this.$insertLines(position.row + 1, newLines.slice(1, -1), fromUndo);
             }
 
             var end = {
