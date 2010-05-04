@@ -118,10 +118,7 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
         doc.setNewLineMode("auto");
         assertEquals(["1", "2", "3"].join("\r\n"), doc.toString());
 
-        doc.replace({
-            start: {row: 0, column: 0},
-            end: {row: 2, column: 1}
-        }, ["4", "5", "6"].join("\n"));
+        doc.replace(new ace.Range(0, 0, 2, 1), ["4", "5", "6"].join("\n"));
         assertEquals(["4", "5", "6"].join("\n"), doc.toString());
     },
 

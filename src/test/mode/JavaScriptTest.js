@@ -16,11 +16,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     "test: toggle comment lines should prepend '//' to each line" : function() {
         var doc = new ace.Document(["  abc", "cde", "fg"]);
 
-        var range =  {
-            start: {row: 0, column: 3},
-            end: {row: 1, column: 1}
-        };
-
+        var range = new ace.Range(0, 3, 1, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["//  abc", "//cde", "fg"].join("\n"), doc.toString());
     },
@@ -28,11 +24,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     "test: toggle comment on commented lines should remove leading '//' chars" : function() {
         var doc = new ace.Document(["//  abc", "//cde", "fg"]);
 
-        var range =  {
-            start: {row: 0, column: 3},
-            end: {row: 1, column: 1}
-        };
-
+        var range = new ace.Range(0, 3, 1, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
@@ -40,11 +32,7 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     "test: toggle comment on multiple lines with one commented line prepend '//' to each line" : function() {
         var doc = new ace.Document(["//  abc", "//cde", "fg"]);
 
-        var range =  {
-            start: {row: 0, column: 3},
-            end: {row: 2, column: 1}
-        };
-
+        var range = new ace.Range(0, 3, 2, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["////  abc", "////cde", "//fg"].join("\n"), doc.toString());
     },
