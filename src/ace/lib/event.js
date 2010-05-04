@@ -2,6 +2,8 @@
 
     var self = this;
 
+    this.isIE = ! + "\v1";
+    
     this.addListener = function(elem, type, callback) {
         if (elem.addEventListener) {
             return elem.addEventListener(type, callback, false);
@@ -118,27 +120,25 @@
         self.addListener(el, "mousewheel", listener);
     };
 
-    this.autoremoveListener = function(el, type, callback, timeout) {
-        var listener = function(e) {
-            clearTimeout(timeoutId);
-            remove();
-            callback(e);
-        };
-
-        var remove = function() {
-            self.removeListener(el, type, listener);
-        };
-
-        self.addListener(el, type, listener);
-        var timeoutId = setTimeout(remove, timeout);
-    };
-
     this.addTripleClickListener = function(el, callback) {
-        self.addListener(el, "mousedown", function() {
-            self.autoremoveListener(el, "mousedown", function() {
-                self.autoremoveListener(el, "mousedown", callback, 300);
-            }, 300);
-        });
+        var clicks = 0;
+        var listener = function(e) {
+           clicks += 1;
+           if (clicks == 1) {
+               setTimeout(function() {
+                   clicks = 0;
+               }, 600);
+           }
+           
+           if (clicks == 3) {
+               clicks = 0;
+               callback(e);
+           }
+           return self.preventDefault(e);
+        };
+        
+        self.addListener(el, "mousedown", listener);
+        this.isIE && self.addListener(el, "dblclick", listener);
     };
 
     this.addKeyListener = function(el, callback) {
