@@ -135,15 +135,37 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.removeLines();
-        var removedText = doc.toString();
-
+        var step1 = doc.toString();
+        assertEquals("222\n333", step1);
         // call normally async code now
         doc.$informUndoManager.call();
+
+        editor.removeLines();
+        var step2 = doc.toString();
+        assertEquals("333", step2);
+        // call normally async code now
+        doc.$informUndoManager.call();
+
+        editor.removeLines();
+        var step3 = doc.toString();
+        assertEquals("", step3);
+        // call normally async code now
+        doc.$informUndoManager.call();
+
+
+        undoManager.undo();
+        assertEquals(step2, doc.toString());
+
+        undoManager.undo();
+        assertEquals(step1, doc.toString());
 
         undoManager.undo();
         assertEquals(initialText, doc.toString());
 
-        undoManager.redo();
-        assertEquals(removedText, doc.toString());
+        undoManager.undo();
+        assertEquals(initialText, doc.toString());
+
+//        undoManager.redo();
+//        assertEquals(removedText, doc.toString());
     }
 });

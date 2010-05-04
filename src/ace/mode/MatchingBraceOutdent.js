@@ -23,18 +23,7 @@ ace.mode.MatchingBraceOutdent = function() {};
         if (!openBracePos || openBracePos.row == row) return 0;
 
         var indent = this.$getIndent(doc.getLine(openBracePos.row));
-
-        var range = {
-            start: {
-                row: row,
-                column: 0
-            },
-            end: {
-                row: row,
-                column: column-1
-            }
-        };
-        doc.replace(range, indent);
+        doc.replace(new ace.Range(row, 0, row, column-1), indent);
 
         return indent.length - (column-1);
     };

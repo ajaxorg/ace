@@ -312,16 +312,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 type: "insert",
-                range: {
-                    start: {
-                        row: row,
-                        column: 0
-                    },
-                    end: {
-                        row: row + lines.length,
-                        column: 0
-                    }
-                },
+                range: new ace.Range(row, 0, row + lines.length, 0),
                 text: lines.join(nl) + nl
             });
             this.$informUndoManager.schedule();
@@ -378,10 +369,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 type: "insert",
-                range: {
-                    start: ace.copyObject(position),
-                    end: ace.copyObject(end)
-                },
+                range: ace.Range.fromPoints(position, end),
                 text: text
             });
             this.$informUndoManager.schedule();
@@ -398,7 +386,7 @@ ace.Document = function(text, mode) {
         this.$remove(range, fromUndo);
 
         this.fireChangeEvent(range.start.row,
-                             range.end.row == range.start.row ? range.start.row
+                             !range.isMultiLine() ? range.start.row
                                      : undefined);
 
         return range.start;
@@ -409,10 +397,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 type: "remove",
-                range: {
-                    start: ace.copyObject(range.start),
-                    end: ace.copyObject(range.end)
-                },
+                range: range.clone(),
                 text: this.getTextRange(range)
             });
             this.$informUndoManager.schedule();
@@ -423,8 +408,8 @@ ace.Document = function(text, mode) {
         var firstRow = range.start.row;
         var lastRow = range.end.row;
 
-        var row = this.lines[firstRow].substring(0, range.start.column)
-                + this.lines[lastRow].substring(range.end.column);
+        var row = this.getLine(firstRow).substring(0, range.start.column)
+                + this.getLine(lastRow).substring(range.end.column);
 
         this.lines.splice(firstRow, lastRow - firstRow + 1, row);
 
@@ -438,6 +423,7 @@ ace.Document = function(text, mode) {
             var delta = deltas[i];
             if (delta.type == "insert") {
                 this.remove(delta.range, true);
+                this.selection.clearSelection();
                 this.selection.moveCursorToPosition(delta.range.start);
             } else {
                 this.insert(delta.range.start, delta.text, true);
@@ -494,14 +480,7 @@ ace.Document = function(text, mode) {
             }
         }
 
-        var deleteRange = {
-            start: {
-                column: 0
-            },
-            end: {
-                column: outdentLength
-            }
-        };
+        var deleteRange = new ace.Range(0, 0, 0, outdentLength);
 
         for (var i=range.start.row; i<= range.end.row; i++)
         {

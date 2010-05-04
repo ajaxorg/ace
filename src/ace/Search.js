@@ -142,17 +142,7 @@ ace.Search.SELECTION = 2;
 
 
     this.$rangeFromMatch = function(row, column, length) {
-        var range = {
-            start: {
-                row: row,
-                column: column
-            },
-            end: {
-                row: row,
-                column: column + length
-            }
-        };
-        return range;
+        return new ace.Range(row, column, row, column+length);
     };
 
     this.$assembleRegExp = function() {

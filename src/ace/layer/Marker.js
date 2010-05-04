@@ -45,30 +45,11 @@ ace.layer.Marker = function(parentEl) {
         var html = [];
         for ( var key in this.markers) {
             var marker = this.markers[key];
-            var range = {
-                start: marker.range.start,
-                end: marker.range.end
-            };
 
-            // clip
-            if (range.start.row > config.lastRow) continue;
-            if (range.end.row < config.firstRow) continue;
+            var range = marker.range.clone().clipRows(config.firstRow, config.lastRow);
+            if (range.isEmpty()) continue;
 
-            if (range.end.row > config.lastRow) {
-                range.end = {
-                    row: config.lastRow+1,
-                    column: 0
-                };
-            }
-
-            if (range.start.row < config.firstRow) {
-                range.start = {
-                    row: config.firstRow,
-                    column: 0
-                };
-            }
-
-            if (range.start.row !== range.end.row) {
+            if (range.isMultiLine()) {
                 if (marker.type == "text") {
                     this.drawTextMarker(html, range, marker.clazz, config);
                 } else {
@@ -86,20 +67,12 @@ ace.layer.Marker = function(parentEl) {
 
         // selection start
         var row = range.start.row;
-        var lineRange = { start: {}, end: {}};
-
-        lineRange.start.row = row;
-        lineRange.start.column = range.start.column;
-        lineRange.end.row = row;
-        lineRange.end.column = this.doc.getLine(row).length;
+        var lineRange = new ace.Range(row, range.start.column, row, this.doc.getLine(row).length);
         this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig);
 
         // selection end
         var row = range.end.row;
-        lineRange.start.row = row;
-        lineRange.start.column = 0;
-        lineRange.end.row = row;
-        lineRange.end.column = range.end.column;
+        var lineRange = new ace.Range(row, 0, row, range.end.column);
         this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig);
 
         for (var row = range.start.row + 1; row < range.end.row; row++) {

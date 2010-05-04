@@ -27,8 +27,7 @@ ace.Selection = function(doc) {
             return false;
         }
 
-        var range = this.getRange();
-        return (range.start.row !== range.end.row);
+        return this.getRange().isMultiLine();
     };
 
     this.getCursor = function() {
@@ -73,16 +72,10 @@ ace.Selection = function(doc) {
 
         if (anchor.row > lead.row
                 || (anchor.row == lead.row && anchor.column > lead.column)) {
-            return {
-                start : lead,
-                end : anchor
-            };
+            return ace.Range.fromPoints(lead, anchor);
         }
         else {
-            return {
-                start : anchor,
-                end : lead
-            };
+            return ace.Range.fromPoints(anchor, lead);
         }
     };
 

@@ -107,13 +107,7 @@ ace.Editor = function(renderer, doc) {
 
             var pos = self.doc.findMatchingBracket(self.getCursorPosition());
             if (pos) {
-                range = {
-                    start: pos,
-                    end: {
-                        row: pos.row,
-                        column: pos.column+1
-                    }
-                };
+                range = new ace.Range(pos.row, pos.column, pos.row, pos.column=1);
                 self.$bracketHighlight = self.renderer.addMarker(range, "bracket");
             }
         }, 10);
@@ -166,16 +160,7 @@ ace.Editor = function(renderer, doc) {
 
         if (this.getHighlightActiveLine() && !this.selection.isMultiLine()) {
             var cursor = this.getCursorPosition();
-            var range = {
-                start: {
-                    row: cursor.row,
-                    column: 0
-                },
-                end: {
-                    row: cursor.row+1,
-                    column: 0
-                }
-            };
+            var range = new ace.Range(cursor.row, 0, cursor.row+1, 0);
             this.$highlightLineMarker = this.renderer.addMarker(range, "active_line", "line");
         }
     };
@@ -296,13 +281,8 @@ ace.Editor = function(renderer, doc) {
             var cursor = this.doc.remove(this.getSelectionRange());
             this.clearSelection();
         } else if (this.$overwrite){
-            var range = {
-                start: cursor,
-                end: {
-                  row: cursor.row,
-                  column: cursor.column + text.length
-                }
-            };
+            var range = new ace.Range.fromPoints(cursor, cursor);
+            range.end.column += text.length;
             this.doc.remove(range);
         }
 
@@ -321,13 +301,7 @@ ace.Editor = function(renderer, doc) {
         if (row !== end.row) {
             var indent = this.mode.getNextLineIndent(lineState, line, this.doc.getTabString());
             if (indent) {
-                var indentRange = {
-                    start: {
-                        row: row+1,
-                        column: 0
-                    },
-                    end : end
-                };
+                var indentRange = new ace.Range(row+1, 0, end.row, end.column);
                 end.column += this.doc.indentRows(indentRange, indent);
             }
         } else {
@@ -454,16 +428,7 @@ ace.Editor = function(renderer, doc) {
 
         var rows = this.$getSelectedRows();
 
-        var range = {
-            start: {
-                row: rows.first,
-                column: 0
-            },
-            end: {
-                row: rows.last,
-                column: 0
-            }
-        };
+        var range = new ace.Range(rows.first, 0, rows.last, 0);
         var state = this.bgTokenizer.getState(this.getCursorPosition().row);
         var addedColumns = this.mode.toggleCommentLines(state, this.doc, range);
 
