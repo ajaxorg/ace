@@ -12,16 +12,19 @@ ace.VirtualRenderer = function(container) {
     this.gutter.className = "gutter";
     this.container.appendChild(this.gutter);
 
-    this.gutterLayer = new ace.layer.Gutter(this.gutter);
-    this.markerLayer = new ace.layer.Marker(this.scroller);
+    this.content = document.createElement("div");
+    this.scroller.appendChild(this.content)
 
-    var textLayer = this.textLayer = new ace.layer.Text(this.scroller);
+    this.gutterLayer = new ace.layer.Gutter(this.gutter);
+    this.markerLayer = new ace.layer.Marker(this.content);
+
+    var textLayer = this.textLayer = new ace.layer.Text(this.content);
     this.canvas = textLayer.element;
 
     this.characterWidth = textLayer.getCharacterWidth();
     this.lineHeight = textLayer.getLineHeight();
 
-    this.cursorLayer = new ace.layer.Cursor(this.scroller);
+    this.cursorLayer = new ace.layer.Cursor(this.content);
 
     this.layers = [ this.markerLayer, textLayer, this.cursorLayer ];
 
@@ -62,8 +65,7 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.getMouseEventTarget = function() {
-        // return top most layer
-        return this.cursorLayer.element;
+        return this.content;
     };
 
     this.getFirstVisibleRow = function() {
@@ -127,6 +129,7 @@ ace.VirtualRenderer = function(container) {
         var charCount = this.doc.getWidth();
         if (this.$showInvisibles)
             charCount += 1;
+            
         var longestLine = Math.max(this.scroller.clientWidth, Math.round(charCount * this.characterWidth));
 
         var lineCount = Math.ceil(minHeight / this.lineHeight);
@@ -140,12 +143,13 @@ ace.VirtualRenderer = function(container) {
             lineHeight : this.lineHeight,
             characterWidth : this.characterWidth
         };
+        
+        this.content.style.marginTop = (-offset) + "px";
 
         for ( var i = 0; i < this.layers.length; i++) {
             var layer = this.layers[i];
 
             var style = layer.element.style;
-            style.marginTop = (-offset) + "px";
             style.height = minHeight + "px";
             style.width = longestLine + "px";
 
