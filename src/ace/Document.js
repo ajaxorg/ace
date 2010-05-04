@@ -315,7 +315,7 @@ ace.Document = function(text, mode) {
         if (!fromUndo && this.$undoManager) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
-                type: "insert",
+                action: "insertText",
                 range: new ace.Range(row, 0, row + lines.length, 0),
                 text: lines.join(nl) + nl
             });
@@ -375,7 +375,7 @@ ace.Document = function(text, mode) {
         if (!fromUndo && this.$undoManager) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
-                type: "insert",
+                action: "insertText",
                 range: ace.Range.fromPoints(position, end),
                 text: text
             });
@@ -409,7 +409,7 @@ ace.Document = function(text, mode) {
         if (!fromUndo && this.$undoManager) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
-                type: "remove",
+                action: "removeText",
                 range: range.clone(),
                 text: this.getTextRange(range)
             });
@@ -434,9 +434,8 @@ ace.Document = function(text, mode) {
         this.selection.clearSelection();
         for (var i=0; i<deltas.length; i++) {
             var delta = deltas[i];
-            if (delta.type == "insert") {
+            if (delta.action == "insertText") {
                 this.remove(delta.range, true);
-                this.selection.clearSelection();
                 this.selection.moveCursorToPosition(delta.range.start);
             } else {
                 this.insert(delta.range.start, delta.text, true);
@@ -449,7 +448,7 @@ ace.Document = function(text, mode) {
         this.selection.clearSelection();
         for (var i=0; i<deltas.length; i++) {
             var delta = deltas[i];
-            if (delta.type == "insert") {
+            if (delta.action == "insertText") {
                 this.insert(delta.range.start, delta.text, true);
                 this.selection.setSelectionRange(delta.range);
             } else {
