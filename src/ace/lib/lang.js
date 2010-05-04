@@ -57,6 +57,11 @@
             }
           },
 
+          call: function() {
+              this.cancel();
+              fcn();
+          },
+
           cancel: function() {
               clearTimeout(timer);
               timer = null;

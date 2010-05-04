@@ -358,11 +358,11 @@ ace.Document = function(text, mode) {
         }
         else {
             var line = this.lines[position.row] || "";
+            var firstLine = line.substring(0, position.column) + newLines[0];
+            var lastLine = newLines[newLines.length - 1] + line.substring(position.column);
 
-            this.lines[position.row] = line.substring(0, position.column)
-                    + newLines[0];
-            this.lines[position.row + 1] = newLines[newLines.length - 1]
-                    + line.substring(position.column);
+            this.lines[position.row] = firstLine;
+            this.$insertLines(position.row + 1, [lastLine]);
 
             if (newLines.length > 2) {
                 this.$insertLines(position.row + 1, newLines.slice(1, -1));

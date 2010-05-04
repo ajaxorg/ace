@@ -123,5 +123,27 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
             end: {row: 2, column: 1}
         }, ["4", "5", "6"].join("\n"));
         assertEquals(["4", "5", "6"].join("\n"), doc.toString());
+    },
+
+    "test: undo/redo for delete line" : function() {
+        var doc = new ace.Document(["111", "222", "333"]);
+        var undoManager = new ace.UndoManager();
+        doc.setUndoManager(undoManager);
+
+        var initialText = doc.toString();
+
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.removeLines();
+        var removedText = doc.toString();
+
+        // call normally async code now
+        doc.$informUndoManager.call();
+
+        undoManager.undo();
+        assertEquals(initialText, doc.toString());
+
+        undoManager.redo();
+        assertEquals(removedText, doc.toString());
     }
 });
