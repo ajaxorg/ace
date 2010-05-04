@@ -9,7 +9,10 @@ ace.Editor = function(renderer, doc) {
     new ace.KeyBinding(container, this);
     var self = this;
     ace.addListener(container, "mousedown", function(e) {
-        self.focus();
+        setTimeout(function() {self.focus();});
+        return ace.preventDefault(e);
+    });
+    ace.addListener(container, "selectstart", function(e) {
         return ace.preventDefault(e);
     });
 
@@ -107,7 +110,7 @@ ace.Editor = function(renderer, doc) {
 
             var pos = self.doc.findMatchingBracket(self.getCursorPosition());
             if (pos) {
-                range = new ace.Range(pos.row, pos.column, pos.row, pos.column=1);
+                range = new ace.Range(pos.row, pos.column, pos.row, pos.column+1);
                 self.$bracketHighlight = self.renderer.addMarker(range, "bracket");
             }
         }, 10);
