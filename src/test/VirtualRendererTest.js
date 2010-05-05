@@ -25,6 +25,19 @@ var VirtualRendererTest = new TestCase("VirtualRendererTest", {
         assertEquals(15, renderer.$documentToScreenColumn(0, 13));
     },
 
+    "test: convert document to scrren coordinates with leading tabs": function() {
+        var el = document.createElement("div");
+        var renderer = new ace.VirtualRenderer(el);
+
+        var doc = new ace.Document("\t\t123");
+        doc.setTabSize(4);
+        renderer.setDocument(doc);
+        assertEquals(0, renderer.$documentToScreenColumn(0, 0));
+        assertEquals(4, renderer.$documentToScreenColumn(0, 1));
+        assertEquals(8, renderer.$documentToScreenColumn(0, 2));
+        assertEquals(9, renderer.$documentToScreenColumn(0, 3));
+    },
+
     "test: convert screen to document coordinates" : function() {
         var el = document.createElement("div");
         var renderer = new ace.VirtualRenderer(el);

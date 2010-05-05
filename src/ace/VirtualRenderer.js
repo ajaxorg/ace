@@ -228,7 +228,7 @@ ace.VirtualRenderer = function(container) {
         var screenColumn = 0;
         var remaining = docColumn;
 
-        var line = this.doc.getLine(row).split(/\t/g);
+        var line = this.doc.getLine(row).split("\t");
         for (var i=0; i<line.length; i++) {
             var len = line[i].length;
             if (remaining > len) {
@@ -240,6 +240,7 @@ ace.VirtualRenderer = function(container) {
                 break;
             }
         }
+
         return screenColumn;
     };
 
@@ -249,7 +250,7 @@ ace.VirtualRenderer = function(container) {
         var docColumn = 0;
         var remaining = screenColumn;
 
-        var line = this.doc.getLine(row).split(/\t/g);
+        var line = this.doc.getLine(row).split("\t");
         for (var i=0; i<line.length; i++) {
             var len = line[i].length;
             if (remaining >= len + tabSize) {
