@@ -14,6 +14,7 @@
   position: absolute;
   overflow-x: scroll;
   overflow-y: hidden;
+  height: 100%;
 }
 
 .editor .sb {
@@ -29,11 +30,17 @@
   left: 0px;
 }
 
+.editor .printMargin {
+  position: absolute;
+  height: 100%;
+}
+
 .layer {
   z-index: 0;
   position: absolute;
   overflow: hidden;  
   white-space: nowrap;
+  height: 100%;
 }
 
 .text-layer {

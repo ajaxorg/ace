@@ -360,18 +360,32 @@ ace.Editor = function(renderer, doc) {
         return this.$highlightActiveLine;
     };
 
-    this.$showInvisibles = true;
     this.setShowInvisibles = function(showInvisibles) {
-        showInvisibles = !!showInvisibles;
-        if (this.$showInvisibles == showInvisibles) return;
+        if (this.getShowInvisibles() == showInvisibles)
+            return;
 
-        this.$showInvisibles = showInvisibles;
         this.renderer.setShowInvisibles(showInvisibles);
         this.renderer.draw();
     };
 
     this.getShowInvisibles = function() {
-        return this.showInvisibles;
+        return this.renderer.getShowInvisibles();
+    };
+
+    this.setShowPrintMargin = function(showPrintMargin) {
+        this.renderer.setShowPrintMargin(showPrintMargin);
+    };
+
+    this.getShowPrintMargin = function() {
+        return this.renderer.getShowPrintMargin();
+    };
+
+    this.setPrintMarginColumn = function(showPrintMargin) {
+        this.renderer.setPrintMarginColumn(showPrintMargin);
+    };
+
+    this.getPrintMarginColumn = function() {
+        return this.renderer.getPrintMarginColumn();
     };
 
     this.$readOnly = false;

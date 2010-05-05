@@ -15,6 +15,11 @@
   font-size: 12px;  
 }
 
+.editor .printMargin {
+  width: 1px;
+  background: rgb(191, 191, 191);
+}
+
 .gutter-layer {
   right: 10px;
   text-align: right;

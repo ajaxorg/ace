@@ -13,7 +13,7 @@ ace.VirtualRenderer = function(container) {
     this.container.appendChild(this.gutter);
 
     this.content = document.createElement("div");
-    this.scroller.appendChild(this.content)
+    this.scroller.appendChild(this.content);
 
     this.gutterLayer = new ace.layer.Gutter(this.gutter);
     this.markerLayer = new ace.layer.Marker(this.content);
@@ -38,6 +38,7 @@ ace.VirtualRenderer = function(container) {
         column : 0
     };
 
+    this.$updatePrintMargin();
     this.onResize();
 };
 
@@ -60,6 +61,45 @@ ace.VirtualRenderer = function(container) {
         this.textLayer.setShowInvisibles(showInvisibles);
     };
 
+    this.getShowInvisibles = function() {
+        return this.showInvisibles;
+    };
+
+    this.$showPrintMargin = true;
+    this.setShowPrintMargin = function(showPrintMargin) {
+        this.$showPrintMargin = showPrintMargin;
+        this.$updatePrintMargin();
+    };
+
+    this.getShowPrintMargin = function() {
+        return this.$showPrintMargin;
+    };
+
+    this.$printMarginColumn = 80;
+    this.setPrintMarginColumn = function(showPrintMargin) {
+        this.$printMarginColumn = showPrintMargin;
+        this.$updatePrintMargin();
+    };
+
+    this.getPrintMarginColumn = function() {
+        return this.$printMarginColumn;
+    };
+
+    this.$updatePrintMargin = function() {
+        if (!this.$showPrintMargin && !this.$printMarginEl)
+            return;
+
+        if (!this.$printMarginEl) {
+            this.$printMarginEl = document.createElement("div");
+            this.$printMarginEl.className = "printMargin";
+            this.content.insertBefore(this.$printMarginEl, this.gutter.element);
+        }
+
+        var style = this.$printMarginEl.style;
+        style.left = (this.characterWidth * this.$printMarginColumn) + "px";
+        style.visibility = this.$showPrintMargin ? "visible" : "hidden";
+    };
+
     this.getContainerElement = function() {
         return this.container;
     };
@@ -79,7 +119,6 @@ ace.VirtualRenderer = function(container) {
     this.onResize = function()
     {
         var height = ace.getInnerHeight(this.container);
-        this.gutter.style.height = height + "px";
         this.scroller.style.height = height + "px";
         this.scrollBar.setHeight(height);
 
@@ -129,7 +168,7 @@ ace.VirtualRenderer = function(container) {
         var charCount = this.doc.getWidth();
         if (this.$showInvisibles)
             charCount += 1;
-            
+
         var longestLine = Math.max(this.scroller.clientWidth, Math.round(charCount * this.characterWidth));
 
         var lineCount = Math.ceil(minHeight / this.lineHeight);
@@ -143,21 +182,19 @@ ace.VirtualRenderer = function(container) {
             lineHeight : this.lineHeight,
             characterWidth : this.characterWidth
         };
-        
+
         this.content.style.marginTop = (-offset) + "px";
 
         for ( var i = 0; i < this.layers.length; i++) {
             var layer = this.layers[i];
 
             var style = layer.element.style;
-            style.height = minHeight + "px";
             style.width = longestLine + "px";
 
             layer.update(layerConfig);
         };
 
         this.gutterLayer.element.style.marginTop = (-offset) + "px";
-        this.gutterLayer.element.style.height = minHeight + "px";
         this.gutterLayer.update(layerConfig);
 
         this.$updateScrollBar();
