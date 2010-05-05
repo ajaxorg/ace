@@ -3,8 +3,6 @@ ace.provide("ace.Selection");
 ace.Selection = function(doc) {
     this.doc = doc;
 
-    this.$initEvents();
-
     this.clearSelection();
     this.selectionLead = {
         row: 0,

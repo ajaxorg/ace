@@ -1,0 +1,532 @@
+<html>
+	<head>
+		<script type="text/javascript" src="d8.js"></script>
+        <script type="text/javascript" src="o3.js"></script>
+	</head>
+	<body>
+		<embed type="application/o3stem-aaaaaaaa-1111-bbbb-1111-cccccccccccc" width="0" height="0" /> 
+
+        <button onClick="testChrome()">start test</button>
+		<br></br>
+		<textarea name="log" id="log" cols="100" rows="25">
+		</textarea>
+	</body>
+	<script>
+        var o3obj = document.getElementsByTagName("embed")[0];;
+        // creating an o3 instance, we need the UID and the name of the product
+        // the o3.js file will take care of all the details
+        //o3obj = o3.create("AAAAAAAA-1111-BBBB-1111-CCCCCCCCCCCC", {
+		//o3obj = o3.create("aaaaaaaa-1111-bbbb-1111-cccccccccccc", { 
+        //    oninstallprompt : function(){ alert("can't find o3 plugin");},
+		//	product : 'o3stem'    
+        //} );
+
+		function getValueFromHeader(name,data,from) {
+			var ret;
+			if (!from)
+				from = 0;
+				
+			var s = data.indexOf(name,from);
+			if (s == -1)
+				return ret;
+			var e = data.indexOf("\r\n",s);
+			if (e == -1)
+				return ret;
+					
+			ret = data.substring(s+name.length+1,e);
+			return ret;
+		};
+		
+		var MSG = {
+			handshake: "ChromeDevToolsHandshake\r\n"
+		};
+		
+		var STATE = {				
+				seq_id: 0,
+				client: o3obj.socketTCP(),
+				connectionEstabilished: false,
+				received : '',
+				tabID: ''
+		};
+						
+		var EVENTS = {
+			DevToolsService : {
+				event : {
+				
+				},				
+				response : {
+					"list_tabs": {}
+				}
+			},
+			V8Debugger : {
+					event : {
+						"break": {
+							"fromCode": nativeBreak
+						},
+						"exception": function(r){log("\n> exception event occured\n");},
+						"afterCompile": function(r){log("\n> after compile event occured\n");},
+						"navigated": function(r){log("\n> navigated event occured\n");},
+						"closed": function(r){log("\n> tab closed event occured\n");}
+					},
+					response : {
+						"attach": {}					
+					}
+			},
+			defaults : {
+				v8event : unknownV8Event,
+				v8response : unknownV8Response,
+				devToolResponse : unknownDevToolResponse,
+				connected : connected
+			},
+			pending : {
+			
+			}		
+		};
+				
+		function reportError(e) {
+			alert(e);
+		};
+				
+		function v8eventDispatcher(responseObj) {
+			var eventType = responseObj.data.event,
+				eventID,
+				brNo,
+				cbGroup = EVENTS.V8Debugger.event[eventType];						 
+			
+			if (cbGroup) {				
+				if (eventType == "break") {
+					if (responseObj.data.body.breakpoints)
+						brNo = responseObj.data.body.breakpoints[0];
+					if (brNo)	
+						cbGroup[brNo](responseObj);
+					else
+						cbGroup["fromCode"](responseObj);
+				}else
+					cbGroup(responseObj);					
+				
+				return;
+			}		
+
+			EVENTS.defaults.v8event(responseObj);											
+		}
+		
+		function v8responseDispatcher(responseObj) {
+			var command = (responseObj.data && responseObj.data.command) ?
+					responseObj.data.command : responseObj.command,
+					
+				reqSeq = responseObj.data ? responseObj.data.request_seq : -1,
+				cbGroup = EVENTS.V8Debugger.response[command],
+				eventToListen;
+			
+			// TODO: check the result report error if something is wrong
+			
+			// set up listener for an already specified event
+			if (eventToListen = EVENTS.pending[reqSeq]) {
+				var brNo = responseObj.data.body.breakpoint;
+				EVENTS.V8Debugger.event[eventToListen.event][brNo] = 
+					eventToListen.ontrigger;
+				EVENTS.pending.reqSeq = null;
+				delete EVENTS.pending.reqSeq;
+			}
+			
+			// lookup reponse callback based on 'request_seq' property
+			if (cbGroup) {
+				// some v8 responses, added for chrome only...
+				if (reqSeq==-1) {
+					cbGroup(responseObj);
+					return
+				}
+
+				if (cbGroup[reqSeq]) {
+					cbGroup[reqSeq](responseObj);
+					return;
+				}
+			}		
+			
+			EVENTS.defaults.v8response(responseObj);
+			return;
+		}
+		function devtoolResponseDispatcher(responseObj) {
+			var cbGroup = EVENTS.DevToolsService.response[responseObj.command];
+				if (cbGroup) {
+					cbGroup(responseObj);
+					return;
+				}
+					
+				EVENTS.defaults.devToolResponse(responseObj);
+		}
+		function nativeBreak(responseObj) {
+			log("\n>event: native javascript breakpoint\n");
+		}
+
+		function unknownV8Event(e) {
+			log("\n>event: unknownV8Event\n");
+		};
+		function unknownV8Response(e){ 
+			log("\n>event: unknownV8Response\n");
+		};
+		function unknownDevToolResponse(e){
+			log("\n>event: unknownDevToolResponse\n");
+		};
+		function connected(e){
+			log("\n>event: connected\n");
+			setTimeout("start()",0);
+		};
+
+
+		
+		function objectifyResponse(responseText){
+				var responseObj = null;
+				try {						
+					//headers = responseText.match(/\[w_-]+\:[^\n\r]+[\n\r]/g);			
+					var content,d = responseText.indexOf('\r\n\r\n'),
+					content = responseText.substring(d+4);
+					responseObj = eval('(' + content + ')');
+				}
+				catch(e){
+					debugger;
+				}
+				return responseObj;
+		}		
+		
+		function checkForWholeMessage() {
+			var i,c,l,responseLength,fullResponse = false; 			
+			if ((i = STATE.received.indexOf('\r\n\r\n')) != -1) {
+				if ((c = STATE.received.indexOf('Content-Length:')) != -1) {
+					l = STATE.received.substring(c+15);
+					l = l.substring(0, l.indexOf('\r\n'));
+					responseLength = i+4+parseInt(l,10)
+					if (responseLength<=STATE.received.length) {
+						fullResponse = STATE.received.substring(0,responseLength);
+						STATE.received = STATE.received.substring(responseLength);
+					}						
+				}
+			}
+			return fullResponse;	
+		}
+
+		function dispatchResponse(fullResponse) {					
+			var	responseObj = objectifyResponse(fullResponse),
+				tool = getValueFromHeader("Tool", fullResponse),
+				dest = getValueFromHeader("Destination", fullResponse);
+				
+			if (!responseObj) {
+				alert("broken message!!!");
+				return;
+			}
+			
+			if (tool == "V8Debugger"){
+				if (responseObj.data && responseObj.data.type) {
+					if (responseObj.data.type == "event") {
+						v8eventDispatcher(responseObj);
+						return;
+					}
+					else if (responseObj.data.type == "response") {
+						v8responseDispatcher(responseObj);
+						return;
+					}
+					else {
+						reportError("unknown V8 message type: " 
+							+ responseObj.data.type);
+					}
+				}
+				else {
+					// v8debugger tool messages were extended with some
+					// special messages only for chrome
+					v8responseDispatcher(responseObj);
+				}
+			}
+			else if (tool == "DevToolsService") {
+				devtoolResponseDispatcher(responseObj);
+			}
+			else {
+				reportError("tool not supported: " + tool);
+			}				
+		}		
+		
+		// receives the next chunk on the socket, and handles the message if there were any
+		function globalReceiveFunction() {			
+			var lastChunk = STATE.client.receivedText;
+			STATE.client.clearBuf();
+			STATE.received += lastChunk;
+			log("\n>receiving: \n" + lastChunk + "\n");
+			
+			if (!STATE.connectionEstabilished && 
+				STATE.received == MSG.handshake) 
+			{				
+				EVENTS.defaults.connected();
+				STATE.received = '';
+				STATE.connectionEstabilished = true;
+				return;
+			}
+			
+			// if there are whole messages on the pipe let's dispatch them
+			while (fullResponse = checkForWholeMessage()) 
+				dispatchResponse(fullResponse);	
+		}
+		
+		var RequestHandler = {
+			sendMessage: function(requestObj) {
+				log("\n>send message:\n" + requestObj.msg + '\n');				
+				var command = requestObj.v8command ? requestObj.v8command :
+					requestObj.command;
+					
+				EVENTS[requestObj.tool]["response"][command] ?
+					EVENTS[requestObj.tool]["response"][command]
+					: (EVENTS[requestObj.tool]["response"][command] = {});
+				
+				// set callback for the receive response event
+				if (requestObj.seq){
+					if (!EVENTS[requestObj.tool]["response"][command]);
+						EVENTS[requestObj.tool]["response"][command] = {};
+					EVENTS[requestObj.tool]["response"][command][requestObj.seq] = requestObj.ondone;				
+				}	
+				else
+					EVENTS[requestObj.tool]["response"][command] = requestObj.ondone;
+					
+				// after the response we might want to listen for an event
+				// (like for example setbreakpoint request)
+				if (requestObj.event)
+					EVENTS.pending[requestObj.seq] = {
+						ontrigger: requestObj.ontrigger,
+						event: requestObj.event					
+					};
+					
+				STATE.client.send(requestObj.msg);			
+			}
+		}
+
+		function protocolStringifier() {
+			var s='';
+			for(var i=0; i<this.headers.length; i++) {
+				s += this.headers[i] + "\r\n";
+			}
+			s += "\r\n";
+			s += this.content;
+			return s;
+		}		
+		
+		function connectAndHandshake()
+		{									
+			STATE.client.onconnect = function()
+			{				
+				log("\n>connect cb\n");
+				STATE.client.receive();				
+				STATE.client.send(MSG.handshake);
+				STATE.client.onconnect = 0;
+			}
+			STATE.client.onreceive = globalReceiveFunction;	
+			STATE.client.connect('127.0.0.1', 9222);								
+		}
+
+
+		function listTabs(ondone)
+		{	
+			var LIST_TABS = '{"command":"list_tabs"}',
+				contentLength = LIST_TABS.length,
+				protocolObj = {
+					headers: [],
+					content: LIST_TABS,
+					toString: protocolStringifier
+				};
+			
+			protocolObj.headers.push(
+				'Content-Length:' + contentLength,
+				'Tool:DevToolsService'
+			);	
+			
+			var requestObj = {			
+				msg: protocolObj.toString(), 
+				command: "list_tabs",
+				tool: "DevToolsService",
+				ondone: ondone
+			};
+			
+			RequestHandler.sendMessage(requestObj);
+		}
+
+		function attach(tabID, ondone)
+		{	
+			var ATTACH_TABS = '{"command":"attach"}',
+				contentLength = ATTACH_TABS.length,
+				protocolObj = {
+					headers: [],
+					content: ATTACH_TABS,
+					toString: protocolStringifier
+				};
+			
+			protocolObj.headers.push(
+				'Content-Length:' + contentLength, 
+				'Tool:V8Debugger',
+				'Destination:' + tabID
+			);
+				
+			var requestObj = {			
+				msg: protocolObj.toString(), 
+				command: "attach",
+				tool: "V8Debugger",
+				ondone: ondone
+			};
+			
+			RequestHandler.sendMessage(requestObj);
+		}
+		
+		function debuggerCmd(cmd, ondone, v8command, seq, event)
+		{	
+			var debCmd = '{"command":"debugger_command","data":' 
+					+ cmd +'}',
+				contentLength = debCmd.length,
+				protocolObj = {
+					headers: [],
+					content: debCmd,
+					toString: protocolStringifier
+				};
+			
+			protocolObj.headers.push(
+				'Content-Length:' + contentLength, 
+				'Tool:V8Debugger',
+				'Destination:' + STATE.tabID
+			);
+				
+			var requestObj = {			
+				msg: protocolObj.toString(), 
+				command: "debugger_command",				
+				v8command: v8command,
+				tool: "V8Debugger",				
+				ondone: ondone
+			};
+						
+			if (seq)
+				requestObj.seq = seq;
+				
+			if (event) {
+				requestObj.event = event.type;
+				requestObj.ontrigger = event.ontrigger;
+			}	
+				
+			RequestHandler.sendMessage(requestObj);
+		}
+
+		function breakpoint(target, line, ondone, ontrigger)
+		{
+			var v8req = {
+				seq:++STATE.seq_id,
+				type:"request",
+				command: "setbreakpoint",
+				arguments: {
+				  enabled: true,				  
+                  target: target,
+                  line: line,
+                  type: "script"                  
+				}
+			};
+			var req = SimpleObjectToJSON_(v8req);
+			var event = {type: "break", ontrigger: ontrigger};
+			debuggerCmd(req, ondone, v8req.command, v8req.seq, event);
+			evalDummy();
+		}		
+		
+		function source(ondone)
+		{
+			var v8req = {
+				seq:++STATE.seq_id,
+				type:"request",
+				command: "source",
+				arguments: {}
+			};
+			var req = SimpleObjectToJSON_(v8req);
+			debuggerCmd(req, ondone);
+		}
+
+		function scripts(ondone)		
+		{
+			var v8req = {
+				seq:++STATE.seq_id,
+				type:"request",
+				command: "scripts"
+			};
+			var req = SimpleObjectToJSON_(v8req);
+			debuggerCmd(req, ondone, v8req.command, v8req.seq);
+			evalDummy();
+		}
+		
+		function evalDummy()
+		{
+			var debCmd = '{"command":"evaluate_javascript","data":"javascript:void(0);"}',
+				contentLength = debCmd.length,
+				protocolObj = {
+					headers: [],
+					content: debCmd,
+					toString: protocolStringifier
+				};
+			
+			protocolObj.headers.push(
+				'Content-Length:' + contentLength, 
+				'Tool:V8Debugger',
+				'Destination:' + STATE.tabID
+			);
+				
+			var requestObj = {			
+				msg: protocolObj.toString(), 
+				command: "debugger_command",
+				tool: "V8Debugger",				
+				ondone: function(){}
+			};
+						
+			RequestHandler.sendMessage(requestObj);
+		}
+		
+		function log(text) {
+			var prev;
+			if (document.all) {
+				document.getElementById('log').innerText += text;
+			} else {
+				document.getElementById('log').textContent += text;
+			}
+		}
+
+		function testChrome() {
+			connectAndHandshake();													
+		}	
+
+		function start() {
+			listTabs(onReceiveTabs);					
+		}	
+		
+		var tabid_;
+		function onReceiveTabs(responseObj) {
+			log("\nreceived tabs...\n");
+			tabid_ = responseObj.data[0][0];
+			attach(responseObj.data[0][0], onAttached);
+		}
+		
+		function onAttached(responseObj) {
+			log("\onAttach: " + responseObj.result + "\n");
+			STATE.tabID = tabid_;
+			scripts(onReceiveActiveScripts);
+		}
+		
+		function onReceiveActiveScripts(responseObj) {
+			var scripts = responseObj.data.body;
+			log("\n> received scripts:\n")
+			var debugjs;
+			for (var i=0; i<scripts.length; i++) {
+				if (!scripts[i].name)
+					continue;
+				log(scripts[i].name + "\n");
+				if (!debugjs && scripts[i].name.indexOf("debug.js")!=-1)
+					debugjs = scripts[i].name;
+			}
+			breakpoint(debugjs, 2, onsetBreakPoint, onBreak);
+		}
+		
+		function onsetBreakPoint(responseObj) {
+			log("\n> breakpoint set id: " + responseObj.data.body.breakpoint + "\n")
+		}
+		
+		function onBreak(responseObj) {
+			log("\n> breakpoint hit.");
+		}
+				
+    </script>
+</html>

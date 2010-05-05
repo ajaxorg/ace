@@ -1,6 +1,5 @@
-var EventEmitter = function() {
-    this.$initEvents();
-};
+var EventEmitter = function() {};
+
 ace.implement(EventEmitter.prototype, ace.MEventEmitter);
 
 var EventEmitterTest = new TestCase("EventEmitterTest", {
@@ -17,4 +16,3 @@ var EventEmitterTest = new TestCase("EventEmitterTest", {
         assertTrue(called);
     }
 });
-

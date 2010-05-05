@@ -33,8 +33,6 @@ ace.BackgroundTokenizer = function(tokenizer) {
 
         self.fireUpdateEvent(startLine, textLines.length - 1);
     };
-
-    this.$initEvents();
 };
 
 (function(){

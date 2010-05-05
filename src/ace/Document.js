@@ -1,8 +1,6 @@
 ace.provide("ace.Document");
 
 ace.Document = function(text, mode) {
-    this.$initEvents();
-
     this.lines = [];
     this.modified = true;
     this.selection = new ace.Selection(this);

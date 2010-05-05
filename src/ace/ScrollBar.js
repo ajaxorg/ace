@@ -1,8 +1,6 @@
 ace.provide("ace.ScrollBar");
 
 ace.ScrollBar = function(parent) {
-    this.$initEvents();
-
     this.element = document.createElement("div");
     this.element.className = "sb";
 
