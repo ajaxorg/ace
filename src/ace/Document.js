@@ -1,8 +1,8 @@
 ace.provide("ace.Document");
 
 ace.Document = function(text, mode) {
-    this.lines = [];
     this.modified = true;
+    this.lines = [];
     this.selection = new ace.Selection(this);
 
     this.listeners = [];
@@ -25,6 +25,13 @@ ace.Document = function(text, mode) {
 
     this.$split = function(text) {
         return text.split(/\r\n|\r|\n/);
+    };
+
+    this.setValue = function(text) {
+        var args = [0, this.lines.length];
+        args.push.apply(args, this.$split(text));
+        this.lines.splice.apply(this.lines, args);
+        this.fireChangeEvent(0);
     };
 
     this.toString = function() {
@@ -323,7 +330,7 @@ ace.Document = function(text, mode) {
 
     this.$insert = function(position, text, fromUndo) {
         if (text.length == 0)
-            return;
+            return position;
 
         this.modified = true;
         if (this.lines.length <= 1) {
