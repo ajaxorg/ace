@@ -345,7 +345,7 @@ ace.Selection = function(doc) {
         var pos = {};
 
         if (row >= this.doc.getLength()) {
-            pos.row = this.doc.getLength() - 1;
+            pos.row = Math.max(0, this.doc.getLength() - 1);
             pos.column = this.doc.getLine(pos.row).length;
         }
         else if (row < 0) {
