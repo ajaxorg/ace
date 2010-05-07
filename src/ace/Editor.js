@@ -35,6 +35,32 @@ ace.Editor = function(renderer, doc) {
 
 (function(){
 
+    ace.implement(this, ace.MEventEmitter);
+
+    this.$forwardEvents = {
+        gutterclick: 1,
+        gutterdblclick: 1
+    };
+
+    this.$originalAddEventListener = this.addEventListener;
+    this.$originalRemoveEventListener = this.removeEventListener;
+
+    this.addEventListener = function(eventName, callback) {
+        if (this.$forwardEvents[eventName]) {
+            return this.renderer.addEventListener(eventName, callback);
+        } else {
+            return this.$originalAddEventListener(eventName, callback);
+        }
+    };
+
+    this.removeEventListener = function(eventName, callback) {
+        if (this.$forwardEvents[eventName]) {
+            return this.renderer.removeEventListener(eventName, callback);
+        } else {
+            return this.$originalRemoveEventListener(eventName, callback);
+        }
+    };
+
     this.setDocument = function(doc) {
         if (this.doc == doc) return;
 
@@ -227,8 +253,7 @@ ace.Editor = function(renderer, doc) {
             if (mousePageX === undefined || mousePageY === undefined)
                 return;
 
-            selectionLead = _self.renderer.screenToTextCoordinates(mousePageX,
-                                                                   mousePageY);
+            selectionLead = _self.renderer.screenToTextCoordinates(mousePageX, mousePageY);
 
             _self.selection.selectToPosition(selectionLead);
             _self.renderer.scrollCursorIntoView();

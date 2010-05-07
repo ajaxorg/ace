@@ -8,15 +8,15 @@ ace.VirtualRenderer = function(container) {
     this.scroller.className = "scroller";
     this.container.appendChild(this.scroller);
 
-    this.gutter = document.createElement("div");
-    this.gutter.className = "gutter";
-    this.container.appendChild(this.gutter);
+    this.$gutter = document.createElement("div");
+    this.$gutter.className = "gutter";
+    this.container.appendChild(this.$gutter);
 
     this.content = document.createElement("div");
     this.scroller.appendChild(this.content);
 
-    this.gutterLayer = new ace.layer.Gutter(this.gutter);
-    this.markerLayer = new ace.layer.Marker(this.content);
+    this.$gutterLayer = new ace.layer.Gutter(this.$gutter);
+    this.$markerLayer = new ace.layer.Marker(this.content);
 
     var textLayer = this.textLayer = new ace.layer.Text(this.content);
     this.canvas = textLayer.element;
@@ -26,7 +26,7 @@ ace.VirtualRenderer = function(container) {
 
     this.cursorLayer = new ace.layer.Cursor(this.content);
 
-    this.layers = [ this.markerLayer, textLayer, this.cursorLayer ];
+    this.layers = [ this.$markerLayer, textLayer, this.cursorLayer ];
 
     this.scrollBar = new ace.ScrollBar(container);
     this.scrollBar.addEventListener("scroll", ace.bind(this.onScroll, this));
@@ -40,19 +40,37 @@ ace.VirtualRenderer = function(container) {
 
     this.$updatePrintMargin();
     this.onResize();
+
+    ace.addListener(this.$gutter, "click", ace.bind(this.$onGutterClick, this));
+    ace.addListener(this.$gutter, "dblclick", ace.bind(this.$onGutterClick, this));
 };
 
 (function() {
 
+    ace.implement(this, ace.MEventEmitter);
+
     this.setDocument = function(doc) {
         this.lines = doc.lines;
         this.doc = doc;
-        this.markerLayer.setDocument(doc);
+        this.$markerLayer.setDocument(doc);
         this.textLayer.setDocument(doc);
     };
 
     this.setTokenizer = function(tokenizer) {
         this.textLayer.setTokenizer(tokenizer);
+    };
+
+    this.$onGutterClick = function(e) {
+        var pageX = ace.getDocumentX(e);
+        var pageY = ace.getDocumentY(e);
+
+        var event = {
+            row: this.screenToTextCoordinates(pageX, pageY).row,
+            htmlEvent: e
+        };
+
+        var type = "gutter" + e.type;
+        this.$dispatchEvent(type, event);
     };
 
     this.$showInvisibles = true;
@@ -92,7 +110,7 @@ ace.VirtualRenderer = function(container) {
         if (!this.$printMarginEl) {
             this.$printMarginEl = document.createElement("div");
             this.$printMarginEl.className = "printMargin";
-            this.content.insertBefore(this.$printMarginEl, this.gutter.element);
+            this.content.insertBefore(this.$printMarginEl, this.$gutter.element);
         }
 
         var style = this.$printMarginEl.style;
@@ -123,7 +141,7 @@ ace.VirtualRenderer = function(container) {
         this.scrollBar.setHeight(height);
 
         var width = ace.getInnerWidth(this.container);
-        var gutterWidth = this.gutter.offsetWidth;
+        var gutterWidth = this.$gutter.offsetWidth;
         this.scroller.style.left = gutterWidth + "px";
         this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
 
@@ -194,8 +212,8 @@ ace.VirtualRenderer = function(container) {
             layer.update(layerConfig);
         };
 
-        this.gutterLayer.element.style.marginTop = (-offset) + "px";
-        this.gutterLayer.update(layerConfig);
+        this.$gutterLayer.element.style.marginTop = (-offset) + "px";
+        this.$gutterLayer.update(layerConfig);
 
         this.$updateScrollBar();
     };
@@ -203,11 +221,11 @@ ace.VirtualRenderer = function(container) {
     this.addMarker = function(range, clazz, type) {
         range.start = this.$documentToScreenPosition(range.start);
         range.end = this.$documentToScreenPosition(range.end);
-        return this.markerLayer.addMarker(range, clazz, type);
+        return this.$markerLayer.addMarker(range, clazz, type);
     };
 
     this.removeMarker = function(markerId) {
-        this.markerLayer.removeMarker(markerId);
+        this.$markerLayer.removeMarker(markerId);
     };
 
     this.updateCursor = function(position, overwrite) {
