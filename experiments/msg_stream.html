@@ -48,11 +48,8 @@ function testChrome() {
 						console.log("V8 version:", version.V8Version);
 					});
 
-					v8debugger.scripts(4, null, false, function(scripts) {
+					v8debugger.scripts(4, null, true, function(scripts) {
 						console.log("scripts (short)", scripts);
-						v8debugger.scripts(4, [scripts[0].id], true, function(scripts) {
-							console.log("scripts (full)", scripts);
-						});
 					});
 				});			
 			});

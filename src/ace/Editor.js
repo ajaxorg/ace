@@ -141,7 +141,7 @@ ace.Editor = function(renderer, doc) {
 
             var pos = self.doc.findMatchingBracket(self.getCursorPosition());
             if (pos) {
-                range = new ace.Range(pos.row, pos.column, pos.row, pos.column+1);
+                var range = new ace.Range(pos.row, pos.column, pos.row, pos.column+1);
                 self.$bracketHighlight = self.renderer.addMarker(range, "bracket");
             }
         }, 10);

@@ -63,14 +63,19 @@
 .marker-layer {
 }
 
-.marker-layer .selection {
+.marker-layer .step {
   position: absolute;
   z-index: 2;
 }
 
-.marker-layer .bracket {
+.marker-layer .selection {
   position: absolute;
   z-index: 3;
+}
+
+.marker-layer .bracket {
+  position: absolute;
+  z-index: 4;
 }
 
 .marker-layer .active_line {
