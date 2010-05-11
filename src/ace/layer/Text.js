@@ -36,6 +36,11 @@ ace.layer.Text = function(parentEl) {
         style.position = "absolute";
         style.overflow = "visible";
 
+        var parent = this.element.parentNode;
+        var sibling = this.element.nextSibling;
+
+        document.body.appendChild(this.element);
+
         measureNode.innerHTML = new Array(1000).join("Xy");
         this.element.appendChild(measureNode);
 
@@ -46,6 +51,12 @@ ace.layer.Text = function(parentEl) {
         this.characterWidth = measureNode.offsetWidth / 2000;
 
         this.element.removeChild(measureNode);
+
+        if (sibling) {
+            parent.insertBefore(this.element, sibling);
+        } else {
+            parent.appendChild(this.element);
+        }
     };
 
     this.setDocument = function(doc) {
