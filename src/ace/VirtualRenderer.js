@@ -111,7 +111,7 @@ ace.VirtualRenderer = function(container) {
         if (!this.$printMarginEl) {
             this.$printMarginEl = document.createElement("div");
             this.$printMarginEl.className = "printMargin";
-            this.content.insertBefore(this.$printMarginEl, this.$gutter.element);
+            this.content.insertBefore(this.$printMarginEl, this.$markerLayer.element);
         }
 
         var style = this.$printMarginEl.style;
