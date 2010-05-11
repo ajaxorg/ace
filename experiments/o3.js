@@ -50,8 +50,19 @@ function detect(o) {
         version = window.external.o3.versionInfo.match(/v([\d]+\.[\d]+)/)[1];        
         embedded = true;
     }
-    else if (navigator.plugins && navigator.plugins[name]) {          
-        version = navigator.plugins[name].description.match(/v([\d]+\.[\d]+)/)[1];    
+    
+    else if (navigator.plugins) {
+        if (navigator.plugins[name]) {
+            version = navigator.plugins[name].description.match(/v([\d]+\.[\d]+)/)[1];
+        }
+        else {
+            // try sniffing the mimeTypes
+            name = "application/" + name;
+            for (var i = 0, l = navigator.mimeTypes.length; i < l; ++i) {
+                if (navigator.mimeTypes[i].type == name)
+                    version = "0.9";
+            }
+        }
     }
     else { 
         try {
