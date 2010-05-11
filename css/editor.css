@@ -6,8 +6,7 @@
 .scroller {
   position: absolute;
   overflow-x: scroll;
-  overflow-y: hidden;	    
-  cursor: text;    
+  overflow-y: hidden;     
 }
 
 .gutter {
@@ -49,6 +48,7 @@
 }
 
 .cursor-layer {
+  cursor: text;
 }
 
 .cursor {

@@ -17,6 +17,7 @@ ace.layer.Gutter = function(parentEl) {
         }
 
         this.element.innerHTML = html.join("");
+        this.element.style.height = config.minHeight + "px";
     };
 
 }).call(ace.layer.Gutter.prototype);

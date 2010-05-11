@@ -13,6 +13,7 @@ ace.VirtualRenderer = function(container) {
     this.container.appendChild(this.$gutter);
 
     this.content = document.createElement("div");
+    this.content.style.position = "absolute";
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new ace.layer.Gutter(this.$gutter);
@@ -198,10 +199,12 @@ ace.VirtualRenderer = function(container) {
             firstRow : firstRow,
             lastRow : lastRow,
             lineHeight : this.lineHeight,
-            characterWidth : this.characterWidth
+            characterWidth : this.characterWidth,
+            minHeight : minHeight
         };
 
         this.content.style.marginTop = (-offset) + "px";
+        this.content.style.height = minHeight + "px";
 
         for ( var i = 0; i < this.layers.length; i++) {
             var layer = this.layers[i];
