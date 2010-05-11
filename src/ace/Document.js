@@ -4,6 +4,7 @@ ace.Document = function(text, mode) {
     this.modified = true;
     this.lines = [];
     this.selection = new ace.Selection(this);
+    this.$breakpoints = [];
 
     this.listeners = [];
     if (mode) {
@@ -107,6 +108,20 @@ ace.Document = function(text, mode) {
 
     this.getTabSize = function() {
         return this.$tabSize;
+    };
+
+    this.getBreakpoints = function() {
+        return this.$breakpoints;
+    };
+
+    this.setBreakpoint = function(row) {
+        this.$breakpoints[row] = true;
+        this.$dispatchEvent("changeBreakpoint", {data: row});
+    };
+
+    this.clearBreakpoint = function(row) {
+        delete this.$breakpoints[row];
+        this.$dispatchEvent("changeBreakpoint", {data: row});
     };
 
     this.$detectNewLine = function(text) {

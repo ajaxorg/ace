@@ -68,6 +68,7 @@ ace.Editor = function(renderer, doc) {
             this.doc.removeEventListener("change", this.$onDocumentChange);
             this.doc.removeEventListener("changeMode", this.$onDocumentModeChange);
             this.doc.removeEventListener("changeTabSize", this.$onDocumentChangeTabSize);
+            this.doc.removeEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
 
             var selection = this.doc.getSelection();
             this.selection.removeEventListener("changeCursor", this.$onCursorChange);
@@ -88,6 +89,9 @@ ace.Editor = function(renderer, doc) {
         this.$onDocumentChangeTabSize = ace.bind(this.renderer.draw, this.renderer);
         doc.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
+        this.$onDocumentChangeBreakpoint = ace.bind(this.onDocumentChangeBreakpoint, this);
+        this.doc.addEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
+
         this.selection = doc.getSelection();
 
         this.$onCursorChange = ace.bind(this.onCursorChange, this);
@@ -103,6 +107,7 @@ ace.Editor = function(renderer, doc) {
         this.renderer.draw();
         this.onCursorChange();
         this.onSelectionChange();
+        this.onDocumentChangeBreakpoint();
         this.renderer.scrollToRow(doc.getScrollTopRow());
     };
 
@@ -207,6 +212,10 @@ ace.Editor = function(renderer, doc) {
         }
 
         this.onCursorChange();
+    };
+
+    this.onDocumentChangeBreakpoint = function() {
+        this.renderer.setBreakpoints(this.doc.getBreakpoints());
     };
 
     this.onDocumentModeChange = function() {

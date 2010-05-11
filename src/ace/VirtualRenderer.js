@@ -221,6 +221,7 @@ ace.VirtualRenderer = function(container) {
         this.$updateScrollBar();
     };
 
+
     this.addMarker = function(range, clazz, type) {
         range.start = this.$documentToScreenPosition(range.start);
         range.end = this.$documentToScreenPosition(range.end);
@@ -229,6 +230,10 @@ ace.VirtualRenderer = function(container) {
 
     this.removeMarker = function(markerId) {
         this.$markerLayer.removeMarker(markerId);
+    };
+
+    this.setBreakpoints = function(rows) {
+        this.$gutterLayer.setBreakpoints(rows);
     };
 
     this.updateCursor = function(position, overwrite) {
