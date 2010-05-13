@@ -6,7 +6,7 @@ ace.layer.Text = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this.$characterSize = this.$measureSizes();
-    this.$pollSizeChanges();
+    //this.$pollSizeChanges();
 };
 
 (function() {
@@ -41,27 +41,41 @@ ace.layer.Text = function(parentEl) {
         }, 500);
     };
 
+    this.$fontStyles = {
+        fontFamily : 1,
+        fontSize : 1,
+        fontWeight : 1,
+        fontStyle : 1,
+        lineHeight : 1
+    },
+
     this.$measureSizes = function() {
         var measureNode = document.createElement("div");
         var style = measureNode.style;
+
         style.width = style.height = "auto";
         style.left = style.top = "-1000px";
         style.visibility = "hidden";
         style.position = "absolute";
         style.overflow = "visible";
 
-        measureNode.innerHTML = new Array(1000).join("Xy");
-        this.element.appendChild(measureNode);
+        for (prop in this.$fontStyles) {
+            var value = ace.computedStyle(this.element, prop);
+            style[prop] = value;
+        }
 
         // in FF 3.6 monospace fonts can have a fixed sub pixel width.
         // that's why we have to measure many characters
         // Note: characterWidth can be a float!
+        measureNode.innerHTML = new Array(1000).join("Xy");
+        document.body.insertBefore(measureNode, document.body.firstChild);
+
         var size = {
             height: measureNode.offsetHeight,
             width: measureNode.offsetWidth / 2000
         };
 
-        this.element.removeChild(measureNode);
+        document.body.removeChild(measureNode);
         return size;
     };
 

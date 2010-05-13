@@ -47,7 +47,7 @@
 
     this.computedStyle = function(element, style) {
         if (window.getComputedStyle) {
-            return (window.getComputedStyle(element, null))[style];
+            return (window.getComputedStyle(element, "") || {})[style] || "";
         }
         else {
             return element.currentStyle[style];
