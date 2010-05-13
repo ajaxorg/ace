@@ -70,3 +70,6 @@ MockRenderer.prototype.updateLines = function(startRow, endRow) {
 
 MockRenderer.prototype.addMarker = function() {
 };
+
+MockRenderer.prototype.setBreakpoints = function() {
+};
