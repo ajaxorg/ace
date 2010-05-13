@@ -108,7 +108,7 @@ ace.KeyBinding = function(element, editor) {
         this.selection.selectFileStart();
     };
 
-    this["Control-Up"] = function() {
+    this["Control-Home"] = this["Control-Up"] = function() {
         this.editor.navigateFileStart();
     };
 
@@ -132,7 +132,7 @@ ace.KeyBinding = function(element, editor) {
         this.selection.selectFileEnd();
     };
 
-    this["Control-Down"] = function() {
+    this["Control-End"] = this["Control-Down"] = function() {
         this.editor.navigateFileEnd();
     };
 
