@@ -19,15 +19,15 @@ ace.VirtualRenderer = function(container) {
     this.$gutterLayer = new ace.layer.Gutter(this.$gutter);
     this.$markerLayer = new ace.layer.Marker(this.content);
 
-    var textLayer = this.textLayer = new ace.layer.Text(this.content);
+    var textLayer = this.$textLayer = new ace.layer.Text(this.content);
     this.canvas = textLayer.element;
 
     this.characterWidth = textLayer.getCharacterWidth();
     this.lineHeight = textLayer.getLineHeight();
 
-    this.cursorLayer = new ace.layer.Cursor(this.content);
+    this.$cursorLayer = new ace.layer.Cursor(this.content);
 
-    this.layers = [ this.$markerLayer, textLayer, this.cursorLayer ];
+    this.layers = [ this.$markerLayer, textLayer, this.$cursorLayer ];
 
     this.scrollBar = new ace.ScrollBar(container);
     this.scrollBar.addEventListener("scroll", ace.bind(this.onScroll, this));
@@ -43,7 +43,7 @@ ace.VirtualRenderer = function(container) {
     this.onResize();
 
     var self = this;
-    this.textLayer.addEventListener("changeCharaterSize", function() {
+    this.$textLayer.addEventListener("changeCharaterSize", function() {
         self.characterWidth = textLayer.getCharacterWidth();
         self.lineHeight = textLayer.getLineHeight();
         self.onResize();
@@ -60,11 +60,11 @@ ace.VirtualRenderer = function(container) {
         this.lines = doc.lines;
         this.doc = doc;
         this.$markerLayer.setDocument(doc);
-        this.textLayer.setDocument(doc);
+        this.$textLayer.setDocument(doc);
     };
 
     this.setTokenizer = function(tokenizer) {
-        this.textLayer.setTokenizer(tokenizer);
+        this.$textLayer.setTokenizer(tokenizer);
     };
 
     this.$onGutterClick = function(e) {
@@ -83,7 +83,7 @@ ace.VirtualRenderer = function(container) {
     this.$showInvisibles = true;
     this.setShowInvisibles = function(showInvisibles) {
         this.$showInvisibles = showInvisibles;
-        this.textLayer.setShowInvisibles(showInvisibles);
+        this.$textLayer.setShowInvisibles(showInvisibles);
     };
 
     this.getShowInvisibles = function() {
@@ -117,7 +117,7 @@ ace.VirtualRenderer = function(container) {
         if (!this.$printMarginEl) {
             this.$printMarginEl = document.createElement("div");
             this.$printMarginEl.className = "printMargin";
-            this.content.insertBefore(this.$printMarginEl, this.$markerLayer.element);
+            this.content.insertBefore(this.$printMarginEl, this.$cursorLayer.element);
         }
 
         var style = this.$printMarginEl.style;
@@ -181,7 +181,7 @@ ace.VirtualRenderer = function(container) {
         }
 
         // else update only the changed rows
-        this.textLayer.updateLines(layerConfig, firstRow, lastRow);
+        this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
     };
 
     this.draw = function() {
@@ -243,8 +243,8 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.updateCursor = function(position, overwrite) {
-        this.cursorLayer.setCursor(this.$documentToScreenPosition(position), overwrite);
-        this.cursorLayer.update(this.layerConfig);
+        this.$cursorLayer.setCursor(this.$documentToScreenPosition(position), overwrite);
+        this.$cursorLayer.update(this.layerConfig);
     };
 
     this.$documentToScreenPosition = function(pos) {
@@ -302,15 +302,15 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.hideCursor = function() {
-        this.cursorLayer.hideCursor();
+        this.$cursorLayer.hideCursor();
     };
 
     this.showCursor = function() {
-        this.cursorLayer.showCursor();
+        this.$cursorLayer.showCursor();
     };
 
     this.scrollCursorIntoView = function() {
-        var pos = this.cursorLayer.getPixelPosition();
+        var pos = this.$cursorLayer.getPixelPosition();
 
         var left = pos.left;
         var top = pos.top;
