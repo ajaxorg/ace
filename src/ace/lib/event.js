@@ -3,7 +3,7 @@
     var self = this;
 
     this.isIE = ! + "\v1";
-    
+
     this.addListener = function(elem, type, callback) {
         if (elem.addEventListener) {
             return elem.addEventListener(type, callback, false);
@@ -129,14 +129,14 @@
                    clicks = 0;
                }, 600);
            }
-           
+
            if (clicks == 3) {
                clicks = 0;
                callback(e);
            }
            return self.preventDefault(e);
         };
-        
+
         self.addListener(el, "mousedown", listener);
         this.isIE && self.addListener(el, "dblclick", listener);
     };
@@ -149,13 +149,15 @@
           return callback(e);
       });
 
-      self.addListener(el, "keypress", function(e) {
-          var keyId = e.keyIdentifier || e.keyCode;
-          if (lastDown !== keyId) {
-              return callback(e);
-          } else {
-              lastDown = null;
-          }
-      });
+      if (ace.isMac) {
+          self.addListener(el, "keypress", function(e) {
+              var keyId = e.keyIdentifier || e.keyCode;
+              if (lastDown !== keyId) {
+                  return callback(e);
+              } else {
+                  lastDown = null;
+              }
+          });
+      }
     };
 }).call(ace);
