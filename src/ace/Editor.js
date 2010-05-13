@@ -360,6 +360,8 @@ ace.Editor = function(renderer, doc) {
         this.$blockScrolling = true;
         this.onCursorChange();
         this.$blockScrolling = false;
+
+        this.$dispatchEvent("changeOverwrite", {data: overwrite});
     };
 
     this.getOverwrite = function() {
@@ -376,6 +378,7 @@ ace.Editor = function(renderer, doc) {
 
         this.$selectionStyle = style;
         this.onSelectionChange();
+        this.$dispatchEvent("changeSelectionStyle", {data: style});
     };
 
     this.getSelectionStyle = function() {
