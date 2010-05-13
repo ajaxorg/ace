@@ -5,10 +5,13 @@ ace.layer.Text = function(parentEl) {
     this.element.className = "layer text-layer";
     parentEl.appendChild(this.element);
 
-    this.$measureSizes();
+    this.$characterSize = this.$measureSizes();
+    this.$pollSizeChanges();
 };
 
 (function() {
+
+    ace.implement(this, ace.MEventEmitter);
 
     this.EOF_CHAR = "&para;";
     this.EOL_CHAR = "&not;";
@@ -20,11 +23,22 @@ ace.layer.Text = function(parentEl) {
     };
 
     this.getLineHeight = function() {
-        return this.lineHeight;
+        return this.$characterSize.height || 1;
     };
 
     this.getCharacterWidth = function() {
-        return this.characterWidth;
+        return this.$characterSize.width || 1;
+    };
+
+    this.$pollSizeChanges = function() {
+        var self = this;
+        setInterval(function() {
+            var size = self.$measureSizes();
+            if (self.$characterSize.width !== size.width || self.$characterSize.height !== size.height) {
+                self.$characterSize = size;
+                self.$dispatchEvent("changeCharaterSize", {data: size});
+            }
+        }, 500);
     };
 
     this.$measureSizes = function() {
@@ -36,27 +50,19 @@ ace.layer.Text = function(parentEl) {
         style.position = "absolute";
         style.overflow = "visible";
 
-        var parent = this.element.parentNode;
-        var sibling = this.element.nextSibling;
-
-        document.body.appendChild(this.element);
-
         measureNode.innerHTML = new Array(1000).join("Xy");
         this.element.appendChild(measureNode);
 
         // in FF 3.6 monospace fonts can have a fixed sub pixel width.
         // that's why we have to measure many characters
         // Note: characterWidth can be a float!
-        this.lineHeight = measureNode.offsetHeight;
-        this.characterWidth = measureNode.offsetWidth / 2000;
+        var size = {
+            height: measureNode.offsetHeight,
+            width: measureNode.offsetWidth / 2000
+        };
 
         this.element.removeChild(measureNode);
-
-        if (sibling) {
-            parent.insertBefore(this.element, sibling);
-        } else {
-            parent.appendChild(this.element);
-        }
+        return size;
     };
 
     this.setDocument = function(doc) {

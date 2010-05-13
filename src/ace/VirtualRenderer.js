@@ -42,6 +42,12 @@ ace.VirtualRenderer = function(container) {
     this.$updatePrintMargin();
     this.onResize();
 
+    var self = this;
+    this.textLayer.addEventListener("changeCharaterSize", function() {
+        self.characterWidth = textLayer.getCharacterWidth();
+        self.lineHeight = textLayer.getLineHeight();
+        self.onResize();
+    });
     ace.addListener(this.$gutter, "click", ace.bind(this.$onGutterClick, this));
     ace.addListener(this.$gutter, "dblclick", ace.bind(this.$onGutterClick, this));
 };
