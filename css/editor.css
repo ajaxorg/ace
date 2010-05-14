@@ -1,40 +1,40 @@
-.editor {
+.ace_editor {
   position: absolute;
   overflow: hidden;
 }
 
-.scroller {
+.ace_scroller {
   position: absolute;
   overflow-x: scroll;
   overflow-y: hidden;     
 }
 
-.gutter {
+.ace_gutter {
   position: absolute;
   overflow-x: scroll;
   overflow-y: hidden;
   height: 100%;
 }
 
-.editor .sb {
+.ace_editor .ace_sb {
   position: absolute;
   overflow-x: hidden;
   overflow-y: scroll;
   right: 0;
 }
 
-.editor .sb div {
+.ace_editor .ace_sb div {
   position: absolute;
   width: 1px;
   left: 0px;
 }
 
-.editor .printMargin {
+.ace_editor .ace_printMargin {
   position: absolute;
   height: 100%;
 }
 
-.layer {
+.ace_layer {
   z-index: 0;
   position: absolute;
   overflow: hidden;  
@@ -42,43 +42,43 @@
   height: 100%;
 }
 
-.text-layer {
+.ace_text-layer {
   font-family: Monaco, "Courier New", monospace;
   color: black;
 }
 
-.cursor-layer {
+.ace_cursor-layer {
   cursor: text;
 }
 
-.cursor {
+.ace_cursor {
   z-index: 3;
   position: absolute;
 }
 
-.line {
+.ace_line {
   white-space: nowrap;
 }
 
-.marker-layer {
+.ace_marker-layer {
 }
 
-.marker-layer .step {
+.ace_marker-layer .ace_step {
   position: absolute;
   z-index: 2;
 }
 
-.marker-layer .selection {
+.ace_marker-layer .ace_selection {
   position: absolute;
   z-index: 3;
 }
 
-.marker-layer .bracket {
+.ace_marker-layer .ace_bracket {
   position: absolute;
   z-index: 4;
 }
 
-.marker-layer .active_line {
+.ace_marker-layer .ace_active_line {
   position: absolute;
   z-index: 1;
 }

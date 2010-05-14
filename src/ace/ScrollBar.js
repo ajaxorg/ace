@@ -2,7 +2,7 @@ ace.provide("ace.ScrollBar");
 
 ace.ScrollBar = function(parent) {
     this.element = document.createElement("div");
-    this.element.className = "sb";
+    this.element.className = "ace_sb";
 
     this.inner = document.createElement("div");
     this.element.appendChild(this.inner);

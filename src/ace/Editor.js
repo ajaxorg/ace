@@ -142,7 +142,7 @@ ace.Editor = function(renderer, doc) {
             var pos = self.doc.findMatchingBracket(self.getCursorPosition());
             if (pos) {
                 var range = new ace.Range(pos.row, pos.column, pos.row, pos.column+1);
-                self.$bracketHighlight = self.renderer.addMarker(range, "bracket");
+                self.$bracketHighlight = self.renderer.addMarker(range, "ace_bracket");
             }
         }, 10);
     };
@@ -195,7 +195,7 @@ ace.Editor = function(renderer, doc) {
         if (this.getHighlightActiveLine() && !this.selection.isMultiLine()) {
             var cursor = this.getCursorPosition();
             var range = new ace.Range(cursor.row, 0, cursor.row+1, 0);
-            this.$highlightLineMarker = this.renderer.addMarker(range, "active_line", "line");
+            this.$highlightLineMarker = this.renderer.addMarker(range, "ace_active_line", "line");
         }
     };
 
@@ -208,7 +208,7 @@ ace.Editor = function(renderer, doc) {
         if (!this.selection.isEmpty()) {
             var range = this.selection.getRange();
             var style = this.getSelectionStyle();
-            this.$selectionMarker = this.renderer.addMarker(range, "selection", style);
+            this.$selectionMarker = this.renderer.addMarker(range, "ace_selection", style);
         }
 
         this.onCursorChange();

@@ -2,14 +2,14 @@ ace.provide("ace.VirtualRenderer");
 
 ace.VirtualRenderer = function(container) {
     this.container = container;
-    ace.addCssClass(this.container, "editor");
+    ace.addCssClass(this.container, "ace_editor");
 
     this.scroller = document.createElement("div");
-    this.scroller.className = "scroller";
+    this.scroller.className = "ace_scroller";
     this.container.appendChild(this.scroller);
 
     this.$gutter = document.createElement("div");
-    this.$gutter.className = "gutter";
+    this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
 
     this.content = document.createElement("div");
@@ -116,7 +116,7 @@ ace.VirtualRenderer = function(container) {
 
         if (!this.$printMarginEl) {
             this.$printMarginEl = document.createElement("div");
-            this.$printMarginEl.className = "printMargin";
+            this.$printMarginEl.className = "ace_printMargin";
             this.content.insertBefore(this.$printMarginEl, this.$cursorLayer.element);
         }
 
@@ -374,11 +374,11 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.visualizeFocus = function() {
-        ace.addCssClass(this.container, "focus");
+        ace.addCssClass(this.container, "ace_focus");
     };
 
     this.visualizeBlur = function() {
-        ace.removeCssClass(this.container, "focus");
+        ace.removeCssClass(this.container, "ace_focus");
     };
 
     this.showComposition = function(position) {

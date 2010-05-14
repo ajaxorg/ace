@@ -2,7 +2,7 @@ ace.provide("ace.layer.Gutter");
 
 ace.layer.Gutter = function(parentEl) {
     this.element = document.createElement("div");
-    this.element.className = "layer gutter-layer";
+    this.element.className = "ace_layer ace_gutter-layer";
     parentEl.appendChild(this.element);
 
     this.$breakpoints = [];
@@ -22,8 +22,8 @@ ace.layer.Gutter = function(parentEl) {
 
         var html = [];
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
-            html.push("<div class='gutter-cell",
-                this.$breakpoints[i] ? " breakpoint" : "",
+            html.push("<div class='ace_gutter-cell",
+                this.$breakpoints[i] ? " ace_breakpoint" : "",
                 "' style='height:", config.lineHeight, "px;'>", (i+1), "</div>");
             html.push("</div>");
         }

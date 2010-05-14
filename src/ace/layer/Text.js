@@ -2,7 +2,7 @@ ace.provide("ace.layer.Text");
 
 ace.layer.Text = function(parentEl) {
     this.element = document.createElement("div");
-    this.element.className = "layer text-layer";
+    this.element.className = "ace_layer ace_text-layer";
     parentEl.appendChild(this.element);
 
     this.$characterSize = this.$measureSizes();
@@ -92,7 +92,7 @@ ace.layer.Text = function(parentEl) {
         var tabSize = this.doc.getTabSize();
         if (this.$showInvisibles) {
             var halfTab = (tabSize) / 2;
-            this.$tabString = "<span class='invisible'>"
+            this.$tabString = "<span class='ace_invisible'>"
                 + new Array(Math.floor(halfTab)).join("&nbsp;")
                 + this.TAB_CHAR
                 + new Array(Math.ceil(halfTab)+1).join("&nbsp;")
@@ -124,7 +124,7 @@ ace.layer.Text = function(parentEl) {
 
         var html = [];
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
-            html.push("<div class='line' style='height:" + this.$characterSize.height + "px;", "width:",
+            html.push("<div class='ace_line' style='height:" + this.$characterSize.height + "px;", "width:",
                       config.width, "px'>");
             this.renderLine(html, i), html.push("</div>");
         }
@@ -140,7 +140,7 @@ ace.layer.Text = function(parentEl) {
             var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]+/g;
             var spaceReplace = function(space) {
                 var space = new Array(space.length+1).join(self.SPACE_CHAR);
-                return "<span class='invisible'>" + space + "</span>";
+                return "<span class='ace_invisible'>" + space + "</span>";
             };
         }
         else {
@@ -158,7 +158,7 @@ ace.layer.Text = function(parentEl) {
                 .replace(/\t/g, this.$tabString);
 
             if (token.type !== "text") {
-                stringBuilder.push("<span class='", token.type, "'>", output, "</span>");
+                stringBuilder.push("<span class='ace_", token.type, "'>", output, "</span>");
             }
             else {
                 stringBuilder.push(output);
@@ -167,9 +167,9 @@ ace.layer.Text = function(parentEl) {
 
         if (this.$showInvisibles) {
             if (row !== this.doc.getLength() - 1) {
-                stringBuilder.push("<span class='invisible'>" + this.EOL_CHAR + "</span>");
+                stringBuilder.push("<span class='ace_invisible'>" + this.EOL_CHAR + "</span>");
             } else {
-                stringBuilder.push("<span class='invisible'>" + this.EOF_CHAR + "</span>");
+                stringBuilder.push("<span class='ace_invisible'>" + this.EOF_CHAR + "</span>");
             }
         }
     };

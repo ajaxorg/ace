@@ -2,11 +2,11 @@ ace.provide("ace.layer.Cursor");
 
 ace.layer.Cursor = function(parentEl) {
     this.element = document.createElement("div");
-    this.element.className = "layer cursor-layer";
+    this.element.className = "ace_layer ace_cursor-layer";
     parentEl.appendChild(this.element);
 
     this.cursor = document.createElement("div");
-    this.cursor.className = "cursor";
+    this.cursor.className = "ace_cursor";
 
     this.isVisible = false;
 };
@@ -19,9 +19,9 @@ ace.layer.Cursor = function(parentEl) {
             column : position.column
         };
         if (overwrite) {
-            ace.addCssClass(this.cursor, "overwrite");
+            ace.addCssClass(this.cursor, "ace_overwrite");
         } else {
-            ace.removeCssClass(this.cursor, "overwrite");
+            ace.removeCssClass(this.cursor, "ace_overwrite");
         }
     };
 

@@ -2,7 +2,7 @@ ace.provide("ace.layer.Marker");
 
 ace.layer.Marker = function(parentEl) {
     this.element = document.createElement("div");
-    this.element.className = "layer marker-layer";
+    this.element.className = "ace_layer ace_marker-layer";
     parentEl.appendChild(this.element);
 
     this.markers = {};

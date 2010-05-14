@@ -1,12 +1,12 @@
-.editor {
+.ace_editor {
   border: 2px solid rgb(159, 159, 159);
 }
 
-.editor.focus {
+.ace_editor.ace_focus {
   border: 2px solid #327fbd;;
 }
 
-.gutter {
+.ace_gutter {
   width: 40px;
   background: rgb(227, 227, 227);
   border-right: 1px solid rgb(159, 159, 159);	 
@@ -15,89 +15,89 @@
   font-size: 12px;  
 }
 
-.editor .printMargin {
+.ace_editor .ace_printMargin {
   width: 1px;
   background: rgb(191, 191, 191);
 }
 
-.gutter-layer {
+.ace_gutter-layer {
   right: 10px;
   text-align: right;
 }
 
-.text-layer {
+.ace_text-layer {
   font-family: Monaco, "Courier New", monospace;
   font-size: 12px;
   cursor: text;
 }
 
-.cursor {
+.ace_cursor {
   border-left: 2px solid black;
 }
 
-.cursor.overwrite {
+.ace_cursor.ace_overwrite {
   border-left: 0px;
   border-bottom: 1px solid black;
 }
         
-.line .invisible {
+.ace_line .ace_invisible {
   color: rgb(191, 191, 191);
 }
 
-.line .keyword {
+.ace_line .ace_keyword {
   color: blue;
 }
 
-.line .buildin-constant {
+.ace_line .ace_buildin-constant {
   color: rgb(88, 72, 246);
 }
 
-.line .library-constant {
+.ace_line .ace_library-constant {
   color: rgb(6, 150, 14);
 }
 
-.line .buildin-function {
+.ace_line .ace_buildin-function {
   color: rgb(60, 76, 114);
 }
 
-.line .string {
+.ace_line .ace_string {
   color: rgb(3, 106, 7);
 }
 
-.line .comment {
+.ace_line .ace_comment {
   font-style: italic;
   color: rgb(76, 136, 107);
 }
 
-.line .doc-comment {
+.ace_line .ace_doc-comment {
   color: rgb(0, 102, 255);
 }
 
-.line .doc-comment-tag {
+.ace_line .ace_doc-comment-tag {
   color: rgb(128, 159, 191);
 }
 
-.line .number {
+.ace_line .ace_number {
   color: rgb(0, 0, 205);
 }
 
-.line .xml_pe {
+.ace_line .ace_xml_pe {
   color: rgb(104, 104, 91);
 }
 
-.marker-layer .selection {
+.ace_marker-layer .ace_selection {
   background: rgb(181, 213, 255);
 }
 
-.ce .marker-layer .step {
+.ace_marker-layer .ace_step {
   background: rgb(198, 219, 174);
 }
 
-.marker-layer .bracket {
+.ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
   border: 1px solid rgb(192, 192, 192);
 }
 
-.marker-layer .active_line {
+.ace_marker-layer .ace_active_line {
   background: rgb(232, 242, 254);
 }
