@@ -59,7 +59,7 @@ ace.layer.Text = function(parentEl) {
         style.position = "absolute";
         style.overflow = "visible";
 
-        for (prop in this.$fontStyles) {
+        for (var prop in this.$fontStyles) {
             var value = ace.computedStyle(this.element, prop);
             style[prop] = value;
         }
@@ -124,7 +124,7 @@ ace.layer.Text = function(parentEl) {
 
         var html = [];
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
-            html.push("<div class='line' style='height:" + this.lineHeight + "px;", "width:",
+            html.push("<div class='line' style='height:" + this.$characterSize.height + "px;", "width:",
                       config.width, "px'>");
             this.renderLine(html, i), html.push("</div>");
         }
