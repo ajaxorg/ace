@@ -1,5 +1,7 @@
 .ace_editor {
   border: 2px solid rgb(159, 159, 159);
+  font-family: Monaco, "Courier New";
+  font-size: 12px;  
 }
 
 .ace_editor.ace_focus {
@@ -11,8 +13,6 @@
   background: rgb(227, 227, 227);
   border-right: 1px solid rgb(159, 159, 159);	 
   color: rgb(136, 136, 136);
-  font-family: Monaco, "Courier New";
-  font-size: 12px;  
 }
 
 .ace_editor .ace_printMargin {
@@ -26,8 +26,6 @@
 }
 
 .ace_text-layer {
-  font-family: Monaco, "Courier New", monospace;
-  font-size: 12px;
   cursor: text;
 }
 
