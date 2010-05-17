@@ -242,11 +242,13 @@ ace.Editor = function(renderer, doc) {
         var pageY = ace.getDocumentY(e);
 
         var pos = this.renderer.screenToTextCoordinates(pageX, pageY);
+        pos.row = Math.max(0, Math.min(pos.row, this.doc.getLength()-1));
+
         this.moveCursorToPosition(pos);
         this.selection.setSelectionAnchor(pos.row, pos.column);
         this.renderer.scrollCursorIntoView();
 
-        var _self = this;
+        var self = this;
         var mousePageX, mousePageY;
 
         var onMouseSelection = function(e) {
@@ -262,10 +264,11 @@ ace.Editor = function(renderer, doc) {
             if (mousePageX === undefined || mousePageY === undefined)
                 return;
 
-            selectionLead = _self.renderer.screenToTextCoordinates(mousePageX, mousePageY);
+            selectionLead = self.renderer.screenToTextCoordinates(mousePageX, mousePageY);
+            selectionLead.row = Math.max(0, Math.min(selectionLead.row, self.doc.getLength()-1));
 
-            _self.selection.selectToPosition(selectionLead);
-            _self.renderer.scrollCursorIntoView();
+            self.selection.selectToPosition(selectionLead);
+            self.renderer.scrollCursorIntoView();
         };
 
         ace.capture(this.container, onMouseSelection, onMouseSelectionEnd);

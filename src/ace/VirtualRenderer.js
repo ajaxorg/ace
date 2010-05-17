@@ -369,7 +369,7 @@ ace.VirtualRenderer = function(container) {
 
         return {
             row : row,
-            column : this.$screenToDocumentColumn(row, col)
+            column : this.$screenToDocumentColumn(Math.max(0, Math.min(row, this.doc.getLength()-1)), col)
         };
     };
 
