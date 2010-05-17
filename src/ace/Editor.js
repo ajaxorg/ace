@@ -93,6 +93,7 @@ ace.Editor = function(renderer, doc) {
         this.doc.addEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
 
         this.selection = doc.getSelection();
+        this.$desiredColumn = 0;
 
         this.$onCursorChange = ace.bind(this.onCursorChange, this);
         this.selection.addEventListener("changeCursor", this.$onCursorChange);
@@ -279,10 +280,12 @@ ace.Editor = function(renderer, doc) {
 
     this.onMouseDoubleClick = function(e) {
         this.selection.selectWord();
+        this.$updateDesiredColumn();
     };
 
     this.onMouseTripleClick = function(e) {
         this.selection.selectLine();
+        this.$updateDesiredColumn();
     };
 
     this.onMouseWheel = function(e) {
@@ -467,6 +470,7 @@ ace.Editor = function(renderer, doc) {
         var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
 
         this.selection.shiftSelection(addedColumns);
+        this.$updateDesiredColumn();
     };
 
     this.blockOutdent = function(indentString) {
@@ -477,6 +481,7 @@ ace.Editor = function(renderer, doc) {
         var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
         this.selection.shiftSelection(addedColumns);
+        this.$updateDesiredColumn();
     };
 
     this.toggleCommentLines = function() {
@@ -656,14 +661,17 @@ ace.Editor = function(renderer, doc) {
 
     this.clearSelection = function() {
         this.selection.clearSelection();
+        this.$updateDesiredColumn();
     };
 
     this.moveCursorTo = function(row, column) {
         this.selection.moveCursorTo(row, column);
+        this.$updateDesiredColumn();
     };
 
     this.moveCursorToPosition = function(pos) {
         this.selection.moveCursorToPosition(pos);
+        this.$updateDesiredColumn();
     };
 
 
@@ -680,16 +688,34 @@ ace.Editor = function(renderer, doc) {
     this.navigateTo = function(row, column) {
         this.clearSelection();
         this.moveCursorTo(row, column);
+        this.$updateDesiredColumn(column);
     };
 
     this.navigateUp = function() {
-        this.clearSelection();
-        this.selection.moveCursorUp();
+        this.selection.clearSelection();
+        this.selection.moveCursorBy(-1, 0);
+
+        if (this.$desiredColumn) {
+            var cursor = this.getCursorPosition();
+            var column = this.doc.screenToDocumentColumn(cursor.row, this.$desiredColumn);
+            this.selection.moveCursorTo(cursor.row, column);
+        }
     };
 
     this.navigateDown = function() {
-        this.clearSelection();
-        this.selection.moveCursorDown();
+        this.selection.clearSelection();
+        this.selection.moveCursorBy(1, 0);
+
+        if (this.$desiredColumn) {
+            var cursor = this.getCursorPosition();
+            var column = this.doc.screenToDocumentColumn(cursor.row, this.$desiredColumn);
+            this.selection.moveCursorTo(cursor.row, column);
+        }
+    };
+
+    this.$updateDesiredColumn = function() {
+        var cursor = this.getCursorPosition();
+        this.$desiredColumn = this.doc.documentToScreenColumn(cursor.row, cursor.column);
     };
 
     this.navigateLeft = function() {
@@ -715,39 +741,40 @@ ace.Editor = function(renderer, doc) {
     };
 
     this.navigateLineStart = function() {
-        this.clearSelection();
         this.selection.moveCursorLineStart();
+        this.clearSelection();
     };
 
     this.navigateLineEnd = function() {
-        this.clearSelection();
         this.selection.moveCursorLineEnd();
+        this.clearSelection();
     };
 
     this.navigateFileEnd = function() {
-        this.clearSelection();
         this.selection.moveCursorFileEnd();
+        this.clearSelection();
     };
 
     this.navigateFileStart = function() {
-        this.clearSelection();
         this.selection.moveCursorFileStart();
+        this.clearSelection();
     };
 
     this.navigateWordRight = function() {
-        this.clearSelection();
         this.selection.moveCursorWordRight();
+        this.clearSelection();
     };
 
     this.navigateWordLeft = function() {
-        this.clearSelection();
         this.selection.moveCursorWordLeft();
+        this.clearSelection();
     };
 
     this.replace = function(replacement) {
       var range = this.$tryReplace(this.getSelectionRange(), replacement);
       if (range !== null)
           this.selection.setSelectionRange(range);
+      this.$updateDesiredColumn();
     },
 
     this.replaceAll = function(replacement) {
@@ -763,6 +790,7 @@ ace.Editor = function(renderer, doc) {
             this.$tryReplace(range, replacement);
         }
         this.selection.setSelectionRange(range);
+        this.$updateDesiredColumn();
     },
 
     this.$tryReplace = function(range, replacement) {
@@ -800,8 +828,10 @@ ace.Editor = function(renderer, doc) {
         });
 
         var range = this.$search.find(this.doc);
-        if (range)
+        if (range) {
             this.selection.setSelectionRange(range);
+            this.$updateDesiredColumn();
+        }
     };
 
     this.undo = function() {

@@ -562,4 +562,51 @@ ace.Document = function(text, mode) {
         return Math.max(0, Math.min(row, this.lines.length-1));
     };
 
+    this.documentToScreenColumn = function(row, docColumn) {
+        var tabSize = this.getTabSize();
+
+        var screenColumn = 0;
+        var remaining = docColumn;
+
+        var line = this.getLine(row).split("\t");
+        for (var i=0; i<line.length; i++) {
+            var len = line[i].length;
+            if (remaining > len) {
+                remaining -= (len + 1);
+                screenColumn += len + tabSize;
+            }
+            else {
+                screenColumn += remaining;
+                break;
+            }
+        }
+
+        return screenColumn;
+    };
+
+    this.screenToDocumentColumn = function(row, screenColumn) {
+        var tabSize = this.getTabSize();
+
+        var docColumn = 0;
+        var remaining = screenColumn;
+
+        var line = this.getLine(row).split("\t");
+        for (var i=0; i<line.length; i++) {
+            var len = line[i].length;
+            if (remaining >= len + tabSize) {
+                remaining -= (len + tabSize);
+                docColumn += (len + 1);
+            }
+            else if (remaining > len){
+                docColumn += len;
+                break;
+            }
+            else {
+                docColumn += remaining;
+                break;
+            }
+        }
+        return docColumn;
+    };
+
 }).call(ace.Document.prototype);

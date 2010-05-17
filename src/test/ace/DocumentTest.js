@@ -162,5 +162,51 @@ var TextDocumentTest = new TestCase("TextDocumentTest", {
         undoManager.undo();
         doc.$informUndoManager.call();
         assertEquals(initialText, doc.toString());
+    },
+
+    "test: convert document to screen coordinates" : function() {
+        var doc = new ace.Document("01234\t567890\t1234");
+        doc.setTabSize(4);
+
+        assertEquals(0, doc.documentToScreenColumn(0, 0));
+        assertEquals(4, doc.documentToScreenColumn(0, 4));
+        assertEquals(5, doc.documentToScreenColumn(0, 5));
+        assertEquals(9, doc.documentToScreenColumn(0, 6));
+        assertEquals(15, doc.documentToScreenColumn(0, 12));
+        assertEquals(19, doc.documentToScreenColumn(0, 13));
+
+        doc.setTabSize(2);
+
+        assertEquals(0, doc.documentToScreenColumn(0, 0));
+        assertEquals(4, doc.documentToScreenColumn(0, 4));
+        assertEquals(5, doc.documentToScreenColumn(0, 5));
+        assertEquals(7, doc.documentToScreenColumn(0, 6));
+        assertEquals(13, doc.documentToScreenColumn(0, 12));
+        assertEquals(15, doc.documentToScreenColumn(0, 13));
+    },
+
+    "test: convert document to scrren coordinates with leading tabs": function() {
+        var doc = new ace.Document("\t\t123");
+        doc.setTabSize(4);
+
+        assertEquals(0, doc.documentToScreenColumn(0, 0));
+        assertEquals(4, doc.documentToScreenColumn(0, 1));
+        assertEquals(8, doc.documentToScreenColumn(0, 2));
+        assertEquals(9, doc.documentToScreenColumn(0, 3));
+    },
+
+    "test: convert screen to document coordinates" : function() {
+        var doc = new ace.Document("01234\t567890\t1234");
+        doc.setTabSize(4);
+
+        assertEquals(0, doc.screenToDocumentColumn(0, 0));
+        assertEquals(4, doc.screenToDocumentColumn(0, 4));
+        assertEquals(5, doc.screenToDocumentColumn(0, 5));
+        assertEquals(5, doc.screenToDocumentColumn(0, 6));
+        assertEquals(5, doc.screenToDocumentColumn(0, 7));
+        assertEquals(5, doc.screenToDocumentColumn(0, 8));
+        assertEquals(6, doc.screenToDocumentColumn(0, 9));
+        assertEquals(12, doc.screenToDocumentColumn(0, 15));
+        assertEquals(13, doc.screenToDocumentColumn(0, 19));
     }
 });

@@ -250,55 +250,8 @@ ace.VirtualRenderer = function(container) {
     this.$documentToScreenPosition = function(pos) {
         return {
             row: pos.row,
-            column: this.$documentToScreenColumn(pos.row, pos.column)
+            column: this.doc.documentToScreenColumn(pos.row, pos.column)
         };
-    };
-
-    this.$documentToScreenColumn = function(row, docColumn) {
-        var tabSize = this.doc.getTabSize();
-
-        var screenColumn = 0;
-        var remaining = docColumn;
-
-        var line = this.doc.getLine(row).split("\t");
-        for (var i=0; i<line.length; i++) {
-            var len = line[i].length;
-            if (remaining > len) {
-                remaining -= (len + 1);
-                screenColumn += len + tabSize;
-            }
-            else {
-                screenColumn += remaining;
-                break;
-            }
-        }
-
-        return screenColumn;
-    };
-
-    this.$screenToDocumentColumn = function(row, screenColumn) {
-        var tabSize = this.doc.getTabSize();
-
-        var docColumn = 0;
-        var remaining = screenColumn;
-
-        var line = this.doc.getLine(row).split("\t");
-        for (var i=0; i<line.length; i++) {
-            var len = line[i].length;
-            if (remaining >= len + tabSize) {
-                remaining -= (len + tabSize);
-                docColumn += (len + 1);
-            }
-            else if (remaining > len){
-                docColumn += len;
-                break;
-            }
-            else {
-                docColumn += remaining;
-                break;
-            }
-        }
-        return docColumn;
     };
 
     this.hideCursor = function() {
@@ -369,7 +322,7 @@ ace.VirtualRenderer = function(container) {
 
         return {
             row : row,
-            column : this.$screenToDocumentColumn(Math.max(0, Math.min(row, this.doc.getLength()-1)), col)
+            column : this.doc.screenToDocumentColumn(Math.max(0, Math.min(row, this.doc.getLength()-1)), col)
         };
     };
 

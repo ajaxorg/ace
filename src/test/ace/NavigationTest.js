@@ -11,7 +11,7 @@ var NavigationTest = TestCase("NavigationTest",
         var editor = new ace.Editor(new MockRenderer(), doc);
 
         editor.navigateFileEnd();
-        var cursor = editor.getSelection().getCursor();
+        var cursor = editor.getCursorPosition();
 
         assertTrue(editor.getFirstVisibleRow() <= cursor.row);
         assertTrue(editor.getLastVisibleRow() >= cursor.row);
@@ -32,32 +32,32 @@ var NavigationTest = TestCase("NavigationTest",
 
         editor.navigateTo(0, 0);
         editor.gotoLine(101);
-        assertPosition(100, 0, editor.getSelection().getCursor());
+        assertPosition(100, 0, editor.getCursorPosition());
         assertEquals(90, editor.getFirstVisibleRow());
 
         editor.navigateTo(100, 0);
         editor.gotoLine(11);
-        assertPosition(10, 0, editor.getSelection().getCursor());
+        assertPosition(10, 0, editor.getCursorPosition());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(100, 0);
         editor.gotoLine(6);
-        assertPosition(5, 0, editor.getSelection().getCursor());
+        assertPosition(5, 0, editor.getCursorPosition());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(100, 0);
         editor.gotoLine(1);
-        assertPosition(0, 0, editor.getSelection().getCursor());
+        assertPosition(0, 0, editor.getCursorPosition());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(0, 0);
         editor.gotoLine(191);
-        assertPosition(190, 0, editor.getSelection().getCursor());
+        assertPosition(190, 0, editor.getCursorPosition());
         assertEquals(180, editor.getFirstVisibleRow());
 
         editor.navigateTo(0, 0);
         editor.gotoLine(196);
-        assertPosition(195, 0, editor.getSelection().getCursor());
+        assertPosition(195, 0, editor.getCursorPosition());
         assertEquals(180, editor.getFirstVisibleRow());
     },
 
@@ -66,12 +66,41 @@ var NavigationTest = TestCase("NavigationTest",
 
         editor.navigateTo(0, 0);
         editor.gotoLine(12);
-        assertPosition(11, 0, editor.getSelection().getCursor());
+        assertPosition(11, 0, editor.getCursorPosition());
         assertEquals(0, editor.getFirstVisibleRow());
 
         editor.navigateTo(30, 0);
         editor.gotoLine(33);
-        assertPosition(32, 0, editor.getSelection().getCursor());
+        assertPosition(32, 0, editor.getCursorPosition());
         assertEquals(30, editor.getFirstVisibleRow());
+    },
+
+    "test: navigate from the end of a long line down to a short line and back should maintain the curser column": function() {
+        var editor = new ace.Editor(new MockRenderer(), new ace.Document(["123456", "1"]));
+
+        editor.navigateTo(0, 6);
+        assertPosition(0, 6, editor.getCursorPosition());
+
+        editor.navigateDown();
+        assertPosition(1, 1, editor.getCursorPosition());
+
+        editor.navigateUp();
+        assertPosition(0, 6, editor.getCursorPosition());
+    },
+
+    "test: reset desired column on navigate left or right": function() {
+        var editor = new ace.Editor(new MockRenderer(), new ace.Document(["123456", "12"]));
+
+        editor.navigateTo(0, 6);
+        assertPosition(0, 6, editor.getCursorPosition());
+
+        editor.navigateDown();
+        assertPosition(1, 2, editor.getCursorPosition());
+
+        editor.navigateLeft();
+        assertPosition(1, 1, editor.getCursorPosition());
+
+        editor.navigateUp();
+        assertPosition(0, 1, editor.getCursorPosition());
     }
 });
