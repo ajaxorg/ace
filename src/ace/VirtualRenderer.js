@@ -362,7 +362,7 @@ ace.VirtualRenderer = function(container) {
     this.screenToTextCoordinates = function(pageX, pageY) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
-        var col = Math.floor((pageX + this.scroller.scrollLeft - canvasPos.left)
+        var col = Math.round((pageX + this.scroller.scrollLeft - canvasPos.left)
                 / this.characterWidth);
         var row = Math.floor((pageY + this.scrollTop - canvasPos.top)
                 / this.lineHeight);
