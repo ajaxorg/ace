@@ -46,7 +46,7 @@ ace.layer.Marker = function(parentEl) {
         for ( var key in this.markers) {
             var marker = this.markers[key];
 
-            var range = marker.range.clone().clipRows(config.firstRow, config.lastRow);
+            var range = marker.range.clipRows(config.firstRow, config.lastRow);
             if (range.isEmpty()) continue;
 
             if (range.isMultiLine()) {

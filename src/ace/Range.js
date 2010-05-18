@@ -14,35 +14,79 @@ ace.Range = function(startRow, startColumn, endRow, endColumn) {
 
 (function() {
 
+    this.toString = function() {
+        return ("Range: [" + this.start.row + "/" + this.start.column +
+            "] -> [" + this.end.row + "/" + this.end.column + "]");
+    };
+
+    this.contains = function(row, column) {
+        return this.compare(row, column) == 0;
+    };
+
+    this.compare = function(row, column) {
+        if (!this.isMultiLine()) {
+            if (row === this.start.row) {
+                return column < this.start.column ? -1 : (column > this.end.column ? 1 : 0);
+            };
+        }
+
+        if (row < this.start.row)
+            return -1;
+
+        if (row > this.end.row)
+            return 1;
+
+        if (this.start.row === row)
+            return column >= this.start.column ? 0 : -1;
+
+        if (this.end.row === row)
+            return column <= this.end.column ? 0 : 1;
+
+        return 0;
+    };
+
     this.clipRows = function(firstRow, lastRow) {
         if (this.end.row > lastRow) {
-            this.end = {
+            var end = {
                 row: lastRow+1,
                 column: 0
             };
         }
 
         if (this.start.row > lastRow) {
-            this.start = {
+            var start = {
                 row: lastRow+1,
                 column: 0
             };
         }
 
         if (this.start.row < firstRow) {
-            this.start = {
+            var start = {
                 row: firstRow,
                 column: 0
             };
         }
 
         if (this.end.row < firstRow) {
-            this.end = {
+            var end = {
                 row: firstRow,
                 column: 0
             };
         }
-        return this;
+        return ace.Range.fromPoints(start || this.start, end || this.end);
+    };
+
+    this.extend = function(row, column) {
+        var cmp = this.compare(row, column);
+
+        if (cmp == 0)
+            return this;
+        else if (cmp == -1)
+            var start = {row: row, column: column};
+        else
+            var end = {row: row, column: column};
+
+        return ace.Range.fromPoints(start || this.start, end || this.end);
     };
 
     this.isEmpty = function() {

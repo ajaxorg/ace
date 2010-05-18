@@ -33,8 +33,17 @@ ace.Selection = function(doc) {
     };
 
     this.setSelectionAnchor = function(row, column) {
-        this.clearSelection();
-        this.selectionAnchor = this.$clipPositionToDocument(row, column);
+        var anchor = this.$clipPositionToDocument(row, column);
+
+        if (!this.selectionAnchor) {
+            this.selectionAnchor = anchor;
+            this.$dispatchEvent("changeSelection", {});
+        }
+        else if (this.selectionAnchor.row !== anchor.row || this.selectionAnchor.column !== anchor.column) {
+            this.selectionAnchor = anchor;
+            this.$dispatchEvent("changeSelection", {});
+        }
+
     };
 
     this.getSelectionAnchor = function() {

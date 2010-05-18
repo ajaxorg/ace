@@ -18,8 +18,8 @@ ace.Editor = function(renderer, doc) {
 
     var mouseTarget = renderer.getMouseEventTarget();
     ace.addListener(mouseTarget, "mousedown", ace.bind(this.onMouseDown, this));
-    ace.addListener(mouseTarget, "dblclick", ace.bind(this.onMouseDoubleClick, this));
-    ace.addTripleClickListener(mouseTarget, ace.bind(this.onMouseTripleClick, this));
+    ace.addMultiMouseDownListener(mouseTarget, 2, ace.bind(this.onMouseDoubleClick, this));
+    ace.addMultiMouseDownListener(mouseTarget, 3, ace.bind(this.onMouseTripleClick, this));
     ace.addMouseWheelListener(mouseTarget, ace.bind(this.onMouseWheel, this));
 
     this.$selectionMarker = null;
@@ -246,7 +246,9 @@ ace.Editor = function(renderer, doc) {
         pos.row = Math.max(0, Math.min(pos.row, this.doc.getLength()-1));
 
         this.moveCursorToPosition(pos);
-        this.selection.setSelectionAnchor(pos.row, pos.column);
+        if (!this.$clickSelection)
+            this.selection.setSelectionAnchor(pos.row, pos.column);
+
         this.renderer.scrollCursorIntoView();
 
         var self = this;
@@ -259,16 +261,33 @@ ace.Editor = function(renderer, doc) {
 
         var onMouseSelectionEnd = function() {
             clearInterval(timerId);
+            self.$clickSelection = null;
         };
 
         var onSelectionInterval = function() {
             if (mousePageX === undefined || mousePageY === undefined)
                 return;
 
-            selectionLead = self.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            selectionLead.row = Math.max(0, Math.min(selectionLead.row, self.doc.getLength()-1));
+            var cursor = self.renderer.screenToTextCoordinates(mousePageX, mousePageY);
+            cursor.row = Math.max(0, Math.min(cursor.row, self.doc.getLength()-1));
 
-            self.selection.selectToPosition(selectionLead);
+            if (self.$clickSelection) {
+                if (self.$clickSelection.contains(cursor.row, cursor.column)) {
+                    self.selection.setSelectionRange(self.$clickSelection);
+                } else {
+                    if (self.$clickSelection.compare(cursor.row, cursor.column) == -1) {
+                        var anchor = self.$clickSelection.end;
+                    } else {
+                        var anchor = self.$clickSelection.start;
+                    }
+                    self.selection.setSelectionAnchor(anchor.row, anchor.column);
+                    self.selection.selectToPosition(cursor);
+                }
+            }
+            else {
+                self.selection.selectToPosition(cursor);
+            }
+
             self.renderer.scrollCursorIntoView();
         };
 
@@ -280,11 +299,13 @@ ace.Editor = function(renderer, doc) {
 
     this.onMouseDoubleClick = function(e) {
         this.selection.selectWord();
+        this.$clickSelection = this.getSelectionRange();
         this.$updateDesiredColumn();
     };
 
     this.onMouseTripleClick = function(e) {
         this.selection.selectLine();
+        this.$clickSelection = this.getSelectionRange();
         this.$updateDesiredColumn();
     };
 

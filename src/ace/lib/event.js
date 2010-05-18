@@ -120,7 +120,7 @@
         self.addListener(el, "mousewheel", listener);
     };
 
-    this.addTripleClickListener = function(el, callback) {
+    this.addMultiMouseDownListener = function(el, count, callback) {
         var clicks = 0;
         var listener = function(e) {
            clicks += 1;
@@ -130,7 +130,7 @@
                }, 600);
            }
 
-           if (clicks == 3) {
+           if (clicks == count) {
                clicks = 0;
                callback(e);
            }

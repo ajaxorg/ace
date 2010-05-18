@@ -19,24 +19,14 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: clip to rows": function() {
-        var range = new ace.Range(0, 20, 100, 30);
-        range.clipRows(10, 30);
-
-        assertPosition(10, 0, range.start);
-        assertPosition(31, 0, range.end);
-
-        var range = new ace.Range(0, 20, 30, 10);
-        range.clipRows(10, 30);
-
-        assertPosition(10, 0, range.start);
-        assertPosition(30, 10, range.end);
+        assertRange(10, 0, 31, 0, new ace.Range(0, 20, 100, 30).clipRows(10, 30));
+        assertRange(10, 0, 30, 10, new ace.Range(0, 20, 30, 10).clipRows(10, 30));
 
         var range = new ace.Range(0, 20, 3, 10);
-        range.clipRows(10, 30);
+        var range = range.clipRows(10, 30);
 
         assertTrue(range.isEmpty());
-        assertPosition(10, 0, range.start);
-        assertPosition(10, 0, range.end);
+        assertRange(10, 0, 10, 0, range);
     },
 
     "test: isEmpty": function() {
@@ -67,5 +57,51 @@ RangeTest = new TestCase("RangeTest", {
 
         clone.end.column = 20;
         assertPosition(3, 4, range.end);
+    },
+
+    "test: contains for multi line ranges": function() {
+        var range = new ace.Range(1, 10, 5, 20);
+
+        assertTrue(range.contains(1, 10));
+        assertTrue(range.contains(2, 0));
+        assertTrue(range.contains(3, 100));
+        assertTrue(range.contains(5, 19));
+        assertTrue(range.contains(5, 20));
+
+        assertFalse(range.contains(1, 9));
+        assertFalse(range.contains(0, 0));
+        assertFalse(range.contains(5, 21));
+    },
+
+    "test: contains for single line ranges": function() {
+        var range = new ace.Range(1, 10, 1, 20);
+
+        assertTrue(range.contains(1, 10));
+        assertTrue(range.contains(1, 15));
+        assertTrue(range.contains(1, 20));
+
+        assertFalse(range.contains(0, 9));
+        assertFalse(range.contains(2, 9));
+        assertFalse(range.contains(1, 9));
+        assertFalse(range.contains(1, 21));
+    },
+
+    "test: extend range": function() {
+        var range = new ace.Range(2, 10, 2, 30);
+
+        var range = range.extend(2, 5);
+        assertRange(2, 5, 2, 30, range);
+
+        var range = range.extend(2, 35);
+        assertRange(2, 5, 2, 35, range);
+
+        var range = range.extend(2, 15);
+        assertRange(2, 5, 2, 35, range);
+
+        var range = range.extend(1, 4);
+        assertRange(1, 4, 2, 35, range);
+
+        var range = range.extend(6, 10);
+        assertRange(1, 4, 6, 10, range);
     }
 });
