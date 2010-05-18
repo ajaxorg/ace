@@ -9,11 +9,32 @@ ace.inherits(ace.mode.JavaScript, ace.mode.Text);
 (function() {
 
     this.toggleCommentLines = function(state, doc, range) {
-        var addedRows = doc.outdentRows(range, "//");
-        if (addedRows == 0) {
-            var addedRows = doc.indentRows(range, "//");
-        };
-        return addedRows;
+        var outdent = true;
+        var outentedRows = [];
+        var re = /^(\s*)\/\//;
+
+        for (var i=range.start.row; i<= range.end.row; i++) {
+            if (!re.test(doc.getLine(i))) {
+                outdent = false;
+                break;
+            }
+        }
+
+        if (outdent) {
+            var deleteRange = new ace.Range(0, 0, 0, 0);
+            for (var i=range.start.row; i<= range.end.row; i++)
+            {
+                var line = doc.getLine(i).replace(re, "$1");
+                deleteRange.start.row = i;
+                deleteRange.end.row = i;
+                deleteRange.end.column = line.length + 2;
+                doc.replace(deleteRange, line);
+            }
+            return -2;
+        }
+        else {
+            return doc.indentRows(range, "//");
+        }
     };
 
     this.getNextLineIndent = function(state, line, tab) {

@@ -145,10 +145,29 @@ var TextEditTest = TestCase("TextEditTest",
         editor.toggleCommentLines();
 
         assertEquals(["  abc", "cde"].join("\n"), doc.toString());
+        assertRange(0, 0, 1, 1, editor.getSelectionRange());
+    },
 
-        var selection = editor.getSelectionRange();
-        assertPosition(0, 0, selection.start);
-        assertPosition(1, 1, selection.end);
+    "test: comment lines - if the selection end is at the line start it should stay there": function() {
+        //select down
+        var doc = new ace.Document(["abc", "cde"].join("\n"), new ace.mode.JavaScript());
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(0, 0);
+        editor.getSelection().selectDown();
+
+        editor.toggleCommentLines();
+        assertRange(0, 2, 1, 0, editor.getSelectionRange());
+
+        // select up
+        var doc = new ace.Document(["abc", "cde"].join("\n"), new ace.mode.JavaScript());
+        var editor = new ace.Editor(new MockRenderer(), doc);
+
+        editor.moveCursorTo(1, 0);
+        editor.getSelection().selectUp();
+
+        editor.toggleCommentLines();
+        assertRange(0, 2, 1, 0, editor.getSelectionRange());
     },
 
     "test: move lines down should select moved lines" : function() {

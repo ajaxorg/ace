@@ -37,6 +37,14 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
         assertEquals(["////  abc", "////cde", "//fg"].join("\n"), doc.toString());
     },
 
+    "test: toggle comment on a comment line with leading white space": function() {
+        var doc = new ace.Document(["//cde", "  //fg"]);
+
+        var range = new ace.Range(0, 3, 1, 1);
+        var comment = this.mode.toggleCommentLines("start", doc, range);
+        assertEquals(["cde", "  fg"].join("\n"), doc.toString());
+    },
+
     "test: auto indent after opening brace" : function() {
         assertEquals("  ", this.mode.getNextLineIndent("start", "if () {", "  "));
     },

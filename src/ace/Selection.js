@@ -67,18 +67,29 @@ ace.Selection = function(doc) {
         var anchor = this.getSelectionAnchor();
         var lead = this.getSelectionLead();
 
-        this.setSelectionAnchor(anchor.row, anchor.column + columns);
-        this.$moveSelection(function() {
-            this.moveCursorTo(lead.row, lead.column + columns);
-        });
+        var isBackwards = this.$isBackwards();
+
+        if (!isBackwards || anchor.column !== 0)
+            this.setSelectionAnchor(anchor.row, anchor.column + columns);
+
+        if (isBackwards || lead.column !== 0) {
+            this.$moveSelection(function() {
+                this.moveCursorTo(lead.row, lead.column + columns);
+            });
+        }
+    };
+
+    this.$isBackwards = function() {
+        var anchor = this.selectionAnchor || this.selectionLead;
+        var lead = this.selectionLead;
+        return (anchor.row > lead.row || (anchor.row == lead.row && anchor.column > lead.column));
     };
 
     this.getRange = function() {
         var anchor = this.selectionAnchor || this.selectionLead;
         var lead = this.selectionLead;
 
-        if (anchor.row > lead.row
-                || (anchor.row == lead.row && anchor.column > lead.column)) {
+        if (this.$isBackwards()) {
             return ace.Range.fromPoints(lead, anchor);
         }
         else {
