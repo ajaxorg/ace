@@ -17,8 +17,9 @@ ace.inherits(ace.mode.Html, ace.mode.Text);
     };
 
     this.getNextLineIndent = function(state, line, tab) {
+        var self = this;
         return this.$delegate("getNextLineIndent", arguments, function() {
-            return "";
+            return self.$getIndent(line);
         });
     };
 

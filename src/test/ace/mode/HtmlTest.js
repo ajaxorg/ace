@@ -1,16 +1,7 @@
-var XmlTest = new TestCase("mode.XmlTest", {
+var HtmlTest = new TestCase("mode.HtmlTest", {
 
     setUp : function() {
-        this.mode = new ace.mode.Xml();
-    },
-
-    "test: getTokenizer() (smoke test)" : function() {
-        var tokenizer = this.mode.getTokenizer();
-
-        assertTrue(tokenizer instanceof ace.Tokenizer);
-
-        var tokens = tokenizer.getLineTokens("<juhu>", "start").tokens;
-        assertEquals("keyword", tokens[1].type);
+        this.mode = new ace.mode.Html();
     },
 
     "test: toggle comment lines should not do anything" : function() {
