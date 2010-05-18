@@ -170,6 +170,9 @@ ace.Editor = function(renderer, doc) {
         var data = e.data;
         this.bgTokenizer.start(data.firstRow);
         this.renderer.updateLines(data.firstRow, data.lastRow);
+
+        // update cursor because tab characters can influence the cursor position
+        this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
     };
 
     this.onTokenizerUpdate = function(e) {
@@ -341,6 +344,7 @@ ace.Editor = function(renderer, doc) {
         var cursor = this.getCursorPosition();
         text = text.replace("\t", this.doc.getTabString());
 
+        // remove selected text
         if (!this.selection.isEmpty()) {
             var cursor = this.doc.remove(this.getSelectionRange());
             this.clearSelection();
