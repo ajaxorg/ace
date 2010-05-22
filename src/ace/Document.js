@@ -114,14 +114,27 @@ ace.Document = function(text, mode) {
         return this.$breakpoints;
     };
 
+    this.setBreakpoints = function(rows) {
+        this.$breakpoints = [];
+        for (var i=0; i<rows; i++) {
+            this.$breakpoints[rows[i]] = true;
+        }
+        this.$dispatchEvent("changeBreakpoint", {});
+    };
+
+    this.clearBreakpoints = function() {
+        this.$breakpoints = [];
+        this.$dispatchEvent("changeBreakpoint", {});
+    };
+
     this.setBreakpoint = function(row) {
         this.$breakpoints[row] = true;
-        this.$dispatchEvent("changeBreakpoint", {data: row});
+        this.$dispatchEvent("changeBreakpoint", {});
     };
 
     this.clearBreakpoint = function(row) {
         delete this.$breakpoints[row];
-        this.$dispatchEvent("changeBreakpoint", {data: row});
+        this.$dispatchEvent("changeBreakpoint", {});
     };
 
     this.$detectNewLine = function(text) {
