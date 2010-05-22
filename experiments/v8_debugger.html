@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../src/debug/d8.js"></script>
+        <script type="text/javascript" src="../src/debug/o3.js"></script>
+        
+        <script type="text/javascript" src="../src/ace/lib/core.js"></script>
+        <script type="text/javascript" src="../src/ace/lib/oop.js"></script>
+        <script type="text/javascript" src="../src/ace/lib/lang.js"></script>
+        <script type="text/javascript" src="../src/ace/MEventEmitter.js"></script>
+        
+        <script type="text/javascript" src="../src/debug/O3Socket.js"></script>
+        <script type="text/javascript" src="../src/debug/StandaloneV8DebuggerService.js"></script>
+        <script type="text/javascript" src="../src/debug/V8Debugger.js"></script>
+        <script type="text/javascript" src="../src/debug/V8Message.js"></script>
+        <script type="text/javascript" src="../src/debug/DevToolsMessage.js"></script>
+        <script type="text/javascript" src="../src/debug/MessageReader.js"></script>
+	</head>
+	<body>
+		<embed type="application/o3stem-aaaaaaaa-1111-bbbb-1111-cccccccccccc" width="0" height="0" /> 
+
+        <button onClick="testChrome()">start test</button>
+	</body>
+	<script>
+
+function testChrome() {
+    var o3obj = document.getElementsByTagName("embed")[0];
+	var socket = new O3Socket("127.0.0.1", 5858, o3obj);
+
+	var v8ds = new StandaloneV8DebuggerService(socket);
+
+	v8ds.attach(0, function() {
+		var v8debugger = new V8Debugger(0, v8ds);
+		v8debugger.version(function(version) {
+			console.log("V8 version:", version.V8Version);
+		});
+	
+		v8debugger.scripts(4, null, true, function(scripts) {
+			console.log("scripts (short)", scripts);
+		});
+	});
+};
+    </script>
+</html>
