@@ -132,6 +132,12 @@ ace.layer.Text = function(parentEl) {
         this.element.innerHTML = html.join("");
     };
 
+    this.$textToken = {
+        "text": true,
+        "rparen": true,
+        "lparen": true
+    };
+    
     this.renderLine = function(stringBuilder, row) {
         var tokens = this.tokenizer.getTokens(row);
 
@@ -157,7 +163,7 @@ ace.layer.Text = function(parentEl) {
                 .replace(spaceRe, spaceReplace)
                 .replace(/\t/g, this.$tabString);
 
-            if (token.type !== "text") {
+            if (!this.$textToken[token.type]) {
                 stringBuilder.push("<span class='ace_", token.type, "'>", output, "</span>");
             }
             else {
