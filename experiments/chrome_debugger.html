@@ -1,7 +1,7 @@
 <html>
 	<head>
-		<script type="text/javascript" src="../src/debug/d8.js"></script>
-        <script type="text/javascript" src="../src/debug/o3.js"></script>
+        <script type="text/javascript" src="o3.js"></script>
+        <script type="text/javascript" src="json2.js"></script>
         
         <script type="text/javascript" src="../src/ace/lib/core.js"></script>
         <script type="text/javascript" src="../src/ace/lib/oop.js"></script>
@@ -18,14 +18,16 @@
         <script type="text/javascript" src="../src/debug/MessageReader.js"></script>
 	</head>
 	<body>
-		<embed type="application/o3demo-8a66ecac-63fd-4afa-9d42-3034d18c88f4" width="0" height="0" /> 
-
         <button onClick="testChrome()">start test</button>
+        <button id="close">close socket</button>
 	</body>
 	<script>
 
 function testChrome() {
-    var o3obj = document.getElementsByTagName("embed")[0];
+    var o3obj = o3.create("8A66ECAC-63FD-4AFA-9D42-3034D18C88F4", { 
+        oninstallprompt: function() { alert("can't find o3 plugin"); },
+        product: "O3Demo"
+    });
 	var socket = new O3Socket("127.0.0.1", 9222, o3obj);
 	var msgStream = new ChromeDebugMessageStream(socket);
 
@@ -36,6 +38,7 @@ function testChrome() {
 		
 		dts.getVersion(function(version) {
 			console.log("ChromeDevTools Version:", version);
+			alert("ChromeDevTools Version:" + version)
 
 			dts.listTabs(function(tabs) {
 				console.log(tabs);
@@ -58,6 +61,10 @@ function testChrome() {
 	});
 	
 	msgStream.connect();
+
+	document.getElementById("close").onclick = function() {
+		socket.close();
+	}
 };
     </script>
 </html>

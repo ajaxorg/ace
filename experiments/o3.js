@@ -51,20 +51,34 @@ function detect(o) {
         embedded = true;
     }
     
-    else if (navigator.plugins) {
-        if (navigator.plugins[name]) {
+    if (!version && navigator.plugins) {
+        if (navigator.plugins[name]) 
             version = navigator.plugins[name].description.match(/v([\d]+\.[\d]+)/)[1];
-        }
-        else {
-            // try sniffing the mimeTypes
-            name = "application/" + name;
-            for (var i = 0, l = navigator.mimeTypes.length; i < l; ++i) {
-                if (navigator.mimeTypes[i].type == name)
-                    version = "0.9";
+        
+        if (!version) {
+            for (var i = 0, l1 = navigator.plugins.length; i < l1; ++i) {
+                var plugin = navigator.plugins[i];
+                for (var j = 0, l2 = plugin.length; j < l2; j++) {
+                    if (plugin[j].type.toLowerCase() == "application/" + name.toLowerCase())
+                        version = "0.9";
+                        break;
+                }
+                if (version)
+                    break;
             }
         }
     }
-    else { 
+        
+    if (!version && navigator.mimeTypes) {
+        // try sniffing the mimeTypes
+        for (var i = 0, l = navigator.mimeTypes.length; i < l; ++i) {
+            if (navigator.mimeTypes[i].type.toLowerCase() == "application/" + name.toLowerCase())
+                version = "0.9";
+                break;
+        }
+    }
+    
+    if (!version) {
         try {
             var axo = new ActiveXObject(name);
             version = axo.versionInfo.match(/v([\d]+\.[\d]+)/)[1];
