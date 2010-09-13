@@ -102,6 +102,7 @@ ace.Document = function(text, mode) {
     this.setTabSize = function(tabSize) {
         if (this.$tabSize === tabSize) return;
 
+        this.modified = true;
         this.$tabSize = tabSize;
         this.$dispatchEvent("changeTabSize");
     };
@@ -199,17 +200,37 @@ ace.Document = function(text, mode) {
     };
 
     this.getWidth = function() {
+        this.$computeWidth();
+        return this.width;
+    };
+
+    this.getScreenWidth = function() {
+        this.$computeWidth();
+        return this.screenWith;
+    };
+
+    this.$computeWidth = function() {
         if (this.modified) {
             this.modified = false;
 
             var lines = this.lines;
             var longestLine = 0;
+            var longestScreenLine = 0;
+            var tabSize = this.getTabSize();
+
             for ( var i = 0; i < lines.length; i++) {
-                longestLine = Math.max(longestLine, lines[i].length);
+                var len = lines[i].length;
+                longestLine = Math.max(longestLine, len);
+
+                lines[i].replace("\t", function(m) {
+                    len += tabSize-1;
+                    return m;
+                });
+                longestScreenLine = Math.max(longestScreenLine, len);
             }
             this.width = longestLine;
+            this.screenWith = longestScreenLine;
         }
-        return this.width;
     };
 
     this.getLine = function(row) {

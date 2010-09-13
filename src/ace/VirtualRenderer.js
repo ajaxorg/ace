@@ -191,7 +191,7 @@ ace.VirtualRenderer = function(container) {
         var offset = this.scrollTop % this.lineHeight;
         var minHeight = this.scroller.clientHeight + offset;
 
-        var charCount = this.doc.getWidth();
+        var charCount = this.doc.getScreenWidth();
         if (this.$showInvisibles)
             charCount += 1;
 
