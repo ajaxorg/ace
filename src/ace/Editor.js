@@ -505,6 +505,10 @@ ace.Editor = function(renderer, doc) {
         var indentString = indentString || this.doc.getTabString();
         var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
+        // besides the indent string also outdent tabs
+        if (addedColumns == 0 && indentString != "\t")
+            var addedColumns = this.doc.outdentRows(this.getSelectionRange(), "\t");
+
         this.selection.shiftSelection(addedColumns);
         this.$updateDesiredColumn();
     };
