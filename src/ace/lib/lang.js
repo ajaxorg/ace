@@ -32,6 +32,15 @@
         return copy;
     };
 
+    this.arrayToMap = function(arr) {
+        var map = {};
+        for (var i=0; i<arr.length; i++) {
+            map[arr[i]] = 1;
+        }
+        return map;
+
+    };
+
     this.escapeRegExp = function(str) {
         return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
     };
