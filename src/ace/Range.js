@@ -101,6 +101,13 @@ ace.Range = function(startRow, startColumn, endRow, endColumn) {
         return ace.Range.fromPoints(this.start, this.end);
     };
 
+    this.toScreenRange = function(doc) {
+        return new ace.Range(
+            this.start.row, doc.documentToScreenColumn(this.start.row, this.start.column),
+            this.end.row, doc.documentToScreenColumn(this.end.row, this.end.column)
+        );
+    };
+
 }).call(ace.Range.prototype);
 
 

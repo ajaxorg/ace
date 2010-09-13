@@ -84,6 +84,7 @@ ace.layer.Marker = function(parentEl) {
     };
 
     this.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+        var range = range.toScreenRange(this.doc);
 
         // from selection start to the end of the line
         var height = layerConfig.lineHeight;
@@ -125,6 +126,7 @@ ace.layer.Marker = function(parentEl) {
     };
 
     this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+        var range = range.toScreenRange(this.doc);
 
         var height = layerConfig.lineHeight;
         var width = Math.round((range.end.column - range.start.column) * layerConfig.characterWidth);

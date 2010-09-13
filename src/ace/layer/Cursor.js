@@ -13,10 +13,14 @@ ace.layer.Cursor = function(parentEl) {
 
 (function() {
 
+    this.setDocument = function(doc) {
+        this.doc = doc;
+    };
+
     this.setCursor = function(position, overwrite) {
         this.position = {
             row : position.row,
-            column : position.column
+            column : this.doc.documentToScreenColumn(position.row, position.column)
         };
         if (overwrite) {
             ace.addCssClass(this.cursor, "ace_overwrite");

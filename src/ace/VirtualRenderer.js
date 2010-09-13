@@ -59,6 +59,7 @@ ace.VirtualRenderer = function(container) {
     this.setDocument = function(doc) {
         this.lines = doc.lines;
         this.doc = doc;
+        this.$cursorLayer.setDocument(doc);
         this.$markerLayer.setDocument(doc);
         this.$textLayer.setDocument(doc);
     };
@@ -229,8 +230,6 @@ ace.VirtualRenderer = function(container) {
 
 
     this.addMarker = function(range, clazz, type) {
-        range.start = this.$documentToScreenPosition(range.start);
-        range.end = this.$documentToScreenPosition(range.end);
         return this.$markerLayer.addMarker(range, clazz, type);
     };
 
@@ -243,15 +242,8 @@ ace.VirtualRenderer = function(container) {
     };
 
     this.updateCursor = function(position, overwrite) {
-        this.$cursorLayer.setCursor(this.$documentToScreenPosition(position), overwrite);
+        this.$cursorLayer.setCursor(position, overwrite);
         this.$cursorLayer.update(this.layerConfig);
-    };
-
-    this.$documentToScreenPosition = function(pos) {
-        return {
-            row: pos.row,
-            column: this.doc.documentToScreenColumn(pos.row, pos.column)
-        };
     };
 
     this.hideCursor = function() {
