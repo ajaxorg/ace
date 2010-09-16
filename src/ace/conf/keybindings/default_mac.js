@@ -47,5 +47,3 @@ ace.KeyBinding.default_mac = {
     "outdent": "Shift-Tab",
     "indent": "Tab"
 };
-
-ace.KeyBinding.default_mac.reverse = ace.objectReverse(ace.KeyBinding.default_mac, "|");

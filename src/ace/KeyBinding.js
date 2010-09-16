@@ -56,6 +56,8 @@ ace.KeyBinding = function(element, editor, config) {
         this.config = config || ace.isMac 
             ? ace.KeyBinding.default_mac
             : ace.KeyBinding.default_win;
+        if (typeof this.config.reverse == "undefined")
+            this.config.reverse = ace.objectReverse(this.config, "|");
     };
 
     this["selectall"] = function() {
