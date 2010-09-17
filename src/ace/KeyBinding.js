@@ -1,15 +1,19 @@
 ace.provide("ace.KeyBinding");
 
-ace.KeyBinding = function(element, editor) {
+ace.KeyBinding = function(element, editor, config) {
 
     this.editor = editor;
+    this.setConfig(config);
     var keys = this.keys;
 
-    var self = this;
+    var _self = this;
     ace.addKeyListener(element, function(e) {
         var key = [];
-        if (e.ctrlKey || e.metaKey) {
+        if (e.ctrlKey) {
             key.push("Control");
+        }
+        if (e.metaKey) {
+            key.push("Meta");
         }
         if (e.altKey) {
             key.push("Alt");
@@ -19,10 +23,10 @@ ace.KeyBinding = function(element, editor) {
         }
         key.push(keys[e.keyCode] || String.fromCharCode(e.keyCode));
 
-        var command = self[key.join("-")];
+        var command = _self[_self.config.reverse[key.join("-")]];
         if (command) {
-            self.selection = editor.getSelection();
-            command.call(self);
+            _self.selection = editor.getSelection();
+            command.call(_self);
             return ace.stopEvent(e);
         }
     });
@@ -48,199 +52,163 @@ ace.KeyBinding = function(element, editor) {
         91 : "Meta"
     };
 
-    this["Control-A"] = function() {
+    this.setConfig = function(config) {
+        this.config = config || ace.isMac 
+            ? ace.KeyBinding.default_mac
+            : ace.KeyBinding.default_win;
+        if (typeof this.config.reverse == "undefined")
+            this.config.reverse = ace.objectReverse(this.config, "|");
+    };
+
+    this["selectall"] = function() {
         this.selection.selectAll();
     };
-
-    this["Control-D"] = function() {
+    this["removeline"] = function() {
         this.editor.removeLines();
     };
-
-    this["Control-L"] = function() {
+    this["gotoline"] = function() {
         var line = parseInt(prompt("Enter line number:"));
         if (!isNaN(line)) {
             this.editor.gotoLine(line);
         }
     };
-
-    this["Control-7"] = function() {
+    this["togglecomment"] = function() {
         this.editor.toggleCommentLines();
     };
-
-    this["Control-K"] = function() {
+    this["findnext"] = function() {
         this.editor.findNext();
     };
-
-    this["Control-Shift-K"] = function() {
+    this["findprevious"] = function() {
         this.editor.findPrevious();
     };
-
-    this["Control-F"] = function() {
+    this["find"] = function() {
         var needle = prompt("Find:");
         this.editor.find(needle);
     };
-
-    this["Control-Z"] = function() {
+    this["undo"] = function() {
       this.editor.undo();
     };
-
-    this["Control-Shift=Z"] = function() {
+    this["redo"] = function() {
         this.editor.redo();
     };
-
-    this["Control-Y"] = function() {
+    this["redo"] = function() {
         this.editor.redo();
     };
-
-    this["Insert"] = function() {
+    this["overwrite"] = function() {
         this.editor.toggleOverwrite();
     };
-
-    this["Control-Alt-Up"] = function() {
+    this["copylinesup"] = function() {
         this.editor.copyLinesUp();
     };
-
-    this["Alt-Up"] = function() {
+    this["movelinesup"] = function() {
         this.editor.moveLinesUp();
     };
-
-    this["Control-Shift-Up"] = function() {
+    this["selecttostart"] = function() {
         this.selection.selectFileStart();
     };
-
-    this["Control-Home"] = this["Control-Up"] = function() {
+    this["gotostart"] = this["Control-Up"] = function() {
         this.editor.navigateFileStart();
     };
-
-    this["Shift-Up"] = function() {
+    this["selectup"] = function() {
         this.selection.selectUp();
     };
-
-    this["Up"] = function() {
+    this["golineup"] = function() {
         this.editor.navigateUp();
     };
-
-    this["Control-Alt-Down"] = function() {
+    this["copylinesdown"] = function() {
         this.editor.copyLinesDown();
     };
-
-    this["Alt-Down"] = function() {
+    this["movelinsedown"] = function() {
         this.editor.moveLinesDown();
     };
-
-    this["Control-Shift-Down"] = function() {
+    this["selecttoend"] = function() {
         this.selection.selectFileEnd();
     };
-
-    this["Control-End"] = this["Control-Down"] = function() {
+    this["gotoend"] = this["Control-Down"] = function() {
         this.editor.navigateFileEnd();
     };
-
-    this["Shift-Down"] = function() {
+    this["selectdown"] = function() {
         this.selection.selectDown();
     };
-
-    this["Down"] = function() {
+    this["godown"] = function() {
         this.editor.navigateDown();
     };
-
-    this["Alt-Shift-Left"] = function() {
+    this["selectwordleft"] = function() {
         this.selection.selectWordLeft();
     };
-
-    this["Alt-Left"] = function() {
+    this["gotowordleft"] = function() {
         this.editor.navigateWordLeft();
     };
-
-    this["Control-Shift-Left"] = function() {
+    this["selecttolinestart"] = function() {
         this.selection.selectLineStart();
     };
-
-    this["Control-Left"] = function() {
+    this["gotolinestart"] = function() {
         this.editor.navigateLineStart();
     };
-
-    this["Shift-Left"] = function() {
+    this["selectleft"] = function() {
         this.selection.selectLeft();
     };
-
-    this["Left"] = function() {
+    this["gotoleft"] = function() {
         this.editor.navigateLeft();
     };
-
-    this["Alt-Shift-Right"] = function() {
+    this["selectwordright"] = function() {
         this.selection.selectWordRight();
     };
-
-    this["Alt-Right"] = function() {
+    this["gotowordright"] = function() {
         this.editor.navigateWordRight();
     };
-
-    this["Control-Shift-Right"] = function() {
+    this["selecttolineend"] = function() {
         this.selection.selectLineEnd();
     };
-
-    this["Control-Right"] = function() {
+    this["gotolineend"] = function() {
         this.editor.navigateLineEnd();
     };
-
-    this["Shift-Right"] = function() {
+    this["selectright"] = function() {
         this.selection.selectRight();
     };
-
-    this["Right"] = function() {
+    this["gotoright"] = function() {
         this.editor.navigateRight();
     };
-
-    this["Shift-PageDown"] = function() {
+    this["selectpagedown"] = function() {
         this.editor.selectPageDown();
     };
-
-    this["PageDown"] = function() {
+    this["pagedown"] = function() {
         this.editor.scrollPageDown();
     };
-
-    this["Shift-PageUp"] = function() {
+    this["selectpageup"] = function() {
         this.editor.selectPageUp();
     };
-
-    this["PageUp"] = function() {
+    this["pageup"] = function() {
         this.editor.scrollPageUp();
     };
-
-    this["Shift-Home"] = function() {
+    this["selectlinestart"] = function() {
         this.selection.selectLineStart();
     };
-
-    this["Home"] = function() {
+    this["gotolinestart"] = function() {
         this.editor.navigateLineStart();
     };
-
-    this["Shift-End"] = function() {
+    this["selectlineend"] = function() {
         this.selection.selectLineEnd();
     };
-
-    this["End"] = function() {
+    this["gotolineend"] = function() {
         this.editor.navigateLineEnd();
     };
-
-    this["Delete"] = function() {
+    this["del"] = function() {
         this.editor.removeRight();
     };
-
-    this["Backspace"] = function() {
+    this["backspace"] = function() {
         this.editor.removeLeft();
     };
-
-    this["Shift-Tab"] = function() {
+    this["outdent"] = function() {
         this.editor.blockOutdent();
     };
-
-    this["Tab"] = function() {
-        if (this.selection.isMultiLine())
+    this["indent"] = function() {
+        if (this.selection.isMultiLine()) {
             this.editor.blockIndent();
-        else
+        }
+        else {
             this.editor.onTextInput("\t");
+        }
     };
 
 }).call(ace.KeyBinding.prototype);
