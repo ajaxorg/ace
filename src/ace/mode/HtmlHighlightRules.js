@@ -116,6 +116,10 @@ ace.mode.HtmlHighlightRules = function() {
     var jsRules = new ace.mode.JavaScriptHighlightRules().getRules();
     this.addRules(jsRules, "js-");
     this.$rules["js-start"].unshift({
+        token: "comment",
+        regex: "\\/\\/.*(?=<\\/script>)",
+        next: "tag"
+    }, {
         token: "text",
         regex: "<\\/(?=script)",
         next: "tag"
