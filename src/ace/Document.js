@@ -530,11 +530,11 @@ ace.Document = function(text, mode) {
     };
 
     this.indentRows = function(range, indentString) {
-      for (var row=range.start.row; row<= range.end.row; row++) {
-          this.$insert({row: row, column:0}, indentString);
-      }
-      this.fireChangeEvent(range.start.row, range.end.row);
-      return indentString.length;
+        for (var row=range.start.row; row<= range.end.row; row++) {
+            this.$insert({row: row, column:0}, indentString);
+        }
+        this.fireChangeEvent(range.start.row, range.end.row);
+        return indentString.length;
     };
 
     this.outdentRows = function(range, indentString) {

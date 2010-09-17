@@ -237,12 +237,10 @@ ace.KeyBinding = function(element, editor) {
     };
 
     this["Tab"] = function() {
-        if (this.selection.isMultiLine()) {
+        if (this.selection.isMultiLine())
             this.editor.blockIndent();
-        }
-        else {
+        else
             this.editor.onTextInput("\t");
-        }
     };
 
 }).call(ace.KeyBinding.prototype);
