@@ -5,8 +5,9 @@ require.def("ace/VirtualRenderer",
          "ace/layer/Marker",
          "ace/layer/Text",
          "ace/layer/Cursor",
-         "ace/ScrollBar"
-    ], function(ace, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar) {
+         "ace/ScrollBar",
+         "ace/MEventEmitter"
+    ], function(ace, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar, MEventEmitter) {
 
 var VirtualRenderer = function(container) {
     this.container = container;
@@ -62,7 +63,7 @@ var VirtualRenderer = function(container) {
 
 (function() {
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.setDocument = function(doc) {
         this.lines = doc.lines;

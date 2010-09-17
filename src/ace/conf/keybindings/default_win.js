@@ -1,4 +1,4 @@
-require.def("ace/conf/keybinding/default_win", function() {
+require.def("ace/conf/keybindings/default_win", function() {
 
 return {
     "selectall": "Control-A",

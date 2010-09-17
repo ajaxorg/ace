@@ -1,4 +1,4 @@
-require.def("ace/conf/keybinding/default_mac", function() {
+require.def("ace/conf/keybindings/default_mac", function() {
 
 return {
     "selectall": "Meta-A",

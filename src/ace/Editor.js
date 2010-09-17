@@ -7,7 +7,8 @@ require.def("ace/Editor",
         "ace/Search",
         "ace/BackgroundTokenizer",
         "ace/Range",
-    ], function(ace, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range) {
+        "ace/MEventEmitter"
+    ], function(ace, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
 
 var Editor = function(renderer, doc) {
     var container = renderer.getContainerElement();
@@ -44,7 +45,7 @@ var Editor = function(renderer, doc) {
 
 (function(){
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.$forwardEvents = {
         gutterclick: 1,

@@ -34,7 +34,7 @@ require.def("ace/lib/lang", function() {
         return copy;
     };
 
-    this.arrayToMap = function(arr) {
+    lang.arrayToMap = function(arr) {
         var map = {};
         for (var i=0; i<arr.length; i++) {
             map[arr[i]] = 1;
@@ -43,7 +43,7 @@ require.def("ace/lib/lang", function() {
 
     };
 
-    this.objectReverse = function(obj, keySplit) {
+    lang.objectReverse = function(obj, keySplit) {
         var i, j, l, key,
             ret = {};
         for (i in obj) {
