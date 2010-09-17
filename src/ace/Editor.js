@@ -1,12 +1,22 @@
-ace.provide("ace.Editor");
+require.def("ace/Editor",
+    [
+        "ace/ace",
+        "ace/TextInput",
+        "ace/KeyBinding",
+        "ace/Document",
+        "ace/Search",
+        "ace/BackgroundTokenizer",
+        "ace/Range",
+        "ace/MEventEmitter"
+    ], function(ace, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
 
-ace.Editor = function(renderer, doc) {
+var Editor = function(renderer, doc) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
 
-    this.textInput = new ace.TextInput(container, this);
-    new ace.KeyBinding(container, this);
+    this.textInput = new TextInput(container, this);
+    new KeyBinding(container, this);
     var self = this;
     ace.addListener(container, "mousedown", function(e) {
         setTimeout(function() {self.focus();});
@@ -26,16 +36,16 @@ ace.Editor = function(renderer, doc) {
     this.$highlightLineMarker = null;
     this.$blockScrolling = false;
 
-    this.$search = new ace.Search().set({
+    this.$search = new Search().set({
         wrap: true
     });
 
-    this.setDocument(doc || new ace.Document(""));
+    this.setDocument(doc || new Document(""));
 };
 
 (function(){
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.$forwardEvents = {
         gutterclick: 1,
@@ -142,7 +152,7 @@ ace.Editor = function(renderer, doc) {
 
             var pos = self.doc.findMatchingBracket(self.getCursorPosition());
             if (pos) {
-                var range = new ace.Range(pos.row, pos.column, pos.row, pos.column+1);
+                var range = new Range(pos.row, pos.column, pos.row, pos.column+1);
                 self.$bracketHighlight = self.renderer.addMarker(range, "ace_bracket");
             }
         }, 10);
@@ -198,7 +208,7 @@ ace.Editor = function(renderer, doc) {
 
         if (this.getHighlightActiveLine() && !this.selection.isMultiLine()) {
             var cursor = this.getCursorPosition();
-            var range = new ace.Range(cursor.row, 0, cursor.row+1, 0);
+            var range = new Range(cursor.row, 0, cursor.row+1, 0);
             this.$highlightLineMarker = this.renderer.addMarker(range, "ace_active_line", "line");
         }
     };
@@ -230,7 +240,7 @@ ace.Editor = function(renderer, doc) {
 
         if (!this.bgTokenizer) {
             var onUpdate = ace.bind(this.onTokenizerUpdate, this);
-            this.bgTokenizer = new ace.BackgroundTokenizer(tokenizer);
+            this.bgTokenizer = new BackgroundTokenizer(tokenizer);
             this.bgTokenizer.addEventListener("update", onUpdate);
         } else {
             this.bgTokenizer.setTokenizer(tokenizer);
@@ -349,7 +359,7 @@ ace.Editor = function(renderer, doc) {
             var cursor = this.doc.remove(this.getSelectionRange());
             this.clearSelection();
         } else if (this.$overwrite){
-            var range = new ace.Range.fromPoints(cursor, cursor);
+            var range = new Range.fromPoints(cursor, cursor);
             range.end.column += text.length;
             this.doc.remove(range);
         }
@@ -369,7 +379,7 @@ ace.Editor = function(renderer, doc) {
         if (row !== end.row) {
             var indent = this.mode.getNextLineIndent(lineState, line, this.doc.getTabString());
             if (indent) {
-                var indentRange = new ace.Range(row+1, 0, end.row, end.column);
+                var indentRange = new Range(row+1, 0, end.row, end.column);
                 end.column += this.doc.indentRows(indentRange, indent);
             }
         } else {
@@ -505,6 +515,10 @@ ace.Editor = function(renderer, doc) {
         var indentString = indentString || this.doc.getTabString();
         var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
 
+        // besides the indent string also outdent tabs
+        if (addedColumns == 0 && indentString != "\t")
+            var addedColumns = this.doc.outdentRows(this.getSelectionRange(), "\t");
+
         this.selection.shiftSelection(addedColumns);
         this.$updateDesiredColumn();
     };
@@ -515,7 +529,7 @@ ace.Editor = function(renderer, doc) {
 
         var rows = this.$getSelectedRows();
 
-        var range = new ace.Range(rows.first, 0, rows.last, 0);
+        var range = new Range(rows.first, 0, rows.last, 0);
         var state = this.bgTokenizer.getState(this.getCursorPosition().row);
         var addedColumns = this.mode.toggleCommentLines(state, this.doc, range);
 
@@ -867,4 +881,8 @@ ace.Editor = function(renderer, doc) {
         this.doc.getUndoManager().redo();
     };
 
-}).call(ace.Editor.prototype);
+}).call(Editor.prototype);
+
+
+return Editor;
+});

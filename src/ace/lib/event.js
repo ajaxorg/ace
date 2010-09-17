@@ -1,10 +1,8 @@
-(function() {
+require.def("ace/lib/event", ["ace/lib/core"], function(core) {
 
-    var self = this;
+    var event = {};
 
-    this.isIE = ! + "\v1";
-
-    this.addListener = function(elem, type, callback) {
+    event.addListener = function(elem, type, callback) {
         if (elem.addEventListener) {
             return elem.addEventListener(type, callback, false);
         }
@@ -17,7 +15,7 @@
         }
     };
 
-    this.removeListener = function(elem, type, callback) {
+    event.removeListener = function(elem, type, callback) {
         if (elem.removeEventListener) {
             return elem.removeEventListener(type, callback, false);
         }
@@ -26,27 +24,27 @@
         }
     };
 
-    this.stopEvent = function(e) {
-        self.stopPropagation(e);
-        self.preventDefault(e);
+    event.stopEvent = function(e) {
+        event.stopPropagation(e);
+        event.preventDefault(e);
         return false;
     };
 
-    this.stopPropagation = function(e) {
+    event.stopPropagation = function(e) {
         if (e.stopPropagation)
             e.stopPropagation();
         else
             e.cancelBubble = true;
     };
 
-    this.preventDefault = function(e) {
+    event.preventDefault = function(e) {
         if (e.preventDefault)
             e.preventDefault();
         else
             e.returnValue = false;
     };
 
-    this.getDocumentX = function(event) {
+    event.getDocumentX = function(event) {
         if (event.clientX) {
             var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
             return event.clientX + scrollLeft;
@@ -55,7 +53,7 @@
         }
     };
 
-    this.getDocumentY = function(event) {
+    event.getDocumentY = function(event) {
         if (event.clientY) {
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             return event.clientY + scrollTop;
@@ -65,31 +63,31 @@
     };
 
     if (document.documentElement.setCapture) {
-        this.capture = function(el, eventHandler, releaseCaptureHandler) {
+        event.capture = function(el, eventHandler, releaseCaptureHandler) {
             function onMouseMove(e) {
                 eventHandler(e);
-                return self.stopPropagation(e);
+                return event.stopPropagation(e);
             }
 
             function onReleaseCapture(e) {
                 eventHandler && eventHandler(e);
                 releaseCaptureHandler && releaseCaptureHandler();
 
-                self.removeListener(el, "mousemove", eventHandler);
-                self.removeListener(el, "mouseup", onReleaseCapture);
-                self.removeListener(el, "losecapture", onReleaseCapture);
+                event.removeListener(el, "mousemove", eventHandler);
+                event.removeListener(el, "mouseup", onReleaseCapture);
+                event.removeListener(el, "losecapture", onReleaseCapture);
 
                 el.releaseCapture();
             }
 
-            self.addListener(el, "mousemove", eventHandler);
-            self.addListener(el, "mouseup", onReleaseCapture);
-            self.addListener(el, "losecapture", onReleaseCapture);
+            event.addListener(el, "mousemove", eventHandler);
+            event.addListener(el, "mouseup", onReleaseCapture);
+            event.addListener(el, "losecapture", onReleaseCapture);
             el.setCapture();
         };
     }
     else {
-        this.capture = function(el, eventHandler, releaseCaptureHandler) {
+        event.capture = function(el, eventHandler, releaseCaptureHandler) {
             function onMouseMove(e) {
                 eventHandler(e);
                 e.stopPropagation();
@@ -110,17 +108,17 @@
         };
     }
 
-    this.addMouseWheelListener = function(el, callback) {
+    event.addMouseWheelListener = function(el, callback) {
         var listener = function(e) {
             e.wheel = (e.wheelDelta) ? e.wheelDelta / 120
                     : -(e.detail || 0) / 3;
             callback(e);
         };
-        self.addListener(el, "DOMMouseScroll", listener);
-        self.addListener(el, "mousewheel", listener);
+        event.addListener(el, "DOMMouseScroll", listener);
+        event.addListener(el, "mousewheel", listener);
     };
 
-    this.addMultiMouseDownListener = function(el, count, callback) {
+    event.addMultiMouseDownListener = function(el, count, callback) {
         var clicks = 0;
         var listener = function(e) {
            clicks += 1;
@@ -134,23 +132,23 @@
                clicks = 0;
                callback(e);
            }
-           return self.preventDefault(e);
+           return event.preventDefault(e);
         };
 
-        self.addListener(el, "mousedown", listener);
-        this.isIE && self.addListener(el, "dblclick", listener);
+        event.addListener(el, "mousedown", listener);
+        core.isIE && event.addListener(el, "dblclick", listener);
     };
 
-    this.addKeyListener = function(el, callback) {
+    event.addKeyListener = function(el, callback) {
       var lastDown = null;
 
-      self.addListener(el, "keydown", function(e) {
+      event.addListener(el, "keydown", function(e) {
           lastDown = e.keyIdentifier || e.keyCode;
           return callback(e);
       });
 
-      if (ace.isMac) {
-          self.addListener(el, "keypress", function(e) {
+      if (core.isMac) {
+          event.addListener(el, "keypress", function(e) {
               var keyId = e.keyIdentifier || e.keyCode;
               if (lastDown !== keyId) {
                   return callback(e);
@@ -160,4 +158,6 @@
           });
       }
     };
-}).call(ace);
+    
+    return event;
+});

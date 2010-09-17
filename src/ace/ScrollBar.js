@@ -1,6 +1,6 @@
-ace.provide("ace.ScrollBar");
+require.def("ace/ScrollBar", ["ace/ace", "ace/MEventEmitter"], function(ace, MEventEmitter) {
 
-ace.ScrollBar = function(parent) {
+var ScrollBar = function(parent) {
     this.element = document.createElement("div");
     this.element.className = "ace_sb";
 
@@ -16,8 +16,7 @@ ace.ScrollBar = function(parent) {
 };
 
 (function() {
-
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.onScroll = function() {
       this.$dispatchEvent("scroll", {data: this.element.scrollTop});
@@ -39,4 +38,7 @@ ace.ScrollBar = function(parent) {
         this.element.scrollTop = scrollTop;
     };
 
-}).call(ace.ScrollBar.prototype);
+}).call(ScrollBar.prototype);
+
+return ScrollBar;
+});

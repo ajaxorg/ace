@@ -1,7 +1,8 @@
-ace.provide("ace.KeyBinding");
+require.def("ace/KeyBinding", 
+    ["ace/ace", "ace/conf/keybindings/default_mac", "ace/conf/keybindings/default_win"],
+    function(ace, default_mac, default_win) {
 
-ace.KeyBinding = function(element, editor, config) {
-
+var KeyBinding = function(element, editor, config) {
     this.editor = editor;
     this.setConfig(config);
     var keys = this.keys;
@@ -54,8 +55,8 @@ ace.KeyBinding = function(element, editor, config) {
 
     this.setConfig = function(config) {
         this.config = config || ace.isMac 
-            ? ace.KeyBinding.default_mac
-            : ace.KeyBinding.default_win;
+            ? default_mac
+            : default_win;
         if (typeof this.config.reverse == "undefined")
             this.config.reverse = ace.objectReverse(this.config, "|");
     };
@@ -211,4 +212,7 @@ ace.KeyBinding = function(element, editor, config) {
         }
     };
 
-}).call(ace.KeyBinding.prototype);
+}).call(KeyBinding.prototype);
+
+return KeyBinding;
+});

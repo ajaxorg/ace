@@ -1,19 +1,19 @@
-ace.provide("ace.Search");
+require.def("ace/Search", ["ace/ace"], function(ace) {
 
-ace.Search = function() {
+var Search = function() {
     this.$options = {
         needle: "",
         backwards: false,
         wrap: false,
         caseSensitive: false,
         wholeWord: false,
-        scope: ace.Search.ALL,
+        scope: Search.ALL,
         regExp: false
     };
 };
 
-ace.Search.ALL = 1;
-ace.Search.SELECTION = 2;
+Search.ALL = 1;
+Search.SELECTION = 2;
 
 (function() {
 
@@ -166,7 +166,7 @@ ace.Search.SELECTION = 2;
     };
 
     this.$forwardLineIterator = function(doc) {
-        var searchSelection = this.$options.scope == ace.Search.SELECTION;
+        var searchSelection = this.$options.scope == Search.SELECTION;
 
         var range = doc.getSelection().getRange();
         var start = doc.getSelection().getCursor();
@@ -222,7 +222,7 @@ ace.Search.SELECTION = 2;
     };
 
     this.$backwardLineIterator = function(doc) {
-        var searchSelection = this.$options.scope == ace.Search.SELECTION;
+        var searchSelection = this.$options.scope == Search.SELECTION;
 
         var range = doc.getSelection().getRange();
         var start = searchSelection ? range.end : range.start;
@@ -272,4 +272,7 @@ ace.Search.SELECTION = 2;
         };
     };
 
-}).call(ace.Search.prototype);
+}).call(Search.prototype);
+
+return Search;
+});

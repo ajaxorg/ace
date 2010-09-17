@@ -38,44 +38,11 @@
 		height: 55px;
 	}
   
+
 	</style>
 	<link rel="stylesheet" href="../css/editor.css" type="text/css" charset="utf-8">
 	<link rel="stylesheet" href="../css/tm.css" type="text/css" charset="utf-8">
-	
-	<script src="../src/ace/lib/core.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/lib/oop.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/lib/lang.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/lib/event.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/lib/dom.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/Text.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/TextHighlightRules.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/JavaScript.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/DocCommentHighlightRules.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/JavaScriptHighlightRules.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/Html.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/HtmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/Css.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/CssHighlightRules.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/Xml.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/XmlHighlightRules.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/mode/MatchingBraceOutdent.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/MEventEmitter.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/Search.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/Range.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/Selection.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/UndoManager.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/Document.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/Tokenizer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/BackgroundTokenizer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/layer/Cursor.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/layer/Gutter.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/layer/Text.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/layer/Marker.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/ScrollBar.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/TextInput.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../src/ace/KeyBinding.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/Editor.js" type="text/javascript" charset="utf-8"></script>	
-	<script src="../src/ace/VirtualRenderer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="require.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
     
@@ -149,18 +116,34 @@
     
 <script type="text/javascript" charset="utf-8">
 
+require(
+    {baseUrl: "../src"},
+    [
+        "ace/Editor",
+        "ace/VirtualRenderer",
+        "ace/Document",
+        "ace/mode/JavaScript",
+        "ace/mode/Css",
+        "ace/mode/Html",
+        "ace/mode/Xml",
+        "ace/mode/Text",
+        "ace/UndoManager"
+    ], function(Editor, Renderer, Document, JavaScriptMode, CssMode, HtmlMode, XmlMode, TextMode, UndoManager) { 
+
+var ace = require("ace/ace");
 var docs = {}
-docs.js = new ace.Document(document.getElementById("jstext").innerHTML);
-docs.js.setMode(new ace.mode.JavaScript());
-docs.js.setUndoManager(new ace.UndoManager());
 
-docs.css = new ace.Document(document.getElementById("csstext").innerHTML);
-docs.css.setMode(new ace.mode.Css());
-docs.css.setUndoManager(new ace.UndoManager());
+docs.js = new Document(document.getElementById("jstext").innerHTML);
+docs.js.setMode(new JavaScriptMode());
+docs.js.setUndoManager(new UndoManager());
 
-docs.html = new ace.Document(document.getElementById("htmltext").innerHTML);
-docs.html.setMode(new ace.mode.Html());
-docs.html.setUndoManager(new ace.UndoManager());
+docs.css = new Document(document.getElementById("csstext").innerHTML);
+docs.css.setMode(new CssMode());
+docs.css.setUndoManager(new UndoManager());
+
+docs.html = new Document(document.getElementById("htmltext").innerHTML);
+docs.html.setMode(new HtmlMode());
+docs.html.setUndoManager(new UndoManager());
 
 var docEl = document.getElementById("doc");
 
@@ -169,16 +152,16 @@ function onDocChange() {
   editor.setDocument(doc);
   
   var mode = doc.getMode();
-  if (mode instanceof ace.mode.JavaScript) {
+  if (mode instanceof JavaScriptMode) {
     modeEl.value = "javascript"
   }
-  else if (mode instanceof ace.mode.Css) {
+  else if (mode instanceof CssMode) {
     modeEl.value = "css"
   }
-  else if (mode instanceof ace.mode.Html) {
+  else if (mode instanceof HtmlMode) {
     modeEl.value = "html"
   }
-  else if (mode instanceof ace.mode.Xml) {
+  else if (mode instanceof XmlMode) {
     modeEl.value = "xml"
   }
   else {
@@ -199,11 +182,11 @@ modeEl.onchange = function() {
 };
 
 var modes = {
-    text: new ace.mode.Text(),
-    xml: new ace.mode.Xml(),
-    html: new ace.mode.Html(),
-    css: new ace.mode.Css(),
-    javascript: new ace.mode.JavaScript()
+    text: new TextMode(),
+    xml: new XmlMode(),
+    html: new HtmlMode(),
+    css: new CssMode(),
+    javascript: new JavaScriptMode()
 };
 
 function getMode() {
@@ -225,7 +208,7 @@ activeEl.onchange = function() {
 };
 
 var container = document.getElementById("editor");
-var editor = new ace.Editor(new ace.VirtualRenderer(container));
+var editor = new Editor(new Renderer(container));
 onDocChange();
 
 function onResize() {
@@ -274,7 +257,9 @@ ace.addListener(container, "drop", function(e) {
   
   return ace.preventDefault(e);
 });
-  
+
+
+});
 </script>
 
 </body>

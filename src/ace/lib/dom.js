@@ -1,8 +1,8 @@
-(function() {
+require.def("ace/lib/dom", ["ace/lib/lang"], function(lang) {
 
-    var self = this;
+    var dom = {};
 
-    this.setText = function(elem, text) {
+    dom.setText = function(elem, text) {
         if (elem.innerText !== undefined) {
             elem.innerText = text;
         }
@@ -11,22 +11,21 @@
         }
     };
 
-    this.hasCssClass = function(el, name) {
+    dom.hasCssClass = function(el, name) {
         var classes = el.className.split(/\s+/g);
-        return ace.arrayIndexOf(classes, name) !== -1;
+        return lang.arrayIndexOf(classes, name) !== -1;
     };
 
-
-    this.addCssClass = function(el, name) {
-        if (!this.hasCssClass(el, name)) {
+    dom.addCssClass = function(el, name) {
+        if (!dom.hasCssClass(el, name)) {
             el.className += " " + name;
         }
     };
 
-    this.removeCssClass = function(el, name) {
+    dom.removeCssClass = function(el, name) {
         var classes = el.className.split(/\s+/g);
         while (true) {
-            var index = ace.arrayIndexOf(classes, name);
+            var index = lang.arrayIndexOf(classes, name);
             if (index == -1) {
                 break;
             }
@@ -35,17 +34,17 @@
         el.className = classes.join(" ");
     };
 
-    this.getInnerWidth = function(element) {
-        return (parseInt(self.computedStyle(element, "paddingLeft"))
-                + parseInt(self.computedStyle(element, "paddingRight")) + element.clientWidth);
+    dom.getInnerWidth = function(element) {
+        return (parseInt(dom.computedStyle(element, "paddingLeft"))
+                + parseInt(dom.computedStyle(element, "paddingRight")) + element.clientWidth);
     };
 
-    this.getInnerHeight = function(element) {
-        return (parseInt(this.computedStyle(element, "paddingTop"))
-                + parseInt(this.computedStyle(element, "paddingBottom")) + element.clientHeight);
+    dom.getInnerHeight = function(element) {
+        return (parseInt(dom.computedStyle(element, "paddingTop"))
+                + parseInt(dom.computedStyle(element, "paddingBottom")) + element.clientHeight);
     };
 
-    this.computedStyle = function(element, style) {
+    dom.computedStyle = function(element, style) {
         if (window.getComputedStyle) {
             return (window.getComputedStyle(element, "") || {})[style] || "";
         }
@@ -54,7 +53,7 @@
         }
     };
 
-    this.scrollbarWidth = function() {
+    dom.scrollbarWidth = function() {
 
         var inner = document.createElement('p');
         inner.style.width = "100%";
@@ -85,4 +84,5 @@
         return noScrollbar-withScrollbar;
     };
 
-}).call(ace);
+    return dom;
+});

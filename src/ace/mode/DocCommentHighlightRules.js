@@ -1,6 +1,10 @@
-ace.provide("ace.mode.DocCommentHighlightRules");
+require.def("ace/mode/DocCommentHighlightRules",
+    [
+        "ace/ace",
+        "ace/mode/TextHighlightRules"
+    ], function(ace, TextHighlightRules) {
 
-ace.mode.DocCommentHighlightRules = function() {
+var DocCommentHighlightRules = function() {
 
     this.$rules = {
         "start" : [ {
@@ -23,7 +27,7 @@ ace.mode.DocCommentHighlightRules = function() {
     };
 };
 
-ace.inherits(ace.mode.DocCommentHighlightRules, ace.mode.TextHighlightRules);
+ace.inherits(DocCommentHighlightRules, TextHighlightRules);
 
 (function() {
 
@@ -35,4 +39,7 @@ ace.inherits(ace.mode.DocCommentHighlightRules, ace.mode.TextHighlightRules);
         };
     };
 
-}).call(ace.mode.DocCommentHighlightRules.prototype);
+}).call(DocCommentHighlightRules.prototype);
+
+return DocCommentHighlightRules;
+});

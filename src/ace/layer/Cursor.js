@@ -1,6 +1,6 @@
-ace.provide("ace.layer.Cursor");
+require.def("ace/layer/Cursor", ["ace/ace"], function(ace) {
 
-ace.layer.Cursor = function(parentEl) {
+var Cursor = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_cursor-layer";
     parentEl.appendChild(this.element);
@@ -13,10 +13,14 @@ ace.layer.Cursor = function(parentEl) {
 
 (function() {
 
+    this.setDocument = function(doc) {
+        this.doc = doc;
+    };
+
     this.setCursor = function(position, overwrite) {
         this.position = {
             row : position.row,
-            column : position.column
+            column : this.doc.documentToScreenColumn(position.row, position.column)
         };
         if (overwrite) {
             ace.addCssClass(this.cursor, "ace_overwrite");
@@ -88,4 +92,7 @@ ace.layer.Cursor = function(parentEl) {
         this.restartTimer();
     };
 
-}).call(ace.layer.Cursor.prototype);
+}).call(Cursor.prototype);
+
+return Cursor;
+});

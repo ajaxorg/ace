@@ -1,6 +1,6 @@
-ace.provide("ace.BackgroundTokenizer");
+require.def("ace/BackgroundTokenizer", ["ace/ace", "ace/MEventEmitter"], function(ace, MEventEmitter) {
 
-ace.BackgroundTokenizer = function(tokenizer) {
+var BackgroundTokenizer = function(tokenizer) {
     this.running = false;
     this.textLines = [];
     this.lines = [];
@@ -37,7 +37,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
 
 (function(){
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;
@@ -102,4 +102,7 @@ ace.BackgroundTokenizer = function(tokenizer) {
         return this.lines[row];
     };
 
-}).call(ace.BackgroundTokenizer.prototype);
+}).call(BackgroundTokenizer.prototype);
+
+return BackgroundTokenizer;
+});

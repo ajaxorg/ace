@@ -1,6 +1,6 @@
-ace.provide("ace.KeyBinding.default_mac");
+require.def("ace/conf/keybindings/default_mac", function() {
 
-ace.KeyBinding.default_mac = {
+return {
     "selectall": "Meta-A",
     "removeline": "Meta-D",
     "gotoline": "Meta-L",
@@ -47,3 +47,5 @@ ace.KeyBinding.default_mac = {
     "outdent": "Shift-Tab",
     "indent": "Tab"
 };
+
+});

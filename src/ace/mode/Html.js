@@ -1,12 +1,20 @@
-ace.provide("ace.mode.Html");
+require.def("ace/mode/Html",
+    [
+        "ace/ace",
+        "ace/mode/Text",
+        "ace/mode/JavaScript",
+        "ace/mode/Css",
+        "ace/Tokenizer",
+        "ace/mode/HtmlHighlightRules"
+    ], function(ace, TextMode, JavaScriptMode, CssMode, Tokenizer, HtmlHighlightRules) {
 
-ace.mode.Html = function() {
-    this.$tokenizer = new ace.Tokenizer(new ace.mode.HtmlHighlightRules().getRules());
+var Html = function() {
+    this.$tokenizer = new Tokenizer(new HtmlHighlightRules().getRules());
 
-    this.$js = new ace.mode.JavaScript();
-    this.$css = new ace.mode.Css();
+    this.$js = new JavaScriptMode();
+    this.$css = new CssMode();
 };
-ace.inherits(ace.mode.Html, ace.mode.Text);
+ace.inherits(Html, TextMode);
 
 (function() {
 
@@ -51,4 +59,7 @@ ace.inherits(ace.mode.Html, ace.mode.Text);
         return defaultHandler ? defaultHandler() : undefined;
     };
 
-}).call(ace.mode.Html.prototype);
+}).call(Html.prototype);
+
+return Html;
+});

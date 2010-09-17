@@ -1,6 +1,10 @@
-ace.provide("ace.Selection");
+require.def("ace/Selection", [
+    "ace/ace",
+    "ace/MEventEmitter",
+    "ace/Range"
+], function(ace, MEventEmitter, Range) {
 
-ace.Selection = function(doc) {
+var Selection = function(doc) {
     this.doc = doc;
 
     this.clearSelection();
@@ -12,7 +16,7 @@ ace.Selection = function(doc) {
 
 (function() {
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.isEmpty = function() {
         return (!this.selectionAnchor ||
@@ -90,10 +94,10 @@ ace.Selection = function(doc) {
         var lead = this.selectionLead;
 
         if (this.$isBackwards()) {
-            return ace.Range.fromPoints(lead, anchor);
+            return Range.fromPoints(lead, anchor);
         }
         else {
-            return ace.Range.fromPoints(anchor, lead);
+            return Range.fromPoints(anchor, lead);
         }
     };
 
@@ -387,4 +391,7 @@ ace.Selection = function(doc) {
         };
     };
 
-}).call(ace.Selection.prototype);
+}).call(Selection.prototype);
+
+return Selection;
+});

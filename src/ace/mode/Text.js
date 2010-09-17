@@ -1,7 +1,11 @@
-ace.provide("ace.mode.Text");
+require.def("ace/mode/Text",
+    [
+        "ace/Tokenizer",
+        "ace/mode/TextHighlightRules",
+    ], function(Tokenizer, TextHighlightRules) {
 
-ace.mode.Text = function() {
-    this.$tokenizer = new ace.Tokenizer(new ace.mode.TextHighlightRules().getRules());
+var Text = function() {
+    this.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());
 };
 
 (function() {
@@ -34,4 +38,7 @@ ace.mode.Text = function() {
         return "";
     };
 
-}).call(ace.mode.Text.prototype);
+}).call(Text.prototype);
+
+return Text;
+});

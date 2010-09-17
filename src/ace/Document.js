@@ -1,10 +1,17 @@
-ace.provide("ace.Document");
+require.def("ace/Document",
+    [
+        "ace/ace",
+        "ace/MEventEmitter",
+        "ace/Selection",
+        "ace/mode/Text",
+        "ace/Range"
+    ], function(ace, MEventEmitter, Selection, TextMode, Range) {
 
-ace.Document = function(text, mode) {
+var Document = function(text, mode) {
     this.modified = true;
     this.lines = [];
-    this.selection = new ace.Selection(this);
-    this.$breakpoints = [];
+    this.selection = new Selection(this);
+    this.$breakpoints = [];    
 
     this.listeners = [];
     if (mode) {
@@ -20,7 +27,7 @@ ace.Document = function(text, mode) {
 
 (function() {
 
-    ace.implement(this, ace.MEventEmitter);
+    ace.implement(this, MEventEmitter);
 
     this.$undoManager = null;
 
@@ -102,6 +109,7 @@ ace.Document = function(text, mode) {
     this.setTabSize = function(tabSize) {
         if (this.$tabSize === tabSize) return;
 
+        this.modified = true;
         this.$tabSize = tabSize;
         this.$dispatchEvent("changeTabSize");
     };
@@ -181,7 +189,7 @@ ace.Document = function(text, mode) {
 
     this.getMode = function() {
         if (!this.$mode) {
-            this.$mode = new ace.mode.Text();
+            this.$mode = new TextMode();
         }
         return this.$mode;
     };
@@ -199,17 +207,37 @@ ace.Document = function(text, mode) {
     };
 
     this.getWidth = function() {
+        this.$computeWidth();
+        return this.width;
+    };
+
+    this.getScreenWidth = function() {
+        this.$computeWidth();
+        return this.screenWith;
+    };
+
+    this.$computeWidth = function() {
         if (this.modified) {
             this.modified = false;
 
             var lines = this.lines;
             var longestLine = 0;
+            var longestScreenLine = 0;
+            var tabSize = this.getTabSize();
+
             for ( var i = 0; i < lines.length; i++) {
-                longestLine = Math.max(longestLine, lines[i].length);
+                var len = lines[i].length;
+                longestLine = Math.max(longestLine, len);
+
+                lines[i].replace("\t", function(m) {
+                    len += tabSize-1;
+                    return m;
+                });
+                longestScreenLine = Math.max(longestScreenLine, len);
             }
             this.width = longestLine;
+            this.screenWith = longestScreenLine;
         }
-        return this.width;
     };
 
     this.getLine = function(row) {
@@ -349,7 +377,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 action: "insertText",
-                range: new ace.Range(row, 0, row + lines.length, 0),
+                range: new Range(row, 0, row + lines.length, 0),
                 text: lines.join(nl) + nl
             });
             this.$informUndoManager.schedule();
@@ -409,7 +437,7 @@ ace.Document = function(text, mode) {
             var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 action: "insertText",
-                range: ace.Range.fromPoints(position, end),
+                range: Range.fromPoints(position, end),
                 text: text
             });
             this.$informUndoManager.schedule();
@@ -509,11 +537,11 @@ ace.Document = function(text, mode) {
     };
 
     this.indentRows = function(range, indentString) {
-      for (var row=range.start.row; row<= range.end.row; row++) {
-          this.$insert({row: row, column:0}, indentString);
-      }
-      this.fireChangeEvent(range.start.row, range.end.row);
-      return indentString.length;
+        for (var row=range.start.row; row<= range.end.row; row++) {
+            this.$insert({row: row, column:0}, indentString);
+        }
+        this.fireChangeEvent(range.start.row, range.end.row);
+        return indentString.length;
     };
 
     this.outdentRows = function(range, indentString) {
@@ -525,7 +553,7 @@ ace.Document = function(text, mode) {
             }
         }
 
-        var deleteRange = new ace.Range(0, 0, 0, outdentLength);
+        var deleteRange = new Range(0, 0, 0, outdentLength);
 
         for (var i=range.start.row; i<= range.end.row; i++)
         {
@@ -622,4 +650,7 @@ ace.Document = function(text, mode) {
         return docColumn;
     };
 
-}).call(ace.Document.prototype);
+}).call(Document.prototype);
+
+return Document;
+});

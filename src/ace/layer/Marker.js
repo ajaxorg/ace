@@ -1,6 +1,6 @@
-ace.provide("ace.layer.Marker");
+require.def("ace/layer/Marker", [], function() {
 
-ace.layer.Marker = function(parentEl) {
+var Marker = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_marker-layer";
     parentEl.appendChild(this.element);
@@ -84,6 +84,7 @@ ace.layer.Marker = function(parentEl) {
     };
 
     this.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+        var range = range.toScreenRange(this.doc);
 
         // from selection start to the end of the line
         var height = layerConfig.lineHeight;
@@ -125,6 +126,7 @@ ace.layer.Marker = function(parentEl) {
     };
 
     this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+        var range = range.toScreenRange(this.doc);
 
         var height = layerConfig.lineHeight;
         var width = Math.round((range.end.column - range.start.column) * layerConfig.characterWidth);
@@ -140,4 +142,7 @@ ace.layer.Marker = function(parentEl) {
         );
     };
 
-}).call(ace.layer.Marker.prototype);
+}).call(Marker.prototype);
+
+return Marker;
+});

@@ -1,6 +1,6 @@
-ace.provide("ace.KeyBinding.default_win");
+require.def("ace/conf/keybindings/default_win", function() {
 
-ace.KeyBinding.default_win = {
+return {
     "selectall": "Control-A",
     "removeline": "Control-D",
     "gotoline": "Control-L",
@@ -47,3 +47,5 @@ ace.KeyBinding.default_win = {
     "outdent": "Shift-Tab",
     "indent": "Tab"
 };
+
+});

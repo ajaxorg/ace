@@ -1,6 +1,6 @@
-ace.provide("ace.layer.Gutter");
+require.def("ace/layer/Gutter", [], function() {
 
-ace.layer.Gutter = function(parentEl) {
+var Gutter = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_gutter-layer";
     parentEl.appendChild(this.element);
@@ -32,4 +32,7 @@ ace.layer.Gutter = function(parentEl) {
         this.element.style.height = config.minHeight + "px";
     };
 
-}).call(ace.layer.Gutter.prototype);
+}).call(Gutter.prototype);
+
+return Gutter;
+});
