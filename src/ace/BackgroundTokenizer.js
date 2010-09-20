@@ -23,10 +23,10 @@ var BackgroundTokenizer = function(tokenizer) {
 
             // only check every 5 lines
             processedLines += 1;
-            //if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
+            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 30) {
                 self.fireUpdateEvent(startLine, self.currentLine-1);
-                return setTimeout(self.$worker, 0);
-            //}
+                return setTimeout(self.$worker, 10);
+            }
         }
 
         self.running = false;
