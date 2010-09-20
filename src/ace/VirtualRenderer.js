@@ -194,7 +194,7 @@ var VirtualRenderer = function(container) {
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
     };
 
-    this.draw = function() {
+    this.draw = function(scrollOnly) {
         var lines = this.lines;
 
         var offset = this.scrollTop % this.lineHeight;
@@ -216,7 +216,8 @@ var VirtualRenderer = function(container) {
             lastRow : lastRow,
             lineHeight : this.lineHeight,
             characterWidth : this.characterWidth,
-            minHeight : minHeight
+            minHeight : minHeight,
+            scrollOnly: !!scrollOnly
         };
 
         this.content.style.marginTop = (-offset) + "px";
@@ -309,7 +310,7 @@ var VirtualRenderer = function(container) {
         if (this.scrollTop !== scrollTop) {
             this.scrollTop = scrollTop;
             this.$updateScrollBar();
-            this.draw();
+            this.draw(true);
         }
     };
 
