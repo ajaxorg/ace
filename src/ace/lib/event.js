@@ -110,8 +110,24 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
 
     event.addMouseWheelListener = function(el, callback) {
         var listener = function(e) {
-            e.wheel = (e.wheelDelta) ? e.wheelDelta / 120
-                    : -(e.detail || 0) / 3;
+            if (e.wheelDelta !== undefined) {
+                if (e.wheelDeltaX !== undefined) {
+                    e.wheelX = e.wheelDeltaX / 8;
+                    e.wheelY = e.wheelDeltaY / 8;
+                } else {
+                    e.wheelX = 0;
+                    e.wheelY = e.wheelDelta / 8;
+                }
+            }
+            else {
+                if (e.axis && e.axis == e.HORIZONTAL_AXIS) {
+                    e.wheelX = (e.detail || 0) * 5;
+                    e.wheelY = 0;
+                } else {
+                    e.wheelX = 0;
+                    e.wheelY = (e.detail || 0) * 5;
+                }
+            }
             callback(e);
         };
         event.addListener(el, "DOMMouseScroll", listener);
@@ -158,6 +174,6 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
           });
       }
     };
-    
+
     return event;
 });

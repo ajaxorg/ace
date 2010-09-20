@@ -323,8 +323,7 @@ var Editor = function(renderer, doc) {
     };
 
     this.onMouseWheel = function(e) {
-        var delta = e.wheel;
-        this.renderer.scrollToY(this.renderer.getScrollTop() - (delta * 15));
+        this.renderer.scrollBy(e.wheelX, e.wheelY);
         return ace.preventDefault(e);
     };
 

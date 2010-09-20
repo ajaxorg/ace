@@ -314,6 +314,11 @@ var VirtualRenderer = function(container) {
         }
     };
 
+    this.scrollBy = function(deltaX, deltaY) {
+        deltaY && this.scrollToY(this.scrollTop + deltaY);
+        deltaX && (this.scroller.scrollLeft += deltaX);
+    };
+
     this.screenToTextCoordinates = function(pageX, pageY) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
