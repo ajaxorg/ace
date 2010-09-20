@@ -11,7 +11,7 @@ var KeyBinding = function(element, editor, config) {
     ace.addKeyListener(element, function(e) {
         var key = [];
         if (e.ctrlKey) {
-            key.push("Control");
+            key.push("Ctrl");
         }
         if (e.metaKey) {
             key.push("Meta");
@@ -38,7 +38,7 @@ var KeyBinding = function(element, editor, config) {
         8 : "Backspace",
         9 : "Tab",
         16 : "Shift",
-        17 : "Control",
+        17 : "Ctrl",
         18 : "Alt",
         33 : "PageUp",
         34 : "PageDown",
@@ -53,12 +53,29 @@ var KeyBinding = function(element, editor, config) {
         91 : "Meta"
     };
 
+    function objectReverse(obj, keySplit) {
+        var i, j, l, key,
+            ret = {};
+        for (i in obj) {
+            key = obj[i];
+            if (keySplit && typeof key == "string") {
+                key = key.split(keySplit);
+                for (j = 0, l = key.length; j < l; ++j)
+                    ret[key[j].replace(/Command/i, "Meta").replace(/Option/i, "Alt")] = i;
+            }
+            else {
+                ret[key.replace(/Command/i, "Meta").replace(/Option/i, "Alt")] = i;
+            }
+        }
+        return ret;
+    }
+
     this.setConfig = function(config) {
-        this.config = config || ace.isMac 
+        this.config = config || (ace.isMac
             ? default_mac
-            : default_win;
+            : default_win);
         if (typeof this.config.reverse == "undefined")
-            this.config.reverse = ace.objectReverse(this.config, "|");
+            this.config.reverse = objectReverse(this.config, "|");
     };
 
     this["selectall"] = function() {

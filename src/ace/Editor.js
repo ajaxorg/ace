@@ -15,8 +15,8 @@ var Editor = function(renderer, doc) {
     this.container = container;
     this.renderer = renderer;
 
-    this.textInput = new TextInput(container, this);
-    new KeyBinding(container, this);
+    this.textInput  = new TextInput(container, this);
+    this.keyBinding = new KeyBinding(container, this);
     var self = this;
     ace.addListener(container, "mousedown", function(e) {
         setTimeout(function() {self.focus();});

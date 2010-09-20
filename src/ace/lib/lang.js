@@ -43,23 +43,6 @@ require.def("ace/lib/lang", function() {
 
     };
 
-    lang.objectReverse = function(obj, keySplit) {
-        var i, j, l, key,
-            ret = {};
-        for (i in obj) {
-            key = obj[i];
-            if (keySplit && typeof key == "string") {
-                key = key.split(keySplit);
-                for (j = 0, l = key.length; j < l; ++j)
-                    ret[key[j]] = i;
-            }
-            else {
-                ret[key] = i;
-            }
-        }
-        return ret;
-    };
-
     this.escapeRegExp = function(str) {
         return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
     };
