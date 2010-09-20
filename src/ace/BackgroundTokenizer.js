@@ -21,12 +21,12 @@ var BackgroundTokenizer = function(tokenizer) {
             self.lines[self.currentLine] = self.$tokenizeRow(self.currentLine);
             self.currentLine++;
 
-            // only check every 30 lines
+            // only check every 5 lines
             processedLines += 1;
-            if ((processedLines % 30 == 0) && (new Date() - workerStart) > 20) {
+            //if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
                 self.fireUpdateEvent(startLine, self.currentLine-1);
-                return setTimeout(self.$worker, 10);
-            }
+                return setTimeout(self.$worker, 0);
+            //}
         }
 
         self.running = false;
@@ -67,11 +67,9 @@ var BackgroundTokenizer = function(tokenizer) {
 
         this.lines.splice(this.currentLine, this.lines.length);
 
-        if (!this.running) {
-            clearTimeout(this.running);
-            // pretty long delay to prevent the tokenizer from interfering with the user
-            this.running = setTimeout(this.$worker, 200);
-        }
+        this.stop();
+        // pretty long delay to prevent the tokenizer from interfering with the user
+        this.running = setTimeout(this.$worker, 200);
     };
 
     this.stop = function() {

@@ -1,4 +1,6 @@
-require.def("ace/Search", ["ace/ace"], function(ace) {
+require.def("ace/Search",
+    ["ace/ace", "ace/Range"], 
+    function(ace, Range) {
 
 var Search = function() {
     this.$options = {
@@ -139,10 +141,8 @@ Search.SELECTION = 2;
         };
     };
 
-
-
     this.$rangeFromMatch = function(row, column, length) {
-        return new ace.Range(row, column, row, column+length);
+        return new Range(row, column, row, column+length);
     };
 
     this.$assembleRegExp = function() {

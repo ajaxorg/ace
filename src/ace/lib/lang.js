@@ -43,7 +43,7 @@ require.def("ace/lib/lang", function() {
 
     };
 
-    this.escapeRegExp = function(str) {
+    lang.escapeRegExp = function(str) {
         return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
     };
 

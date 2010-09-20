@@ -119,13 +119,74 @@ var Text = function(parentEl) {
         };
     };
 
+    this.$scrollLines = function(oldConfig, config) {
+        if (oldConfig.lastRow < config.firstRow)
+            return this.$fullUpdate(config);
+
+        if (config.lastRow < oldConfig.firstRow)
+            return this.$fullUpdate(config);
+
+        var el = this.element;
+
+        if (oldConfig.firstRow < config.firstRow)
+            for (var row=oldConfig.firstRow; row<config.firstRow; row++)
+                el.removeChild(el.firstChild);
+
+        if (oldConfig.lastRow > config.lastRow)
+            for (var row=config.lastRow+1; row<=oldConfig.lastRow; row++)
+                el.removeChild(el.lastChild);
+
+        if (config.firstRow < oldConfig.firstRow) {
+            var fragment = this.$renderLinesFragment(config, config.firstRow, oldConfig.firstRow - 1);
+            if (el.firstChild)
+                el.insertBefore(fragment, el.firstChild);
+            else
+                el.appendChild(fragment);
+        }
+
+        if (config.lastRow > oldConfig.lastRow) {
+            var fragment = this.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow);
+            el.appendChild(fragment);
+        }
+    };
+
+    this.$renderLinesFragment = function(config, firstRow, lastRow) {
+        var fragment = document.createDocumentFragment();
+        for (var row=firstRow; row<=lastRow; row++) {
+            var lineEl = document.createElement("div");
+            lineEl.className = "ace_line";
+            var style = lineEl.style;
+            style.height = this.$characterSize.height + "px";
+            style.width = config.width + "px";
+
+            var html = [];
+            this.renderLine(html, row);
+            lineEl.innerHTML = html.join("");
+            fragment.appendChild(lineEl);
+        }
+        return fragment;
+    };
+
     this.update = function(config) {
+        if (!config.minHeight)
+            return;
+
         this.$computeTabString();
 
+        if (this.config && config.scrollOnly) {
+            this.$scrollLines(this.config, config);
+        } else {
+            this.$fullUpdate(config);
+        }
+
+        this.config = config;
+    };
+
+    this.$fullUpdate = function(config) {
         var html = [];
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
             html.push("<div class='ace_line' style='height:" + this.$characterSize.height + "px;", "width:",
-                      config.width, "px'>");
+                    config.width, "px'>");
             this.renderLine(html, i), html.push("</div>");
         }
 
@@ -137,7 +198,7 @@ var Text = function(parentEl) {
         "rparen": true,
         "lparen": true
     };
-    
+
     this.renderLine = function(stringBuilder, row) {
         var tokens = this.tokenizer.getTokens(row);
 
