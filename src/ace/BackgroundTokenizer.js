@@ -23,7 +23,7 @@ var BackgroundTokenizer = function(tokenizer) {
 
             // only check every 5 lines
             processedLines += 1;
-            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 30) {
+            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
                 self.fireUpdateEvent(startLine, self.currentLine-1);
                 return setTimeout(self.$worker, 10);
             }
@@ -69,7 +69,7 @@ var BackgroundTokenizer = function(tokenizer) {
 
         this.stop();
         // pretty long delay to prevent the tokenizer from interfering with the user
-        this.running = setTimeout(this.$worker, 200);
+        this.running = setTimeout(this.$worker, 500);
     };
 
     this.stop = function() {
@@ -91,11 +91,7 @@ var BackgroundTokenizer = function(tokenizer) {
                 state = this.lines[row - 1].state;
             }
             var tokens = this.tokenizer.getLineTokens(this.textLines[row] || "", state || "start");
-            if (state) {
-                this.lines[row] = tokens;
-            } else {
-                return tokens;
-            }
+            this.lines[row] = tokens;
         }
         return this.lines[row];
     };
