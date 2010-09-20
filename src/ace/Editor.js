@@ -116,6 +116,7 @@ var Editor = function(renderer, doc) {
         this.bgTokenizer.start(0);
 
         var _self = this;
+        _self.renderer.scrollToRow(doc.getScrollTopRow());
         this.renderer.draw(false, function() {
             _self.onCursorChange();
             _self.onSelectionChange();
