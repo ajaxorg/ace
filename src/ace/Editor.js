@@ -115,11 +115,13 @@ var Editor = function(renderer, doc) {
         this.bgTokenizer.setLines(this.doc.lines);
         this.bgTokenizer.start(0);
 
-        this.renderer.draw();
-        this.onCursorChange();
-        this.onSelectionChange();
-        this.onDocumentChangeBreakpoint();
-        this.renderer.scrollToRow(doc.getScrollTopRow());
+        var _self = this;
+        this.renderer.draw(false, function() {
+            _self.onCursorChange();
+            _self.onSelectionChange();
+            _self.onDocumentChangeBreakpoint();
+            _self.renderer.scrollToRow(doc.getScrollTopRow());
+        });
     };
 
     this.getDocument = function() {

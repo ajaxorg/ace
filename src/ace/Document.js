@@ -11,7 +11,7 @@ var Document = function(text, mode) {
     this.modified = true;
     this.lines = [];
     this.selection = new Selection(this);
-    this.$breakpoints = [];    
+    this.$breakpoints = [];
 
     this.listeners = [];
     if (mode) {

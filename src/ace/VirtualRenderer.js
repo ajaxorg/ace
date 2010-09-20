@@ -48,6 +48,8 @@ var VirtualRenderer = function(container) {
         column : 0
     };
 
+    this.$drawCallbacks = [];
+
     this.$updatePrintMargin();
     this.onResize();
 
@@ -194,7 +196,31 @@ var VirtualRenderer = function(container) {
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
     };
 
-    this.draw = function(scrollOnly) {
+    this.draw = function(scrollOnly, callback) {
+        if (this.$drawTimer) {
+            clearInterval(this.$drawTimer);
+            this.scrollOnly = this.scrollOnly && scrollOnly;
+        } else {
+            this.scollOnly = scrollOnly;
+        }
+
+        if (callback)
+            this.$drawCallbacks.push(callback);
+
+        var _self = this;
+        this.$drawTimer = setTimeout(function() {
+            _self.$draw(_self.scrollOnly);
+            for (var i=0; i<_self.$drawCallbacks.length; i++)
+                _self.$drawCallbacks[i]();
+
+            _self.$drawCallbacks = [];
+            delete _self.$drawTimer;
+        }, 0);
+    };
+
+    this.$draw = function(scrollOnly) {
+        //var start = new Date();
+
         var lines = this.lines;
 
         var offset = this.scrollTop % this.lineHeight;
@@ -235,7 +261,9 @@ var VirtualRenderer = function(container) {
         this.$gutterLayer.element.style.marginTop = (-offset) + "px";
         this.$gutterLayer.update(layerConfig);
 
+        //console.log("compute", new Date() - start, "ms")
         this.$updateScrollBar();
+        //console.log("compute+render", new Date() - start, "ms")
     };
 
 
