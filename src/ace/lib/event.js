@@ -136,15 +136,23 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
         event.addListener(el, "mousewheel", listener);
     };
 
-    event.addMultiMouseDownListener = function(el, count, callback) {
+    event.addMultiMouseDownListener = function(el, count, timeout, callback) {
         var clicks = 0;
+        var startX, startY;
+
         var listener = function(e) {
            clicks += 1;
            if (clicks == 1) {
+               startX = e.clientX;
+               startY = e.clientY;
+
                setTimeout(function() {
                    clicks = 0;
-               }, 600);
+               }, timeout || 600);
            }
+
+           if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
+               clicks = 0;
 
            if (clicks == count) {
                clicks = 0;

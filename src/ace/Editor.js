@@ -28,8 +28,8 @@ var Editor = function(renderer, doc) {
 
     var mouseTarget = renderer.getMouseEventTarget();
     ace.addListener(mouseTarget, "mousedown", ace.bind(this.onMouseDown, this));
-    ace.addMultiMouseDownListener(mouseTarget, 2, ace.bind(this.onMouseDoubleClick, this));
-    ace.addMultiMouseDownListener(mouseTarget, 3, ace.bind(this.onMouseTripleClick, this));
+    ace.addMultiMouseDownListener(mouseTarget, 2, 500, ace.bind(this.onMouseDoubleClick, this));
+    ace.addMultiMouseDownListener(mouseTarget, 3, 600, ace.bind(this.onMouseTripleClick, this));
     ace.addMouseWheelListener(mouseTarget, ace.bind(this.onMouseWheel, this));
 
     this.$selectionMarker = null;
