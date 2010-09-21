@@ -114,11 +114,11 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
         var listener = function(e) {
             if (e.wheelDelta !== undefined) {
                 if (e.wheelDeltaX !== undefined) {
-                    e.wheelX = e.wheelDeltaX / 8;
-                    e.wheelY = e.wheelDeltaY / 8;
+                    e.wheelX = -e.wheelDeltaX / 8;
+                    e.wheelY = -e.wheelDeltaY / 8;
                 } else {
                     e.wheelX = 0;
-                    e.wheelY = e.wheelDelta / 8;
+                    e.wheelY = -e.wheelDelta / 8;
                 }
             }
             else {
