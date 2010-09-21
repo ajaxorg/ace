@@ -46,8 +46,7 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
 
     event.getDocumentX = function(event) {
         if (event.clientX) {
-            var doc = event.target.ownerDocument;
-            var scrollLeft = doc.documentElement.scrollLeft || doc.body.scrollLeft;
+            var scrollLeft = document.documentElement.scrollLeft || doc.body.scrollLeft;
             return event.clientX + scrollLeft;
         } else {
             return event.pageX;
@@ -56,8 +55,7 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
 
     event.getDocumentY = function(event) {
         if (event.clientY) {
-            var doc = event.target.ownerDocument;
-            var scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop;
+            var scrollTop = document.documentElement.scrollTop || doc.body.scrollTop;
             return event.clientY + scrollTop;
         } else {
             return event.pageX;
