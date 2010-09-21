@@ -1,9 +1,12 @@
-require.def("ace/KeyBinding", 
-    ["ace/ace", "ace/conf/keybindings/default_mac", "ace/conf/keybindings/default_win"],
-    function(ace, default_mac, default_win) {
+require.def("ace/KeyBinding",
+    ["ace/ace",
+     "ace/conf/keybindings/default_mac",
+     "ace/conf/keybindings/default_win",
+     "ace/PluginManager",
+     "ace/commands/DefaultCommands"],
+    function(ace, default_mac, default_win, PluginManager) {
 
 var KeyBinding = function(element, editor, config) {
-    this.editor = editor;
     this.setConfig(config);
 
     var _self = this;
@@ -12,11 +15,12 @@ var KeyBinding = function(element, editor, config) {
             | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);
         var key = _self.keyNames[e.keyCode];
 
-        var command = _self[(_self.config.reverse[hashId] || {})[(key
-            || String.fromCharCode(e.keyCode)).toLowerCase()]];
+        var commandName = (_self.config.reverse[hashId] || {})[(key
+            || String.fromCharCode(e.keyCode)).toLowerCase()];
+        var command = PluginManager.commands[commandName];
+
         if (command) {
-            _self.selection = editor.getSelection();
-            command.call(_self);
+            command(editor, editor.getSelection());
             return ace.stopEvent(e);
         }
     });
@@ -55,7 +59,7 @@ var KeyBinding = function(element, editor, config) {
         "122": "F11",
         "123": "F12"
     };
-    
+
     function splitSafe(s, separator, limit, bLowerCase) {
         return (bLowerCase && s.toLowerCase() || s)
             .replace(/(?:^\s+|\n|\s+$)/g, "")
@@ -103,157 +107,6 @@ var KeyBinding = function(element, editor, config) {
             : default_win);
         if (typeof this.config.reverse == "undefined")
             this.config.reverse = objectReverse.call(this, this.config, "|");
-    };
-
-    this["selectall"] = function() {
-        this.selection.selectAll();
-    };
-    this["removeline"] = function() {
-        this.editor.removeLines();
-    };
-    this["gotoline"] = function() {
-        var line = parseInt(prompt("Enter line number:"));
-        if (!isNaN(line)) {
-            this.editor.gotoLine(line);
-        }
-    };
-    this["togglecomment"] = function() {
-        this.editor.toggleCommentLines();
-    };
-    this["findnext"] = function() {
-        this.editor.findNext();
-    };
-    this["findprevious"] = function() {
-        this.editor.findPrevious();
-    };
-    this["find"] = function() {
-        var needle = prompt("Find:");
-        this.editor.find(needle);
-    };
-    this["undo"] = function() {
-      this.editor.undo();
-    };
-    this["redo"] = function() {
-        this.editor.redo();
-    };
-    this["redo"] = function() {
-        this.editor.redo();
-    };
-    this["overwrite"] = function() {
-        this.editor.toggleOverwrite();
-    };
-    this["copylinesup"] = function() {
-        this.editor.copyLinesUp();
-    };
-    this["movelinesup"] = function() {
-        this.editor.moveLinesUp();
-    };
-    this["selecttostart"] = function() {
-        this.selection.selectFileStart();
-    };
-    this["gotostart"] = this["Control-Up"] = function() {
-        this.editor.navigateFileStart();
-    };
-    this["selectup"] = function() {
-        this.selection.selectUp();
-    };
-    this["golineup"] = function() {
-        this.editor.navigateUp();
-    };
-    this["copylinesdown"] = function() {
-        this.editor.copyLinesDown();
-    };
-    this["movelinsedown"] = function() {
-        this.editor.moveLinesDown();
-    };
-    this["selecttoend"] = function() {
-        this.selection.selectFileEnd();
-    };
-    this["gotoend"] = this["Control-Down"] = function() {
-        this.editor.navigateFileEnd();
-    };
-    this["selectdown"] = function() {
-        this.selection.selectDown();
-    };
-    this["godown"] = function() {
-        this.editor.navigateDown();
-    };
-    this["selectwordleft"] = function() {
-        this.selection.selectWordLeft();
-    };
-    this["gotowordleft"] = function() {
-        this.editor.navigateWordLeft();
-    };
-    this["selecttolinestart"] = function() {
-        this.selection.selectLineStart();
-    };
-    this["gotolinestart"] = function() {
-        this.editor.navigateLineStart();
-    };
-    this["selectleft"] = function() {
-        this.selection.selectLeft();
-    };
-    this["gotoleft"] = function() {
-        this.editor.navigateLeft();
-    };
-    this["selectwordright"] = function() {
-        this.selection.selectWordRight();
-    };
-    this["gotowordright"] = function() {
-        this.editor.navigateWordRight();
-    };
-    this["selecttolineend"] = function() {
-        this.selection.selectLineEnd();
-    };
-    this["gotolineend"] = function() {
-        this.editor.navigateLineEnd();
-    };
-    this["selectright"] = function() {
-        this.selection.selectRight();
-    };
-    this["gotoright"] = function() {
-        this.editor.navigateRight();
-    };
-    this["selectpagedown"] = function() {
-        this.editor.selectPageDown();
-    };
-    this["pagedown"] = function() {
-        this.editor.scrollPageDown();
-    };
-    this["selectpageup"] = function() {
-        this.editor.selectPageUp();
-    };
-    this["pageup"] = function() {
-        this.editor.scrollPageUp();
-    };
-    this["selectlinestart"] = function() {
-        this.selection.selectLineStart();
-    };
-    this["gotolinestart"] = function() {
-        this.editor.navigateLineStart();
-    };
-    this["selectlineend"] = function() {
-        this.selection.selectLineEnd();
-    };
-    this["gotolineend"] = function() {
-        this.editor.navigateLineEnd();
-    };
-    this["del"] = function() {
-        this.editor.removeRight();
-    };
-    this["backspace"] = function() {
-        this.editor.removeLeft();
-    };
-    this["outdent"] = function() {
-        this.editor.blockOutdent();
-    };
-    this["indent"] = function() {
-        if (this.selection.isMultiLine()) {
-            this.editor.blockIndent();
-        }
-        else {
-            this.editor.onTextInput("\t");
-        }
     };
 
 }).call(KeyBinding.prototype);
