@@ -6,7 +6,6 @@
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
 require.def("ace/conf/keybindings/default_mac", function() {
-}
 
 return {
     "selectall": "Meta-A",
