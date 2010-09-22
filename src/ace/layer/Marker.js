@@ -1,4 +1,4 @@
-require.def("ace/layer/Marker", [], function() {
+require.def("ace/layer/Marker", ["ace/Range"], function(Range) {
 
 var Marker = function(parentEl) {
     this.element = document.createElement("div");
@@ -67,12 +67,12 @@ var Marker = function(parentEl) {
 
         // selection start
         var row = range.start.row;
-        var lineRange = new ace.Range(row, range.start.column, row, this.doc.getLine(row).length);
+        var lineRange = new Range(row, range.start.column, row, this.doc.getLine(row).length);
         this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig);
 
         // selection end
         var row = range.end.row;
-        var lineRange = new ace.Range(row, 0, row, range.end.column);
+        var lineRange = new Range(row, 0, row, range.end.column);
         this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig);
 
         for (var row = range.start.row + 1; row < range.end.row; row++) {
