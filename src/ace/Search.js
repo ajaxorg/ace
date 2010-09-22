@@ -31,7 +31,7 @@ Search.SELECTION = 2;
         if (this.$options.backwards) {
             var iterator = this.$backwardMatchIterator(doc);
         } else {
-            var iterator = this.$forwardMatchIterator(doc);
+            iterator = this.$forwardMatchIterator(doc);
         }
 
         var firstRange = null;
@@ -50,7 +50,7 @@ Search.SELECTION = 2;
         if (this.$options.backwards) {
             var iterator = this.$backwardMatchIterator(doc);
         } else {
-            var iterator = this.$forwardMatchIterator(doc);
+            iterator = this.$forwardMatchIterator(doc);
         }
 
         var ranges = [];
@@ -149,7 +149,7 @@ Search.SELECTION = 2;
         if (this.$options.regExp) {
             var needle = this.$options.needle;
         } else {
-            var needle = ace.escapeRegExp(this.$options.needle);
+            needle = ace.escapeRegExp(this.$options.needle);
         }
 
         if (this.$options.wholeWord) {
@@ -190,7 +190,7 @@ Search.SELECTION = 2;
                 var row = start.row;
 
                 var line = getLine(row);
-                startIndex = start.column;
+                var startIndex = start.column;
 
                 var stop = false;
 
@@ -215,7 +215,7 @@ Search.SELECTION = 2;
                     if (row == start.row)
                         stop = true;
 
-                    var line = getLine(row);
+                    line = getLine(row);
                 }
             }
         };
@@ -247,7 +247,7 @@ Search.SELECTION = 2;
                         return;
 
                     row--;
-                    var startIndex = 0;
+                    startIndex = 0;
 
                     if (row < firstRow) {
                         if (wrap) {

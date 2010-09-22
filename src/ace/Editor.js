@@ -811,14 +811,18 @@ var Editor = function(renderer, doc) {
         this.clearSelection();
     };
 
-    this.replace = function(replacement) {
+    this.replace = function(replacement, options) {
+    if (options)
+        this.$search.set(options);
       var range = this.$tryReplace(this.getSelectionRange(), replacement);
       if (range !== null)
           this.selection.setSelectionRange(range);
       this.$updateDesiredColumn();
     },
 
-    this.replaceAll = function(replacement) {
+    this.replaceAll = function(replacement, options) {
+        if (options)
+            this.$search.set(options);
         this.clearSelection();
         this.selection.moveCursorTo(0, 0);
 
@@ -845,18 +849,29 @@ var Editor = function(renderer, doc) {
         }
     };
 
-    this.find = function(needle) {
+    this.find = function(needle, options) {
         this.clearSelection();
-        this.$search.set({needle: needle});
-        this.findNext();
+        options = options || {};
+        options.needle = needle;
+        this.$search.set(options);
+        console.log("options: ", JSON.stringify(this.$search.$options));
+        this.$find();
     },
 
-    this.findNext = function() {
-        this.$find(false);
+    this.findNext = function(options) {
+        options = options || {};
+        if (typeof options.backwards == "undefined")
+            options.backwards = false;
+        this.$search.set(options);
+        this.$find();
     };
 
-    this.findPrevious = function() {
-        this.$find(true);
+    this.findPrevious = function(options) {
+        options = options || {};
+        if (typeof options.backwards == "undefined")
+            options.backwards = true;
+        this.$search.set(options);
+        this.$find();
     };
 
     this.$find = function(backwards) {
@@ -864,9 +879,8 @@ var Editor = function(renderer, doc) {
             this.$search.set({needle: this.doc.getTextRange(this.getSelectionRange())});
         }
 
-        this.$search.set({
-            backwards: backwards
-        });
+        if (typeof backwards != "undefined")
+            this.$search.set({backwards: backwards});
 
         var range = this.$search.find(this.doc);
         if (range) {
