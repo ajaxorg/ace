@@ -1,3 +1,10 @@
+/**
+ * Ajax.org Code Editor (ACE)
+ *
+ * @copyright 2010, Ajax.org Services B.V.
+ * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ * @author Fabian Jakobs <fabian AT ajax DOT org>
+ */
 var VirtualRendererTest = new TestCase("VirtualRendererTest", {
 
     "test: screen2text the column should be rounded to the next character edge" : function() {
