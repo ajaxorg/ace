@@ -5,7 +5,10 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/MEventEmitter", ["ace/ace"], function(ace) {
+
+if (!require.def) require.def = require("requireJS-node")(module);
+
+require.def("ace/MEventEmitter", ["ace/lib/lang"], function(lang) {
 
     var MEventEmitter = {}
 
@@ -30,7 +33,7 @@ require.def("ace/MEventEmitter", ["ace/ace"], function(ace) {
         if (!listeners) {
           var listeners = this.$eventRegistry[eventName] = [];
         }
-        if (ace.arrayIndexOf(listeners, callback) == -1) {
+        if (lang.arrayIndexOf(listeners, callback) == -1) {
             listeners.push(callback);
         }
     };
@@ -42,7 +45,7 @@ require.def("ace/MEventEmitter", ["ace/ace"], function(ace) {
         if (!listeners) {
           return;
         }
-        var index = ace.arrayIndexOf(listeners, callback);
+        var index = lang.arrayIndexOf(listeners, callback);
         if (index !== -1) {
             listeners.splice(index, 1);
         }

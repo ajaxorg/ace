@@ -5,10 +5,13 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+if (!require.def) require.def = require("requireJS-node")(module);
+
 require.def("ace/lib/lang", function() {
 
     var lang = {};
-    
+
     lang.stringReverse = function(string) {
         return string.split("").reverse().join("");
     };
