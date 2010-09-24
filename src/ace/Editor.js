@@ -861,7 +861,6 @@ var Editor = function(renderer, doc) {
         options = options || {};
         options.needle = needle;
         this.$search.set(options);
-        console.log("options: ", JSON.stringify(this.$search.$options));
         this.$find();
     },
 
