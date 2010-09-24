@@ -88,8 +88,8 @@ var Editor = function(renderer, doc) {
             this.doc.removeEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
 
             var selection = this.doc.getSelection();
-            this.selection.removeEventListener("changeCursor", this.$onCursorChange);
-            this.selection.removeEventListener("changeSelection", this.$onSelectionChange);
+            selection.removeEventListener("changeCursor", this.$onCursorChange);
+            selection.removeEventListener("changeSelection", this.$onSelectionChange);
 
             this.doc.setScrollTopRow(this.renderer.getScrollTopRow());
         }
@@ -861,7 +861,6 @@ var Editor = function(renderer, doc) {
         options = options || {};
         options.needle = needle;
         this.$search.set(options);
-        console.log("options: ", JSON.stringify(this.$search.$options));
         this.$find();
     },
 

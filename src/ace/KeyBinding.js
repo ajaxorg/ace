@@ -51,7 +51,7 @@ var KeyBinding = function(element, editor, config) {
         "39" : "Right",
         "40" : "Down",
         "45" : "Insert",
-        "46" : "Del",
+        "46" : "Delete",
         "107": "+",
         "112": "F1",
         "113": "F2",
