@@ -7,13 +7,13 @@
  */
 require.def("ace/mode/Html",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/mode/Text",
         "ace/mode/JavaScript",
         "ace/mode/Css",
         "ace/Tokenizer",
         "ace/mode/HtmlHighlightRules"
-    ], function(ace, TextMode, JavaScriptMode, CssMode, Tokenizer, HtmlHighlightRules) {
+    ], function(oop, TextMode, JavaScriptMode, CssMode, Tokenizer, HtmlHighlightRules) {
 
 var Html = function() {
     this.$tokenizer = new Tokenizer(new HtmlHighlightRules().getRules());
@@ -21,7 +21,7 @@ var Html = function() {
     this.$js = new JavaScriptMode();
     this.$css = new CssMode();
 };
-ace.inherits(Html, TextMode);
+oop.inherits(Html, TextMode);
 
 (function() {
 

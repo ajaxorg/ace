@@ -8,6 +8,8 @@
 require.def("ace/VirtualRenderer",
     [
          "ace/ace",
+         "ace/lang/oop",
+         "ace/lang/lang",
          "ace/layer/Gutter",
          "ace/layer/Marker",
          "ace/layer/Text",
@@ -46,7 +48,7 @@ var VirtualRenderer = function(container) {
     this.layers = [ this.$markerLayer, textLayer, this.$cursorLayer ];
 
     this.scrollBar = new ScrollBar(container);
-    this.scrollBar.addEventListener("scroll", ace.bind(this.onScroll, this));
+    this.scrollBar.addEventListener("scroll", lang.bind(this.onScroll, this));
 
     this.scrollTop = 0;
 
@@ -66,8 +68,8 @@ var VirtualRenderer = function(container) {
         self.lineHeight = textLayer.getLineHeight();
         self.onResize();
     });
-    ace.addListener(this.$gutter, "click", ace.bind(this.$onGutterClick, this));
-    ace.addListener(this.$gutter, "dblclick", ace.bind(this.$onGutterClick, this));
+    ace.addListener(this.$gutter, "click", lang.bind(this.$onGutterClick, this));
+    ace.addListener(this.$gutter, "dblclick", lang.bind(this.$onGutterClick, this));
 };
 
 (function() {

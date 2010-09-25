@@ -7,11 +7,11 @@
  */
 require.def("ace/mode/HtmlHighlightRules",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/mode/CssHighlightRules",
         "ace/mode/JavaScriptHighlightRules",
         "ace/mode/TextHighlightRules"
-    ], function(ace, CssHighlightRules, JavaScriptHighlightRules, TextHighlightRules) {
+    ], function(oop, CssHighlightRules, JavaScriptHighlightRules, TextHighlightRules) {
 
 var HtmlHighlightRules = function() {
 
@@ -147,7 +147,7 @@ var HtmlHighlightRules = function() {
     });
 };
 
-ace.inherits(HtmlHighlightRules, TextHighlightRules);
+oop.inherits(HtmlHighlightRules, TextHighlightRules);
 
 return HtmlHighlightRules;
 });

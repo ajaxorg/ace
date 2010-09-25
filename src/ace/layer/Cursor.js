@@ -5,7 +5,7 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/layer/Cursor", ["ace/ace"], function(ace) {
+require.def("ace/layer/Cursor", ["ace/lib/dom"], function(dom) {
 
 var Cursor = function(parentEl) {
     this.element = document.createElement("div");
@@ -30,9 +30,9 @@ var Cursor = function(parentEl) {
             column : this.doc.documentToScreenColumn(position.row, position.column)
         };
         if (overwrite) {
-            ace.addCssClass(this.cursor, "ace_overwrite");
+            dom.addCssClass(this.cursor, "ace_overwrite");
         } else {
-            ace.removeCssClass(this.cursor, "ace_overwrite");
+            dom.removeCssClass(this.cursor, "ace_overwrite");
         }
     };
 

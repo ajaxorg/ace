@@ -5,7 +5,7 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/BackgroundTokenizer", ["ace/ace", "ace/MEventEmitter"], function(ace, MEventEmitter) {
+require.def("ace/BackgroundTokenizer", ["ace/lib/oop", "ace/MEventEmitter"], function(oop, MEventEmitter) {
 
 var BackgroundTokenizer = function(tokenizer) {
     this.running = false;
@@ -44,7 +44,7 @@ var BackgroundTokenizer = function(tokenizer) {
 
 (function(){
 
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;
@@ -98,7 +98,7 @@ var BackgroundTokenizer = function(tokenizer) {
                 state = this.lines[row - 1].state;
             }
 
-            // TODO find a proper way to cache every line 
+            // TODO find a proper way to cache every line
             var tokens = this.tokenizer.getLineTokens(this.textLines[row] || "", state || "start");
             if (state) {
                 this.lines[row] = tokens;

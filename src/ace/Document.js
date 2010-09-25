@@ -7,12 +7,13 @@
  */
 require.def("ace/Document",
     [
-        "ace/ace",
+        "ace/lib/oop",
+        "ace/lib/lang",
         "ace/MEventEmitter",
         "ace/Selection",
         "ace/mode/Text",
         "ace/Range"
-    ], function(ace, MEventEmitter, Selection, TextMode, Range) {
+    ], function(oop, lang, MEventEmitter, Selection, TextMode, Range) {
 
 var Document = function(text, mode) {
     this.modified = true;
@@ -25,7 +26,7 @@ var Document = function(text, mode) {
         this.setMode(mode);
     }
 
-    if (ace.isArray(text)) {
+    if (lang.isArray(text)) {
         this.$insertLines(0, text);
     } else {
         this.$insert({row: 0, column: 0}, text);
@@ -34,7 +35,7 @@ var Document = function(text, mode) {
 
 (function() {
 
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.$undoManager = null;
 
@@ -76,7 +77,7 @@ var Document = function(text, mode) {
         if (undoManager) {
             undoManager.setDocument(this);
             var self = this;
-            this.$informUndoManager = ace.deferredCall(function() {
+            this.$informUndoManager = lang.deferredCall(function() {
                 if (self.$deltas.length > 0)
                     undoManager.notify(self.$deltas);
                 self.$deltas = [];

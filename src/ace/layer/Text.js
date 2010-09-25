@@ -5,7 +5,7 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/layer/Text", ["ace/ace", "ace/MEventEmitter"], function(ace, MEventEmitter) {
+require.def("ace/layer/Text", ["ace/lib/oop", "ace/lib/dom", "ace/MEventEmitter"], function(oop, dom, MEventEmitter) {
 
 var Text = function(parentEl) {
     this.element = document.createElement("div");
@@ -18,7 +18,7 @@ var Text = function(parentEl) {
 
 (function() {
 
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.EOF_CHAR = "&para;";
     this.EOL_CHAR = "&not;";
@@ -67,7 +67,7 @@ var Text = function(parentEl) {
         style.overflow = "visible";
 
         for (var prop in this.$fontStyles) {
-            var value = ace.computedStyle(this.element, prop);
+            var value = dom.computedStyle(this.element, prop);
             style[prop] = value;
         }
 

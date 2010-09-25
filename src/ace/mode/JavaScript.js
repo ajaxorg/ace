@@ -7,18 +7,19 @@
  */
 require.def("ace/mode/JavaScript",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/mode/Text",
         "ace/Tokenizer",
         "ace/mode/JavaScriptHighlightRules",
-        "ace/mode/MatchingBraceOutdent"
-    ], function(ace, TextMode, Tokenizer, JavaScriptHighlightRules, MatchingBraceOutdent) {
+        "ace/mode/MatchingBraceOutdent",
+        "ace/Range"
+    ], function(oop, TextMode, Tokenizer, JavaScriptHighlightRules, MatchingBraceOutdent, Range) {
 
 var JavaScript = function() {
     this.$tokenizer = new Tokenizer(new JavaScriptHighlightRules().getRules());
     this.$outdent = new MatchingBraceOutdent();
 };
-ace.inherits(JavaScript, TextMode);
+oop.inherits(JavaScript, TextMode);
 
 (function() {
 
@@ -35,7 +36,7 @@ ace.inherits(JavaScript, TextMode);
         }
 
         if (outdent) {
-            var deleteRange = new ace.Range(0, 0, 0, 0);
+            var deleteRange = new Range(0, 0, 0, 0);
             for (var i=range.start.row; i<= range.end.row; i++)
             {
                 var line = doc.getLine(i).replace(re, "$1");

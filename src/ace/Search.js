@@ -6,8 +6,10 @@
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
 require.def("ace/Search",
-    ["ace/ace", "ace/Range"], 
-    function(ace, Range) {
+    ["ace/lib/lang",
+     "ace/lib/oop",
+     "ace/Range"],
+    function(lang, oop, Range) {
 
 var Search = function() {
     this.$options = {
@@ -27,7 +29,7 @@ Search.SELECTION = 2;
 (function() {
 
     this.set = function(options) {
-        ace.mixin(this.$options, options);
+        oop.mixin(this.$options, options);
         return this;
     };
 
@@ -156,7 +158,7 @@ Search.SELECTION = 2;
         if (this.$options.regExp) {
             var needle = this.$options.needle;
         } else {
-            needle = ace.escapeRegExp(this.$options.needle);
+            needle = lang.escapeRegExp(this.$options.needle);
         }
 
         if (this.$options.wholeWord) {

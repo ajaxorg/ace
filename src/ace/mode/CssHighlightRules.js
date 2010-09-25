@@ -7,13 +7,14 @@
  */
 require.def("ace/mode/CssHighlightRules",
      [
-         "ace/ace",
+         "ace/lib/oop",
+         "ace/lib/lang",
          "ace/mode/TextHighlightRules"
-     ], function(ace, TextHighlightRules) {
+     ], function(oop, lang, TextHighlightRules) {
 
 var CssHighlightRules = function() {
 
-    var properties = ace.arrayToMap(
+    var properties = lang.arrayToMap(
         ("azimuth|background-attachment|background-color|background-image|" +
         "background-position|background-repeat|background|border-bottom-color|" +
         "border-bottom-style|border-bottom-width|border-bottom|border-collapse|" +
@@ -40,11 +41,11 @@ var CssHighlightRules = function() {
         "z-index").split("|")
     );
 
-    var functions = ace.arrayToMap(
+    var functions = lang.arrayToMap(
         ("rgb|rgba|url|attr|counter|counters").split("|")
     );
 
-    var constants = ace.arrayToMap(
+    var constants = lang.arrayToMap(
         ("absolute|all-scroll|always|armenian|auto|baseline|below|bidi-override|" +
         "block|bold|bolder|both|bottom|break-all|break-word|capitalize|center|" +
         "char|circle|cjk-ideographic|col-resize|collapse|crosshair|dashed|" +
@@ -189,7 +190,7 @@ var CssHighlightRules = function() {
     };
 };
 
-ace.inherits(CssHighlightRules, TextHighlightRules);
+oop.inherits(CssHighlightRules, TextHighlightRules);
 
 return CssHighlightRules;
 });

@@ -7,10 +7,10 @@
  */
 require.def("ace/mode/JavaScriptHighlightRules",
      [
-         "ace/ace",
+         "ace/lib/oop",
          "ace/mode/DocCommentHighlightRules",
          "ace/mode/TextHighlightRules"
-     ], function(ace, DocCommentHighlightRules, TextHighlightRules) {
+     ], function(oop, DocCommentHighlightRules, TextHighlightRules) {
 
 
 JavaScriptHighlightRules = function() {
@@ -126,7 +126,7 @@ JavaScriptHighlightRules = function() {
     this.$rules["doc-start"][0].next = "start";
 };
 
-ace.inherits(JavaScriptHighlightRules, TextHighlightRules);
+oop.inherits(JavaScriptHighlightRules, TextHighlightRules);
 
 return JavaScriptHighlightRules;
 });

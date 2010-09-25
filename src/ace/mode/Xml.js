@@ -7,17 +7,17 @@
  */
 require.def("ace/mode/Xml",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/mode/Text",
         "ace/Tokenizer",
         "ace/mode/XmlHighlightRules"
-    ], function(ace, TextMode, Tokenizer, XmlHighlightRules) {
+    ], function(oop, TextMode, Tokenizer, XmlHighlightRules) {
 
 var Xml = function() {
     this.$tokenizer = new Tokenizer(new XmlHighlightRules().getRules());
 };
 
-ace.inherits(Xml, TextMode);
+oop.inherits(Xml, TextMode);
 
 (function() {
 

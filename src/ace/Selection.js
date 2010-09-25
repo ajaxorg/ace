@@ -6,10 +6,11 @@
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
 require.def("ace/Selection", [
-    "ace/ace",
+    "ace/lib/oop",
+    "ace/lib/lang",
     "ace/MEventEmitter",
     "ace/Range"
-], function(ace, MEventEmitter, Range) {
+], function(oop, lang, MEventEmitter, Range) {
 
 var Selection = function(doc) {
     this.doc = doc;
@@ -23,7 +24,7 @@ var Selection = function(doc) {
 
 (function() {
 
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.isEmpty = function() {
         return (!this.selectionAnchor ||
@@ -328,7 +329,7 @@ var Selection = function(doc) {
         var row = this.selectionLead.row;
         var column = this.selectionLead.column;
         var line = this.doc.getLine(row);
-        var leftOfCursor = ace.stringReverse(line.substring(0, column));
+        var leftOfCursor = lang.stringReverse(line.substring(0, column));
 
         var match;
         this.nonTokenRe.lastIndex = 0;

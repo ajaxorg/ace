@@ -7,9 +7,9 @@
  */
 require.def("ace/mode/DocCommentHighlightRules",
     [
-        "ace/ace",
+        "oop/oop",
         "ace/mode/TextHighlightRules"
-    ], function(ace, TextHighlightRules) {
+    ], function(oop, TextHighlightRules) {
 
 var DocCommentHighlightRules = function() {
 
@@ -34,7 +34,7 @@ var DocCommentHighlightRules = function() {
     };
 };
 
-ace.inherits(DocCommentHighlightRules, TextHighlightRules);
+oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
 (function() {
 

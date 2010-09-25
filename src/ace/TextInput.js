@@ -5,7 +5,7 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/TextInput", ["ace/ace"], function(ace) {
+require.def("ace/TextInput", ["ace/lib/event"], function(event) {
 
 var TextInput = function(parentNode, host) {
 
@@ -60,23 +60,23 @@ var TextInput = function(parentNode, host) {
         text.select();
     };
 
-    ace.addListener(text, "keypress", onTextInput);
-    ace.addListener(text, "textInput", onTextInput);
-    ace.addListener(text, "paste", onTextInput);
-    ace.addListener(text, "propertychange", onTextInput);
+    event.addListener(text, "keypress", onTextInput);
+    event.addListener(text, "textInput", onTextInput);
+    event.addListener(text, "paste", onTextInput);
+    event.addListener(text, "propertychange", onTextInput);
 
-    ace.addListener(text, "copy", onCopy);
-    ace.addListener(text, "cut", onCut);
+    event.addListener(text, "copy", onCopy);
+    event.addListener(text, "cut", onCut);
 
-    ace.addListener(text, "compositionstart", onCompositionStart);
-    ace.addListener(text, "compositionupdate", onCompositionUpdate);
-    ace.addListener(text, "compositionend", onCompositionEnd);
+    event.addListener(text, "compositionstart", onCompositionStart);
+    event.addListener(text, "compositionupdate", onCompositionUpdate);
+    event.addListener(text, "compositionend", onCompositionEnd);
 
-    ace.addListener(text, "blur", function() {
+    event.addListener(text, "blur", function() {
         host.onBlur();
     });
 
-    ace.addListener(text, "focus", function() {
+    event.addListener(text, "focus", function() {
         host.onFocus();
     });
 

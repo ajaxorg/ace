@@ -7,9 +7,9 @@
  */
 require.def("ace/mode/XmlHighlightRules",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/mode/TextHighlightRules"
-    ], function(ace, TextHighlightRules) {
+    ], function(oop, TextHighlightRules) {
 
 var XmlHighlightRules = function() {
 
@@ -81,7 +81,7 @@ var XmlHighlightRules = function() {
     };
 };
 
-ace.inherits(XmlHighlightRules, TextHighlightRules);
+oop.inherits(XmlHighlightRules, TextHighlightRules);
 
 return XmlHighlightRules;
 });

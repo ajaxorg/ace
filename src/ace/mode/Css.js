@@ -7,18 +7,18 @@
  */
 require.def("ace/mode/Css",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/mode/Text",
         "ace/Tokenizer",
         "ace/mode/CssHighlightRules",
         "ace/mode/MatchingBraceOutdent"
-    ], function(ace, TextMode, Tokenizer, CssHighlightRules, MatchingBraceOutdent) {
+    ], function(oop, TextMode, Tokenizer, CssHighlightRules, MatchingBraceOutdent) {
 
 var Css = function() {
     this.$tokenizer = new Tokenizer(new CssHighlightRules().getRules());
     this.$outdent = new MatchingBraceOutdent();
 };
-ace.inherits(Css, TextMode);
+oop.inherits(Css, TextMode);
 
 (function() {
 
