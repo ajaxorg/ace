@@ -97,8 +97,14 @@ var BackgroundTokenizer = function(tokenizer) {
             if (row > 0 && this.lines[row - 1]) {
                 state = this.lines[row - 1].state;
             }
+
+            // TODO find a proper way to cache every line 
             var tokens = this.tokenizer.getLineTokens(this.textLines[row] || "", state || "start");
-            this.lines[row] = tokens;
+            if (state) {
+                this.lines[row] = tokens;
+            } else {
+                return tokens;
+            }
         }
         return this.lines[row];
     };
