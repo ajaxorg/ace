@@ -621,9 +621,9 @@ var Editor = function(renderer, doc) {
         };
     };
 
-    this.onCompositionStart = function() {
+    this.onCompositionStart = function(text) {
         this.renderer.showComposition(this.getCursorPosition());
-        this.onTextInput(" ");
+        //this.onTextInput(text);
     };
 
     this.onCompositionUpdate = function(text) {
@@ -632,7 +632,7 @@ var Editor = function(renderer, doc) {
 
     this.onCompositionEnd = function() {
         this.renderer.hideComposition();
-        this.removeLeft();
+        //this.removeLeft();
     };
 
 
