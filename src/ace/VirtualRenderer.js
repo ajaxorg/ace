@@ -8,15 +8,15 @@
 require.def("ace/VirtualRenderer",
     [
          "ace/ace",
-         "ace/lang/oop",
-         "ace/lang/lang",
+         "ace/lib/oop",
+         "ace/lib/lang",
          "ace/layer/Gutter",
          "ace/layer/Marker",
          "ace/layer/Text",
          "ace/layer/Cursor",
          "ace/ScrollBar",
          "ace/MEventEmitter"
-    ], function(ace, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar, MEventEmitter) {
+    ], function(ace, oop, lang, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar, MEventEmitter) {
 
 var VirtualRenderer = function(container) {
     this.container = container;

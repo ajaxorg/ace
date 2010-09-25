@@ -7,7 +7,7 @@
  */
 require.def("ace/mode/DocCommentHighlightRules",
     [
-        "oop/oop",
+        "ace/lib/oop",
         "ace/mode/TextHighlightRules"
     ], function(oop, TextHighlightRules) {
 
