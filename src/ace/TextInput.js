@@ -16,25 +16,40 @@ var TextInput = function(parentNode, host) {
     style.top = "-10000px";
     parentNode.appendChild(text);
 
+    var PLACEHOLDER = String.fromCharCode(0);
+    sendText();
+
     var inCompostion = false;
+    var copied = false;
+
+    function sendText() {
+        if (!copied) {
+            var value = text.value;
+            if (value) {
+                if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0))
+                    host.onTextInput(value.slice(0, -1));
+                else 
+                    host.onTextInput(value);
+            }
+        }
+        copied = false;
+
+        // Safari doesn't fire copy events if no text is selected
+        text.value = PLACEHOLDER;
+        text.select();
+    }
 
     var onTextInput = function(e) {
         setTimeout(function() {
-            if (!inCompostion) {
-                if (text.value)
-                    host.onTextInput(text.value);
-                text.value = "";
-            }
+            if (!inCompostion) 
+                sendText();
         }, 0);
     };
 
     var onCompositionStart = function(e) {
         inCompostion = true;
-
-        if (text.value)
-            host.onTextInput(text.value);
+        sendText();
         text.value = "";
-
         host.onCompositionStart();
         setTimeout(onCompositionUpdate, 0);
     };
@@ -50,16 +65,19 @@ var TextInput = function(parentNode, host) {
     };
 
     var onCopy = function() {
+        copied = true;
         text.value = host.getCopyText();
         text.select();
+        copied = true;
     };
 
     var onCut = function() {
+        copied = true;
         text.value = host.getCopyText();
         host.onCut();
         text.select();
     };
-
+    
     event.addListener(text, "keypress", onTextInput);
     event.addListener(text, "textInput", onTextInput);
     event.addListener(text, "paste", onTextInput);
@@ -78,10 +96,12 @@ var TextInput = function(parentNode, host) {
 
     event.addListener(text, "focus", function() {
         host.onFocus();
+        text.select();
     });
 
     this.focus = function() {
         text.focus();
+        text.select();
     };
 
     this.blur = function() {
