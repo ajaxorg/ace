@@ -501,7 +501,7 @@ var Document = function(text, mode) {
 
     this.undoChanges = function(deltas) {
         this.selection.clearSelection();
-        for (var i=0; i<deltas.length; i++) {
+        for (var i=deltas.length-1; i>=0; i--) {
             var delta = deltas[i];
             if (delta.action == "insertText") {
                 this.remove(delta.range, true);

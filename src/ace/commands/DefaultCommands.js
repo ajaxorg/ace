@@ -34,7 +34,7 @@ PluginManager.registerCommand("find", function(editor, selection) {
     editor.find(needle);
 });
 PluginManager.registerCommand("undo", function(editor, selection) {
-  editor.undo();
+    editor.undo();
 });
 PluginManager.registerCommand("redo", function(editor, selection) {
     editor.redo();
