@@ -5,7 +5,9 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/mode/MatchingBraceOutdent", [], function() {
+require.def("ace/mode/MatchingBraceOutdent",
+    ["ace/Range"],
+    function(Range) {
 
 var MatchingBraceOutdent = function() {};
 
@@ -30,7 +32,7 @@ var MatchingBraceOutdent = function() {};
         if (!openBracePos || openBracePos.row == row) return 0;
 
         var indent = this.$getIndent(doc.getLine(openBracePos.row));
-        doc.replace(new ace.Range(row, 0, row, column-1), indent);
+        doc.replace(new Range(row, 0, row, column-1), indent);
 
         return indent.length - (column-1);
     };
