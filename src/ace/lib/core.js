@@ -17,6 +17,7 @@ require.def("ace/lib/core", function() {
     core.isMac = (os == "mac");
     core.isLinux = (os == "linux");
     core.isIE = ! + "\v1";
+    core.isGecko = window.controllers && window.navigator.product === "Gecko";
 
     core.provide = function(namespace) {
         var parts = namespace.split(".");

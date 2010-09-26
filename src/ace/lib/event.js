@@ -149,24 +149,24 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
         var startX, startY;
 
         var listener = function(e) {
-           clicks += 1;
-           if (clicks == 1) {
-               startX = e.clientX;
-               startY = e.clientY;
+            clicks += 1;
+            if (clicks == 1) {
+                startX = e.clientX;
+                startY = e.clientY;
 
-               setTimeout(function() {
-                   clicks = 0;
-               }, timeout || 600);
-           }
+                setTimeout(function() {
+                    clicks = 0;
+                }, timeout || 600);
+            }
 
-           if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
-               clicks = 0;
+            if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
+                clicks = 0;
 
-           if (clicks == count) {
-               clicks = 0;
-               callback(e);
-           }
-           return event.preventDefault(e);
+            if (clicks == count) {
+                clicks = 0;
+                callback(e);
+            }
+            return event.preventDefault(e);
         };
 
         event.addListener(el, "mousedown", listener);
@@ -174,23 +174,24 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
     };
 
     event.addKeyListener = function(el, callback) {
-      var lastDown = null;
+        var lastDown = null;
 
-      event.addListener(el, "keydown", function(e) {
-          lastDown = e.keyIdentifier || e.keyCode;
-          return callback(e);
-      });
+        event.addListener(el, "keydown", function(e) {
+            lastDown = e.keyIdentifier || e.keyCode;
+            return callback(e);
+        });
 
-      if (core.isMac) {
-          event.addListener(el, "keypress", function(e) {
-              var keyId = e.keyIdentifier || e.keyCode;
-              if (lastDown !== keyId) {
-                  return callback(e);
-              } else {
-                  lastDown = null;
-              }
-          });
-      }
+        // repeated keys are fired as keypress and not keydown events
+        if (core.isMac && core.isGecko) {
+            event.addListener(el, "keypress", function(e) {
+                var keyId = e.keyIdentifier || e.keyCode;
+                if (lastDown !== keyId) {
+                    return callback(e);
+                } else {
+                    lastDown = null;
+                }
+            });
+        }
     };
 
     return event;
