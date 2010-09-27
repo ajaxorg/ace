@@ -100,8 +100,9 @@ var TextInput = function(parentNode, host) {
     });
 
     this.focus = function() {
-        text.focus();
+        host.onFocus();
         text.select();
+        text.focus();
     };
 
     this.blur = function() {

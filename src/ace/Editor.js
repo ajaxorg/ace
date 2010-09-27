@@ -48,6 +48,7 @@ var Editor = function(renderer, doc) {
     });
 
     this.setDocument(doc || new Document(""));
+    this.focus();
 };
 
 (function(){
