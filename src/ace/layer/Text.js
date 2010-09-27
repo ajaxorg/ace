@@ -90,7 +90,7 @@ var Text = function(parentEl) {
         this.doc = doc;
     };
 
-    this.$showInvisibles = true;
+    this.$showInvisibles = false;
     this.setShowInvisibles = function(showInvisibles) {
         this.$showInvisibles = showInvisibles;
     };
