@@ -132,7 +132,7 @@ var Document = function(text, mode) {
 
     this.setBreakpoints = function(rows) {
         this.$breakpoints = [];
-        for (var i=0; i<rows; i++) {
+        for (var i=0; i<rows.length; i++) {
             this.$breakpoints[rows[i]] = true;
         }
         this.$dispatchEvent("changeBreakpoint", {});
