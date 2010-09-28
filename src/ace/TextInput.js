@@ -26,9 +26,11 @@ var TextInput = function(parentNode, host) {
         if (!copied) {
             var value = text.value;
             if (value) {
-                if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0))
-                    host.onTextInput(value.slice(0, -1));
-                else 
+                if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0)) {
+                    value = value.slice(0, -1);
+                    if (value)
+                        host.onTextInput(value);
+                } else
                     host.onTextInput(value);
             }
         }
@@ -41,7 +43,7 @@ var TextInput = function(parentNode, host) {
 
     var onTextInput = function(e) {
         setTimeout(function() {
-            if (!inCompostion) 
+            if (!inCompostion)
                 sendText();
         }, 0);
     };
@@ -77,7 +79,7 @@ var TextInput = function(parentNode, host) {
         host.onCut();
         text.select();
     };
-    
+
     event.addListener(text, "keypress", onTextInput);
     event.addListener(text, "textInput", onTextInput);
     event.addListener(text, "paste", onTextInput);
