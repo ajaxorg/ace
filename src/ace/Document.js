@@ -47,6 +47,7 @@ var Document = function(text, mode) {
         var args = [0, this.lines.length];
         args.push.apply(args, this.$split(text));
         this.lines.splice.apply(this.lines, args);
+        this.modified = true;
         this.fireChangeEvent(0);
     };
 

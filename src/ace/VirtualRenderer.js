@@ -192,6 +192,10 @@ var VirtualRenderer = function(container) {
     this.updateLines = function(firstRow, lastRow) {
         var layerConfig = this.layerConfig;
 
+        // if the update changes the width of the document do a full redraw
+        if (layerConfig.width != this.$getLongestLine())
+            return this.$draw(false);
+
         if (firstRow > layerConfig.lastRow + 1) { return; }
         if (lastRow < layerConfig.firstRow) { return; }
 
@@ -237,11 +241,8 @@ var VirtualRenderer = function(container) {
         var offset = this.scrollTop % this.lineHeight;
         var minHeight = this.scroller.clientHeight + offset;
 
-        var charCount = this.doc.getScreenWidth();
-        if (this.$showInvisibles)
-            charCount += 1;
-
-        var longestLine = Math.max(this.scroller.clientWidth, Math.round(charCount * this.characterWidth));
+        var longestLine = this.$getLongestLine();
+        var widthChanged = this.layerConfig && (this.layerConfig.width != longestLine);
 
         var lineCount = Math.ceil(minHeight / this.lineHeight);
         var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
@@ -263,8 +264,10 @@ var VirtualRenderer = function(container) {
         for ( var i = 0; i < this.layers.length; i++) {
             var layer = this.layers[i];
 
-            var style = layer.element.style;
-            style.width = longestLine + "px";
+            if (widthChanged) {
+                var style = layer.element.style;
+                style.width = longestLine + "px";
+            }
 
             layer.update(layerConfig);
         };
@@ -277,6 +280,13 @@ var VirtualRenderer = function(container) {
         //console.log("compute+render", new Date() - start, "ms")
     };
 
+    this.$getLongestLine = function() {
+        var charCount = this.doc.getScreenWidth();
+        if (this.$showInvisibles)
+            charCount += 1;
+
+        return Math.max(this.scroller.clientWidth, Math.round(charCount * this.characterWidth));
+    };
 
     this.addMarker = function(range, clazz, type) {
         return this.$markerLayer.addMarker(range, clazz, type);
