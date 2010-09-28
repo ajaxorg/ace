@@ -461,7 +461,7 @@ var Document = function(text, mode) {
 
     this.remove = function(range, fromUndo) {
         if (range.isEmpty())
-            return;
+            return range.start;
 
         this.$remove(range, fromUndo);
 
