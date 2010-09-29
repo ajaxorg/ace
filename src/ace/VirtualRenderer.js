@@ -70,9 +70,19 @@ var VirtualRenderer = function(container) {
     });
     ace.addListener(this.$gutter, "click", lang.bind(this.$onGutterClick, this));
     ace.addListener(this.$gutter, "dblclick", lang.bind(this.$onGutterClick, this));
+    
+    this.$changes = 0;
 };
 
 (function() {
+
+    this.CHANGE_CURSOR = 1;
+    this.CHANGE_MARKER = 2;
+    this.CHANGE_TEXT = 4;
+    this.CHANGE_SCROLL = 8;
+    this.CHANGE_SIZE = 16
+    this.CHANGE_LINES = 32;
+    this.CHANGE_FULL = 64;
 
     ace.implement(this, MEventEmitter);
 
@@ -82,10 +92,14 @@ var VirtualRenderer = function(container) {
         this.$cursorLayer.setDocument(doc);
         this.$markerLayer.setDocument(doc);
         this.$textLayer.setDocument(doc);
+        
+        this.$changes = this.$changes & this.CHANGE_FULL;
     };
 
     this.setTokenizer = function(tokenizer) {
         this.$textLayer.setTokenizer(tokenizer);
+        
+        this.$changes = this.$changes & this.CHANGE_TEXT;
     };
 
     this.$onGutterClick = function(e) {
@@ -105,6 +119,8 @@ var VirtualRenderer = function(container) {
     this.setShowInvisibles = function(showInvisibles) {
         this.$showInvisibles = showInvisibles;
         this.$textLayer.setShowInvisibles(showInvisibles);
+        
+        this.$changes = this.$changes & this.CHANGE_TEXT;        
     };
 
     this.getShowInvisibles = function() {
@@ -176,7 +192,8 @@ var VirtualRenderer = function(container) {
         if (this.doc) {
             this.$updateScrollBar();
             this.scrollToY(this.getScrollTop());
-            this.draw();
+            
+            this.$changes = this.$changes & this.CHANGE_SIZE;
         }
     };
 
@@ -190,6 +207,11 @@ var VirtualRenderer = function(container) {
     };
 
     this.updateLines = function(firstRow, lastRow) {
+        // TODO
+        this.$changes = this.$changes & this.CHANGE_FULL;
+    };
+    
+    this.$updateLines = function(firstRow, lastRow) {
         var layerConfig = this.layerConfig;
 
         // if the update changes the width of the document do a full redraw
@@ -210,27 +232,14 @@ var VirtualRenderer = function(container) {
     };
 
     this.draw = function(scrollOnly, callback) {
-        this.$draw(scrollOnly);
+
+        if (scrollOnly)
+            this.$changes = this.$changes & this.CHANGE_SCROLL;
+        else
+            this.$changes = this.$changes & this.CHANGE_FULL;
+        
+//        this.$draw(scrollOnly);
         callback && callback();
-//        if (this.$drawTimer) {
-//            clearInterval(this.$drawTimer);
-//            this.scrollOnly = this.scrollOnly && scrollOnly;
-//        } else {
-//            this.scollOnly = scrollOnly;
-//        }
-//
-//        if (callback)
-//            this.$drawCallbacks.push(callback);
-//
-//        var _self = this;
-//        this.$drawTimer = setTimeout(function() {
-//            _self.$draw(_self.scrollOnly);
-//            for (var i=0; i<_self.$drawCallbacks.length; i++)
-//                _self.$drawCallbacks[i]();
-//
-//            _self.$drawCallbacks = [];
-//            delete _self.$drawTimer;
-//        }, 0);
     };
 
     this.$draw = function(scrollOnly) {
@@ -290,19 +299,23 @@ var VirtualRenderer = function(container) {
 
     this.addMarker = function(range, clazz, type) {
         return this.$markerLayer.addMarker(range, clazz, type);
+        this.$changes = this.$changes & this.CHANGE_MARKER;
     };
 
     this.removeMarker = function(markerId) {
         this.$markerLayer.removeMarker(markerId);
+        this.$changes = this.$changes & this.CHANGE_MARKER;
     };
 
     this.setBreakpoints = function(rows) {
         this.$gutterLayer.setBreakpoints(rows);
+        this.$changes = this.$changes & this.CHANGE_GUTTER;
     };
 
     this.updateCursor = function(position, overwrite) {
         this.$cursorLayer.setCursor(position, overwrite);
         this.$cursorLayer.update(this.layerConfig);
+        this.$changes = this.$changes & this.CHANGE_CURSOR;
     };
 
     this.hideCursor = function() {
@@ -359,7 +372,8 @@ var VirtualRenderer = function(container) {
         if (this.scrollTop !== scrollTop) {
             this.scrollTop = scrollTop;
             this.$updateScrollBar();
-            this.draw(true);
+            
+            this.$changes = this.$changes & this.CHANGE_SCROLL;
         }
     };
 
