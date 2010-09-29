@@ -5,57 +5,52 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/RenderLoop",
-    ["ace/lib/oop",
-     "ace/MEventEmitter"],
-    function(oop, MEventEmitter) {
+require.def("ace/RenderLoop", function() {
 
-var RenderLoop = function(fps) {
-    this.interval = 1000 / fps;
+var RenderLoop = function(onRender) {
+    this.onRender = onRender;
+    this.pending = false;
+    this.changes = 0;
 };
 
 (function() {
 
-    oop.implement(this, MEventEmitter);
-    
-    if (window.mozRequestAnimationFrame) {
-        
-        this.start = function() {
+    this.schedule = function(change) {
+        this.changes = this.changes | change;
+        if (!this.pending) {
+            this.pending = true;
             var _self = this;
-            this.stop();
-            
-            this.$onTimeout = function() {
-                _self.$dispatchEvent("tick");
-                window.mozRequestAnimationFrame();
-            }
-            window.addEventListener("MozBeforePaint", this.$onTimeout, false);
-            window.mozRequestAnimationFrame();
-        };
+            this.setTimeoutZero(function() {
+                _self.pending = false;
+                _self.onRender(_self.changes);
+                _self.changes = 0;
+            })
+        }
+    };
     
-        this.stop = function() {
-            window.removeEventListener("MozBeforePaint", this.$onTimeout, false);
+    if (window.postMessage) {
+        
+        this.messageName = "zero-timeout-message";
+        
+        this.setTimeoutZero = function(callback) {
+            if (!this.attached) {
+                var _self = this;
+                window.addEventListener("message", function(e) {
+                    if (e.source == window && _self.callback && e.data == _self.messageName) {
+                        e.stopPropagation();
+                        _self.callback();
+                    }
+                }, false);
+                this.attached = true;
+            }
+            this.callback = callback;
+            window.postMessage(this.messageName, "*");
         }
         
-    } else {   
+    } else {
         
-        this.start = function() {
-            var _self = this;
-            this.stop();
-            
-            this.$timer = setTimeout(onTimeout, 0);
-        
-            function onTimeout() {
-                var start = new Date();
-                _self.$dispatchEvent("tick");
-                var end = new Date();
-                var timeout = Math.max(10, _self.interval - (end - start));
-                this.$timer = setTimeout(onTimeout, timeout);
-            }
-        };
-    
-        this.stop = function() {
-            if (this.$timer)
-                clearTimeout(this.$timer);        
+        this.setTimeoutZero = function(callback) {
+            setTimeout(callback, 0);
         }
     }
     
