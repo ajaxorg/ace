@@ -16,8 +16,11 @@ require.def("ace/VirtualRenderer",
          "ace/layer/Text",
          "ace/layer/Cursor",
          "ace/ScrollBar",
+         "ace/RenderLoop",
          "ace/MEventEmitter"
-    ], function(oop, lang, dom, event, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar, MEventEmitter) {
+    ], function(
+        oop, lang, dom, event, GutterLayer, MarkerLayer, TextLayer, 
+        CursorLayer, ScrollBar, RenderLoop, MEventEmitter) {
 
 var VirtualRenderer = function(container) {
     this.container = container;
@@ -58,23 +61,30 @@ var VirtualRenderer = function(container) {
         column : 0
     };
 
-    this.$updatePrintMargin();
-    this.onResize();
-
     var self = this;
     this.$textLayer.addEventListener("changeCharaterSize", function() {
         self.characterWidth = textLayer.getCharacterWidth();
         self.lineHeight = textLayer.getLineHeight();
-        self.onResize();
+        
+        this.$changes = this.$changes | this.CHANGE_FULL;
     });
     event.addListener(this.$gutter, "click", lang.bind(this.$onGutterClick, this));
     event.addListener(this.$gutter, "dblclick", lang.bind(this.$onGutterClick, this));
     
-    this.$changes = 0;
     this.$size = {
         width: 0,
-        height: 0
+        height: 0,
+        scrollerHeight: 0,
+        scrollerWidth: 0
     };
+    
+    this.$updatePrintMargin();
+    
+    this.loop = new RenderLoop(50);
+    this.loop.on("tick", lang.bind(this.$renderChanges, this));
+    this.loop.start();
+    
+    this.$changes = this.CHANGE_FULL;
 };
 
 (function() {
@@ -149,9 +159,7 @@ var VirtualRenderer = function(container) {
             this.scrollBar.setHeight(height);
 
             if (this.doc) {
-                this.$updateScrollBar();
                 this.scrollToY(this.getScrollTop());
-
                 this.$changes = this.$changes | this.CHANGE_FULL;
             }
         }
@@ -164,6 +172,9 @@ var VirtualRenderer = function(container) {
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
         }
+        
+        this.$size.scrollerWidth = this.scroller.clientWidth;
+        this.$size.scrollerHeight = this.scroller.clientHeight;
     };
 
     this.setTokenizer = function(tokenizer) {
@@ -257,40 +268,87 @@ var VirtualRenderer = function(container) {
         this.scrollBar.setScrollTop(this.scrollTop);
     };
 
-    this.$updateLines = function(firstRow, lastRow) {
-        var layerConfig = this.layerConfig;
+    this.$renderChanges = function() {
+        if (!this.$changes)
+            return;
 
-        // if the update changes the width of the document do a full redraw
-        if (layerConfig.width != this.$getLongestLine())
-            return this.$draw(false);
-
-        if (firstRow > layerConfig.lastRow + 1) { return; }
-        if (lastRow < layerConfig.firstRow) { return; }
-
-        // if the last row is unknown -> redraw everything
-        if (lastRow === undefined) {
-            this.$draw();
+        // text, scrolling and resize changes can cause the view port size to change
+        if (!this.layerConfig ||
+            this.$changes & this.CHANGE_FULL ||
+            this.$changes & this.CHANGE_SIZE ||
+            this.$changes & this.CHANGE_TEXT || 
+            this.$changes & this.CHANGE_LINES ||
+            this.$changes & this.CHANGE_SCROLL
+        )
+            this.$computeLayerConfig();
+            
+        // full
+        if (this.$changes & this.CHANGE_FULL) {
+            this.$changes = 0;
+            this.$textLayer.update(this.layerConfig);
+            this.$gutterLayer.update(this.layerConfig);
+            this.$markerLayer.update(this.layerConfig);
+            this.$cursorLayer.update(this.layerConfig);
+            this.$updateScrollBar();
             return;
         }
+        
+        // scrolling
+        if (this.$changes & this.CHANGE_SCROLL) {
+            if (this.$changes & this.CHANGE_TEXT || this.$changes & this.CHANGE_LINES) {
+                this.$textLayer.scrollLines(this.layerConfig);
+                this.$gutterLayer.update(this.layerConfig);
+                this.$markerLayer.update(this.layerConfig);
+                this.$cursorLayer.update(this.layerConfig);
+            }
+            else {
+                this.$textLayer.update(this.layerConfig);
+                this.$gutterLayer.update(this.layerConfig);
+                this.$markerLayer.update(this.layerConfig);
+                this.$cursorLayer.update(this.layerConfig);
+            }
+            this.$updateScrollBar();
+            this.$changes = 0;
+            return;
+        }
+        
+        if (this.$changes & this.CHANGE_TEXT) {
+            this.$textLayer.update(this.layerConfig);
+            this.$gutterLayer.update(this.layerConfig);
+        }
+        else if (this.$changes & this.CHANGE_LINES) {
+            this.$updateLines();
+        }
+        else if (this.$changes & this.CHANGE_SCROLL) {
+            this.$textLayer.scrollLines(this.layerConfig);
+            this.$gutterLayer.update(this.layerConfig);
+        } if (this.$changes & this.CHANGE_GUTTER) {
+            this.$gutterLayer.update(this.layerConfig);
+        }
 
-        // else update only the changed rows
-        this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
+        if (this.$changes & this.CHANGE_CURSOR)
+            this.$cursorLayer.update(this.layerConfig);
+
+        if (this.$changes & this.CHANGE_MARKER) {
+            this.$markerLayer.update(this.layerConfig);
+        }
+                
+        if (this.$changes & this.CHANGE_SIZE)
+            this.$updateScrollBar();
+        
+        this.$changes = 0;
     };
-
-    this.$draw = function(scrollOnly) {
-        //var start = new Date();
-
-        var lines = this.lines;
-
+    
+    this.$computeLayerConfig = function() {
         var offset = this.scrollTop % this.lineHeight;
-        var minHeight = this.scroller.clientHeight + offset;
+        var minHeight = this.$size.scrollerHeight + this.lineHeight;
 
         var longestLine = this.$getLongestLine();
-        var widthChanged = this.layerConfig && (this.layerConfig.width != longestLine);
+        var widthChanged = !this.layerConfig ? true : (this.layerConfig.width != longestLine);
 
         var lineCount = Math.ceil(minHeight / this.lineHeight);
         var firstRow = Math.round((this.scrollTop - offset) / this.lineHeight);
-        var lastRow = Math.min(lines.length, firstRow + lineCount) - 1;
+        var lastRow = Math.min(this.lines.length, firstRow + lineCount) - 1;
 
         var layerConfig = this.layerConfig = {
             width : longestLine,
@@ -298,40 +356,51 @@ var VirtualRenderer = function(container) {
             lastRow : lastRow,
             lineHeight : this.lineHeight,
             characterWidth : this.characterWidth,
-            minHeight : minHeight,
-            scrollOnly: !!scrollOnly
+            minHeight : minHeight
         };
-
-        this.content.style.marginTop = (-offset) + "px";
-        this.content.style.height = minHeight + "px";
-
+        
         for ( var i = 0; i < this.layers.length; i++) {
             var layer = this.layers[i];
-
             if (widthChanged) {
                 var style = layer.element.style;
                 style.width = longestLine + "px";
             }
-
-            layer.update(layerConfig);
         };
-
+        
         this.$gutterLayer.element.style.marginTop = (-offset) + "px";
-        this.$gutterLayer.update(layerConfig);
+        this.content.style.marginTop = (-offset) + "px";
+        this.content.style.height = minHeight + "px";
+    };    
 
-        //console.log("compute", new Date() - start, "ms")
-        this.$updateScrollBar();
-        //console.log("compute+render", new Date() - start, "ms")
+    this.$updateLines = function() {
+        var firstRow = this.$updateLines.firstRow;
+        var lastRow = this.$updateLines.lastRow;
+        
+        var layerConfig = this.layerConfig;
+
+        // if the update changes the width of the document do a full redraw
+        if (layerConfig.width != this.$getLongestLine())
+            return this.$textLayer.update(layerConfig);
+
+        if (firstRow > layerConfig.lastRow + 1) { return; }
+        if (lastRow < layerConfig.firstRow) { return; }
+
+        // if the last row is unknown -> redraw everything
+        if (lastRow === undefined)
+            return this.$textLayer.update(layerConfig);
+
+        // else update only the changed rows
+        this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
     };
-
+    
     this.$getLongestLine = function() {
         var charCount = this.doc.getScreenWidth();
         if (this.$showInvisibles)
             charCount += 1;
 
-        return Math.max(this.scroller.clientWidth, Math.round(charCount * this.characterWidth));
+        return Math.max(this.$size.scrollerWidth, Math.round(charCount * this.characterWidth));
     };
-
+    
     this.addMarker = function(range, clazz, type) {
         return this.$markerLayer.addMarker(range, clazz, type);
         this.$changes = this.$changes | this.CHANGE_MARKER;
@@ -370,19 +439,19 @@ var VirtualRenderer = function(container) {
             this.scrollToY(top);
         }
 
-        if (this.getScrollTop() + this.scroller.clientHeight < top
+        if (this.getScrollTop() + this.$size.scrollerHeight < top
                 + this.lineHeight) {
-            this.scrollToY(top + this.lineHeight - this.scroller.clientHeight);
+            this.scrollToY(top + this.lineHeight - this.$size.scrollerHeight);
         }
 
         if (this.scroller.scrollLeft > left) {
             this.scroller.scrollLeft = left;
         }
 
-        if (this.scroller.scrollLeft + this.scroller.clientWidth < left
+        if (this.scroller.scrollLeft + this.$size.scrollerWidth < left
                 + this.characterWidth) {
             this.scroller.scrollLeft = Math.round(left + this.characterWidth
-                    - this.scroller.clientWidth);
+                    - this.$size.scrollerWidth);
         }
     },
 
@@ -399,13 +468,11 @@ var VirtualRenderer = function(container) {
     };
 
     this.scrollToY = function(scrollTop) {
-        var maxHeight = this.lines.length * this.lineHeight - this.scroller.clientHeight;
+        var maxHeight = this.lines.length * this.lineHeight - this.$size.scrollerHeight;
         var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
 
         if (this.scrollTop !== scrollTop) {
             this.scrollTop = scrollTop;
-            this.$updateScrollBar();
-            
             this.$changes = this.$changes | this.CHANGE_SCROLL;
         }
     };
