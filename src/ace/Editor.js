@@ -482,7 +482,7 @@ var Editor = function(renderer, doc) {
     };
 
     this.getReadOnly = function() {
-        return this.readOnly;
+        return this.$readOnly;
     };
 
     this.removeRight = function() {

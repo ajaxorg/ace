@@ -123,7 +123,7 @@ var Text = function(parentEl) {
 
             var lineElement = lineElements[i - layerConfig.firstRow];
             lineElement.innerHTML = html.join("");
-        };
+        }
     };
 
     this.$scrollLines = function(oldConfig, config) {

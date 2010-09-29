@@ -116,7 +116,7 @@ var Document = function(text, mode) {
 
     this.$tabSize = 4;
     this.setTabSize = function(tabSize) {
-        if (this.$tabSize === tabSize) return;
+        if (isNaN(tabSize) || this.$tabSize === tabSize) return;
 
         this.modified = true;
         this.$tabSize = tabSize;

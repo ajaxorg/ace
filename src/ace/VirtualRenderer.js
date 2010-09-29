@@ -57,6 +57,8 @@ var VirtualRenderer = function(container) {
         column : 0
     };
 
+    this.showInvisibles = false;
+
     this.$drawCallbacks = [];
 
     this.$updatePrintMargin();
