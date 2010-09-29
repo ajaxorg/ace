@@ -104,7 +104,7 @@ var Editor = function(renderer, doc) {
         this.$onDocumentModeChange = ace.bind(this.onDocumentModeChange, this);
         doc.addEventListener("changeMode", this.$onDocumentModeChange);
 
-        this.$onDocumentChangeTabSize = ace.bind(this.renderer.draw, this.renderer);
+        this.$onDocumentChangeTabSize = ace.bind(this.renderer.updateText, this.renderer);
         doc.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
         this.$onDocumentChangeBreakpoint = ace.bind(this.onDocumentChangeBreakpoint, this);
@@ -123,14 +123,11 @@ var Editor = function(renderer, doc) {
         this.bgTokenizer.setLines(this.doc.lines);
         this.bgTokenizer.start(0);
 
-        var _self = this;
-        _self.renderer.scrollToRow(doc.getScrollTopRow());
-        this.renderer.draw(false, function() {
-            _self.onCursorChange();
-            _self.onSelectionChange();
-            _self.onDocumentChangeBreakpoint();
-            _self.renderer.scrollToRow(doc.getScrollTopRow());
-        });
+        this.onCursorChange();
+        this.onSelectionChange();
+        this.onDocumentChangeBreakpoint();
+        this.renderer.scrollToRow(doc.getScrollTopRow());
+        this.renderer.updateFull();
     };
 
     this.getDocument = function() {
@@ -258,7 +255,6 @@ var Editor = function(renderer, doc) {
         }
 
         this.renderer.setTokenizer(this.bgTokenizer);
-        this.renderer.draw();
     };
 
 
@@ -453,7 +449,6 @@ var Editor = function(renderer, doc) {
             return;
 
         this.renderer.setShowInvisibles(showInvisibles);
-        this.renderer.draw();
     };
 
     this.getShowInvisibles = function() {

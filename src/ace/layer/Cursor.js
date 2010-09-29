@@ -69,15 +69,27 @@ var Cursor = function(parentEl) {
     };
 
     this.getPixelPosition = function() {
-        return this.pixelPos || {
-            left : 0,
-            top : 0
+        if (!this.config || !this.position) {
+            return {
+                left : 0,
+                top : 0
+            };
+        }
+
+        var cursorLeft = Math.round(this.position.column * this.config.characterWidth);
+        var cursorTop = this.position.row * this.config.lineHeight;
+
+       return {
+            left : cursorLeft,
+            top : cursorTop
         };
     };
 
     this.update = function(config) {
         if (!this.position)
             return;
+            
+        this.config = config;
 
         var cursorLeft = Math.round(this.position.column * config.characterWidth);
         var cursorTop = this.position.row * config.lineHeight;

@@ -26,6 +26,7 @@ require.def("ace/MEventEmitter", ["ace/lib/lang"], function(lang) {
         }
     };
 
+    MEventEmitter.on =
     MEventEmitter.addEventListener = function(eventName, callback) {
         this.$eventRegistry = this.$eventRegistry || {};
 

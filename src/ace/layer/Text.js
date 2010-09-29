@@ -126,12 +126,16 @@ var Text = function(parentEl) {
         }
     };
 
-    this.$scrollLines = function(oldConfig, config) {
-        if (oldConfig.lastRow < config.firstRow)
-            return this.$fullUpdate(config);
+    this.scrollLines = function(config) {
+        this.$computeTabString();
+        var oldConfig = this.config;
+        this.config = config;
+        
+        if (!oldConfig || oldConfig.lastRow < config.firstRow)
+            return this.update(config);
 
         if (config.lastRow < oldConfig.firstRow)
-            return this.$fullUpdate(config);
+            return this.update(config);
 
         var el = this.element;
 
@@ -175,21 +179,8 @@ var Text = function(parentEl) {
     };
 
     this.update = function(config) {
-        if (!config.minHeight)
-            return;
-
         this.$computeTabString();
 
-        if (this.config && config.scrollOnly) {
-            this.$scrollLines(this.config, config);
-        } else {
-            this.$fullUpdate(config);
-        }
-
-        this.config = config;
-    };
-
-    this.$fullUpdate = function(config) {
         var html = [];
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
             html.push("<div class='ace_line' style='height:" + this.$characterSize.height + "px;", "width:",
