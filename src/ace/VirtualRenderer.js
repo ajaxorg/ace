@@ -7,20 +7,21 @@
  */
 require.def("ace/VirtualRenderer",
     [
-         "ace/ace",
          "ace/lib/oop",
          "ace/lib/lang",
+         "ace/lib/dom",
+         "ace/lib/event",         
          "ace/layer/Gutter",
          "ace/layer/Marker",
          "ace/layer/Text",
          "ace/layer/Cursor",
          "ace/ScrollBar",
          "ace/MEventEmitter"
-    ], function(ace, oop, lang, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar, MEventEmitter) {
+    ], function(oop, lang, dom, event, GutterLayer, MarkerLayer, TextLayer, CursorLayer, ScrollBar, MEventEmitter) {
 
 var VirtualRenderer = function(container) {
     this.container = container;
-    ace.addCssClass(this.container, "ace_editor");
+    dom.addCssClass(this.container, "ace_editor");
 
     this.scroller = document.createElement("div");
     this.scroller.className = "ace_scroller";
@@ -57,8 +58,6 @@ var VirtualRenderer = function(container) {
         column : 0
     };
 
-    this.$drawCallbacks = [];
-
     this.$updatePrintMargin();
     this.onResize();
 
@@ -68,23 +67,28 @@ var VirtualRenderer = function(container) {
         self.lineHeight = textLayer.getLineHeight();
         self.onResize();
     });
-    ace.addListener(this.$gutter, "click", lang.bind(this.$onGutterClick, this));
-    ace.addListener(this.$gutter, "dblclick", lang.bind(this.$onGutterClick, this));
+    event.addListener(this.$gutter, "click", lang.bind(this.$onGutterClick, this));
+    event.addListener(this.$gutter, "dblclick", lang.bind(this.$onGutterClick, this));
     
     this.$changes = 0;
+    this.$size = {
+        width: 0,
+        height: 0
+    };
 };
 
 (function() {
 
     this.CHANGE_CURSOR = 1;
     this.CHANGE_MARKER = 2;
-    this.CHANGE_TEXT = 4;
+    this.CHANGE_GUTTER = 4;
     this.CHANGE_SCROLL = 8;
-    this.CHANGE_SIZE = 16
-    this.CHANGE_LINES = 32;
-    this.CHANGE_FULL = 64;
+    this.CHANGE_LINES = 16;
+    this.CHANGE_TEXT = 32;
+    this.CHANGE_SIZE = 64
+    this.CHANGE_FULL = 128;
 
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.setDocument = function(doc) {
         this.lines = doc.lines;
@@ -93,18 +97,84 @@ var VirtualRenderer = function(container) {
         this.$markerLayer.setDocument(doc);
         this.$textLayer.setDocument(doc);
         
-        this.$changes = this.$changes & this.CHANGE_FULL;
+        this.$changes = this.$changes | this.CHANGE_FULL;
+    };
+
+    /**
+     * Triggers partial update of the text layer
+     */
+     this.updateLines = function(firstRow, lastRow) {
+        if (!this.$updateLines) {
+            this.$updateLines = {
+                firstRow: firstRow,
+                lastRow: lastRow
+            }
+        }
+        else {
+            if (this.$updateLines.firstRow > firstRow)
+                this.$updateLines.firstRow = firstRow;
+
+            if (this.$updateLines.lastRow < lastRow)
+                this.$updateLines.lastRow = lastRow;
+        }
+
+        this.$changes = this.$changes | this.CHANGE_FULL;
+    };
+
+    /**
+     * Triggers full update of the text layer
+     */
+    this.updateText = function() {
+        this.$changes = this.$changes | this.CHANGE_TEXT;
+    };
+
+    /**
+     * Triggers a full update of all layers
+     */
+    this.updateFull = function() {
+        this.$changes = this.$changes | this.CHANGE_FULL;
+    };
+    
+    /**
+     * Triggers resize of the editor
+     */
+    this.onResize = function() {
+        this.$changes = this.$changes | this.CHANGE_SIZE;
+        
+        var height = dom.getInnerHeight(this.container);
+        if (this.$size.height != height) {
+            this.$size.height = height;
+            
+            this.scroller.style.height = height + "px";
+            this.scrollBar.setHeight(height);
+
+            if (this.doc) {
+                this.$updateScrollBar();
+                this.scrollToY(this.getScrollTop());
+
+                this.$changes = this.$changes | this.CHANGE_FULL;
+            }
+        }
+
+        var width = dom.getInnerWidth(this.container);
+        if (this.$size.width != width) {
+            this.$size.width = width;
+
+            var gutterWidth = this.$gutter.offsetWidth;
+            this.scroller.style.left = gutterWidth + "px";
+            this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+        }
     };
 
     this.setTokenizer = function(tokenizer) {
         this.$textLayer.setTokenizer(tokenizer);
         
-        this.$changes = this.$changes & this.CHANGE_TEXT;
+        this.$changes = this.$changes | this.CHANGE_TEXT;
     };
 
     this.$onGutterClick = function(e) {
-        var pageX = ace.getDocumentX(e);
-        var pageY = ace.getDocumentY(e);
+        var pageX = event.getDocumentX(e);
+        var pageY = event.getDocumentY(e);
 
         var event = {
             row: this.screenToTextCoordinates(pageX, pageY).row,
@@ -120,7 +190,7 @@ var VirtualRenderer = function(container) {
         this.$showInvisibles = showInvisibles;
         this.$textLayer.setShowInvisibles(showInvisibles);
         
-        this.$changes = this.$changes & this.CHANGE_TEXT;        
+        this.$changes = this.$changes | this.CHANGE_TEXT;        
     };
 
     this.getShowInvisibles = function() {
@@ -178,25 +248,6 @@ var VirtualRenderer = function(container) {
         return this.layerConfig.lastRow || 0;
     };
 
-    this.onResize = function()
-    {
-        var height = ace.getInnerHeight(this.container);
-        this.scroller.style.height = height + "px";
-        this.scrollBar.setHeight(height);
-
-        var width = ace.getInnerWidth(this.container);
-        var gutterWidth = this.$gutter.offsetWidth;
-        this.scroller.style.left = gutterWidth + "px";
-        this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
-
-        if (this.doc) {
-            this.$updateScrollBar();
-            this.scrollToY(this.getScrollTop());
-            
-            this.$changes = this.$changes & this.CHANGE_SIZE;
-        }
-    };
-
     this.onScroll = function(e) {
         this.scrollToY(e.data);
     };
@@ -206,11 +257,6 @@ var VirtualRenderer = function(container) {
         this.scrollBar.setScrollTop(this.scrollTop);
     };
 
-    this.updateLines = function(firstRow, lastRow) {
-        // TODO
-        this.$changes = this.$changes & this.CHANGE_FULL;
-    };
-    
     this.$updateLines = function(firstRow, lastRow) {
         var layerConfig = this.layerConfig;
 
@@ -223,23 +269,12 @@ var VirtualRenderer = function(container) {
 
         // if the last row is unknown -> redraw everything
         if (lastRow === undefined) {
-            this.draw();
+            this.$draw();
             return;
         }
 
         // else update only the changed rows
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
-    };
-
-    this.draw = function(scrollOnly, callback) {
-
-        if (scrollOnly)
-            this.$changes = this.$changes & this.CHANGE_SCROLL;
-        else
-            this.$changes = this.$changes & this.CHANGE_FULL;
-        
-//        this.$draw(scrollOnly);
-        callback && callback();
     };
 
     this.$draw = function(scrollOnly) {
@@ -299,23 +334,22 @@ var VirtualRenderer = function(container) {
 
     this.addMarker = function(range, clazz, type) {
         return this.$markerLayer.addMarker(range, clazz, type);
-        this.$changes = this.$changes & this.CHANGE_MARKER;
+        this.$changes = this.$changes | this.CHANGE_MARKER;
     };
 
     this.removeMarker = function(markerId) {
         this.$markerLayer.removeMarker(markerId);
-        this.$changes = this.$changes & this.CHANGE_MARKER;
+        this.$changes = this.$changes | this.CHANGE_MARKER;
     };
 
     this.setBreakpoints = function(rows) {
         this.$gutterLayer.setBreakpoints(rows);
-        this.$changes = this.$changes & this.CHANGE_GUTTER;
+        this.$changes = this.$changes | this.CHANGE_GUTTER;
     };
 
     this.updateCursor = function(position, overwrite) {
         this.$cursorLayer.setCursor(position, overwrite);
-        this.$cursorLayer.update(this.layerConfig);
-        this.$changes = this.$changes & this.CHANGE_CURSOR;
+        this.$changes = this.$changes | this.CHANGE_CURSOR;
     };
 
     this.hideCursor = function() {
@@ -365,15 +399,14 @@ var VirtualRenderer = function(container) {
     };
 
     this.scrollToY = function(scrollTop) {
-        var maxHeight = this.lines.length * this.lineHeight
-                - this.scroller.clientHeight;
+        var maxHeight = this.lines.length * this.lineHeight - this.scroller.clientHeight;
         var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
 
         if (this.scrollTop !== scrollTop) {
             this.scrollTop = scrollTop;
             this.$updateScrollBar();
             
-            this.$changes = this.$changes & this.CHANGE_SCROLL;
+            this.$changes = this.$changes | this.CHANGE_SCROLL;
         }
     };
 
@@ -397,11 +430,11 @@ var VirtualRenderer = function(container) {
     };
 
     this.visualizeFocus = function() {
-        ace.addCssClass(this.container, "ace_focus");
+        dom.addCssClass(this.container, "ace_focus");
     };
 
     this.visualizeBlur = function() {
-        ace.removeCssClass(this.container, "ace_focus");
+        dom.removeCssClass(this.container, "ace_focus");
     };
 
     this.showComposition = function(position) {
