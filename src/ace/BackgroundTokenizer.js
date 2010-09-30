@@ -15,6 +15,7 @@ var BackgroundTokenizer = function(tokenizer) {
     this.tokenizer = tokenizer;
 
     var self = this;
+
     this.$worker = function() {
         if (!self.running) { return; }
 
@@ -84,12 +85,12 @@ var BackgroundTokenizer = function(tokenizer) {
         this.running = false;
     };
 
-    this.getTokens = function(firstRow, lastRow) {
-        return this.$tokenizeRows(firstRow, lastRow);
+    this.getTokens = function(firstRow, lastRow, callback) {
+        callback(this.$tokenizeRows(firstRow, lastRow));
     };
 
-    this.getState = function(row) {
-        return this.$tokenizeRows(row, row)[0].state;
+    this.getState = function(row, callback) {
+        callback(this.$tokenizeRows(row, row)[0].state);
     };
 
     this.$tokenizeRows = function(firstRow, lastRow) {

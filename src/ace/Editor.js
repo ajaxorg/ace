@@ -378,30 +378,32 @@ var Editor = function(renderer, doc) {
 
         this.clearSelection();
 
-        var lineState = this.bgTokenizer.getState(cursor.row-1);
-        var shouldOutdent = this.mode.checkOutdent(lineState, this.doc.getLine(cursor.row), text);
+        var _self = this;
+        this.bgTokenizer.getState(cursor.row-1, function(lineState) {
+            var shouldOutdent = _self.mode.checkOutdent(lineState, _self.doc.getLine(cursor.row), text);
 
-        var end = this.doc.insert(cursor, text);
+            var end = _self.doc.insert(cursor, text);
 
-        var row = cursor.row;
-        var line = this.doc.getLine(row);
-        var lineState = this.bgTokenizer.getState(row);
+            var row = cursor.row;
+            var line = _self.doc.getLine(row);
+            _self.bgTokenizer.getState(row, function(lineState ) {
+                // multi line insert
+                if (row !== end.row) {
+                    var indent = _self.mode.getNextLineIndent(lineState, line, _self.doc.getTabString());
+                    if (indent) {
+                        var indentRange = new Range(row+1, 0, end.row, end.column);
+                        end.column += _self.doc.indentRows(indentRange, indent);
+                    }
+                } else {
+                    if (shouldOutdent) {
+                        end.column += _self.mode.autoOutdent(lineState, _self.doc, row);
+                    }
+                }
 
-        // multi line insert
-        if (row !== end.row) {
-            var indent = this.mode.getNextLineIndent(lineState, line, this.doc.getTabString());
-            if (indent) {
-                var indentRange = new Range(row+1, 0, end.row, end.column);
-                end.column += this.doc.indentRows(indentRange, indent);
-            }
-        } else {
-            if (shouldOutdent) {
-                end.column += this.mode.autoOutdent(lineState, this.doc, row);
-            }
-        }
-
-        this.moveCursorToPosition(end);
-        this.renderer.scrollCursorIntoView();
+                _self.moveCursorToPosition(end);
+                _self.renderer.scrollCursorIntoView();
+            });
+        });
     };
 
     this.$overwrite = false;
@@ -541,10 +543,11 @@ var Editor = function(renderer, doc) {
         var rows = this.$getSelectedRows();
 
         var range = new Range(rows.first, 0, rows.last, 0);
-        var state = this.bgTokenizer.getState(this.getCursorPosition().row);
-        var addedColumns = this.mode.toggleCommentLines(state, this.doc, range);
-
-        this.selection.shiftSelection(addedColumns);
+        var _self = this;
+        this.bgTokenizer.getState(this.getCursorPosition().row, function(state) {
+            var addedColumns = _self.mode.toggleCommentLines(state, _self.doc, range);
+            _self.selection.shiftSelection(addedColumns);
+        });
     };
 
     this.removeLines = function() {

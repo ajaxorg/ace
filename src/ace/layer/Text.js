@@ -116,15 +116,16 @@ var Text = function(parentEl) {
         var last = Math.min(lastRow, layerConfig.lastRow);
 
         var lineElements = this.element.childNodes;
-        var tokens = this.tokenizer.getTokens(first, last);
+        var _self = this;
+        this.tokenizer.getTokens(first, last, function(tokens) {
+            for ( var i = first; i <= last; i++) {
+                var html = [];
+                _self.$renderLine(html, i, tokens[i-first].tokens);
 
-        for ( var i = first; i <= last; i++) {
-            var html = [];
-            this.$renderLine(html, i, tokens[i-first].tokens);
-
-            var lineElement = lineElements[i - layerConfig.firstRow];
-            lineElement.innerHTML = html.join("");
-        }
+                var lineElement = lineElements[i - layerConfig.firstRow];
+                lineElement.innerHTML = html.join("");
+            }
+        });
     };
 
     this.scrollLines = function(config) {
@@ -148,50 +149,66 @@ var Text = function(parentEl) {
             for (var row=config.lastRow+1; row<=oldConfig.lastRow; row++)
                 el.removeChild(el.lastChild);
 
-        if (config.firstRow < oldConfig.firstRow) {
-            var fragment = this.$renderLinesFragment(config, config.firstRow, oldConfig.firstRow - 1);
-            if (el.firstChild)
-                el.insertBefore(fragment, el.firstChild);
+        appendTop(appendBottom);
+
+        var _self = this;
+        function appendTop(callback) {
+            if (config.firstRow < oldConfig.firstRow) {
+                _self.$renderLinesFragment(config, config.firstRow, oldConfig.firstRow - 1, function(fragment) {
+                    if (el.firstChild)
+                        el.insertBefore(fragment, el.firstChild);
+                    else
+                        el.appendChild(fragment);
+                    callback();
+                });
+            }
             else
-                el.appendChild(fragment);
+                callback();
         }
 
-        if (config.lastRow > oldConfig.lastRow) {
-            var fragment = this.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow);
-            el.appendChild(fragment);
+        function appendBottom() {
+            if (config.lastRow > oldConfig.lastRow) {
+                _self.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow, function(fragment) {
+                    el.appendChild(fragment);
+                });
+            }
         }
     };
 
-    this.$renderLinesFragment = function(config, firstRow, lastRow) {
+    this.$renderLinesFragment = function(config, firstRow, lastRow, callback) {
         var fragment = document.createDocumentFragment();
-        var tokens = this.tokenizer.getTokens(firstRow, lastRow);
-        for (var row=firstRow; row<=lastRow; row++) {
-            var lineEl = document.createElement("div");
-            lineEl.className = "ace_line";
-            var style = lineEl.style;
-            style.height = this.$characterSize.height + "px";
-            style.width = config.width + "px";
+        var _self = this;
+        this.tokenizer.getTokens(firstRow, lastRow, function(tokens) {
+            for (var row=firstRow; row<=lastRow; row++) {
+                var lineEl = document.createElement("div");
+                lineEl.className = "ace_line";
+                var style = lineEl.style;
+                style.height = _self.$characterSize.height + "px";
+                style.width = config.width + "px";
 
-            var html = [];
-            this.$renderLine(html, row, tokens[row-firstRow].tokens);
-            lineEl.innerHTML = html.join("");
-            fragment.appendChild(lineEl);
-        }
-        return fragment;
+                var html = [];
+                _self.$renderLine(html, row, tokens[row-firstRow].tokens);
+                lineEl.innerHTML = html.join("");
+                fragment.appendChild(lineEl);
+            }
+            callback(fragment);
+        });
     };
 
     this.update = function(config) {
         this.$computeTabString();
 
         var html = [];
-        var tokens = this.tokenizer.getTokens(config.firstRow, config.lastRow);
-        for ( var i = config.firstRow; i <= config.lastRow; i++) {
-            html.push("<div class='ace_line' style='height:" + this.$characterSize.height + "px;", "width:",
-                    config.width, "px'>");
-            this.$renderLine(html, i, tokens[i-config.firstRow].tokens), html.push("</div>");
-        }
+        var _self = this;
+        this.tokenizer.getTokens(config.firstRow, config.lastRow, function(tokens) {
+            for ( var i = config.firstRow; i <= config.lastRow; i++) {
+                html.push("<div class='ace_line' style='height:" + _self.$characterSize.height + "px;", "width:",
+                        config.width, "px'>");
+                _self.$renderLine(html, i, tokens[i-config.firstRow].tokens), html.push("</div>");
+            }
 
-        this.element.innerHTML = html.join("");
+            _self.element.innerHTML = html.join("");
+        });
     };
 
     this.$textToken = {
