@@ -10,7 +10,7 @@ require.def("ace/VirtualRenderer",
          "ace/lib/oop",
          "ace/lib/lang",
          "ace/lib/dom",
-         "ace/lib/event",         
+         "ace/lib/event",
          "ace/layer/Gutter",
          "ace/layer/Marker",
          "ace/layer/Text",
@@ -20,7 +20,7 @@ require.def("ace/VirtualRenderer",
          "ace/MEventEmitter",
          "text!ace/css/editor.css"
     ], function(
-        oop, lang, dom, event, GutterLayer, MarkerLayer, TextLayer, 
+        oop, lang, dom, event, GutterLayer, MarkerLayer, TextLayer,
         CursorLayer, ScrollBar, RenderLoop, MEventEmitter, editorCss) {
 
 // import CSS once
@@ -73,21 +73,21 @@ var VirtualRenderer = function(container, theme) {
     this.$textLayer.addEventListener("changeCharaterSize", function() {
         self.characterWidth = textLayer.getCharacterWidth();
         self.lineHeight = textLayer.getLineHeight();
-        
+
         self.$loop.schedule(self.CHANGE_FULL);
     });
     event.addListener(this.$gutter, "click", lang.bind(this.$onGutterClick, this));
     event.addListener(this.$gutter, "dblclick", lang.bind(this.$onGutterClick, this));
-    
+
     this.$size = {
         width: 0,
         height: 0,
         scrollerHeight: 0,
         scrollerWidth: 0
     };
-    
+
     this.$updatePrintMargin();
-    
+
     this.$loop = new RenderLoop(lang.bind(this.$renderChanges, this));
     this.$loop.schedule(this.CHANGE_FULL);
 };
@@ -100,7 +100,7 @@ var VirtualRenderer = function(container, theme) {
     this.CHANGE_SCROLL = 8;
     this.CHANGE_LINES = 16;
     this.CHANGE_TEXT = 32;
-    this.CHANGE_SIZE = 64
+    this.CHANGE_SIZE = 64;
     this.CHANGE_FULL = 128;
 
     oop.implement(this, MEventEmitter);
@@ -111,7 +111,7 @@ var VirtualRenderer = function(container, theme) {
         this.$cursorLayer.setDocument(doc);
         this.$markerLayer.setDocument(doc);
         this.$textLayer.setDocument(doc);
-        
+
         this.$loop.schedule(this.CHANGE_FULL);
     };
 
@@ -133,7 +133,7 @@ var VirtualRenderer = function(container, theme) {
                 this.$updateLines.lastRow = lastRow;
         }
 
-        this.$loop.schedule(this.CHANGE_FULL);
+        this.$loop.schedule(this.CHANGE_LINES);
     };
 
     /**
@@ -149,17 +149,17 @@ var VirtualRenderer = function(container, theme) {
     this.updateFull = function() {
         this.$loop.schedule(this.CHANGE_FULL);
     };
-    
+
     /**
      * Triggers resize of the editor
      */
     this.onResize = function() {
         this.$loop.schedule(this.CHANGE_SIZE);
-        
+
         var height = dom.getInnerHeight(this.container);
         if (this.$size.height != height) {
             this.$size.height = height;
-            
+
             this.scroller.style.height = height + "px";
             this.scrollBar.setHeight(height);
 
@@ -177,14 +177,14 @@ var VirtualRenderer = function(container, theme) {
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
         }
-        
+
         this.$size.scrollerWidth = this.scroller.clientWidth;
         this.$size.scrollerHeight = this.scroller.clientHeight;
     };
 
     this.setTokenizer = function(tokenizer) {
         this.$textLayer.setTokenizer(tokenizer);
-        
+
         this.$loop.schedule(this.CHANGE_TEXT);
     };
 
@@ -205,7 +205,7 @@ var VirtualRenderer = function(container, theme) {
     this.setShowInvisibles = function(showInvisibles) {
         this.$showInvisibles = showInvisibles;
         this.$textLayer.setShowInvisibles(showInvisibles);
-        
+
         this.$loop.schedule(this.CHANGE_TEXT);
     };
 
@@ -281,12 +281,12 @@ var VirtualRenderer = function(container, theme) {
         if (!this.layerConfig ||
             changes & this.CHANGE_FULL ||
             changes & this.CHANGE_SIZE ||
-            changes & this.CHANGE_TEXT || 
+            changes & this.CHANGE_TEXT ||
             changes & this.CHANGE_LINES ||
             changes & this.CHANGE_SCROLL
         )
             this.$computeLayerConfig();
-            
+
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.update(this.layerConfig);
@@ -296,7 +296,7 @@ var VirtualRenderer = function(container, theme) {
             this.$updateScrollBar();
             return;
         }
-        
+
         // scrolling
         if (changes & this.CHANGE_SCROLL) {
             if (changes & this.CHANGE_TEXT || changes & this.CHANGE_LINES) {
@@ -314,7 +314,7 @@ var VirtualRenderer = function(container, theme) {
             this.$updateScrollBar();
             return;
         }
-        
+
         if (changes & this.CHANGE_TEXT) {
             this.$textLayer.update(this.layerConfig);
             this.$gutterLayer.update(this.layerConfig);
@@ -335,11 +335,11 @@ var VirtualRenderer = function(container, theme) {
         if (changes & this.CHANGE_MARKER) {
             this.$markerLayer.update(this.layerConfig);
         }
-                
+
         if (changes & this.CHANGE_SIZE)
             this.$updateScrollBar();
     };
-    
+
     this.$computeLayerConfig = function() {
         var offset = this.scrollTop % this.lineHeight;
         var minHeight = this.$size.scrollerHeight + this.lineHeight;
@@ -359,7 +359,7 @@ var VirtualRenderer = function(container, theme) {
             characterWidth : this.characterWidth,
             minHeight : minHeight
         };
-        
+
         for ( var i = 0; i < this.layers.length; i++) {
             var layer = this.layers[i];
             if (widthChanged) {
@@ -367,16 +367,16 @@ var VirtualRenderer = function(container, theme) {
                 style.width = longestLine + "px";
             }
         };
-        
+
         this.$gutterLayer.element.style.marginTop = (-offset) + "px";
         this.content.style.marginTop = (-offset) + "px";
         this.content.style.height = minHeight + "px";
-    };    
+    };
 
     this.$updateLines = function() {
         var firstRow = this.$updateLines.firstRow;
         var lastRow = this.$updateLines.lastRow;
-        
+
         var layerConfig = this.layerConfig;
 
         // if the update changes the width of the document do a full redraw
@@ -393,7 +393,7 @@ var VirtualRenderer = function(container, theme) {
         // else update only the changed rows
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
     };
-    
+
     this.$getLongestLine = function() {
         var charCount = this.doc.getScreenWidth();
         if (this.$showInvisibles)
@@ -401,7 +401,7 @@ var VirtualRenderer = function(container, theme) {
 
         return Math.max(this.$size.scrollerWidth, Math.round(charCount * this.characterWidth));
     };
-    
+
     this.addMarker = function(range, clazz, type) {
         return this.$markerLayer.addMarker(range, clazz, type);
         this.$loop.schedule(this.CHANGE_MARKER);
@@ -513,7 +513,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.hideComposition = function() {
     };
-    
+
     this.setTheme = function(theme) {
         var _self = this;
         if (!theme || typeof theme == "string") {
@@ -524,17 +524,17 @@ var VirtualRenderer = function(container, theme) {
         } else {
             afterLoad(theme);
         }
-        
+
         var _self = this;
         function afterLoad(theme) {
             if (_self.$theme)
                 dom.removeCssClass(_self.container, _self.$theme)
-        
+
             _self.$theme = theme ? theme.cssClass : null;
-        
+
             if (_self.$theme)
                 dom.addCssClass(_self.container, _self.$theme)
-            
+
             // force remeasure of the gutter width
             if (_self.$size) {
                 _self.$size.width = 0;
