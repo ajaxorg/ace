@@ -145,7 +145,7 @@ var Editor = function(renderer, doc) {
     this.setTheme = function(theme) {
         this.renderer.setTheme(theme);
     };
-    
+
     this.$highlightBrackets = function() {
         if (this.$bracketHighlight) {
             this.renderer.removeMarker(this.$bracketHighlight);
@@ -246,6 +246,8 @@ var Editor = function(renderer, doc) {
 
     this.onDocumentModeChange = function() {
         var mode = this.doc.getMode();
+        if (this.mode == mode)
+            return;
 
         this.mode = mode;
         var tokenizer = mode.getTokenizer();
