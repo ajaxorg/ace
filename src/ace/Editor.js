@@ -142,6 +142,10 @@ var Editor = function(renderer, doc) {
         this.renderer.onResize();
     };
 
+    this.setTheme = function(theme) {
+        this.renderer.setTheme(theme);
+    };
+    
     this.$highlightBrackets = function() {
         if (this.$bracketHighlight) {
             this.renderer.removeMarker(this.$bracketHighlight);

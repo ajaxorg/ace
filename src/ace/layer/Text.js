@@ -13,7 +13,7 @@ var Text = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this.$characterSize = this.$measureSizes();
-    //this.$pollSizeChanges();
+    this.$pollSizeChanges();
 };
 
 (function() {

@@ -17,14 +17,20 @@ require.def("ace/VirtualRenderer",
          "ace/layer/Cursor",
          "ace/ScrollBar",
          "ace/RenderLoop",
-         "ace/MEventEmitter"
+         "ace/MEventEmitter",
+         "text!ace/css/editor.css"
     ], function(
         oop, lang, dom, event, GutterLayer, MarkerLayer, TextLayer, 
-        CursorLayer, ScrollBar, RenderLoop, MEventEmitter) {
+        CursorLayer, ScrollBar, RenderLoop, MEventEmitter, editorCss) {
 
-var VirtualRenderer = function(container) {
+// import CSS once
+dom.importCssString(editorCss);
+
+var VirtualRenderer = function(container, theme) {
     this.container = container;
     dom.addCssClass(this.container, "ace_editor");
+
+    this.setTheme(theme);
 
     this.scroller = document.createElement("div");
     this.scroller.className = "ace_scroller";
@@ -505,6 +511,35 @@ var VirtualRenderer = function(container) {
 
     this.hideComposition = function() {
     };
+    
+    this.setTheme = function(theme) {
+        var _self = this;
+        if (!theme || typeof theme == "string") {
+            theme = theme || "ace/theme/TextMate";
+            require([theme], function(theme) {
+                afterLoad(theme);
+            })
+        } else {
+            afterLoad(theme);
+        }
+        
+        var _self = this;
+        function afterLoad(theme) {
+            if (_self.$theme)
+                dom.removeCssClass(_self.container, _self.$theme)
+        
+            _self.$theme = theme ? theme.cssClass : null;
+        
+            if (_self.$theme)
+                dom.addCssClass(_self.container, _self.$theme)
+            
+            // force remeasure of the gutter width
+            if (_self.$size) {
+                _self.$size.width = 0;
+                _self.onResize();
+            }
+        }
+    }
 
 }).call(VirtualRenderer.prototype);
 

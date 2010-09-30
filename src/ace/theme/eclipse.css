@@ -1,12 +1,12 @@
-.editor {
+.ace-eclipse .ace_editor {
   border: 2px solid rgb(159, 159, 159);
 }
 
-.editor.focus {
+.ace-eclipse .ace_editor.ace_focus {
   border: 2px solid #327fbd;;
 }
 
-.gutter {
+.ace-eclipse .ace_gutter {
   width: 40px;
   background: rgb(227, 227, 227);
   border-right: 1px solid rgb(159, 159, 159);	 
@@ -15,83 +15,82 @@
   font-size: 11px;  
 }
 
-.gutter-layer {
+.ace-eclipse .ace_gutter-layer {
   right: 10px;
   text-align: right;
 }
 
-.text-layer {
+.ace-eclipse .ace_text-layer {
   font-family: Monaco, "Courier New", monospace;
   font-size: 11px;
   cursor: text;
 }
 
-.cursor {
-  width: 1px;
-  background: black;
+.ace-eclipse .ace_cursor {
+  border-left: 1px solid black;
 }
 
-.line .keyword {
+.ace-eclipse .ace_line .ace_keyword {
   color: rgb(127, 0, 85);
 }
 
-.line .buildin-constant {
+.ace-eclipse .ace_line .ace_buildin-constant {
   color: rgb(88, 72, 246);
 }
 
-.line .library-constant {
+.ace-eclipse .ace_line .ace_library-constant {
   color: rgb(6, 150, 14);
 }
 
-.line .buildin-function {
+.ace-eclipse .ace_line .ace_buildin-function {
   color: rgb(60, 76, 114);
 }
 
-.line .string {
+.ace-eclipse .ace_line .ace_string {
   color: rgb(42, 0, 255);
 }
 
-.line .comment {
+.ace-eclipse .ace_line .ace_comment {
   color: rgb(63, 127, 95);
 }
 
-.line .doc-comment {
+.ace-eclipse .ace_line .ace_doc-comment {
   color: rgb(63, 95, 191);
 }
 
-.line .doc-comment-tag {
+.ace-eclipse .ace_line .ace_doc-comment-tag {
   color: rgb(127, 159, 191);
 }
 
-.line .number {
+.ace-eclipse .ace_line .ace_number {
 }
 
-.line .tag {
+.ace-eclipse .ace_line .ace_tag {
 	color: rgb(63, 127, 127);
 }
 
-.line .attribute {
+.ace-eclipse .ace_line .ace_attribute {
 	color: rbg(127, 0, 127);
 }
 
-.line .attribute-value {
+.ace-eclipse .ace_line .ace_attribute-value {
 	font-style: italic;
 	color: rbg(42, 0, 255);
 }
 
-.line .xml_pe {
+.ace-eclipse .ace_line .ace_xml_pe {
   color: rgb(104, 104, 91);
 }
 
-.marker-layer .selection {
+.ace-eclipse .ace_marker-layer .ace_selection {
   background: rgb(181, 213, 255);
 }
 
-.marker-layer .bracket {
+.ace-eclipse .ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
   border: 1px solid rgb(192, 192, 192);
 }
 
-.marker-layer .active_line {
+.ace-eclipse .ace_marker-layer .ace_active_line {
   background: rgb(232, 242, 254);
 }
