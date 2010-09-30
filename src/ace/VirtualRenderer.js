@@ -67,6 +67,8 @@ var VirtualRenderer = function(container, theme) {
         column : 0
     };
 
+    this.showInvisibles = false;
+
     var self = this;
     this.$textLayer.addEventListener("changeCharaterSize", function() {
         self.characterWidth = textLayer.getCharacterWidth();
