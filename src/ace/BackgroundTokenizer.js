@@ -25,7 +25,7 @@ var BackgroundTokenizer = function(tokenizer) {
         var processedLines = 0;
 
         while (self.currentLine < textLines.length) {
-            self.lines[self.currentLine] = self.$tokenizeRow(self.currentLine);
+            self.lines[self.currentLine] = self.$tokenizeRows(self.currentLine, self.currentLine)[0];
             self.currentLine++;
 
             // only check every 5 lines
@@ -72,6 +72,7 @@ var BackgroundTokenizer = function(tokenizer) {
         this.currentLine = Math.min(startRow || 0, this.currentLine,
                                     this.textLines.length);
 
+        // remove all cached items below this line
         this.lines.splice(this.currentLine, this.lines.length);
 
         this.stop();
@@ -83,30 +84,39 @@ var BackgroundTokenizer = function(tokenizer) {
         this.running = false;
     };
 
-    this.getTokens = function(row) {
-        return this.$tokenizeRow(row).tokens;
+    this.getTokens = function(firstRow, lastRow) {
+        return this.$tokenizeRows(firstRow, lastRow);
     };
 
     this.getState = function(row) {
-        return this.$tokenizeRow(row).state;
+        return this.$tokenizeRows(row, row)[0].state;
     };
 
-    this.$tokenizeRow = function(row) {
-        if (!this.lines[row]) {
-            var state = null;
-            if (row > 0 && this.lines[row - 1]) {
-                state = this.lines[row - 1].state;
-            }
+    this.$tokenizeRows = function(firstRow, lastRow) {
+        var rows = [];
 
-            // TODO find a proper way to cache every line
-            var tokens = this.tokenizer.getLineTokens(this.textLines[row] || "", state || "start");
-            if (state) {
-                this.lines[row] = tokens;
-            } else {
-                return tokens;
-            }
+        // determin start state
+        var state = "start";
+        var doCache = false;
+        if (firstRow > 0 && this.lines[firstRow - 1]) {
+            state = this.lines[firstRow - 1].state;
+            doCache = true;
         }
-        return this.lines[row];
+
+        for (var row=firstRow; row<=lastRow; row++) {
+            if (!this.lines[row]) {
+                var tokens = this.tokenizer.getLineTokens(this.textLines[row] || "", state);
+                var state = tokens.state;
+                rows.push(tokens);
+
+                if (doCache) {
+                    this.lines[row] = tokens;
+                }
+            }
+            else
+                rows.push(this.lines[row]);
+        }
+        return rows;
     };
 
 }).call(BackgroundTokenizer.prototype);

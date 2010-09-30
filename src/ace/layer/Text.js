@@ -116,10 +116,11 @@ var Text = function(parentEl) {
         var last = Math.min(lastRow, layerConfig.lastRow);
 
         var lineElements = this.element.childNodes;
+        var tokens = this.tokenizer.getTokens(first, last);
 
         for ( var i = first; i <= last; i++) {
             var html = [];
-            this.renderLine(html, i);
+            this.$renderLine(html, i, tokens[i-first].tokens);
 
             var lineElement = lineElements[i - layerConfig.firstRow];
             lineElement.innerHTML = html.join("");
@@ -130,7 +131,7 @@ var Text = function(parentEl) {
         this.$computeTabString();
         var oldConfig = this.config;
         this.config = config;
-        
+
         if (!oldConfig || oldConfig.lastRow < config.firstRow)
             return this.update(config);
 
@@ -163,6 +164,7 @@ var Text = function(parentEl) {
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
         var fragment = document.createDocumentFragment();
+        var tokens = this.tokenizer.getTokens(firstRow, lastRow);
         for (var row=firstRow; row<=lastRow; row++) {
             var lineEl = document.createElement("div");
             lineEl.className = "ace_line";
@@ -171,7 +173,7 @@ var Text = function(parentEl) {
             style.width = config.width + "px";
 
             var html = [];
-            this.renderLine(html, row);
+            this.$renderLine(html, row, tokens[row-firstRow].tokens);
             lineEl.innerHTML = html.join("");
             fragment.appendChild(lineEl);
         }
@@ -182,10 +184,11 @@ var Text = function(parentEl) {
         this.$computeTabString();
 
         var html = [];
+        var tokens = this.tokenizer.getTokens(config.firstRow, config.lastRow);
         for ( var i = config.firstRow; i <= config.lastRow; i++) {
             html.push("<div class='ace_line' style='height:" + this.$characterSize.height + "px;", "width:",
                     config.width, "px'>");
-            this.renderLine(html, i), html.push("</div>");
+            this.$renderLine(html, i, tokens[i-config.firstRow].tokens), html.push("</div>");
         }
 
         this.element.innerHTML = html.join("");
@@ -197,9 +200,7 @@ var Text = function(parentEl) {
         "lparen": true
     };
 
-    this.renderLine = function(stringBuilder, row) {
-        var tokens = this.tokenizer.getTokens(row);
-
+    this.$renderLine = function(stringBuilder, row, tokens) {
         if (this.$showInvisibles) {
             var self = this;
             var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]+/g;
