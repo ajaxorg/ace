@@ -257,11 +257,11 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getFirstVisibleRow = function() {
-        return this.layerConfig.firstRow || 0;
+        return (this.layerConfig || {}).firstRow || 0;
     };
 
     this.getLastVisibleRow = function() {
-        return this.layerConfig.lastRow || 0;
+        return (this.layerConfig || {}).lastRow || 0;
     };
 
     this.onScroll = function(e) {

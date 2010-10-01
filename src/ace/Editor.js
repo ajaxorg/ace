@@ -861,6 +861,10 @@ var Editor = function(renderer, doc) {
         }
     };
 
+    this.getLastSearchOptions = function() {
+        return this.$search.getOptions();
+    };
+
     this.find = function(needle, options) {
         this.clearSelection();
         options = options || {};
