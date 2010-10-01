@@ -129,6 +129,8 @@ var Text = function(parentEl) {
     };
 
     this.scrollLines = function(config) {
+        var _self = this;
+
         this.$computeTabString();
         var oldConfig = this.config;
         this.config = config;
@@ -151,7 +153,6 @@ var Text = function(parentEl) {
 
         appendTop(appendBottom);
 
-        var _self = this;
         function appendTop(callback) {
             if (config.firstRow < oldConfig.firstRow) {
                 _self.$renderLinesFragment(config, config.firstRow, oldConfig.firstRow - 1, function(fragment) {

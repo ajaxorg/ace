@@ -119,18 +119,18 @@ var VirtualRenderer = function(container, theme) {
      * Triggers partial update of the text layer
      */
      this.updateLines = function(firstRow, lastRow) {
-        if (!this.$updateLines) {
-            this.$updateLines = {
+        if (!this.$changedLines) {
+            this.$changedLines = {
                 firstRow: firstRow,
                 lastRow: lastRow
             }
         }
         else {
-            if (this.$updateLines.firstRow > firstRow)
-                this.$updateLines.firstRow = firstRow;
+            if (this.$changedLines.firstRow > firstRow)
+                this.$changedLines.firstRow = firstRow;
 
-            if (this.$updateLines.lastRow < lastRow)
-                this.$updateLines.lastRow = lastRow;
+            if (this.$changedLines.lastRow < lastRow)
+                this.$changedLines.lastRow = lastRow;
         }
 
         this.$loop.schedule(this.CHANGE_LINES);
@@ -374,8 +374,9 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$updateLines = function() {
-        var firstRow = this.$updateLines.firstRow;
-        var lastRow = this.$updateLines.lastRow;
+        var firstRow = this.$changedLines.firstRow;
+        var lastRow = this.$changedLines.lastRow;
+        this.$changedLines = null;
 
         var layerConfig = this.layerConfig;
 

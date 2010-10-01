@@ -33,7 +33,8 @@ var BackgroundTokenizer = function(tokenizer) {
             processedLines += 1;
             if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
                 self.fireUpdateEvent(startLine, self.currentLine-1);
-                return setTimeout(self.$worker, 10);
+                self.running = setTimeout(self.$worker, 30);
+                return;
             }
         }
 
@@ -78,10 +79,12 @@ var BackgroundTokenizer = function(tokenizer) {
 
         this.stop();
         // pretty long delay to prevent the tokenizer from interfering with the user
-        this.running = setTimeout(this.$worker, 500);
+        this.running = setTimeout(this.$worker, 700);
     };
 
     this.stop = function() {
+        if (this.running)
+            clearTimeout(this.running);
         this.running = false;
     };
 
