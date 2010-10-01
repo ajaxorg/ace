@@ -254,7 +254,7 @@ var Editor = function(renderer, doc) {
 
         if (!this.bgTokenizer) {
             var onUpdate = ace.bind(this.onTokenizerUpdate, this);
-            this.bgTokenizer = new BackgroundTokenizer(tokenizer);
+            this.bgTokenizer = new BackgroundTokenizer(tokenizer, this);
             this.bgTokenizer.addEventListener("update", onUpdate);
         } else {
             this.bgTokenizer.setTokenizer(tokenizer);

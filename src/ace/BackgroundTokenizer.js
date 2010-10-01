@@ -7,7 +7,7 @@
  */
 require.def("ace/BackgroundTokenizer", ["ace/lib/oop", "ace/MEventEmitter"], function(oop, MEventEmitter) {
 
-var BackgroundTokenizer = function(tokenizer) {
+var BackgroundTokenizer = function(tokenizer, editor) {
     this.running = false;
     this.textLines = [];
     this.lines = [];
@@ -24,6 +24,7 @@ var BackgroundTokenizer = function(tokenizer) {
         var textLines = self.textLines;
 
         var processedLines = 0;
+        var lastVisibleRow = editor.getLastVisibleRow();
 
         while (self.currentLine < textLines.length) {
             self.lines[self.currentLine] = self.$tokenizeRows(self.currentLine, self.currentLine)[0];
@@ -33,7 +34,9 @@ var BackgroundTokenizer = function(tokenizer) {
             processedLines += 1;
             if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
                 self.fireUpdateEvent(startLine, self.currentLine-1);
-                self.running = setTimeout(self.$worker, 30);
+                
+                var timeout = self.currentLine < lastVisibleRow ? 20 : 100;
+                self.running = setTimeout(self.$worker, timeout);
                 return;
             }
         }
