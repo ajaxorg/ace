@@ -235,7 +235,7 @@ var VirtualRenderer = function(container, theme) {
         if (!this.$printMarginEl) {
             this.$printMarginEl = document.createElement("div");
             this.$printMarginEl.className = "ace_printMargin";
-            this.content.insertBefore(this.$printMarginEl, this.$cursorLayer.element);
+            this.content.insertBefore(this.$printMarginEl, this.$textLayer.element);
         }
 
         var style = this.$printMarginEl.style;
