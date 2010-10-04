@@ -190,13 +190,10 @@ var VirtualRenderer = function(container, theme) {
         var pageX = event.getDocumentX(e);
         var pageY = event.getDocumentY(e);
 
-        var event = {
+        this.$dispatchEvent("gutter" + e.type, {
             row: this.screenToTextCoordinates(pageX, pageY).row,
             htmlEvent: e
-        };
-
-        var type = "gutter" + e.type;
-        this.$dispatchEvent(type, event);
+        });
     };
 
     this.$showInvisibles = true;
