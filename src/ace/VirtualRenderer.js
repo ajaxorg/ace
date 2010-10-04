@@ -67,8 +67,6 @@ var VirtualRenderer = function(container, theme) {
         column : 0
     };
 
-    this.showInvisibles = false;
-
     var self = this;
     this.$textLayer.addEventListener("changeCharaterSize", function() {
         self.characterWidth = textLayer.getCharacterWidth();
@@ -210,7 +208,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getShowInvisibles = function() {
-        return this.showInvisibles;
+        return this.$showInvisibles;
     };
 
     this.$showPrintMargin = true;
