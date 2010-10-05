@@ -89,6 +89,9 @@ JavaScriptHighlightRules = function() {
             },
             regex : "[a-zA-Z_][a-zA-Z0-9_]*\\b"
         }, {
+            token : "operator",
+            regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(in|instanceof|new|delete|typeof|void)"
+        }, {
             token : "lparen",
             regex : "[\\[\\(\\{]"
         }, {

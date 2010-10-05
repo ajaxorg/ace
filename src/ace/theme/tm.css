@@ -58,6 +58,10 @@
   color: rgb(60, 76, 114);
 }
 
+.ace-tm .ace_line .ace_operator {
+  color: rgb(104, 118, 135);
+}
+
 .ace-tm .ace_line .ace_string {
   color: rgb(3, 106, 7);
 }
