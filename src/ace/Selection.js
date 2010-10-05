@@ -363,6 +363,7 @@ var Selection = function(doc) {
     this.moveCursorTo = function(row, column) {
         var cursor = this.$clipPositionToDocument(row, column);
 
+        // only dispatch change if the cursor actually changed
         if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
             this.selectionLead = cursor;
             this.$dispatchEvent("changeCursor", { data: this.getCursor() });

@@ -271,9 +271,13 @@ var Editor = function(renderer, doc) {
         var pos = this.renderer.screenToTextCoordinates(pageX, pageY);
         pos.row = Math.max(0, Math.min(pos.row, this.doc.getLength()-1));
 
-        this.moveCursorToPosition(pos);
-        if (!this.$clickSelection)
-            this.selection.setSelectionAnchor(pos.row, pos.column);
+        if (e.shiftKey)
+            this.selection.selectToPosition(pos)
+        else {
+            this.moveCursorToPosition(pos);
+            if (!this.$clickSelection)
+                this.selection.clearSelection(pos.row, pos.column);
+        }
 
         this.renderer.scrollCursorIntoView();
 
