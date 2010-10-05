@@ -271,13 +271,9 @@ var Editor = function(renderer, doc) {
         var pos = this.renderer.screenToTextCoordinates(pageX, pageY);
         pos.row = Math.max(0, Math.min(pos.row, this.doc.getLength()-1));
 
-        if (e.shiftKey)
-            this.selection.selectToPosition(pos)
-        else {
-            this.moveCursorToPosition(pos);
-            if (!this.$clickSelection)
-                this.selection.clearSelection(pos.row, pos.column);
-        }
+        this.moveCursorToPosition(pos);
+        if (!this.$clickSelection)
+            this.selection.setSelectionAnchor(pos.row, pos.column);
 
         this.renderer.scrollCursorIntoView();
 
@@ -732,9 +728,9 @@ var Editor = function(renderer, doc) {
     };
 
 
-    this.gotoLine = function(lineNumber) {
+    this.gotoLine = function(lineNumber, row) {
         this.$blockScrolling = true;
-        this.moveCursorTo(lineNumber-1, 0);
+        this.moveCursorTo(lineNumber-1, row || 0);
         this.$blockScrolling = false;
 
         if (!this.isRowVisible(this.getCursorPosition().row)) {
@@ -902,9 +898,10 @@ var Editor = function(renderer, doc) {
             this.$search.set({backwards: backwards});
 
         var range = this.$search.find(this.doc);
-        if (range) {
+        if (range) {            
             this.selection.setSelectionRange(range);
             this.$updateDesiredColumn();
+            this.gotoLine(range.end.row+1, range.end.column);
         }
     };
 
