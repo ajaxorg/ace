@@ -119,10 +119,12 @@ var Text = function(parentEl) {
         var _self = this;
         this.tokenizer.getTokens(first, last, function(tokens) {
             for ( var i = first; i <= last; i++) {
+                var lineElement = lineElements[i - layerConfig.firstRow];
+                if (!lineElement) 
+                    continue;
+
                 var html = [];
                 _self.$renderLine(html, i, tokens[i-first].tokens);
-
-                var lineElement = lineElements[i - layerConfig.firstRow];
                 lineElement.innerHTML = html.join("");
             }
         });
