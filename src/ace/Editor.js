@@ -8,6 +8,7 @@
 require.def("ace/Editor",
     [
         "ace/ace",
+        "ace/lib/event",
         "ace/TextInput",
         "ace/KeyBinding",
         "ace/Document",
@@ -15,7 +16,7 @@ require.def("ace/Editor",
         "ace/BackgroundTokenizer",
         "ace/Range",
         "ace/MEventEmitter"
-    ], function(ace, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
+    ], function(ace, event, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
 
 var Editor = function(renderer, doc) {
     var container = renderer.getContainerElement();
@@ -265,9 +266,12 @@ var Editor = function(renderer, doc) {
 
 
     this.onMouseDown = function(e) {
-        var pageX = ace.getDocumentX(e);
-        var pageY = ace.getDocumentY(e);
+        var pageX = event.getDocumentX(e);
+        var pageY = event.getDocumentY(e);
 
+        if (event.getButton(e) != 0)
+            return;
+            
         var pos = this.renderer.screenToTextCoordinates(pageX, pageY);
         pos.row = Math.max(0, Math.min(pos.row, this.doc.getLength()-1));
 
@@ -281,8 +285,8 @@ var Editor = function(renderer, doc) {
         var mousePageX, mousePageY;
 
         var onMouseSelection = function(e) {
-            mousePageX = ace.getDocumentX(e);
-            mousePageY = ace.getDocumentY(e);
+            mousePageX = event.getDocumentX(e);
+            mousePageY = event.getDocumentY(e);
         };
 
         var onMouseSelectionEnd = function() {
@@ -317,10 +321,10 @@ var Editor = function(renderer, doc) {
             self.renderer.scrollCursorIntoView();
         };
 
-        ace.capture(this.container, onMouseSelection, onMouseSelectionEnd);
+        event.capture(this.container, onMouseSelection, onMouseSelectionEnd);
         var timerId = setInterval(onSelectionInterval, 20);
 
-        return ace.preventDefault(e);
+        return event.preventDefault(e);
     };
 
     this.onMouseDoubleClick = function(e) {
@@ -337,7 +341,7 @@ var Editor = function(renderer, doc) {
 
     this.onMouseWheel = function(e) {
         this.renderer.scrollBy(e.wheelX, e.wheelY);
-        return ace.preventDefault(e);
+        return event.preventDefault(e);
     };
 
     this.getCopyText = function() {

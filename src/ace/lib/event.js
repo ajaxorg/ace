@@ -54,24 +54,38 @@ require.def("ace/lib/event", ["ace/lib/core"], function(core) {
             e.returnValue = false;
     };
 
-    event.getDocumentX = function(event) {
-        if (event.clientX) {
+    event.getDocumentX = function(e) {
+        if (e.clientX) {
             var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-            return event.clientX + scrollLeft;
+            return e.clientX + scrollLeft;
         } else {
-            return event.pageX;
+            return e.pageX;
         }
     };
 
-    event.getDocumentY = function(event) {
-        if (event.clientY) {
+    event.getDocumentY = function(e) {
+        if (e.clientY) {
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            return event.clientY + scrollTop;
+            return e.clientY + scrollTop;
         } else {
-            return event.pageX;
+            return e.pageX;
         }
     };
 
+    /**
+     * @return {Number} 0 for left button, 1 for middle button, 2 for right button
+     */
+    event.getButton = function(e) {
+        // DOM Event
+        if (e.preventDefault) {
+            return e.button;
+        }
+        // old IE
+        else {
+            return Math.max(e.button - 1, 2)
+        }
+    };
+    
     if (document.documentElement.setCapture) {
         event.capture = function(el, eventHandler, releaseCaptureHandler) {
             function onMouseMove(e) {
