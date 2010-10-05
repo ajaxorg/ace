@@ -30,7 +30,7 @@
   border-left: 1px solid black;
 }
 
-.ace-eclipse .ace_line .ace_keyword {
+.ace-eclipse .ace_line .ace_keyword, .ace-eclipse .ace_line .ace_variable {
   color: rgb(127, 0, 85);
 }
 

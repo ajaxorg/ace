@@ -78,6 +78,8 @@ JavaScriptHighlightRules = function() {
             regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
         }, {
             token : function(value) {
+                if (value == "this")
+                    return "variable";
                 if (keywords[value]) {
                     return "keyword";
                 }
