@@ -218,7 +218,7 @@ var Editor = function(renderer, doc) {
         }
         this.$highlightLineMarker = null;
 
-        if (this.getHighlightActiveLine() && !this.selection.isMultiLine()) {
+        if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
             var cursor = this.getCursorPosition();
             var range = new Range(cursor.row, 0, cursor.row+1, 0);
             this.$highlightLineMarker = this.renderer.addMarker(range, "ace_active_line", "line");
