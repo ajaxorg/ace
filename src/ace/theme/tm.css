@@ -9,9 +9,8 @@
 }
 
 .ace-tm .ace_gutter {
-  width: 40px;
+  width: 50px;
   background: rgb(227, 227, 227);
-  border-right: 1px solid rgb(159, 159, 159);	 
   color: rgb(136, 136, 136);
 }
 
