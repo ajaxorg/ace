@@ -11,17 +11,24 @@
 .ace-tm .ace_gutter {
   width: 50px;
   background: #e8e8e8;
-  color: rgb(136, 136, 136);
+  color: #333;
+  font-family: Monaco, "Courier New";
+  font-size: 12px;
+  overflow : hidden;
+}
+
+.ace-tm .ace_gutter-layer {
+  right: 0px;
+  text-align: right;
+}
+
+.ace-tm .ace_gutter-layer .ace_gutter-cell {
+  padding-right: 15px;
 }
 
 .ace-tm .ace_editor .ace_printMargin {
   width: 1px;
   background: #e8e8e8;
-}
-
-.ace-tm .ace_gutter-layer {
-  right: 10px;
-  text-align: right;
 }
 
 .ace-tm .ace_text-layer {
