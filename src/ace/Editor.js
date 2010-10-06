@@ -389,7 +389,7 @@ var Editor = function(renderer, doc) {
             var line = _self.doc.getLine(row);
             var end = _self.doc.insert(cursor, text);
 
-            if (line != _self.doc.getLine(row)) {
+            if (line != _self.doc.getLine(row) && text != "\n") {
                 _self.moveCursorToPosition(end);
                 _self.renderer.scrollCursorIntoView();
                 return;
