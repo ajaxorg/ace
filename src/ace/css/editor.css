@@ -11,7 +11,7 @@
 
 .ace_gutter {
   position: absolute;
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
   height: 100%;
 }

@@ -10,13 +10,13 @@
 
 .ace-tm .ace_gutter {
   width: 50px;
-  background: rgb(227, 227, 227);
+  background: #e8e8e8;
   color: rgb(136, 136, 136);
 }
 
 .ace-tm .ace_editor .ace_printMargin {
   width: 1px;
-  background: rgb(191, 191, 191);
+  background: #e8e8e8;
 }
 
 .ace-tm .ace_gutter-layer {
