@@ -116,7 +116,7 @@ var VirtualRenderer = function(container, theme) {
     /**
      * Triggers partial update of the text layer
      */
-     this.updateLines = function(firstRow, lastRow) {
+    this.updateLines = function(firstRow, lastRow) {
         if (!this.$changedLines) {
             this.$changedLines = {
                 firstRow: firstRow,
@@ -130,6 +130,8 @@ var VirtualRenderer = function(container, theme) {
             if (this.$changedLines.lastRow < lastRow)
                 this.$changedLines.lastRow = lastRow;
         }
+        if (this.$changedLines.lastRow === undefined)
+            this.$changedLines.lastRow = Infinity;
 
         this.$loop.schedule(this.CHANGE_LINES);
     };
@@ -371,7 +373,10 @@ var VirtualRenderer = function(container, theme) {
     this.$updateLines = function() {
         var firstRow = this.$changedLines.firstRow;
         var lastRow = this.$changedLines.lastRow;
-        this.$changedLines = null;
+        this.$changedLines = {
+            firstRow: 0,
+            lastRow: Infinity
+        };
 
         var layerConfig = this.layerConfig;
 
@@ -383,8 +388,11 @@ var VirtualRenderer = function(container, theme) {
         if (lastRow < layerConfig.firstRow) { return; }
 
         // if the last row is unknown -> redraw everything
-        if (lastRow === undefined)
-            return this.$textLayer.update(layerConfig);
+        if (lastRow === Infinity) {
+            this.$gutterLayer.update(layerConfig);
+            this.$textLayer.update(layerConfig);
+            return;
+        }
 
         // else update only the changed rows
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
