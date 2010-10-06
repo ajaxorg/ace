@@ -271,7 +271,7 @@ var Editor = function(renderer, doc) {
 
         if (event.getButton(e) != 0)
             return;
-            
+
         var pos = this.renderer.screenToTextCoordinates(pageX, pageY);
         pos.row = Math.max(0, Math.min(pos.row, this.doc.getLength()-1));
 
@@ -383,14 +383,20 @@ var Editor = function(renderer, doc) {
         this.clearSelection();
 
         var _self = this;
+        var row = cursor.row;
         this.bgTokenizer.getState(cursor.row-1, function(lineState) {
-            var shouldOutdent = _self.mode.checkOutdent(lineState, _self.doc.getLine(cursor.row), text);
-
+            var shouldOutdent = _self.mode.checkOutdent(lineState, _self.doc.getLine(row), text);
+            var line = _self.doc.getLine(row);
             var end = _self.doc.insert(cursor, text);
 
-            var row = cursor.row;
+            if (line != _self.doc.getLine(row)) {
+                _self.moveCursorToPosition(end);
+                _self.renderer.scrollCursorIntoView();
+                return;
+            }
+
             var line = _self.doc.getLine(row);
-            _self.bgTokenizer.getState(row, function(lineState ) {
+            _self.bgTokenizer.getState(row, function(lineState) {
                 // multi line insert
                 if (row !== end.row) {
                     var indent = _self.mode.getNextLineIndent(lineState, line, _self.doc.getTabString());
@@ -902,7 +908,7 @@ var Editor = function(renderer, doc) {
             this.$search.set({backwards: backwards});
 
         var range = this.$search.find(this.doc);
-        if (range) {            
+        if (range) {
             this.selection.setSelectionRange(range);
             this.$updateDesiredColumn();
             this.gotoLine(range.end.row+1, range.end.column);
