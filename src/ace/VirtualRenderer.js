@@ -121,7 +121,7 @@ var VirtualRenderer = function(container, theme) {
             this.$changedLines = {
                 firstRow: firstRow,
                 lastRow: lastRow
-            }
+            };
         }
         else {
             if (this.$changedLines.firstRow > firstRow)
@@ -252,11 +252,11 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getFirstVisibleRow = function() {
-        return (this.layerConfig || {}).firstRow || 0;
+        return (this.layerConfig || {}).firstRow || 0;
     };
 
     this.getLastVisibleRow = function() {
-        return (this.layerConfig || {}).lastRow || 0;
+        return (this.layerConfig || {}).lastRow || 0;
     };
 
     this.onScroll = function(e) {
@@ -516,7 +516,7 @@ var VirtualRenderer = function(container, theme) {
             theme = theme || "ace/theme/TextMate";
             require([theme], function(theme) {
                 afterLoad(theme);
-            })
+            });
         } else {
             afterLoad(theme);
         }
@@ -524,20 +524,20 @@ var VirtualRenderer = function(container, theme) {
         var _self = this;
         function afterLoad(theme) {
             if (_self.$theme)
-                dom.removeCssClass(_self.container, _self.$theme)
+                dom.removeCssClass(_self.container, _self.$theme);
 
             _self.$theme = theme ? theme.cssClass : null;
 
             if (_self.$theme)
-                dom.addCssClass(_self.container, _self.$theme)
+                dom.addCssClass(_self.container, _self.$theme);
 
-            // force remeasure of the gutter width
+            // force re-measure of the gutter width
             if (_self.$size) {
                 _self.$size.width = 0;
                 _self.onResize();
             }
         }
-    }
+    };
 
 }).call(VirtualRenderer.prototype);
 
