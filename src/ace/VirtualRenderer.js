@@ -463,6 +463,10 @@ var VirtualRenderer = function(container, theme) {
     this.getScrollTop = function() {
         return this.scrollTop;
     };
+    
+    this.getScrollLeft = function() {
+        return this.scroller.scrollLeft;
+    };
 
     this.getScrollTopRow = function() {
         return this.scrollTop / this.lineHeight;
@@ -499,6 +503,18 @@ var VirtualRenderer = function(container, theme) {
             row : row,
             column : this.doc.screenToDocumentColumn(Math.max(0, Math.min(row, this.doc.getLength()-1)), col)
         };
+    };
+
+    this.textToScreenCoordinates = function(row, column) {
+        var canvasPos = this.scroller.getBoundingClientRect();
+        
+        var x = Math.round(this.doc.documentToScreenColumn(row, column) * this.characterWidth);
+        var y = row * this.lineHeight;
+        
+        return {
+            pageX: canvasPos.left + x - this.getScrollLeft(),
+            pageY: canvasPos.top + y - this.getScrollTop()
+        }
     };
 
     this.visualizeFocus = function() {

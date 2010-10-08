@@ -38,11 +38,20 @@
         height: 55px;
     }
   
-
+    #jump {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid red;
+        z-index: 10000;
+        display: none;
+    }
+    
     </style>
     <script src="require.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+    <div id="jump"></div>
     
     <table id="controls">
       <tr>
@@ -221,6 +230,15 @@ activeEl.onchange = function() {
 var container = document.getElementById("editor");
 var editor = new Editor(new Renderer(container, theme));
 onDocChange();
+
+window.jump = function() {
+    var jump = document.getElementById("jump")
+    var cursor = editor.getCursorPosition()
+    var pos = editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
+    jump.style.left = pos.pageX + "px";
+    jump.style.top = pos.pageY + "px";
+    jump.style.display = "block";
+}
 
 function onResize() {
     container.style.width = (document.documentElement.clientWidth - 4) + "px";
