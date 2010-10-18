@@ -1,6 +1,6 @@
 .ace-tm .ace_editor {
   border: 2px solid rgb(159, 159, 159);
-  font-family: Monaco, "Courier New";
+  font-family: "Menlo", "Monaco", "Courier New", "Courier", monospace;
   font-size: 12px;  
 }
 
@@ -12,7 +12,7 @@
   width: 50px;
   background: #e8e8e8;
   color: #333;
-  font-family: Monaco, "Courier New";
+  font-family: Menlo, Monaco, "Courier New";
   font-size: 12px;
   overflow : hidden;
 }
