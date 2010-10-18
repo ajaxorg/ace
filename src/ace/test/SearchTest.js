@@ -5,19 +5,28 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Document",
+     "ace/Search"
+ ], function(
+     Document,
+     Search
+ ) {
+
 var SearchTest = new TestCase("SearchTest", {
 
     "test: configure the search object" : function() {
-        var search = new ace.Search();
+        var search = new Search();
         search.set({
             needle: "juhu",
-            scope: ace.Search.ALL
+            scope: Search.ALL
         });
     },
 
     "test: find simple text in document" : function() {
-        var doc = new ace.Document(["juhu kinners 123", "456"]);
-        var search = new ace.Search().set({
+        var doc = new Document(["juhu kinners 123", "456"]);
+        var search = new Search().set({
             needle: "kinners"
         });
 
@@ -27,8 +36,8 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find simple text in next line" : function() {
-        var doc = new ace.Document(["abc", "juhu kinners 123", "456"]);
-        var search = new ace.Search().set({
+        var doc = new Document(["abc", "juhu kinners 123", "456"]);
+        var search = new Search().set({
             needle: "kinners"
         });
 
@@ -38,9 +47,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find text starting at cursor position" : function() {
-        var doc = new ace.Document(["juhu kinners", "juhu kinners 123"]);
+        var doc = new Document(["juhu kinners", "juhu kinners 123"]);
         doc.getSelection().moveCursorTo(0, 6);
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "kinners"
         });
 
@@ -50,10 +59,10 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: wrap search is off by default" : function() {
-        var doc = new ace.Document(["abc", "juhu kinners 123", "456"]);
+        var doc = new Document(["abc", "juhu kinners 123", "456"]);
         doc.getSelection().moveCursorTo(2, 1);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "kinners"
         });
 
@@ -61,10 +70,10 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: wrap search should wrap at file end" : function() {
-        var doc = new ace.Document(["abc", "juhu kinners 123", "456"]);
+        var doc = new Document(["abc", "juhu kinners 123", "456"]);
         doc.getSelection().moveCursorTo(2, 1);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "kinners",
             wrap: true
         });
@@ -75,10 +84,10 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: wrap search with no match should return 'null'": function() {
-        var doc = new ace.Document(["abc", "juhu kinners 123", "456"]);
+        var doc = new Document(["abc", "juhu kinners 123", "456"]);
         doc.getSelection().moveCursorTo(2, 1);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "xyz",
             wrap: true
         });
@@ -87,9 +96,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: case sensitive is by default off": function() {
-        var doc = new ace.Document(["abc", "juhu kinners 123", "456"]);
+        var doc = new Document(["abc", "juhu kinners 123", "456"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "JUHU"
         });
 
@@ -97,9 +106,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: case sensitive search": function() {
-        var doc = new ace.Document(["abc", "juhu kinners 123", "456"]);
+        var doc = new Document(["abc", "juhu kinners 123", "456"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "KINNERS",
             caseSensitive: true
         });
@@ -110,9 +119,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: whole word search should not match inside of words": function() {
-        var doc = new ace.Document(["juhukinners", "juhu kinners 123", "456"]);
+        var doc = new Document(["juhukinners", "juhu kinners 123", "456"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "kinners",
             wholeWord: true
         });
@@ -123,9 +132,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find backwards": function() {
-        var doc = new ace.Document(["juhu juhu juhu juhu"]);
+        var doc = new Document(["juhu juhu juhu juhu"]);
         doc.getSelection().moveCursorTo(0, 10);
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "juhu",
             backwards: true
         });
@@ -136,14 +145,14 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find in selection": function() {
-        var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
+        var doc = new Document(["juhu", "juhu", "juhu", "juhu"]);
         doc.getSelection().setSelectionAnchor(1, 0);
         doc.getSelection().selectTo(3, 5);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "juhu",
             wrap: true,
-            scope: ace.Search.SELECTION
+            scope: Search.SELECTION
         });
 
         var range = search.find(doc);
@@ -159,13 +168,13 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find backwards in selection": function() {
-        var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
+        var doc = new Document(["juhu", "juhu", "juhu", "juhu"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "juhu",
             wrap: true,
             backwards: true,
-            scope: ace.Search.SELECTION
+            scope: Search.SELECTION
         });
 
         doc.getSelection().setSelectionAnchor(0, 2);
@@ -182,9 +191,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: edge case - match directly before the cursor" : function() {
-        var doc = new ace.Document(["123", "123", "juhu"]);
+        var doc = new Document(["123", "123", "juhu"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "juhu",
             wrap: true
         });
@@ -197,9 +206,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: edge case - match backwards directly after the cursor" : function() {
-        var doc = new ace.Document(["123", "123", "juhu"]);
+        var doc = new Document(["123", "123", "juhu"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "juhu",
             wrap: true,
             backwards: true
@@ -213,9 +222,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find using a regular expression" : function() {
-        var doc = new ace.Document(["abc123 123 cd", "abc"]);
+        var doc = new Document(["abc123 123 cd", "abc"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "\\d+",
             regExp: true
         });
@@ -226,9 +235,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find using a regular expression and whole word" : function() {
-        var doc = new ace.Document(["abc123 123 cd", "abc"]);
+        var doc = new Document(["abc123 123 cd", "abc"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "\\d+\\b",
             regExp: true,
             wholeWord: true
@@ -240,9 +249,9 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: use regular expressions with capture groups": function() {
-        var doc = new ace.Document(["  ab: 12px", "  <h1 abc"]);
+        var doc = new Document(["  ab: 12px", "  <h1 abc"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "(\\d+)",
             regExp: true
         });
@@ -253,12 +262,12 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: find all matches in selection" : function() {
-        var doc = new ace.Document(["juhu", "juhu", "juhu", "juhu"]);
+        var doc = new Document(["juhu", "juhu", "juhu", "juhu"]);
 
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "uh",
             wrap: true,
-            scope: ace.Search.SELECTION
+            scope: Search.SELECTION
         });
 
         doc.getSelection().setSelectionAnchor(0, 2);
@@ -274,7 +283,7 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: replace() should return the replacement if the input matches the needle" : function() {
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "juhu"
         });
 
@@ -286,7 +295,7 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: replace with a RegExp search" : function() {
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "\\d+",
             regExp: true
         });
@@ -299,7 +308,7 @@ var SearchTest = new TestCase("SearchTest", {
     },
 
     "test: replace with RegExp match and capture groups" : function() {
-        var search = new ace.Search().set({
+        var search = new Search().set({
             needle: "ab(\\d\\d)",
             regExp: true
         });
@@ -308,4 +317,6 @@ var SearchTest = new TestCase("SearchTest", {
         assertEquals("-ab12-", search.replace("ab12", "-$&-"));
         assertEquals("$", search.replace("ab12", "$$"));
     }
+});
+
 });

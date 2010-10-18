@@ -5,10 +5,17 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Range"
+ ], function(
+     Range
+ ) {
+
 RangeTest = new TestCase("RangeTest", {
 
     "test: create range": function() {
-        var range = new ace.Range(1,2,3,4);
+        var range = new Range(1,2,3,4);
 
         assertEquals(1, range.start.row);
         assertEquals(2, range.start.column);
@@ -17,7 +24,7 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: create from points": function() {
-        var range = ace.Range.fromPoints({row: 1, column: 2}, {row:3, column:4});
+        var range = Range.fromPoints({row: 1, column: 2}, {row:3, column:4});
 
         assertEquals(1, range.start.row);
         assertEquals(2, range.start.column);
@@ -26,10 +33,10 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: clip to rows": function() {
-        assertRange(10, 0, 31, 0, new ace.Range(0, 20, 100, 30).clipRows(10, 30));
-        assertRange(10, 0, 30, 10, new ace.Range(0, 20, 30, 10).clipRows(10, 30));
+        assertRange(10, 0, 31, 0, new Range(0, 20, 100, 30).clipRows(10, 30));
+        assertRange(10, 0, 30, 10, new Range(0, 20, 30, 10).clipRows(10, 30));
 
-        var range = new ace.Range(0, 20, 3, 10);
+        var range = new Range(0, 20, 3, 10);
         var range = range.clipRows(10, 30);
 
         assertTrue(range.isEmpty());
@@ -37,23 +44,23 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: isEmpty": function() {
-        var range = new ace.Range(1, 2, 1, 2);
+        var range = new Range(1, 2, 1, 2);
         assertTrue(range.isEmpty());
 
-        var range = new ace.Range(1, 2, 1, 6);
+        var range = new Range(1, 2, 1, 6);
         assertFalse(range.isEmpty());
     },
 
     "test: is multi line": function() {
-        var range = new ace.Range(1, 2, 1, 6);
+        var range = new Range(1, 2, 1, 6);
         assertFalse(range.isMultiLine());
 
-        var range = new ace.Range(1, 2, 2, 6);
+        var range = new Range(1, 2, 2, 6);
         assertTrue(range.isMultiLine());
     },
 
     "test: clone": function() {
-        var range = new ace.Range(1, 2, 3, 4);
+        var range = new Range(1, 2, 3, 4);
         var clone = range.clone();
 
         assertPosition(1, 2, clone.start);
@@ -67,7 +74,7 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: contains for multi line ranges": function() {
-        var range = new ace.Range(1, 10, 5, 20);
+        var range = new Range(1, 10, 5, 20);
 
         assertTrue(range.contains(1, 10));
         assertTrue(range.contains(2, 0));
@@ -81,7 +88,7 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: contains for single line ranges": function() {
-        var range = new ace.Range(1, 10, 1, 20);
+        var range = new Range(1, 10, 1, 20);
 
         assertTrue(range.contains(1, 10));
         assertTrue(range.contains(1, 15));
@@ -94,7 +101,7 @@ RangeTest = new TestCase("RangeTest", {
     },
 
     "test: extend range": function() {
-        var range = new ace.Range(2, 10, 2, 30);
+        var range = new Range(2, 10, 2, 30);
 
         var range = range.extend(2, 5);
         assertRange(2, 5, 2, 30, range);
@@ -111,4 +118,6 @@ RangeTest = new TestCase("RangeTest", {
         var range = range.extend(6, 10);
         assertRange(1, 4, 6, 10, range);
     }
+});
+
 });

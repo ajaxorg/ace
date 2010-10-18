@@ -5,10 +5,17 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/mode/Css"
+ ], function(
+     CssMode
+ ) {
+
 var CssTest = new TestCase("mode.CssTest", {
 
     setUp : function() {
-        this.tokenizer = new ace.mode.Css().getTokenizer();
+        this.tokenizer = new CssMode().getTokenizer();
     },
 
     "test: tokenize pixel number" : function() {
@@ -41,4 +48,6 @@ var CssTest = new TestCase("mode.CssTest", {
         assertEquals("text", tokens[1].type);
         assertEquals("rparen", tokens[2].type);
     }
+});
+
 });

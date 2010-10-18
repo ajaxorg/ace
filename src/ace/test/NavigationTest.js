@@ -5,17 +5,28 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Document",
+     "ace/Editor",
+     "ace/test/MockRenderer"
+ ], function(
+     Document,
+     Editor,
+     MockRenderer
+ ) {
+
 var NavigationTest = TestCase("NavigationTest",
 {
     createTextDocument : function(rows, cols) {
         var line = new Array(cols + 1).join("a");
         var text = new Array(rows).join(line + "\n") + line;
-        return new ace.Document(text);
+        return new Document(text);
     },
 
     "test: navigate to end of file should scroll the last line into view" : function() {
         var doc = this.createTextDocument(200, 10);
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.navigateFileEnd();
         var cursor = editor.getCursorPosition();
@@ -26,7 +37,7 @@ var NavigationTest = TestCase("NavigationTest",
 
     "test: navigate to start of file should scroll the first row into view" : function() {
         var doc = this.createTextDocument(200, 10);
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(editor.getLastVisibleRow() + 20);
         editor.navigateFileStart();
@@ -35,7 +46,7 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: goto hidden line should scroll the line into the middle of the viewport" : function() {
-        var editor = new ace.Editor(new MockRenderer(), this.createTextDocument(200, 5));
+        var editor = new Editor(new MockRenderer(), this.createTextDocument(200, 5));
 
         editor.navigateTo(0, 0);
         editor.gotoLine(101);
@@ -69,7 +80,7 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: goto visible line should only move the cursor and not scroll": function() {
-        var editor = new ace.Editor(new MockRenderer(), this.createTextDocument(200, 5));
+        var editor = new Editor(new MockRenderer(), this.createTextDocument(200, 5));
 
         editor.navigateTo(0, 0);
         editor.gotoLine(12);
@@ -83,7 +94,7 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: navigate from the end of a long line down to a short line and back should maintain the curser column": function() {
-        var editor = new ace.Editor(new MockRenderer(), new ace.Document(["123456", "1"]));
+        var editor = new Editor(new MockRenderer(), new Document(["123456", "1"]));
 
         editor.navigateTo(0, 6);
         assertPosition(0, 6, editor.getCursorPosition());
@@ -96,7 +107,7 @@ var NavigationTest = TestCase("NavigationTest",
     },
 
     "test: reset desired column on navigate left or right": function() {
-        var editor = new ace.Editor(new MockRenderer(), new ace.Document(["123456", "12"]));
+        var editor = new Editor(new MockRenderer(), new Document(["123456", "12"]));
 
         editor.navigateTo(0, 6);
         assertPosition(0, 6, editor.getCursorPosition());
@@ -110,4 +121,6 @@ var NavigationTest = TestCase("NavigationTest",
         editor.navigateUp();
         assertPosition(0, 1, editor.getCursorPosition());
     }
+});
+
 });

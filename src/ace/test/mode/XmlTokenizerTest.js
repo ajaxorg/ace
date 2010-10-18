@@ -5,28 +5,31 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-var HtmlTest = new TestCase("mode.HtmlTest", {
+
+require.def([
+     "ace/mode/Xml"
+ ], function(
+     XmlMode
+ ) {
+
+var XmlTest = new TestCase("mode.XmlTest", {
 
     setUp : function() {
-        this.tokenizer = new ace.mode.Html().getTokenizer();
+        this.tokenizer = new XmlMode().getTokenizer();
     },
 
-    "test: tokenize embedded script" : function() {
+    "test: tokenize1" : function() {
 
-        var line = "<script a='a'>var</script>'123'";
+        var line = "<Juhu>//Juhu Kinners</Kinners>";
         var tokens = this.tokenizer.getLineTokens(line, "start").tokens;
 
-        //assertEquals(10, tokens.length);
+        assertEquals(5, tokens.length);
         assertEquals("text", tokens[0].type);
         assertEquals("keyword", tokens[1].type);
         assertEquals("text", tokens[2].type);
         assertEquals("keyword", tokens[3].type);
         assertEquals("text", tokens[4].type);
-        assertEquals("string", tokens[5].type);
-        assertEquals("text", tokens[6].type);
-        assertEquals("keyword", tokens[7].type);
-        assertEquals("text", tokens[8].type);
-        assertEquals("keyword", tokens[9].type);
-        assertEquals("text", tokens[10].type);
     }
+});
+
 });
