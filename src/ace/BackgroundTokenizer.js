@@ -34,7 +34,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
             processedLines += 1;
             if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
                 self.fireUpdateEvent(startLine, self.currentLine-1);
-                
+
                 var timeout = self.currentLine < lastVisibleRow ? 20 : 100;
                 self.running = setTimeout(self.$worker, timeout);
                 return;
@@ -102,7 +102,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     this.$tokenizeRows = function(firstRow, lastRow) {
         var rows = [];
 
-        // determin start state
+        // determine start state
         var state = "start";
         var doCache = false;
         if (firstRow > 0 && this.lines[firstRow - 1]) {

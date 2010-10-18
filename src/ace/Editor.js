@@ -344,7 +344,7 @@ var Editor = function(renderer, doc) {
     };
 
     this.onMouseWheel = function(e) {
-        this.renderer.scrollBy(e.wheelX, e.wheelY);
+        this.renderer.scrollBy(e.wheelX * 2, e.wheelY * 2);
         return event.preventDefault(e);
     };
 
