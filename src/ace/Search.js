@@ -170,7 +170,7 @@ Search.SELECTION = 2;
         }
 
         var modifier = "g";
-        if (this.$options.caseSensitive) {
+        if (!this.$options.caseSensitive) {
             modifier += "i";
         }
 
