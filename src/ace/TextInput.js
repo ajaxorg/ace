@@ -71,6 +71,7 @@ var TextInput = function(parentNode, host) {
         text.value = host.getCopyText();
         text.select();
         copied = true;
+        setTimeout(sendText, 0);
     };
 
     var onCut = function() {
@@ -78,6 +79,7 @@ var TextInput = function(parentNode, host) {
         text.value = host.getCopyText();
         host.onCut();
         text.select();
+        setTimeout(sendText, 0);
     };
 
     event.addListener(text, "keypress", onTextInput);
