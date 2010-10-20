@@ -430,10 +430,10 @@ var Document = function(text, mode) {
             var lastLine = newLines[newLines.length - 1] + line.substring(position.column);
 
             this.lines[position.row] = firstLine;
-            this.$insertLines(position.row + 1, [lastLine], fromUndo);
+            this.$insertLines(position.row + 1, [lastLine], true);
 
             if (newLines.length > 2) {
-                this.$insertLines(position.row + 1, newLines.slice(1, -1), fromUndo);
+                this.$insertLines(position.row + 1, newLines.slice(1, -1), true);
             }
 
             var end = {
@@ -443,7 +443,6 @@ var Document = function(text, mode) {
         }
 
         if (!fromUndo && this.$undoManager) {
-            var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 action: "insertText",
                 range: Range.fromPoints(position, end),
