@@ -552,14 +552,10 @@ var Editor = function(renderer, doc) {
         if (this.$readOnly)
             return;
 
-        var indentString = indentString || this.doc.getTabString();
-        var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
-
-        // besides the indent string also outdent tabs
-        if (addedColumns == 0 && indentString != "\t")
-            var addedColumns = this.doc.outdentRows(this.getSelectionRange(), "\t");
-
-        this.selection.shiftSelection(addedColumns);
+        var selection  = this.doc.getSelection(),
+            range      = this.doc.outdentRows(selection.getRange());
+        
+        selection.setSelectionRange(range, selection.isBackwards());
         this.$updateDesiredColumn();
     };
 

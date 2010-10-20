@@ -249,19 +249,8 @@ var Document = function(text, mode) {
         }
     };
 
-    /**
-     * Get a verbatim copy of the given line as it is in the document 
-     */
     this.getLine = function(row) {
         return this.lines[row] || "";
-    };
-
-    /**
-     * Get a line as it is displayed on screen. Tabs are replaced by spaces.
-     */
-    this.getDisplayLine = function(row) {
-        var tab = new Array(this.getTabSize()+1).join(" ");
-        return this.lines[row].replace(/\t/g, tab);
     };
 
     this.getLines = function(firstRow, lastRow) {
@@ -564,27 +553,34 @@ var Document = function(text, mode) {
         return indentString.length;
     };
 
-    this.outdentRows = function(range, indentString) {
-        outdentLength = indentString.length;
-
-        for (var i=range.start.row; i<= range.end.row; i++) {
-            if (this.getLine(i).substr(0, outdentLength) !== indentString) {
-                return 0;
-            }
-        }
-
-        var deleteRange = new Range(0, 0, 0, outdentLength);
-
-        for (var i=range.start.row; i<= range.end.row; i++)
-        {
+    this.outdentRows = function (range) {
+        var deleteRange = new Range(0, 0, 0, 0),
+            size        = this.getTabSize();
+        
+        for (var i = range.start.row; i <= range.end.row; ++i) {
+            var line = this.getLine(i);
+            
             deleteRange.start.row = i;
             deleteRange.end.row = i;
+            for (var j = 0; j < size; ++j)
+                if (line.charAt(j) != ' ')
+                    break;            
+            if (j < size && line.charAt(j) == '\t') {
+                deleteRange.start.column = j;
+                deleteRange.end.column = j + 1;
+            } else {
+                deleteRange.start.column = 0;
+                deleteRange.end.column = j;
+            }
+            if (i == range.start.row)
+                range.start.column -= deleteRange.end.column - deleteRange.start.column;
+            if (i == range.end.row)
+                range.end.column -= deleteRange.end.column - deleteRange.start.column;
             this.$remove(deleteRange);
         }
-
         this.fireChangeEvent(range.start.row, range.end.row);
-        return -outdentLength;
-    };
+        return range;
+    }    
 
     this.moveLinesUp = function(firstRow, lastRow) {
         if (firstRow <= 0) return 0;

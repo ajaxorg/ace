@@ -79,7 +79,7 @@ var Selection = function(doc) {
         var anchor = this.getSelectionAnchor();
         var lead = this.getSelectionLead();
 
-        var isBackwards = this.$isBackwards();
+        var isBackwards = this.isBackwards();
 
         if (!isBackwards || anchor.column !== 0)
             this.setSelectionAnchor(anchor.row, anchor.column + columns);
@@ -91,7 +91,7 @@ var Selection = function(doc) {
         }
     };
 
-    this.$isBackwards = function() {
+    this.isBackwards = function() {
         var anchor = this.selectionAnchor || this.selectionLead;
         var lead = this.selectionLead;
         return (anchor.row > lead.row || (anchor.row == lead.row && anchor.column > lead.column));
@@ -101,7 +101,7 @@ var Selection = function(doc) {
         var anchor = this.selectionAnchor || this.selectionLead;
         var lead = this.selectionLead;
 
-        if (this.$isBackwards()) {
+        if (this.isBackwards()) {
             return Range.fromPoints(lead, anchor);
         }
         else {
@@ -116,7 +116,6 @@ var Selection = function(doc) {
         }
     };
 
-
     this.selectAll = function() {
         var lastRow = this.doc.getLength() - 1;
         this.setSelectionAnchor(lastRow, this.doc.getLine(lastRow).length);
@@ -126,9 +125,14 @@ var Selection = function(doc) {
         });
     };
 
-    this.setSelectionRange = function(range) {
-        this.setSelectionAnchor(range.start.row, range.start.column);
-        this.selectTo(range.end.row, range.end.column);
+    this.setSelectionRange = function(range, reverse) {
+        if (reverse) {
+            this.setSelectionAnchor(range.end.row, range.end.column);
+            this.selectTo(range.start.row, range.start.column);            
+        } else {
+            this.setSelectionAnchor(range.start.row, range.start.column);
+            this.selectTo(range.end.row, range.end.column);
+        }
     };
 
     this.$moveSelection = function(mover) {
@@ -281,14 +285,7 @@ var Selection = function(doc) {
     };
 
     this.moveCursorLineStart = function() {
-        var row = this.selectionLead.row;
-        var column = this.selectionLead.column;
-        var beforeCursor = this.doc.getDisplayLine(row).slice(0, column);
-        var leadingSpace = beforeCursor.match(/^\s+/);
-        if (!leadingSpace || leadingSpace[0].length >= column)
-            this.moveCursorTo(this.selectionLead.row, 0);
-        else
-            this.moveCursorTo(this.selectionLead.row, leadingSpace[0].length);            
+        this.moveCursorTo(this.selectionLead.row, 0);
     };
 
     this.moveCursorLineEnd = function() {
