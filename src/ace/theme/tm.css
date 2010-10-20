@@ -60,6 +60,11 @@
   color: rgb(6, 150, 14);
 }
 
+.ace-tm .ace_line .ace_invalid {
+  background-color: rgb(153, 0, 0);
+  color: white;
+}
+
 .ace-tm .ace_line .ace_buildin-function {
   color: rgb(60, 76, 114);
 }
