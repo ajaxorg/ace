@@ -97,7 +97,7 @@ var Document = function(text, mode) {
 
     this.getTabString = function() {
         if (this.getUseSoftTabs()) {
-            return new Array(this.getTabSize()+1).join(" ");
+            return lang.stringRepeat(" ", this.getTabSize());
         } else {
             return "\t";
         }
@@ -545,7 +545,8 @@ var Document = function(text, mode) {
     };
 
     this.indentRows = function(range, indentString) {
-        for (var row=range.start.row; row<= range.end.row; row++) {
+        indentString.replace("\t", this.getTabString());
+        for (var row=range.start.row; row<=range.end.row; row++) {
             this.$insert({row: row, column:0}, indentString);
         }
         this.fireChangeEvent(range.start.row, range.end.row);

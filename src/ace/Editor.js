@@ -9,6 +9,7 @@ require.def("ace/Editor",
     [
         "ace/ace",
         "ace/lib/event",
+        "ace/lib/lang",
         "ace/TextInput",
         "ace/KeyBinding",
         "ace/Document",
@@ -16,7 +17,7 @@ require.def("ace/Editor",
         "ace/BackgroundTokenizer",
         "ace/Range",
         "ace/MEventEmitter"
-    ], function(ace, event, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
+    ], function(ace, event, lang, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
 
 var Editor = function(renderer, doc) {
     var container = renderer.getContainerElement();
@@ -524,14 +525,26 @@ var Editor = function(renderer, doc) {
         this.clearSelection();
     };
 
-    this.blockIndent = function(indentString) {
+    this.indent = function() {
         if (this.$readOnly)
             return;
 
-        var indentString = indentString || this.doc.getTabString();
-        var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
+        if (this.selection.isMultiLine()) {
+            var addedColumns = this.doc.indentRows(this.getSelectionRange(), "\t");
+            this.selection.shiftSelection(addedColumns);
+        } else {
+            if (!this.doc.getUseSoftTabs()) 
+                return this.onTextInput("\t");
+                
+            var cursor = this.doc.remove(this.getSelectionRange());
+            this.clearSelection();
 
-        this.selection.shiftSelection(addedColumns);
+            // compute indent string
+            var indentString = lang.stringRepeat(" ", this.doc.getTabSize() - (cursor.column % this.doc.getTabSize()));
+            var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
+            cursor.column += addedColumns;
+            this.moveCursorToPosition(cursor);
+        }
         this.$updateDesiredColumn();
     };
 
