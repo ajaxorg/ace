@@ -19,8 +19,8 @@ JavaScriptHighlightRules = function() {
     var docComment = new DocCommentHighlightRules();
 
     var keywords = lang.arrayToMap(
-        ("break|case|catch|continue|default|delete|do|else|finally|for|function|\
-        if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with").split("|")
+        ("break|case|catch|continue|default|delete|do|else|finally|for|function|" +
+        "if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with").split("|")
     );
     
     var buildinConstants = lang.arrayToMap(
@@ -28,8 +28,8 @@ JavaScriptHighlightRules = function() {
     );
     
     var futureReserved = lang.arrayToMap(
-        ("class|enum|extends|super|const|export|import|implements|let|private|\
-        public|yield|interface|package|protected|static").split("|")
+        ("class|enum|extends|super|const|export|import|implements|let|private|" +
+        "public|yield|interface|package|protected|static").split("|")
     );
 
     // regexp must not have capturing parentheses. Use (?:) instead.

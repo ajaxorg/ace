@@ -281,7 +281,14 @@ var Selection = function(doc) {
     };
 
     this.moveCursorLineStart = function() {
-        this.moveCursorTo(this.selectionLead.row, 0);
+        var row = this.selectionLead.row;
+        var column = this.selectionLead.column;
+        var beforeCursor = this.doc.getDisplayLine(row).slice(0, column);
+        var leadingSpace = beforeCursor.match(/^\s+/);
+        if (!leadingSpace || leadingSpace[0].length >= column)
+            this.moveCursorTo(this.selectionLead.row, 0);
+        else
+            this.moveCursorTo(this.selectionLead.row, leadingSpace[0].length);            
     };
 
     this.moveCursorLineEnd = function() {
