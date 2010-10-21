@@ -193,7 +193,7 @@ function getDoc() {
 
 var modeEl = document.getElementById("mode");
 modeEl.onchange = function() {
-    editor.getDocument().setTheme(modeEl.value);
+    editor.getDocument().setMode(modes[modeEl.value] || modes.text);
 };
 
 var modes = {
