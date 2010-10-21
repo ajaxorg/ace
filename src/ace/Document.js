@@ -76,11 +76,14 @@ var Document = function(text, mode) {
         }
 
         if (undoManager) {
-            undoManager.setDocument(this);
+            //undoManager.setDocument(this);
             var self = this;
             this.$informUndoManager = lang.deferredCall(function() {
                 if (self.$deltas.length > 0)
-                    undoManager.notify(self.$deltas);
+                    undoManager.execute({
+                        action : "aceupdate",
+                        args   : [self.$deltas, self]
+                    });
                 self.$deltas = [];
             });
         }
