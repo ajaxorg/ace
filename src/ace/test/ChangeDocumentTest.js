@@ -5,12 +5,26 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-var ChangeDocumentTest = new TestCase("ChangeDocumentTest", {
 
+require.def([
+     "ace/Document",
+     "ace/Editor",
+     "ace/mode/Text",
+     "ace/mode/JavaScript",
+     "ace/test/MockRenderer"
+ ], function(
+     Document,
+     Editor,
+     TextMode,
+     JavaScriptMode,
+     MockRenderer
+ ) {
+
+var ChangeDocumentTest = new TestCase("ChangeDocumentTest", {
     setUp : function() {
-        this.doc1 = new ace.Document(["abc", "def"].join("\n"));
-        this.doc2 = new ace.Document(["ghi", "jkl"].join("\n"));
-        this.editor = new ace.Editor(new MockRenderer());
+        this.doc1 = new Document(["abc", "def"].join("\n"));
+        this.doc2 = new Document(["ghi", "jkl"].join("\n"));
+        this.editor = new Editor(new MockRenderer());
     },
 
     "test: change document" : function() {
@@ -105,10 +119,12 @@ var ChangeDocumentTest = new TestCase("ChangeDocumentTest", {
         this.editor.setDocument(this.doc2);
 
         var called = false;
-        this.doc1.setMode(new ace.mode.Text());
+        this.doc1.setMode(new Text());
         assertFalse(called);
 
-        this.doc2.setMode(new ace.mode.JavaScript());
+        this.doc2.setMode(new JavaScriptMode());
         assertTrue(called);
     }
+});
+
 });

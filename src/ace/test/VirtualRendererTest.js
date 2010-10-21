@@ -5,6 +5,15 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Document",
+     "ace/VirtualRenderer"
+ ], function(
+     Document,
+     VirtualRenderer
+ ) {
+
 var VirtualRendererTest = new TestCase("VirtualRendererTest", {
 
     "test: screen2text the column should be rounded to the next character edge" : function() {
@@ -17,8 +26,8 @@ var VirtualRendererTest = new TestCase("VirtualRendererTest", {
         document.body.style.padding = "0px";
         document.body.appendChild(el);
 
-        var renderer = new ace.VirtualRenderer(el);
-        renderer.setDocument(new ace.Document("1234"));
+        var renderer = new VirtualRenderer(el);
+        renderer.setDocument(new Document("1234"));
 
         renderer.characterWidth = 10;
         renderer.lineHeight = 15;
@@ -33,6 +42,7 @@ var VirtualRendererTest = new TestCase("VirtualRendererTest", {
         document.body.removeChild(el);
     }
 
-
     // change tab size after setDocument (for text layer)
+});
+
 });

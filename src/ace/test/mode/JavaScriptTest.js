@@ -5,49 +5,62 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Document",
+     "ace/Range",
+     "ace/Tokenizer",
+     "ace/mode/JavaScript"
+ ], function(
+     Document,
+     Range,
+     Tokenizer,
+     JavaScriptMode
+ ) {
+
 var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
 
     setUp : function() {
-        this.mode = new ace.mode.JavaScript();
+        this.mode = new JavaScriptMode();
     },
 
     "test: getTokenizer() (smoke test)" : function() {
         var tokenizer = this.mode.getTokenizer();
 
-        assertTrue(tokenizer instanceof ace.Tokenizer);
+        assertTrue(tokenizer instanceof Tokenizer);
 
         var tokens = tokenizer.getLineTokens("'juhu'", "start").tokens;
         assertEquals("string", tokens[0].type);
     },
 
     "test: toggle comment lines should prepend '//' to each line" : function() {
-        var doc = new ace.Document(["  abc", "cde", "fg"]);
+        var doc = new Document(["  abc", "cde", "fg"]);
 
-        var range = new ace.Range(0, 3, 1, 1);
+        var range = new Range(0, 3, 1, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["//  abc", "//cde", "fg"].join("\n"), doc.toString());
     },
 
     "test: toggle comment on commented lines should remove leading '//' chars" : function() {
-        var doc = new ace.Document(["//  abc", "//cde", "fg"]);
+        var doc = new Document(["//  abc", "//cde", "fg"]);
 
-        var range = new ace.Range(0, 3, 1, 1);
+        var range = new Range(0, 3, 1, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
 
     "test: toggle comment on multiple lines with one commented line prepend '//' to each line" : function() {
-        var doc = new ace.Document(["//  abc", "//cde", "fg"]);
+        var doc = new Document(["//  abc", "//cde", "fg"]);
 
-        var range = new ace.Range(0, 3, 2, 1);
+        var range = new Range(0, 3, 2, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["////  abc", "////cde", "//fg"].join("\n"), doc.toString());
     },
 
     "test: toggle comment on a comment line with leading white space": function() {
-        var doc = new ace.Document(["//cde", "  //fg"]);
+        var doc = new Document(["//cde", "  //fg"]);
 
-        var range = new ace.Range(0, 3, 1, 1);
+        var range = new Range(0, 3, 1, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["cde", "  fg"].join("\n"), doc.toString());
     },
@@ -92,15 +105,17 @@ var JavaScriptTest = new TestCase("mode.JavaScriptTest", {
     },
 
     "test: auto outdent should indent the line with the same indent as the line with the matching opening brace" : function() {
-        var doc = new ace.Document(["  function foo() {", "    bla", "    }"]);
+        var doc = new Document(["  function foo() {", "    bla", "    }"]);
         this.mode.autoOutdent("start", doc, 2);
         assertEquals("  }", doc.getLine(2));
     },
 
     "test: no auto outdent if no matching brace is found" : function() {
-        var doc = new ace.Document(["  function foo()", "    bla", "    }"]);
+        var doc = new Document(["  function foo()", "    bla", "    }"]);
         this.mode.autoOutdent("start", doc, 2);
         assertEquals("    }", doc.getLine(2));
     }
+
+});
 
 });

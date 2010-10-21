@@ -16,6 +16,10 @@ require.def("ace/lib/lang", function() {
         return string.split("").reverse().join("");
     };
 
+    lang.stringRepeat = function (string, count) {
+         return new Array(count + 1).join(string);   
+    }
+    
     if (Array.prototype.indexOf) {
         lang.arrayIndexOf = function(array, searchElement) {
             return array.indexOf(searchElement);

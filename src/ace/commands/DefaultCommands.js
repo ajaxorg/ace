@@ -151,12 +151,7 @@ PluginManager.registerCommand("outdent", function(editor, selection) {
     editor.blockOutdent();
 });
 PluginManager.registerCommand("indent", function(editor, selection) {
-    if (selection.isMultiLine()) {
-        editor.blockIndent();
-    }
-    else {
-        editor.onTextInput("\t");
-    }
+    editor.indent();
 });
 
 });

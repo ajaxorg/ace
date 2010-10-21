@@ -5,16 +5,27 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-var CssTest = new TestCase("mode.CssTest", {
+
+require.def([
+     "ace/Document",
+     "ace/Range",
+     "ace/mode/Css"
+ ], function(
+     Document,
+     Range,
+     CssMode
+ ) {
+
+    var CssTest = new TestCase("mode.CssTest", {
 
     setUp : function() {
-        this.mode = new ace.mode.Css();
+        this.mode = new CssMode();
     },
 
     "test: toggle comment lines should not do anything" : function() {
-        var doc = new ace.Document(["  abc", "cde", "fg"].join("\n"));
+        var doc = new Document(["  abc", "cde", "fg"].join("\n"));
 
-        var range = new ace.Range(0, 3, 1, 1);
+        var range = new Range(0, 3, 1, 1);
         var comment = this.mode.toggleCommentLines("start", doc, range);
         assertEquals(["  abc", "cde", "fg"].join("\n"), doc.toString());
     },
@@ -34,4 +45,6 @@ var CssTest = new TestCase("mode.CssTest", {
         assertEquals("   ", this.mode.getNextLineIndent("start", "   /*{", "  "));
         assertEquals("   ", this.mode.getNextLineIndent("start", "   /*{  ", "  "));
     }
+});
+
 });

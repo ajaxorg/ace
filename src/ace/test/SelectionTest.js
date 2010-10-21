@@ -5,12 +5,19 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Document"
+ ], function(
+     Document
+ ) {
+
 var SelectionTest = TestCase("SelectionTest",
 {
     createTextDocument : function(rows, cols) {
         var line = new Array(cols + 1).join("a");
         var text = new Array(rows).join(line + "\n") + line;
-        return new ace.Document(text);
+        return new Document(text);
     },
 
     "test: move cursor to end of file should place the cursor on last row and column" : function() {
@@ -56,7 +63,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: move cursor word right" : function() {
-        var doc = new ace.Document( ["ab",
+        var doc = new Document( ["ab",
                 " Juhu Kinners (abc, 12)", " cde"].join("\n"));
         var selection = doc.getSelection();
 
@@ -96,7 +103,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word right if cursor in word" : function() {
-        var doc = new ace.Document("Juhu Kinners");
+        var doc = new Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 2);
@@ -106,7 +113,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: moveCursor word left" : function() {
-        var doc = new ace.Document( ["ab",
+        var doc = new Document( ["ab",
                                          " Juhu Kinners (abc, 12)", " cde"].join("\n"));
         var selection = doc.getSelection();
 
@@ -147,7 +154,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word left if cursor in word" : function() {
-        var doc = new ace.Document("Juhu Kinners");
+        var doc = new Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 8);
@@ -157,7 +164,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word right and select" : function() {
-        var doc = new ace.Document("Juhu Kinners");
+        var doc = new Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 0);
@@ -170,7 +177,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word left and select" : function() {
-        var doc = new ace.Document("Juhu Kinners");
+        var doc = new Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 3);
@@ -183,7 +190,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word with cursor in word should select the word" : function() {
-        var doc = new ace.Document("Juhu Kinners 123");
+        var doc = new Document("Juhu Kinners 123");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 8);
@@ -195,7 +202,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word with cursor betwen white space and word should select the word" : function() {
-        var doc = new ace.Document("Juhu Kinners");
+        var doc = new Document("Juhu Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 4);
@@ -214,7 +221,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: select word with cursor in white space should select white space" : function() {
-        var doc = new ace.Document("Juhu  Kinners");
+        var doc = new Document("Juhu  Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 5);
@@ -226,7 +233,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: moving cursor should fire a 'changeCursor' event" : function() {
-        var doc = new ace.Document("Juhu  Kinners");
+        var doc = new Document("Juhu  Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 5);
@@ -241,7 +248,7 @@ var SelectionTest = TestCase("SelectionTest",
     },
 
     "test: calling setCursor with the same position should not fire an event": function() {
-        var doc = new ace.Document("Juhu  Kinners");
+        var doc = new Document("Juhu  Kinners");
         var selection = doc.getSelection();
 
         selection.moveCursorTo(0, 5);
@@ -254,4 +261,6 @@ var SelectionTest = TestCase("SelectionTest",
         selection.moveCursorTo(0, 5);
         assertFalse(called);
     }
+});
+
 });

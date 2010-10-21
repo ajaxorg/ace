@@ -1,7 +1,7 @@
 .ace-tm .ace_editor {
   border: 2px solid rgb(159, 159, 159);
-  font-family: Monaco, "Courier New";
-  font-size: 12px;  
+  font-family: "Menlo", "Monaco", "Courier New", "Courier", monospace;
+  font-size: 11px;  
 }
 
 .ace-tm .ace_editor.ace_focus {
@@ -12,8 +12,8 @@
   width: 50px;
   background: #e8e8e8;
   color: #333;
-  font-family: Monaco, "Courier New";
-  font-size: 12px;
+  font-family: "Menlo", "Monaco", "Courier New", monospace;
+  font-size: 11px;
   overflow : hidden;
 }
 
@@ -60,6 +60,11 @@
   color: rgb(6, 150, 14);
 }
 
+.ace-tm .ace_line .ace_invalid {
+  background-color: rgb(153, 0, 0);
+  color: white;
+}
+
 .ace-tm .ace_line .ace_buildin-function {
   color: rgb(60, 76, 114);
 }
@@ -73,7 +78,6 @@
 }
 
 .ace-tm .ace_line .ace_comment {
-  font-style: italic;
   color: rgb(76, 136, 107);
 }
 

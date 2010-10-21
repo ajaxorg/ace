@@ -5,6 +5,9 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([], function() {
+
 MockRenderer = function(visibleRowCount) {
     this.container = document.createElement("div");
     this.cursor = {
@@ -80,3 +83,6 @@ MockRenderer.prototype.addMarker = function() {
 
 MockRenderer.prototype.setBreakpoints = function() {
 };
+
+return MockRenderer;
+});

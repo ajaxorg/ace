@@ -5,9 +5,18 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/lib/oop",
+     "ace/MEventEmitter"
+ ], function(
+     oop,
+     MEventEmitter
+ ) {
+
 var EventEmitter = function() {};
 
-ace.implement(EventEmitter.prototype, ace.MEventEmitter);
+oop.implement(EventEmitter.prototype, MEventEmitter);
 
 var EventEmitterTest = new TestCase("EventEmitterTest", {
     "test: dispatch event with no data" : function() {
@@ -22,4 +31,6 @@ var EventEmitterTest = new TestCase("EventEmitterTest", {
         emitter.$dispatchEvent("juhu");
         assertTrue(called);
     }
+});
+
 });

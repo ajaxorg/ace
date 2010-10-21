@@ -8,40 +8,29 @@
 require.def("ace/mode/JavaScriptHighlightRules",
      [
          "ace/lib/oop",
+         "ace/lib/lang",
          "ace/mode/DocCommentHighlightRules",
          "ace/mode/TextHighlightRules"
-     ], function(oop, DocCommentHighlightRules, TextHighlightRules) {
+     ], function(oop, lang, DocCommentHighlightRules, TextHighlightRules) {
 
 
 JavaScriptHighlightRules = function() {
 
     var docComment = new DocCommentHighlightRules();
 
-    var keywords = {
-        "break" : 1,
-        "case" : 1,
-        "catch" : 1,
-        "continue" : 1,
-        "default" : 1,
-        "delete" : 1,
-        "do" : 1,
-        "else" : 1,
-        "finally" : 1,
-        "for" : 1,
-        "function" : 1,
-        "if" : 1,
-        "in" : 1,
-        "instanceof" : 1,
-        "new" : 1,
-        "return" : 1,
-        "switch" : 1,
-        "throw" : 1,
-        "try" : 1,
-        "typeof" : 1,
-        "var" : 1,
-        "while" : 1,
-        "with" : 1
-    };
+    var keywords = lang.arrayToMap(
+        ("break|case|catch|continue|default|delete|do|else|finally|for|function|" +
+        "if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with").split("|")
+    );
+    
+    var buildinConstants = lang.arrayToMap(
+        ("true|false|null|undefined|Infinity|NaN|undefined").split("|")
+    );
+    
+    var futureReserved = lang.arrayToMap(
+        ("class|enum|extends|super|const|export|import|implements|let|private|" +
+        "public|yield|interface|package|protected|static").split("|")
+    );
 
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
@@ -80,12 +69,14 @@ JavaScriptHighlightRules = function() {
             token : function(value) {
                 if (value == "this")
                     return "variable";
-                if (keywords[value]) {
+                else if (keywords[value])
                     return "keyword";
-                }
-                else {
+                else if (buildinConstants[value])
+                    return "buildin-constant";
+                else if (futureReserved[value] || value == "debugger")
+                    return "invalid";
+                else
                     return "identifier";
-                }
             },
             regex : "[a-zA-Z_][a-zA-Z0-9_]*\\b"
         }, {

@@ -100,7 +100,7 @@ var Document = function(text, mode) {
 
     this.getTabString = function() {
         if (this.getUseSoftTabs()) {
-            return new Array(this.getTabSize()+1).join(" ");
+            return lang.stringRepeat(" ", this.getTabSize());
         } else {
             return "\t";
         }
@@ -433,10 +433,10 @@ var Document = function(text, mode) {
             var lastLine = newLines[newLines.length - 1] + line.substring(position.column);
 
             this.lines[position.row] = firstLine;
-            this.$insertLines(position.row + 1, [lastLine], fromUndo);
+            this.$insertLines(position.row + 1, [lastLine], true);
 
             if (newLines.length > 2) {
-                this.$insertLines(position.row + 1, newLines.slice(1, -1), fromUndo);
+                this.$insertLines(position.row + 1, newLines.slice(1, -1), true);
             }
 
             var end = {
@@ -446,7 +446,6 @@ var Document = function(text, mode) {
         }
 
         if (!fromUndo && this.$undoManager) {
-            var nl = this.$getNewLineCharacter();
             this.$deltas.push({
                 action: "insertText",
                 range: Range.fromPoints(position, end),
@@ -549,34 +548,42 @@ var Document = function(text, mode) {
     };
 
     this.indentRows = function(range, indentString) {
-        for (var row=range.start.row; row<= range.end.row; row++) {
+        indentString.replace("\t", this.getTabString());
+        for (var row=range.start.row; row<=range.end.row; row++) {
             this.$insert({row: row, column:0}, indentString);
         }
         this.fireChangeEvent(range.start.row, range.end.row);
         return indentString.length;
     };
 
-    this.outdentRows = function(range, indentString) {
-        outdentLength = indentString.length;
-
-        for (var i=range.start.row; i<= range.end.row; i++) {
-            if (this.getLine(i).substr(0, outdentLength) !== indentString) {
-                return 0;
-            }
-        }
-
-        var deleteRange = new Range(0, 0, 0, outdentLength);
-
-        for (var i=range.start.row; i<= range.end.row; i++)
-        {
+    this.outdentRows = function (range) {
+        var deleteRange = new Range(0, 0, 0, 0),
+            size        = this.getTabSize();
+        
+        for (var i = range.start.row; i <= range.end.row; ++i) {
+            var line = this.getLine(i);
+            
             deleteRange.start.row = i;
             deleteRange.end.row = i;
+            for (var j = 0; j < size; ++j)
+                if (line.charAt(j) != ' ')
+                    break;            
+            if (j < size && line.charAt(j) == '\t') {
+                deleteRange.start.column = j;
+                deleteRange.end.column = j + 1;
+            } else {
+                deleteRange.start.column = 0;
+                deleteRange.end.column = j;
+            }
+            if (i == range.start.row)
+                range.start.column -= deleteRange.end.column - deleteRange.start.column;
+            if (i == range.end.row)
+                range.end.column -= deleteRange.end.column - deleteRange.start.column;
             this.$remove(deleteRange);
         }
-
         this.fireChangeEvent(range.start.row, range.end.row);
-        return -outdentLength;
-    };
+        return range;
+    }    
 
     this.moveLinesUp = function(firstRow, lastRow) {
         if (firstRow <= 0) return 0;

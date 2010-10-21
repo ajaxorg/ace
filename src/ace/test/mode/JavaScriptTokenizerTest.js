@@ -5,10 +5,17 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/mode/JavaScript"
+ ], function(
+     JavaScriptMode
+ ) {
+
 var JavaScriptTokenizerTest = new TestCase("mode.JavaScriptTokenizerTest", {
 
     setUp : function() {
-        this.tokenizer = new ace.mode.JavaScript().getTokenizer();
+        this.tokenizer = new JavaScriptMode().getTokenizer();
     },
 
     "test: tokenize1" : function() {
@@ -56,4 +63,6 @@ var JavaScriptTokenizerTest = new TestCase("mode.JavaScriptTokenizerTest", {
         assertEquals("text", tokens[1].type);
         assertEquals("rparen", tokens[2].type);
     }
+});
+
 });

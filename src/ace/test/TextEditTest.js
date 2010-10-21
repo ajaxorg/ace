@@ -5,11 +5,24 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
+
+require.def([
+     "ace/Document",
+     "ace/Editor",
+     "ace/mode/JavaScript",
+     "ace/test/MockRenderer"
+ ], function(
+     Document,
+     Editor,
+     JavaScriptMode,
+     MockRenderer
+ ) {
+
 var TextEditTest = TestCase("TextEditTest",
 {
     "test: delete line from the middle" : function() {
-        var doc = new ace.Document(["a", "b", "c", "d"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["a", "b", "c", "d"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
         editor.removeLines();
@@ -34,8 +47,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: delete multiple selected lines" : function() {
-        var doc = new ace.Document(["a", "b", "c", "d"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["a", "b", "c", "d"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectDown();
@@ -46,8 +59,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: delete first line" : function() {
-        var doc = new ace.Document(["a", "b", "c"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["a", "b", "c"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.removeLines();
 
@@ -56,8 +69,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: delete last" : function() {
-        var doc = new ace.Document(["a", "b", "c"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["a", "b", "c"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(2, 1);
         editor.removeLines();
@@ -67,8 +80,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: indent block" : function() {
-        var doc = new ace.Document(["a12345", "b12345", "c12345"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["a12345", "b12345", "c12345"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 3);
         editor.getSelection().selectDown();
@@ -86,8 +99,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: outdent block" : function() {
-        var doc = new ace.Document(["    a12345", "  b12345", "    c12345"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["    a12345", "  b12345", "    c12345"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 3);
         editor.getSelection().selectDown();
@@ -114,8 +127,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: outent without a selection should update cursor" : function() {
-        var doc = new ace.Document("        12");
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document("        12");
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 3);
         editor.blockOutdent("  ");
@@ -125,8 +138,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: comment lines should perserve selection" : function() {
-        var doc = new ace.Document(["  abc", "cde"].join("\n"), new ace.mode.JavaScript());
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["  abc", "cde"].join("\n"), new JavaScriptMode());
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 2);
         editor.getSelection().selectDown();
@@ -141,8 +154,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: uncomment lines should perserve selection" : function() {
-        var doc = new ace.Document(["//  abc", "//cde"].join("\n"), new ace.mode.JavaScript());
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["//  abc", "//cde"].join("\n"), new JavaScriptMode());
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 1);
         editor.getSelection().selectDown();
@@ -157,8 +170,8 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: comment lines - if the selection end is at the line start it should stay there": function() {
         //select down
-        var doc = new ace.Document(["abc", "cde"].join("\n"), new ace.mode.JavaScript());
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["abc", "cde"].join("\n"), new JavaScriptMode());
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 0);
         editor.getSelection().selectDown();
@@ -167,8 +180,8 @@ var TextEditTest = TestCase("TextEditTest",
         assertRange(0, 2, 1, 0, editor.getSelectionRange());
 
         // select up
-        var doc = new ace.Document(["abc", "cde"].join("\n"), new ace.mode.JavaScript());
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["abc", "cde"].join("\n"), new JavaScriptMode());
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 0);
         editor.getSelection().selectUp();
@@ -178,8 +191,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: move lines down should select moved lines" : function() {
-        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["11", "22", "33", "44"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(0, 1);
         editor.getSelection().selectDown();
@@ -205,8 +218,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: move lines up should select moved lines" : function() {
-        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["11", "22", "33", "44"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(2, 1);
         editor.getSelection().selectDown();
@@ -226,8 +239,8 @@ var TextEditTest = TestCase("TextEditTest",
 
     "test: move line without active selection should move cursor to start of the moved line" : function()
     {
-        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["11", "22", "33", "44"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
         editor.clearSelection();
@@ -244,8 +257,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: copy lines down should select lines and place cursor at the selection start" : function() {
-        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["11", "22", "33", "44"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectDown();
@@ -259,8 +272,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: copy lines up should select lines and place cursor at the selection start" : function() {
-        var doc = new ace.Document(["11", "22", "33", "44"].join("\n"));
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document(["11", "22", "33", "44"].join("\n"));
+        var editor = new Editor(new MockRenderer(), doc);
 
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectDown();
@@ -274,8 +287,8 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: input a tab with soft tab should convert it to spaces" : function() {
-        var doc = new ace.Document("");
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document("");
+        var editor = new Editor(new MockRenderer(), doc);
 
         doc.setTabSize(2);
         doc.setUseSoftTabs(true);
@@ -289,12 +302,14 @@ var TextEditTest = TestCase("TextEditTest",
     },
 
     "test: input tab without soft tabs should keep the tab character" : function() {
-        var doc = new ace.Document("");
-        var editor = new ace.Editor(new MockRenderer(), doc);
+        var doc = new Document("");
+        var editor = new Editor(new MockRenderer(), doc);
 
         doc.setUseSoftTabs(false);
 
         editor.onTextInput("\t");
         assertEquals("\t", doc.toString());
     }
+});
+
 });
