@@ -1,87 +1,47 @@
-/**
- * Ajax.org Code Editor (ACE)
- *
- * @copyright 2010, Ajax.org Services B.V.
- * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
- * @author Fabian Jakobs <fabian AT ajax DOT org>
- */
-require.def("ace/mode/XmlHighlightRules",
-    [
-        "ace/lib/oop",
-        "ace/mode/TextHighlightRules"
-    ], function(oop, TextHighlightRules) {
-
-var XmlHighlightRules = function() {
-
-    // regexp must not have capturing parentheses
-    // regexps are ordered -> the first match is used
-
-    this.$rules = {
-        start : [ {
-            token : "text",
-            regex : "<\\!\\[CDATA\\[",
-            next : "cdata"
-        }, {
-            token : "xml_pe",
-            regex : "<\\?.*?\\?>"
-        }, {
-            token : "comment",
-            regex : "<\\!--",
-            next : "comment"
-        }, {
-            token : "text", // opening tag
-            regex : "<\\/?",
-            next : "tag"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }, {
-            token : "text",
-            regex : "[^<]+"
-        } ],
-
-        tag : [ {
-            token : "text",
-            regex : ">",
-            next : "start"
-        }, {
-            token : "keyword",
-            regex : "[-_a-zA-Z0-9:]+"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }, {
-            token : "string",
-            regex : '".*?"'
-        }, {
-            token : "string",
-            regex : "'.*?'"
-        } ],
-
-        cdata : [ {
-            token : "text",
-            regex : "\\]\\]>",
-            next : "start"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }, {
-            token : "text",
-            regex : ".+"
-        } ],
-
-        comment : [ {
-            token : "comment",
-            regex : ".*?-->",
-            next : "start"
-        }, {
-            token : "comment",
-            regex : ".+"
-        } ]
-    };
-};
-
-oop.inherits(XmlHighlightRules, TextHighlightRules);
-
-return XmlHighlightRules;
-});
+<a:application xmlns:a="http://ajax.org/2005/aml">
+    <a:window
+      id        = "winSettings"
+      title     = "Settings"
+      icon      = ""
+      center    = "true"
+      buttons   = "close"
+      kbclose   = "true"
+      width     = "550"
+      height    = "300">
+        <a:vbox anchors="0 0 0 0">
+            <a:hbox padding="8" edge="10" model="{require('ext/settings/settings').model}" actiontracker="atSettings" flex="1">
+                <a:vbox width="150" padding="5">
+                    <a:textbox initial-message="Filter" />
+                    <a:tree flex="1"
+                      each      = "[node()[local-name() and not(local-name() = 'auto')]]"
+                      eachvalue = "[@page]"
+                      caption   = "[@name]"
+                      icon      = "{[@icon] || 'folder.png'}" 
+                      startcollapsed = "false"
+                      onafterselect  = "
+                        var page = pgSettings.getPage(this.value);
+                        if (!page) return;
+                        page.setAttribute('model', this.selected);
+                        pgSettings.set(this.value);
+                      "/>
+                </a:vbox>
+                <a:splitter />
+                <a:pages id="pgSettings" flex="1">
+                    <a:page id="pgSettingsGeneral" render="runtime">
+                        <a:frame caption="General" anchors="0 0 0 0">
+                            <a:checkbox value="[@openfiles]">Open files at startup</a:checkbox>
+                        </a:frame>
+                    </a:page>
+                    <a:page id="pgSettingsEditor" render="runtime">
+                        <a:frame caption="Editor" anchors="0 0 0 0"></a:frame>
+                    </a:page>
+                </a:pages>
+            </a:hbox>
+            <a:hbox pack="end" edge="0 10 5 10" padding="5">
+                <a:button width="80" default="2" class="ui-btn-green">OK</a:button>
+                <a:button width="80" onclick="winSettings.hide();">Cancel</a:button>
+                <a:button width="80" disabled="{!atSettings.undolength}">Apply</a:button>
+            </a:hbox>
+        </a:vbox>
+    </a:window>
+</a:application>
