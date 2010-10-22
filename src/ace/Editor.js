@@ -10,7 +10,7 @@ require.def("ace/Editor",
         "ace/ace",
         "ace/lib/event",
         "ace/lib/lang",
-        "ace/TextInput",
+        "ace/TextInput",    
         "ace/KeyBinding",
         "ace/Document",
         "ace/Search",
@@ -345,7 +345,9 @@ var Editor = function(renderer, doc) {
     };
 
     this.onMouseWheel = function(e) {
-        this.renderer.scrollBy(e.wheelX * 2, e.wheelY * 2);
+        var speed = this.$scrollSpeed * 2;
+
+        this.renderer.scrollBy(e.wheelX * speed, e.wheelY * speed);
         return event.preventDefault(e);
     };
 
@@ -442,6 +444,16 @@ var Editor = function(renderer, doc) {
         this.setOverwrite(!this.$overwrite);
     };
 
+
+    this.$scrollSpeed = 1;
+    this.setScrollSpeed = function(speed) {
+        this.$scrollSpeed = speed;
+    }
+
+    this.getScrollSpeed = function() {
+        return this.$scrollSpeed;
+    }
+
     this.$selectionStyle = "line";
     this.setSelectionStyle = function(style) {
         if (this.$selectionStyle == style) return;
@@ -450,6 +462,7 @@ var Editor = function(renderer, doc) {
         this.onSelectionChange();
         this.$dispatchEvent("changeSelectionStyle", {data: style});
     };
+
 
     this.getSelectionStyle = function() {
         return this.$selectionStyle;
@@ -529,37 +542,35 @@ var Editor = function(renderer, doc) {
         if (this.$readOnly)
             return;
 
-        if (this.selection.isMultiLine()) {
-            var addedColumns = this.doc.indentRows(this.getSelectionRange(), "\t");
-            this.selection.shiftSelection(addedColumns);
-        } else {
-            if (!this.doc.getUseSoftTabs()) 
-                return this.onTextInput("\t");
+        var range = this.getSelectionRange();
                 
-            var cursor = this.doc.remove(this.getSelectionRange());
-            this.clearSelection();
-
-            // compute indent string
-            var indentString = lang.stringRepeat(" ", this.doc.getTabSize() - (cursor.column % this.doc.getTabSize()));
-            var addedColumns = this.doc.indentRows(this.getSelectionRange(), indentString);
-            cursor.column += addedColumns;
-            this.moveCursorToPosition(cursor);
+        if (range.start.row < range.end.row ||
+            range.start.column < range.end.column) {
+            var count = this.doc.indentRows(this.getSelectionRange(), "\t");
+            
+            this.selection.shiftSelection(count);
+        } else {
+            var indentString;
+            
+            if (this.doc.getUseSoftTabs()) {
+                var size = this.doc.getTabSize(),
+                    count = (size - this.getCursorPosition().column % size);
+                    
+                indentString = lang.stringRepeat(" ", count);
+            } else
+                indentString = "\t";
+            return this.onTextInput(indentString);
         }
-        this.$updateDesiredColumn();
     };
 
     this.blockOutdent = function(indentString) {
         if (this.$readOnly)
             return;
 
-        var indentString = indentString || this.doc.getTabString();
-        var addedColumns = this.doc.outdentRows(this.getSelectionRange(), indentString);
-
-        // besides the indent string also outdent tabs
-        if (addedColumns == 0 && indentString != "\t")
-            var addedColumns = this.doc.outdentRows(this.getSelectionRange(), "\t");
-
-        this.selection.shiftSelection(addedColumns);
+        var selection  = this.doc.getSelection(),
+            range      = this.doc.outdentRows(selection.getRange());
+        
+        selection.setSelectionRange(range, selection.isBackwards());
         this.$updateDesiredColumn();
     };
 

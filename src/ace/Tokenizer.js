@@ -19,8 +19,7 @@ var Tokenizer = function(rules) {
             ruleRegExps.push(state[i].regex);
         };
 
-        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(")
-                + ")|(.))", "g");
+        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
     }
 };
 
@@ -48,7 +47,7 @@ var Tokenizer = function(rules) {
             if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
             lastIndex = re.lastIndex;
 
-            window.LOG && jstestdriver.console.log(currentState, match);
+            window.LOG && console.log(currentState, match);
 
             for ( var i = 0; i < state.length; i++) {
                 if (match[i + 1]) {
@@ -70,7 +69,8 @@ var Tokenizer = function(rules) {
                     break;
                 }
             };
-
+            
+                  
             if (token.type !== type) {
                 if (token.type) {
                     tokens.push(token);
@@ -88,7 +88,7 @@ var Tokenizer = function(rules) {
             tokens.push(token);
         }
 
-        window.LOG && jstestdriver.console.log(tokens, currentState);
+        window.LOG && console.log(tokens, currentState);
 
         return {
             tokens : tokens,

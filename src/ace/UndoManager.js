@@ -14,12 +14,14 @@ var UndoManager = function() {
 
 (function() {
 
-    this.$doc = null;
+    /*this.$doc = null;
     this.setDocument = function(doc) {
         this.$doc = doc;
-    };
+    };*/
 
-    this.notify = function(deltas) {
+    this.execute = function(options) {
+        var deltas = options.args[0];
+        this.$doc  = options.args[1];
         this.$undoStack.push(deltas);
     };
 
