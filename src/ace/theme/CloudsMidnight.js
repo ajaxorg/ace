@@ -17,7 +17,7 @@ require.def("ace/theme/CloudsMidnight",
 }\
 \
 .ace-clouds-midnight .ace_gutter-layer {\
-  right: 0px;\
+  width: 100%;\
   text-align: right;\
 }\
 \

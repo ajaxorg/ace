@@ -17,7 +17,7 @@ require.def("ace/theme/Dawn",
 }\
 \
 .ace-dawn .ace_gutter-layer {\
-  right: 0px;\
+  width: 100%;\
   text-align: right;\
 }\
 \

@@ -17,7 +17,7 @@ require.def("ace/theme/MonoIndustrial",
 }\
 \
 .ace-mono-industrial .ace_gutter-layer {\
-  right: 0px;\
+  width: 100%;\
   text-align: right;\
 }\
 \
