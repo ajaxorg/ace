@@ -178,7 +178,13 @@ var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 var themes = {
     "Dawn": "Dawn",
     "IdleFingers": "idleFingers",
-    "Twilight": "Twilight"
+    "Twilight": "Twilight",
+    "Monokai": "Monokai",
+    "Cobalt": "Cobalt",
+    "MonoIndustrial": "monoindustrial",
+    "Clouds": "Clouds",
+    "CloudsMidnight": "Clouds Midnight",
+    "KrTheme": "krTheme"
 }
 
 for (var name in themes) {
