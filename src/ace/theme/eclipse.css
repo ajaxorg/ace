@@ -3,7 +3,7 @@
 }
 
 .ace-eclipse .ace_editor.ace_focus {
-  border: 2px solid #327fbd;;
+  border: 2px solid #327fbd;
 }
 
 .ace-eclipse .ace_gutter {
@@ -34,15 +34,15 @@
   color: rgb(127, 0, 85);
 }
 
-.ace-eclipse .ace_line .ace_buildin-constant {
+.ace-eclipse .ace_line .ace_constant.ace_buildin {
   color: rgb(88, 72, 246);
 }
 
-.ace-eclipse .ace_line .ace_library-constant {
+.ace-eclipse .ace_line .ace_constant.ace_library {
   color: rgb(6, 150, 14);
 }
 
-.ace-eclipse .ace_line .ace_buildin-function {
+.ace-eclipse .ace_line .ace_function {
   color: rgb(60, 76, 114);
 }
 
@@ -54,28 +54,19 @@
   color: rgb(63, 127, 95);
 }
 
-.ace-eclipse .ace_line .ace_doc-comment {
+.ace-eclipse .ace_line .ace_comment.ace_doc {
   color: rgb(63, 95, 191);
 }
 
-.ace-eclipse .ace_line .ace_doc-comment-tag {
+.ace-eclipse .ace_line .ace_comment.ace_doc.ace_tag {
   color: rgb(127, 159, 191);
 }
 
-.ace-eclipse .ace_line .ace_number {
+.ace-eclipse .ace_line .ace_constant.ace_numeric {
 }
 
 .ace-eclipse .ace_line .ace_tag {
 	color: rgb(63, 127, 127);
-}
-
-.ace-eclipse .ace_line .ace_attribute {
-	color: rbg(127, 0, 127);
-}
-
-.ace-eclipse .ace_line .ace_attribute-value {
-	font-style: italic;
-	color: rbg(42, 0, 255);
 }
 
 .ace-eclipse .ace_line .ace_xml_pe {

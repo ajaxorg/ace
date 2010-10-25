@@ -15,20 +15,20 @@ var DocCommentHighlightRules = function() {
 
     this.$rules = {
         "start" : [ {
-            token : "doc-comment", // closing comment
+            token : "comment.doc", // closing comment
             regex : "\\*\\/",
             next : "start"
         }, {
-            token : "doc-comment-tag",
+            token : "comment.doc.tag",
             regex : "@[\\w\\d_]+"
         }, {
-            token : "doc-comment",
+            token : "comment.doc",
             regex : "\s+"
         }, {
-            token : "doc-comment",
+            token : "comment.doc",
             regex : "[^@\\*]+"
         }, {
-            token : "doc-comment",
+            token : "comment.doc",
             regex : "."
         }]
     };

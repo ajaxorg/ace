@@ -165,13 +165,13 @@ var CssHighlightRules = function() {
         }, {
             token : function(value) {
                 if (properties[value.toLowerCase()]) {
-                    return "buildin-constant";
+                    return "constant.language";
                 }
                 else if (functions[value.toLowerCase()]) {
-                    return "buildin-function";
+                    return "function.language";
                 }
                 else if (constants[value.toLowerCase()]) {
-                    return "library-constant";
+                    return "constant.library";
                 }
                 else {
                     return "identifier";

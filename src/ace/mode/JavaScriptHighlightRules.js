@@ -60,21 +60,23 @@ JavaScriptHighlightRules = function() {
             regex : "['].*\\\\$",
             next : "qstring"
         }, {
-            token : "number", // hex
+            token : "constant.numeric", // hex
             regex : "0[xX][0-9a-fA-F]+\\b"
         }, {
-            token : "number", // float
+            token : "constant.numeric", // float
             regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
         }, {
             token : function(value) {
                 if (value == "this")
-                    return "variable";
+                    return "variable.language";
                 else if (keywords[value])
                     return "keyword";
                 else if (buildinConstants[value])
-                    return "buildin-constant";
-                else if (futureReserved[value] || value == "debugger")
-                    return "invalid";
+                    return "constant.language";
+                else if (futureReserved[value])
+                    return "invalid.illegal";
+                else if (value == "debugger")
+                    return "invalid.deprecated";
                 else
                     return "identifier";
             },
@@ -82,7 +84,7 @@ JavaScriptHighlightRules = function() {
             // TODO: Unicode identifiers
             regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
         }, {
-            token : "operator",
+            token : "keyword.operator",
             regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(in|instanceof|new|delete|typeof|void)"
         }, {
             token : "lparen",

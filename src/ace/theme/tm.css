@@ -1,7 +1,5 @@
 .ace-tm .ace_editor {
   border: 2px solid rgb(159, 159, 159);
-  font-family: "Menlo", "Monaco", "Courier New", "Courier", monospace;
-  font-size: 11px;  
 }
 
 .ace-tm .ace_editor.ace_focus {
@@ -33,6 +31,8 @@
 
 .ace-tm .ace_text-layer {
   cursor: text;
+  font-family: "Menlo", "Monaco", "Courier New", "Courier", monospace;
+  font-size: 11px;  
 }
 
 .ace-tm .ace_cursor {
@@ -52,11 +52,11 @@
   color: blue;
 }
 
-.ace-tm .ace_line .ace_buildin-constant {
+.ace-tm .ace_line .ace_constant.ace_buildin {
   color: rgb(88, 72, 246);
 }
 
-.ace-tm .ace_line .ace_library-constant {
+.ace-tm .ace_line .ace_constant.ace_library {
   color: rgb(6, 150, 14);
 }
 
@@ -65,11 +65,11 @@
   color: white;
 }
 
-.ace-tm .ace_line .ace_buildin-function {
+.ace-tm .ace_line .ace_function {
   color: rgb(60, 76, 114);
 }
 
-.ace-tm .ace_line .ace_operator {
+.ace-tm .ace_line .ace_keyword.ace_operator {
   color: rgb(104, 118, 135);
 }
 
@@ -81,15 +81,15 @@
   color: rgb(76, 136, 107);
 }
 
-.ace-tm .ace_line .ace_doc-comment {
+.ace-tm .ace_line .ace_comment.ace_doc {
   color: rgb(0, 102, 255);
 }
 
-.ace-tm .ace_line .ace_doc-comment-tag {
+.ace-tm .ace_line .ace_comment.ace_doc.ace_tag {
   color: rgb(128, 159, 191);
 }
 
-.ace-tm .ace_line .ace_number {
+.ace-tm .ace_line .ace_constant.ace_numeric {
   color: rgb(0, 0, 205);
 }
 
