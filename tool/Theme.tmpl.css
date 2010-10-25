@@ -10,8 +10,6 @@
   width: 50px;
   background: #e8e8e8;
   color: #333;
-  font-family: "Menlo", "Monaco", "Courier New", monospace;
-  font-size: 11px;
   overflow : hidden;
 }
 
@@ -36,8 +34,6 @@
 .%cssClass% .ace_text-layer {
   cursor: text;
   color: %foreground%;
-  font-family: "Menlo", "Monaco", "Courier New", "Courier", monospace;
-  font-size: 11px;
 }
 
 .%cssClass% .ace_cursor {
@@ -107,8 +103,12 @@
   %invalid.deprecated%
 }
 
-.%cssClass% .ace_function {
-  %function%
+.%cssClass% .ace_support {
+  %support%
+}
+
+.%cssClass% .ace_support.ace_function {
+  %support.function%
 }
 
 .%cssClass% .ace_function.ace_buildin {

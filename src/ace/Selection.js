@@ -287,7 +287,7 @@ var Selection = function(doc) {
     this.moveCursorLineStart = function() {
         var row = this.selectionLead.row;
         var column = this.selectionLead.column;
-        var beforeCursor = this.doc.getDisplayLine(row).slice(0, column);
+        var beforeCursor = this.doc.getLine(row).slice(0, column);
         var leadingSpace = beforeCursor.match(/^\s+/);
         if (!leadingSpace || leadingSpace[0].length >= column)
             this.moveCursorTo(this.selectionLead.row, 0);

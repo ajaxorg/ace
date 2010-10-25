@@ -1,6 +1,9 @@
 .ace_editor {
   position: absolute;
   overflow: hidden;
+
+  font-family: "Menlo", "Monaco", "Courier New", monospace;
+  font-size: 12px;  
 }
 
 .ace_scroller {

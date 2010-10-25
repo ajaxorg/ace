@@ -13,8 +13,6 @@ require.def("ace/theme/Twilight",
   width: 50px;\
   background: #e8e8e8;\
   color: #333;\
-  font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;\
-  font-size: 11px;\
   overflow : hidden;\
 }\
 \
@@ -39,8 +37,6 @@ require.def("ace/theme/Twilight",
 .ace-twilight .ace_text-layer {\
   cursor: text;\
   color: #F8F8F8;\
-  font-family: \"Menlo\", \"Monaco\", \"Courier New\", \"Courier\", monospace;\
-  font-size: 11px;\
 }\
 \
 .ace-twilight .ace_cursor {\
@@ -113,8 +109,12 @@ font-style:italic;\
 color:#D2A8A1;\
 }\
 \
-.ace-twilight .ace_function {\
-  \
+.ace-twilight .ace_support {\
+  color:#9B859D;\
+}\
+\
+.ace-twilight .ace_support.ace_function {\
+  color:#DAD085;\
 }\
 \
 .ace-twilight .ace_function.ace_buildin {\

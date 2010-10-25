@@ -63,6 +63,9 @@ var supportedScopes = {
    "constant.library": "constant.library",
    "constant.numeric": "constant.numeric",
    
+   "support": "support",
+   "support.function": "support.function",
+
    "function": "function",
    "function.buildin": "function.buildin",
    
