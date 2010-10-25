@@ -371,6 +371,7 @@ var Editor = function(renderer, doc) {
     };
 
     this.onTextInput = function(text) {
+        console.log("onTextInput was called");
         if (this.$readOnly)
             return;
 
@@ -391,20 +392,24 @@ var Editor = function(renderer, doc) {
 
         var _self = this;
         var row = cursor.row;
-        this.bgTokenizer.getState(cursor.row-1, function(lineState) {
+        this.bgTokenizer.getState(cursor.row-1, function (lineState) {
             var shouldOutdent = _self.mode.checkOutdent(lineState, _self.doc.getLine(row), text);
             var line = _self.doc.getLine(row);
             var end = _self.doc.insert(cursor, text);
 
-            if (line != _self.doc.getLine(row) && text != "\n") {
+            /* TODO: This shortcut is somehow broken
+            if (!shouldOutdent && line != _self.doc.getLine(row) && text != "\n") {
                 _self.moveCursorToPosition(end);
                 _self.renderer.scrollCursorIntoView();
                 return;
             }
-
+            */
+            
             var line = _self.doc.getLine(row);
+            console.log("Poofing");
             _self.bgTokenizer.getState(row, function(lineState) {
                 // multi line insert
+                console.log("Poof " + row + "of" + end.row);
                 if (row !== end.row) {
                     var indent = _self.mode.getNextLineIndent(lineState, line, _self.doc.getTabString());
                     if (indent) {
@@ -412,7 +417,9 @@ var Editor = function(renderer, doc) {
                         end.column += _self.doc.indentRows(indentRange, indent);
                     }
                 } else {
+                    console.log("Last row");
                     if (shouldOutdent) {
+                        console.log("We should outdent");
                         end.column += _self.mode.autoOutdent(lineState, _self.doc, row);
                     }
                 }

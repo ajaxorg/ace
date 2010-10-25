@@ -117,3 +117,7 @@
 .ace-tm .ace_marker-layer .ace_active_line {
   background: rgb(232, 242, 254);
 }
+
+.ace-tm .ace_regex {
+  color: rgb(255, 0, 0)   
+}

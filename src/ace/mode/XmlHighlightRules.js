@@ -67,7 +67,7 @@ var XmlHighlightRules = function() {
             regex : "\\s+"
         }, {
             token : "text",
-            regex : ".+"
+            regex : "(?:[^\\]]|\\](?!\\]>))+"
         } ],
 
         comment : [ {
@@ -80,6 +80,8 @@ var XmlHighlightRules = function() {
         } ]
     };
 };
+
+/fd/g
 
 oop.inherits(XmlHighlightRules, TextHighlightRules);
 
