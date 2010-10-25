@@ -68,6 +68,11 @@ var CssHighlightRules = function() {
         "vertical-ideographic|vertical-text|visible|w-resize|wait|whitespace|" +
         "zero").split("|")
     );
+    
+    var colors = lang.arrayToMap(
+        ("aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|" +
+        "purple|red|silver|teal|white|yellow").split("|")
+    );
 
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
@@ -100,61 +105,61 @@ var CssHighlightRules = function() {
             token : "string", // single line
             regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("em")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("ex")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("px")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("cm")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("mm")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("in")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("pt")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("pc")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("deg")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("rad")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("grad")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("ms")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("s")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("hz")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + ic("khz")
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe + "%"
         }, {
-            token : "number",
+            token : "constant.numeric",
             regex : numRe
         }, {
-            token : "number",  // hex6 color
+            token : "constant.numeric",  // hex6 color
             regex : "#[a-fA-F0-9]{6}"
         }, {
-            token : "number", // hex3 color
+            token : "constant.numeric", // hex3 color
             regex : "#[a-fA-F0-9]{3}"
         }, {
             token : "lparen",
@@ -165,16 +170,19 @@ var CssHighlightRules = function() {
         }, {
             token : function(value) {
                 if (properties[value.toLowerCase()]) {
-                    return "constant.language";
+                    return "support.type";
                 }
                 else if (functions[value.toLowerCase()]) {
-                    return "function.language";
+                    return "support.function";
                 }
                 else if (constants[value.toLowerCase()]) {
-                    return "constant.library";
+                    return "support.constant";
+                }
+                else if (colors[value.toLowerCase()]) {
+                    return "support.constant.color";
                 }
                 else {
-                    return "identifier";
+                    return "text";
                 }
             },
             regex : "\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"

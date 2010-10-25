@@ -109,8 +109,12 @@ font-style:italic;\
 color:#D2A8A1;\
 }\
 \
-.ace-twilight .ace_function {\
-  \
+.ace-twilight .ace_support {\
+  color:#9B859D;\
+}\
+\
+.ace-twilight .ace_support.ace_function {\
+  color:#DAD085;\
 }\
 \
 .ace-twilight .ace_function.ace_buildin {\

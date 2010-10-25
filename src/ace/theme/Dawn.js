@@ -111,8 +111,12 @@ font-style:italic;\
 color:#B52A1D;\
 }\
 \
-.ace-dawn .ace_function {\
-  \
+.ace-dawn .ace_support {\
+  color:#691C97;\
+}\
+\
+.ace-dawn .ace_support.ace_function {\
+  color:#693A17;\
 }\
 \
 .ace-dawn .ace_function.ace_buildin {\

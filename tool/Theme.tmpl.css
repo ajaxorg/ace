@@ -103,8 +103,12 @@
   %invalid.deprecated%
 }
 
-.%cssClass% .ace_function {
-  %function%
+.%cssClass% .ace_support {
+  %support%
+}
+
+.%cssClass% .ace_support.ace_function {
+  %support.function%
 }
 
 .%cssClass% .ace_function.ace_buildin {

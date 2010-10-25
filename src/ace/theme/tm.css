@@ -61,7 +61,7 @@
   color: white;
 }
 
-.ace-tm .ace_line .ace_function {
+.ace-tm .ace_line .ace_support.ace_function {
   color: rgb(60, 76, 114);
 }
 

@@ -244,7 +244,7 @@ var Text = function(parentEl) {
                 .replace(/\t/g, this.$tabString);
 
             if (!this.$textToken[token.type]) {
-                var classes = "ace_" + token.type.replace(".", " ace_");
+                var classes = "ace_" + token.type.replace(/\./g, " ace_");
                 stringBuilder.push("<span class='", classes, "'>", output, "</span>");
             }
             else {

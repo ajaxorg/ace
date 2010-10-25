@@ -107,8 +107,12 @@ background-color:#FF0000;\
   \
 }\
 \
-.ace-idle-fingers .ace_function {\
+.ace-idle-fingers .ace_support {\
   \
+}\
+\
+.ace-idle-fingers .ace_support.ace_function {\
+  color:#B83426;\
 }\
 \
 .ace-idle-fingers .ace_function.ace_buildin {\
