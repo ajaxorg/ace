@@ -13,8 +13,6 @@ require.def("ace/theme/Dawn",
   width: 50px;\
   background: #e8e8e8;\
   color: #333;\
-  font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;\
-  font-size: 11px;\
   overflow : hidden;\
 }\
 \
@@ -39,8 +37,6 @@ require.def("ace/theme/Dawn",
 .ace-dawn .ace_text-layer {\
   cursor: text;\
   color: #080808;\
-  font-family: \"Menlo\", \"Monaco\", \"Courier New\", \"Courier\", monospace;\
-  font-size: 11px;\
 }\
 \
 .ace-dawn .ace_cursor {\

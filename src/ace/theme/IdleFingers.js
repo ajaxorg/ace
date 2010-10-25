@@ -13,8 +13,6 @@ require.def("ace/theme/IdleFingers",
   width: 50px;\
   background: #e8e8e8;\
   color: #333;\
-  font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;\
-  font-size: 11px;\
   overflow : hidden;\
 }\
 \
@@ -39,8 +37,6 @@ require.def("ace/theme/IdleFingers",
 .ace-idle-fingers .ace_text-layer {\
   cursor: text;\
   color: #FFFFFF;\
-  font-family: \"Menlo\", \"Monaco\", \"Courier New\", \"Courier\", monospace;\
-  font-size: 11px;\
 }\
 \
 .ace-idle-fingers .ace_cursor {\

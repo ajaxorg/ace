@@ -10,8 +10,6 @@
   width: 50px;
   background: #e8e8e8;
   color: #333;
-  font-family: "Menlo", "Monaco", "Courier New", monospace;
-  font-size: 11px;
   overflow : hidden;
 }
 
@@ -36,8 +34,6 @@
 .%cssClass% .ace_text-layer {
   cursor: text;
   color: %foreground%;
-  font-family: "Menlo", "Monaco", "Courier New", "Courier", monospace;
-  font-size: 11px;
 }
 
 .%cssClass% .ace_cursor {
