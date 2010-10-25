@@ -114,6 +114,6 @@
   background: rgb(232, 242, 254);
 }
 
-.ace-tm .ace_regex {
+.ace-tm .ace_string.ace_regex {
   color: rgb(255, 0, 0)   
 }

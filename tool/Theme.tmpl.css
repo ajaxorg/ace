@@ -119,6 +119,10 @@
   %string%
 }
 
+.%cssClass% .ace_string.ace_regexp {
+  %string.regexp%
+}
+
 .%cssClass% .ace_comment {
   %comment%
 }

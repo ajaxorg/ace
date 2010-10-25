@@ -127,6 +127,10 @@ color:#B52A1D;\
   color:#0B6125;\
 }\
 \
+.ace-dawn .ace_string.ace_regexp {\
+  color:#CF5628;\
+}\
+\
 .ace-dawn .ace_comment {\
   font-style:italic;\
 color:#5A525F;\

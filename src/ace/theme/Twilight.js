@@ -125,6 +125,10 @@ color:#D2A8A1;\
   color:#8F9D6A;\
 }\
 \
+.ace-twilight .ace_string.ace_regexp {\
+  color:#E9C062;\
+}\
+\
 .ace-twilight .ace_comment {\
   font-style:italic;\
 color:#5F5A60;\

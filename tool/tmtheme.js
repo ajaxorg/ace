@@ -74,6 +74,8 @@ var supportedScopes = {
    "invalid.deprecated": "invalid.deprecated",
    
    "string": "string",
+   "string.regexp": "string.regexp",
+   
    "comment": "comment",
    "comment.documentation": "comment.doc",
    "comment.documentation.tag": "comment.doc.tag",
