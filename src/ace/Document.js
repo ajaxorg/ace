@@ -259,14 +259,6 @@ var Document = function(text, mode) {
         return this.lines[row] || "";
     };
     
-    /**
-     * Get a line as it is displayed on screen. Tabs are replaced by spaces.
-     */
-    this.getDisplayLine = function(row) {
-        var tab = new Array(this.getTabSize()+1).join(" ");
-        return this.lines[row].replace(/\t/g, tab);
-    };
-
     this.getLines = function(firstRow, lastRow) {
         return this.lines.slice(firstRow, lastRow+1);
     };
