@@ -5,7 +5,7 @@
 }
 
 .ace-tm .ace_editor.ace_focus {
-  border: 2px solid #327fbd;;
+  border: 2px solid #327fbd;
 }
 
 .ace-tm .ace_gutter {
@@ -18,7 +18,7 @@
 }
 
 .ace-tm .ace_gutter-layer {
-  right: 0px;
+  width: 100%;
   text-align: right;
 }
 
