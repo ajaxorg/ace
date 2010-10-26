@@ -946,9 +946,9 @@ var Editor = function(renderer, doc) {
 
         var range = this.$search.find(this.doc);
         if (range) {
-            this.selection.setSelectionRange(range);
-            this.$updateDesiredColumn();
             this.gotoLine(range.end.row+1, range.end.column);
+            this.$updateDesiredColumn();
+            this.selection.setSelectionRange(range);
         }
     };
 
