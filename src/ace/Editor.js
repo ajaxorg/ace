@@ -774,6 +774,8 @@ var Editor = function(renderer, doc) {
 
 
     this.gotoLine = function(lineNumber, row) {
+        this.selection.clearSelection();
+        
         this.$blockScrolling = true;
         this.moveCursorTo(lineNumber-1, row || 0);
         this.$blockScrolling = false;
