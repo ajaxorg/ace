@@ -22,7 +22,7 @@ require.def("ace/theme/KrTheme",
 }\
 \
 .ace-kr-theme .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-kr-theme .ace_editor .ace_printMargin {\

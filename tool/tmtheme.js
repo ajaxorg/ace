@@ -188,6 +188,7 @@ var themes = {
 }
 
 for (var name in themes) {
+    console.log("Converting " + name);
 	var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
 
 	var styles = extractStyles(parseTheme(tmTheme));

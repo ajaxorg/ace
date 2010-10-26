@@ -22,7 +22,7 @@ require.def("ace/theme/Cobalt",
 }\
 \
 .ace-cobalt .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-cobalt .ace_editor .ace_printMargin {\

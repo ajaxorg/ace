@@ -22,7 +22,7 @@ require.def("ace/theme/CloudsMidnight",
 }\
 \
 .ace-clouds-midnight .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-clouds-midnight .ace_editor .ace_printMargin {\

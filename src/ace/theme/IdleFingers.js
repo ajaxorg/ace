@@ -22,7 +22,7 @@ require.def("ace/theme/IdleFingers",
 }\
 \
 .ace-idle-fingers .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-idle-fingers .ace_editor .ace_printMargin {\

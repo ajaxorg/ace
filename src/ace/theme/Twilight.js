@@ -22,7 +22,7 @@ require.def("ace/theme/Twilight",
 }\
 \
 .ace-twilight .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-twilight .ace_editor .ace_printMargin {\
