@@ -30,7 +30,6 @@ var Marker = function(parentEl) {
             clazz : clazz
         };
 
-        this.update();
         return id;
     };
 
@@ -38,7 +37,6 @@ var Marker = function(parentEl) {
         var marker = this.markers[markerId];
         if (marker) {
             delete (this.markers[markerId]);
-            this.update();
         }
     };
 
