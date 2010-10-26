@@ -7,7 +7,7 @@
  */
 require.def("ace/Editor",
     [
-        "ace/ace",
+        "ace/lib/oop",
         "ace/lib/event",
         "ace/lib/lang",
         "ace/TextInput",    
@@ -17,7 +17,7 @@ require.def("ace/Editor",
         "ace/BackgroundTokenizer",
         "ace/Range",
         "ace/MEventEmitter"
-    ], function(ace, event, lang, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
+    ], function(oop, event, lang, TextInput, KeyBinding, Document, Search, BackgroundTokenizer, Range, MEventEmitter) {
 
 var Editor = function(renderer, doc) {
     var container = renderer.getContainerElement();
@@ -27,19 +27,19 @@ var Editor = function(renderer, doc) {
     this.textInput  = new TextInput(container, this);
     this.keyBinding = new KeyBinding(container, this);
     var self = this;
-    ace.addListener(container, "mousedown", function(e) {
+    event.addListener(container, "mousedown", function(e) {
         setTimeout(function() {self.focus();});
-        return ace.preventDefault(e);
+        return event.preventDefault(e);
     });
-    ace.addListener(container, "selectstart", function(e) {
-        return ace.preventDefault(e);
+    event.addListener(container, "selectstart", function(e) {
+        return event.preventDefault(e);
     });
 
     var mouseTarget = renderer.getMouseEventTarget();
-    ace.addListener(mouseTarget, "mousedown", ace.bind(this.onMouseDown, this));
-    ace.addMultiMouseDownListener(mouseTarget, 2, 500, ace.bind(this.onMouseDoubleClick, this));
-    ace.addMultiMouseDownListener(mouseTarget, 3, 600, ace.bind(this.onMouseTripleClick, this));
-    ace.addMouseWheelListener(mouseTarget, ace.bind(this.onMouseWheel, this));
+    event.addListener(mouseTarget, "mousedown", lang.bind(this.onMouseDown, this));
+    event.addMultiMouseDownListener(mouseTarget, 2, 500, lang.bind(this.onMouseDoubleClick, this));
+    event.addMultiMouseDownListener(mouseTarget, 3, 600, lang.bind(this.onMouseTripleClick, this));
+    event.addMouseWheelListener(mouseTarget, lang.bind(this.onMouseWheel, this));
 
     this.$selectionMarker = null;
     this.$highlightLineMarker = null;
@@ -55,7 +55,7 @@ var Editor = function(renderer, doc) {
 
 (function(){
 
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.$forwardEvents = {
         gutterclick: 1,
@@ -99,26 +99,26 @@ var Editor = function(renderer, doc) {
 
         this.doc = doc;
 
-        this.$onDocumentChange = ace.bind(this.onDocumentChange, this);
+        this.$onDocumentChange = lang.bind(this.onDocumentChange, this);
         doc.addEventListener("change", this.$onDocumentChange);
         this.renderer.setDocument(doc);
 
-        this.$onDocumentModeChange = ace.bind(this.onDocumentModeChange, this);
+        this.$onDocumentModeChange = lang.bind(this.onDocumentModeChange, this);
         doc.addEventListener("changeMode", this.$onDocumentModeChange);
 
-        this.$onDocumentChangeTabSize = ace.bind(this.renderer.updateText, this.renderer);
+        this.$onDocumentChangeTabSize = lang.bind(this.renderer.updateText, this.renderer);
         doc.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
-        this.$onDocumentChangeBreakpoint = ace.bind(this.onDocumentChangeBreakpoint, this);
+        this.$onDocumentChangeBreakpoint = lang.bind(this.onDocumentChangeBreakpoint, this);
         this.doc.addEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
 
         this.selection = doc.getSelection();
         this.$desiredColumn = 0;
 
-        this.$onCursorChange = ace.bind(this.onCursorChange, this);
+        this.$onCursorChange = lang.bind(this.onCursorChange, this);
         this.selection.addEventListener("changeCursor", this.$onCursorChange);
 
-        this.$onSelectionChange = ace.bind(this.onSelectionChange, this);
+        this.$onSelectionChange = lang.bind(this.onSelectionChange, this);
         this.selection.addEventListener("changeSelection", this.$onSelectionChange);
 
         this.onDocumentModeChange();
@@ -255,7 +255,7 @@ var Editor = function(renderer, doc) {
         var tokenizer = mode.getTokenizer();
 
         if (!this.bgTokenizer) {
-            var onUpdate = ace.bind(this.onTokenizerUpdate, this);
+            var onUpdate = lang.bind(this.onTokenizerUpdate, this);
             this.bgTokenizer = new BackgroundTokenizer(tokenizer, this);
             this.bgTokenizer.addEventListener("update", onUpdate);
         } else {

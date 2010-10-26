@@ -6,18 +6,19 @@
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
 require.def("ace/KeyBinding",
-    ["ace/ace",
+    ["ace/lib/core",
+     "ace/lib/event",
      "ace/conf/keybindings/default_mac",
      "ace/conf/keybindings/default_win",
      "ace/PluginManager",
      "ace/commands/DefaultCommands"],
-    function(ace, default_mac, default_win, PluginManager) {
+    function(core, event, default_mac, default_win, PluginManager) {
 
 var KeyBinding = function(element, editor, config) {
     this.setConfig(config);
 
     var _self = this;
-    ace.addKeyListener(element, function(e) {
+    event.addKeyListener(element, function(e) {
         var hashId = 0 | (e.ctrlKey ? 1 : 0) | (e.altKey ? 2 : 0)
             | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);
         var key = _self.keyNames[e.keyCode];
@@ -28,7 +29,7 @@ var KeyBinding = function(element, editor, config) {
 
         if (command) {
             command(editor, editor.getSelection());
-            return ace.stopEvent(e);
+            return event.stopEvent(e);
         }
     });
 };
@@ -109,7 +110,7 @@ var KeyBinding = function(element, editor, config) {
     }
 
     this.setConfig = function(config) {
-        this.config = config || (ace.isMac
+        this.config = config || (core.isMac
             ? default_mac
             : default_win);
         if (typeof this.config.reverse == "undefined")
