@@ -886,7 +886,7 @@ var Editor = function(renderer, doc) {
     };
 
     this.replace = function(replacement, options) {
-    if (options)
+      if (options)
         this.$search.set(options);
       var range = this.$tryReplace(this.getSelectionRange(), replacement);
       if (range !== null)
@@ -895,8 +895,11 @@ var Editor = function(renderer, doc) {
     },
 
     this.replaceAll = function(replacement, options) {
-        if (options)
+        if (options) {
+            console.log("Find " + options.needle);
             this.$search.set(options);
+        }
+        console.log("Replace " + replacement);
         this.clearSelection();
         this.selection.moveCursorTo(0, 0);
 
@@ -904,11 +907,9 @@ var Editor = function(renderer, doc) {
         if (!ranges.length)
             return;
 
-        for (var i=0; i<ranges.length; i++) {
-            var range = ranges[i];
-            this.$tryReplace(range, replacement);
-        }
-        this.selection.setSelectionRange(range);
+        for (var i = ranges.length - 1; i >= 0; --i)
+            this.$tryReplace(ranges[i], replacement);
+        this.selection.setSelectionRange(ranges[0]);
         this.$updateDesiredColumn();
     },
 
