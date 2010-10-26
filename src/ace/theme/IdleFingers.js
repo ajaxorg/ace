@@ -17,12 +17,12 @@ require.def("ace/theme/IdleFingers",
 }\
 \
 .ace-idle-fingers .ace_gutter-layer {\
-  right: 0px;\
+  width: 100%;\
   text-align: right;\
 }\
 \
 .ace-idle-fingers .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-idle-fingers .ace_editor .ace_printMargin {\
@@ -121,6 +121,10 @@ background-color:#FF0000;\
 \
 .ace-idle-fingers .ace_string {\
   color:#A5C261;\
+}\
+\
+.ace-idle-fingers .ace_string.ace_regexp {\
+  color:#CCCC33;\
 }\
 \
 .ace-idle-fingers .ace_comment {\

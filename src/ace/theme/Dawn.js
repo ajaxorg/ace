@@ -17,12 +17,12 @@ require.def("ace/theme/Dawn",
 }\
 \
 .ace-dawn .ace_gutter-layer {\
-  right: 0px;\
+  width: 100%;\
   text-align: right;\
 }\
 \
 .ace-dawn .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-dawn .ace_editor .ace_printMargin {\
@@ -125,6 +125,10 @@ color:#B52A1D;\
 \
 .ace-dawn .ace_string {\
   color:#0B6125;\
+}\
+\
+.ace-dawn .ace_string.ace_regexp {\
+  color:#CF5628;\
 }\
 \
 .ace-dawn .ace_comment {\

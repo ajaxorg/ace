@@ -14,12 +14,12 @@
 }
 
 .%cssClass% .ace_gutter-layer {
-  right: 0px;
+  width: 100%;
   text-align: right;
 }
 
 .%cssClass% .ace_gutter-layer .ace_gutter-cell {
-  padding-right: 15px;
+  padding-right: 6px;
 }
 
 .%cssClass% .ace_editor .ace_printMargin {
@@ -117,6 +117,10 @@
 
 .%cssClass% .ace_string {
   %string%
+}
+
+.%cssClass% .ace_string.ace_regexp {
+  %string.regexp%
 }
 
 .%cssClass% .ace_comment {

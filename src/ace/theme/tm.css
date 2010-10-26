@@ -19,7 +19,7 @@
 }
 
 .ace-tm .ace_gutter-layer .ace_gutter-cell {
-  padding-right: 15px;
+  padding-right: 6px;
 }
 
 .ace-tm .ace_editor .ace_printMargin {
@@ -114,6 +114,6 @@
   background: rgb(232, 242, 254);
 }
 
-.ace-tm .ace_regex {
+.ace-tm .ace_string.ace_regex {
   color: rgb(255, 0, 0)   
 }

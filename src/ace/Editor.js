@@ -791,6 +791,8 @@ var Editor = function(renderer, doc) {
 
 
     this.gotoLine = function(lineNumber, row) {
+        this.selection.clearSelection();
+        
         this.$blockScrolling = true;
         this.moveCursorTo(lineNumber-1, row || 0);
         this.$blockScrolling = false;
@@ -962,9 +964,9 @@ var Editor = function(renderer, doc) {
 
         var range = this.$search.find(this.doc);
         if (range) {
-            this.selection.setSelectionRange(range);
-            this.$updateDesiredColumn();
             this.gotoLine(range.end.row+1, range.end.column);
+            this.$updateDesiredColumn();
+            this.selection.setSelectionRange(range);
         }
     };
 

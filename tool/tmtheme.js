@@ -74,6 +74,8 @@ var supportedScopes = {
    "invalid.deprecated": "invalid.deprecated",
    
    "string": "string",
+   "string.regexp": "string.regexp",
+   
    "comment": "comment",
    "comment.documentation": "comment.doc",
    "comment.documentation.tag": "comment.doc.tag",
@@ -176,10 +178,17 @@ var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 var themes = {
     "Dawn": "Dawn",
     "IdleFingers": "idleFingers",
-    "Twilight": "Twilight"
+    "Twilight": "Twilight",
+    "Monokai": "Monokai",
+    "Cobalt": "Cobalt",
+    "MonoIndustrial": "monoindustrial",
+    "Clouds": "Clouds",
+    "CloudsMidnight": "Clouds Midnight",
+    "KrTheme": "krTheme"
 }
 
 for (var name in themes) {
+    console.log("Converting " + name);
 	var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
 
 	var styles = extractStyles(parseTheme(tmTheme));

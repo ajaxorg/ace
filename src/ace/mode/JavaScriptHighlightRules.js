@@ -46,7 +46,7 @@ JavaScriptHighlightRules = function() {
             regex : "\\/\\*",
             next : "comment"
         }, {
-            token : "regex",
+            token : "string.regexp",
             regex : "[/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\/|[^\\]/]))*[/][gimy]*\\s*(?=[).;]|$)"
         }, {
             token : "string", // single line

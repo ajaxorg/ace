@@ -17,12 +17,12 @@ require.def("ace/theme/Twilight",
 }\
 \
 .ace-twilight .ace_gutter-layer {\
-  right: 0px;\
+  width: 100%;\
   text-align: right;\
 }\
 \
 .ace-twilight .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 15px;\
+  padding-right: 6px;\
 }\
 \
 .ace-twilight .ace_editor .ace_printMargin {\
@@ -123,6 +123,10 @@ color:#D2A8A1;\
 \
 .ace-twilight .ace_string {\
   color:#8F9D6A;\
+}\
+\
+.ace-twilight .ace_string.ace_regexp {\
+  color:#E9C062;\
 }\
 \
 .ace-twilight .ace_comment {\

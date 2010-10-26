@@ -40,7 +40,7 @@ oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
     this.getStartRule = function(start) {
         return {
-            token : "doc-comment", // doc comment
+            token : "comment.doc", // doc comment
             regex : "\\/\\*\\*",
             next: start
         };

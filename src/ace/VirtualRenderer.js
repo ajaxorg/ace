@@ -184,7 +184,6 @@ var VirtualRenderer = function(container, theme) {
 
     this.setTokenizer = function(tokenizer) {
         this.$textLayer.setTokenizer(tokenizer);
-
         this.$loop.schedule(this.CHANGE_TEXT);
     };
 
@@ -317,7 +316,8 @@ var VirtualRenderer = function(container, theme) {
             this.$gutterLayer.update(this.layerConfig);
         }
         else if (changes & this.CHANGE_LINES) {
-            this.$updateLines();
+            this.$updateLines();     
+            this.$updateScrollBar();       
         }
         else if (changes & this.CHANGE_SCROLL) {
             this.$textLayer.scrollLines(this.layerConfig);
