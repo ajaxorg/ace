@@ -33,6 +33,7 @@ var Document = function(text, mode) {
     }
 };
 
+
 (function() {
 
     oop.implement(this, MEventEmitter);
@@ -43,13 +44,13 @@ var Document = function(text, mode) {
         return text.split(/\r\n|\r|\n/);
     };
 
-    this.setValue = function(text) {
-        var args = [0, this.lines.length];
-        args.push.apply(args, this.$split(text));
-        this.lines.splice.apply(this.lines, args);
-        this.modified = true;
-        this.fireChangeEvent(0);
-    };
+	this.setValue = function(text) {
+	    var args = [0, this.lines.length];
+	    args.push.apply(args, this.$split(text));
+	    this.lines.splice.apply(this.lines, args);
+	    this.modified = true;
+	    this.fireChangeEvent(0);
+	};
 
     this.toString = function() {
         return this.lines.join(this.$getNewLineCharacter());
@@ -259,6 +260,14 @@ var Document = function(text, mode) {
         return this.lines[row] || "";
     };
     
+    /**
+     * Get a line as it is displayed on screen. Tabs are replaced by spaces.
+     */
+    this.getDisplayLine = function(row) {
+        var tab = new Array(this.getTabSize()+1).join(" ");
+        return this.lines[row].replace(/\t/g, tab);
+    };
+
     this.getLines = function(firstRow, lastRow) {
         return this.lines.slice(firstRow, lastRow+1);
     };
@@ -504,7 +513,7 @@ var Document = function(text, mode) {
 
         return range.start;
     };
-
+    
     this.undoChanges = function(deltas) {
         this.selection.clearSelection();
         for (var i=deltas.length-1; i>=0; i--) {

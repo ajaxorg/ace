@@ -371,7 +371,6 @@ var Editor = function(renderer, doc) {
     };
 
     this.onTextInput = function(text) {
-        console.log("onTextInput was called");
         if (this.$readOnly)
             return;
 
@@ -406,10 +405,8 @@ var Editor = function(renderer, doc) {
             */
             
             var line = _self.doc.getLine(row);
-            console.log("Poofing");
             _self.bgTokenizer.getState(row, function(lineState) {
                 // multi line insert
-                console.log("Poof " + row + "of" + end.row);
                 if (row !== end.row) {
                     var indent = _self.mode.getNextLineIndent(lineState, line, _self.doc.getTabString());
                     if (indent) {
@@ -417,9 +414,7 @@ var Editor = function(renderer, doc) {
                         end.column += _self.doc.indentRows(indentRange, indent);
                     }
                 } else {
-                    console.log("Last row");
                     if (shouldOutdent) {
-                        console.log("We should outdent");
                         end.column += _self.mode.autoOutdent(lineState, _self.doc, row);
                     }
                 }
@@ -734,6 +729,28 @@ var Editor = function(renderer, doc) {
         selection.$moveSelection(function() {
             selection.moveCursorTo(row, selection.getSelectionLead().column);
         });
+    };
+
+    this.gotoPageDown = function() {
+        console.log("Goto page down");
+        
+        var row     = this.getPageDownRow(),
+            column  = Math.min(this.getCursorPosition().column,
+                               this.doc.getLine(row).length);
+                          
+        this.scrollToRow(row);
+        this.getSelection().moveCursorTo(row, column);
+    };
+
+    this.gotoPageUp = function() {
+        console.log("Goto page up");
+        
+       var  row     = this.getPageUpRow(),
+            column  = Math.min(this.getCursorPosition().column,
+                               this.doc.getLine(row).length);
+               
+       this.scrollToRow(row);
+       this.getSelection().moveCursorTo(row, column);
     };
 
     this.scrollPageDown = function() {

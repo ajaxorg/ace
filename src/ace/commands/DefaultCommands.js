@@ -66,7 +66,7 @@ PluginManager.registerCommand("golineup", function(editor, selection) {
 PluginManager.registerCommand("copylinesdown", function(editor, selection) {
     editor.copyLinesDown();
 });
-PluginManager.registerCommand("movelinsedown", function(editor, selection) {
+PluginManager.registerCommand("movelinesdown", function(editor, selection) {
     editor.moveLinesDown();
 });
 PluginManager.registerCommand("selecttoend", function(editor, selection) {
@@ -123,11 +123,17 @@ PluginManager.registerCommand("selectpagedown", function(editor, selection) {
 PluginManager.registerCommand("pagedown", function(editor, selection) {
     editor.scrollPageDown();
 });
+PluginManager.registerCommand("gotopagedown", function(editor, selection) {
+    editor.gotoPageDown();
+});
 PluginManager.registerCommand("selectpageup", function(editor, selection) {
     editor.selectPageUp();
 });
 PluginManager.registerCommand("pageup", function(editor, selection) {
     editor.scrollPageUp();
+});
+PluginManager.registerCommand("gotopageup", function(editor, selection) {
+    editor.gotoPageUp();
 });
 PluginManager.registerCommand("selectlinestart", function(editor, selection) {
     selection.selectLineStart();
