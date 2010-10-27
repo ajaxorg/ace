@@ -136,6 +136,7 @@
 require(
     {baseUrl: "../src"},
     [
+        "ace/lib/event",
         "ace/Editor",
         "ace/VirtualRenderer",
         "ace/theme/TextMate",
@@ -146,9 +147,8 @@ require(
         "ace/mode/Xml",
         "ace/mode/Text",
         "ace/UndoManager"
-    ], function(Editor, Renderer, theme, Document, JavaScriptMode, CssMode, HtmlMode, XmlMode, TextMode, UndoManager) { 
+    ], function(event, Editor, Renderer, theme, Document, JavaScriptMode, CssMode, HtmlMode, XmlMode, TextMode, UndoManager) { 
 
-var ace = require("ace/ace");
 var docs = {}
 
 docs.js = new Document(document.getElementById("jstext").innerHTML);
@@ -252,15 +252,15 @@ function onResize() {
 window.onresize = onResize;
 onResize();
 
-ace.addListener(container, "dragover", function(e) {
-    return ace.preventDefault(e);
+event.addListener(container, "dragover", function(e) {
+    return event.preventDefault(e);
 });
 
-ace.addListener(container, "drop", function(e) {
+event.addListener(container, "drop", function(e) {
     try {
         var file = e.dataTransfer.files[0];
     } catch(e) {
-        return ace.stopEvent();
+        return event.stopEvent();
     }
     
     if (window.FileReader) {
@@ -287,7 +287,7 @@ ace.addListener(container, "drop", function(e) {
         reader.readAsText(file);
     }
     
-    return ace.preventDefault(e);
+    return event.preventDefault(e);
 });
 
 

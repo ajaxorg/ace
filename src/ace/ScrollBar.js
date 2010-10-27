@@ -5,7 +5,13 @@
  * @license LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  * @author Fabian Jakobs <fabian AT ajax DOT org>
  */
-require.def("ace/ScrollBar", ["ace/ace", "ace/MEventEmitter"], function(ace, MEventEmitter) {
+require.def("ace/ScrollBar", [
+    "ace/lib/oop",
+    "ace/lib/lang",
+    "ace/lib/dom",
+    "ace/lib/event",
+    "ace/MEventEmitter"
+], function(oop, lang, dom, event, MEventEmitter) {
 
 var ScrollBar = function(parent) {
     this.element = document.createElement("div");
@@ -16,14 +22,14 @@ var ScrollBar = function(parent) {
 
     parent.appendChild(this.element);
 
-    this.width = ace.scrollbarWidth();
+    this.width = dom.scrollbarWidth();
     this.element.style.width = this.width;
 
-    ace.addListener(this.element, "scroll", ace.bind(this.onScroll, this));
+    event.addListener(this.element, "scroll", lang.bind(this.onScroll, this));
 };
 
 (function() {
-    ace.implement(this, MEventEmitter);
+    oop.implement(this, MEventEmitter);
 
     this.onScroll = function() {
       this.$dispatchEvent("scroll", {data: this.element.scrollTop});
