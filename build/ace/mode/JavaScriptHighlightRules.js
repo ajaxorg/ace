@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/mode/JavaScriptHighlightRules", ["ace/lib/oop", "ace/lib/lang", "ace/mode/DocCommentHighlightRules", "ace/mode/TextHighlightRules"], function(d, b, e, f) {
   JavaScriptHighlightRules = function() {
     var c = new e, g = b.arrayToMap("break|case|catch|continue|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with".split("|")), h = b.arrayToMap("true|false|null|undefined|Infinity|NaN|undefined".split("|")), i = b.arrayToMap("abstract|boolean|byte|char|class|const|enum|export|extends|final|float|goto|implements|int|interface|long|native|package|private|protected|short|static|super|synchronized|throws|transient|volatiledouble|import|public".split("|"));

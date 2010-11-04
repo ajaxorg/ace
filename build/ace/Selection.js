@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/Selection", ["ace/lib/oop", "ace/lib/lang", "ace/MEventEmitter", "ace/Range"], function(g, h, i, e) {
   var f = function(a) {
     this.doc = a;

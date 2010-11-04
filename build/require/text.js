@@ -1,3 +1,8 @@
+/*
+ RequireJS text Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ Available via the MIT or new BSD license.
+ see: http://github.com/jrburke/requirejs for details
+*/
 (function() {
   var j = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP", "Msxml2.XMLHTTP.4.0"], l = /^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im, m = /<body[^>]*>\s*([\s\S]+)\s*<\/body>/im;
   if(!require.textStrip) {

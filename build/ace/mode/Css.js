@@ -1,5 +1,7 @@
 /*
  LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
 */
 require.def("ace/mode/CssHighlightRules", ["ace/lib/oop", "ace/lib/lang", "ace/mode/TextHighlightRules"], function(j, f, b) {
   var e = function() {

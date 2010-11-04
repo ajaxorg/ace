@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Range", "ace/Tokenizer", "ace/mode/JavaScript"], function(c, d, e, f) {
   new TestCase("mode.JavaScriptTest", {setUp:function() {
     this.mode = new f

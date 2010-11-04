@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def([], function() {
   MockRenderer = function(a) {
     this.container = document.createElement("div");

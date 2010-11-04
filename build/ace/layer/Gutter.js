@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/layer/Gutter", [], function() {
   var d = function(a) {
     this.element = document.createElement("div");

@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/Document", ["ace/lib/oop", "ace/lib/lang", "ace/MEventEmitter", "ace/Selection", "ace/mode/Text", "ace/Range"], function(l, i, m, n, o, g) {
   var j = function(a, b) {
     this.modified = true;

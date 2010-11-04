@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Range", "ace/Tokenizer", "ace/mode/Xml"], function(b, c, d, e) {
   new TestCase("mode.XmlTest", {setUp:function() {
     this.mode = new e

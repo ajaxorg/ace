@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Range"], function(b) {
   RangeTest = new TestCase("RangeTest", {"test: create range":function() {
     var a = new b(1, 2, 3, 4);

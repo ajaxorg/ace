@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Range", "ace/mode/Html"], function(b, c, d) {
   new TestCase("mode.HtmlTest", {setUp:function() {
     this.mode = new d

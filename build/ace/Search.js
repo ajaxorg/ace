@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/Search", ["ace/lib/lang", "ace/lib/oop", "ace/Range"], function(o, q, r) {
   var l = function() {
     this.$options = {needle:"", backwards:false, wrap:false, caseSensitive:false, wholeWord:false, scope:l.ALL, regExp:false}

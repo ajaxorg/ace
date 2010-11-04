@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Search"], function(c, b) {
   new TestCase("SearchTest", {"test: configure the search object":function() {
     (new b).set({needle:"juhu", scope:b.ALL})

@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/mode/Css"], function(b) {
   new TestCase("mode.CssTest", {setUp:function() {
     this.tokenizer = (new b).getTokenizer()

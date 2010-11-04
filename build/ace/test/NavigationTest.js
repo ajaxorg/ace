@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Editor", "ace/test/MockRenderer"], function(e, c, d) {
   TestCase("NavigationTest", {createTextDocument:function(a, b) {
     b = (new Array(b + 1)).join("a");

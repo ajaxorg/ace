@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/KeyBinding", ["ace/lib/core", "ace/lib/event", "ace/conf/keybindings/default_mac", "ace/conf/keybindings/default_win", "ace/PluginManager", "ace/commands/DefaultCommands"], function(m, k, n, o, p) {
   var l = function(i, g, j) {
     this.setConfig(j);

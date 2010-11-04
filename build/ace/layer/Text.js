@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/layer/Text", ["ace/lib/oop", "ace/lib/dom", "ace/MEventEmitter"], function(m, n, o) {
   var k = function(a) {
     this.element = document.createElement("div");
@@ -58,7 +61,7 @@ require.def("ace/layer/Text", ["ace/lib/oop", "ace/lib/dom", "ace/MEventEmitter"
     this.$computeTabString = function() {
       var a = this.doc.getTabSize();
       if(this.$showInvisibles) {
-        a /= 2;
+        a = a / 2;
         this.$tabString = "<span class='ace_invisible'>" + (new Array(Math.floor(a))).join("&nbsp;") + this.TAB_CHAR + (new Array(Math.ceil(a) + 1)).join("&nbsp;") + "</span>"
       }else {
         this.$tabString = (new Array(a + 1)).join("&nbsp;")

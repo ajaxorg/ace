@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Editor", "ace/mode/Text", "ace/mode/JavaScript", "ace/test/MockRenderer"], function(b, c, f, d, e) {
   new TestCase("ChangeDocumentTest", {setUp:function() {
     this.doc1 = new b("abc\ndef");

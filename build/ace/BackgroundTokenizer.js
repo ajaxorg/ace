@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/BackgroundTokenizer", ["ace/lib/oop", "ace/MEventEmitter"], function(i, j) {
   var h = function(a, c) {
     this.running = false;

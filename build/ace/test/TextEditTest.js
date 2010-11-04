@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/Editor", "ace/mode/JavaScript", "ace/test/MockRenderer"], function(c, d, g, e) {
   TestCase("TextEditTest", {"test: delete line from the middle":function() {
     var b = new c("a\nb\nc\nd"), a = new d(new e, b);

@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/UndoManager", "ace/Editor", "ace/test/MockRenderer"], function(b, h, i, j) {
   new TestCase("TextDocumentTest", {"test: find matching opening bracket":function() {
     var a = new b(["(()(", "())))"]);

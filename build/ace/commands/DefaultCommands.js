@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/commands/DefaultCommands", ["ace/PluginManager"], function(b) {
   b.registerCommand("selectall", function(a, c) {
     c.selectAll()

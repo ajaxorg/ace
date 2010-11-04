@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/mode/JavaScript", ["ace/lib/oop", "ace/mode/Text", "ace/Tokenizer", "ace/mode/JavaScriptHighlightRules", "ace/mode/MatchingBraceOutdent", "ace/Range"], function(h, i, j, k, l, m) {
   var g = function() {
     this.$tokenizer = new j((new k).getRules());
@@ -32,7 +35,7 @@ require.def("ace/mode/JavaScript", ["ace/lib/oop", "ace/mode/Text", "ace/Tokeniz
       if(f.length && f[f.length - 1].type == "comment") {
         return c
       }if(d == "start") {
-        if(b.match(/^.*[\{\(\[]\s*$/)) {
+        if(d = b.match(/^.*[\{\(\[]\s*$/)) {
           c += e
         }
       }else {

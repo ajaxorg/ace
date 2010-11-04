@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/mode/Text", ["ace/Tokenizer", "ace/mode/TextHighlightRules"], function(c, d) {
   var b = function() {
     this.$tokenizer = new c((new d).getRules())

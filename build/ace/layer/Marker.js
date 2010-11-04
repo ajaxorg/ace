@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/layer/Marker", ["ace/Range"], function(h) {
   var i = function(c) {
     this.element = document.createElement("div");

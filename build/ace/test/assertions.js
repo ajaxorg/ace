@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def([], function() {
   window.assertPosition = function(a, b, c) {
     assertEquals(a, c.row);

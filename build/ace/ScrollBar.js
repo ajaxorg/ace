@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/ScrollBar", ["ace/lib/oop", "ace/lib/lang", "ace/lib/dom", "ace/lib/event", "ace/MEventEmitter"], function(c, d, e, f, g) {
   var b = function(a) {
     this.element = document.createElement("div");

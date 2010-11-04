@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/RenderLoop", function() {
   var d = function(b) {
     this.onRender = b;

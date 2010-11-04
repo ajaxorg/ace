@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def("ace/TextInput", ["ace/lib/event"], function(b) {
   return function(l, c) {
     function e() {

@@ -1,4 +1,39 @@
 /*
+ RequireJS text Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ Available via the MIT or new BSD license.
+ see: http://github.com/jrburke/requirejs for details
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
  LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
 */
 (function() {
@@ -2676,7 +2711,7 @@ require.def("ace/layer/Text", ["ace/lib/oop", "ace/lib/dom", "ace/MEventEmitter"
     this.$computeTabString = function() {
       var i = this.doc.getTabSize();
       if(this.$showInvisibles) {
-        i /= 2;
+        i = i / 2;
         this.$tabString = "<span class='ace_invisible'>" + (new Array(Math.floor(i))).join("&nbsp;") + this.TAB_CHAR + (new Array(Math.ceil(i) + 1)).join("&nbsp;") + "</span>"
       }else {
         this.$tabString = (new Array(i + 1)).join("&nbsp;")
@@ -3243,7 +3278,7 @@ function(k, f, a, h, i, e, j, c, g, l, m, b) {
     this.textToScreenCoordinates = function(d, n) {
       var o = this.scroller.getBoundingClientRect();
       n = this.padding + Math.round(this.doc.documentToScreenColumn(d, n) * this.characterWidth);
-      d *= this.lineHeight;
+      d = d * this.lineHeight;
       return{pageX:o.left + n - this.getScrollLeft(), pageY:o.top + d - this.getScrollTop()}
     };
     this.visualizeFocus = function() {
@@ -3370,7 +3405,7 @@ require.def("ace/mode/JavaScript", ["ace/lib/oop", "ace/mode/Text", "ace/Tokeniz
       if(d.length && d[d.length - 1].type == "comment") {
         return m
       }if(c == "start") {
-        if(g.match(/^.*[\{\(\[]\s*$/)) {
+        if(c = g.match(/^.*[\{\(\[]\s*$/)) {
           m += l
         }
       }else {

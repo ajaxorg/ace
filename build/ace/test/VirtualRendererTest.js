@@ -1,3 +1,6 @@
+/*
+ LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
+*/
 require.def(["ace/Document", "ace/VirtualRenderer"], function(c, d) {
   new TestCase("VirtualRendererTest", {"test: screen2text the column should be rounded to the next character edge":function() {
     var b = document.createElement("div");
