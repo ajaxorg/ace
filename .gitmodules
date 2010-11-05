@@ -7,3 +7,6 @@
 [submodule "support/requirejs"]
 	path = support/requirejs
 	url = git://github.com/jrburke/requirejs.git
+[submodule "support/node-o3-xml"]
+	path = support/node-o3-xml
+	url = git://github.com/ajaxorg/node-o3-xml.git
