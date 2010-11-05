@@ -4,3 +4,6 @@
 [submodule "tool/support/async"]
 	path = tool/support/async
 	url = git://github.com/fjakobs/async.js.git
+[submodule "support/requirejs"]
+	path = support/requirejs
+	url = git://github.com/jrburke/requirejs.git
