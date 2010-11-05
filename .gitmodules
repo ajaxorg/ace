@@ -1,0 +1,12 @@
+[submodule "tool/support/node-o3-xml"]
+	path = tool/support/node-o3-xml
+	url = git://github.com/ajaxorg/node-o3-xml.git
+[submodule "tool/support/async"]
+	path = tool/support/async
+	url = git://github.com/fjakobs/async.js.git
+[submodule "support/requirejs"]
+	path = support/requirejs
+	url = git://github.com/jrburke/requirejs.git
+[submodule "support/node-o3-xml"]
+	path = support/node-o3-xml
+	url = git://github.com/ajaxorg/node-o3-xml.git

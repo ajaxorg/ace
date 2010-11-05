@@ -1,0 +1,148 @@
+.%cssClass% .ace_editor {
+  border: 2px solid rgb(159, 159, 159);
+}
+
+.%cssClass% .ace_editor.ace_focus {
+  border: 2px solid #327fbd;
+}
+
+.%cssClass% .ace_gutter {
+  width: 50px;
+  background: #e8e8e8;
+  color: #333;
+  overflow : hidden;
+}
+
+.%cssClass% .ace_gutter-layer {
+  width: 100%;
+  text-align: right;
+}
+
+.%cssClass% .ace_gutter-layer .ace_gutter-cell {
+  padding-right: 6px;
+}
+
+.%cssClass% .ace_editor .ace_printMargin {
+  width: 1px;
+  background: %printMargin%;
+}
+
+.%cssClass% .ace_scroller {
+  background-color: %background%;
+}
+
+.%cssClass% .ace_text-layer {
+  cursor: text;
+  color: %foreground%;
+}
+
+.%cssClass% .ace_cursor {
+  border-left: 2px solid %cursor%;
+}
+
+.%cssClass% .ace_cursor.ace_overwrite {
+  border-left: 0px;
+  border-bottom: 1px solid %overwrite%;
+}
+ 
+.%cssClass% .ace_marker-layer .ace_selection {
+  background: %selection%;
+}
+
+.%cssClass% .ace_marker-layer .ace_step {
+  background: %step%;
+}
+
+.%cssClass% .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid %bracket%;
+}
+
+.%cssClass% .ace_marker-layer .ace_active_line {
+  background: %active_line%;
+}
+
+       
+.%cssClass% .ace_invisible {
+  %invisible%
+}
+
+.%cssClass% .ace_keyword {
+  %keyword%
+}
+
+.%cssClass% .ace_keyword.ace_operator {
+  %keyword.operator%
+}
+
+.%cssClass% .ace_constant {
+  %constant%
+}
+
+.%cssClass% .ace_constant.ace_language {
+  %constant.language%
+}
+
+.%cssClass% .ace_constant.ace_library {
+  %constant.library%
+}
+
+.%cssClass% .ace_constant.ace_numeric {
+  %constant.numeric%
+}
+
+.%cssClass% .ace_invalid {
+  %invalid%
+}
+
+.%cssClass% .ace_invalid.ace_illegal {
+  %invalid.illegal%
+}
+
+.%cssClass% .ace_invalid.ace_deprecated {
+  %invalid.deprecated%
+}
+
+.%cssClass% .ace_support {
+  %support%
+}
+
+.%cssClass% .ace_support.ace_function {
+  %support.function%
+}
+
+.%cssClass% .ace_function.ace_buildin {
+  %function.buildin%
+}
+
+.%cssClass% .ace_string {
+  %string%
+}
+
+.%cssClass% .ace_string.ace_regexp {
+  %string.regexp%
+}
+
+.%cssClass% .ace_comment {
+  %comment%
+}
+
+.%cssClass% .ace_comment.ace_doc {
+  %comment.doc%
+}
+
+.%cssClass% .ace_comment.ace_doc.ace_tag {
+  %comment.doc.tag%
+}
+
+.%cssClass% .ace_variable {
+  %variable%
+}
+
+.%cssClass% .ace_variable.ace_language {
+  %variable.language%
+}
+
+.%cssClass% .ace_xml_pe {
+  %xml_pe%
+}

@@ -1,0 +1,71 @@
+.ace_editor {
+  position: absolute;
+  overflow: hidden;
+  font-family: "Menlo", "Monaco", "Courier New", monospace;
+  font-size: 12px;  
+}
+.ace_scroller {
+  position: absolute;
+  overflow-x: scroll;
+  overflow-y: hidden;     
+}
+.ace_gutter {
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100%;
+}
+.ace_editor .ace_sb {
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  right: 0;
+}
+.ace_editor .ace_sb div {
+  position: absolute;
+  width: 1px;
+  left: 0px;
+}
+.ace_editor .ace_printMargin {
+  position: absolute;
+  height: 100%;
+}
+.ace_layer {
+  z-index: 0;
+  position: absolute;
+  overflow: hidden;  
+  white-space: nowrap;
+  height: 100%;
+}
+.ace_text-layer {
+  font-family: Monaco, "Courier New", monospace;
+  color: black;
+}
+.ace_cursor-layer {
+  cursor: text;
+}
+.ace_cursor {
+  z-index: 3;
+  position: absolute;
+}
+.ace_line {
+  white-space: nowrap;
+}
+.ace_marker-layer {
+}
+.ace_marker-layer .ace_step {
+  position: absolute;
+  z-index: 2;
+}
+.ace_marker-layer .ace_selection {
+  position: absolute;
+  z-index: 3;
+}
+.ace_marker-layer .ace_bracket {
+  position: absolute;
+  z-index: 4;
+}
+.ace_marker-layer .ace_active_line {
+  position: absolute;
+  z-index: 1;
+}
