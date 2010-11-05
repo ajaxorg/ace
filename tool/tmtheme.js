@@ -176,21 +176,21 @@ var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
 var themes = {
-    "Dawn": "Dawn",
-    "IdleFingers": "idleFingers",
-    "Twilight": "Twilight",
-    "Monokai": "Monokai",
-    "Cobalt": "Cobalt",
-    "MonoIndustrial": "monoindustrial",
-    "Clouds": "Clouds",
-    "CloudsMidnight": "Clouds Midnight",
-    "KrTheme": "krTheme"
+    "dawn": "Dawn",
+    "idle_fingers": "idleFingers",
+    "twilight": "Twilight",
+    "monokai": "Monokai",
+    "cobalt": "Cobalt",
+    "mono_industrial": "monoindustrial",
+    "clouds": "Clouds",
+    "clouds_midnight": "Clouds Midnight",
+    "kr_theme": "krTheme"
 }
 
 for (var name in themes) {
     console.log("Converting " + name);
-	var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
+    var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
 
-	var styles = extractStyles(parseTheme(tmTheme));
-	fs.writeFileSync(__dirname + "/../src/ace/theme/" + name + ".js", createTheme(name, styles, cssTemplate, jsTemplate));
+    var styles = extractStyles(parseTheme(tmTheme));
+    fs.writeFileSync(__dirname + "/../src/ace/theme/" + name + ".js", createTheme(name, styles, cssTemplate, jsTemplate));
 }

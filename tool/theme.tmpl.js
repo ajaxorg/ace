@@ -1,6 +1,5 @@
-require.def("ace/theme/%name%",
-    ["ace/lib/dom"], function(dom) {
-
+define(function(require, exports, module) {
+    var dom = require("./lib/dom");
     var cssText = %css%;
     
     // import CSS once
