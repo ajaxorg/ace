@@ -1,19 +1,19 @@
 /** vim: et:ts=4:sw=4:sts=4
- * @license RequireJS Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT, GPL or new BSD license.
+ * @license RequireJS Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
 //laxbreak is true to allow build pragmas to change some statements.
 /*jslint plusplus: false, nomen: false, laxbreak: true, regexp: false */
 /*global window: false, document: false, navigator: false,
 setTimeout: false, traceDeps: true, clearInterval: false, self: false,
-setInterval: false, importScripts: false */
+setInterval: false, importScripts: false, jQuery: false */
 
 
-var require;
+var require, define;
 (function () {
     //Change this version number for each release.
-    var version = "0.14.2",
+    var version = "0.14.5",
             empty = {}, s,
             i, defContextName = "_", contextLoads = [],
             scripts, script, rePkg, src, m, dataMain, cfg = {}, setReadyState,
@@ -43,7 +43,7 @@ var require;
             cfg = require;
         }
     }
-
+    
         /**
      * Calls a method on a plugin. The obj object should have two property,
      * name: the name of the method to call on the plugin
@@ -65,7 +65,7 @@ var require;
             req(["require/" + prefix], context.contextName);
         }
     }
-
+    
     /**
      * Convenience method to call main for a require.def call that was put on
      * hold in the defQueue.
@@ -106,6 +106,27 @@ var require;
     }
 
     /**
+     * Determine if priority loading is done. If so clear the priorityWait
+     */
+    function isPriorityDone(context) {
+        var priorityDone = true,
+            priorityWait = context.config.priorityWait,
+            priorityName, i;
+        if (priorityWait) {
+            for (i = 0; (priorityName = priorityWait[i]); i++) {
+                if (!context.loaded[priorityName]) {
+                    priorityDone = false;
+                    break;
+                }
+            }
+            if (priorityDone) {
+                delete context.config.priorityWait;
+            }
+        }
+        return priorityDone;
+    }
+
+    /**
      * Resumes tracing of dependencies and then checks if everything is loaded.
      */
     function resume(context) {
@@ -128,7 +149,7 @@ var require;
             }
 
             //Skip the resume if current context is in priority wait.
-            if (s.contexts[s.ctxName].config.priorityWait) {
+            if (context.config.priorityWait && !isPriorityDone(context)) {
                 return;
             }
 
@@ -167,12 +188,14 @@ var require;
                 // Adjust args if there are dependencies
                 deps = callback;
                 callback = contextName;
-                contextName = arguments[3];
+                contextName = relModuleName;
+                relModuleName = arguments[4];
             } else {
                 deps = [];
             }
         }
-        main(null, deps, callback, config, contextName);
+
+        main(null, deps, callback, config, contextName, relModuleName);
 
         //If the require call does not trigger anything new to load,
         //then resume the dependency processing. Context will be undefined
@@ -210,7 +233,7 @@ var require;
      * return a value to define the module corresponding to the first argument's
      * name.
      */
-    req.def = function (name, deps, callback, contextName) {
+    define = req.def = function (name, deps, callback, contextName) {
         var i, scripts, script, node = currentlyAddingScript;
 
         //Allow for anonymous functions
@@ -267,6 +290,13 @@ var require;
             name = node.getAttribute("data-requiremodule");
         }
 
+        if (typeof name === 'string') {
+            //Do not try to auto-register a jquery later.
+            //Do this work here and in main, since for IE/useInteractive, this function
+            //is the earliest touch-point.
+            s.contexts[s.ctxName].jQueryDef = (name === "jquery");
+        }
+
         //Always save off evaluating the def call until the script onload handler.
         //This allows multiple modules to be in a file without prematurely
         //tracing dependencies, and allows for anonymous module support,
@@ -275,7 +305,7 @@ var require;
         defQueue.push([name, deps, callback, null, contextName]);
     };
 
-    main = function (name, deps, callback, config, contextName) {
+    main = function (name, deps, callback, config, contextName, relModuleName) {
         //Grab the context, or create a new one for the given context name.
         var context, newContext, loaded, pluginPrefix,
             canSetContext, prop, newLength, outDeps, mods, paths, index, i,
@@ -298,7 +328,7 @@ var require;
                 pluginPrefix = context.defPlugin[name];
             }
 
-
+            
             //If module already defined for context, or already waiting to be
             //evaluated, leave.
             waitingName = context.waiting[name];
@@ -353,7 +383,7 @@ var require;
                         if (s.plugins.newContext) {
                 s.plugins.newContext(newContext);
             }
-
+            
             context = s.contexts[contextName] = newContext;
         }
 
@@ -428,7 +458,7 @@ var require;
             if (config.ready) {
                 req.ready(config.ready);
             }
-
+            
             //If it is just a config block, nothing else,
             //then return.
             if (!deps) {
@@ -443,7 +473,7 @@ var require;
             outDeps = deps;
             deps = [];
             for (i = 0; i < outDeps.length; i++) {
-                deps[i] = req.splitPrefix(outDeps[i], name, context);
+                deps[i] = req.splitPrefix(outDeps[i], (name || relModuleName), context);
             }
         }
 
@@ -499,7 +529,7 @@ var require;
                 args: [name, deps, callback, context]
             });
         }
-
+        
         //Hold on to the module until a script load or other adapter has finished
         //evaluating the whole file. This helps when a file has more than one
         //module in it -- dependencies are not traced and fetched until the whole
@@ -510,8 +540,10 @@ var require;
         //as part of a layer, where onScriptLoad is not fired
         //for those cases. Do this after the inline define and
         //dependency tracing is done.
+        //Also check if auto-registry of jQuery needs to be skipped.
         if (name) {
             context.loaded[name] = true;
+            context.jQueryDef = (name === "jquery");
         }
     };
 
@@ -628,6 +660,36 @@ var require;
 
         return req;
     };
+    
+    /**
+     * As of jQuery 1.4.3, it supports a readyWait property that will hold off
+     * calling jQuery ready callbacks until all scripts are loaded. Be sure
+     * to track it if readyWait is available. Also, since jQuery 1.4.3 does
+     * not register as a module, need to do some global inference checking.
+     * Even if it does register as a module, not guaranteed to be the precise
+     * name of the global. If a jQuery is tracked for this context, then go
+     * ahead and register it as a module too, if not already in process.
+     */
+    function jQueryCheck(context, jqCandidate) {
+        if (!context.jQuery) {
+            var $ = jqCandidate || (typeof jQuery !== "undefined" ? jQuery : null);
+            if ($ && "readyWait" in $) {
+                context.jQuery = $;
+
+                //Manually create a "jquery" module entry if not one already
+                //or in process.
+                if (!context.defined.jquery && !context.jQueryDef) {
+                    context.defined.jquery = $;
+                }
+
+                //Make sure 
+                if (context.scriptCount) {
+                    $.readyWait += 1;
+                    context.jQueryIncremented = true;
+                }
+            }
+        }
+    }
 
     /**
      * Internal method used by environment adapters to complete a load event.
@@ -661,6 +723,11 @@ var require;
         //moduleName that maps to a require.def call. This line is important
         //for traditional browser scripts.
         context.loaded[moduleName] = true;
+
+        //If a global jQuery is defined, check for it. Need to do it here
+        //instead of main() since stock jQuery does not register as
+        //a module via define.
+        jQueryCheck(context);
 
         context.scriptCount -= 1;
         resume(context);
@@ -786,7 +853,7 @@ var require;
             }
         }
     };
-
+    
     req.isArray = function (it) {
         return ostring.call(it) === "[object Array]";
     };
@@ -861,12 +928,19 @@ var require;
                 context.scriptCount += 1;
                 req.attach(url, contextName, moduleName);
                 urlFetched[url] = true;
+
+                //If tracking a jQuery, then make sure its readyWait
+                //is incremented to prevent its ready callbacks from
+                //triggering too soon.
+                if (context.jQuery && !context.jQueryIncremented) {
+                    context.jQuery.readyWait += 1;
+                    context.jQueryIncremented = true;
+                }
             }
         }
     };
 
     req.jsExtRegExp = /\.js$/;
-
 
     /**
      * Given a relative module name, like ./something, normalize it to
@@ -920,7 +994,7 @@ var require;
      * Splits a name into a possible plugin prefix and
      * the module name. If baseName is provided it will
      * also normalize the name via require.normalizeName()
-     *
+     * 
      * @param {String} name the module name
      * @param {String} [baseName] base name that name is
      * relative to.
@@ -965,9 +1039,7 @@ var require;
             //Just a plain path, not module name lookup, so just return it.
             //Add extension if it is included. This is a bit wonky, only non-.js things pass
             //an extension, this method probably needs to be reworked.
-            return moduleName + (ext ? ext : "");
-        } else if (moduleName.charAt(0) === ".") {
-            return req.onError(new Error("require.nameToUrl does not handle relative module names (ones that start with '.' or '..')"));
+            url = moduleName + (ext ? ext : "");
         } else {
             //A module that needs to be converted to a path.
             paths = config.paths;
@@ -999,8 +1071,11 @@ var require;
 
             //Join the path parts together, then figure out if baseUrl is needed.
             url = syms.join("/") + (ext || ".js");
-            return ((url.charAt(0) === '/' || url.match(/^\w+:/)) ? "" : config.baseUrl) + url;
+            url = (url.charAt(0) === '/' || url.match(/^\w+:/) ? "" : config.baseUrl) + url;
         }
+        return config.urlArgs ? url +
+                                ((url.indexOf('?') === -1 ? '?' : '&') +
+                                 config.urlArgs) : url;
     };
 
     /**
@@ -1016,11 +1091,10 @@ var require;
                 expired = waitInterval && (context.startTime + waitInterval) < new Date().getTime(),
                 loaded, defined = context.defined,
                 modifiers = context.modifiers, waiting, noLoads = "",
-                hasLoadedProp = false, stillLoading = false, prop, priorityDone,
-                priorityName,
+                hasLoadedProp = false, stillLoading = false, prop,
 
                                 pIsWaiting = s.plugins.isWaiting, pOrderDeps = s.plugins.orderDeps,
-
+                
                 i, module, allDone, loads, loadArgs, err;
 
         //If already doing a checkLoaded call,
@@ -1032,17 +1106,9 @@ var require;
         //Determine if priority loading is done. If so clear the priority. If
         //not, then do not check
         if (context.config.priorityWait) {
-            priorityDone = true;
-            for (i = 0; (priorityName = context.config.priorityWait[i]); i++) {
-                if (!context.loaded[priorityName]) {
-                    priorityDone = false;
-                    break;
-                }
-            }
-            if (priorityDone) {
-                //Clean up priority and call resume, since it could have
+            if (isPriorityDone(context)) {
+                //Call resume, since it could have
                 //some waiting dependencies to trace.
-                delete context.config.priorityWait;
                 resume(context);
             } else {
                 return;
@@ -1113,7 +1179,7 @@ var require;
         if (pOrderDeps) {
             pOrderDeps(context);
         }
-
+        
                 //Before defining the modules, give priority treatment to any modifiers
         //for modules that are already defined.
         for (prop in modifiers) {
@@ -1123,7 +1189,7 @@ var require;
                 }
             }
         }
-
+        
         //Define the modules, doing a depth first search.
         for (i = 0; (module = waiting[i]); i++) {
             req.exec(module, {}, waiting, context);
@@ -1222,12 +1288,12 @@ var require;
 
     /**
      * Executes the modules in the correct order.
-     *
+     * 
      * @private
      */
     req.exec = function (module, traced, waiting, context) {
         //Some modules are just plain script files, abddo not have a formal
-        //module definition,
+        //module definition, 
         if (!module) {
             //Returning undefined for Spidermonky strict checking in Komodo
             return undefined;
@@ -1304,7 +1370,7 @@ var require;
 
                 //Execute modifiers, if they exist.
         req.execModifiers(name, traced, waiting, context);
-
+        
         return ret;
     };
 
@@ -1344,7 +1410,7 @@ var require;
             delete modifiers[target];
         }
     };
-
+    
     /**
      * callback for script loads, used to check status of loading.
      *
@@ -1465,11 +1531,11 @@ var require;
         if (cfg.baseUrlMatch) {
             rePkg = cfg.baseUrlMatch;
         } else {
-
-
-
-                        rePkg = /(allplugins-|transportD-)?require\.js(\W|$)/i;
-
+            
+            
+            
+                        rePkg = /(allplugins-)?require\.js(\W|$)/i;
+            
                     }
 
         for (i = scripts.length - 1; i > -1 && (script = scripts[i]); i--) {
@@ -1534,12 +1600,27 @@ var require;
      * you can define this method to call your page ready code instead.
      */
     req.callReady = function () {
-        var callbacks = s.readyCalls, i, callback;
+        var callbacks = s.readyCalls, i, callback, contexts, context, prop;
 
-        if (s.isPageLoaded && s.isDone && callbacks.length) {
-            s.readyCalls = [];
-            for (i = 0; (callback = callbacks[i]); i++) {
-                callback();
+        if (s.isPageLoaded && s.isDone) {
+            if (callbacks.length) {
+                s.readyCalls = [];
+                for (i = 0; (callback = callbacks[i]); i++) {
+                    callback();
+                }
+            }
+
+            //If jQuery with readyWait is being tracked, updated its
+            //readyWait count.
+            contexts = s.contexts;
+            for (prop in contexts) {
+                if (!(prop in empty)) {
+                    context = contexts[prop];
+                    if (context.jQueryIncremented) {
+                        context.jQuery.readyWait -= 1;
+                        context.jQueryIncremented = false;
+                    }
+                }
             }
         }
     };
@@ -1600,7 +1681,7 @@ var require;
         }
     }
     //****** END page load functionality ****************
-
+    
     //Set up default context. If require was a configuration object, use that as base config.
     req(cfg);
 
@@ -1610,14 +1691,18 @@ var require;
     //which seems odd to do on the server.
     if (typeof setTimeout !== "undefined") {
         setTimeout(function () {
-            resume(s.contexts[(cfg.context || defContextName)]);
+            var ctx = s.contexts[(cfg.context || defContextName)];
+            //Allow for jQuery to be loaded/already in the page, and if jQuery 1.4.3,
+            //make sure to hold onto it for readyWait triggering.
+            jQueryCheck(ctx);
+            resume(ctx);
         }, 0);
     }
 }());
 
 /**
- * @license RequireJS i18n Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT, GPL or new BSD license.
+ * @license RequireJS i18n Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
 /*jslint regexp: false, nomen: false, plusplus: false */
@@ -1898,7 +1983,7 @@ var require;
                         if (loc === "_match") {
                             //Found default locale to use for the top-level bundle name.
                             defLoc = msWaiting[loc];
-
+                        
                         } else if (msWaiting[loc] !== loc) {
                             //A "best fit" locale, store it off to the end and handle
                             //it at the end by just assigning the best fit value, since
@@ -1928,7 +2013,7 @@ var require;
                 //loop above so that the default locale bundle has been properly mixed
                 //together.
                 context.defined[master] = context.defined[modulePrefix + "/" + defLoc + "/" + moduleSuffix];
-
+                
                 //Handle any best fit locale definitions.
                 if (bestFit) {
                     for (loc in bestFit) {
@@ -1942,8 +2027,8 @@ var require;
     });
 }());
 /**
- * @license RequireJS text Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT, GPL or new BSD license.
+ * @license RequireJS text Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
 /*jslint regexp: false, nomen: false, plusplus: false */
@@ -1993,7 +2078,7 @@ var require;
                         progIds = [progId];  // so faster next time
                         break;
                     }
-                }
+                }   
             }
 
             if (!xhr) {
@@ -2003,7 +2088,7 @@ var require;
             return xhr;
         };
     }
-
+    
     if (!require.fetchText) {
         require.fetchText = function (url, callback) {
             var xhr = require.getXhr();
@@ -2102,7 +2187,6 @@ var require;
                 require.fetchText(url, function (text) {
                     context.text[key] = text;
                     context.loaded[name] = true;
-                    require.checkLoaded(contextName);
                 });
             }
         },
@@ -2138,8 +2222,8 @@ var require;
     });
 }());
 /**
- * @license RequireJS jsonp Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT, GPL or new BSD license.
+ * @license RequireJS jsonp Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
 /*jslint nomen: false, plusplus: false */
@@ -2195,7 +2279,6 @@ var require;
             require._jsonp[funcName] = function (value) {
                 data.value = value;
                 context.loaded[name] = true;
-                require.checkLoaded(contextName);
                 //Use a setTimeout for cleanup because some older IE versions vomit
                 //if removing a script node while it is being evaluated.
                 setTimeout(function () {
@@ -2261,8 +2344,8 @@ var require;
     });
 }());
 /**
- * @license RequireJS order Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
- * Available via the MIT, GPL or new BSD license.
+ * @license RequireJS order Copyright (c) 2010, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/requirejs for details
  */
 /*jslint nomen: false, plusplus: false */
@@ -2386,7 +2469,7 @@ var require;
 
         /**
          * Called when all modules have been loaded. Not needed for this plugin.
-         * State is reset as part of scriptCacheCallback.
+         * State is reset as part of scriptCacheCallback. 
          */
         orderDeps: function (context) {
         }
