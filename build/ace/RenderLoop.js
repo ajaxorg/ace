@@ -1,7 +1,7 @@
 /*
  LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
 */
-require.def("ace/RenderLoop", function() {
+require.def("ace/RenderLoop", ["ace/lib/event"], function(e) {
   var d = function(b) {
     this.onRender = b;
     this.pending = false;
@@ -25,12 +25,12 @@ require.def("ace/RenderLoop", function() {
       this.setTimeoutZero = function(b) {
         if(!this.attached) {
           var a = this;
-          window.addEventListener("message", function(c) {
+          e.addListener(window, "message", function(c) {
             if(c.source == window && a.callback && c.data == a.messageName) {
               c.stopPropagation();
               a.callback()
             }
-          }, false);
+          });
           this.attached = true
         }this.callback = b;
         window.postMessage(this.messageName, "*")

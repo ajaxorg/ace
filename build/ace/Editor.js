@@ -444,9 +444,9 @@ require.def("ace/conf/keybindings/default_mac", function() {
   pagedown:"PageDown", selectpageup:"Shift-PageUp", pageup:"PageUp", selectlinestart:"Shift-Home", selectlineend:"Shift-End", del:"Delete", backspace:"Backspace", outdent:"Shift-Tab", indent:"Tab"}
 });
 require.def("ace/conf/keybindings/default_win", function() {
-  return{selectall:"Ctrl-A", removeline:"Ctrl-D", gotoline:"Ctrl-L", togglecomment:"Ctrl-7", findnext:"Ctrl-K", findprevious:"Ctrl-Shift-K", find:"Ctrl-F", replace:"Ctrl-R", undo:"Ctrl-Z", redo:"Ctrl-Shift-Z|Ctrl-Y", overwrite:"Insert", copylinesup:"Ctrl-Alt-Up", movelinesup:"Alt-Up", selecttostart:"Ctrl-Shift-Up", gotostart:"Ctrl-Home|Ctrl-Up", selectup:"Shift-Up", golineup:"Up", copylinesdown:"Ctrl-Alt-Down", movelinesdown:"Alt-Down", selecttoend:"Ctrl-Shift-Down", gotoend:"Ctrl-End|Ctrl-Down", 
-  selectdown:"Shift-Down", godown:"Down", selectwordleft:"Alt-Shift-Left", gotowordleft:"Alt-Left", selecttolinestart:"Ctrl-Shift-Left", gotolinestart:"Ctrl-Left|Home", selectleft:"Shift-Left", gotoleft:"Left", selectwordright:"Alt-Shift-Right", gotowordright:"Alt-Right", selecttolineend:"Ctrl-Shift-Right", gotolineend:"Ctrl-Right|End", selectright:"Shift-Right", gotoright:"Right", selectpagedown:"Shift-PageDown", pagedown:"PageDown", selectpageup:"Shift-PageUp", pageup:"PageUp", selectlinestart:"Shift-Home", 
-  selectlineend:"Shift-End", del:"Delete", backspace:"Backspace", outdent:"Shift-Tab", indent:"Tab"}
+  return{selectall:"Ctrl-A", removeline:"Ctrl-D", gotoline:"Ctrl-L", togglecomment:"Ctrl-7", findnext:"Ctrl-K", findprevious:"Ctrl-Shift-K", find:"Ctrl-F", replace:"Ctrl-R", undo:"Ctrl-Z", redo:"Ctrl-Shift-Z|Ctrl-Y", overwrite:"Insert", copylinesup:"Ctrl-Alt-Up", movelinesup:"Alt-Up", selecttostart:"Alt-Shift-Up", gotostart:"Ctrl-Home|Ctrl-Up", selectup:"Shift-Up", golineup:"Up", copylinesdown:"Ctrl-Alt-Down", movelinesdown:"Alt-Down", selecttoend:"Alt-Shift-Down", gotoend:"Ctrl-End|Ctrl-Down", selectdown:"Shift-Down", 
+  godown:"Down", selectwordleft:"Ctrl-Shift-Left", gotowordleft:"Ctrl-Left", selecttolinestart:"Ctrl-Shift-Left", gotolinestart:"Alt-Left|Home", selectleft:"Shift-Left", gotoleft:"Left", selectwordright:"Ctrl-Shift-Right", gotowordright:"Ctrl-Right", selecttolineend:"Ctrl-Shift-Right", gotolineend:"Alt-Right|End", selectright:"Shift-Right", gotoright:"Right", selectpagedown:"Shift-PageDown", pagedown:"PageDown", selectpageup:"Shift-PageUp", pageup:"PageUp", selectlinestart:"Shift-Home", selectlineend:"Shift-End", 
+  del:"Delete", backspace:"Backspace", outdent:"Shift-Tab", indent:"Tab"}
 });
 require.def("ace/PluginManager", [], function() {
   return{commands:{}, registerCommand:function(k, f) {
@@ -2899,47 +2899,47 @@ require.def("ace/ScrollBar", ["ace/lib/oop", "ace/lib/lang", "ace/lib/dom", "ace
   }).call(e.prototype);
   return e
 });
-require.def("ace/RenderLoop", function() {
-  var k = function(f) {
-    this.onRender = f;
+require.def("ace/RenderLoop", ["ace/lib/event"], function(k) {
+  var f = function(a) {
+    this.onRender = a;
     this.pending = false;
     this.changes = 0
   };
   (function() {
-    this.schedule = function(f) {
-      this.changes |= f;
+    this.schedule = function(a) {
+      this.changes |= a;
       if(!this.pending) {
         this.pending = true;
-        var a = this;
+        var h = this;
         this.setTimeoutZero(function() {
-          a.pending = false;
-          a.onRender(a.changes);
-          a.changes = 0
+          h.pending = false;
+          h.onRender(h.changes);
+          h.changes = 0
         })
       }
     };
     if(window.postMessage) {
       this.messageName = "zero-timeout-message";
-      this.setTimeoutZero = function(f) {
+      this.setTimeoutZero = function(a) {
         if(!this.attached) {
-          var a = this;
-          window.addEventListener("message", function(h) {
-            if(h.source == window && a.callback && h.data == a.messageName) {
-              h.stopPropagation();
-              a.callback()
+          var h = this;
+          k.addListener(window, "message", function(i) {
+            if(i.source == window && h.callback && i.data == h.messageName) {
+              i.stopPropagation();
+              h.callback()
             }
-          }, false);
+          });
           this.attached = true
-        }this.callback = f;
+        }this.callback = a;
         window.postMessage(this.messageName, "*")
       }
     }else {
-      this.setTimeoutZero = function(f) {
-        setTimeout(f, 0)
+      this.setTimeoutZero = function(a) {
+        setTimeout(a, 0)
       }
     }
-  }).call(k.prototype);
-  return k
+  }).call(f.prototype);
+  return f
 });
 require.def("ace/VirtualRenderer", ["ace/lib/oop", "ace/lib/lang", "ace/lib/dom", "ace/lib/event", "ace/layer/Gutter", "ace/layer/Marker", "ace/layer/Text", "ace/layer/Cursor", "ace/ScrollBar", "ace/RenderLoop", "ace/MEventEmitter", 'text!ace/css/editor.css!.ace_editor {\n  position: absolute;\n  overflow: hidden;\n\n  font-family: "Menlo", "Monaco", "Courier New", monospace;\n  font-size: 12px;  \n}\n\n.ace_scroller {\n  position: absolute;\n  overflow-x: scroll;\n  overflow-y: hidden;     \n}\n\n.ace_gutter {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: hidden;\n  height: 100%;\n}\n\n.ace_editor .ace_sb {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  right: 0;\n}\n\n.ace_editor .ace_sb div {\n  position: absolute;\n  width: 1px;\n  left: 0px;\n}\n\n.ace_editor .ace_printMargin {\n  position: absolute;\n  height: 100%;\n}\n\n.ace_layer {\n  z-index: 0;\n  position: absolute;\n  overflow: hidden;  \n  white-space: nowrap;\n  height: 100%;\n}\n\n.ace_text-layer {\n  font-family: Monaco, "Courier New", monospace;\n  color: black;\n}\n\n.ace_cursor-layer {\n  cursor: text;\n}\n\n.ace_cursor {\n  z-index: 3;\n  position: absolute;\n}\n\n.ace_line {\n  white-space: nowrap;\n}\n\n.ace_marker-layer {\n}\n\n.ace_marker-layer .ace_step {\n  position: absolute;\n  z-index: 2;\n}\n\n.ace_marker-layer .ace_selection {\n  position: absolute;\n  z-index: 3;\n}\n\n.ace_marker-layer .ace_bracket {\n  position: absolute;\n  z-index: 4;\n}\n\n.ace_marker-layer .ace_active_line {\n  position: absolute;\n  z-index: 1;\n}'], 
 function(k, f, a, h, i, e, j, c, g, l, m, b) {
