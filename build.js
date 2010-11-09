@@ -24,20 +24,20 @@
 
     modules: [
         {
-            name: "ace/Editor",
+            name: "ace/editor",
             include: [
-                "ace/Document",
-                "ace/UndoManager",
-                "ace/VirtualRenderer",
+                "ace/document",
+                "ace/undomanager",
+                "ace/virtual_renderer",
                 
-                "ace/mode/JavaScript",
-                "ace/theme/TextMate"
+                "ace/mode/javascript",
+                "ace/theme/textmate"
             ],
             includeRequire: false
         },
         
         { 
-            name: "ace/theme/Eclipse", 
+            name: "ace/theme/eclipse", 
             exclude: [
                 "ace/lib/lang",
                 "ace/lib/dom",
@@ -45,35 +45,34 @@
             ]
         },
         { 
-            name: "ace/mode/Xml",
+            name: "ace/mode/xml",
             exclude: [
                 "ace/lib/oop",
-                "ace/Tokenizer",
-                "ace/mode/Text"      
+                "ace/tokenizer",
+                "ace/mode/text"      
             ]
         },
         { 
-            name: "ace/mode/Css",
+            name: "ace/mode/css",
             exclude: [
                 "ace/lib/oop",
                 "ace/lib/lang",
-                "ace/Tokenizer",
-                "ace/Range",
-                "ace/mode/Text"      
+                "ace/tokenizer",
+                "ace/range",
+                "ace/mode/text"      
             ]
         },
         { 
-            name: "ace/mode/Html",
+            name: "ace/mode/html",
             exclude: [
                 "ace/lib/oop",
                 "ace/lib/lang",
-                "ace/Tokenizer",
-                "ace/Range",
-                "ace/mode/Text",
-                "ace/mode/JavaScript",
-                "ace/mode/Css",
+                "ace/tokenizer",
+                "ace/range",
+                "ace/mode/text",
+                "ace/mode/javascript",
+                "ace/mode/css",
             ]
         }
     ]
 }
-
