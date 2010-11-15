@@ -147,7 +147,22 @@ require(
         "ace/mode/xml",
         "ace/mode/text",
         "ace/undomanager"
-    ], function(event, Editor, Renderer, theme, Document, JavaScriptMode, CssMode, HtmlMode, XmlMode, TextMode, UndoManager) { 
+    ], function(
+        eventMod,
+        Editor,
+        Renderer,
+        theme,
+        Document,
+        JavaScriptMode,
+        cssMod,
+        HtmlMode,
+        XmlMode,
+        TextMode,
+        UndoManager
+    ) {
+
+var event = eventMod.event;
+var CssMode = cssMod.Css;
 
 var docs = {}
 
