@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var dom = require("./lib/dom");
+    var dom = require("ace/lib/dom");
     var cssText = %css%;
     
     // import CSS once
