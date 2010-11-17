@@ -149,7 +149,7 @@ require(
         "ace/undomanager"
     ], function(
         eventMod,
-        Editor,
+        editorMod,
         Renderer,
         theme,
         docMod,
@@ -162,12 +162,16 @@ require(
     ) {
 
 var event = eventMod.event;
+var Editor = editorMod.Editor;
+
+
 var Document = docMod.Document;
 var JavaScriptMode = jsMod.JavaScript;
 var CssMode = cssMod.Css;
 var HtmlMode = htmlMod.Html;
 var XmlMode = xmlMod.Xml;
 var TextMode = textMod.Text;
+
 
 var docs = {}
 
