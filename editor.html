@@ -153,17 +153,20 @@ require(
         Renderer,
         theme,
         Document,
-        JavaScriptMode,
+        jsMod,
         cssMod,
         htmlMod,
-        XmlMode,
-        TextMode,
+        xmlMod,
+        textMod,
         UndoManager
     ) {
 
 var event = eventMod.event;
+var JavaScriptMode = jsMod.JavaScript;
 var CssMode = cssMod.Css;
 var HtmlMode = htmlMod.Html;
+var XmlMode = xmlMod.Xml;
+var TextMode = textMod.Text;
 
 var docs = {}
 
