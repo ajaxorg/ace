@@ -150,7 +150,7 @@ require(
     ], function(
         eventMod,
         editorMod,
-        Renderer,
+        renderMod,
         theme,
         docMod,
         jsMod,
@@ -163,7 +163,7 @@ require(
 
 var event = eventMod.event;
 var Editor = editorMod.Editor;
-
+var Renderer = renderMod.VirtualRenderer;
 var Document = docMod.Document;
 var JavaScriptMode = jsMod.JavaScript;
 var CssMode = cssMod.Css;
