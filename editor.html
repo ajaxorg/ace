@@ -48,7 +48,27 @@
     }
     
     </style>
+    <script>
+      require = {
+        urlArgs: "bust=" +  (new Date()).getTime()
+      };
+    </script>
     <script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
+    <script src="demo/boot.js" type="text/javascript"></script>
+    <script>
+      setupPlugins({
+        pluginDirs: {
+          "../demo": {
+            singleFiles: ["demo_startup"]
+          }
+        }
+      }, function(plugin_manager) {
+        plugin_manager.catalog.startupPlugins({}, plugin_manager.REASONS.APP_STARTUP).then(function() {
+          var demo_startup = require("demo_startup");
+          demo_startup.launch();
+        });
+      });
+    </script>
 </head>
 <body>
     <div id="jump"></div>
@@ -131,191 +151,5 @@
 </html>
     </script>
     
-<script type="text/javascript" charset="utf-8">
-
-require(
-    { baseUrl: "lib" },
-    [
-        "ace/lib/event",
-        "ace/editor",
-        "ace/virtual_renderer",
-        "ace/theme/textmate",
-        "ace/document",
-        "ace/mode/javascript",
-        "ace/mode/css",
-        "ace/mode/html",
-        "ace/mode/xml",
-        "ace/mode/text",
-        "ace/undomanager"
-    ], function(
-        eventMod,
-        editorMod,
-        renderMod,
-        theme,
-        docMod,
-        jsMod,
-        cssMod,
-        htmlMod,
-        xmlMod,
-        textMod,
-        undoMod
-    ) {
-
-var event = eventMod.event;
-var Editor = editorMod.Editor;
-var Renderer = renderMod.VirtualRenderer;
-var Document = docMod.Document;
-var JavaScriptMode = jsMod.JavaScript;
-var CssMode = cssMod.Css;
-var HtmlMode = htmlMod.Html;
-var XmlMode = xmlMod.Xml;
-var TextMode = textMod.Text;
-var UndoManager = undoMod.UndoManager;
-
-var docs = {}
-
-docs.js = new Document(document.getElementById("jstext").innerHTML);
-docs.js.setMode(new JavaScriptMode());
-docs.js.setUndoManager(new UndoManager());
-
-docs.css = new Document(document.getElementById("csstext").innerHTML);
-docs.css.setMode(new CssMode());
-docs.css.setUndoManager(new UndoManager());
-
-docs.html = new Document(document.getElementById("htmltext").innerHTML);
-docs.html.setMode(new HtmlMode());
-docs.html.setUndoManager(new UndoManager());
-
-var docEl = document.getElementById("doc");
-
-function onDocChange() {
-    var doc = getDoc();
-    editor.setDocument(doc);
-    
-    var mode = doc.getMode();
-    if (mode instanceof JavaScriptMode) {
-        modeEl.value = "javascript"
-    }
-    else if (mode instanceof CssMode) {
-        modeEl.value = "css"
-    }
-    else if (mode instanceof HtmlMode) {
-        modeEl.value = "html"
-    }
-    else if (mode instanceof XmlMode) {
-        modeEl.value = "xml"
-    }
-    else {
-        modeEl.value = "text"
-    }
-    
-    editor.focus();
-}
-docEl.onchange = onDocChange;
-
-function getDoc() {
-    return docs[docEl.value];
-}
-
-var modeEl = document.getElementById("mode");
-modeEl.onchange = function() {
-    editor.getDocument().setMode(modes[modeEl.value] || modes.text);
-};
-
-var modes = {
-    text: new TextMode(),
-    xml: new XmlMode(),
-    html: new HtmlMode(),
-    css: new CssMode(),
-    javascript: new JavaScriptMode()
-};
-
-function getMode() {
-    return modes[modeEl.value]; 
-}
-
-var themeEl = document.getElementById("theme");
-themeEl.onchange = function() {
-    editor.setTheme(themeEl.value);
-};
-
-var selectEl = document.getElementById("select_style");
-selectEl.onchange = function() {
-    if (selectEl.checked) {
-        editor.setSelectionStyle("line");
-    } else {
-        editor.setSelectionStyle("text");
-    }
-};
-
-var activeEl = document.getElementById("highlight_active");
-activeEl.onchange = function() {
-    editor.setHighlightActiveLine(!!activeEl.checked);
-};
-
-var container = document.getElementById("editor");
-var editor = new Editor(new Renderer(container, theme));
-onDocChange();
-
-window.jump = function() {
-    var jump = document.getElementById("jump")
-    var cursor = editor.getCursorPosition()
-    var pos = editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
-    jump.style.left = pos.pageX + "px";
-    jump.style.top = pos.pageY + "px";
-    jump.style.display = "block";
-}
-
-function onResize() {
-    container.style.width = (document.documentElement.clientWidth - 4) + "px";
-    container.style.height = (document.documentElement.clientHeight - 55 - 4) + "px";     
-    editor.resize();    
-};
-
-window.onresize = onResize;
-onResize();
-
-event.addListener(container, "dragover", function(e) {
-    return event.preventDefault(e);
-});
-
-event.addListener(container, "drop", function(e) {
-    try {
-        var file = e.dataTransfer.files[0];
-    } catch(e) {
-        return event.stopEvent();
-    }
-    
-    if (window.FileReader) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            editor.getSelection().selectAll();
-            
-            var mode = "text";
-            if (/^.*\.js$/i.test(file.name)) {
-                mode = "javascript";
-            } else if (/^.*\.xml$/i.test(file.name)) {
-                mode = "xml";
-            } else if (/^.*\.html$/i.test(file.name)) {
-                mode = "html";
-            } else if (/^.*\.css$/i.test(file.name)) {
-                mode = "css";
-            }
-            
-            editor.onTextInput(reader.result);
-            
-            modeEl.value = mode;      
-            editor.getDocument().setMode(modes[mode]);
-        }
-        reader.readAsText(file);
-    }
-    
-    return event.preventDefault(e);
-});
-
-
-});
-</script>
-
 </body>
 </html>
