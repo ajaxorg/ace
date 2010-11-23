@@ -37,8 +37,7 @@
 
 define(function(require, exports, module) {
 
-
-var core = require("pilot/core").core;
+    var core = require("pilot/core").core;
     var event = {};
 
     event.addListener = function(elem, type, callback) {
@@ -111,7 +110,7 @@ var core = require("pilot/core").core;
         }
         // old IE
         else {
-            return Math.max(e.button - 1, 2)
+            return Math.max(e.button - 1, 2);
         }
     };
 
@@ -239,4 +238,5 @@ var core = require("pilot/core").core;
     };
 
     exports.event = event;
+
 });

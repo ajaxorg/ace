@@ -41,30 +41,19 @@ define(function(require, exports, module) {
 
 exports.launch = function() {
 
-    var eventMod = require("pilot/event");
-    var editorMod = require("ace/editor");
-    var renderMod = require("ace/virtual_renderer");
+    var event = require("pilot/event").event;
+    var Editor = require("ace/editor").Editor;
+    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
-    var docMod = require("ace/document");
-    var jsMod = require("ace/mode/javascript");
-    var cssMod = require("ace/mode/css");
-    var htmlMod = require("ace/mode/html");
-    var xmlMod = require("ace/mode/xml");
-    var textMod = require("ace/mode/text");
-    var undoMod = require("ace/undomanager");
+    var Document = require("ace/document").Document;
+    var JavaScriptMode = require("ace/mode/javascript").JavaScript;
+    var CssMode = require("ace/mode/css").Css;
+    var HtmlMode = require("ace/mode/html").Html;
+    var XmlMode = require("ace/mode/xml").Xml;
+    var TextMode = require("ace/mode/text").Text;
+    var UndoManager = require("ace/undomanager").UndoManager;
 
-    var event = eventMod.event;
-    var Editor = editorMod.Editor;
-    var Renderer = renderMod.VirtualRenderer;
-    var Document = docMod.Document;
-    var JavaScriptMode = jsMod.JavaScript;
-    var CssMode = cssMod.Css;
-    var HtmlMode = htmlMod.Html;
-    var XmlMode = xmlMod.Xml;
-    var TextMode = textMod.Text;
-    var UndoManager = undoMod.UndoManager;
-
-    var docs = {}
+    var docs = {};
 
     docs.js = new Document(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
@@ -86,19 +75,19 @@ exports.launch = function() {
 
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
-            modeEl.value = "javascript"
+            modeEl.value = "javascript";
         }
         else if (mode instanceof CssMode) {
-            modeEl.value = "css"
+            modeEl.value = "css";
         }
         else if (mode instanceof HtmlMode) {
-            modeEl.value = "html"
+            modeEl.value = "html";
         }
         else if (mode instanceof XmlMode) {
-            modeEl.value = "xml"
+            modeEl.value = "xml";
         }
         else {
-            modeEl.value = "text"
+            modeEl.value = "text";
         }
 
         editor.focus();
@@ -150,13 +139,13 @@ exports.launch = function() {
     onDocChange();
 
     window.jump = function() {
-        var jump = document.getElementById("jump")
-        var cursor = editor.getCursorPosition()
+        var jump = document.getElementById("jump");
+        var cursor = editor.getCursorPosition();
         var pos = editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
         jump.style.left = pos.pageX + "px";
         jump.style.top = pos.pageY + "px";
         jump.style.display = "block";
-    }
+    };
 
     function onResize() {
         container.style.width = (document.documentElement.clientWidth - 4) + "px";
@@ -198,7 +187,7 @@ exports.launch = function() {
 
                 modeEl.value = mode;
                 editor.getDocument().setMode(modes[mode]);
-            }
+            };
             reader.readAsText(file);
         }
 
