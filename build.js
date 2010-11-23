@@ -41,13 +41,13 @@
             exclude: [
                 "pilot/lang",
                 "pilot/dom",
-                "ace/lib/oop"
+                "pilot/oop"
             ]
         },
         {
             name: "ace/mode/xml",
             exclude: [
-                "ace/lib/oop",
+                "pilot/oop",
                 "ace/tokenizer",
                 "ace/mode/text"
             ]
@@ -55,7 +55,7 @@
         {
             name: "ace/mode/css",
             exclude: [
-                "ace/lib/oop",
+                "pilot/oop",
                 "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
@@ -65,7 +65,7 @@
         {
             name: "ace/mode/html",
             exclude: [
-                "ace/lib/oop",
+                "pilot/oop",
                 "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
