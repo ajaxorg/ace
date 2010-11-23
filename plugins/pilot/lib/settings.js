@@ -43,9 +43,10 @@
 
 define(function(require, exports, module) {
 
-var console = require("util/console");
-var types = require("types");
-var Event = require("events").Event;
+var console = require("pilot/console");
+var oop = require("pilot/oop").oop;
+var types = require("pilot/types");
+var MEventEmitter = require("pilot/event_emitter").MEventEmitter;
 
 exports.startup = function(data, reason) {
     // TODO add extension point in new style
@@ -141,12 +142,6 @@ function Settings(persister) {
     if (persister) {
         this.setPersister(persister);
     }
-
-    /**
-     * Event that tells people when a setting has changed.
-     */
-    // TODO: Fix events
-    // this.settingChange = new Event({ keyElement: 0 });
 };
 
 Settings.prototype = {
@@ -235,9 +230,7 @@ Settings.prototype = {
             persister.persistValue(this, key, value);
         }
 
-        // Inform subscriptions of the change
-        // TODO: fix events
-        // this.settingChange(key, converted);
+        this.$dispatchEvent('settingChange', { key: key, value: value });
         return this;
     },
 
@@ -317,6 +310,8 @@ Settings.prototype = {
         }.bind(this));
     }
 };
+
+oop.implement(Settings.prototype, MEventEmitter);
 
 exports.settings = new Settings(new MemoryPersister());
 

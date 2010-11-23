@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
-//var Event = require('events').Event;
+var MEventEmitter = require("pilot/event_emitter").MEventEmitter;
 
 exports.startup = function(data, reason) {
     if (!data.env || !data.env.settings) {
@@ -91,7 +91,7 @@ exports.Canon.prototype = {
     }
 };
 
-// exports.addedRequestOutput = new Event();
+oop.implement(exports, MEventEmitter);
 
 /**
  * Current requirements are around displaying the command line, and provision
@@ -130,7 +130,7 @@ exports.addRequestOutput = function(request) {
         exports.requests.shiftObject();
     }
 
-    exports.addedRequestOutput(request);
+    exports.$dispatchEvent('addedRequestOutput', { request: request });
 };
 
 /**
@@ -189,9 +189,9 @@ exports.Request = function(options) {
     this.end = null;
     this.completed = false;
     this.error = false;
-
-//    this.changed = new Event();
 };
+
+oop.implement(exports.Request.prototype, MEventEmitter);
 
 /**
  * Lazy init to register with the history should only be done on output.
@@ -238,7 +238,7 @@ exports.Request.prototype.output = function(content) {
     }
 
     this.outputs.push(content);
-    this.changed();
+    this.$dispatchEvent('changed', {});
 
     return this;
 };
@@ -254,11 +254,9 @@ exports.Request.prototype.done = function(content) {
 
     if (content) {
         this.output(content);
-    } else {
-        this.changed();
     }
+
+    this.$dispatchEvent('changed', {});
 };
-
-
 
 });
