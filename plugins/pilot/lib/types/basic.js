@@ -38,16 +38,16 @@
 
 define(function(require, exports, module) {
 
-var types = require("types");
+var types = require("pilot/types");
 
 /**
  * These are the basic types that we accept. They are vaguely based on the
  * Jetpack settings system (https://wiki.mozilla.org/Labs/Jetpack/JEP/24)
  * although clearly more restricted.
- * 
+ *
  * <p>In addition to these types, Jetpack also accepts range, member, password
  * that we are thinking of adding.
- * 
+ *
  * <p>This module probably should not be accessed directly, but instead used
  * through types.js
  */

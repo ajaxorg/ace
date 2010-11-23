@@ -37,12 +37,14 @@
 
 define(function(require, exports, module) {
 
-var console = require('util/console');
-var Trace = require('util/stacktrace').Trace;
-var Event = require('events').Event;
-var history = require('canon/history');
+var console = require('pilot/console');
+var Trace = require('pilot/stacktrace').Trace;
+//var Event = require('events').Event;
 
 exports.startup = function(data, reason) {
+    if (!data.env || !data.env.settings) {
+        return;
+    }
     var settings = data.env.settings;
     // TODO register these using new registration functionality
 
@@ -89,7 +91,7 @@ exports.Canon.prototype = {
     }
 };
 
-exports.addedRequestOutput = new Event();
+// exports.addedRequestOutput = new Event();
 
 /**
  * Current requirements are around displaying the command line, and provision
@@ -188,7 +190,7 @@ exports.Request = function(options) {
     this.completed = false;
     this.error = false;
 
-    this.changed = new Event();
+//    this.changed = new Event();
 };
 
 /**
@@ -199,7 +201,7 @@ exports.Request.prototype._beginOutput = function() {
     this._begunOutput = true;
     this.outputs = [];
 
-    history.addRequestOutput(this);
+    exports.addRequestOutput(this);
 };
 
 /**

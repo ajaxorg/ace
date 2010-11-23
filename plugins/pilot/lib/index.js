@@ -35,17 +35,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
+var deps = [
+    "pilot/fixoldbrowsers",
+    "pilot/types/basic",
+    "pilot/canon"
+];
 
-    exports.startup = function(data, reason) {
-        require("fixoldbrowsers").startup(data, reason);
-        require("types/basic").startup(data, reason);
-        require("canon").startup(data, reason);
-    };
+var packages = deps.slice();
+packages.unshift("require", "exports", "module");
 
-    exports.shutdown(data, reason) {
-        require("fixoldbrowsers").shutdown(data, reason);
-        require("types/basic").shutdown(data, reason);
-        require("canon").shutdown(data, reason);
-    };
+define(packages, function(require, exports, module) {
+
+exports.startup = function(data, reason) {
+    deps.forEach(function(dep) {
+        console.log("test startup for " + dep);
+        var module = require(dep);
+        if (typeof module.startup === "function") {
+            module.startup(data, reason);
+        }
+    });
+};
+/*
+exports.shutdown(data, reason) {
+    deps.forEach(function(dep) {
+        var module = require(dep);
+        if (typeof module.shutdown === "function") {
+            module.shutdown(data, reason);
+        }
+    });
+};
+*/
 });
