@@ -39,6 +39,7 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
+var oop = require("pilot/oop").oop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 exports.startup = function(data, reason) {
