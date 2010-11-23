@@ -1,7 +1,3 @@
-// TODO this file can likely be deleted. The useful functionality has moved to
-// index.js
-
-
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -44,7 +40,7 @@ define(function(require, exports, module) {
  * Most of our types are 'static' e.g. there is only one type of 'text', however
  * some types like 'selection' and 'deferred' are customizable. The basic
  * Type type isn't useful, but does provide documentation about what types do.
- * 
+ *
  */
 function Type() {
 };
@@ -77,7 +73,7 @@ Type.prototype = {
      * extra data, however this function returns only the name, not the extra
      * data.
      */
-    name: "unknown",
+    name: "unknown"
 
     // Methods from the original type system that we might need, but not now.
 
@@ -111,14 +107,14 @@ var types = {};
  */
 exports.registerType = function(type) {
     types[type.name] = type;
-}
+};
 
 /**
  * Remove a type from the list available to the system
  */
 exports.deregisterType = function(type) {
     delete types[type.name];
-}
+};
 
 /**
  * Find a type, previously registered using #registerType()
@@ -144,6 +140,6 @@ exports.getType = function(typeSpec) {
     if (typeof type === 'function') {
         return type(typeSpec);
     }
-}
+};
 
 });

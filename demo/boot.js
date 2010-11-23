@@ -47,9 +47,9 @@ var setupPlugins = function(config, callback) {
     config.pluginDirs["../plugins"] = {
         packages: ["pilot"]
     };
-    
+
     var knownPlugins = [];
-    
+
     var pluginPackageInfo = {
         "../lib": [
             {
@@ -58,11 +58,11 @@ var setupPlugins = function(config, callback) {
             }
         ]
     };
-    
+
     var paths = {};
     var i;
     var location;
-    
+
     // we need to ensure that the core plugin directory is loaded first
     var pluginDirs = [];
     var pluginDir;
@@ -76,13 +76,13 @@ var setupPlugins = function(config, callback) {
             return 1;
         } else if (a < b) {
             return -1;
-        } else if (b < a) { 
+        } else if (b < a) {
             return 1;
         } else {
             return 0;
         }
     });
-    
+
     // set up RequireJS to know that our plugins all have a main module called "index"
     for (var dirNum = 0; dirNum < pluginDirs.length; dirNum++) {
         pluginDir = pluginDirs[dirNum];
@@ -109,7 +109,7 @@ var setupPlugins = function(config, callback) {
             }
         }
     }
-    
+
     require({
         packagePaths: pluginPackageInfo,
         paths: paths
