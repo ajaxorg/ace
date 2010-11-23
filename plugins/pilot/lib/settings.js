@@ -230,7 +230,7 @@ Settings.prototype = {
             persister.persistValue(this, key, value);
         }
 
-        this.$dispatchEvent('settingChange', { key: key, value: value });
+        this._dispatchEvent('settingChange', { key: key, value: value });
         return this;
     },
 

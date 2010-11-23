@@ -130,7 +130,7 @@ exports.addRequestOutput = function(request) {
         exports.requests.shiftObject();
     }
 
-    exports.$dispatchEvent('addedRequestOutput', { request: request });
+    exports._dispatchEvent('addedRequestOutput', { request: request });
 };
 
 /**
@@ -238,7 +238,7 @@ exports.Request.prototype.output = function(content) {
     }
 
     this.outputs.push(content);
-    this.$dispatchEvent('changed', {});
+    this._dispatchEvent('changed', {});
 
     return this;
 };
@@ -256,7 +256,7 @@ exports.Request.prototype.done = function(content) {
         this.output(content);
     }
 
-    this.$dispatchEvent('changed', {});
+    this._dispatchEvent('changed', {});
 };
 
 });
