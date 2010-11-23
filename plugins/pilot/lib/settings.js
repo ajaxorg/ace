@@ -46,7 +46,7 @@ define(function(require, exports, module) {
 var console = require("pilot/console");
 var oop = require("pilot/oop").oop;
 var types = require("pilot/types");
-var MEventEmitter = require("pilot/event_emitter").MEventEmitter;
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 exports.startup = function(data, reason) {
     // TODO add extension point in new style
@@ -311,7 +311,7 @@ Settings.prototype = {
     }
 };
 
-oop.implement(Settings.prototype, MEventEmitter);
+oop.implement(Settings.prototype, EventEmitter);
 
 exports.settings = new Settings(new MemoryPersister());
 

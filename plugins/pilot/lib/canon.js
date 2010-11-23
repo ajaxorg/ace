@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
-var MEventEmitter = require("pilot/event_emitter").MEventEmitter;
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 exports.startup = function(data, reason) {
     if (!data.env || !data.env.settings) {
@@ -91,7 +91,7 @@ exports.Canon.prototype = {
     }
 };
 
-oop.implement(exports, MEventEmitter);
+oop.implement(exports, EventEmitter);
 
 /**
  * Current requirements are around displaying the command line, and provision
@@ -191,7 +191,7 @@ exports.Request = function(options) {
     this.error = false;
 };
 
-oop.implement(exports.Request.prototype, MEventEmitter);
+oop.implement(exports.Request.prototype, EventEmitter);
 
 /**
  * Lazy init to register with the history should only be done on output.

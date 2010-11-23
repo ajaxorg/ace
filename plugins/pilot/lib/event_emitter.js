@@ -39,9 +39,9 @@ define(function(require, exports, module) {
 
     var lang = require("pilot/lang").lang;
 
-    var MEventEmitter = {};
+    var EventEmitter = {};
 
-    MEventEmitter.$dispatchEvent = function(eventName, e) {
+    EventEmitter.$dispatchEvent = function(eventName, e) {
         this.$eventRegistry = this.$eventRegistry || {};
 
         var listeners = this.$eventRegistry[eventName];
@@ -55,8 +55,8 @@ define(function(require, exports, module) {
         }
     };
 
-    MEventEmitter.on =
-    MEventEmitter.addEventListener = function(eventName, callback) {
+    EventEmitter.on =
+    EventEmitter.addEventListener = function(eventName, callback) {
         this.$eventRegistry = this.$eventRegistry || {};
 
         var listeners = this.$eventRegistry[eventName];
@@ -68,7 +68,7 @@ define(function(require, exports, module) {
         }
     };
 
-    MEventEmitter.removeEventListener = function(eventName, callback) {
+    EventEmitter.removeEventListener = function(eventName, callback) {
         this.$eventRegistry = this.$eventRegistry || {};
 
         var listeners = this.$eventRegistry[eventName];
@@ -81,5 +81,5 @@ define(function(require, exports, module) {
         }
     };
 
-    exports.MEventEmitter = MEventEmitter;
+    exports.EventEmitter = EventEmitter;
 });
