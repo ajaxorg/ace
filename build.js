@@ -39,7 +39,7 @@
         {
             name: "ace/theme/eclipse",
             exclude: [
-                "ace/lib/lang",
+                "pilot/lang",
                 "pilot/dom",
                 "ace/lib/oop"
             ]
@@ -56,7 +56,7 @@
             name: "ace/mode/css",
             exclude: [
                 "ace/lib/oop",
-                "ace/lib/lang",
+                "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
                 "ace/mode/text"
@@ -66,7 +66,7 @@
             name: "ace/mode/html",
             exclude: [
                 "ace/lib/oop",
-                "ace/lib/lang",
+                "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
                 "ace/mode/text",
