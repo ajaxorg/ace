@@ -40,8 +40,8 @@
 define(function(require, exports, module) {
 
 exports.launch = function() {
-    
-    var eventMod = require("ace/lib/event");
+
+    var eventMod = require("pilot/event");
     var editorMod = require("ace/editor");
     var renderMod = require("ace/virtual_renderer");
     var theme = require("ace/theme/textmate");
@@ -83,7 +83,7 @@ exports.launch = function() {
     function onDocChange() {
         var doc = getDoc();
         editor.setDocument(doc);
-    
+
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript"
@@ -100,7 +100,7 @@ exports.launch = function() {
         else {
             modeEl.value = "text"
         }
-    
+
         editor.focus();
     }
     docEl.onchange = onDocChange;
@@ -123,7 +123,7 @@ exports.launch = function() {
     };
 
     function getMode() {
-        return modes[modeEl.value]; 
+        return modes[modeEl.value];
     }
 
     var themeEl = document.getElementById("theme");
@@ -160,8 +160,8 @@ exports.launch = function() {
 
     function onResize() {
         container.style.width = (document.documentElement.clientWidth - 4) + "px";
-        container.style.height = (document.documentElement.clientHeight - 55 - 4) + "px";     
-        editor.resize();    
+        container.style.height = (document.documentElement.clientHeight - 55 - 4) + "px";
+        editor.resize();
     };
 
     window.onresize = onResize;
@@ -177,12 +177,12 @@ exports.launch = function() {
         } catch(e) {
             return event.stopEvent();
         }
-    
+
         if (window.FileReader) {
             var reader = new FileReader();
             reader.onload = function(e) {
                 editor.getSelection().selectAll();
-            
+
                 var mode = "text";
                 if (/^.*\.js$/i.test(file.name)) {
                     mode = "javascript";
@@ -193,15 +193,15 @@ exports.launch = function() {
                 } else if (/^.*\.css$/i.test(file.name)) {
                     mode = "css";
                 }
-            
+
                 editor.onTextInput(reader.result);
-            
-                modeEl.value = mode;      
+
+                modeEl.value = mode;
                 editor.getDocument().setMode(modes[mode]);
             }
             reader.readAsText(file);
         }
-    
+
         return event.preventDefault(e);
     });
 };
