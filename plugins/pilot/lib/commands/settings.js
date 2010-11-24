@@ -1,13 +1,3 @@
-require.def(['require', 'exports', 'module',
-    'skywriter/plugins',
-    'settings/environment',
-    'settings/settings'
-], function(require, exports, module,
-    plugins,
-    environment,
-    settingsMod
-) {
-
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -45,60 +35,136 @@ require.def(['require', 'exports', 'module',
  *
  * ***** END LICENSE BLOCK ***** */
 
-var catalog = plugins.catalog;
-var env = environment.env;
-
-var settings = settingsMod.settings;
+define(function(require, exports, module) {
 
 /**
- * 'set' command
+ * Something of a hack to allow the set command to give a clearer definition
+ * of the type to the command line.
  */
-exports.setCommand = function(args, request) {
-    var html;
+var valueDeferredType = {
+    name: "deferred",
+    undeferType: function(typeSpec, env) {
+        var assignments = typeSpec.assignments;
+        var replacement = 'text';
 
-    if (!args.setting) {
-        var settingsList = settings._list();
-        html = '';
-        // first sort the settingsList based on the key
-        settingsList.sort(function(a, b) {
-            if (a.key < b.key) {
-                return -1;
-            } else if (a.key == b.key) {
-                return 0;
-            } else {
-                return 1;
+        if (assignments) {
+            // Find the assignment for 'setting' so we can get it's value
+            var settingAssignment = null;
+            assignments.forEach(function(assignment) {
+                if (assignment.param.name === 'setting') {
+                    settingAssignment = assignment;
+                }
+            });
+
+            if (settingAssignment) {
+                var settingName = settingAssignment.value;
+                if (settingName && settingName !== '') {
+                    var settingExt = settings[settingName];
+                    if (settingExt) {
+                        replacement = settingExt.type;
+                    }
+                }
             }
-        });
-
-        settingsList.forEach(function(setting) {
-            html += '<a class="setting" href="https://wiki.mozilla.org/Labs/Skywriter/Settings#' +
-                    setting.key +
-                    '" title="View external documentation on setting: ' +
-                    setting.key +
-                    '" target="_blank">' +
-                    setting.key +
-                    '</a> = ' +
-                    setting.value +
-                    '<br/>';
-        });
-    } else {
-        if (args.value === undefined) {
-            html = '<strong>' + args.setting + '</strong> = ' + settings.get(args.setting);
-        } else {
-            html = 'Setting: <strong>' + args.setting + '</strong> = ' + args.value;
-            settings.set(args.setting, args.value);
         }
+
+        return replacement;
     }
-
-    request.done(html);
 };
 
-/**
- * 'unset' command
- */
-exports.unsetCommand = function(args, request) {
-    settings.resetValue(args.setting);
-    request.done('Reset ' + args.setting + ' to default: ' + settings.get(args.setting));
+var setCommandSpec = {
+    name: "set",
+    params: [
+        {
+            name: "setting",
+            type: {
+                name: "selection",
+                getOptions: function(env) {
+                    return env.settings.getSettingNames();
+                }
+            },
+            description: "The name of the setting to display or alter",
+            defaultValue: null
+        },
+        {
+            name: "value",
+            type: valueDeferredType,
+            description: "The new value for the chosen setting",
+            defaultValue: null
+        }
+    ],
+    description: "define and show settings",
+    exec: function(env, args, request) {
+        var html;
+        if (!args.setting) {
+            var settingsList = env.settings._list();
+            html = '';
+            // first sort the settingsList based on the key
+            settingsList.sort(function(a, b) {
+                if (a.key < b.key) {
+                    return -1;
+                } else if (a.key == b.key) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            });
+            var url = "https://wiki.mozilla.org/Labs/Skywriter/Settings#" +
+                    setting.key;
+            settingsList.forEach(function(setting) {
+                html += '<a class="setting" href="' + url +
+                        '" title="View external documentation on setting: ' +
+                        setting.key +
+                        '" target="_blank">' +
+                        setting.key +
+                        '</a> = ' +
+                        setting.value +
+                        '<br/>';
+            });
+        } else {
+            if (args.value === undefined) {
+                html = '<strong>' + args.setting + '</strong> = ' +
+                        env.settings.get(args.setting);
+            } else {
+                html = 'Setting: <strong>' + args.setting + '</strong> = ' +
+                        args.value;
+                env.settings.set(args.setting, args.value);
+            }
+        }
+        request.done(html);
+    }
 };
+
+var unsetCommandSpec = {
+    name: "unset",
+    params: [
+        {
+            name: "setting",
+            type: {
+                name: "selection",
+                pointer: "settings:index#getSettings"
+            },
+            description: "The name of the setting to return to defaults"
+        }
+    ],
+    description: "unset a setting entirely",
+    exec: function(env, args, request) {
+        env.settings.resetValue(args.setting);
+        request.done('Reset ' + args.setting + ' to default: ' +
+                env.settings.get(args.setting));
+    }
+};
+
+var canon = require('pilot/canon');
+
+exports.startup = function(data, reason) {
+    canon.addCommand(setCommandSpec);
+    canon.addCommand(unsetCommandSpec);
+};
+
+exports.shutdown = function(data, reason) {
+    canon.removeCommand(setCommandSpec);
+    canon.removeCommand(unsetCommandSpec);
+};
+
 
 });

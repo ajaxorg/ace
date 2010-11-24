@@ -37,76 +37,33 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+define(function(require, exports, module) {
+
 /**
  * This plug-in manages settings.
  */
-
-define(function(require, exports, module) {
 
 var console = require("pilot/console");
 var oop = require("pilot/oop").oop;
 var types = require("pilot/types");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var catalog = require("pilot/catalog");
+
+var settingExtensionSpec = {
+    name: "setting",
+    description: "A setting is something that the application offers as a " +
+            "way to customize how it works",
+    register: "env.settings.addSetting",
+    indexOn: "name"
+};
 
 exports.startup = function(data, reason) {
-    // TODO add extension point in new style
-    // catalog.addExtensionPoint("setting", {
-    //     "description":
-    //         "A setting is something that the application offers as a way to customize how it works",
-    //     "register": "index#addSetting",
-    //     "indexOn": "name"
-    // });
-    // catalog.addExtensionPoint("settingChange", {
-    //     "description":
-    //         "A settingChange is a way to be notified of changes to a setting"
-    // });
-
-    // TODO add commands in new style
-    // catalog.connect("command", module.id, {
-    //     "name": "set",
-    //     "params": [
-    //         {
-    //             "name": "setting",
-    //             "type": {
-    //                 "name": "selection",
-    //                 "pointer": "settings:index#getSettings"
-    //             },
-    //             "description": "The name of the setting to display or alter",
-    //             "defaultValue": null
-    //         },
-    //         {
-    //             "name": "value",
-    //             "type": {
-    //                 "name": "deferred",
-    //                 "pointer": "settings:index#getTypeSpecFromAssignment"
-    //             },
-    //             "description": "The new value for the chosen setting",
-    //             "defaultValue": null
-    //         }
-    //     ],
-    //     "description": "define and show settings",
-    //     "pointer": "commands#setCommand"
-    // });
-    // catalog.connect("command", module.id, {
-    //     "name": "unset",
-    //     "params": [
-    //         {
-    //             "name": "setting",
-    //             "type": {
-    //                 "name": "selection",
-    //                 "pointer": "settings:index#getSettings"
-    //             },
-    //             "description": "The name of the setting to return to defaults"
-    //         }
-    //     ],
-    //     "description": "unset a setting entirely",
-    //     "pointer": "commands#unsetCommand"
-    // });
+    catalog.addExtensionSpec(settingExtensionSpec);
 };
 
 exports.shutdown = function(data, reason) {
+    catalog.removeExtensionSpec(settingExtensionSpec);
 };
-
 
 /**
  * A base class for all the various methods of storing settings.
@@ -313,7 +270,7 @@ Settings.prototype = {
 
 oop.implement(Settings.prototype, EventEmitter);
 
-exports.settings = new Settings(new MemoryPersister());
+exports.settings = new Settings();
 
 /**
  * Save the settings in a cookie
