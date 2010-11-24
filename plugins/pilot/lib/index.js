@@ -38,7 +38,9 @@
 var deps = [
     "pilot/fixoldbrowsers",
     "pilot/types/basic",
-    "pilot/canon"
+    "pilot/canon",
+    "pilot/commands/settings",
+    "pilot/settings/canon"
 ];
 
 var packages = deps.slice();
