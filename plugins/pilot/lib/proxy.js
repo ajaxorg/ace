@@ -34,8 +34,9 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
+
 define(function(require, exports, module) {
-    
+
 var Promise = require('pilot/promise').Promise;
 
 exports.xhr = function(method, url, async, beforeSendCallback) {

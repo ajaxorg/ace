@@ -48,7 +48,7 @@ define(function(require, exports, module) {
             var wrapper = function() {
                 callback(window.event);
             };
-            callback.$$wrapper = wrapper;
+            callback._wrapper = wrapper;
             elem.attachEvent("on" + type, wrapper);
         }
     };
@@ -58,7 +58,7 @@ define(function(require, exports, module) {
             return elem.removeEventListener(type, callback, false);
         }
         if (elem.detachEvent) {
-            elem.detachEvent("on" + type, callback.$$wrapper || callback);
+            elem.detachEvent("on" + type, callback._wrapper || callback);
         }
     };
 
