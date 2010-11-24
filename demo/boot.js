@@ -114,12 +114,13 @@ var setupPlugins = function(config, callback) {
         packagePaths: pluginPackageInfo,
         paths: paths
     });
-    require(["pilot/plugin_manager"], function() {
+    require(["pilot/plugin_manager", "pilot/settings"], function() {
         var pluginsModule = require("pilot/plugin_manager");
+        var settings = require("pilot/settings").settings;
         var catalog = pluginsModule.catalog;
         catalog.registerPlugins(knownPlugins);
         if (callback) {
-            callback(pluginsModule);
+            callback(pluginsModule, settings);
         }
     });
 };

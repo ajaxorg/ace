@@ -62,8 +62,13 @@
             singleFiles: ["demo_startup"]
           }
         }
-      }, function(plugin_manager) {
-        plugin_manager.catalog.startupPlugins({}, plugin_manager.REASONS.APP_STARTUP).then(function() {
+      }, function(plugin_manager, settings) {
+        var data = {
+          env: {
+            settings: settings
+          }
+        };
+        plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
           var demo_startup = require("demo_startup");
           demo_startup.launch();
         });
