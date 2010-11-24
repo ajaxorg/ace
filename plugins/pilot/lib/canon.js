@@ -37,61 +37,78 @@
 
 define(function(require, exports, module) {
 
+
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
 var oop = require("pilot/oop").oop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var catalog = require("pilot/catalog");
+
+/*
+// TODO: this doesn't belong here - or maybe anywhere?
+var dimensionsChangedExtensionSpec = {
+    name: "dimensionsChanged",
+    description: "A dimensionsChanged is a way to be notified of " +
+            "changes to the dimension of Skywriter"
+};
+exports.startup = function(data, reason) {
+    catalog.addExtensionSpec(commandExtensionSpec);
+};
+exports.shutdown = function(data, reason) {
+    catalog.removeExtensionSpec(commandExtensionSpec);
+};
+*/
+
+var commandExtensionSpec = {
+    name: "command",
+    description: "A command is a bit of functionality with optional " +
+            "typed arguments which can do something small like moving " +
+            "the cursor around the screen, or large like cloning a " +
+            "project from VCS.",
+    indexOn: "name"
+};
 
 exports.startup = function(data, reason) {
-    if (!data.env || !data.env.settings) {
-        return;
-    }
-    var settings = data.env.settings;
-    // TODO register these using new registration functionality
-
-    // catalog.addExtensionPoint("command", {
-    //     "description":
-    //         "A command is a bit of functionality with optional typed arguments which can do something small like moving the cursor around the screen, or large like cloning a project from VCS.",
-    //     "indexOn": "name"
-    // });
-    // catalog.addExtensionPoint("addedRequestOutput", {
-    //     "description":
-    //         "An extension point to be called whenever a new command begins output."
-    // });
-    // catalog.addExtensionPoint("dimensionsChanged", {
-    //     "description":
-    //         "A dimensionsChanged is a way to be notified of changes to the dimension of Skywriter"
-    // });
-    settings.addSetting({
-        "name": "historyLength",
-        "description": "How many typed commands do we recall for reference?",
-        "type": "number",
-        "defaultValue": 50
-    });
+    catalog.addExtensionSpec(commandExtensionSpec);
 };
 
 exports.shutdown = function(data, reason) {
-    var settings = data.env.settings;
-    settings.removeSetting('historyLength');
+    catalog.removeExtensionSpec(commandExtensionSpec);
 };
 
-exports.Canon = function() {
-    this._commands = {};
+/**
+ * Manage a list of commands in the current canon
+ */
+var commands = {};
+
+exports.addCommand = function(command) {
+    if (!command.name) {
+        throw new Error("All registered commands must have a name");
+    }
+    commands[command.name] = command;
 };
 
-exports.Canon.prototype = {
-    addCommand: function(options) {
-        if (!options.name) {
-            throw new Error("All registered commands must have a name");
-        }
-        this._commands[name] = options;
-    },
-
-    removeCommand: function(name) {
-        delete this._commands[name];
+exports.removeCommand = function(command) {
+    if (typeof command === "string") {
+        delete commands[command];
+    }
+    else {
+        delete commands[command.name];
     }
 };
 
+exports.getCommand = function(name) {
+    return commands[name];
+};
+
+exports.getCommands = function() {
+    return Object.keys(commands);
+};
+
+/**
+ * We publish a 'addedRequestOutput' event whenever new command begins output
+ * TODO: make this more obvious
+ */
 oop.implement(exports, EventEmitter);
 
 /**
