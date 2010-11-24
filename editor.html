@@ -70,7 +70,7 @@
         };
         plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
           var demo_startup = require("demo_startup");
-          demo_startup.launch();
+          demo_startup.launch(data.env);
         });
       });
     </script>

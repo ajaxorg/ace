@@ -39,7 +39,7 @@
 
 define(function(require, exports, module) {
 
-exports.launch = function() {
+exports.launch = function(env) {
 
     var event = require("pilot/event").event;
     var Editor = require("ace/editor").Editor;
@@ -69,9 +69,12 @@ exports.launch = function() {
 
     var docEl = document.getElementById("doc");
 
+    var container = document.getElementById("editor");
+    env.editor = new Editor(new Renderer(container, theme));
+
     function onDocChange() {
         var doc = getDoc();
-        editor.setDocument(doc);
+        env.editor.setDocument(doc);
 
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
@@ -90,7 +93,7 @@ exports.launch = function() {
             modeEl.value = "text";
         }
 
-        editor.focus();
+        env.editor.focus();
     }
     docEl.onchange = onDocChange;
 
@@ -100,7 +103,7 @@ exports.launch = function() {
 
     var modeEl = document.getElementById("mode");
     modeEl.onchange = function() {
-        editor.getDocument().setMode(modes[modeEl.value] || modes.text);
+        env.editor.getDocument().setMode(modes[modeEl.value] || modes.text);
     };
 
     var modes = {
@@ -117,31 +120,29 @@ exports.launch = function() {
 
     var themeEl = document.getElementById("theme");
     themeEl.onchange = function() {
-        editor.setTheme(themeEl.value);
+        env.editor.setTheme(themeEl.value);
     };
 
     var selectEl = document.getElementById("select_style");
     selectEl.onchange = function() {
         if (selectEl.checked) {
-            editor.setSelectionStyle("line");
+            env.editor.setSelectionStyle("line");
         } else {
-            editor.setSelectionStyle("text");
+            env.editor.setSelectionStyle("text");
         }
     };
 
     var activeEl = document.getElementById("highlight_active");
     activeEl.onchange = function() {
-        editor.setHighlightActiveLine(!!activeEl.checked);
+        env.editor.setHighlightActiveLine(!!activeEl.checked);
     };
 
-    var container = document.getElementById("editor");
-    var editor = new Editor(new Renderer(container, theme));
     onDocChange();
 
     window.jump = function() {
         var jump = document.getElementById("jump");
-        var cursor = editor.getCursorPosition();
-        var pos = editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
+        var cursor = env.editor.getCursorPosition();
+        var pos = env.editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
         jump.style.left = pos.pageX + "px";
         jump.style.top = pos.pageY + "px";
         jump.style.display = "block";
@@ -150,7 +151,7 @@ exports.launch = function() {
     function onResize() {
         container.style.width = (document.documentElement.clientWidth - 4) + "px";
         container.style.height = (document.documentElement.clientHeight - 55 - 4) + "px";
-        editor.resize();
+        env.editor.resize();
     };
 
     window.onresize = onResize;
@@ -170,7 +171,7 @@ exports.launch = function() {
         if (window.FileReader) {
             var reader = new FileReader();
             reader.onload = function(e) {
-                editor.getSelection().selectAll();
+                env.editor.getSelection().selectAll();
 
                 var mode = "text";
                 if (/^.*\.js$/i.test(file.name)) {
@@ -183,10 +184,10 @@ exports.launch = function() {
                     mode = "css";
                 }
 
-                editor.onTextInput(reader.result);
+                env.editor.onTextInput(reader.result);
 
                 modeEl.value = mode;
-                editor.getDocument().setMode(modes[mode]);
+                env.editor.getDocument().setMode(modes[mode]);
             };
             reader.readAsText(file);
         }
