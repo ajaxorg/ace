@@ -68,7 +68,11 @@ var commandExtensionSpec = {
     indexOn: "name"
 };
 
+var env;
+
 exports.startup = function(data, reason) {
+    // TODO: this is probably all kinds of evil, but we need something working
+    env = data.env;
     catalog.addExtensionSpec(commandExtensionSpec);
 };
 
@@ -103,6 +107,16 @@ exports.getCommand = function(name) {
 
 exports.getCommands = function() {
     return Object.keys(commands);
+};
+
+exports.exec = function(name) {
+    var command = commands[name];
+    if (command) {
+        env.selection = env.editor.getSelection();
+        command.exec(env);
+        return true;
+    }
+    return false;
 };
 
 /**
