@@ -63,7 +63,7 @@ exports.Plugin.prototype = {
     INSTALLED: 1,
     STARTED: 2,
     SHUTDOWN: 3,
-    
+
     install: function(data, reason) {
         var pr = new Promise();
         if (this.status > this.NEW) {
@@ -79,7 +79,7 @@ exports.Plugin.prototype = {
         }.bind(this));
         return pr;
     },
-    
+
     startup: function(data, reason) {
         var pr = new Promise();
         if (this.status != this.INSTALLED) {
@@ -95,7 +95,7 @@ exports.Plugin.prototype = {
         }.bind(this));
         return pr;
     },
-    
+
     shutdown: function(data, reason) {
         if (this.status != this.STARTED) {
             return;
@@ -121,7 +121,7 @@ exports.PluginCatalog.prototype = {
             }
         }.bind(this));
     },
-    
+
     startupPlugins: function(data, reason) {
         var startupPromises = [];
         for (var pluginName in this.plugins) {
@@ -133,17 +133,5 @@ exports.PluginCatalog.prototype = {
 };
 
 exports.catalog = new exports.PluginCatalog();
-
-// TODO the code below is temporary to bootstrap while setting up the new command system
-var PluginManager = {
-    commands : {},
-
-    registerCommand : function(name, command) {
-        this.commands[name] = command;
-    }
-};
-
-exports.PluginManager = PluginManager;
-
 
 });
