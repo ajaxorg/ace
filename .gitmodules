@@ -10,3 +10,12 @@
 [submodule "support/node-o3-xml"]
 	path = support/node-o3-xml
 	url = git://github.com/ajaxorg/node-o3-xml.git
+[submodule "support/async"]
+	path = support/async
+	url = git://github.com/fjakobs/async.js.git
+[submodule "support/jsdom"]
+	path = support/jsdom
+	url = git://github.com/tmpvar/jsdom.git
+[submodule "support/node-htmlparser"]
+	path = support/node-htmlparser
+	url = git://github.com/tautologistics/node-htmlparser.git
