@@ -83,6 +83,24 @@ exports.shutdown = function(data, reason) {
 /**
  * Manage a list of commands in the current canon
  */
+
+/**
+ * A Command is a discrete action optionally with a set of ways to customize
+ * how it happens. This is here for documentation purposes.
+ * TODO: Document better
+ */
+var Command = {
+    name: "thing",
+    description: "thing is an example command",
+    params: [{
+        name: "param1",
+        description: "an example parameter",
+        type: "text",
+        defaultValue: null
+    }],
+    exec: function(env, args, request) { }
+};
+
 var commands = {};
 
 exports.addCommand = function(command) {
@@ -109,14 +127,28 @@ exports.getCommands = function() {
     return Object.keys(commands);
 };
 
-exports.exec = function(name) {
+/**
+ * Entry point for keyboard accelerators or anything else that knows
+ * everything it needs to about the command params
+ */
+exports.exec = function(name, args) {
     var command = commands[name];
     if (command) {
+        // TODO: Ugg. really?
         env.selection = env.editor.getSelection();
-        command.exec(env);
+        var request = new Request();
+        command.exec(env, args || {}, request);
         return true;
     }
     return false;
+};
+
+/**
+ * Entry point for users that need to collect parameters from textual input
+ */
+exports.execRequisition = function(requisition) {
+    var request = new Request();
+    requisition.command.exec(env, requisition.args, request);
 };
 
 /**
@@ -124,6 +156,114 @@ exports.exec = function(name) {
  * TODO: make this more obvious
  */
 oop.implement(exports, EventEmitter);
+
+/**
+ * A Requisition collects the information needed to execute a command.
+ * There is no point in a requisition for parameter-less commands because there
+ * is no information to collect. A Requisition is a collection of assignments
+ * of values to parameters, each handled by an instance of Assignment.
+ * @constructor
+ */
+function Requisition(command) {
+    this.command = command;
+    this.assignments = {};
+    command.params.forEach(function(param) {
+        this.assignment[param.name] = new Assignment(param);
+    });
+}
+Requisition.prototype = {
+    /**
+     * The command that we are about to execute.
+     * @readonly
+     */
+    command: undefined,
+
+    /**
+     * The set of values that we are assigning to parameters in the command
+     * @readonly
+     */
+    assignments: undefined
+};
+exports.Requisition = Requisition;
+
+
+/**
+ * A link between a parameter and the data for that parameter.
+ * The data for the parameter is available as in the preferred type and in
+ * the string representation of that type.
+ * <p>We also record validity information and cli offset data where applicable.
+ * <p>For values, null and undefined have distinct definitions. null means
+ * that a value has been provided, undefined means that it has not.
+ * Thus, null is a valid default value, and common because it identifies an
+ * parameter that is optional. undefined means there is no value from
+ * the command line.
+ * TODO: think about this distinction some more, particularly this line:
+ * ass.setValue(undefined); ass.value -> param.defaultValue?;
+ * @constructor
+ */
+function Assignment(param) {
+    this.param = param;
+    this.setValue(param.defaultValue);
+};
+Assignment.prototype = {
+    /**
+     * The parameter that we are assigning to
+     * @readonly
+     */
+    param: undefined,
+
+    /**
+     * The current value (i.e. not the string representation)
+     * @readonly - use setValue() to mutate
+     */
+    value: undefined,
+    setValue: function(value) {
+        if (this.value === value) {
+            return;
+        }
+        if (value === undefined) {
+            value = this.param.defaultValue;
+        }
+        this.text = this.param.type.toString(value);
+        this.value = value;
+        this.status = Status.VALID;
+        this.message = "";
+        this._dispatchEvent('change', { assignment: this });
+    },
+
+    /**
+     * The textual representation of the current value
+     * @readonly - use setValue() to mutate
+     */
+    text: undefined,
+    setText: function(text) {
+        if (this.text === text) {
+            return;
+        }
+        var conversion = this.param.type.fromString(text);
+        this.text = text;
+        this.value = conversion.value;
+        this.status = conversion.status;
+        this.message = conversion.message;
+        this._dispatchEvent('change', { assignment: this });
+    },
+
+    /**
+     * Report on the status of the last fromString() conversion.
+     * @see types.Conversion
+     */
+    status: undefined,
+    message: undefined,
+
+    /**
+     * Read-write value which records the offset of this text into a command
+     * line. This is a convenience provided to the command line, but which
+     * probably won't be used elsewhere.
+     */
+    offset: undefined
+};
+oop.implement(Assignment, EventEmitter);
+exports.Assignment = Assignment;
 
 /**
  * Current requirements are around displaying the command line, and provision
@@ -202,8 +342,9 @@ exports.execute = function(args, request) {
  *     typed: typed
  * });
  * </pre>
+ * @constructor
  */
-exports.Request = function(options) {
+function Request(options) {
     options = options || {};
 
     // Will be used in the keyboard case and the cli case
@@ -223,13 +364,13 @@ exports.Request = function(options) {
     this.error = false;
 };
 
-oop.implement(exports.Request.prototype, EventEmitter);
+oop.implement(Request.prototype, EventEmitter);
 
 /**
  * Lazy init to register with the history should only be done on output.
  * init() is expensive, and won't be used in the majority of cases
  */
-exports.Request.prototype._beginOutput = function() {
+Request.prototype._beginOutput = function() {
     this._begunOutput = true;
     this.outputs = [];
 
@@ -240,7 +381,7 @@ exports.Request.prototype._beginOutput = function() {
  * Sugar for:
  * <pre>request.error = true; request.done(output);</pre>
  */
-exports.Request.prototype.doneWithError = function(content) {
+Request.prototype.doneWithError = function(content) {
     this.error = true;
     this.done(content);
 };
@@ -249,7 +390,7 @@ exports.Request.prototype.doneWithError = function(content) {
  * Declares that this function will not be automatically done when
  * the command exits
  */
-exports.Request.prototype.async = function() {
+Request.prototype.async = function() {
     if (!this._begunOutput) {
         this._beginOutput();
     }
@@ -260,7 +401,7 @@ exports.Request.prototype.async = function() {
  * @param output Either DOM node, an SproutCore element or something that
  * can be used in the content of a DIV to create a DOM node.
  */
-exports.Request.prototype.output = function(content) {
+Request.prototype.output = function(content) {
     if (!this._begunOutput) {
         this._beginOutput();
     }
@@ -279,7 +420,7 @@ exports.Request.prototype.output = function(content) {
  * All commands that do output must call this to indicate that the command
  * has finished execution.
  */
-exports.Request.prototype.done = function(content) {
+Request.prototype.done = function(content) {
     this.completed = true;
     this.end = new Date();
     this.duration = this.end.getTime() - this.start.getTime();
@@ -290,5 +431,7 @@ exports.Request.prototype.done = function(content) {
 
     this._dispatchEvent('changed', {});
 };
+exports.Request = Request;
+
 
 });
