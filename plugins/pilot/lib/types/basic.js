@@ -39,6 +39,8 @@
 define(function(require, exports, module) {
 
 var types = require("pilot/types");
+var Type = types.Type;
+var Conversion = types.Conversion;
 
 /**
  * These are the basic types that we accept. They are vaguely based on the
@@ -55,18 +57,17 @@ var types = require("pilot/types");
 /**
  * 'text' is the default if no type is given.
  */
-var text = new types.Type();
-
-text.isValid = function(value) {
-    return typeof value == 'string';
-};
+var text = new Type();
 
 text.toString = function(value) {
     return value;
 };
 
 text.fromString = function(value) {
-    return value;
+    if (typeof value != 'string') {
+        throw new Error('non-string passed to text.fromString()');
+    }
+    return new Conversion(value);
 };
 
 text.name = 'text';
@@ -74,23 +75,7 @@ text.name = 'text';
 /**
  * We don't currently plan to distinguish between integers and floats
  */
-var number = new types.Type();
-
-number.isValid = function(value) {
-    if (isNaN(value)) {
-        return false;
-    }
-    if (value === null) {
-        return false;
-    }
-    if (value === undefined) {
-        return false;
-    }
-    if (value === Infinity) {
-        return false;
-    }
-    return typeof value == 'number';// && !isNaN(value);
-};
+var number = new Type();
 
 number.toString = function(value) {
     if (!value) {
@@ -100,51 +85,20 @@ number.toString = function(value) {
 };
 
 number.fromString = function(value) {
-    if (!value) {
-        return null;
+    if (typeof value != 'string') {
+        throw new Error('non-string passed to number.fromString()');
     }
-    var reply = parseInt(value, 10);
-    if (isNaN(reply)) {
-        throw new Error('Can\'t convert "' + value + '" to a number.');
+
+    var reply = new Conversion(parseInt(value, 10));
+    if (isNaN(reply.value)) {
+        reply.status = Status.INVALID;
+        reply.message = 'Can\'t convert "' + value + '" to a number.';
     }
+
     return reply;
 };
 
 number.name = 'number';
-
-/**
- * true/false values
- */
-var bool = new types.Type();
-
-bool.isValid = function(value) {
-    return typeof value == 'boolean';
-};
-
-bool.toString = function(value) {
-    return '' + value;
-};
-
-bool.fromString = function(value) {
-    if (value === null) {
-        return null;
-    }
-
-    if (!value.toLowerCase) {
-        return !!value;
-    }
-
-    var lower = value.toLowerCase();
-    if (lower == 'true') {
-        return true;
-    } else if (lower == 'false') {
-        return false;
-    }
-
-    return !!value;
-};
-
-bool.name = 'bool';
 
 /**
  * One of a known set of options
@@ -153,42 +107,77 @@ function SelectionType(data) {
     this._data = data;
 };
 
-SelectionType.prototype = new types.Type();
-
-SelectionType.prototype.isValid = function(value) {
-    if (typeof value != 'string') {
-        return false;
-    }
-
-    if (!this._data) {
-        console.error('Missing data on selection type extension. Skipping');
-        return true;
-    }
-
-    var data = (typeof(this._data) === "function") ? this._data() : this._data;
-
-    var match = false;
-    data.forEach(function(option) {
-        if (value == option) {
-            match = true;
-        }
-    });
-
-    return match;
-};
+SelectionType.prototype = new Type();
 
 SelectionType.prototype.toString = function(value) {
     return value;
 };
 
 SelectionType.prototype.fromString = function(value) {
-    // TODO: should we validate and return null if invalid?
-    return value;
+    if (typeof value != 'string') {
+        throw new Error('non-string passed to fromString()');
+    }
+    if (!this._data) {
+        throw new Error('Missing data on selection type extension.');
+    }
+    var data = (typeof(this._data) === "function") ? this._data() : this._data;
+
+    var match = false;
+    var completions = [];
+    data.forEach(function(option) {
+        if (value == option) {
+            match = true;
+        }
+        else if (option.indexOf(value) === 0) {
+            completions.push(option);
+        }
+    });
+
+    if (match) {
+        return new Conversion(value);
+    }
+    else {
+        var status = completions.length > 0 ? Status.INCOMPLETE : Status.INVALID;
+
+        // TODO: better error message - include options?
+        // TODO: better completions - we're just using the extensions
+        return new Conversion(null,
+                status,
+                'Can\'t convert "' + value + '" to a selection.',
+                completions);
+    }
 };
 
 SelectionType.prototype.name = 'selection';
 
 
+/**
+ * true/false values
+ */
+var bool = new SelectionType([ 'true', 'false' ]);
+
+bool.toString = function(value) {
+    return '' + value;
+};
+
+bool.fromString = function(value) {
+    var conversion = SelectionType.prototype.fromString(value);
+
+    if (conversion.value === 'true') {
+        conversion.value = true;
+    }
+    if (conversion.value === 'false') {
+        conversion.value = false;
+    }
+
+    return conversion;
+};
+
+bool.name = 'bool';
+
+/**
+ * Registration and de-registration.
+ */
 exports.startup = function() {
     types.registerType(text);
     types.registerType(number);
@@ -202,5 +191,6 @@ exports.shutdown = function() {
     types.unregisterType(bool);
     types.unregisterType(SelectionType);
 };
+
 
 });
