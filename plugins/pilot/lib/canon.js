@@ -123,7 +123,7 @@ exports.getCommand = function(name) {
     return commands[name];
 };
 
-exports.getCommands = function() {
+exports.getCommandNames = function() {
     return Object.keys(commands);
 };
 
@@ -148,7 +148,7 @@ exports.exec = function(name, args) {
  */
 exports.execRequisition = function(requisition) {
     var request = new Request();
-    requisition.command.exec(env, requisition.args, request);
+    requisition.command.exec(env, requisition.getArgs(), request);
 };
 
 /**
@@ -182,7 +182,18 @@ Requisition.prototype = {
      * The set of values that we are assigning to parameters in the command
      * @readonly
      */
-    assignments: undefined
+    assignments: undefined,
+
+    /**
+     *
+     */
+    getArgs: function() {
+        var args = {};
+        Object.keys(assignments).forEach(function(name) {
+            args[name] = getCommand(name);
+        });
+        return args;
+    }
 };
 exports.Requisition = Requisition;
 
