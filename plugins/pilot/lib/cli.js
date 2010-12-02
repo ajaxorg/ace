@@ -41,16 +41,13 @@ define(function(require, exports, module) {
 var console = require('pilot/console');
 var util = require('pilot/util');
 var oop = require('pilot/oop').oop;
+var EventEmitter = require('pilot/event_emitter').EventEmitter;
 
 //var keyboard = require('keyboard/keyboard');
 var Status = require('pilot/types').Status;
 var canon = require('pilot/canon');
 var types = require('pilot/types');
 
-var commandType;
-exports.startup = function(data, reason) {
-    commandType = types.getType('command');
-};
 
 /**
  * The information required to tell the user there is a problem with their
@@ -113,6 +110,10 @@ Argument.prototype = {
             this.text + following.priorSpace + following.text,
             this.start, following.end,
             this.priorSpace);
+    },
+
+    setText: function(text) {
+        this.text = text;
     }
 };
 /**
@@ -202,7 +203,9 @@ Input.prototype = {
         var command = _split(args);
 
         if (!command) {
+            // TODO: Should we use this technique in split?
             // No command found - bail helpfully.
+            var commandType = types.getType('command');
             var conversion = commandType.parse(typed);
             var arg = Argument.mergeAll(args);
             this._addHint(new ConversionHint(conversion, arg));
@@ -218,14 +221,18 @@ Input.prototype = {
 
             this.requisition.setCommand(command);
             this._assign(args);
-            this.addHints(this.requisition.getHints());
+            this._addHint(this.requisition.getHints());
         }
     },
 
     /**
-     * Some sugar around: 'this.hints.push(new Hint(...));'
+     * Some sugar around: 'this.hints.push(new Hint(...));', but you can also
+     * pass in an array of Hints or the parameters to create a hint
      */
     _addHint: function(status, message, start, end) {
+        if (status == null) {
+            return;
+        }
         if (status instanceof Hint) {
             this.hints.push(status);
         }
@@ -270,7 +277,7 @@ Input.prototype = {
         if (this.requisition.assignmentCount == 1) {
             var assignment = this.requisition.getAssignment(0);
             if (assignment.param.type.name === 'text') {
-                assignment.setText(Argument.mergeAll(args).text);
+                assignment.setArgument(Argument.mergeAll(args));
                 return;
             }
         }
@@ -305,7 +312,7 @@ Input.prototype = {
                             args[i]);
                     } else {
                         args.splice(i + 1, 1);
-                        assignment.setText(args[i + 1].text);
+                        assignment.setArgument(args[i + 1]);
                     }
                 }
 
@@ -326,7 +333,7 @@ Input.prototype = {
             else {
                 var arg = args[i];
                 args.splice(i, 1);
-                assignment.setText(arg.text);
+                assignment.setArgument(arg);
             }
 
             i++;
@@ -358,7 +365,7 @@ function _tokenize(typed) {
     // We are generally converting to their real values except for \', \"
     // and '\ ' which we are converting to unicode private characters so we
     // can distinguish them from ', " and ' ', which have special meaning.
-    // They need swapping back post-split.
+    // They need swapping back post-split - see unescape()
     typed = typed
             .replace(/\\\\/g, '\\')
             .replace(/\\b/g, '\b')
@@ -373,6 +380,13 @@ function _tokenize(typed) {
             .replace(/\\'/g, '\uF001')
             .replace(/\\"/g, '\uF002');
 
+    function unescape(str) {
+        return str
+            .replace(/\uF000/g, ' ')
+            .replace(/\uF001/g, '\'')
+            .replace(/\uF002/g, '"');
+    }
+
     var i = 0;
     var start = 0; // Where did this section start?
     var priorSpace = '';
@@ -382,7 +396,7 @@ function _tokenize(typed) {
         if (i >= typed.length) {
             // There is no more - tidy up
             if (mode !== OUTSIDE) {
-                var str = typed.substring(start, i);
+                var str = unescape(typed.substring(start, i));
                 args.push(new Argument(str, start, i, priorSpace));
             }
             break;
@@ -415,7 +429,7 @@ function _tokenize(typed) {
             // There is an edge case of xx'xx which we are assuming to be
             // a single parameter (and same with ")
             if (c === ' ') {
-                var str = typed.substring(start, i);
+                var str = unescape(typed.substring(start, i));
                 args.push(new Argument(str, start, i, priorSpace));
                 mode = OUTSIDE;
                 start = i;
@@ -425,7 +439,7 @@ function _tokenize(typed) {
 
         case IN_SINGLE_Q:
             if (c === '\'') {
-                var str = typed.substring(start, i);
+                var str = unescape(typed.substring(start, i));
                 args.push(new Argument(str, start, i, priorSpace));
                 mode = OUTSIDE;
                 start = i + 1;
@@ -435,7 +449,7 @@ function _tokenize(typed) {
 
         case IN_DOUBLE_Q:
             if (c === '"') {
-                var str = typed.substring(start, i);
+                var str = unescape(typed.substring(start, i));
                 args.push(new Argument(str, start, i, priorSpace));
                 mode = OUTSIDE;
                 start = i + 1;
@@ -446,13 +460,6 @@ function _tokenize(typed) {
 
         i++;
     }
-
-    args.forEach(function(arg) {
-        arg.text = arg.text
-            .replace(/\uF000/g, ' ')
-            .replace(/\uF001/g, '\'')
-            .replace(/\uF002/g, '"');
-    });
 
     return args;
 }
@@ -724,7 +731,10 @@ Assignment.prototype = {
         if (value === undefined) {
             value = this.param.defaultValue;
         }
-        this.text = (value === null) ? '' : this.param.type.stringify(value);
+        var text = (value === null) ? '' : this.param.type.stringify(value);
+        if (this.arg) {
+            this.arg.setText(text);
+        }
         this.value = value;
         this.status = Status.VALID;
         this.message = '';
@@ -735,13 +745,13 @@ Assignment.prototype = {
      * The textual representation of the current value
      * @readonly - use setValue() to mutate
      */
-    text: undefined,
-    setText: function(text) {
-        if (this.text === text) {
+    arg: undefined,
+    setArgument: function(arg) {
+        if (this.arg === arg) {
             return;
         }
-        var conversion = this.param.type.parse(text);
-        this.text = text;
+        var conversion = this.param.type.parse(arg.text);
+        this.arg = arg;
         this.value = conversion.value;
         this.status = conversion.status;
         this.message = conversion.message;
