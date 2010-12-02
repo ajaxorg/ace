@@ -169,11 +169,10 @@ exports.testInput = function() {
     test.verifyEqual('set', input.requisition.command.name);
 
     input.parse('set h');
-console.log(input);
     test.verifyEqual(1, input.hints.length);
     test.verifyEqual(Status.INCOMPLETE, input.hints[0].status);
     test.verifyEqual('set', input.requisition.command.name);
-    test.verifyEqual('h', input.requisition.getAssignment('setting').text);
+    test.verifyEqual('h', input.requisition.getAssignment('setting').arg.text);
     test.verifyEqual(undefined, input.requisition.getAssignment('setting').value);
 
     return "testInput Completed";

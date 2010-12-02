@@ -44,9 +44,10 @@ var oop = require('pilot/oop').oop;
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
 
 //var keyboard = require('keyboard/keyboard');
-var Status = require('pilot/types').Status;
-var canon = require('pilot/canon');
 var types = require('pilot/types');
+var Status = require('pilot/types').Status;
+var Conversion = require('pilot/types').Conversion;
+var canon = require('pilot/canon');
 
 
 /**
@@ -662,7 +663,14 @@ Requisition.prototype = {
      * Collect the statuses from the Assignments
      */
     getHints: function() {
-
+        var hints = [];
+        Object.keys(this._assignments).map(function(name) {
+            var hint = this._assignments[name].getHint();
+            if (hint) {
+                hints.push(hint);
+            }
+        }, this);
+        return hints;
     },
 
     /**
@@ -736,8 +744,7 @@ Assignment.prototype = {
             this.arg.setText(text);
         }
         this.value = value;
-        this.status = Status.VALID;
-        this.message = '';
+        this.conversion = new Conversion(value, Status.VALID, '', []);
         //this._dispatchEvent('change', { assignment: this });
     },
 
@@ -750,20 +757,26 @@ Assignment.prototype = {
         if (this.arg === arg) {
             return;
         }
-        var conversion = this.param.type.parse(arg.text);
         this.arg = arg;
-        this.value = conversion.value;
-        this.status = conversion.status;
-        this.message = conversion.message;
+        this.conversion = this.param.type.parse(arg.text);
+        this.value = this.conversion.value;
         //this._dispatchEvent('change', { assignment: this });
+    },
+
+    getHint: function() {
+        if (this.conversion.status === Status.VALID &&
+                this.conversion.message === '') {
+            return undefined;
+        }
+
+        return new ConversionHint(this.conversion, this.arg);
     },
 
     /**
      * Report on the status of the last parse() conversion.
      * @see types.Conversion
      */
-    status: undefined,
-    message: undefined
+    conversion: undefined
 };
 oop.implement(Assignment, EventEmitter);
 exports.Assignment = Assignment;
