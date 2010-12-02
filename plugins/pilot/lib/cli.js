@@ -38,30 +38,98 @@
 define(function(require, exports, module) {
 
 
-var console = require('skywriter/console');
+var console = require('pilot/console');
 var util = require('pilot/util');
+var oop = require('pilot/oop').oop;
 
-var keyboard = require('keyboard/keyboard');
-var Status = require('pilot/canon').Status;
-var Requisition = require('pilot/canon').Requisition;
+//var keyboard = require('keyboard/keyboard');
+var Status = require('pilot/types').Status;
+var canon = require('pilot/canon');
+var types = require('pilot/types');
 
-var typehint = require('command_line/typehint');
+var commandType;
+exports.startup = function(data, reason) {
+    commandType = types.getType('command');
+};
 
 /**
  * The information required to tell the user there is a problem with their
  * input.
- * TODO: Consider formalizing alternatives
  */
 function Hint(status, message, start, end) {
     this.status = status;
     this.message = message;
-    this.start = start;
-    this.end = end;
+
+    if (typeof start === 'number') {
+        this.start = start;
+        this.end = end;
+    }
+    else {
+        var arg = start;
+        this.start = arg.start;
+        this.end = arg.end;
+    }
 }
 Hint.prototype = {
-
 };
 exports.Hint = Hint;
+
+/**
+ * A Hint that arose as a result of a Conversion
+ */
+function ConversionHint(conversion, arg) {
+    this.status = conversion.status;
+    this.message = conversion.message;
+    if (arg) {
+        this.start = arg.start;
+        this.end = arg.end;
+    }
+    else {
+        this.start = 0;
+        this.end = 0;
+    }
+    this.predictions = conversion.predictions;
+};
+oop.inherits(ConversionHint, Hint);
+
+
+/**
+ * We record where in the input string an argument comes so we can report errors
+ * against those string positions.
+ * @constructor
+ */
+function Argument(text, start, end, priorSpace) {
+    this.text = text;
+    this.start = start;
+    this.end = end;
+    this.priorSpace = priorSpace;
+}
+Argument.prototype = {
+    /**
+     * Return the result of merging these arguments
+     */
+    merge: function(following) {
+        return new Argument(
+            this.text + following.priorSpace + following.text,
+            this.start, following.end,
+            this.priorSpace);
+    }
+};
+/**
+ * Merge an array of arguments into a single argument.
+ */
+Argument.mergeAll = function(argArray) {
+    var joined;
+    argArray.forEach(function(arg) {
+        if (!joined) {
+            joined = arg;
+        }
+        else {
+            joined = joined.merge(arg);
+        }
+    });
+    return joined;
+};
 
 
 /**
@@ -72,6 +140,15 @@ exports.Hint = Hint;
  * single value.
  * <p>The other output value is input.requisition which gives access to an
  * args object for use in executing the final command.
+ *
+ * The majority of the functions in this class are called in sequence by the
+ * constructor. Their task is to add to <tt>hints</tt> fill out the requisition.
+ * <p>The general sequence is:<ul>
+ * <li>_tokenize(): convert _typed into _parts
+ * <li>_split(): convert _parts into _command and _unparsedArgs
+ * <li>_assign(): convert _unparsedArgs into requisition
+ * </ul>
+ *
  * @param typed {string} The instruction as typed by the user so far
  * @param options {object} A list of optional named parameters. Can be any of:
  * <b>flags</b>: Flags for us to check against the predicates specified with the
@@ -79,169 +156,85 @@ exports.Hint = Hint;
  * if not specified.
  * @constructor
  */
-function Input(typed, options) {
-    if (util.none(typed)) {
-        throw new Error('Input requires something \'typed\' to work on');
+function Input(options) {
+    if (options) {
+        if (options.flags) {
+            this.flags = options.flags;
+        }
+        if (options.input) {
+            // TODO: implement
+            this.useAsInput(options.input);
+        }
     }
-    this.typed = typed;
-    this.hints = [];
-
-    options = options || {};
-
-    // TODO: We were using a default of keyboard.buildFlags({ });
-    // I think this allowed us to have commands that only existed in certain
-    // contexts - i.e. Javascript specific commands.
-    this.flags = options.flags || {};
-
-    // Once tokenize() has been called, we have the #typed string cut up into
-    // #_parts
-    this._parts = [];
-
-    // Once split has been called we have #_parts split into #_unparsedArgs and
-    // #_command (if there is a matching command).
-    this._unparsedArgs = undefined;
-
-    // Once we know what the command is, we can fire up a Requisition
-    this.requisition = undefined;
-
-    // Assign matches #_unparsedArgs to the params declared by the #_command
-    // A list of arguments in _command.params order
-    this._assignments = undefined;
-
-    this._tokenize();
-};
-
-/**
- * Implementation of Input.
- * The majority of the functions in this class are called in sequence by the
- * constructor. Their task is to add to <tt>hints</tt> fill out the requisition.
- * <p>The general sequence is:<ul>
- * <li>_tokenize(): convert _typed into _parts
- * <li>_split(): convert _parts into _command and _unparsedArgs
- * <li>_assign(): convert _unparsedArgs into _assignments
- * </ul>
- */
+    this.requisition = new Requisition();
+}
 Input.prototype = {
     /**
-     * Split up the input taking into account ' and "
+     * TODO: We were using a default of keyboard.buildFlags({ });
+     * I think this allowed us to have commands that only existed in certain
+     * contexts - i.e. Javascript specific commands.
      */
-    _tokenize: function() {
-        if (!this.typed || this.typed === '') {
+    flags: {},
+
+    /**
+     *
+     */
+    parse: function(typed) {
+        if (util.none(typed)) {
+            this.requisition.setCommand(null);
+            return;
+        }
+
+        this.typed = typed;
+        this.hints = [];
+
+        var args = _tokenize(this.typed);
+        if (args.length === 0) {
             // We would like to put some initial help here, but for anyone but
             // a complete novice a 'type help' message is very annoying, so we
             // need to find a way to only display this message once, or for
             // until the user click a 'close' button or similar
-            this.hints.push(new Hint(Status.INCOMPLETE));
+            this._addHint(Status.INCOMPLETE, '', 0, 0);
+            this.requisition.setCommand(null);
             return;
         }
 
-        // replace(/^\s\s*/, '') = trimLeft()
-        var incoming = this.typed.replace(/^\s\s*/, '').split(/\s+/);
+        var command = _split(args);
 
-        var nextToken;
-        while (true) {
-            nextToken = incoming.shift();
-            if (util.none(nextToken)) {
-                break;
-            }
-            if (nextToken[0] == '"' || nextToken[0] == '\'') {
-                // It's quoting time
-                var eaten = [ nextToken.substring(1, nextToken.length) ];
-                var eataway;
-                while (true) {
-                    eataway = incoming.shift();
-                    if (!eataway) {
-                        break;
-                    }
-                    if (eataway[eataway.length - 1] == '"' ||
-                            eataway[eataway.length - 1] == '\'') {
-                        // End quoting time
-                        eaten.push(eataway.substring(0, eataway.length - 1));
-                        break;
-                    } else {
-                        eaten.push(eataway);
-                    }
-                }
-                this._parts.push(eaten.join(' '));
-            } else {
-                this._parts.push(nextToken);
-            }
+        if (!command) {
+            // No command found - bail helpfully.
+            var conversion = commandType.parse(typed);
+            var arg = Argument.mergeAll(args);
+            this._addHint(new ConversionHint(conversion, arg));
+
+            this.requisition.setCommand(null);
         }
+        else {
+            // The user hasn't started to type any arguments
+            if (args.length === 0) {
+                var message = documentCommand(command);
+                this._addHint(Status.VALID, message, 0, typed.length);
+            }
 
-        // Split the command from the args
-        this._split();
+            this.requisition.setCommand(command);
+            this._assign(args);
+            this.addHints(this.requisition.getHints());
+        }
     },
 
     /**
-     * Looks in the canon for a command extension that matches what has been
-     * typed at the command line.
+     * Some sugar around: 'this.hints.push(new Hint(...));'
      */
-    _split: function() {
-        this._unparsedArgs = this._parts.slice(); // aka clone()
-        var initial = this._unparsedArgs.shift();
-        var command;
-
-        while (true) {
-            command = canon.getCommand(initial);
-
-            if (!command) {
-                // Not found. break with command == null
-                break;
-            }
-
-            if (!keyboard.flagsMatch(command.predicates, this.flags)) {
-                // If the predicates say 'no match' then go LA LA LA
-                command = null;
-                break;
-            }
-
-            if (command.exec) {
-                // Valid command, break with command valid
-                break;
-            }
-
-            // command, but no exec - this must be a sub-command
-            initial += ' ' + this._unparsedArgs.shift();
+    _addHint: function(status, message, start, end) {
+        if (status instanceof Hint) {
+            this.hints.push(status);
         }
-
-        // Do we know what the command is.
-        if (!command) {
-            // We don't know what the command is
-            // TODO: We should probably cache this
-            var commands = [];
-            canon.getCommandNames().forEach(function(name) {
-                var command = canon.getCommand(name);
-                if (keyboard.flagsMatch(command.predicates, this.flags) &&
-                        command.description) {
-                    commands.push(command);
-                }
-            }.bind(this));
-
-            // TODO: make this a hint
-            var hintSpec = {
-                param: {
-                    type: { name: 'selection', data: commands },
-                    description: 'Commands'
-                },
-                value: this.typed
-            };
-
-            return;
+        else if (Array.isArray(status)) {
+            this.hints.push.apply(this.hints, status);
         }
-
-        // The user hasn't started to type any params
-        if (this._parts.length === 1) {
-            if (this.typed == command.name ||
-                    !command.params ||
-                    command.params.length === 0) {
-                this.hints.push(documentCommand(command, this.typed));
-            }
+        else {
+            this.hints.push(new Hint(status, message, start, end));
         }
-
-        this.requisition = new Requisition(command);
-
-        // Assign input to declared parameters
-        this._assign();
     },
 
     /**
@@ -253,168 +246,293 @@ Input.prototype = {
      * <li>index - Zero based index into where the match came from on the input
      * <li>value - The matching input
      * </ul>
-     * The resulting #_assignments member created by this function is a list of
-     * assignments of arguments in command.params order.
-     * TODO: _unparsedArgs should be a list of objects that contain the
-     * following values: name, param (when assigned) and maybe hints?
      */
-    _assign: function() {
-        // TODO: something smarter than just assuming that they are all in order
-        this._assignments = [];
-        var params = this.requisition.command.params;
-        var unparsedArgs = this._unparsedArgs;
-        var message;
+    _assign: function(args) {
+        if (args.length === 0) {
+            this.requisition.setDefaultValues();
+            return;
+        }
 
         // Create an error if the command does not take parameters, but we have
         // been given them ...
-        if (!params || params.length === 0) {
-            // No problem if we're passed nothing or an empty something
-            var argCount = 0;
-            unparsedArgs.forEach(function(unparsedArg) {
-                if (unparsedArg.trim() !== '') {
-                    argCount++;
-                }
-            });
-
-            if (argCount !== 0) {
-                message = this.requisition.command.name + ' does not take any parameters';
-                this.hints.push(new Hint(Status.INVALID, message));
-            }
-
+        if (this.requisition.assignmentCount === 0) {
+            // TODO: previously we were doing some extra work to avoid this if
+            // we determined that we had args that were all whitespace, but
+            // probably given our tighter tokenize() this won't be an issue?
+            this._addHint(Status.INVALID,
+                this.requisition.command.name + ' does not take any parameters',
+                Argument.mergeAll(args));
             return;
         }
 
         // Special case: if there is only 1 parameter, and that's of type
         // text we put all the params into the first param
-        if (params.length == 1 && params[0].type == 'text') {
-            // Warning: There is some potential problem here if spaces are
-            // significant. It might be better to chop the command of the
-            // start of this.typed? But that's not easy because there could
-            // be multiple spaces in the command if we're doing sub-commands
-            this._assignments[0] = {
-                value: unparsedArgs.length === 0 ? null : unparsedArgs.join(' '),
-                param: params[0]
-            };
-        } else {
-            // The normal case where we have to assign params individually
-            var index = 0;
-            var used = [];
-            params.forEach(function(param) {
-                this._assignParam(param, index++, used);
-            }.bind(this));
-
-            // Check there are no params that don't fit
-            var unparsed = false;
-            unparsedArgs.forEach(function(unparsedArg) {
-                if (used.indexOf(unparsedArg) == -1) {
-                    message = 'Parameter \'' + unparsedArg + '\' makes no sense.';
-                    this.hints.push(new Hint(Status.INVALID, message));
-                    unparsed = true;
-                }
-            }.bind(this));
-
-            if (unparsed) {
+        if (this.requisition.assignmentCount == 1) {
+            var assignment = this.requisition.getAssignment(0);
+            if (assignment.param.type.name === 'text') {
+                assignment.setText(Argument.mergeAll(args).text);
                 return;
             }
         }
 
-        // Show a hint for the last parameter
-        if (this._parts.length > 1) {
-            var assignment = this._getAssignmentForLastArg();
+        var assignments = this.requisition.cloneAssignments();
+        var names = this.requisition.getParameterNames();
 
-            // HACK! deferred types need to have some parameters
-            // by which to determine which type they should defer to
-            // so we hack in the assignments so the deferrer can work
-            assignment.param.type.assignments = this._assignments;
+        // Extract all the named parameters
+        var used = [];
+        assignments.forEach(function(assignment) {
+            var namedArgText = '--' + assignment.name;
 
-            if (assignment) {
-                this.hints.push(typehint.getHint(this, assignment));
-            }
-        }
+            var i = 0;
+            while (true) {
+                var arg = args[i];
+                if (namedArgText !== arg.text) {
+                    i++;
+                    if (i >= args.length) {
+                        break;
+                    }
+                    continue;
+                }
 
-        // Convert input into declared types
-        this._convertTypes();
-    },
-
-    /**
-     * Extract a value from the set of inputs for a given param.
-     * @param param The param that we are providing a value for. This is taken
-     * from the command meta-data for the command in question.
-     * @param index The number of the param - i.e. the index of <tt>param</tt>
-     * into the original params array.
-     */
-    _assignParam: function(param, index, used) {
-        var message;
-        // Look for '--param X' style inputs
-        for (var i = 0; i < this._unparsedArgs.length; i++) {
-            var unparsedArg = this._unparsedArgs[i];
-
-            if ('--' + param.name == unparsedArg) {
-                used.push(unparsedArg);
-                // boolean parameters don't have values, they default to false
-                if (param.type.name === 'boolean') {
-                    this._assignments[index] = {
-                        value: true,
-                        param: param
-                    };
+                // boolean parameters don't have values, default to false
+                if (assignment.param.type.name === 'boolean') {
+                    assignment.setValue(true);
                 } else {
-                    if (i + 1 < this._unparsedArgs.length) {
-                        message = 'Missing parameter: ' + param.name;
+                    if (i + 1 < args.length) {
                         // Missing value for this param
-                        this.hints.push(new Hint(Status.INCOMPLETE, message));
+                        this._addHint(Status.INCOMPLETE,
+                            'Missing value for: ' + namedArgText,
+                            args[i]);
                     } else {
-                        used.push(this._unparsedArgs[i + 1]);
+                        args.splice(i + 1, 1);
+                        assignment.setText(args[i + 1].text);
                     }
                 }
-                return;
+
+                util.arrayRemove(names, assignment.name);
+                args.splice(i, 1);
+                // We don't need to i++ if we splice
             }
-        }
+        }, this);
 
-        var value = null;
-        if (this._unparsedArgs.length > index) {
-            value = this._unparsedArgs[index];
-            used.push(this._unparsedArgs[index]);
-        }
-
-        // null is a valid default value, and common because it identifies an
-        // parameter that is optional. undefined means there is no value from
-        // the command line
-        if (value !== undefined) {
-            this._assignments[index] = { value: value, param: param };
-        } else {
-            this._assignments[index] = { param: param };
-
-            if (param.defaultValue === undefined) {
-                // There is no default, and we've not supplied one so far
-                message = 'Missing parameter: ' + param.name;
-                this.hints.push(new Hint(Status.INCOMPLETE, message));
+        // What's left are positional parameters assign in order
+        var i = 0;
+        names.forEach(function(name) {
+            var assignment = this.requisition.getAssignment(name);
+            if (i >= args.length) {
+                // No more values
+                assignment.setValue(undefined); // i.e. default
             }
+            else {
+                var arg = args[i];
+                args.splice(i, 1);
+                assignment.setText(arg.text);
+            }
+
+            i++;
+        }, this);
+
+        if (args.length > 0) {
+            var remaining = Argument.mergeAll(args);
+            this._addHint(Status.INVALID,
+                'Input \'' + remaining.text + '\' makes no sense.',
+                remaining);
         }
     }
 };
 exports.Input = Input;
 
 /**
+ * Split up the input taking into account ' and "
+ */
+function _tokenize(typed) {
+    var OUTSIDE = 1;     // The last character was whitespace
+    var IN_SIMPLE = 2;   // The last character was part of a parameter
+    var IN_SINGLE_Q = 3; // We're inside a single quote: '
+    var IN_DOUBLE_Q = 4; // We're inside double quotes: "
+
+    var mode = OUTSIDE;
+
+    // First we un-escape. This list was taken from:
+    // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Core_Language_Features#Unicode
+    // We are generally converting to their real values except for \', \"
+    // and '\ ' which we are converting to unicode private characters so we
+    // can distinguish them from ', " and ' ', which have special meaning.
+    // They need swapping back post-split.
+    typed = typed
+            .replace(/\\\\/g, '\\')
+            .replace(/\\b/g, '\b')
+            .replace(/\\f/g, '\f')
+            .replace(/\\n/g, '\n')
+            .replace(/\\r/g, '\r')
+            .replace(/\\t/g, '\t')
+            .replace(/\\v/g, '\v')
+            .replace(/\\n/g, '\n')
+            .replace(/\\r/g, '\r')
+            .replace(/\\ /g, '\uF000')
+            .replace(/\\'/g, '\uF001')
+            .replace(/\\"/g, '\uF002');
+
+    var i = 0;
+    var start = 0; // Where did this section start?
+    var priorSpace = '';
+    var args = [];
+
+    while (true) {
+        if (i >= typed.length) {
+            // There is no more - tidy up
+            if (mode !== OUTSIDE) {
+                var str = typed.substring(start, i);
+                args.push(new Argument(str, start, i, priorSpace));
+            }
+            break;
+        }
+
+        var c = typed[i];
+        switch (mode) {
+        case OUTSIDE:
+            if (c === '\'') {
+                priorSpace = typed.substring(start, i);
+                mode = IN_SINGLE_Q;
+                start = i + 1;
+            }
+            else if (c === '"') {
+                priorSpace = typed.substring(start, i);
+                mode = IN_DOUBLE_Q;
+                start = i + 1;
+            }
+            else if (/ /.test(c)) {
+                // Still whitespace, do nothing
+            }
+            else {
+                priorSpace = typed.substring(start, i);
+                mode = IN_SIMPLE;
+                start = i;
+            }
+            break;
+
+        case IN_SIMPLE:
+            // There is an edge case of xx'xx which we are assuming to be
+            // a single parameter (and same with ")
+            if (c === ' ') {
+                var str = typed.substring(start, i);
+                args.push(new Argument(str, start, i, priorSpace));
+                mode = OUTSIDE;
+                start = i;
+                priorSpace = '';
+            }
+            break;
+
+        case IN_SINGLE_Q:
+            if (c === '\'') {
+                var str = typed.substring(start, i);
+                args.push(new Argument(str, start, i, priorSpace));
+                mode = OUTSIDE;
+                start = i + 1;
+                priorSpace = '';
+            }
+            break;
+
+        case IN_DOUBLE_Q:
+            if (c === '"') {
+                var str = typed.substring(start, i);
+                args.push(new Argument(str, start, i, priorSpace));
+                mode = OUTSIDE;
+                start = i + 1;
+                priorSpace = '';
+            }
+            break;
+        }
+
+        i++;
+    }
+
+    args.forEach(function(arg) {
+        arg.text = arg.text
+            .replace(/\uF000/g, ' ')
+            .replace(/\uF001/g, '\'')
+            .replace(/\uF002/g, '"');
+    });
+
+    return args;
+}
+exports._tokenize = _tokenize;
+
+/**
+ * Looks in the canon for a command extension that matches what has been
+ * typed at the command line.
+ */
+function _split(args) {
+    if (args.length === 0) {
+        return undefined;
+    }
+
+    var argsUsed = 0;
+    var lookup = '';
+    var command;
+
+    while (true) {
+        argsUsed++;
+        lookup += args.map(function(arg) {
+            return arg.text;
+        }).slice(0, argsUsed).join(' ');
+        command = canon.getCommand(lookup);
+
+        if (!command) {
+            // Not found. break with command == null
+            return undefined;
+        }
+
+        /*
+        // Previously we needed a way to hide commands depending context.
+        // We have not resurrected that feature yet.
+        if (!keyboard.flagsMatch(command.predicates, this.flags)) {
+            // If the predicates say 'no match' then go LA LA LA
+            command = null;
+            break;
+        }
+        */
+
+        if (command.exec) {
+            // Valid command, break with command valid
+            break;
+        }
+
+        // command, but no exec - this must be a sub-command
+        lookup += ' ';
+    }
+
+    // Remove the used args
+    for (var i = 0; i < argsUsed; i++) {
+        args.shift();
+    }
+
+    return command;
+}
+exports._split = _split;
+
+
+/**
  * Provide some documentation for a command.
  * TODO: this should return a hint
  */
-function documentCommand(cmdExt, typed) {
+function documentCommand(command) {
     var docs = [];
-    docs.push('<h1>' + cmdExt.name + '</h1>');
+    docs.push('<h1>' + command.name + '</h1>');
     docs.push('<h2>Summary</h2>');
-    docs.push('<p>' + cmdExt.description + '</p>');
+    docs.push('<p>' + command.description + '</p>');
 
-    if (cmdExt.manual) {
+    if (command.manual) {
         docs.push('<h2>Description</h2>');
-        docs.push('<p>' + cmdExt.description + '</p>');
+        docs.push('<p>' + command.description + '</p>');
     }
 
-    if (cmdExt.params && cmdExt.params.length > 0) {
+    if (command.params && command.params.length > 0) {
         docs.push('<h2>Synopsis</h2>');
         docs.push('<pre>');
-        docs.push(cmdExt.name);
+        docs.push(command.name);
         var optionalParamCount = 0;
-        cmdExt.params.forEach(function(param) {
+        command.params.forEach(function(param) {
             if (param.defaultValue === undefined) {
                 docs.push(' <i>');
                 docs.push(param.name);
@@ -430,7 +548,7 @@ function documentCommand(cmdExt, typed) {
         if (optionalParamCount > 3) {
             docs.push(' [options]');
         } else if (optionalParamCount > 0) {
-            cmdExt.params.forEach(function(param) {
+            command.params.forEach(function(param) {
                 if (param.defaultValue) {
                     docs.push(' [--<i>');
                     docs.push(param.name);
@@ -446,7 +564,7 @@ function documentCommand(cmdExt, typed) {
         docs.push('</pre>');
 
         docs.push('<h2>Parameters</h2>');
-        cmdExt.params.forEach(function(param) {
+        command.params.forEach(function(param) {
             docs.push('<h3 class="cmd_body"><i>' + param.name + '</i></h3>');
             docs.push('<p>' + param.description + '</p>');
             if (param.type.defaultValue) {
@@ -455,12 +573,190 @@ function documentCommand(cmdExt, typed) {
         });
     }
 
-    return {
-        param: { type: 'text', description: docs.join('') },
-        value: typed
-    };
+    return docs.join('');
 };
 exports.documentCommand = documentCommand;
+
+
+/**
+ * A Requisition collects the information needed to execute a command.
+ * There is no point in a requisition for parameter-less commands because there
+ * is no information to collect. A Requisition is a collection of assignments
+ * of values to parameters, each handled by an instance of Assignment.
+ * @constructor
+ */
+function Requisition() {
+}
+Requisition.prototype = {
+    /**
+     * The command that we are about to execute.
+     * @readonly
+     */
+    command: undefined,
+
+    /**
+     * The count of assignments
+     * @readonly
+     */
+    assignmentCount: undefined,
+
+    /**
+     * Set a new command. We make no attempt to convert the args in the old
+     * command to args in the new command. The assignments need to be
+     * re-entered.
+     */
+    setCommand: function(command) {
+        if (this.command === command) {
+            return;
+        }
+
+        this.command = command;
+        this._assignments = {};
+
+        if (command) {
+            command.params.forEach(function(param) {
+                this._assignments[param.name] = new Assignment(param);
+            }, this);
+        }
+
+        this.assignmentCount = Object.keys(this._assignments);
+    },
+
+    /**
+     * Assignments have an order, so we need to store them in an array.
+     * But we also need named access ...
+     */
+    getAssignment: function(nameOrNumber) {
+        var name = (typeof nameOrNumber === 'string') ?
+            nameOrNumber :
+            Object.keys(this._assignments)[nameOrNumber];
+        return this._assignments[name];
+    },
+
+    /**
+     * Where parameter name == assignment names - they are the same.
+     */
+    getParameterNames: function() {
+      return Object.keys(this._assignments);
+    },
+
+    /**
+     * A *shallow* clone of the assignments.
+     * This is useful for systems that wish to go over all the assignments
+     * finding values one way or another and wish to trim an array as they go.
+     */
+    cloneAssignments: function() {
+        return Object.keys(this._assignments).map(function(name) {
+            return this._assignments[name];
+        }, this);
+    },
+
+    /**
+     * Collect the statuses from the Assignments
+     */
+    getHints: function() {
+
+    },
+
+    /**
+     * Extract the names and values of all the assignments, and return as
+     * an object.
+     */
+    getArgs: function() {
+        var args = {};
+        Object.keys(this._assignments).forEach(function(name) {
+            args[name] = getCommand(name);
+        }, this);
+        return args;
+    },
+
+    /**
+     * Reset all the assignments to their default values
+     */
+    setDefaultValues: function() {
+        Object.keys(this._assignments).forEach(function(name) {
+            this._assignments[name].setValue(undefined);
+        }, this);
+    },
+
+    /**
+     * Helper to call canon.exec
+     */
+    exec: function() {
+        exports.exec(this.command, this.getArgs());
+    }
+};
+exports.Requisition = Requisition;
+
+
+/**
+ * A link between a parameter and the data for that parameter.
+ * The data for the parameter is available as in the preferred type and as
+ * an Argument for the CLI.
+ * <p>We also record validity information where applicable.
+ * <p>For values, null and undefined have distinct definitions. null means
+ * that a value has been provided, undefined means that it has not.
+ * Thus, null is a valid default value, and common because it identifies an
+ * parameter that is optional. undefined means there is no value from
+ * the command line.
+ * @constructor
+ */
+function Assignment(param) {
+    this.param = param;
+    this.setValue(param.defaultValue);
+};
+Assignment.prototype = {
+    /**
+     * The parameter that we are assigning to
+     * @readonly
+     */
+    param: undefined,
+
+    /**
+     * The current value (i.e. not the string representation)
+     * @readonly - use setValue() to mutate
+     */
+    value: undefined,
+    setValue: function(value) {
+        if (this.value === value) {
+            return;
+        }
+        if (value === undefined) {
+            value = this.param.defaultValue;
+        }
+        this.text = (value === null) ? '' : this.param.type.stringify(value);
+        this.value = value;
+        this.status = Status.VALID;
+        this.message = '';
+        //this._dispatchEvent('change', { assignment: this });
+    },
+
+    /**
+     * The textual representation of the current value
+     * @readonly - use setValue() to mutate
+     */
+    text: undefined,
+    setText: function(text) {
+        if (this.text === text) {
+            return;
+        }
+        var conversion = this.param.type.parse(text);
+        this.text = text;
+        this.value = conversion.value;
+        this.status = conversion.status;
+        this.message = conversion.message;
+        //this._dispatchEvent('change', { assignment: this });
+    },
+
+    /**
+     * Report on the status of the last parse() conversion.
+     * @see types.Conversion
+     */
+    status: undefined,
+    message: undefined
+};
+oop.implement(Assignment, EventEmitter);
+exports.Assignment = Assignment;
 
 
 });
