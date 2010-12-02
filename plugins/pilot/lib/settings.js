@@ -240,7 +240,7 @@ Settings.prototype = {
             if (data.hasOwnProperty(key)) {
                 var setting = this._settings[key];
                 if (setting) {
-                    var value = setting.type.fromString(data[key]);
+                    var value = setting.type.parse(data[key]);
                     this.set(key, value);
                 } else {
                     this.set(key, data[key]);
@@ -254,7 +254,7 @@ Settings.prototype = {
      */
     _saveToObject: function() {
         return this.getSettingNames().map(function(key) {
-            return this._settings[key].type.toString(this.get(key));
+            return this._settings[key].type.stringify(this.get(key));
         }.bind(this));
     },
 

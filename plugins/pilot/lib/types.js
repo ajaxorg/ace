@@ -50,27 +50,40 @@ var Status = {
     VALID: 1,
 
     /**
+     * The conversion process did not work like Status.INVALID, however it was
+     * noted that the string provided to 'parse()' could be VALID by the
+     * addition of more characters, so the typing may not be actually incorrect
+     * yet, just unfinished.
+     * @see Status.INVALID
+     */
+    INCOMPLETE: 2,
+
+    /**
      * The conversion process did not work, the value should be null and a
      * reason for failure should have been provided. In addition some completion
      * values may be available.
      * @see Status.INCOMPLETE
      */
-    INVALID: 2,
+    INVALID: 3,
 
     /**
-     * The conversion process did not work like Status.INVALID, however it was
-     * noted that the string provided to 'fromString()' could be VALID by
-     * the addition of more characters, so the typing may not be actually
-     * incorrect yet, just unfinished.
-     * @see Status.INVALID
+     * A combined status is the worser of the provided statuses
      */
-    INCOMPLETE: 3
+    combine: function(statuses) {
+        var combined = Status.VALID;
+        for (var i = 0; i < arguments; i++) {
+            if (arguments[i] > combined) {
+                combined = arguments[i];
+            }
+        }
+        return combined;
+    }
 };
 exports.Status = Status;
 
 /**
- * The type.fromString() method returns a Conversion to inform the user about
- * not only the result of a Conversion but also about what went wrong.
+ * The type.parse() method returns a Conversion to inform the user about not
+ * only the result of a Conversion but also about what went wrong.
  * We could use an exception, and throw if the conversion failed, but that
  * seems to violate the idea that exceptions should be exceptional. Typos are
  * not. Also in order to store both a status and a message we'd still need
@@ -123,7 +136,7 @@ Type.prototype = {
      * Where possible, there should be round-tripping between values and their
      * string representations.
      */
-    toString: function(value) { throw new Error("not implemented"); },
+    stringify: function(value) { throw new Error("not implemented"); },
 
     /**
      * Convert the given <tt>str</tt> to an instance of this type.
@@ -131,7 +144,7 @@ Type.prototype = {
      * string representations.
      * @return Conversion
      */
-    fromString: function(str) { throw new Error("not implemented"); },
+    parse: function(str) { throw new Error("not implemented"); },
 
     /**
      * The plug-in system, and other things need to know what this type is
@@ -152,10 +165,35 @@ exports.Type = Type;
 var types = {};
 
 /**
- * Add a new type to the list available to the system
+ * Add a new type to the list available to the system.
+ * You can pass 2 things to this function - either an instance of Type, in
+ * which case we return this instance when #getType() is called with a 'name'
+ * that matches type.name.
+ * Also you can pass in a constructor (i.e. function) in which case when
+ * #getType() is called with a 'name' that matches Type.prototype.name we will
+ * pass the typeSpec into this constructor. See #reconstituteType().
  */
 exports.registerType = function(type) {
-    types[type.name] = type;
+    if (typeof type === 'object') {
+        if (type instanceof Type) {
+            if (!type.name) {
+                throw new Error('All registered types must have a name');
+            }
+            types[type.name] = type;
+        }
+        else {
+            throw new Error('Can\'t registerType using: ' + type);
+        }
+    }
+    else if (typeof type === 'function') {
+        if (!type.prototype.name) {
+            throw new Error('All registered types must have a name');
+        }
+        types[type.prototype.name] = type;
+    }
+    else {
+        throw new Error('Unknown type: ' + type);
+    }
 };
 
 /**
@@ -166,29 +204,33 @@ exports.deregisterType = function(type) {
 };
 
 /**
+ * See description of #exports.registerType()
+ */
+function reconstituteType(name, typeSpec) {
+    var type = types[name];
+    if (typeof type === 'function') {
+        // TODO: should we complain if typeSpec is a string?
+        type = new type(typeSpec);
+    }
+    return type;
+}
+
+/**
  * Find a type, previously registered using #registerType()
  */
 exports.getType = function(typeSpec) {
-    var type;
     if (typeof typeSpec === 'string') {
-        type = types[typeSpec];
+        return reconstituteType(typeSpec, typeSpec);
     }
 
     if (typeof typeSpec == 'object') {
         if (!typeSpec.name) {
             throw new Error('Missing \'name\' member to typeSpec');
         }
-
-        type = types[typeSpec.name];
+        return reconstituteType(typeSpec.name, typeSpec);
     }
 
-    if (type instanceof Type) {
-        return type;
-    }
-
-    if (typeof type === 'function') {
-        return type(typeSpec);
-    }
+    throw new Error('Can\'t extract type from ' + typeSpec);
 };
 
 

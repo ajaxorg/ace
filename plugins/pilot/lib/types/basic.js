@@ -41,6 +41,7 @@ define(function(require, exports, module) {
 var types = require("pilot/types");
 var Type = types.Type;
 var Conversion = types.Conversion;
+var Status = types.Status;
 
 /**
  * These are the basic types that we accept. They are vaguely based on the
@@ -59,13 +60,13 @@ var Conversion = types.Conversion;
  */
 var text = new Type();
 
-text.toString = function(value) {
+text.stringify = function(value) {
     return value;
 };
 
-text.fromString = function(value) {
+text.parse = function(value) {
     if (typeof value != 'string') {
-        throw new Error('non-string passed to text.fromString()');
+        throw new Error('non-string passed to text.parse()');
     }
     return new Conversion(value);
 };
@@ -77,16 +78,16 @@ text.name = 'text';
  */
 var number = new Type();
 
-number.toString = function(value) {
+number.stringify = function(value) {
     if (!value) {
         return null;
     }
     return '' + value;
 };
 
-number.fromString = function(value) {
+number.parse = function(value) {
     if (typeof value != 'string') {
-        throw new Error('non-string passed to number.fromString()');
+        throw new Error('non-string passed to number.parse()');
     }
 
     var reply = new Conversion(parseInt(value, 10));
@@ -103,24 +104,29 @@ number.name = 'number';
 /**
  * One of a known set of options
  */
-function SelectionType(data) {
-    this._data = data;
+function SelectionType(typeSpec) {
+    if (!Array.isArray(typeSpec.data) && typeof typeSpec.data !== 'function') {
+        throw new Error('instances of SelectionType need typeSpec.data to be an array or function that returns an array:' + JSON.stringify(typeSpec));
+    }
+    Object.keys(typeSpec).forEach(function(key) {
+        this[key] = typeSpec[key];
+    }, this);
 };
 
 SelectionType.prototype = new Type();
 
-SelectionType.prototype.toString = function(value) {
+SelectionType.prototype.stringify = function(value) {
     return value;
 };
 
-SelectionType.prototype.fromString = function(value) {
+SelectionType.prototype.parse = function(value) {
     if (typeof value != 'string') {
-        throw new Error('non-string passed to fromString()');
+        throw new Error('non-string passed to parse()');
     }
-    if (!this._data) {
+    if (!this.data) {
         throw new Error('Missing data on selection type extension.');
     }
-    var data = (typeof(this._data) === "function") ? this._data() : this._data;
+    var data = (typeof(this.data) === "function") ? this.data() : this.data;
 
     var match = false;
     var completions = [];
@@ -143,37 +149,70 @@ SelectionType.prototype.fromString = function(value) {
         // TODO: better completions - we're just using the extensions
         return new Conversion(null,
                 status,
-                'Can\'t convert "' + value + '" to a selection.',
+                'Can\'t convert \'' + value + '\' to a selection.',
                 completions);
     }
 };
 
 SelectionType.prototype.name = 'selection';
 
+/**
+ * SelectionType is a base class for other types
+ */
+exports.SelectionType = SelectionType;
 
 /**
  * true/false values
  */
-var bool = new SelectionType([ 'true', 'false' ]);
+var bool = new SelectionType({
+    name: 'bool',
+    data: [ 'true', 'false' ],
+    stringify: function(value) {
+        return '' + value;
+    },
+    parse: function(value) {
+        var conversion = SelectionType.prototype.parse(value);
 
-bool.toString = function(value) {
-    return '' + value;
+        if (conversion.value === 'true') {
+            conversion.value = true;
+        }
+        if (conversion.value === 'false') {
+            conversion.value = false;
+        }
+
+        return conversion;
+    }
+});
+
+
+/**
+ * One of a known set of options
+ */
+function DeferredType(typeSpec) {
+    if (typeof typeSpec.defer !== 'function') {
+        throw new Error('Instances of DeferredType need typeSpec.defer to be a function that returns a type');
+    }
+    Object.keys(typeSpec).forEach(function(key) {
+        this[key] = typeSpec[key];
+    }, this);
 };
 
-bool.fromString = function(value) {
-    var conversion = SelectionType.prototype.fromString(value);
+DeferredType.prototype = new Type();
 
-    if (conversion.value === 'true') {
-        conversion.value = true;
-    }
-    if (conversion.value === 'false') {
-        conversion.value = false;
-    }
-
-    return conversion;
+DeferredType.prototype.stringify = function(value) {
+    return this.defer.stringify(value);
 };
 
-bool.name = 'bool';
+DeferredType.prototype.parse = function(value) {
+    return this.defer.parse(value);
+};
+
+DeferredType.prototype.name = 'deferred';
+
+/**
+ * DeferredType is a base class for other types
+ */
+exports.DeferredType = DeferredType;
 
 /**
  * Registration and de-registration.
@@ -183,6 +222,7 @@ exports.startup = function() {
     types.registerType(number);
     types.registerType(bool);
     types.registerType(SelectionType);
+    types.registerType(DeferredType);
 };
 
 exports.shutdown = function() {
@@ -190,6 +230,7 @@ exports.shutdown = function() {
     types.unregisterType(number);
     types.unregisterType(bool);
     types.unregisterType(SelectionType);
+    types.unregisterType(DeferredType);
 };
 
 
