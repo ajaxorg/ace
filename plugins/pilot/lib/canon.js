@@ -40,16 +40,18 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
-var oop = require("pilot/oop").oop;
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var catalog = require("pilot/catalog");
+var oop = require('pilot/oop').oop;
+var EventEmitter = require('pilot/event_emitter').EventEmitter;
+var catalog = require('pilot/catalog');
+var Status = require('pilot/types').Status;
+var types = require('pilot/types');
 
 /*
 // TODO: this doesn't belong here - or maybe anywhere?
 var dimensionsChangedExtensionSpec = {
-    name: "dimensionsChanged",
-    description: "A dimensionsChanged is a way to be notified of " +
-            "changes to the dimension of Skywriter"
+    name: 'dimensionsChanged',
+    description: 'A dimensionsChanged is a way to be notified of ' +
+            'changes to the dimension of Skywriter'
 };
 exports.startup = function(data, reason) {
     catalog.addExtensionSpec(commandExtensionSpec);
@@ -60,12 +62,12 @@ exports.shutdown = function(data, reason) {
 */
 
 var commandExtensionSpec = {
-    name: "command",
-    description: "A command is a bit of functionality with optional " +
-            "typed arguments which can do something small like moving " +
-            "the cursor around the screen, or large like cloning a " +
-            "project from VCS.",
-    indexOn: "name"
+    name: 'command',
+    description: 'A command is a bit of functionality with optional ' +
+            'typed arguments which can do something small like moving ' +
+            'the cursor around the screen, or large like cloning a ' +
+            'project from VCS.',
+    indexOn: 'name'
 };
 
 var env;
@@ -89,29 +91,55 @@ exports.shutdown = function(data, reason) {
  * how it happens. This is here for documentation purposes.
  * TODO: Document better
  */
-var Command = {
-    name: "thing",
-    description: "thing is an example command",
+var thingCommand = {
+    name: 'thing',
+    description: 'thing is an example command',
     params: [{
-        name: "param1",
-        description: "an example parameter",
-        type: "text",
+        name: 'param1',
+        description: 'an example parameter',
+        type: 'text',
         defaultValue: null
     }],
-    exec: function(env, args, request) { }
+    exec: function(env, args, request) {
+        thing();
+    }
 };
 
 var commands = {};
 
+/**
+ * This registration method isn't like other Ace registration methods because
+ * it doesn't return a decorated command because there is no functional
+ * decoration to be done.
+ * TODO: Are we sure that in the future there will be no such decoration?
+ */
 exports.addCommand = function(command) {
     if (!command.name) {
-        throw new Error("All registered commands must have a name");
+        throw new Error('All registered commands must have a name');
     }
+    if (command.params == null) {
+        command.params = [];
+    }
+    if (!Array.isArray(command.params)) {
+        throw new Error('command.params must be an array in ' + command.name);
+    }
+    // Replace the type
+    command.params.forEach(function(param) {
+        if (!param.name) {
+            throw new Error('In ' + command.name + ': all params must have a name');
+        }
+        var lookup = param.type;
+        param.type = types.getType(lookup);
+        if (param.type == null) {
+            throw new Error('In ' + command.name + '/' + param.name +
+                ': can\'t find type for: ' + JSON.stringify(lookup));
+        }
+    }, this);
     commands[command.name] = command;
 };
 
 exports.removeCommand = function(command) {
-    if (typeof command === "string") {
+    if (typeof command === 'string') {
         delete commands[command];
     }
     else {
@@ -130,25 +158,22 @@ exports.getCommandNames = function() {
 /**
  * Entry point for keyboard accelerators or anything else that knows
  * everything it needs to about the command params
+ * @param command Either a command, or the name of one
  */
-exports.exec = function(name, args) {
-    var command = commands[name];
-    if (command) {
-        // TODO: Ugg. really?
-        env.selection = env.editor.getSelection();
-        var request = new Request();
-        command.exec(env, args || {}, request);
-        return true;
+exports.exec = function(command, args) {
+    if (typeof name === 'string') {
+        command = commands[command];
     }
-    return false;
-};
+    if (!command) {
+        // TODO: Should we complain more than returning false?
+        return false;
+    }
 
-/**
- * Entry point for users that need to collect parameters from textual input
- */
-exports.execRequisition = function(requisition) {
+    // TODO: Ugg. really?
+    env.selection = env.editor.getSelection();
     var request = new Request();
-    requisition.command.exec(env, requisition.getArgs(), request);
+    command.exec(env, args || {}, request);
+    return true;
 };
 
 /**
@@ -157,124 +182,6 @@ exports.execRequisition = function(requisition) {
  */
 oop.implement(exports, EventEmitter);
 
-/**
- * A Requisition collects the information needed to execute a command.
- * There is no point in a requisition for parameter-less commands because there
- * is no information to collect. A Requisition is a collection of assignments
- * of values to parameters, each handled by an instance of Assignment.
- * @constructor
- */
-function Requisition(command) {
-    this.command = command;
-    this.assignments = {};
-    command.params.forEach(function(param) {
-        this.assignment[param.name] = new Assignment(param);
-    });
-}
-Requisition.prototype = {
-    /**
-     * The command that we are about to execute.
-     * @readonly
-     */
-    command: undefined,
-
-    /**
-     * The set of values that we are assigning to parameters in the command
-     * @readonly
-     */
-    assignments: undefined,
-
-    /**
-     *
-     */
-    getArgs: function() {
-        var args = {};
-        Object.keys(assignments).forEach(function(name) {
-            args[name] = getCommand(name);
-        });
-        return args;
-    }
-};
-exports.Requisition = Requisition;
-
-
-/**
- * A link between a parameter and the data for that parameter.
- * The data for the parameter is available as in the preferred type and in
- * the string representation of that type.
- * <p>We also record validity information and cli offset data where applicable.
- * <p>For values, null and undefined have distinct definitions. null means
- * that a value has been provided, undefined means that it has not.
- * Thus, null is a valid default value, and common because it identifies an
- * parameter that is optional. undefined means there is no value from
- * the command line.
- * TODO: think about this distinction some more, particularly this line:
- * ass.setValue(undefined); ass.value -> param.defaultValue?;
- * @constructor
- */
-function Assignment(param) {
-    this.param = param;
-    this.setValue(param.defaultValue);
-};
-Assignment.prototype = {
-    /**
-     * The parameter that we are assigning to
-     * @readonly
-     */
-    param: undefined,
-
-    /**
-     * The current value (i.e. not the string representation)
-     * @readonly - use setValue() to mutate
-     */
-    value: undefined,
-    setValue: function(value) {
-        if (this.value === value) {
-            return;
-        }
-        if (value === undefined) {
-            value = this.param.defaultValue;
-        }
-        this.text = this.param.type.toString(value);
-        this.value = value;
-        this.status = Status.VALID;
-        this.message = "";
-        this._dispatchEvent('change', { assignment: this });
-    },
-
-    /**
-     * The textual representation of the current value
-     * @readonly - use setValue() to mutate
-     */
-    text: undefined,
-    setText: function(text) {
-        if (this.text === text) {
-            return;
-        }
-        var conversion = this.param.type.fromString(text);
-        this.text = text;
-        this.value = conversion.value;
-        this.status = conversion.status;
-        this.message = conversion.message;
-        this._dispatchEvent('change', { assignment: this });
-    },
-
-    /**
-     * Report on the status of the last fromString() conversion.
-     * @see types.Conversion
-     */
-    status: undefined,
-    message: undefined,
-
-    /**
-     * Read-write value which records the offset of this text into a command
-     * line. This is a convenience provided to the command line, but which
-     * probably won't be used elsewhere.
-     */
-    offset: undefined
-};
-oop.implement(Assignment, EventEmitter);
-exports.Assignment = Assignment;
 
 /**
  * Current requirements are around displaying the command line, and provision
@@ -314,32 +221,6 @@ exports.addRequestOutput = function(request) {
     }
 
     exports._dispatchEvent('addedRequestOutput', { request: request });
-};
-
-/**
- * Execute a new command.
- * This is basically an error trapping wrapper around request.command(...)
- */
-exports.execute = function(args, request) {
-    // Check the function pointed to in the meta-data exists
-    if (!request.command) {
-        request.doneWithError('Command not found.');
-        return;
-    }
-
-    try {
-        request.command(args, request);
-    } catch (ex) {
-        var trace = new Trace(ex, true);
-        console.group('Error executing command \'' + request.typed + '\'');
-        console.log('command=', request.commandExt);
-        console.log('args=', args);
-        console.error(ex);
-        trace.log(3);
-        console.groupEnd();
-
-        request.doneWithError(ex);
-    }
 };
 
 /**
