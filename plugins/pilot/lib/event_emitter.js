@@ -37,7 +37,7 @@
 
 define(function(require, exports, module) {
 
-var lang = require("pilot/lang").lang;
+var lang = require('pilot/lang').lang;
 
 var EventEmitter = {};
 

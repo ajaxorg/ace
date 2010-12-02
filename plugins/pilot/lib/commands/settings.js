@@ -37,57 +37,18 @@
 
 define(function(require, exports, module) {
 
-/**
- * Something of a hack to allow the set command to give a clearer definition
- * of the type to the command line.
- */
-var valueDeferredType = {
-    name: "deferred",
-    undeferType: function(typeSpec, env) {
-        var assignments = typeSpec.assignments;
-        var replacement = 'text';
-
-        if (assignments) {
-            // Find the assignment for 'setting' so we can get it's value
-            var settingAssignment = null;
-            assignments.forEach(function(assignment) {
-                if (assignment.param.name === 'setting') {
-                    settingAssignment = assignment;
-                }
-            });
-
-            if (settingAssignment) {
-                var settingName = settingAssignment.value;
-                if (settingName && settingName !== '') {
-                    var settingExt = settings[settingName];
-                    if (settingExt) {
-                        replacement = settingExt.type;
-                    }
-                }
-            }
-        }
-
-        return replacement;
-    }
-};
-
 var setCommandSpec = {
     name: "set",
     params: [
         {
             name: "setting",
-            type: {
-                name: "selection",
-                getOptions: function(env) {
-                    return env.settings.getSettingNames();
-                }
-            },
+            type: "setting",
             description: "The name of the setting to display or alter",
             defaultValue: null
         },
         {
             name: "value",
-            type: valueDeferredType,
+            type: "settingValue",
             description: "The new value for the chosen setting",
             defaultValue: null
         }
@@ -139,10 +100,7 @@ var unsetCommandSpec = {
     params: [
         {
             name: "setting",
-            type: {
-                name: "selection",
-                pointer: "settings:index#getSettings"
-            },
+            type: "setting",
             description: "The name of the setting to return to defaults"
         }
     ],
