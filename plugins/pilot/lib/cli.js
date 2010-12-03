@@ -97,7 +97,7 @@ oop.inherits(ConversionHint, Hint);
  * @constructor
  */
 function Argument(text, start, end, priorSpace) {
-    this.text = text;
+    this.setText(text);
     this.start = start;
     this.end = end;
     this.priorSpace = priorSpace;
@@ -114,23 +114,52 @@ Argument.prototype = {
     },
 
     setText: function(text) {
+        if (text == null) {
+            throw new Error('Illegal text for Argument: ' + text);
+        }
         this.text = text;
     }
 };
 /**
  * Merge an array of arguments into a single argument.
  */
-Argument.mergeAll = function(argArray) {
+Argument.merge = function(argArray, start, end) {
+    start = (start === undefined) ? 0 : start;
+    end = (end === undefined) ? argArray.length : end;
+
     var joined;
-    argArray.forEach(function(arg) {
+    for (var i = start; i < end; i++) {
+        var arg = argArray[i];
         if (!joined) {
             joined = arg;
         }
         else {
             joined = joined.merge(arg);
         }
-    });
+    }
     return joined;
+};
+
+
+/**
+ * CLI / UI Interface
+ * The Cli interacts with the UI via an instance of CliUi.
+ * This implementation is designed as a template rather than to be used.
+ * It is expected that we will have a number of implementations of this:
+ * - A firebug/webkit inspector cli shim
+ * - A simple input[type=text] version
+ * - A possible Cloud9 UI version
+ * - A possible Skywriter UI version
+ * This class will probably need refactoring as time goes on.
+ *
+ * TODO: Who should own the Requisition?
+ */
+function CliUi() {
+}
+CliUi.prototype = {
+    getSelection: function() {},
+    setHints: function() {},
+    setRequisition: function() {}
 };
 
 
@@ -143,7 +172,7 @@ Argument.mergeAll = function(argArray) {
  * <p>The other output value is input.requisition which gives access to an
  * args object for use in executing the final command.
  *
- * The majority of the functions in this class are called in sequence by the
+ * <p>The majority of the functions in this class are called in sequence by the
  * constructor. Their task is to add to <tt>hints</tt> fill out the requisition.
  * <p>The general sequence is:<ul>
  * <li>_tokenize(): convert _typed into _parts
@@ -158,23 +187,20 @@ Argument.mergeAll = function(argArray) {
  * if not specified.
  * @constructor
  */
-function Input(options) {
-    if (options) {
-        if (options.flags) {
-            this.flags = options.flags;
-        }
-        if (options.input) {
-            // TODO: implement
-            this.useAsInput(options.input);
-        }
+function Cli(cliui, options) {
+    this.cliui = cliui;
+    if (options && options.flags) {
+        this.flags = options.flags;
     }
+
     this.requisition = new Requisition();
+    this.cliui.setRequisition(this.requisition);
 }
-Input.prototype = {
+Cli.prototype = {
     /**
      * TODO: We were using a default of keyboard.buildFlags({ });
-     * I think this allowed us to have commands that only existed in certain
-     * contexts - i.e. Javascript specific commands.
+     * This allowed us to have commands that only existed in certain contexts
+     * - i.e. Javascript specific commands.
      */
     flags: {},
 
@@ -184,6 +210,7 @@ Input.prototype = {
     parse: function(typed) {
         if (util.none(typed)) {
             this.requisition.setCommand(null);
+            this.cliui.setHints([]);
             return;
         }
 
@@ -198,17 +225,17 @@ Input.prototype = {
             // until the user click a 'close' button or similar
             this._addHint(Status.INCOMPLETE, '', 0, 0);
             this.requisition.setCommand(null);
+            this.cliui.setHints(this.hints);
             return;
         }
 
         var command = _split(args);
 
         if (!command) {
-            // TODO: Should we use this technique in split?
             // No command found - bail helpfully.
             var commandType = types.getType('command');
             var conversion = commandType.parse(typed);
-            var arg = Argument.mergeAll(args);
+            var arg = Argument.merge(args);
             this._addHint(new ConversionHint(conversion, arg));
 
             this.requisition.setCommand(null);
@@ -224,6 +251,28 @@ Input.prototype = {
             this._assign(args);
             this._addHint(this.requisition.getHints());
         }
+
+        // TODO: This is the wrong place to filter this.
+        // It should be done by the CliUi because:
+        // - the cursor could move without notice
+        // - not all interfaces will have a notion of one cursor for the whole assignment
+
+        // Not knowing about cursor positioning, the requisition and assignments
+        // can't know this, but anything they mark as INCOMPLETE is actually
+        // INVALID unless the cursor is actually inside that argument.
+        var sel = this.cliui.getSelection();
+        this.hints.forEach(function(hint) {
+            var startInHint = sel.start >= hint.start && sel.start <= hint.end;
+            var endInHint = sel.end >= hint.start && sel.end <= hint.end;
+            var inHint = startInHint || endInHint;
+            if (!inHint && hint.status === Status.INCOMPLETE) {
+                 hint.status = Status.INVALID;
+            }
+        }, this);
+
+        this.cliui.setHints(this.hints);
+
+        return;
     },
 
     /**
@@ -269,7 +318,7 @@ Input.prototype = {
             // probably given our tighter tokenize() this won't be an issue?
             this._addHint(Status.INVALID,
                 this.requisition.command.name + ' does not take any parameters',
-                Argument.mergeAll(args));
+                Argument.merge(args));
             return;
         }
 
@@ -278,7 +327,7 @@ Input.prototype = {
         if (this.requisition.assignmentCount == 1) {
             var assignment = this.requisition.getAssignment(0);
             if (assignment.param.type.name === 'text') {
-                assignment.setArgument(Argument.mergeAll(args));
+                assignment.setArgument(Argument.merge(args));
                 return;
             }
         }
@@ -305,13 +354,15 @@ Input.prototype = {
                 // boolean parameters don't have values, default to false
                 if (assignment.param.type.name === 'boolean') {
                     assignment.setValue(true);
-                } else {
+                }
+                else {
                     if (i + 1 < args.length) {
-                        // Missing value for this param
+                        // Missing value portion of this named param
                         this._addHint(Status.INCOMPLETE,
                             'Missing value for: ' + namedArgText,
                             args[i]);
-                    } else {
+                    }
+                    else {
                         args.splice(i + 1, 1);
                         assignment.setArgument(args[i + 1]);
                     }
@@ -324,31 +375,28 @@ Input.prototype = {
         }, this);
 
         // What's left are positional parameters assign in order
-        var i = 0;
         names.forEach(function(name) {
             var assignment = this.requisition.getAssignment(name);
-            if (i >= args.length) {
+            if (args.length === 0) {
                 // No more values
                 assignment.setValue(undefined); // i.e. default
             }
             else {
-                var arg = args[i];
-                args.splice(i, 1);
+                var arg = args[0];
+                args.splice(0, 1);
                 assignment.setArgument(arg);
             }
-
-            i++;
         }, this);
 
         if (args.length > 0) {
-            var remaining = Argument.mergeAll(args);
+            var remaining = Argument.merge(args);
             this._addHint(Status.INVALID,
                 'Input \'' + remaining.text + '\' makes no sense.',
                 remaining);
         }
     }
 };
-exports.Input = Input;
+exports.Cli = Cli;
 
 /**
  * Split up the input taking into account ' and "
@@ -545,14 +593,16 @@ function documentCommand(command) {
                 docs.push(' <i>');
                 docs.push(param.name);
                 docs.push('</i>');
-            } else if (param.defaultValue === null) {
+            }
+            else if (param.defaultValue === null) {
                 docs.push(' <i>[');
                 docs.push(param.name);
                 docs.push(']</i>');
-            } else {
+            }
+            else {
                 optionalParamCount++;
             }
-        });
+        }, this);
         if (optionalParamCount > 3) {
             docs.push(' [options]');
         } else if (optionalParamCount > 0) {
@@ -562,12 +612,13 @@ function documentCommand(command) {
                     docs.push(param.name);
                     if (param.type.name === 'boolean') {
                         docs.push('</i>');
-                    } else {
+                    }
+                    else {
                         docs.push('</i> ' + param.type.name);
                     }
                     docs.push(']');
                 }
-            });
+            }, this);
         }
         docs.push('</pre>');
 
@@ -578,7 +629,7 @@ function documentCommand(command) {
             if (param.type.defaultValue) {
                 docs.push('<p>Default: ' + param.type.defaultValue + '</p>');
             }
-        });
+        }, this);
     }
 
     return docs.join('');
@@ -665,10 +716,8 @@ Requisition.prototype = {
     getHints: function() {
         var hints = [];
         Object.keys(this._assignments).map(function(name) {
-            var hint = this._assignments[name].getHint();
-            if (hint) {
-                hints.push(hint);
-            }
+            // Append the assignments hints to our list
+            hints.push.apply(hints, this._assignments[name].getHints());
         }, this);
         return hints;
     },
@@ -729,7 +778,7 @@ Assignment.prototype = {
 
     /**
      * The current value (i.e. not the string representation)
-     * @readonly - use setValue() to mutate
+     * Use setValue() to mutate
      */
     value: undefined,
     setValue: function(value) {
@@ -739,18 +788,20 @@ Assignment.prototype = {
         if (value === undefined) {
             value = this.param.defaultValue;
         }
-        var text = (value === null) ? '' : this.param.type.stringify(value);
+        this.value = value;
+
+        var text = (value == null) ? '' : this.param.type.stringify(value);
         if (this.arg) {
             this.arg.setText(text);
         }
-        this.value = value;
-        this.conversion = new Conversion(value, Status.VALID, '', []);
+
+        this.conversion = undefined;
         //this._dispatchEvent('change', { assignment: this });
     },
 
     /**
      * The textual representation of the current value
-     * @readonly - use setValue() to mutate
+     * Use setValue() to mutate
      */
     arg: undefined,
     setArgument: function(arg) {
@@ -763,13 +814,27 @@ Assignment.prototype = {
         //this._dispatchEvent('change', { assignment: this });
     },
 
-    getHint: function() {
-        if (this.conversion.status === Status.VALID &&
-                this.conversion.message === '') {
-            return undefined;
+    /**
+     * Create a list of this hints associated with this parameter assignment
+     */
+    getHints: function() {
+        var hints = [];
+        if (this.conversion != null &&
+              (this.conversion.status !== Status.VALID ||
+              this.conversion.message)) {
+            hints.push(new ConversionHint(this.conversion, this.arg));
         }
 
-        return new ConversionHint(this.conversion, this.arg);
+        var argProvided = this.arg != null && this.arg.text !== '';
+        var dataProvided = this.value !== undefined || argProvided;
+
+        if (this.param.defaultValue === undefined && !dataProvided) {
+            // If the there is no data provided, we have no start/end. Use -1
+            hints.push(new Hint(Status.INVALID,
+                    'Argument for ' + param.name + ' is required'
+                    -1, -1));
+        }
+        return hints;
     },
 
     /**
