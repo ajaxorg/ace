@@ -40,6 +40,7 @@ define(function(require, exports, module) {
 /**
  * Some types can detect validity, that is to say they can distinguish between
  * valid and invalid values.
+ * TODO: Change these constants to be numbers for more performance?
  */
 var Status = {
     /**
@@ -47,7 +48,7 @@ var Status = {
      * valid. There are a number of failure states, so the best way to check
      * for failure is (x !== Status.VALID)
      */
-    VALID: 1,
+    VALID: 'VALID',
 
     /**
      * The conversion process did not work like Status.INVALID, however it was
@@ -56,7 +57,7 @@ var Status = {
      * yet, just unfinished.
      * @see Status.INVALID
      */
-    INCOMPLETE: 2,
+    INCOMPLETE: 'INCOMPLETE',
 
     /**
      * The conversion process did not work, the value should be null and a
@@ -64,7 +65,7 @@ var Status = {
      * values may be available.
      * @see Status.INCOMPLETE
      */
-    INVALID: 3,
+    INVALID: 'INVALID',
 
     /**
      * A combined status is the worser of the provided statuses
