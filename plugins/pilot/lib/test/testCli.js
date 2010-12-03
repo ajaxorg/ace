@@ -41,11 +41,12 @@ define(function(require, exports, module) {
 var test = require('pilot/test/assert').test;
 var cli = require('pilot/cli');
 var Status = require('pilot/types').Status;
+var settings = require('pilot/settings').settings;
 
 exports.testAll = function() {
     exports.testTokenize();
     exports.testSplit();
-    exports.testInput();
+    exports.testCli();
     return "testAll Completed";
 };
 
@@ -142,40 +143,152 @@ exports.testTokenize = function() {
     return "testTokenize Completed";
 };
 
-exports.testInput = function() {
-    var input = new cli.Input();
+var hints;
+var hint0;
+var requisition;
+var sel = { start: -1, end: -1 };
+var settingAssignment;
+var valueAssignment;
+mockCliUi = {
+    getSelection: function() {
+        return sel;
+    },
+
+    setHints: function(h) {
+        hints = h;
+        hint0 = (h.length !== 0) ? h[0] : undefined;
+
+        if (requisition && requisition.command && requisition.command.name === 'set') {
+            settingAssignment = requisition.getAssignment('setting');
+            valueAssignment = requisition.getAssignment('value');
+        }
+        else {
+            settingAssignment = undefined;
+            valueAssignment = undefined;
+        }
+    },
+
+    setRequisition: function(r) {
+        requisition = r;
+    }
+};
+
+exports.testCli = function() {
+    var historyLengthSetting = settings.getSetting('historyLength');
+
+    var input = new cli.Cli(mockCliUi);
+
     input.parse('');
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.INCOMPLETE, hint0.status);
+    test.verifyEqual(0, hint0.start);
+    test.verifyEqual(0, hint0.end);
+    test.verifyNull(requisition.command);
 
-    test.verifyEqual(1, input.hints.length);
-    test.verifyEqual(Status.INCOMPLETE, input.hints[0].status);
-    test.verifyNull(input.requisition.command);
-
+    sel.start = sel.end = 1;
     input.parse('s');
-    test.verifyEqual(1, input.hints.length);
-    test.verifyEqual(Status.INCOMPLETE, input.hints[0].status);
-    test.verifyNotEqual(-1, input.hints[0].message.indexOf('possibilities'));
-    test.verifyTrue(input.hints[0].predictions.length > 0);
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.INCOMPLETE, hint0.status);
+    test.verifyNotEqual(-1, hint0.message.indexOf('possibilities'));
+    test.verifyEqual(0, hint0.start);
+    test.verifyEqual(1, hint0.end);
+    test.verifyTrue(hint0.predictions.length > 0);
     // This is slightly fragile because it depends on the configuration
-    test.verifyTrue(input.hints[0].predictions.length < 20);
-    test.verifyNotEqual(-1, input.hints[0].predictions.indexOf('set'));
-    test.verifyNull(input.requisition.command);
+    test.verifyTrue(hint0.predictions.length < 20);
+    test.verifyNotEqual(-1, hint0.predictions.indexOf('set'));
+    test.verifyNull(requisition.command);
 
     input.parse('set');
-    test.verifyEqual(1, input.hints.length);
-    test.verifyEqual('set', input.requisition.command.name);
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.VALID, hint0.status);
+    test.verifyEqual(0, hint0.start);
+    test.verifyEqual(3, hint0.end);
+    test.verifyEqual('set', requisition.command.name);
 
     input.parse('set ');
-    test.verifyEqual(1, input.hints.length);
-    test.verifyEqual('set', input.requisition.command.name);
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.VALID, hint0.status);
+    test.verifyEqual(0, hint0.start);
+    // Technically the command ends at 3, but we're returning 4 currently.
+    // This is caused by us using the whole input to determine the length.
+    // Maybe one day we should fix this?
+    //test.verifyEqual(3, hint0.end);
+    test.verifyEqual('set', requisition.command.name);
 
+    sel.start = sel.end = 5;
     input.parse('set h');
-    test.verifyEqual(1, input.hints.length);
-    test.verifyEqual(Status.INCOMPLETE, input.hints[0].status);
-    test.verifyEqual('set', input.requisition.command.name);
-    test.verifyEqual('h', input.requisition.getAssignment('setting').arg.text);
-    test.verifyEqual(undefined, input.requisition.getAssignment('setting').value);
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.INCOMPLETE, hint0.status);
+    test.verifyTrue(hint0.predictions.length > 0);
+    test.verifyEqual(4, hint0.start);
+    test.verifyEqual(5, hint0.end);
+    test.verifyNotEqual(-1, hint0.predictions.indexOf('historyLength'));
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('h', settingAssignment.arg.text);
+    test.verifyEqual(undefined, settingAssignment.value);
 
-    return "testInput Completed";
+    sel.start = sel.end = 16;
+    input.parse('set historyLengt');
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.INCOMPLETE, hint0.status);
+    test.verifyEqual(1, hint0.predictions.length);
+    test.verifyEqual(4, hint0.start);
+    test.verifyEqual(16, hint0.end);
+    test.verifyEqual('historyLength', hint0.predictions[0]);
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('historyLengt', settingAssignment.arg.text);
+    test.verifyEqual(undefined, settingAssignment.value);
+
+    sel.start = sel.end = 1;
+    input.parse('set historyLengt');
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.INVALID, hint0.status);
+    test.verifyEqual(4, hint0.start);
+    test.verifyEqual(16, hint0.end);
+    test.verifyEqual(1, hint0.predictions.length);
+    test.verifyEqual('historyLength', hint0.predictions[0]);
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('historyLengt', settingAssignment.arg.text);
+    test.verifyEqual(undefined, settingAssignment.value);
+
+    sel.start = sel.end = 17;
+    input.parse('set historyLengt ');
+    test.verifyEqual(1, hints.length);
+    test.verifyEqual(Status.INVALID, hint0.status);
+    test.verifyEqual(4, hint0.start);
+    test.verifyEqual(16, hint0.end);
+    test.verifyEqual(1, hint0.predictions.length);
+    test.verifyEqual('historyLength', hint0.predictions[0]);
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('historyLengt', settingAssignment.arg.text);
+    test.verifyEqual(undefined, settingAssignment.value);
+
+    input.parse('set historyLength');
+    test.verifyEqual(0, hints.length);
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('historyLength', settingAssignment.arg.text);
+    test.verifyEqual(historyLengthSetting, settingAssignment.value);
+
+    input.parse('set historyLength ');
+    test.verifyEqual(0, hints.length);
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('historyLength', settingAssignment.arg.text);
+    test.verifyEqual(historyLengthSetting, settingAssignment.value);
+
+    input.parse('set historyLength 6');
+    test.verifyEqual(0, hints.length);
+    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('historyLength', settingAssignment.arg.text);
+    test.verifyEqual(historyLengthSetting, settingAssignment.value);
+    test.verifyEqual('6', valueAssignment.arg.text);
+    test.verifyEqual(6, valueAssignment.value);
+    test.verifyEqual('number', typeof valueAssignment.value);
+
+    // TODO: Add test to see that a command without mandatory param causes INVALID
+
+    console.log(input);
+
+    return "testCli Completed";
 };
 
 window.testCli = exports;
