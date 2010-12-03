@@ -200,11 +200,12 @@ function DeferredType(typeSpec) {
 DeferredType.prototype = new Type();
 
 DeferredType.prototype.stringify = function(value) {
-    return this.defer.stringify(value);
+    return this.defer().stringify(value);
 };
 
 DeferredType.prototype.parse = function(value) {
-    return this.defer.parse(value);
+    console.log(this.defer);
+    return this.defer().parse(value);
 };
 
 DeferredType.prototype.name = 'deferred';

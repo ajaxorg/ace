@@ -38,9 +38,10 @@
 
 define(function(require, exports, module) {
 
-var SelectionType = require("pilot/types/basic").SelectionType;
-var DeferredType = require("pilot/types/basic").DeferredType;
-var types = require("pilot/types");
+var SelectionType = require('pilot/types/basic').SelectionType;
+var DeferredType = require('pilot/types/basic').DeferredType;
+var types = require('pilot/types');
+var settings = require('pilot/settings').settings;
 
 
 /**
@@ -58,13 +59,21 @@ var setting = new SelectionType({
     data: function() {
         return env.settings.getSettingNames();
     },
-    stringify: function(value) {
-        lastSetting = value;
-        return SelectionType.prototype.stringify.call(this, value);
+    stringify: function(setting) {
+        lastSetting = setting;
+        return setting.name;
     },
-    parse: function(value) {
-        lastSetting = value;
-        return SelectionType.prototype.parse.call(this, value);
+    parse: function(text) {
+        lastSetting = text;
+
+        var conversion = SelectionType.prototype.parse.call(this, text);
+        if (conversion.value) {
+            conversion.value = settings.getSetting(conversion.value);
+        }
+        else {
+            conversion.message = 'Several possibilities for \'' + text + '\'';
+        }
+        return conversion;
     }
 });
 
@@ -73,7 +82,7 @@ var setting = new SelectionType({
  * of the type to the command line.
  */
 var settingValue = new DeferredType({
-    name: "settingValue",
+    name: 'settingValue',
     defer: function() {
         return env.settings.getSetting(lastSetting).type;
     }

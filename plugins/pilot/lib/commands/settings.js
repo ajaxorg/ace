@@ -37,26 +37,28 @@
 
 define(function(require, exports, module) {
 
+
 var setCommandSpec = {
-    name: "set",
+    name: 'set',
     params: [
         {
-            name: "setting",
-            type: "setting",
-            description: "The name of the setting to display or alter",
+            name: 'setting',
+            type: 'setting',
+            description: 'The name of the setting to display or alter',
             defaultValue: null
         },
         {
-            name: "value",
-            type: "settingValue",
-            description: "The new value for the chosen setting",
+            name: 'value',
+            type: 'settingValue',
+            description: 'The new value for the chosen setting',
             defaultValue: null
         }
     ],
-    description: "define and show settings",
+    description: 'define and show settings',
     exec: function(env, args, request) {
         var html;
         if (!args.setting) {
+            // 'set' by itself lists all the settings
             var settingsList = env.settings._list();
             html = '';
             // first sort the settingsList based on the key
@@ -69,7 +71,7 @@ var setCommandSpec = {
                     return 1;
                 }
             });
-            var url = "https://wiki.mozilla.org/Labs/Skywriter/Settings#" +
+            var url = 'https://wiki.mozilla.org/Labs/Skywriter/Settings#' +
                     setting.key;
             settingsList.forEach(function(setting) {
                 html += '<a class="setting" href="' + url +
@@ -82,13 +84,22 @@ var setCommandSpec = {
                         '<br/>';
             });
         } else {
+            var setting = env.settings.get(args.setting);
+            if (!setting) {
+                request.doneWithError('No setting with the name <strong>' +
+                    setting.name + '</strong>.');
+                return;
+            }
+
+            // set with only a setting, shows the value for that setting
             if (args.value === undefined) {
-                html = '<strong>' + args.setting + '</strong> = ' +
-                        env.settings.get(args.setting);
+                html = '<strong>' + setting.name + '</strong> = ' +
+                        setting.get();
             } else {
-                html = 'Setting: <strong>' + args.setting + '</strong> = ' +
-                        args.value;
-                env.settings.set(args.setting, args.value);
+                // Actually change the setting
+                setting.set(args.value);
+                html = 'Setting: <strong>' + setting.name + '</strong> = ' +
+                        setting.get();
             }
         }
         request.done(html);
@@ -96,18 +107,25 @@ var setCommandSpec = {
 };
 
 var unsetCommandSpec = {
-    name: "unset",
+    name: 'unset',
     params: [
         {
-            name: "setting",
-            type: "setting",
-            description: "The name of the setting to return to defaults"
+            name: 'setting',
+            type: 'setting',
+            description: 'The name of the setting to return to defaults'
         }
     ],
-    description: "unset a setting entirely",
+    description: 'unset a setting entirely',
     exec: function(env, args, request) {
-        env.settings.resetValue(args.setting);
-        request.done('Reset ' + args.setting + ' to default: ' +
+        var setting = env.settings.get(args.setting);
+        if (!setting) {
+            request.doneWithError('No setting with the name <strong>' +
+                args.setting + '</strong>.');
+            return;
+        }
+
+        setting.reset();
+        request.done('Reset ' + setting.name + ' to default: ' +
                 env.settings.get(args.setting));
     }
 };

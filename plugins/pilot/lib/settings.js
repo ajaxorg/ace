@@ -43,18 +43,18 @@ define(function(require, exports, module) {
  * This plug-in manages settings.
  */
 
-var console = require("pilot/console");
-var oop = require("pilot/oop").oop;
-var types = require("pilot/types");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var catalog = require("pilot/catalog");
+var console = require('pilot/console');
+var oop = require('pilot/oop').oop;
+var types = require('pilot/types');
+var EventEmitter = require('pilot/event_emitter').EventEmitter;
+var catalog = require('pilot/catalog');
 
 var settingExtensionSpec = {
-    name: "setting",
-    description: "A setting is something that the application offers as a " +
-            "way to customize how it works",
-    register: "env.settings.addSetting",
-    indexOn: "name"
+    name: 'setting',
+    description: 'A setting is something that the application offers as a ' +
+            'way to customize how it works',
+    register: 'env.settings.addSetting',
+    indexOn: 'name'
 };
 
 exports.startup = function(data, reason) {
@@ -64,6 +64,68 @@ exports.startup = function(data, reason) {
 exports.shutdown = function(data, reason) {
     catalog.removeExtensionSpec(settingExtensionSpec);
 };
+
+
+/**
+ * Create a new setting.
+ * @param settingSpec An object literal that looks like this:
+ * {
+ *   name: 'thing',
+ *   description: 'Thing is an example setting',
+ *   type: 'string',
+ *   defaultValue: 'something'
+ * }
+ */
+function Setting(settingSpec, settings) {
+    this._settings = settings;
+
+    Object.keys(settingSpec).forEach(function(key) {
+        this[key] = settingSpec[key];
+    }, this);
+
+    this.type = types.getType(this.type);
+    if (this.type == null) {
+        throw new Error('In ' + this.name +
+            ': can\'t find type for: ' + JSON.stringify(settingSpec.type));
+    }
+
+    if (!this.name) {
+        throw new Error('Setting.name == undefined. Ignoring.', this);
+    }
+
+    if (!this.defaultValue === undefined) {
+        throw new Error('Setting.defaultValue == undefined', this);
+    }
+
+    this.value = this.defaultValue;
+}
+Setting.prototype = {
+    get: function() {
+        return this.value;
+    },
+
+    set: function(value) {
+        if (this.value === value) {
+            return;
+        }
+
+        this.value = value;
+        if (this._settings.persister) {
+            this._settings.persister.persistValue(this._settings, this.name, value);
+        }
+
+        this._dispatchEvent('change', { setting: this, value: value });
+    },
+
+    /**
+     * Reset the value of the <code>key</code> setting to it's default
+     */
+    resetValue: function() {
+        this.set(this.defaultValue);
+    }
+};
+oop.implement(Setting.prototype, EventEmitter);
+
 
 /**
  * A base class for all the various methods of storing settings.
@@ -89,11 +151,6 @@ function Settings(persister) {
      */
     this._deactivated = {};
 
-    /**
-     * Storage for the setting values
-     */
-    this._values = {};
-
     this._settings = {};
 
     if (persister) {
@@ -116,33 +173,8 @@ Settings.prototype = {
      * @param {object} settingSpec Object containing name/type/defaultValue members.
      */
     addSetting: function(settingSpec) {
-        if (!settingSpec.name) {
-            console.error('Setting.name == undefined. Ignoring.', settingSpec);
-            return;
-        }
-
-        if (!settingSpec.defaultValue === undefined) {
-            console.error('Setting.defaultValue == undefined', settingSpec);
-            return;
-        }
-
-        var type = types.getType(settingSpec.type);
-        if (!type) {
-            console.error('Missing type', settingSpec);
-            return;
-        }
-
-        /*
-        // The value can be
-        // 1) the value of a setting that is not activated at the moment
-        //       OR
-        // 2) the defaultValue of the setting.
-        var value = this._deactivated[settingSpec.name] ||
-                settingSpec.defaultValue;
-        */
-
-        var setting = { type: type, spec: settingSpec };
-        this._settings[settingSpec.name] = setting;
+        var setting = new Setting(settingSpec, this);
+        this._settings[setting.name] = setting;
     },
 
     removeSetting: function(name) {
@@ -151,6 +183,10 @@ Settings.prototype = {
 
     getSettingNames: function() {
         return Object.keys(this._settings);
+    },
+
+    getSetting: function(name) {
+        return this._settings[name];
     },
 
     /**
@@ -162,44 +198,6 @@ Settings.prototype = {
         this._persister = persister;
         if (persister) {
             persister.loadInitialValues(this);
-        }
-    },
-
-    /**
-     * Read accessor
-     */
-    get: function(key) {
-        return this._values[key];
-    },
-
-    /**
-     * Override observable.set(key, value) to provide type conversion and
-     * validation.
-     */
-    set: function(key, value) {
-        var setting = this._settings[key];
-        if (!setting) {
-            console.warn('Setting not defined: ', key, value);
-        }
-
-        this._values[key] = value;
-        if (persister) {
-            persister.persistValue(this, key, value);
-        }
-
-        this._dispatchEvent('settingChange', { key: key, value: value });
-        return this;
-    },
-
-    /**
-     * Reset the value of the <code>key</code> setting to it's default
-     */
-    resetValue: function(key) {
-        var setting = this._settings[key];
-        if (setting) {
-            this.set(key, setting.spec.defaultValue);
-        } else {
-            console.log('ignore resetValue on ', key);
         }
     },
 
@@ -267,9 +265,6 @@ Settings.prototype = {
         }.bind(this));
     }
 };
-
-oop.implement(Settings.prototype, EventEmitter);
-
 exports.settings = new Settings();
 
 /**
