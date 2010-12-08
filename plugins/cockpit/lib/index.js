@@ -35,31 +35,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var deps = [
-    "pilot/fixoldbrowsers",
-    "pilot/types/basic",
-    "pilot/types/command",
-    "pilot/types/settings",
-    "pilot/commands/settings",
-    "pilot/settings/canon",
-    "pilot/canon"
-];
+define(function(require, exports, module) {
 
-var packages = deps.slice();
-packages.unshift("require", "exports", "module");
-
-define(packages, function(require, exports, module) {
-
-console.log(packages);
 exports.startup = function(data, reason) {
-    deps.forEach(function(dep) {
-        console.log("test startup for " + dep);
-        var module = require(dep);
-        if (typeof module.startup === "function") {
-            module.startup(data, reason);
-        }
-    });
+
+  window.testCli = require('cockpit/test/testCli');
+
+  var plain = require('cockpit/ui/plain');
+  plain.startup(data, reason);
+
 };
+
 /*
 exports.shutdown(data, reason) {
     deps.forEach(function(dep) {

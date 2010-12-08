@@ -45,7 +45,7 @@ var setupPlugins = function(config, callback) {
     //     packages: ["ace"]
     // };
     config.pluginDirs["../plugins"] = {
-        packages: ["pilot"]
+        packages: ["pilot", "cockpit"]
     };
 
     var knownPlugins = [];
@@ -109,7 +109,10 @@ var setupPlugins = function(config, callback) {
             }
         }
     }
-
+console.log(JSON.stringify({
+        packagePaths: pluginPackageInfo,
+        paths: paths
+    }));
     require({
         packagePaths: pluginPackageInfo,
         paths: paths

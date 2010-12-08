@@ -47,6 +47,11 @@
         display: none;
     }
     
+    #cockpit {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
     </style>
     <script>
       require = {
@@ -63,11 +68,7 @@
           }
         }
       }, function(plugin_manager, settings) {
-        var data = {
-          env: {
-            settings: settings
-          }
-        };
+        var data = { env: { settings: settings } };
         plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
           var demo_startup = require("demo_startup");
           demo_startup.launch(data.env);
@@ -155,6 +156,8 @@
 </body>
 </html>
     </script>
-    
+
+    <input id=cockpit type=text/>
+
 </body>
 </html>

@@ -11,7 +11,7 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Mozilla Skywriter.
+ * The Original Code is Skywriter.
  *
  * The Initial Developer of the Original Code is
  * Mozilla.
@@ -19,7 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Kevin Dangoor (kdangoor@mozilla.com)
+ *   Joe Walker (jwalker@mozilla.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,39 +35,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var deps = [
-    "pilot/fixoldbrowsers",
-    "pilot/types/basic",
-    "pilot/types/command",
-    "pilot/types/settings",
-    "pilot/commands/settings",
-    "pilot/settings/canon",
-    "pilot/canon"
-];
+define(function(require, exports, module) {
 
-var packages = deps.slice();
-packages.unshift("require", "exports", "module");
-
-define(packages, function(require, exports, module) {
-
-console.log(packages);
-exports.startup = function(data, reason) {
-    deps.forEach(function(dep) {
-        console.log("test startup for " + dep);
-        var module = require(dep);
-        if (typeof module.startup === "function") {
-            module.startup(data, reason);
-        }
-    });
-};
-/*
-exports.shutdown(data, reason) {
-    deps.forEach(function(dep) {
-        var module = require(dep);
-        if (typeof module.shutdown === "function") {
-            module.shutdown(data, reason);
-        }
-    });
-};
-*/
 });

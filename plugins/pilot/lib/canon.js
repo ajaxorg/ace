@@ -161,7 +161,7 @@ exports.getCommandNames = function() {
  * @param command Either a command, or the name of one
  */
 exports.exec = function(command, args) {
-    if (typeof name === 'string') {
+    if (typeof command === 'string') {
         command = commands[command];
     }
     if (!command) {

@@ -38,10 +38,13 @@
 define(function(require, exports, module) {
 
 
-var test = require('pilot/test/assert').test;
-var cli = require('pilot/cli');
+var test = require('cockpit/test/assert').test;
 var Status = require('pilot/types').Status;
 var settings = require('pilot/settings').settings;
+var tokenize = require('cockpit/cli')._tokenize;
+var split = require('cockpit/cli')._split;
+var CliRequisition = require('cockpit/cli').CliRequisition;
+
 
 exports.testAll = function() {
     exports.testTokenize();
@@ -50,41 +53,18 @@ exports.testAll = function() {
     return "testAll Completed";
 };
 
-exports.testSplit = function() {
-    var args = cli._tokenize('s');
-    var command = cli._split(args);
-    test.verifyEqual(1, args.length);
-    test.verifyEqual('s', args[0].text);
-    test.verifyUndefined(command);
-
-    var args = cli._tokenize('set');
-    var command = cli._split(args);
-    test.verifyEqual([], args);
-    test.verifyEqual('set', command.name);
-
-    var args = cli._tokenize('set a b');
-    var command = cli._split(args);
-    test.verifyEqual('set', command.name);
-    test.verifyEqual(2, args.length);
-    test.verifyEqual('a', args[0].text);
-    test.verifyEqual('b', args[1].text);
-
-    // TODO: add tests for sub commands
-    return "testSplit Completed";
-};
-
 exports.testTokenize = function() {
-    var args = cli._tokenize('');
+    var args = tokenize('');
     test.verifyEqual(0, args.length);
 
-    args = cli._tokenize('s');
+    args = tokenize('s');
     test.verifyEqual(1, args.length);
     test.verifyEqual('s', args[0].text);
     test.verifyEqual(0, args[0].start);
     test.verifyEqual(1, args[0].end);
     test.verifyEqual('', args[0].priorSpace);
 
-    args = cli._tokenize('s s');
+    args = tokenize('s s');
     test.verifyEqual(2, args.length);
     test.verifyEqual('s', args[0].text);
     test.verifyEqual(0, args[0].start);
@@ -95,7 +75,7 @@ exports.testTokenize = function() {
     test.verifyEqual(3, args[1].end);
     test.verifyEqual(' ', args[1].priorSpace);
 
-    args = cli._tokenize(' 1234  \'12 34\'');
+    args = tokenize(' 1234  \'12 34\'');
     test.verifyEqual(2, args.length);
     test.verifyEqual('1234', args[0].text);
     test.verifyEqual(1, args[0].start);
@@ -106,7 +86,7 @@ exports.testTokenize = function() {
     test.verifyEqual(13, args[1].end);
     test.verifyEqual('  ', args[1].priorSpace);
 
-    args = cli._tokenize('12\'34 "12 34" \\'); // 12'34 "12 34" \
+    args = tokenize('12\'34 "12 34" \\'); // 12'34 "12 34" \
     test.verifyEqual(3, args.length);
     test.verifyEqual('12\'34', args[0].text);
     test.verifyEqual(0, args[0].start);
@@ -121,7 +101,7 @@ exports.testTokenize = function() {
     test.verifyEqual(15, args[2].end);
     test.verifyEqual(' ', args[2].priorSpace);
 
-    args = cli._tokenize('a\\ b \\t\\n\\r \\\'x\\\" \'d'); // a_b \t\n\r \'x\" 'd
+    args = tokenize('a\\ b \\t\\n\\r \\\'x\\\" \'d'); // a_b \t\n\r \'x\" 'd
     test.verifyEqual(4, args.length);
     test.verifyEqual('a b', args[0].text);
     test.verifyEqual(0, args[0].start);
@@ -143,50 +123,60 @@ exports.testTokenize = function() {
     return "testTokenize Completed";
 };
 
-var hints;
-var hint0;
-var requisition;
-var sel = { start: -1, end: -1 };
-var settingAssignment;
-var valueAssignment;
-mockCliUi = {
-    getSelection: function() {
-        return sel;
-    },
+exports.testSplit = function() {
+    var args = tokenize('s');
+    var command = split(args);
+    test.verifyEqual(1, args.length);
+    test.verifyEqual('s', args[0].text);
+    test.verifyUndefined(command);
 
-    setHints: function(h) {
-        hints = h;
-        hint0 = (h.length !== 0) ? h[0] : undefined;
+    var args = tokenize('set');
+    var command = split(args);
+    test.verifyEqual([], args);
+    test.verifyEqual('set', command.name);
 
-        if (requisition && requisition.command && requisition.command.name === 'set') {
-            settingAssignment = requisition.getAssignment('setting');
-            valueAssignment = requisition.getAssignment('value');
+    var args = tokenize('set a b');
+    var command = split(args);
+    test.verifyEqual('set', command.name);
+    test.verifyEqual(2, args.length);
+    test.verifyEqual('a', args[0].text);
+    test.verifyEqual('b', args[1].text);
+
+    // TODO: add tests for sub commands
+    return "testSplit Completed";
+};
+
+exports.testCli = function() {
+    var hints;
+    var hint0;
+    var settingAssignment;
+    var valueAssignment;
+    var cli = new CliRequisition();
+
+    function update(input) {
+        cli.update(input);
+        hints = cli.getHints();
+        hint0 = (hints.length !== 0) ? hints[0] : undefined;
+        if (cli.command && cli.command.name === 'set') {
+            settingAssignment = cli.getAssignment('setting');
+            valueAssignment = cli.getAssignment('value');
         }
         else {
             settingAssignment = undefined;
             valueAssignment = undefined;
         }
-    },
-
-    setRequisition: function(r) {
-        requisition = r;
     }
-};
 
-exports.testCli = function() {
     var historyLengthSetting = settings.getSetting('historyLength');
 
-    var input = new cli.Cli(mockCliUi);
-
-    input.parse('');
+    update({ typed: '', cursor: { start: 0, end: 0 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.INCOMPLETE, hint0.status);
     test.verifyEqual(0, hint0.start);
     test.verifyEqual(0, hint0.end);
-    test.verifyNull(requisition.command);
+    test.verifyNull(cli.command);
 
-    sel.start = sel.end = 1;
-    input.parse('s');
+    update({ typed: 's', cursor: { start: 1, end: 1 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.INCOMPLETE, hint0.status);
     test.verifyNotEqual(-1, hint0.message.indexOf('possibilities'));
@@ -196,16 +186,16 @@ exports.testCli = function() {
     // This is slightly fragile because it depends on the configuration
     test.verifyTrue(hint0.predictions.length < 20);
     test.verifyNotEqual(-1, hint0.predictions.indexOf('set'));
-    test.verifyNull(requisition.command);
+    test.verifyNull(cli.command);
 
-    input.parse('set');
+    update({ typed: 'set', cursor: { start: 3, end: 3 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.VALID, hint0.status);
     test.verifyEqual(0, hint0.start);
     test.verifyEqual(3, hint0.end);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
 
-    input.parse('set ');
+    update({ typed: 'set ', cursor: { start: 4, end: 4 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.VALID, hint0.status);
     test.verifyEqual(0, hint0.start);
@@ -213,71 +203,67 @@ exports.testCli = function() {
     // This is caused by us using the whole input to determine the length.
     // Maybe one day we should fix this?
     //test.verifyEqual(3, hint0.end);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
 
-    sel.start = sel.end = 5;
-    input.parse('set h');
+    update({ typed: 'set h', cursor: { start: 5, end: 5 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.INCOMPLETE, hint0.status);
     test.verifyTrue(hint0.predictions.length > 0);
     test.verifyEqual(4, hint0.start);
     test.verifyEqual(5, hint0.end);
     test.verifyNotEqual(-1, hint0.predictions.indexOf('historyLength'));
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('h', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    sel.start = sel.end = 16;
-    input.parse('set historyLengt');
+    update({ typed: 'set historyLengt', cursor: { start: 16, end: 16 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.INCOMPLETE, hint0.status);
     test.verifyEqual(1, hint0.predictions.length);
     test.verifyEqual(4, hint0.start);
     test.verifyEqual(16, hint0.end);
     test.verifyEqual('historyLength', hint0.predictions[0]);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('historyLengt', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    sel.start = sel.end = 1;
-    input.parse('set historyLengt');
+    update({ typed: 'set historyLengt', cursor: { start: 1, end: 1 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.INVALID, hint0.status);
     test.verifyEqual(4, hint0.start);
     test.verifyEqual(16, hint0.end);
     test.verifyEqual(1, hint0.predictions.length);
     test.verifyEqual('historyLength', hint0.predictions[0]);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('historyLengt', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    sel.start = sel.end = 17;
-    input.parse('set historyLengt ');
+    update({ typed: 'set historyLengt ', cursor: { start: 17, end: 17 } });
     test.verifyEqual(1, hints.length);
     test.verifyEqual(Status.INVALID, hint0.status);
     test.verifyEqual(4, hint0.start);
     test.verifyEqual(16, hint0.end);
     test.verifyEqual(1, hint0.predictions.length);
     test.verifyEqual('historyLength', hint0.predictions[0]);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('historyLengt', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    input.parse('set historyLength');
+    update({ typed: 'set historyLength', cursor: { start: 17, end: 17 } });
     test.verifyEqual(0, hints.length);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('historyLength', settingAssignment.arg.text);
     test.verifyEqual(historyLengthSetting, settingAssignment.value);
 
-    input.parse('set historyLength ');
+    update({ typed: 'set historyLength ', cursor: { start: 18, end: 18 } });
     test.verifyEqual(0, hints.length);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('historyLength', settingAssignment.arg.text);
     test.verifyEqual(historyLengthSetting, settingAssignment.value);
 
-    input.parse('set historyLength 6');
+    update({ typed: 'set historyLength 6', cursor: { start: 19, end: 19 } });
     test.verifyEqual(0, hints.length);
-    test.verifyEqual('set', requisition.command.name);
+    test.verifyEqual('set', cli.command.name);
     test.verifyEqual('historyLength', settingAssignment.arg.text);
     test.verifyEqual(historyLengthSetting, settingAssignment.value);
     test.verifyEqual('6', valueAssignment.arg.text);
@@ -286,12 +272,8 @@ exports.testCli = function() {
 
     // TODO: Add test to see that a command without mandatory param causes INVALID
 
-    console.log(input);
-
     return "testCli Completed";
 };
-
-window.testCli = exports;
 
 
 });

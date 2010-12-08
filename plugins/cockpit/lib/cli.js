@@ -142,31 +142,221 @@ Argument.merge = function(argArray, start, end) {
 
 
 /**
- * CLI / UI Interface
- * The Cli interacts with the UI via an instance of CliUi.
- * This implementation is designed as a template rather than to be used.
- * It is expected that we will have a number of implementations of this:
- * - A firebug/webkit inspector cli shim
- * - A simple input[type=text] version
- * - A possible Cloud9 UI version
- * - A possible Skywriter UI version
- * This class will probably need refactoring as time goes on.
- *
- * TODO: Who should own the Requisition?
+ * A link between a parameter and the data for that parameter.
+ * The data for the parameter is available as in the preferred type and as
+ * an Argument for the CLI.
+ * <p>We also record validity information where applicable.
+ * <p>For values, null and undefined have distinct definitions. null means
+ * that a value has been provided, undefined means that it has not.
+ * Thus, null is a valid default value, and common because it identifies an
+ * parameter that is optional. undefined means there is no value from
+ * the command line.
+ * @constructor
  */
-function CliUi() {
-}
-CliUi.prototype = {
-    getSelection: function() {},
-    setHints: function() {},
-    setRequisition: function() {}
+function Assignment(param) {
+    this.param = param;
+    this.setValue(param.defaultValue);
 };
+Assignment.prototype = {
+    /**
+     * The parameter that we are assigning to
+     * @readonly
+     */
+    param: undefined,
+
+    /**
+     * The current value (i.e. not the string representation)
+     * Use setValue() to mutate
+     */
+    value: undefined,
+    setValue: function(value) {
+        if (this.value === value) {
+            return;
+        }
+        if (value === undefined) {
+            value = this.param.defaultValue;
+        }
+        this.value = value;
+
+        var text = (value == null) ? '' : this.param.type.stringify(value);
+        if (this.arg) {
+            this.arg.setText(text);
+        }
+
+        this.conversion = undefined;
+        //this._dispatchEvent('change', { assignment: this });
+    },
+
+    /**
+     * The textual representation of the current value
+     * Use setValue() to mutate
+     */
+    arg: undefined,
+    setArgument: function(arg) {
+        if (this.arg === arg) {
+            return;
+        }
+        this.arg = arg;
+        this.conversion = this.param.type.parse(arg.text);
+        this.value = this.conversion.value;
+        //this._dispatchEvent('change', { assignment: this });
+    },
+
+    /**
+     * Create a list of this hints associated with this parameter assignment
+     */
+    getHints: function() {
+        var hints = [];
+        if (this.conversion != null &&
+              (this.conversion.status !== Status.VALID ||
+              this.conversion.message)) {
+            hints.push(new ConversionHint(this.conversion, this.arg));
+        }
+
+        var argProvided = this.arg != null && this.arg.text !== '';
+        var dataProvided = this.value !== undefined || argProvided;
+
+        if (this.param.defaultValue === undefined && !dataProvided) {
+            // If the there is no data provided, we have no start/end. Use -1
+            hints.push(new Hint(Status.INVALID,
+                    'Argument for ' + param.name + ' is required'
+                    -1, -1));
+        }
+        return hints;
+    },
+
+    /**
+     * Report on the status of the last parse() conversion.
+     * @see types.Conversion
+     */
+    conversion: undefined
+};
+oop.implement(Assignment, EventEmitter);
+exports.Assignment = Assignment;
+
+
+/**
+ * A Requisition collects the information needed to execute a command.
+ * There is no point in a requisition for parameter-less commands because there
+ * is no information to collect. A Requisition is a collection of assignments
+ * of values to parameters, each handled by an instance of Assignment.
+ * CliRequisition adds functions for parsing input from a command line to this
+ * class
+ * @constructor
+ */
+function Requisition() {
+}
+Requisition.prototype = {
+    /**
+     * The command that we are about to execute.
+     * @readonly
+     */
+    command: undefined,
+
+    /**
+     * The count of assignments
+     * @readonly
+     */
+    assignmentCount: undefined,
+
+    /**
+     * Set a new command. We make no attempt to convert the args in the old
+     * command to args in the new command. The assignments need to be
+     * re-entered.
+     */
+    setCommand: function(command) {
+        if (this.command === command) {
+            return;
+        }
+
+        this.command = command;
+        this._assignments = {};
+
+        if (command) {
+            command.params.forEach(function(param) {
+                this._assignments[param.name] = new Assignment(param);
+            }, this);
+        }
+
+        this.assignmentCount = Object.keys(this._assignments);
+    },
+
+    /**
+     * Assignments have an order, so we need to store them in an array.
+     * But we also need named access ...
+     */
+    getAssignment: function(nameOrNumber) {
+        var name = (typeof nameOrNumber === 'string') ?
+            nameOrNumber :
+            Object.keys(this._assignments)[nameOrNumber];
+        return this._assignments[name];
+    },
+
+    /**
+     * Where parameter name == assignment names - they are the same.
+     */
+    getParameterNames: function() {
+      return Object.keys(this._assignments);
+    },
+
+    /**
+     * A *shallow* clone of the assignments.
+     * This is useful for systems that wish to go over all the assignments
+     * finding values one way or another and wish to trim an array as they go.
+     */
+    cloneAssignments: function() {
+        return Object.keys(this._assignments).map(function(name) {
+            return this._assignments[name];
+        }, this);
+    },
+
+    /**
+     * Collect the statuses from the Assignments
+     */
+    getHints: function() {
+        var hints = [];
+        Object.keys(this._assignments).map(function(name) {
+            // Append the assignments hints to our list
+            hints.push.apply(hints, this._assignments[name].getHints());
+        }, this);
+        return hints;
+    },
+
+    /**
+     * Extract the names and values of all the assignments, and return as
+     * an object.
+     */
+    getArgs: function() {
+        var args = {};
+        Object.keys(this._assignments).forEach(function(name) {
+            args[name] = this.getAssignment(name).value;
+        }, this);
+        return args;
+    },
+
+    /**
+     * Reset all the assignments to their default values
+     */
+    setDefaultValues: function() {
+        Object.keys(this._assignments).forEach(function(name) {
+            this._assignments[name].setValue(undefined);
+        }, this);
+    },
+
+    /**
+     * Helper to call canon.exec
+     */
+    exec: function() {
+        canon.exec(this.command, this.getArgs());
+    }
+};
+exports.Requisition = Requisition;
 
 
 /**
  * An object used during command line parsing to hold the various intermediate
  * data steps.
- * <p>The 'output' of the parse is held in 2 objects: input.hints which is an
+ * <p>The 'output' of the update is held in 2 objects: input.hints which is an
  * array of hints to display to the user. In the future this will become a
  * single value.
  * <p>The other output value is input.requisition which gives access to an
@@ -187,99 +377,87 @@ CliUi.prototype = {
  * if not specified.
  * @constructor
  */
-function Cli(cliui, options) {
-    this.cliui = cliui;
+function CliRequisition(options) {
     if (options && options.flags) {
+        /**
+         * TODO: We were using a default of keyboard.buildFlags({ });
+         * This allowed us to have commands that only existed in certain contexts
+         * - i.e. Javascript specific commands.
+         */
         this.flags = options.flags;
     }
-
-    this.requisition = new Requisition();
-    this.cliui.setRequisition(this.requisition);
 }
-Cli.prototype = {
-    /**
-     * TODO: We were using a default of keyboard.buildFlags({ });
-     * This allowed us to have commands that only existed in certain contexts
-     * - i.e. Javascript specific commands.
-     */
-    flags: {},
-
+oop.inherits(CliRequisition, Requisition);
+(function() {
     /**
      *
      */
-    parse: function(typed) {
-        if (util.none(typed)) {
-            this.requisition.setCommand(null);
-            this.cliui.setHints([]);
+    CliRequisition.prototype.update = function(input) {
+        this.hints = [];
+
+        if (util.none(input.typed)) {
+            this.setCommand(null);
             return;
         }
 
-        this.typed = typed;
-        this.hints = [];
-
-        var args = _tokenize(this.typed);
+        var args = _tokenize(input.typed);
         if (args.length === 0) {
             // We would like to put some initial help here, but for anyone but
             // a complete novice a 'type help' message is very annoying, so we
             // need to find a way to only display this message once, or for
             // until the user click a 'close' button or similar
             this._addHint(Status.INCOMPLETE, '', 0, 0);
-            this.requisition.setCommand(null);
-            this.cliui.setHints(this.hints);
+            this.setCommand(null);
             return;
         }
 
         var command = _split(args);
-
         if (!command) {
             // No command found - bail helpfully.
             var commandType = types.getType('command');
-            var conversion = commandType.parse(typed);
+            var conversion = commandType.parse(input.typed);
             var arg = Argument.merge(args);
             this._addHint(new ConversionHint(conversion, arg));
 
-            this.requisition.setCommand(null);
+            this.setCommand(null);
         }
         else {
             // The user hasn't started to type any arguments
             if (args.length === 0) {
                 var message = documentCommand(command);
-                this._addHint(Status.VALID, message, 0, typed.length);
+                this._addHint(Status.VALID, message, 0, input.typed.length);
             }
 
-            this.requisition.setCommand(command);
+            this.setCommand(command);
             this._assign(args);
-            this._addHint(this.requisition.getHints());
+            this._addHint(CliRequisition.super_.getHints.call(this));
         }
-
-        // TODO: This is the wrong place to filter this.
-        // It should be done by the CliUi because:
-        // - the cursor could move without notice
-        // - not all interfaces will have a notion of one cursor for the whole assignment
 
         // Not knowing about cursor positioning, the requisition and assignments
         // can't know this, but anything they mark as INCOMPLETE is actually
         // INVALID unless the cursor is actually inside that argument.
-        var sel = this.cliui.getSelection();
+        var c = input.cursor;
         this.hints.forEach(function(hint) {
-            var startInHint = sel.start >= hint.start && sel.start <= hint.end;
-            var endInHint = sel.end >= hint.start && sel.end <= hint.end;
+            var startInHint = c.start >= hint.start && c.start <= hint.end;
+            var endInHint = c.end >= hint.start && c.end <= hint.end;
             var inHint = startInHint || endInHint;
             if (!inHint && hint.status === Status.INCOMPLETE) {
                  hint.status = Status.INVALID;
             }
         }, this);
 
-        this.cliui.setHints(this.hints);
-
         return;
-    },
+    };
+
+    CliRequisition.prototype.getHints = function() {
+        return this.hints;
+    };
 
     /**
      * Some sugar around: 'this.hints.push(new Hint(...));', but you can also
      * pass in an array of Hints or the parameters to create a hint
      */
-    _addHint: function(status, message, start, end) {
+    CliRequisition.prototype._addHint = function(status, message, start, end) {
         if (status == null) {
             return;
         }
@@ -292,7 +470,7 @@ Cli.prototype = {
         else {
             this.hints.push(new Hint(status, message, start, end));
         }
-    },
+    };
 
     /**
      * Work out which arguments are applicable to which parameters.
@@ -304,36 +482,36 @@ Cli.prototype = {
      * <li>value - The matching input
      * </ul>
      */
-    _assign: function(args) {
+    CliRequisition.prototype._assign = function(args) {
         if (args.length === 0) {
-            this.requisition.setDefaultValues();
+            this.setDefaultValues();
             return;
         }
 
         // Create an error if the command does not take parameters, but we have
         // been given them ...
-        if (this.requisition.assignmentCount === 0) {
+        if (this.assignmentCount === 0) {
             // TODO: previously we were doing some extra work to avoid this if
             // we determined that we had args that were all whitespace, but
             // probably given our tighter tokenize() this won't be an issue?
             this._addHint(Status.INVALID,
-                this.requisition.command.name + ' does not take any parameters',
+                this.command.name + ' does not take any parameters',
                 Argument.merge(args));
             return;
         }
 
         // Special case: if there is only 1 parameter, and that's of type
         // text we put all the params into the first param
-        if (this.requisition.assignmentCount == 1) {
-            var assignment = this.requisition.getAssignment(0);
+        if (this.assignmentCount == 1) {
+            var assignment = this.getAssignment(0);
             if (assignment.param.type.name === 'text') {
                 assignment.setArgument(Argument.merge(args));
                 return;
             }
         }
 
-        var assignments = this.requisition.cloneAssignments();
-        var names = this.requisition.getParameterNames();
+        var assignments = this.cloneAssignments();
+        var names = this.getParameterNames();
 
         // Extract all the named parameters
         var used = [];
@@ -376,7 +554,7 @@ Cli.prototype = {
 
         // What's left are positional parameters assign in order
         names.forEach(function(name) {
-            var assignment = this.requisition.getAssignment(name);
+            var assignment = this.getAssignment(name);
             if (args.length === 0) {
                 // No more values
                 assignment.setValue(undefined); // i.e. default
@@ -394,9 +572,10 @@ Cli.prototype = {
                 'Input \'' + remaining.text + '\' makes no sense.',
                 remaining);
         }
-    }
-};
-exports.Cli = Cli;
+    };
+
+})();
+exports.CliRequisition = CliRequisition;
 
 /**
  * Split up the input taking into account ' and "
@@ -637,214 +816,6 @@ function documentCommand(command) {
 exports.documentCommand = documentCommand;
 
 
-/**
- * A Requisition collects the information needed to execute a command.
- * There is no point in a requisition for parameter-less commands because there
- * is no information to collect. A Requisition is a collection of assignments
- * of values to parameters, each handled by an instance of Assignment.
- * @constructor
- */
-function Requisition() {
-}
-Requisition.prototype = {
-    /**
-     * The command that we are about to execute.
-     * @readonly
-     */
-    command: undefined,
-
-    /**
-     * The count of assignments
-     * @readonly
-     */
-    assignmentCount: undefined,
-
-    /**
-     * Set a new command. We make no attempt to convert the args in the old
-     * command to args in the new command. The assignments need to be
-     * re-entered.
-     */
-    setCommand: function(command) {
-        if (this.command === command) {
-            return;
-        }
-
-        this.command = command;
-        this._assignments = {};
-
-        if (command) {
-            command.params.forEach(function(param) {
-                this._assignments[param.name] = new Assignment(param);
-            }, this);
-        }
-
-        this.assignmentCount = Object.keys(this._assignments);
-    },
-
-    /**
-     * Assignments have an order, so we need to store them in an array.
-     * But we also need named access ...
-     */
-    getAssignment: function(nameOrNumber) {
-        var name = (typeof nameOrNumber === 'string') ?
-            nameOrNumber :
-            Object.keys(this._assignments)[nameOrNumber];
-        return this._assignments[name];
-    },
-
-    /**
-     * Where parameter name == assignment names - they are the same.
-     */
-    getParameterNames: function() {
-      return Object.keys(this._assignments);
-    },
-
-    /**
-     * A *shallow* clone of the assignments.
-     * This is useful for systems that wish to go over all the assignments
-     * finding values one way or another and wish to trim an array as they go.
-     */
-    cloneAssignments: function() {
-        return Object.keys(this._assignments).map(function(name) {
-            return this._assignments[name];
-        }, this);
-    },
-
-    /**
-     * Collect the statuses from the Assignments
-     */
-    getHints: function() {
-        var hints = [];
-        Object.keys(this._assignments).map(function(name) {
-            // Append the assignments hints to our list
-            hints.push.apply(hints, this._assignments[name].getHints());
-        }, this);
-        return hints;
-    },
-
-    /**
-     * Extract the names and values of all the assignments, and return as
-     * an object.
-     */
-    getArgs: function() {
-        var args = {};
-        Object.keys(this._assignments).forEach(function(name) {
-            args[name] = getCommand(name);
-        }, this);
-        return args;
-    },
-
-    /**
-     * Reset all the assignments to their default values
-     */
-    setDefaultValues: function() {
-        Object.keys(this._assignments).forEach(function(name) {
-            this._assignments[name].setValue(undefined);
-        }, this);
-    },
-
-    /**
-     * Helper to call canon.exec
-     */
-    exec: function() {
-        exports.exec(this.command, this.getArgs());
-    }
-};
-exports.Requisition = Requisition;
-
-
-/**
- * A link between a parameter and the data for that parameter.
- * The data for the parameter is available as in the preferred type and as
- * an Argument for the CLI.
- * <p>We also record validity information where applicable.
- * <p>For values, null and undefined have distinct definitions. null means
- * that a value has been provided, undefined means that it has not.
- * Thus, null is a valid default value, and common because it identifies an
- * parameter that is optional. undefined means there is no value from
- * the command line.
- * @constructor
- */
-function Assignment(param) {
-    this.param = param;
-    this.setValue(param.defaultValue);
-};
-Assignment.prototype = {
-    /**
-     * The parameter that we are assigning to
-     * @readonly
-     */
-    param: undefined,
-
-    /**
-     * The current value (i.e. not the string representation)
-     * Use setValue() to mutate
-     */
-    value: undefined,
-    setValue: function(value) {
-        if (this.value === value) {
-            return;
-        }
-        if (value === undefined) {
-            value = this.param.defaultValue;
-        }
-        this.value = value;
-
-        var text = (value == null) ? '' : this.param.type.stringify(value);
-        if (this.arg) {
-            this.arg.setText(text);
-        }
-
-        this.conversion = undefined;
-        //this._dispatchEvent('change', { assignment: this });
-    },
-
-    /**
-     * The textual representation of the current value
-     * Use setValue() to mutate
-     */
-    arg: undefined,
-    setArgument: function(arg) {
-        if (this.arg === arg) {
-            return;
-        }
-        this.arg = arg;
-        this.conversion = this.param.type.parse(arg.text);
-        this.value = this.conversion.value;
-        //this._dispatchEvent('change', { assignment: this });
-    },
-
-    /**
-     * Create a list of this hints associated with this parameter assignment
-     */
-    getHints: function() {
-        var hints = [];
-        if (this.conversion != null &&
-              (this.conversion.status !== Status.VALID ||
-              this.conversion.message)) {
-            hints.push(new ConversionHint(this.conversion, this.arg));
-        }
-
-        var argProvided = this.arg != null && this.arg.text !== '';
-        var dataProvided = this.value !== undefined || argProvided;
-
-        if (this.param.defaultValue === undefined && !dataProvided) {
-            // If the there is no data provided, we have no start/end. Use -1
-            hints.push(new Hint(Status.INVALID,
-                    'Argument for ' + param.name + ' is required'
-                    -1, -1));
-        }
-        return hints;
-    },
-
-    /**
-     * Report on the status of the last parse() conversion.
-     * @see types.Conversion
-     */
-    conversion: undefined
-};
-oop.implement(Assignment, EventEmitter);
-exports.Assignment = Assignment;
 
 
 });
