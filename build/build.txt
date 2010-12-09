@@ -55,3 +55,9 @@ ace/mode/html.js
 ----------------
 ace/mode/html_highlight_rules.js
 ace/mode/html.js
+
+ace/mode/python.js
+----------------
+ace/mode/python_highlight_rules.js
+ace/mode/matching_brace_outdent.js
+ace/mode/python.js

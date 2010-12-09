@@ -6,12 +6,12 @@ define(["require", "exports", "module", 'text!ace/css/editor.css!.ace_editor {\n
     this.container = a;
     f.addCssClass(this.container, "ace_editor");
     this.setTheme(b);
-    this.scroller = document.createElement("div");
-    this.scroller.className = "ace_scroller";
-    this.container.appendChild(this.scroller);
     this.$gutter = document.createElement("div");
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
+    this.scroller = document.createElement("div");
+    this.scroller.className = "ace_scroller";
+    this.container.appendChild(this.scroller);
     this.content = document.createElement("div");
     this.content.style.position = "absolute";
     this.scroller.appendChild(this.content);
@@ -196,7 +196,7 @@ define(["require", "exports", "module", 'text!ace/css/editor.css!.ace_editor {\n
           this.$updateScrollBar()
         }else {
           if(a & this.CHANGE_SCROLL) {
-            a & this.CHANGE_TEXT || a & this.CHANGE_LINES ? this.$textLayer.scrollLines(this.layerConfig) : this.$textLayer.update(this.layerConfig);
+            a & this.CHANGE_TEXT || a & this.CHANGE_LINES ? this.$textLayer.update(this.layerConfig) : this.$textLayer.scrollLines(this.layerConfig);
             this.showGutter && this.$gutterLayer.update(this.layerConfig);
             this.$markerLayer.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
@@ -209,11 +209,6 @@ define(["require", "exports", "module", 'text!ace/css/editor.css!.ace_editor {\n
               if(a & this.CHANGE_LINES) {
                 this.$updateLines();
                 this.$updateScrollBar()
-              }else {
-                if(a & this.CHANGE_SCROLL) {
-                  this.$textLayer.scrollLines(this.layerConfig);
-                  this.showGutter && this.$gutterLayer.update(this.layerConfig)
-                }
               }
             }a & this.CHANGE_GUTTER && this.showGutter && this.$gutterLayer.update(this.layerConfig);
             a & this.CHANGE_CURSOR && this.$cursorLayer.update(this.layerConfig);
@@ -363,7 +358,7 @@ define(["require", "exports", "module", 'text!ace/css/editor.css!.ace_editor {\n
       }
       var c = this;
       if(!a || typeof a == "string") {
-        a = a || "ace/theme/TextMate";
+        a = a || "ace/theme/textmate";
         d([a], function(e) {
           b(e)
         })

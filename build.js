@@ -73,6 +73,16 @@
                 "ace/mode/javascript",
                 "ace/mode/css",
             ]
+        },
+        { 
+            name: "ace/mode/python",
+            exclude: [
+                "ace/lib/oop",
+                "ace/lib/lang",
+                "ace/tokenizer",
+                "ace/range",
+                "ace/mode/text"
+            ]
         }
     ]
 }
