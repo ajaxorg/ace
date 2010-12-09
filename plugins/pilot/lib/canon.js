@@ -113,7 +113,7 @@ var commands = {};
  * decoration to be done.
  * TODO: Are we sure that in the future there will be no such decoration?
  */
-exports.addCommand = function(command) {
+function addCommand(command) {
     if (!command.name) {
         throw new Error('All registered commands must have a name');
     }
@@ -138,7 +138,7 @@ exports.addCommand = function(command) {
     commands[command.name] = command;
 };
 
-exports.removeCommand = function(command) {
+function removeCommand(command) {
     if (typeof command === 'string') {
         delete commands[command];
     }
@@ -147,11 +147,11 @@ exports.removeCommand = function(command) {
     }
 };
 
-exports.getCommand = function(name) {
+function getCommand(name) {
     return commands[name];
 };
 
-exports.getCommandNames = function() {
+function getCommandNames() {
     return Object.keys(commands);
 };
 
@@ -160,7 +160,7 @@ exports.getCommandNames = function() {
  * everything it needs to about the command params
  * @param command Either a command, or the name of one
  */
-exports.exec = function(command, args) {
+function exec(command, args) {
     if (typeof command === 'string') {
         command = commands[command];
     }
@@ -176,8 +176,15 @@ exports.exec = function(command, args) {
     return true;
 };
 
+exports.removeCommand = removeCommand;
+exports.addCommand = addCommand;
+exports.getCommand = getCommand;
+exports.getCommandNames = getCommandNames;
+exports.exec = exec;
+
+
 /**
- * We publish a 'addedRequestOutput' event whenever new command begins output
+ * We publish a 'output' event whenever new command begins output
  * TODO: make this more obvious
  */
 oop.implement(exports, EventEmitter);
@@ -202,7 +209,7 @@ oop.implement(exports, EventEmitter);
 /**
  * The array of requests that wish to announce their presence
  */
-exports.requests = [];
+var requests = [];
 
 /**
  * How many requests do we store?
@@ -212,16 +219,17 @@ var maxRequestLength = 100;
 /**
  * Called by Request instances when some output (or a cell to async() happens)
  */
-exports.addRequestOutput = function(request) {
-    exports.requests.push(request);
+function addRequestOutput(request) {
+    requests.push(request);
     // This could probably be optimized with some maths, but 99.99% of the
     // time we will only be off by one, and I'm feeling lazy.
-    while (exports.requests.length > maxRequestLength) {
-        exports.requests.shiftObject();
+    while (requests.length > maxRequestLength) {
+        requests.shiftObject();
     }
 
-    exports._dispatchEvent('addedRequestOutput', { request: request });
+    exports._dispatchEvent('output', { requests: requests });
 };
+exports.addRequestOutput = addRequestOutput;
 
 /**
  * To create an invocation, you need to do something like this (all the ctor

@@ -61,24 +61,24 @@ var setCommandSpec = {
             // 'set' by itself lists all the settings
             var settingsList = env.settings._list();
             html = '';
-            // first sort the settingsList based on the key
+            // first sort the settingsList based on the name
             settingsList.sort(function(a, b) {
-                if (a.key < b.key) {
+                if (a.name < b.name) {
                     return -1;
-                } else if (a.key == b.key) {
+                } else if (a.name == b.name) {
                     return 0;
                 } else {
                     return 1;
                 }
             });
-            var url = 'https://wiki.mozilla.org/Labs/Skywriter/Settings#' +
-                    setting.key;
             settingsList.forEach(function(setting) {
+                var url = 'https://wiki.mozilla.org/Labs/Skywriter/Settings#' +
+                        setting.name;
                 html += '<a class="setting" href="' + url +
                         '" title="View external documentation on setting: ' +
-                        setting.key +
+                        setting.name +
                         '" target="_blank">' +
-                        setting.key +
+                        setting.name +
                         '</a> = ' +
                         setting.value +
                         '<br/>';

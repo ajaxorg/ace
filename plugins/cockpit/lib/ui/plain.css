@@ -1,2 +1,181 @@
 
-#cockpit { color: red; }
+/* Command line completion */
+.cptCompletion {
+  color: #666;
+  padding: 0 0 5px 2px;
+  position: absolute;
+  z-index: -1000;
+}
+
+.cptHints {
+  color: #000;
+  position: absolute;
+  border: 1px solid rgba(230, 230, 230, 0.8);
+  background: rgba(250, 250, 250, 0.8);
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 10px; border-top-right-radius: 10px;
+  z-index: 1000;
+  padding: 8px;
+}
+
+.cptCompletion.VALID { background: rgba(210, 255, 210, 1); }
+.cptCompletion.INCOMPLETE { background: rgba(255, 230, 210, 1); }
+.cptCompletion.INVALID { background: rgba(255, 210, 210, 1); }
+
+.cptCompletion span { color: #FFF; }
+.cptCompletion span.INCOMPLETE { text-shadow: 0px 0px 2px #ff8800; }
+.cptCompletion span.INVALID { text-shadow: 0px 0px 5px #ff0000; }
+
+
+#cockpit, .cptCompletion {
+  font-family: consolas, courier, monospace;
+  font-size: 120%;
+}
+
+#cockpit {
+  background: transparent;
+  border: none; outline: none;
+}
+
+
+.cptHints article {
+  margin-left: 25px;
+  padding: 8px;
+  z-index: 1;
+  color: @text;
+  display: block;
+  border: 2px @border_bg solid;
+  border-bottom: 0;
+  font-size: 90%;
+  -moz-border-top-colors: @border_bg @border_fg;
+  -moz-border-left-colors: @border_bg @border_fg;
+  -moz-border-right-colors: @border_bg @bg;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 10px; border-top-right-radius: 10px;
+  background: @input_bg2;
+  background: -moz-linear-gradient(top, @input_bg_light, @input_bg);
+  background: -webkit-gradient(linear, left top, left bottom, from(@input_bg_light), to(@input_bg));
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 10px 3px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 10px 3px;
+  max-width: 500px;
+}
+.cptHints article h1 { font-size: 110%; text-align: center; }
+.cptHints article h2 { font-size: 95%; }
+.cptHints article h3 { font-size: 90%; }
+.cptHints article table th,
+.cptHints article label { color: @hi_text; }
+.cptHints article h1,
+.cptHints article h2,
+.cptHints article h3 { margin: 2px 0 1px 0; color: @hi_text; }
+.cptHints article p,
+.cptHints article pre,
+
+
+
+
+
+/* Global visual styles */
+.cptBrackets { color: @hi_text; }
+.cptGt { color: @theme_text; font-weight: bold; font-size: 120%; }
+
+/* Use absolute positioning to put all children 100%x100% */
+.cptStack {
+  position: relative;
+}
+.cptStack > * {
+  position: absolute;
+  top: 0; height: 100%; bottom: 0; left: 0; width: 100%; right: 0;
+}
+
+
+
+
+
+
+
+
+/* Layout */
+.cptOutput {
+  background: @bg; color: @text;
+  font-family: @fonts; font-size: 90%;
+  overflow: hidden;
+  position: absolute;
+}
+
+/* The input area */
+.cptInput {
+  border-top: 1px solid @border_bg;
+  background: @input_bg;
+  background: -moz-linear-gradient(top, @input_bg, @input_bg2);
+  background: -webkit-gradient(linear, left top, left bottom, from(@input_bg), to(@input_bg2));
+
+  position: absolute;
+  height: 25px; right: 0; bottom: 0; left: 0;
+}
+
+.cptPrompt {
+  width: 40px; padding-left: 5px;
+  position: absolute;
+  top: 0; width: 40px; bottom: 0; left: 0;
+}
+
+.cptKbd {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 40px;  
+}
+
+.cptOutput input.cptCliInput {
+  color: @hi_text; font-size: 120%; font-family: @fonts; 
+  background: transparent;
+  outline: none; border: 0;
+  box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+  padding: 4px 0 0 0;
+  width: 100%;
+}
+.cptOutput input.cptCliInput:focus {
+  outline: none; border: 0;
+  box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+}
+
+
+
+
+.cptRowIn {
+  display: box; display: -moz-box; display: -webkit-box;
+  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;
+  box-align: center; -moz-box-align: center; -webkit-box-align: center;
+  color: @text;
+  background-color: @input_bg;
+  width: 100%;
+}
+.cptRowIn > * { padding-left: 2px; padding-right: 2px; }
+.cptRowIn > img { cursor: pointer; }
+.cptHover { display: none; }
+.cptRowIn:hover > .cptHover { display: block; }
+.cptRowIn:hover > .cptHover.cptHidden { display: none; }
+.cptOutTyped {
+  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;
+  font-weight: bold; color: @hi_text; font-size: 120%;
+}
+.cptRowOutput { padding-left: 10px; line-height: 1.2em; }
+.cptRowOutput strong,
+.cptRowOutput b,
+.cptRowOutput th,
+.cptRowOutput h1,
+.cptRowOutput h2,
+.cptRowOutput h3 { color: @hi_text; }
+.cptRowOutput a { font-weight: bold; color: @link_text; text-decoration: none; }
+.cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }
+.cptRowOutput input[type=password],
+.cptRowOutput input[type=text],
+.cptRowOutput textarea {
+  color: @hi_text; font-size: 120%;
+  background: transparent; padding: 3px;
+  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+.cptRowOutput table,
+.cptRowOutput td,
+.cptRowOutput th { border: 0; padding: 0 2px; }
+.cptRowOutput .right { text-align: right; }

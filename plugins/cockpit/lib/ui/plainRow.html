@@ -1,0 +1,47 @@
+
+
+<!-- The input area, with fixed height -->
+<div id=cptInput class=cptInput>
+  <!-- The prompt -->
+  <div class="cptPrompt cptGt"><span class="cptBrackets">{ }</span> &gt;</div>
+  <!-- Where you type commands -->
+  <div class="cptKbd cptStack">
+    <div class=cptCompletion save="${cliInputView._completer}"></div>
+    <input class=cptCliInput save="${cliInputView._inputer}"/>
+  </div>
+  <!-- Help as you type -->
+  <div id=cptHints class=cptHints>
+  </div>
+</div>
+
+
+
+
+
+<div class=cptRow>
+  <!-- The div for the input (i.e. what was typed) -->
+  <div class="cptRowIn" save="${actions.rowin}"
+      onclick="${actions.copyToInput}"
+      ondblclick="${actions.executeRequest}">
+  
+    <!-- What the user actually typed -->
+    <div class="cptGt">&gt; </div>
+    <div class="cptOutTyped" save="${actions.typed}"></div>
+  
+    <!-- The extra details that appear on hover -->
+    <div class=cptHover save="${actions.duration}"></div>
+    <img class=cptHover onclick="${actions.hideOutput}" save="${actions.hide}"
+        alt="Hide command output" _src="${imagePath}/minus.png"/>
+    <img class="cptHover cptHidden" onclick="${actions.showOutput}" save="${actions.show}"
+        alt="Show command output" _src="${imagePath}/plus.png"/>
+    <img class=cptHover onclick="${actions.remove}"
+        alt="Remove this command from the history" _src="${imagePath}/closer.png"/>
+  
+  </div>
+  
+  <!-- The div for the command output -->
+  <div class="cptRowOut" save="${actions.rowout}">
+    <div class="cptRowOutput" save="${actions.output}"></div>
+    <img src="${imagePath}/throbber.gif" save="${actions.throb}"/>
+  </div>
+</div>

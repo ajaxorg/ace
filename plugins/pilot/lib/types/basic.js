@@ -119,8 +119,8 @@ SelectionType.prototype.stringify = function(value) {
     return value;
 };
 
-SelectionType.prototype.parse = function(value) {
-    if (typeof value != 'string') {
+SelectionType.prototype.parse = function(str) {
+    if (typeof str != 'string') {
         throw new Error('non-string passed to parse()');
     }
     if (!this.data) {
@@ -128,30 +128,38 @@ SelectionType.prototype.parse = function(value) {
     }
     var data = (typeof(this.data) === "function") ? this.data() : this.data;
 
-    var match = false;
+    var match;
     var completions = [];
     data.forEach(function(option) {
-        if (value == option) {
-            match = true;
+        if (str == option) {
+            match = this.fromString(option);
         }
-        else if (option.indexOf(value) === 0) {
-            completions.push(option);
+        else if (option.indexOf(str) === 0) {
+            completions.push(this.fromString(option));
         }
-    });
+    }, this);
 
     if (match) {
-        return new Conversion(value);
+        return new Conversion(match);
     }
     else {
-        var status = completions.length > 0 ? Status.INCOMPLETE : Status.INVALID;
-
-        // TODO: better error message - include options?
-        // TODO: better completions - we're just using the extensions
-        return new Conversion(null,
-                status,
-                'Can\'t convert \'' + value + '\' to a selection.',
-                completions);
+        if (completions.length > 0) {
+            return new Conversion(null,
+                    Status.INCOMPLETE,
+                    'Several possibilities for \'' + str + '\'',
+                    completions);
+        }
+        else {
+            return new Conversion(null,
+                    Status.INVALID,
+                    'Can\'t use \'' + str + '\'.',
+                    completions);
+        }
     }
+};
+
+SelectionType.prototype.fromString = function(str) {
+    return str;
 };
 
 SelectionType.prototype.name = 'selection';
@@ -170,17 +178,8 @@ var bool = new SelectionType({
     stringify: function(value) {
         return '' + value;
     },
-    parse: function(value) {
-        var conversion = SelectionType.prototype.parse(value);
-
-        if (conversion.value === 'true') {
-            conversion.value = true;
-        }
-        if (conversion.value === 'false') {
-            conversion.value = false;
-        }
-
-        return conversion;
+    fromString: function(str) {
+        return str === 'true' ? true : false;
     }
 });
 

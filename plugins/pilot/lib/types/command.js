@@ -54,15 +54,8 @@ var command = new SelectionType({
     stringify: function(command) {
         return command.name;
     },
-    parse: function(value) {
-        var conversion = SelectionType.prototype.parse.call(this, value);
-        if (conversion.value) {
-            conversion.value = canon.getCommand(conversion.value);
-        }
-        else {
-            conversion.message = 'Several possibilities for \'' + value + '\'';
-        }
-        return conversion;
+    fromString: function(str) {
+        return canon.getCommand(str);
     }
 });
 

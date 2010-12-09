@@ -48,16 +48,21 @@ var Status = {
      * valid. There are a number of failure states, so the best way to check
      * for failure is (x !== Status.VALID)
      */
-    VALID: 'VALID',
+    VALID: {
+        toString: function() { return 'VALID'; },
+        valueOf: function() { return 0; }
+    },
 
     /**
-     * The conversion process did not work like Status.INVALID, however it was
-     * noted that the string provided to 'parse()' could be VALID by the
-     * addition of more characters, so the typing may not be actually incorrect
-     * yet, just unfinished.
+     * A conversion process failed, however it was noted that the string
+     * provided to 'parse()' could be VALID by the addition of more characters,
+     * so the typing may not be actually incorrect yet, just unfinished.
      * @see Status.INVALID
      */
-    INCOMPLETE: 'INCOMPLETE',
+    INCOMPLETE: {
+        toString: function() { return 'INCOMPLETE'; },
+        valueOf: function() { return 1; }
+    },
 
     /**
      * The conversion process did not work, the value should be null and a
@@ -65,7 +70,10 @@ var Status = {
      * values may be available.
      * @see Status.INCOMPLETE
      */
-    INVALID: 'INVALID',
+    INVALID: {
+        toString: function() { return 'INVALID'; },
+        valueOf: function() { return 2; }
+    },
 
     /**
      * A combined status is the worser of the provided statuses

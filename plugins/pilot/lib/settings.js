@@ -204,7 +204,7 @@ Settings.prototype = {
     resetAll: function() {
         this.getSettingNames().forEach(function(key) {
             this.resetValue(key);
-        }.bind(this));
+        }, this);
     },
 
     /**
@@ -215,9 +215,9 @@ Settings.prototype = {
         this.getSettingNames().forEach(function(setting) {
             reply.push({
                 'key': setting,
-                'value': this.get(setting)
+                'value': this.getSetting(setting).get()
             });
-        }.bind(this));
+        }, this);
         return reply;
     },
 

@@ -70,6 +70,50 @@ function Hint(status, message, start, end) {
 }
 Hint.prototype = {
 };
+/**
+ * Loop over the array of hints finding the one we should display.
+ * @param hints array of hints
+ */
+Hint.worst = function(hints, cursor) {
+    if (hints.length === 0) {
+        return undefined;
+    }
+    // Calculate 'distance from cursor'
+    if (cursor !== undefined) {
+        hints.forEach(function(hint) {
+            if (cursor < hint.start) {
+                hint.distance = hint.start - cursor;
+            }
+            else {
+                if (cursor > hint.end) {
+                    hint.distance = cursor - hint.end;
+                }
+                else {
+                    hint.distance = 0;
+                }
+            }
+        }, this);
+    }
+    // Sort
+    hints.sort(function(hint1, hint2) {
+        // Compare first based on distance from cursor
+        if (cursor !== undefined) {
+            var diff = hint1.distance - hint2.distance;
+            if (diff != 0) {
+                return diff;
+            }
+        }
+        // otherwise go with hint severity
+        return hint1 - hint2;
+    });
+    // tidy-up
+    if (cursor !== undefined) {
+        hints.forEach(function(hint) {
+            delete hint.distance;
+        }, this);
+    }
+    return hints[0];
+};
 exports.Hint = Hint;
 
 /**
@@ -814,8 +858,6 @@ function documentCommand(command) {
     return docs.join('');
 };
 exports.documentCommand = documentCommand;
-
-
 
 
 });

@@ -63,17 +63,9 @@ var setting = new SelectionType({
         lastSetting = setting;
         return setting.name;
     },
-    parse: function(text) {
-        lastSetting = text;
-
-        var conversion = SelectionType.prototype.parse.call(this, text);
-        if (conversion.value) {
-            conversion.value = settings.getSetting(conversion.value);
-        }
-        else {
-            conversion.message = 'Several possibilities for \'' + text + '\'';
-        }
-        return conversion;
+    fromString: function(str) {
+        lastSetting = settings.getSetting(str);
+        return lastSetting;
     }
 });
 
@@ -84,7 +76,7 @@ var setting = new SelectionType({
 var settingValue = new DeferredType({
     name: 'settingValue',
     defer: function() {
-        return env.settings.getSetting(lastSetting).type;
+        return lastSetting.type;
     }
 });
 
