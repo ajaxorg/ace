@@ -58,6 +58,6 @@ define(function(require, exports, module) {
         }
     };
 
-    return core;
+    exports.core = core;
 
 });
