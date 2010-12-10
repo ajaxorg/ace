@@ -1,0 +1,15 @@
+define(function(a) {
+  var d = a("../lib/oop"), c = a("../lib/lang");
+  a = a("./text_highlight_rules");
+  PythonHighlightRules = function() {
+    var e = c.arrayToMap("and|as|assert|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|raise|return|try|while|with|yield".split("|")), f = c.arrayToMap("True|False|None|NotImplemented|Ellipsis|__debug__".split("|")), g = c.arrayToMap("abs|divmod|input|open|staticmethod|all|enumerate|int|ord|str|any|eval|isinstance|pow|sum|basestring|execfile|issubclass|print|super|binfile|iter|property|tuple|bool|filter|len|range|type|bytearray|float|list|raw_input|unichr|callable|format|locals|reduce|unicode|chr|frozenset|long|reload|vars|classmethod|getattr|map|repr|xrange|cmp|globals|max|reversed|zip|compile|hasattr|memoryview|round|__import__|complex|hash|min|set|apply|delattr|help|next|setattr|buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern".split("|")), 
+    h = c.arrayToMap("".split("|"));
+    this.$rules = {start:[{token:"comment", regex:"#.*$"}, {token:"string", regex:'(?:(?:[rubRUB])|(?:[ubUB][rR]))?"{3}(?:(?:.)|(?:^"{3}))*?"{3}'}, {token:"string", regex:'(?:(?:[rubRUB])|(?:[ubUB][rR]))?"{3}.*$', next:"qqstring"}, {token:"string", regex:'(?:(?:[rubRUB])|(?:[ubUB][rR]))?"(?:(?:\\\\.)|(?:[^"\\\\]))*?"'}, {token:"string", regex:"(?:(?:[rubRUB])|(?:[ubUB][rR]))?'{3}(?:(?:.)|(?:^'{3}))*?'{3}"}, {token:"string", regex:"(?:(?:[rubRUB])|(?:[ubUB][rR]))?'{3}.*$", next:"qstring"}, {token:"string", 
+    regex:"(?:(?:[rubRUB])|(?:[ubUB][rR]))?'(?:(?:\\\\.)|(?:[^'\\\\]))*?'"}, {token:"constant.numeric", regex:"(?:(?:(?:(?:(?:(?:(?:\\d+)?(?:\\.\\d+))|(?:(?:\\d+)\\.))|(?:\\d+))(?:[eE][+-]?\\d+))|(?:(?:(?:\\d+)?(?:\\.\\d+))|(?:(?:\\d+)\\.)))|\\d+)[jJ]\\b"}, {token:"constant.numeric", regex:"(?:(?:(?:(?:(?:(?:\\d+)?(?:\\.\\d+))|(?:(?:\\d+)\\.))|(?:\\d+))(?:[eE][+-]?\\d+))|(?:(?:(?:\\d+)?(?:\\.\\d+))|(?:(?:\\d+)\\.)))"}, {token:"constant.numeric", regex:"(?:(?:(?:[1-9]\\d*)|(?:0))|(?:0[oO]?[0-7]+)|(?:0[xX][\\dA-Fa-f]+)|(?:0[bB][01]+))[lL]\\b"}, 
+    {token:"constant.numeric", regex:"(?:(?:(?:[1-9]\\d*)|(?:0))|(?:0[oO]?[0-7]+)|(?:0[xX][\\dA-Fa-f]+)|(?:0[bB][01]+))\\b"}, {token:function(b) {
+      return e[b] ? "keyword" : f[b] ? "constant.language" : h[b] ? "invalid.illegal" : g[b] ? "support.function" : b == "debugger" ? "invalid.deprecated" : "identifier"
+    }, regex:"[a-zA-Z_$][a-zA-Z0-9_$]*\\b"}, {token:"keyword.operator", regex:"\\+|\\-|\\*|\\*\\*|\\/|\\/\\/|%|<<|>>|&|\\||\\^|~|<|>|<=|=>|==|!=|<>|="}, {token:"lparen", regex:"[\\[\\(\\{]"}, {token:"rparen", regex:"[\\]\\)\\}]"}, {token:"text", regex:"\\s+"}], qqstring:[{token:"string", regex:'(?:^"{3})*?"{3}', next:"start"}, {token:"string", regex:".+"}], qstring:[{token:"string", regex:"(?:^'{3})*?'{3}", next:"start"}, {token:"string", regex:".+"}]}
+  };
+  d.inherits(PythonHighlightRules, a);
+  return PythonHighlightRules
+});

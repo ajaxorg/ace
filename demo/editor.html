@@ -61,6 +61,7 @@
           <option value="js">JS Document</option>
           <option value="html">HTML Document</option>
           <option value="css">CSS Document</option>
+          <option value="python">Python Document</option>
         </select>
       </td>
       <td>
@@ -71,6 +72,7 @@
           <option value="xml">XML</option>
           <option value="html">HTML</option>
           <option value="css">CSS</option>
+          <option value="python">Python</option>
         </select>
       </td>
       <td>
@@ -131,6 +133,26 @@
 </html>
     </script>
     
+    <script type="text/editor" id="pythontext">#!/usr/local/bin/python
+    
+import string, sys
+
+# If no arguments were given, print a helpful message
+if len(sys.argv)==1:
+    print 'Usage: celsius temp1 temp2 ...'
+    sys.exit(0)
+
+# Loop over the arguments
+for i in sys.argv[1:]:
+    try: 
+        fahrenheit=float(string.atoi(i))
+    except string.atoi_error:
+        print repr(i), "not a numeric value"
+    else:
+	    celsius=(fahrenheit-32)*5.0/9.0
+	    print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))
+</script>
+    
 <script type="text/javascript" charset="utf-8">
 
 require(
@@ -146,8 +168,9 @@ require(
         "ace/mode/html",
         "ace/mode/xml",
         "ace/mode/text",
+        "ace/mode/python",
         "ace/undomanager"
-    ], function(event, Editor, Renderer, theme, Document, JavaScriptMode, CssMode, HtmlMode, XmlMode, TextMode, UndoManager) { 
+    ], function(event, Editor, Renderer, theme, Document, JavaScriptMode, CssMode, HtmlMode, XmlMode, TextMode, PythonMode, UndoManager) { 
 
 var docs = {}
 
@@ -162,6 +185,10 @@ docs.css.setUndoManager(new UndoManager());
 docs.html = new Document(document.getElementById("htmltext").innerHTML);
 docs.html.setMode(new HtmlMode());
 docs.html.setUndoManager(new UndoManager());
+
+docs.python = new Document(document.getElementById("pythontext").innerHTML);
+docs.python.setMode(new PythonMode());
+docs.python.setUndoManager(new UndoManager());
 
 var docEl = document.getElementById("doc");
 
@@ -181,6 +208,9 @@ function onDocChange() {
     }
     else if (mode instanceof XmlMode) {
         modeEl.value = "xml"
+    }
+    else if (mode instanceof PythonMode) {
+        modeEl.value = "python"
     }
     else {
         modeEl.value = "text"

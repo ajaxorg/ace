@@ -67,6 +67,7 @@ define(function(k) {
     };
     this.updateLines = function(a, b, e) {
       this.$computeTabString();
+      this.config = a;
       var f = Math.max(b, a.firstRow), c = Math.min(e, a.lastRow), d = this.element.childNodes, h = this;
       this.tokenizer.getTokens(f, c, function(i) {
         for(var g = f;g <= c;g++) {
@@ -128,6 +129,7 @@ define(function(k) {
     };
     this.update = function(a) {
       this.$computeTabString();
+      this.config = a;
       var b = [], e = this;
       this.tokenizer.getTokens(a.firstRow, a.lastRow, function(f) {
         for(var c = a.firstRow;c <= a.lastRow;c++) {

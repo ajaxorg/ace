@@ -6,53 +6,55 @@ define(function(f) {
   };
   h.inherits(f, i);
   (function() {
-    this.toggleCommentLines = function(d, b, e) {
-      var c = true;
-      d = /^(\s*)\/\//;
-      for(var a = e.start.row;a <= e.end.row;a++) {
-        if(!d.test(b.getLine(a))) {
-          c = false;
+    this.toggleCommentLines = function(c, d, e) {
+      var a = true;
+      c = /^(\s*)\/\//;
+      for(var b = e.start.row;b <= e.end.row;b++) {
+        if(!c.test(d.getLine(b))) {
+          a = false;
           break
         }
-      }if(c) {
-        c = new m(0, 0, 0, 0);
-        for(a = e.start.row;a <= e.end.row;a++) {
-          var g = b.getLine(a).replace(d, "$1");
-          c.start.row = a;
-          c.end.row = a;
-          c.end.column = g.length + 2;
-          b.replace(c, g)
+      }if(a) {
+        a = new m(0, 0, 0, 0);
+        for(b = e.start.row;b <= e.end.row;b++) {
+          var g = d.getLine(b).replace(c, "$1");
+          a.start.row = b;
+          a.end.row = b;
+          a.end.column = g.length + 2;
+          d.replace(a, g)
         }return-2
       }else {
-        return b.indentRows(e, "//")
+        return d.indentRows(e, "//")
       }
     };
-    this.getNextLineIndent = function(d, b, e) {
-      var c = this.$getIndent(b), a = this.$tokenizer.getLineTokens(b, d), g = a.tokens;
-      a = a.state;
+    this.getNextLineIndent = function(c, d, e) {
+      var a = this.$getIndent(d), b = this.$tokenizer.getLineTokens(d, c), g = b.tokens;
+      b = b.state;
       if(g.length && g[g.length - 1].type == "comment") {
-        return c
-      }if(d == "start") {
-        if(d = b.match(/^.*[\{\(\[]\s*$/)) {
-          c += e
+        return a
+      }if(c == "start") {
+        if(c = d.match(/^.*[\{\(\[]\s*$/)) {
+          a += e
         }
       }else {
-        if(d == "doc-start") {
-          if(a == "start") {
+        if(c == "doc-start") {
+          if(b == "start") {
             return""
-          }if(d = b.match(/^\s*(\/?)\*/)) {
-            if(d[1]) {
-              c += " "
-            }c += "* "
-          }
+          }if(c = d.match(/^\s*(\/?)\*/)) {
+            if(c[1]) {
+              a += " "
+            }a += "* "
+          }if(c[1]) {
+            a += " "
+          }a += "* "
         }
-      }return c
+      }return a
     };
-    this.checkOutdent = function(d, b, e) {
-      return this.$outdent.checkOutdent(b, e)
+    this.checkOutdent = function(c, d, e) {
+      return this.$outdent.checkOutdent(d, e)
     };
-    this.autoOutdent = function(d, b, e) {
-      return this.$outdent.autoOutdent(b, e)
+    this.autoOutdent = function(c, d, e) {
+      return this.$outdent.autoOutdent(d, e)
     }
   }).call(f.prototype);
   return f

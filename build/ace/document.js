@@ -327,7 +327,7 @@ define(function(g) {
         }this.modified = true;
         b = a.start.row;
         var c = a.end.row, d = this.getLine(b).substring(0, a.start.column) + this.getLine(c).substring(a.end.column);
-        this.lines.splice(b, c - b + 1, d);
+        d != "" ? this.lines.splice(b, c - b + 1, d) : this.lines.splice(b, c - b + 1, "");
         return a.start
       }
     };
