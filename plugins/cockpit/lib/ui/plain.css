@@ -19,13 +19,13 @@
   padding: 8px;
 }
 
-.cptCompletion.VALID { background: rgba(210, 255, 210, 1); }
-.cptCompletion.INCOMPLETE { background: rgba(255, 230, 210, 1); }
-.cptCompletion.INVALID { background: rgba(255, 210, 210, 1); }
+.cptCompletion.VALID { background: #FFF; }
+.cptCompletion.INCOMPLETE { background: #DDD; }
+.cptCompletion.INVALID { background: #DDD; }
 
 .cptCompletion span { color: #FFF; }
-.cptCompletion span.INCOMPLETE { text-shadow: 0px 0px 2px #ff8800; }
-.cptCompletion span.INVALID { text-shadow: 0px 0px 5px #ff0000; }
+.cptCompletion span.INCOMPLETE { text-shadow: 0px 0px 2px #F80; }
+.cptCompletion span.INVALID { text-shadow: 0px 0px 5px #F00; }
 
 
 #cockpit, .cptCompletion {

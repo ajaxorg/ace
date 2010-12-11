@@ -109,10 +109,6 @@ var setupPlugins = function(config, callback) {
             }
         }
     }
-console.log(JSON.stringify({
-        packagePaths: pluginPackageInfo,
-        paths: paths
-    }));
     require({
         packagePaths: pluginPackageInfo,
         paths: paths

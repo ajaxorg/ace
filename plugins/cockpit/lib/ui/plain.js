@@ -59,9 +59,10 @@ var Status = require('pilot/types').Status;
  * 2. Attach a set of events so the command line works
  */
 exports.startup = function(data, reason) {
+    // TODO: We should probably cut this up into an object
+    var settings = data.env.settings;
     var doc = document;
     var win = doc.defaultView;
-
     var cli = new CliRequisition();
 
     // TODO: we should have a better way to specify command lines???
@@ -71,7 +72,7 @@ exports.startup = function(data, reason) {
         return;
     }
 
-    var templates = doc.createElement('dic');
+    var templates = doc.createElement('div');
     templates.innerHTML = plainRow;
     var row = templates.firstChild;
 
@@ -88,12 +89,22 @@ exports.startup = function(data, reason) {
     input.parentNode.insertBefore(output, input);
 
     function resizer() {
-        var style = win.getComputedStyle(input, null);
+        var top, height, left, width;
 
-        var top = parseInt(style.getPropertyValue('top'), 10);
-        var height = parseInt(style.getPropertyValue('height'), 10);
-        var left = parseInt(style.getPropertyValue('left'), 10);
-        var width = parseInt(style.getPropertyValue('width'), 10);
+        if (input.getClientRects) {
+            var rect = input.getClientRects()[0];
+            top = rect.top;
+            height = rect.height;
+            left = rect.left;
+            width = rect.width;
+        }
+        else {
+            var style = win.getComputedStyle(input, null);
+            top = parseInt(style.getPropertyValue('top'), 10);
+            height = parseInt(style.getPropertyValue('height'), 10);
+            left = parseInt(style.getPropertyValue('left'), 10);
+            width = parseInt(style.getPropertyValue('width'), 10);
+        }
 
         completer.style.top = top + 'px';
         completer.style.height = height + 'px';
@@ -124,6 +135,20 @@ exports.startup = function(data, reason) {
             }, this);
         }, this);
     }.bind(this));
+
+    var showHint = settings.getSetting('showHint');
+    function hintShower() {
+        if (showHint.get()) {
+            hinter.style.display = 'block';
+        }
+        else {
+            hinter.style.display = 'none';
+        }
+    }
+    hintShower();
+    showHint.addEventListener('change', hintShower.bind(this));
+
+    var outputHeight = settings.getSetting('outputHeight');
 
     /*
     // All this does is to kill TABs normal use. I wonder if we can train
@@ -210,10 +235,10 @@ exports.startup = function(data, reason) {
                 }
             }
 
-            worst = Hint.worst(hints) || NO_HINT;
+            worst = (hints.length > 0) ? hints[0] : NO_HINT;
             var message = worst.message;
             if (worst.predictions && worst.predictions.length > 0) {
-                message += ' [ ';
+                message += ': [ ';
                 worst.predictions.forEach(function(prediction) {
                     if (prediction.name) {
                         message += prediction.name + ' | ';

@@ -54,9 +54,10 @@ var canon = require('pilot/canon');
  * The information required to tell the user there is a problem with their
  * input.
  */
-function Hint(status, message, start, end) {
+function Hint(status, message, start, end, predictions) {
     this.status = status;
     this.message = message;
+    this.predictions = predictions;
 
     if (typeof start === 'number') {
         this.start = start;
@@ -74,23 +75,21 @@ Hint.prototype = {
  * Loop over the array of hints finding the one we should display.
  * @param hints array of hints
  */
-Hint.worst = function(hints, cursor) {
-    if (hints.length === 0) {
-        return undefined;
-    }
+Hint.sort = function(hints, cursor) {
     // Calculate 'distance from cursor'
     if (cursor !== undefined) {
         hints.forEach(function(hint) {
-            if (cursor < hint.start) {
+            if (hint.start === Argument.AT_CURSOR) {
+                hint.distance = 0;
+            }
+            else if (cursor < hint.start) {
                 hint.distance = hint.start - cursor;
             }
+            else if (cursor > hint.end) {
+                hint.distance = cursor - hint.end;
+            }
             else {
-                if (cursor > hint.end) {
-                    hint.distance = cursor - hint.end;
-                }
-                else {
-                    hint.distance = 0;
-                }
+                hint.distance = 0;
             }
         }, this);
     }
@@ -112,7 +111,7 @@ Hint.worst = function(hints, cursor) {
             delete hint.distance;
         }, this);
     }
-    return hints[0];
+    return hints;
 };
 exports.Hint = Hint;
 
@@ -157,6 +156,10 @@ Argument.prototype = {
             this.priorSpace);
     },
 
+    /**
+     * See notes on events in Assignment. We might need to hook changes here
+     * into a CliRequisition so they appear of the command line.
+     */
     setText: function(text) {
         if (text == null) {
             throw new Error('Illegal text for Argument: ' + text);
@@ -183,6 +186,10 @@ Argument.merge = function(argArray, start, end) {
     }
     return joined;
 };
+/**
+ * We sometimes need a way to say 'this error occurs whereever the cursor is'
+ */
+Argument.AT_CURSOR = -1;
 
 
 /**
@@ -195,6 +202,13 @@ Argument.merge = function(argArray, start, end) {
  * Thus, null is a valid default value, and common because it identifies an
  * parameter that is optional. undefined means there is no value from
  * the command line.
+ *
+ * <p>TODO: We might need events in the future
+ * The current hope is that a GUI and CLI that share an Assignment can be in
+ * direct connection due to assignment.getValue calling arg.setText, however
+ * we might need to use events if not.
+ * oop.implement(Assignment, EventEmitter);
+ *
  * @constructor
  */
 function Assignment(param) {
@@ -209,6 +223,22 @@ Assignment.prototype = {
     param: undefined,
 
     /**
+     * Report on the status of the last parse() conversion.
+     * @see types.Conversion
+     */
+    conversion: undefined,
+
+    /**
+     * The current value in a type as specified by param.type
+     */
+    value: undefined,
+
+    /**
+     * The string version of the current value
+     */
+    arg: undefined,
+
+    /**
      * The current value (i.e. not the string representation)
      * Use setValue() to mutate
      */
@@ -217,8 +247,10 @@ Assignment.prototype = {
         if (this.value === value) {
             return;
         }
+
         if (value === undefined) {
             value = this.param.defaultValue;
+            this.arg = undefined;
         }
         this.value = value;
 
@@ -228,7 +260,6 @@ Assignment.prototype = {
         }
 
         this.conversion = undefined;
-        //this._dispatchEvent('change', { assignment: this });
     },
 
     /**
@@ -242,40 +273,60 @@ Assignment.prototype = {
         }
         this.arg = arg;
         this.conversion = this.param.type.parse(arg.text);
+        this.conversion.arg = arg; // TODO: make this automatic?
         this.value = this.conversion.value;
-        //this._dispatchEvent('change', { assignment: this });
     },
 
     /**
-     * Create a list of this hints associated with this parameter assignment
+     * Create a list of the hints associated with this parameter assignment.
+     * Generally there will be only one hint generated because we're currently
+     * only displaying one hint at a time, ordering by distance from cursor
+     * and severity. Since distance from cursor will be the same for all hints
+     * from this assignment all but the most severe will ever be used. It might
+     * make sense with more experience to alter this to function to be getHint()
      */
     getHints: function() {
         var hints = [];
-        if (this.conversion != null &&
-              (this.conversion.status !== Status.VALID ||
-              this.conversion.message)) {
-            hints.push(new ConversionHint(this.conversion, this.arg));
+
+        // If there is no argument, use the cursor position
+        var message = '<strong>' + this.param.name + '</strong>: ';
+        if (this.param.description) {
+            // TODO: This should be a short description - do we need to trim?
+            message += this.param.description.trim();
+
+            // Ensure the help text ends with '. '
+            if (message.charAt(message.length - 1) !== '.') {
+                message += '.';
+            }
+            if (message.charAt(message.length - 1) !== ' ') {
+                message += ' ';
+            }
+        }
+        var status = Status.VALID;
+        var start = this.arg ? this.arg.start : Argument.AT_CURSOR;
+        var end = this.arg ? this.arg.end : Argument.AT_CURSOR;
+        var predictions;
+
+        // Non-valid conversions will have useful information to pass on
+        if (this.conversion) {
+            status = this.conversion.status;
+            if (this.conversion.message) {
+                message += this.conversion.message;
+            }
+            predictions = this.conversion.predictions;
         }
 
-        var argProvided = this.arg != null && this.arg.text !== '';
+        // Hint if the param is required, but not provided
+        var argProvided = this.arg && this.arg.text !== '';
         var dataProvided = this.value !== undefined || argProvided;
-
         if (this.param.defaultValue === undefined && !dataProvided) {
-            // If the there is no data provided, we have no start/end. Use -1
-            hints.push(new Hint(Status.INVALID,
-                    'Argument for ' + param.name + ' is required'
-                    -1, -1));
+            status = Status.INVALID;
+            message += '<strong>Required<\strong>';
         }
-        return hints;
-    },
 
-    /**
-     * Report on the status of the last parse() conversion.
-     * @see types.Conversion
-     */
-    conversion: undefined
+        return [ new Hint(status, message, start, end, predictions) ];
+    }
 };
-oop.implement(Assignment, EventEmitter);
 exports.Assignment = Assignment;
 
 
@@ -355,15 +406,19 @@ Requisition.prototype = {
     },
 
     /**
-     * Collect the statuses from the Assignments
+     * Collect the statuses from the Assignments.
+     * The hints returned are sorted by severity
      */
     getHints: function() {
         var hints = [];
         Object.keys(this._assignments).map(function(name) {
-            // Append the assignments hints to our list
-            hints.push.apply(hints, this._assignments[name].getHints());
+            // Only use assignments with an argument
+            var assignment = this._assignments[name];
+            if (assignment.arg) {
+                hints.push.apply(hints, assignment.getHints());
+            }
         }, this);
-        return hints;
+        return Hint.sort(hints);
     },
 
     /**
@@ -437,7 +492,9 @@ oop.inherits(CliRequisition, Requisition);
      *
      */
     CliRequisition.prototype.update = function(input) {
-        this.hints = [];
+        // TODO: We only store this so getHints can work. Find a better way.
+        this.input = input;
+        this.localHints = [];
 
         if (util.none(input.typed)) {
             this.setCommand(null);
@@ -450,38 +507,44 @@ oop.inherits(CliRequisition, Requisition);
             // a complete novice a 'type help' message is very annoying, so we
             // need to find a way to only display this message once, or for
             // until the user click a 'close' button or similar
-            this._addHint(Status.INCOMPLETE, '', 0, 0);
+            this.localHints.push(new Hint(Status.INCOMPLETE, '', 0, 0));
             this.setCommand(null);
             return;
         }
 
-        var command = _split(args);
-        if (!command) {
+        var conversion = _split(args);
+        if (!conversion.value) {
             // No command found - bail helpfully.
-            var commandType = types.getType('command');
-            var conversion = commandType.parse(input.typed);
-            var arg = Argument.merge(args);
-            this._addHint(new ConversionHint(conversion, arg));
-
+            this.localHints.push(new ConversionHint(conversion, conversion.arg));
             this.setCommand(null);
         }
         else {
-            // The user hasn't started to type any arguments
-            if (args.length === 0) {
-                var message = documentCommand(command);
-                this._addHint(Status.VALID, message, 0, input.typed.length);
-            }
+            var message = documentCommand(conversion.value);
+            this.localHints.push(new Hint(Status.VALID, message, conversion.arg));
 
-            this.setCommand(command);
+            this.setCommand(conversion.value);
             this._assign(args);
-            this._addHint(CliRequisition.super_.getHints.call(this));
         }
+
+        return;
+    };
+
+    CliRequisition.prototype.getHints = function() {
+        var hints = this.localHints.slice(0);
+
+        Object.keys(this._assignments).map(function(name) {
+            // Only use assignments with an argument
+            var assignment = this._assignments[name];
+            if (assignment.arg) {
+                hints.push.apply(hints, assignment.getHints());
+            }
+        }, this);
 
         // Not knowing about cursor positioning, the requisition and assignments
         // can't know this, but anything they mark as INCOMPLETE is actually
         // INVALID unless the cursor is actually inside that argument.
-        var c = input.cursor;
-        this.hints.forEach(function(hint) {
+        var c = this.input.cursor;
+        hints.forEach(function(hint) {
             var startInHint = c.start >= hint.start && c.start <= hint.end;
             var endInHint = c.end >= hint.start && c.end <= hint.end;
             var inHint = startInHint || endInHint;
@@ -490,30 +553,7 @@ oop.inherits(CliRequisition, Requisition);
             }
         }, this);
 
-        return;
-    };
-
-    CliRequisition.prototype.getHints = function() {
-        return this.hints;
-    };
-
-    /**
-     * Some sugar around: 'this.hints.push(new Hint(...));', but you can also
-     * pass in an array of Hints or the parameters to create a hint
-     */
-    CliRequisition.prototype._addHint = function(status, message, start, end) {
-        if (status == null) {
-            return;
-        }
-        if (status instanceof Hint) {
-            this.hints.push(status);
-        }
-        else if (Array.isArray(status)) {
-            this.hints.push.apply(this.hints, status);
-        }
-        else {
-            this.hints.push(new Hint(status, message, start, end));
-        }
+        return Hint.sort(hints, this.input.cursor.start);
     };
 
     /**
@@ -538,9 +578,9 @@ oop.inherits(CliRequisition, Requisition);
             // TODO: previously we were doing some extra work to avoid this if
             // we determined that we had args that were all whitespace, but
             // probably given our tighter tokenize() this won't be an issue?
-            this._addHint(Status.INVALID,
-                this.command.name + ' does not take any parameters',
-                Argument.merge(args));
+            this.localHints.push(new Hint(Status.INVALID,
+                    this.command.name + ' does not take any parameters',
+                    Argument.merge(args)));
             return;
         }
 
@@ -580,9 +620,9 @@ oop.inherits(CliRequisition, Requisition);
                 else {
                     if (i + 1 < args.length) {
                         // Missing value portion of this named param
-                        this._addHint(Status.INCOMPLETE,
-                            'Missing value for: ' + namedArgText,
-                            args[i]);
+                        this.localHints.push(new Hint(Status.INCOMPLETE,
+                                'Missing value for: ' + namedArgText,
+                                args[i]));
                     }
                     else {
                         args.splice(i + 1, 1);
@@ -612,9 +652,9 @@ oop.inherits(CliRequisition, Requisition);
 
         if (args.length > 0) {
             var remaining = Argument.merge(args);
-            this._addHint(Status.INVALID,
-                'Input \'' + remaining.text + '\' makes no sense.',
-                remaining);
+            this.localHints.push(new Hint(Status.INVALID,
+                    'Input \'' + remaining.text + '\' makes no sense.',
+                    remaining));
         }
     };
 
@@ -671,63 +711,71 @@ function _tokenize(typed) {
                 var str = unescape(typed.substring(start, i));
                 args.push(new Argument(str, start, i, priorSpace));
             }
+            else {
+                if (i !== start) {
+                    // There's a bunch of whitespace at the end of the command
+                    // treat it as another argument without any content
+                    priorSpace = typed.substring(start, i);
+                    args.push(new Argument('', i, i, priorSpace));
+                }
+            }
             break;
         }
 
         var c = typed[i];
         switch (mode) {
-        case OUTSIDE:
-            if (c === '\'') {
-                priorSpace = typed.substring(start, i);
-                mode = IN_SINGLE_Q;
-                start = i + 1;
-            }
-            else if (c === '"') {
-                priorSpace = typed.substring(start, i);
-                mode = IN_DOUBLE_Q;
-                start = i + 1;
-            }
-            else if (/ /.test(c)) {
-                // Still whitespace, do nothing
-            }
-            else {
-                priorSpace = typed.substring(start, i);
-                mode = IN_SIMPLE;
-                start = i;
-            }
-            break;
+            case OUTSIDE:
+                if (c === '\'') {
+                    priorSpace = typed.substring(start, i);
+                    mode = IN_SINGLE_Q;
+                    start = i + 1;
+                }
+                else if (c === '"') {
+                    priorSpace = typed.substring(start, i);
+                    mode = IN_DOUBLE_Q;
+                    start = i + 1;
+                }
+                else if (/ /.test(c)) {
+                    // Still whitespace, do nothing
+                }
+                else {
+                    priorSpace = typed.substring(start, i);
+                    mode = IN_SIMPLE;
+                    start = i;
+                }
+                break;
 
-        case IN_SIMPLE:
-            // There is an edge case of xx'xx which we are assuming to be
-            // a single parameter (and same with ")
-            if (c === ' ') {
-                var str = unescape(typed.substring(start, i));
-                args.push(new Argument(str, start, i, priorSpace));
-                mode = OUTSIDE;
-                start = i;
-                priorSpace = '';
-            }
-            break;
+            case IN_SIMPLE:
+                // There is an edge case of xx'xx which we are assuming to be
+                // a single parameter (and same with ")
+                if (c === ' ') {
+                    var str = unescape(typed.substring(start, i));
+                    args.push(new Argument(str, start, i, priorSpace));
+                    mode = OUTSIDE;
+                    start = i;
+                    priorSpace = '';
+                }
+                break;
 
-        case IN_SINGLE_Q:
-            if (c === '\'') {
-                var str = unescape(typed.substring(start, i));
-                args.push(new Argument(str, start, i, priorSpace));
-                mode = OUTSIDE;
-                start = i + 1;
-                priorSpace = '';
-            }
-            break;
+            case IN_SINGLE_Q:
+                if (c === '\'') {
+                    var str = unescape(typed.substring(start, i));
+                    args.push(new Argument(str, start, i, priorSpace));
+                    mode = OUTSIDE;
+                    start = i + 1;
+                    priorSpace = '';
+                }
+                break;
 
-        case IN_DOUBLE_Q:
-            if (c === '"') {
-                var str = unescape(typed.substring(start, i));
-                args.push(new Argument(str, start, i, priorSpace));
-                mode = OUTSIDE;
-                start = i + 1;
-                priorSpace = '';
-            }
-            break;
+            case IN_DOUBLE_Q:
+                if (c === '"') {
+                    var str = unescape(typed.substring(start, i));
+                    args.push(new Argument(str, start, i, priorSpace));
+                    mode = OUTSIDE;
+                    start = i + 1;
+                    priorSpace = '';
+                }
+                break;
         }
 
         i++;
@@ -742,24 +790,23 @@ exports._tokenize = _tokenize;
  * typed at the command line.
  */
 function _split(args) {
+    var commandType = types.getType('command');
     if (args.length === 0) {
-        return undefined;
+        return commandType.parse('');
     }
 
-    var argsUsed = 0;
-    var lookup = '';
-    var command;
+    var argsUsed = 1;
+    var arg;
+    var conversion;
 
-    while (true) {
-        argsUsed++;
-        lookup += args.map(function(arg) {
-            return arg.text;
-        }).slice(0, argsUsed).join(' ');
-        command = canon.getCommand(lookup);
+    while (argsUsed <= args.length) {
+        var arg = Argument.merge(args, 0, argsUsed);
+        conversion = commandType.parse(arg.text);
+        conversion.arg = arg; // TODO: make this automatic?
 
-        if (!command) {
-            // Not found. break with command == null
-            return undefined;
+        if (!conversion.value) {
+            // Not found. break with value == null
+            break;
         }
 
         /*
@@ -772,21 +819,18 @@ function _split(args) {
         }
         */
 
-        if (command.exec) {
+        if (conversion.value.exec) {
             // Valid command, break with command valid
+            for (var i = 0; i < argsUsed; i++) {
+                args.shift();
+            }
             break;
         }
 
-        // command, but no exec - this must be a sub-command
-        lookup += ' ';
+        argsUsed++;
     }
 
-    // Remove the used args
-    for (var i = 0; i < argsUsed; i++) {
-        args.shift();
-    }
-
-    return command;
+    return conversion;
 }
 exports._split = _split;
 

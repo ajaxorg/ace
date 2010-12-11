@@ -19,7 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Kevin Dangoor (kdangoor@mozilla.com)
+ *   Joe Walker (jwalker@mozilla.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,22 +37,30 @@
 
 define(function(require, exports, module) {
 
+
+var showHintSetting = {
+    name: "showHint",
+    description: "Do we display hints while we type?",
+    type: "bool",
+    defaultValue: true
+};
+
+var outputHeightSetting = {
+    name: "outputHeight",
+    description: "What height should the output panel be?",
+    type: "number",
+    defaultValue: 300
+};
+
 exports.startup = function(data, reason) {
-
-  window.testCli = require('cockpit/test/testCli');
-
-  require('cockpit/ui/settings').startup(data, reason);
-  require('cockpit/ui/plain').startup(data, reason);
+    data.env.settings.addSetting(showHintSetting);
+    data.env.settings.addSetting(outputHeightSetting);
 };
 
-/*
-exports.shutdown(data, reason) {
-    deps.forEach(function(dep) {
-        var module = require(dep);
-        if (typeof module.shutdown === "function") {
-            module.shutdown(data, reason);
-        }
-    });
+exports.shutdown = function(data, reason) {
+    data.env.settings.removeSetting(showHintSetting);
+    data.env.settings.removeSetting(outputHeightSetting);
 };
-*/
+
+
 });

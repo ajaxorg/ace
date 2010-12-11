@@ -128,32 +128,32 @@ SelectionType.prototype.parse = function(str) {
     }
     var data = (typeof(this.data) === "function") ? this.data() : this.data;
 
-    var match;
+    // The matchedValue could be the boolean value false
+    var hasMatched = false;
+    var matchedValue;
     var completions = [];
     data.forEach(function(option) {
         if (str == option) {
-            match = this.fromString(option);
+            matchedValue = this.fromString(option);
+            hasMatched = true;
         }
         else if (option.indexOf(str) === 0) {
             completions.push(this.fromString(option));
         }
     }, this);
 
-    if (match) {
-        return new Conversion(match);
+    if (hasMatched) {
+        return new Conversion(matchedValue);
     }
     else {
         if (completions.length > 0) {
-            return new Conversion(null,
-                    Status.INCOMPLETE,
-                    'Several possibilities for \'' + str + '\'',
-                    completions);
+            var msg = 'Several possibilities' +
+                (str.length === 0 ? '' : ' for \'' + str + '\'');
+            return new Conversion(null, Status.INCOMPLETE, msg, completions);
         }
         else {
-            return new Conversion(null,
-                    Status.INVALID,
-                    'Can\'t use \'' + str + '\'.',
-                    completions);
+            var msg = 'Can\'t use \'' + str + '\'.';
+            return new Conversion(null, Status.INVALID, msg, completions);
         }
     }
 };
@@ -203,7 +203,6 @@ DeferredType.prototype.stringify = function(value) {
 };
 
 DeferredType.prototype.parse = function(value) {
-    console.log(this.defer);
     return this.defer().parse(value);
 };
 

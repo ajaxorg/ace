@@ -84,22 +84,15 @@ var setCommandSpec = {
                         '<br/>';
             });
         } else {
-            var setting = env.settings.get(args.setting);
-            if (!setting) {
-                request.doneWithError('No setting with the name <strong>' +
-                    setting.name + '</strong>.');
-                return;
-            }
-
             // set with only a setting, shows the value for that setting
             if (args.value === undefined) {
                 html = '<strong>' + setting.name + '</strong> = ' +
                         setting.get();
             } else {
                 // Actually change the setting
-                setting.set(args.value);
-                html = 'Setting: <strong>' + setting.name + '</strong> = ' +
-                        setting.get();
+                args.setting.set(args.value);
+                html = 'Setting: <strong>' + args.setting.name + '</strong> = ' +
+                        args.setting.get();
             }
         }
         request.done(html);
