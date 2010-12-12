@@ -398,9 +398,7 @@ Templater.prototype.logError = function(message) {
   console.log(message);
 };
 
-if (this.exports) {
-  exports.Templater = Templater;
-}
+exports.Templater = Templater;
 
 
 });

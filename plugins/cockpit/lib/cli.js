@@ -446,7 +446,8 @@ Requisition.prototype = {
      * Helper to call canon.exec
      */
     exec: function() {
-        canon.exec(this.command, this.getArgs());
+        // TODO: have a toString rather than hack this.input
+        canon.exec(this.command, this.getArgs(), this.input.typed);
     }
 };
 exports.Requisition = Requisition;
@@ -492,8 +493,8 @@ oop.inherits(CliRequisition, Requisition);
      *
      */
     CliRequisition.prototype.update = function(input) {
-        // TODO: We only store this so getHints can work. Find a better way.
         this.input = input;
+        // TODO: We only store this so getHints can work. Find a better way.
         this.localHints = [];
 
         if (util.none(input.typed)) {

@@ -37,18 +37,18 @@
 
 define(function(require, exports, module) {
 
+
 var editorCss = require("text!cockpit/ui/plain.css");
 var dom = require("pilot/dom").dom;
 dom.importCssString(editorCss);
 
-var CliRequisition = require('cockpit/cli').CliRequisition;
-var Hint = require('cockpit/cli').Hint;
-var keyutil = require('pilot/keyboard/keyutil');
-
-var plainRow = require("text!cockpit/ui/plainRow.html");
-var Templater = require("pilot/domtemplate").Templater;
 var canon = require("pilot/canon");
 var Status = require('pilot/types').Status;
+var keyutil = require('pilot/keyboard/keyutil');
+
+var CliRequisition = require('cockpit/cli').CliRequisition;
+var Hint = require('cockpit/cli').Hint;
+var RequestView = require('cockpit/ui/requestView').RequestView;
 
 var NO_HINT = new Hint(Status.VALID, '', 0, 0);
 
@@ -61,19 +61,19 @@ var NO_HINT = new Hint(Status.VALID, '', 0, 0);
  * 2. Attach a set of events so the command line works
  */
 exports.startup = function(data, reason) {
-    var plainUi = new PlainUi(data);
+    var plainUi = new CliView(data);
 };
 
 /**
  * A class to handle the simplest UI implementation
  */
-function PlainUi(data) {
+function CliView(data) {
     this.doc = document;
     this.win = this.doc.defaultView;
 
     // TODO: we should have a better way to specify command lines???
-    this.input = this.doc.getElementById('cockpit');
-    if (!this.input) {
+    this.element = this.doc.getElementById('cockpit');
+    if (!this.element) {
         console.log('No element with an id of cockpit. Bailing on plain cli');
         return;
     }
@@ -90,26 +90,22 @@ function PlainUi(data) {
 
     this.createElements();
 }
-PlainUi.prototype = {
+CliView.prototype = {
     /**
-     * Create divs for templates, completion, hints and output
+     * Create divs for completion, hints and output
      */
     createElements: function() {
-        this.templates = this.doc.createElement('div');
-        this.templates.innerHTML = plainRow;
-        this.row = this.templates.firstChild;
-
         this.completer = this.doc.createElement('div');
         this.completer.className = 'cptCompletion VALID';
-        this.input.parentNode.insertBefore(this.completer, this.input);
+        this.element.parentNode.insertBefore(this.completer, this.element);
 
         this.hinter = this.doc.createElement('div');
         this.hinter.className = 'cptHints';
-        this.input.parentNode.insertBefore(this.hinter, this.input);
+        this.element.parentNode.insertBefore(this.hinter, this.element);
 
         this.output = this.doc.createElement('div');
         this.output.className = 'cptOutput';
-        this.input.parentNode.insertBefore(this.output, this.input);
+        this.element.parentNode.insertBefore(this.output, this.element);
 
         this.win.addEventListener('resize', this.resizer.bind(this), false);
         this.resizer();
@@ -119,9 +115,9 @@ PlainUi.prototype = {
         this.showHint.addEventListener('change', this.hintShower.bind(this));
         this.hintShower();
 
-        keyutil.addKeyDownListener(this.input, this.onKeyDown.bind(this));
-        this.input.addEventListener('mouseup', this.onMouseUp.bind(this), false);
-        this.input.addEventListener('keyup', this.onKeyUp.bind(this), true);
+        keyutil.addKeyDownListener(this.element, this.onKeyDown.bind(this));
+        this.element.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+        this.element.addEventListener('keyup', this.onKeyUp.bind(this), true);
     },
 
     /**
@@ -131,15 +127,15 @@ PlainUi.prototype = {
     resizer: function() {
         var top, height, left, width;
 
-        if (this.input.getClientRects) {
-            var rect = this.input.getClientRects()[0];
+        if (this.element.getClientRects) {
+            var rect = this.element.getClientRects()[0];
             top = rect.top;
             height = rect.height;
             left = rect.left;
             width = rect.width;
         }
         else {
-            var style = this.win.getComputedStyle(this.input, null);
+            var style = this.win.getComputedStyle(this.element, null);
             top = parseInt(style.getPropertyValue('top'), 10);
             height = parseInt(style.getPropertyValue('height'), 10);
             left = parseInt(style.getPropertyValue('left'), 10);
@@ -156,25 +152,42 @@ PlainUi.prototype = {
 
         this.output.style.bottom = (this.win.innerHeight - top) + 'px';
         this.output.style.left = left + 'px';
-        this.output.style.width = width + 'px';
+        this.output.style.width = (width - 60) + 'px';
     },
 
     /**
      * Update the display of executed commands
      */
     showOutput: function(ev) {
+        var requestOutput = new RequestView(ev.request, this);
+
+        /*
         // TODO: be less brutal in how we update this
         this.output.innerHTML = '';
 
+        new RequestView(ev.request, this);
         ev.requests.forEach(function(request) {
-            request.outputs.forEach(function(out) {
-                if (typeof out === 'string') {
-                    this.output.appendChild(this.doc.createTextNode(out));
+            // this.duration.innerHTML = this.request.duration ?
+            //     'completed in ' + (this.request.duration / 1000) + ' sec ' :
+            //     '';
+            // this.typed.innerHTML = this.request.typed;
+
+            request.outputs.forEach(function(output) {
+                var node;
+                if (typeof output == 'string') {
+                    node = document.createElement('p');
+                    node.innerHTML = output;
                 } else {
-                    this.output.appendChild(out);
+                    node = output;
                 }
+                this.output.appendChild(node);
             }, this);
+
+            // this.cliView.scrollToBottom();
+            // util.setClass(this.output, 'cmd_error', this.request.error);
+            // this.throb.style.display = this.request.completed ? 'none' : 'block';
         }, this);
+        */
     },
 
     /**
@@ -219,27 +232,26 @@ PlainUi.prototype = {
 
         if (ev.keyCode === keyutil.KeyHelper.KEY.RETURN) {
             if (this.worstHint && this.worstHint.status !== Status.VALID) {
-                this.input.selectionStart = this.worstHint.start;
-                this.input.selectionEnd = this.worstHint.end;
+                this.element.selectionStart = this.worstHint.start;
+                this.element.selectionEnd = this.worstHint.end;
             }
             else {
                 this.cli.exec();
-                this.input.value = '';
+                this.element.value = '';
             }
         }
 
-        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
-            if (this.shownHint && this.shownHint.predictions && this.shownHint.predictions.length > 0) {
-                var prefix = this.input.value.substring(0, this.shownHint.start);
-                var suffix = this.input.value.substring(this.shownHint.end);
-                var insert = this.shownHint.predictions[0];
-                insert = typeof insert === 'string' ? insert : insert.name;
-                this.input.value = prefix + insert + suffix;
-                // Fix the cursor.
-                var insertEnd = (prefix + insert).length;
-                this.input.selectionStart = insertEnd;
-                this.input.selectionEnd = insertEnd;
-            }
+        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB && this.shownHint &&
+                this.shownHint.predictions && this.shownHint.predictions.length > 0) {
+            var prefix = this.element.value.substring(0, this.shownHint.start);
+            var suffix = this.element.value.substring(this.shownHint.end);
+            var insert = this.shownHint.predictions[0];
+            insert = typeof insert === 'string' ? insert : insert.name;
+            this.element.value = prefix + insert + suffix;
+            // Fix the cursor.
+            var insertEnd = (prefix + insert).length;
+            this.element.selectionStart = insertEnd;
+            this.element.selectionEnd = insertEnd;
         }
 
         this.update();
@@ -260,10 +272,10 @@ PlainUi.prototype = {
      */
     update: function() {
         this.cli.update({
-            typed: this.input.value,
+            typed: this.element.value,
             cursor: {
-                start: this.input.selectionStart,
-                end: this.input.selectionEnd
+                start: this.element.selectionStart,
+                end: this.element.selectionEnd
             }
         });
 
@@ -288,10 +300,10 @@ PlainUi.prototype = {
 
         // Create a marked up version of the input
         var highlightedInput = '';
-        if (this.input.value.length > 0) {
+        if (this.element.value.length > 0) {
             // 'scores' is an array which tells us what chars are errors
             // Initialize with everything VALID
-            var scores = this.input.value.split('').map(function(char) {
+            var scores = this.element.value.split('').map(function(char) {
                 return Status.VALID;
             });
             // For all chars in all hints, check and upgrade the score
@@ -310,9 +322,9 @@ PlainUi.prototype = {
                     highlightedInput += '<span class=' + scores[i].toString() + '>';
                     lastStatus = scores[i];
                 }
-                highlightedInput += this.input.value[i];
+                highlightedInput += this.element.value[i];
                 i++;
-                if (i === this.input.value.length) {
+                if (i === this.element.value.length) {
                     highlightedInput += '</span>';
                     break;
                 }
@@ -351,7 +363,7 @@ PlainUi.prototype = {
         // dom.addCssClass(input, status.toString());
     }
 };
-exports.PlainUi = PlainUi;
+exports.CliView = CliView;
 
 
 });

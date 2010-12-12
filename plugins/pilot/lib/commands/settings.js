@@ -59,19 +59,15 @@ var setCommandSpec = {
         var html;
         if (!args.setting) {
             // 'set' by itself lists all the settings
-            var settingsList = env.settings._list();
+            var names = env.settings.getSettingNames();
             html = '';
             // first sort the settingsList based on the name
-            settingsList.sort(function(a, b) {
-                if (a.name < b.name) {
-                    return -1;
-                } else if (a.name == b.name) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+            names.sort(function(name1, name2) {
+                return name1.localeCompare(name2);
             });
-            settingsList.forEach(function(setting) {
+
+            names.forEach(function(name) {
+                var setting = env.settings.getSetting(name);
                 var url = 'https://wiki.mozilla.org/Labs/Skywriter/Settings#' +
                         setting.name;
                 html += '<a class="setting" href="' + url +

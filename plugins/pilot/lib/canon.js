@@ -160,7 +160,8 @@ function getCommandNames() {
  * everything it needs to about the command params
  * @param command Either a command, or the name of one
  */
-function exec(command, args) {
+function exec(command, args, typed) {
+    // TODO: Use requisition.toString rather than 'typed'
     if (typeof command === 'string') {
         command = commands[command];
     }
@@ -171,7 +172,12 @@ function exec(command, args) {
 
     // TODO: Ugg. really?
     env.selection = env.editor.getSelection();
-    var request = new Request();
+
+    var request = new Request({
+        command: command,
+        args: args,
+        typed: typed
+    });
     command.exec(env, args || {}, request);
     return true;
 };
@@ -217,21 +223,6 @@ var requests = [];
 var maxRequestLength = 100;
 
 /**
- * Called by Request instances when some output (or a cell to async() happens)
- */
-function addRequestOutput(request) {
-    requests.push(request);
-    // This could probably be optimized with some maths, but 99.99% of the
-    // time we will only be off by one, and I'm feeling lazy.
-    while (requests.length > maxRequestLength) {
-        requests.shiftObject();
-    }
-
-    exports._dispatchEvent('output', { requests: requests });
-};
-exports.addRequestOutput = addRequestOutput;
-
-/**
  * To create an invocation, you need to do something like this (all the ctor
  * args are optional):
  * <pre>
@@ -249,7 +240,6 @@ function Request(options) {
 
     // Will be used in the keyboard case and the cli case
     this.command = options.command;
-    this.commandExt = options.commandExt;
 
     // Will be used only in the cli case
     this.args = options.args;
@@ -274,7 +264,14 @@ Request.prototype._beginOutput = function() {
     this._begunOutput = true;
     this.outputs = [];
 
-    exports.addRequestOutput(this);
+    requests.push(this);
+    // This could probably be optimized with some maths, but 99.99% of the
+    // time we will only be off by one, and I'm feeling lazy.
+    while (requests.length > maxRequestLength) {
+        requests.shiftObject();
+    }
+
+    exports._dispatchEvent('output', { requests: requests, request: this });
 };
 
 /**
@@ -311,7 +308,7 @@ Request.prototype.output = function(content) {
     }
 
     this.outputs.push(content);
-    this._dispatchEvent('changed', {});
+    this._dispatchEvent('output', {});
 
     return this;
 };
@@ -329,7 +326,7 @@ Request.prototype.done = function(content) {
         this.output(content);
     }
 
-    this._dispatchEvent('changed', {});
+    this._dispatchEvent('output', {});
 };
 exports.Request = Request;
 
