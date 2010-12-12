@@ -103,7 +103,7 @@ Hint.sort = function(hints, cursor) {
             }
         }
         // otherwise go with hint severity
-        return hint1 - hint2;
+        return hint2.status - hint1.status;
     });
     // tidy-up
     if (cursor !== undefined) {
