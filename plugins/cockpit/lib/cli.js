@@ -373,7 +373,7 @@ Requisition.prototype = {
             }, this);
         }
 
-        this.assignmentCount = Object.keys(this._assignments);
+        this.assignmentCount = Object.keys(this._assignments).length;
     },
 
     /**
@@ -626,7 +626,7 @@ oop.inherits(CliRequisition, Requisition);
 
         // Special case: if there is only 1 parameter, and that's of type
         // text we put all the params into the first param
-        if (this.assignmentCount == 1) {
+        if (this.assignmentCount === 1) {
             var assignment = this.getAssignment(0);
             if (assignment.param.type.name === 'text') {
                 assignment.setArgument(Argument.merge(args));
