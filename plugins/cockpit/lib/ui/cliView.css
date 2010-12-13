@@ -18,7 +18,6 @@
   overflow: auto;
   position: absolute;
   z-index: 999;
-  font-family: consolas, courier, monospace;
   display: none;
 }
 

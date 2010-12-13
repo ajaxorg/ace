@@ -4,8 +4,9 @@
   box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;
   box-align: center; -moz-box-align: center; -webkit-box-align: center;
   color: #333;
-  background-color: @input_bg;
+  background-color: #EEE;
   width: 100%;
+  font-family: consolas, courier, monospace;
 }
 .cptRowIn > * { padding-left: 2px; padding-right: 2px; }
 .cptRowIn > img { cursor: pointer; }
