@@ -110,15 +110,11 @@ var setupPlugins = function(config, callback) {
             }
         }
     }
-console.log(JSON.stringify({
-        packagePaths: pluginPackageInfo,
-        paths: paths
-    }));
     require({
         packagePaths: pluginPackageInfo,
         paths: paths
     });
-    require(["pilot/plugin_manager", "pilot/settings"], function() {
+    require(["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings"], function() {
         var pluginsModule = require("pilot/plugin_manager");
         var settings = require("pilot/settings").settings;
         var catalog = pluginsModule.catalog;
