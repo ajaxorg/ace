@@ -39,71 +39,67 @@ define(function(require, exports, module) {
 
 
 var util = require('pilot/util');
+var canon = require('pilot/canon');
 
 /**
  * 'help' command
  */
 var helpCommandSpec = {
-    name: "help",
+    name: 'help',
     params: [
         {
-            name: "search",
-            type: "text",
-            description: "Search string to narrow the output.",
+            name: 'search',
+            type: 'text',
+            description: 'Search string to narrow the output.',
             defaultValue: null
         }
     ],
-    description: "Get help on the available commands.",
+    description: 'Get help on the available commands.',
     exec: function(env, args, request) {
         var output = [];
 
-        var command = catalog.getExtensionByKey('command', args.search);
-        if (command && command.pointer) {
+        var command = canon.getCommand(args.search);
+        if (command && command.exec) {
             // caught a real command
-            output.push(command.description);
+            output.push(command.description ?
+                    command.description :
+                    'No description for ' + args.search);
         } else {
             var showHidden = false;
 
             if (!args.search) {
                 output.push('<h2>Welcome to Skywriter - Code in the Cloud</h2><ul>' +
-                    "<li><a href='http://labs.mozilla.com/projects/skywriter' target='_blank'>Home Page</a></li>" +
-                    "<li><a href='https://wiki.mozilla.org/Labs/Skywriter' target='_blank'>Wiki</a></li>" +
-                    "<li><a href='https://wiki.mozilla.org/Labs/Skywriter/UserGuide' target='_blank'>User Guide</a></li>" +
-                    "<li><a href='https://wiki.mozilla.org/Labs/Skywriter/Tips' target='_blank'>Tips and Tricks</a></li>" +
-                    "<li><a href='https://wiki.mozilla.org/Labs/Skywriter/FAQ' target='_blank'>FAQ</a></li>" +
-                    "<li><a href='https://wiki.mozilla.org/Labs/Skywriter/DeveloperGuide' target='_blank'>Developers Guide</a></li>" +
-                    "</ul>");
+                    '<li><a href="http://labs.mozilla.com/projects/skywriter" target="_blank">Home Page</a></li>' +
+                    '<li><a href="https://wiki.mozilla.org/Labs/Skywriter" target="_blank">Wiki</a></li>' +
+                    '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/UserGuide" target="_blank">User Guide</a></li>' +
+                    '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/Tips" target="_blank">Tips and Tricks</a></li>' +
+                    '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/FAQ" target="_blank">FAQ</a></li>' +
+                    '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/DeveloperGuide" target="_blank">Developers Guide</a></li>' +
+                    '</ul>');
             }
 
             if (command) {
                 // We must be looking at sub-commands
                 output.push('<h2>Sub-Commands of ' + command.name + '</h2>');
                 output.push('<p>' + command.description + '</p>');
-            } else if (args.search) {
+            }
+            else if (args.search) {
                 if (args.search == 'hidden') { // sneaky, sneaky.
                     args.search = '';
                     showHidden = true;
                 }
                 output.push('<h2>Commands starting with \'' + args.search + '\':</h2>');
-            } else {
+            }
+            else {
                 output.push('<h2>Available Commands:</h2>');
             }
 
-            var toBeSorted = [];
-            catalog.getExtensions('command').forEach(function(command) {
-                toBeSorted.push(command.name);
-            });
-
-            var sorted = toBeSorted.sort();
+            var commandNames = canon.getCommandNames();
+            commandNames.sort();
 
             output.push('<table>');
-            for (var i = 0; i < sorted.length; i++) {
-                command = catalog.getExtensionByKey('command', sorted[i]);
-                if (!command) {
-                    console.error('Huh? command ', command.name, ' cannot be looked up by name');
-                    continue;
-                }
-
+            for (var i = 0; i < commandNames.length; i++) {
+                command = canon.getCommand(commandNames[i]);
                 if (!showHidden && command.hidden) {
                     continue;
                 }
@@ -134,7 +130,7 @@ var helpCommandSpec = {
             output.push('</table>');
 
             if (!args.search) {
-                output.push("For more information, see the <a href='https://wiki.mozilla.org/Labs/Skywriter'>Skywriter Wiki</a>.");
+                output.push('For more information, see the <a href="https://wiki.mozilla.org/Labs/Skywriter">Skywriter Wiki</a>.');
             }
         }
 
@@ -146,15 +142,15 @@ var helpCommandSpec = {
  * 'eval' command
  */
 var evalCommandSpec = {
-    name: "eval",
+    name: 'eval',
     params: [
         {
-            name: "javascript",
-            type: "text",
-            description: "The JavaScript to evaluate"
+            name: 'javascript',
+            type: 'text',
+            description: 'The JavaScript to evaluate'
         }
     ],
-    description: "evals given js code and show the result",
+    description: 'evals given js code and show the result',
     hidden: true,
     exec: function(env, args, request) {
         var result;
@@ -210,7 +206,7 @@ var evalCommandSpec = {
             type = typeof result;
         }
 
-        request.done('Result for eval <b>"' + javascript + '"</b>' +
+        request.done('Result for eval <b>\'' + javascript + '\'</b>' +
                 ' (type: '+ type+'): <br><br>'+ msg);
     }
 };
@@ -219,8 +215,8 @@ var evalCommandSpec = {
  * 'version' command
  */
 var versionCommandSpec = {
-    name: "version",
-    description: "show the Skywriter version",
+    name: 'version',
+    description: 'show the Skywriter version',
     hidden: true,
     exec: function(env, args, request) {
         var version = 'Skywriter ' + skywriter.versionNumber + ' (' +
@@ -233,8 +229,7 @@ var versionCommandSpec = {
  * 'skywriter' command
  */
 var skywriterCommandSpec = {
-    name: "skywriter",
-    description: "has",
+    name: 'skywriter',
     hidden: true,
     exec: function(env, args, request) {
         var index = Math.floor(Math.random() * messages.length);
