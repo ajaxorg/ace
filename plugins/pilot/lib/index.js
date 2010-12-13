@@ -41,6 +41,8 @@ var deps = [
     "pilot/types/command",
     "pilot/types/settings",
     "pilot/commands/settings",
+    "pilot/commands/basic",
+    // "pilot/commands/history",
     "pilot/settings/canon",
     "pilot/canon"
 ];

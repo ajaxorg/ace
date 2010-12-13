@@ -38,11 +38,26 @@
 define(function(require, exports, module) {
 
 
-var showHintSetting = {
-    name: "showHint",
-    description: "Do we display hints while we type?",
-    type: "bool",
-    defaultValue: true
+var types = require("pilot/types");
+var SelectionType = require('pilot/types/basic').SelectionType;
+
+var direction = new SelectionType({
+    name: 'direction',
+    data: [ 'above', 'below' ]
+});
+
+var hintDirectionSetting = {
+    name: "hintDirection",
+    description: "Are hints shown above or below the command line?",
+    type: "direction",
+    defaultValue: "above"
+};
+
+var outputDirectionSetting = {
+    name: "outputDirection",
+    description: "Is the output window shown above or below the command line?",
+    type: "direction",
+    defaultValue: "above"
 };
 
 var outputHeightSetting = {
@@ -53,12 +68,16 @@ var outputHeightSetting = {
 };
 
 exports.startup = function(data, reason) {
-    data.env.settings.addSetting(showHintSetting);
+    types.registerType(direction);
+    data.env.settings.addSetting(hintDirectionSetting);
+    data.env.settings.addSetting(outputDirectionSetting);
     data.env.settings.addSetting(outputHeightSetting);
 };
 
 exports.shutdown = function(data, reason) {
-    data.env.settings.removeSetting(showHintSetting);
+    types.unregisterType(direction);
+    data.env.settings.removeSetting(hintDirectionSetting);
+    data.env.settings.removeSetting(outputDirectionSetting);
     data.env.settings.removeSetting(outputHeightSetting);
 };
 

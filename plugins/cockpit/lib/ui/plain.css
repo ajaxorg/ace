@@ -1,10 +1,37 @@
 
-/* Command line completion */
+#cockpit {
+  background: transparent;
+  border: none; outline: none;
+  font-family: consolas, courier, monospace;
+  font-size: 120%;
+}
+
+.cptOutput {
+  border: 1px solid #AAA;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 4px; border-top-right-radius: 4px;
+  padding: 10px;
+  margin: 0 15px;
+  background: #DDD; color: #000;
+  overflow: hidden;
+  position: absolute;
+  z-index: 999;
+  font-family: consolas, courier, monospace;
+  display: none;
+}
+
+#cockpit:focus ~ .cptOutput {
+  display: block;
+}
+
 .cptCompletion {
   color: #666;
   padding: 0 0 5px 2px;
   position: absolute;
   z-index: -1000;
+  font-family: consolas, courier, monospace;
+  font-size: 120%;
 }
 
 .cptHints {
@@ -17,6 +44,17 @@
   border-top-left-radius: 10px; border-top-right-radius: 10px;
   z-index: 1000;
   padding: 8px;
+  display: none;
+}
+
+.cptHints ul { margin: 0; padding: 0 15px; }
+
+#cockpit:focus ~ .cptHints {
+  display: block;
+}
+
+#cockpit:focus ~ .cptHints.cptNoHints {
+  display: none;
 }
 
 .cptCompletion.VALID { background: #FFF; }
@@ -24,34 +62,8 @@
 .cptCompletion.INVALID { background: #DDD; }
 
 .cptCompletion span { color: #FFF; }
-.cptCompletion span.INCOMPLETE { text-shadow: 0px 0px 2px #F80; }
-.cptCompletion span.INVALID { text-shadow: 0px 0px 5px #F00; }
-
-
-#cockpit, .cptCompletion {
-  font-family: consolas, courier, monospace;
-  font-size: 120%;
-}
-
-#cockpit {
-  background: transparent;
-  border: none; outline: none;
-}
-
-.cptOutput {
-  border: 1px solid #AAA;
-  -moz-border-radius-topleft: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-left-radius: 4px; border-top-right-radius: 4px;
-  padding: 10px;
-  margin: 0 15px;
-  background: #DDD; color: #000;
-  font-family: consolas, courier, monospace;
-  font-size: 90%;
-  overflow: hidden;
-  position: absolute;
-  z-index: 999;
-}
+.cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }
+.cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }
 
 
 

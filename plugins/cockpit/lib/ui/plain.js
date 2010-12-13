@@ -81,12 +81,11 @@ function CliView(data) {
     this.cli = new CliRequisition();
 
     this.settings = data.env.settings;
-    this.showHint = this.settings.getSetting('showHint');
+    this.hintDirection = this.settings.getSetting('hintDirection');
+    this.outputDirection = this.settings.getSetting('outputDirection');
     this.outputHeight = this.settings.getSetting('outputHeight');
 
     this.hints = [];
-    this.shownHint;
-    this.worstHint;
 
     this.createElements();
 }
@@ -95,29 +94,35 @@ CliView.prototype = {
      * Create divs for completion, hints and output
      */
     createElements: function() {
+        var input = this.element;
+
         this.completer = this.doc.createElement('div');
         this.completer.className = 'cptCompletion VALID';
-        this.element.parentNode.insertBefore(this.completer, this.element);
+        input.parentNode.insertBefore(this.completer, input.nextSibling);
 
         this.hinter = this.doc.createElement('div');
         this.hinter.className = 'cptHints';
-        this.element.parentNode.insertBefore(this.hinter, this.element);
+        input.parentNode.insertBefore(this.hinter, input.nextSibling);
 
         this.output = this.doc.createElement('div');
         this.output.className = 'cptOutput';
-        this.element.parentNode.insertBefore(this.output, this.element);
+        input.parentNode.insertBefore(this.output, input.nextSibling);
 
         this.win.addEventListener('resize', this.resizer.bind(this), false);
+        this.hintDirection.addEventListener('change', this.resizer.bind(this));
+        this.outputDirection.addEventListener('change', this.resizer.bind(this));
         this.resizer();
 
-        canon.addEventListener('output', this.showOutput.bind(this));
+        canon.addEventListener('output',  function(ev) {
+            new RequestView(ev.request, this);
+        }.bind(this));
 
-        this.showHint.addEventListener('change', this.hintShower.bind(this));
-        this.hintShower();
-
-        keyutil.addKeyDownListener(this.element, this.onKeyDown.bind(this));
-        this.element.addEventListener('mouseup', this.onMouseUp.bind(this), false);
-        this.element.addEventListener('keyup', this.onKeyUp.bind(this), true);
+        keyutil.addKeyDownListener(input, this.onKeyDown.bind(this));
+        input.addEventListener('keyup', this.onKeyUp.bind(this), true);
+        // cursor position affects hint severity. TODO: shortcuts for speed
+        input.addEventListener('mouseup', function(ev) {
+            this.update();
+        }.bind(this), false);
     },
 
     /**
@@ -125,84 +130,34 @@ CliView.prototype = {
      * with the input box.
      */
     resizer: function() {
-        var top, height, left, width;
+        var rect = this.element.getClientRects()[0];
 
-        if (this.element.getClientRects) {
-            var rect = this.element.getClientRects()[0];
-            top = rect.top;
-            height = rect.height;
-            left = rect.left;
-            width = rect.width;
+        this.completer.style.top = rect.top + 'px';
+        this.completer.style.height = rect.height + 'px';
+        this.completer.style.left = rect.left + 'px';
+        this.completer.style.width = rect.width + 'px';
+
+        if (this.hintDirection.get() === 'below') {
+            this.hinter.style.top = rect.bottom + 'px';
+            this.hinter.style.bottom = 'auto';
         }
         else {
-            var style = this.win.getComputedStyle(this.element, null);
-            top = parseInt(style.getPropertyValue('top'), 10);
-            height = parseInt(style.getPropertyValue('height'), 10);
-            left = parseInt(style.getPropertyValue('left'), 10);
-            width = parseInt(style.getPropertyValue('width'), 10);
+            this.hinter.style.top = 'auto';
+            this.hinter.style.bottom = (this.win.innerHeight - rect.top) + 'px';
         }
+        this.hinter.style.left = (rect.left + 30) + 'px';
+        this.hinter.style.maxWidth = (rect.width - 90) + 'px';
 
-        this.completer.style.top = top + 'px';
-        this.completer.style.height = height + 'px';
-        this.completer.style.left = left + 'px';
-        this.completer.style.width = width + 'px';
-
-        this.hinter.style.bottom = (this.win.innerHeight - top) + 'px';
-        this.hinter.style.left = (left + 30) + 'px';
-
-        this.output.style.bottom = (this.win.innerHeight - top) + 'px';
-        this.output.style.left = left + 'px';
-        this.output.style.width = (width - 60) + 'px';
-    },
-
-    /**
-     * Update the display of executed commands
-     */
-    showOutput: function(ev) {
-        var requestOutput = new RequestView(ev.request, this);
-
-        /*
-        // TODO: be less brutal in how we update this
-        this.output.innerHTML = '';
-
-        new RequestView(ev.request, this);
-        ev.requests.forEach(function(request) {
-            // this.duration.innerHTML = this.request.duration ?
-            //     'completed in ' + (this.request.duration / 1000) + ' sec ' :
-            //     '';
-            // this.typed.innerHTML = this.request.typed;
-
-            request.outputs.forEach(function(output) {
-                var node;
-                if (typeof output == 'string') {
-                    node = document.createElement('p');
-                    node.innerHTML = output;
-                } else {
-                    node = output;
-                }
-                this.output.appendChild(node);
-            }, this);
-
-            // this.cliView.scrollToBottom();
-            // util.setClass(this.output, 'cmd_error', this.request.error);
-            // this.throb.style.display = this.request.completed ? 'none' : 'block';
-        }, this);
-        */
-    },
-
-    /**
-     * Show/hide the hint line.
-     * It's not clear that this is actually useful, however it does help to
-     * highlight some features for right now.
-     * TODO: remove this?
-     */
-    hintShower: function() {
-        if (this.showHint.get()) {
-            this.hinter.style.display = 'block';
+        if (this.outputDirection.get() === 'below') {
+            this.output.style.top = rect.bottom + 'px';
+            this.output.style.bottom = 'auto';
         }
         else {
-            this.hinter.style.display = 'none';
+            this.output.style.top = 'auto';
+            this.output.style.bottom = (this.win.innerHeight - rect.top) + 'px';
         }
+        this.output.style.left = rect.left + 'px';
+        this.output.style.width = (rect.width - 60) + 'px';
     },
 
     /**
@@ -231,21 +186,17 @@ CliView.prototype = {
         */
 
         if (ev.keyCode === keyutil.KeyHelper.KEY.RETURN) {
-            if (this.worstHint && this.worstHint.status !== Status.VALID) {
-                this.element.selectionStart = this.worstHint.start;
-                this.element.selectionEnd = this.worstHint.end;
-            }
-            else {
+            if (this.hints.worst || this.hints.worst.status === Status.VALID) {
                 this.cli.exec();
                 this.element.value = '';
             }
         }
 
-        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB && this.shownHint &&
-                this.shownHint.predictions && this.shownHint.predictions.length > 0) {
-            var prefix = this.element.value.substring(0, this.shownHint.start);
-            var suffix = this.element.value.substring(this.shownHint.end);
-            var insert = this.shownHint.predictions[0];
+        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB && this.hints.display &&
+                this.hints.display.predictions && this.hints.display.predictions.length > 0) {
+            var prefix = this.element.value.substring(0, this.hints.display.start);
+            var suffix = this.element.value.substring(this.hints.display.end);
+            var insert = this.hints.display.predictions[0];
             insert = typeof insert === 'string' ? insert : insert.name;
             this.element.value = prefix + insert + suffix;
             // Fix the cursor.
@@ -256,15 +207,14 @@ CliView.prototype = {
 
         this.update();
 
-        return handled;
-    },
+        if (ev.keyCode === keyutil.KeyHelper.KEY.RETURN) {
+            if (this.hints.worst && this.hints.worst.status !== Status.VALID) {
+                this.element.selectionStart = this.hints.worst.start;
+                this.element.selectionEnd = this.hints.worst.end;
+            }
+        }
 
-    /**
-     * Cause an update if the cursor changes position due to a mouse click
-     * TODO: there are probably some performance wins here.
-     */
-    onMouseUp: function(ev) {
-        this.update();
+        return handled;
     },
 
     /**
@@ -288,15 +238,6 @@ CliView.prototype = {
         // dom.removeCssClass(completer, Status.INVALID.toString());
 
         this.hints = this.cli.getHints();
-
-        // Those hints came in order of display importance - i.e. an INCOMPLETE
-        // hint under the cursor should be displayed before an INVALID hint
-        // somewhere else. That's good for displaying hints, but not good for
-        // deciding if we're good to go.
-        if (this.hints.length > 1) {
-            hintClone = this.hints.slice(0);
-            this.worstHint = Hint.sort(hintClone)[0];
-        }
 
         // Create a marked up version of the input
         var highlightedInput = '';
@@ -335,11 +276,11 @@ CliView.prototype = {
         }
 
         // Display the "-> prediction" at the end of the completer
-        this.shownHint = (this.hints.length > 0) ? this.hints[0] : NO_HINT;
-        var message = this.shownHint.message;
-        if (this.shownHint.predictions && this.shownHint.predictions.length > 0) {
+        var display = this.hints.display || NO_HINT;
+        var message = display.message;
+        if (display.predictions && display.predictions.length > 0) {
             message += ': [ ';
-            this.shownHint.predictions.forEach(function(prediction) {
+            display.predictions.forEach(function(prediction) {
                 if (prediction.name) {
                     message += prediction.name + ' | ';
                 }
@@ -349,16 +290,22 @@ CliView.prototype = {
             }, this);
             message = message.replace(/\| $/, ']');
 
-            var onTab = this.shownHint.predictions[0];
+            var onTab = display.predictions[0];
             onTab = onTab.name ? onTab.name : onTab;
-            this.completer.innerHTML = highlightedInput + ' &nbsp;-&gt; ' + onTab;
+            this.completer.innerHTML = highlightedInput + ' &nbsp;&#x2192; ' + onTab;
         }
         else {
             this.completer.innerHTML = highlightedInput;
         }
         this.hinter.innerHTML = message;
+        if (message.length === 0) {
+            this.hinter.classList.add('cptNoHints');
+        }
+        else {
+            this.hinter.classList.remove('cptNoHints');
+        }
 
-        var status = this.worstHint ? this.worstHint.status : Status.VALID;
+        var status = this.hints.worst ? this.hints.worst.status : Status.VALID;
         this.completer.classList.add(status.toString());
         // dom.addCssClass(input, status.toString());
     }

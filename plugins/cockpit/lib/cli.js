@@ -391,7 +391,7 @@ Requisition.prototype = {
      * Where parameter name == assignment names - they are the same.
      */
     getParameterNames: function() {
-      return Object.keys(this._assignments);
+        return Object.keys(this._assignments);
     },
 
     /**
@@ -495,7 +495,7 @@ oop.inherits(CliRequisition, Requisition);
     CliRequisition.prototype.update = function(input) {
         this.input = input;
         // TODO: We only store this so getHints can work. Find a better way.
-        this.localHints = [];
+        this.hints = [];
 
         if (util.none(input.typed)) {
             this.setCommand(null);
@@ -508,44 +508,55 @@ oop.inherits(CliRequisition, Requisition);
             // a complete novice a 'type help' message is very annoying, so we
             // need to find a way to only display this message once, or for
             // until the user click a 'close' button or similar
-            this.localHints.push(new Hint(Status.INCOMPLETE, '', 0, 0));
+            this.hints.push(new Hint(Status.INCOMPLETE, '', 0, 0));
             this.setCommand(null);
+            this._annotateHints();
             return;
         }
 
         var conversion = _split(args);
         if (!conversion.value) {
             // No command found - bail helpfully.
-            this.localHints.push(new ConversionHint(conversion, conversion.arg));
+            this.hints.push(new ConversionHint(conversion, conversion.arg));
             this.setCommand(null);
-        }
-        else {
-            var message = documentCommand(conversion.value);
-            this.localHints.push(new Hint(Status.VALID, message, conversion.arg));
-
-            this.setCommand(conversion.value);
-            this._assign(args);
+            this._annotateHints();
+            return;
         }
 
-        return;
-    };
+        var message = documentCommand(conversion.value);
+        this.hints.push(new Hint(Status.VALID, message, conversion.arg));
 
-    CliRequisition.prototype.getHints = function() {
-        var hints = this.localHints.slice(0);
+        this.setCommand(conversion.value);
+        this._assign(args);
 
+        // Add the hints from the assignments to those already collected
         Object.keys(this._assignments).map(function(name) {
             // Only use assignments with an argument
             var assignment = this._assignments[name];
             if (assignment.arg) {
-                hints.push.apply(hints, assignment.getHints());
+                this.hints.push.apply(this.hints, assignment.getHints());
             }
         }, this);
 
+        this._annotateHints();
+        return;
+    };
+
+    /**
+     * Marks up hints in a number of ways:
+     * - Makes INCOMPLETE hints that are not near the cursor INVALID since
+     *   they can't be completed by typing
+     * - Finds the most severe hint, and annotates the array with it
+     * - Finds the hint to display, and also annotates the array with it
+     * TODO: I'm wondering if array annotation is evil and we should replace
+     * this with an object. Need to find out more.
+     */
+    CliRequisition.prototype._annotateHints = function() {
         // Not knowing about cursor positioning, the requisition and assignments
         // can't know this, but anything they mark as INCOMPLETE is actually
         // INVALID unless the cursor is actually inside that argument.
         var c = this.input.cursor;
-        hints.forEach(function(hint) {
+        this.hints.forEach(function(hint) {
             var startInHint = c.start >= hint.start && c.start <= hint.end;
             var endInHint = c.end >= hint.start && c.end <= hint.end;
             var inHint = startInHint || endInHint;
@@ -554,7 +565,35 @@ oop.inherits(CliRequisition, Requisition);
             }
         }, this);
 
-        return Hint.sort(hints, this.input.cursor.start);
+        // Work out what the worst hint is (irrespective of the cursor). We
+        // return the hints in order of display importance - i.e. an INCOMPLETE
+        // hint under the cursor should be displayed before an INVALID hint
+        // somewhere else. That's good for displaying hints, but not good for
+        // deciding if we're good to go.
+        if (this.hints.length > 1) {
+            Hint.sort(this.hints);
+            this.hints.worst = this.hints[0];
+        }
+        else if (this.hints.length > 0) {
+            this.hints.worst = this.hints[0];
+        }
+
+        Hint.sort(this.hints, this.input.cursor.start);
+        this.hints.display = this.hints[0];
+
+        return this.hints;
+    };
+
+    /**
+     * Accessor for the hints array.
+     * While we could just use the hints property, using getHints() is
+     * preferred for symmetry with Requisition where it needs a function due to
+     * lack of an atomic update system.
+     * TODO: When we use this properly (i.e. with a fancy UI) then
+     * CliRequisition will also not have an atomic update system. Hmmmmm
+     */
+    CliRequisition.prototype.getHints = function() {
+        return this.hints;
     };
 
     /**
@@ -579,7 +618,7 @@ oop.inherits(CliRequisition, Requisition);
             // TODO: previously we were doing some extra work to avoid this if
             // we determined that we had args that were all whitespace, but
             // probably given our tighter tokenize() this won't be an issue?
-            this.localHints.push(new Hint(Status.INVALID,
+            this.hints.push(new Hint(Status.INVALID,
                     this.command.name + ' does not take any parameters',
                     Argument.merge(args)));
             return;
@@ -621,7 +660,7 @@ oop.inherits(CliRequisition, Requisition);
                 else {
                     if (i + 1 < args.length) {
                         // Missing value portion of this named param
-                        this.localHints.push(new Hint(Status.INCOMPLETE,
+                        this.hints.push(new Hint(Status.INCOMPLETE,
                                 'Missing value for: ' + namedArgText,
                                 args[i]));
                     }
@@ -653,7 +692,7 @@ oop.inherits(CliRequisition, Requisition);
 
         if (args.length > 0) {
             var remaining = Argument.merge(args);
-            this.localHints.push(new Hint(Status.INVALID,
+            this.hints.push(new Hint(Status.INVALID,
                     'Input \'' + remaining.text + '\' makes no sense.',
                     remaining));
         }
@@ -842,62 +881,41 @@ exports._split = _split;
  */
 function documentCommand(command) {
     var docs = [];
-    docs.push('<h1>' + command.name + '</h1>');
-    docs.push('<h2>Summary</h2>');
-    docs.push('<p>' + command.description + '</p>');
-
-    if (command.manual) {
-        docs.push('<h2>Description</h2>');
-        docs.push('<p>' + command.description + '</p>');
-    }
-
+    docs.push('<strong><tt> &gt; ');
+    docs.push(command.name);
     if (command.params && command.params.length > 0) {
-        docs.push('<h2>Synopsis</h2>');
-        docs.push('<pre>');
-        docs.push(command.name);
-        var optionalParamCount = 0;
         command.params.forEach(function(param) {
             if (param.defaultValue === undefined) {
-                docs.push(' <i>');
-                docs.push(param.name);
-                docs.push('</i>');
-            }
-            else if (param.defaultValue === null) {
-                docs.push(' <i>[');
-                docs.push(param.name);
-                docs.push(']</i>');
+                docs.push(' [' + param.name + ']');
             }
             else {
-                optionalParamCount++;
+                docs.push(' <em>[' + param.name + ']</em>');
             }
         }, this);
-        if (optionalParamCount > 3) {
-            docs.push(' [options]');
-        } else if (optionalParamCount > 0) {
-            command.params.forEach(function(param) {
-                if (param.defaultValue) {
-                    docs.push(' [--<i>');
-                    docs.push(param.name);
-                    if (param.type.name === 'boolean') {
-                        docs.push('</i>');
-                    }
-                    else {
-                        docs.push('</i> ' + param.type.name);
-                    }
-                    docs.push(']');
-                }
-            }, this);
-        }
-        docs.push('</pre>');
+    }
+    docs.push('</tt></strong><br/>');
 
-        docs.push('<h2>Parameters</h2>');
+    docs.push(command.description ? command.description : '(No description)');
+    docs.push('<br/>');
+
+    if (command.params && command.params.length > 0) {
+        docs.push('<ul>');
         command.params.forEach(function(param) {
-            docs.push('<h3 class="cmd_body"><i>' + param.name + '</i></h3>');
-            docs.push('<p>' + param.description + '</p>');
-            if (param.type.defaultValue) {
-                docs.push('<p>Default: ' + param.type.defaultValue + '</p>');
+            docs.push('<li>');
+            docs.push('<strong><tt>' + param.name + '</tt></strong>: ');
+            docs.push(param.description ? param.description : '(No description)');
+            if (param.defaultValue === undefined) {
+                docs.push(' <em>[Required]</em>');
             }
+            else if (param.defaultValue === null) {
+                docs.push(' <em>[Optional]</em>');
+            }
+            else {
+                docs.push(' <em>[Default: ' + param.defaultValue + ']</em>');
+            }
+            docs.push('</li>');
         }, this);
+        docs.push('</ul>');
     }
 
     return docs.join('');

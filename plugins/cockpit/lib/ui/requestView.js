@@ -61,7 +61,7 @@ function RequestView(request, cliView) {
     this.request = request;
     this.cliView = cliView;
 
-    this.imagePath = '/plugins/ace/pluging/cockpit/ui';
+    this.imagePath = '/plugins/ace/plugins/cockpit/lib/ui/images';
 
     // Elements attached to this by the templater. For info only
     this.rowin = null;
@@ -86,7 +86,7 @@ RequestView.prototype = {
      * the command line
      */
     copyToInput: function() {
-        this.cliView.input.value = this.request.typed;
+        this.cliView.element.value = this.request.typed;
     },
 
     /**
