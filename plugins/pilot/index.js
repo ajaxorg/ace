@@ -50,7 +50,6 @@ packages.unshift("require", "exports", "module");
 
 define(packages, function(require, exports, module) {
 
-console.log(packages);
 exports.startup = function(data, reason) {
     deps.forEach(function(dep) {
         console.log("test startup for " + dep);

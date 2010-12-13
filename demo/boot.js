@@ -96,7 +96,8 @@ var setupPlugins = function(config, callback) {
             for (i = 0; i < packages.length; i++) {
                 location.push({
                     name: packages[i],
-                    main: "index"
+                    main: "index",
+                    lib: "."
                 });
                 knownPlugins.push(packages[i]);
             }
