@@ -40,18 +40,18 @@ define(function(require, exports, module) {
 
 var util = require('pilot/util');
 
-var editorCss = require("text!cockpit/ui/requestView.css");
+var requestViewCss = require("text!cockpit/ui/requestView.css");
 var dom = require("pilot/dom").dom;
-dom.importCssString(editorCss);
+dom.importCssString(requestViewCss);
 
-var plainRow = require("text!cockpit/ui/requestView.html");
+var requestViewHtml = require("text!cockpit/ui/requestView.html");
 var Templater = require("pilot/domtemplate").Templater;
 
 /**
  * Pull the HTML into the DOM, but don't add it to the document
  */
 var templates = document.createElement('div');
-templates.innerHTML = plainRow;
+templates.innerHTML = requestViewHtml;
 var row = templates.querySelector('.cptRow');
 
 /**
@@ -138,8 +138,7 @@ RequestView.prototype = {
             }
             this.output.appendChild(node);
         }, this);
-        // TODO: Fix this
-        // this.cliView.scrollToBottom();
+        this.cliView.scrollOutputToBottom();
 
         util.setClass(this.output, 'cmd_error', this.request.error);
 

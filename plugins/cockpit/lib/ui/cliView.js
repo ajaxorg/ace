@@ -38,7 +38,7 @@
 define(function(require, exports, module) {
 
 
-var editorCss = require("text!cockpit/ui/plain.css");
+var editorCss = require("text!cockpit/ui/cliView.css");
 var dom = require("pilot/dom").dom;
 dom.importCssString(editorCss);
 
@@ -61,7 +61,7 @@ var NO_HINT = new Hint(Status.VALID, '', 0, 0);
  * 2. Attach a set of events so the command line works
  */
 exports.startup = function(data, reason) {
-    var plainUi = new CliView(data);
+    var cliView = new CliView(data);
 };
 
 /**
@@ -74,7 +74,7 @@ function CliView(data) {
     // TODO: we should have a better way to specify command lines???
     this.element = this.doc.getElementById('cockpit');
     if (!this.element) {
-        console.log('No element with an id of cockpit. Bailing on plain cli');
+        console.log('No element with an id of cockpit. Bailing on cli');
         return;
     }
 
@@ -88,6 +88,7 @@ function CliView(data) {
     this.hints = [];
 
     this.createElements();
+    this.update();
 }
 CliView.prototype = {
     /**
@@ -113,6 +114,12 @@ CliView.prototype = {
         this.outputDirection.addEventListener('change', this.resizer.bind(this));
         this.resizer();
 
+        var setMaxOutputHeight = function() {
+            this.output.style.maxHeight = this.outputHeight.get() + 'px';
+        }.bind(this);
+        this.outputHeight.addEventListener('change', setMaxOutputHeight);
+        setMaxOutputHeight();
+
         canon.addEventListener('output',  function(ev) {
             new RequestView(ev.request, this);
         }.bind(this));
@@ -123,6 +130,16 @@ CliView.prototype = {
         input.addEventListener('mouseup', function(ev) {
             this.update();
         }.bind(this), false);
+    },
+
+    /**
+     * We need to see the output of the latest command entered
+     */
+    scrollOutputToBottom: function() {
+        // Certain browsers have a bug such that scrollHeight is too small
+        // when content does not fill the client area of the element
+        var scrollHeight = Math.max(this.output.scrollHeight, this.output.clientHeight);
+        this.output.scrollTop = scrollHeight - this.output.clientHeight;
     },
 
     /**
@@ -146,7 +163,7 @@ CliView.prototype = {
             this.hinter.style.bottom = (this.win.innerHeight - rect.top) + 'px';
         }
         this.hinter.style.left = (rect.left + 30) + 'px';
-        this.hinter.style.maxWidth = (rect.width - 90) + 'px';
+        this.hinter.style.maxWidth = (rect.width - 110) + 'px';
 
         if (this.outputDirection.get() === 'below') {
             this.output.style.top = rect.bottom + 'px';
@@ -157,7 +174,7 @@ CliView.prototype = {
             this.output.style.bottom = (this.win.innerHeight - rect.top) + 'px';
         }
         this.output.style.left = rect.left + 'px';
-        this.output.style.width = (rect.width - 60) + 'px';
+        this.output.style.width = (rect.width - 80) + 'px';
     },
 
     /**
@@ -240,7 +257,7 @@ CliView.prototype = {
         this.hints = this.cli.getHints();
 
         // Create a marked up version of the input
-        var highlightedInput = '';
+        var highlightedInput = '<span class="cptPrompt">&gt;</span> ';
         if (this.element.value.length > 0) {
             // 'scores' is an array which tells us what chars are errors
             // Initialize with everything VALID
@@ -292,7 +309,7 @@ CliView.prototype = {
 
             var onTab = display.predictions[0];
             onTab = onTab.name ? onTab.name : onTab;
-            this.completer.innerHTML = highlightedInput + ' &nbsp;&#x2192; ' + onTab;
+            this.completer.innerHTML = highlightedInput + ' &nbsp;&#x21E5; ' + onTab;
         }
         else {
             this.completer.innerHTML = highlightedInput;

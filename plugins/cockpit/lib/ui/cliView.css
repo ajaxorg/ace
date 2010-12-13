@@ -4,6 +4,7 @@
   border: none; outline: none;
   font-family: consolas, courier, monospace;
   font-size: 120%;
+  padding-left: 16px;
 }
 
 .cptOutput {
@@ -14,7 +15,7 @@
   padding: 10px;
   margin: 0 15px;
   background: #DDD; color: #000;
-  overflow: hidden;
+  overflow: auto;
   position: absolute;
   z-index: 999;
   font-family: consolas, courier, monospace;
@@ -26,7 +27,7 @@
 }
 
 .cptCompletion {
-  color: #666;
+  color: #999;
   padding: 0 0 5px 2px;
   position: absolute;
   z-index: -1000;
@@ -65,6 +66,7 @@
 .cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }
 .cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }
 
+span.cptPrompt { color: #66F; font-weight: bold; }
 
 
 
@@ -140,12 +142,6 @@
 
   position: absolute;
   height: 25px; right: 0; bottom: 0; left: 0;
-}
-
-.cptPrompt {
-  width: 40px; padding-left: 5px;
-  position: absolute;
-  top: 0; width: 40px; bottom: 0; left: 0;
 }
 
 .cptKbd {

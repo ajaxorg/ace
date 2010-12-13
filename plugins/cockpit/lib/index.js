@@ -42,7 +42,7 @@ exports.startup = function(data, reason) {
   window.testCli = require('cockpit/test/testCli');
 
   require('cockpit/ui/settings').startup(data, reason);
-  require('cockpit/ui/plain').startup(data, reason);
+  require('cockpit/ui/cliView').startup(data, reason);
 };
 
 /*
