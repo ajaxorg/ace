@@ -37,7 +37,6 @@
 
 define(function(require, exports, module) {
 
-
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
 var oop = require('pilot/oop').oop;
@@ -70,11 +69,8 @@ var commandExtensionSpec = {
     indexOn: 'name'
 };
 
-var env;
-
 exports.startup = function(data, reason) {
     // TODO: this is probably all kinds of evil, but we need something working
-    env = data.env;
     catalog.addExtensionSpec(commandExtensionSpec);
 };
 
@@ -160,7 +156,7 @@ exports.getCommandNames = function() {
  * everything it needs to about the command params
  * @param command Either a command, or the name of one
  */
-exports.exec = function(command, args) {
+exports.exec = function(command, env, args) {
     if (typeof command === 'string') {
         command = commands[command];
     }

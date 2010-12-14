@@ -244,8 +244,10 @@ exports.Assignment = Assignment;
  * class
  * @constructor
  */
-function Requisition() {
+function Requisition(env) {
+    this.env = env;
 }
+
 Requisition.prototype = {
     /**
      * The command that we are about to execute.
@@ -377,7 +379,9 @@ exports.Requisition = Requisition;
  * if not specified.
  * @constructor
  */
-function CliRequisition(options) {
+function CliRequisition(env, options) {
+    Requisition.call(this, env);
+    
     if (options && options.flags) {
         /**
          * TODO: We were using a default of keyboard.buildFlags({ });
