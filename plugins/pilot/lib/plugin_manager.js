@@ -61,8 +61,10 @@ exports.Plugin.prototype = {
      */
     NEW: 0,
     INSTALLED: 1,
-    STARTED: 2,
-    SHUTDOWN: 3,
+    REGISTERED: 2,
+    STARTED: 3,
+    UNREGISTERED: 4,
+    SHUTDOWN: 5,
 
     install: function(data, reason) {
         var pr = new Promise();
@@ -79,10 +81,26 @@ exports.Plugin.prototype = {
         }.bind(this));
         return pr;
     },
+    
+    register: function(data, reason) {
+        var pr = new Promise();
+        if (this.status != this.INSTALLED) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.register) {
+                pluginModule.register(data, reason);
+            }
+            this.status = this.REGISTERED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
 
     startup: function(data, reason) {
         var pr = new Promise();
-        if (this.status != this.INSTALLED) {
+        if (this.status != this.REGISTERED) {
             pr.resolve(this);
             return pr;
         }
@@ -112,14 +130,17 @@ exports.PluginCatalog = function() {
 };
 
 exports.PluginCatalog.prototype = {
-    registerPlugins: function(pluginList) {
+    registerPlugins: function(pluginList, data, reason) {
+        var registrationPromises = [];
         pluginList.forEach(function(pluginName) {
             var plugin = this.plugins[pluginName];
             if (plugin === undefined) {
                 plugin = new exports.Plugin(pluginName);
                 this.plugins[pluginName] = plugin;
+                registrationPromises.push(plugin.register(data, reason));
             }
         }.bind(this));
+        return Promise.group(registrationPromises);
     },
 
     startupPlugins: function(data, reason) {

@@ -121,9 +121,10 @@ console.log(JSON.stringify({
         var pluginsModule = require("pilot/plugin_manager");
         var settings = require("pilot/settings").settings;
         var catalog = pluginsModule.catalog;
-        catalog.registerPlugins(knownPlugins);
-        if (callback) {
-            callback(pluginsModule, settings);
-        }
+        catalog.registerPlugins(knownPlugins).then(function() {
+            if (callback) {
+                callback(pluginsModule, settings);
+            }
+        });
     });
 };
