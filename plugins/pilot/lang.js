@@ -111,7 +111,7 @@ define(function(require, exports, module) {
           },
 
           call: function() {
-              lang.cancel();
+              this.cancel();
               fcn();
           },
 
