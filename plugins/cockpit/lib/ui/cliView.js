@@ -61,13 +61,15 @@ var NO_HINT = new Hint(Status.VALID, '', 0, 0);
  * 2. Attach a set of events so the command line works
  */
 exports.startup = function(data, reason) {
-    var cliView = new CliView(data);
+    var cli = new CliRequisition();
+    var cliView = new CliView(cli, data.env);
 };
 
 /**
  * A class to handle the simplest UI implementation
  */
-function CliView(data) {
+function CliView(cli, env) {
+    this.cli = cli;
     this.doc = document;
     this.win = this.doc.defaultView;
 
@@ -78,14 +80,14 @@ function CliView(data) {
         return;
     }
 
-    this.cli = new CliRequisition();
-
-    this.settings = data.env.settings;
+    this.settings = env.settings;
     this.hintDirection = this.settings.getSetting('hintDirection');
     this.outputDirection = this.settings.getSetting('outputDirection');
     this.outputHeight = this.settings.getSetting('outputHeight');
 
-    this.hints = [];
+    // If the requisition tells us something has changed, we use this to know
+    // if we should ignore it
+    this.isUpdating = false;
 
     this.createElements();
     this.update();
@@ -128,8 +130,12 @@ CliView.prototype = {
         input.addEventListener('keyup', this.onKeyUp.bind(this), true);
         // cursor position affects hint severity. TODO: shortcuts for speed
         input.addEventListener('mouseup', function(ev) {
+            this.isUpdating = true;
             this.update();
+            this.isUpdating = false;
         }.bind(this), false);
+
+        this.cli.addEventListener('argumentChange', this.onArgChange.bind(this));
     },
 
     /**
@@ -181,6 +187,7 @@ CliView.prototype = {
      * Ensure that TAB isn't handled by the browser
      */
     onKeyDown: function(ev) {
+        this.isUpdating = true;
         var handled;
         // var handled = keyboardManager.processKeyEvent(ev, this, {
         //     isCommandLine: true, isKeyUp: false
@@ -188,6 +195,7 @@ CliView.prototype = {
         if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
             return true;
         }
+        this.isUpdating = false;
         return handled;
     },
 
@@ -195,6 +203,7 @@ CliView.prototype = {
      * The main keyboard processing loop
      */
     onKeyUp: function(ev) {
+        this.isUpdating = true;
         var handled;
         /*
         var handled = keyboardManager.processKeyEvent(ev, this, {
@@ -202,35 +211,36 @@ CliView.prototype = {
         });
         */
 
+        // RETURN does a special exec/highlight thing
         if (ev.keyCode === keyutil.KeyHelper.KEY.RETURN) {
-            if (this.hints.worst || this.hints.worst.status === Status.VALID) {
+            var worst = this.getWorstHint();
+            // Deny RETURN unless the command might work
+            if (worst.status === Status.VALID) {
                 this.cli.exec();
                 this.element.value = '';
             }
+            else {
+                // If we've denied RETURN because the command was not VALID,
+                // select the part of the command line that is causing problems
+                // TODO: if there are 2 errors are we picking the right one?
+                this.element.selectionStart = worst.start;
+                this.element.selectionEnd = worst.end;
+            }
         }
 
-        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB && this.hints.display &&
-                this.hints.display.predictions && this.hints.display.predictions.length > 0) {
-            var prefix = this.element.value.substring(0, this.hints.display.start);
-            var suffix = this.element.value.substring(this.hints.display.end);
-            var insert = this.hints.display.predictions[0];
-            insert = typeof insert === 'string' ? insert : insert.name;
-            this.element.value = prefix + insert + suffix;
-            // Fix the cursor.
-            var insertEnd = (prefix + insert).length;
-            this.element.selectionStart = insertEnd;
-            this.element.selectionEnd = insertEnd;
+        // TAB does a special complete thing
+        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
+            var assignment = this.cli.getAssignmentAt(this.element.selectionStart);
+            if (assignment) {
+                this.isUpdating = false;
+                assignment.complete();
+                this.isUpdating = true;
+            }
         }
 
         this.update();
 
-        if (ev.keyCode === keyutil.KeyHelper.KEY.RETURN) {
-            if (this.hints.worst && this.hints.worst.status !== Status.VALID) {
-                this.element.selectionStart = this.hints.worst.start;
-                this.element.selectionEnd = this.hints.worst.end;
-            }
-        }
-
+        this.isUpdating = false;
         return handled;
     },
 
@@ -254,24 +264,10 @@ CliView.prototype = {
         // dom.removeCssClass(completer, Status.INCOMPLETE.toString());
         // dom.removeCssClass(completer, Status.INVALID.toString());
 
-        this.hints = this.cli.getHints();
-
         // Create a marked up version of the input
         var highlightedInput = '<span class="cptPrompt">&gt;</span> ';
         if (this.element.value.length > 0) {
-            // 'scores' is an array which tells us what chars are errors
-            // Initialize with everything VALID
-            var scores = this.element.value.split('').map(function(char) {
-                return Status.VALID;
-            });
-            // For all chars in all hints, check and upgrade the score
-            this.hints.forEach(function(hint) {
-                for (var i = hint.start; i <= hint.end; i++) {
-                    if (hint.status > scores[i]) {
-                        scores[i] = hint.status;
-                    }
-                }
-            }, this);
+            var scores = this.cli.getInputStatusMarkup();
             // Create markup
             var i = 0;
             var lastStatus = -1;
@@ -293,7 +289,7 @@ CliView.prototype = {
         }
 
         // Display the "-> prediction" at the end of the completer
-        var display = this.hints.display || NO_HINT;
+        var display = this.cli.getAssignmentAt(this.element.selectionStart).getHint();
         var message = display.message;
         if (display.predictions && display.predictions.length > 0) {
             message += ': [ ';
@@ -322,9 +318,26 @@ CliView.prototype = {
             this.hinter.classList.remove('cptNoHints');
         }
 
-        var status = this.hints.worst ? this.hints.worst.status : Status.VALID;
-        this.completer.classList.add(status.toString());
-        // dom.addCssClass(input, status.toString());
+        this.completer.classList.add(this.cli.getWorstHint().status.toString());
+        // dom.addCssClass(input, this.cli.getWorstHint().status.toString());
+    },
+
+    /**
+     * Update the input element to reflect the changed argument
+     */
+    onArgChange: function(ev) {
+        if (this.isUpdating) {
+            return;
+        }
+
+        var prefix = this.element.value.substring(0, ev.argument.start);
+        var suffix = this.element.value.substring(ev.argument.end);
+        var insert = typeof ev.text === 'string' ? ev.text : ev.text.name;
+        this.element.value = prefix + insert + suffix;
+        // Fix the cursor.
+        var insertEnd = (prefix + insert).length;
+        this.element.selectionStart = insertEnd;
+        this.element.selectionEnd = insertEnd;
     }
 };
 exports.CliView = CliView;

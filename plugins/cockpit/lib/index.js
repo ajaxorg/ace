@@ -39,6 +39,7 @@ define(function(require, exports, module) {
 
 exports.startup = function(data, reason) {
 
+  require('cockpit/cli').startup(data, reason);
   window.testCli = require('cockpit/test/testCli');
 
   require('cockpit/ui/settings').startup(data, reason);

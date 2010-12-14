@@ -54,17 +54,19 @@ exports.testAll = function() {
 };
 
 exports.testTokenize = function() {
-    var args = tokenize('');
+    var cli = new CliRequisition();
+
+    var args = cli._tokenize('');
     test.verifyEqual(0, args.length);
 
-    args = tokenize('s');
+    args = cli._tokenize('s');
     test.verifyEqual(1, args.length);
     test.verifyEqual('s', args[0].text);
     test.verifyEqual(0, args[0].start);
     test.verifyEqual(1, args[0].end);
     test.verifyEqual('', args[0].priorSpace);
 
-    args = tokenize('s s');
+    args = cli._tokenize('s s');
     test.verifyEqual(2, args.length);
     test.verifyEqual('s', args[0].text);
     test.verifyEqual(0, args[0].start);
@@ -75,7 +77,7 @@ exports.testTokenize = function() {
     test.verifyEqual(3, args[1].end);
     test.verifyEqual(' ', args[1].priorSpace);
 
-    args = tokenize(' 1234  \'12 34\'');
+    args = cli._tokenize(' 1234  \'12 34\'');
     test.verifyEqual(2, args.length);
     test.verifyEqual('1234', args[0].text);
     test.verifyEqual(1, args[0].start);
@@ -86,7 +88,7 @@ exports.testTokenize = function() {
     test.verifyEqual(13, args[1].end);
     test.verifyEqual('  ', args[1].priorSpace);
 
-    args = tokenize('12\'34 "12 34" \\'); // 12'34 "12 34" \
+    args = cli._tokenize('12\'34 "12 34" \\'); // 12'34 "12 34" \
     test.verifyEqual(3, args.length);
     test.verifyEqual('12\'34', args[0].text);
     test.verifyEqual(0, args[0].start);
@@ -101,7 +103,7 @@ exports.testTokenize = function() {
     test.verifyEqual(15, args[2].end);
     test.verifyEqual(' ', args[2].priorSpace);
 
-    args = tokenize('a\\ b \\t\\n\\r \\\'x\\\" \'d'); // a_b \t\n\r \'x\" 'd
+    args = cli._tokenize('a\\ b \\t\\n\\r \\\'x\\\" \'d'); // a_b \t\n\r \'x\" 'd
     test.verifyEqual(4, args.length);
     test.verifyEqual('a b', args[0].text);
     test.verifyEqual(0, args[0].start);
@@ -124,19 +126,21 @@ exports.testTokenize = function() {
 };
 
 exports.testSplit = function() {
-    var args = tokenize('s');
-    var conversion = split(args);
+    var cli = new CliRequisition();
+
+    var args = cli._tokenize('s');
+    var conversion = cli._split(args);
     test.verifyEqual(1, args.length);
     test.verifyEqual('s', args[0].text);
     test.verifyNull(conversion.value);
 
-    var args = tokenize('set');
-    var conversion = split(args);
+    var args = cli._tokenize('set');
+    var conversion = cli._split(args);
     test.verifyEqual([], args);
     test.verifyEqual('set', conversion.value.name);
 
-    var args = tokenize('set a b');
-    var conversion = split(args);
+    var args = cli._tokenize('set a b');
+    var conversion = cli._split(args);
     test.verifyEqual('set', conversion.value.name);
     test.verifyEqual(2, args.length);
     test.verifyEqual('a', args[0].text);

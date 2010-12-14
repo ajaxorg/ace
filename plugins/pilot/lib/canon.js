@@ -128,15 +128,19 @@ function addCommand(command) {
         if (!param.name) {
             throw new Error('In ' + command.name + ': all params must have a name');
         }
-        var lookup = param.type;
-        param.type = types.getType(lookup);
-        if (param.type == null) {
-            throw new Error('In ' + command.name + '/' + param.name +
-                ': can\'t find type for: ' + JSON.stringify(lookup));
-        }
+        upgradeType(param);
     }, this);
     commands[command.name] = command;
 };
+
+function upgradeType(param) {
+    var lookup = param.type;
+    param.type = types.getType(lookup);
+    if (param.type == null) {
+        throw new Error('In ' + command.name + '/' + param.name +
+            ': can\'t find type for: ' + JSON.stringify(lookup));
+    }
+}
 
 function removeCommand(command) {
     if (typeof command === 'string') {
@@ -187,6 +191,7 @@ exports.addCommand = addCommand;
 exports.getCommand = getCommand;
 exports.getCommandNames = getCommandNames;
 exports.exec = exec;
+exports.upgradeType = upgradeType;
 
 
 /**
@@ -228,7 +233,6 @@ var maxRequestLength = 100;
  * <pre>
  * var request = new Request({
  *     command: command,
- *     commandExt: commandExt,
  *     args: args,
  *     typed: typed
  * });
