@@ -37,8 +37,7 @@
 
 define(function(require, exports, module) {
 
-
-var core = require("./core");
+    var core = require("pilot/core").core;
     var event = {};
 
     event.addListener = function(elem, type, callback) {
@@ -49,7 +48,7 @@ var core = require("./core");
             var wrapper = function() {
                 callback(window.event);
             };
-            callback.$$wrapper = wrapper;
+            callback._wrapper = wrapper;
             elem.attachEvent("on" + type, wrapper);
         }
     };
@@ -59,7 +58,7 @@ var core = require("./core");
             return elem.removeEventListener(type, callback, false);
         }
         if (elem.detachEvent) {
-            elem.detachEvent("on" + type, callback.$$wrapper || callback);
+            elem.detachEvent("on" + type, callback._wrapper || callback);
         }
     };
 
@@ -111,10 +110,10 @@ var core = require("./core");
         }
         // old IE
         else {
-            return Math.max(e.button - 1, 2)
+            return Math.max(e.button - 1, 2);
         }
     };
-    
+
     if (document.documentElement.setCapture) {
         event.capture = function(el, eventHandler, releaseCaptureHandler) {
             function onMouseMove(e) {
@@ -202,7 +201,7 @@ var core = require("./core");
                 }, timeout || 600);
             }
 
-            if (event.getButton(e) != button 
+            if (event.getButton(e) != button
               || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
                 clicks = 0;
 
@@ -238,5 +237,6 @@ var core = require("./core");
         }
     };
 
-    return event;
+    exports.event = event;
+
 });

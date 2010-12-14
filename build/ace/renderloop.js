@@ -1,6 +1,6 @@
-define(function(c) {
-  var e = c("./lib/event");
-  c = function(b) {
+define(function(d) {
+  var e = d("./lib/event");
+  d = function(b) {
     this.onRender = b;
     this.pending = false;
     this.changes = 0
@@ -13,8 +13,9 @@ define(function(c) {
         var a = this;
         this.setTimeoutZero(function() {
           a.pending = false;
-          a.onRender(a.changes);
-          a.changes = 0
+          var c = a.changes;
+          a.changes = 0;
+          a.onRender(c)
         })
       }
     };
@@ -23,9 +24,9 @@ define(function(c) {
       this.setTimeoutZero = function(b) {
         if(!this.attached) {
           var a = this;
-          e.addListener(window, "message", function(d) {
-            if(d.source == window && a.callback && d.data == a.messageName) {
-              e.stopPropagation(d);
+          e.addListener(window, "message", function(c) {
+            if(c.source == window && a.callback && c.data == a.messageName) {
+              e.stopPropagation(c);
               a.callback()
             }
           });
@@ -38,6 +39,6 @@ define(function(c) {
         setTimeout(b, 0)
       }
     }
-  }).call(c.prototype);
-  return c
+  }).call(d.prototype);
+  return d
 });

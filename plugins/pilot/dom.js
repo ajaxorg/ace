@@ -37,7 +37,7 @@
 
 define(function(require, exports, module) {
 
-var lang = require("./lang");
+    var lang = require("pilot/lang").lang;
 
     var dom = {};
 
@@ -137,5 +137,5 @@ var lang = require("./lang");
         return noScrollbar-withScrollbar;
     };
 
-    return dom;
+    exports.dom = dom;
 });

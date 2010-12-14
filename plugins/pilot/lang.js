@@ -37,6 +37,7 @@
 
 define(function(require, exports, module) {
 
+
     var lang = {};
 
     lang.stringReverse = function(string) {
@@ -44,9 +45,9 @@ define(function(require, exports, module) {
     };
 
     lang.stringRepeat = function (string, count) {
-         return new Array(count + 1).join(string);   
-    }
-    
+         return new Array(count + 1).join(string);
+    };
+
     if (Array.prototype.indexOf) {
         lang.arrayIndexOf = function(array, searchElement) {
             return array.indexOf(searchElement);
@@ -121,5 +122,5 @@ define(function(require, exports, module) {
       };
     };
 
-    return lang;
+    exports.lang = lang;
 });

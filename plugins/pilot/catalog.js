@@ -11,15 +11,15 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Ajax.org Code Editor (ACE).
+ * The Original Code is Mozilla Skywriter.
  *
  * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
+ *   Julian Viereck (jviereck@mozilla.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,49 +37,29 @@
 
 define(function(require, exports, module) {
 
-    var lang = require("./lib/lang");
 
-    var MEventEmitter = {}
+var extensionSpecs = {};
 
-    MEventEmitter.$dispatchEvent = function(eventName, e) {
-        this.$eventRegistry = this.$eventRegistry || {};
+exports.addExtensionSpec = function(extensionSpec) {
+    extensionSpecs[extensionSpec.name] = extensionSpec;
+};
 
-        var listeners = this.$eventRegistry[eventName];
-        if (!listeners || !listeners.length) return;
+exports.removeExtensionSpec = function(extensionSpec) {
+    if (typeof extensionSpec === "string") {
+        delete extensionSpecs[extensionSpec];
+    }
+    else {
+        delete extensionSpecs[extensionSpec.name];
+    }
+};
 
-        var e = e || {};
-        e.type = eventName;
+exports.getExtensionSpec = function(name) {
+    return extensionSpecs[name];
+};
 
-        for (var i=0; i<listeners.length; i++) {
-            listeners[i](e);
-        }
-    };
+exports.getExtensionSpecs = function() {
+    return Object.keys(extensionSpecs);
+};
 
-    MEventEmitter.on =
-    MEventEmitter.addEventListener = function(eventName, callback) {
-        this.$eventRegistry = this.$eventRegistry || {};
 
-        var listeners = this.$eventRegistry[eventName];
-        if (!listeners) {
-          var listeners = this.$eventRegistry[eventName] = [];
-        }
-        if (lang.arrayIndexOf(listeners, callback) == -1) {
-            listeners.push(callback);
-        }
-    };
-
-    MEventEmitter.removeEventListener = function(eventName, callback) {
-        this.$eventRegistry = this.$eventRegistry || {};
-
-        var listeners = this.$eventRegistry[eventName];
-        if (!listeners) {
-          return;
-        }
-        var index = lang.arrayIndexOf(listeners, callback);
-        if (index !== -1) {
-            listeners.splice(index, 1);
-        }
-    };
-
-    return MEventEmitter;
 });

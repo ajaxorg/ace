@@ -29,49 +29,59 @@
                 "ace/document",
                 "ace/undomanager",
                 "ace/virtual_renderer",
-                
+
                 "ace/mode/javascript",
                 "ace/theme/textmate"
             ],
             includeRequire: false
         },
-        
-        { 
-            name: "ace/theme/eclipse", 
+
+        {
+            name: "ace/theme/eclipse",
             exclude: [
-                "ace/lib/lang",
-                "ace/lib/dom",
-                "ace/lib/oop"
+                "pilot/lang",
+                "pilot/dom",
+                "pilot/oop"
             ]
         },
-        { 
+        {
             name: "ace/mode/xml",
             exclude: [
-                "ace/lib/oop",
+                "pilot/oop",
                 "ace/tokenizer",
-                "ace/mode/text"      
+                "ace/mode/text"
             ]
         },
-        { 
+        {
             name: "ace/mode/css",
             exclude: [
-                "ace/lib/oop",
-                "ace/lib/lang",
+                "pilot/oop",
+                "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
-                "ace/mode/text"      
+                "ace/mode/text"
             ]
         },
-        { 
+        {
             name: "ace/mode/html",
             exclude: [
-                "ace/lib/oop",
-                "ace/lib/lang",
+                "pilot/oop",
+                "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
                 "ace/mode/text",
                 "ace/mode/javascript",
                 "ace/mode/css",
+            ]
+        },
+        { 
+            name: "ace/mode/python",
+            exclude: [
+                "ace/lib/oop",
+                "ace/lib/lang",
+                "ace/tokenizer",
+                "ace/range",
+                "ace/mode/text"
             ]
         }
     ]

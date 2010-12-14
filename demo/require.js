@@ -13,16 +13,20 @@ setInterval: false, importScripts: false, jQuery: false */
 var require, define;
 (function () {
     //Change this version number for each release.
-    var version = "0.14.5",
+    var version = "0.14.5+",
             empty = {}, s,
             i, defContextName = "_", contextLoads = [],
             scripts, script, rePkg, src, m, dataMain, cfg = {}, setReadyState,
-            readyRegExp = /^(complete|loaded)$/,
             commentRegExp = /(\/\*([\s\S]*?)\*\/|\/\/(.*)$)/mg,
-            cjsRequireRegExp = /require\(["']([\w-_\.\/]+)["']\)/g,
+            cjsRequireRegExp = /require\(["']([\w\!\-_\.\/]+)["']\)/g,
             main,
             isBrowser = !!(typeof window !== "undefined" && navigator && document),
             isWebWorker = !isBrowser && typeof importScripts !== "undefined",
+            //PS3 indicates loaded and complete, but need to wait for complete
+            //specifically. Sequence is "loading", "loaded", execution,
+            // then "complete". The UA check is unfortunate, but not sure how
+            //to feature test w/o causing perf issues.
+            readyRegExp = isBrowser && navigator.platform === 'PLAYSTATION 3' ? /^complete$/ : /^(complete|loaded)$/,
             ostring = Object.prototype.toString,
             ap = Array.prototype,
             aps = ap.slice, scrollIntervalId, req, baseElement,
@@ -882,12 +886,12 @@ var require, define;
         }
         contextName = contextName || s.ctxName;
 
-        var ret, context = s.contexts[contextName];
+        var ret, context = s.contexts[contextName], nameProps;
 
         //Normalize module name, if it contains . or ..
-        moduleName = req.normalizeName(moduleName, relModuleName, context);
+        nameProps = req.splitPrefix(moduleName, relModuleName, context);
 
-        ret = context.defined[moduleName];
+        ret = context.defined[nameProps.name];
         if (ret === undefined) {
             req.onError(new Error("require: module name '" +
                         moduleName +
@@ -940,7 +944,7 @@ var require, define;
         }
     };
 
-    req.jsExtRegExp = /\.js$/;
+    req.jsExtRegExp = /^\/|:|\?|\.js$/;
 
     /**
      * Given a relative module name, like ./something, normalize it to
@@ -955,37 +959,44 @@ var require, define;
         //Adjust any relative paths.
         var part;
         if (name.charAt(0) === ".") {
-            if (!baseName) {
-                req.onError(new Error("Cannot normalize module name: " +
-                            name +
-                            ", no relative module name available."));
-            }
-
-            if (context.config.packages[baseName]) {
-                //If the baseName is a package name, then just treat it as one
-                //name to concat the name with.
-                baseName = [baseName];
-            } else {
-                //Convert baseName to array, and lop off the last part,
-                //so that . matches that "directory" and not name of the baseName's
-                //module. For instance, baseName of "one/two/three", maps to
-                //"one/two/three.js", but we want the directory, "one/two" for
-                //this normalization.
-                baseName = baseName.split("/");
-                baseName = baseName.slice(0, baseName.length - 1);
-            }
-
-            name = baseName.concat(name.split("/"));
-            for (i = 0; (part = name[i]); i++) {
-                if (part === ".") {
-                    name.splice(i, 1);
-                    i -= 1;
-                } else if (part === "..") {
-                    name.splice(i - 1, 2);
-                    i -= 2;
+            //If have a base name, try to normalize against it,
+            //otherwise, assume it is a top-level require that will
+            //be relative to baseUrl in the end.
+            if (baseName) {
+                if (context.config.packages[baseName]) {
+                    //If the baseName is a package name, then just treat it as one
+                    //name to concat the name with.
+                    baseName = [baseName];
+                } else {
+                    //Convert baseName to array, and lop off the last part,
+                    //so that . matches that "directory" and not name of the baseName's
+                    //module. For instance, baseName of "one/two/three", maps to
+                    //"one/two/three.js", but we want the directory, "one/two" for
+                    //this normalization.
+                    baseName = baseName.split("/");
+                    baseName = baseName.slice(0, baseName.length - 1);
                 }
+
+                name = baseName.concat(name.split("/"));
+                for (i = 0; (part = name[i]); i++) {
+                    if (part === ".") {
+                        name.splice(i, 1);
+                        i -= 1;
+                    } else if (part === "..") {
+                        if (i === 1) {
+                            //End of the line. Keep at least one non-dot
+                            //path segment at the front so it can be mapped
+                            //correctly to disk. Otherwise, there is likely
+                            //no path mapping for '..'.
+                            break;
+                        } else if (i > 1) {
+                            name.splice(i - 1, 2);
+                            i -= 2;
+                        }
+                    }
+                }
+                name = name.join("/");
             }
-            name = name.join("/");
         }
         return name;
     };
@@ -1035,7 +1046,7 @@ var require, define;
         //If a colon is in the URL, it indicates a protocol is used and it is just
         //an URL to a file, or if it starts with a slash or ends with .js, it is just a plain file.
         //The slash is important for protocol-less URLs as well as full paths.
-        if (moduleName.indexOf(":") !== -1 || moduleName.charAt(0) === '/' || req.jsExtRegExp.test(moduleName)) {
+        if (req.jsExtRegExp.test(moduleName)) {
             //Just a plain path, not module name lookup, so just return it.
             //Add extension if it is included. This is a bit wonky, only non-.js things pass
             //an extension, this method probably needs to be reworked.
@@ -1078,6 +1089,11 @@ var require, define;
                                  config.urlArgs) : url;
     };
 
+    //In async environments, checkLoaded can get called a few times in the same
+    //call stack. Allow only one to do the finishing work. Set to false
+    //for sync environments.
+    req.blockCheckLoaded = true;
+
     /**
      * Checks if all modules for a context are loaded, and if so, evaluates the
      * new ones in right dependency order.
@@ -1119,7 +1135,7 @@ var require, define;
         //by calling a waiting callback that then calls require and then this function
         //should not proceed. At the end of this function, if there are still things
         //waiting, then checkLoaded will be called again.
-        context.isCheckLoaded = true;
+        context.isCheckLoaded = req.blockCheckLoaded;
 
         //Grab waiting and loaded lists here, since it could have changed since
         //this function was first called.

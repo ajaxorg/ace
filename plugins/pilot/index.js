@@ -11,15 +11,15 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Ajax.org Code Editor (ACE).
+ * The Original Code is Mozilla Skywriter.
  *
  * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Kevin Dangoor (kdangoor@mozilla.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,29 +35,38 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
+var deps = [
+    "pilot/fixoldbrowsers",
+    "pilot/types/basic",
+    "pilot/types/command",
+    "pilot/types/settings",
+    "pilot/commands/settings",
+    "pilot/settings/canon",
+    "pilot/canon"
+];
 
-    var core = {};
-    var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
+var packages = deps.slice();
+packages.unshift("require", "exports", "module");
 
-    core.isWin = (os == "win");
-    core.isMac = (os == "mac");
-    core.isLinux = (os == "linux");
-    core.isIE = ! + "\v1";
-    core.isGecko = window.controllers && window.navigator.product === "Gecko";
+define(packages, function(require, exports, module) {
 
-    core.provide = function(namespace) {
-        var parts = namespace.split(".");
-        var obj = window;
-        for (var i=0; i<parts.length; i++) {
-            var part = parts[i];
-            if (!obj[part]) {
-                obj[part] = {};
-            }
-            obj = obj[part];
+exports.startup = function(data, reason) {
+    deps.forEach(function(dep) {
+        console.log("test startup for " + dep);
+        var module = require(dep);
+        if (typeof module.startup === "function") {
+            module.startup(data, reason);
         }
-    };
-
-    return core;
-
+    });
+};
+/*
+exports.shutdown(data, reason) {
+    deps.forEach(function(dep) {
+        var module = require(dep);
+        if (typeof module.shutdown === "function") {
+            module.shutdown(data, reason);
+        }
+    });
+};
+*/
 });
