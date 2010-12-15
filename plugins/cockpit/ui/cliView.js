@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
 
 var editorCss = require("text!cockpit/ui/cliView.css");
-var dom = require("pilot/dom").dom;
+var dom = require("pilot/dom");
 dom.importCssString(editorCss);
 
 var canon = require("pilot/canon");
@@ -61,7 +61,7 @@ var NO_HINT = new Hint(Status.VALID, '', 0, 0);
  * 2. Attach a set of events so the command line works
  */
 exports.startup = function(data, reason) {
-    var cli = new CliRequisition();
+    var cli = new CliRequisition(data.env);
     var cliView = new CliView(cli, data.env);
 };
 

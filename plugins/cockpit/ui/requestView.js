@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 var util = require('pilot/util');
 
 var requestViewCss = require("text!cockpit/ui/requestView.css");
-var dom = require("pilot/dom").dom;
+var dom = require("pilot/dom");
 dom.importCssString(requestViewCss);
 
 var requestViewHtml = require("text!cockpit/ui/requestView.html");
