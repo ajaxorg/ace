@@ -113,7 +113,7 @@ if (!Function.prototype.bind) {
 
         // optimize common case
         if (arguments.length == 1) {
-	        var bound = return function() {
+	        var bound = function() {
 	            return fcn.apply(this instanceof nop ? this : obj, arguments);
 	        };
         }
