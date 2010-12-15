@@ -45,22 +45,6 @@ exports.stringRepeat = function (string, count) {
      return new Array(count + 1).join(string);
 };
 
-if (Array.prototype.indexOf) {
-    exports.arrayIndexOf = function(array, searchElement) {
-        return array.indexOf(searchElement);
-    };
-}
-else {
-    exports.arrayIndexOf = function(array, searchElement) {
-        for (var i=0; i<array.length; i++) {
-            if (array[i] == searchElement) {
-                return i;
-            }
-        }
-        return -1;
-    };
-}
-
 exports.copyObject = function(obj) {
     var copy = {};
     for (var key in obj) {

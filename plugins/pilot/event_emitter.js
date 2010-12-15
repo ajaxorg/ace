@@ -37,8 +37,6 @@
 
 define(function(require, exports, module) {
 
-var lang = require('pilot/lang');
-
 var EventEmitter = {};
 
 EventEmitter._dispatchEvent = function(eventName, e) {
@@ -63,7 +61,7 @@ EventEmitter.addEventListener = function(eventName, callback) {
     if (!listeners) {
       var listeners = this._eventRegistry[eventName] = [];
     }
-    if (lang.arrayIndexOf(listeners, callback) == -1) {
+    if (listeners.indexOf(callback) == -1) {
         listeners.push(callback);
     }
 };
@@ -75,7 +73,7 @@ EventEmitter.removeEventListener = function(eventName, callback) {
     if (!listeners) {
       return;
     }
-    var index = lang.arrayIndexOf(listeners, callback);
+    var index = listeners.indexOf(callback);
     if (index !== -1) {
         listeners.splice(index, 1);
     }

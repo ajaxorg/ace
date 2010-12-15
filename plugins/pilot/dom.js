@@ -37,8 +37,6 @@
 
 define(function(require, exports, module) {
 
-var lang = require("pilot/lang");
-
 exports.setText = function(elem, text) {
     if (elem.innerText !== undefined) {
         elem.innerText = text;
@@ -50,7 +48,7 @@ exports.setText = function(elem, text) {
 
 exports.hasCssClass = function(el, name) {
     var classes = el.className.split(/\s+/g);
-    return lang.arrayIndexOf(classes, name) !== -1;
+    return classes.indexOf(name) !== -1;
 };
 
 exports.addCssClass = function(el, name) {
@@ -62,7 +60,7 @@ exports.addCssClass = function(el, name) {
 exports.removeCssClass = function(el, name) {
     var classes = el.className.split(/\s+/g);
     while (true) {
-        var index = lang.arrayIndexOf(classes, name);
+        var index = classes.indexOf(name);
         if (index == -1) {
             break;
         }
