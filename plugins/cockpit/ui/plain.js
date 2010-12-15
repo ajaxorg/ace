@@ -48,7 +48,7 @@ exports.startup = function(data, reason) {
     // TODO: we should have a better way to specify command lines???
     this.input = document.getElementById('cockpit');
     if (!this.input) {
-        console.log('No element with an id of cockpit. Bailing on plain cli');
+        // console.log('No element with an id of cockpit. Bailing on plain cli');
         return;
     }
 
@@ -87,7 +87,7 @@ exports.startup = function(data, reason) {
                     end: this.input.selectionEnd
                 }
             });
-            console.log(JSON.stringify(cli.getHints()));
+            //console.log(JSON.stringify(cli.getHints()));
         }
 
         // return handled;

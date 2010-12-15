@@ -52,7 +52,6 @@ define(packages, function(require, exports, module) {
 
 exports.startup = function(data, reason) {
     deps.forEach(function(dep) {
-        console.log("test startup for " + dep);
         var module = require(dep);
         if (typeof module.startup === "function") {
             module.startup(data, reason);
