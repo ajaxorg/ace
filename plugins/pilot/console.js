@@ -66,7 +66,7 @@ if (typeof(window) === 'undefined') {
     // For each of the console functions, copy them if they exist, stub if not
     NAMES.forEach(function(name) {
         if (window.console && window.console[name]) {
-            exports[name] = window.console[name].bind(window.console);
+            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
         } else {
             exports[name] = noop;
         }

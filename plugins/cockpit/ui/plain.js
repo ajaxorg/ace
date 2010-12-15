@@ -39,6 +39,7 @@ define(function(require, exports, module) {
 
 var editorCss = require("text!cockpit/ui/plain.css");
 var dom = require("pilot/dom");
+var event = require("pilot/event");
 dom.importCssString(editorCss);
 
 var CliRequisition = require('cockpit/cli').CliRequisition;
@@ -69,7 +70,7 @@ exports.startup = function(data, reason) {
     }.bind(this));
     */
 
-    this.input.addEventListener('keyup', function(ev) {
+    event.addListener(this.input, 'keyup', function(ev) {
         /*
         var handled = keyboardManager.processKeyEvent(ev, this, {
             isCommandLine: true, isKeyUp: true
