@@ -61,10 +61,6 @@ else {
     };
 }
 
-exports.isArray = function(value) {
-    return Object.prototype.toString.call(value) == "[object Array]";
-};
-
 exports.copyObject = function(obj) {
     var copy = {};
     for (var key in obj) {
