@@ -18,10 +18,9 @@
         overflow: hidden;
         margin: 0;
         padding: 0;
-        font: sans-serif;
         height: 100%;
         width: 100%;
-        font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana;
+        font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
         font-size: 12px;
         background: rgb(14, 98, 165);
         color: white;
@@ -53,28 +52,6 @@
         bottom: 0;
     }
     </style>
-    <script>
-      require = {
-        //urlArgs: "bust=" +  (new Date()).getTime()
-      };
-    </script>
-    <script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
-    <script src="demo/boot.js" type="text/javascript"></script>
-    <script>
-      setupPlugins({
-        pluginDirs: {
-          "../demo": {
-            singleFiles: ["demo_startup"]
-          }
-        }
-      }, function(plugin_manager, settings) {
-        var data = { env: { settings: settings } };
-        plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
-          var demo_startup = require("demo_startup");
-          demo_startup.launch(data.env);
-        });
-      });
-    </script>
 </head>
 <body>
     <div id="jump"></div>
@@ -178,6 +155,30 @@ for i in sys.argv[1:]:
 </script>
 
     <input id="cockpit" type="text"/>
+
+
+    <script>
+	  require = {
+	    //urlArgs: "bust=" +  (new Date()).getTime()
+	  };
+	</script>
+	<script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
+	<script src="demo/boot.js" type="text/javascript"></script>
+	<script>
+	  setupPlugins({
+	    pluginDirs: {
+	      "../demo": {
+	        singleFiles: ["demo_startup"]
+	      }
+	    }
+	  }, function(plugin_manager, settings) {
+	    var data = { env: { settings: settings } };
+	    plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
+	      var demo_startup = require("demo_startup");
+	      demo_startup.launch(data.env);
+	    });
+	  });
+	</script>
 
 </body>
 </html>
