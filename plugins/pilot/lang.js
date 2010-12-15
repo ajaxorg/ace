@@ -82,12 +82,6 @@ exports.escapeRegExp = function(str) {
     return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
 };
 
-exports.bind = function(fcn, context) {
-    return function() {
-        return fcn.apply(context, arguments);
-    };
-};
-
 exports.deferredCall = function(fcn) {
 
     var timer = null;

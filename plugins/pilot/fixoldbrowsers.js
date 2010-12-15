@@ -65,22 +65,38 @@ if (!Object.keys) {
 }
 
 if (!Function.prototype.bind) {
-    // From Narwhal
-    Function.prototype.bind = function () {
-        var args = Array.prototype.slice.call(arguments);
+    // from MDC
+    // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
+    Function.prototype.bind = function () {       
+        var slice = [].slice;
+        var args = slice.call(arguments, 1);
         var self = this;
-        var bound = function () {
-            return self.call.apply(
-                self,
-                args.concat(
-                    Array.prototype.slice.call(arguments)
-                )
-            );
-        };
+        var nop = function () {};
+
+        // optimize common case
+        if (arguments.length == 1) {
+	        var bound = return function() {
+	            return fcn.apply(this instanceof nop ? this : obj, arguments);
+	        };
+        }
+        else {
+	        var bound = function () {
+	            return self.apply(
+	                this instanceof nop ? this : ( obj || {} ), 
+	                args.concat( slice.call(arguments) )
+	            );
+	        };
+        }
+	    
+        nop.prototype = self.prototype;    
+        bound.prototype = new nop();    
+        
+        // From Narwhal
         bound.name = this.name;
         bound.displayName = this.displayName;
         bound.length = this.length;
         bound.unbound = self;
+        
         return bound;
     };
 }
