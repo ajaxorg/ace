@@ -148,14 +148,14 @@ else {
             eventHandler && eventHandler(e);
             releaseCaptureHandler && releaseCaptureHandler();
 
-            exports.removeEventListener("mousemove", onMouseMove, true);
-            exports.removeEventListener("mouseup", onMouseUp, true);
+            el.removeEventListener("mousemove", onMouseMove, true);
+            el.removeEventListener("mouseup", onMouseUp, true);
 
             e.stopPropagation();
         }
 
-        exports.addEventListener("mousemove", onMouseMove, true);
-        exports.addEventListener("mouseup", onMouseUp, true);
+        el.addEventListener("mousemove", onMouseMove, true);
+        el.addEventListener("mouseup", onMouseUp, true);
     };
 }
 

@@ -105,7 +105,7 @@ if (!Object.keys) {
 if (!Function.prototype.bind) {
     // from MDC
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
-    Function.prototype.bind = function () {       
+    Function.prototype.bind = function (obj) {       
         var slice = [].slice;
         var args = slice.call(arguments, 1);
         var self = this;
@@ -114,7 +114,7 @@ if (!Function.prototype.bind) {
         // optimize common case
         if (arguments.length == 1) {
 	        var bound = function() {
-	            return fcn.apply(this instanceof nop ? this : obj, arguments);
+	            return self.apply(this instanceof nop ? this : obj, arguments);
 	        };
         }
         else {
