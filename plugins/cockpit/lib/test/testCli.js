@@ -54,9 +54,10 @@ exports.testAll = function() {
 };
 
 exports.testTokenize = function() {
+    var args;
     var cli = new CliRequisition();
 
-    var args = cli._tokenize('');
+    args = cli._tokenize('');
     test.verifyEqual(0, args.length);
 
     args = cli._tokenize('s');
@@ -65,6 +66,13 @@ exports.testTokenize = function() {
     test.verifyEqual(0, args[0].start);
     test.verifyEqual(1, args[0].end);
     test.verifyEqual('', args[0].priorSpace);
+
+    args = cli._tokenize(' ');
+    test.verifyEqual(1, args.length);
+    test.verifyEqual('', args[0].text);
+    test.verifyEqual(1, args[0].start);
+    test.verifyEqual(1, args[0].end);
+    test.verifyEqual(' ', args[0].priorSpace);
 
     args = cli._tokenize('s s');
     test.verifyEqual(2, args.length);
@@ -126,22 +134,23 @@ exports.testTokenize = function() {
 };
 
 exports.testSplit = function() {
+    var args;
     var cli = new CliRequisition();
 
-    var args = cli._tokenize('s');
-    var conversion = cli._split(args);
+    args = cli._tokenize('s');
+    cli._split(args);
     test.verifyEqual(1, args.length);
     test.verifyEqual('s', args[0].text);
-    test.verifyNull(conversion.value);
+    test.verifyNull(cli.commandAssignment.value);
 
-    var args = cli._tokenize('set');
-    var conversion = cli._split(args);
+    args = cli._tokenize('set');
+    cli._split(args);
     test.verifyEqual([], args);
-    test.verifyEqual('set', conversion.value.name);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
 
-    var args = cli._tokenize('set a b');
-    var conversion = cli._split(args);
-    test.verifyEqual('set', conversion.value.name);
+    args = cli._tokenize('set a b');
+    cli._split(args);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual(2, args.length);
     test.verifyEqual('a', args[0].text);
     test.verifyEqual('b', args[1].text);
@@ -151,31 +160,32 @@ exports.testSplit = function() {
 };
 
 exports.testCli = function() {
-    var hints;
-    var hint0;
     var settingAssignment;
     var valueAssignment;
     var cli = new CliRequisition();
     var debug = true;
+    var worst;
+    var display;
+    var statuses;
 
     function update(input) {
-        if (debug) {
-            console.log('####### TEST: typed="' + input.typed + '" cursor:', input.cursor);
-        }
         cli.update(input);
-        hints = cli.getHints();
-        hint0 = (hints.length !== 0) ? hints[0] : undefined;
+
         if (debug) {
-            console.log('cli=', cli);
-            console.log('hints=', hints);
+            console.log('####### TEST: typed="' + input.typed +
+                    '" cur=' + input.cursor.start +
+                    ' cli=', cli);
         }
-        if (cli.command && cli.command.name === 'set') {
+
+        worst = cli.getWorstHint();
+        display = cli.getAssignmentAt(input.cursor.start).getHint();
+        statuses = cli.getInputStatusMarkup().map(function(status) {
+          return status.valueOf();
+        }).join('');
+
+        if (cli.commandAssignment.value && cli.commandAssignment.value.name === 'set') {
             settingAssignment = cli.getAssignment('setting');
             valueAssignment = cli.getAssignment('value');
-            if (debug) {
-                console.log('settingAssignment=', settingAssignment);
-                console.log('valueAssignment=', valueAssignment);
-            }
         }
         else {
             settingAssignment = undefined;
@@ -191,108 +201,145 @@ exports.testCli = function() {
 
     var historyLengthSetting = settings.getSetting('historyLength');
 
-    update({ typed: '', cursor: { start: 0, end: 0 } });
-    test.verifyEqual(1, hints.length);
-    test.verifyEqual(Status.INCOMPLETE, hint0.status);
-    test.verifyEqual(0, hint0.start);
-    test.verifyEqual(0, hint0.end);
-    test.verifyNull(cli.command);
+    update({  typed: '', cursor: { start: 0, end: 0 } });
+    test.verifyEqual('', statuses);
+    test.verifyEqual(1, cli._hints.length);
+    test.verifyEqual(Status.INCOMPLETE, display.status);
+    test.verifyEqual(0, display.start);
+    test.verifyEqual(0, display.end);
+    test.verifyEqual(display, worst);
+    test.verifyNull(cli.commandAssignment.value);
 
-    update({ typed: 's', cursor: { start: 1, end: 1 } });
-    test.verifyEqual(1, hints.length);
-    test.verifyEqual(Status.INCOMPLETE, hint0.status);
-    test.verifyNotEqual(-1, hint0.message.indexOf('possibilities'));
-    test.verifyEqual(0, hint0.start);
-    test.verifyEqual(1, hint0.end);
-    test.verifyTrue(hint0.predictions.length > 0);
+    update({  typed: ' ', cursor: { start: 1, end: 1 } });
+    test.verifyEqual('1', statuses);
+    test.verifyEqual(1, cli._hints.length);
+    test.verifyEqual(Status.INCOMPLETE, display.status);
+    test.verifyEqual(1, display.start);
+    test.verifyEqual(1, display.end);
+    test.verifyEqual(display, worst);
+    test.verifyNull(cli.commandAssignment.value);
+
+    update({  typed: ' ', cursor: { start: 0, end: 0 } });
+    test.verifyEqual('1', statuses);
+    test.verifyEqual(1, cli._hints.length);
+    test.verifyEqual(Status.INCOMPLETE, display.status);
+    test.verifyEqual(1, display.start);
+    test.verifyEqual(1, display.end);
+    test.verifyEqual(display, worst);
+    test.verifyNull(cli.commandAssignment.value);
+
+    update({  typed: 's', cursor: { start: 1, end: 1 } });
+    test.verifyEqual('1', statuses);
+    test.verifyEqual(1, cli._hints.length);
+    test.verifyEqual(Status.INCOMPLETE, display.status);
+    test.verifyEqual(0, display.start);
+    test.verifyEqual(1, display.end);
+    test.verifyEqual(display, worst);
+    test.verifyTrue(display.predictions.length > 0);
     // This is slightly fragile because it depends on the configuration
     // TODO: Mock, but first we need a way to have a clear canon.
-    test.verifyTrue(hint0.predictions.length < 20);
-    verifyPredictionsContains('set', hint0.predictions);
-    test.verifyNull(cli.command);
+    test.verifyTrue(display.predictions.length < 20);
+    verifyPredictionsContains('set', display.predictions);
+    test.verifyNull(cli.commandAssignment.value);
 
-    update({ typed: 'set', cursor: { start: 3, end: 3 } });
-    test.verifyEqual(1, hints.length);
-    test.verifyEqual(Status.VALID, hint0.status);
-    test.verifyEqual(0, hint0.start);
-    test.verifyEqual(3, hint0.end);
-    test.verifyEqual('set', cli.command.name);
+    update({  typed: 'set', cursor: { start: 3, end: 3 } });
+    test.verifyEqual('000', statuses);
+    test.verifyEqual(1, cli._hints.length);
+    test.verifyEqual(Status.VALID, display.status);
+    test.verifyEqual(0, display.start);
+    test.verifyEqual(3, display.end);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
 
-    update({ typed: 'set ', cursor: { start: 4, end: 4 } });
-    test.verifyEqual(2, hints.length);
-    test.verifyEqual(Status.VALID, hint0.status);
-    test.verifyEqual(4, hint0.start);
-    test.verifyEqual(4, hint0.end);
-    test.verifyEqual(Status.VALID, hints[1].status);
-    test.verifyEqual(0, hints[1].start);
-    test.verifyEqual(3, hints[1].end);
-    test.verifyEqual('set', cli.command.name);
+    update({  typed: 'set ', cursor: { start: 4, end: 4 } });
+    test.verifyEqual('0000', statuses);
+    test.verifyEqual(2, cli._hints.length);
+    test.verifyEqual(Status.VALID, display.status);
+    test.verifyEqual(4, display.start);
+    test.verifyEqual(4, display.end);
+    test.verifyEqual(display, worst);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
 
-    update({ typed: 'set h', cursor: { start: 5, end: 5 } });
-    test.verifyEqual(2, hints.length);
-    test.verifyEqual(Status.INCOMPLETE, hint0.status);
-    test.verifyEqual(4, hint0.start);
-    test.verifyEqual(5, hint0.end);
-    test.verifyTrue(hint0.predictions.length > 0);
-    verifyPredictionsContains('historyLength', hint0.predictions);
-    test.verifyEqual('set', cli.command.name);
+    update({  typed: 'set ', cursor: { start: 2, end: 2 } });
+    test.verifyEqual('0000', statuses);
+    test.verifyEqual(2, cli._hints.length);
+    test.verifyEqual(Status.VALID, display.status);
+    test.verifyEqual(0, display.start);
+    test.verifyEqual(3, display.end);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
+
+    update({  typed: 'set h', cursor: { start: 5, end: 5 } });
+    test.verifyEqual('00001', statuses);
+    test.verifyEqual(2, cli._hints.length);
+    test.verifyEqual(Status.INCOMPLETE, display.status);
+    test.verifyEqual(4, display.start);
+    test.verifyEqual(5, display.end);
+    test.verifyTrue(display.predictions.length > 0);
+    verifyPredictionsContains('historyLength', display.predictions);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('h', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    update({ typed: 'set historyLengt', cursor: { start: 16, end: 16 } });
-    test.verifyEqual(2, hints.length);
-    test.verifyEqual(Status.INCOMPLETE, hint0.status);
-    test.verifyEqual(4, hint0.start);
-    test.verifyEqual(16, hint0.end);
-    test.verifyEqual(1, hint0.predictions.length);
-    verifyPredictionsContains('historyLength', hint0.predictions);
-    test.verifyEqual('set', cli.command.name);
+    update({  typed: 'set historyLengt', cursor: { start: 16, end: 16 } });
+    test.verifyEqual('0000111111111111', statuses);
+    test.verifyEqual(2, cli._hints.length);
+    test.verifyEqual(Status.INCOMPLETE, display.status);
+    test.verifyEqual(4, display.start);
+    test.verifyEqual(16, display.end);
+    test.verifyEqual(1, display.predictions.length);
+    verifyPredictionsContains('historyLength', display.predictions);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('historyLengt', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    update({ typed: 'set historyLengt', cursor: { start: 1, end: 1 } });
-    test.verifyEqual(2, hints.length);
-    test.verifyEqual(Status.VALID, hint0.status);
-    test.verifyEqual(0, hint0.start);
-    test.verifyEqual(3, hint0.end);
-    test.verifyEqual(Status.INVALID, hints[1].status);
-    test.verifyEqual(4, hints[1].start);
-    test.verifyEqual(16, hints[1].end);
-    test.verifyEqual(1, hints[1].predictions.length);
-    verifyPredictionsContains('historyLength', hints[1].predictions);
-    test.verifyEqual('set', cli.command.name);
+    update({ typed:  'set historyLengt', cursor: { start: 1, end: 1 } });
+    test.verifyEqual('0000222222222222', statuses);
+    test.verifyEqual(2, cli._hints.length);
+    test.verifyEqual(Status.VALID, display.status);
+    test.verifyEqual(0, display.start);
+    test.verifyEqual(3, display.end);
+    test.verifyEqual(Status.INVALID, worst.status);
+    test.verifyEqual(4, worst.start);
+    test.verifyEqual(16, worst.end);
+    test.verifyEqual(1, worst.predictions.length);
+    verifyPredictionsContains('historyLength', worst.predictions);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('historyLengt', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    update({ typed: 'set historyLengt ', cursor: { start: 17, end: 17 } });
-    test.verifyEqual(3, hints.length);
-    test.verifyEqual(Status.VALID, hint0.status);
-    test.verifyEqual(17, hint0.start);
-    test.verifyEqual(17, hint0.end);
-    test.verifyEqual(Status.INVALID, hints[1].status);
-    test.verifyEqual(4, hints[1].start);
-    test.verifyEqual(16, hints[1].end);
-    test.verifyEqual(1, hints[1].predictions.length);
-    verifyPredictionsContains('historyLength', hints[1].predictions);
-    test.verifyEqual('set', cli.command.name);
+    update({ typed:  'set historyLengt ', cursor: { start: 17, end: 17 } });
+    // TODO: would   '00002222222222220' be better?
+    test.verifyEqual('00002222222222222', statuses);
+    test.verifyEqual(3, cli._hints.length);
+    test.verifyEqual(Status.VALID, display.status);
+    test.verifyEqual(17, display.start);
+    test.verifyEqual(17, display.end);
+    test.verifyEqual(Status.INVALID, worst.status);
+    test.verifyEqual(4, worst.start);
+    test.verifyEqual(16, worst.end);
+    test.verifyEqual(1, worst.predictions.length);
+    verifyPredictionsContains('historyLength', worst.predictions);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('historyLengt', settingAssignment.arg.text);
     test.verifyEqual(undefined, settingAssignment.value);
 
-    update({ typed: 'set historyLength', cursor: { start: 17, end: 17 } });
-    test.verifyEqual(2, hints.length);
-    test.verifyEqual('set', cli.command.name);
+    update({ typed:  'set historyLength', cursor: { start: 17, end: 17 } });
+    test.verifyEqual('00000000000000000', statuses);
+    test.verifyEqual(2, cli._hints.length);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('historyLength', settingAssignment.arg.text);
     test.verifyEqual(historyLengthSetting, settingAssignment.value);
 
-    update({ typed: 'set historyLength ', cursor: { start: 18, end: 18 } });
-    test.verifyEqual(3, hints.length);
-    test.verifyEqual('set', cli.command.name);
+    update({ typed:  'set historyLength ', cursor: { start: 18, end: 18 } });
+    test.verifyEqual('000000000000000000', statuses);
+    test.verifyEqual(3, cli._hints.length);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('historyLength', settingAssignment.arg.text);
     test.verifyEqual(historyLengthSetting, settingAssignment.value);
 
-    update({ typed: 'set historyLength 6', cursor: { start: 19, end: 19 } });
-    test.verifyEqual(3, hints.length);
-    test.verifyEqual('set', cli.command.name);
+    update({ typed:  'set historyLength 6', cursor: { start: 19, end: 19 } });
+    test.verifyEqual('0000000000000000000', statuses);
+    test.verifyEqual(3, cli._hints.length);
+    test.verifyEqual('set', cli.commandAssignment.value.name);
     test.verifyEqual('historyLength', settingAssignment.arg.text);
     test.verifyEqual(historyLengthSetting, settingAssignment.value);
     test.verifyEqual('6', valueAssignment.arg.text);

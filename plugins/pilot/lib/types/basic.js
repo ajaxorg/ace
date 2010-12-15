@@ -90,6 +90,10 @@ number.parse = function(value) {
         throw new Error('non-string passed to number.parse()');
     }
 
+    if (value.replace(/\s/g, '').length === 0) {
+        return new Conversion(null, Status.INCOMPLETE, '');
+    }
+
     var reply = new Conversion(parseInt(value, 10));
     if (isNaN(reply.value)) {
         reply.status = Status.INVALID;
@@ -97,6 +101,14 @@ number.parse = function(value) {
     }
 
     return reply;
+};
+
+number.decrement = function(value) {
+    return value - 1;
+};
+
+number.increment = function(value) {
+    return value + 1;
 };
 
 number.name = 'number';
@@ -126,7 +138,7 @@ SelectionType.prototype.parse = function(str) {
     if (!this.data) {
         throw new Error('Missing data on selection type extension.');
     }
-    var data = (typeof(this.data) === "function") ? this.data() : this.data;
+    var data = (typeof(this.data) === 'function') ? this.data() : this.data;
 
     // The matchedValue could be the boolean value false
     var hasMatched = false;
@@ -160,6 +172,34 @@ SelectionType.prototype.parse = function(str) {
 
 SelectionType.prototype.fromString = function(str) {
     return str;
+};
+
+SelectionType.prototype.decrement = function(value) {
+    var data = (typeof this.data === 'function') ? this.data() : this.data;
+    var index;
+    if (value == null) {
+        index = data.length - 1;
+    }
+    else {
+        var name = this.stringify(value);
+        var index = data.indexOf(name);
+        index = (index === 0 ? data.length - 1 : index - 1);
+    }
+    return this.fromString(data[index]);
+};
+
+SelectionType.prototype.increment = function(value) {
+    var data = (typeof this.data === 'function') ? this.data() : this.data;
+    var index;
+    if (value == null) {
+        index = 0;
+    }
+    else {
+        var name = this.stringify(value);
+        var index = data.indexOf(name);
+        index = (index === data.length - 1 ? 0 : index + 1);
+    }
+    return this.fromString(data[index]);
 };
 
 SelectionType.prototype.name = 'selection';
@@ -204,6 +244,16 @@ DeferredType.prototype.stringify = function(value) {
 
 DeferredType.prototype.parse = function(value) {
     return this.defer().parse(value);
+};
+
+DeferredType.prototype.decrement = function(value) {
+    var deferred = this.defer();
+    return (deferred.decrement ? deferred.decrement(value) : undefined);
+};
+
+DeferredType.prototype.increment = function(value) {
+    var deferred = this.defer();
+    return (deferred.increment ? deferred.increment(value) : undefined);
 };
 
 DeferredType.prototype.name = 'deferred';

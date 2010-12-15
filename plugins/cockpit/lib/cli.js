@@ -363,6 +363,28 @@ Assignment.prototype = {
                 this.conversion.predictions.length > 0) {
             this.setValue(this.conversion.predictions[0]);
         }
+    },
+
+    /**
+     * Replace the current value with the lower value if such a concept
+     * exists.
+     */
+    decrement: function() {
+        var replacement = this.param.type.decrement(this.value);
+        if (replacement != null) {
+            this.setValue(replacement);
+        }
+    },
+
+    /**
+     * Replace the current value with the higher value if such a concept
+     * exists.
+     */
+    increment: function() {
+        var replacement = this.param.type.increment(this.value);
+        if (replacement != null) {
+            this.setValue(replacement);
+        }
     }
 };
 exports.Assignment = Assignment;

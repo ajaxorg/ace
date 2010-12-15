@@ -146,12 +146,13 @@ oop.implement(Setting.prototype, EventEmitter);
  * @constructor
  */
 function Settings(persister) {
-    /**
-     * Storage for deactivated values
-     */
+    // Storage for deactivated values
     this._deactivated = {};
 
+    // Storage for the active settings
     this._settings = {};
+    // We often want sorted setting names. Cache
+    this._settingNames = [];
 
     if (persister) {
         this.setPersister(persister);
@@ -175,14 +176,18 @@ Settings.prototype = {
     addSetting: function(settingSpec) {
         var setting = new Setting(settingSpec, this);
         this._settings[setting.name] = setting;
+        this._settingNames.push(setting.name);
+        this._settingNames.sort();
     },
 
-    removeSetting: function(name) {
+    removeSetting: function(setting) {
+        var name = (typeof setting === 'string' ? setting : setting.name);
         delete this._settings[name];
+        util.arrayRemove(this._settingNames, name);
     },
 
     getSettingNames: function() {
-        return Object.keys(this._settings);
+        return this._settingNames;
     },
 
     getSetting: function(name) {

@@ -45,6 +45,7 @@ var EventEmitter = require('pilot/event_emitter').EventEmitter;
 var catalog = require('pilot/catalog');
 var Status = require('pilot/types').Status;
 var types = require('pilot/types');
+var util = require('pilot/util');
 
 /*
 // TODO: this doesn't belong here - or maybe anywhere?
@@ -105,7 +106,15 @@ var thingCommand = {
     }
 };
 
+/**
+ * A lookup hash of our registered commands
+ */
 var commands = {};
+
+/**
+ * A sorted list of command names, we regularly want them in order, so pre-sort
+ */
+var commandNames = [];
 
 /**
  * This registration method isn't like other Ace registration methods because
@@ -131,6 +140,9 @@ function addCommand(command) {
         upgradeType(param);
     }, this);
     commands[command.name] = command;
+
+    commandNames.push(command.name);
+    commandNames.sort();
 };
 
 function upgradeType(param) {
@@ -143,12 +155,9 @@ function upgradeType(param) {
 }
 
 function removeCommand(command) {
-    if (typeof command === 'string') {
-        delete commands[command];
-    }
-    else {
-        delete commands[command.name];
-    }
+    var name = (typeof command === 'string' ? command : command.name);
+    delete commands[name];
+    util.arrayRemove(commandNames, name);
 };
 
 function getCommand(name) {
@@ -156,7 +165,7 @@ function getCommand(name) {
 };
 
 function getCommandNames() {
-    return Object.keys(commands);
+    return commandNames;
 };
 
 /**

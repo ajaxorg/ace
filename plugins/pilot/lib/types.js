@@ -163,7 +163,23 @@ Type.prototype = {
      * <p>In old bespin, equality was based on the name. This may turn out to be
      * important in Ace too.
      */
-    name: undefined
+    name: undefined,
+
+    /**
+     * If there is some concept of a higher value, return it,
+     * otherwise return undefined.
+     */
+    increment: function(value) {
+        return undefined;
+    },
+
+    /**
+     * If there is some concept of a lower value, return it,
+     * otherwise return undefined.
+     */
+    decrement: function(value) {
+        return undefined;
+    }
 };
 exports.Type = Type;
 

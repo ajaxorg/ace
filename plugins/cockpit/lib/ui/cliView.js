@@ -192,7 +192,9 @@ CliView.prototype = {
         // var handled = keyboardManager.processKeyEvent(ev, this, {
         //     isCommandLine: true, isKeyUp: false
         // });
-        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
+        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB ||
+                ev.keyCode === keyutil.KeyHelper.KEY.UP ||
+                ev.keyCode === keyutil.KeyHelper.KEY.DOWN) {
             return true;
         }
         this.isUpdating = false;
@@ -213,7 +215,7 @@ CliView.prototype = {
 
         // RETURN does a special exec/highlight thing
         if (ev.keyCode === keyutil.KeyHelper.KEY.RETURN) {
-            var worst = this.getWorstHint();
+            var worst = this.cli.getWorstHint();
             // Deny RETURN unless the command might work
             if (worst.status === Status.VALID) {
                 this.cli.exec();
@@ -228,14 +230,25 @@ CliView.prototype = {
             }
         }
 
-        // TAB does a special complete thing
-        if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
-            var assignment = this.cli.getAssignmentAt(this.element.selectionStart);
-            if (assignment) {
-                this.isUpdating = false;
-                assignment.complete();
-                this.isUpdating = true;
+        // Special actions which delegate to the assignment
+        var current = this.cli.getAssignmentAt(this.element.selectionStart);
+        if (current) {
+            this.isUpdating = false;
+
+            // TAB does a special complete thing
+            if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
+                current.complete();
             }
+
+            // UP/DOWN look for some history
+            if (ev.keyCode === keyutil.KeyHelper.KEY.UP) {
+                current.increment();
+            }
+            if (ev.keyCode === keyutil.KeyHelper.KEY.DOWN) {
+                current.decrement();
+            }
+
+            this.isUpdating = true;
         }
 
         this.update();
@@ -268,7 +281,7 @@ CliView.prototype = {
         var highlightedInput = '<span class="cptPrompt">&gt;</span> ';
         if (this.element.value.length > 0) {
             var scores = this.cli.getInputStatusMarkup();
-            // Create markup
+            // Create mark-up
             var i = 0;
             var lastStatus = -1;
             while (true) {
@@ -290,26 +303,30 @@ CliView.prototype = {
 
         // Display the "-> prediction" at the end of the completer
         var display = this.cli.getAssignmentAt(this.element.selectionStart).getHint();
-        var message = display.message;
-        if (display.predictions && display.predictions.length > 0) {
-            message += ': [ ';
-            display.predictions.forEach(function(prediction) {
-                if (prediction.name) {
-                    message += prediction.name + ' | ';
-                }
-                else {
-                    message += prediction + ' | ';
-                }
-            }, this);
-            message = message.replace(/\| $/, ']');
+        var message = '';
+        if (this.element.value.length !== 0) {
+            message += display.message;
+            if (display.predictions && display.predictions.length > 0) {
+                message += ': [ ';
+                display.predictions.forEach(function(prediction) {
+                    if (prediction.name) {
+                        message += prediction.name + ' | ';
+                    }
+                    else {
+                        message += prediction + ' | ';
+                    }
+                }, this);
+                message = message.replace(/\| $/, ']');
 
-            var onTab = display.predictions[0];
-            onTab = onTab.name ? onTab.name : onTab;
-            this.completer.innerHTML = highlightedInput + ' &nbsp;&#x21E5; ' + onTab;
+                var onTab = display.predictions[0];
+                onTab = onTab.name ? onTab.name : onTab;
+                this.completer.innerHTML = highlightedInput + ' &nbsp;&#x21E5; ' + onTab;
+            }
+            else {
+                this.completer.innerHTML = highlightedInput;
+            }
         }
-        else {
-            this.completer.innerHTML = highlightedInput;
-        }
+
         this.hinter.innerHTML = message;
         if (message.length === 0) {
             this.hinter.classList.add('cptNoHints');
