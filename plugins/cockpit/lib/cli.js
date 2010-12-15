@@ -66,16 +66,17 @@ exports.startup = function(data, reason) {
 function Hint(status, message, start, end, predictions) {
     this.status = status;
     this.message = message;
-    this.predictions = predictions;
 
     if (typeof start === 'number') {
         this.start = start;
         this.end = end;
+        this.predictions = predictions;
     }
     else {
         var arg = start;
         this.start = arg.start;
         this.end = arg.end;
+        this.predictions = arg.predictions;
     }
 }
 Hint.prototype = {
@@ -191,6 +192,13 @@ Argument.prototype = {
         var ev = { argument: this, oldText: this.text, text: text };
         this.text = text;
         this.emitter._dispatchEvent('argumentChange', ev);
+    },
+
+    /**
+     * Helper when we're putting arguments back together
+     */
+    toString: function() {
+        return this.priorSpace + this.text;
     }
 };
 /**
@@ -309,6 +317,14 @@ Assignment.prototype = {
      * make sense with more experience to alter this to function to be getHint()
      */
     getHint: function() {
+        // Allow the parameter to provide documentation
+        if (this.param.getCustomHint && this.value && this.arg) {
+            var hint = this.param.getCustomHint(this.value, this.arg);
+            if (hint) {
+                return hint;
+            }
+        }
+
         // If there is no argument, use the cursor position
         var message = '<strong>' + this.param.name + '</strong>: ';
         if (this.param.description) {
@@ -345,12 +361,6 @@ Assignment.prototype = {
             message += '<strong>Required<\strong>';
         }
 
-        // Allow the parameter to provide documentation
-        // TODO: consider when we should do this
-        if (status === Status.VALID && message === '' && this.param.documentValid) {
-            message = this.param.documentValid(value);
-        }
-
         return new Hint(status, message, start, end, predictions);
     },
 
@@ -385,6 +395,13 @@ Assignment.prototype = {
         if (replacement != null) {
             this.setValue(replacement);
         }
+    },
+
+    /**
+     * Helper when we're rebuilding command lines.
+     */
+    toString: function() {
+        return this.arg ? this.arg.toString() : '';
     }
 };
 exports.Assignment = Assignment;
@@ -401,7 +418,7 @@ var commandParam = {
     /**
      * Provide some documentation for a command.
      */
-    documentValid: function(command) {
+    getCustomHint: function(command, arg) {
         var docs = [];
         docs.push('<strong><tt> &gt; ');
         docs.push(command.name);
@@ -440,7 +457,7 @@ var commandParam = {
             docs.push('</ul>');
         }
 
-        return docs.join('');
+        return new Hint(Status.VALID, docs.join(''), arg);
     }
 };
 
@@ -716,11 +733,10 @@ oop.inherits(CliRequisition, Requisition);
     CliRequisition.prototype.toString = function() {
         // All the params
         var parts = Object.keys(this._assignments).map(function(name) {
-            var arg = this._assignments[name].arg;
-            return arg ? arg.priorSpace + arg.text : '';
+            return this._assignments[name].toString();
         }, this);
         // Prefix with the command
-        parts.unshift(this.commandAssignment.arg.text);
+        parts.unshift(this.commandAssignment.toString());
         return parts.join('');
     };
 
@@ -768,30 +784,33 @@ oop.inherits(CliRequisition, Requisition);
      * at the given position.
      */
     CliRequisition.prototype.getAssignmentAt = function(position) {
-        var found;
-
         var arg = this.commandAssignment.arg;
-        if (arg && arg.start <= position && arg.end >= position) {
-            found = this.commandAssignment;
+        if (arg && position <= arg.end) {
+            return this.commandAssignment;
         }
 
-        if (!found) {
-            Object.keys(this._assignments).forEach(function(name) {
-                var assignment = this._assignments[name];
-                var arg = assignment.arg;
-                if (arg && arg.start <= position && arg.end >= position) {
-                    found = assignment;
-                }
-            }, this);
+        var names = Object.keys(this._assignments);
+        for (var i = 0; i < names.length; i++) {
+            var assignment = this._assignments[names[i]];
+            if (assignment.arg && position <= assignment.arg.end) {
+                return assignment;
+            }
         }
 
-        return found;
+        // We can only have got here if
+        throw new Error('position (' + position +
+                ') is off end of requisition (' + this.toString() + ')');
     };
 
     /**
      * Split up the input taking into account ' and "
      */
     CliRequisition.prototype._tokenize = function(typed) {
+        // For blank input, place a dummy empty argument into the list
+        if (typed == null || typed.length === 0) {
+            return [ new Argument(this, '', 0, 0, '') ];
+        }
+
         var OUTSIDE = 1;     // The last character was whitespace
         var IN_SIMPLE = 2;   // The last character was part of a parameter
         var IN_SINGLE_Q = 3; // We're inside a single quote: '
@@ -916,12 +935,6 @@ oop.inherits(CliRequisition, Requisition);
      * typed at the command line.
      */
     CliRequisition.prototype._split = function(args) {
-        // Place a dummy empty argument into the list
-        // TODO: should this go into _tokenize?
-        if (args.length === 0) {
-            args.push(new Argument(this, '', 0, 0, ''));
-        }
-
         var argsUsed = 1;
         var arg;
 
@@ -981,7 +994,7 @@ oop.inherits(CliRequisition, Requisition);
             // we determined that we had args that were all whitespace, but
             // probably given our tighter tokenize() this won't be an issue?
             this._hints.push(new Hint(Status.INVALID,
-                    this.command.name + ' does not take any parameters',
+                    this.commandAssignment.value.name + ' does not take any parameters',
                     Argument.merge(args)));
             return;
         }

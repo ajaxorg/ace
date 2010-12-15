@@ -58,7 +58,11 @@ exports.testTokenize = function() {
     var cli = new CliRequisition();
 
     args = cli._tokenize('');
-    test.verifyEqual(0, args.length);
+    test.verifyEqual(1, args.length);
+    test.verifyEqual('', args[0].text);
+    test.verifyEqual(0, args[0].start);
+    test.verifyEqual(0, args[0].end);
+    test.verifyEqual('', args[0].priorSpace);
 
     args = cli._tokenize('s');
     test.verifyEqual(1, args.length);
@@ -211,7 +215,7 @@ exports.testCli = function() {
     test.verifyNull(cli.commandAssignment.value);
 
     update({  typed: ' ', cursor: { start: 1, end: 1 } });
-    test.verifyEqual('1', statuses);
+    test.verifyEqual('0', statuses);
     test.verifyEqual(1, cli._hints.length);
     test.verifyEqual(Status.INCOMPLETE, display.status);
     test.verifyEqual(1, display.start);
@@ -220,7 +224,7 @@ exports.testCli = function() {
     test.verifyNull(cli.commandAssignment.value);
 
     update({  typed: ' ', cursor: { start: 0, end: 0 } });
-    test.verifyEqual('1', statuses);
+    test.verifyEqual('0', statuses);
     test.verifyEqual(1, cli._hints.length);
     test.verifyEqual(Status.INCOMPLETE, display.status);
     test.verifyEqual(1, display.start);

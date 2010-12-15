@@ -66,6 +66,9 @@ var setting = new SelectionType({
     fromString: function(str) {
         lastSetting = settings.getSetting(str);
         return lastSetting;
+    },
+    noMatch: function() {
+        lastSetting = null;
     }
 });
 
@@ -76,7 +79,12 @@ var setting = new SelectionType({
 var settingValue = new DeferredType({
     name: 'settingValue',
     defer: function() {
-        return lastSetting.type;
+        if (lastSetting) {
+            return lastSetting.type;
+        }
+        else {
+            return types.getType('text');
+        }
     }
 });
 

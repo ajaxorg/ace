@@ -158,8 +158,13 @@ SelectionType.prototype.parse = function(str) {
         return new Conversion(matchedValue);
     }
     else {
+        // This is something of a hack. settings
+        if (this.noMatch) {
+            this.noMatch();
+        }
+
         if (completions.length > 0) {
-            var msg = 'Several possibilities' +
+            var msg = 'Possibilities' +
                 (str.length === 0 ? '' : ' for \'' + str + '\'');
             return new Conversion(null, Status.INCOMPLETE, msg, completions);
         }

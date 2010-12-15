@@ -187,7 +187,6 @@ CliView.prototype = {
      * Ensure that TAB isn't handled by the browser
      */
     onKeyDown: function(ev) {
-        this.isUpdating = true;
         var handled;
         // var handled = keyboardManager.processKeyEvent(ev, this, {
         //     isCommandLine: true, isKeyUp: false
@@ -197,7 +196,6 @@ CliView.prototype = {
                 ev.keyCode === keyutil.KeyHelper.KEY.DOWN) {
             return true;
         }
-        this.isUpdating = false;
         return handled;
     },
 
@@ -205,7 +203,6 @@ CliView.prototype = {
      * The main keyboard processing loop
      */
     onKeyUp: function(ev) {
-        this.isUpdating = true;
         var handled;
         /*
         var handled = keyboardManager.processKeyEvent(ev, this, {
@@ -230,30 +227,28 @@ CliView.prototype = {
             }
         }
 
+        this.update();
+
         // Special actions which delegate to the assignment
         var current = this.cli.getAssignmentAt(this.element.selectionStart);
         if (current) {
-            this.isUpdating = false;
-
             // TAB does a special complete thing
             if (ev.keyCode === keyutil.KeyHelper.KEY.TAB) {
                 current.complete();
+                this.update();
             }
 
             // UP/DOWN look for some history
             if (ev.keyCode === keyutil.KeyHelper.KEY.UP) {
                 current.increment();
+                this.update();
             }
             if (ev.keyCode === keyutil.KeyHelper.KEY.DOWN) {
                 current.decrement();
+                this.update();
             }
-
-            this.isUpdating = true;
         }
 
-        this.update();
-
-        this.isUpdating = false;
         return handled;
     },
 
@@ -261,82 +256,93 @@ CliView.prototype = {
      * Actually parse the input and make sure we're all up to date
      */
     update: function() {
-        this.cli.update({
+        this.isUpdating = true;
+        var input = {
             typed: this.element.value,
             cursor: {
                 start: this.element.selectionStart,
                 end: this.element.selectionEnd
             }
-        });
+        };
+        this.cli.update(input);
 
-        // TODO: borked implementation? This is modern browser only. Fix
+        var display = this.cli.getAssignmentAt(input.cursor.start).getHint();
+
+        // 1. Update the completer with prompt/error marker/TAB info
         this.completer.classList.remove(Status.VALID.toString());
         this.completer.classList.remove(Status.INCOMPLETE.toString());
         this.completer.classList.remove(Status.INVALID.toString());
+        // TODO: borked implementation? This is modern browser only. Fix
         // dom.removeCssClass(completer, Status.VALID.toString());
         // dom.removeCssClass(completer, Status.INCOMPLETE.toString());
         // dom.removeCssClass(completer, Status.INVALID.toString());
 
-        // Create a marked up version of the input
-        var highlightedInput = '<span class="cptPrompt">&gt;</span> ';
+        var completion = '<span class="cptPrompt">&gt;</span> ';
         if (this.element.value.length > 0) {
             var scores = this.cli.getInputStatusMarkup();
-            // Create mark-up
-            var i = 0;
-            var lastStatus = -1;
-            while (true) {
-                if (lastStatus !== scores[i]) {
-                    highlightedInput += '<span class=' + scores[i].toString() + '>';
-                    lastStatus = scores[i];
-                }
-                highlightedInput += this.element.value[i];
-                i++;
-                if (i === this.element.value.length) {
-                    highlightedInput += '</span>';
-                    break;
-                }
-                if (lastStatus !== scores[i]) {
-                    highlightedInput += '</span>';
-                }
-            }
+            completion += this.markupStatusScore(scores);
         }
 
         // Display the "-> prediction" at the end of the completer
-        var display = this.cli.getAssignmentAt(this.element.selectionStart).getHint();
-        var message = '';
-        if (this.element.value.length !== 0) {
-            message += display.message;
-            if (display.predictions && display.predictions.length > 0) {
-                message += ': [ ';
-                display.predictions.forEach(function(prediction) {
-                    if (prediction.name) {
-                        message += prediction.name + ' | ';
-                    }
-                    else {
-                        message += prediction + ' | ';
-                    }
-                }, this);
-                message = message.replace(/\| $/, ']');
+        if (this.element.value.length > 0 &&
+                display.predictions && display.predictions.length > 0) {
+            var tab = display.predictions[0];
+            completion += ' &nbsp;&#x21E5; ' + (tab.name ? tab.name : tab);
+        }
+        this.completer.innerHTML = completion;
+        this.completer.classList.add(this.cli.getWorstHint().status.toString());
+        // dom.addCssClass(input, this.cli.getWorstHint().status.toString());
 
-                var onTab = display.predictions[0];
-                onTab = onTab.name ? onTab.name : onTab;
-                this.completer.innerHTML = highlightedInput + ' &nbsp;&#x21E5; ' + onTab;
-            }
-            else {
-                this.completer.innerHTML = highlightedInput;
+        // 2. Update the hint element
+        var hint = '';
+        if (this.element.value.length !== 0) {
+            hint += display.message;
+            if (display.predictions && display.predictions.length > 0) {
+                hint += ': [ ';
+                display.predictions.forEach(function(prediction) {
+                    hint += (prediction.name ? prediction.name : prediction);
+                    hint += ' | ';
+                }, this);
+                hint = hint.replace(/\| $/, ']');
             }
         }
 
-        this.hinter.innerHTML = message;
-        if (message.length === 0) {
+        this.hinter.innerHTML = hint;
+        if (hint.length === 0) {
             this.hinter.classList.add('cptNoHints');
         }
         else {
             this.hinter.classList.remove('cptNoHints');
         }
 
-        this.completer.classList.add(this.cli.getWorstHint().status.toString());
-        // dom.addCssClass(input, this.cli.getWorstHint().status.toString());
+        this.isUpdating = false;
+    },
+
+    /**
+     * Markup an array of Status values with spans
+     */
+    markupStatusScore: function(scores) {
+        var completion = '';
+        // Create mark-up
+        var i = 0;
+        var lastStatus = -1;
+        while (true) {
+            if (lastStatus !== scores[i]) {
+                completion += '<span class=' + scores[i].toString() + '>';
+                lastStatus = scores[i];
+            }
+            completion += this.element.value[i];
+            i++;
+            if (i === this.element.value.length) {
+                completion += '</span>';
+                break;
+            }
+            if (lastStatus !== scores[i]) {
+                completion += '</span>';
+            }
+        }
+
+        return completion;
     },
 
     /**
