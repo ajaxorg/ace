@@ -224,7 +224,7 @@ exports.addKeyListener = function(el, callback) {
     });
 
     // repeated keys are fired as keypress and not keydown events
-    if (core.isMac && core.isGecko) {
+    if (core.isMac && (core.isGecko || core.isOpera)) {
         exports.addListener(el, "keypress", function(e) {
             var keyId = e.keyIdentifier || e.keyCode;
             if (lastDown !== keyId) {

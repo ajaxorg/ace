@@ -44,6 +44,7 @@ exports.isMac = (os == "mac");
 exports.isLinux = (os == "linux");
 exports.isIE = ! + "\v1";
 exports.isGecko = window.controllers && window.navigator.product === "Gecko";
+exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
 
 exports.provide = function(namespace) {
     var parts = namespace.split(".");
