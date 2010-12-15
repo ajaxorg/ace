@@ -1,7 +1,7 @@
 /*
  LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
 */
-require.def([], function() {
+define(function() {
   MockRenderer = function(a) {
     this.container = document.createElement("div");
     this.cursor = {row:0, column:0};
@@ -51,6 +51,12 @@ require.def([], function() {
   MockRenderer.prototype.addMarker = function() {
   };
   MockRenderer.prototype.setBreakpoints = function() {
+  };
+  MockRenderer.prototype.updateFull = function() {
+  };
+  MockRenderer.prototype.showCursor = function() {
+  };
+  MockRenderer.prototype.visualizeFocus = function() {
   };
   return MockRenderer
 });

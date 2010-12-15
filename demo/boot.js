@@ -96,7 +96,8 @@ var setupPlugins = function(config, callback) {
             for (i = 0; i < packages.length; i++) {
                 location.push({
                     name: packages[i],
-                    main: "index"
+                    main: "index",
+                    lib: "."
                 });
                 knownPlugins.push(packages[i]);
             }
@@ -113,7 +114,7 @@ var setupPlugins = function(config, callback) {
         packagePaths: pluginPackageInfo,
         paths: paths
     });
-    require(["pilot/plugin_manager", "pilot/settings"], function() {
+    require(["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings"], function() {
         var pluginsModule = require("pilot/plugin_manager");
         var settings = require("pilot/settings").settings;
         var catalog = pluginsModule.catalog;

@@ -41,16 +41,17 @@ define(function(require, exports, module) {
 
 exports.launch = function(env) {
 
-    var event = require("pilot/event").event;
+    var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
     var Document = require("ace/document").Document;
-    var JavaScriptMode = require("ace/mode/javascript").JavaScript;
-    var CssMode = require("ace/mode/css").Css;
-    var HtmlMode = require("ace/mode/html").Html;
-    var XmlMode = require("ace/mode/xml").Xml;
-    var TextMode = require("ace/mode/text").Text;
+    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    var CssMode = require("ace/mode/css").Mode;
+    var HtmlMode = require("ace/mode/html").Mode;
+    var XmlMode = require("ace/mode/xml").Mode;
+    var PythonMode = require("ace/mode/python").Mode;
+    var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
     var docs = {};
@@ -66,6 +67,10 @@ exports.launch = function(env) {
     docs.html = new Document(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
+
+    docs.python = new Document(document.getElementById("pythontext").innerHTML);
+    docs.python.setMode(new PythonMode());
+    docs.python.setUndoManager(new UndoManager());
 
     var docEl = document.getElementById("doc");
 
@@ -89,6 +94,9 @@ exports.launch = function(env) {
         else if (mode instanceof XmlMode) {
             modeEl.value = "xml";
         }
+        else if (mode instanceof PythonMode) {
+            modeEl.value = "python";
+        }
         else {
             modeEl.value = "text";
         }
@@ -111,7 +119,8 @@ exports.launch = function(env) {
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
-        javascript: new JavaScriptMode()
+        javascript: new JavaScriptMode(),
+        python: new PythonMode()
     };
 
     function getMode() {
@@ -182,6 +191,8 @@ exports.launch = function(env) {
                     mode = "html";
                 } else if (/^.*\.css$/i.test(file.name)) {
                     mode = "css";
+                } else if (/^.*\.py$/i.test(file.name)) {
+                    mode = "python";
                 }
 
                 env.editor.onTextInput(reader.result);

@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var util = require('pilot/util');
-var oop = require('pilot/oop').oop;
+var oop = require('pilot/oop');
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
 
 //var keyboard = require('keyboard/keyboard');
@@ -480,9 +480,11 @@ var commandParam = {
  * The event object looks like { command: A }
  * @constructor
  */
-function Requisition() {
+function Requisition(env) {
+    this.env = env;
     this.commandAssignment = new Assignment(commandParam, this);
 }
+
 Requisition.prototype = {
     /**
      * The command that we are about to execute.
@@ -672,8 +674,9 @@ exports.Requisition = Requisition;
  * if not specified.
  * @constructor
  */
-function CliRequisition(options) {
-    Requisition.call(this);
+function CliRequisition(env, options) {
+    Requisition.call(this, env);
+    
     if (options && options.flags) {
         /**
          * TODO: We were using a default of keyboard.buildFlags({ });

@@ -11,15 +11,17 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Ajax.org Code Editor (ACE).
+ * The Original Code is Mozilla Skywriter.
  *
  * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
+ *   Joe Walker (jwalker@mozilla.com)
+ *   Patrick Walton (pwalton@mozilla.com)
+ *   Julian Viereck (jviereck@mozilla.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -34,43 +36,41 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
+define(function(require, exports, module) {
+    
+/**
+ * This object represents a "safe console" object that forwards debugging
+ * messages appropriately without creating a dependency on Firebug in Firefox.
+ */
 
-require("../../../../support/paths");
+var noop = function() {};
 
-var Document = require("ace/document").Document;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var XmlMode = require("ace/mode/xml").Mode;
-var assert = require("../assertions");
+// These are the functions that are available in Chrome 4/5, Safari 4
+// and Firefox 3.6. Don't add to this list without checking browser support
+var NAMES = [
+    "assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd",
+    "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"
+];
 
-var Test = {
-    setUp : function() {
-        this.mode = new XmlMode();
-    },
+if (typeof(window) === 'undefined') {
+    // We're in a web worker. Forward to the main thread so the messages
+    // will show up.
+    NAMES.forEach(function(name) {
+        exports[name] = function() {
+            var args = Array.prototype.slice.call(arguments);
+            var msg = { op: 'log', method: name, args: args };
+            postMessage(JSON.stringify(msg));
+        };
+    });
+} else {
+    // For each of the console functions, copy them if they exist, stub if not
+    NAMES.forEach(function(name) {
+        if (window.console && window.console[name]) {
+            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
+        } else {
+            exports[name] = noop;
+        }
+    });
+}
 
-    "test: getTokenizer() (smoke test)" : function() {
-        var tokenizer = this.mode.getTokenizer();
-
-        assert.ok(tokenizer instanceof Tokenizer);
-
-        var tokens = tokenizer.getLineTokens("<juhu>", "start").tokens;
-        assert.equal("keyword", tokens[1].type);
-    },
-
-    "test: toggle comment lines should not do anything" : function() {
-        var doc = new Document(["  abc", "cde", "fg"]);
-
-        var comment = this.mode.toggleCommentLines("start", doc, 0, 1);
-        assert.equal(["  abc", "cde", "fg"].join("\n"), doc.toString());
-    },
-
-    "test: next line indent should be the same as the current line indent" : function() {
-        assert.equal("     ", this.mode.getNextLineIndent("start", "     abc"));
-        assert.equal("", this.mode.getNextLineIndent("start", "abc"));
-        assert.equal("\t", this.mode.getNextLineIndent("start", "\tabc"));
-    }
-};
-
-module.exports = require("async/test").testcase(Test);
-
-if (module === require.main)
-    module.exports.exec()
+});
