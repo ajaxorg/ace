@@ -623,7 +623,7 @@ Requisition.prototype = {
      */
     exec: function() {
         var command = this.commandAssignment.value;
-        canon.exec(command, this.getArgs(), this.toCanonicalString());
+        canon.exec(command, this.env, this.getArgs(), this.toCanonicalString());
     },
 
     /**
@@ -676,7 +676,7 @@ exports.Requisition = Requisition;
  */
 function CliRequisition(env, options) {
     Requisition.call(this, env);
-    
+
     if (options && options.flags) {
         /**
          * TODO: We were using a default of keyboard.buildFlags({ });
