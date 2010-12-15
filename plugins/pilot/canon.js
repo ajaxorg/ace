@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
-var oop = require('pilot/oop').oop;
+var oop = require('pilot/oop');
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
 var catalog = require('pilot/catalog');
 var Status = require('pilot/types').Status;

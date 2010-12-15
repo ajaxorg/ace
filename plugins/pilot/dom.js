@@ -37,105 +37,102 @@
 
 define(function(require, exports, module) {
 
-    var lang = require("pilot/lang").lang;
+var lang = require("pilot/lang");
 
-    var dom = {};
+exports.setText = function(elem, text) {
+    if (elem.innerText !== undefined) {
+        elem.innerText = text;
+    }
+    if (elem.textContent !== undefined) {
+        elem.textContent = text;
+    }
+};
 
-    dom.setText = function(elem, text) {
-        if (elem.innerText !== undefined) {
-            elem.innerText = text;
+exports.hasCssClass = function(el, name) {
+    var classes = el.className.split(/\s+/g);
+    return lang.arrayIndexOf(classes, name) !== -1;
+};
+
+exports.addCssClass = function(el, name) {
+    if (!exports.hasCssClass(el, name)) {
+        el.className += " " + name;
+    }
+};
+
+exports.removeCssClass = function(el, name) {
+    var classes = el.className.split(/\s+/g);
+    while (true) {
+        var index = lang.arrayIndexOf(classes, name);
+        if (index == -1) {
+            break;
         }
-        if (elem.textContent !== undefined) {
-            elem.textContent = text;
-        }
-    };
+        classes.splice(index, 1);
+    }
+    el.className = classes.join(" ");
+};
 
-    dom.hasCssClass = function(el, name) {
-        var classes = el.className.split(/\s+/g);
-        return lang.arrayIndexOf(classes, name) !== -1;
-    };
+exports.importCssString = function(cssText, doc){
+    doc = doc || document;        
 
-    dom.addCssClass = function(el, name) {
-        if (!dom.hasCssClass(el, name)) {
-            el.className += " " + name;
-        }
-    };
+    if (doc.createStyleSheet) {
+        var sheet = doc.createStyleSheet();
+        sheet.cssText = cssText;
+    }
+    else {
+        var style = doc.createElement("style");
+        style.appendChild(doc.createTextNode(cssText));
+        doc.getElementsByTagName("head")[0].appendChild(style);
+    }            
+};
 
-    dom.removeCssClass = function(el, name) {
-        var classes = el.className.split(/\s+/g);
-        while (true) {
-            var index = lang.arrayIndexOf(classes, name);
-            if (index == -1) {
-                break;
-            }
-            classes.splice(index, 1);
-        }
-        el.className = classes.join(" ");
-    };
+exports.getInnerWidth = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingLeft"))
+            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
+};
 
-    dom.importCssString = function(cssText, doc){
-        doc = doc || document;        
+exports.getInnerHeight = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingTop"))
+            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
+};
 
-        if (doc.createStyleSheet) {
-            var sheet = doc.createStyleSheet();
-            sheet.cssText = cssText;
-        }
-        else {
-            var style = doc.createElement("style");
-            style.appendChild(doc.createTextNode(cssText));
-            doc.getElementsByTagName("head")[0].appendChild(style);
-        }            
-    };
-    
-    dom.getInnerWidth = function(element) {
-        return (parseInt(dom.computedStyle(element, "paddingLeft"))
-                + parseInt(dom.computedStyle(element, "paddingRight")) + element.clientWidth);
-    };
+exports.computedStyle = function(element, style) {
+    if (window.getComputedStyle) {
+        return (window.getComputedStyle(element, "") || {})[style] || "";
+    }
+    else {
+        return element.currentStyle[style];
+    }
+};
 
-    dom.getInnerHeight = function(element) {
-        return (parseInt(dom.computedStyle(element, "paddingTop"))
-                + parseInt(dom.computedStyle(element, "paddingBottom")) + element.clientHeight);
-    };
+exports.scrollbarWidth = function() {
 
-    dom.computedStyle = function(element, style) {
-        if (window.getComputedStyle) {
-            return (window.getComputedStyle(element, "") || {})[style] || "";
-        }
-        else {
-            return element.currentStyle[style];
-        }
-    };
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
 
-    dom.scrollbarWidth = function() {
+    var outer = document.createElement("div");
+    var style = outer.style;
 
-        var inner = document.createElement('p');
-        inner.style.width = "100%";
-        inner.style.height = "200px";
+    style.position = "absolute";
+    style.left = "-10000px";
+    style.overflow = "hidden";
+    style.width = "200px";
+    style.height = "150px";
 
-        var outer = document.createElement("div");
-        var style = outer.style;
+    outer.appendChild(inner);
+    document.body.appendChild(outer);
+    var noScrollbar = inner.offsetWidth;
 
-        style.position = "absolute";
-        style.left = "-10000px";
-        style.overflow = "hidden";
-        style.width = "200px";
-        style.height = "150px";
+    style.overflow = "scroll";
+    var withScrollbar = inner.offsetWidth;
 
-        outer.appendChild(inner);
-        document.body.appendChild(outer);
-        var noScrollbar = inner.offsetWidth;
+    if (noScrollbar == withScrollbar) {
+        withScrollbar = outer.clientWidth;
+    }
 
-        style.overflow = "scroll";
-        var withScrollbar = inner.offsetWidth;
+    document.body.removeChild(outer);
 
-        if (noScrollbar == withScrollbar) {
-            withScrollbar = outer.clientWidth;
-        }
+    return noScrollbar-withScrollbar;
+};
 
-        document.body.removeChild(outer);
-
-        return noScrollbar-withScrollbar;
-    };
-
-    exports.dom = dom;
 });

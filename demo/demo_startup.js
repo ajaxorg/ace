@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 
 exports.launch = function(env) {
 
-    var event = require("pilot/event").event;
+    var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");

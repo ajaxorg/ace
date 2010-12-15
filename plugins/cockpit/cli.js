@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
 var console = require('pilot/console');
 var util = require('pilot/util');
-var oop = require('pilot/oop').oop;
+var oop = require('pilot/oop');
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
 
 //var keyboard = require('keyboard/keyboard');

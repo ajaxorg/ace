@@ -38,7 +38,7 @@
 define(function(require, exports, module) {
 
 var editorCss = require("text!cockpit/ui/plain.css");
-var dom = require("pilot/dom").dom;
+var dom = require("pilot/dom");
 dom.importCssString(editorCss);
 
 var CliRequisition = require('cockpit/cli').CliRequisition;

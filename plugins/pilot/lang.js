@@ -37,90 +37,86 @@
 
 define(function(require, exports, module) {
 
+exports.stringReverse = function(string) {
+    return string.split("").reverse().join("");
+};
 
-    var lang = {};
+exports.stringRepeat = function (string, count) {
+     return new Array(count + 1).join(string);
+};
 
-    lang.stringReverse = function(string) {
-        return string.split("").reverse().join("");
+if (Array.prototype.indexOf) {
+    exports.arrayIndexOf = function(array, searchElement) {
+        return array.indexOf(searchElement);
     };
-
-    lang.stringRepeat = function (string, count) {
-         return new Array(count + 1).join(string);
-    };
-
-    if (Array.prototype.indexOf) {
-        lang.arrayIndexOf = function(array, searchElement) {
-            return array.indexOf(searchElement);
-        };
-    }
-    else {
-        lang.arrayIndexOf = function(array, searchElement) {
-            for (var i=0; i<array.length; i++) {
-                if (array[i] == searchElement) {
-                    return i;
-                }
+}
+else {
+    exports.arrayIndexOf = function(array, searchElement) {
+        for (var i=0; i<array.length; i++) {
+            if (array[i] == searchElement) {
+                return i;
             }
-            return -1;
-        };
+        }
+        return -1;
+    };
+}
+
+exports.isArray = function(value) {
+    return Object.prototype.toString.call(value) == "[object Array]";
+};
+
+exports.copyObject = function(obj) {
+    var copy = {};
+    for (var key in obj) {
+        copy[key] = obj[key];
     }
+    return copy;
+};
 
-    lang.isArray = function(value) {
-        return Object.prototype.toString.call(value) == "[object Array]";
+exports.arrayToMap = function(arr) {
+    var map = {};
+    for (var i=0; i<arr.length; i++) {
+        map[arr[i]] = 1;
+    }
+    return map;
+
+};
+
+exports.escapeRegExp = function(str) {
+    return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
+};
+
+exports.bind = function(fcn, context) {
+    return function() {
+        return fcn.apply(context, arguments);
+    };
+};
+
+exports.deferredCall = function(fcn) {
+
+    var timer = null;
+    var callback = function() {
+        timer = null;
+        fcn();
     };
 
-    lang.copyObject = function(obj) {
-        var copy = {};
-        for (var key in obj) {
-            copy[key] = obj[key];
+    return {
+      schedule: function() {
+        if (!timer) {
+            timer = setTimeout(callback, 0);
         }
-        return copy;
-    };
+      },
 
-    lang.arrayToMap = function(arr) {
-        var map = {};
-        for (var i=0; i<arr.length; i++) {
-            map[arr[i]] = 1;
-        }
-        return map;
+      call: function() {
+          this.cancel();
+          fcn();
+      },
 
-    };
+      cancel: function() {
+          clearTimeout(timer);
+          timer = null;
+      }
+  };
+};
 
-    lang.escapeRegExp = function(str) {
-        return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
-    };
-
-    lang.bind = function(fcn, context) {
-        return function() {
-            return fcn.apply(context, arguments);
-        };
-    };
-
-    lang.deferredCall = function(fcn) {
-
-        var timer = null;
-        var callback = function() {
-            timer = null;
-            fcn();
-        };
-
-        return {
-          schedule: function() {
-            if (!timer) {
-                timer = setTimeout(callback, 0);
-            }
-          },
-
-          call: function() {
-              this.cancel();
-              fcn();
-          },
-
-          cancel: function() {
-              clearTimeout(timer);
-              timer = null;
-          }
-      };
-    };
-
-    exports.lang = lang;
 });

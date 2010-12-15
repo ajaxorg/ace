@@ -37,25 +37,22 @@
 
 define(function(require, exports, module) {
 
-    var oop = {};
+exports.inherits = function(ctor, superCtor) {
+    var tempCtor = function() {};
+    tempCtor.prototype = superCtor.prototype;
+    ctor.super_ = superCtor.prototype;
+    ctor.prototype = new tempCtor();
+    ctor.prototype.constructor = ctor;
+};
 
-    oop.inherits = function(ctor, superCtor) {
-        var tempCtor = function() {};
-        tempCtor.prototype = superCtor.prototype;
-        ctor.super_ = superCtor.prototype;
-        ctor.prototype = new tempCtor();
-        ctor.prototype.constructor = ctor;
-    };
+exports.mixin = function(obj, mixin) {
+    for (var key in mixin) {
+        obj[key] = mixin[key];
+    }
+};
 
-    oop.mixin = function(obj, mixin) {
-        for (var key in mixin) {
-            obj[key] = mixin[key];
-        }
-    };
+exports.implement = function(proto, mixin) {
+    exports.mixin(proto, mixin);
+};
 
-    oop.implement = function(proto, mixin) {
-        oop.mixin(proto, mixin);
-    };
-
-    exports.oop = oop;
 });

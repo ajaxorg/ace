@@ -37,27 +37,24 @@
 
 define(function(require, exports, module) {
 
-    var core = {};
-    var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
+var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
 
-    core.isWin = (os == "win");
-    core.isMac = (os == "mac");
-    core.isLinux = (os == "linux");
-    core.isIE = ! + "\v1";
-    core.isGecko = window.controllers && window.navigator.product === "Gecko";
+exports.isWin = (os == "win");
+exports.isMac = (os == "mac");
+exports.isLinux = (os == "linux");
+exports.isIE = ! + "\v1";
+exports.isGecko = window.controllers && window.navigator.product === "Gecko";
 
-    core.provide = function(namespace) {
-        var parts = namespace.split(".");
-        var obj = window;
-        for (var i=0; i<parts.length; i++) {
-            var part = parts[i];
-            if (!obj[part]) {
-                obj[part] = {};
-            }
-            obj = obj[part];
+exports.provide = function(namespace) {
+    var parts = namespace.split(".");
+    var obj = window;
+    for (var i=0; i<parts.length; i++) {
+        var part = parts[i];
+        if (!obj[part]) {
+            obj[part] = {};
         }
-    };
-
-    exports.core = core;
+        obj = obj[part];
+    }
+};
 
 });

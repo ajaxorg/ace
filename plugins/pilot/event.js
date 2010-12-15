@@ -37,206 +37,203 @@
 
 define(function(require, exports, module) {
 
-    var core = require("pilot/core").core;
-    var event = {};
+var core = require("pilot/core");
 
-    event.addListener = function(elem, type, callback) {
-        if (elem.addEventListener) {
-            return elem.addEventListener(type, callback, false);
-        }
-        if (elem.attachEvent) {
-            var wrapper = function() {
-                callback(window.event);
-            };
-            callback._wrapper = wrapper;
-            elem.attachEvent("on" + type, wrapper);
-        }
-    };
-
-    event.removeListener = function(elem, type, callback) {
-        if (elem.removeEventListener) {
-            return elem.removeEventListener(type, callback, false);
-        }
-        if (elem.detachEvent) {
-            elem.detachEvent("on" + type, callback._wrapper || callback);
-        }
-    };
-
-    event.stopEvent = function(e) {
-        event.stopPropagation(e);
-        event.preventDefault(e);
-        return false;
-    };
-
-    event.stopPropagation = function(e) {
-        if (e.stopPropagation)
-            e.stopPropagation();
-        else
-            e.cancelBubble = true;
-    };
-
-    event.preventDefault = function(e) {
-        if (e.preventDefault)
-            e.preventDefault();
-        else
-            e.returnValue = false;
-    };
-
-    event.getDocumentX = function(e) {
-        if (e.clientX) {
-            var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-            return e.clientX + scrollLeft;
-        } else {
-            return e.pageX;
-        }
-    };
-
-    event.getDocumentY = function(e) {
-        if (e.clientY) {
-            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            return e.clientY + scrollTop;
-        } else {
-            return e.pageX;
-        }
-    };
-
-    /**
-     * @return {Number} 0 for left button, 1 for middle button, 2 for right button
-     */
-    event.getButton = function(e) {
-        // DOM Event
-        if (e.preventDefault) {
-            return e.button;
-        }
-        // old IE
-        else {
-            return Math.max(e.button - 1, 2);
-        }
-    };
-
-    if (document.documentElement.setCapture) {
-        event.capture = function(el, eventHandler, releaseCaptureHandler) {
-            function onMouseMove(e) {
-                eventHandler(e);
-                return event.stopPropagation(e);
-            }
-
-            function onReleaseCapture(e) {
-                eventHandler && eventHandler(e);
-                releaseCaptureHandler && releaseCaptureHandler();
-
-                event.removeListener(el, "mousemove", eventHandler);
-                event.removeListener(el, "mouseup", onReleaseCapture);
-                event.removeListener(el, "losecapture", onReleaseCapture);
-
-                el.releaseCapture();
-            }
-
-            event.addListener(el, "mousemove", eventHandler);
-            event.addListener(el, "mouseup", onReleaseCapture);
-            event.addListener(el, "losecapture", onReleaseCapture);
-            el.setCapture();
-        };
+exports.addListener = function(elem, type, callback) {
+    if (elem.addEventListener) {
+        return elem.addEventListener(type, callback, false);
     }
+    if (elem.attachEvent) {
+        var wrapper = function() {
+            callback(window.event);
+        };
+        callback._wrapper = wrapper;
+        elem.attachEvent("on" + type, wrapper);
+    }
+};
+
+exports.removeListener = function(elem, type, callback) {
+    if (elem.removeEventListener) {
+        return elem.removeEventListener(type, callback, false);
+    }
+    if (elem.detachEvent) {
+        elem.detachEvent("on" + type, callback._wrapper || callback);
+    }
+};
+
+exports.stopEvent = function(e) {
+    exports.stopPropagation(e);
+    exports.preventDefault(e);
+    return false;
+};
+
+exports.stopPropagation = function(e) {
+    if (e.stopPropagation)
+        e.stopPropagation();
+    else
+        e.cancelBubble = true;
+};
+
+exports.preventDefault = function(e) {
+    if (e.preventDefault)
+        e.preventDefault();
+    else
+        e.returnValue = false;
+};
+
+exports.getDocumentX = function(e) {
+    if (e.clientX) {
+        var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+        return e.clientX + scrollLeft;
+    } else {
+        return e.pageX;
+    }
+};
+
+exports.getDocumentY = function(e) {
+    if (e.clientY) {
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        return e.clientY + scrollTop;
+    } else {
+        return e.pageX;
+    }
+};
+
+/**
+ * @return {Number} 0 for left button, 1 for middle button, 2 for right button
+ */
+exports.getButton = function(e) {
+    // DOM Event
+    if (e.preventDefault) {
+        return e.button;
+    }
+    // old IE
     else {
-        event.capture = function(el, eventHandler, releaseCaptureHandler) {
-            function onMouseMove(e) {
-                eventHandler(e);
-                e.stopPropagation();
-            }
-
-            function onMouseUp(e) {
-                eventHandler && eventHandler(e);
-                releaseCaptureHandler && releaseCaptureHandler();
-
-                document.removeEventListener("mousemove", onMouseMove, true);
-                document.removeEventListener("mouseup", onMouseUp, true);
-
-                e.stopPropagation();
-            }
-
-            document.addEventListener("mousemove", onMouseMove, true);
-            document.addEventListener("mouseup", onMouseUp, true);
-        };
+        return Math.max(e.button - 1, 2);
     }
+};
 
-    event.addMouseWheelListener = function(el, callback) {
-        var listener = function(e) {
-            if (e.wheelDelta !== undefined) {
-                if (e.wheelDeltaX !== undefined) {
-                    e.wheelX = -e.wheelDeltaX / 8;
-                    e.wheelY = -e.wheelDeltaY / 8;
-                } else {
-                    e.wheelX = 0;
-                    e.wheelY = -e.wheelDelta / 8;
-                }
-            }
-            else {
-                if (e.axis && e.axis == e.HORIZONTAL_AXIS) {
-                    e.wheelX = (e.detail || 0) * 5;
-                    e.wheelY = 0;
-                } else {
-                    e.wheelX = 0;
-                    e.wheelY = (e.detail || 0) * 5;
-                }
-            }
-            callback(e);
-        };
-        event.addListener(el, "DOMMouseScroll", listener);
-        event.addListener(el, "mousewheel", listener);
-    };
-
-    event.addMultiMouseDownListener = function(el, button, count, timeout, callback) {
-        var clicks = 0;
-        var startX, startY;
-
-        var listener = function(e) {
-            clicks += 1;
-            if (clicks == 1) {
-                startX = e.clientX;
-                startY = e.clientY;
-
-                setTimeout(function() {
-                    clicks = 0;
-                }, timeout || 600);
-            }
-
-            if (event.getButton(e) != button
-              || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
-                clicks = 0;
-
-            if (clicks == count) {
-                clicks = 0;
-                callback(e);
-            }
-            return event.preventDefault(e);
-        };
-
-        event.addListener(el, "mousedown", listener);
-        core.isIE && event.addListener(el, "dblclick", listener);
-    };
-
-    event.addKeyListener = function(el, callback) {
-        var lastDown = null;
-
-        event.addListener(el, "keydown", function(e) {
-            lastDown = e.keyIdentifier || e.keyCode;
-            return callback(e);
-        });
-
-        // repeated keys are fired as keypress and not keydown events
-        if (core.isMac && core.isGecko) {
-            event.addListener(el, "keypress", function(e) {
-                var keyId = e.keyIdentifier || e.keyCode;
-                if (lastDown !== keyId) {
-                    return callback(e);
-                } else {
-                    lastDown = null;
-                }
-            });
+if (document.documentElement.setCapture) {
+    exports.capture = function(el, eventHandler, releaseCaptureHandler) {
+        function onMouseMove(e) {
+            eventHandler(e);
+            return exports.stopPropagation(e);
         }
+
+        function onReleaseCapture(e) {
+            eventHandler && eventHandler(e);
+            releaseCaptureHandler && releaseCaptureHandler();
+
+            exports.removeListener(el, "mousemove", eventHandler);
+            exports.removeListener(el, "mouseup", onReleaseCapture);
+            exports.removeListener(el, "losecapture", onReleaseCapture);
+
+            el.releaseCapture();
+        }
+
+        exports.addListener(el, "mousemove", eventHandler);
+        exports.addListener(el, "mouseup", onReleaseCapture);
+        exports.addListener(el, "losecapture", onReleaseCapture);
+        el.setCapture();
+    };
+}
+else {
+    exports.capture = function(el, eventHandler, releaseCaptureHandler) {
+        function onMouseMove(e) {
+            eventHandler(e);
+            e.stopPropagation();
+        }
+
+        function onMouseUp(e) {
+            eventHandler && eventHandler(e);
+            releaseCaptureHandler && releaseCaptureHandler();
+
+            exports.removeEventListener("mousemove", onMouseMove, true);
+            exports.removeEventListener("mouseup", onMouseUp, true);
+
+            e.stopPropagation();
+        }
+
+        exports.addEventListener("mousemove", onMouseMove, true);
+        exports.addEventListener("mouseup", onMouseUp, true);
+    };
+}
+
+exports.addMouseWheelListener = function(el, callback) {
+    var listener = function(e) {
+        if (e.wheelDelta !== undefined) {
+            if (e.wheelDeltaX !== undefined) {
+                e.wheelX = -e.wheelDeltaX / 8;
+                e.wheelY = -e.wheelDeltaY / 8;
+            } else {
+                e.wheelX = 0;
+                e.wheelY = -e.wheelDelta / 8;
+            }
+        }
+        else {
+            if (e.axis && e.axis == e.HORIZONTAL_AXIS) {
+                e.wheelX = (e.detail || 0) * 5;
+                e.wheelY = 0;
+            } else {
+                e.wheelX = 0;
+                e.wheelY = (e.detail || 0) * 5;
+            }
+        }
+        callback(e);
+    };
+    exports.addListener(el, "DOMMouseScroll", listener);
+    exports.addListener(el, "mousewheel", listener);
+};
+
+exports.addMultiMouseDownListener = function(el, button, count, timeout, callback) {
+    var clicks = 0;
+    var startX, startY;
+
+    var listener = function(e) {
+        clicks += 1;
+        if (clicks == 1) {
+            startX = e.clientX;
+            startY = e.clientY;
+
+            setTimeout(function() {
+                clicks = 0;
+            }, timeout || 600);
+        }
+
+        if (exports.getButton(e) != button
+          || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
+            clicks = 0;
+
+        if (clicks == count) {
+            clicks = 0;
+            callback(e);
+        }
+        return exports.preventDefault(e);
     };
 
-    exports.event = event;
+    exports.addListener(el, "mousedown", listener);
+    core.isIE && exports.addListener(el, "dblclick", listener);
+};
+
+exports.addKeyListener = function(el, callback) {
+    var lastDown = null;
+
+    exports.addListener(el, "keydown", function(e) {
+        lastDown = e.keyIdentifier || e.keyCode;
+        return callback(e);
+    });
+
+    // repeated keys are fired as keypress and not keydown events
+    if (core.isMac && core.isGecko) {
+        exports.addListener(el, "keypress", function(e) {
+            var keyId = e.keyIdentifier || e.keyCode;
+            if (lastDown !== keyId) {
+                return callback(e);
+            } else {
+                lastDown = null;
+            }
+        });
+    }
+};
 
 });
