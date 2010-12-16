@@ -140,25 +140,27 @@ exports.rateLimit = function(maxRate, scope, func) {
     }
 };
 
+var objectToString = Object.prototype.toString;
+
 /**
  * Return true if it is a String
  */
 exports.isString = function(it) {
-    return (typeof it == "string" || it instanceof String);
+    return it && objectToString.call(it) === "[object String]";
 };
 
 /**
  * Returns true if it is a Boolean.
  */
 exports.isBoolean = function(it) {
-    return (typeof it == 'boolean');
+    return it && objectToString.call(it) === "[object Boolean]";
 };
 
 /**
  * Returns true if it is a Number.
  */
 exports.isNumber = function(it) {
-    return (typeof it == 'number' && isFinite(it));
+    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
 };
 
 /**
@@ -174,22 +176,9 @@ exports.isObject = function(it) {
  * Is the passed object a function?
  * From dojo.isFunction()
  */
-exports.isFunction = (function() {
-    var _isFunction = function(it) {
-        var t = typeof it; // must evaluate separately due to bizarre Opera bug. See #8937
-        //Firefox thinks object HTML element is a function, so test for nodeType.
-        return it && (t == "function" || it instanceof Function) && !it.nodeType; // Boolean
-    };
-
-    return exports.isSafari ?
-        // only slow this down w/ gratuitious casting in Safari (not WebKit)
-        function(/*anything*/ it) {
-            if (typeof it == "function" && it == "[object NodeList]") {
-                return false;
-            }
-            return _isFunction(it); // Boolean
-        } : _isFunction;
-})();
+exports.isFunction = function(it) {
+    return it && objectToString.call(it) === "[object Function]";
+};
 
 /**
  * A la Prototype endsWith(). Takes a regex excluding the '$' end marker
