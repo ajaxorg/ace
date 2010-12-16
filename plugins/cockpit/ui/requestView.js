@@ -37,15 +37,13 @@
 
 define(function(require, exports, module) {
 
-
-var util = require('pilot/util');
-
-var requestViewCss = require("text!cockpit/ui/requestView.css");
 var dom = require("pilot/dom");
-dom.importCssString(requestViewCss);
-
+var event = require("pilot/event");
 var requestViewHtml = require("text!cockpit/ui/requestView.html");
 var Templater = require("pilot/domtemplate").Templater;
+
+var requestViewCss = require("text!cockpit/ui/requestView.css");
+dom.importCssString(requestViewCss);
 
 /**
  * Pull the HTML into the DOM, but don't add it to the document
@@ -102,24 +100,24 @@ RequestView.prototype = {
 
     hideOutput: function(ev) {
         this.output.style.display = 'none';
-        util.addClass(this.hide, 'cmd_hidden');
-        util.removeClass(this.show, 'cmd_hidden');
+        dom.addCssClass(this.hide, 'cmd_hidden');
+        dom.removeCssClass(this.show, 'cmd_hidden');
 
-        ev.stopPropagation();
+        event.stopPropagation(ev);
     },
 
     showOutput: function(ev) {
         this.output.style.display = 'block';
-        util.removeClass(this.hide, 'cmd_hidden');
-        util.addClass(this.show, 'cmd_hidden');
+        dom.removeCssClass(this.hide, 'cmd_hidden');
+        dom.addCssClass(this.show, 'cmd_hidden');
 
-        ev.stopPropagation();
+        event.stopPropagation(ev);
     },
 
     remove: function(ev) {
         this.cliView.output.removeChild(this.rowin);
         this.cliView.output.removeChild(this.rowout);
-        ev.stopPropagation();
+        event.stopPropagation(ev);
     },
 
     onRequestChange: function(ev) {
@@ -140,7 +138,7 @@ RequestView.prototype = {
         }, this);
         this.cliView.scrollOutputToBottom();
 
-        util.setClass(this.output, 'cmd_error', this.request.error);
+        dom.setCssClass(this.output, 'cmd_error', this.request.error);
 
         this.throb.style.display = this.request.completed ? 'none' : 'block';
     }

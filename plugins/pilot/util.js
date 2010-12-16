@@ -481,53 +481,6 @@ exports.formatDate = function (date) {
 exports.formatDate.shortMonths = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
 /**
- * Add a CSS class to the list of classes on the given node
- */
-exports.addClass = function(node, className) {
-    var parts = className.split(/\s+/);
-    var cls = " " + node.className + " ";
-    for (var i = 0, len = parts.length, c; i < len; ++i) {
-        c = parts[i];
-        if (c && cls.indexOf(" " + c + " ") < 0) {
-            cls += c + " ";
-        }
-    }
-    node.className = cls.trim();
-};
-
-/**
- * Remove a CSS class from the list of classes on the given node
- */
-exports.removeClass = function(node, className) {
-    var cls;
-    if (className !== undefined) {
-        var parts = className.split(/\s+/);
-        cls = " " + node.className + " ";
-        for (var i = 0, len = parts.length; i < len; ++i) {
-            cls = cls.replace(" " + parts[i] + " ", " ");
-        }
-        cls = cls.trim();
-    } else {
-        cls = "";
-    }
-    if (node.className != cls) {
-        node.className = cls;
-    }
-};
-
-/**
- * Add or remove a CSS class from the list of classes on the given node
- * depending on the value of <tt>include</tt>
- */
-exports.setClass = function(node, className, include) {
-    if (include) {
-        exports.addClass(node, className);
-    } else {
-        exports.removeClass(node, className);
-    }
-};
-
-/**
  * Is the passed object either null or undefined (using ===)
  */
 exports.none = function(obj) {
