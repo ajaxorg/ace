@@ -33,6 +33,7 @@ For more information about SproutCore, visit http://www.sproutcore.com
 
 define(function(require, exports, module) {
 
+var dom = require('pilot/dom');
 var util = require('pilot/util');
 
 
@@ -215,7 +216,7 @@ exports.addKeyDownListener = function(element, boundFunction) {
         var handled = boundFunction(ev);
         // If the boundFunction returned true, then stop the event.
         if (handled) {
-            util.stopEvent(ev);
+            dom.stopEvent(ev);
         }
         return handled;
     };

@@ -61,6 +61,9 @@ exports.removeListener = function(elem, type, callback) {
     }
 };
 
+/**
+* Prevents propagation and clobbers the default action of the passed event
+*/
 exports.stopEvent = function(e) {
     exports.stopPropagation(e);
     exports.preventDefault(e);
