@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
 
 var console = require('pilot/console');
-var util = require('pilot/util');
+var lang = require('pilot/lang');
 var oop = require('pilot/oop');
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
 
@@ -1048,7 +1048,7 @@ oop.inherits(CliRequisition, Requisition);
                     }
                 }
 
-                util.arrayRemove(names, assignment.name);
+                lang.arrayRemove(names, assignment.name);
                 args.splice(i, 1);
                 // We don't need to i++ if we splice
             }

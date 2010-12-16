@@ -44,7 +44,7 @@ var EventEmitter = require('pilot/event_emitter').EventEmitter;
 var catalog = require('pilot/catalog');
 var Status = require('pilot/types').Status;
 var types = require('pilot/types');
-var util = require('pilot/util');
+var lang = require('pilot/lang');
 
 /*
 // TODO: this doesn't belong here - or maybe anywhere?
@@ -153,7 +153,7 @@ function upgradeType(param) {
 function removeCommand(command) {
     var name = (typeof command === 'string' ? command : command.name);
     delete commands[name];
-    util.arrayRemove(commandNames, name);
+    lang.arrayRemove(commandNames, name);
 };
 
 function getCommand(name) {
