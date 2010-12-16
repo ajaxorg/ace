@@ -37,6 +37,9 @@
 
 define(function(require, exports, module) {
 
+throw new Error("pilot/util is deprecated. If you need one of the functions from this\
+module please copy the code to the appropriate placein pilot/(lang|dom|event)");
+
 /**
  * Create an object representing a de-serialized query section of a URL.
  * Query keys with multiple values are returned in an array.
