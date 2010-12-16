@@ -140,46 +140,6 @@ exports.rateLimit = function(maxRate, scope, func) {
     }
 };
 
-var objectToString = Object.prototype.toString;
-
-/**
- * Return true if it is a String
- */
-exports.isString = function(it) {
-    return it && objectToString.call(it) === "[object String]";
-};
-
-/**
- * Returns true if it is a Boolean.
- */
-exports.isBoolean = function(it) {
-    return it && objectToString.call(it) === "[object Boolean]";
-};
-
-/**
- * Returns true if it is a Number.
- */
-exports.isNumber = function(it) {
-    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
-};
-
-/**
- * Hack copied from dojo.
- */
-exports.isObject = function(it) {
-    return it !== undefined &&
-        (it === null || typeof it == "object" ||
-        Array.isArray(it) || exports.isFunction(it));
-};
-
-/**
- * Is the passed object a function?
- * From dojo.isFunction()
- */
-exports.isFunction = function(it) {
-    return it && objectToString.call(it) === "[object Function]";
-};
-
 /**
  * A la Prototype endsWith(). Takes a regex excluding the '$' end marker
  */

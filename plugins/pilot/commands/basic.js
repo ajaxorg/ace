@@ -37,8 +37,7 @@
 
 define(function(require, exports, module) {
 
-
-var util = require('pilot/util');
+var checks = require("pilot/typecheck");
 var canon = require('pilot/canon');
 
 /**
@@ -165,11 +164,11 @@ var evalCommandSpec = {
         var type = '';
         var x;
 
-        if (util.isFunction(result)) {
+        if (checks.isFunction(result)) {
             // converts the function to a well formated string
             msg = (result + '').replace(/\n/g, '<br>').replace(/ /g, '&#160');
             type = 'function';
-        } else if (util.isObject(result)) {
+        } else if (checks.isObject(result)) {
             if (Array.isArray(result)) {
                 type = 'array';
             } else {
@@ -181,9 +180,9 @@ var evalCommandSpec = {
 
             for (x in result) {
                 if (result.hasOwnProperty(x)) {
-                    if (util.isFunction(result[x])) {
+                    if (checks.isFunction(result[x])) {
                         value = '[function]';
-                    } else if (util.isObject(result[x])) {
+                    } else if (checks.isObject(result[x])) {
                         value = '[object]';
                     } else {
                         value = result[x];
