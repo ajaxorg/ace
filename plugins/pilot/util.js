@@ -261,21 +261,6 @@ exports.makeArray = function(number, character) {
 };
 
 /**
- * Repeat a string a given number of times.
- * @param string String to repeat
- * @param repeat Number of times to repeat
- */
-exports.repeatString = function(string, repeat) {
-    var newstring = '';
-
-    for (var i = 0; i < repeat; i++) {
-        newstring += string;
-    }
-
-    return newstring;
-};
-
-/**
  * Given a row, find the number of leading spaces.
  * E.g. an array with the string "  aposjd" would return 2
  * @param row The row to hunt through
