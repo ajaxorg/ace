@@ -217,9 +217,8 @@ exports.indexOfProperty = function(array, propertyName, item) {
  * A la Prototype last().
  */
 exports.last = function(array) {
-    if (Array.isArray(array)) {
-        return array[array.length - 1];
-    }
+
+return array[array.length - 1];
 };
 
 /**
