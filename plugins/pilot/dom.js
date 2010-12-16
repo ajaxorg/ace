@@ -51,12 +51,30 @@ exports.hasCssClass = function(el, name) {
     return classes.indexOf(name) !== -1;
 };
 
+/**
+* Add a CSS class to the list of classes on the given node
+*/
 exports.addCssClass = function(el, name) {
     if (!exports.hasCssClass(el, name)) {
         el.className += " " + name;
     }
 };
 
+/**
+ * Add or remove a CSS class from the list of classes on the given node
+ * depending on the value of <tt>include</tt>
+ */
+exports.setCssClass = function(node, className, include) {
+    if (include) {
+        exports.addCssClass(node, className);
+    } else {
+        exports.removeCssClass(node, className);
+    }
+};
+
+/**
+* Remove a CSS class from the list of classes on the given node
+*/
 exports.removeCssClass = function(el, name) {
     var classes = el.className.split(/\s+/g);
     while (true) {

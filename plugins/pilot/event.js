@@ -37,7 +37,7 @@
 
 define(function(require, exports, module) {
 
-var core = require("pilot/core");
+var useragent = require("pilot/useragent");
 
 exports.addListener = function(elem, type, callback) {
     if (elem.addEventListener) {
@@ -61,6 +61,9 @@ exports.removeListener = function(elem, type, callback) {
     }
 };
 
+/**
+* Prevents propagation and clobbers the default action of the passed event
+*/
 exports.stopEvent = function(e) {
     exports.stopPropagation(e);
     exports.preventDefault(e);
@@ -212,7 +215,7 @@ exports.addMultiMouseDownListener = function(el, button, count, timeout, callbac
     };
 
     exports.addListener(el, "mousedown", listener);
-    core.isIE && exports.addListener(el, "dblclick", listener);
+    useragent.isIE && exports.addListener(el, "dblclick", listener);
 };
 
 exports.addKeyListener = function(el, callback) {
@@ -224,7 +227,7 @@ exports.addKeyListener = function(el, callback) {
     });
 
     // repeated keys are fired as keypress and not keydown events
-    if (core.isMac && (core.isGecko || core.isOpera)) {
+    if (useragent.isMac && (useragent.isGecko || useragent.isOpera)) {
         exports.addListener(el, "keypress", function(e) {
             var keyId = e.keyIdentifier || e.keyCode;
             if (lastDown !== keyId) {

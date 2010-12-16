@@ -11,15 +11,15 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Ajax.org Code Editor (ACE).
+ * The Original Code is Skywriter.
  *
  * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
+ *   Joe Walker (jwalker@mozilla.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,71 +37,44 @@
 
 define(function(require, exports, module) {
 
-exports.stringReverse = function(string) {
-    return string.split("").reverse().join("");
-};
+var objectToString = Object.prototype.toString;
 
-exports.stringRepeat = function (string, count) {
-     return new Array(count + 1).join(string);
-};
-
-exports.copyObject = function(obj) {
-    var copy = {};
-    for (var key in obj) {
-        copy[key] = obj[key];
-    }
-    return copy;
-};
-
-exports.arrayToMap = function(arr) {
-    var map = {};
-    for (var i=0; i<arr.length; i++) {
-        map[arr[i]] = 1;
-    }
-    return map;
-
+/**
+ * Return true if it is a String
+ */
+exports.isString = function(it) {
+    return it && objectToString.call(it) === "[object String]";
 };
 
 /**
- * splice out of 'array' anything that === 'value'
+ * Returns true if it is a Boolean.
  */
-exports.arrayRemove = function(array, value) {
-  for (var i = 0; i <= array.length; i++) {
-    if (value === array[i]) {
-      array.splice(i, 1);
-    }
-  }
+exports.isBoolean = function(it) {
+    return it && objectToString.call(it) === "[object Boolean]";
 };
 
-exports.escapeRegExp = function(str) {
-    return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
+/**
+ * Returns true if it is a Number.
+ */
+exports.isNumber = function(it) {
+    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
 };
 
-exports.deferredCall = function(fcn) {
+/**
+ * Hack copied from dojo.
+ */
+exports.isObject = function(it) {
+    return it !== undefined &&
+        (it === null || typeof it == "object" ||
+        Array.isArray(it) || exports.isFunction(it));
+};
 
-    var timer = null;
-    var callback = function() {
-        timer = null;
-        fcn();
-    };
-
-    return {
-      schedule: function() {
-        if (!timer) {
-            timer = setTimeout(callback, 0);
-        }
-      },
-
-      call: function() {
-          this.cancel();
-          fcn();
-      },
-
-      cancel: function() {
-          clearTimeout(timer);
-          timer = null;
-      }
-  };
+/**
+ * Is the passed object a function?
+ * From dojo.isFunction()
+ */
+exports.isFunction = function(it) {
+    return it && objectToString.call(it) === "[object Function]";
 };
 
 });

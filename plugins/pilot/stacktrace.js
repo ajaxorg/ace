@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     
-var util = require("pilot/util");
+var ua = require("pilot/useragent");
 var console = require('pilot/console');
 
 // Changed to suit the specific needs of running within Skywriter
@@ -65,11 +65,11 @@ var mode = (function() {
     // functionality provided by Firebug. Firebug tries to do the right
     // thing here and break, but it happens every time you load the page.
     // bug 554105
-    if (util.isMozilla) {
+    if (ua.isGecko) {
         return 'firefox';
-    } else if (util.isOpera) {
+    } else if (ua.isOpera) {
         return 'opera';
-    } else if (util.isSafari) {
+    } else {
         return 'other';
     }
 

@@ -33,8 +33,8 @@ For more information about SproutCore, visit http://www.sproutcore.com
 
 define(function(require, exports, module) {
 
-var util = require('pilot/util');
-
+var event = require('pilot/event');
+var useragent = require('pilot/useragent');
 
 /**
  * Helper functions and hashes for key handling.
@@ -215,13 +215,13 @@ exports.addKeyDownListener = function(element, boundFunction) {
         var handled = boundFunction(ev);
         // If the boundFunction returned true, then stop the event.
         if (handled) {
-            util.stopEvent(ev);
+            event.stopEvent(ev);
         }
         return handled;
     };
 
     element.addEventListener('keydown', function(ev) {
-        if (util.isMozilla) {
+        if (useragent.isGecko) {
             // Check for function keys (like DELETE, TAB, LEFT, RIGHT...)
             if (exports.KeyHelper.FUNCTION_KEYS[ev.keyCode]) {
                 return true;
@@ -240,7 +240,7 @@ exports.addKeyDownListener = function(element, boundFunction) {
     }, false);
 
     element.addEventListener('keypress', function(ev) {
-        if (util.isMozilla) {
+        if (useragent.isGecko) {
             // If this is a function key, we have to use the keyCode.
             if (exports.KeyHelper.FUNCTION_KEYS[ev.keyCode]) {
                 return handleBoundFunction(ev);

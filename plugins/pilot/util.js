@@ -37,6 +37,9 @@
 
 define(function(require, exports, module) {
 
+throw new Error("pilot/util is deprecated. If you need one of the functions from this\
+module please copy the code to the appropriate placein pilot/(lang|dom|event)");
+
 /**
  * Create an object representing a de-serialized query section of a URL.
  * Query keys with multiple values are returned in an array.
@@ -141,57 +144,6 @@ exports.rateLimit = function(maxRate, scope, func) {
 };
 
 /**
- * Return true if it is a String
- */
-exports.isString = function(it) {
-    return (typeof it == "string" || it instanceof String);
-};
-
-/**
- * Returns true if it is a Boolean.
- */
-exports.isBoolean = function(it) {
-    return (typeof it == 'boolean');
-};
-
-/**
- * Returns true if it is a Number.
- */
-exports.isNumber = function(it) {
-    return (typeof it == 'number' && isFinite(it));
-};
-
-/**
- * Hack copied from dojo.
- */
-exports.isObject = function(it) {
-    return it !== undefined &&
-        (it === null || typeof it == "object" ||
-        Array.isArray(it) || exports.isFunction(it));
-};
-
-/**
- * Is the passed object a function?
- * From dojo.isFunction()
- */
-exports.isFunction = (function() {
-    var _isFunction = function(it) {
-        var t = typeof it; // must evaluate separately due to bizarre Opera bug. See #8937
-        //Firefox thinks object HTML element is a function, so test for nodeType.
-        return it && (t == "function" || it instanceof Function) && !it.nodeType; // Boolean
-    };
-
-    return exports.isSafari ?
-        // only slow this down w/ gratuitious casting in Safari (not WebKit)
-        function(/*anything*/ it) {
-            if (typeof it == "function" && it == "[object NodeList]") {
-                return false;
-            }
-            return _isFunction(it); // Boolean
-        } : _isFunction;
-})();
-
-/**
  * A la Prototype endsWith(). Takes a regex excluding the '$' end marker
  */
 exports.endsWith = function(str, end) {
@@ -228,9 +180,8 @@ exports.indexOfProperty = function(array, propertyName, item) {
  * A la Prototype last().
  */
 exports.last = function(array) {
-    if (Array.isArray(array)) {
-        return array[array.length - 1];
-    }
+
+return array[array.length - 1];
 };
 
 /**
@@ -269,21 +220,6 @@ exports.makeArray = function(number, character) {
         newArray.push(character);
     }
     return newArray;
-};
-
-/**
- * Repeat a string a given number of times.
- * @param string String to repeat
- * @param repeat Number of times to repeat
- */
-exports.repeatString = function(string, repeat) {
-    var newstring = '';
-
-    for (var i = 0; i < repeat; i++) {
-        newstring += string;
-    }
-
-    return newstring;
 };
 
 /**
@@ -347,77 +283,6 @@ exports.englishFromCamel = function(camel) {
     }).trim();
 };
 
-/**
- * I hate doing this, but we need some way to determine if the user is on a Mac
- * The reason is that users have different expectations of their key combinations.
- *
- * Take copy as an example, Mac people expect to use CMD or APPLE + C
- * Windows folks expect to use CTRL + C
- */
-exports.OS = {
-    LINUX: 'LINUX',
-    MAC: 'MAC',
-    WINDOWS: 'WINDOWS'
-};
-
-var ua = navigator.userAgent;
-var av = navigator.appVersion;
-
-/** Is the user using a browser that identifies itself as Linux */
-exports.isLinux = av.indexOf("Linux") >= 0;
-
-/** Is the user using a browser that identifies itself as Windows */
-exports.isWindows = av.indexOf("Win") >= 0;
-
-/** Is the user using a browser that identifies itself as WebKit */
-exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
-
-/** Is the user using a browser that identifies itself as Chrome */
-exports.isChrome = parseFloat(ua.split("Chrome/")[1]) || undefined;
-
-/** Is the user using a browser that identifies itself as Mac OS */
-exports.isMac = av.indexOf("Macintosh") >= 0;
-
-/* Is this Firefox or related? */
-exports.isMozilla = av.indexOf('Gecko/') >= 0;
-
-if (ua.indexOf("AdobeAIR") >= 0) {
-    exports.isAIR = 1;
-}
-
-/**
- * Is the user using a browser that identifies itself as Safari
- * See also:
- * - http://developer.apple.com/internet/safari/faq.html#anchor2
- * - http://developer.apple.com/internet/safari/uamatrix.html
- */
-var index = Math.max(av.indexOf("WebKit"), av.indexOf("Safari"), 0);
-if (index && !exports.isChrome) {
-    // try to grab the explicit Safari version first. If we don't get
-    // one, look for less than 419.3 as the indication that we're on something
-    // "Safari 2-ish".
-    exports.isSafari = parseFloat(av.split("Version/")[1]);
-    if (!exports.isSafari || parseFloat(av.substr(index + 7)) <= 419.3) {
-        exports.isSafari = 2;
-    }
-}
-
-if (ua.indexOf("Gecko") >= 0 && !exports.isWebKit) {
-    exports.isMozilla = parseFloat(av);
-}
-
-/**
- * Return a exports.OS constant
- */
-exports.getOS = function() {
-    if (exports.isMac) {
-        return exports.OS['MAC'];
-    } else if (exports.isLinux) {
-        return exports.OS['LINUX'];
-    } else {
-        return exports.OS['WINDOWS'];
-    }
-};
 
 /** Returns true if the DOM element "b" is inside the element "a". */
 if (typeof(document) !== 'undefined' && document.compareDocumentPosition) {
@@ -429,14 +294,6 @@ if (typeof(document) !== 'undefined' && document.compareDocumentPosition) {
         return a !== b && (a.contains ? a.contains(b) : true);
     };
 }
-
-/**
- * Prevents propagation and clobbers the default action of the passed event
- */
-exports.stopEvent = function(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-};
 
 /**
  * Create a random password of the given length (default 16 chars)
@@ -490,53 +347,6 @@ exports.formatDate = function (date) {
  * Month data for exports.formatDate
  */
 exports.formatDate.shortMonths = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-
-/**
- * Add a CSS class to the list of classes on the given node
- */
-exports.addClass = function(node, className) {
-    var parts = className.split(/\s+/);
-    var cls = " " + node.className + " ";
-    for (var i = 0, len = parts.length, c; i < len; ++i) {
-        c = parts[i];
-        if (c && cls.indexOf(" " + c + " ") < 0) {
-            cls += c + " ";
-        }
-    }
-    node.className = cls.trim();
-};
-
-/**
- * Remove a CSS class from the list of classes on the given node
- */
-exports.removeClass = function(node, className) {
-    var cls;
-    if (className !== undefined) {
-        var parts = className.split(/\s+/);
-        cls = " " + node.className + " ";
-        for (var i = 0, len = parts.length; i < len; ++i) {
-            cls = cls.replace(" " + parts[i] + " ", " ");
-        }
-        cls = cls.trim();
-    } else {
-        cls = "";
-    }
-    if (node.className != cls) {
-        node.className = cls;
-    }
-};
-
-/**
- * Add or remove a CSS class from the list of classes on the given node
- * depending on the value of <tt>include</tt>
- */
-exports.setClass = function(node, className, include) {
-    if (include) {
-        exports.addClass(node, className);
-    } else {
-        exports.removeClass(node, className);
-    }
-};
 
 /**
  * Is the passed object either null or undefined (using ===)
@@ -628,17 +438,5 @@ exports.rectsEqual = function(r1, r2, delta) {
 
     return true;
 };
-
-/**
- * splice out of 'array' anything that === 'value'
- */
-exports.arrayRemove = function(array, value) {
-  for (var i = 0; i <= array.length; i++) {
-    if (value === array[i]) {
-      array.splice(i, 1);
-    }
-  }
-};
-
 
 });
