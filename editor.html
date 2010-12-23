@@ -46,10 +46,24 @@
         display: none;
     }
     
-    #cockpit {
+    #cockpitInput {
         position: absolute;
         width: 100%;
         bottom: 0;
+
+        border: none; outline: none;
+        font-family: consolas, courier, monospace;
+        font-size: 120%;
+    }
+
+    #cockpitOutput {
+        padding: 10px;
+        margin: 0 15px;
+        border: 1px solid #AAA;
+        -moz-border-radius-topleft: 10px;
+        -moz-border-radius-topright: 10px;
+        border-top-left-radius: 4px; border-top-right-radius: 4px;
+        background: #DDD; color: #000;
     }
     </style>
 </head>
@@ -177,31 +191,10 @@ echo $output;
 
 ?></script>
 
-    <input id="cockpit" type="text"/>
+  <input id="cockpitInput" type="text"/>
 
-
-    <script>
-	  require = {
-	    //urlArgs: "bust=" +  (new Date()).getTime()
-	  };
-	</script>
-	<script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
-	<script src="demo/boot.js" type="text/javascript"></script>
-	<script>
-	  setupPlugins({
-	    pluginDirs: {
-	      "../demo": {
-	        singleFiles: ["demo_startup"]
-	      }
-	    }
-	  }, function(plugin_manager, settings) {
-	    var data = { env: { settings: settings } };
-	    plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
-	      var demo_startup = require("demo_startup");
-	      demo_startup.launch(data.env);
-	    });
-	  });
-	</script>
+  <script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
+  <script src="demo/boot.js" type="text/javascript"></script>
 
 </body>
 </html>
