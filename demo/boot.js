@@ -35,17 +35,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/*
+setupPlugins(function(plugin_manager, settings) {
+  var data = { env: { settings: settings } };
+  plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
+    var demo_startup = require("demo_startup");
+    demo_startup.launch(data.env);
+  });
+});
+
 // TODO: Yuck! A global function
-var setupPlugins = function(config, callback) {
-    config = config || {};
+var setupPlugins = function(callback) {
+    var config = {
+      pluginDirs: {
+        "../demo": {
+          singleFiles: ["demo_startup"]
+        }
+      }
+    };
+
     if (!config.pluginDirs) {
         config.pluginDirs = {};
     }
     // config.pluginDirs["../lib"] = {
     //     packages: ["ace"]
     // };
-    config.pluginDirs["../plugins"] = {
-        packages: ["pilot", "cockpit"]
+    config.pluginDirs["../support/cockpit/support/pilot/lib"] = {
+        packages: [ "pilot" ]
+    };
+    config.pluginDirs["../support/cockpit/lib"] = {
+        packages: [ "cockpit" ]
     };
 
     var knownPlugins = [];
@@ -99,7 +118,7 @@ var setupPlugins = function(config, callback) {
                     main: "index",
                     lib: "."
                 });
-                knownPlugins.push(packages[i]);
+                knownPlugins.push(packages[i] + "/index");
             }
         }
         if (dirInfo.singleFiles) {
@@ -125,3 +144,35 @@ var setupPlugins = function(config, callback) {
         });
     });
 };
+*/
+
+var config = {
+    packagePaths: {
+        "../lib": [
+            { name:"ace", lib: "." }
+        ],
+        "../support/cockpit/lib": [
+            { name: "cockpit", main: "index", lib: "." }
+        ],
+        "../support/cockpit/support/pilot/lib": [
+            { name: "pilot", main: "index", lib: "." }
+        ]
+    },
+    paths: { demo_startup: "../demo/demo_startup" }
+};
+
+var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
+             "pilot/environment", "demo_startup" ];
+
+require(config, deps, function() {
+    var catalog = require("pilot/plugin_manager").catalog;
+    var REASON_START = require("pilot/plugin_manager").REASONS.APP_STARTUP;
+    var settings = require("pilot/settings").settings;
+
+    catalog.registerPlugins([ "pilot/index", "cockpit/index" ]).then(function() {
+        var env = require("pilot/environment").create();
+        catalog.startupPlugins({ env:env }, REASON_START).then(function() {
+          require("demo_startup").launch(env);
+        });
+    });
+});
