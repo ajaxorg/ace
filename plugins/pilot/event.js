@@ -151,14 +151,14 @@ else {
             eventHandler && eventHandler(e);
             releaseCaptureHandler && releaseCaptureHandler();
 
-            el.removeEventListener("mousemove", onMouseMove, true);
-            el.removeEventListener("mouseup", onMouseUp, true);
+            document.removeEventListener("mousemove", onMouseMove, true);
+            document.removeEventListener("mouseup", onMouseUp, true);
 
             e.stopPropagation();
         }
 
-        el.addEventListener("mousemove", onMouseMove, true);
-        el.addEventListener("mouseup", onMouseUp, true);
+        document.addEventListener("mousemove", onMouseMove, true);
+        document.addEventListener("mouseup", onMouseUp, true);
     };
 }
 
