@@ -43,6 +43,7 @@
   overflow: hidden;  
   white-space: nowrap;
   height: 100%;
+  width: 100%;
 }
 
 .ace_text-layer {
