@@ -58,6 +58,7 @@ exports.launch = function(env) {
     var docs = {};
 
     docs.js = new Document(document.getElementById("jstext").innerHTML);
+    docs.js.setUseWrapMode(true);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
