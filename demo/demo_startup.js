@@ -57,8 +57,17 @@ exports.launch = function(env) {
 
     var docs = {};
 
+    // Make the lorem ipsum text a little bit longer.
+    var loreIpsum = document.getElementById("plaintext").innerHTML;
+    for (var i = 0; i < 5; i++) {
+        loreIpsum += loreIpsum;
+    }
+    docs.plain = new Document(loreIpsum);
+    docs.plain.setUseWrapMode(true);
+    docs.plain.setMode(new TextMode());
+    docs.plain.setUndoManager(new UndoManager());
+
     docs.js = new Document(document.getElementById("jstext").innerHTML);
-    docs.js.setUseWrapMode(true);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
