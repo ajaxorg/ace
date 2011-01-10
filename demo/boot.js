@@ -37,9 +37,6 @@
 
 var config = {
     packagePaths: {
-        "../lib": [
-            { name:"ace", lib: "." }
-        ],
         "../support/cockpit/lib": [
             { name: "cockpit", main: "index", lib: "." }
         ],
@@ -47,18 +44,21 @@ var config = {
             { name: "pilot", main: "index", lib: "." }
         ]
     },
-    paths: { demo_startup: "../demo/demo_startup" }
+    paths: { 
+        demo: "../demo",
+        ace: "../lib/ace"
+    }
 };
 
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment", "demo_startup" ];
+             "pilot/environment", "demo/startup" ];
 
 require(config, deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index", "cockpit/index" ]).then(function() {
         var env = require("pilot/environment").create();
         catalog.startupPlugins({ env: env }).then(function() {
-            require("demo_startup").launch(env);
+            require("demo/startup").launch(env);
         });
     });
 });
