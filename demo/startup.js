@@ -153,7 +153,7 @@ exports.launch = function(env) {
             env.editor.setSelectionStyle("text");
         }
     };
-    selectEl.onchange = setSelectionStyle;
+    selectEl.onclick = setSelectionStyle;
     setSelectionStyle();
 
 
@@ -161,7 +161,7 @@ exports.launch = function(env) {
     function setHighlightActiveLine() {
         env.editor.setHighlightActiveLine(!!activeEl.checked);
     };
-    activeEl.onchange = setHighlightActiveLine;
+    activeEl.onclick = setHighlightActiveLine;
     setHighlightActiveLine();
 
 
@@ -169,7 +169,7 @@ exports.launch = function(env) {
     function setShowInvisibles() {
         env.editor.setShowInvisibles(!!showHiddenEl.checked);
     };
-    showHiddenEl.onchange = setShowInvisibles;
+    showHiddenEl.onclick = setShowInvisibles;
     setShowInvisibles();
 
 
