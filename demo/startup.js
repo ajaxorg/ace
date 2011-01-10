@@ -36,25 +36,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-
-define(function(require, exports, module) {
+var event = require("pilot/event");
+var Editor = require("ace/editor").Editor;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var theme = require("ace/theme/textmate");
+var Document = require("ace/document").Document;
+var JavaScriptMode = require("ace/mode/javascript").Mode;
+var CssMode = require("ace/mode/css").Mode;
+var HtmlMode = require("ace/mode/html").Mode;
+var XmlMode = require("ace/mode/xml").Mode;
+var PythonMode = require("ace/mode/python").Mode;
+var PhpMode = require("ace/mode/php").Mode;
+var TextMode = require("ace/mode/text").Mode;
+var UndoManager = require("ace/undomanager").UndoManager;
 
 exports.launch = function(env) {
-
-    var event = require("pilot/event");
-    var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var Document = require("ace/document").Document;
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    var CssMode = require("ace/mode/css").Mode;
-    var HtmlMode = require("ace/mode/html").Mode;
-    var XmlMode = require("ace/mode/xml").Mode;
-    var PythonMode = require("ace/mode/python").Mode;
-    var PhpMode = require("ace/mode/php").Mode;
-    var TextMode = require("ace/mode/text").Mode;
-    var UndoManager = require("ace/undomanager").UndoManager;
-
     var docs = {};
 
     docs.js = new Document(document.getElementById("jstext").innerHTML);
@@ -142,7 +138,7 @@ exports.launch = function(env) {
         env.editor.setTheme(themeEl.value);
     };
     themeEl.onchange = setTheme;
-    setTheme();
+    //setTheme();
 
 
     var selectEl = document.getElementById("select_style");
@@ -235,4 +231,16 @@ exports.launch = function(env) {
     });
 };
 
-});
+exports.main = function main() {
+  var catalog = require("pilot/plugin_manager").catalog;
+  var env = require("pilot/environment").create();
+  var pilot = require("pilot/index");
+  var cockpit = require("cockpit/index");
+  catalog.startupPlugins({
+    "pilot/index": pilot,
+    "cockpit/index": cockpit,
+    "env": env,
+  }).then(function() { exports.launch(env); });
+}
+
+if (require.main == module) exports.main()
