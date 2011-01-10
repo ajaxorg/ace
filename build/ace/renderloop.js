@@ -1,5 +1,5 @@
-define(function(d) {
-  var e = d("./lib/event");
+define(function(d, f) {
+  var e = d("pilot/event");
   d = function(b) {
     this.onRender = b;
     this.pending = false;
@@ -7,6 +7,7 @@ define(function(d) {
   };
   (function() {
     this.schedule = function(b) {
+      b = 128;
       this.changes |= b;
       if(!this.pending) {
         this.pending = true;
@@ -15,7 +16,11 @@ define(function(d) {
           a.pending = false;
           var c = a.changes;
           a.changes = 0;
-          a.onRender(c)
+          var g = new Date;
+          a.onRender(c);
+          a.setTimeoutZero(function() {
+            console.log(new Date - g)
+          })
         })
       }
     };
@@ -40,5 +45,5 @@ define(function(d) {
       }
     }
   }).call(d.prototype);
-  return d
+  f.RenderLoop = d
 });

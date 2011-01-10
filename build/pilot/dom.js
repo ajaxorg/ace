@@ -1,5 +1,4 @@
-define(function(g) {
-  var f = g("./lang"), c = {};
+define(function(f, c) {
   c.setText = function(a, b) {
     if(a.innerText !== undefined) {
       a.innerText = b
@@ -8,15 +7,17 @@ define(function(g) {
     }
   };
   c.hasCssClass = function(a, b) {
-    a = a.className.split(/\s+/g);
-    return f.arrayIndexOf(a, b) !== -1
+    return a.className.split(/\s+/g).indexOf(b) !== -1
   };
   c.addCssClass = function(a, b) {
     c.hasCssClass(a, b) || (a.className += " " + b)
   };
+  c.setCssClass = function(a, b, d) {
+    d ? c.addCssClass(a, b) : c.removeCssClass(a, b)
+  };
   c.removeCssClass = function(a, b) {
     for(var d = a.className.split(/\s+/g);;) {
-      var e = f.arrayIndexOf(d, b);
+      var e = d.indexOf(b);
       if(e == -1) {
         break
       }d.splice(e, 1)
@@ -61,5 +62,13 @@ define(function(g) {
     }document.body.removeChild(b);
     return e - a
   };
-  return c
+  c.setInnerHtml = function(a, b) {
+    var d = a.cloneNode(false);
+    d.innerHTML = b;
+    a.parentNode.replaceChild(d, a);
+    return d
+  };
+  c.getParentWindow = function(a) {
+    return a.defaultView || a.parentWindow
+  }
 });

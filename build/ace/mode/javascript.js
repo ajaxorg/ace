@@ -1,61 +1,59 @@
-define(function(f) {
-  var h = f("../lib/oop"), i = f("./text"), j = f("../tokenizer"), k = f("./javascript_highlight_rules"), l = f("./matching_brace_outdent"), m = f("../range");
+define(function(f, h) {
+  var i = f("pilot/oop"), j = f("ace/mode/text").Mode, k = f("ace/tokenizer").Tokenizer, l = f("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules, m = f("ace/mode/matching_brace_outdent").MatchingBraceOutdent, n = f("ace/range").Range;
   f = function() {
-    this.$tokenizer = new j((new k).getRules());
-    this.$outdent = new l
+    this.$tokenizer = new k((new l).getRules());
+    this.$outdent = new m
   };
-  h.inherits(f, i);
+  i.inherits(f, j);
   (function() {
-    this.toggleCommentLines = function(c, d, e) {
-      var a = true;
+    this.toggleCommentLines = function(c, a, d, g) {
+      var e = true;
       c = /^(\s*)\/\//;
-      for(var b = e.start.row;b <= e.end.row;b++) {
-        if(!c.test(d.getLine(b))) {
-          a = false;
+      for(var b = d;b <= g;b++) {
+        if(!c.test(a.getLine(b))) {
+          e = false;
           break
         }
-      }if(a) {
-        a = new m(0, 0, 0, 0);
-        for(b = e.start.row;b <= e.end.row;b++) {
-          var g = d.getLine(b).replace(c, "$1");
-          a.start.row = b;
-          a.end.row = b;
-          a.end.column = g.length + 2;
-          d.replace(a, g)
+      }if(e) {
+        e = new n(0, 0, 0, 0);
+        for(b = d;b <= g;b++) {
+          d = a.getLine(b).replace(c, "$1");
+          e.start.row = b;
+          e.end.row = b;
+          e.end.column = d.length + 2;
+          a.replace(e, d)
         }return-2
       }else {
-        return d.indentRows(e, "//")
+        return a.indentRows(d, g, "//")
       }
     };
-    this.getNextLineIndent = function(c, d, e) {
-      var a = this.$getIndent(d), b = this.$tokenizer.getLineTokens(d, c), g = b.tokens;
-      b = b.state;
-      if(g.length && g[g.length - 1].type == "comment") {
-        return a
+    this.getNextLineIndent = function(c, a, d) {
+      var g = this.$getIndent(a), e = this.$tokenizer.getLineTokens(a, c), b = e.tokens;
+      e = e.state;
+      if(b.length && b[b.length - 1].type == "comment") {
+        return g
       }if(c == "start") {
-        if(c = d.match(/^.*[\{\(\[]\s*$/)) {
-          a += e
+        if(c = a.match(/^.*[\{\(\[]\s*$/)) {
+          g += d
         }
       }else {
         if(c == "doc-start") {
-          if(b == "start") {
+          if(e == "start") {
             return""
-          }if(c = d.match(/^\s*(\/?)\*/)) {
+          }if(c = a.match(/^\s*(\/?)\*/)) {
             if(c[1]) {
-              a += " "
-            }a += "* "
-          }if(c[1]) {
-            a += " "
-          }a += "* "
+              g += " "
+            }g += "* "
+          }
         }
-      }return a
+      }return g
     };
-    this.checkOutdent = function(c, d, e) {
-      return this.$outdent.checkOutdent(d, e)
+    this.checkOutdent = function(c, a, d) {
+      return this.$outdent.checkOutdent(a, d)
     };
-    this.autoOutdent = function(c, d, e) {
-      return this.$outdent.autoOutdent(d, e)
+    this.autoOutdent = function(c, a, d) {
+      return this.$outdent.autoOutdent(a, d)
     }
   }).call(f.prototype);
-  return f
+  h.Mode = f
 });

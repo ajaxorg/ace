@@ -1,16 +1,20 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
-require.def(["ace/Document", "ace/Range", "ace/mode/Html"], function(b, c, d) {
-  new TestCase("mode.HtmlTest", {setUp:function() {
-    this.mode = new d
+define(function(a, c, e) {
+  var f = a("ace/document").Document, g = a("ace/range").Range, h = a("ace/mode/html").Mode, b = a("../assertions");
+  c = {setUp:function() {
+    this.mode = new h
   }, "test: toggle comment lines should not do anything":function() {
-    var a = new b(["  abc", "cde", "fg"]), e = new c(0, 3, 1, 1);
-    this.mode.toggleCommentLines("start", a, e);
-    assertEquals("  abc\ncde\nfg", a.toString())
+    var d = new f(["  abc", "cde", "fg"]);
+    new g(0, 3, 1, 1);
+    this.mode.toggleCommentLines("start", d, 0, 1);
+    b.equal("  abc\ncde\nfg", d.toString())
   }, "test: next line indent should be the same as the current line indent":function() {
-    assertEquals("     ", this.mode.getNextLineIndent("start", "     abc"));
-    assertEquals("", this.mode.getNextLineIndent("start", "abc"));
-    assertEquals("\t", this.mode.getNextLineIndent("start", "\tabc"))
-  }})
+    b.equal("     ", this.mode.getNextLineIndent("start", "     abc"));
+    b.equal("", this.mode.getNextLineIndent("start", "abc"));
+    b.equal("\t", this.mode.getNextLineIndent("start", "\tabc"))
+  }};
+  e.exports = a("async/test").testcase(c)
 });
+if(module === require.main) {
+  require("../../../support/paths");
+  exports.exec()
+};

@@ -1,5 +1,5 @@
-define(function(e) {
-  var f = e("../range");
+define(function(e, f) {
+  var g = e("ace/range").Range;
   e = function() {
   };
   (function() {
@@ -17,7 +17,7 @@ define(function(e) {
       if(!d || d.row == b) {
         return 0
       }d = this.$getIndent(a.getLine(d.row));
-      a.replace(new f(b, 0, b, c - 1), d);
+      a.replace(new g(b, 0, b, c - 1), d);
       return d.length - (c - 1)
     };
     this.$getIndent = function(a) {
@@ -26,5 +26,5 @@ define(function(e) {
       }return""
     }
   }).call(e.prototype);
-  return e
+  f.MatchingBraceOutdent = e
 });

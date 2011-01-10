@@ -1,21 +1,24 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
-require.def(["ace/mode/Html"], function(b) {
-  new TestCase("mode.HtmlTest", {setUp:function() {
-    this.tokenizer = (new b).getTokenizer()
+define(function(c, d, e) {
+  var f = c("ace/mode/html").Mode, a = c("../assertions");
+  d = {setUp:function() {
+    this.tokenizer = (new f).getTokenizer()
   }, "test: tokenize embedded script":function() {
-    var a = this.tokenizer.getLineTokens("<script a='a'>var<\/script>'123'", "start").tokens;
-    assertEquals("text", a[0].type);
-    assertEquals("keyword", a[1].type);
-    assertEquals("text", a[2].type);
-    assertEquals("keyword", a[3].type);
-    assertEquals("text", a[4].type);
-    assertEquals("string", a[5].type);
-    assertEquals("text", a[6].type);
-    assertEquals("keyword", a[7].type);
-    assertEquals("text", a[8].type);
-    assertEquals("keyword", a[9].type);
-    assertEquals("text", a[10].type)
-  }})
+    var b = this.tokenizer.getLineTokens("<script a='a'>var<\/script>'123'", "start").tokens;
+    a.equal("text", b[0].type);
+    a.equal("keyword", b[1].type);
+    a.equal("text", b[2].type);
+    a.equal("keyword", b[3].type);
+    a.equal("text", b[4].type);
+    a.equal("string", b[5].type);
+    a.equal("text", b[6].type);
+    a.equal("keyword", b[7].type);
+    a.equal("text", b[8].type);
+    a.equal("keyword", b[9].type);
+    a.equal("text", b[10].type)
+  }};
+  e.exports = c("async/test").testcase(d)
 });
+if(module === require.main) {
+  require("../../../support/paths");
+  exports.exec()
+};

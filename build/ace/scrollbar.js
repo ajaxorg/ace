@@ -1,5 +1,5 @@
-define(function(a) {
-  var c = a("./lib/oop"), d = a("./lib/lang"), e = a("./lib/dom"), f = a("./lib/event"), g = a("./event_emitter");
+define(function(a, c) {
+  var d = a("pilot/oop"), e = a("pilot/dom"), f = a("pilot/event"), g = a("pilot/event_emitter").EventEmitter;
   a = function(b) {
     this.element = document.createElement("div");
     this.element.className = "ace_sb";
@@ -8,12 +8,12 @@ define(function(a) {
     b.appendChild(this.element);
     this.width = e.scrollbarWidth();
     this.element.style.width = this.width;
-    f.addListener(this.element, "scroll", d.bind(this.onScroll, this))
+    f.addListener(this.element, "scroll", this.onScroll.bind(this))
   };
   (function() {
-    c.implement(this, g);
+    d.implement(this, g);
     this.onScroll = function() {
-      this.$dispatchEvent("scroll", {data:this.element.scrollTop})
+      this._dispatchEvent("scroll", {data:this.element.scrollTop})
     };
     this.getWidth = function() {
       return this.width
@@ -28,5 +28,5 @@ define(function(a) {
       this.element.scrollTop = b
     }
   }).call(a.prototype);
-  return a
+  c.ScrollBar = a
 });

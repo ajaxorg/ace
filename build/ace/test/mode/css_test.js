@@ -1,21 +1,24 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
-require.def(["ace/Document", "ace/Range", "ace/mode/Css"], function(b, c, d) {
-  new TestCase("mode.CssTest", {setUp:function() {
-    this.mode = new d
+define(function(b, c, e) {
+  var f = b("ace/document").Document, g = b("ace/mode/css").Mode, a = b("../assertions");
+  c = {setUp:function() {
+    this.mode = new g
   }, "test: toggle comment lines should not do anything":function() {
-    var a = new b("  abc\ncde\nfg"), e = new c(0, 3, 1, 1);
-    this.mode.toggleCommentLines("start", a, e);
-    assertEquals("  abc\ncde\nfg", a.toString())
+    var d = new f("  abc\ncde\nfg");
+    this.mode.toggleCommentLines("start", d, 0, 1);
+    a.equal("  abc\ncde\nfg", d.toString())
   }, "test: lines should keep indentation":function() {
-    assertEquals("   ", this.mode.getNextLineIndent("start", "   abc", "  "));
-    assertEquals("\t", this.mode.getNextLineIndent("start", "\tabc", "  "))
+    a.equal("   ", this.mode.getNextLineIndent("start", "   abc", "  "));
+    a.equal("\t", this.mode.getNextLineIndent("start", "\tabc", "  "))
   }, "test: new line after { should increase indent":function() {
-    assertEquals("     ", this.mode.getNextLineIndent("start", "   abc{", "  "));
-    assertEquals("\t  ", this.mode.getNextLineIndent("start", "\tabc  { ", "  "))
+    a.equal("     ", this.mode.getNextLineIndent("start", "   abc{", "  "));
+    a.equal("\t  ", this.mode.getNextLineIndent("start", "\tabc  { ", "  "))
   }, "test: no indent increase after { in a comment":function() {
-    assertEquals("   ", this.mode.getNextLineIndent("start", "   /*{", "  "));
-    assertEquals("   ", this.mode.getNextLineIndent("start", "   /*{  ", "  "))
-  }})
+    a.equal("   ", this.mode.getNextLineIndent("start", "   /*{", "  "));
+    a.equal("   ", this.mode.getNextLineIndent("start", "   /*{  ", "  "))
+  }};
+  e.exports = b("async/test").testcase(c)
 });
+if(module === require.main) {
+  require("../../../support/paths");
+  exports.exec()
+};

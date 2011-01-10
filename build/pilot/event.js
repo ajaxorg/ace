@@ -1,5 +1,5 @@
-define(function(m) {
-  var i = m("./core"), c = {};
+define(function(m, c) {
+  var i = m("pilot/useragent");
   c.addListener = function(a, e, d) {
     if(a.addEventListener) {
       return a.addEventListener(e, d, false)
@@ -7,7 +7,7 @@ define(function(m) {
       var b = function() {
         d(window.event)
       };
-      d.$$wrapper = b;
+      d._wrapper = b;
       a.attachEvent("on" + e, b)
     }
   };
@@ -15,7 +15,7 @@ define(function(m) {
     if(a.removeEventListener) {
       return a.removeEventListener(e, d, false)
     }if(a.detachEvent) {
-      a.detachEvent("on" + e, d.$$wrapper || d)
+      a.detachEvent("on" + e, d._wrapper || d)
     }
   };
   c.stopEvent = function(a) {
@@ -122,13 +122,14 @@ define(function(m) {
       d = b.keyIdentifier || b.keyCode;
       return e(b)
     });
-    i.isMac && i.isGecko && c.addListener(a, "keypress", function(b) {
-      if(d !== (b.keyIdentifier || b.keyCode)) {
-        return e(b)
-      }else {
-        d = null
-      }
-    })
-  };
-  return c
+    if(i.isMac && (i.isGecko || i.isOpera)) {
+      c.addListener(a, "keypress", function(b) {
+        if(d !== (b.keyIdentifier || b.keyCode)) {
+          return e(b)
+        }else {
+          d = null
+        }
+      })
+    }
+  }
 });

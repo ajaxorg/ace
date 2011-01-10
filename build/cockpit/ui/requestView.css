@@ -1,0 +1,39 @@
+
+.cptRowIn {
+  display: box; display: -moz-box; display: -webkit-box;
+  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;
+  box-align: center; -moz-box-align: center; -webkit-box-align: center;
+  color: #333;
+  background-color: #EEE;
+  width: 100%;
+  font-family: consolas, courier, monospace;
+}
+.cptRowIn > * { padding-left: 2px; padding-right: 2px; }
+.cptRowIn > img { cursor: pointer; }
+.cptHover { display: none; }
+.cptRowIn:hover > .cptHover { display: block; }
+.cptRowIn:hover > .cptHover.cptHidden { display: none; }
+.cptOutTyped {
+  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;
+  font-weight: bold; color: #000; font-size: 120%;
+}
+.cptRowOutput { padding-left: 10px; line-height: 1.2em; }
+.cptRowOutput strong,
+.cptRowOutput b,
+.cptRowOutput th,
+.cptRowOutput h1,
+.cptRowOutput h2,
+.cptRowOutput h3 { color: #000; }
+.cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }
+.cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }
+.cptRowOutput input[type=password],
+.cptRowOutput input[type=text],
+.cptRowOutput textarea {
+  color: #000; font-size: 120%;
+  background: transparent; padding: 3px;
+  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+.cptRowOutput table,
+.cptRowOutput td,
+.cptRowOutput th { border: 0; padding: 0 2px; }
+.cptRowOutput .right { text-align: right; }

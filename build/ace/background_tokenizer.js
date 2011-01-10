@@ -1,5 +1,5 @@
-define(function(f) {
-  var i = f("./lib/oop"), j = f("./event_emitter");
+define(function(f, i) {
+  var j = f("pilot/oop"), k = f("pilot/event_emitter").EventEmitter;
   f = function(a, c) {
     this.running = false;
     this.textLines = [];
@@ -9,13 +9,13 @@ define(function(f) {
     var b = this;
     this.$worker = function() {
       if(b.running) {
-        for(var e = new Date, g = b.currentLine, d = b.textLines, h = 0, k = c.getLastVisibleRow();b.currentLine < d.length;) {
+        for(var e = new Date, g = b.currentLine, d = b.textLines, h = 0, l = c.getLastVisibleRow();b.currentLine < d.length;) {
           b.lines[b.currentLine] = b.$tokenizeRows(b.currentLine, b.currentLine)[0];
           b.currentLine++;
           h += 1;
           if(h % 5 == 0 && new Date - e > 20) {
             b.fireUpdateEvent(g, b.currentLine - 1);
-            b.running = setTimeout(b.$worker, b.currentLine < k ? 20 : 100);
+            b.running = setTimeout(b.$worker, b.currentLine < l ? 20 : 100);
             return
           }
         }b.running = false;
@@ -24,7 +24,7 @@ define(function(f) {
     }
   };
   (function() {
-    i.implement(this, j);
+    j.implement(this, k);
     this.setTokenizer = function(a) {
       this.tokenizer = a;
       this.lines = [];
@@ -36,7 +36,7 @@ define(function(f) {
       this.stop()
     };
     this.fireUpdateEvent = function(a, c) {
-      this.$dispatchEvent("update", {data:{first:a, last:c}})
+      this._dispatchEvent("update", {data:{first:a, last:c}})
     };
     this.start = function(a) {
       this.currentLine = Math.min(a || 0, this.currentLine, this.textLines.length);
@@ -75,5 +75,5 @@ define(function(f) {
       }return b
     }
   }).call(f.prototype);
-  return f
+  i.BackgroundTokenizer = f
 });

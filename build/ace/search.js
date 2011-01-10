@@ -1,12 +1,12 @@
-define(function(o) {
-  var p = o("./lib/lang"), r = o("./lib/oop"), s = o("./range"), l = function() {
+define(function(o, r) {
+  var p = o("pilot/lang"), s = o("pilot/oop"), t = o("ace/range").Range, l = function() {
     this.$options = {needle:"", backwards:false, wrap:false, caseSensitive:false, wholeWord:false, scope:l.ALL, regExp:false}
   };
   l.ALL = 1;
   l.SELECTION = 2;
   (function() {
     this.set = function(a) {
-      r.mixin(this.$options, a);
+      s.mixin(this.$options, a);
       return this
     };
     this.getOptions = function() {
@@ -78,7 +78,7 @@ define(function(o) {
       }}
     };
     this.$rangeFromMatch = function(a, b, c) {
-      return new s(a, b, a, b + c)
+      return new t(a, b, a, b + c)
     };
     this.$assembleRegExp = function() {
       var a = this.$options.regExp ? this.$options.needle : p.escapeRegExp(this.$options.needle);
@@ -145,5 +145,5 @@ define(function(o) {
       }}
     }
   }).call(l.prototype);
-  return l
+  r.Search = l
 });

@@ -1,21 +1,24 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
-require.def(["ace/Document", "ace/Range", "ace/Tokenizer", "ace/mode/Xml"], function(b, c, d, e) {
-  new TestCase("mode.XmlTest", {setUp:function() {
-    this.mode = new e
+define(function(c, d, e) {
+  var f = c("ace/document").Document, g = c("ace/tokenizer").Tokenizer, h = c("ace/mode/xml").Mode, b = c("../assertions");
+  d = {setUp:function() {
+    this.mode = new h
   }, "test: getTokenizer() (smoke test)":function() {
     var a = this.mode.getTokenizer();
-    assertTrue(a instanceof d);
+    b.ok(a instanceof g);
     a = a.getLineTokens("<juhu>", "start").tokens;
-    assertEquals("keyword", a[1].type)
+    b.equal("keyword", a[1].type)
   }, "test: toggle comment lines should not do anything":function() {
-    var a = new b(["  abc", "cde", "fg"]), f = new c(0, 3, 1, 1);
-    this.mode.toggleCommentLines("start", a, f);
-    assertEquals("  abc\ncde\nfg", a.toString())
+    var a = new f(["  abc", "cde", "fg"]);
+    this.mode.toggleCommentLines("start", a, 0, 1);
+    b.equal("  abc\ncde\nfg", a.toString())
   }, "test: next line indent should be the same as the current line indent":function() {
-    assertEquals("     ", this.mode.getNextLineIndent("start", "     abc"));
-    assertEquals("", this.mode.getNextLineIndent("start", "abc"));
-    assertEquals("\t", this.mode.getNextLineIndent("start", "\tabc"))
-  }})
+    b.equal("     ", this.mode.getNextLineIndent("start", "     abc"));
+    b.equal("", this.mode.getNextLineIndent("start", "abc"));
+    b.equal("\t", this.mode.getNextLineIndent("start", "\tabc"))
+  }};
+  e.exports = c("async/test").testcase(d)
 });
+if(module === require.main) {
+  require("../../../support/paths");
+  exports.exec()
+};

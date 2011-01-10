@@ -1,6 +1,6 @@
-define(function(l) {
-  var b = l("./lib/event");
-  return function(m, c) {
+define(function(l, m) {
+  var b = l("pilot/event");
+  m.TextInput = function(n, c) {
     function e() {
       if(!f) {
         var d = a.value;
@@ -19,7 +19,7 @@ define(function(l) {
     h.position = "absolute";
     h.left = "-10000px";
     h.top = "-10000px";
-    m.appendChild(a);
+    n.appendChild(a);
     var j = String.fromCharCode(0);
     e();
     var i = false, f = false, g = function() {

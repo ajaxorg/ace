@@ -1,72 +1,74 @@
-define(function(h) {
-  var i = h("../range");
-  h = function(c) {
+define(function(h, j) {
+  var i = h("ace/range").Range, k = h("pilot/dom");
+  h = function(d) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_marker-layer";
-    c.appendChild(this.element);
+    d.appendChild(this.element);
     this.markers = {};
     this.$markerId = 1
   };
   (function() {
-    this.setDocument = function(c) {
-      this.doc = c
+    this.setDocument = function(d) {
+      this.doc = d
     };
-    this.addMarker = function(c, a, e) {
+    this.addMarker = function(d, a, e) {
       var b = this.$markerId++;
-      this.markers[b] = {range:c, type:e || "line", clazz:a};
+      this.markers[b] = {range:d, type:e || "line", clazz:a};
       return b
     };
-    this.removeMarker = function(c) {
-      this.markers[c] && delete this.markers[c]
+    this.removeMarker = function(d) {
+      this.markers[d] && delete this.markers[d]
     };
-    this.update = function(c) {
-      if(c = c || this.config) {
-        this.config = c;
+    this.update = function(d) {
+      if(d = d || this.config) {
+        this.config = d;
         var a = [];
         for(var e in this.markers) {
-          var b = this.markers[e], d = b.range.clipRows(c.firstRow, c.lastRow);
-          if(!d.isEmpty()) {
-            if(d.isMultiLine()) {
-              b.type == "text" ? this.drawTextMarker(a, d, b.clazz, c) : this.drawMultiLineMarker(a, d, b.clazz, c)
+          var b = this.markers[e], c = b.range.clipRows(d.firstRow, d.lastRow);
+          if(!c.isEmpty()) {
+            if(c.isMultiLine()) {
+              b.type == "text" ? this.drawTextMarker(a, c, b.clazz, d) : this.drawMultiLineMarker(a, c, b.clazz, d)
             }else {
-              this.drawSingleLineMarker(a, d, b.clazz, c)
+              this.drawSingleLineMarker(a, c, b.clazz, d)
             }
           }
-        }this.element.innerHTML = a.join("")
+        }this.element = k.setInnerHtml(this.element, a.join(""))
       }
     };
-    this.drawTextMarker = function(c, a, e, b) {
-      var d = a.start.row, f = new i(d, a.start.column, d, this.doc.getLine(d).length);
-      this.drawSingleLineMarker(c, f, e, b);
-      d = a.end.row;
-      f = new i(d, 0, d, a.end.column);
-      this.drawSingleLineMarker(c, f, e, b);
-      for(d = a.start.row + 1;d < a.end.row;d++) {
-        f.start.row = d;
-        f.end.row = d;
-        f.end.column = this.doc.getLine(d).length;
-        this.drawSingleLineMarker(c, f, e, b)
+    this.drawTextMarker = function(d, a, e, b) {
+      var c = a.start.row, f = new i(c, a.start.column, c, this.doc.getLine(c).length);
+      this.drawSingleLineMarker(d, f, e, b, 1);
+      c = a.end.row;
+      f = new i(c, 0, c, a.end.column);
+      this.drawSingleLineMarker(d, f, e, b);
+      for(c = a.start.row + 1;c < a.end.row;c++) {
+        f.start.row = c;
+        f.end.row = c;
+        f.end.column = this.doc.getLine(c).length;
+        this.drawSingleLineMarker(d, f, e, b, 1)
       }
     };
-    this.drawMultiLineMarker = function(c, a, e, b) {
+    this.drawMultiLineMarker = function(d, a, e, b) {
       a = a.toScreenRange(this.doc);
-      var d = b.lineHeight, f = Math.round(b.width - a.start.column * b.characterWidth), g = (a.start.row - b.firstRow) * b.lineHeight, j = Math.round(a.start.column * b.characterWidth);
-      c.push("<div class='", e, "' style='", "height:", d, "px;", "width:", f, "px;", "top:", g, "px;", "left:", j, "px;'></div>");
+      var c = b.lineHeight, f = Math.round(b.width - a.start.column * b.characterWidth), g = (a.start.row - b.firstRow) * b.lineHeight, l = Math.round(a.start.column * b.characterWidth);
+      d.push("<div class='", e, "' style='", "height:", c, "px;", "width:", f, "px;", "top:", g, "px;", "left:", l, "px;'></div>");
       g = (a.end.row - b.firstRow) * b.lineHeight;
       f = Math.round(a.end.column * b.characterWidth);
-      c.push("<div class='", e, "' style='", "height:", d, "px;", "top:", g, "px;", "width:", f, "px;'></div>");
-      d = (a.end.row - a.start.row - 1) * b.lineHeight;
-      if(!(d < 0)) {
+      d.push("<div class='", e, "' style='", "height:", c, "px;", "top:", g, "px;", "width:", f, "px;'></div>");
+      c = (a.end.row - a.start.row - 1) * b.lineHeight;
+      if(!(c < 0)) {
         g = (a.start.row + 1 - b.firstRow) * b.lineHeight;
-        c.push("<div class='", e, "' style='", "height:", d, "px;", "width:", b.width, "px;", "top:", g, "px;'></div>")
+        d.push("<div class='", e, "' style='", "height:", c, "px;", "width:", b.width, "px;", "top:", g, "px;'></div>")
       }
     };
-    this.drawSingleLineMarker = function(c, a, e, b) {
+    this.drawSingleLineMarker = function(d, a, e, b, c) {
       a = a.toScreenRange(this.doc);
-      var d = b.lineHeight, f = Math.round((a.end.column - a.start.column) * b.characterWidth), g = (a.start.row - b.firstRow) * b.lineHeight;
+      var f = b.lineHeight;
+      c = Math.round((a.end.column + (c || 0) - a.start.column) * b.characterWidth);
+      var g = (a.start.row - b.firstRow) * b.lineHeight;
       a = Math.round(a.start.column * b.characterWidth);
-      c.push("<div class='", e, "' style='", "height:", d, "px;", "width:", f, "px;", "top:", g, "px;", "left:", a, "px;'></div>")
+      d.push("<div class='", e, "' style='", "height:", f, "px;", "width:", c, "px;", "top:", g, "px;", "left:", a, "px;'></div>")
     }
   }).call(h.prototype);
-  return h
+  j.Marker = h
 });

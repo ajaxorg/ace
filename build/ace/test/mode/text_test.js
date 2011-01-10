@@ -1,14 +1,17 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
-require.def(["ace/Document", "ace/Range", "ace/mode/Text"], function(b, c, d) {
-  new TestCase("mode.TextTest", {setUp:function() {
-    this.mode = new d
+define(function(a, b, e) {
+  var f = a("ace/document").Document, g = a("ace/mode/text").Mode, c = a("../assertions");
+  b = {setUp:function() {
+    this.mode = new g
   }, "test: toggle comment lines should not do anything":function() {
-    var a = new b(["  abc", "cde", "fg"]), e = new c(0, 3, 1, 1);
-    this.mode.toggleCommentLines("start", a, e);
-    assertEquals("  abc\ncde\nfg", a.toString())
+    var d = new f(["  abc", "cde", "fg"]);
+    this.mode.toggleCommentLines("start", d, 0, 1);
+    c.equal("  abc\ncde\nfg", d.toString())
   }, "text: lines should not be indented":function() {
-    assertEquals("", this.mode.getNextLineIndent("start", "   abc", "  "))
-  }})
+    c.equal("", this.mode.getNextLineIndent("start", "   abc", "  "))
+  }};
+  e.exports = a("async/test").testcase(b)
 });
+if(module === require.main) {
+  require("../../../support/paths");
+  exports.exec()
+};

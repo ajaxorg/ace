@@ -1,5 +1,5 @@
-define(function() {
-  var k = function(f) {
+define(function(i, m) {
+  i = function(f) {
     this.rules = f;
     this.regExps = {};
     for(var a in this.rules) {
@@ -14,33 +14,31 @@ define(function() {
       a = a;
       var b = this.rules[a], c = this.regExps[a];
       c.lastIndex = 0;
-      for(var g, h = [], i = 0, e = {type:null, value:""};g = c.exec(f);) {
-        var j = "text", l = g[0];
-        if(c.lastIndex == i) {
+      for(var g, j = [], h = 0, e = {type:null, value:""};g = c.exec(f);) {
+        var k = "text", l = g[0];
+        if(c.lastIndex == h) {
           throw new Error("tokenizer error");
-        }i = c.lastIndex;
-        window.LOG && console.log(a, g);
+        }h = c.lastIndex;
         for(var d = 0;d < b.length;d++) {
           if(g[d + 1]) {
-            j = typeof b[d].token == "function" ? b[d].token(g[0]) : b[d].token;
+            k = typeof b[d].token == "function" ? b[d].token(g[0]) : b[d].token;
             if(b[d].next && b[d].next !== a) {
               a = b[d].next;
               b = this.rules[a];
-              i = c.lastIndex;
+              h = c.lastIndex;
               c = this.regExps[a];
-              c.lastIndex = i
+              c.lastIndex = h
             }break
           }
-        }if(e.type !== j) {
-          e.type && h.push(e);
-          e = {type:j, value:l}
+        }if(e.type !== k) {
+          e.type && j.push(e);
+          e = {type:k, value:l}
         }else {
           e.value += l
         }
-      }e.type && h.push(e);
-      window.LOG && console.log(h, a);
-      return{tokens:h, state:a}
+      }e.type && j.push(e);
+      return{tokens:j, state:a}
     }
-  }).call(k.prototype);
-  return k
+  }).call(i.prototype);
+  m.Tokenizer = i
 });

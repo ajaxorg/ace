@@ -1,13 +1,13 @@
-define(function() {
-  var b = function() {
+define(function(b, c) {
+  b = function() {
     this.$undoStack = [];
     this.$redoStack = []
   };
   (function() {
     this.execute = function(a) {
-      var c = a.args[0];
+      var d = a.args[0];
       this.$doc = a.args[1];
-      this.$undoStack.push(c)
+      this.$undoStack.push(d)
     };
     this.undo = function() {
       var a = this.$undoStack.pop();
@@ -24,5 +24,5 @@ define(function() {
       }
     }
   }).call(b.prototype);
-  return b
+  c.UndoManager = b
 });

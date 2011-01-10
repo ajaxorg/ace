@@ -1,4 +1,4 @@
-define(function() {
+define(function(h, f) {
   var c = function(a, b, d, e) {
     this.start = {row:a, column:b};
     this.end = {row:d, column:e}
@@ -44,9 +44,9 @@ define(function() {
         if(d == -1) {
           var e = {row:a, column:b}
         }else {
-          var f = {row:a, column:b}
+          var g = {row:a, column:b}
         }
-      }return c.fromPoints(e || this.start, f || this.end)
+      }return c.fromPoints(e || this.start, g || this.end)
     };
     this.isEmpty = function() {
       return this.start.row == this.end.row && this.start.column == this.end.column
@@ -57,6 +57,9 @@ define(function() {
     this.clone = function() {
       return c.fromPoints(this.start, this.end)
     };
+    this.collapseRows = function() {
+      return this.end.column == 0 ? new c(this.start.row, 0, Math.max(this.start.row, this.end.row - 1), 0) : new c(this.start.row, 0, this.end.row, 0)
+    };
     this.toScreenRange = function(a) {
       return new c(this.start.row, a.documentToScreenColumn(this.start.row, this.start.column), this.end.row, a.documentToScreenColumn(this.end.row, this.end.column))
     }
@@ -64,5 +67,5 @@ define(function() {
   c.fromPoints = function(a, b) {
     return new c(a.row, a.column, b.row, b.column)
   };
-  return c
+  f.Range = c
 });

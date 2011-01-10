@@ -1,12 +1,12 @@
-define(function(d) {
-  var g = d("./lib/oop"), h = d("./lib/lang"), i = d("./event_emitter"), f = d("./range");
+define(function(d, g) {
+  var h = d("pilot/oop"), i = d("pilot/lang"), j = d("pilot/event_emitter").EventEmitter, f = d("ace/range").Range;
   d = function(a) {
     this.doc = a;
     this.clearSelection();
     this.selectionLead = {row:0, column:0}
   };
   (function() {
-    g.implement(this, i);
+    h.implement(this, j);
     this.isEmpty = function() {
       return!this.selectionAnchor || this.selectionAnchor.row == this.selectionLead.row && this.selectionAnchor.column == this.selectionLead.column
     };
@@ -23,11 +23,11 @@ define(function(d) {
       if(this.selectionAnchor) {
         if(this.selectionAnchor.row !== a.row || this.selectionAnchor.column !== a.column) {
           this.selectionAnchor = a;
-          this.$dispatchEvent("changeSelection", {})
+          this._dispatchEvent("changeSelection", {})
         }
       }else {
         this.selectionAnchor = a;
-        this.$dispatchEvent("changeSelection", {})
+        this._dispatchEvent("changeSelection", {})
       }
     };
     this.getSelectionAnchor = function() {
@@ -61,15 +61,19 @@ define(function(d) {
     this.clearSelection = function() {
       if(this.selectionAnchor) {
         this.selectionAnchor = null;
-        this.$dispatchEvent("changeSelection", {})
+        this._dispatchEvent("changeSelection", {})
       }
     };
     this.selectAll = function() {
       var a = this.doc.getLength() - 1;
       this.setSelectionAnchor(a, this.doc.getLine(a).length);
-      this.$moveSelection(function() {
-        this.moveCursorTo(0, 0)
-      })
+      if(!this.selectionAnchor) {
+        this.selectionAnchor = this.$clone(this.selectionLead)
+      }a = {row:0, column:0};
+      if(a.row !== this.selectionLead.row || a.column !== this.selectionLead.column) {
+        this.selectionLead = a;
+        this._dispatchEvent("changeSelection", {blockScrolling:true})
+      }
     };
     this.setSelectionRange = function(a, b) {
       if(b) {
@@ -89,7 +93,7 @@ define(function(d) {
       a.call(this);
       if(c.row !== this.selectionLead.row || c.column !== this.selectionLead.column) {
         b = true
-      }b && this.$dispatchEvent("changeSelection", {})
+      }b && this._dispatchEvent("changeSelection", {})
     };
     this.selectTo = function(a, b) {
       this.$moveSelection(function() {
@@ -151,14 +155,16 @@ define(function(d) {
       if(this.selectionLead.column == 0) {
         this.selectionLead.row > 0 && this.moveCursorTo(this.selectionLead.row - 1, this.doc.getLine(this.selectionLead.row - 1).length)
       }else {
-        this.moveCursorBy(0, -1)
+        var a = this.doc, b = a.getTabSize(), c = this.selectionLead;
+        a.isTabStop(c) && a.getLine(c.row).slice(c.column - b, c.column).split(" ").length - 1 == b ? this.moveCursorBy(0, -b) : this.moveCursorBy(0, -1)
       }
     };
     this.moveCursorRight = function() {
       if(this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
         this.selectionLead.row < this.doc.getLength() - 1 && this.moveCursorTo(this.selectionLead.row + 1, 0)
       }else {
-        this.moveCursorBy(0, 1)
+        var a = this.doc, b = a.getTabSize(), c = this.selectionLead;
+        a.isTabStop(c) && a.getLine(c.row).slice(c.column, c.column + b).split(" ").length - 1 == b ? this.moveCursorBy(0, b) : this.moveCursorBy(0, 1)
       }
     };
     this.moveCursorLineStart = function() {
@@ -199,7 +205,7 @@ define(function(d) {
     };
     this.moveCursorWordLeft = function() {
       var a = this.selectionLead.row, b = this.selectionLead.column, c = this.doc.getLine(a);
-      c = h.stringReverse(c.substring(0, b));
+      c = i.stringReverse(c.substring(0, b));
       this.doc.nonTokenRe.lastIndex = 0;
       this.doc.tokenRe.lastIndex = 0;
       if(b == 0) {
@@ -226,7 +232,7 @@ define(function(d) {
       a = this.$clipPositionToDocument(a, b);
       if(a.row !== this.selectionLead.row || a.column !== this.selectionLead.column) {
         this.selectionLead = a;
-        this.$dispatchEvent("changeCursor", {data:this.getCursor()})
+        this._dispatchEvent("changeCursor", {data:this.getCursor()})
       }
     };
     this.moveCursorUp = function() {
@@ -251,5 +257,5 @@ define(function(d) {
       return{row:a.row, column:a.column}
     }
   }).call(d.prototype);
-  return d
+  g.Selection = d
 });

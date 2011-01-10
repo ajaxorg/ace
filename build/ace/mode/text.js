@@ -1,7 +1,7 @@
-define(function(a) {
-  var c = a("../tokenizer"), d = a("./text_highlight_rules");
+define(function(a, c) {
+  var d = a("ace/tokenizer").Tokenizer, e = a("ace/mode/text_highlight_rules").TextHighlightRules;
   a = function() {
-    this.$tokenizer = new c((new d).getRules())
+    this.$tokenizer = new d((new e).getRules())
   };
   (function() {
     this.getTokenizer = function() {
@@ -24,5 +24,5 @@ define(function(a) {
       }return""
     }
   }).call(a.prototype);
-  return a
+  c.Mode = a
 });

@@ -1,4 +1,4 @@
-require({paths:{ace:"../src/ace"}}, ["ace/test/assertions", "ace/test/ChangeDocumentTest"], function(a) {
-  console.log(a);
-  alert("a " + a)
-});
+require("../../../support/paths");
+var async = require("async");
+async.concat(require("./change_document_test"), require("./document_test"), require("./event_emitter_test"), require("./navigation_test"), require("./range_test"), require("./search_test"), require("./selection_test"), require("./text_edit_test"), require("./mode/css_test"), require("./mode/css_tokenizer_test"), require("./mode/html_test"), require("./mode/html_tokenizer_test"), require("./mode/javascript_test"), require("./mode/javascript_tokenizer_test"), require("./mode/text_test"), require("./mode/xml_test"), 
+require("./mode/xml_tokenizer_test")).exec();

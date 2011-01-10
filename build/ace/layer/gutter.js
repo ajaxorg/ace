@@ -1,5 +1,6 @@
-define(function() {
-  var d = function(a) {
+define(function(d, e) {
+  var f = d("pilot/dom");
+  d = function(a) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_gutter-layer";
     a.appendChild(this.element);
@@ -22,9 +23,9 @@ define(function() {
       for(var b = [], c = a.firstRow;c <= a.lastRow;c++) {
         b.push("<div class='ace_gutter-cell", this.$decorations[c] || "", this.$breakpoints[c] ? " ace_breakpoint" : "", "' style='height:", a.lineHeight, "px;'>", c + 1, "</div>");
         b.push("</div>")
-      }this.element.innerHTML = b.join("");
+      }this.element = f.setInnerHtml(this.element, b.join(""));
       this.element.style.height = a.minHeight + "px"
     }
   }).call(d.prototype);
-  return d
+  e.Gutter = d
 });

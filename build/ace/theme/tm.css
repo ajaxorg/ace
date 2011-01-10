@@ -41,6 +41,9 @@
 .ace-tm .ace_line .ace_constant.ace_buildin {
   color: rgb(88, 72, 246);
 }
+.ace-tm .ace_line .ace_constant.ace_language {
+  color: rgb(88, 92, 246);
+}
 .ace-tm .ace_line .ace_constant.ace_library {
   color: rgb(6, 150, 14);
 }
@@ -50,6 +53,13 @@
 }
 .ace-tm .ace_line .ace_support.ace_function {
   color: rgb(60, 76, 114);
+}
+.ace-tm .ace_line .ace_support.ace_constant {
+  color: rgb(6, 150, 14);
+}
+.ace-tm .ace_line .ace_support.ace_type,
+.ace-tm .ace_line .ace_support.ace_class {
+  color: rgb(109, 121, 222);
 }
 .ace-tm .ace_line .ace_keyword.ace_operator {
   color: rgb(104, 118, 135);

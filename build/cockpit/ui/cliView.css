@@ -1,0 +1,29 @@
+
+#cockpitInput { padding-left: 16px; }
+#cockpitOutput { overflow: auto; }
+#cockpitOutput.cptFocusPopup { position: absolute; z-index: 999; }
+.cptFocusPopup { display: none; }
+#cockpitInput:focus ~ .cptFocusPopup { display: block; }
+#cockpitInput:focus ~ .cptFocusPopup.cptNoPopup { display: none; }
+.cptCompletion { padding: 0; position: absolute; z-index: -1000; }
+.cptCompletion.VALID { background: #FFF; }
+.cptCompletion.INCOMPLETE { background: #DDD; }
+.cptCompletion.INVALID { background: #DDD; }
+.cptCompletion span { color: #FFF; }
+.cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }
+.cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }
+span.cptPrompt { color: #66F; font-weight: bold; }
+.cptHints {
+  color: #000;
+  position: absolute;
+  border: 1px solid rgba(230, 230, 230, 0.8);
+  background: rgba(250, 250, 250, 0.8);
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 10px; border-top-right-radius: 10px;
+  z-index: 1000;
+  padding: 8px;
+  display: none;
+}
+.cptHints ul { margin: 0; padding: 0 15px; }
+.cptGt { font-weight: bold; font-size: 120%; }

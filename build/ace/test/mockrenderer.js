@@ -1,6 +1,3 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
 define(function() {
   MockRenderer = function(a) {
     this.container = document.createElement("div");
@@ -53,6 +50,8 @@ define(function() {
   MockRenderer.prototype.setBreakpoints = function() {
   };
   MockRenderer.prototype.updateFull = function() {
+  };
+  MockRenderer.prototype.updateText = function() {
   };
   MockRenderer.prototype.showCursor = function() {
   };

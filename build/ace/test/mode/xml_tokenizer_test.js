@@ -1,16 +1,19 @@
-/*
- LGPLv3 <http://www.gnu.org/licenses/lgpl-3.0.txt>
-*/
-require.def(["ace/mode/Xml"], function(b) {
-  new TestCase("mode.XmlTest", {setUp:function() {
-    this.tokenizer = (new b).getTokenizer()
+define(function(c, d, e) {
+  var f = c("ace/mode/xml").Mode, a = c("../assertions");
+  d = {setUp:function() {
+    this.tokenizer = (new f).getTokenizer()
   }, "test: tokenize1":function() {
-    var a = this.tokenizer.getLineTokens("<Juhu>//Juhu Kinners</Kinners>", "start").tokens;
-    assertEquals(5, a.length);
-    assertEquals("text", a[0].type);
-    assertEquals("keyword", a[1].type);
-    assertEquals("text", a[2].type);
-    assertEquals("keyword", a[3].type);
-    assertEquals("text", a[4].type)
-  }})
+    var b = this.tokenizer.getLineTokens("<Juhu>//Juhu Kinners</Kinners>", "start").tokens;
+    a.equal(5, b.length);
+    a.equal("text", b[0].type);
+    a.equal("keyword", b[1].type);
+    a.equal("text", b[2].type);
+    a.equal("keyword", b[3].type);
+    a.equal("text", b[4].type)
+  }};
+  e.exports = c("async/test").testcase(d)
 });
+if(module === require.main) {
+  require("../../../support/paths");
+  exports.exec()
+};

@@ -1,5 +1,5 @@
-define(function(b) {
-  var d = b("../lib/dom");
+define(function(b, f) {
+  var d = b("pilot/dom");
   b = function(a) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_cursor-layer";
@@ -59,5 +59,5 @@ define(function(b) {
       }
     }
   }).call(b.prototype);
-  return b
+  f.Cursor = b
 });

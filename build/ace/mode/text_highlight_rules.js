@@ -1,19 +1,19 @@
-define(function() {
-  var f = function() {
+define(function(a, h) {
+  a = function() {
     this.$rules = {start:[{token:"text", regex:".+"}]}
   };
   (function() {
-    this.addRules = function(g, a) {
-      for(var b in g) {
-        for(var c = g[b], d = 0;d < c.length;d++) {
-          var e = c[d];
-          e.next = e.next ? a + e.next : a + b
-        }this.$rules[a + b] = c
+    this.addRules = function(g, b) {
+      for(var c in g) {
+        for(var d = g[c], e = 0;e < d.length;e++) {
+          var f = d[e];
+          f.next = f.next ? b + f.next : b + c
+        }this.$rules[b + c] = d
       }
     };
     this.getRules = function() {
       return this.$rules
     }
-  }).call(f.prototype);
-  return f
+  }).call(a.prototype);
+  h.TextHighlightRules = a
 });
