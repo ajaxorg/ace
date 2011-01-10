@@ -15,6 +15,7 @@
     //in the minified files.
     //- "none": no minification will be done.
     optimize: "closure.keepLines",
+    //optimize: "none",
     inlineText: true,
     useStrict: false,
 
@@ -31,6 +32,18 @@
 
     modules: [
         {
+            name: "demo/boot",
+            include: [
+                "pilot/fixoldbrowsers", 
+                "pilot/plugin_manager", 
+                "pilot/settings",
+                "pilot/environment", 
+                "pilot/index",
+                "cockpit/index",
+                "demo/startup"
+            ]
+        },
+        /*{
             name: "demo/startup",
             includeRequire: false,
             include: [
@@ -48,7 +61,7 @@
                 "ace/theme/textmate"
             ],
             includeRequire: false
-        },
+        },*/
         {
             name: "ace/theme/eclipse",
             exclude: [

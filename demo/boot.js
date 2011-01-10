@@ -36,24 +36,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 var config = {
-    packagePaths: {
-        "../support/cockpit/lib": [
-            { name: "cockpit", main: "index", lib: "." }
-        ],
-        "../support/cockpit/support/pilot/lib": [
-            { name: "pilot", main: "index", lib: "." }
-        ]
-    },
     paths: { 
         demo: "../demo",
-        ace: "../lib/ace"
+        ace: "../lib/ace",
+        cockpit: "../support/cockpit/lib/cockpit",
+        pilot: "../support/cockpit/support/pilot/lib/pilot"
     }
 };
 
-var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment", "demo/startup" ];
-
-require(config, deps, function() {
+require(config, ["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
+"pilot/environment", "demo/startup"], function() {
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index", "cockpit/index" ]).then(function() {
         var env = require("pilot/environment").create();
