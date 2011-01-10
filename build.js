@@ -1,6 +1,13 @@
 {
-    baseUrl: "./lib",
+    baseUrl: "lib",
     dir: "build",
+
+    paths: {
+        "ace": "ace",
+        "demo": "../demo",
+        "cockpit": "../support/cockpit/lib/cockpit",
+        "pilot": "../support/cockpit/support/pilot/lib/pilot"
+    },
 
     //- "closure": uses Google's Closure Compiler in simple optimization
     //mode to minify the code.
@@ -24,6 +31,13 @@
 
     modules: [
         {
+            name: "demo/startup",
+            includeRequire: false,
+            include: [
+                "pilot/fixoldbrowsers"
+            ]
+        },
+        {
             name: "ace/editor",
             include: [
                 "ace/document",
@@ -35,7 +49,6 @@
             ],
             includeRequire: false
         },
-
         {
             name: "ace/theme/eclipse",
             exclude: [
@@ -77,8 +90,8 @@
         { 
             name: "ace/mode/python",
             exclude: [
-                "ace/lib/oop",
-                "ace/lib/lang",
+                "pilot/oop",
+                "pilot/lang",
                 "ace/tokenizer",
                 "ace/range",
                 "ace/mode/text"
