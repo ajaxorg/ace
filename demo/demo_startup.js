@@ -77,15 +77,37 @@ exports.launch = function(env) {
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    var docEl = document.getElementById("doc");
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
+    
+    var modes = {
+        text: new TextMode(),
+        xml: new XmlMode(),
+        html: new HtmlMode(),
+        css: new CssMode(),
+        javascript: new JavaScriptMode(),
+        python: new PythonMode(),
+        php: new PhpMode()
+    };
 
+    function getMode() {
+        return modes[modeEl.value];
+    }
+
+
+    var modeEl = document.getElementById("mode");
+    function setMode() {
+        env.editor.getDocument().setMode(modes[modeEl.value] || modes.text);
+    }
+    modeEl.onchange = setMode;
+    setMode();
+
+    var docEl = document.getElementById("doc");
     function onDocChange() {
-        var doc = getDoc();
+        var doc = docs[docEl.value];
         env.editor.setDocument(doc);
-
+    
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript";
@@ -108,55 +130,50 @@ exports.launch = function(env) {
         else {
             modeEl.value = "text";
         }
-
+    
         env.editor.focus();
     }
     docEl.onchange = onDocChange;
+    onDocChange();
 
-    function getDoc() {
-        return docs[docEl.value];
-    }
-
-    var modeEl = document.getElementById("mode");
-    modeEl.onchange = function() {
-        env.editor.getDocument().setMode(modes[modeEl.value] || modes.text);
-    };
-
-    var modes = {
-        text: new TextMode(),
-        xml: new XmlMode(),
-        html: new HtmlMode(),
-        css: new CssMode(),
-        javascript: new JavaScriptMode(),
-        python: new PythonMode(),
-        php: new PhpMode()
-    };
-
-    function getMode() {
-        return modes[modeEl.value];
-    }
 
     var themeEl = document.getElementById("theme");
-    themeEl.onchange = function() {
+    function setTheme() {
         env.editor.setTheme(themeEl.value);
     };
+    themeEl.onchange = setTheme;
+    setTheme();
+
 
     var selectEl = document.getElementById("select_style");
-    selectEl.onchange = function() {
+    function setSelectionStyle() {
         if (selectEl.checked) {
             env.editor.setSelectionStyle("line");
         } else {
             env.editor.setSelectionStyle("text");
         }
     };
+    selectEl.onchange = setSelectionStyle;
+    setSelectionStyle();
+
 
     var activeEl = document.getElementById("highlight_active");
-    activeEl.onchange = function() {
+    function setHighlightActiveLine() {
         env.editor.setHighlightActiveLine(!!activeEl.checked);
     };
+    activeEl.onchange = setHighlightActiveLine;
+    setHighlightActiveLine();
 
-    onDocChange();
 
+    var showHiddenEl = document.getElementById("show_hidden");
+    function setShowInvisibles() {
+        env.editor.setShowInvisibles(!!showHiddenEl.checked);
+    };
+    showHiddenEl.onchange = setShowInvisibles;
+    setShowInvisibles();
+
+
+    // for debugging
     window.jump = function() {
         var jump = document.getElementById("jump");
         var cursor = env.editor.getCursorPosition();
