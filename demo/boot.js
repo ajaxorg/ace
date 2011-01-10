@@ -35,117 +35,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*
-setupPlugins(function(plugin_manager, settings) {
-  var data = { env: { settings: settings } };
-  plugin_manager.catalog.startupPlugins(data, plugin_manager.REASONS.APP_STARTUP).then(function() {
-    var demo_startup = require("demo_startup");
-    demo_startup.launch(data.env);
-  });
-});
-
-// TODO: Yuck! A global function
-var setupPlugins = function(callback) {
-    var config = {
-      pluginDirs: {
-        "../demo": {
-          singleFiles: ["demo_startup"]
-        }
-      }
-    };
-
-    if (!config.pluginDirs) {
-        config.pluginDirs = {};
-    }
-    // config.pluginDirs["../lib"] = {
-    //     packages: ["ace"]
-    // };
-    config.pluginDirs["../support/cockpit/support/pilot/lib"] = {
-        packages: [ "pilot" ]
-    };
-    config.pluginDirs["../support/cockpit/lib"] = {
-        packages: [ "cockpit" ]
-    };
-
-    var knownPlugins = [];
-
-    var pluginPackageInfo = {
-        "../lib": [
-            {
-                name: "ace",
-                lib: "."
-            }
-        ]
-    };
-
-    var paths = {};
-    var i;
-    var location;
-
-    // we need to ensure that the core plugin directory is loaded first
-    var pluginDirs = [];
-    var pluginDir;
-    for (pluginDir in config.pluginDirs) {
-        pluginDirs.push(pluginDir);
-    }
-    pluginDirs.sort(function(a, b) {
-        if (a == "../plugins") {
-            return -1;
-        } else if (b == "../plugins") {
-            return 1;
-        } else if (a < b) {
-            return -1;
-        } else if (b < a) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-
-    // set up RequireJS to know that our plugins all have a main module called "index"
-    for (var dirNum = 0; dirNum < pluginDirs.length; dirNum++) {
-        pluginDir = pluginDirs[dirNum];
-        var dirInfo = config.pluginDirs[pluginDir];
-        if (dirInfo.packages) {
-            location = pluginPackageInfo[pluginDir];
-            if (location === undefined) {
-                pluginPackageInfo[pluginDir] = location = [];
-            }
-            var packages = dirInfo.packages;
-            for (i = 0; i < packages.length; i++) {
-                location.push({
-                    name: packages[i],
-                    main: "index",
-                    lib: "."
-                });
-                knownPlugins.push(packages[i] + "/index");
-            }
-        }
-        if (dirInfo.singleFiles) {
-            for (i = 0; i < dirInfo.singleFiles.length; i++) {
-                var pluginName = dirInfo.singleFiles[i];
-                paths[pluginName] = pluginDir + "/" + pluginName;
-                knownPlugins.push(pluginName);
-            }
-        }
-    }
-    require({
-        packagePaths: pluginPackageInfo,
-        paths: paths
-    });
-    require(["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings"], function() {
-        var pluginsModule = require("pilot/plugin_manager");
-        var settings = require("pilot/settings").settings;
-        var catalog = pluginsModule.catalog;
-        catalog.registerPlugins(knownPlugins).then(function() {
-            if (callback) {
-                callback(pluginsModule, settings);
-            }
-        });
-    });
-};
-*/
-
 var config = {
     packagePaths: {
         "../lib": [
@@ -166,13 +55,10 @@ var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
 
 require(config, deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
-    var REASON_START = require("pilot/plugin_manager").REASONS.APP_STARTUP;
-    var settings = require("pilot/settings").settings;
-
     catalog.registerPlugins([ "pilot/index", "cockpit/index" ]).then(function() {
         var env = require("pilot/environment").create();
-        catalog.startupPlugins({ env:env }, REASON_START).then(function() {
-          require("demo_startup").launch(env);
+        catalog.startupPlugins({ env: env }).then(function() {
+            require("demo_startup").launch(env);
         });
     });
 });

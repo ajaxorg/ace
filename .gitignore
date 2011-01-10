@@ -1,4 +1,14 @@
+# Junk that could exist anywhere:
 .DS_Store
+*.swp
+*.tmp
+
+# Project files that should not be in the repo
+.project
+.settings/
 .settings.xml
 .settings.xml.old
 .*.gz
+
+# A handy place to put stuff that git should ignore:
+/ignore/
