@@ -361,20 +361,20 @@ define("pilot/stacktrace", ["require", "exports", "module", "pilot/useragent", "
   function NameGuesser() {
   }
   var ua$$1 = require$$8("pilot/useragent");
-  var console$$1 = require$$8("pilot/console");
+  var console = require$$8("pilot/console");
   var mode = function() {
     return ua$$1.isGecko ? "firefox" : ua$$1.isOpera ? "opera" : "other"
   }();
   var decoders = {chrome:function(e$$17) {
     var stack = e$$17.stack;
     if(!stack) {
-      console$$1.log(e$$17);
+      console.log(e$$17);
       return[]
     }return stack.replace(/^.*?\n/, "").replace(/^.*?\n/, "").replace(/^.*?\n/, "").replace(/^[^\(]+?[\n$]/gm, "").replace(/^\s+at\s+/gm, "").replace(/^Object.<anonymous>\s*\(/gm, "{anonymous}()@").split("\n")
   }, firefox:function(e$$18) {
     var stack$$1 = e$$18.stack;
     if(!stack$$1) {
-      console$$1.log(e$$18);
+      console.log(e$$18);
       return[]
     }stack$$1 = stack$$1.replace(/(?:\n@:0)?\s+$/m, "");
     stack$$1 = stack$$1.replace(/^\(/gm, "{anonymous}(");
@@ -510,7 +510,7 @@ define("pilot/stacktrace", ["require", "exports", "module", "pilot/useragent", "
         }
       });
       if(display) {
-        console$$1.debug(frame$$1);
+        console.debug(frame$$1);
         printed++
       }
     }
@@ -3466,7 +3466,6 @@ define("ace/renderloop", ["require", "exports", "module", "pilot/event"], functi
   };
   (function() {
     this.schedule = function(change) {
-      change = 128;
       this.changes |= change;
       if(!this.pending) {
         this.pending = true;
@@ -3475,11 +3474,7 @@ define("ace/renderloop", ["require", "exports", "module", "pilot/event"], functi
           _self$$7.pending = false;
           var changes = _self$$7.changes;
           _self$$7.changes = 0;
-          var start$$6 = new Date;
-          _self$$7.onRender(changes);
-          _self$$7.setTimeoutZero(function() {
-            console.log(new Date - start$$6)
-          })
+          _self$$7.onRender(changes)
         })
       }
     };
@@ -3911,8 +3906,8 @@ define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "module", 
   };
   oop$$9.inherits(DocCommentHighlightRules, TextHighlightRules$$2);
   (function() {
-    this.getStartRule = function(start$$7) {
-      return{token:"comment.doc", regex:"\\/\\*(?=\\*)", next:start$$7}
+    this.getStartRule = function(start$$6) {
+      return{token:"comment.doc", regex:"\\/\\*(?=\\*)", next:start$$6}
     }
   }).call(DocCommentHighlightRules.prototype);
   exports$$33.DocCommentHighlightRules = DocCommentHighlightRules

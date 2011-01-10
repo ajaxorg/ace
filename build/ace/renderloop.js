@@ -7,7 +7,6 @@ define(function(d, f) {
   };
   (function() {
     this.schedule = function(b) {
-      b = 128;
       this.changes |= b;
       if(!this.pending) {
         this.pending = true;
@@ -16,11 +15,7 @@ define(function(d, f) {
           a.pending = false;
           var c = a.changes;
           a.changes = 0;
-          var g = new Date;
-          a.onRender(c);
-          a.setTimeoutZero(function() {
-            console.log(new Date - g)
-          })
+          a.onRender(c)
         })
       }
     };

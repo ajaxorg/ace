@@ -1,27 +1,27 @@
-define("pilot/oop", ["require", "exports", "module"], function(j, g) {
+define("pilot/oop", ["require", "exports", "module"], function(i, g) {
   g.inherits = function(l, e) {
-    var i = function() {
+    var j = function() {
     };
-    i.prototype = e.prototype;
+    j.prototype = e.prototype;
     l.super_ = e.prototype;
-    l.prototype = new i;
+    l.prototype = new j;
     l.prototype.constructor = l
   };
   g.mixin = function(l, e) {
-    for(var i in e) {
-      l[i] = e[i]
+    for(var j in e) {
+      l[j] = e[j]
     }
   };
   g.implement = function(l, e) {
     g.mixin(l, e)
   }
 });
-define("pilot/useragent", ["require", "exports", "module"], function(j, g) {
-  j = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
+define("pilot/useragent", ["require", "exports", "module"], function(i, g) {
+  i = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
   var l = navigator.userAgent;
-  g.isWin = j == "win";
-  g.isMac = j == "mac";
-  g.isLinux = j == "linux";
+  g.isWin = i == "win";
+  g.isMac = i == "mac";
+  g.isLinux = i == "linux";
   g.isIE = !+"\u000b1";
   g.isGecko = g.isMozilla = window.controllers && window.navigator.product === "Gecko";
   g.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
@@ -32,24 +32,24 @@ define("pilot/useragent", ["require", "exports", "module"], function(j, g) {
     return g.isMac ? g.OS.MAC : g.isLinux ? g.OS.LINUX : g.OS.WINDOWS
   }
 });
-define("pilot/event", ["require", "exports", "module", "pilot/useragent"], function(j, g) {
-  var l = j("pilot/useragent");
-  g.addListener = function(e, i, o) {
+define("pilot/event", ["require", "exports", "module", "pilot/useragent"], function(i, g) {
+  var l = i("pilot/useragent");
+  g.addListener = function(e, j, o) {
     if(e.addEventListener) {
-      return e.addEventListener(i, o, false)
+      return e.addEventListener(j, o, false)
     }if(e.attachEvent) {
       var d = function() {
         o(window.event)
       };
       o._wrapper = d;
-      e.attachEvent("on" + i, d)
+      e.attachEvent("on" + j, d)
     }
   };
-  g.removeListener = function(e, i, o) {
+  g.removeListener = function(e, j, o) {
     if(e.removeEventListener) {
-      return e.removeEventListener(i, o, false)
+      return e.removeEventListener(j, o, false)
     }if(e.detachEvent) {
-      e.detachEvent("on" + i, o._wrapper || o)
+      e.detachEvent("on" + j, o._wrapper || o)
     }
   };
   g.stopEvent = function(e) {
@@ -80,26 +80,26 @@ define("pilot/event", ["require", "exports", "module", "pilot/useragent"], funct
   g.getButton = function(e) {
     return e.preventDefault ? e.button : Math.max(e.button - 1, 2)
   };
-  g.capture = document.documentElement.setCapture ? function(e, i, o) {
+  g.capture = document.documentElement.setCapture ? function(e, j, o) {
     function d(k) {
-      i && i(k);
+      j && j(k);
       o && o();
-      g.removeListener(e, "mousemove", i);
+      g.removeListener(e, "mousemove", j);
       g.removeListener(e, "mouseup", d);
       g.removeListener(e, "losecapture", d);
       e.releaseCapture()
     }
-    g.addListener(e, "mousemove", i);
+    g.addListener(e, "mousemove", j);
     g.addListener(e, "mouseup", d);
     g.addListener(e, "losecapture", d);
     e.setCapture()
-  } : function(e, i, o) {
+  } : function(e, j, o) {
     function d(a) {
-      i(a);
+      j(a);
       a.stopPropagation()
     }
     function k(a) {
-      i && i(a);
+      j && j(a);
       o && o();
       document.removeEventListener("mousemove", d, true);
       document.removeEventListener("mouseup", k, true);
@@ -108,7 +108,7 @@ define("pilot/event", ["require", "exports", "module", "pilot/useragent"], funct
     document.addEventListener("mousemove", d, true);
     document.addEventListener("mouseup", k, true)
   };
-  g.addMouseWheelListener = function(e, i) {
+  g.addMouseWheelListener = function(e, j) {
     var o = function(d) {
       if(d.wheelDelta !== undefined) {
         if(d.wheelDeltaX !== undefined) {
@@ -126,12 +126,12 @@ define("pilot/event", ["require", "exports", "module", "pilot/useragent"], funct
           d.wheelX = 0;
           d.wheelY = (d.detail || 0) * 5
         }
-      }i(d)
+      }j(d)
     };
     g.addListener(e, "DOMMouseScroll", o);
     g.addListener(e, "mousewheel", o)
   };
-  g.addMultiMouseDownListener = function(e, i, o, d, k) {
+  g.addMultiMouseDownListener = function(e, j, o, d, k) {
     var a = 0, f, h, m = function(b) {
       a += 1;
       if(a == 1) {
@@ -140,7 +140,7 @@ define("pilot/event", ["require", "exports", "module", "pilot/useragent"], funct
         setTimeout(function() {
           a = 0
         }, d || 600)
-      }if(g.getButton(b) != i || Math.abs(b.clientX - f) > 5 || Math.abs(b.clientY - h) > 5) {
+      }if(g.getButton(b) != j || Math.abs(b.clientX - f) > 5 || Math.abs(b.clientY - h) > 5) {
         a = 0
       }if(a == o) {
         a = 0;
@@ -150,16 +150,16 @@ define("pilot/event", ["require", "exports", "module", "pilot/useragent"], funct
     g.addListener(e, "mousedown", m);
     l.isIE && g.addListener(e, "dblclick", m)
   };
-  g.addKeyListener = function(e, i) {
+  g.addKeyListener = function(e, j) {
     var o = null;
     g.addListener(e, "keydown", function(d) {
       o = d.keyIdentifier || d.keyCode;
-      return i(d)
+      return j(d)
     });
     if(l.isMac && (l.isGecko || l.isOpera)) {
       g.addListener(e, "keypress", function(d) {
         if(o !== (d.keyIdentifier || d.keyCode)) {
-          return i(d)
+          return j(d)
         }else {
           o = null
         }
@@ -167,7 +167,7 @@ define("pilot/event", ["require", "exports", "module", "pilot/useragent"], funct
     }
   }
 });
-define("pilot/lang", ["require", "exports", "module"], function(j, g) {
+define("pilot/lang", ["require", "exports", "module"], function(i, g) {
   g.stringReverse = function(l) {
     return l.split("").reverse().join("")
   };
@@ -176,30 +176,30 @@ define("pilot/lang", ["require", "exports", "module"], function(j, g) {
   };
   g.copyObject = function(l) {
     var e = {};
-    for(var i in l) {
-      e[i] = l[i]
+    for(var j in l) {
+      e[j] = l[j]
     }return e
   };
   g.arrayToMap = function(l) {
-    for(var e = {}, i = 0;i < l.length;i++) {
-      e[l[i]] = 1
+    for(var e = {}, j = 0;j < l.length;j++) {
+      e[l[j]] = 1
     }return e
   };
   g.arrayRemove = function(l, e) {
-    for(var i = 0;i <= l.length;i++) {
-      e === l[i] && l.splice(i, 1)
+    for(var j = 0;j <= l.length;j++) {
+      e === l[j] && l.splice(j, 1)
     }
   };
   g.escapeRegExp = function(l) {
     return l.replace(/([.*+?^${}()|[\]\/\\])/g, "\\$1")
   };
   g.deferredCall = function(l) {
-    var e = null, i = function() {
+    var e = null, j = function() {
       e = null;
       l()
     };
     return{schedule:function() {
-      e || (e = setTimeout(i, 0))
+      e || (e = setTimeout(j, 0))
     }, call:function() {
       this.cancel();
       l()
@@ -209,17 +209,17 @@ define("pilot/lang", ["require", "exports", "module"], function(j, g) {
     }}
   }
 });
-define("ace/textinput", ["require", "exports", "module", "pilot/event"], function(j, g) {
-  var l = j("pilot/event");
-  g.TextInput = function(e, i) {
+define("ace/textinput", ["require", "exports", "module", "pilot/event"], function(i, g) {
+  var l = i("pilot/event");
+  g.TextInput = function(e, j) {
     function o() {
       if(!h) {
         var c = d.value;
         if(c) {
           if(c.charCodeAt(c.length - 1) == a.charCodeAt(0)) {
-            (c = c.slice(0, -1)) && i.onTextInput(c)
+            (c = c.slice(0, -1)) && j.onTextInput(c)
           }else {
-            i.onTextInput(c)
+            j.onTextInput(c)
           }
         }
       }h = false;
@@ -238,7 +238,7 @@ define("ace/textinput", ["require", "exports", "module", "pilot/event"], functio
         f || o()
       }, 0)
     }, b = function() {
-      i.onCompositionUpdate(d.value)
+      j.onCompositionUpdate(d.value)
     };
     l.addListener(d, "keypress", m);
     l.addListener(d, "textInput", m);
@@ -246,15 +246,15 @@ define("ace/textinput", ["require", "exports", "module", "pilot/event"], functio
     l.addListener(d, "propertychange", m);
     l.addListener(d, "copy", function() {
       h = true;
-      d.value = i.getCopyText();
+      d.value = j.getCopyText();
       d.select();
       h = true;
       setTimeout(o, 0)
     });
     l.addListener(d, "cut", function() {
       h = true;
-      d.value = i.getCopyText();
-      i.onCut();
+      d.value = j.getCopyText();
+      j.onCut();
       d.select();
       setTimeout(o, 0)
     });
@@ -262,24 +262,24 @@ define("ace/textinput", ["require", "exports", "module", "pilot/event"], functio
       f = true;
       o();
       d.value = "";
-      i.onCompositionStart();
+      j.onCompositionStart();
       setTimeout(b, 0)
     });
     l.addListener(d, "compositionupdate", b);
     l.addListener(d, "compositionend", function() {
       f = false;
-      i.onCompositionEnd();
+      j.onCompositionEnd();
       m()
     });
     l.addListener(d, "blur", function() {
-      i.onBlur()
+      j.onBlur()
     });
     l.addListener(d, "focus", function() {
-      i.onFocus();
+      j.onFocus();
       d.select()
     });
     this.focus = function() {
-      i.onFocus();
+      j.onFocus();
       d.select();
       d.focus()
     };
@@ -288,30 +288,30 @@ define("ace/textinput", ["require", "exports", "module", "pilot/event"], functio
     }
   }
 });
-define("ace/conf/keybindings/default_mac", ["require", "exports", "module"], function(j, g) {
+define("ace/conf/keybindings/default_mac", ["require", "exports", "module"], function(i, g) {
   g.bindings = {selectall:"Command-A", removeline:"Command-D", gotoline:"Command-L", togglecomment:"Command-7", findnext:"Command-K", findprevious:"Command-Shift-K", find:"Command-F", replace:"Command-R", undo:"Command-Z", redo:"Command-Shift-Z|Command-Y", overwrite:"Insert", copylinesup:"Command-Option-Up", movelinesup:"Option-Up", selecttostart:"Command-Shift-Up", gotostart:"Command-Home|Command-Up", selectup:"Shift-Up", golineup:"Up", copylinesdown:"Command-Option-Down", movelinesdown:"Option-Down", 
   selecttoend:"Command-Shift-Down", gotoend:"Command-End|Command-Down", selectdown:"Shift-Down", godown:"Down", selectwordleft:"Option-Shift-Left", gotowordleft:"Option-Left", selecttolinestart:"Command-Shift-Left", gotolinestart:"Command-Left|Home", selectleft:"Shift-Left", gotoleft:"Left", selectwordright:"Option-Shift-Right", gotowordright:"Option-Right", selecttolineend:"Command-Shift-Right", gotolineend:"Command-Right|End", selectright:"Shift-Right", gotoright:"Right", selectpagedown:"Shift-PageDown", 
   pagedown:"PageDown", selectpageup:"Shift-PageUp", pageup:"PageUp", selectlinestart:"Shift-Home", selectlineend:"Shift-End", del:"Delete", backspace:"Ctrl-Backspace|Command-Backspace|Option-Backspace|Backspace", outdent:"Shift-Tab", indent:"Tab"}
 });
-define("ace/conf/keybindings/default_win", ["require", "exports", "module"], function(j, g) {
+define("ace/conf/keybindings/default_win", ["require", "exports", "module"], function(i, g) {
   g.bindings = {selectall:"Ctrl-A", removeline:"Ctrl-D", gotoline:"Ctrl-L", togglecomment:"Ctrl-7", findnext:"Ctrl-K", findprevious:"Ctrl-Shift-K", find:"Ctrl-F", replace:"Ctrl-R", undo:"Ctrl-Z", redo:"Ctrl-Shift-Z|Ctrl-Y", overwrite:"Insert", copylinesup:"Ctrl-Alt-Up", movelinesup:"Alt-Up", selecttostart:"Alt-Shift-Up", gotostart:"Ctrl-Home|Ctrl-Up", selectup:"Shift-Up", golineup:"Up", copylinesdown:"Ctrl-Alt-Down", movelinesdown:"Alt-Down", selecttoend:"Alt-Shift-Down", gotoend:"Ctrl-End|Ctrl-Down", 
   selectdown:"Shift-Down", godown:"Down", selectwordleft:"Ctrl-Shift-Left", gotowordleft:"Ctrl-Left", selecttolinestart:"Alt-Shift-Left", gotolinestart:"Alt-Left|Home", selectleft:"Shift-Left", gotoleft:"Left", selectwordright:"Ctrl-Shift-Right", gotowordright:"Ctrl-Right", selecttolineend:"Alt-Shift-Right", gotolineend:"Alt-Right|End", selectright:"Shift-Right", gotoright:"Right", selectpagedown:"Shift-PageDown", pagedown:"PageDown", selectpageup:"Shift-PageUp", pageup:"PageUp", selectlinestart:"Shift-Home", 
   selectlineend:"Shift-End", del:"Delete", backspace:"Backspace", outdent:"Shift-Tab", indent:"Tab"}
 });
-define("pilot/console", ["require", "exports", "module"], function(j, g) {
+define("pilot/console", ["require", "exports", "module"], function(i, g) {
   var l = function() {
   };
-  j = ["assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd", "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"];
-  typeof window === "undefined" ? j.forEach(function(e) {
+  i = ["assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd", "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"];
+  typeof window === "undefined" ? i.forEach(function(e) {
     g[e] = function() {
-      var i = Array.prototype.slice.call(arguments);
-      postMessage(JSON.stringify({op:"log", method:e, args:i}))
+      var j = Array.prototype.slice.call(arguments);
+      postMessage(JSON.stringify({op:"log", method:e, args:j}))
     }
-  }) : j.forEach(function(e) {
+  }) : i.forEach(function(e) {
     g[e] = window.console && window.console[e] ? Function.prototype.bind.call(window.console[e], window.console) : l
   })
 });
-define("pilot/stacktrace", ["require", "exports", "module", "pilot/useragent", "pilot/console"], function(j, g) {
+define("pilot/stacktrace", ["require", "exports", "module", "pilot/useragent", "pilot/console"], function(i, g) {
   function l(h) {
     for(var m = 0;m < h.length;++m) {
       var b = h[m];
@@ -330,8 +330,8 @@ define("pilot/stacktrace", ["require", "exports", "module", "pilot/useragent", "
   }
   function e() {
   }
-  var i = j("pilot/useragent"), o = j("pilot/console"), d = function() {
-    return i.isGecko ? "firefox" : i.isOpera ? "opera" : "other"
+  var j = i("pilot/useragent"), o = i("pilot/console"), d = function() {
+    return j.isGecko ? "firefox" : j.isOpera ? "opera" : "other"
   }(), k = {chrome:function(h) {
     var m = h.stack;
     if(!m) {
@@ -456,35 +456,35 @@ define("pilot/stacktrace", ["require", "exports", "module", "pilot/useragent", "
     }
   }
 });
-define("pilot/event_emitter", ["require", "exports", "module"], function(j, g) {
-  j = {};
-  j._dispatchEvent = function(l, e) {
+define("pilot/event_emitter", ["require", "exports", "module"], function(i, g) {
+  i = {};
+  i._dispatchEvent = function(l, e) {
     this._eventRegistry = this._eventRegistry || {};
-    var i = this._eventRegistry[l];
-    if(i && i.length) {
+    var j = this._eventRegistry[l];
+    if(j && j.length) {
       e = e || {};
       e.type = l;
-      for(l = 0;l < i.length;l++) {
-        i[l](e)
+      for(l = 0;l < j.length;l++) {
+        j[l](e)
       }
     }
   };
-  j.on = j.addEventListener = function(l, e) {
+  i.on = i.addEventListener = function(l, e) {
     this._eventRegistry = this._eventRegistry || {};
-    var i = this._eventRegistry[l];
-    i || (i = this._eventRegistry[l] = []);
-    i.indexOf(e) == -1 && i.push(e)
+    var j = this._eventRegistry[l];
+    j || (j = this._eventRegistry[l] = []);
+    j.indexOf(e) == -1 && j.push(e)
   };
-  j.removeEventListener = function(l, e) {
+  i.removeEventListener = function(l, e) {
     this._eventRegistry = this._eventRegistry || {};
     if(l = this._eventRegistry[l]) {
       e = l.indexOf(e);
       e !== -1 && l.splice(e, 1)
     }
   };
-  g.EventEmitter = j
+  g.EventEmitter = i
 });
-define("pilot/catalog", ["require", "exports", "module"], function(j, g) {
+define("pilot/catalog", ["require", "exports", "module"], function(i, g) {
   var l = {};
   g.addExtensionSpec = function(e) {
     l[e.name] = e
@@ -503,7 +503,7 @@ define("pilot/catalog", ["require", "exports", "module"], function(j, g) {
     return Object.keys(l)
   }
 });
-define("pilot/types", ["require", "exports", "module"], function(j, g) {
+define("pilot/types", ["require", "exports", "module"], function(i, g) {
   function l(k, a, f, h) {
     this.value = k;
     this.status = a || o.VALID;
@@ -512,7 +512,7 @@ define("pilot/types", ["require", "exports", "module"], function(j, g) {
   }
   function e() {
   }
-  function i(k, a) {
+  function j(k, a) {
     k = d[k];
     if(typeof k === "function") {
       k = new k(a)
@@ -572,15 +572,15 @@ define("pilot/types", ["require", "exports", "module"], function(j, g) {
   };
   g.getType = function(k) {
     if(typeof k === "string") {
-      return i(k, k)
+      return j(k, k)
     }if(typeof k == "object") {
       if(!k.name) {
         throw new Error("Missing 'name' member to typeSpec");
-      }return i(k.name, k)
+      }return j(k.name, k)
     }throw new Error("Can't extract type from " + k);
   }
 });
-define("pilot/canon", ["require", "exports", "module", "pilot/console", "pilot/stacktrace", "pilot/oop", "pilot/event_emitter", "pilot/catalog", "pilot/types", "pilot/types", "pilot/lang"], function(j, g) {
+define("pilot/canon", ["require", "exports", "module", "pilot/console", "pilot/stacktrace", "pilot/oop", "pilot/event_emitter", "pilot/catalog", "pilot/types", "pilot/types", "pilot/lang"], function(i, g) {
   function l(q) {
     if(!q.name) {
       throw new Error("All registered commands must have a name");
@@ -604,7 +604,7 @@ define("pilot/canon", ["require", "exports", "module", "pilot/console", "pilot/s
       throw new Error("In " + q + "/" + s.name + ": can't find type for: " + JSON.stringify(u));
     }
   }
-  function i(q) {
+  function j(q) {
     q = typeof q === "string" ? q : q.name;
     delete p[q];
     c.arrayRemove(r, q)
@@ -634,11 +634,11 @@ define("pilot/canon", ["require", "exports", "module", "pilot/console", "pilot/s
     this.end = null;
     this.error = this.completed = false
   }
-  j("pilot/console");
-  j("pilot/stacktrace");
-  var f = j("pilot/oop"), h = j("pilot/event_emitter").EventEmitter, m = j("pilot/catalog");
-  j("pilot/types");
-  var b = j("pilot/types"), c = j("pilot/lang"), n = {name:"command", description:"A command is a bit of functionality with optional typed arguments which can do something small like moving the cursor around the screen, or large like cloning a project from VCS.", indexOn:"name"};
+  i("pilot/console");
+  i("pilot/stacktrace");
+  var f = i("pilot/oop"), h = i("pilot/event_emitter").EventEmitter, m = i("pilot/catalog");
+  i("pilot/types");
+  var b = i("pilot/types"), c = i("pilot/lang"), n = {name:"command", description:"A command is a bit of functionality with optional typed arguments which can do something small like moving the cursor around the screen, or large like cloning a project from VCS.", indexOn:"name"};
   g.startup = function() {
     m.addExtensionSpec(n)
   };
@@ -646,7 +646,7 @@ define("pilot/canon", ["require", "exports", "module", "pilot/console", "pilot/s
     m.removeExtensionSpec(n)
   };
   var p = {}, r = [];
-  g.removeCommand = i;
+  g.removeCommand = j;
   g.addCommand = l;
   g.getCommand = o;
   g.getCommandNames = d;
@@ -686,162 +686,162 @@ define("pilot/canon", ["require", "exports", "module", "pilot/console", "pilot/s
   };
   g.Request = a
 });
-define("ace/commands/default_commands", ["require", "exports", "module", "pilot/canon"], function(j) {
-  j = j("pilot/canon");
-  j.addCommand({name:"selectall", exec:function(g) {
+define("ace/commands/default_commands", ["require", "exports", "module", "pilot/canon"], function(i) {
+  i = i("pilot/canon");
+  i.addCommand({name:"selectall", exec:function(g) {
     g.editor.getSelection().selectAll()
   }});
-  j.addCommand({name:"removeline", exec:function(g) {
+  i.addCommand({name:"removeline", exec:function(g) {
     g.editor.removeLines()
   }});
-  j.addCommand({name:"gotoline", exec:function(g) {
+  i.addCommand({name:"gotoline", exec:function(g) {
     var l = parseInt(prompt("Enter line number:"));
     isNaN(l) || g.editor.gotoLine(l)
   }});
-  j.addCommand({name:"togglecomment", exec:function(g) {
+  i.addCommand({name:"togglecomment", exec:function(g) {
     g.editor.toggleCommentLines()
   }});
-  j.addCommand({name:"findnext", exec:function(g) {
+  i.addCommand({name:"findnext", exec:function(g) {
     g.editor.findNext()
   }});
-  j.addCommand({name:"findprevious", exec:function(g) {
+  i.addCommand({name:"findprevious", exec:function(g) {
     g.editor.findPrevious()
   }});
-  j.addCommand({name:"find", exec:function(g) {
+  i.addCommand({name:"find", exec:function(g) {
     var l = prompt("Find:");
     g.editor.find(l)
   }});
-  j.addCommand({name:"undo", exec:function(g) {
+  i.addCommand({name:"undo", exec:function(g) {
     g.editor.undo()
   }});
-  j.addCommand({name:"redo", exec:function(g) {
+  i.addCommand({name:"redo", exec:function(g) {
     g.editor.redo()
   }});
-  j.addCommand({name:"redo", exec:function(g) {
+  i.addCommand({name:"redo", exec:function(g) {
     g.editor.redo()
   }});
-  j.addCommand({name:"overwrite", exec:function(g) {
+  i.addCommand({name:"overwrite", exec:function(g) {
     g.editor.toggleOverwrite()
   }});
-  j.addCommand({name:"copylinesup", exec:function(g) {
+  i.addCommand({name:"copylinesup", exec:function(g) {
     g.editor.copyLinesUp()
   }});
-  j.addCommand({name:"movelinesup", exec:function(g) {
+  i.addCommand({name:"movelinesup", exec:function(g) {
     g.editor.moveLinesUp()
   }});
-  j.addCommand({name:"selecttostart", exec:function(g) {
+  i.addCommand({name:"selecttostart", exec:function(g) {
     g.editor.getSelection().selectFileStart()
   }});
-  j.addCommand({name:"gotostart", exec:function(g) {
+  i.addCommand({name:"gotostart", exec:function(g) {
     g.editor.navigateFileStart()
   }});
-  j.addCommand({name:"selectup", exec:function(g) {
+  i.addCommand({name:"selectup", exec:function(g) {
     g.editor.getSelection().selectUp()
   }});
-  j.addCommand({name:"golineup", exec:function(g) {
+  i.addCommand({name:"golineup", exec:function(g) {
     g.editor.navigateUp()
   }});
-  j.addCommand({name:"copylinesdown", exec:function(g) {
+  i.addCommand({name:"copylinesdown", exec:function(g) {
     g.editor.copyLinesDown()
   }});
-  j.addCommand({name:"movelinesdown", exec:function(g) {
+  i.addCommand({name:"movelinesdown", exec:function(g) {
     g.editor.moveLinesDown()
   }});
-  j.addCommand({name:"selecttoend", exec:function(g) {
+  i.addCommand({name:"selecttoend", exec:function(g) {
     g.editor.getSelection().selectFileEnd()
   }});
-  j.addCommand({name:"gotoend", exec:function(g) {
+  i.addCommand({name:"gotoend", exec:function(g) {
     g.editor.navigateFileEnd()
   }});
-  j.addCommand({name:"selectdown", exec:function(g) {
+  i.addCommand({name:"selectdown", exec:function(g) {
     g.editor.getSelection().selectDown()
   }});
-  j.addCommand({name:"godown", exec:function(g) {
+  i.addCommand({name:"godown", exec:function(g) {
     g.editor.navigateDown()
   }});
-  j.addCommand({name:"selectwordleft", exec:function(g) {
+  i.addCommand({name:"selectwordleft", exec:function(g) {
     g.editor.getSelection().selectWordLeft()
   }});
-  j.addCommand({name:"gotowordleft", exec:function(g) {
+  i.addCommand({name:"gotowordleft", exec:function(g) {
     g.editor.navigateWordLeft()
   }});
-  j.addCommand({name:"selecttolinestart", exec:function(g) {
+  i.addCommand({name:"selecttolinestart", exec:function(g) {
     g.editor.getSelection().selectLineStart()
   }});
-  j.addCommand({name:"gotolinestart", exec:function(g) {
+  i.addCommand({name:"gotolinestart", exec:function(g) {
     g.editor.navigateLineStart()
   }});
-  j.addCommand({name:"selectleft", exec:function(g) {
+  i.addCommand({name:"selectleft", exec:function(g) {
     g.editor.getSelection().selectLeft()
   }});
-  j.addCommand({name:"gotoleft", exec:function(g) {
+  i.addCommand({name:"gotoleft", exec:function(g) {
     g.editor.navigateLeft()
   }});
-  j.addCommand({name:"selectwordright", exec:function(g) {
+  i.addCommand({name:"selectwordright", exec:function(g) {
     g.editor.getSelection().selectWordRight()
   }});
-  j.addCommand({name:"gotowordright", exec:function(g) {
+  i.addCommand({name:"gotowordright", exec:function(g) {
     g.editor.navigateWordRight()
   }});
-  j.addCommand({name:"selecttolineend", exec:function(g) {
+  i.addCommand({name:"selecttolineend", exec:function(g) {
     g.editor.getSelection().selectLineEnd()
   }});
-  j.addCommand({name:"gotolineend", exec:function(g) {
+  i.addCommand({name:"gotolineend", exec:function(g) {
     g.editor.navigateLineEnd()
   }});
-  j.addCommand({name:"selectright", exec:function(g) {
+  i.addCommand({name:"selectright", exec:function(g) {
     g.editor.getSelection().selectRight()
   }});
-  j.addCommand({name:"gotoright", exec:function(g) {
+  i.addCommand({name:"gotoright", exec:function(g) {
     g.editor.navigateRight()
   }});
-  j.addCommand({name:"selectpagedown", exec:function(g) {
+  i.addCommand({name:"selectpagedown", exec:function(g) {
     g.editor.selectPageDown()
   }});
-  j.addCommand({name:"pagedown", exec:function(g) {
+  i.addCommand({name:"pagedown", exec:function(g) {
     g.editor.scrollPageDown()
   }});
-  j.addCommand({name:"gotopagedown", exec:function(g) {
+  i.addCommand({name:"gotopagedown", exec:function(g) {
     g.editor.gotoPageDown()
   }});
-  j.addCommand({name:"selectpageup", exec:function(g) {
+  i.addCommand({name:"selectpageup", exec:function(g) {
     g.editor.selectPageUp()
   }});
-  j.addCommand({name:"pageup", exec:function(g) {
+  i.addCommand({name:"pageup", exec:function(g) {
     g.editor.scrollPageUp()
   }});
-  j.addCommand({name:"gotopageup", exec:function(g) {
+  i.addCommand({name:"gotopageup", exec:function(g) {
     g.editor.gotoPageUp()
   }});
-  j.addCommand({name:"selectlinestart", exec:function(g) {
+  i.addCommand({name:"selectlinestart", exec:function(g) {
     g.editor.getSelection().selectLineStart()
   }});
-  j.addCommand({name:"gotolinestart", exec:function(g) {
+  i.addCommand({name:"gotolinestart", exec:function(g) {
     g.editor.navigateLineStart()
   }});
-  j.addCommand({name:"selectlineend", exec:function(g) {
+  i.addCommand({name:"selectlineend", exec:function(g) {
     g.editor.getSelection().selectLineEnd()
   }});
-  j.addCommand({name:"gotolineend", exec:function(g) {
+  i.addCommand({name:"gotolineend", exec:function(g) {
     g.editor.navigateLineEnd()
   }});
-  j.addCommand({name:"del", exec:function(g) {
+  i.addCommand({name:"del", exec:function(g) {
     g.editor.removeRight()
   }});
-  j.addCommand({name:"backspace", exec:function(g) {
+  i.addCommand({name:"backspace", exec:function(g) {
     g.editor.removeLeft()
   }});
-  j.addCommand({name:"outdent", exec:function(g) {
+  i.addCommand({name:"outdent", exec:function(g) {
     g.editor.blockOutdent()
   }});
-  j.addCommand({name:"indent", exec:function(g) {
+  i.addCommand({name:"indent", exec:function(g) {
     g.editor.indent()
   }})
 });
-define("ace/keybinding", ["require", "exports", "module", "pilot/useragent", "pilot/event", "ace/conf/keybindings/default_mac", "ace/conf/keybindings/default_win", "pilot/canon", "ace/commands/default_commands"], function(j, g) {
-  var l = j("pilot/useragent"), e = j("pilot/event"), i = j("ace/conf/keybindings/default_mac").bindings, o = j("ace/conf/keybindings/default_win").bindings, d = j("pilot/canon");
-  j("ace/commands/default_commands");
-  j = function(k, a, f) {
+define("ace/keybinding", ["require", "exports", "module", "pilot/useragent", "pilot/event", "ace/conf/keybindings/default_mac", "ace/conf/keybindings/default_win", "pilot/canon", "ace/commands/default_commands"], function(i, g) {
+  var l = i("pilot/useragent"), e = i("pilot/event"), j = i("ace/conf/keybindings/default_mac").bindings, o = i("ace/conf/keybindings/default_win").bindings, d = i("pilot/canon");
+  i("ace/commands/default_commands");
+  i = function(k, a, f) {
     this.setConfig(f);
     var h = this;
     e.addKeyListener(k, function(m) {
@@ -885,61 +885,61 @@ define("ace/keybinding", ["require", "exports", "module", "pilot/useragent", "pi
     this.keyMods = {ctrl:1, alt:2, option:2, shift:4, meta:8, command:8};
     this.keyNames = {"8":"Backspace", "9":"Tab", "13":"Enter", "27":"Esc", "32":"Space", "33":"PageUp", "34":"PageDown", "35":"End", "36":"Home", "37":"Left", "38":"Up", "39":"Right", "40":"Down", "45":"Insert", "46":"Delete", "107":"+", "112":"F1", "113":"F2", "114":"F3", "115":"F4", "116":"F5", "117":"F6", "118":"F7", "119":"F8", "120":"F9", "121":"F10", "122":"F11", "123":"F12"};
     this.setConfig = function(h) {
-      this.config = h || (l.isMac ? i : o);
+      this.config = h || (l.isMac ? j : o);
       if(typeof this.config.reverse == "undefined") {
         this.config.reverse = f.call(this, this.config, "|")
       }
     }
-  }).call(j.prototype);
-  g.KeyBinding = j
+  }).call(i.prototype);
+  g.KeyBinding = i
 });
-define("ace/range", ["require", "exports", "module"], function(j, g) {
-  var l = function(e, i, o, d) {
-    this.start = {row:e, column:i};
+define("ace/range", ["require", "exports", "module"], function(i, g) {
+  var l = function(e, j, o, d) {
+    this.start = {row:e, column:j};
     this.end = {row:o, column:d}
   };
   (function() {
     this.toString = function() {
       return"Range: [" + this.start.row + "/" + this.start.column + "] -> [" + this.end.row + "/" + this.end.column + "]"
     };
-    this.contains = function(e, i) {
-      return this.compare(e, i) == 0
+    this.contains = function(e, j) {
+      return this.compare(e, j) == 0
     };
-    this.compare = function(e, i) {
+    this.compare = function(e, j) {
       if(!this.isMultiLine()) {
         if(e === this.start.row) {
-          return i < this.start.column ? -1 : i > this.end.column ? 1 : 0
+          return j < this.start.column ? -1 : j > this.end.column ? 1 : 0
         }
       }if(e < this.start.row) {
         return-1
       }if(e > this.end.row) {
         return 1
       }if(this.start.row === e) {
-        return i >= this.start.column ? 0 : -1
+        return j >= this.start.column ? 0 : -1
       }if(this.end.row === e) {
-        return i <= this.end.column ? 0 : 1
+        return j <= this.end.column ? 0 : 1
       }return 0
     };
-    this.clipRows = function(e, i) {
-      if(this.end.row > i) {
-        var o = {row:i + 1, column:0}
-      }if(this.start.row > i) {
-        var d = {row:i + 1, column:0}
+    this.clipRows = function(e, j) {
+      if(this.end.row > j) {
+        var o = {row:j + 1, column:0}
+      }if(this.start.row > j) {
+        var d = {row:j + 1, column:0}
       }if(this.start.row < e) {
         d = {row:e, column:0}
       }if(this.end.row < e) {
         o = {row:e, column:0}
       }return l.fromPoints(d || this.start, o || this.end)
     };
-    this.extend = function(e, i) {
-      var o = this.compare(e, i);
+    this.extend = function(e, j) {
+      var o = this.compare(e, j);
       if(o == 0) {
         return this
       }else {
         if(o == -1) {
-          var d = {row:e, column:i}
+          var d = {row:e, column:j}
         }else {
-          var k = {row:e, column:i}
+          var k = {row:e, column:j}
         }
       }return l.fromPoints(d || this.start, k || this.end)
     };
@@ -959,20 +959,20 @@ define("ace/range", ["require", "exports", "module"], function(j, g) {
       return new l(this.start.row, e.documentToScreenColumn(this.start.row, this.start.column), this.end.row, e.documentToScreenColumn(this.end.row, this.end.column))
     }
   }).call(l.prototype);
-  l.fromPoints = function(e, i) {
-    return new l(e.row, e.column, i.row, i.column)
+  l.fromPoints = function(e, j) {
+    return new l(e.row, e.column, j.row, j.column)
   };
   g.Range = l
 });
-define("ace/selection", ["require", "exports", "module", "pilot/oop", "pilot/lang", "pilot/event_emitter", "ace/range"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/lang"), i = j("pilot/event_emitter").EventEmitter, o = j("ace/range").Range;
-  j = function(d) {
+define("ace/selection", ["require", "exports", "module", "pilot/oop", "pilot/lang", "pilot/event_emitter", "ace/range"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/lang"), j = i("pilot/event_emitter").EventEmitter, o = i("ace/range").Range;
+  i = function(d) {
     this.doc = d;
     this.clearSelection();
     this.selectionLead = {row:0, column:0}
   };
   (function() {
-    l.implement(this, i);
+    l.implement(this, j);
     this.isEmpty = function() {
       return!this.selectionAnchor || this.selectionAnchor.row == this.selectionLead.row && this.selectionAnchor.column == this.selectionLead.column
     };
@@ -1222,36 +1222,36 @@ define("ace/selection", ["require", "exports", "module", "pilot/oop", "pilot/lan
     this.$clone = function(d) {
       return{row:d.row, column:d.column}
     }
-  }).call(j.prototype);
-  g.Selection = j
+  }).call(i.prototype);
+  g.Selection = i
 });
-define("ace/tokenizer", ["require", "exports", "module"], function(j, g) {
-  j = function(l) {
+define("ace/tokenizer", ["require", "exports", "module"], function(i, g) {
+  i = function(l) {
     this.rules = l;
     this.regExps = {};
     for(var e in this.rules) {
       l = this.rules[e];
-      for(var i = [], o = 0;o < l.length;o++) {
-        i.push(l[o].regex)
-      }this.regExps[e] = new RegExp("(?:(" + i.join(")|(") + ")|(.))", "g")
+      for(var j = [], o = 0;o < l.length;o++) {
+        j.push(l[o].regex)
+      }this.regExps[e] = new RegExp("(?:(" + j.join(")|(") + ")|(.))", "g")
     }
   };
   (function() {
     this.getLineTokens = function(l, e) {
       e = e;
-      var i = this.rules[e], o = this.regExps[e];
+      var j = this.rules[e], o = this.regExps[e];
       o.lastIndex = 0;
       for(var d, k = [], a = 0, f = {type:null, value:""};d = o.exec(l);) {
         var h = "text", m = d[0];
         if(o.lastIndex == a) {
           throw new Error("tokenizer error");
         }a = o.lastIndex;
-        for(var b = 0;b < i.length;b++) {
+        for(var b = 0;b < j.length;b++) {
           if(d[b + 1]) {
-            h = typeof i[b].token == "function" ? i[b].token(d[0]) : i[b].token;
-            if(i[b].next && i[b].next !== e) {
-              e = i[b].next;
-              i = this.rules[e];
+            h = typeof j[b].token == "function" ? j[b].token(d[0]) : j[b].token;
+            if(j[b].next && j[b].next !== e) {
+              e = j[b].next;
+              j = this.rules[e];
               a = o.lastIndex;
               o = this.regExps[e];
               o.lastIndex = a
@@ -1266,31 +1266,31 @@ define("ace/tokenizer", ["require", "exports", "module"], function(j, g) {
       }f.type && k.push(f);
       return{tokens:k, state:e}
     }
-  }).call(j.prototype);
-  g.Tokenizer = j
+  }).call(i.prototype);
+  g.Tokenizer = i
 });
-define("ace/mode/text_highlight_rules", ["require", "exports", "module"], function(j, g) {
-  j = function() {
+define("ace/mode/text_highlight_rules", ["require", "exports", "module"], function(i, g) {
+  i = function() {
     this.$rules = {start:[{token:"text", regex:".+"}]}
   };
   (function() {
     this.addRules = function(l, e) {
-      for(var i in l) {
-        for(var o = l[i], d = 0;d < o.length;d++) {
+      for(var j in l) {
+        for(var o = l[j], d = 0;d < o.length;d++) {
           var k = o[d];
-          k.next = k.next ? e + k.next : e + i
-        }this.$rules[e + i] = o
+          k.next = k.next ? e + k.next : e + j
+        }this.$rules[e + j] = o
       }
     };
     this.getRules = function() {
       return this.$rules
     }
-  }).call(j.prototype);
-  g.TextHighlightRules = j
+  }).call(i.prototype);
+  g.TextHighlightRules = i
 });
-define("ace/mode/text", ["require", "exports", "module", "ace/tokenizer", "ace/mode/text_highlight_rules"], function(j, g) {
-  var l = j("ace/tokenizer").Tokenizer, e = j("ace/mode/text_highlight_rules").TextHighlightRules;
-  j = function() {
+define("ace/mode/text", ["require", "exports", "module", "ace/tokenizer", "ace/mode/text_highlight_rules"], function(i, g) {
+  var l = i("ace/tokenizer").Tokenizer, e = i("ace/mode/text_highlight_rules").TextHighlightRules;
+  i = function() {
     this.$tokenizer = new l((new e).getRules())
   };
   (function() {
@@ -1308,17 +1308,17 @@ define("ace/mode/text", ["require", "exports", "module", "ace/tokenizer", "ace/m
     };
     this.autoOutdent = function() {
     };
-    this.$getIndent = function(i) {
-      if(i = i.match(/^(\s+)/)) {
-        return i[1]
+    this.$getIndent = function(j) {
+      if(j = j.match(/^(\s+)/)) {
+        return j[1]
       }return""
     }
-  }).call(j.prototype);
-  g.Mode = j
+  }).call(i.prototype);
+  g.Mode = i
 });
-define("ace/document", ["require", "exports", "module", "pilot/oop", "pilot/lang", "pilot/event_emitter", "ace/selection", "ace/mode/text", "ace/range"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/lang"), i = j("pilot/event_emitter").EventEmitter, o = j("ace/selection").Selection, d = j("ace/mode/text").Mode, k = j("ace/range").Range;
-  j = function(a, f) {
+define("ace/document", ["require", "exports", "module", "pilot/oop", "pilot/lang", "pilot/event_emitter", "ace/selection", "ace/mode/text", "ace/range"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/lang"), j = i("pilot/event_emitter").EventEmitter, o = i("ace/selection").Selection, d = i("ace/mode/text").Mode, k = i("ace/range").Range;
+  i = function(a, f) {
     this.modified = true;
     this.lines = [];
     this.selection = new o(this);
@@ -1328,7 +1328,7 @@ define("ace/document", ["require", "exports", "module", "pilot/oop", "pilot/lang
     Array.isArray(a) ? this.$insertLines(0, a) : this.$insert({row:0, column:0}, a)
   };
   (function() {
-    l.implement(this, i);
+    l.implement(this, j);
     this.$undoManager = null;
     this.$split = function(a) {
       return a.split(/\r\n|\r|\n/)
@@ -1807,11 +1807,11 @@ define("ace/document", ["require", "exports", "module", "pilot/oop", "pilot/lang
         }
       }return m
     }
-  }).call(j.prototype);
-  g.Document = j
+  }).call(i.prototype);
+  g.Document = i
 });
-define("ace/search", ["require", "exports", "module", "pilot/lang", "pilot/oop", "ace/range"], function(j, g) {
-  var l = j("pilot/lang"), e = j("pilot/oop"), i = j("ace/range").Range, o = function() {
+define("ace/search", ["require", "exports", "module", "pilot/lang", "pilot/oop", "ace/range"], function(i, g) {
+  var l = i("pilot/lang"), e = i("pilot/oop"), j = i("ace/range").Range, o = function() {
     this.$options = {needle:"", backwards:false, wrap:false, caseSensitive:false, wholeWord:false, scope:o.ALL, regExp:false}
   };
   o.ALL = 1;
@@ -1890,7 +1890,7 @@ define("ace/search", ["require", "exports", "module", "pilot/lang", "pilot/oop",
       }}
     };
     this.$rangeFromMatch = function(d, k, a) {
-      return new i(d, k, d, k + a)
+      return new j(d, k, d, k + a)
     };
     this.$assembleRegExp = function() {
       var d = this.$options.regExp ? this.$options.needle : l.escapeRegExp(this.$options.needle);
@@ -1959,14 +1959,14 @@ define("ace/search", ["require", "exports", "module", "pilot/lang", "pilot/oop",
   }).call(o.prototype);
   g.Search = o
 });
-define("ace/background_tokenizer", ["require", "exports", "module", "pilot/oop", "pilot/event_emitter"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/event_emitter").EventEmitter;
-  j = function(i, o) {
+define("ace/background_tokenizer", ["require", "exports", "module", "pilot/oop", "pilot/event_emitter"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/event_emitter").EventEmitter;
+  i = function(j, o) {
     this.running = false;
     this.textLines = [];
     this.lines = [];
     this.currentLine = 0;
-    this.tokenizer = i;
+    this.tokenizer = j;
     var d = this;
     this.$worker = function() {
       if(d.running) {
@@ -1986,21 +1986,21 @@ define("ace/background_tokenizer", ["require", "exports", "module", "pilot/oop",
   };
   (function() {
     l.implement(this, e);
-    this.setTokenizer = function(i) {
-      this.tokenizer = i;
+    this.setTokenizer = function(j) {
+      this.tokenizer = j;
       this.lines = [];
       this.start(0)
     };
-    this.setLines = function(i) {
-      this.textLines = i;
+    this.setLines = function(j) {
+      this.textLines = j;
       this.lines = [];
       this.stop()
     };
-    this.fireUpdateEvent = function(i, o) {
-      this._dispatchEvent("update", {data:{first:i, last:o}})
+    this.fireUpdateEvent = function(j, o) {
+      this._dispatchEvent("update", {data:{first:j, last:o}})
     };
-    this.start = function(i) {
-      this.currentLine = Math.min(i || 0, this.currentLine, this.textLines.length);
+    this.start = function(j) {
+      this.currentLine = Math.min(j || 0, this.currentLine, this.textLines.length);
       this.lines.splice(this.currentLine, this.lines.length);
       this.stop();
       this.running = setTimeout(this.$worker, 700)
@@ -2009,38 +2009,38 @@ define("ace/background_tokenizer", ["require", "exports", "module", "pilot/oop",
       this.running && clearTimeout(this.running);
       this.running = false
     };
-    this.getTokens = function(i, o, d) {
-      d(this.$tokenizeRows(i, o))
+    this.getTokens = function(j, o, d) {
+      d(this.$tokenizeRows(j, o))
     };
-    this.getState = function(i, o) {
-      o(this.$tokenizeRows(i, i)[0].state)
+    this.getState = function(j, o) {
+      o(this.$tokenizeRows(j, j)[0].state)
     };
-    this.$tokenizeRows = function(i, o) {
+    this.$tokenizeRows = function(j, o) {
       var d = [], k = "start", a = false;
-      if(i > 0 && this.lines[i - 1]) {
-        k = this.lines[i - 1].state;
+      if(j > 0 && this.lines[j - 1]) {
+        k = this.lines[j - 1].state;
         a = true
-      }for(i = i;i <= o;i++) {
-        if(this.lines[i]) {
-          f = this.lines[i];
+      }for(j = j;j <= o;j++) {
+        if(this.lines[j]) {
+          f = this.lines[j];
           k = f.state;
           d.push(f)
         }else {
-          var f = this.tokenizer.getLineTokens(this.textLines[i] || "", k);
+          var f = this.tokenizer.getLineTokens(this.textLines[j] || "", k);
           k = f.state;
           d.push(f);
           if(a) {
-            this.lines[i] = f
+            this.lines[j] = f
           }
         }
       }return d
     }
-  }).call(j.prototype);
-  g.BackgroundTokenizer = j
+  }).call(i.prototype);
+  g.BackgroundTokenizer = i
 });
-define("ace/editor", ["require", "exports", "module", "pilot/oop", "pilot/event", "pilot/lang", "ace/textinput", "ace/keybinding", "ace/document", "ace/search", "ace/background_tokenizer", "ace/range", "pilot/event_emitter"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/event"), i = j("pilot/lang"), o = j("ace/textinput").TextInput, d = j("ace/keybinding").KeyBinding, k = j("ace/document").Document, a = j("ace/search").Search, f = j("ace/background_tokenizer").BackgroundTokenizer, h = j("ace/range").Range, m = j("pilot/event_emitter").EventEmitter;
-  j = function(b, c) {
+define("ace/editor", ["require", "exports", "module", "pilot/oop", "pilot/event", "pilot/lang", "ace/textinput", "ace/keybinding", "ace/document", "ace/search", "ace/background_tokenizer", "ace/range", "pilot/event_emitter"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/event"), j = i("pilot/lang"), o = i("ace/textinput").TextInput, d = i("ace/keybinding").KeyBinding, k = i("ace/document").Document, a = i("ace/search").Search, f = i("ace/background_tokenizer").BackgroundTokenizer, h = i("ace/range").Range, m = i("pilot/event_emitter").EventEmitter;
+  i = function(b, c) {
     var n = b.getContainerElement();
     this.container = n;
     this.renderer = b;
@@ -2430,7 +2430,7 @@ define("ace/editor", ["require", "exports", "module", "pilot/oop", "pilot/event"
             var n = this.getCursorPosition();
             b = b.documentToScreenColumn(n.row, n.column);
             b = c - b % c;
-            b = i.stringRepeat(" ", b)
+            b = j.stringRepeat(" ", b)
           }else {
             b = "\t"
           }return this.onTextInput(b)
@@ -2707,11 +2707,11 @@ define("ace/editor", ["require", "exports", "module", "pilot/oop", "pilot/event"
     this.redo = function() {
       this.doc.getUndoManager().redo()
     }
-  }).call(j.prototype);
-  g.Editor = j
+  }).call(i.prototype);
+  g.Editor = i
 });
-define("ace/undomanager", ["require", "exports", "module"], function(j, g) {
-  j = function() {
+define("ace/undomanager", ["require", "exports", "module"], function(i, g) {
+  i = function() {
     this.$undoStack = [];
     this.$redoStack = []
   };
@@ -2735,10 +2735,10 @@ define("ace/undomanager", ["require", "exports", "module"], function(j, g) {
         this.$undoStack.push(l)
       }
     }
-  }).call(j.prototype);
-  g.UndoManager = j
+  }).call(i.prototype);
+  g.UndoManager = i
 });
-define("pilot/dom", ["require", "exports", "module"], function(j, g) {
+define("pilot/dom", ["require", "exports", "module"], function(i, g) {
   g.setText = function(l, e) {
     if(l.innerText !== undefined) {
       l.innerText = e
@@ -2752,25 +2752,25 @@ define("pilot/dom", ["require", "exports", "module"], function(j, g) {
   g.addCssClass = function(l, e) {
     g.hasCssClass(l, e) || (l.className += " " + e)
   };
-  g.setCssClass = function(l, e, i) {
-    i ? g.addCssClass(l, e) : g.removeCssClass(l, e)
+  g.setCssClass = function(l, e, j) {
+    j ? g.addCssClass(l, e) : g.removeCssClass(l, e)
   };
   g.removeCssClass = function(l, e) {
-    for(var i = l.className.split(/\s+/g);;) {
-      var o = i.indexOf(e);
+    for(var j = l.className.split(/\s+/g);;) {
+      var o = j.indexOf(e);
       if(o == -1) {
         break
-      }i.splice(o, 1)
-    }l.className = i.join(" ")
+      }j.splice(o, 1)
+    }l.className = j.join(" ")
   };
   g.importCssString = function(l, e) {
     e = e || document;
     if(e.createStyleSheet) {
       e.createStyleSheet().cssText = l
     }else {
-      var i = e.createElement("style");
-      i.appendChild(e.createTextNode(l));
-      e.getElementsByTagName("head")[0].appendChild(i)
+      var j = e.createElement("style");
+      j.appendChild(e.createTextNode(l));
+      e.getElementsByTagName("head")[0].appendChild(j)
     }
   };
   g.getInnerWidth = function(l) {
@@ -2786,16 +2786,16 @@ define("pilot/dom", ["require", "exports", "module"], function(j, g) {
     var l = document.createElement("p");
     l.style.width = "100%";
     l.style.height = "200px";
-    var e = document.createElement("div"), i = e.style;
-    i.position = "absolute";
-    i.left = "-10000px";
-    i.overflow = "hidden";
-    i.width = "200px";
-    i.height = "150px";
+    var e = document.createElement("div"), j = e.style;
+    j.position = "absolute";
+    j.left = "-10000px";
+    j.overflow = "hidden";
+    j.width = "200px";
+    j.height = "150px";
     e.appendChild(l);
     document.body.appendChild(e);
     var o = l.offsetWidth;
-    i.overflow = "scroll";
+    j.overflow = "scroll";
     l = l.offsetWidth;
     if(o == l) {
       l = e.clientWidth
@@ -2803,18 +2803,18 @@ define("pilot/dom", ["require", "exports", "module"], function(j, g) {
     return o - l
   };
   g.setInnerHtml = function(l, e) {
-    var i = l.cloneNode(false);
-    i.innerHTML = e;
-    l.parentNode.replaceChild(i, l);
-    return i
+    var j = l.cloneNode(false);
+    j.innerHTML = e;
+    l.parentNode.replaceChild(j, l);
+    return j
   };
   g.getParentWindow = function(l) {
     return l.defaultView || l.parentWindow
   }
 });
-define("ace/layer/gutter", ["require", "exports", "module", "pilot/dom"], function(j, g) {
-  var l = j("pilot/dom");
-  j = function(e) {
+define("ace/layer/gutter", ["require", "exports", "module", "pilot/dom"], function(i, g) {
+  var l = i("pilot/dom");
+  i = function(e) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_gutter-layer";
     e.appendChild(this.element);
@@ -2822,104 +2822,104 @@ define("ace/layer/gutter", ["require", "exports", "module", "pilot/dom"], functi
     this.$decorations = []
   };
   (function() {
-    this.addGutterDecoration = function(e, i) {
+    this.addGutterDecoration = function(e, j) {
       this.$decorations[e] || (this.$decorations[e] = "");
-      this.$decorations[e] += " ace_" + i
+      this.$decorations[e] += " ace_" + j
     };
-    this.removeGutterDecoration = function(e, i) {
-      this.$decorations[e] = this.$decorations[e].replace(" ace_" + i, "")
+    this.removeGutterDecoration = function(e, j) {
+      this.$decorations[e] = this.$decorations[e].replace(" ace_" + j, "")
     };
     this.setBreakpoints = function(e) {
       this.$breakpoints = e.concat()
     };
     this.update = function(e) {
       this.$config = e;
-      for(var i = [], o = e.firstRow;o <= e.lastRow;o++) {
-        i.push("<div class='ace_gutter-cell", this.$decorations[o] || "", this.$breakpoints[o] ? " ace_breakpoint" : "", "' style='height:", e.lineHeight, "px;'>", o + 1, "</div>");
-        i.push("</div>")
-      }this.element = l.setInnerHtml(this.element, i.join(""));
+      for(var j = [], o = e.firstRow;o <= e.lastRow;o++) {
+        j.push("<div class='ace_gutter-cell", this.$decorations[o] || "", this.$breakpoints[o] ? " ace_breakpoint" : "", "' style='height:", e.lineHeight, "px;'>", o + 1, "</div>");
+        j.push("</div>")
+      }this.element = l.setInnerHtml(this.element, j.join(""));
       this.element.style.height = e.minHeight + "px"
     }
-  }).call(j.prototype);
-  g.Gutter = j
+  }).call(i.prototype);
+  g.Gutter = i
 });
-define("ace/layer/marker", ["require", "exports", "module", "ace/range", "pilot/dom"], function(j, g) {
-  var l = j("ace/range").Range, e = j("pilot/dom");
-  j = function(i) {
+define("ace/layer/marker", ["require", "exports", "module", "ace/range", "pilot/dom"], function(i, g) {
+  var l = i("ace/range").Range, e = i("pilot/dom");
+  i = function(j) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_marker-layer";
-    i.appendChild(this.element);
+    j.appendChild(this.element);
     this.markers = {};
     this.$markerId = 1
   };
   (function() {
-    this.setDocument = function(i) {
-      this.doc = i
+    this.setDocument = function(j) {
+      this.doc = j
     };
-    this.addMarker = function(i, o, d) {
+    this.addMarker = function(j, o, d) {
       var k = this.$markerId++;
-      this.markers[k] = {range:i, type:d || "line", clazz:o};
+      this.markers[k] = {range:j, type:d || "line", clazz:o};
       return k
     };
-    this.removeMarker = function(i) {
-      this.markers[i] && delete this.markers[i]
+    this.removeMarker = function(j) {
+      this.markers[j] && delete this.markers[j]
     };
-    this.update = function(i) {
-      if(i = i || this.config) {
-        this.config = i;
+    this.update = function(j) {
+      if(j = j || this.config) {
+        this.config = j;
         var o = [];
         for(var d in this.markers) {
-          var k = this.markers[d], a = k.range.clipRows(i.firstRow, i.lastRow);
+          var k = this.markers[d], a = k.range.clipRows(j.firstRow, j.lastRow);
           if(!a.isEmpty()) {
             if(a.isMultiLine()) {
-              k.type == "text" ? this.drawTextMarker(o, a, k.clazz, i) : this.drawMultiLineMarker(o, a, k.clazz, i)
+              k.type == "text" ? this.drawTextMarker(o, a, k.clazz, j) : this.drawMultiLineMarker(o, a, k.clazz, j)
             }else {
-              this.drawSingleLineMarker(o, a, k.clazz, i)
+              this.drawSingleLineMarker(o, a, k.clazz, j)
             }
           }
         }this.element = e.setInnerHtml(this.element, o.join(""))
       }
     };
-    this.drawTextMarker = function(i, o, d, k) {
+    this.drawTextMarker = function(j, o, d, k) {
       var a = o.start.row, f = new l(a, o.start.column, a, this.doc.getLine(a).length);
-      this.drawSingleLineMarker(i, f, d, k, 1);
+      this.drawSingleLineMarker(j, f, d, k, 1);
       a = o.end.row;
       f = new l(a, 0, a, o.end.column);
-      this.drawSingleLineMarker(i, f, d, k);
+      this.drawSingleLineMarker(j, f, d, k);
       for(a = o.start.row + 1;a < o.end.row;a++) {
         f.start.row = a;
         f.end.row = a;
         f.end.column = this.doc.getLine(a).length;
-        this.drawSingleLineMarker(i, f, d, k, 1)
+        this.drawSingleLineMarker(j, f, d, k, 1)
       }
     };
-    this.drawMultiLineMarker = function(i, o, d, k) {
+    this.drawMultiLineMarker = function(j, o, d, k) {
       o = o.toScreenRange(this.doc);
       var a = k.lineHeight, f = Math.round(k.width - o.start.column * k.characterWidth), h = (o.start.row - k.firstRow) * k.lineHeight, m = Math.round(o.start.column * k.characterWidth);
-      i.push("<div class='", d, "' style='", "height:", a, "px;", "width:", f, "px;", "top:", h, "px;", "left:", m, "px;'></div>");
+      j.push("<div class='", d, "' style='", "height:", a, "px;", "width:", f, "px;", "top:", h, "px;", "left:", m, "px;'></div>");
       h = (o.end.row - k.firstRow) * k.lineHeight;
       f = Math.round(o.end.column * k.characterWidth);
-      i.push("<div class='", d, "' style='", "height:", a, "px;", "top:", h, "px;", "width:", f, "px;'></div>");
+      j.push("<div class='", d, "' style='", "height:", a, "px;", "top:", h, "px;", "width:", f, "px;'></div>");
       a = (o.end.row - o.start.row - 1) * k.lineHeight;
       if(!(a < 0)) {
         h = (o.start.row + 1 - k.firstRow) * k.lineHeight;
-        i.push("<div class='", d, "' style='", "height:", a, "px;", "width:", k.width, "px;", "top:", h, "px;'></div>")
+        j.push("<div class='", d, "' style='", "height:", a, "px;", "width:", k.width, "px;", "top:", h, "px;'></div>")
       }
     };
-    this.drawSingleLineMarker = function(i, o, d, k, a) {
+    this.drawSingleLineMarker = function(j, o, d, k, a) {
       o = o.toScreenRange(this.doc);
       var f = k.lineHeight;
       a = Math.round((o.end.column + (a || 0) - o.start.column) * k.characterWidth);
       var h = (o.start.row - k.firstRow) * k.lineHeight;
       o = Math.round(o.start.column * k.characterWidth);
-      i.push("<div class='", d, "' style='", "height:", f, "px;", "width:", a, "px;", "top:", h, "px;", "left:", o, "px;'></div>")
+      j.push("<div class='", d, "' style='", "height:", f, "px;", "width:", a, "px;", "top:", h, "px;", "left:", o, "px;'></div>")
     }
-  }).call(j.prototype);
-  g.Marker = j
+  }).call(i.prototype);
+  g.Marker = i
 });
-define("ace/layer/text", ["require", "exports", "module", "pilot/oop", "pilot/dom", "pilot/lang", "pilot/event_emitter"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/dom"), i = j("pilot/lang"), o = j("pilot/event_emitter").EventEmitter;
-  j = function(d) {
+define("ace/layer/text", ["require", "exports", "module", "pilot/oop", "pilot/dom", "pilot/lang", "pilot/event_emitter"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/dom"), j = i("pilot/lang"), o = i("pilot/event_emitter").EventEmitter;
+  i = function(d) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_text-layer";
     d.appendChild(this.element);
@@ -2961,7 +2961,7 @@ define("ace/layer/text", ["require", "exports", "module", "pilot/oop", "pilot/do
         k.position = "absolute";
         k.overflow = "visible";
         k.whiteSpace = "nowrap";
-        d.innerHTML = i.stringRepeat("Xy", 1E3);
+        d.innerHTML = j.stringRepeat("Xy", 1E3);
         document.body.insertBefore(d, document.body.firstChild)
       }k = this.$measureNode.style;
       for(var a in this.$fontStyles) {
@@ -3076,12 +3076,12 @@ define("ace/layer/text", ["require", "exports", "module", "pilot/oop", "pilot/do
         k !== this.doc.getLength() - 1 ? d.push("<span class='ace_invisible'>" + this.EOL_CHAR + "</span>") : d.push("<span class='ace_invisible'>" + this.EOF_CHAR + "</span>")
       }
     }
-  }).call(j.prototype);
-  g.Text = j
+  }).call(i.prototype);
+  g.Text = i
 });
-define("ace/layer/cursor", ["require", "exports", "module", "pilot/dom"], function(j, g) {
-  var l = j("pilot/dom");
-  j = function(e) {
+define("ace/layer/cursor", ["require", "exports", "module", "pilot/dom"], function(i, g) {
+  var l = i("pilot/dom");
+  i = function(e) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_cursor-layer";
     e.appendChild(this.element);
@@ -3093,9 +3093,9 @@ define("ace/layer/cursor", ["require", "exports", "module", "pilot/dom"], functi
     this.setDocument = function(e) {
       this.doc = e
     };
-    this.setCursor = function(e, i) {
+    this.setCursor = function(e, j) {
       this.position = {row:e.row, column:this.doc.documentToScreenColumn(e.row, e.column)};
-      i ? l.addCssClass(this.cursor, "ace_overwrite") : l.removeCssClass(this.cursor, "ace_overwrite")
+      j ? l.addCssClass(this.cursor, "ace_overwrite") : l.removeCssClass(this.cursor, "ace_overwrite")
     };
     this.hideCursor = function() {
       this.isVisible = false;
@@ -3129,9 +3129,9 @@ define("ace/layer/cursor", ["require", "exports", "module", "pilot/dom"], functi
     this.update = function(e) {
       if(this.position) {
         this.config = e;
-        var i = Math.round(this.position.column * e.characterWidth), o = this.position.row * e.lineHeight;
-        this.pixelPos = {left:i, top:o};
-        this.cursor.style.left = i + "px";
+        var j = Math.round(this.position.column * e.characterWidth), o = this.position.row * e.lineHeight;
+        this.pixelPos = {left:j, top:o};
+        this.cursor.style.left = j + "px";
         this.cursor.style.top = o - e.firstRow * e.lineHeight + "px";
         this.cursor.style.width = e.characterWidth + "px";
         this.cursor.style.height = e.lineHeight + "px";
@@ -3139,12 +3139,12 @@ define("ace/layer/cursor", ["require", "exports", "module", "pilot/dom"], functi
         this.restartTimer()
       }
     }
-  }).call(j.prototype);
-  g.Cursor = j
+  }).call(i.prototype);
+  g.Cursor = i
 });
-define("ace/scrollbar", ["require", "exports", "module", "pilot/oop", "pilot/dom", "pilot/event", "pilot/event_emitter"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/dom"), i = j("pilot/event"), o = j("pilot/event_emitter").EventEmitter;
-  j = function(d) {
+define("ace/scrollbar", ["require", "exports", "module", "pilot/oop", "pilot/dom", "pilot/event", "pilot/event_emitter"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/dom"), j = i("pilot/event"), o = i("pilot/event_emitter").EventEmitter;
+  i = function(d) {
     this.element = document.createElement("div");
     this.element.className = "ace_sb";
     this.inner = document.createElement("div");
@@ -3152,7 +3152,7 @@ define("ace/scrollbar", ["require", "exports", "module", "pilot/oop", "pilot/dom
     d.appendChild(this.element);
     this.width = e.scrollbarWidth();
     this.element.style.width = this.width;
-    i.addListener(this.element, "scroll", this.onScroll.bind(this))
+    j.addListener(this.element, "scroll", this.onScroll.bind(this))
   };
   (function() {
     l.implement(this, o);
@@ -3171,32 +3171,27 @@ define("ace/scrollbar", ["require", "exports", "module", "pilot/oop", "pilot/dom
     this.setScrollTop = function(d) {
       this.element.scrollTop = d
     }
-  }).call(j.prototype);
-  g.ScrollBar = j
+  }).call(i.prototype);
+  g.ScrollBar = i
 });
-define("ace/renderloop", ["require", "exports", "module", "pilot/event"], function(j, g) {
-  var l = j("pilot/event");
-  j = function(e) {
+define("ace/renderloop", ["require", "exports", "module", "pilot/event"], function(i, g) {
+  var l = i("pilot/event");
+  i = function(e) {
     this.onRender = e;
     this.pending = false;
     this.changes = 0
   };
   (function() {
     this.schedule = function(e) {
-      e = 128;
       this.changes |= e;
       if(!this.pending) {
         this.pending = true;
-        var i = this;
+        var j = this;
         this.setTimeoutZero(function() {
-          i.pending = false;
-          var o = i.changes;
-          i.changes = 0;
-          var d = new Date;
-          i.onRender(o);
-          i.setTimeoutZero(function() {
-            console.log(new Date - d)
-          })
+          j.pending = false;
+          var o = j.changes;
+          j.changes = 0;
+          j.onRender(o)
         })
       }
     };
@@ -3204,11 +3199,11 @@ define("ace/renderloop", ["require", "exports", "module", "pilot/event"], functi
       this.messageName = "zero-timeout-message";
       this.setTimeoutZero = function(e) {
         if(!this.attached) {
-          var i = this;
+          var j = this;
           l.addListener(window, "message", function(o) {
-            if(o.source == window && i.callback && o.data == i.messageName) {
+            if(o.source == window && j.callback && o.data == j.messageName) {
               l.stopPropagation(o);
-              i.callback()
+              j.callback()
             }
           });
           this.attached = true
@@ -3220,12 +3215,12 @@ define("ace/renderloop", ["require", "exports", "module", "pilot/event"], functi
         setTimeout(e, 0)
       }
     }
-  }).call(j.prototype);
-  g.RenderLoop = j
+  }).call(i.prototype);
+  g.RenderLoop = i
 });
 define("ace/virtual_renderer", ["require", "exports", "module", "pilot/oop", "pilot/dom", "pilot/event", "ace/layer/gutter", "ace/layer/marker", "ace/layer/text", "ace/layer/cursor", "ace/scrollbar", "ace/renderloop", "pilot/event_emitter", 'text!ace/css/editor.css!.ace_editor {\n  position: absolute;\n  overflow: hidden;\n\n  font-family: "Menlo", "Monaco", "Courier New", monospace;\n  font-size: 12px;  \n}\n\n.ace_scroller {\n  position: absolute;\n  overflow-x: scroll;\n  overflow-y: hidden;     \n}\n\n.ace_gutter {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: hidden;\n  height: 100%;\n}\n\n.ace_editor .ace_sb {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  right: 0;\n}\n\n.ace_editor .ace_sb div {\n  position: absolute;\n  width: 1px;\n  left: 0px;\n}\n\n.ace_editor .ace_printMargin {\n  position: absolute;\n  height: 100%;\n}\n\n.ace_layer {\n  z-index: 0;\n  position: absolute;\n  overflow: hidden;  \n  white-space: nowrap;\n  height: 100%;\n}\n\n.ace_text-layer {\n  font-family: Monaco, "Courier New", monospace;\n  color: black;\n}\n\n.ace_cursor-layer {\n  cursor: text;\n}\n\n.ace_cursor {\n  z-index: 3;\n  position: absolute;\n}\n\n.ace_line {\n  white-space: nowrap;\n}\n\n.ace_marker-layer {\n}\n\n.ace_marker-layer .ace_step {\n  position: absolute;\n  z-index: 2;\n}\n\n.ace_marker-layer .ace_selection {\n  position: absolute;\n  z-index: 3;\n}\n\n.ace_marker-layer .ace_bracket {\n  position: absolute;\n  z-index: 4;\n}\n\n.ace_marker-layer .ace_active_line {\n  position: absolute;\n  z-index: 1;\n}'], 
-function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/dom"), i = j("pilot/event"), o = j("ace/layer/gutter").Gutter, d = j("ace/layer/marker").Marker, k = j("ace/layer/text").Text, a = j("ace/layer/cursor").Cursor, f = j("ace/scrollbar").ScrollBar, h = j("ace/renderloop").RenderLoop, m = j("pilot/event_emitter").EventEmitter, b = j('text!ace/css/editor.css!.ace_editor {\n  position: absolute;\n  overflow: hidden;\n\n  font-family: "Menlo", "Monaco", "Courier New", monospace;\n  font-size: 12px;  \n}\n\n.ace_scroller {\n  position: absolute;\n  overflow-x: scroll;\n  overflow-y: hidden;     \n}\n\n.ace_gutter {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: hidden;\n  height: 100%;\n}\n\n.ace_editor .ace_sb {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  right: 0;\n}\n\n.ace_editor .ace_sb div {\n  position: absolute;\n  width: 1px;\n  left: 0px;\n}\n\n.ace_editor .ace_printMargin {\n  position: absolute;\n  height: 100%;\n}\n\n.ace_layer {\n  z-index: 0;\n  position: absolute;\n  overflow: hidden;  \n  white-space: nowrap;\n  height: 100%;\n}\n\n.ace_text-layer {\n  font-family: Monaco, "Courier New", monospace;\n  color: black;\n}\n\n.ace_cursor-layer {\n  cursor: text;\n}\n\n.ace_cursor {\n  z-index: 3;\n  position: absolute;\n}\n\n.ace_line {\n  white-space: nowrap;\n}\n\n.ace_marker-layer {\n}\n\n.ace_marker-layer .ace_step {\n  position: absolute;\n  z-index: 2;\n}\n\n.ace_marker-layer .ace_selection {\n  position: absolute;\n  z-index: 3;\n}\n\n.ace_marker-layer .ace_bracket {\n  position: absolute;\n  z-index: 4;\n}\n\n.ace_marker-layer .ace_active_line {\n  position: absolute;\n  z-index: 1;\n}');
+function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/dom"), j = i("pilot/event"), o = i("ace/layer/gutter").Gutter, d = i("ace/layer/marker").Marker, k = i("ace/layer/text").Text, a = i("ace/layer/cursor").Cursor, f = i("ace/scrollbar").ScrollBar, h = i("ace/renderloop").RenderLoop, m = i("pilot/event_emitter").EventEmitter, b = i('text!ace/css/editor.css!.ace_editor {\n  position: absolute;\n  overflow: hidden;\n\n  font-family: "Menlo", "Monaco", "Courier New", monospace;\n  font-size: 12px;  \n}\n\n.ace_scroller {\n  position: absolute;\n  overflow-x: scroll;\n  overflow-y: hidden;     \n}\n\n.ace_gutter {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: hidden;\n  height: 100%;\n}\n\n.ace_editor .ace_sb {\n  position: absolute;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  right: 0;\n}\n\n.ace_editor .ace_sb div {\n  position: absolute;\n  width: 1px;\n  left: 0px;\n}\n\n.ace_editor .ace_printMargin {\n  position: absolute;\n  height: 100%;\n}\n\n.ace_layer {\n  z-index: 0;\n  position: absolute;\n  overflow: hidden;  \n  white-space: nowrap;\n  height: 100%;\n}\n\n.ace_text-layer {\n  font-family: Monaco, "Courier New", monospace;\n  color: black;\n}\n\n.ace_cursor-layer {\n  cursor: text;\n}\n\n.ace_cursor {\n  z-index: 3;\n  position: absolute;\n}\n\n.ace_line {\n  white-space: nowrap;\n}\n\n.ace_marker-layer {\n}\n\n.ace_marker-layer .ace_step {\n  position: absolute;\n  z-index: 2;\n}\n\n.ace_marker-layer .ace_selection {\n  position: absolute;\n  z-index: 3;\n}\n\n.ace_marker-layer .ace_bracket {\n  position: absolute;\n  z-index: 4;\n}\n\n.ace_marker-layer .ace_active_line {\n  position: absolute;\n  z-index: 1;\n}');
   e.importCssString(b);
   b = function(c, n) {
     this.container = c;
@@ -3258,8 +3253,8 @@ function(j, g) {
       r.lineHeight = p.getLineHeight();
       r.$loop.schedule(r.CHANGE_FULL)
     });
-    i.addListener(this.$gutter, "click", this.$onGutterClick.bind(this));
-    i.addListener(this.$gutter, "dblclick", this.$onGutterClick.bind(this));
+    j.addListener(this.$gutter, "click", this.$onGutterClick.bind(this));
+    j.addListener(this.$gutter, "dblclick", this.$onGutterClick.bind(this));
     this.$size = {width:0, height:0, scrollerHeight:0, scrollerWidth:0};
     this.$loop = new h(this.$renderChanges.bind(this));
     this.$loop.schedule(this.CHANGE_FULL);
@@ -3330,7 +3325,7 @@ function(j, g) {
       this.$loop.schedule(this.CHANGE_TEXT)
     };
     this.$onGutterClick = function(c) {
-      var n = i.getDocumentX(c), p = i.getDocumentY(c);
+      var n = j.getDocumentX(c), p = j.getDocumentY(c);
       this._dispatchEvent("gutter" + c.type, {row:this.screenToTextCoordinates(n, p).row, htmlEvent:c})
     };
     this.setShowInvisibles = function(c) {
@@ -3583,7 +3578,7 @@ function(j, g) {
       var p = this;
       if(!c || typeof c == "string") {
         c = c || "ace/theme/textmate";
-        j([c], function(r) {
+        i([c], function(r) {
           n(r)
         })
       }else {
@@ -3593,25 +3588,25 @@ function(j, g) {
   }).call(b.prototype);
   g.VirtualRenderer = b
 });
-define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "module", "pilot/oop", "ace/mode/text_highlight_rules"], function(j, g) {
-  var l = j("pilot/oop");
-  j = j("ace/mode/text_highlight_rules").TextHighlightRules;
+define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "module", "pilot/oop", "ace/mode/text_highlight_rules"], function(i, g) {
+  var l = i("pilot/oop");
+  i = i("ace/mode/text_highlight_rules").TextHighlightRules;
   var e = function() {
     this.$rules = {start:[{token:"comment.doc", regex:"\\*\\/", next:"start"}, {token:"comment.doc.tag", regex:"@[\\w\\d_]+"}, {token:"comment.doc", regex:"s+"}, {token:"comment.doc", regex:"TODO"}, {token:"comment.doc", regex:"[^@\\*]+"}, {token:"comment.doc", regex:"."}]}
   };
-  l.inherits(e, j);
+  l.inherits(e, i);
   (function() {
-    this.getStartRule = function(i) {
-      return{token:"comment.doc", regex:"\\/\\*(?=\\*)", next:i}
+    this.getStartRule = function(j) {
+      return{token:"comment.doc", regex:"\\/\\*(?=\\*)", next:j}
     }
   }).call(e.prototype);
   g.DocCommentHighlightRules = e
 });
-define("ace/mode/javascript_highlight_rules", ["require", "exports", "module", "pilot/oop", "pilot/lang", "ace/mode/doc_comment_highlight_rules", "ace/mode/text_highlight_rules"], function(j, g) {
-  var l = j("pilot/oop"), e = j("pilot/lang"), i = j("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
-  j = j("ace/mode/text_highlight_rules").TextHighlightRules;
+define("ace/mode/javascript_highlight_rules", ["require", "exports", "module", "pilot/oop", "pilot/lang", "ace/mode/doc_comment_highlight_rules", "ace/mode/text_highlight_rules"], function(i, g) {
+  var l = i("pilot/oop"), e = i("pilot/lang"), j = i("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
+  i = i("ace/mode/text_highlight_rules").TextHighlightRules;
   JavaScriptHighlightRules = function() {
-    var o = new i, d = e.arrayToMap("break|case|catch|continue|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with".split("|")), k = e.arrayToMap("null|Infinity|NaN|undefined".split("|")), a = e.arrayToMap("class|enum|extends|super|const|export|import|implements|let|private|public|yield|interface|package|protected|static".split("|"));
+    var o = new j, d = e.arrayToMap("break|case|catch|continue|default|delete|do|else|finally|for|function|if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with".split("|")), k = e.arrayToMap("null|Infinity|NaN|undefined".split("|")), a = e.arrayToMap("class|enum|extends|super|const|export|import|implements|let|private|public|yield|interface|package|protected|static".split("|"));
     this.$rules = {start:[{token:"comment", regex:"\\/\\/.*$"}, o.getStartRule("doc-start"), {token:"comment", regex:"\\/\\*", next:"comment"}, {token:"string.regexp", regex:"[/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\/|[^\\]/]))*[/][gimy]*\\s*(?=[).,;]|$)"}, {token:"string", regex:'["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'}, {token:"string", regex:'["].*\\\\$', next:"qqstring"}, {token:"string", regex:"['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"}, {token:"string", regex:"['].*\\\\$", next:"qstring"}, {token:"constant.numeric", 
     regex:"0[xX][0-9a-fA-F]+\\b"}, {token:"constant.numeric", regex:"[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"}, {token:"constant.language.boolean", regex:"(?:true|false)\\b"}, {token:function(f) {
       return f == "this" ? "variable.language" : d[f] ? "keyword" : k[f] ? "constant.language" : a[f] ? "invalid.illegal" : f == "debugger" ? "invalid.deprecated" : "identifier"
@@ -3620,29 +3615,29 @@ define("ace/mode/javascript_highlight_rules", ["require", "exports", "module", "
     this.addRules(o.getRules(), "doc-");
     this.$rules["doc-start"][0].next = "start"
   };
-  l.inherits(JavaScriptHighlightRules, j);
+  l.inherits(JavaScriptHighlightRules, i);
   g.JavaScriptHighlightRules = JavaScriptHighlightRules
 });
-define("ace/mode/matching_brace_outdent", ["require", "exports", "module", "ace/range"], function(j, g) {
-  var l = j("ace/range").Range;
-  j = function() {
+define("ace/mode/matching_brace_outdent", ["require", "exports", "module", "ace/range"], function(i, g) {
+  var l = i("ace/range").Range;
+  i = function() {
   };
   (function() {
-    this.checkOutdent = function(e, i) {
+    this.checkOutdent = function(e, j) {
       if(!/^\s+$/.test(e)) {
         return false
-      }return/^\s*\}/.test(i)
+      }return/^\s*\}/.test(j)
     };
-    this.autoOutdent = function(e, i) {
-      var o = e.getLine(i).match(/^(\s*\})/);
+    this.autoOutdent = function(e, j) {
+      var o = e.getLine(j).match(/^(\s*\})/);
       if(!o) {
         return 0
       }o = o[1].length;
-      var d = e.findMatchingBracket({row:i, column:o});
-      if(!d || d.row == i) {
+      var d = e.findMatchingBracket({row:j, column:o});
+      if(!d || d.row == j) {
         return 0
       }d = this.$getIndent(e.getLine(d.row));
-      e.replace(new l(i, 0, i, o - 1), d);
+      e.replace(new l(j, 0, j, o - 1), d);
       return d.length - (o - 1)
     };
     this.$getIndent = function(e) {
@@ -3650,16 +3645,16 @@ define("ace/mode/matching_brace_outdent", ["require", "exports", "module", "ace/
         return e[1]
       }return""
     }
-  }).call(j.prototype);
-  g.MatchingBraceOutdent = j
+  }).call(i.prototype);
+  g.MatchingBraceOutdent = i
 });
-define("ace/mode/javascript", ["require", "exports", "module", "pilot/oop", "ace/mode/text", "ace/tokenizer", "ace/mode/javascript_highlight_rules", "ace/mode/matching_brace_outdent", "ace/range"], function(j, g) {
-  var l = j("pilot/oop"), e = j("ace/mode/text").Mode, i = j("ace/tokenizer").Tokenizer, o = j("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules, d = j("ace/mode/matching_brace_outdent").MatchingBraceOutdent, k = j("ace/range").Range;
-  j = function() {
-    this.$tokenizer = new i((new o).getRules());
+define("ace/mode/javascript", ["require", "exports", "module", "pilot/oop", "ace/mode/text", "ace/tokenizer", "ace/mode/javascript_highlight_rules", "ace/mode/matching_brace_outdent", "ace/range"], function(i, g) {
+  var l = i("pilot/oop"), e = i("ace/mode/text").Mode, j = i("ace/tokenizer").Tokenizer, o = i("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules, d = i("ace/mode/matching_brace_outdent").MatchingBraceOutdent, k = i("ace/range").Range;
+  i = function() {
+    this.$tokenizer = new j((new o).getRules());
     this.$outdent = new d
   };
-  l.inherits(j, e);
+  l.inherits(i, e);
   (function() {
     this.toggleCommentLines = function(a, f, h, m) {
       var b = true;
@@ -3709,13 +3704,13 @@ define("ace/mode/javascript", ["require", "exports", "module", "pilot/oop", "ace
     this.autoOutdent = function(a, f, h) {
       return this.$outdent.autoOutdent(f, h)
     }
-  }).call(j.prototype);
-  g.Mode = j
+  }).call(i.prototype);
+  g.Mode = i
 });
 define("ace/theme/textmate", ["require", "exports", "module", "pilot/dom", "text!ace/theme/tm.css!.ace-tm .ace_editor {\n  border: 2px solid rgb(159, 159, 159);\n}\n\n.ace-tm .ace_editor.ace_focus {\n  border: 2px solid #327fbd;\n}\n\n.ace-tm .ace_gutter {\n  width: 50px;\n  background: #e8e8e8;\n  color: #333;\n  overflow : hidden;\n}\n\n.ace-tm .ace_gutter-layer {\n  width: 100%;\n  text-align: right;\n}\n\n.ace-tm .ace_gutter-layer .ace_gutter-cell {\n  padding-right: 6px;\n}\n\n.ace-tm .ace_editor .ace_printMargin {\n  width: 1px;\n  background: #e8e8e8;\n}\n\n.ace-tm .ace_text-layer {\n  cursor: text;\n}\n\n.ace-tm .ace_cursor {\n  border-left: 2px solid black;\n}\n\n.ace-tm .ace_cursor.ace_overwrite {\n  border-left: 0px;\n  border-bottom: 1px solid black;\n}\n        \n.ace-tm .ace_line .ace_invisible {\n  color: rgb(191, 191, 191);\n}\n\n.ace-tm .ace_line .ace_keyword {\n  color: blue;\n}\n\n.ace-tm .ace_line .ace_constant.ace_buildin {\n  color: rgb(88, 72, 246);\n}\n\n.ace-tm .ace_line .ace_constant.ace_language {\n  color: rgb(88, 92, 246);\n}\n\n.ace-tm .ace_line .ace_constant.ace_library {\n  color: rgb(6, 150, 14);\n}\n\n.ace-tm .ace_line .ace_invalid {\n  background-color: rgb(153, 0, 0);\n  color: white;\n}\n\n.ace-tm .ace_line .ace_support.ace_function {\n  color: rgb(60, 76, 114);\n}\n\n.ace-tm .ace_line .ace_support.ace_constant {\n  color: rgb(6, 150, 14);\n}\n\n.ace-tm .ace_line .ace_support.ace_type,\n.ace-tm .ace_line .ace_support.ace_class {\n  color: rgb(109, 121, 222);\n}\n\n.ace-tm .ace_line .ace_keyword.ace_operator {\n  color: rgb(104, 118, 135);\n}\n\n.ace-tm .ace_line .ace_string {\n  color: rgb(3, 106, 7);\n}\n\n.ace-tm .ace_line .ace_comment {\n  color: rgb(76, 136, 107);\n}\n\n.ace-tm .ace_line .ace_comment.ace_doc {\n  color: rgb(0, 102, 255);\n}\n\n.ace-tm .ace_line .ace_comment.ace_doc.ace_tag {\n  color: rgb(128, 159, 191);\n}\n\n.ace-tm .ace_line .ace_constant.ace_numeric {\n  color: rgb(0, 0, 205);\n}\n\n.ace-tm .ace_line .ace_variable {\n  color: rgb(49, 132, 149);\n}\n\n.ace-tm .ace_line .ace_xml_pe {\n  color: rgb(104, 104, 91);\n}\n\n.ace-tm .ace_marker-layer .ace_selection {\n  background: rgb(181, 213, 255);\n}\n\n.ace-tm .ace_marker-layer .ace_step {\n  background: rgb(252, 255, 0);\n}\n\n.ace-tm .ace_marker-layer .ace_stack {\n  background: rgb(164, 229, 101);\n}\n\n.ace-tm .ace_marker-layer .ace_bracket {\n  margin: -1px 0 0 -1px;\n  border: 1px solid rgb(192, 192, 192);\n}\n\n.ace-tm .ace_marker-layer .ace_active_line {\n  background: rgb(232, 242, 254);\n}\n\n.ace-tm .ace_string.ace_regex {\n  color: rgb(255, 0, 0)   \n}"], 
-function(j, g) {
-  var l = j("pilot/dom");
-  j = j("text!ace/theme/tm.css!.ace-tm .ace_editor {\n  border: 2px solid rgb(159, 159, 159);\n}\n\n.ace-tm .ace_editor.ace_focus {\n  border: 2px solid #327fbd;\n}\n\n.ace-tm .ace_gutter {\n  width: 50px;\n  background: #e8e8e8;\n  color: #333;\n  overflow : hidden;\n}\n\n.ace-tm .ace_gutter-layer {\n  width: 100%;\n  text-align: right;\n}\n\n.ace-tm .ace_gutter-layer .ace_gutter-cell {\n  padding-right: 6px;\n}\n\n.ace-tm .ace_editor .ace_printMargin {\n  width: 1px;\n  background: #e8e8e8;\n}\n\n.ace-tm .ace_text-layer {\n  cursor: text;\n}\n\n.ace-tm .ace_cursor {\n  border-left: 2px solid black;\n}\n\n.ace-tm .ace_cursor.ace_overwrite {\n  border-left: 0px;\n  border-bottom: 1px solid black;\n}\n        \n.ace-tm .ace_line .ace_invisible {\n  color: rgb(191, 191, 191);\n}\n\n.ace-tm .ace_line .ace_keyword {\n  color: blue;\n}\n\n.ace-tm .ace_line .ace_constant.ace_buildin {\n  color: rgb(88, 72, 246);\n}\n\n.ace-tm .ace_line .ace_constant.ace_language {\n  color: rgb(88, 92, 246);\n}\n\n.ace-tm .ace_line .ace_constant.ace_library {\n  color: rgb(6, 150, 14);\n}\n\n.ace-tm .ace_line .ace_invalid {\n  background-color: rgb(153, 0, 0);\n  color: white;\n}\n\n.ace-tm .ace_line .ace_support.ace_function {\n  color: rgb(60, 76, 114);\n}\n\n.ace-tm .ace_line .ace_support.ace_constant {\n  color: rgb(6, 150, 14);\n}\n\n.ace-tm .ace_line .ace_support.ace_type,\n.ace-tm .ace_line .ace_support.ace_class {\n  color: rgb(109, 121, 222);\n}\n\n.ace-tm .ace_line .ace_keyword.ace_operator {\n  color: rgb(104, 118, 135);\n}\n\n.ace-tm .ace_line .ace_string {\n  color: rgb(3, 106, 7);\n}\n\n.ace-tm .ace_line .ace_comment {\n  color: rgb(76, 136, 107);\n}\n\n.ace-tm .ace_line .ace_comment.ace_doc {\n  color: rgb(0, 102, 255);\n}\n\n.ace-tm .ace_line .ace_comment.ace_doc.ace_tag {\n  color: rgb(128, 159, 191);\n}\n\n.ace-tm .ace_line .ace_constant.ace_numeric {\n  color: rgb(0, 0, 205);\n}\n\n.ace-tm .ace_line .ace_variable {\n  color: rgb(49, 132, 149);\n}\n\n.ace-tm .ace_line .ace_xml_pe {\n  color: rgb(104, 104, 91);\n}\n\n.ace-tm .ace_marker-layer .ace_selection {\n  background: rgb(181, 213, 255);\n}\n\n.ace-tm .ace_marker-layer .ace_step {\n  background: rgb(252, 255, 0);\n}\n\n.ace-tm .ace_marker-layer .ace_stack {\n  background: rgb(164, 229, 101);\n}\n\n.ace-tm .ace_marker-layer .ace_bracket {\n  margin: -1px 0 0 -1px;\n  border: 1px solid rgb(192, 192, 192);\n}\n\n.ace-tm .ace_marker-layer .ace_active_line {\n  background: rgb(232, 242, 254);\n}\n\n.ace-tm .ace_string.ace_regex {\n  color: rgb(255, 0, 0)   \n}");
-  l.importCssString(j);
+function(i, g) {
+  var l = i("pilot/dom");
+  i = i("text!ace/theme/tm.css!.ace-tm .ace_editor {\n  border: 2px solid rgb(159, 159, 159);\n}\n\n.ace-tm .ace_editor.ace_focus {\n  border: 2px solid #327fbd;\n}\n\n.ace-tm .ace_gutter {\n  width: 50px;\n  background: #e8e8e8;\n  color: #333;\n  overflow : hidden;\n}\n\n.ace-tm .ace_gutter-layer {\n  width: 100%;\n  text-align: right;\n}\n\n.ace-tm .ace_gutter-layer .ace_gutter-cell {\n  padding-right: 6px;\n}\n\n.ace-tm .ace_editor .ace_printMargin {\n  width: 1px;\n  background: #e8e8e8;\n}\n\n.ace-tm .ace_text-layer {\n  cursor: text;\n}\n\n.ace-tm .ace_cursor {\n  border-left: 2px solid black;\n}\n\n.ace-tm .ace_cursor.ace_overwrite {\n  border-left: 0px;\n  border-bottom: 1px solid black;\n}\n        \n.ace-tm .ace_line .ace_invisible {\n  color: rgb(191, 191, 191);\n}\n\n.ace-tm .ace_line .ace_keyword {\n  color: blue;\n}\n\n.ace-tm .ace_line .ace_constant.ace_buildin {\n  color: rgb(88, 72, 246);\n}\n\n.ace-tm .ace_line .ace_constant.ace_language {\n  color: rgb(88, 92, 246);\n}\n\n.ace-tm .ace_line .ace_constant.ace_library {\n  color: rgb(6, 150, 14);\n}\n\n.ace-tm .ace_line .ace_invalid {\n  background-color: rgb(153, 0, 0);\n  color: white;\n}\n\n.ace-tm .ace_line .ace_support.ace_function {\n  color: rgb(60, 76, 114);\n}\n\n.ace-tm .ace_line .ace_support.ace_constant {\n  color: rgb(6, 150, 14);\n}\n\n.ace-tm .ace_line .ace_support.ace_type,\n.ace-tm .ace_line .ace_support.ace_class {\n  color: rgb(109, 121, 222);\n}\n\n.ace-tm .ace_line .ace_keyword.ace_operator {\n  color: rgb(104, 118, 135);\n}\n\n.ace-tm .ace_line .ace_string {\n  color: rgb(3, 106, 7);\n}\n\n.ace-tm .ace_line .ace_comment {\n  color: rgb(76, 136, 107);\n}\n\n.ace-tm .ace_line .ace_comment.ace_doc {\n  color: rgb(0, 102, 255);\n}\n\n.ace-tm .ace_line .ace_comment.ace_doc.ace_tag {\n  color: rgb(128, 159, 191);\n}\n\n.ace-tm .ace_line .ace_constant.ace_numeric {\n  color: rgb(0, 0, 205);\n}\n\n.ace-tm .ace_line .ace_variable {\n  color: rgb(49, 132, 149);\n}\n\n.ace-tm .ace_line .ace_xml_pe {\n  color: rgb(104, 104, 91);\n}\n\n.ace-tm .ace_marker-layer .ace_selection {\n  background: rgb(181, 213, 255);\n}\n\n.ace-tm .ace_marker-layer .ace_step {\n  background: rgb(252, 255, 0);\n}\n\n.ace-tm .ace_marker-layer .ace_stack {\n  background: rgb(164, 229, 101);\n}\n\n.ace-tm .ace_marker-layer .ace_bracket {\n  margin: -1px 0 0 -1px;\n  border: 1px solid rgb(192, 192, 192);\n}\n\n.ace-tm .ace_marker-layer .ace_active_line {\n  background: rgb(232, 242, 254);\n}\n\n.ace-tm .ace_string.ace_regex {\n  color: rgb(255, 0, 0)   \n}");
+  l.importCssString(i);
   g.cssClass = "ace-tm"
 });
