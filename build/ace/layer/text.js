@@ -79,7 +79,7 @@ define(function(k, n) {
           if(j) {
             var m = [];
             h.$renderLine(m, f, i[f - g].tokens);
-            l.setInnerHtml(j, m.join)
+            l.setInnerHtml(j, m.join(""))
           }
         }
       })
