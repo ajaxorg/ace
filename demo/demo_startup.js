@@ -91,6 +91,7 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
+    window.$editor = env.editor;
 
     function onDocChange() {
         var doc = getDoc();
@@ -124,7 +125,7 @@ exports.launch = function(env) {
     docEl.onchange = onDocChange;
 
     function getDoc() {
-        return docs[docEl.value];
+        return docs.plain//docs[docEl.value];
     }
 
     var modeEl = document.getElementById("mode");
