@@ -36,12 +36,14 @@
  * ***** END LICENSE BLOCK ***** */
 
 var config = {
-    paths: { 
-        demo: "../demo",
-        ace: "../lib/ace",
-        cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/cockpit/support/pilot/lib/pilot"
-    }
+    baseUrl: "../../packages/",
+    packages: [
+        { name: "ace", lib: "lib/ace" },
+        { name: "cockpit", lib: "lib/cockpit" },
+        { name: "pilot", lib: "lib/pilot" },
+        { name: "demo", location: "ace/demo", lib: "." },
+        { name: "require", location: "requirejs/require", lib: "." }
+    ]
 };
 
 require(config, ["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
