@@ -53,7 +53,8 @@ var config = {
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
              "pilot/environment", "demo_startup" ];
 
-require(config, deps, function() {
+require(config);
+require(deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index", "cockpit/index" ]).then(function() {
         var env = require("pilot/environment").create();
