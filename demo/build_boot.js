@@ -60,6 +60,7 @@ var ace = {
             var theme = require("ace/theme/textmate");
 
             var doc = new Document(el.innerHTML);
+            el.innerHTML = '';
             doc.setMode(new JavaScriptMode());
             doc.setUndoManager(new UndoManager());
             env.editor = new Editor(new Renderer(el, theme));
