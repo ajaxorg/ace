@@ -118,13 +118,20 @@ copy({
 var data = copy.createDataObject();
 copy({
     source: [
-        'demo/mini_require.js',
+        'build_support/mini_require.js',
         pilot,
         // cockpit,
         ace,
-        'demo/build_boot.js'
+        'build_support/boot.js'
     ],
     dest: data
+});
+
+copy({
+    source: [
+        'build_support/editor.html'
+    ],
+    dest: 'build/editor.html'
 });
 
 // Create the compressed and uncompressed output files
