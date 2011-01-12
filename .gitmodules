@@ -22,3 +22,6 @@
 [submodule "support/cockpit"]
 	path = support/cockpit
 	url = git://github.com/joewalker/cockpit.git
+[submodule "support/dryice"]
+	path = support/dryice
+	url = git://github.com/mozilla/dryice.git
