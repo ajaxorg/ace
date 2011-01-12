@@ -40,7 +40,7 @@ var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
 
 require(deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins([ "pilot/index", "cockpit/index" ]);
+    catalog.registerPlugins([ "pilot/index" ]);
 });
 
 var ace = {

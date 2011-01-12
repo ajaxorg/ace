@@ -120,7 +120,7 @@ copy({
     source: [
         'demo/mini_require.js',
         pilot,
-        cockpit,
+        // cockpit,
         ace,
         'demo/build_boot.js'
     ],
