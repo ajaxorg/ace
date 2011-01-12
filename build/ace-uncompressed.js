@@ -2200,25 +2200,25 @@ define('pilot/index', function(require, exports, module) {
 exports.startup = function(data, reason) {
     require('pilot/fixoldbrowsers');
 
-    require('pilot/types/basic').startup();
-    require('pilot/types/command').startup();
-    require('pilot/types/settings').startup();
-    require('pilot/commands/settings').startup();
-    require('pilot/commands/basic').startup();
-    // require('pilot/commands/history').startup();
-    require('pilot/settings/canon').startup();
-    require('pilot/canon').startup();
+    require('pilot/types/basic').startup(data, reason);
+    require('pilot/types/command').startup(data, reason);
+    require('pilot/types/settings').startup(data, reason);
+    require('pilot/commands/settings').startup(data, reason);
+    require('pilot/commands/basic').startup(data, reason);
+    // require('pilot/commands/history').startup(data, reason);
+    require('pilot/settings/canon').startup(data, reason);
+    require('pilot/canon').startup(data, reason);
 };
 
 exports.shutdown = function(data, reason) {
-    require('pilot/types/basic').shutdown();
-    require('pilot/types/command').shutdown();
-    require('pilot/types/settings').shutdown();
-    require('pilot/commands/settings').shutdown();
-    require('pilot/commands/basic').shutdown();
-    // require('pilot/commands/history').shutdown();
-    require('pilot/settings/canon').shutdown();
-    require('pilot/canon').shutdown();
+    require('pilot/types/basic').shutdown(data, reason);
+    require('pilot/types/command').shutdown(data, reason);
+    require('pilot/types/settings').shutdown(data, reason);
+    require('pilot/commands/settings').shutdown(data, reason);
+    require('pilot/commands/basic').shutdown(data, reason);
+    // require('pilot/commands/history').shutdown(data, reason);
+    require('pilot/settings/canon').shutdown(data, reason);
+    require('pilot/canon').shutdown(data, reason);
 };
 
 
@@ -10402,6 +10402,7 @@ var VirtualRenderer = function(container, theme) {
         var changes = this.CHANGE_SIZE;
 
         var height = dom.getInnerHeight(this.container);
+console.log('height: ', height, ' this.$size.height: ', this.$size.height);
         if (this.$size.height != height) {
             this.$size.height = height;
 
@@ -10415,6 +10416,7 @@ var VirtualRenderer = function(container, theme) {
         }
 
         var width = dom.getInnerWidth(this.container);
+console.log('width: ', width, ' this.$size.width: ', this.$size.width);
         if (this.$size.width != width) {
             this.$size.width = width;
 
@@ -10422,10 +10424,14 @@ var VirtualRenderer = function(container, theme) {
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
         }
+console.log('this.scroller.style.width: ', this.scroller.style.width);
 
         this.$size.scrollerWidth = this.scroller.clientWidth;
         this.$size.scrollerHeight = this.scroller.clientHeight;
         this.$loop.schedule(changes);
+console.log('this.$size.scrollerWidth: ', this.$size.scrollerWidth);
+console.log('this.$size.scrollerHeight: ', this.$size.scrollerHeight);
+console.log('changes: ', changes);
     };
 
     this.setTokenizer = function(tokenizer) {
@@ -10547,7 +10553,7 @@ var VirtualRenderer = function(container, theme) {
     this.$renderChanges = function(changes) {
         if (!changes || !this.doc || !this.$tokenizer)
             return;
-        
+
         // text, scrolling and resize changes can cause the view port size to change
         if (!this.layerConfig ||
             changes & this.CHANGE_FULL ||
@@ -10937,362 +10943,48 @@ define('ace/theme/textmate', function(require, exports, module) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/text', function(require, exports, module) {
+define('ace/mode/text', function(require, exports, module) {
 
-var oop = require("pilot/oop");
-var dom = require("pilot/dom");
-var lang = require("pilot/lang");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-
-var Text = function(parentEl) {
-    this.element = document.createElement("div");
-    this.element.className = "ace_layer ace_text-layer";
-    parentEl.appendChild(this.element);
-
-    this.$characterSize = this.$measureSizes();
-    this.$pollSizeChanges();
-};
-
-(function() {
-
-    oop.implement(this, EventEmitter);
-
-    this.EOF_CHAR = "&para;";
-    this.EOL_CHAR = "&not;";
-    this.TAB_CHAR = "&rarr;";
-    this.SPACE_CHAR = "&middot;";
-
-    this.setTokenizer = function(tokenizer) {
-        this.tokenizer = tokenizer;
-    };
-
-    this.getLineHeight = function() {
-        return this.$characterSize.height || 1;
-    };
-
-    this.getCharacterWidth = function() {
-        return this.$characterSize.width || 1;
-    };
-
-    this.$pollSizeChanges = function() {
-        var self = this;
-        setInterval(function() {
-            var size = self.$measureSizes();
-            if (self.$characterSize.width !== size.width || self.$characterSize.height !== size.height) {
-                self.$characterSize = size;
-                self._dispatchEvent("changeCharaterSize", {data: size});
-            }
-        }, 500);
-    };
-
-    this.$fontStyles = {
-        fontFamily : 1,
-        fontSize : 1,
-        fontWeight : 1,
-        fontStyle : 1,
-        lineHeight : 1
-    },
-
-    this.$measureSizes = function() {
-        var n = 1000;
-        if (!this.$measureNode) {
-	        var measureNode = this.$measureNode = document.createElement("div");
-	        var style = measureNode.style;
-	
-	        style.width = style.height = "auto";
-	        style.left = style.top = "-1000px";
-	        
-	        style.visibility = "hidden";
-	        style.position = "absolute";
-	        style.overflow = "visible";
-	        style.whiteSpace = "nowrap";
-	
-	        // in FF 3.6 monospace fonts can have a fixed sub pixel width.
-	        // that's why we have to measure many characters
-	        // Note: characterWidth can be a float!
-	        measureNode.innerHTML = lang.stringRepeat("Xy", n);
-	        document.body.insertBefore(measureNode, document.body.firstChild);
-        }
-
-        var style = this.$measureNode.style;
-        for (var prop in this.$fontStyles) {
-            var value = dom.computedStyle(this.element, prop);
-            style[prop] = value;
-        }
-
-        var size = {
-            height: this.$measureNode.offsetHeight,
-            width: this.$measureNode.offsetWidth / (n * 2)
-        };
-        return size;
-    };
-
-    this.setDocument = function(doc) {
-        this.doc = doc;
-    };
-
-    this.$showInvisibles = false;
-    this.setShowInvisibles = function(showInvisibles) {
-        this.$showInvisibles = showInvisibles;
-    };
-
-    this.$computeTabString = function() {
-        var tabSize = this.doc.getTabSize();
-        if (this.$showInvisibles) {
-            var halfTab = (tabSize) / 2;
-            this.$tabString = "<span class='ace_invisible'>"
-                + new Array(Math.floor(halfTab)).join("&nbsp;")
-                + this.TAB_CHAR
-                + new Array(Math.ceil(halfTab)+1).join("&nbsp;")
-                + "</span>";
-        } else {
-            this.$tabString = new Array(tabSize+1).join("&nbsp;");
-        }
-    };
-
-    this.updateLines = function(layerConfig, firstRow, lastRow) {
-        this.$computeTabString();
-        this.config = layerConfig;
-        
-        var first = Math.max(firstRow, layerConfig.firstRow);
-        var last = Math.min(lastRow, layerConfig.lastRow);
-
-        var lineElements = this.element.childNodes;
-        var _self = this;
-        this.tokenizer.getTokens(first, last, function(tokens) {
-            for ( var i = first; i <= last; i++) {
-                var lineElement = lineElements[i - layerConfig.firstRow];
-                if (!lineElement)
-                    continue;
-
-                var html = [];
-                _self.$renderLine(html, i, tokens[i-first].tokens);
-                lineElement.innerHTML = html.join("");
-            }
-        });
-    };
-
-    this.scrollLines = function(config) {
-        var _self = this;
-
-        this.$computeTabString();
-        var oldConfig = this.config;
-        this.config = config;
-
-        if (!oldConfig || oldConfig.lastRow < config.firstRow)
-            return this.update(config);
-
-        if (config.lastRow < oldConfig.firstRow)
-            return this.update(config);
-
-        var el = this.element;
-
-        if (oldConfig.firstRow < config.firstRow)
-            for (var row=oldConfig.firstRow; row<config.firstRow; row++)
-                el.removeChild(el.firstChild);
-
-        if (oldConfig.lastRow > config.lastRow)
-            for (var row=config.lastRow+1; row<=oldConfig.lastRow; row++)
-                el.removeChild(el.lastChild);
-
-        appendTop(appendBottom);
-
-        function appendTop(callback) {
-            if (config.firstRow < oldConfig.firstRow) {
-                _self.$renderLinesFragment(config, config.firstRow, oldConfig.firstRow - 1, function(fragment) {
-                    if (el.firstChild)
-                        el.insertBefore(fragment, el.firstChild);
-                    else
-                        el.appendChild(fragment);
-                    callback();
-                });
-            }
-            else
-                callback();
-        }
-
-        function appendBottom() {
-            if (config.lastRow > oldConfig.lastRow) {
-                _self.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow, function(fragment) {
-                    el.appendChild(fragment);
-                });
-            }
-        }
-    };
-
-    this.$renderLinesFragment = function(config, firstRow, lastRow, callback) {
-        var fragment = document.createDocumentFragment();
-        var _self = this;
-        this.tokenizer.getTokens(firstRow, lastRow, function(tokens) {
-            for (var row=firstRow; row<=lastRow; row++) {
-                var lineEl = document.createElement("div");
-                lineEl.className = "ace_line";
-                var style = lineEl.style;
-                style.height = _self.$characterSize.height + "px";
-                style.width = config.width + "px";
-
-                var html = [];
-                _self.$renderLine(html, row, tokens[row-firstRow].tokens);
-                lineEl.innerHTML = html.join("");
-                fragment.appendChild(lineEl);
-            }
-            callback(fragment);
-        });
-    };
-
-    this.update = function(config) {
-        this.$computeTabString();
-        this.config = config;
-
-        var html = [];
-        var _self = this;
-        this.tokenizer.getTokens(config.firstRow, config.lastRow, function(tokens) {
-            for ( var i = config.firstRow; i <= config.lastRow; i++) {
-                html.push("<div class='ace_line' style='height:" + _self.$characterSize.height + "px;", "width:",
-                        config.width, "px'>");
-                _self.$renderLine(html, i, tokens[i-config.firstRow].tokens), html.push("</div>");
-            }
-
-            _self.element.innerHTML = html.join("");
-        });
-    };
-
-    this.$textToken = {
-        "text": true,
-        "rparen": true,
-        "lparen": true
-    };
-
-    this.$renderLine = function(stringBuilder, row, tokens) {
-//        if (this.$showInvisibles) {
-//            var self = this;
-//            var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]+/g;
-//            var spaceReplace = function(space) {
-//                var space = new Array(space.length+1).join(self.SPACE_CHAR);
-//                return "<span class='ace_invisible'>" + space + "</span>";
-//            };
-//        }
-//        else {
-            var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/g;
-            var spaceReplace = "&nbsp;";
-//        }
-
-        for ( var i = 0; i < tokens.length; i++) {
-            var token = tokens[i];
-
-            var output = token.value
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(spaceRe, spaceReplace)
-                .replace(/\t/g, this.$tabString);
-
-            if (!this.$textToken[token.type]) {
-                var classes = "ace_" + token.type.replace(/\./g, " ace_");
-                stringBuilder.push("<span class='", classes, "'>", output, "</span>");
-            }
-            else {
-                stringBuilder.push(output);
-            }
-        };
-
-        if (this.$showInvisibles) {
-            if (row !== this.doc.getLength() - 1) {
-                stringBuilder.push("<span class='ace_invisible'>" + this.EOL_CHAR + "</span>");
-            } else {
-                stringBuilder.push("<span class='ace_invisible'>" + this.EOF_CHAR + "</span>");
-            }
-        }
-    };
-
-}).call(Text.prototype);
-
-exports.Text = Text;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/mode/doc_comment_highlight_rules', function(require, exports, module) {
-
-var oop = require("pilot/oop");
+var Tokenizer = require("ace/tokenizer").Tokenizer;
 var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 
-var DocCommentHighlightRules = function() {
-
-    this.$rules = {
-        "start" : [ {
-            token : "comment.doc", // closing comment
-            regex : "\\*\\/",
-            next : "start"
-        }, {
-            token : "comment.doc.tag",
-            regex : "@[\\w\\d_]+" // TODO: fix email addresses
-        }, {
-            token : "comment.doc",
-            regex : "\s+"
-        }, {
-            token : "comment.doc",
-            regex : "TODO"
-        }, {
-            token : "comment.doc",
-            regex : "[^@\\*]+"
-        }, {
-            token : "comment.doc",
-            regex : "."
-        }]
-    };
+var Mode = function() {
+    this.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());
 };
-
-oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
 (function() {
 
-    this.getStartRule = function(start) {
-        return {
-            token : "comment.doc", // doc comment
-            regex : "\\/\\*(?=\\*)",
-            next: start
-        };
+    this.getTokenizer = function() {
+        return this.$tokenizer;
     };
 
-}).call(DocCommentHighlightRules.prototype);
+    this.toggleCommentLines = function(state, doc, startRow, endRow) {
+        return 0;
+    };
 
-exports.DocCommentHighlightRules = DocCommentHighlightRules;
+    this.getNextLineIndent = function(state, line, tab) {
+        return "";
+    };
 
+    this.checkOutdent = function(state, line, input) {
+        return false;
+    };
+
+    this.autoOutdent = function(state, doc, row) {
+    };
+
+    this.$getIndent = function(line) {
+        var match = line.match(/^(\s+)/);
+        if (match) {
+            return match[1];
+        }
+
+        return "";
+    };
+
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -11420,6 +11112,83 @@ oop.inherits(Mode, TextMode);
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org Services B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/text_highlight_rules', function(require, exports, module) {
+
+var TextHighlightRules = function() {
+
+    // regexp must not have capturing parentheses
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        "start" : [ {
+            token : "text",
+            regex : ".+"
+        } ]
+    };
+};
+
+(function() {
+
+    this.addRules = function(rules, prefix) {
+        for (var key in rules) {
+            var state = rules[key];
+            for (var i=0; i<state.length; i++) {
+                var rule = state[i];
+                if (rule.next) {
+                    rule.next = prefix + rule.next;
+                } else {
+                    rule.next = prefix + key;
+                }
+            }
+            this.$rules[prefix + key] = state;
+        }
+    };
+
+    this.getRules = function() {
+        return this.$rules;
+    };
+
+}).call(TextHighlightRules.prototype);
+
+exports.TextHighlightRules = TextHighlightRules;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -11632,6 +11401,91 @@ exports.JavaScriptHighlightRules = JavaScriptHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
+define('ace/mode/doc_comment_highlight_rules', function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+
+var DocCommentHighlightRules = function() {
+
+    this.$rules = {
+        "start" : [ {
+            token : "comment.doc", // closing comment
+            regex : "\\*\\/",
+            next : "start"
+        }, {
+            token : "comment.doc.tag",
+            regex : "@[\\w\\d_]+" // TODO: fix email addresses
+        }, {
+            token : "comment.doc",
+            regex : "\s+"
+        }, {
+            token : "comment.doc",
+            regex : "TODO"
+        }, {
+            token : "comment.doc",
+            regex : "[^@\\*]+"
+        }, {
+            token : "comment.doc",
+            regex : "."
+        }]
+    };
+};
+
+oop.inherits(DocCommentHighlightRules, TextHighlightRules);
+
+(function() {
+
+    this.getStartRule = function(start) {
+        return {
+            token : "comment.doc", // doc comment
+            regex : "\\/\\*(?=\\*)",
+            next: start
+        };
+    };
+
+}).call(DocCommentHighlightRules.prototype);
+
+exports.DocCommentHighlightRules = DocCommentHighlightRules;
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org Services B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 define('ace/mode/matching_brace_outdent', function(require, exports, module) {
 
 var Range = require("ace/range").Range;
@@ -11714,125 +11568,142 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/text', function(require, exports, module) {
+define('ace/mode/javascript_highlight_rules', function(require, exports, module) {
 
-var Tokenizer = require("ace/tokenizer").Tokenizer;
+var oop = require("pilot/oop");
+var lang = require("pilot/lang");
+var DocCommentHighlightRules = require("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
 var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 
-var Mode = function() {
-    this.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());
-};
+JavaScriptHighlightRules = function() {
 
-(function() {
+    var docComment = new DocCommentHighlightRules();
 
-    this.getTokenizer = function() {
-        return this.$tokenizer;
-    };
+    var keywords = lang.arrayToMap(
+        ("break|case|catch|continue|default|delete|do|else|finally|for|function|" +
+        "if|in|instanceof|new|return|switch|throw|try|typeof|var|while|with").split("|")
+    );
+    
+    var buildinConstants = lang.arrayToMap(
+        ("null|Infinity|NaN|undefined").split("|")
+    );
+    
+    var futureReserved = lang.arrayToMap(
+        ("class|enum|extends|super|const|export|import|implements|let|private|" +
+        "public|yield|interface|package|protected|static").split("|")
+    );
 
-    this.toggleCommentLines = function(state, doc, startRow, endRow) {
-        return 0;
-    };
-
-    this.getNextLineIndent = function(state, line, tab) {
-        return "";
-    };
-
-    this.checkOutdent = function(state, line, input) {
-        return false;
-    };
-
-    this.autoOutdent = function(state, doc, row) {
-    };
-
-    this.$getIndent = function(line) {
-        var match = line.match(/^(\s+)/);
-        if (match) {
-            return match[1];
-        }
-
-        return "";
-    };
-
-}).call(Mode.prototype);
-
-exports.Mode = Mode;
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/mode/text_highlight_rules', function(require, exports, module) {
-
-var TextHighlightRules = function() {
-
-    // regexp must not have capturing parentheses
+    // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
 
     this.$rules = {
-        "start" : [ {
-            token : "text",
-            regex : ".+"
-        } ]
+        "start" : [
+	        {
+	            token : "comment",
+	            regex : "\\/\\/.*$"
+	        },
+	        docComment.getStartRule("doc-start"),
+	        {
+	            token : "comment", // multi line comment
+	            regex : "\\/\\*",
+	            next : "comment"
+	        }, {
+	            token : "string.regexp",
+	            regex : "[/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\/|[^\\]/]))*[/][gimy]*\\s*(?=[).,;]|$)"
+	        }, {
+	            token : "string", // single line
+	            regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+	        }, {
+	            token : "string", // multi line string start
+	            regex : '["].*\\\\$',
+	            next : "qqstring"
+	        }, {
+	            token : "string", // single line
+	            regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+	        }, {
+	            token : "string", // multi line string start
+	            regex : "['].*\\\\$",
+	            next : "qstring"
+	        }, {
+	            token : "constant.numeric", // hex
+	            regex : "0[xX][0-9a-fA-F]+\\b"
+	        }, {
+	            token : "constant.numeric", // float
+	            regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+	        }, {
+	            token : "constant.language.boolean",
+	            regex : "(?:true|false)\\b"
+	        }, {
+	            token : function(value) {
+	                if (value == "this")
+	                    return "variable.language";
+	                else if (keywords[value])
+	                    return "keyword";
+	                else if (buildinConstants[value])
+	                    return "constant.language";
+	                else if (futureReserved[value])
+	                    return "invalid.illegal";
+	                else if (value == "debugger")
+	                    return "invalid.deprecated";
+	                else
+	                    return "identifier";
+	            },
+	            // TODO: Unicode escape sequences
+	            // TODO: Unicode identifiers
+	            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+	        }, {
+	            token : "keyword.operator",
+	            regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
+	        }, {
+	            token : "lparen",
+	            regex : "[[({]"
+	        }, {
+	            token : "rparen",
+	            regex : "[\\])}]"
+	        }, {
+	            token : "text",
+	            regex : "\\s+"
+	        }
+        ],
+        "comment" : [
+	        {
+	            token : "comment", // closing comment
+	            regex : ".*?\\*\\/",
+	            next : "start"
+	        }, {
+	            token : "comment", // comment spanning whole line
+	            regex : ".+"
+	        }
+        ],
+        "qqstring" : [
+            {
+	            token : "string",
+	            regex : '(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
+	            next : "start"
+	        }, {
+	            token : "string",
+	            regex : '.+'
+	        }
+        ],
+        "qstring" : [
+	        {
+	            token : "string",
+	            regex : "(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
+	            next : "start"
+	        }, {
+	            token : "string",
+	            regex : '.+'
+	        }
+        ]
     };
+
+    this.addRules(docComment.getRules(), "doc-");
+    this.$rules["doc-start"][0].next = "start";
 };
 
-(function() {
+oop.inherits(JavaScriptHighlightRules, TextHighlightRules);
 
-    this.addRules = function(rules, prefix) {
-        for (var key in rules) {
-            var state = rules[key];
-            for (var i=0; i<state.length; i++) {
-                var rule = state[i];
-                if (rule.next) {
-                    rule.next = prefix + rule.next;
-                } else {
-                    rule.next = prefix + key;
-                }
-            }
-            this.$rules[prefix + key] = state;
-        }
-    };
-
-    this.getRules = function() {
-        return this.$rules;
-    };
-
-}).call(TextHighlightRules.prototype);
-
-exports.TextHighlightRules = TextHighlightRules;
+exports.JavaScriptHighlightRules = JavaScriptHighlightRules;
 });
 define("text!ace/css/editor.css", ".ace_editor {" +
   "  position: absolute;" +
@@ -12121,6 +11992,7 @@ var ace = {
             var theme = require("ace/theme/textmate");
 
             var doc = new Document(el.innerHTML);
+            el.innerHTML = '';
             doc.setMode(new JavaScriptMode());
             doc.setUndoManager(new UndoManager());
             env.editor = new Editor(new Renderer(el, theme));
