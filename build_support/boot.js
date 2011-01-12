@@ -69,6 +69,7 @@ var ace = {
             window.addEventListener("resize", function() {
                 env.editor.resize();
             }, false);
+            el.env = env;
         });
     }
 };
