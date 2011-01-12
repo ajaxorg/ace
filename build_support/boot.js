@@ -62,6 +62,7 @@ var ace = {
             el.innerHTML = '';
             doc.setMode(new JavaScriptMode());
             doc.setUndoManager(new UndoManager());
+            env.document = doc;
             env.editor = new Editor(new Renderer(el, theme));
             env.editor.setDocument(doc);
             env.editor.resize();
