@@ -86,13 +86,6 @@ copy({
     dest: buildStep
 });
 
-// The startup file
-copy({
-    source: { base: aceHome + '/demo/', path: 'demo_startup.js' },
-    filter: [ copy.filter.moduleDefines ],
-    dest: buildStep
-});
-
 // The CSS files
 copy({
     source: [
