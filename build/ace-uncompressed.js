@@ -10402,7 +10402,6 @@ var VirtualRenderer = function(container, theme) {
         var changes = this.CHANGE_SIZE;
 
         var height = dom.getInnerHeight(this.container);
-console.log('height: ', height, ' this.$size.height: ', this.$size.height);
         if (this.$size.height != height) {
             this.$size.height = height;
 
@@ -10416,7 +10415,6 @@ console.log('height: ', height, ' this.$size.height: ', this.$size.height);
         }
 
         var width = dom.getInnerWidth(this.container);
-console.log('width: ', width, ' this.$size.width: ', this.$size.width);
         if (this.$size.width != width) {
             this.$size.width = width;
 
@@ -10424,14 +10422,10 @@ console.log('width: ', width, ' this.$size.width: ', this.$size.width);
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
         }
-console.log('this.scroller.style.width: ', this.scroller.style.width);
 
         this.$size.scrollerWidth = this.scroller.clientWidth;
         this.$size.scrollerHeight = this.scroller.clientHeight;
         this.$loop.schedule(changes);
-console.log('this.$size.scrollerWidth: ', this.$size.scrollerWidth);
-console.log('this.$size.scrollerHeight: ', this.$size.scrollerHeight);
-console.log('changes: ', changes);
     };
 
     this.setTokenizer = function(tokenizer) {
@@ -10553,7 +10547,7 @@ console.log('changes: ', changes);
     this.$renderChanges = function(changes) {
         if (!changes || !this.doc || !this.$tokenizer)
             return;
-
+        
         // text, scrolling and resize changes can cause the view port size to change
         if (!this.layerConfig ||
             changes & this.CHANGE_FULL ||
