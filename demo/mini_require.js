@@ -14,6 +14,7 @@ function require(module, callback) {
 
     if (typeof module === 'string') {
         var payload = require.modules[module];
+        var module_name = module;
         if (payload == null) {
             console.error('Missing module: ' + module);
         }
@@ -26,6 +27,8 @@ function require(module, callback) {
             };
             payload(require, exports, module);
             payload = exports;
+            // cache the resulting module object for next time
+            require.modules[module_name] = payload;
         }
 
         if (callback) {
