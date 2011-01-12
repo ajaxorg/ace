@@ -65,6 +65,9 @@ var ace = {
             env.editor = new Editor(new Renderer(el, theme));
             env.editor.setDocument(doc);
             env.editor.resize();
+            window.addEventListener("resize", function() {
+                env.editor.resize();
+            }, false);
         });
     }
 };
