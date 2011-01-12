@@ -1,54 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Editor</title>
-    <meta name="author" content="Fabian Jakobs">
-    
-    <style type="text/css" media="screen">
-    
-    html {
-        height: 100%;
-        overflow: hidden;
-    }
-    
-    body {
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
-        font-size: 12px;
-        background: rgb(14, 98, 165);
-        color: white;
-    }
-    
-    #editor {  
-        top: 0px;
-        left: 0px;
-        height: 100%;
-        width: 100%;
-        background: white;
-    }
-    
-    </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <meta name="author" content="Fabian Jakobs, Kevin Dangoor, Joe Walker">
+  <style type="text/css" media="screen">
+    body { overflow: hidden; }
+    #editor { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+  </style>
 </head>
 <body>
-    <div id="editor">function foo(items) {
-    for (var i=0; i&lt;items.length; i++) {
-        alert(items[i] + "juhu");
+
+<div id="editor">function foo(items) {
+    for (var i = 0; i &lt; items.length; i++) {
+        alert("Ace Rocks " + items[i]);
     }
 }</div>
-    
-  <script src="ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      ace.edit("editor");
-    }, false);
-  </script>
+
+<script src="ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    ace.edit("editor");
+  }, false);
+</script>
 
 </body>
 </html>
