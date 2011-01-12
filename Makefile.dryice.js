@@ -63,16 +63,24 @@ copy({
     filter: [ copy.filter.moduleDefines ],
     dest: cockpit
 });
-/*
-// The graphics files
 copy({
-    source: sources.map(function(source) {
-        return { root: aceHome, include: source + '/.*\\.png$' };
-    }, this),
-    filter: [ copy.filter.base64, copy.filter.addDefines ],
+    source: [ {
+        root: aceHome + '/support/cockpit/lib',
+        include: /.*\.css$|.*\.html$/,
+        exclude: /tests?\//
+    } ],
+    filter: [ copy.filter.addDefines ],
     dest: cockpit
 });
-*/
+copy({
+    source: [ {
+        root: aceHome + '/support/cockpit/lib',
+        include: /.*\.png$|.*\.gif$/,
+        exclude: /tests?\//
+    } ],
+    filter: [ copy.filter.base64 ],
+    dest: cockpit
+});
 
 // Ace sources
 var ace = copy.createDataObject();
@@ -441,7 +449,25 @@ copy.filter.base64 = function(input, source) {
         throw new Error('base64 filter needs to be the first in a filter set');
     }
 
-    return 'define("text!' + source.toString() + '", ' + input + ');\n\n';
+    if (!source) {
+        throw new Error('Missing filename for moduleDefines');
+    }
+
+    if (source.base) {
+        source = source.path;
+    }
+
+    if (source.substr(-4) === '.png') {
+        input = 'data:image/png;base64,' + input.toString('base64');
+    }
+    else if (source.substr(-4) === '.gif') {
+        input = 'data:image/gif;base64,' + input.toString('base64');
+    }
+    else {
+        throw new Error('Only gif/png supported by base64 filter: ' + source);
+    }
+
+    return 'define("text!' + source + '", "' + input + '");\n\n';
 };
 copy.filter.base64.onRead = true;
 
@@ -460,11 +486,10 @@ copy.filter.moduleDefines = function(input, source) {
     if (source.base) {
         source = source.path;
     }
-
-    var module = source.replace(/\.js$/, '');
+    source = source.replace(/\.js$/, '');
 
     return input.replace(/\bdefine\(\s*function\(require,\s*exports,\s*module\)\s*\{/,
-        "define('" + module + "', function(require, exports, module) {");
+        "define('" + source + "', function(require, exports, module) {");
 };
 copy.filter.moduleDefines.onRead = true;
 
