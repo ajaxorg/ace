@@ -204,7 +204,7 @@ function addSource(obj, source) {
 }
 
 function addSourceFile(obj, filename) {
-    var read = fs.readFileSync(filename).toString();
+    var read = fs.readFileSync(filename);
     obj.sources.push({
         name: filename,
         value: runFilters(read, obj.filter, true, filename)
@@ -212,7 +212,7 @@ function addSourceFile(obj, filename) {
 }
 
 function addSourceBase(obj, baseObj) {
-    var read = fs.readFileSync(baseObj.base + baseObj.path).toString();
+    var read = fs.readFileSync(baseObj.base + baseObj.path);
     obj.sources.push({
         name: baseObj,
         value: runFilters(read, obj.filter, true, baseObj)
@@ -344,6 +344,10 @@ copy.filter = {};
  * @return string output
  */
 copy.filter.uglifyjs = function(input) {
+    if (typeof input !== 'string') {
+        input = input.toString();
+    }
+
     var opt = copy.filter.uglifyjs.options;
     var ast = ujs.parser.parse(input, opt.parse_strict_semicolons);
 
@@ -392,6 +396,10 @@ copy.filter.uglifyjs.options = {
  * A filter to munge CommonJS headers
  */
 copy.filter.addDefines = function(input, source) {
+    if (typeof input !== 'string') {
+        input = input.toString();
+    }
+
     if (!source) {
         throw new Error('Missing filename for moduleDefines');
     }
@@ -412,7 +420,10 @@ copy.filter.addDefines.onRead = true;
 /**
  *
  */
-copy.filter.base64 = function() {
+copy.filter.base64 = function(input, source) {
+    if (typeof input !== 'string') {
+        input = input.toString();
+    }
 
 };
 copy.filter.base64.onRead = true;
@@ -421,6 +432,10 @@ copy.filter.base64.onRead = true;
  *
  */
 copy.filter.moduleDefines = function(input, source) {
+    if (typeof input !== 'string') {
+        input = input.toString();
+    }
+
     if (!source) {
         throw new Error('Missing filename for moduleDefines');
     }
@@ -448,82 +463,6 @@ exports.copy = copy;
 
 
 
-
-
-
-/*
-// copy a single file
-copy({ source: 'foo.txt', dest: 'bar.txt' });
-
-// copy a directory
-copy({ source: 'foo', dest: 'bar' });
-
-// cat a bunch of files together
-copy({ source: [ 'file1.js', 'file2.js' ], dest: 'output.js' });
-
-// cat files together using a glob pattern
-copy({ source: /.js$/, dest: 'built.js' });
-
-// cat together a custom set of files
-copy({
-  source: function() {
-    var files = [ 'file1.js' ];
-    if (baz) files.push('file2.js');
-    return files;
-  },
-  dest: 'built.js'
-});
-
-// some utils are available to custom functions
-copy({
-  source: function() {
-    var files = filesMatching(/.js$/);
-    arrayRemove(files, 'broken.js');
-    return files;
-  },
-  dest: 'built.js'
-});
-
-// maybe one day we could add multiple destinations
-copy({
-  source: /src/.*\.js$/,
-  dest: [ /\(*\)\.js$/, '\1.js.bak' ]
-});
-
-// use a filter while copying
-copy({
-  source: /src/.*\.js$/,
-  filter: compressor,
-  dest: 'built.js'
-});
-
-// and you can have multiple (custom) filters
-copy({
-  source: /src/.*\.js$/,
-  filter: [
-    compressor,
-    function(name, data) {
-      return 'wibble';
-    }
-  ],
-  dest: 'built.js'
-});
-
-// I think it's possible to see a huge array of operations in these terms.
-// I'm not suggesting you implement these, just demoing what the API could do
-copy({
-  source: '**',
-  filter: [ zip ],
-  dest: 'scp://example.com/upload/myproject-0.1.zip'
-});
-
-copy({
-  source: /src/.*\.java$/,
-  filter: javac,
-  dest: [ /\(*\)\.java$/, '\1.class' ],
-  comment: 'only joking'
-});
-*/
 
 return exports;
 };
