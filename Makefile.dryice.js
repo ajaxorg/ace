@@ -40,22 +40,44 @@ var copy = internalRequire('dryice').copy;
 
 var aceHome = __dirname;
 
-var buildStep = copy.createDataObject();
-
-// The Javascript files that don't need unwrapping
+// Pilot sources
+var pilot = copy.createDataObject();
 copy({
-    source: [ 'demo/mini_require.js' ],
-    dest: buildStep
+    source: [ {
+        root: aceHome + '/support/cockpit/support/pilot/lib',
+        include: /.*\.js$/,
+        exclude: /tests?\//
+    } ],
+    filter: [ copy.filter.moduleDefines ],
+    dest: pilot
 });
 
-// JS files that we tweak the define lines on
+// Cockpit sources
+var cockpit = copy.createDataObject();
+copy({
+    source: [ {
+        root: aceHome + '/support/cockpit/lib',
+        include: /.*\.js$/,
+        exclude: /tests?\//
+    } ],
+    filter: [ copy.filter.moduleDefines ],
+    dest: cockpit
+});
+/*
+// The graphics files
+copy({
+    source: sources.map(function(source) {
+        return { root: aceHome, include: source + '/.*\\.png$' };
+    }, this),
+    filter: [ copy.filter.base64, copy.filter.addDefines ],
+    dest: cockpit
+});
+*/
+
+// Ace sources
+var ace = copy.createDataObject();
 copy({
     source: [
-        {
-            root: aceHome + '/support/cockpit/support/pilot/lib',
-            include: /.*\.js$/,
-            exclude: /tests?\//
-        },
         // Exclude all themes/modes so we can just include textmate/js
         {
             root: aceHome + '/lib',
@@ -69,52 +91,46 @@ copy({
         { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/doc_comment_highlight_rules.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/matching_brace_outdent.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' }
     ],
     filter: [ copy.filter.moduleDefines ],
-    dest: buildStep
+    dest: ace
 });
-
-// The CSS files
 copy({
-    source: [
-        {
+    source: [ {
             root: aceHome + '/lib',
             include: /tm\.css|editor\.css/,
             exclude: /tests?\//
-        }
-    ],
+    } ],
     filter: [ copy.filter.addDefines ],
-    dest: buildStep
+    dest: ace
 });
 
-/*
-// The graphics files
+// Piece together the parts that we want
+var data = copy.createDataObject();
 copy({
-    source: sources.map(function(source) {
-        return { root: aceHome, include: source + '/.*\\.png$' };
-    }, this),
-    filter: [ copy.filter.base64, copy.filter.addDefines ],
-    dest: buildStep
-});
-*/
-
-// The Javascript files that don't need unwrapping
-copy({
-    source: [ 'demo/build_boot.js' ],
-    dest: buildStep
+    source: [
+        'demo/mini_require.js',
+        pilot,
+        // cockpit,
+        ace,
+        'demo/build_boot.js'
+    ],
+    dest: data
 });
 
 // Create the compressed and uncompressed output files
 copy({
-    source: buildStep,
+    source: data,
     filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
 copy({
-    source: buildStep,
+    source: data,
     dest: 'build/ace-uncompressed.js'
 });
+
+
 
 
 
@@ -421,10 +437,11 @@ copy.filter.addDefines.onRead = true;
  *
  */
 copy.filter.base64 = function(input, source) {
-    if (typeof input !== 'string') {
-        input = input.toString();
+    if (typeof input === 'string') {
+        throw new Error('base64 filter needs to be the first in a filter set');
     }
 
+    return 'define("text!' + source.toString() + '", ' + input + ');\n\n';
 };
 copy.filter.base64.onRead = true;
 
