@@ -57,16 +57,31 @@ copy({
             exclude: /tests?\//
         },
         {
-            root: aceHome + '/support/cockpit/lib',
-            include: /.*\.js$/,
-            exclude: /tests?\//
-        },
-        {
             root: aceHome + '/lib',
             include: /.*\.js$/,
-            exclude: /tests?\//
+            exclude: /tests?\/|theme\/|mode\//
         }
     ],
+    filter: [ copy.filter.moduleDefines ],
+    dest: buildStep
+});
+
+// include the TextMate theme only for now
+copy({
+    source: [ {
+        root: aceHome + "/lib",
+        include: /textmate\.js/
+    } ],
+    filter: [ copy.filter.moduleDefines ],
+    dest: buildStep
+});
+
+// include the JS mode only for now
+copy({
+    source: [ {
+        root: aceHome + '/lib',
+        include: /\/text\.js|\/javascript\.js|\/text_highlight_rules\.js|\/javascript_highlight_rules\.js|\/doc_comment_highlight_rules\.js|\/matching_brace_outdent\.js/
+    } ],
     filter: [ copy.filter.moduleDefines ],
     dest: buildStep
 });
@@ -82,18 +97,8 @@ copy({
 copy({
     source: [
         {
-            root: aceHome + '/support/cockpit/support/pilot/lib',
-            include: /.*\.css$/,
-            exclude: /tests?\//
-        },
-        {
-            root: aceHome + '/support/cockpit/lib',
-            include: /.*\.css$/,
-            exclude: /tests?\//
-        },
-        {
             root: aceHome + '/lib',
-            include: /.*\.css$/,
+            include: /tm\.css|editor\.css/,
             exclude: /tests?\//
         }
     ],
@@ -114,7 +119,7 @@ copy({
 
 // The Javascript files that don't need unwrapping
 copy({
-    source: [ 'demo/boot.js' ],
+    source: [ 'demo/build_boot.js' ],
     dest: buildStep
 });
 

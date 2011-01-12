@@ -27,173 +27,28 @@
     }
     
     #editor {  
-        top: 55px;
+        top: 0px;
         left: 0px;
+        height: 100%;
+        width: 100%;
         background: white;
     }
     
-    #controls {
-        width: 100%;
-        height: 55px;
-    }
-  
-    #jump {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        border: 1px solid red;
-        z-index: 10000;
-        display: none;
-    }
-    
-    #cockpitInput {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-
-        border: none; outline: none;
-        font-family: consolas, courier, monospace;
-        font-size: 120%;
-    }
-
-    #cockpitOutput {
-        padding: 10px;
-        margin: 0 15px;
-        border: 1px solid #AAA;
-        -moz-border-radius-topleft: 10px;
-        -moz-border-radius-topright: 10px;
-        border-top-left-radius: 4px; border-top-right-radius: 4px;
-        background: #DDD; color: #000;
-    }
     </style>
 </head>
 <body>
-    <div id="jump"></div>
-    
-    <table id="controls">
-      <tr>
-        <td>
-        <label for="doc">Document:</label>
-        <select id="doc" size="1">
-          <option value="js">JS Document</option>
-          <option value="html">HTML Document</option>
-          <option value="css">CSS Document</option>
-          <option value="python">Python Document</option>
-          <option value="php">PHP Document</option>
-        </select>
-      </td>
-      <td>
-        <label for="mode">Mode:</label>
-        <select id="mode" size="1">
-          <option value="text">Plain Text</option>
-          <option value="javascript">JavaScript</option>
-          <option value="xml">XML</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="python">Python</option>
-          <option value="php">PHP</option>
-        </select>
-      </td>
-      <td>
-        <label for="theme">Theme:</label>
-        <select id="theme" size="1">
-          <option value="ace/theme/textmate">TextMate</option>
-          <option value="ace/theme/eclipse">Eclipse</option>
-          <option value="ace/theme/dawn">Dawn</option>
-          <option value="ace/theme/idle_fingers">idleFingers</option>
-          <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
-          <option value="ace/theme/twilight">Twilight</option>
-        </select>
-      </td>
-      <td>
-        <label for="select_style">Full line selections</label>
-        <input type="checkbox" name="select_style" id="select_style" checked>        
-      </td>
-      <td>
-        <label for="highlight_active">Highlight active line</label>
-        <input type="checkbox" name="highlight_active" id="highlight_active" checked>        
-      </td>
-      <td align="right">
-        <img src="demo/logo.png">        
-      </td>
-      </tr>
-    </table>
-
-    <div id="editor">    
-    </div>
-    
-    <script type="text/editor" id="jstext">function foo(items) {
-    for (var i=0; i<items.length; i++) {
+    <div id="editor">function foo(items) {
+    for (var i=0; i&lt;items.length; i++) {
         alert(items[i] + "juhu");
     }
-}</script>
-
-    <script type="text/editor" id="csstext">.text-layer {
-    font-family: Monaco, "Courier New", monospace;
-    font-size: 12px;
-    cursor: text;
-}</script>
-
-    <script type="text/editor" id="htmltext"><html>
-<head>
-
-<style type="text/css">
-.text-layer {
-    font-family: Monaco, "Courier New", monospace;
-    font-size: 12px;
-    cursor: text;
-}
-</style>
-
-</head>
-<body>
-    <h1 style="color:red">Juhu Kinners</h1>
-</body>
-</html></script>
-
-    <script type="text/editor" id="pythontext">#!/usr/local/bin/python
+}</div>
     
-import string, sys
-
-# If no arguments were given, print a helpful message
-if len(sys.argv)==1:
-    print 'Usage: celsius temp1 temp2 ...'
-    sys.exit(0)
-
-# Loop over the arguments
-for i in sys.argv[1:]:
-    try: 
-        fahrenheit=float(string.atoi(i))
-    except string.atoi_error:
-        print repr(i), "not a numeric value"
-    else:
-        celsius=(fahrenheit-32)*5.0/9.0
-        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))
-</script>
-
-    <script type="text/editor" id="phptext"><?php
-
-function nfact($n) {
-  if ($n == 0) {
-    return 1;
-  }
-  else {
-    return $n * nfact($n - 1);
-  }
-}
-
-echo "\n\nPlease enter a whole number ... ";
-$num = trim(fgets(STDIN));
-
-// ===== PROCESS - Determing the factorial of the input number =====
-$output = "\n\nFactorial " . $num . " = " . nfact($num) . "\n\n";
-echo $output;
-
-?></script>
-
-  <input id="cockpitInput" type="text"/>
-
-  <script src="ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      ace.edit("editor");
+    }, false);
+  </script>
 
 </body>
 </html>
