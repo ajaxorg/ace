@@ -119,13 +119,11 @@ copy({
 });
 
 // Create the compressed and uncompressed output files
-/*
 copy({
     source: buildStep,
     filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
-*/
 copy({
     source: buildStep,
     dest: 'build/ace-uncompressed.js'
