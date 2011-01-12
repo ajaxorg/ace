@@ -56,32 +56,21 @@ copy({
             include: /.*\.js$/,
             exclude: /tests?\//
         },
+        // Exclude all themes/modes so we can just include textmate/js
         {
             root: aceHome + '/lib',
             include: /.*\.js$/,
             exclude: /tests?\/|theme\/|mode\//
-        }
+        },
+        { base: aceHome + '/lib/', path: 'ace/theme/textmate.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/text.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/javascript.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/text_highlight_rules.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/doc_comment_highlight_rules.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/matching_brace_outdent.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' },
     ],
-    filter: [ copy.filter.moduleDefines ],
-    dest: buildStep
-});
-
-// include the TextMate theme only for now
-copy({
-    source: [ {
-        root: aceHome + "/lib",
-        include: /textmate\.js/
-    } ],
-    filter: [ copy.filter.moduleDefines ],
-    dest: buildStep
-});
-
-// include the JS mode only for now
-copy({
-    source: [ {
-        root: aceHome + '/lib',
-        include: /\/text\.js|\/javascript\.js|\/text_highlight_rules\.js|\/javascript_highlight_rules\.js|\/doc_comment_highlight_rules\.js|\/matching_brace_outdent\.js/
-    } ],
     filter: [ copy.filter.moduleDefines ],
     dest: buildStep
 });
