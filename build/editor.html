@@ -4,10 +4,23 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Editor</title>
-  <meta name="author" content="Fabian Jakobs, Kevin Dangoor, Joe Walker">
   <style type="text/css" media="screen">
     body { overflow: hidden; }
-    #editor { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+    #editor { position: absolute; top: 0; bottom: 27px; left: 0; right: 0; }
+    #cockpitInput {
+      position: absolute; height: 20px; bottom: 0; left: 0; right: 0;
+      font-size: 90%; width: 100%;
+      font-family: Consolas, Inconsolata, Courier New, monospace;
+    }
+    #cockpitOutput {
+      padding: 10px;
+      margin: 0 15px;
+      border: 1px solid #AAA;
+      -moz-border-radius-topleft: 10px;
+      -moz-border-radius-topright: 10px;
+      border-top-left-radius: 4px; border-top-right-radius: 4px;
+      background: #DDD; color: #000;
+    }
   </style>
 </head>
 <body>
@@ -18,6 +31,8 @@
     }
 }</div>
 
+<input id="cockpitInput" type="text"/>
+    
 <script src="ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
