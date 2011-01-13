@@ -125,7 +125,7 @@ exports.launch = function(env) {
     docEl.onchange = onDocChange;
 
     function getDoc() {
-        return docs.plain//docs[docEl.value];
+        return docs[docEl.value];
     }
 
     var modeEl = document.getElementById("mode");
