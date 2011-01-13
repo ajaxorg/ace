@@ -57,6 +57,7 @@ exports.launch = function(env) {
 
     var vim = require("ace/keyboard/vim").Vim;
     var emacs = require("ace/keyboard/emacs").Emacs;
+    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
     var docs = {};
 
@@ -84,9 +85,15 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
-
-    // This is how you change the keyboardHandler.
-    env.editor.setKeyboardHandler(vim);
+    // This is how you can set a custom keyboardHandler.
+    //
+    // Define some basic keymapping using a hash:
+    // env.editor.setKeyboardHandler(new HashHandler({
+    //     "gotoright": "Tab"
+    // }));
+    //
+    // Use a more complex keymapping:
+    // env.editor.setKeyboardHandler(vim);
 
     function onDocChange() {
         var doc = getDoc();
