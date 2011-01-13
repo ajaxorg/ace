@@ -55,6 +55,9 @@ exports.launch = function(env) {
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
+    var vim = require("ace/mode/vim");
+    var emacs = require("ace/mode/emacs");
+
     var docs = {};
 
     docs.js = new Document(document.getElementById("jstext").innerHTML);
@@ -81,6 +84,9 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
+
+    // This is how you change the keyboardHandler.
+    env.editor.setKeyboardHandler(vim);
 
     function onDocChange() {
         var doc = getDoc();
