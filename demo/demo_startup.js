@@ -55,8 +55,8 @@ exports.launch = function(env) {
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
-    var vim = require("ace/mode/vim");
-    var emacs = require("ace/mode/emacs");
+    var vim = require("ace/keyboard/vim").Vim;
+    var emacs = require("ace/keyboard/emacs").Emacs;
 
     var docs = {};
 
