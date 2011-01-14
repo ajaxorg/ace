@@ -35,54 +35,59 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
+function require(module, callback) {
 
-exports.bindings = {
-    "selectall": "Command-A",
-    "removeline": "Command-D",
-    "gotoline": "Command-L",
-    "togglecomment": "Command-7",
-    "findnext": "Command-K",
-    "findprevious": "Command-Shift-K",
-    "find": "Command-F",
-    "replace": "Command-R",
-    "undo": "Command-Z",
-    "redo": "Command-Shift-Z|Command-Y",
-    "overwrite": "Insert",
-    "copylinesup": "Command-Option-Up",
-    "movelinesup": "Option-Up",
-    "selecttostart": "Command-Shift-Up",
-    "gotostart": "Command-Home|Command-Up",
-    "selectup": "Shift-Up",
-    "golineup": "Up",
-    "copylinesdown": "Command-Option-Down",
-    "movelinesdown": "Option-Down",
-    "selecttoend": "Command-Shift-Down",
-    "gotoend": "Command-End|Command-Down",
-    "selectdown": "Shift-Down",
-    "golinedown": "Down",
-    "selectwordleft": "Option-Shift-Left",
-    "gotowordleft": "Option-Left",
-    "selecttolinestart": "Command-Shift-Left",
-    "gotolinestart": "Command-Left|Home",
-    "selectleft": "Shift-Left",
-    "gotoleft": "Left",
-    "selectwordright": "Option-Shift-Right",
-    "gotowordright": "Option-Right",
-    "selecttolineend": "Command-Shift-Right",
-    "gotolineend": "Command-Right|End",
-    "selectright": "Shift-Right",
-    "gotoright": "Right",
-    "selectpagedown": "Shift-PageDown",
-    "pagedown": "PageDown",
-    "selectpageup": "Shift-PageUp",
-    "pageup": "PageUp",
-    "selectlinestart": "Shift-Home",
-    "selectlineend": "Shift-End",
-    "del": "Delete",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Backspace",
-    "outdent": "Shift-Tab",
-    "indent": "Tab"
+    if (Array.isArray(module)) {
+        var params = [];
+        module.forEach(function(m) {
+            params.push(require._lookup(m));
+        }, this);
+
+        if (callback) {
+            callback.apply(null, params);
+        }
+    }
+
+    if (typeof module === 'string') {
+        payload = require._lookup(module);
+        if (callback) {
+            callback();
+        }
+        return payload;
+    }
+}
+require.modules = {};
+
+require._lookup = function(moduleName) {
+    var payload = require.modules[moduleName];
+    var module_name = moduleName;
+    if (payload == null) {
+        console.error('Missing module: ' + moduleName);
+        console.trace();
+    }
+
+    if (typeof payload === 'function') {
+        var exports = {};
+        var module = {
+             id: moduleName,
+             uri: ''
+        };
+        payload(require, exports, module);
+        payload = exports;
+        // cache the resulting module object for next time
+        require.modules[module_name] = payload;
+    }
+
+    return payload;
 };
 
-});
+function define(module, payload) {
+    if (typeof module !== 'string') {
+        console.error('dropping module because define wasn\'t munged.');
+        console.trace();
+        return;
+    }
+
+    console.log('defining module: ' + module + ' as a ' + typeof payload);
+    require.modules[module] = payload;
+}

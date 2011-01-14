@@ -55,6 +55,10 @@ exports.launch = function(env) {
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
+    var vim = require("ace/keyboard/vim").Vim;
+    var emacs = require("ace/keyboard/emacs").Emacs;
+    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+
     var docs = {};
 
     docs.js = new Document(document.getElementById("jstext").innerHTML);
@@ -80,6 +84,7 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
+<<<<<<< HEAD:demo/startup.js
     
     var modes = {
         text: new TextMode(),
@@ -102,6 +107,17 @@ exports.launch = function(env) {
     }
     modeEl.onchange = setMode;
     setMode();
+=======
+    // This is how you can set a custom keyboardHandler.
+    //
+    // Define some basic keymapping using a hash:
+    // env.editor.setKeyboardHandler(new HashHandler({
+    //     "gotoright": "Tab"
+    // }));
+    //
+    // Use a more complex keymapping:
+    // env.editor.setKeyboardHandler(vim);
+>>>>>>> jviereck/keymapping:demo/demo_startup.js
 
     var docEl = document.getElementById("doc");
     function onDocChange() {
