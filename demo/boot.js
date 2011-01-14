@@ -40,7 +40,7 @@ var config = {
         demo: "../demo",
         ace: "../lib/ace",
         cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/cockpit/support/pilot/lib/pilot"
+        pilot: "../support/pilot/lib/pilot"
     }
 };
 
