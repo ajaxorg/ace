@@ -58,12 +58,17 @@ exports.launch = function(env) {
     var vim = require("ace/keyboard/keybinding/vim").Vim;
     var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
     var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+    
+    var WorkerClient = require("ace/worker/WorkerClient").WorkerClient;
 
     var docs = {};
 
     docs.js = new Document(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
+    
+    var worker = new WorkerClient("../..", ["ace", "pilot"], "ace/worker/demo", "Demo");
+    
 
     docs.css = new Document(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
