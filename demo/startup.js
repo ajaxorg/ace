@@ -68,7 +68,7 @@ exports.launch = function(env) {
     docs.js.setUndoManager(new UndoManager());
     
     var worker = new WorkerClient("../..", ["ace", "pilot"], "ace/worker/demo", "Demo");
-    
+    worker.send("juhu");
 
     docs.css = new Document(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
