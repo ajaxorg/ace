@@ -44,7 +44,7 @@ var aceHome = __dirname;
 var pilot = copy.createDataObject();
 copy({
     source: [ {
-        root: aceHome + '/support/cockpit/support/pilot/lib',
+        root: aceHome + '/support/pilot/lib',
         include: /.*\.js$/,
         exclude: /tests?\//
     } ],
