@@ -44,8 +44,8 @@ exports.launch = function(env) {
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var Document = require("ace/document").Document;
+    var theme = require("ace/theme/textmate");    
+    var EditSession = require("ace/edit_session").EditSession;
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
     var HtmlMode = require("ace/mode/html").Mode;
@@ -61,23 +61,23 @@ exports.launch = function(env) {
 
     var docs = {};
 
-    docs.js = new Document(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new Document(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.html = new Document(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new Document(document.getElementById("pythontext").innerHTML);
+    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new Document(document.getElementById("phptext").innerHTML);
+    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
