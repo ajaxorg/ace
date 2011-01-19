@@ -21,7 +21,7 @@
 	url = git://github.com/tautologistics/node-htmlparser.git
 [submodule "support/cockpit"]
 	path = support/cockpit
-	url = git://github.com/mozilla/cockpit.git
+	url = git://github.com/ajaxorg/cockpit.git
 [submodule "support/pilot"]
 	path = support/pilot
 	url = git://github.com/ajaxorg/pilot.git
