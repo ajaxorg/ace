@@ -1,4 +1,4 @@
-ACE (Ajax.org Cloud9 Editor)
+Ace (Ajax.org Cloud9 Editor)
 ============================
 
 Ace is a standalone code editor written in JavaScript. Our goal is to create a web based code editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page and JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](http://www.cloud9ide.com/) and the successor of the Mozilla Skywriter (Bespin) Project.
