@@ -40,12 +40,15 @@ var config = {
         demo: "../demo",
         ace: "../lib/ace",
         cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/cockpit/support/pilot/lib/pilot"
+        pilot: "../support/pilot/lib/pilot"
     }
 };
 
-require(config, ["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-"pilot/environment", "demo/startup"], function() {
+var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
+             "pilot/environment", "demo/startup" ];
+
+require(config);
+require(deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index", "cockpit/index" ]).then(function() {
         var env = require("pilot/environment").create();
