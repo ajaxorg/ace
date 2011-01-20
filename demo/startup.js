@@ -44,8 +44,8 @@ exports.launch = function(env) {
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var Document = require("ace/document").Document;
+    var theme = require("ace/theme/textmate");    
+    var EditSession = require("ace/edit_session").EditSession;
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
     var HtmlMode = require("ace/mode/html").Mode;
@@ -55,25 +55,29 @@ exports.launch = function(env) {
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
+    var vim = require("ace/keyboard/keybinding/vim").Vim;
+    var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+
     var docs = {};
 
-    docs.js = new Document(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new Document(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.html = new Document(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new Document(document.getElementById("pythontext").innerHTML);
+    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new Document(document.getElementById("phptext").innerHTML);
+    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
@@ -98,15 +102,25 @@ exports.launch = function(env) {
 
     var modeEl = document.getElementById("mode");
     function setMode() {
-        env.editor.getDocument().setMode(modes[modeEl.value] || modes.text);
+        env.editor.getSession().setMode(modes[modeEl.value] || modes.text);
     }
     modeEl.onchange = setMode;
     setMode();
 
+    // This is how you can set a custom keyboardHandler.
+    //
+    // Define some basic keymapping using a hash:
+    // env.editor.setKeyboardHandler(new HashHandler({
+    //     "gotoright": "Tab"
+    // }));
+    //
+    // Use a more complex keymapping:
+    // env.editor.setKeyboardHandler(vim);
+
     var docEl = document.getElementById("doc");
     function onDocChange() {
         var doc = docs[docEl.value];
-        env.editor.setDocument(doc);
+        env.editor.setSession(doc);
     
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
@@ -153,7 +167,7 @@ exports.launch = function(env) {
             env.editor.setSelectionStyle("text");
         }
     };
-    selectEl.onchange = setSelectionStyle;
+    selectEl.onclick = setSelectionStyle;
     setSelectionStyle();
 
 
@@ -161,7 +175,7 @@ exports.launch = function(env) {
     function setHighlightActiveLine() {
         env.editor.setHighlightActiveLine(!!activeEl.checked);
     };
-    activeEl.onchange = setHighlightActiveLine;
+    activeEl.onclick = setHighlightActiveLine;
     setHighlightActiveLine();
 
 
@@ -169,7 +183,7 @@ exports.launch = function(env) {
     function setShowInvisibles() {
         env.editor.setShowInvisibles(!!showHiddenEl.checked);
     };
-    showHiddenEl.onchange = setShowInvisibles;
+    showHiddenEl.onclick = setShowInvisibles;
     setShowInvisibles();
 
 
@@ -226,7 +240,7 @@ exports.launch = function(env) {
                 env.editor.onTextInput(reader.result);
 
                 modeEl.value = mode;
-                env.editor.getDocument().setMode(modes[mode]);
+                env.editor.getSession().setMode(modes[mode]);
             };
             reader.readAsText(file);
         }

@@ -22,7 +22,7 @@
   padding-right: 6px;
 }
 
-.%cssClass% .ace_editor .ace_printMargin {
+.%cssClass% .ace_print_margin {
   width: 1px;
   background: %printMargin%;
 }
