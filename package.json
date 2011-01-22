@@ -11,11 +11,10 @@
          "url" : "http://github.com/ajaxorg/ace.git"
     },
     "dependencies": {
-        "uglify-js": ">=0.0.2",
-        "step": ">=0.0.3",
         "asyncjs": ">=0.0.2",
         "jsdom": ">=0.1.23",
-        "htmlparser": ">=1.7.2"        
+        "htmlparser": ">=1.7.2",
+        "dryice": ">=0.1.0"
     },
     "licenses": [{
         "type": "MPL",
