@@ -19,6 +19,10 @@
   height: 100%;
 }
 
+.ace_gutter-cell.ace_breakpoint {
+    color: red;
+}
+
 .ace_editor .ace_sb {
   position: absolute;
   overflow-x: hidden;

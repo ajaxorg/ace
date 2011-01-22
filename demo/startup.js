@@ -59,7 +59,7 @@ exports.launch = function(env) {
     var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
     var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
     
-    var WorkerClient = require("ace/worker/WorkerClient").WorkerClient;
+    var WorkerClient = require("ace/worker/worker_client").WorkerClient;
 
     var docs = {};
 
@@ -67,9 +67,37 @@ exports.launch = function(env) {
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
     
-    var worker = new WorkerClient("../..", ["ace", "pilot"], "ace/worker/demo", "Demo");
-    worker.send("juhu");
-
+    var worker = new WorkerClient("../..", ["ace", "pilot"], "ace/worker/mirror", "Mirror");
+    worker.call("setValue", [docs.js.getValue()]);
+    
+    docs.js.getDocument().on("change", function(e) {
+        e.range = {
+            start: e.data.range.start,
+            end: e.data.range.end
+        };
+        worker.emit("change", e);
+    });
+        
+    worker.on("jslint", function(results) {
+        console.log("jslint", results);
+        
+        var rows = [];
+        for (var i=0; i<results.data.length; i++) {
+            var error = results.data[i];
+            if (error)
+                rows.push(error.line-1);
+        }
+        
+        docs.js.clearBreakpoints();
+        docs.js.setBreakpoints(rows)
+    });
+    
+    window.mirror = function() {
+        worker.call("getValue", [], function(value) {
+            console.log(value)
+        });
+    }
+    
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
