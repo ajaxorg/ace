@@ -137,7 +137,7 @@ copy({
 // Create the compressed and uncompressed output files
 copy({
     source: data,
-    filter: copy.filter.uglifyjs,
+    //filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
 copy({
