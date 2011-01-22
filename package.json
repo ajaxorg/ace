@@ -1,7 +1,7 @@
 {
     "name": "ace",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "0.1",
+    "version": "0.1.0",
     "homepage" : "http://github.com/ajaxorg/ace",
     "engines": {"node": ">= 0.2.0"},
     "author": "Fabian Jakobs <fabian@ajax.org>",
@@ -9,6 +9,12 @@
     "repository" : {
         "type" : "git",
          "url" : "http://github.com/ajaxorg/ace.git"
+    },
+    "dependencies": {
+        "asyncjs": ">=0.0.2",
+        "jsdom": ">=0.1.23",
+        "htmlparser": ">=1.7.2",
+        "dryice": ">=0.1.0"
     },
     "licenses": [{
         "type": "MPL",

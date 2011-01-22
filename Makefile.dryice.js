@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -44,7 +45,7 @@ var aceHome = __dirname;
 var pilot = copy.createDataObject();
 copy({
     source: [ {
-        root: aceHome + '/support/cockpit/support/pilot/lib',
+        root: aceHome + '/support/pilot/lib',
         include: /.*\.js$/,
         exclude: /tests?\//
     } ],
@@ -137,7 +138,7 @@ copy({
 // Create the compressed and uncompressed output files
 copy({
     source: data,
-    filter: copy.filter.uglifyjs,
+    //filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
 copy({

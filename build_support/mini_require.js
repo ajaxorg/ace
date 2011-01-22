@@ -88,6 +88,6 @@ function define(module, payload) {
         return;
     }
 
-    console.log('defining module: ' + module + ' as a ' + typeof payload);
+    // console.log('defining module: ' + module + ' as a ' + typeof payload);
     require.modules[module] = payload;
 }
