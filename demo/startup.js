@@ -79,17 +79,20 @@ exports.launch = function(env) {
     });
         
     worker.on("jslint", function(results) {
-        console.log("jslint", results);
-        
-        var rows = [];
+        var errors = [];
         for (var i=0; i<results.data.length; i++) {
             var error = results.data[i];
             if (error)
-                rows.push(error.line-1);
+                errors.push({
+                    row: error.line-1,
+                    column: error.character-1,
+                    text: error.reason,
+                    type: "error",
+                    lint: error
+                })
         }
-        
-        docs.js.clearBreakpoints();
-        docs.js.setBreakpoints(rows)
+                
+        docs.js.setAnnotations(errors)
     });
     
     window.mirror = function() {

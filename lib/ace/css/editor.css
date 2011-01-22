@@ -19,7 +19,7 @@
   height: 100%;
 }
 
-.ace_gutter-cell.ace_breakpoint {
+.ace_gutter-cell.ace_error {
     color: red;
 }
 
