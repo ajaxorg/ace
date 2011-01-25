@@ -12,6 +12,20 @@
   overflow-y: hidden;     
 }
 
+.ace_content {
+    position: absolute;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.ace_composition {
+    position: absolute;
+    background: #555;
+    color: #DDD;
+    z-index: 4;
+}
+
 .ace_gutter {
   position: absolute;
   overflow-x: hidden;
@@ -61,8 +75,14 @@
   color: black;
 }
 
+.ace_cjk {
+    display: inline-block;
+    text-align: center;
+}
+
 .ace_cursor-layer {
   cursor: text;
+  pointer-events: none;
 }
 
 .ace_cursor {

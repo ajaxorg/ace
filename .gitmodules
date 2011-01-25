@@ -1,6 +1,3 @@
-[submodule "support/node-o3-xml"]
-	path = support/node-o3-xml
-	url = git://github.com/ajaxorg/node-o3-xml.git
 [submodule "support/cockpit"]
 	path = support/cockpit
 	url = git://github.com/ajaxorg/cockpit.git
