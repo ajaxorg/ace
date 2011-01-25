@@ -231,7 +231,7 @@ def test():
     app = Cling(getcwd())
     try:
         print "Serving " + getcwd() + " to http://localhost:9999"
-        make_server('localhost', 9999, validator(app)).serve_forever()
+        make_server('0.0.0.0', 9999, validator(app)).serve_forever()
     except KeyboardInterrupt, ki:
         print ""
         print "Ciao, baby!"
