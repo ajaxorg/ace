@@ -78,7 +78,7 @@
           <option value="js">JS Document</option>
           <option value="html">HTML Document</option>
           <option value="css">CSS Document</option>
-          <option value="python">Python Document</option>
+          <option value="python" selected>Python Document</option>
           <option value="php">PHP Document</option>
         </select>
       </td>
@@ -90,7 +90,7 @@
           <option value="xml">XML</option>
           <option value="html">HTML</option>
           <option value="css">CSS</option>
-          <option value="python">Python</option>
+          <option value="python" selected>Python</option>
           <option value="php">PHP</option>
         </select>
       </td>
@@ -100,7 +100,7 @@
           <option value="ace/theme/textmate">TextMate</option>
           <option value="ace/theme/eclipse">Eclipse</option>
           <option value="ace/theme/dawn">Dawn</option>
-          <option value="ace/theme/idle_fingers">idleFingers</option>
+          <option value="ace/theme/idle_fingers" selected>idleFingers</option>
           <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
           <option value="ace/theme/twilight">Twilight</option>
         </select>
@@ -118,7 +118,9 @@
         <input type="checkbox" name="show_hidden" id="show_hidden">
       </td>
       <td align="right">
-        <img src="demo/logo.png">        
+        <div id="debuger" style="color: #fff;font-weight:bold;">
+        	info
+        </div>  
       </td>
       </tr>
     </table>
@@ -163,6 +165,7 @@ import string, sys
 if len(sys.argv)==1:
     print 'Usage: celsius temp1 temp2 ...'
     sys.exit(0)
+    print '这里是中文'
 
 # Loop over the arguments
 for i in sys.argv[1:]:
@@ -200,6 +203,9 @@ echo $output;
 <script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
 <script src="demo/boot.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+window['debug'] = function(t){
+	document.getElementById('debuger').innerHTML = t;
+}
 require("demo/boot");  
 </script>
 
