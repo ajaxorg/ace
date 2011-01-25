@@ -46,13 +46,23 @@
   left: 0px;
 }
 
+.ace_editor .ace_print_margin_layer {
+  z-index: 0;
+  position: absolute;
+  overflow: hidden;
+  margin: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
 .ace_editor .ace_print_margin {
   position: absolute;
   height: 100%;
 }
 
 .ace_layer {
-  z-index: 0;
+  z-index: 1;
   position: absolute;
   overflow: hidden;  
   white-space: nowrap;
@@ -76,7 +86,7 @@
 }
 
 .ace_cursor {
-  z-index: 3;
+  z-index: 4;
   position: absolute;
 }
 
@@ -89,20 +99,20 @@
 
 .ace_marker-layer .ace_step {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
 }
 
 .ace_marker-layer .ace_selection {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
 }
 
 .ace_marker-layer .ace_bracket {
   position: absolute;
-  z-index: 4;
+  z-index: 5;
 }
 
 .ace_marker-layer .ace_active_line {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
 }
