@@ -54,3 +54,19 @@ body {
     border-top-left-radius: 4px; border-top-right-radius: 4px;
     background: #DDD; color: #000;
 }
+
+#toggleGutter{
+    height:8px;
+    width:20px;
+    background:lightblue;
+    bottom:0;
+    position:absolute;
+    z-index: 1000;
+    -moz-border-radius-topright: 20px;
+}
+
+#toggleGutter:hover{
+    -moz-box-shadow: 2px -1px 5px 3px #91B6D5;
+    border-right: 1px solid #A1A1CF;
+    border-top: 1px solid #A1A1CF;
+}
