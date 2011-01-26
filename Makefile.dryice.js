@@ -263,7 +263,7 @@ function runFilters(value, filter, reading, name) {
         return value;
     }
 
-    if (filter.onRead == reading) {
+    if ((!!filter.onRead) == reading) {
         return filter(value, name);
     }
     else {
