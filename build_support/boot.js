@@ -35,41 +35,45 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment" ];
-
-require(deps, function() {
-    var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins([ "pilot/index" ]);
-});
-
-var ace = {
-    edit: function(el) {
-        if (typeof(el) == "string") {
-            el = document.getElementById(el);
-        }
-        var env = require("pilot/environment").create();
+// don't define it in a worker.
+if (window.document) {
+    
+    var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
+                 "pilot/environment" ];
+    
+    require(deps, function() {
         var catalog = require("pilot/plugin_manager").catalog;
-        catalog.startupPlugins({ env: env }).then(function() {
-            var EditSession = require("ace/edit_session").EditSession;
-            var JavaScriptMode = require("ace/mode/javascript").Mode;
-            var UndoManager = require("ace/undomanager").UndoManager;
-            var Editor = require("ace/editor").Editor;
-            var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-            var theme = require("ace/theme/textmate");
-
-            var doc = new EditSession(el.innerHTML);
-            el.innerHTML = '';
-            doc.setMode(new JavaScriptMode());
-            doc.setUndoManager(new UndoManager());
-            env.document = doc;
-            env.editor = new Editor(new Renderer(el, theme));
-            env.editor.setSession(doc);
-            env.editor.resize();
-            window.addEventListener("resize", function() {
+        catalog.registerPlugins([ "pilot/index" ]);
+    });
+    
+    var ace = {
+        edit: function(el) {
+            if (typeof(el) == "string") {
+                el = document.getElementById(el);
+            }
+            var env = require("pilot/environment").create();
+            var catalog = require("pilot/plugin_manager").catalog;
+            catalog.startupPlugins({ env: env }).then(function() {
+                var EditSession = require("ace/edit_session").EditSession;
+                var JavaScriptMode = require("ace/mode/javascript").Mode;
+                var UndoManager = require("ace/undomanager").UndoManager;
+                var Editor = require("ace/editor").Editor;
+                var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+                var theme = require("ace/theme/textmate");
+    
+                var doc = new EditSession(el.innerHTML);
+                el.innerHTML = '';
+                doc.setMode(new JavaScriptMode());
+                doc.setUndoManager(new UndoManager());
+                env.document = doc;
+                env.editor = new Editor(new Renderer(el, theme));
+                env.editor.setSession(doc);
                 env.editor.resize();
-            }, false);
-            el.env = env;
-        });
-    }
-};
+                window.addEventListener("resize", function() {
+                    env.editor.resize();
+                }, false);
+                el.env = env;
+            });
+        }
+    };
+}

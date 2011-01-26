@@ -91,11 +91,12 @@ copy({
         {
             root: aceHome + '/lib',
             include: /.*\.js$/,
-            exclude: /tests?\/|theme\/|mode\//
+            exclude: /tests?\/|theme\/|mode\/|ace\/worker\/host\.js/
         },
         { base: aceHome + '/lib/', path: 'ace/theme/textmate.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/text.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/javascript.js' },
+        { base: aceHome + '/lib/', path: 'ace/mode/javascript_worker.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/text_highlight_rules.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/doc_comment_highlight_rules.js' },
@@ -121,7 +122,6 @@ copy({
     source: [
         'build_support/mini_require.js',
         pilot,
-        // cockpit,
         ace,
         'build_support/boot.js'
     ],
@@ -146,7 +146,14 @@ copy({
     dest: 'build/ace-uncompressed.js'
 });
 
-
+// Create worker bootstrap code
+copy({
+    source: "lib/ace/worker/host.js",
+    filter: [function(data) {
+        return data + "\nimportScripts('ace-uncompressed.js')";
+    }],
+    dest: 'build/host.js'
+});
 
 
 
