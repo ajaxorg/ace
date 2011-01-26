@@ -44,7 +44,7 @@ exports.launch = function(env) {
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");    
+    var theme = require("ace/theme/textmate");
     var EditSession = require("ace/edit_session").EditSession;
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
@@ -58,17 +58,27 @@ exports.launch = function(env) {
     var vim = require("ace/keyboard/keybinding/vim").Vim;
     var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
     var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-    
+
     var docs = {};
+
+    // Make the lorem ipsum text a little bit longer.
+    var loreIpsum = document.getElementById("plaintext").innerHTML;
+    for (var i = 0; i < 5; i++) {
+        loreIpsum += loreIpsum;
+    }
+    docs.plain = new EditSession(loreIpsum);
+    docs.plain.setUseWrapMode(true);
+    docs.plain.setMode(new TextMode());
+    docs.plain.setUndoManager(new UndoManager());
 
     docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
-    
+
     if (false && window.Worker) {
         var worker = new WorkerClient("../..", ["ace", "pilot"], "ace/worker/mirror", "Mirror");
         worker.call("setValue", [docs.js.getValue()]);
-        
+
         docs.js.getDocument().on("change", function(e) {
             e.range = {
                 start: e.data.range.start,
@@ -76,7 +86,7 @@ exports.launch = function(env) {
             };
             worker.emit("change", e);
         });
-            
+
         worker.on("jslint", function(results) {
             var errors = [];
             for (var i=0; i<results.data.length; i++) {
@@ -90,11 +100,11 @@ exports.launch = function(env) {
                         lint: error
                     })
             }
-                    
+
             docs.js.setAnnotations(errors)
         });
     };
-        
+
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
@@ -114,7 +124,7 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
-    
+
     var modes = {
         text: new TextMode(),
         xml: new XmlMode(),
@@ -128,7 +138,6 @@ exports.launch = function(env) {
     function getMode() {
         return modes[modeEl.value];
     }
-
 
     var modeEl = document.getElementById("mode");
     function setMode() {
@@ -151,7 +160,7 @@ exports.launch = function(env) {
     function onDocChange() {
         var doc = docs[docEl.value];
         env.editor.setSession(doc);
-    
+
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript";
@@ -174,7 +183,7 @@ exports.launch = function(env) {
         else {
             modeEl.value = "text";
         }
-    
+
         env.editor.focus();
     }
     docEl.onchange = onDocChange;
