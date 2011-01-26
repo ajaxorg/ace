@@ -21,18 +21,6 @@ body {
     background: white;
 }
 
-.ace_gutter-cell.ace_error {
-    background-image: url("icons/error_obj.gif");
-    background-repeat: no-repeat;
-    background-position: 4px center;
-}
-
-.ace_gutter-cell.ace_warning {
-    background-image: url("icons/warning_obj.gif");
-    background-repeat: no-repeat;
-    background-position: 4px center;
-}
-
 #controls {
     width: 100%;
     height: 55px;
