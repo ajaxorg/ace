@@ -93,6 +93,7 @@
 }
 
 .ace_cursor-layer {
+  z-index: 0;
   cursor: text;
   pointer-events: none;
 }
