@@ -75,36 +75,6 @@ exports.launch = function(env) {
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    if (false && window.Worker) {
-        var worker = new WorkerClient("../..", ["ace", "pilot"], "ace/worker/mirror", "Mirror");
-        worker.call("setValue", [docs.js.getValue()]);
-
-        docs.js.getDocument().on("change", function(e) {
-            e.range = {
-                start: e.data.range.start,
-                end: e.data.range.end
-            };
-            worker.emit("change", e);
-        });
-
-        worker.on("jslint", function(results) {
-            var errors = [];
-            for (var i=0; i<results.data.length; i++) {
-                var error = results.data[i];
-                if (error)
-                    errors.push({
-                        row: error.line-1,
-                        column: error.character-1,
-                        text: error.reason,
-                        type: "error",
-                        lint: error
-                    })
-            }
-
-            docs.js.setAnnotations(errors)
-        });
-    };
-
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
@@ -140,11 +110,7 @@ exports.launch = function(env) {
     }
 
     var modeEl = document.getElementById("mode");
-    function setMode() {
-        env.editor.getSession().setMode(modes[modeEl.value] || modes.text);
-    }
-    modeEl.onchange = setMode;
-    setMode();
+    var wrapModeEl = document.getElementById("soft_wrap");
 
     // This is how you can set a custom keyboardHandler.
     //
@@ -182,8 +148,13 @@ exports.launch = function(env) {
         else {
             modeEl.value = "text";
         }
-
+        
+        wrapModeEl.checked = doc.getUseWrapMode() ? "checked" : "";
         env.editor.focus();
+    });
+
+    bindDropdown("mode", function(value) {
+        env.editor.getSession().setMode(modes[value] || modes.text);
     });
 
     bindDropdown("theme", function(value) {
@@ -200,6 +171,18 @@ exports.launch = function(env) {
     
     bindCheckbox("show_hidden", function(checked) {
         env.editor.setShowInvisibles(checked);
+    });
+    
+    bindCheckbox("show_gutter", function(checked) {
+        env.editor.renderer.setShowGutter(checked);
+    });
+    
+    bindCheckbox("show_print_margin", function(checked) {
+        env.editor.renderer.setShowPrintMargin(checked);
+    });
+    
+    bindCheckbox("soft_wrap", function(checked) {
+        env.editor.getSession().setUseWrapMode(checked);
     });
     
     function bindCheckbox(id, callback) {
@@ -221,8 +204,8 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        container.style.width = (document.documentElement.clientWidth - 4) + "px";
-        container.style.height = (document.documentElement.clientHeight - 55 - 4 - 23) + "px";
+        container.style.width = (document.documentElement.clientWidth) + "px";
+        container.style.height = (document.documentElement.clientHeight - 60 - 22) + "px";
         env.editor.resize();
     };
 

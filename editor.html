@@ -11,7 +11,7 @@
 <body>
     <table id="controls">
       <tr>
-        <td>
+        <td rowspan="2">
         <label for="doc">Document:</label>
         <select id="doc" size="1">
           <option value="js">JS Document</option>
@@ -22,7 +22,7 @@
           <option value="plain">Text Document</option>
         </select>
       </td>
-      <td>
+      <td rowspan="2">
         <label for="mode">Mode:</label>
         <select id="mode" size="1">
           <option value="text">Plain Text</option>
@@ -34,7 +34,7 @@
           <option value="php">PHP</option>
         </select>
       </td>
-      <td>
+      <td align="right">
         <label for="theme">Theme:</label>
         <select id="theme" size="1">
           <option value="ace/theme/textmate">TextMate</option>
@@ -45,20 +45,42 @@
           <option value="ace/theme/twilight">Twilight</option>
         </select>
       </td>
-      <td>
-        <label for="select_style">Full line selections</label>
+      <td align="right">
+        <label for="select_style">Full Line Selection</label>
         <input type="checkbox" name="select_style" id="select_style" checked>
       </td>
-      <td>
-        <label for="highlight_active">Highlight active line</label>
+      <td align="right">
+        <label for="highlight_active">Highlight Active Line</label>
         <input type="checkbox" name="highlight_active" id="highlight_active" checked>
       </td>
-      <td>
-        <label for="show_hidden">Show invisibles</label>
+      <td align="right">
+        <label for="show_hidden">Show Invisibles</label>
         <input type="checkbox" name="show_hidden" id="show_hidden">
       </td>
-      <td align="right">
+      <td align="right" rowspan="2">
         <img src="demo/logo.png">
+      </td>
+      </tr>
+      <tr>
+      <td align="right">
+        <label for="keybinding">Key Binding:</label>
+        <select id="keybinding" size="1">
+          <option value="ace">Ace</option>
+          <option value="vim">Vim</option>
+          <option value="emace">Emacs</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="show_gutter">Show Gutter</label>
+        <input type="checkbox" id="show_gutter" checked>
+      </td>
+      <td align="right">
+        <label for="show_print_margin">Show Print Margin</label>
+        <input type="checkbox" id="show_print_margin" checked>
+      </td>
+      <td align="right">
+        <label for="soft_wrap">Soft Wrap</label>
+        <input type="checkbox" id="soft_wrap">
       </td>
       </tr>
     </table>

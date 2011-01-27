@@ -1,4 +1,4 @@
-    html {
+html {
     height: 100%;
     overflow: hidden;
 }
@@ -15,15 +15,15 @@ body {
     color: white;
 }
 
-#editor {  
-    top: 55px;
+#editor {
+    position: absolute;
+    top: 60px;
     left: 0px;
     background: white;
 }
 
 #controls {
     width: 100%;
-    height: 55px;
 }
 
 #cockpitInput {
