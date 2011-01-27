@@ -44,7 +44,7 @@ var config = {
     }
 };
 
-var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
+var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager",
              "pilot/environment", "demo/startup" ];
 
 var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
