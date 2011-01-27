@@ -52,11 +52,11 @@ require(config, deps, function() {
     var pluginManager = require("pilot/plugin_manager");
     var launcher = require("demo/startup");
     var env = require("pilot/environment").create()
-    var catalog = pluginManager.create({
-      "pilot/index": require("pilot/index"),
-      "cockpit/index": require("cockpit/index"),
-      "ace/defaults": require("ace/defaults")
-    });
+    var catalog = env.plugins = pluginManager.create([
+      require("pilot/index"),
+      require("cockpit/index"),
+      require("ace/defaults")
+    ]);
     catalog.plug({ env: env });
     launcher.launch(env);
 });
