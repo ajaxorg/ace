@@ -128,13 +128,6 @@ copy({
     dest: data
 });
 
-copy({
-    source: [
-        'build_support/editor.html'
-    ],
-    dest: 'build/editor.html'
-});
-
 // Create the compressed and uncompressed output files
 copy({
     source: data,
@@ -146,6 +139,14 @@ copy({
     dest: 'build/ace-uncompressed.js'
 });
 
+copy({
+    source: [
+        'build_support/editor.html'
+    ],
+    dest: 'build/editor.html'
+});
+
+
 // Create worker bootstrap code
 copy({
     source: "lib/ace/worker/worker.js",
@@ -155,7 +156,41 @@ copy({
     dest: 'build/worker.js'
 });
 
+var eclipseTheme = copy.createDataObject();
+copy({
+    source: [{
+        root: aceHome + '/lib',
+        include: "ace/theme/eclipse.js"
+    }],
+    filter: [ copy.filter.moduleDefines ],
+    dest: eclipseTheme
+});
+copy({
+    source: [{
+        root: aceHome + '/lib',
+        include: "ace/theme/eclipse.css"
+    }],
+    filter: [ copy.filter.addDefines ],
+    dest: eclipseTheme
+});
+copy({
+    source: eclipseTheme,
+    dest: 'build/theme/eclipse.js'
+});
 
+[
+    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme", 
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight"
+].forEach(function(theme) {
+    copy({
+        source: [{
+            root: aceHome + '/lib',
+            include: "ace/theme/" + theme + ".js"
+        }],
+        filter: [ copy.filter.moduleDefines ],
+        dest: "build/theme/" + theme + ".js"
+    });
+});
 
 function internalRequire(ignore) {
 var exports = {};

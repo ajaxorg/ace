@@ -41,38 +41,43 @@ if (window.document) {
     require("pilot/fixoldbrowsers");
     require("pilot/settings");
     
-    var catalog = require("pilot/plugin_manager").catalog;
     var Event = require("pilot/event");
+    var EditSession = require("ace/edit_session").EditSession;
+    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    var UndoManager = require("ace/undomanager").UndoManager;
+    var Editor = require("ace/editor").Editor;
+    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+    var Theme = require("ace/theme/textmate");
     
+    var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
+    
     
     var ace = {
         edit: function(el) {
             if (typeof(el) == "string") {
                 el = document.getElementById(el);
             }
+            
+            var doc = new EditSession(el.innerHTML);
+            doc.setMode(new JavaScriptMode());
+            doc.setUndoManager(new UndoManager());
+            el.innerHTML = '';
+
+            var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
+            editor.setSession(doc);
+            
             var env = require("pilot/environment").create();
             catalog.startupPlugins({ env: env }).then(function() {
-                var EditSession = require("ace/edit_session").EditSession;
-                var JavaScriptMode = require("ace/mode/javascript").Mode;
-                var UndoManager = require("ace/undomanager").UndoManager;
-                var Editor = require("ace/editor").Editor;
-                var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-                var theme = require("ace/theme/textmate");
-    
-                var doc = new EditSession(el.innerHTML);
-                el.innerHTML = '';
-                doc.setMode(new JavaScriptMode());
-                doc.setUndoManager(new UndoManager());
                 env.document = doc;
-                env.editor = new Editor(new Renderer(el, theme));
-                env.editor.setSession(doc);
-                env.editor.resize();
+                env.editor = env;
+                editor.resize();
                 Event.addListener(window, "resize", function() {
-                    env.editor.resize();
+                    editor.resize();
                 });
                 el.env = env;
-            });            
+            });
+            return editor;
         }
     };
 }
