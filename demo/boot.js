@@ -45,17 +45,18 @@ var config = {
 };
 
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager",
-             "pilot/environment", "demo/startup" ];
+             "pilot/environment", "demo/startup",
+             "pilot/index", "cockpit/index", "ace/defaults" ];
 
-var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
-
-require(config);
-require(deps, function() {
-    var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins(plugins).then(function() {
-        var env = require("pilot/environment").create();
-        catalog.startupPlugins({ env: env }).then(function() {
-            require("demo/startup").launch(env);
-        });
+require(config, deps, function() {
+    var pluginManager = require("pilot/plugin_manager");
+    var launcher = require("demo/startup");
+    var env = require("pilot/environment").create()
+    var catalog = pluginManager.create({
+      "pilot/index": require("pilot/index"),
+      "cockpit/index": require("cockpit/index"),
+      "ace/defaults": require("ace/defaults")
     });
+    catalog.plug({ env: env });
+    launcher.launch(env);
 });
