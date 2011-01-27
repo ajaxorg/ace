@@ -60,7 +60,6 @@ require.modules = {};
 
 require._lookup = function(moduleName) {
     var payload = require.modules[moduleName];
-    var module_name = moduleName;
     if (payload == null) {
         console.error('Missing module: ' + moduleName);
         console.trace();
@@ -75,7 +74,7 @@ require._lookup = function(moduleName) {
         payload(require, exports, module);
         payload = exports;
         // cache the resulting module object for next time
-        require.modules[module_name] = payload;
+        require.modules[moduleName] = payload;
     }
 
     return payload;
