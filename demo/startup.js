@@ -156,9 +156,8 @@ exports.launch = function(env) {
     // Use a more complex keymapping:
     // env.editor.setKeyboardHandler(vim);
 
-    var docEl = document.getElementById("doc");
-    function onDocChange() {
-        var doc = docs[docEl.value];
+    bindDropdown("doc", function(value) {
+        var doc = docs[value];
         env.editor.setSession(doc);
 
         var mode = doc.getMode();
@@ -185,56 +184,41 @@ exports.launch = function(env) {
         }
 
         env.editor.focus();
+    });
+
+    bindDropdown("theme", function(value) {
+        env.editor.setTheme(value);
+    });
+
+    bindCheckbox("select_style", function(checked) {
+        env.editor.setSelectionStyle(checked ? "line" : "text");
+    });
+    
+    bindCheckbox("highlight_active", function(checked) {
+        env.editor.setHighlightActiveLine(checked);
+    });
+    
+    bindCheckbox("show_hidden", function(checked) {
+        env.editor.setShowInvisibles(checked);
+    });
+    
+    function bindCheckbox(id, callback) {
+        var el = document.getElementById(id);
+        var onCheck = function() {
+            callback(!!el.checked);
+        };
+        el.onclick = onCheck;
+        onCheck();
     }
-    docEl.onchange = onDocChange;
-    onDocChange();
-
-
-    var themeEl = document.getElementById("theme");
-    function setTheme() {
-        env.editor.setTheme(themeEl.value);
-    };
-    themeEl.onchange = setTheme;
-    setTheme();
-
-
-    var selectEl = document.getElementById("select_style");
-    function setSelectionStyle() {
-        if (selectEl.checked) {
-            env.editor.setSelectionStyle("line");
-        } else {
-            env.editor.setSelectionStyle("text");
-        }
-    };
-    selectEl.onclick = setSelectionStyle;
-    setSelectionStyle();
-
-
-    var activeEl = document.getElementById("highlight_active");
-    function setHighlightActiveLine() {
-        env.editor.setHighlightActiveLine(!!activeEl.checked);
-    };
-    activeEl.onclick = setHighlightActiveLine;
-    setHighlightActiveLine();
-
-
-    var showHiddenEl = document.getElementById("show_hidden");
-    function setShowInvisibles() {
-        env.editor.setShowInvisibles(!!showHiddenEl.checked);
-    };
-    showHiddenEl.onclick = setShowInvisibles;
-    setShowInvisibles();
-
-
-    // for debugging
-    window.jump = function() {
-        var jump = document.getElementById("jump");
-        var cursor = env.editor.getCursorPosition();
-        var pos = env.editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
-        jump.style.left = pos.pageX + "px";
-        jump.style.top = pos.pageY + "px";
-        jump.style.display = "block";
-    };
+    
+    function bindDropdown(id, callback) {
+        var el = document.getElementById(id);
+        var onChange = function() {
+            callback(el.value);
+        };
+        el.onchange = onChange;
+        onChange();
+    }
 
     function onResize() {
         container.style.width = (document.documentElement.clientWidth - 4) + "px";

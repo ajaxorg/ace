@@ -26,15 +26,6 @@ body {
     height: 55px;
 }
 
-#jump {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border: 1px solid red;
-    z-index: 10000;
-    display: none;
-}
-
 #cockpitInput {
     position: absolute;
     width: 100%;
