@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """static - A stupidly simple WSGI way to serve static (or mixed) content.
 
 (See the docstrings of the various functions and classes.)
@@ -231,7 +231,7 @@ def test():
     app = Cling(getcwd())
     try:
         print "Serving " + getcwd() + " to http://localhost:9999"
-        make_server('localhost', 9999, validator(app)).serve_forever()
+        make_server('0.0.0.0', 9999, validator(app)).serve_forever()
     except KeyboardInterrupt, ki:
         print ""
         print "Ciao, baby!"

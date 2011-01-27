@@ -1,0 +1,1 @@
+The icons in this folder are from the Eclipse project and licensed under the Eclipse public license version 1.0 (EPL).

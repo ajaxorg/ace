@@ -33,3 +33,38 @@ Getting the code
 Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the Mozilla tri-license (MPL/GPL/LGPL). This is the same license used by Firefox. This license is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
 
     git clone git://github.com/ajaxorg/ace.git
+    git submodule update --init --recursive
+
+Running Ace
+-----------
+
+After the checkout Ace works out of the box. No build step is required. Simply open 'editor.html' in any browser except Google Chrome. Google Chrome doesn't allow XMLHTTPRequests from files loaded from disc (i.e. with a file:/// URL). To open the Ace in Chrome simply start the bundled mini HTTP server:
+
+    ./static.py
+
+The editor can then be opened at http://localhost:9999/editor.html.
+
+Package Ace
+-----------
+
+To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. To install dryice and all its dependencies simply call:
+
+    npm link .
+
+Afterwards Ace can by build by calling
+
+    ./Makefile.dryice.js
+
+The packaged Ace will be put in the 'build' folder.
+
+Running the Unit Tests
+----------------------
+
+The Ace unit tests run on node.js. Before the first run a couple of node mudules have to be installed. The easiest way to do this is by using the node package manager (npm). In the Ace base directory simply call
+
+    npm link .
+
+To run the tests call:
+
+    node lib/ace/test/all.js
+

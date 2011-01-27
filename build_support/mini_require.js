@@ -35,59 +35,64 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-function require(module, callback) {
+// don't define it in a worker. There we have a different implementation
+if (window.document) {
 
-    if (Array.isArray(module)) {
-        var params = [];
-        module.forEach(function(m) {
-            params.push(require._lookup(m));
-        }, this);
-
-        if (callback) {
-            callback.apply(null, params);
+    window.require = function(module, callback) {
+    
+        if (Array.isArray(module)) {
+            var params = [];
+            module.forEach(function(m) {
+                params.push(require._lookup(m));
+            }, this);
+    
+            if (callback) {
+                callback.apply(null, params);
+            }
+        }
+    
+        if (typeof module === 'string') {
+            payload = require._lookup(module);
+            if (callback) {
+                callback();
+            }
+            return payload;
         }
     }
-
-    if (typeof module === 'string') {
-        payload = require._lookup(module);
-        if (callback) {
-            callback();
+    require.modules = {};
+    require.packaged = true;
+    
+    require._lookup = function(moduleName) {
+        var payload = require.modules[moduleName];
+        var module_name = moduleName;
+        if (payload == null) {
+            console.error('Missing module: ' + moduleName);
+            console.trace();
         }
+    
+        if (typeof payload === 'function') {
+            var exports = {};
+            var module = {
+                 id: moduleName,
+                 uri: ''
+            };
+            payload(require, exports, module);
+            payload = exports;
+            // cache the resulting module object for next time
+            require.modules[module_name] = payload;
+        }
+    
         return payload;
+    };
+    
+    window.define = function(module, payload) {
+        if (typeof module !== 'string') {
+            console.error('dropping module because define wasn\'t munged.');
+            console.trace();
+            return;
+        }
+    
+        // console.log('defining module: ' + module + ' as a ' + typeof payload);
+        require.modules[module] = payload;
     }
-}
-require.modules = {};
-
-require._lookup = function(moduleName) {
-    var payload = require.modules[moduleName];
-    var module_name = moduleName;
-    if (payload == null) {
-        console.error('Missing module: ' + moduleName);
-        console.trace();
-    }
-
-    if (typeof payload === 'function') {
-        var exports = {};
-        var module = {
-             id: moduleName,
-             uri: ''
-        };
-        payload(require, exports, module);
-        payload = exports;
-        // cache the resulting module object for next time
-        require.modules[module_name] = payload;
-    }
-
-    return payload;
-};
-
-function define(module, payload) {
-    if (typeof module !== 'string') {
-        console.error('dropping module because define wasn\'t munged.');
-        console.trace();
-        return;
-    }
-
-    // console.log('defining module: ' + module + ' as a ' + typeof payload);
-    require.modules[module] = payload;
 }
