@@ -38,13 +38,13 @@
 // don't define it in a worker.
 if (window.document) {
     
-    var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-                 "pilot/environment" ];
+    require("pilot/fixoldbrowsers");
+    require("pilot/settings");
     
-    require(deps, function() {
-        var catalog = require("pilot/plugin_manager").catalog;
-        catalog.registerPlugins([ "pilot/index" ]);
-    });
+    var catalog = require("pilot/plugin_manager").catalog;
+    var Event = require("pilot/event");
+    
+    catalog.registerPlugins([ "pilot/index" ]);
     
     var ace = {
         edit: function(el) {
@@ -52,7 +52,6 @@ if (window.document) {
                 el = document.getElementById(el);
             }
             var env = require("pilot/environment").create();
-            var catalog = require("pilot/plugin_manager").catalog;
             catalog.startupPlugins({ env: env }).then(function() {
                 var EditSession = require("ace/edit_session").EditSession;
                 var JavaScriptMode = require("ace/mode/javascript").Mode;
@@ -69,11 +68,11 @@ if (window.document) {
                 env.editor = new Editor(new Renderer(el, theme));
                 env.editor.setSession(doc);
                 env.editor.resize();
-                window.addEventListener("resize", function() {
+                Event.addListener(window, "resize", function() {
                     env.editor.resize();
-                }, false);
+                });
                 el.env = env;
-            });
+            });            
         }
     };
 }
