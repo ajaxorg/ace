@@ -91,7 +91,7 @@ copy({
         {
             root: aceHome + '/lib',
             include: /.*\.js$/,
-            exclude: /tests?\/|theme\/|mode\/|ace\/worker\/host\.js/
+            exclude: /tests?\/|theme\/|mode\/|ace\/worker\/worker\.js/
         },
         { base: aceHome + '/lib/', path: 'ace/theme/textmate.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/text.js' },
@@ -148,11 +148,11 @@ copy({
 
 // Create worker bootstrap code
 copy({
-    source: "lib/ace/worker/host.js",
+    source: "lib/ace/worker/worker.js",
     filter: [function(data) {
         return data + "\nimportScripts('ace-uncompressed.js')";
     }],
-    dest: 'build/host.js'
+    dest: 'build/worker.js'
 });
 
 
