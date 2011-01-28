@@ -35,8 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment" ];
+var deps = [ "pilot/plugin_manager", "pilot/environment" ];
 
 require(deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;

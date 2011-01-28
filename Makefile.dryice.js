@@ -55,9 +55,7 @@ copy({
         copy.source.commonjs({
             project: project,
             require: [
-                'pilot/fixoldbrowsers',
                 'pilot/plugin_manager',
-                'pilot/settings',
                 'pilot/environment',
                 'pilot/index',
                 'startup',
@@ -244,7 +242,7 @@ copy({
 // Create the compressed and uncompressed output files
 copy({
     source: data,
-    //filter: copy.filter.uglifyjs,
+    filter: copy.filter.uglifyjs,
     dest: 'build/old-ace.js'
 });
 copy({

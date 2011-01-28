@@ -47,8 +47,6 @@ function define(module, payload) {
         return;
     }
 
-    console.log('defining module: ' + module + ' as a ' + typeof payload);
-
     if (!define.modules) {
         define.modules = {};
     }
@@ -58,7 +56,7 @@ function define(module, payload) {
 /**
  * Get at functionality define()ed using the function above
  */
-define.require = function(module, callback) {
+function require(module, callback) {
     if (Array.isArray(module)) {
         var params = [];
         module.forEach(function(m) {
@@ -71,13 +69,13 @@ define.require = function(module, callback) {
     }
 
     if (typeof module === 'string') {
-        payload = define.lookup(module);
+        var payload = define.lookup(module);
         if (callback) {
             callback();
         }
         return payload;
     }
-};
+}
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
@@ -90,9 +88,9 @@ define.lookup = function(moduleName) {
         return null;
     }
 
-    if (typeof payload === 'function') {
+    if (typeof module === 'function') {
         var exports = {};
-        payload(define.require, exports, { id: moduleName, uri: '' });
+        module(require, exports, { id: moduleName, uri: '' });
         // cache the resulting module object for next time
         define.modules[moduleName] = exports;
         return exports;
