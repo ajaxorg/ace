@@ -1,4 +1,5 @@
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -20,6 +21,7 @@
  *
  * Contributor(s):
  *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -36,14 +38,12 @@
  * ***** END LICENSE BLOCK ***** */
 
 var config = {
-    baseUrl: "../../packages/",
-    packages: [
-        { name: "ace", lib: "lib/ace" },
-        { name: "cockpit", lib: "lib/cockpit" },
-        { name: "pilot", lib: "lib/pilot" },
-        { name: "demo", location: "ace/demo", lib: "." },
-        { name: "require", location: "requirejs/require", lib: "." }
-    ]
+    paths: {
+        demo: "../demo",
+        ace: "../lib/ace",
+        cockpit: "../support/cockpit/lib/cockpit",
+        pilot: "../support/pilot/lib/pilot",
+    }
 };
 
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
