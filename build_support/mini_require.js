@@ -35,12 +35,34 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-function require(module, callback) {
+/**
+ * Define a module along with a payload
+ * @param module a name for the payload
+ * @param payload a function to call with (require, exports, module) params
+ */
+function define(module, payload) {
+    if (typeof module !== 'string') {
+        console.error('dropping module because define wasn\'t a string.');
+        console.trace();
+        return;
+    }
 
+    console.log('defining module: ' + module + ' as a ' + typeof payload);
+
+    if (!define.modules) {
+        define.modules = {};
+    }
+    define.modules[module] = payload;
+}
+
+/**
+ * Get at functionality define()ed using the function above
+ */
+define.require = function(module, callback) {
     if (Array.isArray(module)) {
         var params = [];
         module.forEach(function(m) {
-            params.push(require._lookup(m));
+            params.push(define.lookup(m));
         }, this);
 
         if (callback) {
@@ -49,44 +71,32 @@ function require(module, callback) {
     }
 
     if (typeof module === 'string') {
-        payload = require._lookup(module);
+        payload = define.lookup(module);
         if (callback) {
             callback();
         }
         return payload;
     }
-}
-require.modules = {};
+};
 
-require._lookup = function(moduleName) {
-    var payload = require.modules[moduleName];
-    if (payload == null) {
+/**
+ * Internal function to lookup moduleNames and resolve them by calling the
+ * definition function if needed.
+ */
+define.lookup = function(moduleName) {
+    var module = define.modules[moduleName];
+    if (module == null) {
         console.error('Missing module: ' + moduleName);
-        console.trace();
+        return null;
     }
 
     if (typeof payload === 'function') {
         var exports = {};
-        var module = {
-             id: moduleName,
-             uri: ''
-        };
-        payload(require, exports, module);
-        payload = exports;
+        payload(define.require, exports, { id: moduleName, uri: '' });
         // cache the resulting module object for next time
-        require.modules[moduleName] = payload;
+        define.modules[moduleName] = exports;
+        return exports;
     }
 
-    return payload;
+    return module;
 };
-
-function define(module, payload) {
-    if (typeof module !== 'string') {
-        console.error('dropping module because define wasn\'t munged.');
-        console.trace();
-        return;
-    }
-
-    // console.log('defining module: ' + module + ' as a ' + typeof payload);
-    require.modules[module] = payload;
-}
