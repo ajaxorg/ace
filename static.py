@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 """static - A stupidly simple WSGI way to serve static (or mixed) content.
 
 (See the docstrings of the various functions and classes.)

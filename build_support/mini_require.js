@@ -11,15 +11,15 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Mozilla Skywriter.
+ * The Original Code is Ajax.org Code Editor (ACE).
  *
  * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,39 +35,58 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment" ];
+function require(module, callback) {
 
-require(deps, function() {
-    var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins([ "pilot/index" ]);
-});
+    if (Array.isArray(module)) {
+        var params = [];
+        module.forEach(function(m) {
+            params.push(require._lookup(m));
+        }, this);
 
-var ace = {
-    edit: function(el) {
-        if (typeof(el) == "string") {
-            el = document.getElementById(el);
+        if (callback) {
+            callback.apply(null, params);
         }
-        var env = require("pilot/environment").create();
-        var catalog = require("pilot/plugin_manager").catalog;
-        catalog.startupPlugins({ env: env }).then(function() {
-            var Document = require("ace/document").Document;
-            var JavaScriptMode = require("ace/mode/javascript").Mode;
-            var UndoManager = require("ace/undomanager").UndoManager;
-            var Editor = require("ace/editor").Editor;
-            var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-            var theme = require("ace/theme/textmate");
-
-            var doc = new Document(el.innerHTML);
-            el.innerHTML = '';
-            doc.setMode(new JavaScriptMode());
-            doc.setUndoManager(new UndoManager());
-            env.editor = new Editor(new Renderer(el, theme));
-            env.editor.setDocument(doc);
-            env.editor.resize();
-            window.addEventListener("resize", function() {
-                env.editor.resize();
-            }, false);
-        });
     }
+
+    if (typeof module === 'string') {
+        payload = require._lookup(module);
+        if (callback) {
+            callback();
+        }
+        return payload;
+    }
+}
+require.modules = {};
+
+require._lookup = function(moduleName) {
+    var payload = require.modules[moduleName];
+    if (payload == null) {
+        console.error('Missing module: ' + moduleName);
+        console.trace();
+    }
+
+    if (typeof payload === 'function') {
+        var exports = {};
+        var module = {
+             id: moduleName,
+             uri: ''
+        };
+        payload(require, exports, module);
+        payload = exports;
+        // cache the resulting module object for next time
+        require.modules[moduleName] = payload;
+    }
+
+    return payload;
 };
+
+function define(module, payload) {
+    if (typeof module !== 'string') {
+        console.error('dropping module because define wasn\'t munged.');
+        console.trace();
+        return;
+    }
+
+    // console.log('defining module: ' + module + ' as a ' + typeof payload);
+    require.modules[module] = payload;
+}

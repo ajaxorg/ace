@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -14,7 +15,7 @@
  * The Original Code is Ajax.org Code Editor (ACE).
  *
  * The Initial Developer of the Original Code is
- * Ajax.org Services B.V.
+ * Ajax.org B.V.
  * Portions created by the Initial Developer are Copyright (C) 2010
  * the Initial Developer. All Rights Reserved.
  *
@@ -40,7 +41,7 @@ var copy = require('dryice').copy;
 var aceHome = __dirname;
 
 var project = copy.createCommonJsProject([
-    aceHome + '/support/cockpit/support/pilot/lib',
+    aceHome + '/support/pilot/lib',
     aceHome + '/support/cockpit/lib',
     aceHome + '/lib',
     aceHome + '/demo'
@@ -103,7 +104,7 @@ console.log('---------');
 var pilot = copy.createDataObject();
 copy({
     source: {
-        root: aceHome + '/support/cockpit/support/pilot/lib',
+        root: aceHome + '/support/pilot/lib',
         include: /.*\.js$/,
         exclude: /tests?\//
     },
@@ -177,19 +178,26 @@ copy({
 var data = copy.createDataObject();
 copy({
     source: [
-        'demo/mini_require.js',
+        'build_support/mini_require.js',
         pilot,
         // cockpit,
         ace,
-        'demo/build_boot.js'
+        'build_support/boot.js'
     ],
     dest: data
+});
+
+copy({
+    source: [
+        'build_support/editor.html'
+    ],
+    dest: 'build/editor.html'
 });
 
 // Create the compressed and uncompressed output files
 copy({
     source: data,
-    filter: copy.filter.uglifyjs,
+    //filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
 copy({

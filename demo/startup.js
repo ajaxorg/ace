@@ -44,8 +44,8 @@ exports.launch = function(env) {
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var Document = require("ace/document").Document;
+    var theme = require("ace/theme/textmate");    
+    var EditSession = require("ace/edit_session").EditSession;
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
     var HtmlMode = require("ace/mode/html").Mode;
@@ -55,37 +55,73 @@ exports.launch = function(env) {
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
+    var vim = require("ace/keyboard/keybinding/vim").Vim;
+    var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+
     var docs = {};
 
-    docs.js = new Document(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new Document(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.html = new Document(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new Document(document.getElementById("pythontext").innerHTML);
+    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new Document(document.getElementById("phptext").innerHTML);
+    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    var docEl = document.getElementById("doc");
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
+    
+    var modes = {
+        text: new TextMode(),
+        xml: new XmlMode(),
+        html: new HtmlMode(),
+        css: new CssMode(),
+        javascript: new JavaScriptMode(),
+        python: new PythonMode(),
+        php: new PhpMode()
+    };
 
+    function getMode() {
+        return modes[modeEl.value];
+    }
+
+
+    var modeEl = document.getElementById("mode");
+    function setMode() {
+        env.editor.getSession().setMode(modes[modeEl.value] || modes.text);
+    }
+    modeEl.onchange = setMode;
+    setMode();
+
+    // This is how you can set a custom keyboardHandler.
+    //
+    // Define some basic keymapping using a hash:
+    // env.editor.setKeyboardHandler(new HashHandler({
+    //     "gotoright": "Tab"
+    // }));
+    //
+    // Use a more complex keymapping:
+    // env.editor.setKeyboardHandler(vim);
+
+    var docEl = document.getElementById("doc");
     function onDocChange() {
-        var doc = getDoc();
-        env.editor.setDocument(doc);
-
+        var doc = docs[docEl.value];
+        env.editor.setSession(doc);
+    
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript";
@@ -108,55 +144,50 @@ exports.launch = function(env) {
         else {
             modeEl.value = "text";
         }
-
+    
         env.editor.focus();
     }
     docEl.onchange = onDocChange;
+    onDocChange();
 
-    function getDoc() {
-        return docs[docEl.value];
-    }
-
-    var modeEl = document.getElementById("mode");
-    modeEl.onchange = function() {
-        env.editor.getDocument().setMode(modes[modeEl.value] || modes.text);
-    };
-
-    var modes = {
-        text: new TextMode(),
-        xml: new XmlMode(),
-        html: new HtmlMode(),
-        css: new CssMode(),
-        javascript: new JavaScriptMode(),
-        python: new PythonMode(),
-        php: new PhpMode()
-    };
-
-    function getMode() {
-        return modes[modeEl.value];
-    }
 
     var themeEl = document.getElementById("theme");
-    themeEl.onchange = function() {
+    function setTheme() {
         env.editor.setTheme(themeEl.value);
     };
+    themeEl.onchange = setTheme;
+    setTheme();
+
 
     var selectEl = document.getElementById("select_style");
-    selectEl.onchange = function() {
+    function setSelectionStyle() {
         if (selectEl.checked) {
             env.editor.setSelectionStyle("line");
         } else {
             env.editor.setSelectionStyle("text");
         }
     };
+    selectEl.onclick = setSelectionStyle;
+    setSelectionStyle();
+
 
     var activeEl = document.getElementById("highlight_active");
-    activeEl.onchange = function() {
+    function setHighlightActiveLine() {
         env.editor.setHighlightActiveLine(!!activeEl.checked);
     };
+    activeEl.onclick = setHighlightActiveLine;
+    setHighlightActiveLine();
 
-    onDocChange();
 
+    var showHiddenEl = document.getElementById("show_hidden");
+    function setShowInvisibles() {
+        env.editor.setShowInvisibles(!!showHiddenEl.checked);
+    };
+    showHiddenEl.onclick = setShowInvisibles;
+    setShowInvisibles();
+
+
+    // for debugging
     window.jump = function() {
         var jump = document.getElementById("jump");
         var cursor = env.editor.getCursorPosition();
@@ -209,7 +240,7 @@ exports.launch = function(env) {
                 env.editor.onTextInput(reader.result);
 
                 modeEl.value = mode;
-                env.editor.getDocument().setMode(modes[mode]);
+                env.editor.getSession().setMode(modes[mode]);
             };
             reader.readAsText(file);
         }
