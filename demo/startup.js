@@ -59,6 +59,17 @@ exports.launch = function(env) {
     var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
     var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
+    var keybindings = {
+      // Null = use "default" keymapping
+      ace: null,
+      vim: vim,
+      emacs: emacs,
+      // This is a way to define simple keyboard remappings
+      custom: new HashHandler({
+          "gotoright": "Tab"
+      })
+    }
+
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
@@ -112,16 +123,6 @@ exports.launch = function(env) {
     var modeEl = document.getElementById("mode");
     var wrapModeEl = document.getElementById("soft_wrap");
 
-    // This is how you can set a custom keyboardHandler.
-    //
-    // Define some basic keymapping using a hash:
-    // env.editor.setKeyboardHandler(new HashHandler({
-    //     "gotoright": "Tab"
-    // }));
-    //
-    // Use a more complex keymapping:
-    // env.editor.setKeyboardHandler(vim);
-
     bindDropdown("doc", function(value) {
         var doc = docs[value];
         env.editor.setSession(doc);
@@ -148,7 +149,7 @@ exports.launch = function(env) {
         else {
             modeEl.value = "text";
         }
-        
+
         wrapModeEl.checked = doc.getUseWrapMode() ? "checked" : "";
         env.editor.focus();
     });
@@ -161,30 +162,34 @@ exports.launch = function(env) {
         env.editor.setTheme(value);
     });
 
+    bindDropdown("keybinding", function(value) {
+      env.editor.setKeyboardHandler(keybindings[value]);
+    });
+
     bindCheckbox("select_style", function(checked) {
         env.editor.setSelectionStyle(checked ? "line" : "text");
     });
-    
+
     bindCheckbox("highlight_active", function(checked) {
         env.editor.setHighlightActiveLine(checked);
     });
-    
+
     bindCheckbox("show_hidden", function(checked) {
         env.editor.setShowInvisibles(checked);
     });
-    
+
     bindCheckbox("show_gutter", function(checked) {
         env.editor.renderer.setShowGutter(checked);
     });
-    
+
     bindCheckbox("show_print_margin", function(checked) {
         env.editor.renderer.setShowPrintMargin(checked);
     });
-    
+
     bindCheckbox("soft_wrap", function(checked) {
         env.editor.getSession().setUseWrapMode(checked);
     });
-    
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
@@ -193,7 +198,7 @@ exports.launch = function(env) {
         el.onclick = onCheck;
         onCheck();
     }
-    
+
     function bindDropdown(id, callback) {
         var el = document.getElementById(id);
         var onChange = function() {
