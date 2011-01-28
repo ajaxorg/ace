@@ -150,7 +150,11 @@ exports.launch = function(env) {
             modeEl.value = "text";
         }
 
-        wrapModeEl.checked = doc.getUseWrapMode() ? "checked" : "";
+        if (!doc.getUseWrapMode()) {
+            wrapModeEl.value = "off";
+        } else {
+            wrapModeEl.value = doc.getWrapLimit();
+        }
         env.editor.focus();
     });
 
@@ -163,11 +167,32 @@ exports.launch = function(env) {
     });
 
     bindDropdown("keybinding", function(value) {
-      env.editor.setKeyboardHandler(keybindings[value]);
+        env.editor.setKeyboardHandler(keybindings[value]);
     });
 
     bindDropdown("fontsize", function(value) {
-      document.getElementById("editor").style["font-size"] = value;
+        document.getElementById("editor").style["font-size"] = value;
+    });
+
+    bindDropdown("soft_wrap", function(value) {
+        var session = env.editor.getSession();
+        var renderer = env.editor.renderer;
+        switch (value) {
+            case "off":
+                session.setUseWrapMode(false);
+                renderer.setPrintMarginColumn(80);
+                break;
+            case "40":
+                session.setUseWrapMode(true);
+                session.setWrapLimit(40);
+                renderer.setPrintMarginColumn(40);
+                break;
+            case "80":
+                session.setUseWrapMode(true);
+                session.setWrapLimit(80);
+                renderer.setPrintMarginColumn(80);
+                break;
+        }
     });
 
     bindCheckbox("select_style", function(checked) {
@@ -188,10 +213,6 @@ exports.launch = function(env) {
 
     bindCheckbox("show_print_margin", function(checked) {
         env.editor.renderer.setShowPrintMargin(checked);
-    });
-
-    bindCheckbox("soft_wrap", function(checked) {
-        env.editor.getSession().setUseWrapMode(checked);
     });
 
     function bindCheckbox(id, callback) {
