@@ -166,6 +166,10 @@ exports.launch = function(env) {
       env.editor.setKeyboardHandler(keybindings[value]);
     });
 
+    bindDropdown("fontsize", function(value) {
+      document.getElementById("editor").style["font-size"] = value;
+    });
+
     bindCheckbox("select_style", function(checked) {
         env.editor.setSelectionStyle(checked ? "line" : "text");
     });

@@ -11,7 +11,7 @@
 <body>
     <table id="controls">
       <tr>
-        <td rowspan="2">
+      <td align="right">
         <label for="doc">Document:</label>
         <select id="doc" size="1">
           <option value="js">JS Document</option>
@@ -20,18 +20,6 @@
           <option value="python">Python Document</option>
           <option value="php">PHP Document</option>
           <option value="plain">Text Document</option>
-        </select>
-      </td>
-      <td rowspan="2">
-        <label for="mode">Mode:</label>
-        <select id="mode" size="1">
-          <option value="text">Plain Text</option>
-          <option value="javascript">JavaScript</option>
-          <option value="xml">XML</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="python">Python</option>
-          <option value="php">PHP</option>
         </select>
       </td>
       <td align="right">
@@ -43,6 +31,18 @@
           <option value="ace/theme/idle_fingers">idleFingers</option>
           <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
           <option value="ace/theme/twilight">Twilight</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="fontsize">Font Size:</label>
+        <select id="fontsize" size="1">
+          <option value="10px">10px</option>
+          <option value="11px">11px</option>
+          <option value="12px" selected="selected">12px</option>
+          <option value="14px">14px</option>
+          <option value="16px">16px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
         </select>
       </td>
       <td align="right">
@@ -62,6 +62,19 @@
       </td>
       </tr>
       <tr>
+      <td align="right">
+        <label for="mode">Mode:</label>
+        <select id="mode" size="1">
+          <option value="text">Plain Text</option>
+          <option value="javascript">JavaScript</option>
+          <option value="xml">XML</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="python">Python</option>
+          <option value="php">PHP</option>
+        </select>
+      </td>
+
       <td align="right">
         <label for="keybinding">Key Binding:</label>
         <select id="keybinding" size="1">
