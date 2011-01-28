@@ -253,16 +253,6 @@ exports.launch = function(env) {
 
         return event.preventDefault(e);
     });
-	
-	// gutter
-	editor = env.editor
-	toggleGutter=function(){
-		editor.renderer.setShowGutter(!editor.renderer.showGutter)
-	}
-	//
-	window.ace={
-		editor: editor		
-	}
 };
 
 });
