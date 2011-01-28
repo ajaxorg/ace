@@ -283,6 +283,8 @@ exports.launch = function(env) {
 
         return event.preventDefault(e);
     });
+
+    window.env = env;
 };
 
 });
