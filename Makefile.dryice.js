@@ -36,21 +36,22 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+require("long-stack-traces");
 var copy = require('dryice').copy;
 
 var aceHome = __dirname;
 
+console.log('# ace ---------');
+
 var project = copy.createCommonJsProject([
     aceHome + '/support/pilot/lib',
-    aceHome + '/support/cockpit/lib',
     aceHome + '/lib',
     aceHome + '/demo'
 ]);
 
-var data = copy.createDataObject();
+var ace = copy.createDataObject();
 copy({
     source: [
-        'demo/mini_require.js',
         copy.source.commonjs({
             project: project,
             require: [
@@ -59,14 +60,14 @@ copy({
                 'pilot/settings',
                 'pilot/environment',
                 'pilot/index',
-                'cockpit/index',
-                'demo_startup',
+                'startup',
             ]
         }),
-        'demo/build_boot.js'
+        'build_support/mini_require.js',
+        'build_support/boot.js'
     ],
     filter: [ copy.filter.debug, copy.filter.moduleDefines ],
-    dest: data
+    dest: ace
 });
 copy({
     source: {
@@ -75,7 +76,7 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.addDefines ],
-    dest: data
+    dest: ace
 });
 copy({
     source: {
@@ -84,24 +85,70 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.base64 ],
-    dest: data
+    dest: ace
 });
 
 // Create the compressed and uncompressed output files
 copy({
-    source: data,
+    source: ace,
     filter: copy.filter.uglifyjs,
-    dest: 'build/ace2.js'
+    dest: 'build/ace.js'
 });
 copy({
-    source: data,
-    dest: 'build/ace2-uncompressed.js'
+    source: ace,
+    dest: 'build/ace-uncompressed.js'
 });
 
-console.log('---------');
+console.log('# cockpit ---------');
+
+project.assmeAllFilesLoaded();
+project.addRoot(aceHome + '/support/cockpit/lib');
+
+var cockpit = copy.createDataObject();
+copy({
+    source: [
+        copy.source.commonjs({
+            project: project,
+            require: [ 'cockpit/index' ]
+        }),
+    ],
+    filter: [ copy.filter.debug, copy.filter.moduleDefines ],
+    dest: cockpit
+});
+copy({
+    source: {
+        root: aceHome + '/support/cockpit/lib',
+        include: /.*\.css$|.*\.html$/,
+        exclude: /tests?\//
+    },
+    filter: [ copy.filter.addDefines ],
+    dest: cockpit
+});
+copy({
+    source: {
+        root: aceHome + '/support/cockpit/lib',
+        include: /.*\.png$|.*\.gif$/,
+        exclude: /tests?\//
+    },
+    filter: [ copy.filter.base64 ],
+    dest: cockpit
+});
+
+// Create the compressed and uncompressed output files
+copy({
+    source: cockpit,
+    filter: copy.filter.uglifyjs,
+    dest: 'build/cockpit.js'
+});
+copy({
+    source: cockpit,
+    dest: 'build/cockpit-uncompressed.js'
+});
+
+console.log('# conventional ---------');
 
 // Pilot sources
-var pilot = copy.createDataObject();
+var pilotData = copy.createDataObject();
 copy({
     source: {
         root: aceHome + '/support/pilot/lib',
@@ -109,11 +156,11 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.debug, copy.filter.moduleDefines ],
-    dest: pilot
+    dest: pilotData
 });
 
 // Cockpit sources
-var cockpit = copy.createDataObject();
+var cockpitData = copy.createDataObject();
 copy({
     source: {
         root: aceHome + '/support/cockpit/lib',
@@ -121,7 +168,7 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.moduleDefines ],
-    dest: cockpit
+    dest: cockpitData
 });
 copy({
     source: {
@@ -130,7 +177,7 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.addDefines ],
-    dest: cockpit
+    dest: cockpitData
 });
 copy({
     source: {
@@ -139,11 +186,11 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.base64 ],
-    dest: cockpit
+    dest: cockpitData
 });
 
 // Ace sources
-var ace = copy.createDataObject();
+var aceData = copy.createDataObject();
 copy({
     source: [
         // Exclude all themes/modes so we can just include textmate/js
@@ -162,7 +209,7 @@ copy({
         { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' }
     ],
     filter: [ copy.filter.moduleDefines ],
-    dest: ace
+    dest: aceData
 });
 copy({
     source: {
@@ -171,7 +218,7 @@ copy({
         exclude: /tests?\//
     },
     filter: [ copy.filter.addDefines ],
-    dest: ace
+    dest: aceData
 });
 
 // Piece together the parts that we want
@@ -179,9 +226,9 @@ var data = copy.createDataObject();
 copy({
     source: [
         'build_support/mini_require.js',
-        pilot,
-        // cockpit,
-        ace,
+        pilotData,
+        // cockpitData,
+        aceData,
         'build_support/boot.js'
     ],
     dest: data
@@ -198,9 +245,9 @@ copy({
 copy({
     source: data,
     //filter: copy.filter.uglifyjs,
-    dest: 'build/ace.js'
+    dest: 'build/old-ace.js'
 });
 copy({
     source: data,
-    dest: 'build/ace-uncompressed.js'
+    dest: 'build/old-ace-uncompressed.js'
 });
