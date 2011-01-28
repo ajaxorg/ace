@@ -42,6 +42,7 @@ if (window.document) {
     require("pilot/settings");
     
     var Event = require("pilot/event");
+    var Dom = require("pilot/dom");
     var EditSession = require("ace/edit_session").EditSession;
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
@@ -59,7 +60,7 @@ if (window.document) {
                 el = document.getElementById(el);
             }
             
-            var doc = new EditSession(el.innerHTML);
+            var doc = new EditSession(Dom.getInnerText(el));
             doc.setMode(new JavaScriptMode());
             doc.setUndoManager(new UndoManager());
             el.innerHTML = '';

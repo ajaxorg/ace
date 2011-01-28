@@ -134,10 +134,10 @@ copy({
     //filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
-copy({
-    source: data,
-    dest: 'build/ace-uncompressed.js'
-});
+//copy({
+//    source: data,
+//    dest: 'build/ace-uncompressed.js'
+//});
 
 copy({
     source: [
@@ -151,7 +151,7 @@ copy({
 copy({
     source: "lib/ace/worker/worker.js",
     filter: [function(data) {
-        return data + "\nimportScripts('ace-uncompressed.js')";
+        return data + "\nimportScripts('ace.js')";
     }],
     dest: 'build/worker.js'
 });
