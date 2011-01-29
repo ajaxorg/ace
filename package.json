@@ -13,7 +13,11 @@
     "overlay": {
         "teleport": {
             "directories": {
-                "lib": "lib/ace"
+                "lib": "lib/ace",
+                "dependencies": {
+                    "cockpit": ">=0.1.0",
+                    "pilot": ">=0.1.0"
+                }
             }
         }
     },
@@ -21,7 +25,6 @@
         "pilot": ">=0.1.0",
         "cockpit": ">=0.1.0",
         "teleport": ">=0.2.6",
-        "requirejs": ">=0.22.0",
         "asyncjs": ">=0.0.2",
         "jsdom": ">=0.1.23",
         "htmlparser": ">=1.7.2",
