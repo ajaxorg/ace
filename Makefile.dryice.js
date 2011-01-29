@@ -91,7 +91,7 @@ copy({
         {
             root: aceHome + '/lib',
             include: /.*\.js$/,
-            exclude: /tests?\/|theme\/|mode\/|ace\/worker\/host\.js/
+            exclude: /tests?\/|theme\/|mode\/|ace\/worker\/worker\.js/
         },
         { base: aceHome + '/lib/', path: 'ace/theme/textmate.js' },
         { base: aceHome + '/lib/', path: 'ace/mode/text.js' },
@@ -128,6 +128,17 @@ copy({
     dest: data
 });
 
+// Create the compressed and uncompressed output files
+copy({
+    source: data,
+    //filter: copy.filter.uglifyjs,
+    dest: 'build/ace.js'
+});
+//copy({
+//    source: data,
+//    dest: 'build/ace-uncompressed.js'
+//});
+
 copy({
     source: [
         'build_support/editor.html'
@@ -135,27 +146,51 @@ copy({
     dest: 'build/editor.html'
 });
 
-// Create the compressed and uncompressed output files
-copy({
-    source: data,
-    //filter: copy.filter.uglifyjs,
-    dest: 'build/ace.js'
-});
-copy({
-    source: data,
-    dest: 'build/ace-uncompressed.js'
-});
 
 // Create worker bootstrap code
 copy({
-    source: "lib/ace/worker/host.js",
+    source: "lib/ace/worker/worker.js",
     filter: [function(data) {
-        return data + "\nimportScripts('ace-uncompressed.js')";
+        return data + "\nimportScripts('ace.js')";
     }],
-    dest: 'build/host.js'
+    dest: 'build/worker.js'
 });
 
+var eclipseTheme = copy.createDataObject();
+copy({
+    source: [{
+        root: aceHome + '/lib',
+        include: "ace/theme/eclipse.js"
+    }],
+    filter: [ copy.filter.moduleDefines ],
+    dest: eclipseTheme
+});
+copy({
+    source: [{
+        root: aceHome + '/lib',
+        include: "ace/theme/eclipse.css"
+    }],
+    filter: [ copy.filter.addDefines ],
+    dest: eclipseTheme
+});
+copy({
+    source: eclipseTheme,
+    dest: 'build/theme/eclipse.js'
+});
 
+[
+    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme", 
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight"
+].forEach(function(theme) {
+    copy({
+        source: [{
+            root: aceHome + '/lib',
+            include: "ace/theme/" + theme + ".js"
+        }],
+        filter: [ copy.filter.moduleDefines ],
+        dest: "build/theme/" + theme + ".js"
+    });
+});
 
 function internalRequire(ignore) {
 var exports = {};
