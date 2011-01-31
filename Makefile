@@ -5,7 +5,7 @@ build:
 clean:
 	rm -rf build
 	rm -rf ace-*
-	rm ace-*.tgz
+	rm -f ace-*.tgz
 
 ace.tgz: build
 	mv build ace-`./version.js`
