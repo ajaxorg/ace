@@ -345,7 +345,7 @@ if (!Array.prototype.reduceRight) {
 if (!Object.keys) {
     Object.keys = function keys(object) {
         var name, names = [];
-        for (key in object)
+        for (name in object)
             if (owns(object, name)) names.push(name);
 
         return names;
