@@ -47,9 +47,9 @@ function define(module, payload) {
         return;
     }
 
-    if (!define.modules) {
+    if (!define.modules)
         define.modules = {};
-    }
+        
     define.modules[module] = payload;
 }
 
@@ -57,12 +57,11 @@ function define(module, payload) {
  * Get at functionality define()ed using the function above
  */
 function require(module, callback) {
-    if (Array.isArray(module)) {
+    if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
-        module.forEach(function(m) {
-            params.push(define.lookup(m));
-        }, this);
-
+        for (var i = 0, l = module.length; i < l; ++i) {
+            params.push(require._lookup(module[i]));
+        };
         if (callback) {
             callback.apply(null, params);
         }
