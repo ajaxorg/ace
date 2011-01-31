@@ -35,51 +35,43 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// don't define it in a worker. There we have a different implementation
-if (window.document) {
+/**
+ * Define a module along with a payload
+ * @param module a name for the payload
+ * @param payload a function to call with (require, exports, module) params
+ */
+function define(module, payload) {
+    if (typeof module !== 'string') {
+        console.error('dropping module because define wasn\'t a string.');
+        console.trace();
+        return;
+    }
 
-    window.require = function(module, callback) {
-    
-        if (Array.isArray(module)) {
-            var params = [];
-            module.forEach(function(m) {
-                params.push(require._lookup(m));
-            }, this);
-    
-            if (callback) {
-                callback.apply(null, params);
-            }
-        }
-    
-        if (typeof module === 'string') {
-            payload = require._lookup(module);
-            if (callback) {
-                callback();
-            }
-            return payload;
+    if (!define.modules) {
+        define.modules = {};
+    }
+    define.modules[module] = payload;
+}
+
+/**
+ * Get at functionality define()ed using the function above
+ */
+function require(module, callback) {
+    if (Array.isArray(module)) {
+        var params = [];
+        module.forEach(function(m) {
+            params.push(define.lookup(m));
+        }, this);
+
+        if (callback) {
+            callback.apply(null, params);
         }
     }
-    require.modules = {};
-    require.packaged = true;
-    
-    require._lookup = function(moduleName) {
-        var payload = require.modules[moduleName];
-        var module_name = moduleName;
-        if (payload == null) {
-            console.error('Missing module: ' + moduleName);
-            console.trace();
-        }
-    
-        if (typeof payload === 'function') {
-            var exports = {};
-            var module = {
-                 id: moduleName,
-                 uri: ''
-            };
-            payload(require, exports, module);
-            payload = exports;
-            // cache the resulting module object for next time
-            require.modules[module_name] = payload;
+
+    if (typeof module === 'string') {
+        var payload = define.lookup(module);
+        if (callback) {
+            callback();
         }
     
         return payload;
@@ -96,3 +88,25 @@ if (window.document) {
         require.modules[module] = payload;
     }
 }
+
+/**
+ * Internal function to lookup moduleNames and resolve them by calling the
+ * definition function if needed.
+ */
+define.lookup = function(moduleName) {
+    var module = define.modules[moduleName];
+    if (module == null) {
+        console.error('Missing module: ' + moduleName);
+        return null;
+    }
+
+    if (typeof module === 'function') {
+        var exports = {};
+        module(require, exports, { id: moduleName, uri: '' });
+        // cache the resulting module object for next time
+        define.modules[moduleName] = exports;
+        return exports;
+    }
+
+    return module;
+};

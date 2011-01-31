@@ -35,21 +35,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// don't define it in a worker.
-if (window.document) {
-    
-    require("pilot/fixoldbrowsers");
-    require("pilot/settings");
-    
-    var Event = require("pilot/event");
-    var Dom = require("pilot/dom");
-    var EditSession = require("ace/edit_session").EditSession;
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    var UndoManager = require("ace/undomanager").UndoManager;
-    var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var Theme = require("ace/theme/textmate");
-    
+var deps = [ "pilot/plugin_manager", "pilot/environment" ];
+
+require(deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
     
