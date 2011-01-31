@@ -74,7 +74,7 @@
 }
 
 .ace_editor textarea {
-  position: "absolute";
+  position: absolute;
   z-index: -1;
   opacity: 0;
   width: 10px;
