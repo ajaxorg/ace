@@ -245,11 +245,68 @@ copy({
     });
 });
 
+// copy key bindings
+["vim", "emacs"].forEach(function(keybinding) {
+    project.assmeAllFilesLoaded();
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: project,
+                require: [ 'ace/keyboard/keybinding/' + keybinding ]
+            }),
+        ],
+        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        dest: "build/src/keybinding-" + keybinding + ".js"
+    });
+});
+
+
+// copy text files
 copy({
-    source: "LICENSE",
+    source: aceHome + "/LICENSE",
     dest: 'build/LICENSE'
 });
 copy({
-    source: "Readme.md",
+    source: aceHome + "/Readme.md",
     dest: 'build/Readme.md'
+});
+
+// copy complex demo
+copy({
+    source: aceHome + "/editor.html",
+    filter: [ function(data) {
+        var includes = [
+            "ace", "cockpit",
+            "keybinding-vim", "keybinding-emacs",
+            "mode-javascript", "mode-css", "mode-html", "mode-php", "mode-python",
+            "mode-xml", 
+            "theme-clouds", "theme-clouds_midnight", "theme-cobalt",
+            "theme-dawn", "theme-idle_fingers", "theme-kr_theme", 
+            "theme-mono_industrial", "theme-monokai", "theme-pastel_on_dark",
+            "theme-twilight"
+        ].map(function(module) {
+            return '<script src="src/' + module + '.js" type="text/javascript"></script>';
+        }).join("\n");
+        return (
+            data.replace('<script src="demo/require.js" type="text/javascript" charset="utf-8"></script>', includes)
+                .replace('<script src="demo/boot.js" type="text/javascript"></script>', '<script src="demo/demo.js" type="text/javascript"></script>\n<script>require("demo").launch()</script>')
+        )
+    } ],
+    dest: "build/editor-demo.html"
+});
+copy({    
+    source: [{
+        root: aceHome + '/demo',
+        include: "demo.js"
+    }],
+    filter: [ copy.filter.moduleDefines ],
+    dest: "build/demo/demo.js"
+});
+copy({    
+    source: aceHome + '/demo/styles.css',
+    dest: "build/demo/styles.css"
+});
+copy({    
+    source: aceHome + '/demo/logo.png',
+    dest: "build/demo/logo.png"
 });
