@@ -76,18 +76,9 @@ function require(module, callback) {
     
         return payload;
     };
-    
-    window.define = function(module, payload) {
-        if (typeof module !== 'string') {
-            console.error('dropping module because define wasn\'t munged.');
-            console.trace();
-            return;
-        }
-    
-        // console.log('defining module: ' + module + ' as a ' + typeof payload);
-        require.modules[module] = payload;
-    }
 }
+
+require.packaged = true;
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the

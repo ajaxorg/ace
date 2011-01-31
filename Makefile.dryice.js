@@ -36,7 +36,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-//require("long-stack-traces");
 var copy = require('dryice').copy;
 
 var aceHome = __dirname;
@@ -49,22 +48,32 @@ var project = copy.createCommonJsProject([
     aceHome + '/demo'
 ]);
 
+copy({
+    source: "build_support/editor.html",
+    dest: 'build/editor.html'
+});
+
 var ace = copy.createDataObject();
 copy({
     source: [
         copy.source.commonjs({
             project: project,
             require: [
-                'pilot/plugin_manager',
-                'pilot/environment',
-                'pilot/index',
-                'startup',
+                "pilot/fixoldbrowsers",
+                "pilot/index",
+                "pilot/plugin_manager",
+                "pilot/environment",
+                "ace/editor",
+                "ace/edit_session",
+                "ace/undomanager",
+                "ace/theme/textmate",
+                "ace/mode/text",
+                "ace/mode/matching_brace_outdent",
+                "ace/virtual_renderer"
             ]
-        }),
-        'build_support/mini_require.js',
-        'build_support/boot.js'
+        })
     ],
-    filter: [ copy.filter.debug, copy.filter.moduleDefines ],
+    filter: [ copy.filter.moduleDefines ],
     dest: ace
 });
 copy({
@@ -85,11 +94,19 @@ copy({
     filter: [ copy.filter.base64 ],
     dest: ace
 });
+copy({
+    source: [
+        'build_support/mini_require.js',
+        'build_support/boot.js'    
+    ],
+    dest: ace
+});
+
 
 // Create the compressed and uncompressed output files
 copy({
     source: ace,
-    filter: copy.filter.uglifyjs,
+//    filter: copy.filter.uglifyjs,
     dest: 'build/ace.js'
 });
 copy({
@@ -110,7 +127,7 @@ copy({
             require: [ 'cockpit/index' ]
         }),
     ],
-    filter: [ copy.filter.debug, copy.filter.moduleDefines ],
+    filter: [ copy.filter.moduleDefines ],
     dest: cockpit
 });
 copy({
@@ -143,108 +160,87 @@ copy({
     dest: 'build/cockpit-uncompressed.js'
 });
 
-console.log('# conventional ---------');
 
-// Pilot sources
-var pilotData = copy.createDataObject();
-copy({
-    source: {
-        root: aceHome + '/support/pilot/lib',
-        include: /.*\.js$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.debug, copy.filter.moduleDefines ],
-    dest: pilotData
-});
+// create modes
+project.assmeAllFilesLoaded();
 
-// Cockpit sources
-var cockpitData = copy.createDataObject();
-copy({
-    source: {
-        root: aceHome + '/support/cockpit/lib',
-        include: /.*\.js$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.moduleDefines ],
-    dest: cockpitData
-});
-copy({
-    source: {
-        root: aceHome + '/support/cockpit/lib',
-        include: /.*\.css$|.*\.html$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.addDefines ],
-    dest: cockpitData
-});
-copy({
-    source: {
-        root: aceHome + '/support/cockpit/lib',
-        include: /.*\.png$|.*\.gif$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.base64 ],
-    dest: cockpitData
+["css", "html", "javascript", "php", "python", "xml"].forEach(function(mode) {
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: project,
+                require: [ 'ace/mode/' + mode ]
+            }),
+        ],
+        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        dest: "build/mode/" + mode + ".js"
+    });
 });
 
-// Ace sources
-var aceData = copy.createDataObject();
+// create worker
+console.log('# worker ---------');
+
+var jsWorker = copy.createDataObject();
+var workerProject = copy.createCommonJsProject([
+    aceHome + '/support/pilot/lib',
+    aceHome + '/lib'
+]);
 copy({
     source: [
-        // Exclude all themes/modes so we can just include textmate/js
-        {
-            root: aceHome + '/lib',
-            include: /.*\.js$/,
-            exclude: /tests?\/|theme\/|mode\/|ace\/worker\/worker\.js/
-        },
-        { base: aceHome + '/lib/', path: 'ace/theme/textmate.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/text.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/javascript.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/javascript_worker.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/text_highlight_rules.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/doc_comment_highlight_rules.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/matching_brace_outdent.js' },
-        { base: aceHome + '/lib/', path: 'ace/mode/javascript_highlight_rules.js' }
+        copy.source.commonjs({
+            project: workerProject,
+            require: [
+                'pilot/fixoldbrowsers',
+                'pilot/event_emitter',
+                'pilot/oop',
+                'ace/mode/javascript_worker'
+            ]
+        }),
     ],
-    filter: [ copy.filter.moduleDefines ],
-    dest: aceData
+    filter: [ copy.filter.moduleDefines, /*copy.filter.uglifyjs*/ ],
+    dest: jsWorker
 });
 copy({
-    source: {
+    source: [
+        aceHome + "/lib/ace/worker/worker.js",
+        jsWorker
+    ],
+    dest: "build/worker/javascript.js"
+});
+
+// create themes
+var eclipseTheme = copy.createDataObject();
+copy({
+    source: [{
         root: aceHome + '/lib',
-        include: /tm\.css|editor\.css/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.addDefines ],
-    dest: aceData
+        include: "ace/theme/eclipse.js"
+    }],
+    filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+    dest: eclipseTheme
+});
+copy({
+    source: [{
+        root: aceHome + '/lib',
+        include: "ace/theme/eclipse.css"
+    }],
+    filter: [ copy.filter.addDefines, copy.filter.uglifyjs ],
+    dest: eclipseTheme
+});
+copy({
+    source: eclipseTheme,
+    dest: 'build/theme/eclipse.js'
 });
 
-// Piece together the parts that we want
-var data = copy.createDataObject();
-copy({
-    source: [
-        'build_support/mini_require.js',
-        pilotData,
-        // cockpitData,
-        aceData,
-        'build_support/boot.js'
-    ],
-    dest: data
-});
-
-// Create the compressed and uncompressed output files
-copy({
-    source: data,
-    filter: copy.filter.uglifyjs,
-    dest: 'build/old-ace.js'
-});
-//copy({
-//    source: data,
-//    dest: 'build/ace-uncompressed.js'
-//});
-
-copy({
-    source: data,
-    dest: 'build/old-ace-uncompressed.js'
+[
+    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme", 
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight"
+].forEach(function(theme) {
+    copy({
+        source: [{
+            root: aceHome + '/lib',
+            include: "ace/theme/" + theme + ".js"
+        }],
+        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        dest: "build/theme/" + theme + ".js"
+    });
 });
