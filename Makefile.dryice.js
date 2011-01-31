@@ -106,12 +106,12 @@ copy({
 // Create the compressed and uncompressed output files
 copy({
     source: ace,
-//    filter: copy.filter.uglifyjs,
-    dest: 'build/ace.js'
+    filter: copy.filter.uglifyjs,
+    dest: 'build/src/ace.js'
 });
 copy({
     source: ace,
-    dest: 'build/ace-uncompressed.js'
+    dest: 'build/src/ace-uncompressed.js'
 });
 
 console.log('# cockpit ---------');
@@ -153,11 +153,11 @@ copy({
 copy({
     source: cockpit,
     filter: copy.filter.uglifyjs,
-    dest: 'build/cockpit.js'
+    dest: 'build/src/cockpit.js'
 });
 copy({
     source: cockpit,
-    dest: 'build/cockpit-uncompressed.js'
+    dest: 'build/src/cockpit-uncompressed.js'
 });
 
 
@@ -173,7 +173,7 @@ project.assmeAllFilesLoaded();
             }),
         ],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
-        dest: "build/mode/" + mode + ".js"
+        dest: "build/src/mode-" + mode + ".js"
     });
 });
 
@@ -197,7 +197,7 @@ copy({
             ]
         }),
     ],
-    filter: [ copy.filter.moduleDefines, /*copy.filter.uglifyjs*/ ],
+    filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
     dest: jsWorker
 });
 copy({
@@ -205,7 +205,7 @@ copy({
         aceHome + "/lib/ace/worker/worker.js",
         jsWorker
     ],
-    dest: "build/worker/javascript.js"
+    dest: "build/src/worker-javascript.js"
 });
 
 // create themes
@@ -228,7 +228,7 @@ copy({
 });
 copy({
     source: eclipseTheme,
-    dest: 'build/theme/eclipse.js'
+    dest: 'build/src/theme-eclipse.js'
 });
 
 [
@@ -241,6 +241,15 @@ copy({
             include: "ace/theme/" + theme + ".js"
         }],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
-        dest: "build/theme/" + theme + ".js"
+        dest: "build/src/theme-" + theme + ".js"
     });
+});
+
+copy({
+    source: "LICENSE",
+    dest: 'build/LICENSE'
+});
+copy({
+    source: "Readme.md",
+    dest: 'build/Readme.md'
 });

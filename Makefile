@@ -1,5 +1,5 @@
 build:
-	mkdir -p build/theme
+	mkdir -p build/src
 	./Makefile.dryice.js
 
 clean:
@@ -7,8 +7,7 @@ clean:
 	rm -rf ace
 
 ace.tgz: build
-	mkdir ace
-	cp -r build ace/src
+	mv build ace-`./version.js`
 	cp Readme.md ace
 	cp LICENSE ace
 	tar cvfz ace-`./version.js`.tgz ace

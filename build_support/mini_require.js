@@ -60,7 +60,7 @@ function require(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
-            params.push(require._lookup(module[i]));
+            params.push(define.lookup(module[i]));
         };
         if (callback) {
             callback.apply(null, params);
