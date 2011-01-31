@@ -1,5 +1,4 @@
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -21,7 +20,6 @@
  *
  * Contributor(s):
  *      Kevin Dangoor (kdangoor@mozilla.com)
- *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -42,7 +40,7 @@ var config = {
         demo: "../demo",
         ace: "../lib/ace",
         cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/pilot/lib/pilot",
+        pilot: "../support/pilot/lib/pilot"
     }
 };
 
