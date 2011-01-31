@@ -40,11 +40,11 @@ if (window.document) {
 
     window.require = function(module, callback) {
     
-        if (Array.isArray(module)) {
+        if (module && Object.prototype.toString.call(module) === "[object Array]") {
             var params = [];
-            module.forEach(function(m) {
-                params.push(require._lookup(m));
-            }, this);
+            for (var i = 0, l = module.length; i < l; ++i) {
+                params.push(require._lookup(module[i]));
+            };
     
             if (callback) {
                 callback.apply(null, params);
