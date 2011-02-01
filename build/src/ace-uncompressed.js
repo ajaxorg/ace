@@ -3987,7 +3987,6 @@ var Editor =function(renderer, session) {
     });
 
     this.setSession(session || new EditSession(""));
-    this.focus();
 };
 
 (function(){
@@ -9102,8 +9101,7 @@ var oop = require("pilot/oop");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 var BackgroundTokenizer = function(tokenizer, editor) {
-    this.running = false;
-    this.doc = [];
+    this.running = false;    
     this.lines = [];
     this.currentLine = 0;
     this.tokenizer = tokenizer;
@@ -9195,6 +9193,9 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     };
 
     this.$tokenizeRows = function(firstRow, lastRow) {
+        if (!this.doc)
+            return [];
+            
         var rows = [];
 
         // determine start state
@@ -9953,8 +9954,10 @@ var VirtualRenderer = function(container, theme) {
 
     this.moveTextAreaToCursor = function(textarea) {        
         // in IE the native cursor always shines through
-        if (useragent.isIE)
+        if (useragent.isIE) {
+            console.log("IE")
             return;
+        }
             
         var pos = this.$cursorLayer.getPixelPosition();
         if (!pos)
@@ -11102,7 +11105,7 @@ var Cursor = function(parentEl) {
         clearInterval(this.blinkId);
     };
 
-    this.showCursor = function() {        
+    this.showCursor = function() {
         this.isVisible = true;
         this.element.appendChild(this.cursor);
 
@@ -11427,12 +11430,10 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "" +
   ".ace_editor textarea {" +
   "  position: fixed;" +
-  "  z-index: 0;" +
-  "  /*z-index: -1;" +
+  "  z-index: -1;" +
   "  width: 10px;" +
-  "  height: 30px;*/" +
+  "  height: 30px;" +
   "  opacity: 0;" +
-  "  width: 1px;" +
   "  background: transparent;" +
   "  appearance: none;" +
   "  border: none;" +
