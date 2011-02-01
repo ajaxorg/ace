@@ -10,7 +10,21 @@
         "type" : "git",
          "url" : "http://github.com/ajaxorg/ace.git"
     },
+    "overlay": {
+        "teleport": {
+            "directories": {
+                "lib": "lib/ace",
+                "dependencies": {
+                    "cockpit": ">=0.1.1",
+                    "pilot": ">=0.1.1"
+                }
+            }
+        }
+    },
     "dependencies": {
+        "pilot": ">=0.1.1",
+        "cockpit": ">=0.1.1",
+        "teleport": ">=0.2.6",
         "asyncjs": ">=0.0.2",
         "jsdom": ">=0.1.23",
         "htmlparser": ">=1.7.2",
