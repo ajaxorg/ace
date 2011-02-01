@@ -52,6 +52,7 @@ exports.launch = function(env) {
     var XmlMode = require("ace/mode/xml").Mode;
     var PythonMode = require("ace/mode/python").Mode;
     var PhpMode = require("ace/mode/php").Mode;
+    var RubyMode = require("ace/mode/ruby").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -102,6 +103,10 @@ exports.launch = function(env) {
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
+    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby.setMode(new RubyMode());
+    docs.ruby.setUndoManager(new UndoManager());
+
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
@@ -113,7 +118,8 @@ exports.launch = function(env) {
         css: new CssMode(),
         javascript: new JavaScriptMode(),
         python: new PythonMode(),
-        php: new PhpMode()
+        php: new PhpMode(),
+        ruby: new RubyMode()
     };
 
     function getMode() {
@@ -145,6 +151,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PhpMode) {
             modeEl.value = "php";
+        }
+        else if (mode instanceof RubyMode) {
+            modeEl.value = "ruby";
         }
         else {
             modeEl.value = "text";
@@ -271,6 +280,9 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
+                }
+                } else if (/^.*\.rb$/i.test(file.name)) {
+                    mode = "ruby";
                 }
 
                 env.editor.onTextInput(reader.result);
