@@ -280,7 +280,6 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
-                }
                 } else if (/^.*\.rb$/i.test(file.name)) {
                     mode = "ruby";
                 }
