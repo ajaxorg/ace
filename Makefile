@@ -8,9 +8,9 @@ clean:
 	rm -f ace-*.tgz
 
 ace.tgz: build
-	mv build ace-`./version.js`
-	cp Readme.md ace
-	cp LICENSE ace
-	tar cvfz ace-`./version.js`.tgz ace
+	mv build ace-`./version.js`/
+	cp Readme.md ace-`./version.js`/
+	cp LICENSE ace-`./version.js`/
+	tar cvfz ace-`./version.js`.tgz ace-`./version.js`/
 
 dist: clean build ace.tgz
