@@ -76,9 +76,11 @@
 .ace_editor textarea {
   position: fixed;
   z-index: -1;
-  opacity: 0;
   width: 10px;
   height: 30px;
+  opacity: 0;
+  background: transparent;
+  appearance: none;
   border: none;
   resize: none;
   outline: none;
