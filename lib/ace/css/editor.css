@@ -73,6 +73,20 @@
   height: 100%;
 }
 
+.ace_editor textarea {
+  position: fixed;
+  z-index: -1;
+  width: 10px;
+  height: 30px;
+  opacity: 0;
+  background: transparent;
+  appearance: none;
+  border: none;
+  resize: none;
+  outline: none;
+  overflow: hidden;
+}
+
 .ace_layer {
   z-index: 1;
   position: absolute;
