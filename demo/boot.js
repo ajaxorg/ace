@@ -45,7 +45,7 @@ require({
 });
 
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment", "demo/startup" ];
+             "pilot/environment", "demo/demo" ];
 
 var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
 require(deps, function() {

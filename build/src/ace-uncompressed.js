@@ -9946,16 +9946,19 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getTextAreaContainer = function() {
-        return this.scroller;
+        return this.container;
     };
 
-    this.moveTextAreaToCursor = function(textarea) {
+    this.moveTextAreaToCursor = function(textarea) {        
         var pos = this.$cursorLayer.getPixelPosition();
         if (!pos)
             return;
 
-        textarea.style.left = (pos.left + this.$padding) + "px";
-        textarea.style.top = pos.top + "px";
+        var bounds = this.content.getBoundingClientRect();
+        var offset = (this.layerConfig && this.layerConfig.offset) || 0;
+        
+        textarea.style.left = (bounds.left + pos.left + this.$padding) + "px";
+        textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
     };
 
     this.getFirstVisibleRow = function() {
@@ -11417,7 +11420,7 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "" +
   ".ace_editor textarea {" +
-  "  position: absolute;" +
+  "  position: fixed;" +
   "  z-index: -1;" +
   "  opacity: 0;" +
   "  width: 10px;" +
