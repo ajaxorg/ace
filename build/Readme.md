@@ -20,7 +20,7 @@ Features
 Take Ace for a spin!
 --------------------
 
-Check out the Ace live [demo](http://ajaxorg.github.com/ace/editor-build.html) or get a [Cloud9 IDE account](http://run.cloud9ide.com) to experience Ace while editing one of your own GitHub projects.
+Check out the Ace live [demo](http://ajaxorg.github.com/ace/build/editor.html) or get a [Cloud9 IDE account](http://run.cloud9ide.com) to experience Ace while editing one of your own GitHub projects.
 
 History
 -------
@@ -45,7 +45,7 @@ The easiest version is simply:
     <div id="editor">some text</div>
     <script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
-    document.onload = function() {
+    window.onload = function() {
         var editor = ace.edit("editor");
     };
     </script>
@@ -64,6 +64,7 @@ By default the editor only supports plain text mode. However all other language 
     
 the mode can be used like this:
 
+    var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
 
 Running Ace
