@@ -5083,7 +5083,7 @@ exports.getDocumentY = function(e) {
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         return e.clientY + scrollTop;
     } else {
-        return e.pageX;
+        return e.pageY;
     }
 };
 
@@ -5448,6 +5448,7 @@ var useragent = require("pilot/useragent");
 var TextInput = function(parentNode, host) {
 
     var text = document.createElement("textarea");
+    text.style.left = "-10000px";
     parentNode.appendChild(text);
 
     var PLACEHOLDER = String.fromCharCode(0);
@@ -9692,6 +9693,7 @@ define('ace/virtual_renderer', function(require, exports, module) {
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
 var event = require("pilot/event");
+var useragent = require("pilot/useragent");
 var GutterLayer = require("ace/layer/gutter").Gutter;
 var MarkerLayer = require("ace/layer/marker").Marker;
 var TextLayer = require("ace/layer/text").Text;
@@ -9950,6 +9952,10 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.moveTextAreaToCursor = function(textarea) {        
+        // in IE the native cursor always shines through
+        if (useragent.isIE)
+            return;
+            
         var pos = this.$cursorLayer.getPixelPosition();
         if (!pos)
             return;
@@ -11096,7 +11102,7 @@ var Cursor = function(parentEl) {
         clearInterval(this.blinkId);
     };
 
-    this.showCursor = function() {
+    this.showCursor = function() {        
         this.isVisible = true;
         this.element.appendChild(this.cursor);
 
@@ -11421,10 +11427,14 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "" +
   ".ace_editor textarea {" +
   "  position: fixed;" +
-  "  z-index: -1;" +
-  "  opacity: 0;" +
+  "  z-index: 0;" +
+  "  /*z-index: -1;" +
   "  width: 10px;" +
-  "  height: 30px;" +
+  "  height: 30px;*/" +
+  "  opacity: 0;" +
+  "  width: 1px;" +
+  "  background: transparent;" +
+  "  appearance: none;" +
   "  border: none;" +
   "  resize: none;" +
   "  outline: none;" +
