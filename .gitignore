@@ -7,6 +7,7 @@
 .project
 .settings/
 .settings.xml
+.c9settiongs.xml
 .settings.xml.old
 .*.gz
 
