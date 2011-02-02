@@ -1,0 +1,47 @@
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    background: rgb(14, 98, 165);
+    color: white;
+}
+
+#editor {
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    background: white;
+}
+
+#controls {
+    width: 100%;
+}
+
+#cockpitInput {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+
+    border: none; outline: none;
+    font-family: consolas, courier, monospace;
+    font-size: 120%;
+}
+
+#cockpitOutput {
+    padding: 10px;
+    margin: 0 15px;
+    border: 1px solid #AAA;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 4px; border-top-right-radius: 4px;
+    background: #DDD; color: #000;
+}
