@@ -35,33 +35,37 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// don't define it in a worker.
-if (window.document) {
-    
-    require("pilot/fixoldbrowsers");
-    require("pilot/settings");
-    
-    var Event = require("pilot/event");
-    var Dom = require("pilot/dom");
-    var EditSession = require("ace/edit_session").EditSession;
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    var UndoManager = require("ace/undomanager").UndoManager;
-    var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var Theme = require("ace/theme/textmate");
-    
+var deps = [
+    "pilot/fixoldbrowsers",
+    "pilot/index",
+    "pilot/plugin_manager",
+    "pilot/environment",
+    "ace/editor",
+    "ace/edit_session",
+    "ace/virtual_renderer",
+    "ace/undomanager",
+    "ace/theme/textmate"
+];
+
+require(deps, function() {
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
     
+    var Dom = require("pilot/dom");
+    var Event = require("pilot/event");
     
-    var ace = {
+    var Editor = require("ace/editor").Editor;
+    var EditSession = require("ace/edit_session").EditSession;
+    var UndoManager = require("ace/undomanager").UndoManager;
+    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+    
+    window.ace = {
         edit: function(el) {
             if (typeof(el) == "string") {
                 el = document.getElementById(el);
             }
             
             var doc = new EditSession(Dom.getInnerText(el));
-            doc.setMode(new JavaScriptMode());
             doc.setUndoManager(new UndoManager());
             el.innerHTML = '';
 
@@ -81,4 +85,4 @@ if (window.document) {
             return editor;
         }
     };
-}
+});

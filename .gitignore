@@ -7,9 +7,9 @@
 .project
 .settings/
 .settings.xml
+.c9settiongs.xml
 .settings.xml.old
 .*.gz
 
 # A handy place to put stuff that git should ignore:
 /ignore/
-/build/
