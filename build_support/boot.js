@@ -35,45 +35,54 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// don't define it in a worker.
-if (window.document) {
+var deps = [
+    "pilot/fixoldbrowsers",
+    "pilot/index",
+    "pilot/plugin_manager",
+    "pilot/environment",
+    "ace/editor",
+    "ace/edit_session",
+    "ace/virtual_renderer",
+    "ace/undomanager",
+    "ace/theme/textmate"
+];
+
+require(deps, function() {
+    var catalog = require("pilot/plugin_manager").catalog;
+    catalog.registerPlugins([ "pilot/index" ]);
     
-    var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-                 "pilot/environment" ];
+    var Dom = require("pilot/dom");
+    var Event = require("pilot/event");
     
-    require(deps, function() {
-        var catalog = require("pilot/plugin_manager").catalog;
-        catalog.registerPlugins([ "pilot/index" ]);
-    });
+    var Editor = require("ace/editor").Editor;
+    var EditSession = require("ace/edit_session").EditSession;
+    var UndoManager = require("ace/undomanager").UndoManager;
+    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     
-    var ace = {
+    window.ace = {
         edit: function(el) {
             if (typeof(el) == "string") {
                 el = document.getElementById(el);
             }
+            
+            var doc = new EditSession(Dom.getInnerText(el));
+            doc.setUndoManager(new UndoManager());
+            el.innerHTML = '';
+
+            var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
+            editor.setSession(doc);
+            
             var env = require("pilot/environment").create();
-            var catalog = require("pilot/plugin_manager").catalog;
             catalog.startupPlugins({ env: env }).then(function() {
-                var EditSession = require("ace/edit_session").EditSession;
-                var JavaScriptMode = require("ace/mode/javascript").Mode;
-                var UndoManager = require("ace/undomanager").UndoManager;
-                var Editor = require("ace/editor").Editor;
-                var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-                var theme = require("ace/theme/textmate");
-    
-                var doc = new EditSession(el.innerHTML);
-                el.innerHTML = '';
-                doc.setMode(new JavaScriptMode());
-                doc.setUndoManager(new UndoManager());
                 env.document = doc;
-                env.editor = new Editor(new Renderer(el, theme));
-                env.editor.setSession(doc);
-                env.editor.resize();
-                window.addEventListener("resize", function() {
-                    env.editor.resize();
-                }, false);
+                env.editor = env;
+                editor.resize();
+                Event.addListener(window, "resize", function() {
+                    editor.resize();
+                });
                 el.env = env;
             });
+            return editor;
         }
     };
-}
+});

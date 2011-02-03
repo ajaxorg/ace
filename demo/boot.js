@@ -37,14 +37,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var config = {
+require({
     paths: {
         demo: "../demo",
         ace: "../lib/ace",
         cockpit: "../support/cockpit/lib/cockpit",
         pilot: "../support/pilot/lib/pilot"
     }
-};
+});
 
 var deps = [ "pilot/fixoldbrowsers",
              "ace/ace",
@@ -53,7 +53,7 @@ var deps = [ "pilot/fixoldbrowsers",
              "cockpit/index",
              "ace/defaults" ];
 
-require(config, deps, function() {
+require(deps, function() {
     var ace = require("ace/ace");
     ace.create({
       // This is an order in which plug-ins are going to be
