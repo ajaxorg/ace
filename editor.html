@@ -210,7 +210,17 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 </script>
 
     <script type="text/editor" id="rubytext">#!/usr/bin/ruby
-print "Hello Ruby!\n"
+    
+# Program to find the factorial of a number
+def fact(n)
+    if n == 0
+        1
+    else
+        n * fact(n-1)
+    end
+end
+
+puts fact(ARGV[0].to_i)
 </script>
 
   <input id="cockpitInput" type="text"/>
