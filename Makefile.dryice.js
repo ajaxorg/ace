@@ -164,7 +164,7 @@ copy({
 // create modes
 project.assmeAllFilesLoaded();
 
-["css", "html", "javascript", "php", "python", "xml"].forEach(function(mode) {
+["css", "html", "javascript", "php", "python", "xml", "ruby", "java"].forEach(function(mode) {
     copy({
         source: [
             copy.source.commonjs({

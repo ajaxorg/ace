@@ -123,12 +123,12 @@ if (!Array.prototype.indexOf)
     if (len === 0)
         return -1;
 
-    var n = 0;
+    var n = 0, zero = n;
     if (arguments.length > 0) {
         n = Number(arguments[1]);
         if (n !== n)
             n = 0;
-        else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
+        else if (n !== 0 && n !== (1 / zero) && n !== -(1 / zero))
             n = (n > 0 || -1) * Math.floor(Math.abs(n));
     }
 
@@ -163,13 +163,13 @@ if (!Array.prototype.lastIndexOf)
     if (len === 0)
       return -1;
 
-    var n = len;
+    var n = len, zero = false | 0;
     if (arguments.length > 0)
     {
       n = Number(arguments[1]);
       if (n !== n)
         n = 0;
-      else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
+      else if (n !== 0 && n !== (1 / zero) && n !== -(1 / zero))
         n = (n > 0 || -1) * Math.floor(Math.abs(n));
     }
 
@@ -6566,7 +6566,7 @@ var EditSession = function(text, mode) {
      *  }
      */
     this.setAnnotations = function(annotations) {
-        this.$annotations = [];
+        this.$annotations = {};
         for (var i=0; i<annotations.length; i++) {
             var annotation = annotations[i];
             var row = annotation.row;
@@ -6583,7 +6583,7 @@ var EditSession = function(text, mode) {
     };
 
     this.clearAnnotations = function() {
-        this.$annotations = [];
+        this.$annotations = {};
         this._dispatchEvent("changeAnnotation", {});
     };
 
@@ -10515,12 +10515,15 @@ var Gutter = function(parentEl) {
 
     this.setAnnotations = function(annotations) {
         // iterate over sparse array
-        this.$annotations = [];
+        this.$annotations = [];        
         for (var row in annotations) {
+            var rowAnnotations = annotations[row];
+            if (!rowAnnotations)
+                continue;
+                
             var rowInfo = this.$annotations[row] = {
                 text: []
             };
-            var rowAnnotations = annotations[row];
             for (var i=0; i<rowAnnotations.length; i++) {
                 var annotation = rowAnnotations[i];
                 rowInfo.text.push(annotation.text.replace(/"/g, "&quot;").replace(/'/g, "&rsquo;").replace(/</, "&lt;"));
@@ -11428,17 +11431,17 @@ var RenderLoop = function(onRender) {
 exports.RenderLoop = RenderLoop;
 });
 define("text!ace/css/editor.css", ".ace_editor {" +
-  "  position: absolute;" +
-  "  overflow: hidden;" +
+  "    position: absolute;" +
+  "    overflow: hidden;" +
   "" +
-  "  font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;" +
-  "  font-size: 12px;  " +
+  "    font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;" +
+  "    font-size: 12px;  " +
   "}" +
   "" +
   ".ace_scroller {" +
-  "  position: absolute;" +
-  "  overflow-x: scroll;" +
-  "  overflow-y: hidden;     " +
+  "    position: absolute;" +
+  "    overflow-x: scroll;" +
+  "    overflow-y: hidden;     " +
   "}" +
   "" +
   ".ace_content {" +
@@ -11456,10 +11459,10 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "" +
   ".ace_gutter {" +
-  "  position: absolute;" +
-  "  overflow-x: hidden;" +
-  "  overflow-y: hidden;" +
-  "  height: 100%;" +
+  "    position: absolute;" +
+  "    overflow-x: hidden;" +
+  "    overflow-y: hidden;" +
+  "    height: 100%;" +
   "}" +
   "" +
   ".ace_gutter-cell.ace_error {" +
@@ -11475,59 +11478,59 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "" +
   ".ace_editor .ace_sb {" +
-  "  position: absolute;" +
-  "  overflow-x: hidden;" +
-  "  overflow-y: scroll;" +
-  "  right: 0;" +
+  "    position: absolute;" +
+  "    overflow-x: hidden;" +
+  "    overflow-y: scroll;" +
+  "    right: 0;" +
   "}" +
   "" +
   ".ace_editor .ace_sb div {" +
-  "  position: absolute;" +
-  "  width: 1px;" +
-  "  left: 0px;" +
+  "    position: absolute;" +
+  "    width: 1px;" +
+  "    left: 0;" +
   "}" +
   "" +
   ".ace_editor .ace_print_margin_layer {" +
-  "  z-index: 0;" +
-  "  position: absolute;" +
-  "  overflow: hidden;" +
-  "  margin: 0px;" +
-  "  left: 0px;" +
-  "  height: 100%;" +
-  "  width: 100%;" +
+  "    z-index: 0;" +
+  "    position: absolute;" +
+  "    overflow: hidden;" +
+  "    margin: 0;" +
+  "    left: 0;" +
+  "    height: 100%;" +
+  "    width: 100%;" +
   "}" +
   "" +
   ".ace_editor .ace_print_margin {" +
-  "  position: absolute;" +
-  "  height: 100%;" +
+  "    position: absolute;" +
+  "    height: 100%;" +
   "}" +
   "" +
   ".ace_editor textarea {" +
-  "  position: fixed;" +
-  "  z-index: -1;" +
-  "  width: 10px;" +
-  "  height: 30px;" +
-  "  opacity: 0;" +
-  "  background: transparent;" +
-  "  appearance: none;" +
-  "  border: none;" +
-  "  resize: none;" +
-  "  outline: none;" +
-  "  overflow: hidden;" +
+  "    position: fixed;" +
+  "    z-index: -1;" +
+  "    width: 10px;" +
+  "    height: 30px;" +
+  "    opacity: 0;" +
+  "    background: transparent;" +
+  "    appearance: none;" +
+  "    border: none;" +
+  "    resize: none;" +
+  "    outline: none;" +
+  "    overflow: hidden;" +
   "}" +
   "" +
   ".ace_layer {" +
-  "  z-index: 1;" +
-  "  position: absolute;" +
-  "  overflow: hidden;  " +
-  "  white-space: nowrap;" +
-  "  height: 100%;" +
-  "  width: 100%;" +
+  "    z-index: 1;" +
+  "    position: absolute;" +
+  "    overflow: hidden;  " +
+  "    white-space: nowrap;" +
+  "    height: 100%;" +
+  "    width: 100%;" +
   "}" +
   "" +
   ".ace_text-layer {" +
-  "  font-family: Monaco, \"Courier New\", monospace;" +
-  "  color: black;" +
+  "    font-family: Monaco, \"Courier New\", monospace;" +
+  "    color: black;" +
   "}" +
   "" +
   ".ace_cjk {" +
@@ -11536,41 +11539,41 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "" +
   ".ace_cursor-layer {" +
-  "  z-index: 4;" +
-  "  cursor: text;" +
-  "  pointer-events: none;" +
+  "    z-index: 4;" +
+  "    cursor: text;" +
+  "    pointer-events: none;" +
   "}" +
   "" +
   ".ace_cursor {" +
-  "  z-index: 4;" +
-  "  position: absolute;" +
+  "    z-index: 4;" +
+  "    position: absolute;" +
   "}" +
   "" +
   ".ace_line {" +
-  "  white-space: nowrap;" +
+  "    white-space: nowrap;" +
   "}" +
   "" +
   ".ace_marker-layer {" +
   "}" +
   "" +
   ".ace_marker-layer .ace_step {" +
-  "  position: absolute;" +
-  "  z-index: 3;" +
+  "    position: absolute;" +
+  "    z-index: 3;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_selection {" +
-  "  position: absolute;" +
-  "  z-index: 4;" +
+  "    position: absolute;" +
+  "    z-index: 4;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_bracket {" +
-  "  position: absolute;" +
-  "  z-index: 5;" +
+  "    position: absolute;" +
+  "    z-index: 5;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_active_line {" +
-  "  position: absolute;" +
-  "  z-index: 2;" +
+  "    position: absolute;" +
+  "    z-index: 2;" +
   "}" +
   "");
 
