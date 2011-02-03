@@ -56,6 +56,8 @@ exports.plug = function(data) {
     var XmlMode = require("ace/mode/xml").Mode;
     var PythonMode = require("ace/mode/python").Mode;
     var PhpMode = require("ace/mode/php").Mode;
+    var JavaMode = require("ace/mode/java").Mode;
+    var RubyMode = require("ace/mode/ruby").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -105,6 +107,14 @@ exports.plug = function(data) {
     docs.php = new EditSession(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
+    
+    docs.java = new EditSession(document.getElementById("javatext").innerHTML);
+    docs.java.setMode(new JavaMode());
+    docs.java.setUndoManager(new UndoManager());
+
+    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby.setMode(new RubyMode());
+    docs.ruby.setUndoManager(new UndoManager());
 
 
     var container = document.getElementById("editor");
@@ -117,7 +127,9 @@ exports.plug = function(data) {
         css: new CssMode(),
         javascript: new JavaScriptMode(),
         python: new PythonMode(),
-        php: new PhpMode()
+        php: new PhpMode(),
+        java: new JavaMode(),
+        ruby: new RubyMode()
     };
 
     function getMode() {
@@ -149,6 +161,12 @@ exports.plug = function(data) {
         }
         else if (mode instanceof PhpMode) {
             modeEl.value = "php";
+        }
+        else if (mode instanceof JavaMode) {
+            modeEl.value = "java";
+        }
+        else if (mode instanceof RubyMode) {
+            modeEl.value = "ruby";
         }
         else {
             modeEl.value = "text";
@@ -275,6 +293,10 @@ exports.plug = function(data) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
+                } else if (/^.*\.java$/i.test(file.name)) {
+                    mode = "java";
+                } else if (/^.*\.rb$/i.test(file.name)) {
+                    mode = "ruby";
                 }
 
                 env.editor.onTextInput(reader.result);
