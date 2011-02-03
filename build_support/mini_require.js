@@ -40,10 +40,17 @@
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
-function define(module, payload) {
+ 
+(function() {
+    
+var _define = function(module, payload) {
     if (typeof module !== 'string') {
-        console.error('dropping module because define wasn\'t a string.');
-        console.trace();
+        if (_define.original)
+            _define.original.apply(window, arguments);
+        else {
+            console.error('dropping module because define wasn\'t a string.');
+            console.trace();
+        }
         return;
     }
 
@@ -51,16 +58,24 @@ function define(module, payload) {
         define.modules = {};
         
     define.modules[module] = payload;
-}
+};
+if (window.define)
+    _define.original = window.define;
+    
+window.define = _define;
+
 
 /**
  * Get at functionality define()ed using the function above
  */
-function require(module, callback) {
+var _require = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
-            params.push(define.lookup(module[i]));
+            var dep = lookup(module[i]);
+            if (!dep && _require.original)
+                return _require.original.apply(window, arguments);
+            params.push(dep);
         };
         if (callback) {
             callback.apply(null, params);
@@ -68,7 +83,10 @@ function require(module, callback) {
     }
 
     if (typeof module === 'string') {
-        var payload = define.lookup(module);
+        var payload = lookup(module);
+        if (!payload && _require.original)
+            return _require.original.apply(window, arguments);
+        
         if (callback) {
             callback();
         }
@@ -77,13 +95,17 @@ function require(module, callback) {
     };
 }
 
+if (window.require)
+    _require.original = window.require;
+    
+window.require = _require;
 require.packaged = true;
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
  * definition function if needed.
  */
-define.lookup = function(moduleName) {
+var lookup = function(moduleName) {
     var module = define.modules[moduleName];
     if (module == null) {
         console.error('Missing module: ' + moduleName);
@@ -100,3 +122,5 @@ define.lookup = function(moduleName) {
 
     return module;
 };
+
+})();
