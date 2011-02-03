@@ -248,12 +248,12 @@ if (!Array.prototype.indexOf)
     if (len === 0)
         return -1;
 
-    var n = 0, zero = n;
+    var n = 0;
     if (arguments.length > 0) {
         n = Number(arguments[1]);
         if (n !== n)
             n = 0;
-        else if (n !== 0 && n !== (1 / zero) && n !== -(1 / zero))
+        else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
             n = (n > 0 || -1) * Math.floor(Math.abs(n));
     }
 
@@ -288,13 +288,13 @@ if (!Array.prototype.lastIndexOf)
     if (len === 0)
       return -1;
 
-    var n = len, zero = false | 0;
+    var n = len;
     if (arguments.length > 0)
     {
       n = Number(arguments[1]);
       if (n !== n)
         n = 0;
-      else if (n !== 0 && n !== (1 / zero) && n !== -(1 / zero))
+      else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
         n = (n > 0 || -1) * Math.floor(Math.abs(n));
     }
 
@@ -4078,7 +4078,7 @@ var lang = require("pilot/lang");
 var useragent = require("pilot/useragent");
 var TextInput = require("ace/keyboard/textinput").TextInput;
 var MouseHandler = require("ace/mouse_handler").MouseHandler;
-//var TouchHandler = require("ace/touch_handler").TouchHandler;
+var TouchHandler = require("ace/touch_handler").TouchHandler;
 var KeyBinding = require("ace/keyboard/keybinding").KeyBinding;
 var EditSession = require("ace/edit_session").EditSession;
 var Search = require("ace/search").Search;
@@ -4095,11 +4095,10 @@ var Editor =function(renderer, session) {
     this.keyBinding = new KeyBinding(this);
     
     // TODO detect touch event support
-    if (useragent.isIPad) {
-        //this.$mouseHandler = new TouchHandler(this);
-    } else {
+    if (useragent.isIPad)
+        this.$mouseHandler = new TouchHandler(this);
+    else 
         this.$mouseHandler = new MouseHandler(this);
-    }
 
     this.$selectionMarker = null;
     this.$highlightLineMarker = null;
@@ -5476,6 +5475,8 @@ var TextInput = function(parentNode, host) {
 
     var text = document.createElement("textarea");
     text.style.left = "-10000px";
+    if (useragent.isIPad)
+        text.style.position = "absolute";
     parentNode.appendChild(text);
 
     var PLACEHOLDER = String.fromCharCode(0);
@@ -5491,10 +5492,17 @@ var TextInput = function(parentNode, host) {
             if (value) {
                 if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0)) {
                     value = value.slice(0, -1);
-                    if (value)
+                    if (value.length)
                         host.onTextInput(value);
-                } else
+                }
+                if (value.charCodeAt(0) == PLACEHOLDER.charCodeAt(0)) {
+                    value = value.slice(1, value.length);
+                    if (value.length)
+                        host.onTextInput(value);
+                }
+                else {
                     host.onTextInput(value);
+                }
             }
         }
         copied = false;
@@ -5815,6 +5823,129 @@ var MouseHandler = function(editor) {
 }).call(MouseHandler.prototype);
 
 exports.MouseHandler = MouseHandler;
+});/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/touch_handler', function(require, exports, module) {
+
+var event = require("pilot/event");
+
+var TouchHandler = function(editor) {
+    this.editor = editor;
+    event.addListener(editor.container, "click", function(e) {
+        // does this only work on click?
+        editor.focus();
+    });
+    var mouseTarget = editor.renderer.getMouseEventTarget();
+    mouseTarget.ontouchstart = this.onTouchStart.bind(this);
+    mouseTarget.ontouchmove = this.onTouchMove.bind(this);
+    mouseTarget.ontouchend = this.onTouchEnd.bind(this);
+};
+
+(function() {
+
+    this.$scrollSpeed = 1;
+    this.setScrollSpeed = function(speed) {
+        this.$scrollSpeed = speed;
+    };
+    
+    this.getScrollSpeed = function() {
+        return this.$scrollSpeed;
+    };
+    
+    this.onTouchMove = function(e) {
+        e.preventDefault();
+        if (e.touches.length == 1) {
+            this.$moveCursor(e.touches[0]);
+        }
+        else if (e.touches.length == 2) {
+            if (!this.$scroll)
+                return;
+            
+            var touch = e.touches[0];
+            var diffX = this.$scroll.pageX - touch.pageX;
+            var diffY = this.$scroll.pageY - touch.pageY;
+            this.editor.renderer.scrollBy(diffX, diffY);
+
+            this.$scroll = {
+                pageX: touch.pageX,
+                pageY: touch.pageY,
+                ts: new Date().getTime() 
+            }
+        }
+    };
+    
+    this.$moveCursor = function(touch) {
+        var pageX = touch.pageX;
+        var pageY = touch.pageY;
+        
+        var editor = this.editor;
+        var pos = editor.renderer.screenToTextCoordinates(pageX, pageY);
+        pos.row = Math.max(0, Math.min(pos.row, editor.session.getLength()-1));
+        
+        editor.moveCursorToPosition(pos);
+        editor.renderer.scrollCursorIntoView();
+    };
+    
+    this.onTouchEnd = function(e) {        
+        //if (e.touches.length == 1) {
+            console.log("focus")
+            editor.focus();
+            //e.preventDefault();
+        //}
+    };
+    
+    this.onTouchStart = function(e) {
+        if (e.touches.length == 1) {
+            this.$moveCursor(e.touches[0]);
+        }
+        else if (e.touches.length == 2) {
+            e.preventDefault();
+            var touch = e.touches[0];
+            this.$scroll = {
+                pageX: touch.pageX,
+                pageY: touch.pageY
+            }
+        }
+    };
+
+}).call(TouchHandler.prototype);
+
+exports.TouchHandler = TouchHandler;
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -6469,8 +6600,7 @@ canon.addCommand({
 canon.addCommand({
     name: "inserttext",
     exec: function(env, args, request) {
-        env.editor.insert(lang.stringRepeat(args.text  || "",
-                                            args.times || 1));
+        env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
 });
 
@@ -7568,7 +7698,7 @@ var EditSession = function(text, mode) {
 
         if (!this.$useWrapMode) {
             str = this.getLine(row).substring(0, column);
-            column = this.$getStringScreenWidth(str);
+            column = this.$getStringScreenWidth(str);            
             return {
                 row: row,
                 column: column
@@ -10126,7 +10256,7 @@ var VirtualRenderer = function(container, theme) {
 
         if (!this.$showPrintMargin && !this.$printMarginEl)
             return;
-            
+
         if (!this.$printMarginEl) {
             containerEl = document.createElement("div");
             containerEl.className = "ace_print_margin_layer";
@@ -10150,23 +10280,42 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getTextAreaContainer = function() {
-        return this.container;
+        // Let's make it play nice wit iPad. Otherwise the default padding of
+        // the container will make the cursor shift to the left.
+        return useragent.isIPad ? this.content : this.container;
     };
 
-    this.moveTextAreaToCursor = function(textarea) {        
+    this.moveTextAreaToCursor = function(textarea) {
         // in IE the native cursor always shines through
         if (useragent.isIE)
             return;
-            
-        var pos = this.$cursorLayer.getPixelPosition();
-        if (!pos)
+
+        if (!this.layerConfig)
             return;
 
-        var bounds = this.content.getBoundingClientRect();
-        var offset = (this.layerConfig && this.layerConfig.offset) || 0;
-        
-        textarea.style.left = (bounds.left + pos.left + this.$padding) + "px";
-        textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
+        var pos, left, top;
+        if (useragent.isIPad) {
+            pos = this.$cursorLayer.getPixelPosition(true);
+            if (!pos)
+                return;
+
+            left = pos.left + this.$padding// - 3;
+            top  = pos.top;
+        } else {
+            pos = this.$cursorLayer.getPixelPosition();
+            if (!pos)
+                return;
+
+            var bounds = this.content.getBoundingClientRect();
+            var offset = this.layerConfig.offset;
+
+            left = bounds.left + pos.left + this.$padding;
+            top  = bounds.top  + pos.top  - this.scrollTop + offset;
+        }
+
+        textarea.style.left = left + "px";
+        textarea.style.top  = top  + "px";
+        textarea.style.lineHeight = this.layerConfig.lineHeight + "px";
     };
 
     this.getFirstVisibleRow = function() {
@@ -10494,7 +10643,7 @@ var VirtualRenderer = function(container, theme) {
             this.$composition.className = "ace_composition";
             this.content.appendChild(this.$composition);
 		}
-    	
+
         this.$composition.innerHTML = "&nbsp;";
 
         var pos = this.$cursorLayer.getPixelPosition();
@@ -10502,7 +10651,7 @@ var VirtualRenderer = function(container, theme) {
 		style.top = pos.top + "px";
 		style.left = (pos.left + this.$padding) + "px";
     	style.height = this.lineHeight + "px";
-    	
+
 		this.hideCursor();
     };
 
@@ -10975,7 +11124,8 @@ var Text = function(parentEl) {
     },
 
     this.$measureSizes = function() {
-        var n = 1000;
+        var n = 500;
+        var probe = "Xy";
         if (!this.$measureNode) {
 	        var measureNode = this.$measureNode = document.createElement("div");
 	        var style = measureNode.style;
@@ -10991,7 +11141,7 @@ var Text = function(parentEl) {
 	        // in FF 3.6 monospace fonts can have a fixed sub pixel width.
 	        // that's why we have to measure many characters
 	        // Note: characterWidth can be a float!
-	        measureNode.innerHTML = lang.stringRepeat("Xy", n);
+	        dom.setInnerText(measureNode, lang.stringRepeat(probe, n));
 	        document.body.insertBefore(measureNode, document.body.firstChild);
         }
 
@@ -11001,9 +11151,10 @@ var Text = function(parentEl) {
             style[prop] = value;
         }
 
+        //console.log(this.$measureNode.offsetWidth / (n * probe.length))
         var size = {
             height: this.$measureNode.offsetHeight,
-            width: this.$measureNode.offsetWidth / (n * 2)
+            width: this.$measureNode.offsetWidth / (n * probe.length)
         };
         return size;
     };
@@ -11270,6 +11421,7 @@ exports.Text = Text;
 define('ace/layer/cursor', function(require, exports, module) {
 
 var dom = require("pilot/dom");
+var useragent = require("pilot/useragent");
 
 var Cursor = function(parentEl) {
     this.element = document.createElement("div");
@@ -11309,7 +11461,9 @@ var Cursor = function(parentEl) {
 
     this.showCursor = function() {
         this.isVisible = true;
-        this.element.appendChild(this.cursor);
+        
+        if (!useragent.isIPad)
+            this.element.appendChild(this.cursor);
 
         var cursor = this.cursor;
         cursor.style.visibility = "visible";
@@ -11363,7 +11517,7 @@ var Cursor = function(parentEl) {
         this.cursor.style.width = config.characterWidth + "px";
         this.cursor.style.height = config.lineHeight + "px";
 
-        if (this.isVisible) {
+        if (this.isVisible && !useragent.isIPad) {
             this.element.appendChild(this.cursor);
         }
         this.restartTimer();
@@ -11560,13 +11714,13 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "    overflow: hidden;" +
   "" +
   "    font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;" +
-  "    font-size: 12px;  " +
+  "    font-size: 12px;" +
   "}" +
   "" +
   ".ace_scroller {" +
   "    position: absolute;" +
   "    overflow-x: scroll;" +
-  "    overflow-y: hidden;     " +
+  "    overflow-y: hidden;" +
   "}" +
   "" +
   ".ace_content {" +
@@ -11632,7 +11786,6 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "" +
   ".ace_editor textarea {" +
   "    position: fixed;" +
-  "    z-index: -1;" +
   "    width: 10px;" +
   "    height: 30px;" +
   "    opacity: 0;" +
@@ -11647,7 +11800,7 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   ".ace_layer {" +
   "    z-index: 1;" +
   "    position: absolute;" +
-  "    overflow: hidden;  " +
+  "    overflow: hidden;" +
   "    white-space: nowrap;" +
   "    height: 100%;" +
   "    width: 100%;" +
