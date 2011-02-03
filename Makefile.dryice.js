@@ -56,6 +56,12 @@ copy({
 var ace = copy.createDataObject();
 copy({
     source: [
+        'build_support/mini_require.js'
+    ],
+    dest: ace
+});
+copy({
+    source: [
         copy.source.commonjs({
             project: project,
             require: [
@@ -96,7 +102,6 @@ copy({
 });
 copy({
     source: [
-        'build_support/mini_require.js',
         'build_support/boot.js'    
     ],
     dest: ace
