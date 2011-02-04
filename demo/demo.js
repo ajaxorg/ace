@@ -48,7 +48,6 @@ exports.plug = function(data) {
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
     var EditSession = require("ace/edit_session").EditSession;
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
@@ -312,5 +311,31 @@ exports.plug = function(data) {
 
     window.env = env;
 };
+
+var ace = require("ace/ace");
+ace.create({
+  // This is an order in which plug-ins are going to be
+  // loaded so if your plug-in A depends on B it should
+  // appear earlier in the array.
+  plugins: [
+    require("pilot/index"),
+    require("ace/theme-manager"),
+    exports,
+    require("cockpit/index"),
+    require("ace/defaults"),
+    // themes
+    require("ace/theme/twilight"),
+    require("ace/theme/textmate"),
+    require("ace/theme/clouds_midnight"),
+    require("ace/theme/cobalt"),
+    require("ace/theme/dawn"),
+    require("ace/theme/eclipse"),
+    require("ace/theme/idle_fingers"),
+    require("ace/theme/kr_theme"),
+    require("ace/theme/mono_industrial"),
+    require("ace/theme/monokai"),
+    require("ace/theme/pastel_on_dark")
+  ]
+})
 
 });

@@ -44,26 +44,5 @@ require({
         cockpit: "../support/cockpit/lib/cockpit",
         pilot: "../support/pilot/lib/pilot"
     }
-});
+}, [ "pilot/fixoldbrowsers", "demo/demo" ], "demo/demo");
 
-var deps = [ "pilot/fixoldbrowsers",
-             "ace/ace",
-             "demo/startup",
-             "pilot/index",
-             "cockpit/index",
-             "ace/defaults" ];
-
-require(deps, function() {
-    var ace = require("ace/ace");
-    ace.create({
-      // This is an order in which plug-ins are going to be
-      // loaded so if your plug-in A depends on B it should
-      // appear earlier in the array.
-      plugins: [
-        require("demo/startup"),
-        require("pilot/index"),
-        require("cockpit/index"),
-        require("ace/defaults"),
-      ]
-    })
-});
