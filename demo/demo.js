@@ -322,6 +322,10 @@ ace.create({
     exports,
     require("cockpit/index"),
     require("ace/defaults"),
+    // For the moment settings-manager should at the top
+    // so that settings will get picked up.
+    require("ace/settings-manager"),
+
     // themes
     require("ace/theme-manager"),
     require("ace/theme/twilight"),
