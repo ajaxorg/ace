@@ -54,6 +54,7 @@ exports.launch = function(env) {
     var PhpMode = require("ace/mode/php").Mode;
     var JavaMode = require("ace/mode/java").Mode;
     var RubyMode = require("ace/mode/ruby").Mode;
+    var CCPPMode = require("ace/mode/c_cpp").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -103,7 +104,7 @@ exports.launch = function(env) {
     docs.php = new EditSession(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
-    
+
     docs.java = new EditSession(document.getElementById("javatext").innerHTML);
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
@@ -112,6 +113,9 @@ exports.launch = function(env) {
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
+    docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp.setMode(new CCPPMode());
+    docs.c_cpp.setUndoManager(new UndoManager());
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
@@ -125,7 +129,8 @@ exports.launch = function(env) {
         python: new PythonMode(),
         php: new PhpMode(),
         java: new JavaMode(),
-        ruby: new RubyMode()
+        ruby: new RubyMode(),
+        c_cpp: new CCPPMode()
     };
 
     function getMode() {
@@ -163,6 +168,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof RubyMode) {
             modeEl.value = "ruby";
+        }
+        else if (mode instanceof CCPPMode) {
+            modeEl.value = "c_cpp";
         }
         else {
             modeEl.value = "text";
@@ -293,6 +301,8 @@ exports.launch = function(env) {
                     mode = "java";
                 } else if (/^.*\.rb$/i.test(file.name)) {
                     mode = "ruby";
+                } else if (/^.*\.(c|cpp|h|hpp|cxx)$/i.test(file.name)) {
+                    mode = "c_cpp";
                 }
 
                 env.editor.onTextInput(reader.result);
