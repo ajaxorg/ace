@@ -1,0 +1,5 @@
+2011.02.04, Version 0.1.4
+
+* Add C/C++ mode contributed by Gastón Kleiman
+* Fix word wrap bug
+* fix exception in key input

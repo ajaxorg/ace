@@ -5543,7 +5543,10 @@ var TextInput = function(parentNode, host) {
         else
             e.preventDefault();
         text.select();
-        setTimeout(sendText, 0);
+        setTimeout(function () {
+            sendText();
+        }, 0);
+        
     };
 
     var onCut = function(e) {
@@ -5555,7 +5558,10 @@ var TextInput = function(parentNode, host) {
         } else
             e.preventDefault();
         text.select();
-        setTimeout(sendText, 0);
+        setTimeout(function () {
+            sendText();
+        }, 0);
+        
     };
 
     event.addCommandKeyListener(text, host.onCommandKey.bind(host));
@@ -5563,7 +5569,8 @@ var TextInput = function(parentNode, host) {
     if (useragent.isIE) {
         var keytable = { 13:1, 27:1 };
         event.addListener(text, "keyup", function (e) {
-            if (inCompostion && (!text.value || keytable[e.keyCode])) setTimeout(onCompositionEnd, 0);
+            if (inCompostion && (!text.value || keytable[e.keyCode]))
+                setTimeout(onCompositionEnd, 0);
             if ((text.value.charCodeAt(0)|0) < 129) {
                 return;
             };
@@ -7333,7 +7340,7 @@ var EditSession = function(text, mode) {
 
     this.getRowHeight = function(config, row) {
         var rows;
-        if (!this.$useWrapMode) {
+        if (!this.$useWrapMode || !this.$wrapData[row]) {
             rows = 1;
         } else {
             rows = this.$wrapData[row].length + 1;
