@@ -319,11 +319,11 @@ ace.create({
   // appear earlier in the array.
   plugins: [
     require("pilot/index"),
-    require("ace/theme-manager"),
     exports,
     require("cockpit/index"),
     require("ace/defaults"),
     // themes
+    require("ace/theme-manager"),
     require("ace/theme/twilight"),
     require("ace/theme/textmate"),
     require("ace/theme/clouds_midnight"),
@@ -334,7 +334,18 @@ ace.create({
     require("ace/theme/kr_theme"),
     require("ace/theme/mono_industrial"),
     require("ace/theme/monokai"),
-    require("ace/theme/pastel_on_dark")
+    require("ace/theme/pastel_on_dark"),
+    // modes
+    require("ace/mode-manager"),
+    require("ace/mode/javascript"),
+    require("ace/mode/css"),
+    require("ace/mode/html"),
+    require("ace/mode/xml"),
+    require("ace/mode/python"),
+    require("ace/mode/php"),
+    require("ace/mode/java"),
+    require("ace/mode/ruby"),
+    require("ace/mode/text")
   ]
 })
 
