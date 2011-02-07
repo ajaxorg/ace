@@ -202,7 +202,7 @@ copy({
             ]
         })
     ],
-    filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+    filter: [ copy.filter.moduleDefines],
     dest: jsWorker
 });
 copy({
@@ -210,6 +210,7 @@ copy({
         aceHome + "/lib/ace/worker/worker.js",
         jsWorker
     ],
+    filter: [ copy.filter.uglifyjs ],
     dest: "build/src/worker-javascript.js"
 });
 
@@ -220,7 +221,7 @@ copy({
         root: aceHome + '/lib',
         include: "ace/theme/eclipse.js"
     }],
-    filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+    filter: [ copy.filter.moduleDefines ],
     dest: eclipseTheme
 });
 copy({
@@ -228,11 +229,12 @@ copy({
         root: aceHome + '/lib',
         include: "ace/theme/eclipse.css"
     }],
-    filter: [ copy.filter.addDefines, copy.filter.uglifyjs ],
+    filter: [ copy.filter.addDefines ],
     dest: eclipseTheme
 });
 copy({
     source: eclipseTheme,
+    filter: [ copy.filter.uglifyjs ],
     dest: 'build/src/theme-eclipse.js'
 });
 
