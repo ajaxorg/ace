@@ -277,6 +277,10 @@ copy({
     source: aceHome + "/Readme.md",
     dest: 'build/Readme.md'
 });
+copy({
+    source: aceHome + "/ChangeLog.txt",
+    dest: 'build/ChangeLog.txt'
+});
 
 // copy complex demo
 //copy({
