@@ -130,7 +130,7 @@ copy({
         copy.source.commonjs({
             project: project,
             require: [ 'cockpit/index' ]
-        }),
+        })
     ],
     filter: [ copy.filter.moduleDefines ],
     dest: cockpit
@@ -175,7 +175,7 @@ project.assmeAllFilesLoaded();
             copy.source.commonjs({
                 project: project,
                 require: [ 'ace/mode/' + mode ]
-            }),
+            })
         ],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
         dest: "build/src/mode-" + mode + ".js"
@@ -200,7 +200,7 @@ copy({
                 'pilot/oop',
                 'ace/mode/javascript_worker'
             ]
-        }),
+        })
     ],
     filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
     dest: jsWorker
@@ -258,7 +258,7 @@ copy({
             copy.source.commonjs({
                 project: project,
                 require: [ 'ace/keyboard/keybinding/' + keybinding ]
-            }),
+            })
         ],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
         dest: "build/src/keybinding-" + keybinding + ".js"
