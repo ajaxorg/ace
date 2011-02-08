@@ -130,7 +130,7 @@ copy({
         copy.source.commonjs({
             project: project,
             require: [ 'cockpit/index' ]
-        }),
+        })
     ],
     filter: [ copy.filter.moduleDefines ],
     dest: cockpit
@@ -175,7 +175,7 @@ project.assmeAllFilesLoaded();
             copy.source.commonjs({
                 project: project,
                 require: [ 'ace/mode/' + mode ]
-            }),
+            })
         ],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
         dest: "build/src/mode-" + mode + ".js"
@@ -200,9 +200,9 @@ copy({
                 'pilot/oop',
                 'ace/mode/javascript_worker'
             ]
-        }),
+        })
     ],
-    filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+    filter: [ copy.filter.moduleDefines],
     dest: jsWorker
 });
 copy({
@@ -210,6 +210,7 @@ copy({
         aceHome + "/lib/ace/worker/worker.js",
         jsWorker
     ],
+    filter: [ copy.filter.uglifyjs ],
     dest: "build/src/worker-javascript.js"
 });
 
@@ -220,7 +221,7 @@ copy({
         root: aceHome + '/lib',
         include: "ace/theme/eclipse.js"
     }],
-    filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+    filter: [ copy.filter.moduleDefines ],
     dest: eclipseTheme
 });
 copy({
@@ -228,11 +229,12 @@ copy({
         root: aceHome + '/lib',
         include: "ace/theme/eclipse.css"
     }],
-    filter: [ copy.filter.addDefines, copy.filter.uglifyjs ],
+    filter: [ copy.filter.addDefines ],
     dest: eclipseTheme
 });
 copy({
     source: eclipseTheme,
+    filter: [ copy.filter.uglifyjs ],
     dest: 'build/src/theme-eclipse.js'
 });
 
@@ -258,7 +260,7 @@ copy({
             copy.source.commonjs({
                 project: project,
                 require: [ 'ace/keyboard/keybinding/' + keybinding ]
-            }),
+            })
         ],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
         dest: "build/src/keybinding-" + keybinding + ".js"
@@ -274,6 +276,10 @@ copy({
 copy({
     source: aceHome + "/Readme.md",
     dest: 'build/Readme.md'
+});
+copy({
+    source: aceHome + "/ChangeLog.txt",
+    dest: 'build/ChangeLog.txt'
 });
 
 // copy complex demo

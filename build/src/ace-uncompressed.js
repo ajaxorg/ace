@@ -5777,7 +5777,7 @@ var MouseHandler = function(editor) {
     
             if (self.$clickSelection) {
                 if (self.$clickSelection.contains(cursor.row, cursor.column)) {
-                    self.selection.setSelectionRange(self.$clickSelection);
+                    editor.selection.setSelectionRange(self.$clickSelection);
                 } else {
                     if (self.$clickSelection.compare(cursor.row, cursor.column) == -1) {
                         var anchor = self.$clickSelection.end;
