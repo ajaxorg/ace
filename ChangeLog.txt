@@ -1,4 +1,4 @@
-2011.02.xx, Version 0.1.4
+2011.02.08, Version 0.1.5
 
 * Add Coffeescript Mode (Satoshi Murakami)
 * Fix word wrap bug (Julian Viereck)
