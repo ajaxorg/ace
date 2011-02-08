@@ -22,6 +22,7 @@
           <option value="java">Java Document</option>
           <option value="ruby">Ruby Document</option>
           <option value="c_cpp">C++ Document</option>
+          <option value="coffee">CoffeeScript Document</option>
           <option value="plain">Text Document</option>
         </select>
       </td>
@@ -77,7 +78,8 @@
           <option value="php">PHP</option>
           <option value="java">Java</option>
           <option value="ruby">Ruby</option>
-          <option value="c_cpp">C/C++ Document</option>
+          <option value="c_cpp">C/C++</option>
+          <option value="coffee">CoffeeScript</option>
         </select>
       </td>
       <td align="right">
@@ -238,6 +240,30 @@ int main ()
     cout << a;
     return 0;
 }
+</script>
+
+<script type="text/editor" id="coffeetext">#!/usr/bin/env coffee
+
+try
+  throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)
+catch e
+  console.log 'qstring' + "qqstring" + '''
+    qdoc
+  ''' + """
+    qqdoc
+  """
+
+do ->
+  ###
+  herecomment
+  ###
+  re = /regex/imgy.test ///
+    heregex  # comment
+  ///imgy
+  this isnt: `just JavaScript`
+  undefined
+
+var illegal
 </script>
 
   <input id="cockpitInput" type="text"/>
