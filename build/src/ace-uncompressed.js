@@ -8441,7 +8441,7 @@ var Tokenizer = function(rules) {
             }
 
             for ( var i = 0; i < state.length; i++) {
-                if (match[i + 1] !== undefined) {
+                if (match[i + 1] !== undefined && match[i + 1].length) {
                     if (typeof state[i].token == "function") {
                         type = state[i].token(match[0]);
                     }
@@ -10678,7 +10678,7 @@ var Gutter = function(parentEl) {
     this.setAnnotations = function(annotations) {
         // iterate over sparse array
         this.$annotations = [];        
-        for (var row in annotations) {
+        for (var row in annotations) if (annotations.hasOwnProperty(row)) {
             var rowAnnotations = annotations[row];
             if (!rowAnnotations)
                 continue;
@@ -11146,7 +11146,8 @@ var Text = function(parentEl) {
             style.width = config.width + "px";
 
             var html = [];
-            this.$renderLine(html, row, tokens[row-firstRow].tokens);
+            if (tokens.length > row-firstRow)
+            	this.$renderLine(html, row, tokens[row-firstRow].tokens);
             // don't use setInnerHtml since we are working with an empty DIV
             lineEl.innerHTML = html.join("");
             fragment.appendChild(lineEl);
