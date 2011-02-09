@@ -6123,12 +6123,14 @@ exports.bindings = {
     "gotoright": "Right",
     "selectpagedown": "Shift-PageDown",
     "pagedown": "PageDown",
+    "gotopagedown": "Option-PageDown",
     "selectpageup": "Shift-PageUp",
     "pageup": "PageUp",
+    "gotopageup": "Option-PageUp",
     "selectlinestart": "Shift-Home",
     "selectlineend": "Shift-End",
     "del": "Delete",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Backspace",
+    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
     "outdent": "Shift-Tab",
     "indent": "Tab"
 };
@@ -6209,13 +6211,13 @@ exports.bindings = {
     "selectright": "Shift-Right",
     "gotoright": "Right",
     "selectpagedown": "Shift-PageDown",
-    "pagedown": "PageDown",
+    "gotopagedown": "PageDown",
     "selectpageup": "Shift-PageUp",
-    "pageup": "PageUp",
+    "gotopageup": "PageUp",
     "selectlinestart": "Shift-Home",
     "selectlineend": "Shift-End",
     "del": "Delete",
-    "backspace": "Backspace",
+    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
     "outdent": "Shift-Tab",
     "indent": "Tab"
 };
@@ -6779,7 +6781,7 @@ var EditSession = function(text, mode) {
 
         if (window.Worker)
             this.$worker = mode.createWorker(this);
-        else 
+        else
             this.$worker = null;
 
         this.$mode = mode;
@@ -7130,8 +7132,18 @@ var EditSession = function(text, mode) {
     this.setUseWrapMode = function(useWrapMode) {
         if (useWrapMode != this.$useWrapMode) {
             this.$useWrapMode = useWrapMode;
-            this.$updateWrapData(0, this.getLength() - 1);
             this.$modified = true;
+
+            // If wrapMode is activaed, the wrapData array has to be initialized.
+            if (useWrapMode) {
+                var len = this.getLength();
+                this.$wrapMode = [];
+                for (i = 0; i < len; i++) {
+                    this.$wrapData.push([]);
+                }
+                this.$updateWrapData(0, len - 1);
+            }
+
             this._dispatchEvent("changeWrapMode");
         }
     };
@@ -7143,7 +7155,9 @@ var EditSession = function(text, mode) {
     this.setWrapLimit = function(wrapLimit) {
         if (wrapLimit != this.$wrapLimit) {
             this.$wrapLimit = wrapLimit;
-            this.$updateWrapData(0, this.getLength() - 1);
+            if (this.$useWrapMode) {
+                this.$updateWrapData(0, this.getLength() - 1);
+            }
             this._dispatchEvent("changeWrapMode");
         }
     };
@@ -7157,20 +7171,23 @@ var EditSession = function(text, mode) {
             return;
         }
 
+        var len;
         var action = e.data.action;
         var firstRow = e.data.range.start.row,
             lastRow = e.data.range.end.row;
 
         if (action.indexOf("Lines") != -1) {
             if (action == "insertLines") {
-                lastRow = firstRow + e.data.lines.length;
+                lastRow = firstRow + (e.data.lines.length);
             } else {
-                firstRow = lastRow - e.data.lines.length;
+                lastRow = firstRow;
             }
+            len = e.data.lines.length;
+        } else {
+            len = lastRow - firstRow;
         }
 
-        if (firstRow != lastRow) {
-            var len = lastRow - firstRow;
+        if (len != 0) {
             if (action.indexOf("remove") != -1) {
                 this.$wrapData.splice(firstRow, len);
                 lastRow = firstRow;
@@ -7181,6 +7198,10 @@ var EditSession = function(text, mode) {
             }
         }
 
+        if (this.$wrapData.length != this.doc.$lines.length) {
+            console.error("The length of doc.$lines and $wrapData have to be the same!");
+        }
+
         this.$updateWrapData(firstRow, lastRow);
     };
 
@@ -7189,9 +7210,6 @@ var EditSession = function(text, mode) {
         var tabSize = this.getTabSize();
         var wrapData = this.$wrapData;
         var wrapLimit = this.$wrapLimit;
-
-        // Remove lines that are no longer there.
-        wrapData.splice(lines.length, wrapData.length - lines.length);
 
         for (var row = firstRow; row <= lastRow; row++) {
             wrapData[row] =
@@ -7539,7 +7557,7 @@ var EditSession = function(text, mode) {
         if (docRow > wrapData.length - 1) {
             return [
                 this.getScreenLength(),
-                wrapData[wrapData.length - 1].length - 1
+                wrapData.length == 0 ? 0 : (wrapData[wrapData.length - 1].length - 1)
             ];
         }
 
@@ -8418,11 +8436,12 @@ var Tokenizer = function(rules) {
             var type = "text";
             var value = match[0];
 
-            if (re.lastIndex == lastIndex) { throw new Error("tokenizer error"); }
-            lastIndex = re.lastIndex;
+            if (re.lastIndex == lastIndex) {
+                throw new Error("tokenizer error before line: '" + line + "'");
+            }
 
             for ( var i = 0; i < state.length; i++) {
-                if (match[i + 1]) {
+                if (match[i + 1] !== undefined) {
                     if (typeof state[i].token == "function") {
                         type = state[i].token(match[0]);
                     }
@@ -8454,6 +8473,12 @@ var Tokenizer = function(rules) {
             } else {
                 token.value += value;
             }
+            
+            if (lastIndex == line.length) {
+		        break;
+	        }
+            
+	        lastIndex = re.lastIndex;
         };
 
         if (token.type) {
@@ -8595,6 +8620,11 @@ var Document = function(text) {
 
     if (Array.isArray(text)) {
         this.insertLines(0, text);
+    }
+    // There has to be one line at least in the document. If you pass an empty
+    // string to the insert function, nothing will happen. Workaround.
+    else if (text.length == 0) {
+        this.$lines = [""];
     } else {
         this.insert({row: 0, column:0}, text);
     }
@@ -8606,7 +8636,7 @@ var Document = function(text) {
 
     this.setValue = function(text) {
         var len = this.getLength();
-        this.remove(new Range(0, 0, len, this.getLine(len-1).length));        
+        this.remove(new Range(0, 0, len, this.getLine(len-1).length));
         this.insert({row: 0, column:0}, text);
     };
   	
@@ -8811,16 +8841,16 @@ var Document = function(text) {
         var firstRow = range.start.row;
         var lastRow = range.end.row;
 
-        if (range.isMultiLine()) {            
+        if (range.isMultiLine()) {
             var firstFullRow = range.start.column == 0 ? firstRow : firstRow + 1;
             var lastFullRow = lastRow - 1;
-            
+
             if (range.end.column > 0)
                 this.removeInLine(lastRow, 0, range.end.column);
-                
+
             if (lastFullRow >= firstFullRow)
                 this.removeLines(firstFullRow, lastFullRow);
-                
+
             if (firstFullRow != firstRow) {
                 this.removeInLine(firstRow, range.start.column, this.$lines[firstRow].length);
                 this.removeNewLine(range.start.row);
