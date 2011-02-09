@@ -21,6 +21,8 @@
           <option value="php">PHP Document</option>
           <option value="java">Java Document</option>
           <option value="ruby">Ruby Document</option>
+          <option value="c_cpp">C++ Document</option>
+          <option value="coffee">CoffeeScript Document</option>
           <option value="plain">Text Document</option>
         </select>
       </td>
@@ -76,6 +78,8 @@
           <option value="php">PHP</option>
           <option value="java">Java</option>
           <option value="ruby">Ruby</option>
+          <option value="c_cpp">C/C++</option>
+          <option value="coffee">CoffeeScript</option>
         </select>
       </td>
       <td align="right">
@@ -222,6 +226,44 @@ end
 
 puts fact(ARGV[0].to_i)
 </script>
+
+<script type="text/editor" id="cpptext">// compound assignment operators
+
+#include <iostream>
+using namespace std;
+
+int main ()
+{
+    int a, b=3; /* foobar */
+    a = b;
+    a+=2; // equivalent to a=a+2
+    cout << a;
+    return 0;
+}
+</script>
+
+<script type="text/editor" id="coffeetext">#!/usr/bin/env coffee
+
+try
+    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)
+catch e
+    console.log 'qstring' + "qqstring" + '''
+        qdoc
+    ''' + """
+        qqdoc
+    """
+
+do ->
+    ###
+    herecomment
+    ###
+    re = /regex/imgy.test ///
+        heregex  # comment
+    ///imgy
+    this isnt: `just JavaScript`
+    undefined
+
+var illegal</script>
 
   <input id="cockpitInput" type="text"/>
 
