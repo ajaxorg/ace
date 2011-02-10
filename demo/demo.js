@@ -228,6 +228,11 @@ exports.launch = function(env) {
                 session.setWrapLimit(80);
                 renderer.setPrintMarginColumn(80);
                 break;
+            case "free":
+                session.setUseWrapMode(true);
+                session.setWrapLimitRange(null, null);
+                renderer.setPrintMarginColumn(80);
+                break;
         }
     });
 
