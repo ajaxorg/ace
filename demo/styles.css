@@ -15,6 +15,12 @@ body {
     color: white;
 }
 
+#editor .cool {
+    position: absolute;
+    z-index: 4;
+    background: orange;
+}
+
 #editor {
     position: absolute;
     top: 60px;
