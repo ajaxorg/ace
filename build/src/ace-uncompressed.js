@@ -4848,12 +4848,14 @@ var Editor =function(renderer, session) {
 
     this.navigateUp = function(times) {
         this.selection.clearSelection();
-        this.selection.moveCursorBy(-1, 0);
+        times = times || 1;
+        this.selection.moveCursorBy(-times, 0);
     };
 
     this.navigateDown = function(times) {
         this.selection.clearSelection();
-        this.selection.moveCursorBy(1, 0);
+        times = times || 1;
+        this.selection.moveCursorBy(times, 0);
     };
 
     this.navigateLeft = function(times) {
@@ -8436,12 +8438,8 @@ var Tokenizer = function(rules) {
             var type = "text";
             var value = match[0];
 
-            if (re.lastIndex == lastIndex) {
-                throw new Error("tokenizer error before line: '" + line + "'");
-            }
-
             for ( var i = 0; i < state.length; i++) {
-                if (match[i + 1] !== undefined && match[i + 1].length) {
+                if (match[i + 1] !== undefined) {
                     if (typeof state[i].token == "function") {
                         type = state[i].token(match[0]);
                     }
@@ -8541,6 +8539,9 @@ var TextHighlightRules = function() {
 
     this.$rules = {
         "start" : [ {
+            token : "empty_line",
+            regex : '^$',
+        }, {
             token : "text",
             regex : ".+"
         } ]
