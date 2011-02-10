@@ -121,7 +121,7 @@ copy({
 
 console.log('# cockpit ---------');
 
-project.assmeAllFilesLoaded();
+project.assumeAllFilesLoaded();
 project.addRoot(aceHome + '/support/cockpit/lib');
 
 var cockpit = copy.createDataObject();
@@ -167,17 +167,17 @@ copy({
 
 
 // create modes
-project.assmeAllFilesLoaded();
-
-["css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp"].forEach(function(mode) {
+project.assumeAllFilesLoaded();
+["css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp", "coffee"].forEach(function(mode) {
+    console.log("mode " + mode);
     copy({
         source: [
             copy.source.commonjs({
-                project: project,
+                project: project.clone(),
                 require: [ 'ace/mode/' + mode ]
             })
         ],
-        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        filter: [ copy.filter.debug, copy.filter.moduleDefines, copy.filter.uglifyjs ],
         dest: "build/src/mode-" + mode + ".js"
     });
 });
@@ -253,12 +253,12 @@ copy({
 });
 
 // copy key bindings
+project.assumeAllFilesLoaded();
 ["vim", "emacs"].forEach(function(keybinding) {
-    project.assmeAllFilesLoaded();
     copy({
         source: [
             copy.source.commonjs({
-                project: project,
+                project: project.clone(),
                 require: [ 'ace/keyboard/keybinding/' + keybinding ]
             })
         ],
