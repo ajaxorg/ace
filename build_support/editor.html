@@ -22,12 +22,13 @@
 <body>
 
 <pre id="editor">function foo(items) {
-    for (var i = 0; i &lt; items.length; i++) {
+    var i;
+    for (i = 0; i &lt; items.length; i++) {
         alert("Ace Rocks " + items[i]);
     }
 }</pre>
     
-<script src="src/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 <script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 <script>
