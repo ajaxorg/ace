@@ -4156,6 +4156,7 @@ var Editor =function(renderer, session) {
             this.session.removeEventListener("change", this.$onDocumentChange);
             this.session.removeEventListener("changeMode", this.$onDocumentModeChange);
             this.session.removeEventListener("changeTabSize", this.$onDocumentChangeTabSize);
+            this.session.removeEventListener("changeWrapLimit", this.$onDocumentChangeWrapLimit);
             this.session.removeEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
             this.session.removeEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
             this.session.removeEventListener("changeAnnotation", this.$onDocumentChangeAnnotation);
@@ -4179,7 +4180,10 @@ var Editor =function(renderer, session) {
         this.$onDocumentChangeTabSize = this.renderer.updateText.bind(this.renderer);
         session.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
-        this.$onDocumentChangeWrapMode = this.renderer.updateFull.bind(this.renderer);
+        this.$onDocumentChangeWrapLimit = this.onDocumentChangeWrapLimit.bind(this);
+        session.addEventListener("changeWrapLimit", this.$onDocumentChangeWrapLimit);
+
+        this.$onDocumentChangeWrapMode = this.onDocumentChangeWrapMode.bind(this);
         session.addEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
 
         this.$onDocumentChangeBreakpoint = this.onDocumentChangeBreakpoint.bind(this);
@@ -4376,6 +4380,15 @@ var Editor =function(renderer, session) {
         }
 
         this.renderer.setTokenizer(this.bgTokenizer);
+    };
+
+    this.onDocumentChangeWrapLimit = function() {
+        this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
+        this.renderer.updateFull();
+    };
+
+    this.onDocumentChangeWrapMode = function() {
+        this.renderer.onResize(true);
     };
 
     this.getCopyText = function() {
@@ -7130,6 +7143,10 @@ var EditSession = function(text, mode) {
     // WRAPMODE
     this.$wrapLimit = 80;
     this.$useWrapMode = false;
+    this.$wrapLimitRange = {
+        min : null,
+        max : null
+    };
 
     this.setUseWrapMode = function(useWrapMode) {
         if (useWrapMode != this.$useWrapMode) {
@@ -7155,17 +7172,62 @@ var EditSession = function(text, mode) {
     };
 
     this.setWrapLimit = function(wrapLimit) {
-        if (wrapLimit != this.$wrapLimit) {
-            this.$wrapLimit = wrapLimit;
-            if (this.$useWrapMode) {
-                this.$updateWrapData(0, this.getLength() - 1);
-            }
+        this.setWrapLimitRange(wrapLimit, wrapLimit);
+    };
+
+    // Allow the wrap limit to move freely between min and max. Either
+    // parameter can be null to allow the wrap limit to be unconstrained
+    // in that direction. Or set both parameters to the same number to pin
+    // the limit to that value.
+    this.setWrapLimitRange = function(min, max) {
+        if (this.$wrapLimitRange.min !== min || this.$wrapLimitRange.max !== max) {
+            this.$wrapLimitRange.min = min;
+            this.$wrapLimitRange.max = max;
+            this.$modified = true;
+            // This will force a recalculation of the wrap limit
             this._dispatchEvent("changeWrapMode");
         }
     };
 
+    // This should generally only be called by the renderer when a resize
+    // is detected.
+    this.adjustWrapLimit = function(desiredLimit) {
+        var wrapLimit = this.$constrainWrapLimit(desiredLimit);
+        if (wrapLimit != this.$wrapLimit && wrapLimit > 0) {
+            this.$wrapLimit = wrapLimit;
+            this.$modified = true;
+            if (this.$useWrapMode) {
+                this.$updateWrapData(0, this.getLength() - 1);
+                this._dispatchEvent("changeWrapLimit");
+            }
+            return true;
+        }
+        return false;
+    };
+
+    this.$constrainWrapLimit = function(wrapLimit) {
+        var min = this.$wrapLimitRange.min;
+        if (min)
+            wrapLimit = Math.max(min, wrapLimit);
+
+        var max = this.$wrapLimitRange.max;
+        if (max)
+            wrapLimit = Math.min(max, wrapLimit);
+
+        // What would a limit of 0 even mean?
+        return Math.max(1, wrapLimit);
+    };
+
     this.getWrapLimit = function() {
         return this.$wrapLimit;
+    };
+
+    this.getWrapLimitRange = function() {
+        // Avoid unexpected mutation by returning a copy
+        return {
+            min : this.$wrapLimitRange.min,
+            max : this.$wrapLimitRange.max
+        };
     };
 
     this.$updateWrapDataOnChange = function(e) {
@@ -10099,6 +10161,13 @@ var VirtualRenderer = function(container, theme) {
             var gutterWidth = this.showGutter ? this.$gutter.offsetWidth : 0;
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+
+            if (this.session.getUseWrapMode()) {
+                var limit = Math.floor(this.scroller.clientWidth / this.characterWidth);
+                if (this.session.adjustWrapLimit(limit) || force) {
+                    changes = changes | this.CHANGE_FULL;
+                }
+            }
         }
 
         this.$size.scrollerWidth = this.scroller.clientWidth;
