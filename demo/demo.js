@@ -140,7 +140,6 @@ exports.launch = function(env) {
             anchorStart.getPosition(),
             anchorEnd.getPosition()
         );
-        console.log(range);
         marker = env.editor.renderer.addMarker(range, "cool", "text");
     };
     updateFloat();
