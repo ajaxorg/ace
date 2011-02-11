@@ -84,6 +84,7 @@ exports.launch = function(env) {
     }
     docs.plain = new EditSession(loreIpsum);
     docs.plain.setUseWrapMode(true);
+    docs.plain.setWrapLimitRange(80, 80)
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
@@ -189,7 +190,7 @@ exports.launch = function(env) {
         if (!doc.getUseWrapMode()) {
             wrapModeEl.value = "off";
         } else {
-            wrapModeEl.value = doc.getWrapLimit();
+            wrapModeEl.value = doc.getWrapLimitRange().min || "free";
         }
         env.editor.focus();
     });
@@ -220,12 +221,17 @@ exports.launch = function(env) {
                 break;
             case "40":
                 session.setUseWrapMode(true);
-                session.setWrapLimit(40);
+                session.setWrapLimitRange(40, 40);
                 renderer.setPrintMarginColumn(40);
                 break;
             case "80":
                 session.setUseWrapMode(true);
-                session.setWrapLimit(80);
+                session.setWrapLimitRange(80, 80);
+                renderer.setPrintMarginColumn(80);
+                break;
+            case "free":
+                session.setUseWrapMode(true);
+                session.setWrapLimitRange(null, null);
                 renderer.setPrintMarginColumn(80);
                 break;
         }
