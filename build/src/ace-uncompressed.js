@@ -4103,7 +4103,7 @@ var Editor =function(renderer, session) {
 
     this.$selectionMarker = null;
     this.$highlightLineMarker = null;
-    this.$blockScrolling = false;
+    this.$blockScrolling = 0;
 
     this.$search = new Search().set({
         wrap: true
@@ -4315,7 +4315,7 @@ var Editor =function(renderer, session) {
     this.onCursorChange = function(e) {
         this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
 
-        if (!this.$blockScrolling && (!e || !e.blockScrolling)) {
+        if (!this.$blockScrolling) {
             this.renderer.scrollCursorIntoView();
         }
 
@@ -4405,7 +4405,7 @@ var Editor =function(renderer, session) {
             return;
 
         if (!this.selection.isEmpty()) {
-            this.moveCursorToPosition(this.session.remove(this.getSelectionRange()));
+            this.session.remove(this.getSelectionRange())
             this.clearSelection();
         }
     };
@@ -4434,14 +4434,6 @@ var Editor =function(renderer, session) {
         var line          = this.session.getLine(cursor.row);
         var lineIndent    = this.mode.getNextLineIndent(lineState, line.slice(0, cursor.column), this.session.getTabString());
         var end           = this.session.insert(cursor, text);
-
-        /* TODO: This shortcut is somehow broken
-        if (!shouldOutdent && line != this.session.getLine(row) && text != "\n") {
-            this.moveCursorToPosition(end);
-            this.renderer.scrollCursorIntoView();
-            return;
-        }
-        */
 
         var lineState = this.bgTokenizer.getState(cursor.row);
         // multi line insert
@@ -4475,15 +4467,12 @@ var Editor =function(renderer, session) {
                         outdent -= 1;
                 this.session.replace(new Range(row, 0, row, line.length), line.substr(i));
             }
-            end.column += this.session.indentRows(cursor.row + 1, end.row, lineIndent);
+            this.session.indentRows(cursor.row + 1, end.row, lineIndent);
         } else {
             if (shouldOutdent) {
-                end.column += this.mode.autoOutdent(lineState, this.session, cursor.row);
+                this.mode.autoOutdent(lineState, this.session, cursor.row);
             }
         }
-
-        this.moveCursorToPosition(end);
-        this.renderer.scrollCursorIntoView();
     }
 
     this.onTextInput = function(text) {
@@ -4500,9 +4489,9 @@ var Editor =function(renderer, session) {
 
         this.$overwrite = overwrite;
 
-        this.$blockScrolling = true;
+        this.$blockScrolling += 1;
         this.onCursorChange();
-        this.$blockScrolling = false;
+        this.$blockScrolling -= 1;
 
         this._dispatchEvent("changeOverwrite", {data: overwrite});
     };
@@ -4591,7 +4580,7 @@ var Editor =function(renderer, session) {
         if (this.selection.isEmpty()) {
             this.selection.selectRight();
         }
-        this.moveCursorToPosition(this.session.remove(this.getSelectionRange()));
+        this.session.remove(this.getSelectionRange())
         this.clearSelection();
     };
 
@@ -4602,7 +4591,7 @@ var Editor =function(renderer, session) {
         if (this.selection.isEmpty())
             this.selection.selectLeft();
 
-        this.moveCursorToPosition(this.session.remove(this.getSelectionRange()));
+        this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
 
@@ -4615,9 +4604,7 @@ var Editor =function(renderer, session) {
 
         if (range.start.row < range.end.row || range.start.column < range.end.column) {
             var rows = this.$getSelectedRows();
-            var count = session.indentRows(rows.first, rows.last, "\t");
-
-            this.selection.shiftSelection(count);
+            session.indentRows(rows.first, rows.last, "\t");
         } else {
             var indentString;
 
@@ -4639,9 +4626,7 @@ var Editor =function(renderer, session) {
             return;
 
         var selection = this.session.getSelection();
-        var range = this.session.outdentRows(selection.getRange());
-
-        selection.setSelectionRange(range, selection.isBackwards());
+        this.session.outdentRows(selection.getRange());
     };
 
     this.toggleCommentLines = function() {
@@ -4650,8 +4635,7 @@ var Editor =function(renderer, session) {
 
         var state = this.bgTokenizer.getState(this.getCursorPosition().row);
         var rows = this.$getSelectedRows()
-        var addedColumns = this.mode.toggleCommentLines(state, this.session, rows.first, rows.last);
-        this.selection.shiftSelection(addedColumns);
+        this.mode.toggleCommentLines(state, this.session, rows.first, rows.last);
     };
 
     this.removeLines = function() {
@@ -4659,10 +4643,7 @@ var Editor =function(renderer, session) {
             return;
 
         var rows = this.$getSelectedRows();
-        this.selection.setSelectionAnchor(rows.last+1, 0);
-        this.selection.selectTo(rows.first, 0);
-
-        this.session.remove(this.getSelectionRange());
+        this.session.remove(new Range(rows.first, 0, rows.last+1, 0));
         this.clearSelection();
     };
 
@@ -4727,7 +4708,6 @@ var Editor =function(renderer, session) {
 
     this.onCompositionStart = function(text) {
         this.renderer.showComposition(this.getCursorPosition());
-        //this.onTextInput(text);
     };
 
     this.onCompositionUpdate = function(text) {
@@ -4736,7 +4716,6 @@ var Editor =function(renderer, session) {
 
     this.onCompositionEnd = function() {
         this.renderer.hideComposition();
-        //this.removeLeft();
     };
 
 
@@ -4829,6 +4808,13 @@ var Editor =function(renderer, session) {
         return this.selection.getRange();
     };
 
+
+    this.selectAll = function() {
+        this.$blockScrolling += 1;
+        this.selection.selectAll();
+        this.$blockScrolling -= 1;
+    };
+    
     this.clearSelection = function() {
         this.selection.clearSelection();
     };
@@ -4845,9 +4831,9 @@ var Editor =function(renderer, session) {
     this.gotoLine = function(lineNumber, row) {
         this.selection.clearSelection();
 
-        this.$blockScrolling = true;
+        this.$blockScrolling += 1;
         this.moveCursorTo(lineNumber-1, row || 0);
-        this.$blockScrolling = false;
+        this.$blockScrolling -= 1;
 
         if (!this.isRowVisible(this.getCursorPosition().row)) {
             this.scrollToRow(lineNumber - 1 - Math.floor(this.getVisibleRowCount() / 2));
@@ -6524,7 +6510,7 @@ canon.addCommand({
 
 canon.addCommand({
     name: "selectall",
-    exec: function(env, args, request) { env.editor.getSelection().selectAll(); }
+    exec: function(env, args, request) { env.editor.selectAll(); }
 });
 canon.addCommand({
     name: "removeline",
@@ -6786,7 +6772,6 @@ var NO_CHANGE_DELTAS = {};
 
 var EditSession = function(text, mode) {
     this.$modified = true;
-    this.selection = new Selection(this);
     this.$breakpoints = [];
     this.$wrapData = [];
     this.listeners = [];
@@ -6797,6 +6782,7 @@ var EditSession = function(text, mode) {
         this.setDocument(new Document(text));
     }
 
+    this.selection = new Selection(this);
     if (mode)
         this.setMode(mode);
 };
@@ -7220,50 +7206,8 @@ var EditSession = function(text, mode) {
         return this.doc.insert(position, text);
     };
 
-    /**
-     * @param rows Array[Integer] sorted list of rows
-     */
-    this.multiRowInsert = function(rows, column, text) {
-        for (var i=rows.length-1; i>=0; i--) {
-            var row = rows[i];
-            if (row >= this.doc.getLength())
-                continue;
-
-            var diff = column - this.doc.getLine(row).length;
-            if ( diff > 0) {
-                var padded = lang.stringRepeat(" ", diff) + text;
-                var offset = -diff;
-            }
-            else {
-                padded = text;
-                offset = 0;
-            }
-
-            var end = this.insert({row: row, column: column+offset}, padded);
-        }
-
-        return {
-            rows: end ? end.row - rows[0] : 0,
-            columns: end ? end.column - column : 0
-        };
-    };
-
     this.remove = function(range) {
         return this.doc.remove(range);
-    };
-
-    this.multiRowRemove = function(rows, range) {
-        if (range.start.row !== rows[0])
-            throw new TypeError("range must start in the first row!");
-
-        var height = range.end.row - rows[0];
-        for (var i=rows.length-1; i>=0; i--) {
-            var row = rows[i];
-            if (row >= this.doc.getLength())
-                continue;
-
-            var end = this.remove(new Range(row, range.start.column, row+height, range.end.column));
-        }
     };
 
     this.undoChanges = function(deltas) {
@@ -7313,7 +7257,6 @@ var EditSession = function(text, mode) {
         for (var row=startRow; row<=endRow; row++) {
             this.insert({row: row, column:0}, indentString);
         }
-        return indentString.length;
     };
 
     this.outdentRows = function (range) {
@@ -7336,13 +7279,8 @@ var EditSession = function(text, mode) {
                 deleteRange.start.column = 0;
                 deleteRange.end.column = j;
             }
-            if (i == range.start.row)
-                range.start.column -= deleteRange.end.column - deleteRange.start.column;
-            if (i == range.end.row)
-                range.end.column -= deleteRange.end.column - deleteRange.start.column;
             this.remove(deleteRange);
         }
-        return range;
     };
 
     this.moveLinesUp = function(firstRow, lastRow) {
@@ -7980,15 +7918,27 @@ var oop = require("pilot/oop");
 var lang = require("pilot/lang");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 var Range = require("ace/range").Range;
+var Anchor = require("ace/anchor").Anchor;
 
-var Selection = function(doc) {
-    this.doc = doc;
+var Selection = function(session) {
+    this.session = session;
+    this.doc = session.getDocument();
 
     this.clearSelection();
-    this.selectionLead = {
-        row: 0,
-        column: 0
-    };
+    this.selectionLead = new Anchor(this.doc, 0, 0);
+    this.selectionAnchor = new Anchor(this.doc, 0, 0);
+    
+    var _self = this;
+    this.selectionLead.on("change", function() {
+        _self._dispatchEvent("changeCursor");
+        if (!_self.$isEmpty)
+            _self._dispatchEvent("changeSelection");
+    });
+    
+    this.selectionAnchor.on("change", function() {
+        if (!_self.$isEmpty)
+            _self._dispatchEvent("changeSelection");
+    });
 };
 
 (function() {
@@ -7996,9 +7946,10 @@ var Selection = function(doc) {
     oop.implement(this, EventEmitter);
 
     this.isEmpty = function() {
-        return (!this.selectionAnchor ||
-            (this.selectionAnchor.row == this.selectionLead.row &&
-             this.selectionAnchor.column == this.selectionLead.column));
+        return (this.$isEmpty || (
+            this.selectionAnchor.row == this.selectionLead.row &&
+            this.selectionAnchor.column == this.selectionLead.column
+        ));
     };
 
     this.isMultiLine = function() {
@@ -8010,37 +7961,31 @@ var Selection = function(doc) {
     };
 
     this.getCursor = function() {
-        return this.selectionLead;
+        return this.selectionLead.getPosition();
     };
 
     this.setSelectionAnchor = function(row, column) {
-        var anchor = this.$clipPositionToDocument(row, column);
+        this.selectionAnchor.setPosition(row, column);
 
-        if (!this.selectionAnchor) {
-            this.selectionAnchor = anchor;
-            this._dispatchEvent("changeSelection", {});
+        if (this.$isEmpty) {
+            this.$isEmpty = false;
+            this._dispatchEvent("changeSelection");
         }
-        else if (this.selectionAnchor.row !== anchor.row || this.selectionAnchor.column !== anchor.column) {
-            this.selectionAnchor = anchor;
-            this._dispatchEvent("changeSelection", {});
-        }
-
     };
 
     this.getSelectionAnchor = function() {
-        if (this.selectionAnchor) {
-            return this.$clone(this.selectionAnchor);
-        } else {
-            return this.$clone(this.selectionLead);
-        }
+        if (this.$isEmpty)
+            return this.getSelectionLead()
+        else
+            return this.selectionAnchor.getPosition();
     };
 
     this.getSelectionLead = function() {
-        return this.$clone(this.selectionLead);
+        return this.selectionLead.getPosition();
     };
 
     this.shiftSelection = function(columns) {
-        if (this.isEmpty()) {
+        if (this.$isEmpty) {
             this.moveCursorTo(this.selectionLead.row, this.selectionLead.column + columns);
             return;
         };
@@ -8061,14 +8006,17 @@ var Selection = function(doc) {
     };
 
     this.isBackwards = function() {
-        var anchor = this.selectionAnchor || this.selectionLead;
+        var anchor = this.selectionAnchor;
         var lead = this.selectionLead;
         return (anchor.row > lead.row || (anchor.row == lead.row && anchor.column > lead.column));
     };
 
     this.getRange = function() {
-        var anchor = this.selectionAnchor || this.selectionLead;
+        var anchor = this.selectionAnchor;
         var lead = this.selectionLead;
+
+        if (this.isEmpty())
+            return Range.fromPoints(lead, lead);
 
         if (this.isBackwards()) {
             return Range.fromPoints(lead, anchor);
@@ -8079,26 +8027,16 @@ var Selection = function(doc) {
     };
 
     this.clearSelection = function() {
-        if (this.selectionAnchor) {
-            this.selectionAnchor = null;
-            this._dispatchEvent("changeSelection", {});
+        if (!this.$isEmpty) {
+            this.$isEmpty = true;
+            this._dispatchEvent("changeSelection");
         }
     };
 
     this.selectAll = function() {
         var lastRow = this.doc.getLength() - 1;
         this.setSelectionAnchor(lastRow, this.doc.getLine(lastRow).length);
-
-        if (!this.selectionAnchor) {
-            this.selectionAnchor = this.$clone(this.selectionLead);
-        }
-
-        var cursor = {row:0, column:0};
-        // only dispatch change if the cursor actually changed
-        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
-            this.selectionLead = cursor;
-            this._dispatchEvent("changeSelection", {blockScrolling: true});
-        }
+        this.moveCursorTo(0, 0);
     };
 
     this.setSelectionRange = function(range, reverse) {
@@ -8115,27 +8053,16 @@ var Selection = function(doc) {
     this.$updateDesiredColumn = function() {
         var cursor = this.getCursor();
         if (cursor) {
-            this.$desiredColumn = this.doc.documentToScreenColumn(cursor.row, cursor.column);
+            this.$desiredColumn = this.session.documentToScreenColumn(cursor.row, cursor.column);
         }
     };
 
     this.$moveSelection = function(mover) {
-        var changed = false;
+        var lead = this.selectionLead;
+        if (this.$isEmpty)
+            this.setSelectionAnchor(lead.row, lead.column);
 
-        if (!this.selectionAnchor) {
-            changed = true;
-            this.selectionAnchor = this.$clone(this.selectionLead);
-        }
-
-        var cursor = this.$clone(this.selectionLead);
         mover.call(this);
-
-        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
-            changed = true;
-        }
-
-        if (changed)
-            this._dispatchEvent("changeSelection", {});
     };
 
     this.selectTo = function(row, column) {
@@ -8191,15 +8118,9 @@ var Selection = function(doc) {
     };
 
     this.selectWord = function() {
-        var cursor = this.selectionLead;
-        var column = cursor.column;
-        var range  = this.doc.getWordRange(cursor.row, column);
+        var cursor = this.getCursor();
+        var range  = this.session.getWordRange(cursor.row, cursor.column);
         this.setSelectionRange(range);
-
-        /*this.setSelectionAnchor(cursor.row, start);
-        this.$moveSelection(function() {
-            this.moveCursorTo(cursor.row, end);
-        });*/
     };
 
     this.selectLine = function() {
@@ -8218,18 +8139,16 @@ var Selection = function(doc) {
     };
 
     this.moveCursorLeft = function() {
-        if (this.selectionLead.column == 0) {
+        var cursor = this.selectionLead.getPosition();
+        if (cursor.column == 0) {
             // cursor is a line (start
-            if (this.selectionLead.row > 0) {
-                this.moveCursorTo(this.selectionLead.row - 1, this.doc
-                        .getLine(this.selectionLead.row - 1).length);
+            if (cursor.row > 0) {
+                this.moveCursorTo(cursor.row - 1, this.doc.getLine(cursor.row - 1).length);
             }
         }
         else {
-            var doc = this.doc;
-            var tabSize = doc.getTabSize();
-            var cursor = this.selectionLead;
-            if (doc.isTabStop(cursor) && doc.getLine(cursor.row).slice(cursor.column-tabSize, cursor.column).split(" ").length-1 == tabSize)
+            var tabSize = this.session.getTabSize();
+            if (this.session.isTabStop(cursor) && this.doc.getLine(cursor.row).slice(cursor.column-tabSize, cursor.column).split(" ").length-1 == tabSize)
                 this.moveCursorBy(0, -tabSize);
             else
                 this.moveCursorBy(0, -1);
@@ -8243,10 +8162,9 @@ var Selection = function(doc) {
             }
         }
         else {
-            var doc = this.doc;
-            var tabSize = doc.getTabSize();
+            var tabSize = this.session.getTabSize();
             var cursor = this.selectionLead;
-            if (doc.isTabStop(cursor) && doc.getLine(cursor.row).slice(cursor.column, cursor.column+tabSize).split(" ").length-1 == tabSize)
+            if (this.session.isTabStop(cursor) && this.doc.getLine(cursor.row).slice(cursor.column, cursor.column+tabSize).split(" ").length-1 == tabSize)
                 this.moveCursorBy(0, tabSize);
             else
                 this.moveCursorBy(0, 1);
@@ -8256,12 +8174,12 @@ var Selection = function(doc) {
     this.moveCursorLineStart = function() {
         var row = this.selectionLead.row;
         var column = this.selectionLead.column;
-        var screenRow = this.doc.documentToScreenRow(row, column);
-        var firstRowColumn = this.doc.getScreenFirstRowColumn(screenRow);
+        var screenRow = this.session.documentToScreenRow(row, column);
+        var firstRowColumn = this.session.getScreenFirstRowColumn(screenRow);
         var beforeCursor = this.doc.getLine(row).slice(firstRowColumn, column);
         var leadingSpace = beforeCursor.match(/^\s*/);
         if (leadingSpace[0].length == 0) {
-            var lastRowColumn = this.doc.getDocumentLastRowColumn(row, column);
+            var lastRowColumn = this.session.getDocumentLastRowColumn(row, column);
             leadingSpace = this.doc.getLine(row).
                                 substring(firstRowColumn, lastRowColumn).
                                 match(/^\s*/);
@@ -8274,9 +8192,8 @@ var Selection = function(doc) {
     };
 
     this.moveCursorLineEnd = function() {
-        var selLead = this.selectionLead;
-        this.moveCursorTo(selLead.row,
-              this.doc.getDocumentLastRowColumn(selLead.row, selLead.column));
+        var lead = this.selectionLead;
+        this.moveCursorTo(lead.row, this.session.getDocumentLastRowColumn(lead.row, lead.column));
     };
 
     this.moveCursorFileEnd = function() {
@@ -8296,20 +8213,20 @@ var Selection = function(doc) {
         var rightOfCursor = line.substring(column);
 
         var match;
-        this.doc.nonTokenRe.lastIndex = 0;
-        this.doc.tokenRe.lastIndex = 0;
+        this.session.nonTokenRe.lastIndex = 0;
+        this.session.tokenRe.lastIndex = 0;
 
         if (column == line.length) {
             this.moveCursorRight();
             return;
         }
-        else if (match = this.doc.nonTokenRe.exec(rightOfCursor)) {
-            column += this.doc.nonTokenRe.lastIndex;
-            this.doc.nonTokenRe.lastIndex = 0;
+        else if (match = this.session.nonTokenRe.exec(rightOfCursor)) {
+            column += this.session.nonTokenRe.lastIndex;
+            this.session.nonTokenRe.lastIndex = 0;
         }
-        else if (match = this.doc.tokenRe.exec(rightOfCursor)) {
-            column += this.doc.tokenRe.lastIndex;
-            this.doc.tokenRe.lastIndex = 0;
+        else if (match = this.session.tokenRe.exec(rightOfCursor)) {
+            column += this.session.tokenRe.lastIndex;
+            this.session.tokenRe.lastIndex = 0;
         }
 
         this.moveCursorTo(row, column);
@@ -8322,83 +8239,49 @@ var Selection = function(doc) {
         var leftOfCursor = lang.stringReverse(line.substring(0, column));
 
         var match;
-        this.doc.nonTokenRe.lastIndex = 0;
-        this.doc.tokenRe.lastIndex = 0;
+        this.session.nonTokenRe.lastIndex = 0;
+        this.session.tokenRe.lastIndex = 0;
 
         if (column == 0) {
             this.moveCursorLeft();
             return;
         }
-        else if (match = this.doc.nonTokenRe.exec(leftOfCursor)) {
-            column -= this.doc.nonTokenRe.lastIndex;
-            this.doc.nonTokenRe.lastIndex = 0;
+        else if (match = this.session.nonTokenRe.exec(leftOfCursor)) {
+            column -= this.session.nonTokenRe.lastIndex;
+            this.session.nonTokenRe.lastIndex = 0;
         }
-        else if (match = this.doc.tokenRe.exec(leftOfCursor)) {
-            column -= this.doc.tokenRe.lastIndex;
-            this.doc.tokenRe.lastIndex = 0;
+        else if (match = this.session.tokenRe.exec(leftOfCursor)) {
+            column -= this.session.tokenRe.lastIndex;
+            this.session.tokenRe.lastIndex = 0;
         }
 
         this.moveCursorTo(row, column);
     };
 
     this.moveCursorBy = function(rows, chars) {
-        if (this.doc.getUseWrapMode()) {
-            var screenPos = this.doc.documentToScreenPosition(
-                        this.selectionLead.row, this.selectionLead.column);
-            var screenCol =
-                (chars == 0 && this.$desiredColumn) || screenPos.column;
-
-            var docPos = this.doc.screenToDocumentPosition(
-                        screenPos.row + rows, screenCol);
+        if (this.session.getUseWrapMode()) {
+            var screenPos = this.session.documentToScreenPosition(
+                this.selectionLead.row, 
+                this.selectionLead.column
+            );
+            var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
+            var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
+            
             this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
         } else {
-            var docColumn =
-                (chars == 0 && this.$desiredColumn) || this.selectionLead.column;
-            this.moveCursorTo(
-                this.selectionLead.row + rows, docColumn + chars, chars == 0);
+            var docColumn = (chars == 0 && this.$desiredColumn) || this.selectionLead.column;
+            this.moveCursorTo(this.selectionLead.row + rows, docColumn + chars, chars == 0);
         }
     };
-
 
     this.moveCursorToPosition = function(position) {
         this.moveCursorTo(position.row, position.column);
     };
 
     this.moveCursorTo = function(row, column, preventUpdateDesiredColumn) {
-        var cursor = this.$clipPositionToDocument(row, column);
-
-        // only dispatch change if the cursor actually changed
-        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
-            this.selectionLead = cursor;
-            !preventUpdateDesiredColumn && this.$updateDesiredColumn(column);
-            this._dispatchEvent("changeCursor", { data: this.getCursor() });
-        }
-    };
-
-    this.$clipPositionToDocument = function(row, column) {
-        var pos = {};
-
-        if (row >= this.doc.getLength()) {
-            pos.row = Math.max(0, this.doc.getLength() - 1);
-            pos.column = this.doc.getLine(pos.row).length;
-        }
-        else if (row < 0) {
-            pos.row = 0;
-            pos.column = 0;
-        }
-        else {
-            pos.row = row;
-            pos.column = Math.min(this.doc.getLine(pos.row).length,
-                    Math.max(0, column));
-        }
-        return pos;
-    };
-
-    this.$clone = function(pos) {
-        return {
-            row: pos.row,
-            column: pos.column
-        };
+        this.selectionLead.setPosition(row, column);
+        if (!preventUpdateDesiredColumn)
+            this.$updateDesiredColumn(this.selectionLead.column);
     };
 
 }).call(Selection.prototype);
@@ -8609,6 +8492,180 @@ exports.Range = Range;
  *
  * ***** END LICENSE BLOCK ***** */
 
+define('ace/anchor', function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
+
+/**
+ * An Anchor is a floating pointer in the document. Whenever text is inserted or
+ * deleted before the cursor, the position of the cursor is updated
+ */
+var Anchor = exports.Anchor = function(doc, row, column) {
+    this.document = doc;
+    
+    if (typeof column == "undefined")
+        this.setPosition(row.row, row.column)
+    else
+        this.setPosition(row, column);
+
+    this.$onChange = this.onChange.bind(this);
+    doc.on("change", this.$onChange);
+};
+
+(function() {
+
+    oop.implement(this, EventEmitter);
+    
+    this.getPosition = function() {
+        return this.$clipPositionToDocument(this.row, this.column);
+    };
+    
+    this.getDocument = function() {
+        return this.document;
+    };
+    
+    this.onChange = function(e) {
+        var delta = e.data;
+        var range = delta.range;
+            
+        if (range.start.row == range.end.row && range.start.row != this.row)
+            return;
+            
+        if (range.start.row > this.row)
+            return;
+            
+        if (range.start.row == this.row && range.start.column > this.column)
+            return;
+    
+        var row = this.row;
+        var column = this.column;
+        
+        if (delta.action === "insertText") {
+            if (range.start.row === row && range.start.column <= column) {
+                if (range.start.row === range.end.row) {
+                    column += range.end.column - range.start.column;
+                }
+                else {
+                    column -= range.start.column;
+                    row += range.end.row - range.start.row;
+                }
+            }
+            else if (range.start.row !== range.end.row && range.start.row < row) {
+                row += range.end.row - range.start.row;
+            }
+        } else if (delta.action === "insertLines") {
+            if (range.start.row <= row) {
+                row += range.end.row - range.start.row;
+            }
+        }
+        else if (delta.action == "removeText") {
+            if (range.start.row == row && range.start.column < column) {
+                if (range.end.column >= column)
+                    column = range.start.column;
+                else
+                    column = Math.max(0, column - (range.end.column - range.start.column));
+                
+            } else if (range.start.row !== range.end.row && range.start.row < row) {
+                if (range.end.row == row) {
+                    column = Math.max(0, column - range.end.column) + range.start.column;
+                }
+                row -= (range.end.row - range.start.row);
+            }
+            else if (range.end.row == row) {
+                row -= range.end.row - range.start.row;
+                column = Math.max(0, column - range.end.column) + range.start.column;
+            }
+        } else if (delta.action == "removeLines") {
+            if (range.start.row <= row) {
+                if (range.end.row <= row)
+                    row -= range.end.row - range.start.row;
+                else {
+                    row = range.start.row;
+                    column = 0;
+                }
+            }
+        }
+
+        this.setPosition(row, column);
+    };
+
+    this.setPosition = function(row, column) {
+        pos = this.$clipPositionToDocument(row, column);
+        if (this.row == pos.row && this.column == pos.column)
+            return;
+            
+        this.row = pos.row;
+        this.column = pos.column;
+        this._dispatchEvent("change");
+    };
+    
+    this.detach = function() {
+        this.document.removeEventListener("change", this.$onChange);
+    };
+    
+    this.$clipPositionToDocument = function(row, column) {
+        var pos = {};
+    
+        if (row >= this.document.getLength()) {
+            pos.row = Math.max(0, this.document.getLength() - 1);
+            pos.column = this.document.getLine(pos.row).length;
+        }
+        else if (row < 0) {
+            pos.row = 0;
+            pos.column = 0;
+        }
+        else {
+            pos.row = row;
+            pos.column = Math.min(this.document.getLine(pos.row).length, Math.max(0, column));
+        }
+        
+        if (column < 0)
+            pos.column = 0;
+            
+        return pos;
+    };
+    
+}).call(Anchor.prototype);
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 define('ace/mode/text', function(require, exports, module) {
 
 var Tokenizer = require("ace/tokenizer").Tokenizer;
@@ -8625,7 +8682,6 @@ var Mode = function() {
     };
 
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
-        return 0;
     };
 
     this.getNextLineIndent = function(state, line, tab) {
@@ -9947,8 +10003,6 @@ var MatchingBraceOutdent = function() {};
 
         var indent = this.$getIndent(doc.getLine(openBracePos.row));
         doc.replace(new Range(row, 0, row, column-1), indent);
-
-        return indent.length - (column-1);
     };
 
     this.$getIndent = function(line) {
