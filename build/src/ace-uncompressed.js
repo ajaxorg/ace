@@ -4179,7 +4179,7 @@ var Editor =function(renderer, session) {
         this.$onDocumentChangeTabSize = this.renderer.updateText.bind(this.renderer);
         session.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
-        this.$onDocumentChangeWrapMode = this.renderer.updateFull.bind(this.renderer);
+        this.$onDocumentChangeWrapMode = this.onDocumentChangeWrapMode.bind(this);
         session.addEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
 
         this.$onDocumentChangeBreakpoint = this.onDocumentChangeBreakpoint.bind(this);
@@ -4376,6 +4376,11 @@ var Editor =function(renderer, session) {
         }
 
         this.renderer.setTokenizer(this.bgTokenizer);
+    };
+
+    this.onDocumentChangeWrapMode = function() {
+        this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
+        this.renderer.updateFull();
     };
 
     this.getCopyText = function() {
@@ -7157,6 +7162,7 @@ var EditSession = function(text, mode) {
     this.setWrapLimit = function(wrapLimit) {
         if (wrapLimit != this.$wrapLimit) {
             this.$wrapLimit = wrapLimit;
+            this.$modified = true;
             if (this.$useWrapMode) {
                 this.$updateWrapData(0, this.getLength() - 1);
             }
@@ -8540,7 +8546,7 @@ var TextHighlightRules = function() {
     this.$rules = {
         "start" : [ {
             token : "empty_line",
-            regex : '^$',
+            regex : '^$'
         }, {
             token : "text",
             regex : ".+"
@@ -8777,7 +8783,7 @@ var Document = function(text) {
         args.push.apply(args, lines);
         this.$lines.splice.apply(this.$lines, args);
 
-        var range = new Range(row, 0, row + lines.length - 1, 0);
+        var range = new Range(row, 0, row + lines.length, 0);
         var delta = {
             action: "insertLines",
             range: range,
@@ -8890,7 +8896,7 @@ var Document = function(text) {
      * @return {String[]} The removed lines
      */
     this.removeLines = function(firstRow, lastRow) {
-        var range = new Range(firstRow, 0, lastRow, this.$lines[lastRow].length);
+        var range = new Range(firstRow, 0, lastRow + 1, 0);
         var removed = this.$lines.splice(firstRow, lastRow - firstRow + 1);
 
         var delta = {
@@ -8950,7 +8956,7 @@ var Document = function(text) {
             else if (delta.action == "insertText")
                 this.insert(range.start, delta.text)
             else if (delta.action == "removeLines")
-                this.removeLines(range.start.row, range.end.row)
+                this.removeLines(range.start.row, range.end.row - 1)
             else if (delta.action == "removeText")
                 this.remove(range)
         }
@@ -8962,7 +8968,7 @@ var Document = function(text) {
             var range = Range.fromPoints(delta.range.start, delta.range.end);
 
             if (delta.action == "insertLines")
-                this.removeLines(range.start.row, range.end.row)
+                this.removeLines(range.start.row, range.end.row - 1)
             else if (delta.action == "insertText")
                 this.remove(range)
             else if (delta.action == "removeLines")
@@ -9974,6 +9980,7 @@ var VirtualRenderer = function(container, theme) {
     this.lineHeight = textLayer.getLineHeight();
 
     this.$cursorLayer = new CursorLayer(this.content);
+    this.$cursorPadding = 8;
 
     this.layers = [ this.$markerLayer, textLayer, this.$cursorLayer ];
 
@@ -10379,7 +10386,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$getLongestLine = function() {
-        var charCount = this.session.getScreenWidth();
+        var charCount = this.session.getScreenWidth() + 1;
         if (this.$textLayer.showInvisibles)
             charCount += 1;
 
@@ -10449,10 +10456,12 @@ var VirtualRenderer = function(container, theme) {
             this.scrollToX(left);
         }
 
-        if (this.scroller.scrollLeft + this.$size.scrollerWidth < left
-                + this.characterWidth) {
-            this.scrollToX(Math.round(left + this.characterWidth
-                    - this.$size.scrollerWidth));
+        if (this.scroller.scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
+
+            if (left + this.characterWidth > this.scroller.scrollWidth)
+                this.$renderChanges(this.CHANGE_SIZE);
+
+            this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
         }
     },
 
@@ -10499,7 +10508,7 @@ var VirtualRenderer = function(container, theme) {
 
         var col = Math.round((pageX + this.scroller.scrollLeft - canvasPos.left - this.$padding)
                 / this.characterWidth);
-        var row = Math.floor((pageY + this.scrollTop - canvasPos.top)
+        var row = Math.floor((pageY + this.scrollTop - canvasPos.top - window.pageYOffset)
                 / this.lineHeight);
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0));
@@ -10527,21 +10536,21 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.showComposition = function(position) {
-		if (!this.$composition) {
-    	    this.$composition = document.createElement("div");
+        if (!this.$composition) {
+            this.$composition = document.createElement("div");
             this.$composition.className = "ace_composition";
             this.content.appendChild(this.$composition);
-		}
-    	
+        }
+        
         this.$composition.innerHTML = "&nbsp;";
-
+        
         var pos = this.$cursorLayer.getPixelPosition();
-    	var style = this.$composition.style;
-		style.top = pos.top + "px";
-		style.left = (pos.left + this.$padding) + "px";
-    	style.height = this.lineHeight + "px";
-    	
-		this.hideCursor();
+        var style = this.$composition.style;
+        style.top = pos.top + "px";
+        style.left = (pos.left + this.$padding) + "px";
+        style.height = this.lineHeight + "px";
+        
+        this.hideCursor();
     };
 
     this.setCompositionText = function(text) {
@@ -10549,14 +10558,14 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.hideComposition = function() {
-		this.showCursor();
+        this.showCursor();
 
         if (!this.$composition)
             return;
 
-    	var style = this.$composition.style;
-		style.top = "-10000px";
-		style.left = "-10000px";
+        var style = this.$composition.style;
+        style.top = "-10000px";
+        style.left = "-10000px";
     };
 
     this.setTheme = function(theme) {
@@ -11019,7 +11028,7 @@ var Text = function(parentEl) {
 	        var style = measureNode.style;
 
 	        style.width = style.height = "auto";
-	        style.left = style.top = "-1000px";
+	        style.left = style.top = (-n * 40)  + "px";
 
 	        style.visibility = "hidden";
 	        style.position = "absolute";
