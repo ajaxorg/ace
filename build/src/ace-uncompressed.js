@@ -4156,6 +4156,7 @@ var Editor =function(renderer, session) {
             this.session.removeEventListener("change", this.$onDocumentChange);
             this.session.removeEventListener("changeMode", this.$onDocumentModeChange);
             this.session.removeEventListener("changeTabSize", this.$onDocumentChangeTabSize);
+            this.session.removeEventListener("changeWrapLimit", this.$onDocumentChangeWrapLimit);
             this.session.removeEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
             this.session.removeEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
             this.session.removeEventListener("changeAnnotation", this.$onDocumentChangeAnnotation);
@@ -4178,6 +4179,9 @@ var Editor =function(renderer, session) {
 
         this.$onDocumentChangeTabSize = this.renderer.updateText.bind(this.renderer);
         session.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
+
+        this.$onDocumentChangeWrapLimit = this.onDocumentChangeWrapLimit.bind(this);
+        session.addEventListener("changeWrapLimit", this.$onDocumentChangeWrapLimit);
 
         this.$onDocumentChangeWrapMode = this.onDocumentChangeWrapMode.bind(this);
         session.addEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
@@ -4378,9 +4382,13 @@ var Editor =function(renderer, session) {
         this.renderer.setTokenizer(this.bgTokenizer);
     };
 
-    this.onDocumentChangeWrapMode = function() {
+    this.onDocumentChangeWrapLimit = function() {
         this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
         this.renderer.updateFull();
+    };
+
+    this.onDocumentChangeWrapMode = function() {
+        this.renderer.onResize(true);
     };
 
     this.getCopyText = function() {
@@ -5057,6 +5065,7 @@ define('pilot/event', function(require, exports, module) {
 
 var keys = require("pilot/keys");
 var useragent = require("pilot/useragent");
+var dom = require("pilot/dom");
 
 exports.addListener = function(elem, type, callback) {
     if (elem.addEventListener) {
@@ -5104,9 +5113,8 @@ exports.preventDefault = function(e) {
 };
 
 exports.getDocumentX = function(e) {
-    if (e.clientX) {
-        var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-        return e.clientX + scrollLeft;
+    if (e.clientX) {        
+        return e.clientX + dom.getPageScrollLeft();
     } else {
         return e.pageX;
     }
@@ -5114,8 +5122,7 @@ exports.getDocumentX = function(e) {
 
 exports.getDocumentY = function(e) {
     if (e.clientY) {
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        return e.clientY + scrollTop;
+        return e.clientY + dom.getPageScrollTop();
     } else {
         return e.pageY;
     }
@@ -5435,6 +5442,243 @@ var Keys = (function() {
     return ret;
 })();
 oop.mixin(exports, Keys);
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/dom', function(require, exports, module) {
+
+exports.setText = function(elem, text) {
+    if (elem.innerText !== undefined) {
+        elem.innerText = text;
+    }
+    if (elem.textContent !== undefined) {
+        elem.textContent = text;
+    }
+};
+
+exports.hasCssClass = function(el, name) {
+    var classes = el.className.split(/\s+/g);
+    return classes.indexOf(name) !== -1;
+};
+
+/**
+* Add a CSS class to the list of classes on the given node
+*/
+exports.addCssClass = function(el, name) {
+    if (!exports.hasCssClass(el, name)) {
+        el.className += " " + name;
+    }
+};
+
+/**
+ * Add or remove a CSS class from the list of classes on the given node
+ * depending on the value of <tt>include</tt>
+ */
+exports.setCssClass = function(node, className, include) {
+    if (include) {
+        exports.addCssClass(node, className);
+    } else {
+        exports.removeCssClass(node, className);
+    }
+};
+
+/**
+* Remove a CSS class from the list of classes on the given node
+*/
+exports.removeCssClass = function(el, name) {
+    var classes = el.className.split(/\s+/g);
+    while (true) {
+        var index = classes.indexOf(name);
+        if (index == -1) {
+            break;
+        }
+        classes.splice(index, 1);
+    }
+    el.className = classes.join(" ");
+};
+
+exports.importCssString = function(cssText, doc){
+    doc = doc || document;        
+
+    if (doc.createStyleSheet) {
+        var sheet = doc.createStyleSheet();
+        sheet.cssText = cssText;
+    }
+    else {
+        var style = doc.createElement("style");
+        style.appendChild(doc.createTextNode(cssText));
+        doc.getElementsByTagName("head")[0].appendChild(style);
+    }            
+};
+
+exports.getInnerWidth = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingLeft"))
+            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
+};
+
+exports.getInnerHeight = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingTop"))
+            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
+};
+
+if (window.pageYOffset !== undefined) {
+    exports.getPageScrollTop = function() {
+        return window.pageYOffset;
+    };
+    
+    exports.getPageScrollLeft = function() {
+        return window.pageXOffset;
+    };
+}
+else {
+    exports.getPageScrollTop = function() {
+        return ocument.body.scrollTop;
+    };
+    
+    exports.getPageScrollLeft = function() {
+        return ocument.body.scrollLeft;
+    };
+}
+
+exports.computedStyle = function(element, style) {
+    if (window.getComputedStyle) {
+        return (window.getComputedStyle(element, "") || {})[style] || "";
+    }
+    else {
+        return element.currentStyle[style];
+    }
+};
+
+exports.scrollbarWidth = function() {
+
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+
+    var outer = document.createElement("div");
+    var style = outer.style;
+
+    style.position = "absolute";
+    style.left = "-10000px";
+    style.overflow = "hidden";
+    style.width = "200px";
+    style.height = "150px";
+
+    outer.appendChild(inner);
+    document.body.appendChild(outer);
+    var noScrollbar = inner.offsetWidth;
+
+    style.overflow = "scroll";
+    var withScrollbar = inner.offsetWidth;
+
+    if (noScrollbar == withScrollbar) {
+        withScrollbar = outer.clientWidth;
+    }
+
+    document.body.removeChild(outer);
+
+    return noScrollbar-withScrollbar;
+};
+
+/**
+ * Optimized set innerHTML. This is faster than plain innerHTML if the element
+ * already contains a lot of child elements.
+ * 
+ * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
+ */
+exports.setInnerHtml = function(el, innerHtml) {
+	var element = el.cloneNode(false);//document.createElement("div");
+    element.innerHTML = innerHtml;
+    el.parentNode.replaceChild(element, el);
+    return element;
+};
+
+exports.setInnerText = function(el, innerText) {
+    if ("textContent" in document.body)
+        el.textContent = innerText;
+    else 
+        el.innerText = innerText;
+        
+};
+
+exports.getInnerText = function(el) {
+    if ("textContent" in document.body)
+        return el.textContent;
+    else 
+         return el.innerText;
+};
+
+exports.getParentWindow = function(document) {
+    return document.defaultView || document.parentWindow;
+};
+
+exports.getSelectionStart = function(textarea) {
+    // TODO IE
+    var start;
+    try {
+        start = textarea.selectionStart || 0;
+    } catch (e) {
+        start = 0;
+    }
+    return start;
+};
+
+exports.setSelectionStart = function(textarea, start) {
+    // TODO IE
+    return textarea.selectionStart = start;
+};
+
+exports.getSelectionEnd = function(textarea) {
+    // TODO IE
+    var end;
+    try {
+        end = textarea.selectionEnd || 0;
+    } catch (e) {
+        end = 0;
+    }
+    return end;
+};
+
+exports.setSelectionEnd = function(textarea, end) {
+    // TODO IE
+    return textarea.selectionEnd = end;
+};
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
@@ -7135,6 +7379,10 @@ var EditSession = function(text, mode) {
     // WRAPMODE
     this.$wrapLimit = 80;
     this.$useWrapMode = false;
+    this.$wrapLimitRange = {
+        min : null,
+        max : null
+    };
 
     this.setUseWrapMode = function(useWrapMode) {
         if (useWrapMode != this.$useWrapMode) {
@@ -7159,19 +7407,59 @@ var EditSession = function(text, mode) {
         return this.$useWrapMode;
     };
 
-    this.setWrapLimit = function(wrapLimit) {
-        if (wrapLimit != this.$wrapLimit) {
-            this.$wrapLimit = wrapLimit;
+    // Allow the wrap limit to move freely between min and max. Either
+    // parameter can be null to allow the wrap limit to be unconstrained
+    // in that direction. Or set both parameters to the same number to pin
+    // the limit to that value.
+    this.setWrapLimitRange = function(min, max) {
+        if (this.$wrapLimitRange.min !== min || this.$wrapLimitRange.max !== max) {
+            this.$wrapLimitRange.min = min;
+            this.$wrapLimitRange.max = max;
             this.$modified = true;
-            if (this.$useWrapMode) {
-                this.$updateWrapData(0, this.getLength() - 1);
-            }
+            // This will force a recalculation of the wrap limit
             this._dispatchEvent("changeWrapMode");
         }
     };
 
+    // This should generally only be called by the renderer when a resize
+    // is detected.
+    this.adjustWrapLimit = function(desiredLimit) {
+        var wrapLimit = this.$constrainWrapLimit(desiredLimit);
+        if (wrapLimit != this.$wrapLimit && wrapLimit > 0) {
+            this.$wrapLimit = wrapLimit;
+            this.$modified = true;
+            if (this.$useWrapMode) {
+                this.$updateWrapData(0, this.getLength() - 1);
+                this._dispatchEvent("changeWrapLimit");
+            }
+            return true;
+        }
+        return false;
+    };
+
+    this.$constrainWrapLimit = function(wrapLimit) {
+        var min = this.$wrapLimitRange.min;
+        if (min)
+            wrapLimit = Math.max(min, wrapLimit);
+
+        var max = this.$wrapLimitRange.max;
+        if (max)
+            wrapLimit = Math.min(max, wrapLimit);
+
+        // What would a limit of 0 even mean?
+        return Math.max(1, wrapLimit);
+    };
+
     this.getWrapLimit = function() {
         return this.$wrapLimit;
+    };
+
+    this.getWrapLimitRange = function() {
+        // Avoid unexpected mutation by returning a copy
+        return {
+            min : this.$wrapLimitRange.min,
+            max : this.$wrapLimitRange.max
+        };
     };
 
     this.$updateWrapDataOnChange = function(e) {
@@ -9631,224 +9919,6 @@ define('ace/theme/textmate', function(require, exports, module) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/dom', function(require, exports, module) {
-
-exports.setText = function(elem, text) {
-    if (elem.innerText !== undefined) {
-        elem.innerText = text;
-    }
-    if (elem.textContent !== undefined) {
-        elem.textContent = text;
-    }
-};
-
-exports.hasCssClass = function(el, name) {
-    var classes = el.className.split(/\s+/g);
-    return classes.indexOf(name) !== -1;
-};
-
-/**
-* Add a CSS class to the list of classes on the given node
-*/
-exports.addCssClass = function(el, name) {
-    if (!exports.hasCssClass(el, name)) {
-        el.className += " " + name;
-    }
-};
-
-/**
- * Add or remove a CSS class from the list of classes on the given node
- * depending on the value of <tt>include</tt>
- */
-exports.setCssClass = function(node, className, include) {
-    if (include) {
-        exports.addCssClass(node, className);
-    } else {
-        exports.removeCssClass(node, className);
-    }
-};
-
-/**
-* Remove a CSS class from the list of classes on the given node
-*/
-exports.removeCssClass = function(el, name) {
-    var classes = el.className.split(/\s+/g);
-    while (true) {
-        var index = classes.indexOf(name);
-        if (index == -1) {
-            break;
-        }
-        classes.splice(index, 1);
-    }
-    el.className = classes.join(" ");
-};
-
-exports.importCssString = function(cssText, doc){
-    doc = doc || document;        
-
-    if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet();
-        sheet.cssText = cssText;
-    }
-    else {
-        var style = doc.createElement("style");
-        style.appendChild(doc.createTextNode(cssText));
-        doc.getElementsByTagName("head")[0].appendChild(style);
-    }            
-};
-
-exports.getInnerWidth = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingLeft"))
-            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
-};
-
-exports.getInnerHeight = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingTop"))
-            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
-};
-
-exports.computedStyle = function(element, style) {
-    if (window.getComputedStyle) {
-        return (window.getComputedStyle(element, "") || {})[style] || "";
-    }
-    else {
-        return element.currentStyle[style];
-    }
-};
-
-exports.scrollbarWidth = function() {
-
-    var inner = document.createElement('p');
-    inner.style.width = "100%";
-    inner.style.height = "200px";
-
-    var outer = document.createElement("div");
-    var style = outer.style;
-
-    style.position = "absolute";
-    style.left = "-10000px";
-    style.overflow = "hidden";
-    style.width = "200px";
-    style.height = "150px";
-
-    outer.appendChild(inner);
-    document.body.appendChild(outer);
-    var noScrollbar = inner.offsetWidth;
-
-    style.overflow = "scroll";
-    var withScrollbar = inner.offsetWidth;
-
-    if (noScrollbar == withScrollbar) {
-        withScrollbar = outer.clientWidth;
-    }
-
-    document.body.removeChild(outer);
-
-    return noScrollbar-withScrollbar;
-};
-
-/**
- * Optimized set innerHTML. This is faster than plain innerHTML if the element
- * already contains a lot of child elements.
- * 
- * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
- */
-exports.setInnerHtml = function(el, innerHtml) {
-	var element = el.cloneNode(false);//document.createElement("div");
-    element.innerHTML = innerHtml;
-    el.parentNode.replaceChild(element, el);
-    return element;
-};
-
-exports.setInnerText = function(el, innerText) {
-    if ("textContent" in document.body)
-        el.textContent = innerText;
-    else 
-        el.innerText = innerText;
-        
-};
-
-exports.getInnerText = function(el) {
-    if ("textContent" in document.body)
-        return el.textContent;
-    else 
-         return el.innerText;
-};
-
-exports.getParentWindow = function(document) {
-    return document.defaultView || document.parentWindow;
-};
-
-exports.getSelectionStart = function(textarea) {
-    // TODO IE
-    var start;
-    try {
-        start = textarea.selectionStart || 0;
-    } catch (e) {
-        start = 0;
-    }
-    return start;
-};
-
-exports.setSelectionStart = function(textarea, start) {
-    // TODO IE
-    return textarea.selectionStart = start;
-};
-
-exports.getSelectionEnd = function(textarea) {
-    // TODO IE
-    var end;
-    try {
-        end = textarea.selectionEnd || 0;
-    } catch (e) {
-        end = 0;
-    }
-    return end;
-};
-
-exports.setSelectionEnd = function(textarea, end) {
-    // TODO IE
-    return textarea.selectionEnd = end;
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
 define('ace/mode/matching_brace_outdent', function(require, exports, module) {
 
 var Range = require("ace/range").Range;
@@ -10106,6 +10176,13 @@ var VirtualRenderer = function(container, theme) {
             var gutterWidth = this.showGutter ? this.$gutter.offsetWidth : 0;
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+
+            if (this.session.getUseWrapMode()) {
+                var limit = Math.floor(this.scroller.clientWidth / this.characterWidth);
+                if (this.session.adjustWrapLimit(limit) || force) {
+                    changes = changes | this.CHANGE_FULL;
+                }
+            }
         }
 
         this.$size.scrollerWidth = this.scroller.clientWidth;
@@ -10506,9 +10583,9 @@ var VirtualRenderer = function(container, theme) {
     this.screenToTextCoordinates = function(pageX, pageY) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
-        var col = Math.round((pageX + this.scroller.scrollLeft - canvasPos.left - this.$padding)
+        var col = Math.round((pageX + this.scroller.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft())
                 / this.characterWidth);
-        var row = Math.floor((pageY + this.scrollTop - canvasPos.top - window.pageYOffset)
+        var row = Math.floor((pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop())
                 / this.lineHeight);
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0));
