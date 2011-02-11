@@ -127,26 +127,6 @@ exports.launch = function(env) {
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
 
-    var Anchor = require("ace/anchor").Anchor;
-    var Range = require("ace/range").Range;
-    
-    var anchorStart = new Anchor(docs.js, 2, 8);
-    var anchorEnd = new Anchor(docs.js, 2, 13);
-
-    var marker;
-    function updateFloat() {
-        if (marker)
-            env.editor.renderer.removeMarker(marker);
-        var range = Range.fromPoints(
-            anchorStart.getPosition(),
-            anchorEnd.getPosition()
-        );
-        marker = env.editor.renderer.addMarker(range, "cool", "text");
-    };
-    updateFloat();
-    anchorStart.on("change", updateFloat);
-    anchorEnd.on("change", updateFloat);
-
     var modes = {
         text: new TextMode(),
         xml: new XmlMode(),
