@@ -4433,6 +4433,8 @@ var Editor =function(renderer, session) {
         var lineIndent    = this.mode.getNextLineIndent(lineState, line.slice(0, cursor.column), this.session.getTabString());
         var end           = this.session.insert(cursor, text);
 
+        this.moveCursorToPosition(end);
+        
         var lineState = this.bgTokenizer.getState(cursor.row);
         // multi line insert
         if (cursor.row !== end.row) {
@@ -4463,14 +4465,14 @@ var Editor =function(renderer, session) {
                         outdent -= size;
                     else if (line.charAt(i) == ' ')
                         outdent -= 1;
-                this.session.replace(new Range(row, 0, row, line.length), line.substr(i));
+                this.session.remove(new Range(row, 0, row, i));
             }
             this.session.indentRows(cursor.row + 1, end.row, lineIndent);
         } else {
             if (shouldOutdent) {
                 this.mode.autoOutdent(lineState, this.session, cursor.row);
             }
-        }
+        };        
     }
 
     this.onTextInput = function(text) {
@@ -4592,7 +4594,57 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
+    
+    this.removeToLineEnd = function() {
+        if (this.$readOnly)
+            return;
 
+        if (this.selection.isEmpty())
+            this.selection.selectLineEnd();
+
+        this.session.remove(this.getSelectionRange());
+        this.clearSelection();
+    };
+
+    this.splitLine = function() {
+        if (this.$readOnly)
+            return;
+        
+        if (!this.selection.isEmpty()) {
+            this.session.remove(this.getSelectionRange());
+            this.clearSelection();
+        }
+    
+        var cursor = this.getCursorPosition();
+        this.insert("\n");
+        this.moveCursorToPosition(cursor);
+    };
+    
+    this.transposeLetters = function() {
+        if (this.$readOnly)
+            return;
+        
+        if (!this.selection.isEmpty()) {
+            return;
+        }
+    
+        var cursor = this.getCursorPosition();
+        var column = cursor.column;
+        if (column == 0)
+            return;
+        
+        var line = this.session.getLine(cursor.row);
+        if (column < line.length) {
+            var swap = line.charAt(column) + line.charAt(column-1);
+            var range = new Range(cursor.row, column-1, cursor.row, column+1)
+        }
+        else {
+            var swap = line.charAt(column-1) + line.charAt(column-2);
+            var range = new Range(cursor.row, column-2, cursor.row, column)
+        }
+        this.session.replace(range, swap);
+    };
+    
     this.indent = function() {
         if (this.$readOnly)
             return;
@@ -4799,6 +4851,12 @@ var Editor =function(renderer, session) {
 
     this.scrollToLine = function(line, center) {
         this.renderer.scrollToLine(line, center);
+    };
+    
+    this.centerSelection = function() {
+        var range = this.getSelectionRange();
+        var line = Math.floor(range.start.row + (range.end.row - range.start.row) / 2);
+        this.renderer.scrollToLine(line, true);
     };
 
     this.getCursorPosition = function() {
@@ -6359,37 +6417,41 @@ exports.bindings = {
     "selecttostart": "Command-Shift-Up",
     "gotostart": "Command-Home|Command-Up",
     "selectup": "Shift-Up",
-    "golineup": "Up",
+    "golineup": "Up|Ctrl-P",
     "copylinesdown": "Command-Option-Down",
     "movelinesdown": "Option-Down",
     "selecttoend": "Command-Shift-Down",
     "gotoend": "Command-End|Command-Down",
     "selectdown": "Shift-Down",
-    "golinedown": "Down",
+    "golinedown": "Down|Ctrl-N",
     "selectwordleft": "Option-Shift-Left",
     "gotowordleft": "Option-Left",
     "selecttolinestart": "Command-Shift-Left",
-    "gotolinestart": "Command-Left|Home",
+    "gotolinestart": "Command-Left|Home|Ctrl-A",
     "selectleft": "Shift-Left",
-    "gotoleft": "Left",
+    "gotoleft": "Left|Ctrl-B",
     "selectwordright": "Option-Shift-Right",
     "gotowordright": "Option-Right",
     "selecttolineend": "Command-Shift-Right",
-    "gotolineend": "Command-Right|End",
+    "gotolineend": "Command-Right|End|Ctrl-E",
     "selectright": "Shift-Right",
-    "gotoright": "Right",
+    "gotoright": "Right|Ctrl-F",
     "selectpagedown": "Shift-PageDown",
     "pagedown": "PageDown",
-    "gotopagedown": "Option-PageDown",
+    "gotopagedown": "Option-PageDown|Ctrl-V",
     "selectpageup": "Shift-PageUp",
     "pageup": "PageUp",
     "gotopageup": "Option-PageUp",
     "selectlinestart": "Shift-Home",
     "selectlineend": "Shift-End",
-    "del": "Delete",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+    "del": "Delete|Ctrl-D",
+    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace|Ctrl-H",
+    "removetolineend": "Ctrl-K",
     "outdent": "Shift-Tab",
-    "indent": "Tab"
+    "indent": "Tab",
+    "transposeletters": "Ctrl-T",
+    "splitline": "Ctrl-O",
+    "centerselection": "Ctrl-L"
 };
 
 });/* ***** BEGIN LICENSE BLOCK *****
@@ -6725,6 +6787,10 @@ canon.addCommand({
     exec: function(env, args, request) { env.editor.removeLeft(); }
 });
 canon.addCommand({
+    name: "removetolineend",
+    exec: function(env, args, request) { env.editor.removeToLineEnd(); }
+});
+canon.addCommand({
     name: "outdent",
     exec: function(env, args, request) { env.editor.blockOutdent(); }
 });
@@ -6738,6 +6804,19 @@ canon.addCommand({
         env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
 });
+canon.addCommand({
+    name: "centerselection",
+    exec: function(env, args, request) { env.editor.centerSelection(); }
+});
+canon.addCommand({
+    name: "splitline",
+    exec: function(env, args, request) { env.editor.splitLine(); }
+});
+canon.addCommand({
+    name: "transposeletters",
+    exec: function(env, args, request) { env.editor.transposeLetters(); }
+});
+
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
@@ -10993,6 +11072,7 @@ var Marker = function(parentEl) {
         this.markers[id] = {
             range : range,
             type : type || "line",
+            renderer: typeof type == "function" ? type : null,
             clazz : clazz
         };
 
@@ -11022,7 +11102,12 @@ var Marker = function(parentEl) {
 
             range = range.toScreenRange(this.session);
 
-            if (range.isMultiLine()) {
+            if (marker.renderer) {
+                var top = this.$getTop(range.start.row, config);
+                var left = Math.round(range.start.column * config.characterWidth);        
+                marker.renderer(html, range, left, top, config);
+            }
+            else if (range.isMultiLine()) {
                 if (marker.type == "text") {
                     this.drawTextMarker(html, range, marker.clazz, config);
                 } else {
@@ -12448,6 +12533,22 @@ define("text!styles.css", "html {" +
   "    top: 60px;" +
   "    left: 0px;" +
   "    background: white;" +
+  "}" +
+  "" +
+  ".cool {" +
+  "    position: absolute;" +
+  "    background: orange;" +
+  "    opacity: 0.8;" +
+  "}" +
+  "" +
+  ".cool_header {" +
+  "    position: absolute;" +
+  "    background: orange;" +
+  "    color: black;" +
+  "    font-size: 8px;" +
+  "    padding: 1px;" +
+  "    margin-top: -8px;" +
+  "    opacity: 0.8;" +
   "}" +
   "" +
   "#controls {" +
