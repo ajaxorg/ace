@@ -598,23 +598,21 @@ if (!Object.isFrozen) Object.isFrozen = no;
 // ES5 15.2.3.13
 if (!Object.isExtensible) Object.isExtensible = yes;
 
-
-
 if (!String.prototype.trim) {
     String.prototype.trim = function() {
-        return this.replace(/^\s+/, "").replace(/\s+$/, "");
+        return this.trimLeft().trimRight();
     }
 }
 
 if (!String.prototype.trimRight) {
     String.prototype.trimRight = function() {
-        return this.replace(/\s+$/, "");
+        return this.replace(/[\t\v\f\s\u00a0\ufeff]+$/, "");
     }
 }
 
 if (!String.prototype.trimLeft) {
-    String.prototype.trimRight = function() {
-        return this.replace(/^\s+/, "");
+    String.prototype.trimLeft = function() {
+        return this.replace(/^[\t\v\f\s\u00a0\ufeff]+/, "");
     }
 }
 
@@ -4799,6 +4797,9 @@ var Editor =function(renderer, session) {
         this.renderer.scrollToRow(row);
     };
 
+    this.scrollToLine = function(line, center) {
+        this.renderer.scrollToLine(line, center);
+    };
 
     this.getCursorPosition = function() {
         return this.selection.getCursor();
@@ -4836,7 +4837,7 @@ var Editor =function(renderer, session) {
         this.$blockScrolling -= 1;
 
         if (!this.isRowVisible(this.getCursorPosition().row)) {
-            this.scrollToRow(lineNumber - 1 - Math.floor(this.getVisibleRowCount() / 2));
+            this.scrollToLine(lineNumber, true);
         }
     },
 
@@ -5554,11 +5555,11 @@ if (window.pageYOffset !== undefined) {
 }
 else {
     exports.getPageScrollTop = function() {
-        return ocument.body.scrollTop;
+        return document.body.scrollTop;
     };
     
     exports.getPageScrollLeft = function() {
-        return ocument.body.scrollLeft;
+        return document.body.scrollLeft;
     };
 }
 
@@ -5783,7 +5784,6 @@ var TextInput = function(parentNode, host) {
         setTimeout(function () {
             sendText();
         }, 0);
-        
     };
 
     var onCut = function(e) {
@@ -5798,7 +5798,6 @@ var TextInput = function(parentNode, host) {
         setTimeout(function () {
             sendText();
         }, 0);
-        
     };
 
     event.addCommandKeyListener(text, host.onCommandKey.bind(host));
@@ -5832,8 +5831,29 @@ var TextInput = function(parentNode, host) {
         event.addListener(text, "propertychange", onTextInput);
     };
 
-    event.addListener(text, "copy", onCopy);
-    event.addListener(text, "cut", onCut);
+    if (useragent.isIE) {
+        event.addListener(text, "beforecopy", function(e) {        
+            var copyText = host.getCopyText();
+            if(copyText)
+                clipboardData.setData("Text", copyText);
+            else
+                e.preventDefault();
+        });
+        event.addListener(parentNode, "keydown", function(e) {
+            if (e.ctrlKey && e.keyCode == 88) {
+                var copyText = host.getCopyText();
+                if (copyText) {
+                    clipboardData.setData("Text", copyText);
+                    host.onCut();
+                }
+                event.preventDefault(e)
+            }
+        });
+    }
+    else {
+        event.addListener(text, "copy", onCopy);
+        event.addListener(text, "cut", onCut);
+    }
 
     event.addListener(text, "compositionstart", onCompositionStart);
     if (useragent.isGecko) {
@@ -6715,8 +6735,7 @@ canon.addCommand({
 canon.addCommand({
     name: "inserttext",
     exec: function(env, args, request) {
-        env.editor.insert(lang.stringRepeat(args.text  || "",
-                                            args.times || 1));
+        env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
 });
 
@@ -7929,10 +7948,12 @@ var Selection = function(session) {
     this.selectionAnchor = new Anchor(this.doc, 0, 0);
     
     var _self = this;
-    this.selectionLead.on("change", function() {
+    this.selectionLead.on("change", function(e) {
         _self._dispatchEvent("changeCursor");
         if (!_self.$isEmpty)
             _self._dispatchEvent("changeSelection");
+        if (e.old.row == e.value.row)
+            _self.$updateDesiredColumn();
     });
     
     this.selectionAnchor.on("change", function() {
@@ -8052,9 +8073,7 @@ var Selection = function(session) {
 
     this.$updateDesiredColumn = function() {
         var cursor = this.getCursor();
-        if (cursor) {
-            this.$desiredColumn = this.session.documentToScreenColumn(cursor.row, cursor.column);
-        }
+        this.$desiredColumn = this.session.documentToScreenColumn(cursor.row, cursor.column);
     };
 
     this.$moveSelection = function(mover) {
@@ -8595,9 +8614,17 @@ var Anchor = exports.Anchor = function(doc, row, column) {
         if (this.row == pos.row && this.column == pos.column)
             return;
             
+        var old = {
+            row: this.row,
+            column: this.column
+        };
+        
         this.row = pos.row;
         this.column = pos.column;
-        this._dispatchEvent("change");
+        this._dispatchEvent("change", {
+            old: old,
+            value: pos
+        });
     };
     
     this.detach = function() {
@@ -8789,7 +8816,7 @@ var Tokenizer = function(rules) {
             var value = match[0];
 
             for ( var i = 0; i < state.length; i++) {
-                if (match[i + 1] !== undefined) {
+                if (match[i + 1]) {
                     if (typeof state[i].token == "function") {
                         type = state[i].token(match[0]);
                     }
@@ -8823,10 +8850,10 @@ var Tokenizer = function(rules) {
             }
             
             if (lastIndex == line.length) {
-		        break;
-	        }
+    	        break;
+            }
             
-	        lastIndex = re.lastIndex;
+            lastIndex = re.lastIndex;
         };
 
         if (token.type) {
@@ -10095,18 +10122,18 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$markerLayer = new MarkerLayer(this.content);
+    this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
     this.canvas = textLayer.element;
+
+    this.$markerFront = new MarkerLayer(this.content);
 
     this.characterWidth = textLayer.getCharacterWidth();
     this.lineHeight = textLayer.getLineHeight();
 
     this.$cursorLayer = new CursorLayer(this.content);
     this.$cursorPadding = 8;
-
-    this.layers = [ this.$markerLayer, textLayer, this.$cursorLayer ];
 
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", this.onScroll.bind(this));
@@ -10153,14 +10180,17 @@ var VirtualRenderer = function(container, theme) {
     this.CHANGE_LINES = 16;
     this.CHANGE_TEXT = 32;
     this.CHANGE_SIZE = 64;
-    this.CHANGE_FULL = 128;
+    this.CHANGE_MARKER_BACK = 128;
+    this.CHANGE_MARKER_FRONT = 256;
+    this.CHANGE_FULL = 512;
 
     oop.implement(this, EventEmitter);
 
     this.setSession = function(session) {
         this.session = session;
         this.$cursorLayer.setSession(session);
-        this.$markerLayer.setSession(session);
+        this.$markerBack.setSession(session);
+        this.$markerFront.setSession(session);
         this.$gutterLayer.setSession(session);
         this.$textLayer.setSession(session);
         this.$loop.schedule(this.CHANGE_FULL);
@@ -10232,7 +10262,8 @@ var VirtualRenderer = function(container, theme) {
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
 
             if (this.session.getUseWrapMode()) {
-                var limit = Math.floor(this.scroller.clientWidth / this.characterWidth);
+                var availableWidth = this.scroller.clientWidth - this.$padding * 2;
+                var limit = Math.floor(availableWidth / this.characterWidth) - 1;
                 if (this.session.adjustWrapLimit(limit) || force) {
                     changes = changes | this.CHANGE_FULL;
                 }
@@ -10403,7 +10434,8 @@ var VirtualRenderer = function(container, theme) {
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.update(this.layerConfig);
             this.showGutter && this.$gutterLayer.update(this.layerConfig);
-            this.$markerLayer.update(this.layerConfig);
+            this.$markerBack.update(this.layerConfig);
+            this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
             this.$updateScrollBar();
             this.scrollCursorIntoView();
@@ -10417,7 +10449,8 @@ var VirtualRenderer = function(container, theme) {
             else
                 this.$textLayer.scrollLines(this.layerConfig);
             this.showGutter && this.$gutterLayer.update(this.layerConfig);
-            this.$markerLayer.update(this.layerConfig);
+            this.$markerBack.update(this.layerConfig);
+            this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
             this.$updateScrollBar();
             return;
@@ -10438,8 +10471,12 @@ var VirtualRenderer = function(container, theme) {
         if (changes & this.CHANGE_CURSOR)
             this.$cursorLayer.update(this.layerConfig);
 
-        if (changes & this.CHANGE_MARKER) {
-            this.$markerLayer.update(this.layerConfig);
+        if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_FRONT)) {
+            this.$markerFront.update(this.layerConfig);
+        }
+        
+        if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_BACK)) {
+            this.$markerBack.update(this.layerConfig);
         }
 
         if (changes & this.CHANGE_SIZE)
@@ -10524,15 +10561,28 @@ var VirtualRenderer = function(container, theme) {
         return Math.max(this.$size.scrollerWidth - this.$padding * 2, Math.round(charCount * this.characterWidth));
     };
 
-    this.addMarker = function(range, clazz, type) {
-        var id = this.$markerLayer.addMarker(range, clazz, type);
-        this.$loop.schedule(this.CHANGE_MARKER);
-        return id;
+    this.addMarker = function(range, clazz, type, inFront) {
+        if (inFront) {
+            var id = this.$markerFront.addMarker(range, clazz, type);
+            this.$loop.schedule(this.CHANGE_MARKER_FRONT);
+        }
+        else {
+            var id = this.$markerBack.addMarker(range, clazz, type);
+            this.$loop.schedule(this.CHANGE_MARKER_BACK);
+        }
+        
+        return [id, !!inFront];
     };
 
     this.removeMarker = function(markerId) {
-        this.$markerLayer.removeMarker(markerId);
-        this.$loop.schedule(this.CHANGE_MARKER);
+        if (markerId[1]) {
+            this.$markerFront.removeMarker(markerId[0]);
+            this.$loop.schedule(this.CHANGE_MARKER_FRONT);
+        }
+        else {
+            this.$markerBack.removeMarker(markerId[0]);
+            this.$loop.schedule(this.CHANGE_MARKER_BACK);
+        }
     };
 
     this.addGutterDecoration = function(row, className){
@@ -10611,6 +10661,19 @@ var VirtualRenderer = function(container, theme) {
     this.scrollToRow = function(row) {
         this.scrollToY(row * this.lineHeight);
     };
+
+    this.scrollToLine = function(line, center) {
+	      var lineHeight = { lineHeight: this.lineHeight };
+	      var offset = 0;
+	      for (var l = 1; l < line; l++) {
+		        offset += this.session.getRowHeight(lineHeight, l-1);
+		    }
+		
+		    if (center) {
+			      offset -= this.$size.scrollerHeight / 2;
+			  }
+		    this.scrollToY(offset);
+	  };
 
     this.scrollToY = function(scrollTop) {
         var maxHeight = this.session.getScreenLength() * this.lineHeight - this.$size.scrollerHeight;
