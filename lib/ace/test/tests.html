@@ -1,0 +1,54 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ace Unit Tests</title>
+  <style type="text/css" media="screen">
+
+    #log .passed {
+        color: green;
+    }
+    
+    #log .failed {
+        color: red;
+    }
+    
+    #log pre.error {
+        color: black;
+    }
+  </style>
+</head>
+<body>
+    
+<div id="log"></div>
+
+<script src="../../../demo/require.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+require({
+    paths: {
+        ace: "../lib/ace",
+        cockpit: "../support/cockpit/lib/cockpit",
+        pilot: "../support/pilot/lib/pilot"
+    },
+    packages : [{
+        name: "asyncjs",
+        location: "../lib/ace/test",
+        lib: "asyncjs",
+        main: "index"
+    }, {
+        name: "assert",
+        location: "../lib/ace/test",
+        lib: "asyncjs",
+        main: "assert"
+    }]
+});
+
+require(["ace/test/all_browser"], function(tests) {
+});
+
+</script>
+
+</body>
+</html>
