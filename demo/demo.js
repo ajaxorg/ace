@@ -257,6 +257,10 @@ exports.launch = function(env) {
         env.editor.renderer.setShowPrintMargin(checked);
     });
 
+    bindCheckbox("highlight_selected_word", function(checked) {
+        env.editor.setHighlightSelectedWord(checked);
+    });
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
