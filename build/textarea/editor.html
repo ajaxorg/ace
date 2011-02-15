@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+</head>
+<body>
+
+<textarea id="textarea" style="width:300px; height:300px">
+    function foo() {
+        var bar = true;
+    }
+</textarea><br>
+SourceUrl: <input id="srcURL" value="http://URL/To/Js/Files"></input>
+
+<button id="buBuild">Build link</button> <br> <a href="#"></a>
+
+<script>
+function inject() {
+    var baseUrl = "src/";
+    var load = function(path, callback) {
+        path = baseUrl + path;
+        if (!load.scripts[path]) {
+            load.scripts[path] = {
+                loaded: false,
+                callbacks: [ callback ]
+            };
+
+            var head = document.getElementsByTagName('head')[0];
+            var s = document.createElement('script');
+            s.onload = function() {
+                load.scripts[path].loaded = true;
+                load.scripts[path].callbacks.forEach(function(callback) {
+                    callback();
+                });
+            };
+            s.src = path;
+            head.appendChild(s);
+        } else if (load.scripts[path].loaded) {
+            callback();
+        } else {
+            load.scripts[path].callbacks.push(callback);
+        }
+    };
+
+    load.scripts = {};
+
+    load('ace-uncompressed.js', function() {
+        var ace = window.__ace_shadowed__;
+        ace.load = load;
+        ace.options.mode = "javascript";
+        var areas = document.querySelectorAll("textarea");
+        for (var i = 0; i < areas.length; i++) {
+            areas[i].addEventListener("click", function(e) {
+                if (e.detail == 3) {
+                    ace.transformTextarea(e.target);
+                }
+            }, false);
+        }
+    });
+
+}
+
+var textAce;
+
+inject();
+setTimeout(function() {
+    var t = document.querySelector("textarea");
+    var ace = window.__ace_shadowed__;
+    textAce = ace.transformTextarea(t);
+    textAce.setDisplaySettings(true);
+}, 300);
+
+document.getElementById("buBuild").onclick = function() {
+    var injectSrc = inject.toString().split("\n").join("");
+    injectSrc = injectSrc.replace('baseUrl = "src/"', 'baseUrl="' + document.getElementById("srcURL").value + '"');
+
+    var aceOptions = textAce.getOptions();
+    var opt = [];
+    for (var option in aceOptions) {
+        opt.push(option + ":'" + aceOptions[option] + "'");
+    }
+    injectSrc = injectSrc.replace('ace.options.mode = "javascript"', 'ace.options = { ' + opt.join(",") + ' }');
+    injectSrc = injectSrc.replace(/\s+/g, " ");
+
+    var a = document.querySelector("a");
+    a.href = "javascript:(" + injectSrc + ")()";
+    a.innerHTML = "Ace Bookmarklet Link";
+}
+
+</script>
+
+</body>
+</html>
