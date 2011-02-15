@@ -1,8 +1,25 @@
+#!/usr/bin/env node
+
 var http = require("http"),
     url = require("url"),
     path = require("path"),
     fs = require("fs")
     port = process.env.C9_PORT || 8888;
+
+function guessFileType(name) {
+  var types = {
+    '.html': 'text/html',
+    '.xhtml': 'application/xhtml+xml',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+  };
+
+  var ext = path.extname(name);
+
+  return ext in types ? types[ext] : 'text/plain';
+}
 
 http.createServer(function(request, response) {
 
@@ -27,7 +44,7 @@ http.createServer(function(request, response) {
         return;
       }
 
-      response.writeHead(200);
+      response.writeHead(200, {"Content-Type": guessFileType(filename)});
       response.write(file, "binary");
       response.end();
     });
