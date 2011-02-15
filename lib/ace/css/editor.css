@@ -122,6 +122,7 @@
 }
 
 .ace_marker-layer {
+    cursor: text;
 }
 
 .ace_marker-layer .ace_step {
@@ -142,4 +143,12 @@
 .ace_marker-layer .ace_active_line {
     position: absolute;
     z-index: 2;
+}
+
+.ace_marker-layer .ace_selected_word {
+    position: absolute;
+    z-index: 6;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }

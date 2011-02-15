@@ -1,5 +1,10 @@
 2011.02.14, Version 0.1.6
 
+* Floating Anchors
+  - An Anchor is a floating pointer in the document. 
+  - Whenever text is inserted or deleted before the cursor, the position of the cursor is updated
+  - Usesd for the cursor and selection
+  - Basis for bookmarks, multiple cursors and snippets in the future
 * Extensive support for Cocoa style keybindings on the Mac <https://github.com/ajaxorg/ace/issues/closed#issue/116/comment/767803>
 * New commands:
   - center selection in viewport
