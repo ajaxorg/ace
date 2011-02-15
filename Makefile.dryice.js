@@ -166,7 +166,8 @@ copy({
 });
 
 
-// create modes
+console.log('# ace modes ---------');
+
 project.assumeAllFilesLoaded();
 ["css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp", "coffee"].forEach(function(mode) {
     console.log("mode " + mode);
@@ -182,7 +183,6 @@ project.assumeAllFilesLoaded();
     });
 });
 
-// create worker
 console.log('# worker ---------');
 
 var jsWorker = copy.createDataObject();
@@ -214,7 +214,8 @@ copy({
     dest: "build/src/worker-javascript.js"
 });
 
-// create themes
+console.log('# ace themes ---------');
+
 var eclipseTheme = copy.createDataObject();
 copy({
     source: [{
@@ -268,7 +269,8 @@ project.assumeAllFilesLoaded();
 });
 
 
-// copy text files
+console.log('# License | Readme | Changelog ---------');
+
 copy({
     source: aceHome + "/LICENSE",
     dest: 'build/LICENSE'
