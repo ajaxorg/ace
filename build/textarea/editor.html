@@ -46,7 +46,7 @@ function inject() {
 
     load.scripts = {};
 
-    load('ace-uncompressed.js', function() {
+    load('ace.js', function() {
         var ace = window.__ace_shadowed__;
         ace.load = load;
         ace.options.mode = "javascript";
@@ -59,18 +59,26 @@ function inject() {
             }, false);
         }
     });
-
 }
 
-var textAce;
-
+// Call the inject function to load the ace files.
 inject();
-setTimeout(function() {
-    var t = document.querySelector("textarea");
+
+var textAce;
+function initAce() {
     var ace = window.__ace_shadowed__;
-    textAce = ace.transformTextarea(t);
-    textAce.setDisplaySettings(true);
-}, 300);
+    // Check if the ace.js file was loaded already, otherwise check back later.
+    if (ace && ace.transformTextarea) {
+        var t = document.querySelector("textarea");
+        textAce = ace.transformTextarea(t);
+        textAce.setDisplaySettings(true);
+    } else {
+        setTimeout(initAce, 100);
+    }
+}
+
+// Transform the textarea on the page into an ace editor.
+initAce();
 
 document.getElementById("buBuild").onclick = function() {
     var injectSrc = inject.toString().split("\n").join("");
