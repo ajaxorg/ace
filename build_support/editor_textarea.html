@@ -46,7 +46,7 @@ function inject() {
 
     load.scripts = {};
 
-    load('ace-uncompressed.js', function() {
+    load('ace.js', function() {
         var ace = window.__ace_shadowed__;
         ace.load = load;
         ace.options.mode = "javascript";
