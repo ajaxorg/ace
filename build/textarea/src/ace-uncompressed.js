@@ -12460,46 +12460,44 @@ var deps = [
 ];
 
 require(deps, function() {
-    var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins([ "pilot/index" ]);
 
-    var Dom = require("pilot/dom");
-    var Event = require("pilot/event");
+var catalog = require("pilot/plugin_manager").catalog;
+catalog.registerPlugins([ "pilot/index" ]);
 
-    var Editor = require("ace/editor").Editor;
-    var EditSession = require("ace/edit_session").EditSession;
-    var UndoManager = require("ace/undomanager").UndoManager;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var Dom = require("pilot/dom");
+var Event = require("pilot/event");
+var UA = require("pilot/useragent")
 
-    window.__ace_shadowed__.edit = function(el) {
-        if (typeof(el) == "string") {
-            el = document.getElementById(el);
-        }
+var Editor = require("ace/editor").Editor;
+var EditSession = require("ace/edit_session").EditSession;
+var UndoManager = require("ace/undomanager").UndoManager;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 
-        var doc = new EditSession(Dom.getInnerText(el));
-        doc.setUndoManager(new UndoManager());
-        el.innerHTML = '';
+window.__ace_shadowed__.edit = function(el) {
+    if (typeof(el) == "string") {
+        el = document.getElementById(el);
+    }
 
-        var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
-        editor.setSession(doc);
+    var doc = new EditSession(Dom.getInnerText(el));
+    doc.setUndoManager(new UndoManager());
+    el.innerHTML = '';
 
-        var env = require("pilot/environment").create();
-        catalog.startupPlugins({ env: env }).then(function() {
-            env.document = doc;
-            env.editor = env;
+    var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
+    editor.setSession(doc);
+
+    var env = require("pilot/environment").create();
+    catalog.startupPlugins({ env: env }).then(function() {
+        env.document = doc;
+        env.editor = env;
+        editor.resize();
+        Event.addListener(window, "resize", function() {
             editor.resize();
-            Event.addListener(window, "resize", function() {
-                editor.resize();
-            });
-            el.env = env;
         });
-        return editor;
-    }
+        el.env = env;
+    });
+    return editor;
+}
 
-    if (window.__ace_shadowed_loaded__) {
-        window.__ace_shadowed_loaded__();
-    }
-});
 
 /**
  * Returns the CSS property of element.
@@ -12511,9 +12509,15 @@ require(deps, function() {
  * is hidden and has no dimension styles).
  */
 var getCSSProperty = function(element, container, property) {
-    var ret = element.style[property]
-                || document.defaultView.getComputedStyle(element, '').
-                                        getPropertyValue(property);
+    var ret = element.style[property];
+
+    if (!ret) {
+        if (window.getComputedStyle) {
+            ret = window.getComputedStyle(element, '').getPropertyValue(property);
+        } else {
+            ret = element.currentStyle[property];
+        }
+    }
 
     if (!ret || ret == 'auto' || ret == 'intrinsic') {
         ret = container.style[property];
@@ -12573,15 +12577,15 @@ function setupContainer(element, getValue) {
 
         // The complete width is the width of the textarea + the padding
         // to the left and right.
-        var width = getCSSProperty(element, container, 'width');
-        var height = getCSSProperty(element, container, 'height');
+        var width = getCSSProperty(element, container, 'width') || (element.clientWidth + "px");
+        var height = getCSSProperty(element, container, 'height')  || (element.clientHeight + "px");
         style += 'height:' + height + ';width:' + width + ';';
 
         // Set the display property to 'inline-block'.
         style += 'display:inline-block;';
         container.setAttribute('style', style);
     };
-    window.addEventListener('resize', resizeEvent, false);
+    Event.addListener(window, 'resize', resizeEvent);
 
     // Call the resizeEvent once, so that the size of the container is
     // calculated.
@@ -12632,7 +12636,8 @@ window.__ace_shadowed__.transformTextarea = function(element) {
         top: "0px",
         left: "0px",
         right: "0px",
-        bottom: "0px"
+        bottom: "0px",
+        border: "1px solid gray"
     });
     container.appendChild(editorDiv);
 
@@ -12650,20 +12655,26 @@ window.__ace_shadowed__.transformTextarea = function(element) {
     settingOpener.innerHTML = "I";
 
     var settingDiv = document.createElement("div");
-    applyStyles(settingDiv, {
+    var settingDivStyles = {
         top: "0px",
         left: "0px",
         right: "0px",
         bottom: "0px",
         position: "absolute",
         padding: "5px",
-        background: "rgba(0, 0, 0, 0.6)",
         zIndex: 100,
         color: "white",
         display: "none",
         overflow: "auto",
         fontSize: "14px"
-    });
+    };
+    if (!UA.isIE) {
+        settingDivStyles.backgroundColor = "rgba(0, 0, 0, 0.6)";
+    } else {
+        settingDivStyles.backgroundColor = "#333";
+    }
+
+    applyStyles(settingDiv, settingDivStyles);
     container.appendChild(settingDiv);
 
     // Power up ace on the textarea:
@@ -12691,7 +12702,6 @@ window.__ace_shadowed__.transformTextarea = function(element) {
 }
 
 function setupApi(editor, editorDiv, settingDiv, ace, options) {
-    var load = ace.load;
     var session = editor.getSession();
     var renderer = editor.renderer;
 
@@ -12707,6 +12717,8 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
         setOption: function(key, value) {
             if (options[key] == value) return;
 
+            var load = window.__ace_shadowed_load__;
+
             switch (key) {
                 case "gutter":
                     renderer.setShowGutter(toBool(value));
@@ -12715,7 +12727,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                 case "mode":
                     if (value != "text") {
                         // Load the required mode file. Files get loaded only once.
-                        load("mode-" + value + ".js", function() {
+                        load("mode-" + value + ".js", "ace/mode/" + value, function() {
                             var aceMode = require("ace/mode/" + value).Mode;
                             session.setMode(new aceMode());
                         });
@@ -12727,7 +12739,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                 case "theme":
                     if (value != "textmate") {
                         // Load the required theme file. Files get loaded only once.
-                        load("theme-" + value + ".js", function() {
+                        load("theme-" + value + ".js", "ace/theme/" + value, function() {
                             editor.setTheme("ace/theme/" + value);
                         });
                     } else {
@@ -12827,7 +12839,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             mono_industrial:    "Mono Industrial",
             monokai:    "Monokai",
             pastel_on_dark: "Pastel On Dark",
-            twilight: "Twilight",
+            twilight: "Twilight"
         },
         gutter: BOOL,
         fontSize: {
@@ -12874,13 +12886,17 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
     table.push("</table>");
     settingDiv.innerHTML = table.join("");
 
-    var selects = settingDiv.querySelectorAll("select");
+    var selects = settingDiv.getElementsByTagName("select");
     for (var i = 0; i < selects.length; i++) {
-        selects[i].onchange = function(e) {
-            var option = e.target.title;
-            var value  = e.target.value;
-            api.setOption(option, value);
-        }
+        var onChange = (function() {
+            var select = selects[i];
+            return function() {
+                var option = select.title;
+                var value  = select.value;
+                api.setOption(option, value);
+            }
+        })();
+        selects[i].onchange = onChange;
     }
 
     var button = document.createElement("input");
@@ -12905,5 +12921,7 @@ window.__ace_shadowed__.options = {
     softWrap:   "off",
     showPrintMargin: "false"
 }
+
+});
 
 })()
