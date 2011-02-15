@@ -4247,9 +4247,9 @@ var Editor =function(renderer, session) {
     }
 
     this.$highlightBrackets = function() {
-        if (this.$bracketHighlight) {
-            this.session.removeMarker(this.$bracketHighlight);
-            this.$bracketHighlight = null;
+        if (this.session.$bracketHighlight) {
+            this.session.removeMarker(this.session.$bracketHighlight);
+            this.session.$bracketHighlight = null;
         }
 
         if (this.$highlightPending) {
@@ -4265,7 +4265,7 @@ var Editor =function(renderer, session) {
             var pos = self.session.findMatchingBracket(self.getCursorPosition());
             if (pos) {
                 var range = new Range(pos.row, pos.column, pos.row, pos.column+1);
-                self.$bracketHighlight = self.session.addMarker(range, "ace_bracket");
+                self.session.$bracketHighlight = self.session.addMarker(range, "ace_bracket");
             }
         }, 10);
     };
@@ -7596,7 +7596,7 @@ var EditSession = function(text, mode) {
             // If wrapMode is activaed, the wrapData array has to be initialized.
             if (useWrapMode) {
                 var len = this.getLength();
-                this.$wrapMode = [];
+                this.$wrapData = [];
                 for (i = 0; i < len; i++) {
                     this.$wrapData.push([]);
                 }
@@ -10289,7 +10289,148 @@ exports.UndoManager = UndoManager;
 define('ace/theme/textmate', function(require, exports, module) {
 
     var dom = require("pilot/dom");
-    var cssText = require("text!ace/theme/tm.css");
+
+    var cssText = ".ace-tm .ace_editor {\
+  border: 2px solid rgb(159, 159, 159);\
+}\
+\
+.ace-tm .ace_editor.ace_focus {\
+  border: 2px solid #327fbd;\
+}\
+\
+.ace-tm .ace_gutter {\
+  width: 50px;\
+  background: #e8e8e8;\
+  color: #333;\
+  overflow : hidden;\
+}\
+\
+.ace-tm .ace_gutter-layer {\
+  width: 100%;\
+  text-align: right;\
+}\
+\
+.ace-tm .ace_gutter-layer .ace_gutter-cell {\
+  padding-right: 6px;\
+}\
+\
+.ace-tm .ace_print_margin {\
+  width: 1px;\
+  background: #e8e8e8;\
+}\
+\
+.ace-tm .ace_text-layer {\
+  cursor: text;\
+}\
+\
+.ace-tm .ace_cursor {\
+  border-left: 2px solid black;\
+}\
+\
+.ace-tm .ace_cursor.ace_overwrite {\
+  border-left: 0px;\
+  border-bottom: 1px solid black;\
+}\
+        \
+.ace-tm .ace_line .ace_invisible {\
+  color: rgb(191, 191, 191);\
+}\
+\
+.ace-tm .ace_line .ace_keyword {\
+  color: blue;\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_buildin {\
+  color: rgb(88, 72, 246);\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_language {\
+  color: rgb(88, 92, 246);\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_library {\
+  color: rgb(6, 150, 14);\
+}\
+\
+.ace-tm .ace_line .ace_invalid {\
+  background-color: rgb(153, 0, 0);\
+  color: white;\
+}\
+\
+.ace-tm .ace_line .ace_support.ace_function {\
+  color: rgb(60, 76, 114);\
+}\
+\
+.ace-tm .ace_line .ace_support.ace_constant {\
+  color: rgb(6, 150, 14);\
+}\
+\
+.ace-tm .ace_line .ace_support.ace_type,\
+.ace-tm .ace_line .ace_support.ace_class {\
+  color: rgb(109, 121, 222);\
+}\
+\
+.ace-tm .ace_line .ace_keyword.ace_operator {\
+  color: rgb(104, 118, 135);\
+}\
+\
+.ace-tm .ace_line .ace_string {\
+  color: rgb(3, 106, 7);\
+}\
+\
+.ace-tm .ace_line .ace_comment {\
+  color: rgb(76, 136, 107);\
+}\
+\
+.ace-tm .ace_line .ace_comment.ace_doc {\
+  color: rgb(0, 102, 255);\
+}\
+\
+.ace-tm .ace_line .ace_comment.ace_doc.ace_tag {\
+  color: rgb(128, 159, 191);\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_numeric {\
+  color: rgb(0, 0, 205);\
+}\
+\
+.ace-tm .ace_line .ace_variable {\
+  color: rgb(49, 132, 149);\
+}\
+\
+.ace-tm .ace_line .ace_xml_pe {\
+  color: rgb(104, 104, 91);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_selection {\
+  background: rgb(181, 213, 255);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_step {\
+  background: rgb(252, 255, 0);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_stack {\
+  background: rgb(164, 229, 101);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_bracket {\
+  margin: -1px 0 0 -1px;\
+  border: 1px solid rgb(192, 192, 192);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_active_line {\
+  background: rgb(232, 242, 254);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_selected_word {\
+  background: rgb(250, 250, 255);\
+  border: 1px solid rgb(200, 200, 250);\
+}\
+\
+.ace-tm .ace_string.ace_regex {\
+  color: rgb(255, 0, 0)\
+}";
 
     // import CSS once
     dom.importCssString(cssText);
@@ -10481,6 +10622,7 @@ var VirtualRenderer = function(container, theme) {
         _self.characterWidth = textLayer.getCharacterWidth();
         _self.lineHeight = textLayer.getLineHeight();
         _self.$updatePrintMargin();
+        _self.onResize(true);
 
         _self.$loop.schedule(_self.CHANGE_FULL);
     });
@@ -10664,7 +10806,7 @@ var VirtualRenderer = function(container, theme) {
 
         if (!this.$showPrintMargin && !this.$printMarginEl)
             return;
-            
+
         if (!this.$printMarginEl) {
             containerEl = document.createElement("div");
             containerEl.className = "ace_print_margin_layer";
@@ -10691,18 +10833,18 @@ var VirtualRenderer = function(container, theme) {
         return this.container;
     };
 
-    this.moveTextAreaToCursor = function(textarea) {        
+    this.moveTextAreaToCursor = function(textarea) {
         // in IE the native cursor always shines through
         if (useragent.isIE)
             return;
-            
+
         var pos = this.$cursorLayer.getPixelPosition();
         if (!pos)
             return;
 
         var bounds = this.content.getBoundingClientRect();
         var offset = (this.layerConfig && this.layerConfig.offset) || 0;
-        
+
         textarea.style.left = (bounds.left + pos.left + this.$padding) + "px";
         textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
     };
@@ -10805,7 +10947,7 @@ var VirtualRenderer = function(container, theme) {
         if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_FRONT)) {
             this.$markerFront.update(this.layerConfig);
         }
-        
+
         if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_BACK)) {
             this.$markerBack.update(this.layerConfig);
         }
@@ -11056,15 +11198,15 @@ var VirtualRenderer = function(container, theme) {
             this.$composition.className = "ace_composition";
             this.content.appendChild(this.$composition);
         }
-        
+
         this.$composition.innerHTML = "&nbsp;";
-        
+
         var pos = this.$cursorLayer.getPixelPosition();
         var style = this.$composition.style;
         style.top = pos.top + "px";
         style.left = (pos.left + this.$padding) + "px";
         style.height = this.lineHeight + "px";
-        
+
         this.hideCursor();
     };
 
@@ -12262,233 +12404,6 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "");
 
-define("text!ace/theme/eclipse.css", ".ace-eclipse .ace_editor {" +
-  "  border: 2px solid rgb(159, 159, 159);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_editor.ace_focus {" +
-  "  border: 2px solid #327fbd;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_gutter {" +
-  "  width: 40px;" +
-  "  background: rgb(227, 227, 227);" +
-  "  border-right: 1px solid rgb(159, 159, 159);	 " +
-  "  color: rgb(136, 136, 136);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_gutter-layer {" +
-  "  right: 10px;" +
-  "  text-align: right;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_text-layer {" +
-  "  cursor: text;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_cursor {" +
-  "  border-left: 1px solid black;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_keyword, .ace-eclipse .ace_line .ace_variable {" +
-  "  color: rgb(127, 0, 85);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_constant.ace_buildin {" +
-  "  color: rgb(88, 72, 246);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_constant.ace_library {" +
-  "  color: rgb(6, 150, 14);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_function {" +
-  "  color: rgb(60, 76, 114);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_string {" +
-  "  color: rgb(42, 0, 255);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_comment {" +
-  "  color: rgb(63, 127, 95);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_comment.ace_doc {" +
-  "  color: rgb(63, 95, 191);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_comment.ace_doc.ace_tag {" +
-  "  color: rgb(127, 159, 191);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_constant.ace_numeric {" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_tag {" +
-  "	color: rgb(63, 127, 127);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_xml_pe {" +
-  "  color: rgb(104, 104, 91);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_marker-layer .ace_selection {" +
-  "  background: rgb(181, 213, 255);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_marker-layer .ace_bracket {" +
-  "  margin: -1px 0 0 -1px;" +
-  "  border: 1px solid rgb(192, 192, 192);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_marker-layer .ace_active_line {" +
-  "  background: rgb(232, 242, 254);" +
-  "}");
-
-define("text!ace/theme/tm.css", ".ace-tm .ace_editor {" +
-  "  border: 2px solid rgb(159, 159, 159);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_editor.ace_focus {" +
-  "  border: 2px solid #327fbd;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_gutter {" +
-  "  width: 50px;" +
-  "  background: #e8e8e8;" +
-  "  color: #333;" +
-  "  overflow : hidden;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_gutter-layer {" +
-  "  width: 100%;" +
-  "  text-align: right;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_gutter-layer .ace_gutter-cell {" +
-  "  padding-right: 6px;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_print_margin {" +
-  "  width: 1px;" +
-  "  background: #e8e8e8;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_text-layer {" +
-  "  cursor: text;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_cursor {" +
-  "  border-left: 2px solid black;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_cursor.ace_overwrite {" +
-  "  border-left: 0px;" +
-  "  border-bottom: 1px solid black;" +
-  "}" +
-  "        " +
-  ".ace-tm .ace_line .ace_invisible {" +
-  "  color: rgb(191, 191, 191);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_keyword {" +
-  "  color: blue;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_buildin {" +
-  "  color: rgb(88, 72, 246);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_language {" +
-  "  color: rgb(88, 92, 246);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_library {" +
-  "  color: rgb(6, 150, 14);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_invalid {" +
-  "  background-color: rgb(153, 0, 0);" +
-  "  color: white;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_support.ace_function {" +
-  "  color: rgb(60, 76, 114);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_support.ace_constant {" +
-  "  color: rgb(6, 150, 14);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_support.ace_type," +
-  ".ace-tm .ace_line .ace_support.ace_class {" +
-  "  color: rgb(109, 121, 222);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_keyword.ace_operator {" +
-  "  color: rgb(104, 118, 135);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_string {" +
-  "  color: rgb(3, 106, 7);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_comment {" +
-  "  color: rgb(76, 136, 107);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_comment.ace_doc {" +
-  "  color: rgb(0, 102, 255);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_comment.ace_doc.ace_tag {" +
-  "  color: rgb(128, 159, 191);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_numeric {" +
-  "  color: rgb(0, 0, 205);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_variable {" +
-  "  color: rgb(49, 132, 149);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_xml_pe {" +
-  "  color: rgb(104, 104, 91);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_selection {" +
-  "  background: rgb(181, 213, 255);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_step {" +
-  "  background: rgb(252, 255, 0);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_stack {" +
-  "  background: rgb(164, 229, 101);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_bracket {" +
-  "  margin: -1px 0 0 -1px;" +
-  "  border: 1px solid rgb(192, 192, 192);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_active_line {" +
-  "  background: rgb(232, 242, 254);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_selected_word {" +
-  "  background: rgb(250, 250, 255);" +
-  "  border: 1px solid rgb(200, 200, 250);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_string.ace_regex {" +
-  "  color: rgb(255, 0, 0)   " +
-  "}" +
-  "");
-
 define("text!icons/epl.html", "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
   "<!-- saved from url=(0049)http://www.eclipse.org/org/documents/epl-v10.html -->" +
   "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" +
@@ -12772,6 +12687,22 @@ define("text!styles.css", "html {" +
   "    top: 60px;" +
   "    left: 0px;" +
   "    background: white;" +
+  "}" +
+  "" +
+  ".cool {" +
+  "    position: absolute;" +
+  "    background: orange;" +
+  "    opacity: 0.8;" +
+  "}" +
+  "" +
+  ".cool_header {" +
+  "    position: absolute;" +
+  "    background: orange;" +
+  "    color: black;" +
+  "    font-size: 8px;" +
+  "    padding: 1px;" +
+  "    margin-top: -8px;" +
+  "    opacity: 0.8;" +
   "}" +
   "" +
   "#controls {" +

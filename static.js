@@ -1,7 +1,10 @@
+#!/usr/bin/env node
+
 var http = require("http"),
     url = require("url"),
     path = require("path"),
-    fs = require("fs")
+    fs = require("fs"),
+    mime = require("mime"),
     port = process.env.C9_PORT || 8888;
 
 http.createServer(function(request, response) {
@@ -27,7 +30,8 @@ http.createServer(function(request, response) {
         return;
       }
 
-      response.writeHead(200);
+      var contentType = mime.lookup(filename) || "text/plain";
+      response.writeHead(200, {"Content-Type": contentType});
       response.write(file, "binary");
       response.end();
     });
