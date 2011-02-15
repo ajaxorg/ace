@@ -3,23 +3,9 @@
 var http = require("http"),
     url = require("url"),
     path = require("path"),
-    fs = require("fs")
+    fs = require("fs"),
+    mime = require("mime"),
     port = process.env.C9_PORT || 8888;
-
-function guessFileType(name) {
-  var types = {
-    '.html': 'text/html',
-    '.xhtml': 'application/xhtml+xml',
-    '.js': 'text/javascript',
-    '.css': 'text/css',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-  };
-
-  var ext = path.extname(name);
-
-  return ext in types ? types[ext] : 'text/plain';
-}
 
 http.createServer(function(request, response) {
 
@@ -44,7 +30,8 @@ http.createServer(function(request, response) {
         return;
       }
 
-      response.writeHead(200, {"Content-Type": guessFileType(filename)});
+      var contentType = mime.lookup(filename) || "text/plain";
+      response.writeHead(200, {"Content-Type": contentType});
       response.write(file, "binary");
       response.end();
     });
