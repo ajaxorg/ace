@@ -1,6 +1,8 @@
 build:
 	mkdir -p build/src
+	mkdir -p build/textarea/src
 	./Makefile.dryice.js
+	./Makefile.dryice.textarea.js
 
 clean:
 	rm -rf build
