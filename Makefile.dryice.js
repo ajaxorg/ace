@@ -102,7 +102,7 @@ copy({
 });
 copy({
     source: [
-        'build_support/boot.js'    
+        'build_support/boot.js'
     ],
     dest: ace
 });
@@ -216,32 +216,9 @@ copy({
 
 console.log('# ace themes ---------');
 
-var eclipseTheme = copy.createDataObject();
-copy({
-    source: [{
-        root: aceHome + '/lib',
-        include: "ace/theme/eclipse.js"
-    }],
-    filter: [ copy.filter.moduleDefines ],
-    dest: eclipseTheme
-});
-copy({
-    source: [{
-        root: aceHome + '/lib',
-        include: "ace/theme/eclipse.css"
-    }],
-    filter: [ copy.filter.addDefines ],
-    dest: eclipseTheme
-});
-copy({
-    source: eclipseTheme,
-    filter: [ copy.filter.uglifyjs ],
-    dest: 'build/src/theme-eclipse.js'
-});
-
 [
-    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme", 
-    "mono_industrial", "monokai", "pastel_on_dark", "twilight"
+    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse"
 ].forEach(function(theme) {
     copy({
         source: [{
@@ -292,9 +269,9 @@ copy({
 //            "ace", "cockpit",
 //            "keybinding-vim", "keybinding-emacs",
 //            "mode-javascript", "mode-css", "mode-html", "mode-php", "mode-python",
-//            "mode-xml", 
+//            "mode-xml",
 //            "theme-clouds", "theme-clouds_midnight", "theme-cobalt",
-//            "theme-dawn", "theme-idle_fingers", "theme-kr_theme", 
+//            "theme-dawn", "theme-idle_fingers", "theme-kr_theme",
 //            "theme-mono_industrial", "theme-monokai", "theme-pastel_on_dark",
 //            "theme-twilight"
 //        ].map(function(module) {
@@ -307,7 +284,7 @@ copy({
 //    } ],
 //    dest: "build/editor-demo.html"
 //});
-//copy({    
+//copy({
 //    source: [{
 //        root: aceHome + '/demo',
 //        include: "demo.js"
@@ -315,11 +292,11 @@ copy({
 //    filter: [ copy.filter.moduleDefines ],
 //    dest: "build/demo/demo.js"
 //});
-//copy({    
+//copy({
 //    source: aceHome + '/demo/styles.css',
 //    dest: "build/demo/styles.css"
 //});
-//copy({    
+//copy({
 //    source: aceHome + '/demo/logo.png',
 //    dest: "build/demo/logo.png"
 //});
