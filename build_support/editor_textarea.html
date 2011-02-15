@@ -7,6 +7,25 @@
 </head>
 <body>
 
+<h1>Ace Bookmarklet Builder</h1>
+
+<p>
+WARNING: Currently, this is only fully supported in non IE browsers.
+</p>
+
+<p>
+How to use it:
+<ul>
+    <li>Select the options below as you want them to be by default.</li>
+    <li>Enter the "SourceUrl" where you placed the source data which you find under build/textarea/src (you can also leave the default to server the scripts from GitHub).</li>
+    <li>Click the "Build Link" button to generate your custom Ace Bookmarklet.</li>
+    <li>Drag the generated link to your toolbar or store it somewhere else.</li>
+    <li>Go to a page with an textarea element and click the bookmarklet - wait a little bit till the files are loaded.</li>
+    <li>Click 3 times on the textarea you want to replace - Ace will replace it.</li>
+    <li>To change settings, just click the red icon in the bottom right corner.</li>
+</ul>
+</p>
+
 <textarea id="textarea" style="width:300px; height:300px">
     function foo() {
         var bar = true;
@@ -14,7 +33,7 @@
 </textarea><br>
 SourceUrl: <input id="srcURL" value="http://ajaxorg.github.com/ace/build/textarea/src/"></input>
 
-<button id="buBuild">Build link</button> <br> <a href="#"></a>
+<button id="buBuild">Build Link</button> <br> <a href="#"></a>
 
 <script>
 function inject() {
@@ -52,13 +71,11 @@ function inject() {
     };
 
     load.scripts = {};
-
     window.__ace_shadowed_load__ = load;
 
-    load('ace-uncompressed.js', 'text!ace/css/editor.css', function() {
+    load('ace.js', 'text!ace/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
         var Event = ace.require('pilot/event');
-        ace.options.mode = "javascript";
         var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
             Event.addListener(areas[i], "click", function(e) {
