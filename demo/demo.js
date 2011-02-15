@@ -57,6 +57,7 @@ exports.launch = function(env) {
     var RubyMode = require("ace/mode/ruby").Mode;
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
+    var PerlMode = require("ace/mode/perl").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -124,6 +125,10 @@ exports.launch = function(env) {
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
+    docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
+    docs.perl.setMode(new PerlMode());
+    docs.perl.setUndoManager(new UndoManager());
+
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
 
@@ -138,7 +143,8 @@ exports.launch = function(env) {
         java: new JavaMode(),
         ruby: new RubyMode(),
         c_cpp: new CCPPMode(),
-        coffee: new CoffeeMode()
+        coffee: new CoffeeMode(),
+        perl: new PerlMode()
     };
 
     function getMode() {
@@ -182,6 +188,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof CoffeeMode) {
             modeEl.value = "coffee";
+        }
+        else if (mode instanceof PerlMode) {
+            modeEl.value = "perl";
         }
         else {
             modeEl.value = "text";
@@ -325,6 +334,8 @@ exports.launch = function(env) {
                     mode = "c_cpp";
                 } else if (/^.*\.coffee$/i.test(file.name)) {
                     mode = "coffee";
+                } else if (/^.*\.(pl|pm)$/i.test(file.name)) {
+                    mode = "perl";
                 }
 
                 env.editor.onTextInput(reader.result);

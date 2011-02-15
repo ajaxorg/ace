@@ -42,7 +42,6 @@ var copy = require('dryice').copy;
 var aceHome = __dirname;
 
 function shadow(input) {
-    console.log("shadow input");
     if (typeof input !== 'string') {
         input = input.toString();
     }
@@ -137,7 +136,10 @@ console.log('# ace modes ---------');
 
 // create modes
 project.assumeAllFilesLoaded();
-["css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp", "coffee"].forEach(function(mode) {
+[
+    "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
+    "coffee", "perl"
+].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
         source: [
@@ -160,7 +162,7 @@ console.log('# ace themes ---------');
 // create themes
 [
     "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
-    "mono_industrial", "monokai", "pastel_on_dark", "twilight"
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse"
 ].forEach(function(theme) {
     console.log("theme " + theme);
     copy({

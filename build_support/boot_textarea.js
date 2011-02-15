@@ -252,7 +252,9 @@ window.__ace_shadowed__.transformTextarea = function(element) {
         background: "rgba(0, 0, 0, 0.6)",
         zIndex: 100,
         color: "white",
-        display: "none"
+        display: "none",
+        overflow: "auto",
+        fontSize: "14px"
     });
     container.appendChild(settingDiv);
 
@@ -328,6 +330,34 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                 case "fontSize":
                     editorDiv.style.fontSize = value;
                 break;
+
+                case "softWrap":
+                    switch (value) {
+                        case "off":
+                            session.setUseWrapMode(false);
+                            renderer.setPrintMarginColumn(80);
+                        break;
+                        case "40":
+                            session.setUseWrapMode(true);
+                            session.setWrapLimitRange(40, 40);
+                            renderer.setPrintMarginColumn(40);
+                        break;
+                        case "80":
+                            session.setUseWrapMode(true);
+                            session.setWrapLimitRange(80, 80);
+                            renderer.setPrintMarginColumn(80);
+                        break;
+                        case "free":
+                            session.setUseWrapMode(true);
+                            session.setWrapLimitRange(null, null);
+                            renderer.setPrintMarginColumn(80);
+                        break;
+                    }
+                break;
+
+                case "showPrintMargin":
+                    renderer.setShowPrintMargin(toBool(value));
+                break
             }
 
             options[key] = value;
@@ -359,7 +389,9 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         mode: "Mode:",
         gutter: "Display Gutter:",
         theme: "Theme:",
-        fontSize: "Font Size:"
+        fontSize: "Font Size:",
+        softWrap: "Soft Wrap:",
+        showPrintMargin: "Show Print Margin:"
     }
 
     var optionValues = {
@@ -392,10 +424,18 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         gutter: BOOL,
         fontSize: {
             "10px": "10px",
+            "11px": "11px",
             "12px": "12px",
             "14px": "14px",
             "16px": "16px"
-        }
+        },
+        softWrap: {
+            off:    "Off",
+            40:     "40",
+            80:     "80",
+            free:   "Free"
+        },
+        showPrintMargin: BOOL
     }
 
     var table = [];
@@ -453,7 +493,9 @@ window.__ace_shadowed__.options = {
     mode:       "text",
     theme:      "textmate",
     gutter:     "false",
-    fontSize:   "12px"
+    fontSize:   "12px",
+    softWrap:   "off",
+    showPrintMargin: "false"
 }
 
 })()
