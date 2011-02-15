@@ -4362,6 +4362,9 @@ var Editor =function(renderer, session) {
         }
 
         this.onCursorChange(e);
+
+        if (this.$highlightSelectedWord)
+            this.mode.highlightSelection(this);
     };
 
     this.onChangeFrontMarker = function() {
@@ -4554,6 +4557,22 @@ var Editor =function(renderer, session) {
 
     this.getHighlightActiveLine = function() {
         return this.$highlightActiveLine;
+    };
+
+    this.$highlightSelectedWord = true;
+    this.setHighlightSelectedWord = function(shouldHighlight) {
+        if (this.$highlightSelectedWord == shouldHighlight)
+            return;
+
+        this.$highlightSelectedWord = shouldHighlight;
+        if (shouldHighlight)
+            this.mode.highlightSelection(this);
+        else
+            this.mode.clearSelectionHighlight(this);
+    };
+
+    this.getHighlightSelectedWord = function() {
+        return this.$highlightSelectedWord;
     };
 
     this.setShowInvisibles = function(showInvisibles) {
@@ -4833,68 +4852,66 @@ var Editor =function(renderer, session) {
         return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
     };
 
-    this.getVisibleRowCount = function() {
-        return this.getLastVisibleRow() - this.getFirstVisibleRow() + 1;
+    this.$getVisibleRowCount = function() {
+        return this.renderer.getScrollBottomRow() - this.renderer.getScrollTopRow() + 1;
     };
 
-    this.getPageDownRow = function() {
-        return this.renderer.getLastVisibleRow() - 1;
+    this.$getPageDownRow = function() {
+        return this.renderer.getScrollBottomRow();
     };
 
-    this.getPageUpRow = function() {
-        var firstRow = this.renderer.getFirstVisibleRow();
-        var lastRow = this.renderer.getLastVisibleRow();
+    this.$getPageUpRow = function() {
+        var firstRow = this.renderer.getScrollTopRow();
+        var lastRow = this.renderer.getScrollBottomRow();
 
-        return firstRow - (lastRow - firstRow) + 1;
+        return firstRow - (lastRow - firstRow);
     };
 
     this.selectPageDown = function() {
-        var row = this.getPageDownRow() + Math.floor(this.getVisibleRowCount() / 2);
+        var row = this.$getPageDownRow() + Math.floor(this.$getVisibleRowCount() / 2);
 
         this.scrollPageDown();
 
         var selection = this.getSelection();
-        selection.$moveSelection(function() {
-            selection.moveCursorTo(row, selection.getSelectionLead().column);
-        });
+        var leadScreenPos = this.session.documentToScreenPosition(selection.getSelectionLead());
+        var dest = this.session.screenToDocumentPosition(row, leadScreenPos.column);
+        selection.selectTo(dest.row, dest.column);
     };
 
     this.selectPageUp = function() {
-        var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
-        var row = this.getPageUpRow() + Math.round(visibleRows / 2);
+        var visibleRows = this.renderer.getScrollTopRow() - this.renderer.getScrollBottomRow();
+        var row = this.$getPageUpRow() + Math.round(visibleRows / 2);
 
         this.scrollPageUp();
 
         var selection = this.getSelection();
-        selection.$moveSelection(function() {
-            selection.moveCursorTo(row, selection.getSelectionLead().column);
-        });
+        var leadScreenPos = this.session.documentToScreenPosition(selection.getSelectionLead());
+        var dest = this.session.screenToDocumentPosition(row, leadScreenPos.column);
+        selection.selectTo(dest.row, dest.column);
     };
 
     this.gotoPageDown = function() {
-        var row     = this.getPageDownRow(),
-            column  = Math.min(this.getCursorPosition().column,
-                               this.session.getLine(row).length);
+        var row = this.$getPageDownRow();
+        var column = this.getCursorPositionScreen().column;
 
         this.scrollToRow(row);
-        this.getSelection().moveCursorTo(row, column);
+        this.getSelection().moveCursorToScreen(row, column);
     };
 
     this.gotoPageUp = function() {
-       var  row     = this.getPageUpRow(),
-            column  = Math.min(this.getCursorPosition().column,
-                               this.session.getLine(row).length);
+        var row = this.$getPageUpRow();
+        var column = this.getCursorPositionScreen().column;
 
        this.scrollToRow(row);
-       this.getSelection().moveCursorTo(row, column);
+       this.getSelection().moveCursorToScreen(row, column);
     };
 
     this.scrollPageDown = function() {
-        this.scrollToRow(this.getPageDownRow());
+        this.scrollToRow(this.$getPageDownRow());
     };
 
     this.scrollPageUp = function() {
-        this.renderer.scrollToRow(this.getPageUpRow());
+        this.renderer.scrollToRow(this.$getPageUpRow());
     };
 
     this.scrollToRow = function(row) {
@@ -4914,6 +4931,10 @@ var Editor =function(renderer, session) {
     this.getCursorPosition = function() {
         return this.selection.getCursor();
     };
+
+    this.getCursorPositionScreen = function() {
+        return this.session.documentToScreenPosition(this.getCursorPosition());
+    }
 
     this.getSelectionRange = function() {
         return this.selection.getRange();
@@ -5592,19 +5613,69 @@ exports.setText = function(elem, text) {
     }
 };
 
-exports.hasCssClass = function(el, name) {
-    var classes = el.className.split(/\s+/g);
-    return classes.indexOf(name) !== -1;
-};
+if (!document.documentElement.classList) {
+    exports.hasCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g);
+        return classes.indexOf(name) !== -1;
+    };
 
-/**
-* Add a CSS class to the list of classes on the given node
-*/
-exports.addCssClass = function(el, name) {
-    if (!exports.hasCssClass(el, name)) {
-        el.className += " " + name;
-    }
-};
+    /**
+    * Add a CSS class to the list of classes on the given node
+    */
+    exports.addCssClass = function(el, name) {
+        if (!exports.hasCssClass(el, name)) {
+            el.className += " " + name;
+        }
+    };
+
+    /**
+    * Remove a CSS class from the list of classes on the given node
+    */
+    exports.removeCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g);
+        while (true) {
+            var index = classes.indexOf(name);
+            if (index == -1) {
+                break;
+            }
+            classes.splice(index, 1);
+        }
+        el.className = classes.join(" ");
+    };
+
+    exports.toggleCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g), add = true;
+        while (true) {
+            var index = classes.indexOf(name);
+            if (index == -1) {
+                break;
+            }
+            add = false;
+            classes.splice(index, 1);
+        }
+        if(add)
+            classes.push(name);
+
+        el.className = classes.join(" ");
+        return add;
+    };
+} else {
+    exports.hasCssClass = function(el, name) {
+        return el.classList.contains(name);
+    };
+
+    exports.addCssClass = function(el, name) {
+        el.classList.add(name);
+    };
+
+    exports.removeCssClass = function(el, name) {
+        el.classList.remove(name);
+    };
+
+    exports.toggleCssClass = function(el, name) {
+        return el.classList.toggle(name);
+    };
+}
 
 /**
  * Add or remove a CSS class from the list of classes on the given node
@@ -5618,23 +5689,8 @@ exports.setCssClass = function(node, className, include) {
     }
 };
 
-/**
-* Remove a CSS class from the list of classes on the given node
-*/
-exports.removeCssClass = function(el, name) {
-    var classes = el.className.split(/\s+/g);
-    while (true) {
-        var index = classes.indexOf(name);
-        if (index == -1) {
-            break;
-        }
-        classes.splice(index, 1);
-    }
-    el.className = classes.join(" ");
-};
-
 exports.importCssString = function(cssText, doc){
-    doc = doc || document;        
+    doc = doc || document;
 
     if (doc.createStyleSheet) {
         var sheet = doc.createStyleSheet();
@@ -5644,7 +5700,7 @@ exports.importCssString = function(cssText, doc){
         var style = doc.createElement("style");
         style.appendChild(doc.createTextNode(cssText));
         doc.getElementsByTagName("head")[0].appendChild(style);
-    }            
+    }
 };
 
 exports.getInnerWidth = function(element) {
@@ -5661,7 +5717,7 @@ if (window.pageYOffset !== undefined) {
     exports.getPageScrollTop = function() {
         return window.pageYOffset;
     };
-    
+
     exports.getPageScrollLeft = function() {
         return window.pageXOffset;
     };
@@ -5670,7 +5726,7 @@ else {
     exports.getPageScrollTop = function() {
         return document.body.scrollTop;
     };
-    
+
     exports.getPageScrollLeft = function() {
         return document.body.scrollLeft;
     };
@@ -5719,11 +5775,11 @@ exports.scrollbarWidth = function() {
 /**
  * Optimized set innerHTML. This is faster than plain innerHTML if the element
  * already contains a lot of child elements.
- * 
+ *
  * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
  */
 exports.setInnerHtml = function(el, innerHtml) {
-	var element = el.cloneNode(false);//document.createElement("div");
+    var element = el.cloneNode(false);//document.createElement("div");
     element.innerHTML = innerHtml;
     el.parentNode.replaceChild(element, el);
     return element;
@@ -5732,15 +5788,15 @@ exports.setInnerHtml = function(el, innerHtml) {
 exports.setInnerText = function(el, innerText) {
     if ("textContent" in document.body)
         el.textContent = innerText;
-    else 
+    else
         el.innerText = innerText;
-        
+
 };
 
 exports.getInnerText = function(el) {
     if ("textContent" in document.body)
         return el.textContent;
-    else 
+    else
          return el.innerText;
 };
 
@@ -6192,7 +6248,8 @@ var MouseHandler = function(editor) {
 }).call(MouseHandler.prototype);
 
 exports.MouseHandler = MouseHandler;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -7100,7 +7157,7 @@ var EditSession = function(text, mode) {
 
     this.addMarker = function(range, clazz, type, inFront) {
         var id = this.$markerId++;
-        
+
         var marker = {
             range : range,
             type : type || "line",
@@ -7108,7 +7165,7 @@ var EditSession = function(text, mode) {
             clazz : clazz,
             inFront: !!inFront
         }
-        
+
         if (inFront) {
             this.$frontMarkers[id] = marker;
             this._dispatchEvent("changeFrontMarker")
@@ -7116,26 +7173,26 @@ var EditSession = function(text, mode) {
             this.$backMarkers[id] = marker;
             this._dispatchEvent("changeBackMarker")
         }
-        
+
         return id;
     };
-    
+
     this.removeMarker = function(markerId) {
         var marker = this.$frontMarkers[markerId] || this.$backMarkers[markerId];
         if (!marker)
             return;
-            
+
         var markers = marker.inFront ? this.$frontMarkers : this.$backMarkers;
         if (marker) {
             delete (markers[markerId]);
             this._dispatchEvent(marker.inFront ? "changeFrontMarker" : "changeBackMarker");
         }
     };
-    
+
     this.getMarkers = function(inFront) {
         return inFront ? this.$frontMarkers : this.$backMarkers;
     };
-    
+
     /**
      * Error:
      *  {
@@ -7225,7 +7282,7 @@ var EditSession = function(text, mode) {
         if (this.$worker)
             this.$worker.terminate();
 
-        if (window.Worker)
+        if (window.Worker && !require.noWorker)
             this.$worker = mode.createWorker(this);
         else
             this.$worker = null;
@@ -8493,6 +8550,15 @@ var Selection = function(session) {
             this.$updateDesiredColumn(this.selectionLead.column);
     };
 
+    this.moveCursorToScreen = function(row, column, preventUpdateDesiredColumn) {
+        if (this.session.getUseWrapMode()) {
+            var pos = this.session.screenToDocumentPosition(row, column);
+            row = pos.row;
+            column = pos.column;
+        }
+        this.moveCursorTo(row, column, preventUpdateDesiredColumn);
+    };
+
 }).call(Selection.prototype);
 
 exports.Selection = Selection;
@@ -8846,7 +8912,8 @@ var Anchor = exports.Anchor = function(doc, row, column) {
 }).call(Anchor.prototype);
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -8868,6 +8935,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -8923,6 +8991,64 @@ var Mode = function() {
     
     this.createWorker = function(session) {
         return null;
+    };
+
+    this.highlightSelection = function(editor) {
+        var session = editor.session;
+        if (!session.$selectionOccurrences)
+            session.$selectionOccurrences = [];
+
+        if (session.$selectionOccurrences.length)
+            this.clearSelectionHighlight(editor);
+
+        var selection = editor.getSelectionRange();
+        if (selection.isEmpty() || selection.isMultiLine())
+            return;
+
+        var startOuter = selection.start.column - 1;
+        var endOuter = selection.end.column + 1;
+        var line = session.getLine(selection.start.row);
+        var lineCols = line.length - 1;
+        var needle = line.substring(Math.max(startOuter, 0),
+                                    Math.min(endOuter, lineCols));
+
+        // Make sure the outer characters are not part of the word.
+        if ((startOuter >= 0 && !/[^\w\d]/.test(needle.charAt(0))) ||
+            (endOuter <= lineCols && !/[^\w\d]/.test(needle.charAt(needle.length - 1))))
+            return;
+
+        needle = line.substring(selection.start.column, selection.end.column);
+        if (!/^[\w\d]+$/.test(needle))
+            return;
+
+        var newOptions = {
+            wrap: true,
+            wholeWord: true,
+            needle: needle
+        };
+
+        var currentOptions = editor.$search.getOptions();
+        editor.$search.set(newOptions);
+
+        var ranges = editor.$search.findAll(session);
+        session.$selectionOccurrences = [];
+        ranges.forEach(function(range) {
+            if (!range.contains(selection.start.row, selection.start.column)) {
+                var marker = session.addMarker(range, "ace_selected_word");
+                session.$selectionOccurrences.push(marker);
+            }
+        });
+
+        editor.$search.set(currentOptions);
+    };
+
+    this.clearSelectionHighlight = function(editor) {
+        if (!editor.session.$selectionOccurrences)
+            return;
+
+        editor.session.$selectionOccurrences.forEach(function(marker) {
+            editor.session.removeMarker(marker);
+        });
     };
 
 }).call(Mode.prototype);
@@ -9209,7 +9335,7 @@ var Document = function(text) {
     };
   	
     this.getValue = function() {
-        return this.$lines.join(this.getNewLineCharacter());
+        return this.getAllLines().join(this.getNewLineCharacter());
     };
 
     // check for IE split bug
@@ -9265,11 +9391,11 @@ var Document = function(text) {
      * Get a verbatim copy of the given line as it is in the document
      */
     this.getLine = function(row) {
-        return this.$lines[row] || "";
+        return this.getLines(row, row + 1)[0] || "";
     };
 
     this.getLines = function(firstRow, lastRow) {
-        return this.$lines.slice(firstRow, lastRow+1);
+        return this.$lines.slice(firstRow, lastRow + 1);
     };
 
     /**
@@ -9277,7 +9403,7 @@ var Document = function(text) {
      * should not modify this array!
      */
     this.getAllLines = function() {
-        return this.$lines;
+        return this.getLines(0, this.getLength());
     };
 
     this.getLength = function() {
@@ -9325,14 +9451,29 @@ var Document = function(text) {
             var end = this.insertInLine(position, text);
         }
         else {
-            var end = this.insertInLine(position, newLines[0]);
-            this.insertNewLine(end);
-            if (newLines.length > 2)
-                this.insertLines(position.row+1, newLines.slice(1, newLines.length-1));
-
-            var end = this.insertInLine({row: position.row + newLines.length - 1, column: 0}, newLines[newLines.length-1]);
+            if (newLines[0].length > 0) {
+                var end = this.insertInLine(position, newLines[0]);
+                this.insertNewLine(end);
+            }
+            // If we are inserting at the end of the document, we don't need to
+            // use insertInLine (concorde depends on this optimization!)
+            if (position.row + 1 == this.getLength()) {
+                this.insertLines(position.row + 1,
+                                 newLines.slice(1, newLines.length));
+                var end = {
+                    row: position.row + newLines.length - 1,
+                    column: position.column + newLines[newLines.length - 1].length
+                };
+            } else {
+                if (newLines.length > 2)
+                    this.insertLines(position.row + 1,
+                                     newLines.slice(1, newLines.length - 1));
+                var end = this.insertInLine({
+                    row: position.row + newLines.length - 1,
+                    column: 0
+                }, newLines[newLines.length - 1]);
+            }
         }
-
         return end;
     };
 
@@ -9420,7 +9561,7 @@ var Document = function(text) {
                 this.removeLines(firstFullRow, lastFullRow);
 
             if (firstFullRow != firstRow) {
-                this.removeInLine(firstRow, range.start.column, this.$lines[firstRow].length);
+                this.removeInLine(firstRow, range.start.column, this.getLine(firstRow).length);
                 this.removeNewLine(range.start.row);
             }
         }
@@ -10834,6 +10975,10 @@ var VirtualRenderer = function(container, theme) {
         return this.scrollTop / this.lineHeight;
     };
 
+    this.getScrollBottomRow = function() {
+        return Math.max(0, Math.floor((this.scrollTop + this.$size.scrollerHeight) / this.lineHeight) - 1);
+    }
+
     this.scrollToRow = function(row) {
         this.scrollToY(row * this.lineHeight);
     };
@@ -12085,6 +12230,7 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "" +
   ".ace_marker-layer {" +
+  "    cursor: text;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_step {" +
@@ -12105,6 +12251,14 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   ".ace_marker-layer .ace_active_line {" +
   "    position: absolute;" +
   "    z-index: 2;" +
+  "}" +
+  "" +
+  ".ace_marker-layer .ace_selected_word {" +
+  "    position: absolute;" +
+  "    z-index: 6;" +
+  "    box-sizing: border-box;" +
+  "    -moz-box-sizing: border-box;" +
+  "    -webkit-box-sizing: border-box;" +
   "}" +
   "");
 
@@ -12325,9 +12479,15 @@ define("text!ace/theme/tm.css", ".ace-tm .ace_editor {" +
   "  background: rgb(232, 242, 254);" +
   "}" +
   "" +
+  ".ace-tm .ace_marker-layer .ace_selected_word {" +
+  "  background: rgb(250, 250, 255);" +
+  "  border: 1px solid rgb(200, 200, 250);" +
+  "}" +
+  "" +
   ".ace-tm .ace_string.ace_regex {" +
   "  color: rgb(255, 0, 0)   " +
-  "}");
+  "}" +
+  "");
 
 define("text!icons/epl.html", "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
   "<!-- saved from url=(0049)http://www.eclipse.org/org/documents/epl-v10.html -->" +
@@ -12612,22 +12772,6 @@ define("text!styles.css", "html {" +
   "    top: 60px;" +
   "    left: 0px;" +
   "    background: white;" +
-  "}" +
-  "" +
-  ".cool {" +
-  "    position: absolute;" +
-  "    background: orange;" +
-  "    opacity: 0.8;" +
-  "}" +
-  "" +
-  ".cool_header {" +
-  "    position: absolute;" +
-  "    background: orange;" +
-  "    color: black;" +
-  "    font-size: 8px;" +
-  "    padding: 1px;" +
-  "    margin-top: -8px;" +
-  "    opacity: 0.8;" +
   "}" +
   "" +
   "#controls {" +
