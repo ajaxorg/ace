@@ -59,7 +59,7 @@ var project = copy.createCommonJsProject([
 
 copy({
     source: "build_support/editor_textarea.html",
-    dest: 'build/editor.html'
+    dest: 'build/textarea/editor.html'
 });
 
 var ace = copy.createDataObject();
@@ -123,14 +123,14 @@ copy({
         shadow,
         copy.filter.uglifyjs
     ],
-    dest: 'build/src/ace.js'
+    dest: 'build/textarea/src/ace.js'
 });
 copy({
     source: ace,
     filter: [
         shadow,
     ],
-    dest: 'build/src/ace-uncompressed.js'
+    dest: 'build/textarea/src/ace-uncompressed.js'
 });
 
 console.log('# ace modes ---------');
@@ -151,7 +151,7 @@ project.assumeAllFilesLoaded();
             shadow,
             copy.filter.uglifyjs
         ],
-        dest: "build/src/mode-" + mode + ".js"
+        dest: "build/textarea/src/mode-" + mode + ".js"
     });
 });
 
@@ -173,22 +173,8 @@ console.log('# ace themes ---------');
             shadow,
             copy.filter.uglifyjs
         ],
-        dest: "build/src/theme-" + theme + ".js"
+        dest: "build/textarea/src/theme-" + theme + ".js"
     });
 });
 
 console.log('# License | Readme | Changelog ---------');
-
-// copy text files
-copy({
-    source: aceHome + "/LICENSE",
-    dest: 'build/LICENSE'
-});
-copy({
-    source: aceHome + "/Readme.md",
-    dest: 'build/Readme.md'
-});
-copy({
-    source: aceHome + "/ChangeLog.txt",
-    dest: 'build/ChangeLog.txt'
-});
