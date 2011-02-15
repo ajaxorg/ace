@@ -424,6 +424,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         gutter: BOOL,
         fontSize: {
             "10px": "10px",
+            "11px": "11px",
             "12px": "12px",
             "14px": "14px",
             "16px": "16px"
