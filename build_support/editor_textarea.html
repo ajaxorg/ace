@@ -19,7 +19,7 @@ SourceUrl: <input id="srcURL" value="http://ajaxorg.github.com/ace/build/textare
 <script>
 function inject() {
     var baseUrl = "src/";
-    var load = function(path, callback) {
+    function load(path, module, callback) {
         path = baseUrl + path;
         if (!load.scripts[path]) {
             load.scripts[path] = {
@@ -29,14 +29,21 @@ function inject() {
 
             var head = document.getElementsByTagName('head')[0];
             var s = document.createElement('script');
-            s.onload = function() {
-                load.scripts[path].loaded = true;
-                load.scripts[path].callbacks.forEach(function(callback) {
-                    callback();
-                });
+
+            function c() {
+                if (window.__ace_shadowed__ && window.__ace_shadowed__.define.modules[module]) {
+                    load.scripts[path].loaded = true;
+                    load.scripts[path].callbacks.forEach(function(callback) {
+                        callback();
+                    });
+                } else {
+                    setTimeout(c, 50);
+                }
             };
             s.src = path;
             head.appendChild(s);
+
+            c();
         } else if (load.scripts[path].loaded) {
             callback();
         } else {
@@ -46,17 +53,19 @@ function inject() {
 
     load.scripts = {};
 
-    load('ace.js', function() {
+    window.__ace_shadowed_load__ = load;
+
+    load('ace-uncompressed.js', 'text!ace/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
-        ace.load = load;
+        var Event = ace.require('pilot/event');
         ace.options.mode = "javascript";
-        var areas = document.querySelectorAll("textarea");
+        var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
-            areas[i].addEventListener("click", function(e) {
+            Event.addListener(areas[i], "click", function(e) {
                 if (e.detail == 3) {
                     ace.transformTextarea(e.target);
                 }
-            }, false);
+            });
         }
     });
 }
