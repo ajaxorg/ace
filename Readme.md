@@ -22,6 +22,8 @@ Take Ace for a spin!
 
 Check out the Ace live [demo](http://ajaxorg.github.com/ace/build/editor.html) or get a [Cloud9 IDE account](http://run.cloud9ide.com) to experience Ace while editing one of your own GitHub projects.
 
+If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace/build/textarea/editor.html).
+
 History
 -------
 

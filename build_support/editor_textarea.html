@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+</head>
+<body>
+
+<h1>Ace Bookmarklet Builder</h1>
+
+<p>
+WARNING: Currently, this is only fully supported in non IE browsers.
+</p>
+
+<p>
+How to use it:
+<ul>
+    <li>Select the options below as you want them to be by default.</li>
+    <li>Enter the "SourceUrl" where you placed the source data which you find under build/textarea/src (you can also leave the default to server the scripts from GitHub).</li>
+    <li>Click the "Build Link" button to generate your custom Ace Bookmarklet.</li>
+    <li>Drag the generated link to your toolbar or store it somewhere else.</li>
+    <li>Go to a page with an textarea element and click the bookmarklet - wait a little bit till the files are loaded.</li>
+    <li>Click 3 times on the textarea you want to replace - Ace will replace it.</li>
+    <li>To change settings, just click the red icon in the bottom right corner.</li>
+</ul>
+</p>
+
+<textarea id="textarea" style="width:300px; height:300px">
+    function foo() {
+        var bar = true;
+    }
+</textarea><br>
+SourceUrl: <input id="srcURL" value="http://ajaxorg.github.com/ace/build/textarea/src/"></input>
+
+<button id="buBuild">Build Link</button> <br> <a href="#"></a>
+
+<script>
+function inject() {
+    var baseUrl = "src/";
+    function load(path, module, callback) {
+        path = baseUrl + path;
+        if (!load.scripts[path]) {
+            load.scripts[path] = {
+                loaded: false,
+                callbacks: [ callback ]
+            };
+
+            var head = document.getElementsByTagName('head')[0];
+            var s = document.createElement('script');
+
+            function c() {
+                if (window.__ace_shadowed__ && window.__ace_shadowed__.define.modules[module]) {
+                    load.scripts[path].loaded = true;
+                    load.scripts[path].callbacks.forEach(function(callback) {
+                        callback();
+                    });
+                } else {
+                    setTimeout(c, 50);
+                }
+            };
+            s.src = path;
+            head.appendChild(s);
+
+            c();
+        } else if (load.scripts[path].loaded) {
+            callback();
+        } else {
+            load.scripts[path].callbacks.push(callback);
+        }
+    };
+
+    load.scripts = {};
+    window.__ace_shadowed_load__ = load;
+
+    load('ace.js', 'text!ace/css/editor.css', function() {
+        var ace = window.__ace_shadowed__;
+        var Event = ace.require('pilot/event');
+        var areas = document.getElementsByTagName("textarea");
+        for (var i = 0; i < areas.length; i++) {
+            Event.addListener(areas[i], "click", function(e) {
+                if (e.detail == 3) {
+                    ace.transformTextarea(e.target);
+                }
+            });
+        }
+    });
+}
+
+// Call the inject function to load the ace files.
+inject();
+
+var textAce;
+function initAce() {
+    var ace = window.__ace_shadowed__;
+    // Check if the ace.js file was loaded already, otherwise check back later.
+    if (ace && ace.transformTextarea) {
+        var t = document.querySelector("textarea");
+        textAce = ace.transformTextarea(t);
+        textAce.setDisplaySettings(true);
+    } else {
+        setTimeout(initAce, 100);
+    }
+}
+
+// Transform the textarea on the page into an ace editor.
+initAce();
+
+document.getElementById("buBuild").onclick = function() {
+    var injectSrc = inject.toString().split("\n").join("");
+    injectSrc = injectSrc.replace('baseUrl = "src/"', 'baseUrl="' + document.getElementById("srcURL").value + '"');
+
+    var aceOptions = textAce.getOptions();
+    var opt = [];
+    for (var option in aceOptions) {
+        opt.push(option + ":'" + aceOptions[option] + "'");
+    }
+    injectSrc = injectSrc.replace('ace.options.mode = "javascript"', 'ace.options = { ' + opt.join(",") + ' }');
+    injectSrc = injectSrc.replace(/\s+/g, " ");
+
+    var a = document.querySelector("a");
+    a.href = "javascript:(" + injectSrc + ")()";
+    a.innerHTML = "Ace Bookmarklet Link";
+}
+
+</script>
+
+</body>
+</html>

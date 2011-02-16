@@ -598,23 +598,21 @@ if (!Object.isFrozen) Object.isFrozen = no;
 // ES5 15.2.3.13
 if (!Object.isExtensible) Object.isExtensible = yes;
 
-
-
 if (!String.prototype.trim) {
     String.prototype.trim = function() {
-        return this.replace(/^\s+/, "").replace(/\s+$/, "");
+        return this.trimLeft().trimRight();
     }
 }
 
 if (!String.prototype.trimRight) {
     String.prototype.trimRight = function() {
-        return this.replace(/\s+$/, "");
+        return this.replace(/[\t\v\f\s\u00a0\ufeff]+$/, "");
     }
 }
 
 if (!String.prototype.trimLeft) {
-    String.prototype.trimRight = function() {
-        return this.replace(/^\s+/, "");
+    String.prototype.trimLeft = function() {
+        return this.replace(/^[\t\v\f\s\u00a0\ufeff]+/, "");
     }
 }
 
@@ -4101,10 +4099,7 @@ var Editor =function(renderer, session) {
         this.$mouseHandler = new MouseHandler(this);
     }
 
-    this.$selectionMarker = null;
-    this.$highlightLineMarker = null;
-    this.$blockScrolling = false;
-
+    this.$blockScrolling = 0;
     this.$search = new Search().set({
         wrap: true
     });
@@ -4156,7 +4151,10 @@ var Editor =function(renderer, session) {
             this.session.removeEventListener("change", this.$onDocumentChange);
             this.session.removeEventListener("changeMode", this.$onDocumentModeChange);
             this.session.removeEventListener("changeTabSize", this.$onDocumentChangeTabSize);
+            this.session.removeEventListener("changeWrapLimit", this.$onDocumentChangeWrapLimit);
             this.session.removeEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
+            this.session.removeEventListener("changeFrontMarker", this.$onChangeFrontMarker);
+            this.session.removeEventListener("changeBackMarker", this.$onChangeBackMarker);
             this.session.removeEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
             this.session.removeEventListener("changeAnnotation", this.$onDocumentChangeAnnotation);
 
@@ -4179,9 +4177,18 @@ var Editor =function(renderer, session) {
         this.$onDocumentChangeTabSize = this.renderer.updateText.bind(this.renderer);
         session.addEventListener("changeTabSize", this.$onDocumentChangeTabSize);
 
-        this.$onDocumentChangeWrapMode = this.renderer.updateFull.bind(this.renderer);
+        this.$onDocumentChangeWrapLimit = this.onDocumentChangeWrapLimit.bind(this);
+        session.addEventListener("changeWrapLimit", this.$onDocumentChangeWrapLimit);
+
+        this.$onDocumentChangeWrapMode = this.onDocumentChangeWrapMode.bind(this);
         session.addEventListener("changeWrapMode", this.$onDocumentChangeWrapMode);
 
+        this.$onChangeFrontMarker = this.onChangeFrontMarker.bind(this);
+        this.session.addEventListener("changeFrontMarker", this.$onChangeFrontMarker);
+        
+        this.$onChangeBackMarker = this.onChangeBackMarker.bind(this);
+        this.session.addEventListener("changeBackMarker", this.$onChangeBackMarker);
+        
         this.$onDocumentChangeBreakpoint = this.onDocumentChangeBreakpoint.bind(this);
         this.session.addEventListener("changeBreakpoint", this.$onDocumentChangeBreakpoint);
 
@@ -4202,6 +4209,8 @@ var Editor =function(renderer, session) {
 
         this.onCursorChange();
         this.onSelectionChange();
+        this.onChangeFrontMarker();
+        this.onChangeBackMarker();
         this.onDocumentChangeBreakpoint();
         this.onDocumentChangeAnnotation();
         this.renderer.scrollToRow(session.getScrollTopRow());
@@ -4238,9 +4247,9 @@ var Editor =function(renderer, session) {
     }
 
     this.$highlightBrackets = function() {
-        if (this.$bracketHighlight) {
-            this.renderer.removeMarker(this.$bracketHighlight);
-            this.$bracketHighlight = null;
+        if (this.session.$bracketHighlight) {
+            this.session.removeMarker(this.session.$bracketHighlight);
+            this.session.$bracketHighlight = null;
         }
 
         if (this.$highlightPending) {
@@ -4256,7 +4265,7 @@ var Editor =function(renderer, session) {
             var pos = self.session.findMatchingBracket(self.getCursorPosition());
             if (pos) {
                 var range = new Range(pos.row, pos.column, pos.row, pos.column+1);
-                self.$bracketHighlight = self.renderer.addMarker(range, "ace_bracket");
+                self.session.$bracketHighlight = self.session.addMarker(range, "ace_bracket");
             }
         }, 10);
     };
@@ -4311,7 +4320,7 @@ var Editor =function(renderer, session) {
     this.onCursorChange = function(e) {
         this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
 
-        if (!this.$blockScrolling && (!e || !e.blockScrolling)) {
+        if (!this.$blockScrolling) {
             this.renderer.scrollCursorIntoView();
         }
 
@@ -4324,33 +4333,48 @@ var Editor =function(renderer, session) {
     };
 
     this.$updateHighlightActiveLine = function() {
-        if (this.$highlightLineMarker) {
-            this.renderer.removeMarker(this.$highlightLineMarker);
+        var session = this.getSession();
+        
+        if (session.$highlightLineMarker) {
+            session.removeMarker(session.$highlightLineMarker);
         }
-        this.$highlightLineMarker = null;
+        session.$highlightLineMarker = null;
 
         if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
             var cursor = this.getCursorPosition();
             var range = new Range(cursor.row, 0, cursor.row+1, 0);
-            this.$highlightLineMarker = this.renderer.addMarker(range, "ace_active_line", "line");
+            session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "line");
         }
     };
 
     this.onSelectionChange = function(e) {
-        if (this.$selectionMarker) {
-            this.renderer.removeMarker(this.$selectionMarker);
+        var session = this.getSession();
+        
+        if (session.$selectionMarker) {
+            session.removeMarker(session.$selectionMarker);
         }
-        this.$selectionMarker = null;
+        session.$selectionMarker = null;
 
         if (!this.selection.isEmpty()) {
             var range = this.selection.getRange();
             var style = this.getSelectionStyle();
-            this.$selectionMarker = this.renderer.addMarker(range, "ace_selection", style);
+            session.$selectionMarker = session.addMarker(range, "ace_selection", style);
         }
 
         this.onCursorChange(e);
+
+        if (this.$highlightSelectedWord)
+            this.mode.highlightSelection(this);
     };
 
+    this.onChangeFrontMarker = function() {
+        this.renderer.updateFrontMarkers();
+    };
+    
+    this.onChangeBackMarker = function() {
+        this.renderer.updateBackMarkers();
+    };
+    
     this.onDocumentChangeBreakpoint = function() {
         this.renderer.setBreakpoints(this.session.getBreakpoints());
     };
@@ -4378,6 +4402,15 @@ var Editor =function(renderer, session) {
         this.renderer.setTokenizer(this.bgTokenizer);
     };
 
+    this.onDocumentChangeWrapLimit = function() {
+        this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
+        this.renderer.updateFull();
+    };
+
+    this.onDocumentChangeWrapMode = function() {
+        this.renderer.onResize(true);
+    };
+
     this.getCopyText = function() {
         if (!this.selection.isEmpty()) {
             return this.session.getTextRange(this.getSelectionRange());
@@ -4392,7 +4425,7 @@ var Editor =function(renderer, session) {
             return;
 
         if (!this.selection.isEmpty()) {
-            this.moveCursorToPosition(this.session.remove(this.getSelectionRange()));
+            this.session.remove(this.getSelectionRange())
             this.clearSelection();
         }
     };
@@ -4422,14 +4455,8 @@ var Editor =function(renderer, session) {
         var lineIndent    = this.mode.getNextLineIndent(lineState, line.slice(0, cursor.column), this.session.getTabString());
         var end           = this.session.insert(cursor, text);
 
-        /* TODO: This shortcut is somehow broken
-        if (!shouldOutdent && line != this.session.getLine(row) && text != "\n") {
-            this.moveCursorToPosition(end);
-            this.renderer.scrollCursorIntoView();
-            return;
-        }
-        */
-
+        this.moveCursorToPosition(end);
+        
         var lineState = this.bgTokenizer.getState(cursor.row);
         // multi line insert
         if (cursor.row !== end.row) {
@@ -4460,17 +4487,14 @@ var Editor =function(renderer, session) {
                         outdent -= size;
                     else if (line.charAt(i) == ' ')
                         outdent -= 1;
-                this.session.replace(new Range(row, 0, row, line.length), line.substr(i));
+                this.session.remove(new Range(row, 0, row, i));
             }
-            end.column += this.session.indentRows(cursor.row + 1, end.row, lineIndent);
+            this.session.indentRows(cursor.row + 1, end.row, lineIndent);
         } else {
             if (shouldOutdent) {
-                end.column += this.mode.autoOutdent(lineState, this.session, cursor.row);
+                this.mode.autoOutdent(lineState, this.session, cursor.row);
             }
-        }
-
-        this.moveCursorToPosition(end);
-        this.renderer.scrollCursorIntoView();
+        };        
     }
 
     this.onTextInput = function(text) {
@@ -4487,9 +4511,9 @@ var Editor =function(renderer, session) {
 
         this.$overwrite = overwrite;
 
-        this.$blockScrolling = true;
+        this.$blockScrolling += 1;
         this.onCursorChange();
-        this.$blockScrolling = false;
+        this.$blockScrolling -= 1;
 
         this._dispatchEvent("changeOverwrite", {data: overwrite});
     };
@@ -4535,6 +4559,22 @@ var Editor =function(renderer, session) {
         return this.$highlightActiveLine;
     };
 
+    this.$highlightSelectedWord = true;
+    this.setHighlightSelectedWord = function(shouldHighlight) {
+        if (this.$highlightSelectedWord == shouldHighlight)
+            return;
+
+        this.$highlightSelectedWord = shouldHighlight;
+        if (shouldHighlight)
+            this.mode.highlightSelection(this);
+        else
+            this.mode.clearSelectionHighlight(this);
+    };
+
+    this.getHighlightSelectedWord = function() {
+        return this.$highlightSelectedWord;
+    };
+
     this.setShowInvisibles = function(showInvisibles) {
         if (this.getShowInvisibles() == showInvisibles)
             return;
@@ -4578,7 +4618,7 @@ var Editor =function(renderer, session) {
         if (this.selection.isEmpty()) {
             this.selection.selectRight();
         }
-        this.moveCursorToPosition(this.session.remove(this.getSelectionRange()));
+        this.session.remove(this.getSelectionRange())
         this.clearSelection();
     };
 
@@ -4589,10 +4629,93 @@ var Editor =function(renderer, session) {
         if (this.selection.isEmpty())
             this.selection.selectLeft();
 
-        this.moveCursorToPosition(this.session.remove(this.getSelectionRange()));
+        this.session.remove(this.getSelectionRange());
+        this.clearSelection();
+    };
+    
+    this.removeWordRight = function() {
+        if (this.$readOnly)
+            return;
+
+        if (this.selection.isEmpty())
+            this.selection.selectWordRight();
+
+        this.session.remove(this.getSelectionRange());
+        this.clearSelection();
+    };
+    
+    this.removeWordLeft = function() {
+        if (this.$readOnly)
+            return;
+
+        if (this.selection.isEmpty())
+            this.selection.selectWordLeft();
+
+        this.session.remove(this.getSelectionRange());
+        this.clearSelection();
+    };
+    
+    this.removeToLineStart = function() {
+        if (this.$readOnly)
+            return;
+
+        if (this.selection.isEmpty())
+            this.selection.selectLineStart();
+
+        this.session.remove(this.getSelectionRange());
+        this.clearSelection();
+    };
+    
+    this.removeToLineEnd = function() {
+        if (this.$readOnly)
+            return;
+
+        if (this.selection.isEmpty())
+            this.selection.selectLineEnd();
+
+        this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
 
+    this.splitLine = function() {
+        if (this.$readOnly)
+            return;
+        
+        if (!this.selection.isEmpty()) {
+            this.session.remove(this.getSelectionRange());
+            this.clearSelection();
+        }
+    
+        var cursor = this.getCursorPosition();
+        this.insert("\n");
+        this.moveCursorToPosition(cursor);
+    };
+    
+    this.transposeLetters = function() {
+        if (this.$readOnly)
+            return;
+        
+        if (!this.selection.isEmpty()) {
+            return;
+        }
+    
+        var cursor = this.getCursorPosition();
+        var column = cursor.column;
+        if (column == 0)
+            return;
+        
+        var line = this.session.getLine(cursor.row);
+        if (column < line.length) {
+            var swap = line.charAt(column) + line.charAt(column-1);
+            var range = new Range(cursor.row, column-1, cursor.row, column+1)
+        }
+        else {
+            var swap = line.charAt(column-1) + line.charAt(column-2);
+            var range = new Range(cursor.row, column-2, cursor.row, column)
+        }
+        this.session.replace(range, swap);
+    };
+    
     this.indent = function() {
         if (this.$readOnly)
             return;
@@ -4602,9 +4725,7 @@ var Editor =function(renderer, session) {
 
         if (range.start.row < range.end.row || range.start.column < range.end.column) {
             var rows = this.$getSelectedRows();
-            var count = session.indentRows(rows.first, rows.last, "\t");
-
-            this.selection.shiftSelection(count);
+            session.indentRows(rows.first, rows.last, "\t");
         } else {
             var indentString;
 
@@ -4626,9 +4747,7 @@ var Editor =function(renderer, session) {
             return;
 
         var selection = this.session.getSelection();
-        var range = this.session.outdentRows(selection.getRange());
-
-        selection.setSelectionRange(range, selection.isBackwards());
+        this.session.outdentRows(selection.getRange());
     };
 
     this.toggleCommentLines = function() {
@@ -4637,8 +4756,7 @@ var Editor =function(renderer, session) {
 
         var state = this.bgTokenizer.getState(this.getCursorPosition().row);
         var rows = this.$getSelectedRows()
-        var addedColumns = this.mode.toggleCommentLines(state, this.session, rows.first, rows.last);
-        this.selection.shiftSelection(addedColumns);
+        this.mode.toggleCommentLines(state, this.session, rows.first, rows.last);
     };
 
     this.removeLines = function() {
@@ -4646,10 +4764,7 @@ var Editor =function(renderer, session) {
             return;
 
         var rows = this.$getSelectedRows();
-        this.selection.setSelectionAnchor(rows.last+1, 0);
-        this.selection.selectTo(rows.first, 0);
-
-        this.session.remove(this.getSelectionRange());
+        this.session.remove(new Range(rows.first, 0, rows.last+1, 0));
         this.clearSelection();
     };
 
@@ -4714,7 +4829,6 @@ var Editor =function(renderer, session) {
 
     this.onCompositionStart = function(text) {
         this.renderer.showComposition(this.getCursorPosition());
-        //this.onTextInput(text);
     };
 
     this.onCompositionUpdate = function(text) {
@@ -4723,7 +4837,6 @@ var Editor =function(renderer, session) {
 
     this.onCompositionEnd = function() {
         this.renderer.hideComposition();
-        //this.removeLeft();
     };
 
 
@@ -4739,83 +4852,101 @@ var Editor =function(renderer, session) {
         return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
     };
 
-    this.getVisibleRowCount = function() {
-        return this.getLastVisibleRow() - this.getFirstVisibleRow() + 1;
+    this.$getVisibleRowCount = function() {
+        return this.renderer.getScrollBottomRow() - this.renderer.getScrollTopRow() + 1;
     };
 
-    this.getPageDownRow = function() {
-        return this.renderer.getLastVisibleRow() - 1;
+    this.$getPageDownRow = function() {
+        return this.renderer.getScrollBottomRow();
     };
 
-    this.getPageUpRow = function() {
-        var firstRow = this.renderer.getFirstVisibleRow();
-        var lastRow = this.renderer.getLastVisibleRow();
+    this.$getPageUpRow = function() {
+        var firstRow = this.renderer.getScrollTopRow();
+        var lastRow = this.renderer.getScrollBottomRow();
 
-        return firstRow - (lastRow - firstRow) + 1;
+        return firstRow - (lastRow - firstRow);
     };
 
     this.selectPageDown = function() {
-        var row = this.getPageDownRow() + Math.floor(this.getVisibleRowCount() / 2);
+        var row = this.$getPageDownRow() + Math.floor(this.$getVisibleRowCount() / 2);
 
         this.scrollPageDown();
 
         var selection = this.getSelection();
-        selection.$moveSelection(function() {
-            selection.moveCursorTo(row, selection.getSelectionLead().column);
-        });
+        var leadScreenPos = this.session.documentToScreenPosition(selection.getSelectionLead());
+        var dest = this.session.screenToDocumentPosition(row, leadScreenPos.column);
+        selection.selectTo(dest.row, dest.column);
     };
 
     this.selectPageUp = function() {
-        var visibleRows = this.getLastVisibleRow() - this.getFirstVisibleRow();
-        var row = this.getPageUpRow() + Math.round(visibleRows / 2);
+        var visibleRows = this.renderer.getScrollTopRow() - this.renderer.getScrollBottomRow();
+        var row = this.$getPageUpRow() + Math.round(visibleRows / 2);
 
         this.scrollPageUp();
 
         var selection = this.getSelection();
-        selection.$moveSelection(function() {
-            selection.moveCursorTo(row, selection.getSelectionLead().column);
-        });
+        var leadScreenPos = this.session.documentToScreenPosition(selection.getSelectionLead());
+        var dest = this.session.screenToDocumentPosition(row, leadScreenPos.column);
+        selection.selectTo(dest.row, dest.column);
     };
 
     this.gotoPageDown = function() {
-        var row     = this.getPageDownRow(),
-            column  = Math.min(this.getCursorPosition().column,
-                               this.session.getLine(row).length);
+        var row = this.$getPageDownRow();
+        var column = this.getCursorPositionScreen().column;
 
         this.scrollToRow(row);
-        this.getSelection().moveCursorTo(row, column);
+        this.getSelection().moveCursorToScreen(row, column);
     };
 
     this.gotoPageUp = function() {
-       var  row     = this.getPageUpRow(),
-            column  = Math.min(this.getCursorPosition().column,
-                               this.session.getLine(row).length);
+        var row = this.$getPageUpRow();
+        var column = this.getCursorPositionScreen().column;
 
        this.scrollToRow(row);
-       this.getSelection().moveCursorTo(row, column);
+       this.getSelection().moveCursorToScreen(row, column);
     };
 
     this.scrollPageDown = function() {
-        this.scrollToRow(this.getPageDownRow());
+        this.scrollToRow(this.$getPageDownRow());
     };
 
     this.scrollPageUp = function() {
-        this.renderer.scrollToRow(this.getPageUpRow());
+        this.renderer.scrollToRow(this.$getPageUpRow());
     };
 
     this.scrollToRow = function(row) {
         this.renderer.scrollToRow(row);
     };
 
+    this.scrollToLine = function(line, center) {
+        this.renderer.scrollToLine(line, center);
+    };
+    
+    this.centerSelection = function() {
+        var range = this.getSelectionRange();
+        var line = Math.floor(range.start.row + (range.end.row - range.start.row) / 2);
+        this.renderer.scrollToLine(line, true);
+    };
 
     this.getCursorPosition = function() {
         return this.selection.getCursor();
     };
 
+    this.getCursorPositionScreen = function() {
+        return this.session.documentToScreenPosition(this.getCursorPosition());
+    }
+
     this.getSelectionRange = function() {
         return this.selection.getRange();
     };
 
+
+    this.selectAll = function() {
+        this.$blockScrolling += 1;
+        this.selection.selectAll();
+        this.$blockScrolling -= 1;
+    };
+    
     this.clearSelection = function() {
         this.selection.clearSelection();
     };
@@ -4832,12 +4963,12 @@ var Editor =function(renderer, session) {
     this.gotoLine = function(lineNumber, row) {
         this.selection.clearSelection();
 
-        this.$blockScrolling = true;
+        this.$blockScrolling += 1;
         this.moveCursorTo(lineNumber-1, row || 0);
-        this.$blockScrolling = false;
+        this.$blockScrolling -= 1;
 
         if (!this.isRowVisible(this.getCursorPosition().row)) {
-            this.scrollToRow(lineNumber - 1 - Math.floor(this.getVisibleRowCount() / 2));
+            this.scrollToLine(lineNumber, true);
         }
     },
 
@@ -4935,13 +5066,16 @@ var Editor =function(renderer, session) {
         if (!ranges.length)
             return;
 
+        var selection = this.getSelectionRange();
         this.clearSelection();
         this.selection.moveCursorTo(0, 0);
 
+        this.$blockScrolling += 1;
         for (var i = ranges.length - 1; i >= 0; --i)
             this.$tryReplace(ranges[i], replacement);
-        if (ranges[0] !== null)
-            this.selection.setSelectionRange(ranges[0]);
+        
+        this.selection.setSelectionRange(selection);
+        this.$blockScrolling -= 1;
     },
 
     this.$tryReplace = function(range, replacement) {
@@ -5052,6 +5186,7 @@ define('pilot/event', function(require, exports, module) {
 
 var keys = require("pilot/keys");
 var useragent = require("pilot/useragent");
+var dom = require("pilot/dom");
 
 exports.addListener = function(elem, type, callback) {
     if (elem.addEventListener) {
@@ -5099,9 +5234,8 @@ exports.preventDefault = function(e) {
 };
 
 exports.getDocumentX = function(e) {
-    if (e.clientX) {
-        var scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-        return e.clientX + scrollLeft;
+    if (e.clientX) {        
+        return e.clientX + dom.getPageScrollLeft();
     } else {
         return e.pageX;
     }
@@ -5109,8 +5243,7 @@ exports.getDocumentX = function(e) {
 
 exports.getDocumentY = function(e) {
     if (e.clientY) {
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        return e.clientY + scrollTop;
+        return e.clientY + dom.getPageScrollTop();
     } else {
         return e.pageY;
     }
@@ -5469,6 +5602,278 @@ oop.mixin(exports, Keys);
  *
  * ***** END LICENSE BLOCK ***** */
 
+define('pilot/dom', function(require, exports, module) {
+
+exports.setText = function(elem, text) {
+    if (elem.innerText !== undefined) {
+        elem.innerText = text;
+    }
+    if (elem.textContent !== undefined) {
+        elem.textContent = text;
+    }
+};
+
+if (!document.documentElement.classList) {
+    exports.hasCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g);
+        return classes.indexOf(name) !== -1;
+    };
+
+    /**
+    * Add a CSS class to the list of classes on the given node
+    */
+    exports.addCssClass = function(el, name) {
+        if (!exports.hasCssClass(el, name)) {
+            el.className += " " + name;
+        }
+    };
+
+    /**
+    * Remove a CSS class from the list of classes on the given node
+    */
+    exports.removeCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g);
+        while (true) {
+            var index = classes.indexOf(name);
+            if (index == -1) {
+                break;
+            }
+            classes.splice(index, 1);
+        }
+        el.className = classes.join(" ");
+    };
+
+    exports.toggleCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g), add = true;
+        while (true) {
+            var index = classes.indexOf(name);
+            if (index == -1) {
+                break;
+            }
+            add = false;
+            classes.splice(index, 1);
+        }
+        if(add)
+            classes.push(name);
+
+        el.className = classes.join(" ");
+        return add;
+    };
+} else {
+    exports.hasCssClass = function(el, name) {
+        return el.classList.contains(name);
+    };
+
+    exports.addCssClass = function(el, name) {
+        el.classList.add(name);
+    };
+
+    exports.removeCssClass = function(el, name) {
+        el.classList.remove(name);
+    };
+
+    exports.toggleCssClass = function(el, name) {
+        return el.classList.toggle(name);
+    };
+}
+
+/**
+ * Add or remove a CSS class from the list of classes on the given node
+ * depending on the value of <tt>include</tt>
+ */
+exports.setCssClass = function(node, className, include) {
+    if (include) {
+        exports.addCssClass(node, className);
+    } else {
+        exports.removeCssClass(node, className);
+    }
+};
+
+exports.importCssString = function(cssText, doc){
+    doc = doc || document;
+
+    if (doc.createStyleSheet) {
+        var sheet = doc.createStyleSheet();
+        sheet.cssText = cssText;
+    }
+    else {
+        var style = doc.createElement("style");
+        style.appendChild(doc.createTextNode(cssText));
+        doc.getElementsByTagName("head")[0].appendChild(style);
+    }
+};
+
+exports.getInnerWidth = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingLeft"))
+            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
+};
+
+exports.getInnerHeight = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingTop"))
+            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
+};
+
+if (window.pageYOffset !== undefined) {
+    exports.getPageScrollTop = function() {
+        return window.pageYOffset;
+    };
+
+    exports.getPageScrollLeft = function() {
+        return window.pageXOffset;
+    };
+}
+else {
+    exports.getPageScrollTop = function() {
+        return document.body.scrollTop;
+    };
+
+    exports.getPageScrollLeft = function() {
+        return document.body.scrollLeft;
+    };
+}
+
+exports.computedStyle = function(element, style) {
+    if (window.getComputedStyle) {
+        return (window.getComputedStyle(element, "") || {})[style] || "";
+    }
+    else {
+        return element.currentStyle[style];
+    }
+};
+
+exports.scrollbarWidth = function() {
+
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+
+    var outer = document.createElement("div");
+    var style = outer.style;
+
+    style.position = "absolute";
+    style.left = "-10000px";
+    style.overflow = "hidden";
+    style.width = "200px";
+    style.height = "150px";
+
+    outer.appendChild(inner);
+    document.body.appendChild(outer);
+    var noScrollbar = inner.offsetWidth;
+
+    style.overflow = "scroll";
+    var withScrollbar = inner.offsetWidth;
+
+    if (noScrollbar == withScrollbar) {
+        withScrollbar = outer.clientWidth;
+    }
+
+    document.body.removeChild(outer);
+
+    return noScrollbar-withScrollbar;
+};
+
+/**
+ * Optimized set innerHTML. This is faster than plain innerHTML if the element
+ * already contains a lot of child elements.
+ *
+ * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
+ */
+exports.setInnerHtml = function(el, innerHtml) {
+    var element = el.cloneNode(false);//document.createElement("div");
+    element.innerHTML = innerHtml;
+    el.parentNode.replaceChild(element, el);
+    return element;
+};
+
+exports.setInnerText = function(el, innerText) {
+    if ("textContent" in document.body)
+        el.textContent = innerText;
+    else
+        el.innerText = innerText;
+
+};
+
+exports.getInnerText = function(el) {
+    if ("textContent" in document.body)
+        return el.textContent;
+    else
+         return el.innerText;
+};
+
+exports.getParentWindow = function(document) {
+    return document.defaultView || document.parentWindow;
+};
+
+exports.getSelectionStart = function(textarea) {
+    // TODO IE
+    var start;
+    try {
+        start = textarea.selectionStart || 0;
+    } catch (e) {
+        start = 0;
+    }
+    return start;
+};
+
+exports.setSelectionStart = function(textarea, start) {
+    // TODO IE
+    return textarea.selectionStart = start;
+};
+
+exports.getSelectionEnd = function(textarea) {
+    // TODO IE
+    var end;
+    try {
+        end = textarea.selectionEnd || 0;
+    } catch (e) {
+        end = 0;
+    }
+    return end;
+};
+
+exports.setSelectionEnd = function(textarea, end) {
+    // TODO IE
+    return textarea.selectionEnd = end;
+};
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 define('ace/keyboard/textinput', function(require, exports, module) {
 
 var event = require("pilot/event");
@@ -5548,7 +5953,6 @@ var TextInput = function(parentNode, host) {
         setTimeout(function () {
             sendText();
         }, 0);
-        
     };
 
     var onCut = function(e) {
@@ -5563,7 +5967,6 @@ var TextInput = function(parentNode, host) {
         setTimeout(function () {
             sendText();
         }, 0);
-        
     };
 
     event.addCommandKeyListener(text, host.onCommandKey.bind(host));
@@ -5597,8 +6000,29 @@ var TextInput = function(parentNode, host) {
         event.addListener(text, "propertychange", onTextInput);
     };
 
-    event.addListener(text, "copy", onCopy);
-    event.addListener(text, "cut", onCut);
+    if (useragent.isIE) {
+        event.addListener(text, "beforecopy", function(e) {        
+            var copyText = host.getCopyText();
+            if(copyText)
+                clipboardData.setData("Text", copyText);
+            else
+                e.preventDefault();
+        });
+        event.addListener(parentNode, "keydown", function(e) {
+            if (e.ctrlKey && e.keyCode == 88) {
+                var copyText = host.getCopyText();
+                if (copyText) {
+                    clipboardData.setData("Text", copyText);
+                    host.onCut();
+                }
+                event.preventDefault(e)
+            }
+        });
+    }
+    else {
+        event.addListener(text, "copy", onCopy);
+        event.addListener(text, "cut", onCut);
+    }
 
     event.addListener(text, "compositionstart", onCompositionStart);
     if (useragent.isGecko) {
@@ -5824,7 +6248,8 @@ var MouseHandler = function(editor) {
 }).call(MouseHandler.prototype);
 
 exports.MouseHandler = MouseHandler;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -6104,37 +6529,44 @@ exports.bindings = {
     "selecttostart": "Command-Shift-Up",
     "gotostart": "Command-Home|Command-Up",
     "selectup": "Shift-Up",
-    "golineup": "Up",
+    "golineup": "Up|Ctrl-P",
     "copylinesdown": "Command-Option-Down",
     "movelinesdown": "Option-Down",
     "selecttoend": "Command-Shift-Down",
     "gotoend": "Command-End|Command-Down",
     "selectdown": "Shift-Down",
-    "golinedown": "Down",
+    "golinedown": "Down|Ctrl-N",
     "selectwordleft": "Option-Shift-Left",
     "gotowordleft": "Option-Left",
     "selecttolinestart": "Command-Shift-Left",
-    "gotolinestart": "Command-Left|Home",
+    "gotolinestart": "Command-Left|Home|Ctrl-A",
     "selectleft": "Shift-Left",
-    "gotoleft": "Left",
+    "gotoleft": "Left|Ctrl-B",
     "selectwordright": "Option-Shift-Right",
     "gotowordright": "Option-Right",
     "selecttolineend": "Command-Shift-Right",
-    "gotolineend": "Command-Right|End",
+    "gotolineend": "Command-Right|End|Ctrl-E",
     "selectright": "Shift-Right",
-    "gotoright": "Right",
+    "gotoright": "Right|Ctrl-F",
     "selectpagedown": "Shift-PageDown",
     "pagedown": "PageDown",
-    "gotopagedown": "Option-PageDown",
+    "gotopagedown": "Option-PageDown|Ctrl-V",
     "selectpageup": "Shift-PageUp",
     "pageup": "PageUp",
     "gotopageup": "Option-PageUp",
     "selectlinestart": "Shift-Home",
     "selectlineend": "Shift-End",
-    "del": "Delete",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+    "del": "Delete|Ctrl-D",
+    "backspace": "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H",
+    "removetolineend": "Ctrl-K",
+    "removetolinestart": "Option-Backspace",
+    "removewordleft": "Alt-Backspace|Ctrl-Alt-Backspace",
+    "removewordright": "Alt-Delete",
     "outdent": "Shift-Tab",
-    "indent": "Tab"
+    "indent": "Tab",
+    "transposeletters": "Ctrl-T",
+    "splitline": "Ctrl-O",
+    "centerselection": "Ctrl-L"
 };
 
 });/* ***** BEGIN LICENSE BLOCK *****
@@ -6275,7 +6707,7 @@ canon.addCommand({
 
 canon.addCommand({
     name: "selectall",
-    exec: function(env, args, request) { env.editor.getSelection().selectAll(); }
+    exec: function(env, args, request) { env.editor.selectAll(); }
 });
 canon.addCommand({
     name: "removeline",
@@ -6470,6 +6902,22 @@ canon.addCommand({
     exec: function(env, args, request) { env.editor.removeLeft(); }
 });
 canon.addCommand({
+    name: "removetolinestart",
+    exec: function(env, args, request) { env.editor.removeToLineStart(); }
+});
+canon.addCommand({
+    name: "removetolineend",
+    exec: function(env, args, request) { env.editor.removeToLineEnd(); }
+});
+canon.addCommand({
+    name: "removewordleft",
+    exec: function(env, args, request) { env.editor.removeWordLeft(); }
+});
+canon.addCommand({
+    name: "removewordright",
+    exec: function(env, args, request) { env.editor.removeWordRight(); }
+});
+canon.addCommand({
     name: "outdent",
     exec: function(env, args, request) { env.editor.blockOutdent(); }
 });
@@ -6480,10 +6928,22 @@ canon.addCommand({
 canon.addCommand({
     name: "inserttext",
     exec: function(env, args, request) {
-        env.editor.insert(lang.stringRepeat(args.text  || "",
-                                            args.times || 1));
+        env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
 });
+canon.addCommand({
+    name: "centerselection",
+    exec: function(env, args, request) { env.editor.centerSelection(); }
+});
+canon.addCommand({
+    name: "splitline",
+    exec: function(env, args, request) { env.editor.splitLine(); }
+});
+canon.addCommand({
+    name: "transposeletters",
+    exec: function(env, args, request) { env.editor.transposeLetters(); }
+});
+
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
@@ -6537,8 +6997,10 @@ var NO_CHANGE_DELTAS = {};
 
 var EditSession = function(text, mode) {
     this.$modified = true;
-    this.selection = new Selection(this);
     this.$breakpoints = [];
+    this.$frontMarkers = {};
+    this.$backMarkers = {};
+    this.$markerId = 1;
     this.$wrapData = [];
     this.listeners = [];
 
@@ -6548,6 +7010,7 @@ var EditSession = function(text, mode) {
         this.setDocument(new Document(text));
     }
 
+    this.selection = new Selection(this);
     if (mode)
         this.setMode(mode);
 };
@@ -6692,6 +7155,44 @@ var EditSession = function(text, mode) {
         return this.$breakpoints;
     };
 
+    this.addMarker = function(range, clazz, type, inFront) {
+        var id = this.$markerId++;
+
+        var marker = {
+            range : range,
+            type : type || "line",
+            renderer: typeof type == "function" ? type : null,
+            clazz : clazz,
+            inFront: !!inFront
+        }
+
+        if (inFront) {
+            this.$frontMarkers[id] = marker;
+            this._dispatchEvent("changeFrontMarker")
+        } else {
+            this.$backMarkers[id] = marker;
+            this._dispatchEvent("changeBackMarker")
+        }
+
+        return id;
+    };
+
+    this.removeMarker = function(markerId) {
+        var marker = this.$frontMarkers[markerId] || this.$backMarkers[markerId];
+        if (!marker)
+            return;
+
+        var markers = marker.inFront ? this.$frontMarkers : this.$backMarkers;
+        if (marker) {
+            delete (markers[markerId]);
+            this._dispatchEvent(marker.inFront ? "changeFrontMarker" : "changeBackMarker");
+        }
+    };
+
+    this.getMarkers = function(inFront) {
+        return inFront ? this.$frontMarkers : this.$backMarkers;
+    };
+
     /**
      * Error:
      *  {
@@ -6781,7 +7282,7 @@ var EditSession = function(text, mode) {
         if (this.$worker)
             this.$worker.terminate();
 
-        if (window.Worker)
+        if (window.Worker && !require.noWorker)
             this.$worker = mode.createWorker(this);
         else
             this.$worker = null;
@@ -6971,50 +7472,8 @@ var EditSession = function(text, mode) {
         return this.doc.insert(position, text);
     };
 
-    /**
-     * @param rows Array[Integer] sorted list of rows
-     */
-    this.multiRowInsert = function(rows, column, text) {
-        for (var i=rows.length-1; i>=0; i--) {
-            var row = rows[i];
-            if (row >= this.doc.getLength())
-                continue;
-
-            var diff = column - this.doc.getLine(row).length;
-            if ( diff > 0) {
-                var padded = lang.stringRepeat(" ", diff) + text;
-                var offset = -diff;
-            }
-            else {
-                padded = text;
-                offset = 0;
-            }
-
-            var end = this.insert({row: row, column: column+offset}, padded);
-        }
-
-        return {
-            rows: end ? end.row - rows[0] : 0,
-            columns: end ? end.column - column : 0
-        };
-    };
-
     this.remove = function(range) {
         return this.doc.remove(range);
-    };
-
-    this.multiRowRemove = function(rows, range) {
-        if (range.start.row !== rows[0])
-            throw new TypeError("range must start in the first row!");
-
-        var height = range.end.row - rows[0];
-        for (var i=rows.length-1; i>=0; i--) {
-            var row = rows[i];
-            if (row >= this.doc.getLength())
-                continue;
-
-            var end = this.remove(new Range(row, range.start.column, row+height, range.end.column));
-        }
     };
 
     this.undoChanges = function(deltas) {
@@ -7064,7 +7523,6 @@ var EditSession = function(text, mode) {
         for (var row=startRow; row<=endRow; row++) {
             this.insert({row: row, column:0}, indentString);
         }
-        return indentString.length;
     };
 
     this.outdentRows = function (range) {
@@ -7087,13 +7545,8 @@ var EditSession = function(text, mode) {
                 deleteRange.start.column = 0;
                 deleteRange.end.column = j;
             }
-            if (i == range.start.row)
-                range.start.column -= deleteRange.end.column - deleteRange.start.column;
-            if (i == range.end.row)
-                range.end.column -= deleteRange.end.column - deleteRange.start.column;
             this.remove(deleteRange);
         }
-        return range;
     };
 
     this.moveLinesUp = function(firstRow, lastRow) {
@@ -7130,6 +7583,10 @@ var EditSession = function(text, mode) {
     // WRAPMODE
     this.$wrapLimit = 80;
     this.$useWrapMode = false;
+    this.$wrapLimitRange = {
+        min : null,
+        max : null
+    };
 
     this.setUseWrapMode = function(useWrapMode) {
         if (useWrapMode != this.$useWrapMode) {
@@ -7139,7 +7596,7 @@ var EditSession = function(text, mode) {
             // If wrapMode is activaed, the wrapData array has to be initialized.
             if (useWrapMode) {
                 var len = this.getLength();
-                this.$wrapMode = [];
+                this.$wrapData = [];
                 for (i = 0; i < len; i++) {
                     this.$wrapData.push([]);
                 }
@@ -7154,18 +7611,59 @@ var EditSession = function(text, mode) {
         return this.$useWrapMode;
     };
 
-    this.setWrapLimit = function(wrapLimit) {
-        if (wrapLimit != this.$wrapLimit) {
-            this.$wrapLimit = wrapLimit;
-            if (this.$useWrapMode) {
-                this.$updateWrapData(0, this.getLength() - 1);
-            }
+    // Allow the wrap limit to move freely between min and max. Either
+    // parameter can be null to allow the wrap limit to be unconstrained
+    // in that direction. Or set both parameters to the same number to pin
+    // the limit to that value.
+    this.setWrapLimitRange = function(min, max) {
+        if (this.$wrapLimitRange.min !== min || this.$wrapLimitRange.max !== max) {
+            this.$wrapLimitRange.min = min;
+            this.$wrapLimitRange.max = max;
+            this.$modified = true;
+            // This will force a recalculation of the wrap limit
             this._dispatchEvent("changeWrapMode");
         }
     };
 
+    // This should generally only be called by the renderer when a resize
+    // is detected.
+    this.adjustWrapLimit = function(desiredLimit) {
+        var wrapLimit = this.$constrainWrapLimit(desiredLimit);
+        if (wrapLimit != this.$wrapLimit && wrapLimit > 0) {
+            this.$wrapLimit = wrapLimit;
+            this.$modified = true;
+            if (this.$useWrapMode) {
+                this.$updateWrapData(0, this.getLength() - 1);
+                this._dispatchEvent("changeWrapLimit");
+            }
+            return true;
+        }
+        return false;
+    };
+
+    this.$constrainWrapLimit = function(wrapLimit) {
+        var min = this.$wrapLimitRange.min;
+        if (min)
+            wrapLimit = Math.max(min, wrapLimit);
+
+        var max = this.$wrapLimitRange.max;
+        if (max)
+            wrapLimit = Math.min(max, wrapLimit);
+
+        // What would a limit of 0 even mean?
+        return Math.max(1, wrapLimit);
+    };
+
     this.getWrapLimit = function() {
         return this.$wrapLimit;
+    };
+
+    this.getWrapLimitRange = function() {
+        // Avoid unexpected mutation by returning a copy
+        return {
+            min : this.$wrapLimitRange.min,
+            max : this.$wrapLimitRange.max
+        };
     };
 
     this.$updateWrapDataOnChange = function(e) {
@@ -7601,6 +8099,10 @@ var EditSession = function(text, mode) {
                 column: column
             };
         }
+
+        var rowData = this.$documentToScreenRow(row, column);
+        var screenRow = rowData[0];
+
         if (row >= this.getLength()) {
             return {
                 row: screenRow,
@@ -7610,11 +8112,8 @@ var EditSession = function(text, mode) {
 
         var split;
         var wrapRowData = this.$wrapData[row];
-        var screenRow, screenRowOffset;
         var screenColumn;
-        var rowData = this.$documentToScreenRow(row, column);
-        screenRow = rowData[0];
-        screenRowOffset = rowData[1];
+        var screenRowOffset = rowData[1];
 
         str = this.getLine(row).substring(
                 wrapRowData[screenRowOffset - 1] || 0,  column);
@@ -7641,8 +8140,7 @@ var EditSession = function(text, mode) {
 }).call(EditSession.prototype);
 
 exports.EditSession = EditSession;
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -7686,15 +8184,29 @@ var oop = require("pilot/oop");
 var lang = require("pilot/lang");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 var Range = require("ace/range").Range;
+var Anchor = require("ace/anchor").Anchor;
 
-var Selection = function(doc) {
-    this.doc = doc;
+var Selection = function(session) {
+    this.session = session;
+    this.doc = session.getDocument();
 
     this.clearSelection();
-    this.selectionLead = {
-        row: 0,
-        column: 0
-    };
+    this.selectionLead = new Anchor(this.doc, 0, 0);
+    this.selectionAnchor = new Anchor(this.doc, 0, 0);
+    
+    var _self = this;
+    this.selectionLead.on("change", function(e) {
+        _self._dispatchEvent("changeCursor");
+        if (!_self.$isEmpty)
+            _self._dispatchEvent("changeSelection");
+        if (e.old.row == e.value.row)
+            _self.$updateDesiredColumn();
+    });
+    
+    this.selectionAnchor.on("change", function() {
+        if (!_self.$isEmpty)
+            _self._dispatchEvent("changeSelection");
+    });
 };
 
 (function() {
@@ -7702,9 +8214,10 @@ var Selection = function(doc) {
     oop.implement(this, EventEmitter);
 
     this.isEmpty = function() {
-        return (!this.selectionAnchor ||
-            (this.selectionAnchor.row == this.selectionLead.row &&
-             this.selectionAnchor.column == this.selectionLead.column));
+        return (this.$isEmpty || (
+            this.selectionAnchor.row == this.selectionLead.row &&
+            this.selectionAnchor.column == this.selectionLead.column
+        ));
     };
 
     this.isMultiLine = function() {
@@ -7716,37 +8229,31 @@ var Selection = function(doc) {
     };
 
     this.getCursor = function() {
-        return this.selectionLead;
+        return this.selectionLead.getPosition();
     };
 
     this.setSelectionAnchor = function(row, column) {
-        var anchor = this.$clipPositionToDocument(row, column);
+        this.selectionAnchor.setPosition(row, column);
 
-        if (!this.selectionAnchor) {
-            this.selectionAnchor = anchor;
-            this._dispatchEvent("changeSelection", {});
+        if (this.$isEmpty) {
+            this.$isEmpty = false;
+            this._dispatchEvent("changeSelection");
         }
-        else if (this.selectionAnchor.row !== anchor.row || this.selectionAnchor.column !== anchor.column) {
-            this.selectionAnchor = anchor;
-            this._dispatchEvent("changeSelection", {});
-        }
-
     };
 
     this.getSelectionAnchor = function() {
-        if (this.selectionAnchor) {
-            return this.$clone(this.selectionAnchor);
-        } else {
-            return this.$clone(this.selectionLead);
-        }
+        if (this.$isEmpty)
+            return this.getSelectionLead()
+        else
+            return this.selectionAnchor.getPosition();
     };
 
     this.getSelectionLead = function() {
-        return this.$clone(this.selectionLead);
+        return this.selectionLead.getPosition();
     };
 
     this.shiftSelection = function(columns) {
-        if (this.isEmpty()) {
+        if (this.$isEmpty) {
             this.moveCursorTo(this.selectionLead.row, this.selectionLead.column + columns);
             return;
         };
@@ -7767,14 +8274,17 @@ var Selection = function(doc) {
     };
 
     this.isBackwards = function() {
-        var anchor = this.selectionAnchor || this.selectionLead;
+        var anchor = this.selectionAnchor;
         var lead = this.selectionLead;
         return (anchor.row > lead.row || (anchor.row == lead.row && anchor.column > lead.column));
     };
 
     this.getRange = function() {
-        var anchor = this.selectionAnchor || this.selectionLead;
+        var anchor = this.selectionAnchor;
         var lead = this.selectionLead;
+
+        if (this.isEmpty())
+            return Range.fromPoints(lead, lead);
 
         if (this.isBackwards()) {
             return Range.fromPoints(lead, anchor);
@@ -7785,26 +8295,16 @@ var Selection = function(doc) {
     };
 
     this.clearSelection = function() {
-        if (this.selectionAnchor) {
-            this.selectionAnchor = null;
-            this._dispatchEvent("changeSelection", {});
+        if (!this.$isEmpty) {
+            this.$isEmpty = true;
+            this._dispatchEvent("changeSelection");
         }
     };
 
     this.selectAll = function() {
         var lastRow = this.doc.getLength() - 1;
         this.setSelectionAnchor(lastRow, this.doc.getLine(lastRow).length);
-
-        if (!this.selectionAnchor) {
-            this.selectionAnchor = this.$clone(this.selectionLead);
-        }
-
-        var cursor = {row:0, column:0};
-        // only dispatch change if the cursor actually changed
-        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
-            this.selectionLead = cursor;
-            this._dispatchEvent("changeSelection", {blockScrolling: true});
-        }
+        this.moveCursorTo(0, 0);
     };
 
     this.setSelectionRange = function(range, reverse) {
@@ -7820,28 +8320,15 @@ var Selection = function(doc) {
 
     this.$updateDesiredColumn = function() {
         var cursor = this.getCursor();
-        if (cursor) {
-            this.$desiredColumn = this.doc.documentToScreenColumn(cursor.row, cursor.column);
-        }
+        this.$desiredColumn = this.session.documentToScreenColumn(cursor.row, cursor.column);
     };
 
     this.$moveSelection = function(mover) {
-        var changed = false;
+        var lead = this.selectionLead;
+        if (this.$isEmpty)
+            this.setSelectionAnchor(lead.row, lead.column);
 
-        if (!this.selectionAnchor) {
-            changed = true;
-            this.selectionAnchor = this.$clone(this.selectionLead);
-        }
-
-        var cursor = this.$clone(this.selectionLead);
         mover.call(this);
-
-        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
-            changed = true;
-        }
-
-        if (changed)
-            this._dispatchEvent("changeSelection", {});
     };
 
     this.selectTo = function(row, column) {
@@ -7897,15 +8384,9 @@ var Selection = function(doc) {
     };
 
     this.selectWord = function() {
-        var cursor = this.selectionLead;
-        var column = cursor.column;
-        var range  = this.doc.getWordRange(cursor.row, column);
+        var cursor = this.getCursor();
+        var range  = this.session.getWordRange(cursor.row, cursor.column);
         this.setSelectionRange(range);
-
-        /*this.setSelectionAnchor(cursor.row, start);
-        this.$moveSelection(function() {
-            this.moveCursorTo(cursor.row, end);
-        });*/
     };
 
     this.selectLine = function() {
@@ -7924,18 +8405,16 @@ var Selection = function(doc) {
     };
 
     this.moveCursorLeft = function() {
-        if (this.selectionLead.column == 0) {
+        var cursor = this.selectionLead.getPosition();
+        if (cursor.column == 0) {
             // cursor is a line (start
-            if (this.selectionLead.row > 0) {
-                this.moveCursorTo(this.selectionLead.row - 1, this.doc
-                        .getLine(this.selectionLead.row - 1).length);
+            if (cursor.row > 0) {
+                this.moveCursorTo(cursor.row - 1, this.doc.getLine(cursor.row - 1).length);
             }
         }
         else {
-            var doc = this.doc;
-            var tabSize = doc.getTabSize();
-            var cursor = this.selectionLead;
-            if (doc.isTabStop(cursor) && doc.getLine(cursor.row).slice(cursor.column-tabSize, cursor.column).split(" ").length-1 == tabSize)
+            var tabSize = this.session.getTabSize();
+            if (this.session.isTabStop(cursor) && this.doc.getLine(cursor.row).slice(cursor.column-tabSize, cursor.column).split(" ").length-1 == tabSize)
                 this.moveCursorBy(0, -tabSize);
             else
                 this.moveCursorBy(0, -1);
@@ -7949,10 +8428,9 @@ var Selection = function(doc) {
             }
         }
         else {
-            var doc = this.doc;
-            var tabSize = doc.getTabSize();
+            var tabSize = this.session.getTabSize();
             var cursor = this.selectionLead;
-            if (doc.isTabStop(cursor) && doc.getLine(cursor.row).slice(cursor.column, cursor.column+tabSize).split(" ").length-1 == tabSize)
+            if (this.session.isTabStop(cursor) && this.doc.getLine(cursor.row).slice(cursor.column, cursor.column+tabSize).split(" ").length-1 == tabSize)
                 this.moveCursorBy(0, tabSize);
             else
                 this.moveCursorBy(0, 1);
@@ -7962,12 +8440,12 @@ var Selection = function(doc) {
     this.moveCursorLineStart = function() {
         var row = this.selectionLead.row;
         var column = this.selectionLead.column;
-        var screenRow = this.doc.documentToScreenRow(row, column);
-        var firstRowColumn = this.doc.getScreenFirstRowColumn(screenRow);
+        var screenRow = this.session.documentToScreenRow(row, column);
+        var firstRowColumn = this.session.getScreenFirstRowColumn(screenRow);
         var beforeCursor = this.doc.getLine(row).slice(firstRowColumn, column);
         var leadingSpace = beforeCursor.match(/^\s*/);
         if (leadingSpace[0].length == 0) {
-            var lastRowColumn = this.doc.getDocumentLastRowColumn(row, column);
+            var lastRowColumn = this.session.getDocumentLastRowColumn(row, column);
             leadingSpace = this.doc.getLine(row).
                                 substring(firstRowColumn, lastRowColumn).
                                 match(/^\s*/);
@@ -7980,9 +8458,8 @@ var Selection = function(doc) {
     };
 
     this.moveCursorLineEnd = function() {
-        var selLead = this.selectionLead;
-        this.moveCursorTo(selLead.row,
-              this.doc.getDocumentLastRowColumn(selLead.row, selLead.column));
+        var lead = this.selectionLead;
+        this.moveCursorTo(lead.row, this.session.getDocumentLastRowColumn(lead.row, lead.column));
     };
 
     this.moveCursorFileEnd = function() {
@@ -8002,20 +8479,20 @@ var Selection = function(doc) {
         var rightOfCursor = line.substring(column);
 
         var match;
-        this.doc.nonTokenRe.lastIndex = 0;
-        this.doc.tokenRe.lastIndex = 0;
+        this.session.nonTokenRe.lastIndex = 0;
+        this.session.tokenRe.lastIndex = 0;
 
         if (column == line.length) {
             this.moveCursorRight();
             return;
         }
-        else if (match = this.doc.nonTokenRe.exec(rightOfCursor)) {
-            column += this.doc.nonTokenRe.lastIndex;
-            this.doc.nonTokenRe.lastIndex = 0;
+        else if (match = this.session.nonTokenRe.exec(rightOfCursor)) {
+            column += this.session.nonTokenRe.lastIndex;
+            this.session.nonTokenRe.lastIndex = 0;
         }
-        else if (match = this.doc.tokenRe.exec(rightOfCursor)) {
-            column += this.doc.tokenRe.lastIndex;
-            this.doc.tokenRe.lastIndex = 0;
+        else if (match = this.session.tokenRe.exec(rightOfCursor)) {
+            column += this.session.tokenRe.lastIndex;
+            this.session.tokenRe.lastIndex = 0;
         }
 
         this.moveCursorTo(row, column);
@@ -8028,83 +8505,58 @@ var Selection = function(doc) {
         var leftOfCursor = lang.stringReverse(line.substring(0, column));
 
         var match;
-        this.doc.nonTokenRe.lastIndex = 0;
-        this.doc.tokenRe.lastIndex = 0;
+        this.session.nonTokenRe.lastIndex = 0;
+        this.session.tokenRe.lastIndex = 0;
 
         if (column == 0) {
             this.moveCursorLeft();
             return;
         }
-        else if (match = this.doc.nonTokenRe.exec(leftOfCursor)) {
-            column -= this.doc.nonTokenRe.lastIndex;
-            this.doc.nonTokenRe.lastIndex = 0;
+        else if (match = this.session.nonTokenRe.exec(leftOfCursor)) {
+            column -= this.session.nonTokenRe.lastIndex;
+            this.session.nonTokenRe.lastIndex = 0;
         }
-        else if (match = this.doc.tokenRe.exec(leftOfCursor)) {
-            column -= this.doc.tokenRe.lastIndex;
-            this.doc.tokenRe.lastIndex = 0;
+        else if (match = this.session.tokenRe.exec(leftOfCursor)) {
+            column -= this.session.tokenRe.lastIndex;
+            this.session.tokenRe.lastIndex = 0;
         }
 
         this.moveCursorTo(row, column);
     };
 
     this.moveCursorBy = function(rows, chars) {
-        if (this.doc.getUseWrapMode()) {
-            var screenPos = this.doc.documentToScreenPosition(
-                        this.selectionLead.row, this.selectionLead.column);
-            var screenCol =
-                (chars == 0 && this.$desiredColumn) || screenPos.column;
-
-            var docPos = this.doc.screenToDocumentPosition(
-                        screenPos.row + rows, screenCol);
+        if (this.session.getUseWrapMode()) {
+            var screenPos = this.session.documentToScreenPosition(
+                this.selectionLead.row, 
+                this.selectionLead.column
+            );
+            var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
+            var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
+            
             this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
         } else {
-            var docColumn =
-                (chars == 0 && this.$desiredColumn) || this.selectionLead.column;
-            this.moveCursorTo(
-                this.selectionLead.row + rows, docColumn + chars, chars == 0);
+            var docColumn = (chars == 0 && this.$desiredColumn) || this.selectionLead.column;
+            this.moveCursorTo(this.selectionLead.row + rows, docColumn + chars, chars == 0);
         }
     };
-
 
     this.moveCursorToPosition = function(position) {
         this.moveCursorTo(position.row, position.column);
     };
 
     this.moveCursorTo = function(row, column, preventUpdateDesiredColumn) {
-        var cursor = this.$clipPositionToDocument(row, column);
-
-        // only dispatch change if the cursor actually changed
-        if (cursor.row !== this.selectionLead.row || cursor.column !== this.selectionLead.column) {
-            this.selectionLead = cursor;
-            !preventUpdateDesiredColumn && this.$updateDesiredColumn(column);
-            this._dispatchEvent("changeCursor", { data: this.getCursor() });
-        }
+        this.selectionLead.setPosition(row, column);
+        if (!preventUpdateDesiredColumn)
+            this.$updateDesiredColumn(this.selectionLead.column);
     };
 
-    this.$clipPositionToDocument = function(row, column) {
-        var pos = {};
-
-        if (row >= this.doc.getLength()) {
-            pos.row = Math.max(0, this.doc.getLength() - 1);
-            pos.column = this.doc.getLine(pos.row).length;
+    this.moveCursorToScreen = function(row, column, preventUpdateDesiredColumn) {
+        if (this.session.getUseWrapMode()) {
+            var pos = this.session.screenToDocumentPosition(row, column);
+            row = pos.row;
+            column = pos.column;
         }
-        else if (row < 0) {
-            pos.row = 0;
-            pos.column = 0;
-        }
-        else {
-            pos.row = row;
-            pos.column = Math.min(this.doc.getLine(pos.row).length,
-                    Math.max(0, column));
-        }
-        return pos;
-    };
-
-    this.$clone = function(pos) {
-        return {
-            row: pos.row,
-            column: pos.column
-        };
+        this.moveCursorTo(row, column, preventUpdateDesiredColumn);
     };
 
 }).call(Selection.prototype);
@@ -8315,6 +8767,190 @@ exports.Range = Range;
  *
  * ***** END LICENSE BLOCK ***** */
 
+define('ace/anchor', function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
+
+/**
+ * An Anchor is a floating pointer in the document. Whenever text is inserted or
+ * deleted before the cursor, the position of the cursor is updated
+ */
+var Anchor = exports.Anchor = function(doc, row, column) {
+    this.document = doc;
+    
+    if (typeof column == "undefined")
+        this.setPosition(row.row, row.column)
+    else
+        this.setPosition(row, column);
+
+    this.$onChange = this.onChange.bind(this);
+    doc.on("change", this.$onChange);
+};
+
+(function() {
+
+    oop.implement(this, EventEmitter);
+    
+    this.getPosition = function() {
+        return this.$clipPositionToDocument(this.row, this.column);
+    };
+    
+    this.getDocument = function() {
+        return this.document;
+    };
+    
+    this.onChange = function(e) {
+        var delta = e.data;
+        var range = delta.range;
+            
+        if (range.start.row == range.end.row && range.start.row != this.row)
+            return;
+            
+        if (range.start.row > this.row)
+            return;
+            
+        if (range.start.row == this.row && range.start.column > this.column)
+            return;
+    
+        var row = this.row;
+        var column = this.column;
+        
+        if (delta.action === "insertText") {
+            if (range.start.row === row && range.start.column <= column) {
+                if (range.start.row === range.end.row) {
+                    column += range.end.column - range.start.column;
+                }
+                else {
+                    column -= range.start.column;
+                    row += range.end.row - range.start.row;
+                }
+            }
+            else if (range.start.row !== range.end.row && range.start.row < row) {
+                row += range.end.row - range.start.row;
+            }
+        } else if (delta.action === "insertLines") {
+            if (range.start.row <= row) {
+                row += range.end.row - range.start.row;
+            }
+        }
+        else if (delta.action == "removeText") {
+            if (range.start.row == row && range.start.column < column) {
+                if (range.end.column >= column)
+                    column = range.start.column;
+                else
+                    column = Math.max(0, column - (range.end.column - range.start.column));
+                
+            } else if (range.start.row !== range.end.row && range.start.row < row) {
+                if (range.end.row == row) {
+                    column = Math.max(0, column - range.end.column) + range.start.column;
+                }
+                row -= (range.end.row - range.start.row);
+            }
+            else if (range.end.row == row) {
+                row -= range.end.row - range.start.row;
+                column = Math.max(0, column - range.end.column) + range.start.column;
+            }
+        } else if (delta.action == "removeLines") {
+            if (range.start.row <= row) {
+                if (range.end.row <= row)
+                    row -= range.end.row - range.start.row;
+                else {
+                    row = range.start.row;
+                    column = 0;
+                }
+            }
+        }
+
+        this.setPosition(row, column);
+    };
+
+    this.setPosition = function(row, column) {
+        pos = this.$clipPositionToDocument(row, column);
+        if (this.row == pos.row && this.column == pos.column)
+            return;
+            
+        var old = {
+            row: this.row,
+            column: this.column
+        };
+        
+        this.row = pos.row;
+        this.column = pos.column;
+        this._dispatchEvent("change", {
+            old: old,
+            value: pos
+        });
+    };
+    
+    this.detach = function() {
+        this.document.removeEventListener("change", this.$onChange);
+    };
+    
+    this.$clipPositionToDocument = function(row, column) {
+        var pos = {};
+    
+        if (row >= this.document.getLength()) {
+            pos.row = Math.max(0, this.document.getLength() - 1);
+            pos.column = this.document.getLine(pos.row).length;
+        }
+        else if (row < 0) {
+            pos.row = 0;
+            pos.column = 0;
+        }
+        else {
+            pos.row = row;
+            pos.column = Math.min(this.document.getLine(pos.row).length, Math.max(0, column));
+        }
+        
+        if (column < 0)
+            pos.column = 0;
+            
+        return pos;
+    };
+    
+}).call(Anchor.prototype);
+
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 define('ace/mode/text', function(require, exports, module) {
 
 var Tokenizer = require("ace/tokenizer").Tokenizer;
@@ -8331,7 +8967,6 @@ var Mode = function() {
     };
 
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
-        return 0;
     };
 
     this.getNextLineIndent = function(state, line, tab) {
@@ -8356,6 +8991,64 @@ var Mode = function() {
     
     this.createWorker = function(session) {
         return null;
+    };
+
+    this.highlightSelection = function(editor) {
+        var session = editor.session;
+        if (!session.$selectionOccurrences)
+            session.$selectionOccurrences = [];
+
+        if (session.$selectionOccurrences.length)
+            this.clearSelectionHighlight(editor);
+
+        var selection = editor.getSelectionRange();
+        if (selection.isEmpty() || selection.isMultiLine())
+            return;
+
+        var startOuter = selection.start.column - 1;
+        var endOuter = selection.end.column + 1;
+        var line = session.getLine(selection.start.row);
+        var lineCols = line.length - 1;
+        var needle = line.substring(Math.max(startOuter, 0),
+                                    Math.min(endOuter, lineCols));
+
+        // Make sure the outer characters are not part of the word.
+        if ((startOuter >= 0 && !/[^\w\d]/.test(needle.charAt(0))) ||
+            (endOuter <= lineCols && !/[^\w\d]/.test(needle.charAt(needle.length - 1))))
+            return;
+
+        needle = line.substring(selection.start.column, selection.end.column);
+        if (!/^[\w\d]+$/.test(needle))
+            return;
+
+        var newOptions = {
+            wrap: true,
+            wholeWord: true,
+            needle: needle
+        };
+
+        var currentOptions = editor.$search.getOptions();
+        editor.$search.set(newOptions);
+
+        var ranges = editor.$search.findAll(session);
+        session.$selectionOccurrences = [];
+        ranges.forEach(function(range) {
+            if (!range.contains(selection.start.row, selection.start.column)) {
+                var marker = session.addMarker(range, "ace_selected_word");
+                session.$selectionOccurrences.push(marker);
+            }
+        });
+
+        editor.$search.set(currentOptions);
+    };
+
+    this.clearSelectionHighlight = function(editor) {
+        if (!editor.session.$selectionOccurrences)
+            return;
+
+        editor.session.$selectionOccurrences.forEach(function(marker) {
+            editor.session.removeMarker(marker);
+        });
     };
 
 }).call(Mode.prototype);
@@ -8439,7 +9132,7 @@ var Tokenizer = function(rules) {
             var value = match[0];
 
             for ( var i = 0; i < state.length; i++) {
-                if (match[i + 1] !== undefined) {
+                if (match[i + 1]) {
                     if (typeof state[i].token == "function") {
                         type = state[i].token(match[0]);
                     }
@@ -8473,10 +9166,10 @@ var Tokenizer = function(rules) {
             }
             
             if (lastIndex == line.length) {
-		        break;
-	        }
+    	        break;
+            }
             
-	        lastIndex = re.lastIndex;
+            lastIndex = re.lastIndex;
         };
 
         if (token.type) {
@@ -8540,7 +9233,7 @@ var TextHighlightRules = function() {
     this.$rules = {
         "start" : [ {
             token : "empty_line",
-            regex : '^$',
+            regex : '^$'
         }, {
             token : "text",
             regex : ".+"
@@ -8642,7 +9335,7 @@ var Document = function(text) {
     };
   	
     this.getValue = function() {
-        return this.$lines.join(this.getNewLineCharacter());
+        return this.getAllLines().join(this.getNewLineCharacter());
     };
 
     // check for IE split bug
@@ -8698,11 +9391,11 @@ var Document = function(text) {
      * Get a verbatim copy of the given line as it is in the document
      */
     this.getLine = function(row) {
-        return this.$lines[row] || "";
+        return this.getLines(row, row + 1)[0] || "";
     };
 
     this.getLines = function(firstRow, lastRow) {
-        return this.$lines.slice(firstRow, lastRow+1);
+        return this.$lines.slice(firstRow, lastRow + 1);
     };
 
     /**
@@ -8710,7 +9403,7 @@ var Document = function(text) {
      * should not modify this array!
      */
     this.getAllLines = function() {
-        return this.$lines;
+        return this.getLines(0, this.getLength());
     };
 
     this.getLength = function() {
@@ -8758,14 +9451,29 @@ var Document = function(text) {
             var end = this.insertInLine(position, text);
         }
         else {
-            var end = this.insertInLine(position, newLines[0]);
-            this.insertNewLine(end);
-            if (newLines.length > 2)
-                this.insertLines(position.row+1, newLines.slice(1, newLines.length-1));
-
-            var end = this.insertInLine({row: position.row + newLines.length - 1, column: 0}, newLines[newLines.length-1]);
+            if (newLines[0].length > 0) {
+                var end = this.insertInLine(position, newLines[0]);
+                this.insertNewLine(end);
+            }
+            // If we are inserting at the end of the document, we don't need to
+            // use insertInLine (concorde depends on this optimization!)
+            if (position.row + 1 == this.getLength()) {
+                this.insertLines(position.row + 1,
+                                 newLines.slice(1, newLines.length));
+                var end = {
+                    row: position.row + newLines.length - 1,
+                    column: position.column + newLines[newLines.length - 1].length
+                };
+            } else {
+                if (newLines.length > 2)
+                    this.insertLines(position.row + 1,
+                                     newLines.slice(1, newLines.length - 1));
+                var end = this.insertInLine({
+                    row: position.row + newLines.length - 1,
+                    column: 0
+                }, newLines[newLines.length - 1]);
+            }
         }
-
         return end;
     };
 
@@ -8777,7 +9485,7 @@ var Document = function(text) {
         args.push.apply(args, lines);
         this.$lines.splice.apply(this.$lines, args);
 
-        var range = new Range(row, 0, row + lines.length - 1, 0);
+        var range = new Range(row, 0, row + lines.length, 0);
         var delta = {
             action: "insertLines",
             range: range,
@@ -8853,7 +9561,7 @@ var Document = function(text) {
                 this.removeLines(firstFullRow, lastFullRow);
 
             if (firstFullRow != firstRow) {
-                this.removeInLine(firstRow, range.start.column, this.$lines[firstRow].length);
+                this.removeInLine(firstRow, range.start.column, this.getLine(firstRow).length);
                 this.removeNewLine(range.start.row);
             }
         }
@@ -8890,7 +9598,7 @@ var Document = function(text) {
      * @return {String[]} The removed lines
      */
     this.removeLines = function(firstRow, lastRow) {
-        var range = new Range(firstRow, 0, lastRow, this.$lines[lastRow].length);
+        var range = new Range(firstRow, 0, lastRow + 1, 0);
         var removed = this.$lines.splice(firstRow, lastRow - firstRow + 1);
 
         var delta = {
@@ -8950,7 +9658,7 @@ var Document = function(text) {
             else if (delta.action == "insertText")
                 this.insert(range.start, delta.text)
             else if (delta.action == "removeLines")
-                this.removeLines(range.start.row, range.end.row)
+                this.removeLines(range.start.row, range.end.row - 1)
             else if (delta.action == "removeText")
                 this.remove(range)
         }
@@ -8962,7 +9670,7 @@ var Document = function(text) {
             var range = Range.fromPoints(delta.range.start, delta.range.end);
 
             if (delta.action == "insertLines")
-                this.removeLines(range.start.row, range.end.row)
+                this.removeLines(range.start.row, range.end.row - 1)
             else if (delta.action == "insertText")
                 this.remove(range)
             else if (delta.action == "removeLines")
@@ -9581,230 +10289,153 @@ exports.UndoManager = UndoManager;
 define('ace/theme/textmate', function(require, exports, module) {
 
     var dom = require("pilot/dom");
-    var cssText = require("text!ace/theme/tm.css");
+
+    var cssText = ".ace-tm .ace_editor {\
+  border: 2px solid rgb(159, 159, 159);\
+}\
+\
+.ace-tm .ace_editor.ace_focus {\
+  border: 2px solid #327fbd;\
+}\
+\
+.ace-tm .ace_gutter {\
+  width: 50px;\
+  background: #e8e8e8;\
+  color: #333;\
+  overflow : hidden;\
+}\
+\
+.ace-tm .ace_gutter-layer {\
+  width: 100%;\
+  text-align: right;\
+}\
+\
+.ace-tm .ace_gutter-layer .ace_gutter-cell {\
+  padding-right: 6px;\
+}\
+\
+.ace-tm .ace_print_margin {\
+  width: 1px;\
+  background: #e8e8e8;\
+}\
+\
+.ace-tm .ace_text-layer {\
+  cursor: text;\
+}\
+\
+.ace-tm .ace_cursor {\
+  border-left: 2px solid black;\
+}\
+\
+.ace-tm .ace_cursor.ace_overwrite {\
+  border-left: 0px;\
+  border-bottom: 1px solid black;\
+}\
+        \
+.ace-tm .ace_line .ace_invisible {\
+  color: rgb(191, 191, 191);\
+}\
+\
+.ace-tm .ace_line .ace_keyword {\
+  color: blue;\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_buildin {\
+  color: rgb(88, 72, 246);\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_language {\
+  color: rgb(88, 92, 246);\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_library {\
+  color: rgb(6, 150, 14);\
+}\
+\
+.ace-tm .ace_line .ace_invalid {\
+  background-color: rgb(153, 0, 0);\
+  color: white;\
+}\
+\
+.ace-tm .ace_line .ace_support.ace_function {\
+  color: rgb(60, 76, 114);\
+}\
+\
+.ace-tm .ace_line .ace_support.ace_constant {\
+  color: rgb(6, 150, 14);\
+}\
+\
+.ace-tm .ace_line .ace_support.ace_type,\
+.ace-tm .ace_line .ace_support.ace_class {\
+  color: rgb(109, 121, 222);\
+}\
+\
+.ace-tm .ace_line .ace_keyword.ace_operator {\
+  color: rgb(104, 118, 135);\
+}\
+\
+.ace-tm .ace_line .ace_string {\
+  color: rgb(3, 106, 7);\
+}\
+\
+.ace-tm .ace_line .ace_comment {\
+  color: rgb(76, 136, 107);\
+}\
+\
+.ace-tm .ace_line .ace_comment.ace_doc {\
+  color: rgb(0, 102, 255);\
+}\
+\
+.ace-tm .ace_line .ace_comment.ace_doc.ace_tag {\
+  color: rgb(128, 159, 191);\
+}\
+\
+.ace-tm .ace_line .ace_constant.ace_numeric {\
+  color: rgb(0, 0, 205);\
+}\
+\
+.ace-tm .ace_line .ace_variable {\
+  color: rgb(49, 132, 149);\
+}\
+\
+.ace-tm .ace_line .ace_xml_pe {\
+  color: rgb(104, 104, 91);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_selection {\
+  background: rgb(181, 213, 255);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_step {\
+  background: rgb(252, 255, 0);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_stack {\
+  background: rgb(164, 229, 101);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_bracket {\
+  margin: -1px 0 0 -1px;\
+  border: 1px solid rgb(192, 192, 192);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_active_line {\
+  background: rgb(232, 242, 254);\
+}\
+\
+.ace-tm .ace_marker-layer .ace_selected_word {\
+  background: rgb(250, 250, 255);\
+  border: 1px solid rgb(200, 200, 250);\
+}\
+\
+.ace-tm .ace_string.ace_regex {\
+  color: rgb(255, 0, 0)\
+}";
 
     // import CSS once
     dom.importCssString(cssText);
 
     exports.cssClass = "ace-tm";
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/dom', function(require, exports, module) {
-
-exports.setText = function(elem, text) {
-    if (elem.innerText !== undefined) {
-        elem.innerText = text;
-    }
-    if (elem.textContent !== undefined) {
-        elem.textContent = text;
-    }
-};
-
-exports.hasCssClass = function(el, name) {
-    var classes = el.className.split(/\s+/g);
-    return classes.indexOf(name) !== -1;
-};
-
-/**
-* Add a CSS class to the list of classes on the given node
-*/
-exports.addCssClass = function(el, name) {
-    if (!exports.hasCssClass(el, name)) {
-        el.className += " " + name;
-    }
-};
-
-/**
- * Add or remove a CSS class from the list of classes on the given node
- * depending on the value of <tt>include</tt>
- */
-exports.setCssClass = function(node, className, include) {
-    if (include) {
-        exports.addCssClass(node, className);
-    } else {
-        exports.removeCssClass(node, className);
-    }
-};
-
-/**
-* Remove a CSS class from the list of classes on the given node
-*/
-exports.removeCssClass = function(el, name) {
-    var classes = el.className.split(/\s+/g);
-    while (true) {
-        var index = classes.indexOf(name);
-        if (index == -1) {
-            break;
-        }
-        classes.splice(index, 1);
-    }
-    el.className = classes.join(" ");
-};
-
-exports.importCssString = function(cssText, doc){
-    doc = doc || document;        
-
-    if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet();
-        sheet.cssText = cssText;
-    }
-    else {
-        var style = doc.createElement("style");
-        style.appendChild(doc.createTextNode(cssText));
-        doc.getElementsByTagName("head")[0].appendChild(style);
-    }            
-};
-
-exports.getInnerWidth = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingLeft"))
-            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
-};
-
-exports.getInnerHeight = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingTop"))
-            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
-};
-
-exports.computedStyle = function(element, style) {
-    if (window.getComputedStyle) {
-        return (window.getComputedStyle(element, "") || {})[style] || "";
-    }
-    else {
-        return element.currentStyle[style];
-    }
-};
-
-exports.scrollbarWidth = function() {
-
-    var inner = document.createElement('p');
-    inner.style.width = "100%";
-    inner.style.height = "200px";
-
-    var outer = document.createElement("div");
-    var style = outer.style;
-
-    style.position = "absolute";
-    style.left = "-10000px";
-    style.overflow = "hidden";
-    style.width = "200px";
-    style.height = "150px";
-
-    outer.appendChild(inner);
-    document.body.appendChild(outer);
-    var noScrollbar = inner.offsetWidth;
-
-    style.overflow = "scroll";
-    var withScrollbar = inner.offsetWidth;
-
-    if (noScrollbar == withScrollbar) {
-        withScrollbar = outer.clientWidth;
-    }
-
-    document.body.removeChild(outer);
-
-    return noScrollbar-withScrollbar;
-};
-
-/**
- * Optimized set innerHTML. This is faster than plain innerHTML if the element
- * already contains a lot of child elements.
- * 
- * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
- */
-exports.setInnerHtml = function(el, innerHtml) {
-	var element = el.cloneNode(false);//document.createElement("div");
-    element.innerHTML = innerHtml;
-    el.parentNode.replaceChild(element, el);
-    return element;
-};
-
-exports.setInnerText = function(el, innerText) {
-    if ("textContent" in document.body)
-        el.textContent = innerText;
-    else 
-        el.innerText = innerText;
-        
-};
-
-exports.getInnerText = function(el) {
-    if ("textContent" in document.body)
-        return el.textContent;
-    else 
-         return el.innerText;
-};
-
-exports.getParentWindow = function(document) {
-    return document.defaultView || document.parentWindow;
-};
-
-exports.getSelectionStart = function(textarea) {
-    // TODO IE
-    var start;
-    try {
-        start = textarea.selectionStart || 0;
-    } catch (e) {
-        start = 0;
-    }
-    return start;
-};
-
-exports.setSelectionStart = function(textarea, start) {
-    // TODO IE
-    return textarea.selectionStart = start;
-};
-
-exports.getSelectionEnd = function(textarea) {
-    // TODO IE
-    var end;
-    try {
-        end = textarea.selectionEnd || 0;
-    } catch (e) {
-        end = 0;
-    }
-    return end;
-};
-
-exports.setSelectionEnd = function(textarea, end) {
-    // TODO IE
-    return textarea.selectionEnd = end;
-};
-
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -9871,8 +10502,6 @@ var MatchingBraceOutdent = function() {};
 
         var indent = this.$getIndent(doc.getLine(openBracePos.row));
         doc.replace(new Range(row, 0, row, column-1), indent);
-
-        return indent.length - (column-1);
     };
 
     this.$getIndent = function(line) {
@@ -9965,17 +10594,18 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$markerLayer = new MarkerLayer(this.content);
+    this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
     this.canvas = textLayer.element;
+
+    this.$markerFront = new MarkerLayer(this.content);
 
     this.characterWidth = textLayer.getCharacterWidth();
     this.lineHeight = textLayer.getLineHeight();
 
     this.$cursorLayer = new CursorLayer(this.content);
-
-    this.layers = [ this.$markerLayer, textLayer, this.$cursorLayer ];
+    this.$cursorPadding = 8;
 
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", this.onScroll.bind(this));
@@ -9992,6 +10622,7 @@ var VirtualRenderer = function(container, theme) {
         _self.characterWidth = textLayer.getCharacterWidth();
         _self.lineHeight = textLayer.getLineHeight();
         _self.$updatePrintMargin();
+        _self.onResize(true);
 
         _self.$loop.schedule(_self.CHANGE_FULL);
     });
@@ -10022,14 +10653,17 @@ var VirtualRenderer = function(container, theme) {
     this.CHANGE_LINES = 16;
     this.CHANGE_TEXT = 32;
     this.CHANGE_SIZE = 64;
-    this.CHANGE_FULL = 128;
+    this.CHANGE_MARKER_BACK = 128;
+    this.CHANGE_MARKER_FRONT = 256;
+    this.CHANGE_FULL = 512;
 
     oop.implement(this, EventEmitter);
 
     this.setSession = function(session) {
         this.session = session;
         this.$cursorLayer.setSession(session);
-        this.$markerLayer.setSession(session);
+        this.$markerBack.setSession(session);
+        this.$markerFront.setSession(session);
         this.$gutterLayer.setSession(session);
         this.$textLayer.setSession(session);
         this.$loop.schedule(this.CHANGE_FULL);
@@ -10099,6 +10733,14 @@ var VirtualRenderer = function(container, theme) {
             var gutterWidth = this.showGutter ? this.$gutter.offsetWidth : 0;
             this.scroller.style.left = gutterWidth + "px";
             this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+
+            if (this.session.getUseWrapMode()) {
+                var availableWidth = this.scroller.clientWidth - this.$padding * 2;
+                var limit = Math.floor(availableWidth / this.characterWidth) - 1;
+                if (this.session.adjustWrapLimit(limit) || force) {
+                    changes = changes | this.CHANGE_FULL;
+                }
+            }
         }
 
         this.$size.scrollerWidth = this.scroller.clientWidth;
@@ -10164,7 +10806,7 @@ var VirtualRenderer = function(container, theme) {
 
         if (!this.$showPrintMargin && !this.$printMarginEl)
             return;
-            
+
         if (!this.$printMarginEl) {
             containerEl = document.createElement("div");
             containerEl.className = "ace_print_margin_layer";
@@ -10191,18 +10833,18 @@ var VirtualRenderer = function(container, theme) {
         return this.container;
     };
 
-    this.moveTextAreaToCursor = function(textarea) {        
+    this.moveTextAreaToCursor = function(textarea) {
         // in IE the native cursor always shines through
         if (useragent.isIE)
             return;
-            
+
         var pos = this.$cursorLayer.getPixelPosition();
         if (!pos)
             return;
 
         var bounds = this.content.getBoundingClientRect();
         var offset = (this.layerConfig && this.layerConfig.offset) || 0;
-        
+
         textarea.style.left = (bounds.left + pos.left + this.$padding) + "px";
         textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
     };
@@ -10265,7 +10907,8 @@ var VirtualRenderer = function(container, theme) {
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.update(this.layerConfig);
             this.showGutter && this.$gutterLayer.update(this.layerConfig);
-            this.$markerLayer.update(this.layerConfig);
+            this.$markerBack.update(this.layerConfig);
+            this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
             this.$updateScrollBar();
             this.scrollCursorIntoView();
@@ -10279,7 +10922,8 @@ var VirtualRenderer = function(container, theme) {
             else
                 this.$textLayer.scrollLines(this.layerConfig);
             this.showGutter && this.$gutterLayer.update(this.layerConfig);
-            this.$markerLayer.update(this.layerConfig);
+            this.$markerBack.update(this.layerConfig);
+            this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
             this.$updateScrollBar();
             return;
@@ -10300,8 +10944,12 @@ var VirtualRenderer = function(container, theme) {
         if (changes & this.CHANGE_CURSOR)
             this.$cursorLayer.update(this.layerConfig);
 
-        if (changes & this.CHANGE_MARKER) {
-            this.$markerLayer.update(this.layerConfig);
+        if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_FRONT)) {
+            this.$markerFront.update(this.layerConfig);
+        }
+
+        if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_BACK)) {
+            this.$markerBack.update(this.layerConfig);
         }
 
         if (changes & this.CHANGE_SIZE)
@@ -10379,22 +11027,21 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$getLongestLine = function() {
-        var charCount = this.session.getScreenWidth();
+        var charCount = this.session.getScreenWidth() + 1;
         if (this.$textLayer.showInvisibles)
             charCount += 1;
 
         return Math.max(this.$size.scrollerWidth - this.$padding * 2, Math.round(charCount * this.characterWidth));
     };
 
-    this.addMarker = function(range, clazz, type) {
-        var id = this.$markerLayer.addMarker(range, clazz, type);
-        this.$loop.schedule(this.CHANGE_MARKER);
-        return id;
+    this.updateFrontMarkers = function() {
+        this.$markerFront.setMarkers(this.session.getMarkers(true));
+        this.$loop.schedule(this.CHANGE_MARKER_FRONT);
     };
 
-    this.removeMarker = function(markerId) {
-        this.$markerLayer.removeMarker(markerId);
-        this.$loop.schedule(this.CHANGE_MARKER);
+    this.updateBackMarkers = function() {
+        this.$markerBack.setMarkers(this.session.getMarkers());
+        this.$loop.schedule(this.CHANGE_MARKER_BACK);
     };
 
     this.addGutterDecoration = function(row, className){
@@ -10449,10 +11096,12 @@ var VirtualRenderer = function(container, theme) {
             this.scrollToX(left);
         }
 
-        if (this.scroller.scrollLeft + this.$size.scrollerWidth < left
-                + this.characterWidth) {
-            this.scrollToX(Math.round(left + this.characterWidth
-                    - this.$size.scrollerWidth));
+        if (this.scroller.scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
+
+            if (left + this.characterWidth > this.scroller.scrollWidth)
+                this.$renderChanges(this.CHANGE_SIZE);
+
+            this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
         }
     },
 
@@ -10468,9 +11117,26 @@ var VirtualRenderer = function(container, theme) {
         return this.scrollTop / this.lineHeight;
     };
 
+    this.getScrollBottomRow = function() {
+        return Math.max(0, Math.floor((this.scrollTop + this.$size.scrollerHeight) / this.lineHeight) - 1);
+    }
+
     this.scrollToRow = function(row) {
         this.scrollToY(row * this.lineHeight);
     };
+
+    this.scrollToLine = function(line, center) {
+	      var lineHeight = { lineHeight: this.lineHeight };
+	      var offset = 0;
+	      for (var l = 1; l < line; l++) {
+		        offset += this.session.getRowHeight(lineHeight, l-1);
+		    }
+		
+		    if (center) {
+			      offset -= this.$size.scrollerHeight / 2;
+			  }
+		    this.scrollToY(offset);
+	  };
 
     this.scrollToY = function(scrollTop) {
         var maxHeight = this.session.getScreenLength() * this.lineHeight - this.$size.scrollerHeight;
@@ -10497,9 +11163,9 @@ var VirtualRenderer = function(container, theme) {
     this.screenToTextCoordinates = function(pageX, pageY) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
-        var col = Math.round((pageX + this.scroller.scrollLeft - canvasPos.left - this.$padding)
+        var col = Math.round((pageX + this.scroller.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft())
                 / this.characterWidth);
-        var row = Math.floor((pageY + this.scrollTop - canvasPos.top)
+        var row = Math.floor((pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop())
                 / this.lineHeight);
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0));
@@ -10527,21 +11193,21 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.showComposition = function(position) {
-		if (!this.$composition) {
-    	    this.$composition = document.createElement("div");
+        if (!this.$composition) {
+            this.$composition = document.createElement("div");
             this.$composition.className = "ace_composition";
             this.content.appendChild(this.$composition);
-		}
-    	
+        }
+
         this.$composition.innerHTML = "&nbsp;";
 
         var pos = this.$cursorLayer.getPixelPosition();
-    	var style = this.$composition.style;
-		style.top = pos.top + "px";
-		style.left = (pos.left + this.$padding) + "px";
-    	style.height = this.lineHeight + "px";
-    	
-		this.hideCursor();
+        var style = this.$composition.style;
+        style.top = pos.top + "px";
+        style.left = (pos.left + this.$padding) + "px";
+        style.height = this.lineHeight + "px";
+
+        this.hideCursor();
     };
 
     this.setCompositionText = function(text) {
@@ -10549,14 +11215,14 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.hideComposition = function() {
-		this.showCursor();
+        this.showCursor();
 
         if (!this.$composition)
             return;
 
-    	var style = this.$composition.style;
-		style.top = "-10000px";
-		style.left = "-10000px";
+        var style = this.$composition.style;
+        style.top = "-10000px";
+        style.left = "-10000px";
     };
 
     this.setTheme = function(theme) {
@@ -10774,9 +11440,6 @@ var Marker = function(parentEl) {
     this.element = document.createElement("div");
     this.element.className = "ace_layer ace_marker-layer";
     parentEl.appendChild(this.element);
-
-    this.markers = {};
-    this.$markerId = 1;
 };
 
 (function() {
@@ -10784,23 +11447,9 @@ var Marker = function(parentEl) {
     this.setSession = function(session) {
         this.session = session;
     };
-
-    this.addMarker = function(range, clazz, type) {
-        var id = this.$markerId++;
-        this.markers[id] = {
-            range : range,
-            type : type || "line",
-            clazz : clazz
-        };
-
-        return id;
-    };
-
-    this.removeMarker = function(markerId) {
-        var marker = this.markers[markerId];
-        if (marker) {
-            delete (this.markers[markerId]);
-        }
+    
+    this.setMarkers = function(markers) {
+        this.markers = markers;
     };
 
     this.update = function(config) {
@@ -10810,7 +11459,7 @@ var Marker = function(parentEl) {
 
         this.config = config;
 
-        var html = [];
+        var html = [];        
         for ( var key in this.markers) {
             var marker = this.markers[key];
 
@@ -10819,7 +11468,12 @@ var Marker = function(parentEl) {
 
             range = range.toScreenRange(this.session);
 
-            if (range.isMultiLine()) {
+            if (marker.renderer) {
+                var top = this.$getTop(range.start.row, config);
+                var left = Math.round(range.start.column * config.characterWidth);        
+                marker.renderer(html, range, left, top, config);
+            }
+            else if (range.isMultiLine()) {
                 if (marker.type == "text") {
                     this.drawTextMarker(html, range, marker.clazz, config);
                 } else {
@@ -11019,7 +11673,7 @@ var Text = function(parentEl) {
 	        var style = measureNode.style;
 
 	        style.width = style.height = "auto";
-	        style.left = style.top = "-1000px";
+	        style.left = style.top = (-n * 40)  + "px";
 
 	        style.visibility = "hidden";
 	        style.position = "absolute";
@@ -11718,6 +12372,7 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "}" +
   "" +
   ".ace_marker-layer {" +
+  "    cursor: text;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_step {" +
@@ -11739,228 +12394,15 @@ define("text!ace/css/editor.css", ".ace_editor {" +
   "    position: absolute;" +
   "    z-index: 2;" +
   "}" +
+  "" +
+  ".ace_marker-layer .ace_selected_word {" +
+  "    position: absolute;" +
+  "    z-index: 6;" +
+  "    box-sizing: border-box;" +
+  "    -moz-box-sizing: border-box;" +
+  "    -webkit-box-sizing: border-box;" +
+  "}" +
   "");
-
-define("text!ace/theme/eclipse.css", ".ace-eclipse .ace_editor {" +
-  "  border: 2px solid rgb(159, 159, 159);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_editor.ace_focus {" +
-  "  border: 2px solid #327fbd;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_gutter {" +
-  "  width: 40px;" +
-  "  background: rgb(227, 227, 227);" +
-  "  border-right: 1px solid rgb(159, 159, 159);	 " +
-  "  color: rgb(136, 136, 136);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_gutter-layer {" +
-  "  right: 10px;" +
-  "  text-align: right;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_text-layer {" +
-  "  cursor: text;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_cursor {" +
-  "  border-left: 1px solid black;" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_keyword, .ace-eclipse .ace_line .ace_variable {" +
-  "  color: rgb(127, 0, 85);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_constant.ace_buildin {" +
-  "  color: rgb(88, 72, 246);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_constant.ace_library {" +
-  "  color: rgb(6, 150, 14);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_function {" +
-  "  color: rgb(60, 76, 114);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_string {" +
-  "  color: rgb(42, 0, 255);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_comment {" +
-  "  color: rgb(63, 127, 95);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_comment.ace_doc {" +
-  "  color: rgb(63, 95, 191);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_comment.ace_doc.ace_tag {" +
-  "  color: rgb(127, 159, 191);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_constant.ace_numeric {" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_tag {" +
-  "	color: rgb(63, 127, 127);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_line .ace_xml_pe {" +
-  "  color: rgb(104, 104, 91);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_marker-layer .ace_selection {" +
-  "  background: rgb(181, 213, 255);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_marker-layer .ace_bracket {" +
-  "  margin: -1px 0 0 -1px;" +
-  "  border: 1px solid rgb(192, 192, 192);" +
-  "}" +
-  "" +
-  ".ace-eclipse .ace_marker-layer .ace_active_line {" +
-  "  background: rgb(232, 242, 254);" +
-  "}");
-
-define("text!ace/theme/tm.css", ".ace-tm .ace_editor {" +
-  "  border: 2px solid rgb(159, 159, 159);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_editor.ace_focus {" +
-  "  border: 2px solid #327fbd;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_gutter {" +
-  "  width: 50px;" +
-  "  background: #e8e8e8;" +
-  "  color: #333;" +
-  "  overflow : hidden;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_gutter-layer {" +
-  "  width: 100%;" +
-  "  text-align: right;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_gutter-layer .ace_gutter-cell {" +
-  "  padding-right: 6px;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_print_margin {" +
-  "  width: 1px;" +
-  "  background: #e8e8e8;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_text-layer {" +
-  "  cursor: text;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_cursor {" +
-  "  border-left: 2px solid black;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_cursor.ace_overwrite {" +
-  "  border-left: 0px;" +
-  "  border-bottom: 1px solid black;" +
-  "}" +
-  "        " +
-  ".ace-tm .ace_line .ace_invisible {" +
-  "  color: rgb(191, 191, 191);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_keyword {" +
-  "  color: blue;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_buildin {" +
-  "  color: rgb(88, 72, 246);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_language {" +
-  "  color: rgb(88, 92, 246);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_library {" +
-  "  color: rgb(6, 150, 14);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_invalid {" +
-  "  background-color: rgb(153, 0, 0);" +
-  "  color: white;" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_support.ace_function {" +
-  "  color: rgb(60, 76, 114);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_support.ace_constant {" +
-  "  color: rgb(6, 150, 14);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_support.ace_type," +
-  ".ace-tm .ace_line .ace_support.ace_class {" +
-  "  color: rgb(109, 121, 222);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_keyword.ace_operator {" +
-  "  color: rgb(104, 118, 135);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_string {" +
-  "  color: rgb(3, 106, 7);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_comment {" +
-  "  color: rgb(76, 136, 107);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_comment.ace_doc {" +
-  "  color: rgb(0, 102, 255);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_comment.ace_doc.ace_tag {" +
-  "  color: rgb(128, 159, 191);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_constant.ace_numeric {" +
-  "  color: rgb(0, 0, 205);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_variable {" +
-  "  color: rgb(49, 132, 149);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_line .ace_xml_pe {" +
-  "  color: rgb(104, 104, 91);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_selection {" +
-  "  background: rgb(181, 213, 255);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_step {" +
-  "  background: rgb(252, 255, 0);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_stack {" +
-  "  background: rgb(164, 229, 101);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_bracket {" +
-  "  margin: -1px 0 0 -1px;" +
-  "  border: 1px solid rgb(192, 192, 192);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_marker-layer .ace_active_line {" +
-  "  background: rgb(232, 242, 254);" +
-  "}" +
-  "" +
-  ".ace-tm .ace_string.ace_regex {" +
-  "  color: rgb(255, 0, 0)   " +
-  "}");
 
 define("text!icons/epl.html", "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
   "<!-- saved from url=(0049)http://www.eclipse.org/org/documents/epl-v10.html -->" +
@@ -12245,6 +12687,22 @@ define("text!styles.css", "html {" +
   "    top: 60px;" +
   "    left: 0px;" +
   "    background: white;" +
+  "}" +
+  "" +
+  ".cool {" +
+  "    position: absolute;" +
+  "    background: orange;" +
+  "    opacity: 0.8;" +
+  "}" +
+  "" +
+  ".cool_header {" +
+  "    position: absolute;" +
+  "    background: orange;" +
+  "    color: black;" +
+  "    font-size: 8px;" +
+  "    padding: 1px;" +
+  "    margin-top: -8px;" +
+  "    opacity: 0.8;" +
   "}" +
   "" +
   "#controls {" +
