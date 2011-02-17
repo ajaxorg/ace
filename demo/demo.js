@@ -270,6 +270,10 @@ exports.launch = function(env) {
         env.editor.setHighlightSelectedWord(checked);
     });
 
+    bindCheckbox("show_hscroll", function(checked) {
+        env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+    });
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
