@@ -366,6 +366,10 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                     }
                 break;
 
+                case "useSoftTabs":
+                    session.setUseSoftTabs(toBool(value));
+                break;
+
                 case "showPrintMargin":
                     renderer.setShowPrintMargin(toBool(value));
                 break
@@ -402,7 +406,8 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         theme:           "Theme:",
         fontSize:        "Font Size:",
         softWrap:        "Soft Wrap:",
-        showPrintMargin: "Show Print Margin:"
+        showPrintMargin: "Show Print Margin:",
+        useSoftTabs:     "Use Soft Tabs:"
     }
 
     var optionValues = {
@@ -446,7 +451,8 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             80:     "80",
             free:   "Free"
         },
-        showPrintMargin: BOOL
+        showPrintMargin: BOOL,
+        useSoftTabs: BOOL
     }
 
     var table = [];
@@ -510,7 +516,8 @@ window.__ace_shadowed__.options = {
     gutter:     "false",
     fontSize:   "12px",
     softWrap:   "off",
-    showPrintMargin: "false"
+    showPrintMargin: "false",
+    useSoftTabs: "true"
 }
 
 });
