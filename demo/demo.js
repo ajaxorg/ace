@@ -130,7 +130,7 @@ exports.launch = function(env) {
     docs.perl.setUndoManager(new UndoManager());
 
     var container = document.getElementById("editor");
-    env.editor = new Editor(new Renderer(container, theme));
+    env.editor = new Editor(env, new Renderer(container, theme));
 
     var modes = {
         text: new TextMode(),

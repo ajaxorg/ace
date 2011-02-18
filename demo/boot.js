@@ -45,7 +45,7 @@ require({
 });
 
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment", "demo/demo" ];
+             "pilot/environment", "pilot/types/basic" ];
 
 var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
 require(deps, function() {
@@ -53,7 +53,9 @@ require(deps, function() {
     catalog.registerPlugins(plugins).then(function() {
         var env = require("pilot/environment").create();
         catalog.startupPlugins({ env: env }).then(function() {
-            require("demo/demo").launch(env);
+            require([ "demo/demo" ], function() {
+                require("demo/demo").launch(env);
+            });
         });
     });
 });
