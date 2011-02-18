@@ -83,7 +83,9 @@ var supportedScopes = {
    "variable": "variable",
    "variable.language": "variable.language",
    
-   "meta.tag.sgml.doctype": "xml_pe"
+   "meta.tag.sgml.doctype": "xml_pe",
+   
+   "collab.user1": "collab.user1"
 };
 
 function extractStyles(theme) {   
@@ -116,7 +118,7 @@ function extractStyles(theme) {
             }
         }
     }
-    
+
     return colors;
 };
 
