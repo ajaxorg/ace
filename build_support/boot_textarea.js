@@ -392,16 +392,16 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
 
 function setupSettingPanel(settingDiv, settingOpener, api, options) {
     var BOOL = {
-        "true": true,
+        "true":  true,
         "false": false
     }
 
     var desc = {
-        mode: "Mode:",
-        gutter: "Display Gutter:",
-        theme: "Theme:",
-        fontSize: "Font Size:",
-        softWrap: "Soft Wrap:",
+        mode:            "Mode:",
+        gutter:          "Display Gutter:",
+        theme:           "Theme:",
+        fontSize:        "Font Size:",
+        softWrap:        "Soft Wrap:",
         showPrintMargin: "Show Print Margin:"
     }
 
@@ -419,18 +419,18 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
 
         },
         theme: {
-            textmate:   "Textmate",
-            eclipse:    "Eclipse",
-            clouds:     "Clouds",
-            clouds_midnight:    "Clouds Midnight",
-            cobalt:     "Cobalt",
-            dawn:       "Dawn",
-            idle_fingers:       "Idle Fingers",
-            kr_theme:   "Kr Theme",
-            mono_industrial:    "Mono Industrial",
-            monokai:    "Monokai",
-            pastel_on_dark: "Pastel On Dark",
-            twilight: "Twilight"
+            textmate:         "Textmate",
+            eclipse:          "Eclipse",
+            clouds:           "Clouds",
+            clouds_midnight:  "Clouds Midnight",
+            cobalt:           "Cobalt",
+            dawn:             "Dawn",
+            idle_fingers:     "Idle Fingers",
+            kr_theme:         "Kr Theme",
+            mono_industrial:  "Mono Industrial",
+            monokai:          "Monokai",
+            pastel_on_dark:   "Pastel On Dark",
+            twilight:         "Twilight"
         },
         gutter: BOOL,
         fontSize: {
