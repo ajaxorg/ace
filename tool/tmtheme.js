@@ -83,7 +83,9 @@ var supportedScopes = {
    "variable": "variable",
    "variable.language": "variable.language",
    
-   "meta.tag.sgml.doctype": "xml_pe"
+   "meta.tag.sgml.doctype": "xml_pe",
+   
+   "collab.user1": "collab.user1"
 };
 
 function extractStyles(theme) {   
@@ -116,7 +118,7 @@ function extractStyles(theme) {
             }
         }
     }
-    
+
     return colors;
 };
 
@@ -159,17 +161,17 @@ function fillTemplate(template, replacements) {
 }
 
 function createTheme(name, styles, cssTemplate, jsTemplate) {
-    styles.cssClass = "ace" + hyphenate(name);
+    styles.cssClass = "ace-" + hyphenate(name);
     var css = fillTemplate(cssTemplate, styles);
     return fillTemplate(jsTemplate, {
         name: name,
         css: '"' + css.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"',
-        cssClass: "ace" + hyphenate(name)
+        cssClass: "ace-" + hyphenate(name)
     });
 };
 
 function hyphenate(str) {
-    return str.replace(/([A-Z])/g, "-$1").toLowerCase();
+    return str.replace(/([A-Z])/g, "-$1").replace("_", "-").toLowerCase();
 }
 
 var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
@@ -192,5 +194,5 @@ for (var name in themes) {
     var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
 
     var styles = extractStyles(parseTheme(tmTheme));
-    fs.writeFileSync(__dirname + "/../src/ace/theme/" + name + ".js", createTheme(name, styles, cssTemplate, jsTemplate));
+    fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", createTheme(name, styles, cssTemplate, jsTemplate));
 }

@@ -44,14 +44,20 @@ exports.launch = function(env) {
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");    
+    var theme = require("ace/theme/textmate");
     var EditSession = require("ace/edit_session").EditSession;
+
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
     var HtmlMode = require("ace/mode/html").Mode;
     var XmlMode = require("ace/mode/xml").Mode;
     var PythonMode = require("ace/mode/python").Mode;
     var PhpMode = require("ace/mode/php").Mode;
+    var JavaMode = require("ace/mode/java").Mode;
+    var RubyMode = require("ace/mode/ruby").Mode;
+    var CCPPMode = require("ace/mode/c_cpp").Mode;
+    var CoffeeMode = require("ace/mode/coffee").Mode;
+    var PerlMode = require("ace/mode/perl").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -59,7 +65,29 @@ exports.launch = function(env) {
     var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
     var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
+    var keybindings = {
+      // Null = use "default" keymapping
+      ace: null,
+      vim: vim,
+      emacs: emacs,
+      // This is a way to define simple keyboard remappings
+      custom: new HashHandler({
+          "gotoright": "Tab"
+      })
+    }
+
     var docs = {};
+
+    // Make the lorem ipsum text a little bit longer.
+    var loreIpsum = document.getElementById("plaintext").innerHTML;
+    for (var i = 0; i < 5; i++) {
+        loreIpsum += loreIpsum;
+    }
+    docs.plain = new EditSession(loreIpsum);
+    docs.plain.setUseWrapMode(true);
+    docs.plain.setWrapLimitRange(80, 80)
+    docs.plain.setMode(new TextMode());
+    docs.plain.setUndoManager(new UndoManager());
 
     docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
@@ -81,10 +109,29 @@ exports.launch = function(env) {
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
+    docs.java = new EditSession(document.getElementById("javatext").innerHTML);
+    docs.java.setMode(new JavaMode());
+    docs.java.setUndoManager(new UndoManager());
+
+    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby.setMode(new RubyMode());
+    docs.ruby.setUndoManager(new UndoManager());
+
+    docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp.setMode(new CCPPMode());
+    docs.c_cpp.setUndoManager(new UndoManager());
+
+    docs.coffee = new EditSession(document.getElementById("coffeetext").innerHTML);
+    docs.coffee.setMode(new CoffeeMode());
+    docs.coffee.setUndoManager(new UndoManager());
+
+    docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
+    docs.perl.setMode(new PerlMode());
+    docs.perl.setUndoManager(new UndoManager());
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
-    
+
     var modes = {
         text: new TextMode(),
         xml: new XmlMode(),
@@ -92,36 +139,25 @@ exports.launch = function(env) {
         css: new CssMode(),
         javascript: new JavaScriptMode(),
         python: new PythonMode(),
-        php: new PhpMode()
+        php: new PhpMode(),
+        java: new JavaMode(),
+        ruby: new RubyMode(),
+        c_cpp: new CCPPMode(),
+        coffee: new CoffeeMode(),
+        perl: new PerlMode()
     };
 
     function getMode() {
         return modes[modeEl.value];
     }
 
-
     var modeEl = document.getElementById("mode");
-    function setMode() {
-        env.editor.getSession().setMode(modes[modeEl.value] || modes.text);
-    }
-    modeEl.onchange = setMode;
-    setMode();
+    var wrapModeEl = document.getElementById("soft_wrap");
 
-    // This is how you can set a custom keyboardHandler.
-    //
-    // Define some basic keymapping using a hash:
-    // env.editor.setKeyboardHandler(new HashHandler({
-    //     "gotoright": "Tab"
-    // }));
-    //
-    // Use a more complex keymapping:
-    // env.editor.setKeyboardHandler(vim);
-
-    var docEl = document.getElementById("doc");
-    function onDocChange() {
-        var doc = docs[docEl.value];
+    bindDropdown("doc", function(value) {
+        var doc = docs[value];
         env.editor.setSession(doc);
-    
+
         var mode = doc.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript";
@@ -141,65 +177,124 @@ exports.launch = function(env) {
         else if (mode instanceof PhpMode) {
             modeEl.value = "php";
         }
+        else if (mode instanceof JavaMode) {
+            modeEl.value = "java";
+        }
+        else if (mode instanceof RubyMode) {
+            modeEl.value = "ruby";
+        }
+        else if (mode instanceof CCPPMode) {
+            modeEl.value = "c_cpp";
+        }
+        else if (mode instanceof CoffeeMode) {
+            modeEl.value = "coffee";
+        }
+        else if (mode instanceof PerlMode) {
+            modeEl.value = "perl";
+        }
         else {
             modeEl.value = "text";
         }
-    
-        env.editor.focus();
-    }
-    docEl.onchange = onDocChange;
-    onDocChange();
 
-
-    var themeEl = document.getElementById("theme");
-    function setTheme() {
-        env.editor.setTheme(themeEl.value);
-    };
-    themeEl.onchange = setTheme;
-    setTheme();
-
-
-    var selectEl = document.getElementById("select_style");
-    function setSelectionStyle() {
-        if (selectEl.checked) {
-            env.editor.setSelectionStyle("line");
+        if (!doc.getUseWrapMode()) {
+            wrapModeEl.value = "off";
         } else {
-            env.editor.setSelectionStyle("text");
+            wrapModeEl.value = doc.getWrapLimitRange().min || "free";
         }
-    };
-    selectEl.onclick = setSelectionStyle;
-    setSelectionStyle();
+        env.editor.focus();
+    });
 
+    bindDropdown("mode", function(value) {
+        env.editor.getSession().setMode(modes[value] || modes.text);
+    });
 
-    var activeEl = document.getElementById("highlight_active");
-    function setHighlightActiveLine() {
-        env.editor.setHighlightActiveLine(!!activeEl.checked);
-    };
-    activeEl.onclick = setHighlightActiveLine;
-    setHighlightActiveLine();
+    bindDropdown("theme", function(value) {
+        env.editor.setTheme(value);
+    });
 
+    bindDropdown("keybinding", function(value) {
+        env.editor.setKeyboardHandler(keybindings[value]);
+    });
 
-    var showHiddenEl = document.getElementById("show_hidden");
-    function setShowInvisibles() {
-        env.editor.setShowInvisibles(!!showHiddenEl.checked);
-    };
-    showHiddenEl.onclick = setShowInvisibles;
-    setShowInvisibles();
+    bindDropdown("fontsize", function(value) {
+        document.getElementById("editor").style.fontSize = value;
+    });
 
+    bindDropdown("soft_wrap", function(value) {
+        var session = env.editor.getSession();
+        var renderer = env.editor.renderer;
+        switch (value) {
+            case "off":
+                session.setUseWrapMode(false);
+                renderer.setPrintMarginColumn(80);
+                break;
+            case "40":
+                session.setUseWrapMode(true);
+                session.setWrapLimitRange(40, 40);
+                renderer.setPrintMarginColumn(40);
+                break;
+            case "80":
+                session.setUseWrapMode(true);
+                session.setWrapLimitRange(80, 80);
+                renderer.setPrintMarginColumn(80);
+                break;
+            case "free":
+                session.setUseWrapMode(true);
+                session.setWrapLimitRange(null, null);
+                renderer.setPrintMarginColumn(80);
+                break;
+        }
+    });
 
-    // for debugging
-    window.jump = function() {
-        var jump = document.getElementById("jump");
-        var cursor = env.editor.getCursorPosition();
-        var pos = env.editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);
-        jump.style.left = pos.pageX + "px";
-        jump.style.top = pos.pageY + "px";
-        jump.style.display = "block";
-    };
+    bindCheckbox("select_style", function(checked) {
+        env.editor.setSelectionStyle(checked ? "line" : "text");
+    });
+
+    bindCheckbox("highlight_active", function(checked) {
+        env.editor.setHighlightActiveLine(checked);
+    });
+
+    bindCheckbox("show_hidden", function(checked) {
+        env.editor.setShowInvisibles(checked);
+    });
+
+    bindCheckbox("show_gutter", function(checked) {
+        env.editor.renderer.setShowGutter(checked);
+    });
+
+    bindCheckbox("show_print_margin", function(checked) {
+        env.editor.renderer.setShowPrintMargin(checked);
+    });
+
+    bindCheckbox("highlight_selected_word", function(checked) {
+        env.editor.setHighlightSelectedWord(checked);
+    });
+
+    bindCheckbox("show_hscroll", function(checked) {
+        env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+    });
+
+    function bindCheckbox(id, callback) {
+        var el = document.getElementById(id);
+        var onCheck = function() {
+            callback(!!el.checked);
+        };
+        el.onclick = onCheck;
+        onCheck();
+    }
+
+    function bindDropdown(id, callback) {
+        var el = document.getElementById(id);
+        var onChange = function() {
+            callback(el.value);
+        };
+        el.onchange = onChange;
+        onChange();
+    }
 
     function onResize() {
-        container.style.width = (document.documentElement.clientWidth - 4) + "px";
-        container.style.height = (document.documentElement.clientHeight - 55 - 4 - 23) + "px";
+        container.style.width = (document.documentElement.clientWidth) + "px";
+        container.style.height = (document.documentElement.clientHeight - 60 - 22) + "px";
         env.editor.resize();
     };
 
@@ -235,6 +330,16 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
+                } else if (/^.*\.java$/i.test(file.name)) {
+                    mode = "java";
+                } else if (/^.*\.rb$/i.test(file.name)) {
+                    mode = "ruby";
+                } else if (/^.*\.(c|cpp|h|hpp|cxx)$/i.test(file.name)) {
+                    mode = "c_cpp";
+                } else if (/^.*\.coffee$/i.test(file.name)) {
+                    mode = "coffee";
+                } else if (/^.*\.(pl|pm)$/i.test(file.name)) {
+                    mode = "perl";
                 }
 
                 env.editor.onTextInput(reader.result);
@@ -247,6 +352,8 @@ exports.launch = function(env) {
 
         return event.preventDefault(e);
     });
+
+    window.env = env;
 };
 
 });
