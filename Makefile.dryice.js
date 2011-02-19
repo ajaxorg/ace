@@ -184,6 +184,18 @@ project.assumeAllFilesLoaded();
         filter: [ copy.filter.debug, copy.filter.moduleDefines, copy.filter.uglifyjs ],
         dest: "build/src/mode-" + mode + ".js"
     });
+
+    // uncompressed
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: project.clone(),
+                require: [ 'ace/mode/' + mode ]
+            })
+        ],
+        filter: [ copy.filter.debug, copy.filter.moduleDefines ],
+        dest: "build/src/mode-" + mode + "-uncompressed.js"
+    });
 });
 
 console.log('# worker ---------');
