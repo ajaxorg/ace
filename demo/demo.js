@@ -132,6 +132,17 @@ exports.launch = function(env) {
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
 
+    env.editor.setArgsProvider(function(request, callback) {
+        var cliArgsProvider = env.cli.getArgsProvider();
+        request.addEventListener("output", function() {
+            // Once the request is done, focus the editor again.
+            if (request.isDone) {
+                env.editor.focus();
+            }
+        });
+        cliArgsProvider(request, callback);
+    });
+
     var modes = {
         text: new TextMode(),
         xml: new XmlMode(),
