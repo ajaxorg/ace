@@ -470,7 +470,6 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
 
     if (require.packaged) {
         var base = this.$guessBasePath();
-        dump("Worker " + base + " " + packagedJs + "\n");
         var worker = this.$worker = new Worker(base + packagedJs);
     }
     else {
