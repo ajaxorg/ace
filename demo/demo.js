@@ -40,7 +40,7 @@
 define(function(require, exports, module) {
 
 exports.launch = function(env) {
-
+    var canon = require("pilot/canon");
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
@@ -354,6 +354,68 @@ exports.launch = function(env) {
     });
 
     window.env = env;
+    
+    /**
+     * This demonstrates how you can define commands and bind shortcuts to them.
+     */
+    
+    // Command to focus the command line from the editor.
+    canon.addCommand({
+        name: "focuscli",
+        bindKey: {
+            win: "Ctrl-J",
+            mac: "Command-J",
+            sender: "editor"
+        },
+        exec: function() {
+            env.cli.cliView.element.focus();
+        }
+    });
+    
+    // Command to focus the editor line from the command line.
+    canon.addCommand({
+        name: "focuseditor",
+        bindKey: {
+            win: "Ctrl-J",
+            mac: "Command-J",
+            sender: "cli"
+        },
+        exec: function() {
+            env.editor.focus();
+        }
+    });
+    
+    // Fake-Save, works from the editor and the command line.
+    canon.addCommand({
+        name: "save",
+        bindKey: {
+            win: "Ctrl-S",
+            mac: "Command-S",
+            sender: "editor|cli"
+        },
+        exec: function() {
+            alert("Fake Save File");
+        }
+    });
+    
+    // Fake-Print with custom lookup-sender-match function.
+    canon.addCommand({
+        name: "save",
+        bindKey: {
+            win: "Ctrl-P",
+            mac: "Command-P",
+            sender: function(env, sender, hashId, keyString) {
+                if (sender == "editor") {
+                    return true;   
+                } else {
+                    alert("Sorry, can only print from the editor");                    
+                }
+            }
+        },
+        exec: function() {
+            alert("Fake Print File");
+        }
+    });
 };
 
 });
