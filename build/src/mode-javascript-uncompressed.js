@@ -427,7 +427,7 @@ exports.DocCommentHighlightRules = DocCommentHighlightRules;
 
 });
 /* vim:ts=4:sts=4:sw=4:
-/**
+ *
  * Ajax.org Code Editor (ACE)
  *
  * @copyright 2010, Ajax.org Services B.V.
