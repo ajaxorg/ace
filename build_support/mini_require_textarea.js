@@ -44,7 +44,7 @@
 
 (function() {
 
-var _define = function(module, payload) {
+var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
             _define.original.apply(window, arguments);
