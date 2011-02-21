@@ -7195,7 +7195,7 @@ var EditSession = function(text, mode) {
     this.onChange = function(e) {
         var delta = e.data;
         this.$modified = true;
-        if (!this.$fromUndo && this.$undoManager) {
+        if (!this.$fromUndo && this.$undoManager && !delta.ignore) {
             this.$deltas.push(delta);
             this.$informUndoManager.schedule();
         }
@@ -7457,10 +7457,10 @@ var EditSession = function(text, mode) {
     this.setUseWorker = function(useWorker) {
         if (this.$useWorker == useWorker)
             return;
-
+            
         if (useWorker && !this.$worker && window.Worker)
             this.$worker = mode.createWorker(this);
-
+            
         if (!useWorker && this.$worker) {
             this.$worker.terminate();
             this.$worker = null;
