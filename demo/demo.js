@@ -54,6 +54,7 @@ exports.launch = function(env) {
     var PythonMode = require("ace/mode/python").Mode;
     var PhpMode = require("ace/mode/php").Mode;
     var JavaMode = require("ace/mode/java").Mode;
+    var CSharpMode = require("ace/mode/csharp").Mode;
     var RubyMode = require("ace/mode/ruby").Mode;
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
@@ -117,6 +118,10 @@ exports.launch = function(env) {
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
+    docs.csharp = new EditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp.setMode(new CSharpMode());
+    docs.csharp.setUndoManager(new UndoManager());
+
     docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
@@ -144,7 +149,8 @@ exports.launch = function(env) {
         ruby: new RubyMode(),
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
-        perl: new PerlMode()
+        perl: new PerlMode(),
+				csharp: new CSharpMode()
     };
 
     function getMode() {
@@ -191,6 +197,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PerlMode) {
             modeEl.value = "perl";
+        }
+        else if (mode instanceof CSharpMode) {
+            modeEl.value = "csharp";
         }
         else {
             modeEl.value = "text";
@@ -330,6 +339,8 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
+	              } else if (/^.*\.cs$/i.test(file.name)) {
+	                  mode = "csharp";
                 } else if (/^.*\.java$/i.test(file.name)) {
                     mode = "java";
                 } else if (/^.*\.rb$/i.test(file.name)) {

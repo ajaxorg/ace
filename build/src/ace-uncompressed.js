@@ -2529,26 +2529,28 @@ exports.deferredCall = function(fcn) {
         fcn();
     };
 
-    return {
-        schedule: function(timeout) {
-            if (!timer) {
-                timer = setTimeout(callback, timeout || 0);
-            }
-            return this;
-        },
-
-        call: function() {
-            this.cancel();
-            fcn();
-            return this;
-        },
-
-        cancel: function() {
-            clearTimeout(timer);
-            timer = null;
-            return this;
+    var deferred = function(timeout) {
+        if (!timer) {
+            timer = setTimeout(callback, timeout || 0);
         }
+        return deferred;
+    }
+
+    deferred.schedule = deferred;
+    
+    deferred.call = function() {
+        this.cancel();
+        fcn();
+        return deferred;
     };
+
+    deferred.cancel = function() {
+        clearTimeout(timer);
+        timer = null;
+        return deferred;
+    };
+    
+    return deferred;
 };
 
 });
@@ -5583,7 +5585,8 @@ var Keys = (function() {
 oop.mixin(exports, Keys);
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -5605,6 +5608,7 @@ oop.mixin(exports, Keys);
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai AT sucan AT gmail ODT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -5621,6 +5625,14 @@ oop.mixin(exports, Keys);
  * ***** END LICENSE BLOCK ***** */
 
 define('pilot/dom', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var XHTML_NS = "http://www.w3.org/1999/xhtml";
+
+exports.createElement = function(tag, ns) {
+    return document.createElementNS ?
+           document.createElementNS(ns || XHTML_NS, tag) :
+           document.createElement(tag);
+};
 
 exports.setText = function(elem, text) {
     if (elem.innerText !== undefined) {
@@ -5715,9 +5727,14 @@ exports.importCssString = function(cssText, doc){
         sheet.cssText = cssText;
     }
     else {
-        var style = doc.createElement("style");
+        var style = doc.createElementNS ?
+                    doc.createElementNS(XHTML_NS, "style") :
+                    doc.createElement("style");
+
         style.appendChild(doc.createTextNode(cssText));
-        doc.getElementsByTagName("head")[0].appendChild(style);
+
+        var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
+        head.appendChild(style);
     }
 };
 
@@ -5761,11 +5778,11 @@ exports.computedStyle = function(element, style) {
 
 exports.scrollbarWidth = function() {
 
-    var inner = document.createElement('p');
+    var inner = exports.createElement("p");
     inner.style.width = "100%";
     inner.style.height = "200px";
 
-    var outer = document.createElement("div");
+    var outer = exports.createElement("div");
     var style = outer.style;
 
     style.position = "absolute";
@@ -5775,7 +5792,10 @@ exports.scrollbarWidth = function() {
     style.height = "150px";
 
     outer.appendChild(inner);
-    document.body.appendChild(outer);
+
+    var body = document.body || document.documentElement;
+    body.appendChild(outer);
+
     var noScrollbar = inner.offsetWidth;
 
     style.overflow = "scroll";
@@ -5785,7 +5805,7 @@ exports.scrollbarWidth = function() {
         withScrollbar = outer.clientWidth;
     }
 
-    document.body.removeChild(outer);
+    body.removeChild(outer);
 
     return noScrollbar-withScrollbar;
 };
@@ -5804,7 +5824,7 @@ exports.setInnerHtml = function(el, innerHtml) {
 };
 
 exports.setInnerText = function(el, innerText) {
-    if ("textContent" in document.body)
+    if (document.body && "textContent" in document.body)
         el.textContent = innerText;
     else
         el.innerText = innerText;
@@ -5812,10 +5832,10 @@ exports.setInnerText = function(el, innerText) {
 };
 
 exports.getInnerText = function(el) {
-    if ("textContent" in document.body)
+    if (document.body && "textContent" in document.body)
         return el.textContent;
     else
-         return el.innerText;
+         return el.innerText || el.textContent;
 };
 
 exports.getParentWindow = function(document) {
@@ -5855,7 +5875,8 @@ exports.setSelectionEnd = function(textarea, end) {
 };
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -5892,14 +5913,15 @@ exports.setSelectionEnd = function(textarea, end) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/textinput', ['require', 'exports', 'module' , 'pilot/event', 'pilot/useragent'], function(require, exports, module) {
+define('ace/keyboard/textinput', ['require', 'exports', 'module' , 'pilot/event', 'pilot/useragent', 'pilot/dom'], function(require, exports, module) {
 
 var event = require("pilot/event");
 var useragent = require("pilot/useragent");
+var dom = require("pilot/dom");
 
 var TextInput = function(parentNode, host) {
 
-    var text = document.createElement("textarea");
+    var text = dom.createElement("textarea");
     text.style.left = "-10000px";
     parentNode.appendChild(text);
 
@@ -10451,7 +10473,8 @@ var BackgroundTokenizer = function(tokenizer, editor) {
 
 exports.BackgroundTokenizer = BackgroundTokenizer;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -10473,6 +10496,7 @@ exports.BackgroundTokenizer = BackgroundTokenizer;
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -10521,6 +10545,14 @@ var UndoManager = function() {
     this.reset = function() {
         this.$undoStack = [];
         this.$redoStack = [];
+    };
+
+    this.hasUndo = function() {
+        return this.$undoStack.length > 0;
+    };
+
+    this.hasRedo = function() {
+        return this.$redoStack.length > 0;
     };
 
 }).call(UndoManager.prototype);
@@ -10859,15 +10891,15 @@ var VirtualRenderer = function(container, theme) {
 
     this.setTheme(theme);
 
-    this.$gutter = document.createElement("div");
+    this.$gutter = dom.createElement("div");
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
 
-    this.scroller = document.createElement("div");
+    this.scroller = dom.createElement("div");
     this.scroller.className = "ace_scroller";
     this.container.appendChild(this.scroller);
 
-    this.content = document.createElement("div");
+    this.content = dom.createElement("div");
     this.content.className = "ace_content";
     this.scroller.appendChild(this.content);
 
@@ -11090,9 +11122,9 @@ var VirtualRenderer = function(container, theme) {
             return;
 
         if (!this.$printMarginEl) {
-            containerEl = document.createElement("div");
+            containerEl = dom.createElement("div");
             containerEl.className = "ace_print_margin_layer";
-            this.$printMarginEl = document.createElement("div")
+            this.$printMarginEl = dom.createElement("div")
             this.$printMarginEl.className = "ace_print_margin";
             containerEl.appendChild(this.$printMarginEl);
             this.content.insertBefore(containerEl, this.$textLayer.element);
@@ -11498,12 +11530,12 @@ var VirtualRenderer = function(container, theme) {
 
     this.showComposition = function(position) {
         if (!this.$composition) {
-            this.$composition = document.createElement("div");
+            this.$composition = dom.createElement("div");
             this.$composition.className = "ace_composition";
             this.content.appendChild(this.$composition);
         }
 
-        this.$composition.innerHTML = "&nbsp;";
+        this.$composition.innerHTML = "&#160;";
 
         var pos = this.$cursorLayer.getPixelPosition();
         var style = this.$composition.style;
@@ -11573,7 +11605,9 @@ var VirtualRenderer = function(container, theme) {
 }).call(VirtualRenderer.prototype);
 
 exports.VirtualRenderer = VirtualRenderer;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -11616,7 +11650,7 @@ define('ace/layer/gutter', ['require', 'exports', 'module' , 'pilot/dom'], funct
 var dom = require("pilot/dom");
 
 var Gutter = function(parentEl) {
-    this.element = document.createElement("div");
+    this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_gutter-layer";
     parentEl.appendChild(this.element);
 
@@ -11658,7 +11692,7 @@ var Gutter = function(parentEl) {
             };
             for (var i=0; i<rowAnnotations.length; i++) {
                 var annotation = rowAnnotations[i];
-                rowInfo.text.push(annotation.text.replace(/"/g, "&quot;").replace(/'/g, "&rsquo;").replace(/</, "&lt;"));
+                rowInfo.text.push(annotation.text.replace(/"/g, "&quot;").replace(/'/g, "&#8217;").replace(/</, "&lt;"));
                 var type = annotation.type;
                 if (type == "error")
                     rowInfo.className = "ace_error";
@@ -11685,7 +11719,6 @@ var Gutter = function(parentEl) {
                 annotation.className,
                 "' title='", annotation.text.join("\n"),
                 "' style='height:", this.session.getRowHeight(config, i), "px;'>", (i+1), "</div>");
-            html.push("</div>");
         }
 		this.element = dom.setInnerHtml(this.element, html.join(""));
         this.element.style.height = config.minHeight + "px";
@@ -11696,7 +11729,8 @@ var Gutter = function(parentEl) {
 exports.Gutter = Gutter;
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -11740,7 +11774,7 @@ var Range = require("ace/range").Range;
 var dom = require("pilot/dom");
 
 var Marker = function(parentEl) {
-    this.element = document.createElement("div");
+    this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_marker-layer";
     parentEl.appendChild(this.element);
 };
@@ -11875,7 +11909,8 @@ var Marker = function(parentEl) {
 exports.Marker = Marker;
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -11898,6 +11933,7 @@ exports.Marker = Marker;
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Julian Viereck <julian.viereck@gmail.com>
+ *      Mihai Sucan <mihai.sucan@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -11921,7 +11957,7 @@ var lang = require("pilot/lang");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 var Text = function(parentEl) {
-    this.element = document.createElement("div");
+    this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_text-layer";
     parentEl.appendChild(this.element);
 
@@ -11972,7 +12008,7 @@ var Text = function(parentEl) {
     this.$measureSizes = function() {
         var n = 1000;
         if (!this.$measureNode) {
-	        var measureNode = this.$measureNode = document.createElement("div");
+	        var measureNode = this.$measureNode = dom.createElement("div");
 	        var style = measureNode.style;
 
 	        style.width = style.height = "auto";
@@ -11987,7 +12023,12 @@ var Text = function(parentEl) {
 	        // that's why we have to measure many characters
 	        // Note: characterWidth can be a float!
 	        measureNode.innerHTML = lang.stringRepeat("Xy", n);
-	        document.body.insertBefore(measureNode, document.body.firstChild);
+
+            var container = this.element.parentNode;
+            while (!dom.hasCssClass(container, "ace_editor"))
+                container = container.parentNode;
+
+	        container.appendChild(measureNode);
         }
 
         var style = this.$measureNode.style;
@@ -12021,12 +12062,12 @@ var Text = function(parentEl) {
         if (this.showInvisibles) {
             var halfTab = (tabSize) / 2;
             this.$tabString = "<span class='ace_invisible'>"
-                + new Array(Math.floor(halfTab)).join("&nbsp;")
+                + new Array(Math.floor(halfTab)).join("&#160;")
                 + this.TAB_CHAR
-                + new Array(Math.ceil(halfTab)+1).join("&nbsp;")
+                + new Array(Math.ceil(halfTab)+1).join("&#160;")
                 + "</span>";
         } else {
-            this.$tabString = new Array(tabSize+1).join("&nbsp;");
+            this.$tabString = new Array(tabSize+1).join("&#160;");
         }
     };
 
@@ -12097,7 +12138,7 @@ var Text = function(parentEl) {
         var fragment = document.createDocumentFragment();
         var tokens = this.tokenizer.getTokens(firstRow, lastRow);
         for (var row=firstRow; row<=lastRow; row++) {
-            var lineEl = document.createElement("div");
+            var lineEl = dom.createElement("div");
             lineEl.className = "ace_line";
             var style = lineEl.style;
             style.height = this.session.getRowHeight(config, row) + "px";
@@ -12138,7 +12179,7 @@ var Text = function(parentEl) {
             var spaceRe = /( +)|([\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000])/g;
             var spaceReplace = function(space) {
                 if (space.charCodeAt(0) == 32)
-                    return new Array(space.length+1).join("&nbsp;");
+                    return new Array(space.length+1).join("&#160;");
                 else {
                     var space = new Array(space.length+1).join(self.SPACE_CHAR);
                     return "<span class='ace_invisible'>" + space + "</span>";
@@ -12148,7 +12189,7 @@ var Text = function(parentEl) {
         }
         else {
             var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/g;
-            var spaceReplace = "&nbsp;";
+            var spaceReplace = "&#160;";
         }
 
         var _self = this;
@@ -12225,7 +12266,8 @@ var Text = function(parentEl) {
 exports.Text = Text;
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -12268,11 +12310,11 @@ define('ace/layer/cursor', ['require', 'exports', 'module' , 'pilot/dom'], funct
 var dom = require("pilot/dom");
 
 var Cursor = function(parentEl) {
-    this.element = document.createElement("div");
+    this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_cursor-layer";
     parentEl.appendChild(this.element);
 
-    this.cursor = document.createElement("div");
+    this.cursor = dom.createElement("div");
     this.cursor.className = "ace_cursor";
 
     this.isVisible = false;
@@ -12409,10 +12451,10 @@ var event = require("pilot/event");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 var ScrollBar = function(parent) {
-    this.element = document.createElement("div");
+    this.element = dom.createElement("div");
     this.element.className = "ace_sb";
 
-    this.inner = document.createElement("div");
+    this.inner = dom.createElement("div");
     this.element.appendChild(this.inner);
 
     parent.appendChild(this.element);
