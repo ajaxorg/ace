@@ -14,16 +14,18 @@
       <td align="right">
         <label for="doc">Document:</label>
         <select id="doc" size="1">
-          <option value="js">JS Document</option>
+          <option value="js">JavaScript Document</option>
           <option value="html">HTML Document</option>
           <option value="css">CSS Document</option>
+          <option value="coffee">CoffeeScript Document</option>
           <option value="python">Python Document</option>
+          <option value="ruby">Ruby Document</option>
+          <option value="perl">Perl Document</option>
           <option value="php">PHP Document</option>
           <option value="java">Java Document</option>
-          <option value="ruby">Ruby Document</option>
+          <option value="csharp">C# Document</option>
           <option value="c_cpp">C++ Document</option>
-          <option value="coffee">CoffeeScript Document</option>
-          <option value="perl">Perl Document</option>
+          <option value="textile" selected>Textile Document</option>
           <option value="plain">Text Document</option>
         </select>
       </td>
@@ -86,6 +88,8 @@
           <option value="c_cpp">C/C++</option>
           <option value="coffee">CoffeeScript</option>
           <option value="perl">Perl</option>
+          <option value="csharp">C-Sharp</option>
+          <option value="textile">Textile</option>
         </select>
       </td>
       <td align="right">
@@ -123,7 +127,10 @@
 
     <div id="editor">
     </div>
-
+        <script type="text/editor" id="csharptext">public void HelloWorld() {
+   //Say Hello!
+   Console.WriteLine("Hello World");
+}</script>
     <script type="text/editor" id="jstext">function foo(items) {
     for (var i=0; i<items.length; i++) {
         alert(items[i] + "juhu");
@@ -309,6 +316,40 @@ for my $p (0 .. ($num_primes-1))
     print $primes[$p], ", ";
 }
 print "\n";
+
+</script>
+
+<script type="text/editor" id="textile">
+
+h1. Textile document
+
+h2. Heading Two
+
+h3. A two-line
+    header
+
+h2. Another two-line
+header
+
+Paragraph:
+one, two,
+thee lines!
+
+p(classone two three). This is a paragraph with classes
+
+p(#id). (one with an id)
+
+p(one two three#my_id). ..classes + id
+
+* Unordered list
+** sublist
+* back again!
+** sublist again..
+
+# ordered
+
+bg. Blockquote!
+    This is a two-list blockquote..!
 
 </script>
 
