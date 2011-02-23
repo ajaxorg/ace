@@ -25,6 +25,7 @@
           <option value="java">Java Document</option>
           <option value="csharp">C# Document</option>
           <option value="c_cpp">C++ Document</option>
+          <option value="textile" selected>Textile Document</option>
           <option value="plain">Text Document</option>
         </select>
       </td>
@@ -88,6 +89,7 @@
           <option value="coffee">CoffeeScript</option>
           <option value="perl">Perl</option>
           <option value="csharp">C-Sharp</option>
+          <option value="textile">Textile</option>
         </select>
       </td>
       <td align="right">
@@ -314,6 +316,40 @@ for my $p (0 .. ($num_primes-1))
     print $primes[$p], ", ";
 }
 print "\n";
+
+</script>
+
+<script type="text/editor" id="textile">
+
+h1. Textile document
+
+h2. Heading Two
+
+h3. A two-line
+    header
+
+h2. Another two-line
+header
+
+Paragraph:
+one, two,
+thee lines!
+
+p(classone two three). This is a paragraph with classes
+
+p(#id). (one with an id)
+
+p(one two three#my_id). ..classes + id
+
+* Unordered list
+** sublist
+* back again!
+** sublist again..
+
+# ordered
+
+bg. Blockquote!
+    This is a two-list blockquote..!
 
 </script>
 
