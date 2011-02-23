@@ -59,6 +59,7 @@ exports.launch = function(env) {
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
+    var TextileMode = require("ace/mode/textile").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -134,11 +135,16 @@ exports.launch = function(env) {
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
+    docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
+    docs.textile.setMode(new TextileMode());
+    docs.textile.setUndoManager(new UndoManager());
+
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
 
     var modes = {
         text: new TextMode(),
+        textile: new TextileMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
@@ -200,6 +206,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof CSharpMode) {
             modeEl.value = "csharp";
+        }
+        else if (mode instanceof TextileMode) {
+            modeEl.value = "textile";
         }
         else {
             modeEl.value = "text";
