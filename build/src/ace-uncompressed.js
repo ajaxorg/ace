@@ -4160,6 +4160,7 @@ var Editor =function(renderer, session) {
     }
 
     this.setSession = function(session) {
+        if (!session) debugger
         if (this.session == session) return;
 
         if (this.session) {
@@ -6677,7 +6678,7 @@ exports.bindings = {
     "findnext": "Command-G",
     "findprevious": "Command-Shift-G",
     "find": "Command-F",
-    "replace": "Command-R",
+    "replace": "Alt-Command-R",
     "undo": "Command-Z",
     "redo": "Command-Shift-Z|Command-Y",
     "overwrite": "Insert",
@@ -6773,7 +6774,7 @@ exports.bindings = {
     "findnext": "Ctrl-K",
     "findprevious": "Ctrl-Shift-K",
     "find": "Ctrl-F",
-    "replace": "Ctrl-R",
+    "replace": "Alt-Ctrl-R",
     "undo": "Ctrl-Z",
     "redo": "Ctrl-Shift-Z|Ctrl-Y",
     "overwrite": "Insert",
@@ -9208,14 +9209,15 @@ var Tokenizer = function(rules) {
 
     this.regExps = {};
     for ( var key in this.rules) {
-        var state = this.rules[key];
+        var rule = this.rules[key];
+        var state = rule;
         var ruleRegExps = [];
 
-        for ( var i = 0; i < state.length; i++) {
+        for ( var i = 0; i < state.length; i++)
             ruleRegExps.push(state[i].regex);
-        };
 
         this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
+        
     }
 };
 
@@ -9242,19 +9244,19 @@ var Tokenizer = function(rules) {
 
             for ( var i = 0; i < state.length; i++) {
                 if (match[i + 1]) {
-                    if (typeof state[i].token == "function") {
-                        type = state[i].token(match[0]);
-                    }
-                    else {
-                        type = state[i].token;
-                    }
+                    var rule = state[i];
+                    
+                    if (typeof rule.token == "function")
+                        type = rule.token(match[0]);
+                    else
+                        type = rule.token;
 
-                    if (state[i].next && state[i].next !== currentState) {
-                        currentState = state[i].next;
-                        var state = this.rules[currentState];
-                        var lastIndex = re.lastIndex;
+                    if (rule.next && rule.next !== currentState) {
+                        currentState = rule.next;
+                        state = this.rules[currentState];
+                        lastIndex = re.lastIndex;
 
-                        var re = this.regExps[currentState];
+                        re = this.regExps[currentState];
                         re.lastIndex = lastIndex;
                     }
                     break;
@@ -9263,9 +9265,9 @@ var Tokenizer = function(rules) {
             
                   
             if (token.type !== type) {
-                if (token.type) {
+                if (token.type)
                     tokens.push(token);
-                }
+                    
                 token = {
                     type: type,
                     value: value
@@ -9274,16 +9276,14 @@ var Tokenizer = function(rules) {
                 token.value += value;
             }
             
-            if (lastIndex == line.length) {
-    	        break;
-            }
+            if (lastIndex == line.length)
+                break;
             
             lastIndex = re.lastIndex;
         };
 
-        if (token.type) {
+        if (token.type)
             tokens.push(token);
-        }
 
         return {
             tokens : tokens,
@@ -12008,27 +12008,27 @@ var Text = function(parentEl) {
     this.$measureSizes = function() {
         var n = 1000;
         if (!this.$measureNode) {
-	        var measureNode = this.$measureNode = dom.createElement("div");
-	        var style = measureNode.style;
+            var measureNode = this.$measureNode = dom.createElement("div");
+            var style = measureNode.style;
 
-	        style.width = style.height = "auto";
-	        style.left = style.top = (-n * 40)  + "px";
+            style.width = style.height = "auto";
+            style.left = style.top = (-n * 40)  + "px";
 
-	        style.visibility = "hidden";
-	        style.position = "absolute";
-	        style.overflow = "visible";
-	        style.whiteSpace = "nowrap";
+            style.visibility = "hidden";
+            style.position = "absolute";
+            style.overflow = "visible";
+            style.whiteSpace = "nowrap";
 
-	        // in FF 3.6 monospace fonts can have a fixed sub pixel width.
-	        // that's why we have to measure many characters
-	        // Note: characterWidth can be a float!
-	        measureNode.innerHTML = lang.stringRepeat("Xy", n);
+            // in FF 3.6 monospace fonts can have a fixed sub pixel width.
+            // that's why we have to measure many characters
+            // Note: characterWidth can be a float!
+            measureNode.innerHTML = lang.stringRepeat("Xy", n);
 
             var container = this.element.parentNode;
             while (!dom.hasCssClass(container, "ace_editor"))
                 container = container.parentNode;
 
-	        container.appendChild(measureNode);
+            container.appendChild(measureNode);
         }
 
         var style = this.$measureNode.style;
@@ -12146,7 +12146,7 @@ var Text = function(parentEl) {
 
             var html = [];
             if (tokens.length > row-firstRow)
-            	this.$renderLine(html, row, tokens[row-firstRow].tokens);
+                this.$renderLine(html, row, tokens[row-firstRow].tokens);
             // don't use setInnerHtml since we are working with an empty DIV
             lineEl.innerHTML = html.join("");
             fragment.appendChild(lineEl);
