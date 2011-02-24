@@ -4160,7 +4160,6 @@ var Editor =function(renderer, session) {
     }
 
     this.setSession = function(session) {
-        if (!session) debugger
         if (this.session == session) return;
 
         if (this.session) {
