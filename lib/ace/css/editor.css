@@ -2,14 +2,14 @@
     position: absolute;
     overflow: hidden;
 
-    font-family: "Menlo", "Monaco", "Courier New", monospace;
-    font-size: 12px;  
+    font-family: "Droid Sans Mono", "Monaco", "Courier New", monospace;
+    font-size: 16px;
 }
 
 .ace_scroller {
     position: absolute;
     overflow-x: scroll;
-    overflow-y: hidden;     
+    overflow-y: hidden;
 }
 
 .ace_content {
@@ -90,14 +90,14 @@
 .ace_layer {
     z-index: 1;
     position: absolute;
-    overflow: hidden;  
+    overflow: hidden;
     white-space: nowrap;
     height: 100%;
     width: 100%;
 }
 
 .ace_text-layer {
-    font-family: Monaco, "Courier New", monospace;
+    font-family: "Droid Sans Mono", Monaco, "Courier New", monospace;
     color: black;
 }
 
