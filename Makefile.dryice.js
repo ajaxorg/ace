@@ -53,6 +53,13 @@ copy({
     dest: 'build/editor.html'
 });
 
+function filterTextPlugin(text) {
+    return text.replace(/(['"])text\!/g, "$1text/");
+    /*return text
+        .replace(/define\(\s*['"]text\!\)/g, "text/")
+        .replace(/require\(\s*['"]text\!\)/g, "text/")*/
+}
+
 var ace = copy.createDataObject();
 copy({
     source: [
@@ -85,19 +92,10 @@ copy({
 copy({
     source: {
         root: project,
-        include: /.*\.css$|.*\.html$/,
+        include: /.*\.css$/,
         exclude: /tests?\//
     },
     filter: [ copy.filter.addDefines ],
-    dest: ace
-});
-copy({
-    source: {
-        root: project,
-        include: /.*\.png$|.*\.gif$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.base64 ],
     dest: ace
 });
 copy({
@@ -111,11 +109,12 @@ copy({
 // Create the compressed and uncompressed output files
 copy({
     source: ace,
-    filter: copy.filter.uglifyjs,
+    filter: [copy.filter.uglifyjs, filterTextPlugin],
     dest: 'build/src/ace.js'
 });
 copy({
     source: ace,
+    filter: [filterTextPlugin],
     dest: 'build/src/ace-uncompressed.js'
 });
 
@@ -181,7 +180,7 @@ project.assumeAllFilesLoaded();
                 require: [ 'ace/mode/' + mode ]
             })
         ],
-        filter: [ copy.filter.debug, copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        filter: [ copy.filter.debug, copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
         dest: "build/src/mode-" + mode + ".js"
     });
 });
@@ -213,7 +212,7 @@ copy({
         aceHome + "/lib/ace/worker/worker.js",
         jsWorker
     ],
-    filter: [ copy.filter.uglifyjs ],
+    filter: [ copy.filter.uglifyjs, filterTextPlugin ],
     dest: "build/src/worker-javascript.js"
 });
 
@@ -228,7 +227,7 @@ console.log('# ace themes ---------');
             root: aceHome + '/lib',
             include: "ace/theme/" + theme + ".js"
         }],
-        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
         dest: "build/src/theme-" + theme + ".js"
     });
 });
@@ -243,7 +242,7 @@ project.assumeAllFilesLoaded();
                 require: [ 'ace/keyboard/keybinding/' + keybinding ]
             })
         ],
-        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs ],
+        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
         dest: "build/src/keybinding-" + keybinding + ".js"
     });
 });
