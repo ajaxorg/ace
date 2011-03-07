@@ -162,7 +162,8 @@ console.log('# ace themes ---------');
 // create themes
 [
     "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
-    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse"
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse",
+    "merbivore", "merbivore_soft", "vibrant_ink"
 ].forEach(function(theme) {
     console.log("theme " + theme);
     copy({
