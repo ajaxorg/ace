@@ -59,6 +59,7 @@ exports.launch = function(env) {
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
+    var SvgMode = require("ace/mode/svg").Mode;
     var TextileMode = require("ace/mode/textile").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
@@ -135,6 +136,10 @@ exports.launch = function(env) {
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
+    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg.setMode(new SvgMode());
+    docs.svg.setUndoManager(new UndoManager());
+    
     docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
@@ -145,6 +150,7 @@ exports.launch = function(env) {
     var modes = {
         text: new TextMode(),
         textile: new TextileMode(),
+        svg: new SvgMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
@@ -206,6 +212,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof CSharpMode) {
             modeEl.value = "csharp";
+        }
+        else if (mode instanceof SvgMode) {
+            modeEl.value = "svg";
         }
         else if (mode instanceof TextileMode) {
             modeEl.value = "textile";

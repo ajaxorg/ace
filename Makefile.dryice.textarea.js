@@ -127,7 +127,7 @@ copy({
 copy({
     source: ace,
     filter: [
-        shadow,
+        shadow
     ],
     dest: 'build/textarea/src/ace-uncompressed.js'
 });
@@ -138,7 +138,7 @@ console.log('# ace modes ---------');
 project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
-    "coffee", "perl"
+    "coffee", "perl", "svg"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
