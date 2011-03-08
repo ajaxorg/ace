@@ -152,3 +152,7 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
+
+.ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {
+  cursor: move;
+}

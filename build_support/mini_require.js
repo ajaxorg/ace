@@ -43,7 +43,12 @@
  
 (function() {
     
-var _define = function(module, payload) {
+if (window.require) {
+    require.packaged = true;
+    return;
+}
+    
+var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
             _define.original.apply(window, arguments);
@@ -53,6 +58,9 @@ var _define = function(module, payload) {
         }
         return;
     }
+
+    if (arguments.length == 2)
+        payload = deps;
 
     if (!define.modules)
         define.modules = {};
@@ -76,13 +84,12 @@ var _require = function(module, callback) {
             if (!dep && _require.original)
                 return _require.original.apply(window, arguments);
             params.push(dep);
-        };
+        }
         if (callback) {
             callback.apply(null, params);
         }
     }
-
-    if (typeof module === 'string') {
+    else if (typeof module === 'string') {
         var payload = lookup(module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
@@ -92,8 +99,12 @@ var _require = function(module, callback) {
         }
     
         return payload;
-    };
-}
+    }
+    else {
+        if (_require.original)
+            return _require.original.apply(window, arguments);
+    }
+};
 
 if (window.require)
     _require.original = window.require;
