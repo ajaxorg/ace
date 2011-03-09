@@ -1007,7 +1007,12 @@ ArrayType.prototype.name = 'array';
 /**
  * Registration and de-registration.
  */
+var isStarted = false;
 exports.startup = function() {
+    if (isStarted) {
+        return;
+    }
+    isStarted = true;
     types.registerType(text);
     types.registerType(number);
     types.registerType(bool);
@@ -1017,6 +1022,7 @@ exports.startup = function() {
 };
 
 exports.shutdown = function() {
+    isStarted = false;
     types.unregisterType(text);
     types.unregisterType(number);
     types.unregisterType(bool);
@@ -1109,9 +1115,9 @@ var Status = {
      */
     combine: function(statuses) {
         var combined = Status.VALID;
-        for (var i = 0; i < arguments; i++) {
-            if (arguments[i] > combined) {
-                combined = arguments[i];
+        for (var i = 0; i < statuses.length; i++) {
+            if (statuses[i].valueOf() > combined.valueOf()) {
+                combined = statuses[i];
             }
         }
         return combined;
@@ -1421,12 +1427,15 @@ exports.shutdown = function() {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/canon', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/event_emitter', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(require, exports, module) {
+define('pilot/canon', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/useragent', 'pilot/keys', 'pilot/event_emitter', 'pilot/typecheck', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
 var oop = require('pilot/oop');
+var useragent = require('pilot/useragent');
+var keyUtil = require('pilot/keys');
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
+var typecheck = require('pilot/typecheck');
 var catalog = require('pilot/catalog');
 var Status = require('pilot/types').Status;
 var types = require('pilot/types');
@@ -1494,6 +1503,123 @@ var thingCommand = {
 var commands = {};
 
 /**
+ * A lookup has for command key bindings that use a string as sender.
+ */
+var commmandKeyBinding = {};
+
+/**
+ * Array with command key bindings that use a function to determ the sender.
+ */
+var commandKeyBindingFunc = { };
+
+function splitSafe(s, separator, limit, bLowerCase) {
+    return (bLowerCase && s.toLowerCase() || s)
+        .replace(/(?:^\s+|\n|\s+$)/g, "")
+        .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
+}
+
+function parseKeys(keys, val, ret) {
+    var key,
+        hashId = 0,
+        parts  = splitSafe(keys, "\\-", null, true),
+        i      = 0,
+        l      = parts.length;
+
+    for (; i < l; ++i) {
+        if (keyUtil.KEY_MODS[parts[i]])
+            hashId = hashId | keyUtil.KEY_MODS[parts[i]];
+        else
+            key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
+    }
+
+    if (ret == null) {
+        return {
+            key: key,
+            hashId: hashId
+        }   
+    } else {
+        (ret[hashId] || (ret[hashId] = {}))[key] = val;
+    }
+}
+
+var platform = useragent.isMac ? "mac" : "win";
+function buildKeyHash(command) {
+    var binding = command.bindKey,
+        key = binding[platform],
+        ckb = commmandKeyBinding,
+        ckbf = commandKeyBindingFunc
+
+    if (!binding.sender) {
+        throw new Error('All key bindings must have a sender');   
+    }
+    if (!binding.mac && binding.mac !== null) {
+        throw new Error('All key bindings must have a mac key binding');
+    }
+    if (!binding.win && binding.win !== null) {
+        throw new Error('All key bindings must have a windows key binding');
+    }
+    if(!binding[platform]) {
+        // No keymapping for this platform.
+        return;   
+    }
+    if (typeof binding.sender == 'string') {
+        var targets = splitSafe(binding.sender, "\\|", null, true);
+        targets.forEach(function(target) {
+            if (!ckb[target]) {
+                ckb[target] = { };
+            }
+            key.split("|").forEach(function(keyPart) {
+                parseKeys(keyPart, command, ckb[target]);        
+            });
+        });
+    } else if (typecheck.isFunction(binding.sender)) {
+        var val = {
+            command: command,
+            sender:  binding.sender
+        };
+        
+        keyData = parseKeys(key);
+        if (!ckbf[keyData.hashId]) {
+            ckbf[keyData.hashId] = { };
+        }
+        if (!ckbf[keyData.hashId][keyData.key]) {
+            ckbf[keyData.hashId][keyData.key] = [ val ];   
+        } else {
+            ckbf[keyData.hashId][keyData.key].push(val);
+        }
+    } else {
+        throw new Error('Key binding must have a sender that is a string or function');   
+    }
+}
+
+function findKeyCommand(env, sender, hashId, textOrKey) {
+    // Convert keyCode to the string representation.
+    if (typecheck.isNumber(textOrKey)) {
+        textOrKey = keyUtil.keyCodeToString(textOrKey);
+    }
+    
+    // Check bindings with functions as sender first.    
+    var bindFuncs = (commandKeyBindingFunc[hashId]  || {})[textOrKey] || [];
+    for (var i = 0; i < bindFuncs.length; i++) {
+        if (bindFuncs[i].sender(env, sender, hashId, textOrKey)) {
+            return bindFuncs[i].command;
+        }
+    }
+    
+    var ckbr = commmandKeyBinding[sender]
+    return ckbr && ckbr[hashId] && ckbr[hashId][textOrKey];
+}
+
+function execKeyCommand(env, sender, hashId, textOrKey) {
+    var command = findKeyCommand(env, sender, hashId, textOrKey);
+    if (command) {
+        return exec(command, env, sender, { });   
+    } else {
+        return false;
+    }
+}
+
+/**
  * A sorted list of command names, we regularly want them in order, so pre-sort
  */
 var commandNames = [];
@@ -1523,6 +1649,10 @@ function addCommand(command) {
     }, this);
     commands[command.name] = command;
 
+    if (command.bindKey) {
+        buildKeyHash(command);   
+    }
+
     commandNames.push(command.name);
     commandNames.sort();
 };
@@ -1551,11 +1681,55 @@ function getCommandNames() {
 };
 
 /**
- * Entry point for keyboard accelerators or anything else that knows
- * everything it needs to about the command params
- * @param command Either a command, or the name of one
+ * Default ArgumentProvider that is used if no ArgumentProvider is provided
+ * by the command's sender.
  */
-function exec(command, env, args, typed) {
+function defaultArgsProvider(request, callback) {
+    var args  = request.args,
+        params = request.command.params;
+
+    for (var i = 0; i < params.length; i++) {
+        var param = params[i];
+
+        // If the parameter is already valid, then don't ask for it anymore.
+        if (request.getParamStatus(param) != Status.VALID ||
+            // Ask for optional parameters as well.
+            param.defaultValue === null) 
+        {
+            var paramPrompt = param.description;
+            if (param.defaultValue === null) {
+                paramPrompt += " (optional)";
+            }
+            var value = prompt(paramPrompt, param.defaultValue || "");
+            // No value but required -> nope.
+            if (!value) {
+                callback();
+                return;
+            } else {
+                args[param.name] = value;
+            }           
+        }
+    }
+    callback();
+}
+
+/**
+ * Entry point for keyboard accelerators or anything else that wants to execute
+ * a command. A new request object is created and a check performed, if the
+ * passed in arguments are VALID/INVALID or INCOMPLETE. If they are INCOMPLETE
+ * the ArgumentProvider on the sender is called or otherwise the default 
+ * ArgumentProvider to get the still required arguments.
+ * If they are valid (or valid after the ArgumentProvider is done), the command
+ * is executed.
+ * 
+ * @param command   Either a command, or the name of one
+ * @param env       Current environment to execute the command in
+ * @param sender    String that should be the same as the senderObject stored on 
+ *                  the environment in env[sender]
+ * @param args      Arguments for the command
+ * @param typed     (Optional)
+ */
+function exec(command, env, sender, args, typed) {
     if (typeof command === 'string') {
         command = commands[command];
     }
@@ -1565,19 +1739,63 @@ function exec(command, env, args, typed) {
     }
 
     var request = new Request({
+        sender: sender,
         command: command,
-        args: args,
+        args: args || {},
         typed: typed
     });
-    command.exec(env, args || {}, request);
-    return true;
+    
+    /**
+     * Executes the command and ensures request.done is called on the request in 
+     * case it's not marked to be done already or async.
+     */
+    function execute() {
+        command.exec(env, request.args, request);
+        
+        // If the request isn't asnync and isn't done, then make it done.
+        if (!request.isAsync && !request.isDone) {
+            request.done();
+        }
+    }
+    
+    
+    if (request.getStatus() == Status.INVALID) {
+        console.error("Canon.exec: Invalid parameter(s) passed to " + 
+                            command.name);
+        return false;   
+    } 
+    // If the request isn't complete yet, try to complete it.
+    else if (request.getStatus() == Status.INCOMPLETE) {
+        // Check if the sender has a ArgsProvider, otherwise use the default
+        // build in one.
+        var argsProvider;
+        var senderObj = env[sender];
+        if (!senderObj || !senderObj.getArgsProvider ||
+            !(argsProvider = senderObj.getArgsProvider())) 
+        {
+            argsProvider = defaultArgsProvider;
+        }
+
+        // Ask the paramProvider to complete the request.
+        argsProvider(request, function() {
+            if (request.getStatus() == Status.VALID) {
+                execute();
+            }
+        });
+        return true;
+    } else {
+        execute();
+        return true;
+    }
 };
 
 exports.removeCommand = removeCommand;
 exports.addCommand = addCommand;
 exports.getCommand = getCommand;
 exports.getCommandNames = getCommandNames;
+exports.findKeyCommand = findKeyCommand;
 exports.exec = exec;
+exports.execKeyCommand = execKeyCommand;
 exports.upgradeType = upgradeType;
 
 
@@ -1648,6 +1866,87 @@ function Request(options) {
 oop.implement(Request.prototype, EventEmitter);
 
 /**
+ * Return the status of a parameter on the request object.
+ */
+Request.prototype.getParamStatus = function(param) {
+    var args = this.args || {};
+    
+    // Check if there is already a value for this parameter.
+    if (param.name in args) {
+        // If there is no value set and then the value is VALID if it's not
+        // required or INCOMPLETE if not set yet.
+        if (args[param.name] == null) {
+            if (param.defaultValue === null) {
+                return Status.VALID;
+            } else {
+                return Status.INCOMPLETE;   
+            } 
+        }
+        
+        // Check if the parameter value is valid.
+        var reply,
+            // The passed in value when parsing a type is a string.
+            argsValue = args[param.name].toString();
+        
+        // Type.parse can throw errors. 
+        try {
+            reply = param.type.parse(argsValue);
+        } catch (e) {
+            return Status.INVALID;   
+        }
+        
+        if (reply.status != Status.VALID) {
+            return reply.status;   
+        }
+    } 
+    // Check if the param is marked as required.
+    else if (param.defaultValue === undefined) {
+        // The parameter is not set on the args object but it's required,
+        // which means, things are invalid.
+        return Status.INCOMPLETE;
+    }
+    
+    return Status.VALID;
+}
+
+/**
+ * Return the status of a parameter name on the request object.
+ */
+Request.prototype.getParamNameStatus = function(paramName) {
+    var params = this.command.params || [];
+    
+    for (var i = 0; i < params.length; i++) {
+        if (params[i].name == paramName) {
+            return this.getParamStatus(params[i]);   
+        }
+    }
+    
+    throw "Parameter '" + paramName + 
+                "' not defined on command '" + this.command.name + "'"; 
+}
+
+/**
+ * Checks if all required arguments are set on the request such that it can
+ * get executed.
+ */
+Request.prototype.getStatus = function() {
+    var args = this.args || {},
+        params = this.command.params;
+
+    // If there are not parameters, then it's valid.
+    if (!params || params.length == 0) {
+        return Status.VALID;
+    }
+
+    var status = [];
+    for (var i = 0; i < params.length; i++) {
+        status.push(this.getParamStatus(params[i]));        
+    }
+
+    return Status.combine(status);
+}
+
+/**
  * Lazy init to register with the history should only be done on output.
  * init() is expensive, and won't be used in the majority of cases
  */
@@ -1679,6 +1978,7 @@ Request.prototype.doneWithError = function(content) {
  * the command exits
  */
 Request.prototype.async = function() {
+    this.isAsync = true;
     if (!this._begunOutput) {
         this._beginOutput();
     }
@@ -1699,6 +1999,7 @@ Request.prototype.output = function(content) {
     }
 
     this.outputs.push(content);
+    this.isDone = true;
     this._dispatchEvent('output', {});
 
     return this;
@@ -1716,8 +2017,12 @@ Request.prototype.done = function(content) {
     if (content) {
         this.output(content);
     }
-
-    this._dispatchEvent('output', {});
+    
+    // Ensure to finish the request only once.
+    if (!this.isDone) {
+        this.isDone = true;
+        this._dispatchEvent('output', {});   
+    }
 };
 exports.Request = Request;
 
@@ -2288,6 +2593,124 @@ exports.implement = function(proto, mixin) {
 };
 
 });
+/*! @license
+==========================================================================
+SproutCore -- JavaScript Application Framework
+copyright 2006-2009, Sprout Systems Inc., Apple Inc. and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+SproutCore and the SproutCore logo are trademarks of Sprout Systems, Inc.
+
+For more information about SproutCore, visit http://www.sproutcore.com
+
+
+==========================================================================
+@license */
+
+// Most of the following code is taken from SproutCore with a few changes.
+
+define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+
+/**
+ * Helper functions and hashes for key handling.
+ */
+var Keys = (function() {
+    var ret = {
+        MODIFIER_KEYS: {
+            16: 'Shift', 17: 'Ctrl', 18: 'Alt', 224: 'Meta'
+        },
+
+        KEY_MODS: {
+            "ctrl": 1, "alt": 2, "option" : 2,
+            "shift": 4, "meta": 8, "command": 8
+        },
+
+        FUNCTION_KEYS : {
+            8  : "Backspace",
+            9  : "Tab",
+            13 : "Return",
+            19 : "Pause",
+            27 : "Esc",
+            32 : "Space",
+            33 : "PageUp",
+            34 : "PageDown",
+            35 : "End",
+            36 : "Home",
+            37 : "Left",
+            38 : "Up",
+            39 : "Right",
+            40 : "Down",
+            44 : "Print",
+            45 : "Insert",
+            46 : "Delete",
+            112: "F1",
+            113: "F2",
+            114: "F3",
+            115: "F4",
+            116: "F5",
+            117: "F6",
+            118: "F7",
+            119: "F8",
+            120: "F9",
+            121: "F10",
+            122: "F11",
+            123: "F12",
+            144: "Numlock",
+            145: "Scrolllock"
+        },
+
+        PRINTABLE_KEYS: {
+           32: ' ',  48: '0',  49: '1',  50: '2',  51: '3',  52: '4', 53:  '5',
+           54: '6',  55: '7',  56: '8',  57: '9',  59: ';',  61: '=', 65:  'a',
+           66: 'b',  67: 'c',  68: 'd',  69: 'e',  70: 'f',  71: 'g', 72:  'h',
+           73: 'i',  74: 'j',  75: 'k',  76: 'l',  77: 'm',  78: 'n', 79:  'o',
+           80: 'p',  81: 'q',  82: 'r',  83: 's',  84: 't',  85: 'u', 86:  'v',
+           87: 'w',  88: 'x',  89: 'y',  90: 'z', 107: '+', 109: '-', 110: '.',
+          188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\',
+          221: ']', 222: '\"'
+        }
+    };
+
+    // A reverse map of FUNCTION_KEYS
+    for (i in ret.FUNCTION_KEYS) {
+        var name = ret.FUNCTION_KEYS[i].toUpperCase();
+        ret[name] = parseInt(i, 10);
+    }
+
+    // Add the MODIFIER_KEYS, FUNCTION_KEYS and PRINTABLE_KEYS to the KEY
+    // variables as well.
+    oop.mixin(ret, ret.MODIFIER_KEYS);
+    oop.mixin(ret, ret.PRINTABLE_KEYS);
+    oop.mixin(ret, ret.FUNCTION_KEYS);
+
+    return ret;
+})();
+oop.mixin(exports, Keys);
+
+exports.keyCodeToString = function(keyCode) {
+    return (Keys[keyCode] || String.fromCharCode(keyCode)).toLowerCase();
+}
+
+});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -2381,6 +2804,85 @@ exports.EventEmitter = EventEmitter;
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Joe Walker (jwalker@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/typecheck', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var objectToString = Object.prototype.toString;
+
+/**
+ * Return true if it is a String
+ */
+exports.isString = function(it) {
+    return it && objectToString.call(it) === "[object String]";
+};
+
+/**
+ * Returns true if it is a Boolean.
+ */
+exports.isBoolean = function(it) {
+    return it && objectToString.call(it) === "[object Boolean]";
+};
+
+/**
+ * Returns true if it is a Number.
+ */
+exports.isNumber = function(it) {
+    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
+};
+
+/**
+ * Hack copied from dojo.
+ */
+exports.isObject = function(it) {
+    return it !== undefined &&
+        (it === null || typeof it == "object" ||
+        Array.isArray(it) || exports.isFunction(it));
+};
+
+/**
+ * Is the passed object a function?
+ * From dojo.isFunction()
+ */
+exports.isFunction = function(it) {
+    return it && objectToString.call(it) === "[object Function]";
+};
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -3445,85 +3947,6 @@ exports.shutdown = function(data, reason) {
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/typecheck', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var objectToString = Object.prototype.toString;
-
-/**
- * Return true if it is a String
- */
-exports.isString = function(it) {
-    return it && objectToString.call(it) === "[object String]";
-};
-
-/**
- * Returns true if it is a Boolean.
- */
-exports.isBoolean = function(it) {
-    return it && objectToString.call(it) === "[object Boolean]";
-};
-
-/**
- * Returns true if it is a Number.
- */
-exports.isNumber = function(it) {
-    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
-};
-
-/**
- * Hack copied from dojo.
- */
-exports.isObject = function(it) {
-    return it !== undefined &&
-        (it === null || typeof it == "object" ||
-        Array.isArray(it) || exports.isFunction(it));
-};
-
-/**
- * Is the passed object a function?
- * From dojo.isFunction()
- */
-exports.isFunction = function(it) {
-    return it && objectToString.call(it) === "[object Function]";
-};
-
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
  * The Original Code is Mozilla Skywriter.
  *
  * The Initial Developer of the Original Code is
@@ -4160,7 +4583,7 @@ var Editor =function(renderer, session) {
 
     this.getKeyboardHandler = function() {
         return this.keyBinding.getKeyboardHandler();
-    }
+    };
 
     this.setSession = function(session) {
         if (this.session == session) return;
@@ -4292,13 +4715,16 @@ var Editor =function(renderer, session) {
     };
 
     this.focus = function() {
-        // Safari need the timeout
+        // Safari needs the timeout
         // iOS and Firefox need it called immediately
         // to be on the save side we do both
+        // except for IE
         var _self = this;
-        setTimeout(function() {
-            _self.textInput.focus();
-        });
+        if (!useragent.isIE) {        
+            setTimeout(function() {
+                _self.textInput.focus();
+            });
+        }
         this.textInput.focus();
     };
 
@@ -4957,7 +5383,7 @@ var Editor =function(renderer, session) {
 
     this.getCursorPositionScreen = function() {
         return this.session.documentToScreenPosition(this.getCursorPosition());
-    }
+    };
 
     this.getSelectionRange = function() {
         return this.selection.getRange();
@@ -5472,120 +5898,6 @@ exports.addCommandKeyListener = function(el, callback) {
         }
     }
 };
-
-});
-/*! @license
-==========================================================================
-SproutCore -- JavaScript Application Framework
-copyright 2006-2009, Sprout Systems Inc., Apple Inc. and contributors.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-
-SproutCore and the SproutCore logo are trademarks of Sprout Systems, Inc.
-
-For more information about SproutCore, visit http://www.sproutcore.com
-
-
-==========================================================================
-@license */
-
-// Most of the following code is taken from SproutCore with a few changes.
-
-define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
-
-var oop = require("pilot/oop");
-
-/**
- * Helper functions and hashes for key handling.
- */
-var Keys = (function() {
-    var ret = {
-        MODIFIER_KEYS: {
-            16: 'Shift', 17: 'Ctrl', 18: 'Alt', 224: 'Meta'
-        },
-
-        KEY_MODS: {
-            "ctrl": 1, "alt": 2, "option" : 2,
-            "shift": 4, "meta": 8, "command": 8
-        },
-
-        FUNCTION_KEYS : {
-            8  : "Backspace",
-            9  : "Tab",
-            13 : "Return",
-            19 : "Pause",
-            27 : "Esc",
-            32 : "Space",
-            33 : "PageUp",
-            34 : "PageDown",
-            35 : "End",
-            36 : "Home",
-            37 : "Left",
-            38 : "Up",
-            39 : "Right",
-            40 : "Down",
-            44 : "Print",
-            45 : "Insert",
-            46 : "Delete",
-            112: "F1",
-            113: "F2",
-            114: "F3",
-            115: "F4",
-            116: "F5",
-            117: "F6",
-            118: "F7",
-            119: "F8",
-            120: "F9",
-            121: "F10",
-            122: "F11",
-            123: "F12",
-            144: "Numlock",
-            145: "Scrolllock"
-        },
-
-        PRINTABLE_KEYS: {
-           32: ' ',  48: '0',  49: '1',  50: '2',  51: '3',  52: '4', 53:  '5',
-           54: '6',  55: '7',  56: '8',  57: '9',  59: ';',  61: '=', 65:  'a',
-           66: 'b',  67: 'c',  68: 'd',  69: 'e',  70: 'f',  71: 'g', 72:  'h',
-           73: 'i',  74: 'j',  75: 'k',  76: 'l',  77: 'm',  78: 'n', 79:  'o',
-           80: 'p',  81: 'q',  82: 'r',  83: 's',  84: 't',  85: 'u', 86:  'v',
-           87: 'w',  88: 'x',  89: 'y',  90: 'z', 107: '+', 109: '-', 110: '.',
-          188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\',
-          221: ']', 222: '\"'
-        }
-    };
-
-    // A reverse map of FUNCTION_KEYS
-    for (i in ret.FUNCTION_KEYS) {
-        var name = ret.FUNCTION_KEYS[i].toUpperCase();
-        ret[name] = parseInt(i, 10);
-    }
-
-    // Add the MODIFIER_KEYS, FUNCTION_KEYS and PRINTABLE_KEYS to the KEY
-    // variables as well.
-    oop.mixin(ret, ret.MODIFIER_KEYS);
-    oop.mixin(ret, ret.PRINTABLE_KEYS);
-    oop.mixin(ret, ret.FUNCTION_KEYS);
-
-    return ret;
-})();
-oop.mixin(exports, Keys);
 
 });
 /* vim:ts=4:sts=4:sw=4:
@@ -6227,8 +6539,8 @@ var MouseHandler = function(editor) {
         var state = STATE_UNKNOWN;
         var inSelection = false;
     
-        var button = event.getButton(e)
-        if (button != 0) {
+        var button = event.getButton(e);
+        if (button !== 0) {
             if (selectionEmpty) {
                 editor.moveCursorToPosition(pos);
             }
@@ -6237,10 +6549,11 @@ var MouseHandler = function(editor) {
                 event.capture(editor.container, function(){}, editor.textInput.onContextMenuClose);
             }
             return;
-        } else
-            inSelection = !editor.getReadOnly() &&
-                          !selectionEmpty &&
-                          selectionRange.contains(pos.row, pos.column);
+        } else {
+            inSelection = !editor.getReadOnly()
+                && !selectionEmpty
+                && selectionRange.contains(pos.row, pos.column);
+        }
 
         if (!inSelection) {
             // Directly pick STATE_SELECT, since the user is not clicking inside
@@ -6252,8 +6565,8 @@ var MouseHandler = function(editor) {
     
         var mousePageX, mousePageY;
         var overwrite = editor.getOverwrite();
-        var dragCursor = null;
         var mousedownTime = (new Date()).getTime();
+        var dragCursor, dragRange;
     
         var onMouseSelection = function(e) {
             mousePageX = event.getDocumentX(e);
@@ -6273,6 +6586,7 @@ var MouseHandler = function(editor) {
 
         var onMouseDragSelectionEnd = function() {
             dom.removeCssClass(editor.container, "ace_dragging");
+            editor.session.removeMarker(dragSelectionMarker);
 
             if (!self.$clickSelection) {
                 if (!dragCursor) {
@@ -6284,14 +6598,13 @@ var MouseHandler = function(editor) {
             if (!dragCursor)
                 return;
 
-            var selection = editor.getSelectionRange();
-            if (selection.contains(dragCursor.row, dragCursor.column)) {
+            if (dragRange.contains(dragCursor.row, dragCursor.column)) {
                 dragCursor = null;
                 return;
             }
 
             editor.clearSelection();
-            var newRange = editor.moveText(selection, dragCursor);
+            var newRange = editor.moveText(dragRange, dragCursor);
             if (!newRange) {
                 dragCursor = null;
                 return;
@@ -6316,6 +6629,10 @@ var MouseHandler = function(editor) {
                     onStartSelect(cursor);
                 } else if ((time - mousedownTime) > DRAG_TIMER) {
                     state = STATE_DRAG;
+                    dragRange = editor.getSelectionRange();
+                    var style = editor.getSelectionStyle();
+                    dragSelectionMarker = editor.session.addMarker(dragRange, "ace_selection", style);
+                    editor.clearSelection();
                     dom.addCssClass(editor.container, "ace_dragging");
                 }
 
@@ -6368,8 +6685,7 @@ var MouseHandler = function(editor) {
             dragCursor.row = Math.max(0, Math.min(dragCursor.row,
                                                   editor.session.getLength() - 1));
 
-            editor.renderer.updateCursor(dragCursor, overwrite);
-            editor.renderer.scrollCursorIntoView();
+            editor.moveCursorToPosition(dragCursor);
         };
 
         event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
@@ -6447,25 +6763,19 @@ exports.MouseHandler = MouseHandler;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'ace/keyboard/hash_handler', 'ace/keyboard/keybinding/default_mac', 'ace/keyboard/keybinding/default_win', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
+define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
 
 var useragent = require("pilot/useragent");
 var keyUtil  = require("pilot/keys");
 var event = require("pilot/event");
 var settings  = require("pilot/settings").settings;
-var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-var default_mac = require("ace/keyboard/keybinding/default_mac").bindings;
-var default_win = require("ace/keyboard/keybinding/default_win").bindings;
 var canon = require("pilot/canon");
 require("ace/commands/default_commands");
 
-var KeyBinding = function(editor, config) {
+var KeyBinding = function(editor) {
     this.$editor = editor;
     this.$data = { };
     this.$keyboardHandler = null;
-    this.$defaulKeyboardHandler = new HashHandler(config || (useragent.isMac
-        ? default_mac
-        : default_win));
 };
 
 (function() {
@@ -6481,7 +6791,9 @@ var KeyBinding = function(editor, config) {
     };
 
     this.$callKeyboardHandler = function (e, hashId, keyOrText, keyCode) {
-        var toExecute;
+        var env = {editor: this.$editor},
+            toExecute;
+
         if (this.$keyboardHandler) {
             toExecute =
                 this.$keyboardHandler.handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
@@ -6489,13 +6801,23 @@ var KeyBinding = function(editor, config) {
 
         // If there is nothing to execute yet, then use the default keymapping.
         if (!toExecute || !toExecute.command) {
-            toExecute = this.$defaulKeyboardHandler.
-                handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
+            if (hashId != 0 || keyCode != 0) {
+                toExecute = {
+                    command: canon.findKeyCommand(env, "editor", hashId, keyOrText)
+                }
+            } else {
+                toExecute = {
+                    command: "inserttext",
+                    args: {
+                        text: keyOrText
+                    }
+                }
+            }
         }
 
         if (toExecute) {
             var success = canon.exec(toExecute.command,
-                                        {editor: this.$editor}, toExecute.args);
+                                        env, "editor", toExecute.args);
             if (success) {
                 return event.stopEvent(e);
             }
@@ -6503,10 +6825,8 @@ var KeyBinding = function(editor, config) {
     };
 
     this.onCommandKey = function(e, hashId, keyCode) {
-        key = (keyUtil[keyCode] ||
-                String.fromCharCode(keyCode)).toLowerCase();
-
-        this.$callKeyboardHandler(e, hashId, key, keyCode);
+        var keyString = keyUtil.keyCodeToString(keyCode);
+        this.$callKeyboardHandler(e, hashId, keyString, keyCode);
     };
 
     this.onTextInput = function(text) {
@@ -6516,306 +6836,6 @@ var KeyBinding = function(editor, config) {
 }).call(KeyBinding.prototype);
 
 exports.KeyBinding = KeyBinding;
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Fabian Jakobs <fabian AT ajax DOT org>
- *   Julian Viereck (julian.viereck@gmail.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'pilot/keys'], function(require, exports, module) {
-
-var keyUtil  = require("pilot/keys");
-
-function HashHandler(config) {
-    this.setConfig(config);
-}
-
-(function() {
-    function splitSafe(s, separator, limit, bLowerCase) {
-        return (bLowerCase && s.toLowerCase() || s)
-            .replace(/(?:^\s+|\n|\s+$)/g, "")
-            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
-    }
-
-    function parseKeys(keys, val, ret) {
-        var key,
-            hashId = 0,
-            parts  = splitSafe(keys, "\\-", null, true),
-            i      = 0,
-            l      = parts.length;
-
-        for (; i < l; ++i) {
-            if (keyUtil.KEY_MODS[parts[i]])
-                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
-            else
-                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
-        }
-
-        (ret[hashId] || (ret[hashId] = {}))[key] = val;
-        return ret;
-    }
-
-    function objectReverse(obj, keySplit) {
-        var i, j, l, key,
-            ret = {};
-        for (i in obj) {
-            key = obj[i];
-            if (keySplit && typeof key == "string") {
-                key = key.split(keySplit);
-                for (j = 0, l = key.length; j < l; ++j)
-                    parseKeys.call(this, key[j], i, ret);
-            }
-            else {
-                parseKeys.call(this, key, i, ret);
-            }
-        }
-        return ret;
-    }
-
-    this.setConfig = function(config) {
-        this.$config = config;
-        if (typeof this.$config.reverse == "undefined")
-            this.$config.reverse = objectReverse.call(this, this.$config, "|");
-    };
-
-    /**
-     * This function is called by keyBinding.
-     */
-    this.handleKeyboard = function(data, hashId, textOrKey, keyCode) {
-        // Figure out if a commandKey was pressed or just some text was insert.
-        if (hashId != 0 || keyCode != 0) {
-            return {
-                command: (this.$config.reverse[hashId] || {})[textOrKey]
-            }
-        } else {
-            return {
-                command: "inserttext",
-                args: {
-                    text: textOrKey
-                }
-            }
-        }
-    }
-}).call(HashHandler.prototype)
-
-exports.HashHandler = HashHandler;
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/keybinding/default_mac', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-exports.bindings = {
-    "selectall": "Command-A",
-    "removeline": "Command-D",
-    "gotoline": "Command-L",
-    "togglecomment": "Command-7",
-    "findnext": "Command-G",
-    "findprevious": "Command-Shift-G",
-    "find": "Command-F",
-    "replace": "Alt-Command-R",
-    "undo": "Command-Z",
-    "redo": "Command-Shift-Z|Command-Y",
-    "overwrite": "Insert",
-    "copylinesup": "Command-Option-Up",
-    "movelinesup": "Option-Up",
-    "selecttostart": "Command-Shift-Up",
-    "gotostart": "Command-Home|Command-Up",
-    "selectup": "Shift-Up",
-    "golineup": "Up|Ctrl-P",
-    "copylinesdown": "Command-Option-Down",
-    "movelinesdown": "Option-Down",
-    "selecttoend": "Command-Shift-Down",
-    "gotoend": "Command-End|Command-Down",
-    "selectdown": "Shift-Down",
-    "golinedown": "Down|Ctrl-N",
-    "selectwordleft": "Option-Shift-Left",
-    "gotowordleft": "Option-Left",
-    "selecttolinestart": "Command-Shift-Left",
-    "gotolinestart": "Command-Left|Home|Ctrl-A",
-    "selectleft": "Shift-Left",
-    "gotoleft": "Left|Ctrl-B",
-    "selectwordright": "Option-Shift-Right",
-    "gotowordright": "Option-Right",
-    "selecttolineend": "Command-Shift-Right",
-    "gotolineend": "Command-Right|End|Ctrl-E",
-    "selectright": "Shift-Right",
-    "gotoright": "Right|Ctrl-F",
-    "selectpagedown": "Shift-PageDown",
-    "pagedown": "PageDown",
-    "gotopagedown": "Option-PageDown|Ctrl-V",
-    "selectpageup": "Shift-PageUp",
-    "pageup": "PageUp",
-    "gotopageup": "Option-PageUp",
-    "selectlinestart": "Shift-Home",
-    "selectlineend": "Shift-End",
-    "del": "Delete|Ctrl-D",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H",
-    "removetolineend": "Ctrl-K",
-    "removetolinestart": "Option-Backspace",
-    "removewordleft": "Alt-Backspace|Ctrl-Alt-Backspace",
-    "removewordright": "Alt-Delete",
-    "outdent": "Shift-Tab",
-    "indent": "Tab",
-    "transposeletters": "Ctrl-T",
-    "splitline": "Ctrl-O",
-    "centerselection": "Ctrl-L"
-};
-
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/keybinding/default_win', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-exports.bindings = {
-    "selectall": "Ctrl-A",
-    "removeline": "Ctrl-D",
-    "gotoline": "Ctrl-L",
-    "togglecomment": "Ctrl-7",
-    "findnext": "Ctrl-K",
-    "findprevious": "Ctrl-Shift-K",
-    "find": "Ctrl-F",
-    "replace": "Alt-Ctrl-R",
-    "undo": "Ctrl-Z",
-    "redo": "Ctrl-Shift-Z|Ctrl-Y",
-    "overwrite": "Insert",
-    "copylinesup": "Ctrl-Alt-Up",
-    "movelinesup": "Alt-Up",
-    "selecttostart": "Alt-Shift-Up",
-    "gotostart": "Ctrl-Home|Ctrl-Up",
-    "selectup": "Shift-Up",
-    "golineup": "Up",
-    "copylinesdown": "Ctrl-Alt-Down",
-    "movelinesdown": "Alt-Down",
-    "selecttoend": "Alt-Shift-Down",
-    "gotoend": "Ctrl-End|Ctrl-Down",
-    "selectdown": "Shift-Down",
-    "golinedown": "Down",
-    "selectwordleft": "Ctrl-Shift-Left",
-    "gotowordleft": "Ctrl-Left",
-    "selecttolinestart": "Alt-Shift-Left",
-    "gotolinestart": "Alt-Left|Home",
-    "selectleft": "Shift-Left",
-    "gotoleft": "Left",
-    "selectwordright": "Ctrl-Shift-Right",
-    "gotowordright": "Ctrl-Right",
-    "selecttolineend": "Alt-Shift-Right",
-    "gotolineend": "Alt-Right|End",
-    "selectright": "Shift-Right",
-    "gotoright": "Right",
-    "selectpagedown": "Shift-PageDown",
-    "gotopagedown": "PageDown",
-    "selectpageup": "Shift-PageUp",
-    "gotopageup": "PageUp",
-    "selectlinestart": "Shift-Home",
-    "selectlineend": "Shift-End",
-    "del": "Delete",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
-    "outdent": "Shift-Tab",
-    "indent": "Tab"
-};
-
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -6862,6 +6882,14 @@ define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot
 var lang = require("pilot/lang");
 var canon = require("pilot/canon");
 
+function bindKey(win, mac) {
+    return {
+        win: win,
+        mac: mac,
+        sender: "editor"
+    };
+}
+
 canon.addCommand({
     name: "null",
     exec: function(env, args, request) {  }
@@ -6869,14 +6897,17 @@ canon.addCommand({
 
 canon.addCommand({
     name: "selectall",
+    bindKey: bindKey("Ctrl-A", "Command-A"),
     exec: function(env, args, request) { env.editor.selectAll(); }
 });
 canon.addCommand({
     name: "removeline",
+    bindKey: bindKey("Ctrl-D", "Command-D"),
     exec: function(env, args, request) { env.editor.removeLines(); }
 });
 canon.addCommand({
     name: "gotoline",
+    bindKey: bindKey("Ctrl-L", "Command-L"),
     exec: function(env, args, request) {
         var line = parseInt(prompt("Enter line number:"));
         if (!isNaN(line)) {
@@ -6886,18 +6917,22 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "togglecomment",
+    bindKey: bindKey("Ctrl-7", "Command-7"),
     exec: function(env, args, request) { env.editor.toggleCommentLines(); }
 });
 canon.addCommand({
     name: "findnext",
+    bindKey: bindKey("Ctrl-K", "Command-G"),
     exec: function(env, args, request) { env.editor.findNext(); }
 });
 canon.addCommand({
     name: "findprevious",
+    bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
     exec: function(env, args, request) { env.editor.findPrevious(); }
 });
 canon.addCommand({
     name: "find",
+    bindKey: bindKey("Ctrl-F", "Command-F"),
     exec: function(env, args, request) {
         var needle = prompt("Find:");
         env.editor.find(needle);
@@ -6905,6 +6940,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "replace",
+    bindKey: bindKey("Ctrl-R", "Command-Option-F"),
     exec: function(env, args, request) {
         var needle = prompt("Find:");
         if (!needle)
@@ -6917,6 +6953,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "replaceall",
+    bindKey: bindKey("Ctrl-Shift-R", "Command-Shift-Option-F"),
     exec: function(env, args, request) {
         var needle = prompt("Find:");
         if (!needle)
@@ -6929,186 +6966,220 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "undo",
+    bindKey: bindKey("Ctrl-Z", "Command-Z"),
     exec: function(env, args, request) { env.editor.undo(); }
 });
 canon.addCommand({
     name: "redo",
-    exec: function(env, args, request) { env.editor.redo(); }
-});
-canon.addCommand({
-    name: "redo",
+    bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
     exec: function(env, args, request) { env.editor.redo(); }
 });
 canon.addCommand({
     name: "overwrite",
+    bindKey: bindKey("Insert", "Insert"),
     exec: function(env, args, request) { env.editor.toggleOverwrite(); }
 });
 canon.addCommand({
     name: "copylinesup",
+    bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
     exec: function(env, args, request) { env.editor.copyLinesUp(); }
 });
 canon.addCommand({
     name: "movelinesup",
+    bindKey: bindKey("Alt-Up", "Option-Up"),
     exec: function(env, args, request) { env.editor.moveLinesUp(); }
 });
 canon.addCommand({
     name: "selecttostart",
+    bindKey: bindKey("Alt-Shift-Up", "Command-Shift-Up"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
 });
 canon.addCommand({
     name: "gotostart",
+    bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
     exec: function(env, args, request) { env.editor.navigateFileStart(); }
 });
 canon.addCommand({
     name: "selectup",
+    bindKey: bindKey("Shift-Up", "Shift-Up"),
     exec: function(env, args, request) { env.editor.getSelection().selectUp(); }
 });
 canon.addCommand({
     name: "golineup",
+    bindKey: bindKey("Up", "Up|Ctrl-P"),
     exec: function(env, args, request) { env.editor.navigateUp(args.times); }
 });
 canon.addCommand({
     name: "copylinesdown",
+    bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
     exec: function(env, args, request) { env.editor.copyLinesDown(); }
 });
 canon.addCommand({
     name: "movelinesdown",
+    bindKey: bindKey("Alt-Down", "Option-Down"),
     exec: function(env, args, request) { env.editor.moveLinesDown(); }
 });
 canon.addCommand({
     name: "selecttoend",
+    bindKey: bindKey("Alt-Shift-Down", "Command-Shift-Down"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
 });
 canon.addCommand({
     name: "gotoend",
+    bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
     exec: function(env, args, request) { env.editor.navigateFileEnd(); }
 });
 canon.addCommand({
     name: "selectdown",
+    bindKey: bindKey("Shift-Down", "Shift-Down"),
     exec: function(env, args, request) { env.editor.getSelection().selectDown(); }
 });
 canon.addCommand({
     name: "golinedown",
+    bindKey: bindKey("Down", "Down|Ctrl-N"),
     exec: function(env, args, request) { env.editor.navigateDown(args.times); }
 });
 canon.addCommand({
     name: "selectwordleft",
+    bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
     exec: function(env, args, request) { env.editor.getSelection().selectWordLeft(); }
 });
 canon.addCommand({
     name: "gotowordleft",
+    bindKey: bindKey("Ctrl-Left", "Option-Left"),
     exec: function(env, args, request) { env.editor.navigateWordLeft(); }
 });
 canon.addCommand({
     name: "selecttolinestart",
+    bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
 });
 canon.addCommand({
     name: "gotolinestart",
+    bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
     exec: function(env, args, request) { env.editor.navigateLineStart(); }
 });
 canon.addCommand({
     name: "selectleft",
+    bindKey: bindKey("Shift-Left", "Shift-Left"),
     exec: function(env, args, request) { env.editor.getSelection().selectLeft(); }
 });
 canon.addCommand({
     name: "gotoleft",
+    bindKey: bindKey("Left", "Left|Ctrl-B"),
     exec: function(env, args, request) { env.editor.navigateLeft(args.times); }
 });
 canon.addCommand({
     name: "selectwordright",
+    bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
     exec: function(env, args, request) { env.editor.getSelection().selectWordRight(); }
 });
 canon.addCommand({
     name: "gotowordright",
+    bindKey: bindKey("Ctrl-Right", "Option-Right"),
     exec: function(env, args, request) { env.editor.navigateWordRight(); }
 });
 canon.addCommand({
     name: "selecttolineend",
+    bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
 });
 canon.addCommand({
     name: "gotolineend",
+    bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
     exec: function(env, args, request) { env.editor.navigateLineEnd(); }
 });
 canon.addCommand({
     name: "selectright",
+    bindKey: bindKey("Shift-Right", "Shift-Right"),
     exec: function(env, args, request) { env.editor.getSelection().selectRight(); }
 });
 canon.addCommand({
     name: "gotoright",
+    bindKey: bindKey("Right", "Right|Ctrl-F"),
     exec: function(env, args, request) { env.editor.navigateRight(args.times); }
 });
 canon.addCommand({
     name: "selectpagedown",
+    bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
     exec: function(env, args, request) { env.editor.selectPageDown(); }
 });
 canon.addCommand({
     name: "pagedown",
+    bindKey: bindKey(null, "PageDown"),
     exec: function(env, args, request) { env.editor.scrollPageDown(); }
 });
 canon.addCommand({
     name: "gotopagedown",
+    bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
     exec: function(env, args, request) { env.editor.gotoPageDown(); }
 });
 canon.addCommand({
     name: "selectpageup",
+    bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
     exec: function(env, args, request) { env.editor.selectPageUp(); }
 });
 canon.addCommand({
     name: "pageup",
+    bindKey: bindKey(null, "PageUp"),
     exec: function(env, args, request) { env.editor.scrollPageUp(); }
 });
 canon.addCommand({
     name: "gotopageup",
+    bindKey: bindKey("PageUp", "Option-PageUp"),
     exec: function(env, args, request) { env.editor.gotoPageUp(); }
 });
 canon.addCommand({
     name: "selectlinestart",
+    bindKey: bindKey("Shift-Home", "Shift-Home"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
 });
 canon.addCommand({
-    name: "gotolinestart",
-    exec: function(env, args, request) { env.editor.navigateLineStart(); }
-});
-canon.addCommand({
     name: "selectlineend",
+    bindKey: bindKey("Shift-End", "Shift-End"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
 });
 canon.addCommand({
-    name: "gotolineend",
-    exec: function(env, args, request) { env.editor.navigateLineEnd(); }
-});
-canon.addCommand({
     name: "del",
+    bindKey: bindKey("Delete", "Delete|Ctrl-D"),
     exec: function(env, args, request) { env.editor.removeRight(); }
 });
 canon.addCommand({
     name: "backspace",
+    bindKey: bindKey(
+        "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+        "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
+    ),
     exec: function(env, args, request) { env.editor.removeLeft(); }
 });
 canon.addCommand({
     name: "removetolinestart",
+    bindKey: bindKey(null, "Option-Backspace"),
     exec: function(env, args, request) { env.editor.removeToLineStart(); }
 });
 canon.addCommand({
     name: "removetolineend",
+    bindKey: bindKey(null, "Ctrl-K"),
     exec: function(env, args, request) { env.editor.removeToLineEnd(); }
 });
 canon.addCommand({
     name: "removewordleft",
+    bindKey: bindKey(null, "Alt-Backspace|Ctrl-Alt-Backspace"),
     exec: function(env, args, request) { env.editor.removeWordLeft(); }
 });
 canon.addCommand({
     name: "removewordright",
+    bindKey: bindKey(null, "Alt-Delete"),
     exec: function(env, args, request) { env.editor.removeWordRight(); }
 });
 canon.addCommand({
     name: "outdent",
+    bindKey: bindKey("Shift-Tab", "Shift-Tab"),
     exec: function(env, args, request) { env.editor.blockOutdent(); }
 });
 canon.addCommand({
     name: "indent",
+    bindKey: bindKey("Tab", "Tab"),
     exec: function(env, args, request) { env.editor.indent(); }
 });
 canon.addCommand({
@@ -7119,20 +7190,21 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "centerselection",
+    bindKey: bindKey("Ctrl-L", "Ctrl-L"),
     exec: function(env, args, request) { env.editor.centerSelection(); }
 });
 canon.addCommand({
     name: "splitline",
+    bindKey: bindKey(null, "Ctrl-O"),
     exec: function(env, args, request) { env.editor.splitLine(); }
 });
 canon.addCommand({
     name: "transposeletters",
+    bindKey: bindKey("Ctrl-T", "Ctrl-T"),
     exec: function(env, args, request) { env.editor.transposeLetters(); }
 });
 
-
-});
-/* vim:ts=4:sts=4:sw=4:
+});/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -11023,6 +11095,10 @@ var VirtualRenderer = function(container, theme) {
         this.$loop.schedule(this.CHANGE_FULL);
     };
 
+    this.updateFontSize = function() {
+        this.$textLayer.checkForSizeChanges();
+    };
+
     /**
      * Triggers resize of the editor
      */
@@ -11971,7 +12047,7 @@ var Text = function(parentEl) {
     this.element.className = "ace_layer ace_text-layer";
     parentEl.appendChild(this.element);
 
-    this.$characterSize = this.$measureSizes();
+    this.$characterSize = this.$measureSizes() || {width: 0, height: 0};
     this.$pollSizeChanges();
 };
 
@@ -11996,14 +12072,18 @@ var Text = function(parentEl) {
         return this.$characterSize.width || 1;
     };
 
+    this.checkForSizeChanges = function() {
+        var size = this.$measureSizes();
+        if (size && (this.$characterSize.width !== size.width || this.$characterSize.height !== size.height)) {
+            this.$characterSize = size;
+            this._dispatchEvent("changeCharaterSize", {data: size});
+        }
+    };
+
     this.$pollSizeChanges = function() {
         var self = this;
         setInterval(function() {
-            var size = self.$measureSizes();
-            if (self.$characterSize.width !== size.width || self.$characterSize.height !== size.height) {
-                self.$characterSize = size;
-                self._dispatchEvent("changeCharaterSize", {data: size});
-            }
+            self.checkForSizeChanges();
         }, 500);
     };
 
@@ -12013,7 +12093,7 @@ var Text = function(parentEl) {
         fontWeight : 1,
         fontStyle : 1,
         lineHeight : 1
-    },
+    };
 
     this.$measureSizes = function() {
         var n = 1000;
@@ -12055,6 +12135,12 @@ var Text = function(parentEl) {
             height: this.$measureNode.offsetHeight,
             width: this.$measureNode.offsetWidth / (n * 2)
         };
+
+        // Size and width can be null if the editor is not visible or
+        // detached from the document
+        if (size.width == 0 && size.height == 0)
+            return null;
+
         return size;
     };
 
