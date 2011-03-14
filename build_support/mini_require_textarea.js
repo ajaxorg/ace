@@ -55,6 +55,9 @@ var _define = function(module, deps, payload) {
         return;
     }
 
+    if (arguments.length == 2)
+        payload = deps;
+
     if (!_define.modules)
         _define.modules = {};
 

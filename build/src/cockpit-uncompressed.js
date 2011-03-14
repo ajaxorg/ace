@@ -760,6 +760,7 @@ Requisition.prototype = {
     exec: function() {
         canon.exec(this.commandAssignment.value,
               this.env,
+              "cli",
               this.getArgsObject(),
               this.toCanonicalString());
     },
@@ -1351,6 +1352,7 @@ define('cockpit/ui/cli_view', ['require', 'exports', 'module' , 'text!cockpit/ui
 var editorCss = require("text!cockpit/ui/cli_view.css");
 var event = require("pilot/event");
 var dom = require("pilot/dom");
+
 dom.importCssString(editorCss);
 
 var event = require("pilot/event");
@@ -1375,15 +1377,18 @@ var NO_HINT = new Hint(Status.VALID, '', 0, 0);
 exports.startup = function(data, reason) {
     var cli = new CliRequisition(data.env);
     var cliView = new CliView(cli, data.env);
+    data.env.cli = cli;
 };
 
 /**
  * A class to handle the simplest UI implementation
  */
 function CliView(cli, env) {
+    cli.cliView = this;
     this.cli = cli;
     this.doc = document;
     this.win = dom.getParentWindow(this.doc);
+    this.env = env;
 
     // TODO: we should have a better way to specify command lines???
     this.element = this.doc.getElementById('cockpitInput');
@@ -1418,7 +1423,7 @@ CliView.prototype = {
         if (!this.output) {
             this.output = this.doc.createElement('div');
             this.output.id = 'cockpitOutput';
-            this.output.className = 'cptFocusPopup';
+            this.output.className = 'cptOutput';
             input.parentNode.insertBefore(this.output, input.nextSibling);
 
             var setMaxOutputHeight = function() {
@@ -1430,7 +1435,7 @@ CliView.prototype = {
 
         this.completer = this.doc.createElement('div');
         this.completer.className = 'cptCompletion VALID';
-        ;
+
         this.completer.style.color = dom.computedStyle(input, "color");
         this.completer.style.fontSize = dom.computedStyle(input, "fontSize");
         this.completer.style.fontFamily = dom.computedStyle(input, "fontFamily");
@@ -1443,7 +1448,7 @@ CliView.prototype = {
         input.style.backgroundColor = 'transparent';
 
         this.hinter = this.doc.createElement('div');
-        this.hinter.className = 'cptHints cptFocusPopup';
+        this.hinter.className = 'cptHints';
         input.parentNode.insertBefore(this.hinter, input.nextSibling);
 
         var resizer = this.resizer.bind(this);
@@ -1455,7 +1460,7 @@ CliView.prototype = {
         canon.addEventListener('output',  function(ev) {
             new RequestView(ev.request, this);
         }.bind(this));
-        event.addCommandKeyListener(input, this.onCommandKey.bind(this));        
+        event.addCommandKeyListener(input, this.onCommandKey.bind(this));
         event.addListener(input, 'keyup', this.onKeyUp.bind(this));
 
         // cursor position affects hint severity. TODO: shortcuts for speed
@@ -1466,6 +1471,18 @@ CliView.prototype = {
         }.bind(this));
 
         this.cli.addEventListener('argumentChange', this.onArgChange.bind(this));
+
+        event.addListener(input, "focus", function() {
+            dom.addCssClass(this.output, "cptFocusPopup");
+            dom.addCssClass(this.hinter, "cptFocusPopup");
+        }.bind(this));
+
+        function hideOutput() {
+            dom.removeCssClass(this.output, "cptFocusPopup");
+            dom.removeCssClass(this.hinter, "cptFocusPopup");
+        };
+        event.addListener(input, "blur", hideOutput.bind(this));
+        hideOutput.call(this);
     },
 
     /**
@@ -1521,17 +1538,16 @@ CliView.prototype = {
     /**
      * Ensure that TAB isn't handled by the browser
      */
-    onCommandKey: function(ev, hashId, keyCode) {
-        var handled;
-        // var handled = keyboardManager.processKeyEvent(ev, this, {
-        //     isCommandLine: true, isKeyUp: false
-        // });
+onCommandKey: function(ev, hashId, keyCode) {
+        var stopEvent;
         if (keyCode === keys.TAB ||
                 keyCode === keys.UP ||
                 keyCode === keys.DOWN) {
-            event.stopEvent(ev);
+            stopEvent = true;
+        } else if (hashId != 0 || keyCode != 0) {
+            stopEvent = canon.execKeyCommand(this.env, 'cli', hashId, keyCode);
         }
-        return handled;
+        stopEvent && event.stopEvent(ev);
     },
 
     /**
@@ -1756,7 +1772,10 @@ var row = templates.querySelector('.cptRow');
  * TODO: This should probably live in some utility area somewhere
  */
 function imageUrl(path) {
-    var dataUrl = require('text!cockpit/ui/' + path);
+    var dataUrl;
+    try {
+        dataUrl = require('text!cockpit/ui/' + path);
+    } catch (e) { }
     if (dataUrl) {
         return dataUrl;
     }
@@ -1771,7 +1790,7 @@ function imageUrl(path) {
 
     if (module.uri) {
         var end = module.uri.length - filename.length - 1;
-        return module.uri.substr(0, end) + path;
+        return module.uri.substr(0, end) + "/" + path;
     }
 
     return filename + path;
@@ -2360,12 +2379,7 @@ exports.shutdown = function(data, reason) {
 define("text!cockpit/ui/cli_view.css", [], "" +
   "#cockpitInput { padding-left: 16px; }" +
   "" +
-  "#cockpitOutput { overflow: auto; }" +
-  "#cockpitOutput.cptFocusPopup { position: absolute; z-index: 999; }" +
-  "" +
-  ".cptFocusPopup { display: none; }" +
-  "#cockpitInput:focus ~ .cptFocusPopup { display: block; }" +
-  "#cockpitInput:focus ~ .cptFocusPopup.cptNoPopup { display: none; }" +
+  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }" +
   "" +
   ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }" +
   ".cptCompletion.VALID { background: #FFF; }" +
@@ -2389,6 +2403,10 @@ define("text!cockpit/ui/cli_view.css", [], "" +
   "  padding: 8px;" +
   "  display: none;" +
   "}" +
+  "" +
+  ".cptFocusPopup { display: block; }" +
+  ".cptFocusPopup.cptNoPopup { display: none; }" +
+  "" +
   ".cptHints ul { margin: 0; padding: 0 15px; }" +
   "" +
   ".cptGt { font-weight: bold; font-size: 120%; }" +
