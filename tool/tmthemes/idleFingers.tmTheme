@@ -373,6 +373,19 @@
 				<string>#FFFFFF</string>
 			</dict>
 		</dict>
+		<dict>
+			<key>name</key>
+			<string>User1</string>
+			<key>scope</key>
+			<string>collab.user1</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#FFF980</string>
+				<key>foreground</key>
+				<string>#323232</string>
+			</dict>
+		</dict>
 	</array>
 	<key>uuid</key>
 	<string>95BEF169-A2E5-4041-A84A-AAFC1DD61558</string>

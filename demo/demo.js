@@ -40,7 +40,7 @@
 define(function(require, exports, module) {
 
 exports.launch = function(env) {
-
+    var canon = require("pilot/canon");
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
@@ -54,10 +54,13 @@ exports.launch = function(env) {
     var PythonMode = require("ace/mode/python").Mode;
     var PhpMode = require("ace/mode/php").Mode;
     var JavaMode = require("ace/mode/java").Mode;
+    var CSharpMode = require("ace/mode/csharp").Mode;
     var RubyMode = require("ace/mode/ruby").Mode;
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
+    var SvgMode = require("ace/mode/svg").Mode;
+    var TextileMode = require("ace/mode/textile").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -117,6 +120,10 @@ exports.launch = function(env) {
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
+    docs.csharp = new EditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp.setMode(new CSharpMode());
+    docs.csharp.setUndoManager(new UndoManager());
+
     docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
@@ -129,11 +136,21 @@ exports.launch = function(env) {
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
+    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg.setMode(new SvgMode());
+    docs.svg.setUndoManager(new UndoManager());
+    
+    docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
+    docs.textile.setMode(new TextileMode());
+    docs.textile.setUndoManager(new UndoManager());
+
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
 
     var modes = {
         text: new TextMode(),
+        textile: new TextileMode(),
+        svg: new SvgMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
@@ -144,7 +161,8 @@ exports.launch = function(env) {
         ruby: new RubyMode(),
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
-        perl: new PerlMode()
+        perl: new PerlMode(),
+				csharp: new CSharpMode()
     };
 
     function getMode() {
@@ -191,6 +209,15 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PerlMode) {
             modeEl.value = "perl";
+        }
+        else if (mode instanceof CSharpMode) {
+            modeEl.value = "csharp";
+        }
+        else if (mode instanceof SvgMode) {
+            modeEl.value = "svg";
+        }
+        else if (mode instanceof TextileMode) {
+            modeEl.value = "textile";
         }
         else {
             modeEl.value = "text";
@@ -330,6 +357,8 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
+	              } else if (/^.*\.cs$/i.test(file.name)) {
+	                  mode = "csharp";
                 } else if (/^.*\.java$/i.test(file.name)) {
                     mode = "java";
                 } else if (/^.*\.rb$/i.test(file.name)) {
@@ -354,6 +383,68 @@ exports.launch = function(env) {
     });
 
     window.env = env;
+    
+    /**
+     * This demonstrates how you can define commands and bind shortcuts to them.
+     */
+    
+    // Command to focus the command line from the editor.
+    canon.addCommand({
+        name: "focuscli",
+        bindKey: {
+            win: "Ctrl-J",
+            mac: "Command-J",
+            sender: "editor"
+        },
+        exec: function() {
+            env.cli.cliView.element.focus();
+        }
+    });
+    
+    // Command to focus the editor line from the command line.
+    canon.addCommand({
+        name: "focuseditor",
+        bindKey: {
+            win: "Ctrl-J",
+            mac: "Command-J",
+            sender: "cli"
+        },
+        exec: function() {
+            env.editor.focus();
+        }
+    });
+    
+    // Fake-Save, works from the editor and the command line.
+    canon.addCommand({
+        name: "save",
+        bindKey: {
+            win: "Ctrl-S",
+            mac: "Command-S",
+            sender: "editor|cli"
+        },
+        exec: function() {
+            alert("Fake Save File");
+        }
+    });
+    
+    // Fake-Print with custom lookup-sender-match function.
+    canon.addCommand({
+        name: "save",
+        bindKey: {
+            win: "Ctrl-P",
+            mac: "Command-P",
+            sender: function(env, sender, hashId, keyString) {
+                if (sender == "editor") {
+                    return true;   
+                } else {
+                    alert("Sorry, can only print from the editor");                    
+                }
+            }
+        },
+        exec: function() {
+            alert("Fake Print File");
+        }
+    });
 };
 
 });

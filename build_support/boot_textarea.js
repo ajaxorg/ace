@@ -130,19 +130,18 @@ function setupContainer(element, getValue) {
 
     var parentNode = element.parentNode;
 
-    // This will hold the Bespin editor.
+    // This will hold the editor.
     var container = document.createElement('div');
 
-    // To put Bespin in the place of the textarea, we have to copy a
-    // few of the textarea's style attributes to the div container.
+    // To put Ace in the place of the textarea, we have to copy a few of the
+    // textarea's style attributes to the div container.
     //
-    // The problem is, that the properties have to get computed (they
-    // might be defined by a CSS file on the page - you can't access
-    // such rules that apply to an element via elm.style). Computed
-    // properties are converted to pixels although the dimension might
-    // be given as percentage. When the window resizes, the dimensions
-    // defined by percentages changes, so the properties have to get
-    // recomputed to get the new/true pixels.
+    // The problem is that the properties have to get computed (they might be
+    // defined by a CSS file on the page - you can't access such rules that
+    // apply to an element via elm.style). Computed properties are converted to
+    // pixels although the dimension might be given as percentage. When the
+    // window resizes, the dimensions defined by percentages changes, so the
+    // properties have to get recomputed to get the new/true pixels.
     var resizeEvent = function() {
         var style = 'position:relative;';
         [
@@ -152,20 +151,20 @@ function setupContainer(element, getValue) {
                         getCSSProperty(element, container, item) + ';';
         });
 
-        // Calculating the width/height of the textarea is somewhat
-        // tricky. To do it right, you have to include the paddings
-        // to the sides as well (eg. width = width + padding-left, -right).
-        // This works well, as long as the width of the element is not
-        // set or given in pixels. In this case and after the textarea
-        // is hidden, getCSSProperty(element, container, 'width') will
-        // still return pixel value. If the element has realtiv dimensions
-        // (e.g. width='95<percent>') getCSSProperty(...) will return pixel values
-        // only as long as the textarea is visible. After it is hidden
-        // getCSSProperty will return the relativ dimensions as they
-        // are set on the element (in the case of width, 95<percent>).
-        // Making the sum of pixel vaules (e.g. padding) and realtive
-        // values (e.g. <percent>) is not possible. As such the padding styles
-        // are ignored.
+        // Calculating the width/height of the textarea is somewhat tricky. To
+        // do it right, you have to include the paddings to the sides as well
+        // (eg. width = width + padding-left, -right).  This works well, as
+        // long as the width of the element is not set or given in pixels. In
+        // this case and after the textarea is hidden, getCSSProperty(element,
+        // container, 'width') will still return pixel value. If the element
+        // has realtiv dimensions (e.g. width='95<percent>')
+        // getCSSProperty(...) will return pixel values only as long as the
+        // textarea is visible. After it is hidden getCSSProperty will return
+        // the relative dimensions as they are set on the element (in the case
+        // of width, 95<percent>).
+        // Making the sum of pixel vaules (e.g. padding) and realtive values
+        // (e.g. <percent>) is not possible. As such the padding styles are
+        // ignored.
 
         // The complete width is the width of the textarea + the padding
         // to the left and right.
@@ -367,6 +366,10 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                     }
                 break;
 
+                case "useSoftTabs":
+                    session.setUseSoftTabs(toBool(value));
+                break;
+
                 case "showPrintMargin":
                     renderer.setShowPrintMargin(toBool(value));
                 break
@@ -393,17 +396,18 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
 
 function setupSettingPanel(settingDiv, settingOpener, api, options) {
     var BOOL = {
-        "true": true,
+        "true":  true,
         "false": false
     }
 
     var desc = {
-        mode: "Mode:",
-        gutter: "Display Gutter:",
-        theme: "Theme:",
-        fontSize: "Font Size:",
-        softWrap: "Soft Wrap:",
-        showPrintMargin: "Show Print Margin:"
+        mode:            "Mode:",
+        gutter:          "Display Gutter:",
+        theme:           "Theme:",
+        fontSize:        "Font Size:",
+        softWrap:        "Soft Wrap:",
+        showPrintMargin: "Show Print Margin:",
+        useSoftTabs:     "Use Soft Tabs:"
     }
 
     var optionValues = {
@@ -420,18 +424,18 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
 
         },
         theme: {
-            textmate:   "Textmate",
-            eclipse:    "Eclipse",
-            clouds:     "Clouds",
-            clouds_midnight:    "Clouds Midnight",
-            cobalt:     "Cobalt",
-            dawn:       "Dawn",
-            idle_fingers:       "Idle Fingers",
-            kr_theme:   "Kr Theme",
-            mono_industrial:    "Mono Industrial",
-            monokai:    "Monokai",
-            pastel_on_dark: "Pastel On Dark",
-            twilight: "Twilight"
+            textmate:         "Textmate",
+            eclipse:          "Eclipse",
+            clouds:           "Clouds",
+            clouds_midnight:  "Clouds Midnight",
+            cobalt:           "Cobalt",
+            dawn:             "Dawn",
+            idle_fingers:     "Idle Fingers",
+            kr_theme:         "Kr Theme",
+            mono_industrial:  "Mono Industrial",
+            monokai:          "Monokai",
+            pastel_on_dark:   "Pastel On Dark",
+            twilight:         "Twilight"
         },
         gutter: BOOL,
         fontSize: {
@@ -447,7 +451,8 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             80:     "80",
             free:   "Free"
         },
-        showPrintMargin: BOOL
+        showPrintMargin: BOOL,
+        useSoftTabs: BOOL
     }
 
     var table = [];
@@ -511,7 +516,8 @@ window.__ace_shadowed__.options = {
     gutter:     "false",
     fontSize:   "12px",
     softWrap:   "off",
-    showPrintMargin: "false"
+    showPrintMargin: "false",
+    useSoftTabs: "true"
 }
 
 });

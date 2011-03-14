@@ -1,4 +1,4 @@
-var xml = require("../support/node-o3-xml/lib/o3-xml");
+var xml = require("../support/node-o3-xml-v4/lib/o3-xml");
 var fs = require("fs");
 
 function plistToJson(el) {
@@ -83,7 +83,9 @@ var supportedScopes = {
    "variable": "variable",
    "variable.language": "variable.language",
    
-   "meta.tag.sgml.doctype": "xml_pe"
+   "meta.tag.sgml.doctype": "xml_pe",
+   
+   "collab.user1": "collab.user1"
 };
 
 function extractStyles(theme) {   
@@ -116,7 +118,7 @@ function extractStyles(theme) {
             }
         }
     }
-    
+
     return colors;
 };
 

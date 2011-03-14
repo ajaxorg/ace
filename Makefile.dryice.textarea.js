@@ -127,7 +127,7 @@ copy({
 copy({
     source: ace,
     filter: [
-        shadow,
+        shadow
     ],
     dest: 'build/textarea/src/ace-uncompressed.js'
 });
@@ -138,7 +138,7 @@ console.log('# ace modes ---------');
 project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
-    "coffee", "perl"
+    "coffee", "perl", "svg"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
@@ -162,7 +162,8 @@ console.log('# ace themes ---------');
 // create themes
 [
     "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
-    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse"
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse",
+    "merbivore", "merbivore_soft", "vibrant_ink"
 ].forEach(function(theme) {
     console.log("theme " + theme);
     copy({
