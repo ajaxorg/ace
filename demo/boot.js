@@ -40,7 +40,7 @@ require({
         demo: "../demo",
         ace: "../lib/ace",
         cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/pilot/lib/pilot"
+        pilot: "../support/cockpit/support/pilot/lib/pilot"
     }
 });
 
