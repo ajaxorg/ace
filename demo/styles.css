@@ -37,7 +37,6 @@ body {
 }
 
 #cockpitOutput {
-    padding: 10px;
     margin: 0 15px;
     border: 1px solid #AAA;
     -moz-border-radius-topleft: 10px;
