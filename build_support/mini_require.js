@@ -35,15 +35,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-(function() {
-
-
 /**
  * Define a module along with a payload
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
-var _define = function(module, payload) {
+
+(function() {
+
+if (window.require) {
+    require.packaged = true;
+    return;
+}
+
+var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
             _define.original.apply(window, arguments);
@@ -54,15 +59,16 @@ var _define = function(module, payload) {
         return;
     }
 
-    if (!define.modules) {
+    if (arguments.length == 2)
+        payload = deps;
+
+    if (!define.modules)
         define.modules = {};
-    }
 
     define.modules[module] = payload;
 };
-if (window.define) {
+if (window.define)
     _define.original = window.define;
-}
 
 window.define = _define;
 
@@ -78,13 +84,12 @@ var _require = function(module, callback) {
             if (!dep && _require.original)
                 return _require.original.apply(window, arguments);
             params.push(dep);
-        };
+        }
         if (callback) {
             callback.apply(null, params);
         }
     }
-
-    if (typeof module === 'string') {
+    else if (typeof module === 'string') {
         var payload = lookup(module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
@@ -94,12 +99,15 @@ var _require = function(module, callback) {
         }
 
         return payload;
-    };
+    }
+    else {
+        if (_require.original)
+            return _require.original.apply(window, arguments);
+    }
 };
 
-if (window.require) {
+if (window.require)
     _require.original = window.require;
-}
 
 window.require = _require;
 require.packaged = true;
@@ -125,6 +133,5 @@ var lookup = function(moduleName) {
 
     return module;
 };
-
 
 })();

@@ -22,7 +22,7 @@ Take Ace for a spin!
 
 Check out the Ace live [demo](http://ajaxorg.github.com/ace/build/editor.html) or get a [Cloud9 IDE account](http://run.cloud9ide.com) to experience Ace while editing one of your own GitHub projects.
 
-If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet][http://ajaxorg.github.com/ace/build/textarea/editor.html].
+If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace/build/textarea/editor.html).
 
 History
 -------
@@ -51,19 +51,19 @@ The easiest version is simply:
         var editor = ace.edit("editor");
     };
     </script>
-
+    
 To change the theme simply include the Theme's JavaScript file
 
     <script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
-
+    
 and configure the editor to use the theme:
 
     editor.setTheme("ace/theme/twilight");
-
+    
 By default the editor only supports plain text mode. However all other language modes are available as separate modules. After including the mode's Javascript file
 
     <script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-
+    
 the mode can be used like this:
 
     var JavaScriptMode = require("ace/mode/javascript").Mode;
