@@ -71,7 +71,7 @@
       </td>
       <td align="right">
         <label for="show_hidden">Show Invisibles</label>
-        <input type="checkbox" name="show_hidden" id="show_hidden">
+        <input type="checkbox" name="show_hidden" id="show_hidden" checked>
       </td>
       <td align="right">
         <label for="show_hscroll">Persistent HScroll</label>
@@ -129,6 +129,10 @@
         <input type="checkbox" id="show_print_margin" checked>
       </td>
       <td align="right">
+        <label for="soft_tab">Use Soft Tab:</label>
+        <input type="checkbox" id="soft_tab" checked>
+      </td>
+      <td align="right">
         <label for="highlight_selected_word">Highlight selected word</label>
         <input type="checkbox" id="highlight_selected_word" checked>
       </td>
@@ -144,7 +148,7 @@
     <script type="text/editor" id="jstext">function foo(items) {
     for (var i=0; i<items.length; i++) {
         alert(items[i] + "juhu");
-    }
+    }	// Real Tab.
 }
 // A magic character: >> ぁ <<
 </script>
@@ -329,8 +333,8 @@ print "\n";
 
 </script>
 
-<script type="text/editor" id="svgtext"><svg 
-  width="800" height="600" 
+<script type="text/editor" id="svgtext"><svg
+  width="800" height="600"
   xmlns="http://www.w3.org/2000/svg"
   onload="StartAnimation(evt)">
 
@@ -380,14 +384,14 @@ print "\n";
     window.ShowAndGrowElement = ShowAndGrowElement
   ]]>&lt;/script>
 
-  <rect 
-    fill="#2e3436" 
-    fill-rule="nonzero" 
-    stroke-width="3" 
-    y="0" 
-    x="0" 
-    height="600" 
-    width="800" 
+  <rect
+    fill="#2e3436"
+    fill-rule="nonzero"
+    stroke-width="3"
+    y="0"
+    x="0"
+    height="600"
+    width="800"
     id="rect3590"/>
 
     <text
