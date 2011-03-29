@@ -75,8 +75,8 @@ copy({
             require: [
                 "pilot/fixoldbrowsers",
                 "pilot/index",
-                "pilot/plugin_manager",
-                "pilot/environment",
+                "ace/plugin_manager",
+                "ace/environment",
                 "ace/editor",
                 "ace/edit_session",
                 "ace/undomanager",

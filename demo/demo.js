@@ -77,7 +77,7 @@ exports.launch = function(env) {
       custom: new HashHandler({
           "gotoright": "Tab"
       })
-    }
+    };
 
     var docs = {};
 
@@ -88,7 +88,7 @@ exports.launch = function(env) {
     }
     docs.plain = new EditSession(loreIpsum);
     docs.plain.setUseWrapMode(true);
-    docs.plain.setWrapLimitRange(80, 80)
+    docs.plain.setWrapLimitRange(80, 80);
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
@@ -139,7 +139,7 @@ exports.launch = function(env) {
     docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
-    
+
     docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
@@ -383,11 +383,11 @@ exports.launch = function(env) {
     });
 
     window.env = env;
-    
+
     /**
      * This demonstrates how you can define commands and bind shortcuts to them.
      */
-    
+
     // Command to focus the command line from the editor.
     canon.addCommand({
         name: "focuscli",
@@ -400,7 +400,7 @@ exports.launch = function(env) {
             env.cli.cliView.element.focus();
         }
     });
-    
+
     // Command to focus the editor line from the command line.
     canon.addCommand({
         name: "focuseditor",
@@ -413,7 +413,7 @@ exports.launch = function(env) {
             env.editor.focus();
         }
     });
-    
+
     // Fake-Save, works from the editor and the command line.
     canon.addCommand({
         name: "save",
@@ -426,7 +426,7 @@ exports.launch = function(env) {
             alert("Fake Save File");
         }
     });
-    
+
     // Fake-Print with custom lookup-sender-match function.
     canon.addCommand({
         name: "save",
@@ -435,9 +435,9 @@ exports.launch = function(env) {
             mac: "Command-P",
             sender: function(env, sender, hashId, keyString) {
                 if (sender == "editor") {
-                    return true;   
+                    return true;
                 } else {
-                    alert("Sorry, can only print from the editor");                    
+                    alert("Sorry, can only print from the editor");
                 }
             }
         },
