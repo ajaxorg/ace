@@ -301,6 +301,10 @@ exports.launch = function(env) {
         env.editor.renderer.setHScrollBarAlwaysVisible(checked);
     });
 
+    bindCheckbox("soft_tab", function(checked) {
+        env.editor.getSession().setUseSoftTabs(checked);
+    });
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
