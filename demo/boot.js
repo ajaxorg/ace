@@ -35,7 +35,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*
 require({
     paths: {
         demo: "../demo",
@@ -45,42 +44,41 @@ require({
     }
 });
 
-var deps = [ "pilot/fixoldbrowsers", "ace/plugin_manager",
-             "ace/environment", "demo/demo" ];
+//*
+var deps = [
+    "pilot/fixoldbrowsers",
+    "ace/plugin_manager",
+    "ace/environment",
+    "demo/demo"
+];
 
-var plugins = [ "pilot/index", "cockpit/index", "ace/index" ];
 require(deps, function() {
     var catalog = require("ace/plugin_manager").catalog;
+
+    var plugins = [ "cockpit/index", "ace/index" ];
     catalog.registerPlugins(plugins).then(function() {
         var env = require("ace/environment").create();
         catalog.startupPlugins({ env: env }).then(function() {
+            var gcli = require("cockpit/index");
+            new gcli.CliView(env);
+
             require("demo/demo").launch(env);
         });
     });
 });
-*/
+//*/
 
-require({
-    paths: {
-        demo: "../demo",
-        ace: "../lib/ace",
-        cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/cockpit/support/pilot/lib/pilot"
-    }
-});
-
+/*
 var deps = [
-    "ace/environment", "pilot/index", "cockpit/index", "ace/index",
+    "ace/environment", "cockpit/index", "ace/index", "demo/demo",
     "pilot/fixoldbrowsers"
 ];
 
-require(deps, function(environment, pilot, cockpit) {
+require(deps, function(environment, cockpit, ace, demo) {
     var data = { env: environment.create() };
-    pilot.startup(data);
     cockpit.startup(data);
     new cockpit.CliView(data.env);
-
-    require([ "demo/demo" ], function(demo) {
-        demo.launch(data.env);
-    });
+    ace.startup(data);
+    demo.launch(data.env);
 }.bind(this));
+//*/

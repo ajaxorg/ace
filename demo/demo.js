@@ -40,7 +40,7 @@
 define(function(require, exports, module) {
 
 exports.launch = function(env) {
-    var canon = require("pilot/canon");
+    var canon = require("cockpit/canon");
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
