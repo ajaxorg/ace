@@ -44,7 +44,6 @@ require({
     }
 });
 
-//*
 var deps = [
     "pilot/fixoldbrowsers",
     "ace/plugin_manager",
@@ -66,19 +65,3 @@ require(deps, function() {
         });
     });
 });
-//*/
-
-/*
-var deps = [
-    "ace/environment", "cockpit/index", "ace/index", "demo/demo",
-    "pilot/fixoldbrowsers"
-];
-
-require(deps, function(environment, cockpit, ace, demo) {
-    var data = { env: environment.create() };
-    cockpit.startup(data);
-    new cockpit.CliView(data.env);
-    ace.startup(data);
-    demo.launch(data.env);
-}.bind(this));
-//*/
