@@ -397,8 +397,7 @@ exports.launch = function(env) {
         name: "focuscli",
         bindKey: {
             win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "editor"
+            mac: "Command-J"
         },
         exec: function() {
             env.cli.cliView.element.focus();
@@ -410,8 +409,7 @@ exports.launch = function(env) {
         name: "focuseditor",
         bindKey: {
             win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "cli"
+            mac: "Command-J"
         },
         exec: function() {
             env.editor.focus();
@@ -423,30 +421,10 @@ exports.launch = function(env) {
         name: "save",
         bindKey: {
             win: "Ctrl-S",
-            mac: "Command-S",
-            sender: "editor|cli"
+            mac: "Command-S"
         },
         exec: function() {
             alert("Fake Save File");
-        }
-    });
-
-    // Fake-Print with custom lookup-sender-match function.
-    canon.addCommand({
-        name: "save",
-        bindKey: {
-            win: "Ctrl-P",
-            mac: "Command-P",
-            sender: function(env, sender, hashId, keyString) {
-                if (sender == "editor") {
-                    return true;
-                } else {
-                    alert("Sorry, can only print from the editor");
-                }
-            }
-        },
-        exec: function() {
-            alert("Fake Print File");
         }
     });
 };
