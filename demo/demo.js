@@ -36,8 +36,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-
 define(function(require, exports, module) {
+
+
+var keybinding = require('ace/keyboard/keybinding');
 
 exports.launch = function(env) {
     var canon = require("cockpit/canon");
@@ -395,38 +397,29 @@ exports.launch = function(env) {
     // Command to focus the command line from the editor.
     canon.addCommand({
         name: "focuscli",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J"
-        },
         exec: function() {
             env.cli.cliView.element.focus();
         }
     });
+    keybinding.bindCommand({ win: "Ctrl-J", mac: "Command-J" }, "focuscli");
 
     // Command to focus the editor line from the command line.
     canon.addCommand({
         name: "focuseditor",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J"
-        },
         exec: function() {
             env.editor.focus();
         }
     });
+    keybinding.bindCommand({ win: "Ctrl-J", mac: "Command-J" }, "focuseditor");
 
     // Fake-Save, works from the editor and the command line.
     canon.addCommand({
         name: "save",
-        bindKey: {
-            win: "Ctrl-S",
-            mac: "Command-S"
-        },
         exec: function() {
             alert("Fake Save File");
         }
     });
+    keybinding.bindCommand({ win: "Ctrl-S", mac: "Command-S" }, "save");
 };
 
 });
