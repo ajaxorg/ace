@@ -59,7 +59,7 @@ require(deps, function() {
         var env = require("ace/environment").create();
         catalog.startupPlugins({ env: env }).then(function() {
             var gcli = require("cockpit/index");
-            new gcli.CliView(env);
+            new gcli.CliView({ env: env });
 
             require("demo/demo").launch(env);
         });
