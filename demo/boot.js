@@ -39,7 +39,7 @@ require({
     paths: {
         demo: "../demo",
         ace: "../lib/ace",
-        cockpit: "../support/cockpit/lib/cockpit",
+        gcli: "../support/cockpit/lib/gcli",
         pilot: "../support/cockpit/support/pilot/lib/pilot"
     }
 });
@@ -54,11 +54,11 @@ var deps = [
 require(deps, function() {
     var catalog = require("ace/plugin_manager").catalog;
 
-    var plugins = [ "cockpit/index", "ace/index" ];
+    var plugins = [ "gcli/index", "ace/index" ];
     catalog.registerPlugins(plugins).then(function() {
         var env = require("ace/environment").create();
         catalog.startupPlugins({ env: env }).then(function() {
-            var gcli = require("cockpit/index");
+            var gcli = require("gcli/index");
             new gcli.CliView({ env: env });
 
             require("demo/demo").launch(env);

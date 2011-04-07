@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 var keybinding = require('ace/keyboard/keybinding');
 
 exports.launch = function(env) {
-    var gcli = require("cockpit/index");
+    var gcli = require("gcli/index");
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
