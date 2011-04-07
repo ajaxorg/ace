@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 var keybinding = require('ace/keyboard/keybinding');
 
 exports.launch = function(env) {
-    var canon = require("cockpit/canon");
+    var gcli = require("cockpit/index");
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
@@ -395,7 +395,7 @@ exports.launch = function(env) {
      */
 
     // Command to focus the command line from the editor.
-    canon.addCommand({
+    gcli.addCommand({
         name: "focuscli",
         exec: function() {
             env.cli.cliView.element.focus();
@@ -404,7 +404,7 @@ exports.launch = function(env) {
     keybinding.bindCommand({ win: "Ctrl-J", mac: "Command-J" }, "focuscli");
 
     // Command to focus the editor line from the command line.
-    canon.addCommand({
+    gcli.addCommand({
         name: "focuseditor",
         exec: function() {
             env.editor.focus();
@@ -413,7 +413,7 @@ exports.launch = function(env) {
     keybinding.bindCommand({ win: "Ctrl-J", mac: "Command-J" }, "focuseditor");
 
     // Fake-Save, works from the editor and the command line.
-    canon.addCommand({
+    gcli.addCommand({
         name: "save",
         exec: function() {
             alert("Fake Save File");
