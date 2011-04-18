@@ -1,6 +1,7 @@
 var path = require("path");
 var fs = require("fs");
-var currentModule, defaultCompile = module.constructor.prototype._compile;
+var currentModule
+var defaultCompile = module.constructor.prototype._compile;
 
 module.constructor.prototype._compile = function(content, filename){  
   currentModule = this;
@@ -15,11 +16,39 @@ module.constructor.prototype._compile = function(content, filename){
 var requireModule = module;
 
 global.define = function (id, injects, factory) {
-    if (currentModule == null) {
-      throw new Error("define() may only be called during module factory instantiation");
-    }
-    
+
+    // infere the module
     var module = currentModule;
+    if (!module) {
+        module = requireModule;
+        while (module.parent)
+            module = module.parent;
+    }
+
+    // parse arguments
+    if (!factory) {
+        // two or less arguments
+        factory = injects;
+        if (factory) {
+            // two args
+            if (typeof id === "string") {
+                if (id !== module.id) {
+                    throw new Error("Can not assign module to a different id than the current file");
+                }
+                // default injects
+                injects = [];
+            }
+            else{
+                // anonymous, deps included
+                injects = id;          
+            }
+        }
+        else {
+            // only one arg, just the factory
+            factory = id;
+            injects = [];
+        }
+    }
 
     var req = function(relativeId, callback) {
         if (Array.isArray(relativeId)) {
@@ -45,50 +74,29 @@ global.define = function (id, injects, factory) {
         } else
             return require(relativeId);
     };
-    if (!factory) {
-      // two or less arguments
-      factory = injects;
-      if (factory) {
-        // two args
-        if (typeof id === "string") {
-          if (id !== module.id) {
-            throw new Error("Can not assign module to a different id than the current file");
-          }
-          // default injects
-          injects = [];
-        }
-        else{
-          // anonymous, deps included
-          injects = id;          
-        }
-      }
-      else {
-        // only one arg, just the factory
-        factory = id;
-        injects = [];
-      }
-    }
+
     injects.unshift("require", "exports", "module");
     
     id = module.id;
-    if (typeof factory !== "function"){
-      // we can just provide a plain object
-      return module.exports = factory;
+    if (typeof factory !== "function") {
+        // we can just provide a plain object
+        return module.exports = factory;
     }
     var returned = factory.apply(module.exports, injects.map(function (injection) {
-      switch (injection) {
-        // check for CommonJS injection variables
-        case "require": return req;
-        case "exports": return module.exports;
-        case "module": return module;
-        default:
-          // a module dependency
-          return req(injection);
-      }
+        switch (injection) {
+            // check for CommonJS injection variables
+            case "require": return req;
+            case "exports": return module.exports;
+            case "module": return module;
+            default:
+              // a module dependency
+              return req(injection);
+        }
     }));
-    if(returned){
-      // since AMD encapsulates a function/callback, it can allow the factory to return the exports.
-      module.exports = returned;
+    
+    if(returned) {
+          // since AMD encapsulates a function/callback, it can allow the factory to return the exports.
+          module.exports = returned;
     }
 };
 
@@ -114,8 +122,8 @@ function findModulePath(request) {
 
   // check if the file exists and is not a directory
   var tryFile = function(requestPath) {
-    try {
-      var stats = fs.statSync(requestPath);
+     try {
+        var stats = fs.statSync(requestPath);
       if (stats && !stats.isDirectory()) {
         return requestPath;
       }
