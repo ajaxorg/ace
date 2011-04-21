@@ -58,10 +58,10 @@ require(deps, function() {
     catalog.registerPlugins(plugins).then(function() {
         var env = require("ace/environment").create();
         catalog.startupPlugins({ env: env }).then(function() {
-            var gcli = require("gcli/index");
-            new gcli.CliView({ env: env });
-
             require("demo/demo").launch(env);
+
+            var gcli = require("gcli/index");
+            gcli.createView({ env: env });
         });
     });
 });
