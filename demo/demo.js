@@ -150,8 +150,8 @@ exports.launch = function(env) {
     // BEGING TESTING
     var Range = require("ace/range").Range;
     docs.js.addFold(new Range(0, 13, 0, 18), "args...");
-    docs.js.addFold(new Range(1, 10, 2, 10), "foo...");
     docs.js.addFold(new Range(2, 20, 2, 25), "bar...");
+    docs.js.addFold(new Range(1, 10, 2, 10), "foo...");
     window.s = docs.js;
     window.e = env.editor;
     setTimeout(function() {
