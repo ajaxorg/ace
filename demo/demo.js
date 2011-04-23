@@ -147,6 +147,18 @@ exports.launch = function(env) {
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
 
+    // BEGING TESTING
+    var Range = require("ace/range").Range;
+    docs.js.addFold(new Range(1,0, 2, 999), "foo...");
+    window.s = docs.js;
+    window.e = env.editor;
+    setTimeout(function() {
+        env.editor.selection.addEventListener("changeCursor", function() {
+            console.log(env.editor.selection.getRange() + "");
+        })
+    }, 500)
+    // END TESTING
+
     var modes = {
         text: new TextMode(),
         textile: new TextileMode(),
