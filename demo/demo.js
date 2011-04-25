@@ -463,6 +463,36 @@ exports.launch = function(env) {
             alert("Fake Print File");
         }
     });
+
+    canon.addCommand({
+        name: "fold",
+        bindKey: {
+            win: "Alt-L",
+            mac: "Alt-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange(),
+                placeHolder = session.getTextRange(range).substring(0, 3) + "...";
+
+            session.addFold(range, placeHolder);
+        }
+    });
+
+    canon.addCommand({
+        name: "undfold",
+        bindKey: {
+            win: "Alt-Shift-L",
+            mac: "Alt-Shift-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange();
+            session.removeFolds(session.getFoldsInRange(range));
+        }
+    });
 };
 
 });
