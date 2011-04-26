@@ -146,6 +146,9 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
+    // Each editor should contain reference to an `env` which will be used be
+    // passed to the commands executed by keybindings.
+    env.editor.env = Object.create(env);
 
     var modes = {
         text: new TextMode(),
