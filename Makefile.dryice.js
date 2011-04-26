@@ -48,6 +48,7 @@ var project = copy.createCommonJsProject([
     aceHome + '/demo'
 ]);
 
+
 copy({
     source: "build_support/editor.html",
     dest: 'build/editor.html'
@@ -74,8 +75,8 @@ copy({
             require: [
                 "pilot/fixoldbrowsers",
                 "pilot/index",
-                "pilot/plugin_manager",
-                "pilot/environment",
+                "ace/plugin_manager",
+                "ace/environment",
                 "ace/editor",
                 "ace/edit_session",
                 "ace/undomanager",
@@ -118,50 +119,50 @@ copy({
     dest: 'build/src/ace-uncompressed.js'
 });
 
-console.log('# cockpit ---------');
+console.log('# gcli ---------');
 
 project.assumeAllFilesLoaded();
-project.addRoot(aceHome + '/support/cockpit/lib');
+project.addRoot(aceHome + '/support/gcli/lib');
 
-var cockpit = copy.createDataObject();
+var gcli = copy.createDataObject();
 copy({
     source: [
         copy.source.commonjs({
             project: project,
-            require: [ 'cockpit/index' ]
+            require: [ 'gcli/index' ]
         })
     ],
     filter: [ copy.filter.moduleDefines ],
-    dest: cockpit
+    dest: gcli
 });
 copy({
     source: {
-        root: aceHome + '/support/cockpit/lib',
+        root: aceHome + '/support/gcli/lib',
         include: /.*\.css$|.*\.html$/,
         exclude: /tests?\//
     },
     filter: [ copy.filter.addDefines ],
-    dest: cockpit
+    dest: gcli
 });
 copy({
     source: {
-        root: aceHome + '/support/cockpit/lib',
+        root: aceHome + '/support/gcli/lib',
         include: /.*\.png$|.*\.gif$/,
         exclude: /tests?\//
     },
     filter: [ copy.filter.base64 ],
-    dest: cockpit
+    dest: gcli
 });
 
 // Create the compressed and uncompressed output files
 copy({
-    source: cockpit,
+    source: gcli,
     filter: copy.filter.uglifyjs,
-    dest: 'build/src/cockpit.js'
+    dest: 'build/src/gcli.js'
 });
 copy({
-    source: cockpit,
-    dest: 'build/src/cockpit-uncompressed.js'
+    source: gcli,
+    dest: 'build/src/gcli-uncompressed.js'
 });
 
 
@@ -269,7 +270,7 @@ copy({
 //    source: aceHome + "/editor.html",
 //    filter: [ function(data) {
 //        var includes = [
-//            "ace", "cockpit",
+//            "ace", "gcli",
 //            "keybinding-vim", "keybinding-emacs",
 //            "mode-javascript", "mode-css", "mode-html", "mode-php", "mode-python",
 //            "mode-xml",

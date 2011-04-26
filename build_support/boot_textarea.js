@@ -42,8 +42,8 @@ var require = window.__ace_shadowed__.require;
 var deps = [
     "pilot/fixoldbrowsers",
     "pilot/index",
-    "pilot/plugin_manager",
-    "pilot/environment",
+    "ace/plugin_manager",
+    "ace/environment",
     "ace/editor",
     "ace/edit_session",
     "ace/virtual_renderer",
@@ -58,7 +58,7 @@ catalog.registerPlugins([ "pilot/index" ]);
 
 var Dom = require("pilot/dom");
 var Event = require("pilot/event");
-var UA = require("pilot/useragent")
+var UA = require("pilot/useragent");
 
 var Editor = require("ace/editor").Editor;
 var EditSession = require("ace/edit_session").EditSession;
@@ -77,7 +77,7 @@ window.__ace_shadowed__.edit = function(el) {
     var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
     editor.setSession(doc);
 
-    var env = require("pilot/environment").create();
+    var env = require("ace/environment").create();
     catalog.startupPlugins({ env: env }).then(function() {
         env.document = doc;
         env.editor = env;
@@ -88,7 +88,7 @@ window.__ace_shadowed__.edit = function(el) {
         el.env = env;
     });
     return editor;
-}
+};
 
 
 /**
@@ -203,7 +203,7 @@ function setupContainer(element, getValue) {
                 if (oldSumit) {
                     oldSumit.call(this, evt);
                 }
-            }
+            };
             break;
         }
         parentNode = parentNode.parentNode;
@@ -284,13 +284,13 @@ window.__ace_shadowed__.transformTextarea = function(element) {
     editorDiv.appendChild(settingOpener);
 
     // Create the API.
-    var api = setupApi(editor, editorDiv, settingDiv, ace, options)
+    var api = setupApi(editor, editorDiv, settingDiv, ace, options);
 
     // Create the setting's panel.
     setupSettingPanel(settingDiv, settingOpener, api, options);
 
     return api;
-}
+};
 
 function setupApi(editor, editorDiv, settingDiv, ace, options) {
     var session = editor.getSession();
@@ -372,7 +372,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
 
                 case "showPrintMargin":
                     renderer.setShowPrintMargin(toBool(value));
-                break
+                break;
             }
 
             options[key] = value;
@@ -385,7 +385,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
         getOptions: function() {
             return options;
         }
-    }
+    };
 
     for (option in ace.options) {
         ret.setOption(option, ace.options[option]);
@@ -398,7 +398,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
     var BOOL = {
         "true":  true,
         "false": false
-    }
+    };
 
     var desc = {
         mode:            "Mode:",
@@ -408,7 +408,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         softWrap:        "Soft Wrap:",
         showPrintMargin: "Show Print Margin:",
         useSoftTabs:     "Use Soft Tabs:"
-    }
+    };
 
     var optionValues = {
         mode: {
@@ -453,13 +453,13 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         },
         showPrintMargin: BOOL,
         useSoftTabs: BOOL
-    }
+    };
 
     var table = [];
     table.push("<table><tr><th>Setting</th><th>Value</th></tr>");
 
     function renderOption(builder, option, obj, cValue) {
-        builder.push("<select title='" + option + "'>")
+        builder.push("<select title='" + option + "'>");
         for (var value in obj) {
             builder.push("<option value='" + value + "' ");
 
@@ -471,7 +471,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
                 obj[value],
                 "</option>");
         }
-        builder.push("</select>")
+        builder.push("</select>");
     }
 
     for (var option in options) {
@@ -491,7 +491,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
                 var option = select.title;
                 var value  = select.value;
                 api.setOption(option, value);
-            }
+            };
         })();
         selects[i].onchange = onChange;
     }
@@ -501,12 +501,12 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
     button.value = "Hide";
     button.onclick = function() {
         api.setDisplaySettings(false);
-    }
+    };
     settingDiv.appendChild(button);
 
     settingOpener.onclick = function() {
         api.setDisplaySettings(true);
-    }
+    };
 }
 
 // Default startup options.
@@ -518,8 +518,8 @@ window.__ace_shadowed__.options = {
     softWrap:   "off",
     showPrintMargin: "false",
     useSoftTabs: "true"
-}
+};
 
 });
 
-})()
+})();

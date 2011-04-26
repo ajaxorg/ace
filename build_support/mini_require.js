@@ -40,14 +40,14 @@
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
- 
+
 (function() {
-    
+
 if (window.require) {
     require.packaged = true;
     return;
 }
-    
+
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
@@ -64,12 +64,12 @@ var _define = function(module, deps, payload) {
 
     if (!define.modules)
         define.modules = {};
-        
+
     define.modules[module] = payload;
 };
 if (window.define)
     _define.original = window.define;
-    
+
 window.define = _define;
 
 
@@ -93,11 +93,11 @@ var _require = function(module, callback) {
         var payload = lookup(module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
-        
+
         if (callback) {
             callback();
         }
-    
+
         return payload;
     }
     else {
@@ -108,7 +108,7 @@ var _require = function(module, callback) {
 
 if (window.require)
     _require.original = window.require;
-    
+
 window.require = _require;
 require.packaged = true;
 
