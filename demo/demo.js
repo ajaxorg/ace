@@ -162,7 +162,7 @@ exports.launch = function(env) {
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
         perl: new PerlMode(),
-				csharp: new CSharpMode()
+        csharp: new CSharpMode()
     };
 
     function getMode() {
