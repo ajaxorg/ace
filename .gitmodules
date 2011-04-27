@@ -1,3 +1,3 @@
-[submodule "support/cockpit"]
-	path = support/cockpit
-	url = git://github.com/joewalker/cockpit.git
+[submodule "support/gcli"]
+	path = support/gcli
+	url = git://github.com/joewalker/gcli.git
