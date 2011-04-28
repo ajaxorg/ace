@@ -495,7 +495,7 @@ exports.launch = function(env) {
         exec: function() {
             var session = env.editor.session,
                 range = env.editor.selection.getRange();
-            session.removeFolds(session.getFoldsInRange(range));
+            session.expandFolds(session.getFoldsInRange(range));
         }
     });
 };
