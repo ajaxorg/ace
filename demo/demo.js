@@ -43,6 +43,7 @@ define(function(require, exports, module) {
 exports.launch = function(env) {
     var canon = require("pilot/canon");
     var event = require("pilot/event");
+    var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
@@ -96,6 +97,9 @@ exports.launch = function(env) {
     docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
+    docs.js.addFold("args...", new Range(0, 13, 0, 18));
+    docs.js.addFold("bar...", new Range(2, 20, 2, 25));
+    docs.js.addFold("foo...", new Range(1, 10, 2, 10));
 
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
@@ -147,24 +151,6 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     env.editor = new Editor(new Renderer(container, theme));
-
-    // BEGING TESTING
-    var Range = require("ace/range").Range;
-    docs.js.addFold("args...", new Range(0, 13, 0, 18));
-    docs.js.addFold("bar...", new Range(2, 20, 2, 25));
-    docs.js.addFold("foo...", new Range(1, 10, 2, 10));
-
-    docs.svg.addFold("fold...", new Range(1, 0, 7, 0));
-
-    docs.plain.addFold("fold", new Range(0, 90, 2, 30));
-    window.s = docs.js;
-    window.e = env.editor;
-    setTimeout(function() {
-        env.editor.selection.addEventListener("changeCursor", function() {
-            console.log(env.editor.selection.getRange() + "");
-        })
-    }, 500)
-    // END TESTING
 
     var modes = {
         text: new TextMode(),
