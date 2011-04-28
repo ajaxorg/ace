@@ -36,11 +36,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-
 define(function(require, exports, module) {
 
+
+var keybinding = require('ace/keyboard/keybinding');
+
 exports.launch = function(env) {
-    var canon = require("pilot/canon");
+    var gcli = require("gcli/index");
     var event = require("pilot/event");
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
@@ -77,7 +79,7 @@ exports.launch = function(env) {
       custom: new HashHandler({
           "gotoright": "Tab"
       })
-    }
+    };
 
     var docs = {};
 
@@ -88,7 +90,7 @@ exports.launch = function(env) {
     }
     docs.plain = new EditSession(loreIpsum);
     docs.plain.setUseWrapMode(true);
-    docs.plain.setWrapLimitRange(80, 80)
+    docs.plain.setWrapLimitRange(80, 80);
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
@@ -393,62 +395,31 @@ exports.launch = function(env) {
      */
 
     // Command to focus the command line from the editor.
-    canon.addCommand({
+    gcli.addCommand({
         name: "focuscli",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "editor"
-        },
         exec: function() {
             env.cli.cliView.element.focus();
         }
     });
+    keybinding.bindCommand({ win: "Ctrl-J", mac: "Command-J" }, "focuscli");
 
     // Command to focus the editor line from the command line.
-    canon.addCommand({
+    gcli.addCommand({
         name: "focuseditor",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "cli"
-        },
         exec: function() {
             env.editor.focus();
         }
     });
+    keybinding.bindCommand({ win: "Ctrl-J", mac: "Command-J" }, "focuseditor");
 
     // Fake-Save, works from the editor and the command line.
-    canon.addCommand({
+    gcli.addCommand({
         name: "save",
-        bindKey: {
-            win: "Ctrl-S",
-            mac: "Command-S",
-            sender: "editor|cli"
-        },
         exec: function() {
             alert("Fake Save File");
         }
     });
-
-    // Fake-Print with custom lookup-sender-match function.
-    canon.addCommand({
-        name: "save",
-        bindKey: {
-            win: "Ctrl-P",
-            mac: "Command-P",
-            sender: function(env, sender, hashId, keyString) {
-                if (sender == "editor") {
-                    return true;
-                } else {
-                    alert("Sorry, can only print from the editor");
-                }
-            }
-        },
-        exec: function() {
-            alert("Fake Print File");
-        }
-    });
+    keybinding.bindCommand({ win: "Ctrl-S", mac: "Command-S" }, "save");
 };
 
 });

@@ -92,7 +92,7 @@ var _require = function(module, callback) {
 
         return payload;
     };
-}
+};
 
 _require.packaged = true;
 _require.noWorker = true;

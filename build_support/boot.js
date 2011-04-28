@@ -38,8 +38,8 @@
 var deps = [
     "pilot/fixoldbrowsers",
     "pilot/index",
-    "pilot/plugin_manager",
-    "pilot/environment",
+    "ace/plugin_manager",
+    "ace/environment",
     "ace/editor",
     "ace/edit_session",
     "ace/virtual_renderer",
@@ -72,7 +72,7 @@ require(deps, function() {
             var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
             editor.setSession(doc);
 
-            var env = require("pilot/environment").create();
+            var env = require("ace/environment").create();
             catalog.startupPlugins({ env: env }).then(function() {
                 env.document = doc;
                 env.editor = editor;
