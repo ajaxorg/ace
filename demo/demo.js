@@ -150,13 +150,13 @@ exports.launch = function(env) {
 
     // BEGING TESTING
     var Range = require("ace/range").Range;
-    docs.js.addFold(new Range(0, 13, 0, 18), "args...");
-    docs.js.addFold(new Range(2, 20, 2, 25), "bar...");
-    docs.js.addFold(new Range(1, 10, 2, 10), "foo...");
+    docs.js.addFold("args...", new Range(0, 13, 0, 18));
+    docs.js.addFold("bar...", new Range(2, 20, 2, 25));
+    docs.js.addFold("foo...", new Range(1, 10, 2, 10));
 
-    docs.svg.addFold(new Range(1, 0, 7, 0), "fold...");
+    docs.svg.addFold("fold...", new Range(1, 0, 7, 0));
 
-    docs.plain.addFold(new Range(0, 90, 2, 30), "fold");
+    docs.plain.addFold("fold", new Range(0, 90, 2, 30));
     window.s = docs.plain;
     window.e = env.editor;
     setTimeout(function() {
@@ -481,7 +481,7 @@ exports.launch = function(env) {
                 range = env.editor.selection.getRange(),
                 placeHolder = session.getTextRange(range).substring(0, 3) + "...";
 
-            session.addFold(range, placeHolder);
+            session.addFold(placeHolder, range);
         }
     });
 
