@@ -21,6 +21,7 @@
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -154,6 +155,8 @@ exports.launch = function(env) {
     docs.js.addFold(new Range(1, 10, 2, 10), "foo...");
 
     docs.svg.addFold(new Range(1, 0, 7, 0), "fold...");
+
+    docs.plain.addFold(new Range(0, 90, 2, 30), "fold");
     window.s = docs.js;
     window.e = env.editor;
     setTimeout(function() {
