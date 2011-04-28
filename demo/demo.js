@@ -157,7 +157,7 @@ exports.launch = function(env) {
     docs.svg.addFold(new Range(1, 0, 7, 0), "fold...");
 
     docs.plain.addFold(new Range(0, 90, 2, 30), "fold");
-    window.s = docs.js;
+    window.s = docs.plain;
     window.e = env.editor;
     setTimeout(function() {
         env.editor.selection.addEventListener("changeCursor", function() {
