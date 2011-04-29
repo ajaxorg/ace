@@ -21,6 +21,7 @@
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -42,6 +43,7 @@ define(function(require, exports, module) {
 exports.launch = function(env) {
     var canon = require("pilot/canon");
     var event = require("pilot/event");
+    var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
@@ -95,6 +97,9 @@ exports.launch = function(env) {
     docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
+    docs.js.addFold("args...", new Range(0, 13, 0, 18));
+    docs.js.addFold("bar...", new Range(2, 20, 2, 25));
+    docs.js.addFold("foo...", new Range(1, 10, 2, 10));
 
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
@@ -447,6 +452,36 @@ exports.launch = function(env) {
         },
         exec: function() {
             alert("Fake Print File");
+        }
+    });
+
+    canon.addCommand({
+        name: "fold",
+        bindKey: {
+            win: "Alt-L",
+            mac: "Alt-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange(),
+                placeHolder = session.getTextRange(range).substring(0, 3) + "...";
+
+            session.addFold(placeHolder, range);
+        }
+    });
+
+    canon.addCommand({
+        name: "undfold",
+        bindKey: {
+            win: "Alt-Shift-L",
+            mac: "Alt-Shift-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange();
+            session.expandFolds(session.getFoldsInRange(range));
         }
     });
 };
