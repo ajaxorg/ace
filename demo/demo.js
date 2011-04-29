@@ -85,7 +85,7 @@ exports.launch = function(env) {
 
     // Make the lorem ipsum text a little bit longer.
     var loreIpsum = document.getElementById("plaintext").innerHTML;
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 11; i++) {
         loreIpsum += loreIpsum;
     }
     docs.plain = new EditSession(loreIpsum);
