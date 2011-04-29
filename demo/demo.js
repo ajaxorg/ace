@@ -97,9 +97,6 @@ exports.launch = function(env) {
     docs.js = new EditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
-    docs.js.addFold("args...", new Range(0, 13, 0, 18));
-    docs.js.addFold("bar...", new Range(2, 20, 2, 25));
-    docs.js.addFold("foo...", new Range(1, 10, 2, 10));
 
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
@@ -120,6 +117,7 @@ exports.launch = function(env) {
     docs.java = new EditSession(document.getElementById("javatext").innerHTML);
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
+    docs.java.addFold("...", new Range(8, 44, 13, 4));
 
     docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
     docs.ruby.setMode(new RubyMode());
