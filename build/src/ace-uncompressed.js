@@ -4878,7 +4878,7 @@ var Editor =function(renderer, session) {
 
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
-    
+
     // TODO detect touch event support
     if (useragent.isIPad) {
         //this.$mouseHandler = new TouchHandler(this);
@@ -4941,6 +4941,7 @@ var Editor =function(renderer, session) {
             this.session.removeEventListener("changeTabSize", this.$onChangeTabSize);
             this.session.removeEventListener("changeWrapLimit", this.$onChangeWrapLimit);
             this.session.removeEventListener("changeWrapMode", this.$onChangeWrapMode);
+            this.session.removeEventListener("onChangeFold", this.$onChangeFold);
             this.session.removeEventListener("changeFrontMarker", this.$onChangeFrontMarker);
             this.session.removeEventListener("changeBackMarker", this.$onChangeBackMarker);
             this.session.removeEventListener("changeBreakpoint", this.$onChangeBreakpoint);
@@ -4975,18 +4976,21 @@ var Editor =function(renderer, session) {
         this.$onChangeWrapMode = this.onChangeWrapMode.bind(this);
         session.addEventListener("changeWrapMode", this.$onChangeWrapMode);
 
+        this.$onChangeFold = this.onChangeFold.bind(this);
+        session.addEventListener("changeFold", this.$onChangeFold);
+
         this.$onChangeFrontMarker = this.onChangeFrontMarker.bind(this);
         this.session.addEventListener("changeFrontMarker", this.$onChangeFrontMarker);
-        
+
         this.$onChangeBackMarker = this.onChangeBackMarker.bind(this);
         this.session.addEventListener("changeBackMarker", this.$onChangeBackMarker);
-        
+
         this.$onChangeBreakpoint = this.onChangeBreakpoint.bind(this);
         this.session.addEventListener("changeBreakpoint", this.$onChangeBreakpoint);
 
         this.$onChangeAnnotation = this.onChangeAnnotation.bind(this);
         this.session.addEventListener("changeAnnotation", this.$onChangeAnnotation);
-        
+
         this.$onCursorChange = this.onCursorChange.bind(this);
         this.session.addEventListener("changeOverwrite", this.$onCursorChange);
 
@@ -5067,7 +5071,7 @@ var Editor =function(renderer, session) {
         // to be on the save side we do both
         // except for IE
         var _self = this;
-        if (!useragent.isIE) {        
+        if (!useragent.isIE) {
             setTimeout(function() {
                 _self.textInput.focus();
             });
@@ -5127,22 +5131,28 @@ var Editor =function(renderer, session) {
 
     this.$updateHighlightActiveLine = function() {
         var session = this.getSession();
-        
+
         if (session.$highlightLineMarker) {
             session.removeMarker(session.$highlightLineMarker);
         }
         session.$highlightLineMarker = null;
 
         if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
-            var cursor = this.getCursorPosition();
-            var range = new Range(cursor.row, 0, cursor.row+1, 0);
+            var cursor = this.getCursorPosition(),
+                foldLine = this.session.getFoldLine(cursor.row);
+            var range;
+            if (foldLine) {
+                range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
+            } else {
+                range = new Range(cursor.row, 0, cursor.row+1, 0);
+            }
             session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "line");
         }
     };
 
     this.onSelectionChange = function(e) {
         var session = this.getSession();
-        
+
         if (session.$selectionMarker) {
             session.removeMarker(session.$selectionMarker);
         }
@@ -5163,11 +5173,11 @@ var Editor =function(renderer, session) {
     this.onChangeFrontMarker = function() {
         this.renderer.updateFrontMarkers();
     };
-    
+
     this.onChangeBackMarker = function() {
         this.renderer.updateBackMarkers();
     };
-    
+
     this.onChangeBreakpoint = function() {
         this.renderer.setBreakpoints(this.session.getBreakpoints());
     };
@@ -5186,6 +5196,11 @@ var Editor =function(renderer, session) {
 
     this.onChangeWrapMode = function() {
         this.renderer.onResize(true);
+    };
+
+    this.onChangeFold = function() {
+        // TODO: This might be too much updating. Okay for now.
+        this.renderer.updateFull();
     };
 
     this.getCopyText = function() {
@@ -5213,7 +5228,7 @@ var Editor =function(renderer, session) {
 
         var session = this.session;
         var mode = session.getMode();
-        
+
         var cursor = this.getCursorPosition();
         text = text.replace("\t", this.session.getTabString());
 
@@ -5236,14 +5251,14 @@ var Editor =function(renderer, session) {
         var lineIndent    = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
         var end           = session.insert(cursor, text);
 
-        
         var lineState = session.getState(cursor.row);
+
         // TODO disabled multiline auto indent
         // possibly doing the indent before inserting the text
         // if (cursor.row !== end.row) {
         if (session.getDocument().isNewLine(text)) {
             this.moveCursorTo(cursor.row+1, 0);
-            
+
             var size = session.getTabSize();
             var minIndent = Number.MAX_VALUE;
 
@@ -5278,7 +5293,7 @@ var Editor =function(renderer, session) {
             if (shouldOutdent) {
                 mode.autoOutdent(lineState, session, cursor.row);
             }
-        };        
+        };
     }
 
     this.onTextInput = function(text) {
@@ -5407,7 +5422,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeWordRight = function() {
         if (this.$readOnly)
             return;
@@ -5418,7 +5433,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeWordLeft = function() {
         if (this.$readOnly)
             return;
@@ -5429,7 +5444,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeToLineStart = function() {
         if (this.$readOnly)
             return;
@@ -5440,7 +5455,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeToLineEnd = function() {
         if (this.$readOnly)
             return;
@@ -5455,30 +5470,30 @@ var Editor =function(renderer, session) {
     this.splitLine = function() {
         if (this.$readOnly)
             return;
-        
+
         if (!this.selection.isEmpty()) {
             this.session.remove(this.getSelectionRange());
             this.clearSelection();
         }
-    
+
         var cursor = this.getCursorPosition();
         this.insert("\n");
         this.moveCursorToPosition(cursor);
     };
-    
+
     this.transposeLetters = function() {
         if (this.$readOnly)
             return;
-        
+
         if (!this.selection.isEmpty()) {
             return;
         }
-    
+
         var cursor = this.getCursorPosition();
         var column = cursor.column;
         if (column == 0)
             return;
-        
+
         var line = this.session.getLine(cursor.row);
         if (column < line.length) {
             var swap = line.charAt(column) + line.charAt(column-1);
@@ -5490,7 +5505,7 @@ var Editor =function(renderer, session) {
         }
         this.session.replace(range, swap);
     };
-    
+
     this.indent = function() {
         if (this.$readOnly)
             return;
@@ -5703,7 +5718,7 @@ var Editor =function(renderer, session) {
     this.scrollToLine = function(line, center) {
         this.renderer.scrollToLine(line, center);
     };
-    
+
     this.centerSelection = function() {
         var range = this.getSelectionRange();
         var line = Math.floor(range.start.row + (range.end.row - range.start.row) / 2);
@@ -5728,7 +5743,7 @@ var Editor =function(renderer, session) {
         this.selection.selectAll();
         this.$blockScrolling -= 1;
     };
-    
+
     this.clearSelection = function() {
         this.selection.clearSelection();
     };
@@ -5855,7 +5870,7 @@ var Editor =function(renderer, session) {
         this.$blockScrolling += 1;
         for (var i = ranges.length - 1; i >= 0; --i)
             this.$tryReplace(ranges[i], replacement);
-        
+
         this.selection.setSelectionRange(selection);
         this.$blockScrolling -= 1;
     },
@@ -7562,6 +7577,7 @@ canon.addCommand({
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -7577,7 +7593,7 @@ canon.addCommand({
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/edit_session', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer'], function(require, exports, module) {
+define('ace/edit_session', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var lang = require("pilot/lang");
@@ -7594,7 +7610,18 @@ var EditSession = function(text, mode) {
     this.$frontMarkers = {};
     this.$backMarkers = {};
     this.$markerId = 1;
+    this.$rowCache = [];
+    this.$rowCacheSize = 1000;
     this.$wrapData = [];
+    this.$foldData = [];
+    this.$foldData.toString = function() {
+        var str = "";
+        this.forEach(function(foldLine) {
+            str += "\n" + foldLine.toString();
+        });
+        return str;
+    }
+    this.$docChangeCounter = 0;
 
     if (text instanceof Document) {
         this.setDocument(text);
@@ -7620,29 +7647,88 @@ var EditSession = function(text, mode) {
 
         this.doc = doc;
         doc.on("change", this.onChange.bind(this));
+        doc.on("changeStart", this.onChangeStart.bind(this));
+        doc.on("changeEnd",   this.onChangeEnd.bind(this));
+        this.on("changeFold", this.onChangeFold.bind(this));
     };
 
     this.getDocument = function() {
         return this.doc;
     };
 
+    this.onChangeStart = function() {
+        this.$docChangeCounter ++;
+    };
+
+    this.$resetRowCache = function(row) {
+        var rowCache = this.$rowCache;
+        if (row == 0) {
+            rowCache = [];
+            return;
+        }
+        for (var i = 0; i < rowCache.length; i++) {
+            if (rowCache[i].docRow >= row) {
+                rowCache.splice(i, rowCache.length);
+                return;
+            }
+        }
+    }
+
+    this.onChangeEnd = function() {
+        this.$docChangeCounter --;
+        if (this.$docChangeCounter == 0
+            && !this.$fromUndo && this.$undoManager)
+        {
+            if (this.$deltasFold.length) {
+                this.$deltas.push({
+                    group: "fold",
+                    deltas: this.$deltasFold
+                });
+                this.$deltasFold = [];
+            }
+            if (this.$deltasDoc) {
+                this.$deltas.push({
+                    group: "doc",
+                    deltas: this.$deltasDoc
+                });
+                this.$deltasDoc = [];
+            }
+            this.$informUndoManager.schedule();
+        }
+    };
+
+    this.onChangeFold = function(e) {
+        var fold = e.data;
+        this.$resetRowCache(fold.start.row);
+    };
+
     this.onChange = function(e) {
         var delta = e.data;
         this.$modified = true;
+
+        this.$resetRowCache(delta.range.start.row);
+
+        var removedFolds = this.$updateInternalDataOnChange(e);
         if (!this.$fromUndo && this.$undoManager && !delta.ignore) {
-            this.$deltas.push(delta);
-            this.$informUndoManager.schedule();
+            this.$deltasDoc.push(delta);
+            if (removedFolds && removedFolds.length != 0) {
+                this.$deltasFold.push({
+                    action: "removeFolds",
+                    folds:  removedFolds
+                });
+            }
         }
 
-        this.$updateWrapDataOnChange(e);
-        
         this.bgTokenizer.start(delta.range.start.row);
         this._dispatchEvent("change", e);
     };
 
     this.setValue = function(text) {
         this.doc.setValue(text);
+        this.$resetRowCache(0);
         this.$deltas = [];
+        this.$deltasDoc = [];
+        this.$deltasFold = [];
         this.getUndoManager().reset();
     };
 
@@ -7658,14 +7744,17 @@ var EditSession = function(text, mode) {
     this.getState = function(row) {
         return this.bgTokenizer.getState(row);
     };
-    
+
     this.getTokens = function(firstRow, lastRow) {
         return this.bgTokenizer.getTokens(firstRow, lastRow);
     };
 
     this.setUndoManager = function(undoManager) {
         this.$undoManager = undoManager;
+        this.$resetRowCache(0);
         this.$deltas = [];
+        this.$deltasDoc = [];
+        this.$deltasFold = [];
 
         if (this.$informUndoManager) {
             this.$informUndoManager.cancel();
@@ -7673,14 +7762,17 @@ var EditSession = function(text, mode) {
 
         if (undoManager) {
             var self = this;
-            this.$informUndoManager = lang.deferredCall(function() {
+            this.$syncInformUndoManager = function() {
+                self.$informUndoManager.cancel();
                 if (self.$deltas.length > 0)
                     undoManager.execute({
                         action : "aceupdate",
                         args   : [self.$deltas, self]
                     });
                 self.$deltas = [];
-            });
+            }
+            this.$informUndoManager =
+                lang.deferredCall(this.$syncInformUndoManager);
         }
     };
 
@@ -7917,6 +8009,12 @@ var EditSession = function(text, mode) {
         return this.$useWorker;
     };
 
+    this.onReloadTokenizer = function(e) {
+        var rows = e.data;
+        this.bgTokenizer.start(rows.first);
+        this._dispatchEvent("tokenizerUpdate", e);
+    };
+
     this.$mode = null;
     this.setMode = function(mode) {
         if (this.$mode === mode) return;
@@ -7931,6 +8029,11 @@ var EditSession = function(text, mode) {
 
         var tokenizer = mode.getTokenizer();
 
+        if(tokenizer.addEventListener !== undefined) {
+            var onReloadTokenizer = this.onReloadTokenizer.bind(this);
+            tokenizer.addEventListener("update", onReloadTokenizer);
+        }
+
         if (!this.bgTokenizer) {
             this.bgTokenizer = new BackgroundTokenizer(tokenizer);
             var _self = this;
@@ -7940,7 +8043,7 @@ var EditSession = function(text, mode) {
         } else {
             this.bgTokenizer.setTokenizer(tokenizer);
         }
-        
+
         this.bgTokenizer.setDocument(this.getDocument());
         this.bgTokenizer.start(0);
 
@@ -7983,11 +8086,25 @@ var EditSession = function(text, mode) {
             var longestScreenLine = 0;
 
             for ( var i = 0; i < lines.length; i++) {
-                var line = lines[i],
-                    len = line.length,
-                    screenLen = this.$getStringScreenWidth(line);
+                var foldLine = this.getFoldLine(i),
+                    line, len;
+
+                line = lines[i];
+                if (foldLine) {
+                    var end = foldLine.range.end;
+                    line = this.getFoldDisplayLine(foldLine);
+                    // Continue after the foldLine.end.row. All the lines in
+                    // between are folded.
+                    i = end.row;
+                }
+                len = line.length;
                 longestLine = Math.max(longestLine, len);
-                longestScreenLine = Math.max(longestScreenLine, screenLen);
+                if (!this.$useWrapMode) {
+                    longestScreenLine = Math.max(
+                        longestScreenLine,
+                        this.$getStringScreenWidth(line)[0]
+                    );
+                }
             }
             this.width = longestLine;
 
@@ -8123,10 +8240,20 @@ var EditSession = function(text, mode) {
             return;
 
         this.$fromUndo = true;
-        this.doc.revertDeltas(deltas);
+        var lastUndoRange = null;
+        for (var i = deltas.length - 1; i != -1; i--) {
+            delta = deltas[i];
+            if (delta.group == "doc") {
+                this.doc.revertDeltas(delta.deltas);
+                lastUndoRange =
+                    this.$setUndoSelection(delta.deltas, true, lastUndoRange);
+            } else {
+                delta.deltas.forEach(function(foldDelta) {
+                    this.addFolds(foldDelta.folds);
+                }, this);
+            }
+        }
         this.$fromUndo = false;
-
-        this.$setUndoSelection(deltas, true);
     },
 
     this.redoChanges = function(deltas) {
@@ -8134,56 +8261,72 @@ var EditSession = function(text, mode) {
             return;
 
         this.$fromUndo = true;
-        this.doc.applyDeltas(deltas);
+        var lastUndoRange = null;
+        for (var i = 0; i < deltas.length; i++) {
+            delta = deltas[i];
+            if (delta.group == "doc") {
+                this.doc.applyDeltas(delta.deltas);
+                lastUndoRange =
+                    this.$setUndoSelection(delta.deltas, false, lastUndoRange);
+            }
+        }
         this.$fromUndo = false;
-
-        this.$setUndoSelection(deltas, false);
     },
 
-    this.$setUndoSelection = function(deltas, isUndo) {
-        // invert deltas is they are an undo
-        if (isUndo)
-            deltas = deltas.map(function(delta) {
-                var d = {
-                    range: delta.range
+    this.$setUndoSelection = function(deltas, isUndo, lastUndoRange) {
+        function isInsert(delta) {
+            var insert =
+                delta.action == "insertText" || delta.action == "insertLines";
+            return isUndo ? !insert : insert;
+        }
+
+        var delta = deltas[0];
+        var range;
+        var lastDeltaIsInsert = false;
+        if (isInsert(delta)) {
+            range = delta.range.clone();
+            lastDeltaIsInsert = true;
+        } else {
+            range = Range.fromPoints(delta.range.start, delta.range.start);
+            lastDeltaIsInsert = false;
+        }
+
+        for (var i = 1; i < deltas.length; i++) {
+            delta = deltas[i];
+            if (isInsert(delta)) {
+                if (range.compare(delta.range.start) == -1) {
+                    range.setStart(delta.range.start);
                 }
-                if (delta.action == "insertText" || delta.action == "insertLines")
-                    d.action = "removeText"
-                else
-                    d.action = "insertText"
-                return d;
-            }).reverse();
-
-
-        var actions = [{}];
-
-        // collapse insert and remove operations
-        for (var i=0; i<deltas.length; i++) {
-            var delta = deltas[i];
-            var isInsert = delta.action == "insertText" || delta.action == "insertLines";
-            var action = actions[actions.length-1];
-            if (action.isInsert !== isInsert) {
-                actions.push({
-                    isInsert: isInsert,
-                    start: isInsert ? delta.range.start : delta.range.end,
-                    end: isInsert ? delta.range.end : delta.range.start
-                })
-            }
-            else {
-                if (isInsert)
-                    action.end = delta.range.end;
-                else
-                    action.start = delta.range.start;
+                if (range.compare(delta.range.end) == 1) {
+                    range.setEnd(delta.range.end);
+                }
+                lastDeltaIsInsert = true;
+            } else {
+                if (range.compare(delta.range.start) == -1) {
+                    range =
+                        Range.fromPoints(delta.range.start, delta.range.start);
+                }
+                lastDeltaIsInsert = false;
             }
         }
 
-        // update selection based on last operation
-        this.selection.clearSelection();
-        var action = actions[actions.length-1];
-        if (action.isInsert)
-            this.selection.setSelectionRange(Range.fromPoints(action.start, action.end));
-        else
-            this.selection.moveCursorToPosition(action.end);
+        // Check if this range and the last undo range has something in common.
+        // If true, merge the ranges.
+        if (lastUndoRange != null) {
+            var cmp = lastUndoRange.compareRange(range);
+            if (cmp == 1) {
+                range.setStart(lastUndoRange.start);
+            } else if (cmp == -1) {
+                range.setEnd(lastUndoRange.end);
+            }
+        }
+
+        if (!range.isEmpty()) {
+            this.selection.setSelectionRange(range);
+        } else {
+            this.selection.moveCursorToPosition(range.start);
+        }
+        return range;
     },
 
     this.replace = function(range, text) {
@@ -8303,6 +8446,7 @@ var EditSession = function(text, mode) {
         if (useWrapMode != this.$useWrapMode) {
             this.$useWrapMode = useWrapMode;
             this.$modified = true;
+            this.$resetRowCache(0);
 
             // If wrapMode is activaed, the wrapData array has to be initialized.
             if (useWrapMode) {
@@ -8345,6 +8489,7 @@ var EditSession = function(text, mode) {
             this.$modified = true;
             if (this.$useWrapMode) {
                 this.$updateWrapData(0, this.getLength() - 1);
+                this.$resetRowCache(0)
                 this._dispatchEvent("changeWrapLimit");
             }
             return true;
@@ -8377,15 +8522,15 @@ var EditSession = function(text, mode) {
         };
     };
 
-    this.$updateWrapDataOnChange = function(e) {
-        if (!this.$useWrapMode) {
-            return;
-        }
-
+    this.$updateInternalDataOnChange = function(e) {
+        var useWrapMode = this.$useWrapMode;
         var len;
         var action = e.data.action;
         var firstRow = e.data.range.start.row,
-            lastRow = e.data.range.end.row;
+            lastRow = e.data.range.end.row,
+            start = e.data.range.start,
+            end = e.data.range.end;
+        var removedFolds = null;
 
         if (action.indexOf("Lines") != -1) {
             if (action == "insertLines") {
@@ -8400,20 +8545,97 @@ var EditSession = function(text, mode) {
 
         if (len != 0) {
             if (action.indexOf("remove") != -1) {
-                this.$wrapData.splice(firstRow, len);
+                useWrapMode && this.$wrapData.splice(firstRow, len);
+
+                var foldLines = this.$foldData;
+                removedFolds = this.getFoldsInRange(e.data.range);
+                this.removeFolds(removedFolds);
+
+                var foldLine = this.getFoldLine(lastRow);
+                var idx = 0;
+                if (foldLine) {
+                    foldLine.addRemoveChars(end.row, end.column, start.column - end.column);
+                    foldLine.shiftRow(-len);
+
+                    var foldLineBefore = this.getFoldLine(firstRow);
+                    if (foldLineBefore && foldLineBefore !== foldLine) {
+                        foldLineBefore.merge(foldLine);
+                        foldLine = foldLineBefore;
+                    }
+                    idx = foldLines.indexOf(foldLine) + 1;
+                }
+
+                for (idx; idx < foldLines.length; idx++) {
+                    var foldLine = foldLines[idx];
+                    if (foldLine.start.row >= lastRow) {
+                        foldLine.shiftRow(-len);
+                    }
+                }
+
                 lastRow = firstRow;
             } else {
-                var args = [firstRow, 0];
-                for (var i = 0; i < len; i++) args.push([]);
-                this.$wrapData.splice.apply(this.$wrapData, args);
+                var args;
+                if (useWrapMode) {
+                    args = [firstRow, 0];
+                    for (var i = 0; i < len; i++) args.push([]);
+                    this.$wrapData.splice.apply(this.$wrapData, args);
+                }
+
+                // If some new line is added inside of a foldLine, then split
+                // the fold line up.
+                var foldLines = this.$foldData;
+                var foldLine = this.getFoldLine(firstRow);
+                var idx = 0;
+                if (foldLine) {
+                    var cmp = foldLine.range.compareInside(start.row, start.column)
+                    // Inside of the foldLine range. Need to split stuff up.
+                    if (cmp == 0) {
+                        foldLine = foldLine.split(start.row, start.column);
+                        foldLine.shiftRow(len);
+                        foldLine.addRemoveChars(
+                            lastRow, 0, end.column - start.column);
+                    } else
+                    // Infront of the foldLine but same row. Need to shift column.
+                    if (cmp == -1) {
+                        foldLine.addRemoveChars(firstRow, 0, end.column - start.column);
+                        foldLine.shiftRow(len);
+                    }
+                    // Nothing to do if the insert is after the foldLine.
+                    idx = foldLines.indexOf(foldLine) + 1;
+                }
+
+                for (idx; idx < foldLines.length; idx++) {
+                    var foldLine = foldLines[idx];
+                    if (foldLine.start.row >= firstRow) {
+                        foldLine.shiftRow(len);
+                    }
+                }
+            }
+        } else {
+            // Realign folds. E.g. if you add some new chars before a fold, the
+            // fold should "move" to the right.
+            var column;
+            len = Math.abs(e.data.range.start.column - e.data.range.end.column);
+            if (action.indexOf("remove") != -1) {
+                // Get all the folds in the change range and remove them.
+                removedFolds = this.getFoldsInRange(e.data.range);
+                this.removeFolds(removedFolds);
+
+                len = -len;
+            }
+            var foldLine = this.getFoldLine(firstRow);
+            if (foldLine) {
+                foldLine.addRemoveChars(firstRow, start.column, len);
             }
         }
 
-        if (this.$wrapData.length != this.doc.$lines.length) {
+        if (useWrapMode && this.$wrapData.length != this.doc.$lines.length) {
             console.error("The length of doc.$lines and $wrapData have to be the same!");
         }
 
-        this.$updateWrapData(firstRow, lastRow);
+        useWrapMode && this.$updateWrapData(firstRow, lastRow);
+
+        return removedFolds;
     };
 
     this.$updateWrapData = function(firstRow, lastRow) {
@@ -8421,29 +8643,67 @@ var EditSession = function(text, mode) {
         var tabSize = this.getTabSize();
         var wrapData = this.$wrapData;
         var wrapLimit = this.$wrapLimit;
+        var tokens;
+        var foldLine;
 
-        for (var row = firstRow; row <= lastRow; row++) {
+        var row = firstRow;
+        lastRow = Math.min(lastRow, lines.length - 1);
+        while (row <= lastRow) {
+            foldLine = this.getFoldLine(row);
+            if (!foldLine) {
+                tokens = this.$getDisplayTokens(lang.stringTrimRight(lines[row]));
+            } else {
+                tokens = [];
+                foldLine.walk(
+                    function(placeholder, row, column, lastColumn) {
+                        var walkTokens;
+                        if (placeholder) {
+                            walkTokens = this.$getDisplayTokens(
+                                            placeholder, tokens.length);
+                            walkTokens[0] = PLACEHOLDER_START;
+                            for (var i = 1; i < walkTokens.length; i++) {
+                                walkTokens[i] = PLACEHOLDER_BODY;
+                            }
+                        } else {
+                            walkTokens = this.$getDisplayTokens(
+                                lines[row].substring(lastColumn, column),
+                                tokens.length);
+                        }
+                        tokens = tokens.concat(walkTokens);
+                    }.bind(this),
+                    foldLine.end.row,
+                    lines[foldLine.end.row].length + 1
+                );
+                // Remove spaces/tabs from the back of the token array.
+                while (tokens.length != 0
+                    && tokens[tokens.length - 1] >= SPACE)
+                {
+                    tokens.pop();
+                }
+            }
             wrapData[row] =
-                this.$computeWrapSplits(lines[row], wrapLimit, tabSize);
+                this.$computeWrapSplits(tokens, wrapLimit, tabSize);
+
+            row = this.getRowFoldEnd(row) + 1;
         }
     };
 
     // "Tokens"
     var CHAR = 1,
         CHAR_EXT = 2,
-        SPACE = 3,
-        TAB = 4,
-        TAB_SPACE = 5;
+        PLACEHOLDER_START = 3,
+        PLACEHOLDER_BODY =  4,
+        SPACE = 10,
+        TAB = 11,
+        TAB_SPACE = 12;
 
-    this.$computeWrapSplits = function(textLine, wrapLimit, tabSize) {
-        textLine = lang.stringTrimRight(textLine);
-        if (textLine.length == 0) {
+    this.$computeWrapSplits = function(tokens, wrapLimit, tabSize) {
+        if (tokens.length == 0) {
             return [];
         }
 
         var tabSize = this.getTabSize();
         var splits = [];
-        var tokens = this.$getDisplayTokens(textLine);
         var displayLength = tokens.length;
         var lastSplit = 0, lastDocSplit = 0;
 
@@ -8454,11 +8714,11 @@ var EditSession = function(text, mode) {
             // and multipleWidth characters.
             var len = displayed.length;
             displayed.join("").
-                // Get all the tabs spaces.
-                replace(/5/g, function(m) {
+                // Get all the TAB_SPACEs.
+                replace(/12/g, function(m) {
                     len -= 1;
                 }).
-                // Get all the multipleWidth characters.
+                // Get all the CHAR_EXT/multipleWidth characters.
                 replace(/2/g, function(m) {
                     len -= 1;
                 });
@@ -8472,53 +8732,112 @@ var EditSession = function(text, mode) {
             // This is, where the split should be.
             var split = lastSplit + wrapLimit;
 
-            // If there is a space or tab at this split position.
+            // If there is a space or tab at this split position, then making
+            // a split is simple.
             if (tokens[split] >= SPACE) {
                 // Include all following spaces + tabs in this split as well.
                 while (tokens[split] >= SPACE)  {
                     split ++;
                 }
                 addSplit(split);
-            } else {
-                // Search for the first non space/tab token.
+                continue;
+            }
+
+            // === ELSE ===
+            // Check if split is inside of a placeholder. Placeholder are
+            // not splitable. Therefore, seek the beginning of the placeholder
+            // and try to place the split beofre the placeholder's start.
+            if (tokens[split] == PLACEHOLDER_START
+                || tokens[split] == PLACEHOLDER_BODY)
+            {
+                // Seek the start of the placeholder and do the split
+                // before the placeholder. By definition there always
+                // a PLACEHOLDER_START between split and lastSplit.
                 for (split; split != lastSplit - 1; split--) {
-                    if (tokens[split] >= SPACE) {
-                        split++;
+                    if (tokens[split] == PLACEHOLDER_START) {
+                        // split++; << No incremental here as we want to
+                        //  have the position before the Placeholder.
                         break;
                     }
                 }
-                // If we found one, then add the split.
+
+                // If the PLACEHOLDER_START is not the index of the
+                // last split, then we can do the split
                 if (split > lastSplit) {
                     addSplit(split);
+                    continue;
                 }
-                // No space or tab around? Well, force a split then.
-                else {
-                    addSplit(lastSplit + wrapLimit);
+
+                // If the PLACEHOLDER_START IS the index of the last
+                // split, then we have to place the split after the
+                // placeholder. So, let's seek for the end of the placeholder.
+                split = lastSplit + wrapLimit;
+                for (split; split < tokens.length; split++) {
+                    if (tokens[split] != PLACEHOLDER_BODY)
+                    {
+                        break;
+                    }
+                }
+
+                // If spilt == tokens.length, then the placeholder is the last
+                // thing in the line and adding a new split doesn't make sense.
+                if (split == tokens.length) {
+                    break;  // Breaks the while-loop.
+                }
+
+                // Finally, add the split...
+                addSplit(split);
+                continue;
+            }
+
+            // === ELSE ===
+            // Search for the first non space/tab/placeholder token backwards.
+            for (split; split != lastSplit - 1; split--) {
+                if (tokens[split] >= PLACEHOLDER_START) {
+                    split++;
+                    break;
                 }
             }
+            // If we found one, then add the split.
+            if (split > lastSplit) {
+                addSplit(split);
+                continue;
+            }
+
+            // === ELSE ===
+            split = lastSplit + wrapLimit;
+            // The split is inside of a CHAR or CHAR_EXT token and no space
+            // around -> force a split.
+            addSplit(lastSplit + wrapLimit);
         }
         return splits;
     }
 
-    this.$getDisplayTokens = function(str) {
+    /**
+     * @param
+     *   offset: The offset in screenColumn at which position str starts.
+     *           Important for calculating the realTabSize.
+     */
+    this.$getDisplayTokens = function(str, offset) {
         var arr = [];
         var tabSize;
+        offset = offset || 0;
 
         for (var i = 0; i < str.length; i++) {
             var c = str.charCodeAt(i);
             // Tab
             if (c == 9) {
-                tabSize = this.getScreenTabSize(arr.length);
+                tabSize = this.getScreenTabSize(arr.length + offset);
                 arr.push(TAB);
                 for (var n = 1; n < tabSize; n++) {
                     arr.push(TAB_SPACE);
                 }
             }
-			// Space
-			else if(c == 32) {
-			    arr.push(SPACE);
-			}
-    		// full width characters
+            // Space
+            else if(c == 32) {
+                arr.push(SPACE);
+            }
+            // full width characters
             else if (isFullWidth(c)) {
                 arr.push(CHAR, CHAR_EXT);
             } else {
@@ -8533,84 +8852,68 @@ var EditSession = function(text, mode) {
      * the string starts at the first column on the screen.
      *
      * @param string str String to calculate the screen width of
-     * @return int number of columns for str on screen.
+     * @return array
+     *      [0]: number of columns for str on screen.
+     *      [1]: docColumn position that was read until (useful with screenColumn)
      */
-    this.$getStringScreenWidth = function(str) {
-        var screenColumn = 0;
-        var tabSize = this.getTabSize();
+    this.$getStringScreenWidth = function(str, maxScreenColumn, screenColumn) {
+        if (maxScreenColumn == 0) {
+            return [0, 0];
+        }
+        if (maxScreenColumn == null) {
+            maxScreenColumn = screenColumn +
+                str.length * Math.max(this.getTabSize(), 2);
+        }
+        screenColumn = screenColumn || 0;
 
-        for (var i=0; i<str.length; i++) {
-            var c = str.charCodeAt(i);
+        var c, column;
+        for (column = 0; column < str.length; column++) {
+            c = str.charCodeAt(column);
             // tab
             if (c == 9) {
                 screenColumn += this.getScreenTabSize(screenColumn);
             }
-    		// full width characters
+            // full width characters
             else if (isFullWidth(c)) {
-            	screenColumn += 2;
-			} else {
-				screenColumn += 1;
-			}
-		}
-		
-		return screenColumn;
+                screenColumn += 2;
+            } else {
+                screenColumn += 1;
+            }
+            if (screenColumn > maxScreenColumn) {
+                break
+            }
+        }
+
+        return [screenColumn, column];
+    }
+
+    this.getRowLength = function(row) {
+        if (!this.$useWrapMode || !this.$wrapData[row]) {
+            return 1;
+        } else {
+            return this.$wrapData[row].length + 1;
+        }
     }
 
     this.getRowHeight = function(config, row) {
-        var rows;
-        if (!this.$useWrapMode || !this.$wrapData[row]) {
-            rows = 1;
-        } else {
-            rows = this.$wrapData[row].length + 1;
-        }
-
-        return rows * config.lineHeight;
+        return this.getRowLength(row) * config.lineHeight;
     }
 
-    this.getScreenLastRowColumn = function(screenRow, returnDocPosition) {
-        if (!this.$useWrapMode) {
-            return this.$getStringScreenWidth(this.getLine(screenRow));
-        }
-
-        var rowData = this.$screenToDocumentRow(screenRow);
-        var docRow = rowData[0],
-            row = rowData[1];
-
-        var start, end;
-        if (this.$wrapData[docRow][row]) {
-            start = (this.$wrapData[docRow][row - 1] || 0);
-            end = this.$wrapData[docRow][row];
-            returnDocPosition && end--;
-        } else {
-            end = this.getLine(docRow).length;
-            start = (this.$wrapData[docRow][row - 1] || 0);
-        }
-        if (!returnDocPosition) {
-            return this.$getStringScreenWidth(this.getLine(docRow).substring(start, end));
-        } else {
-            return end;
-        }
+    this.getScreenLastRowColumn = function(screenRow) {
+        // Note: This won't work if someone has more then
+        // 1.7976931348623158e+307 characters in one row. But I think we can
+        // live with this limitation ;)
+        return this.screenToDocumentColumn(screenRow, Number.MAX_VALUE / 10)
     };
 
     this.getDocumentLastRowColumn = function(docRow, docColumn) {
-        if (!this.$useWrapMode) {
-            return this.getLine(docRow).length;
-        }
-
         var screenRow = this.documentToScreenRow(docRow, docColumn);
-        return this.getScreenLastRowColumn(screenRow, true);
-    }
+        return this.getScreenLastRowColumn(screenRow);
+    };
 
-    this.getScreenFirstRowColumn = function(screenRow) {
-        if (!this.$useWrapMode) {
-            return 0;
-        }
-
-        var rowData = this.$screenToDocumentRow(screenRow);
-        var docRow = rowData[0],
-            row = rowData[1];
-
-        return this.$wrapData[docRow][row - 1] || 0;
+    this.getDocumentLastRowColumnPosition = function(docRow, docColumn) {
+        var screenRow = this.documentToScreenRow(docRow, docColumn);
+        return this.screenToDocumentPosition(screenRow, Number.MAX_VALUE / 10);
     };
 
     this.getRowSplitData = function(row) {
@@ -8622,120 +8925,192 @@ var EditSession = function(text, mode) {
     };
 
     /**
-     *
-     * @returns array
-     * - array[0]: The documentRow equivalent.
-     * - array[1]: The screenRowOffset to the first documentRow on the screen.
-     */
-    this.$screenToDocumentRow = function(row) {
-        if (!this.$useWrapMode) {
-            return [row, 0];
-        }
-
-        var wrapData = this.$wrapData, linesCount = this.getLength();
-        var docRow = 0;
-        while (docRow < linesCount && row >= wrapData[docRow].length + 1) {
-            row -= wrapData[docRow].length + 1;
-            docRow ++;
-        }
-
-        return [docRow, row];
-    };
-
-    this.screenToDocumentRow = function(screenRow) {
-        return this.$screenToDocumentRow(screenRow)[0];
-    };
-
-    this.screenToDocumentColumn = function(screenRow, screenColumn) {
-        return this.screenToDocumentPosition(screenRow, screenColumn).column;
-    };
-
-    /**
      * Returns the width of a tab character at screenColumn.
      */
     this.getScreenTabSize = function(screenColumn) {
         return this.$tabSize - screenColumn % this.$tabSize;
     };
 
-    this.screenToDocumentPosition = function(row, column) {
+    this.screenToDocumentRow = function(screenRow, screenColumn) {
+        return this.screenToDocumentPosition(screenRow, screenColumn).row;
+    };
+
+    this.screenToDocumentColumn = function(screenRow, screenColumn) {
+        return this.screenToDocumentPosition(screenRow, screenColumn).column;
+    };
+
+    this.screenToDocumentPosition = function(screenRow, screenColumn) {
         var line;
-        var docRow;
-        var docColumn;
-        var remaining = column;
-        var linesCount = this.getLength();
-        if (!this.$useWrapMode) {
-            docRow = row >= linesCount? linesCount-1 : (row < 0 ? 0 : row);
-            row = 0;
-            docColumn = 0;
-            line = this.getLine(docRow);
-        } else {
-            var wrapData = this.$wrapData;
+        var docRow = 0;
+        var docColumn = 0;
+        var column;
+        var foldLine;
+        var foldLineRowLength;
+        var row = 0;
+        var rowLength = 0;
+        var splits = null;
+        var split = 0;
 
-            var docRow = 0;
-            while (docRow < linesCount && row >= wrapData[docRow].length + 1) {
-                row -= wrapData[docRow].length + 1;
-                docRow ++;
+        var rowCache = this.$rowCache;
+        var doCache = !rowCache.length;
+        for (var i = 0; i < rowCache.length; i++) {
+            if (rowCache[i].screenRow < screenRow) {
+                row = rowCache[i].screenRow;
+                docRow = rowCache[i].docRow;
+                doCache = i == rowCache.length - 1;
             }
-
-            if (docRow >= linesCount) {
-                docRow = linesCount-1
-                row = wrapData[docRow].length;
-            }
-            docColumn = wrapData[docRow][row - 1] || 0;
-            line = this.getLine(docRow).substring(docColumn);
         }
+        var docRowCacheLast = docRow;
 
-        var tabSize,
-            screenColumn = 0;
-        for(var i = 0; i < line.length; i++) {
-            var c = line.charCodeAt(i);
-
-            if (remaining > 0) {
-                docColumn += 1;
-                // tab
-                if (c == 9) {
-                    tabSize = this.getScreenTabSize(screenColumn);
-                    if (remaining >= tabSize) {
-                        remaining -= tabSize;
-                        screenColumn += tabSize;
-                    } else {
-                        remaining = 0;
-                        docColumn -= 1;
-                    }
-                }
-                // full width characters
-                else if (isFullWidth(c)) {
-                    if (remaining >= 2) {
-                        remaining -= 2;
-                    } else {
-                        remaining = 0;
-                        docColumn -= 1;
-                    }
-                } else {
-                    screenColumn += 1;
-                    remaining -= 1;
-                }
-            } else {
+        while (row <= screenRow) {
+            if (doCache
+                && docRow - docRowCacheLast > this.$rowCacheSize) {
+                rowCache.push({
+                    docRow: docRow,
+                    screenRow: row
+                });
+                docRowCacheLast = docRow;
+            }
+            rowLength = this.getRowLength(docRow);
+            if (row + rowLength - 1 >= screenRow) {
                 break;
+            } else {
+                row += rowLength;
+                docRow = this.getRowFoldEnd(docRow) + 1;
             }
         }
 
-        // Clamp docColumn.
+        splits = this.$wrapData[docRow] || [];
+        foldLine = this.getFoldLine(docRow);
+        line = foldLine
+                ? this.getFoldDisplayLine(foldLine)
+                : this.getLine(docRow);
+
         if (this.$useWrapMode) {
-            column = wrapData[docRow][row]
+            docColumn = split = splits[screenRow - row - 1] || 0;
+            line = line.substring(split);
+        }
+
+        docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
+
+        // Need to do some clamping action here.
+        if (this.$useWrapMode) {
+            column = splits[screenRow - row]
             if (docColumn >= column) {
                 // We remove one character at the end such that the docColumn
                 // position returned is not associated to the next row on the
                 // screen.
                 docColumn = column - 1;
             }
-        } else if (line) {
-             docColumn = Math.min(docColumn, line.length);
+        } else {
+            docColumn = Math.min(docColumn, line.length);
+        }
+
+        if (foldLine) {
+            return foldLine.idxToPosition(docColumn);
         }
 
         return {
             row: docRow,
             column: docColumn
+        }
+    };
+
+    this.documentToScreenPosition = function(docRow, docColumn) {
+        // Normalize the passed in arguments.
+        if (docColumn == null) {
+            docColumn = docRow.column;
+            docRow = docRow.row;
+        }
+
+        var wrapData;
+
+        // Special case in wrapMode if the doc is at the end of the document.
+        if (this.$useWrapMode) {
+            wrapData = this.$wrapData;
+            if (docRow > wrapData.length - 1) {
+                return {
+                    row: this.getScreenLength(),
+                    column: wrapData.length == 0
+                        ? 0
+                        : (wrapData[wrapData.length - 1].length - 1)
+                };
+            }
+        }
+
+        var screenRow = 0,
+            screenColumn = 0,
+            foldStartRow = null,
+            fold = null,
+            folds,
+            comp,
+            foldLine = null;
+
+        // Clamp the docRow position in case it's inside of a folded block.
+        fold = this.getFoldAt(docRow, docColumn, 1);
+        if (fold) {
+            docRow = fold.start.row;
+            docColumn = fold.start.column;
+        }
+
+        var rowEnd, row = 0;
+        var rowCache = this.$rowCache;
+        //
+        var doCache = !rowCache.length;
+        for (var i = 0; i < rowCache.length; i++) {
+            if (rowCache[i].docRow < docRow) {
+                screenRow = rowCache[i].screenRow;
+                row = rowCache[i].docRow;
+                doCache = i == rowCache.length - 1;
+            }
+        }
+        var docRowCacheLast = row;
+
+        while (row < docRow) {
+            if (doCache
+                && row - docRowCacheLast > this.$rowCacheSize) {
+                rowCache.push({
+                    docRow: row,
+                    screenRow: screenRow
+                });
+                docRowCacheLast = row;
+            }
+
+            rowEnd = this.getRowFoldEnd(row);
+            if (rowEnd >= docRow) {
+                break;
+            }
+            screenRow += this.getRowLength(row);
+            row = rowEnd + 1;
+        }
+
+        // Calculate the text line that is displayed in docRow on the screen.
+        var textLine = "";
+        foldLine = this.getFoldLine(docRow);
+        // Check if the final row we want to reach is inside of a fold.
+        if (!foldLine) {
+            textLine = this.getLine(docRow).substring(0, docColumn);
+            foldStartRow = docRow;
+        } else {
+            textLine = this.getFoldDisplayLine(foldLine, docRow, docColumn);
+            foldStartRow = foldLine.start.row;
+        }
+
+        // Clamp textLine if in wrapMode.
+        if (this.$useWrapMode) {
+            var wrapRow = wrapData[foldStartRow];
+            var screenRowOffset = 0;
+            while (textLine.length >= wrapRow[screenRowOffset]) {
+                screenRow ++;
+                screenRowOffset++;
+            }
+            textLine = textLine.substring(
+                wrapRow[screenRowOffset - 1] || 0,  textLine.length);
+        }
+
+        return {
+            row: screenRow,
+            column: this.$getStringScreenWidth(textLine)[0]
         };
     };
 
@@ -8743,105 +9118,29 @@ var EditSession = function(text, mode) {
         return this.documentToScreenPosition(row, docColumn).column;
     };
 
-    /**
-     *
-     * @return array[2]
-     * - array[0]: The number of the row on the screen (aka screenRow)
-     * - array[1]: The number of rows from the first docRow on the screen
-     *              (aka screenRowOffset);
-     */
-    this.$documentToScreenRow = function(docRow, docColumn) {
-        if (!this.$useWrapMode) {
-            return [docRow, 0];
-        }
-
-        var wrapData = this.$wrapData;
-        var screenRow = 0;
-
-        // Handle special case where the row is outside of the range of lines.
-        if (docRow > wrapData.length - 1) {
-            return [
-                this.getScreenLength(),
-                wrapData.length == 0 ? 0 : (wrapData[wrapData.length - 1].length - 1)
-            ];
-        }
-
-        for (var i = 0; i < docRow; i++) {
-            screenRow += wrapData[i].length + 1;
-        }
-
-        var screenRowOffset = 0;
-        while (docColumn >= wrapData[docRow][screenRowOffset]) {
-            screenRow ++;
-            screenRowOffset++;
-        }
-
-        return [screenRow, screenRowOffset];
-    }
-
     this.documentToScreenRow = function(docRow, docColumn) {
-        return this.$documentToScreenRow(docRow, docColumn)[0];
-    }
-
-    this.documentToScreenPosition = function(pos, column) {
-        var str;
-        var tabSize = this.getTabSize();
-
-        // Normalize the passed in arguments.
-        var row;
-        if (column != null) {
-            row = pos;
-        } else {
-            row = pos.row;
-            column = pos.column;
-        }
-
-        if (!this.$useWrapMode) {
-            str = this.getLine(row).substring(0, column);
-            column = this.$getStringScreenWidth(str);
-            return {
-                row: row,
-                column: column
-            };
-        }
-
-        var rowData = this.$documentToScreenRow(row, column);
-        var screenRow = rowData[0];
-
-        if (row >= this.getLength()) {
-            return {
-                row: screenRow,
-                column: 0
-            };
-        }
-
-        var split;
-        var wrapRowData = this.$wrapData[row];
-        var screenColumn;
-        var screenRowOffset = rowData[1];
-
-        str = this.getLine(row).substring(
-                wrapRowData[screenRowOffset - 1] || 0,  column);
-        screenColumn = this.$getStringScreenWidth(str);
-
-        return {
-            row: screenRow,
-            column: screenColumn
-        };
+        return this.documentToScreenPosition(docRow, docColumn).row;
     };
 
     this.getScreenLength = function() {
+        var length = this.getLength();
+        var screenRows = 0;
         if (!this.$useWrapMode) {
-            return this.getLength();
+            screenRows = length;
+        } else {
+            for (var row = 0; row < this.$wrapData.length; row++) {
+                screenRows += this.$wrapData[row].length + 1;
+            }
         }
 
-        var screenRows = 0;
-        for (var row = 0; row < this.$wrapData.length; row++) {
-            screenRows += this.$wrapData[row].length + 1;
+        var foldData = this.$foldData;
+        for (var i = 0; i < foldData.length; i++) {
+            var foldLine = foldData[i];
+            screenRows -= foldLine.end.row - foldLine.start.row;
         }
         return screenRows;
     }
-    
+
     // For every keystroke this gets called once per char in the whole doc!!
     // Wouldn't hurt to make it a bit faster for c >= 0x1100
     function isFullWidth(c) {
@@ -8879,9 +9178,11 @@ var EditSession = function(text, mode) {
                c >= 0xFE68 && c <= 0xFE6B ||
                c >= 0xFF01 && c <= 0xFF60 ||
                c >= 0xFFE0 && c <= 0xFFE6;
-    }
+    };
 
 }).call(EditSession.prototype);
+
+require("ace/edit_session/folding").Folding.call(EditSession.prototype);
 
 exports.EditSession = EditSession;
 });
@@ -9134,9 +9435,19 @@ var Selection = function(session) {
     };
 
     this.selectLine = function() {
-        this.setSelectionAnchor(this.selectionLead.row, 0);
+        var rowStart = this.selectionLead.row;
+        var rowEnd;
+
+        var foldLine = this.session.getFoldLine(rowStart);
+        if (foldLine) {
+            rowStart = foldLine.start.row;
+            rowEnd = foldLine.end.row;
+        } else {
+            rowEnd = rowStart;
+        }
+        this.setSelectionAnchor(rowStart, 0);
         this.$moveSelection(function() {
-            this.moveCursorTo(this.selectionLead.row + 1, 0);
+            this.moveCursorTo(rowEnd + 1, 0);
         });
     };
 
@@ -9149,8 +9460,12 @@ var Selection = function(session) {
     };
 
     this.moveCursorLeft = function() {
-        var cursor = this.selectionLead.getPosition();
-        if (cursor.column == 0) {
+        var cursor = this.selectionLead.getPosition(),
+            fold;
+
+        if (fold = this.session.getFoldAt(cursor.row, cursor.column, -1)) {
+            this.moveCursorTo(fold.start.row, fold.start.column);
+        } else if (cursor.column == 0) {
             // cursor is a line (start
             if (cursor.row > 0) {
                 this.moveCursorTo(cursor.row - 1, this.doc.getLine(cursor.row - 1).length);
@@ -9166,7 +9481,11 @@ var Selection = function(session) {
     };
 
     this.moveCursorRight = function() {
-        if (this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
+        var cursor = this.selectionLead.getPosition(),
+            fold;
+        if (fold = this.session.getFoldAt(cursor.row, cursor.column, 1)) {
+            this.moveCursorTo(fold.end.row, fold.end.column);
+        } else if (this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
             if (this.selectionLead.row < this.doc.getLength() - 1) {
                 this.moveCursorTo(this.selectionLead.row + 1, 0);
             }
@@ -9185,25 +9504,38 @@ var Selection = function(session) {
         var row = this.selectionLead.row;
         var column = this.selectionLead.column;
         var screenRow = this.session.documentToScreenRow(row, column);
-        var firstRowColumn = this.session.getScreenFirstRowColumn(screenRow);
-        var beforeCursor = this.doc.getLine(row).slice(firstRowColumn, column);
+
+        // Determ the doc-position of the first character at the screen line.
+        var firstColumnPosition =
+            this.session.screenToDocumentPosition(screenRow, 0);
+
+        // Determ the string "before" the cursor.
+        var beforeCursor = this.session.getDisplayLine(
+                row, column,
+                firstColumnPosition.row, firstColumnPosition.column);
+
+        //
         var leadingSpace = beforeCursor.match(/^\s*/);
-        if (leadingSpace[0].length == 0) {
-            var lastRowColumn = this.session.getDocumentLastRowColumn(row, column);
-            leadingSpace = this.doc.getLine(row).
-                                substring(firstRowColumn, lastRowColumn).
-                                match(/^\s*/);
-            this.moveCursorTo(row, firstRowColumn + leadingSpace[0].length);
-        } else if (leadingSpace[0].length >= column) {
-            this.moveCursorTo(row, firstRowColumn);
+        if (leadingSpace[0].length == 0
+            || leadingSpace[0].length >= column - firstColumnPosition.column)
+        {
+            this.moveCursorTo(
+                firstColumnPosition.row, firstColumnPosition.column);
         } else {
-            this.moveCursorTo(row, firstRowColumn + leadingSpace[0].length);
+            this.moveCursorTo(
+                firstColumnPosition.row,
+                firstColumnPosition.column + leadingSpace[0].length);
         }
     };
 
     this.moveCursorLineEnd = function() {
         var lead = this.selectionLead;
-        this.moveCursorTo(lead.row, this.session.getDocumentLastRowColumn(lead.row, lead.column));
+        var lastRowColumnPosition =
+            this.session.getDocumentLastRowColumnPosition(lead.row, lead.column);
+        this.moveCursorTo(
+            lastRowColumnPosition.row,
+            lastRowColumnPosition.column
+        );
     };
 
     this.moveCursorFileEnd = function() {
@@ -9226,7 +9558,11 @@ var Selection = function(session) {
         this.session.nonTokenRe.lastIndex = 0;
         this.session.tokenRe.lastIndex = 0;
 
-        if (column == line.length) {
+        var fold;
+        if (fold = this.session.getFoldAt(row, column, 1)) {
+            this.moveCursorTo(fold.end.row, fold.end.column);
+            return;
+        } else if (column == line.length) {
             this.moveCursorRight();
             return;
         }
@@ -9245,18 +9581,29 @@ var Selection = function(session) {
     this.moveCursorWordLeft = function() {
         var row = this.selectionLead.row;
         var column = this.selectionLead.column;
-        var line = this.doc.getLine(row);
-        var leftOfCursor = lang.stringReverse(line.substring(0, column));
 
-        var match;
-        this.session.nonTokenRe.lastIndex = 0;
-        this.session.tokenRe.lastIndex = 0;
+        var fold;
+        if (fold = this.session.getFoldAt(row, column, -1)) {
+            this.moveCursorTo(fold.start.row, fold.start.column);
+            return;
+        }
 
         if (column == 0) {
             this.moveCursorLeft();
             return;
         }
-        else if (match = this.session.nonTokenRe.exec(leftOfCursor)) {
+
+        var str = this.session.getFoldStringAt(row, column, -1);
+        if (str == null) {
+            str = this.doc.getLine(row).substring(0, column)
+        }
+        var leftOfCursor = lang.stringReverse(str);
+
+        var match;
+        this.session.nonTokenRe.lastIndex = 0;
+        this.session.tokenRe.lastIndex = 0;
+
+        if (match = this.session.nonTokenRe.exec(leftOfCursor)) {
             column -= this.session.nonTokenRe.lastIndex;
             this.session.nonTokenRe.lastIndex = 0;
         }
@@ -9284,6 +9631,12 @@ var Selection = function(session) {
     };
 
     this.moveCursorTo = function(row, column, preventUpdateDesiredColumn) {
+        // Ensure the row/column is not inside of a fold.
+        var fold = this.session.getFoldAt(row, column, 1);
+        if (fold) {
+            row = fold.start.row;
+            column = fold.start.column;
+        }
         this.selectionLead.setPosition(row, column);
         if (!preventUpdateDesiredColumn)
             this.$updateDesiredColumn(this.selectionLead.column);
@@ -9362,6 +9715,114 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return this.compare(row, column) == 0;
     };
 
+    /**
+     * Compares this range (A) with another range (B), where B is the passed in
+     * range.
+     *
+     * Return values:
+     *  -2: (B) is infront of (A) and doesn't intersect with (A)
+     *  -1: (B) begins before (A) but ends inside of (A)
+     *   0: (B) is completly inside of (A) OR (A) is complety inside of (B)
+     *  +1: (B) begins inside of (A) but ends outside of (A)
+     *  +2: (B) is after (A) and doesn't intersect with (A)
+     *
+     *  42: FTW state: (B) ends in (A) but starts outside of (A)
+     */
+    this.compareRange = function(range) {
+        var cmp,
+            end = range.end,
+            start = range.start;
+
+        cmp = this.compare(end.row, end.column);
+        if (cmp == 1) {
+            cmp = this.compare(start.row, start.column);
+            if (cmp == 1) {
+                return 2;
+            } else if (cmp == 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if (cmp == -1) {
+            return -2;
+        } else {
+            cmp = this.compare(start.row, start.column);
+            if (cmp == -1) {
+                return -1;
+            } else if (cmp == 1) {
+                return 42;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    this.containsRange = function(range) {
+        var cmp = this.compareRange(range);
+        return (cmp == -1 || cmp == 0 || cmp == 1);
+    }
+
+    this.isEnd = function(row, column) {
+        return this.end.row == row && this.end.column == column;
+    }
+
+    this.isStart = function(row, column) {
+        return this.start.row == row && this.start.column == column;
+    }
+
+    this.setStart = function(row, column) {
+        if (typeof row == "object") {
+            this.start.column = row.column;
+            this.start.row = row.row;
+        } else {
+            this.start.row = row;
+            this.start.column = column;
+        }
+    }
+
+    this.setEnd = function(row, column) {
+        if (typeof row == "object") {
+            this.end.column = row.column;
+            this.end.row = row.row;
+        } else {
+            this.end.row = row;
+            this.end.column = column;
+        }
+    }
+
+    this.inside = function(row, column) {
+        if (this.compare(row, column) == 0) {
+            if (this.isEnd(row, column) || this.isStart(row, column)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    this.insideStart = function(row, column) {
+        if (this.compare(row, column) == 0) {
+            if (this.isEnd(row, column)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    this.insideEnd = function(row, column) {
+        if (this.compare(row, column) == 0) {
+            if (this.isStart(row, column)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     this.compare = function(row, column) {
         if (!this.isMultiLine()) {
             if (row === this.start.row) {
@@ -9383,6 +9844,38 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
         return 0;
     };
+
+    /**
+     * Like .compare(), but if isStart is true, return -1;
+     */
+    this.compareStart = function(row, column) {
+        if (this.start.row == row && this.start.column == column) {
+            return -1;
+        } else {
+            return this.compare(row, column);
+        }
+    }
+
+    /**
+     * Like .compare(), but if isEnd is true, return 1;
+     */
+    this.compareEnd = function(row, column) {
+        if (this.end.row == row && this.end.column == column) {
+            return 1;
+        } else {
+            return this.compare(row, column);
+        }
+    }
+
+    this.compareInside = function(row, column) {
+        if (this.end.row == row && this.end.column == column) {
+            return 1;
+        } else if (this.start.row == row && this.start.column == column) {
+            return -1;
+        } else {
+            return this.compare(row, column);
+        }
+    }
 
     this.clipRows = function(firstRow, lastRow) {
         if (this.end.row > lastRow) {
@@ -9892,11 +10385,11 @@ var Document = function(text) {
         this.remove(new Range(0, 0, len, this.getLine(len-1).length));
         this.insert({row: 0, column:0}, text);
     };
-  	
+
     this.getValue = function() {
         return this.getAllLines().join(this.getNewLineCharacter());
     };
-    
+
     this.createAnchor = function(row, column) {
         return new Anchor(this, row, column);
     };
@@ -10009,12 +10502,14 @@ var Document = function(text) {
         var firstLine = lines.splice(0, 1)[0];
         var lastLine = lines.length == 0 ? null : lines.splice(lines.length - 1, 1)[0];
 
+        this._dispatchEvent("changeStart");
         position = this.insertInLine(position, firstLine);
         if (lastLine !== null) {
             position = this.insertNewLine(position); // terminate first line
             position = this.insertLines(position.row, lines);
             position = this.insertInLine(position, lastLine || "");
         }
+        this._dispatchEvent("changeEnd");
         return position;
     };
 
@@ -10026,6 +10521,7 @@ var Document = function(text) {
         args.push.apply(args, lines);
         this.$lines.splice.apply(this.$lines, args);
 
+        this._dispatchEvent("changeStart");
         var range = new Range(row, 0, row + lines.length, 0);
         var delta = {
             action: "insertLines",
@@ -10033,12 +10529,15 @@ var Document = function(text) {
             lines: lines
         };
         this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("changeEnd");
         return range.end;
     },
 
     this.insertNewLine = function(position) {
         position = this.$clipPosition(position);
         var line = this.$lines[position.row] || "";
+
+        this._dispatchEvent("changeStart");
         this.$lines[position.row] = line.substring(0, position.column);
         this.$lines.splice(position.row + 1, 0, line.substring(position.column, line.length));
 
@@ -10053,6 +10552,7 @@ var Document = function(text) {
             text: this.getNewLineCharacter()
         };
         this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("changeEnd");
 
         return end;
     };
@@ -10062,6 +10562,8 @@ var Document = function(text) {
             return position;
 
         var line = this.$lines[position.row] || "";
+
+        this._dispatchEvent("changeStart");
         this.$lines[position.row] = line.substring(0, position.column) + text
                 + line.substring(position.column);
 
@@ -10076,6 +10578,7 @@ var Document = function(text) {
             text: text
         };
         this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("changeEnd");
 
         return end;
     };
@@ -10091,6 +10594,7 @@ var Document = function(text) {
         var firstRow = range.start.row;
         var lastRow = range.end.row;
 
+        this._dispatchEvent("changeStart");
         if (range.isMultiLine()) {
             var firstFullRow = range.start.column == 0 ? firstRow : firstRow + 1;
             var lastFullRow = lastRow - 1;
@@ -10109,6 +10613,7 @@ var Document = function(text) {
         else {
             this.removeInLine(firstRow, range.start.column, range.end.column);
         }
+        this._dispatchEvent("changeEnd");
         return range.start;
     };
 
@@ -10120,6 +10625,7 @@ var Document = function(text) {
         var line = this.getLine(row);
         var removed = line.substring(startColumn, endColumn);
         var newLine = line.substring(0, startColumn) + line.substring(endColumn, line.length);
+        this._dispatchEvent("changeStart");
         this.$lines.splice(row, 1, newLine);
 
         var delta = {
@@ -10128,6 +10634,7 @@ var Document = function(text) {
             text: removed
         };
         this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("changeEnd");
         return range.start;
     };
 
@@ -10139,6 +10646,7 @@ var Document = function(text) {
      * @return {String[]} The removed lines
      */
     this.removeLines = function(firstRow, lastRow) {
+        this._dispatchEvent("changeStart");
         var range = new Range(firstRow, 0, lastRow + 1, 0);
         var removed = this.$lines.splice(firstRow, lastRow - firstRow + 1);
 
@@ -10149,6 +10657,7 @@ var Document = function(text) {
             lines: removed
         };
         this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("changeEnd");
         return removed;
     };
 
@@ -10159,6 +10668,7 @@ var Document = function(text) {
         var range = new Range(row, firstLine.length, row+1, 0);
         var line = firstLine + secondLine;
 
+        this._dispatchEvent("changeStart");
         this.$lines.splice(row, 2, line);
 
         var delta = {
@@ -10167,6 +10677,7 @@ var Document = function(text) {
             text: this.getNewLineCharacter()
         };
         this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("changeEnd");
     };
 
     this.replace = function(range, text) {
@@ -10178,6 +10689,7 @@ var Document = function(text) {
         if (text == this.getTextRange(range))
             return range.end;
 
+        this._dispatchEvent("changeStart");
         this.remove(range);
         if (text) {
             var end = this.insert(range.start, text);
@@ -10185,6 +10697,7 @@ var Document = function(text) {
         else {
             end = range.start;
         }
+        this._dispatchEvent("changeEnd");
 
         return end;
     };
@@ -10208,6 +10721,7 @@ var Document = function(text) {
     this.revertDeltas = function(deltas) {
         for (var i=deltas.length-1; i>=0; i--) {
             var delta = deltas[i];
+
             var range = Range.fromPoints(delta.range.start, delta.range.end);
 
             if (delta.action == "insertLines")
@@ -10607,6 +11121,765 @@ exports.BackgroundTokenizer = BackgroundTokenizer;
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/edit_session/folding', ['require', 'exports', 'module' , 'ace/range', 'ace/edit_session/fold_line'], function(require, exports, module) {
+
+var Range = require("ace/range").Range;
+var FoldLine = require("ace/edit_session/fold_line").FoldLine;
+
+/**
+ * Simple fold-data struct.
+ **/
+function Fold(range, placeholder) {
+    this.foldLine = null;
+    this.placeholder = placeholder;
+    this.range = range;
+    this.start = range.start;
+    this.end = range.end;
+
+    this.sameRow = range.start.row == range.end.row;
+    this.subFolds = [];
+}
+
+Fold.prototype.toString = function() {
+    return '"' + this.placeholder + '" ' + this.range.toString();
+}
+
+function Folding() {
+    /**
+     * Looks up a fold at a given row/column. Possible values for side:
+     *   -1: ignore a fold if fold.start = row/column
+     *   +1: ignore a fold if fold.end = row/column
+     */
+    this.getFoldAt = function(row, column, side) {
+        var foldLine = this.getFoldLine(row);
+        if (foldLine) {
+            var folds = foldLine.folds,
+                fold;
+
+            for (var i = 0; i < folds.length; i++) {
+                fold = folds[i];
+                if (fold.range.contains(row, column)) {
+                    if (side == 1 && fold.range.isEnd(row, column)) {
+                        continue;
+                    } else if (side == -1 && fold.range.isStart(row, column)) {
+                        continue;
+                    }
+                    return fold;
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns all folds in the given range. Note, that this will return folds
+     *
+     */
+    this.getFoldsInRange = function(range) {
+        range = range.clone();
+        var start = range.start,
+            end = range.end;
+        var foldLines = this.$foldData,
+            folds,
+            fold;
+        var cmp,
+            foundFolds = [];
+
+        start.column += 1;
+        end.column -= 1;
+
+        for (var i = 0; i < foldLines.length; i++) {
+            cmp = foldLines[i].range.compareRange(range);
+            // Range is before foldLine. No intersection. This means,
+            // there might be other foldLines that intersect.
+            if (cmp == 2) {
+                continue;
+            } else
+            // Range is after foldLine. There can't be any other foldLines then,
+            // so let's give up.
+            if (cmp == -2) {
+                break;
+            }
+
+            folds = foldLines[i].folds;
+            for (var j = 0; j < folds.length; j++) {
+                fold = folds[j];
+                cmp = fold.range.compareRange(range);
+                if (cmp == -2) {
+                    break;
+                } else if (cmp == 2) {
+                    continue;
+                } else
+                // WTF-state: Can happen due to -1/+1 to start/end column.
+                if (cmp == 42) {
+                    break;
+                }
+                foundFolds.push(fold);
+            }
+        }
+        return foundFolds;
+    }
+
+    /**
+     * Returns the string between folds at the given position.
+     * E.g.
+     *  foo<fold>b|ar<fold>wolrd -> "bar"
+     *  foo<fold>bar<fold>wol|rd -> "world"
+     *  foo<fold>bar<fo|ld>wolrd -> <null>
+     *
+     * where | means the position of row/column
+     *
+     * The trim option determs if the return string should be trimed according
+     * to the "side" passed with the trim value:
+     *
+     * E.g.
+     *  foo<fold>b|ar<fold>wolrd -trim=-1> "b"
+     *  foo<fold>bar<fold>wol|rd -trim=+1> "rld"
+     *  fo|o<fold>bar<fold>wolrd -trim=00> "foo"
+     */
+    this.getFoldStringAt = function(row, column, trim, foldLine) {
+        var foldLine = foldLine || this.getFoldLine(row);
+        if (!foldLine) {
+            return null;
+        } else {
+            var fold, lastFold, cmp, str;
+            lastFold = {
+                end: { column: 0 }
+            };
+            // TODO: Refactor to use getNextFoldTo function.
+            for (var i = 0; i < foldLine.folds.length; i++) {
+                fold = foldLine.folds[i];
+                cmp = fold.range.compareEnd(row, column);
+                if (cmp == -1) {
+                    str = this.getLine(fold.start.row).
+                                substring(lastFold.end.column, fold.start.column);
+                    break;
+                } else if (cmp == 0) {
+                    return null;
+                }
+                lastFold = fold;
+            }
+            if (!str) {
+                str = this.getLine(fold.start.row).
+                                substring(lastFold.end.column);
+            }
+            if (trim == -1) {
+                return str.substring(0, column - lastFold.end.column);
+            } else if (trim == 1) {
+                return str.substring(column - lastFold.end.column)
+            } else {
+                return str;
+            }
+        }
+    }
+
+    this.getFoldLine = function(docRow, startFoldLine) {
+        var foldData = this.$foldData;
+        var i = Math.max(foldData.indexOf(startFoldLine), 0);
+        for (i; i < foldData.length; i++) {
+            var foldLine = foldData[i];
+            if (foldLine.start.row <= docRow && foldLine.end.row >= docRow) {
+                return foldLine;
+            } else if (foldLine.end.row > docRow) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    this.$addFoldLine = function(foldLine) {
+        this.$foldData.push(foldLine);
+        this.$foldData.sort(function(a, b) {
+            return a.start.row - b.start.row;
+        });
+        return foldLine;
+    }
+
+    /**
+     * Adds a new fold.
+     *
+     * @returns
+     *      The new created Fold object or an existing fold object in case the
+     *      passed in range fits an existing fold exactly.
+     */
+    this.addFold = function(placeholder, startRow, startColumn, endRow, endColumn) {
+        var range;
+        var foldData = this.$foldData;
+        var foldRow  = null;
+        var foldLine;
+        var fold;
+        var argsFold;
+        var folds;
+        var added = false;
+
+        if (placeholder instanceof Fold) {
+            argsFold = placeholder;
+            startRow = argsFold.range;
+            placeholder = argsFold.placeholder;
+        }
+
+        // Normalize parameters.
+        if (!(startRow instanceof Range)) {
+            range = new Range(startRow, startColumn, endRow, endColumn);
+        } else {
+            range = startRow;
+            startRow = range.start.row;
+            startColumn = range.start.column;
+            endRow = range.end.row;
+            endColumn = range.end.column;
+        }
+
+        // --- Some checking ---
+        if (placeholder.length < 2) {
+            throw "Placeholder has to be at least 2 characters";
+        }
+
+        if (startRow == endRow && endColumn - startColumn < 2) {
+            throw "The range has to be at least 2 characters width";
+        }
+
+        fold = this.getFoldAt(startRow, startColumn, 1);
+        if (fold
+            && fold.range.isEnd(endRow, endColumn)
+            && fold.range.isStart(startRow, startColumn))
+        {
+            return fold;
+        }
+
+        fold = this.getFoldAt(startRow, startColumn, 1);
+        if (fold && !fold.range.isStart(startRow, startColumn)) {
+            throw "A fold can't start inside of an already existing fold";
+        }
+
+        fold = this.getFoldAt(endRow, endColumn, -1);
+        if (fold && !fold.range.isEnd(endRow, endColumn)) {
+            throw "A fold can't end inside of an already existing fold";
+        }
+
+        if (endRow >= this.doc.$lines.length) {
+            throw "End of fold is outside of the document.";
+        }
+
+        if (endColumn > this.getLine(endRow).length
+            || startColumn > this.getLine(startRow).length)
+        {
+            throw "End of fold is outside of the document.";
+        }
+
+        // --- Start adding the fold ---
+        // Use the passed in fold or create a new one.
+        fold = argsFold || new Fold(range, placeholder);
+
+        // Check if there are folds in the range we create the new fold for.
+        folds = this.getFoldsInRange(range);
+        if (folds.length > 0) {
+            // Remove the folds from fold data.
+            this.removeFolds(folds);
+            // Add the removed folds as subfolds on the new fold.
+            fold.subFolds = folds;
+        }
+
+        for (var i = 0; i < foldData.length; i++) {
+            foldLine = foldData[i];
+            if (endRow == foldLine.start.row) {
+                foldLine.addFold(fold);
+                added = true;
+                break;
+            } else if (startRow == foldLine.end.row) {
+                foldLine.addFold(fold);
+                added = true;
+                if (!fold.sameRow) {
+                    // Check if we might have to merge two FoldLines.
+                    foldLineNext = foldData[i + 1];
+                    if (foldLineNext && foldLineNext.start.row == endRow) {
+                        // We need to merge!
+                        foldLine.merge(foldLineNext);
+                        break;
+                    }
+                }
+                break;
+            } else if (endRow <= foldLine.start.row) {
+                break;
+            }
+        }
+
+        if (!added) {
+            foldLine = this.$addFoldLine(new FoldLine(this.$foldData, fold));
+        }
+
+        if (this.$useWrapMode) {
+            this.$updateWrapData(foldLine.start.row, foldLine.start.row);
+        }
+
+        // Notify that fold data has changed.
+        this.$modified = true;
+        this._dispatchEvent("changeFold", { data: fold });
+
+        return fold;
+    };
+
+    this.addFolds = function(folds) {
+        folds.forEach(function(fold) {
+            this.addFold(fold);
+        }, this);
+    };
+
+    this.removeFold = function(fold) {
+        var foldLine = fold.foldLine;
+        var startRow = foldLine.start.row;
+        var endRow = foldLine.end.row;
+
+        var foldLines = this.$foldData,
+            folds = foldLine.folds;
+        // Simple case where there is only one fold in the FoldLine such that
+        // the entire fold line can get removed directly.
+        if (folds.length == 1) {
+            foldLines.splice(foldLines.indexOf(foldLine), 1);
+        } else
+        // If the fold is the last fold of the foldLine, just remove it.
+        if (foldLine.range.isEnd(fold.end.row, fold.end.column)) {
+            folds.pop();
+            foldLine.end.row = folds[folds.length - 1].end.row;
+            foldLine.end.column = folds[folds.length - 1].end.column;
+        } else
+        // If the fold is the first fold of the foldLine, just remove it.
+        if (foldLine.range.isStart(fold.start.row, fold.start.column)) {
+            folds.shift();
+            foldLine.start.row = folds[0].start.row;
+            foldLine.start.column = folds[0].start.column;
+        } else
+        // We know there are more then 2 folds and the fold is not at the edge.
+        // This means, the fold is somewhere in between.
+        //
+        // If the fold is in one row, we just can remove it.
+        if (fold.sameRow) {
+            folds.splice(folds.indexOf(fold), 1);
+        } else
+        // The fold goes over more then one row. This means remvoing this fold
+        // will cause the fold line to get splitted up.
+        {
+            var newFoldLine = foldLine.split(fold.start.row, fold.start.column);
+            newFoldLine.folds.shift();
+            foldLine.start.row = folds[0].start.row;
+            foldLine.start.column = folds[0].start.column;
+            this.$addFoldLine(newFoldLine);
+        }
+
+        if (this.$useWrapMode) {
+            this.$updateWrapData(startRow, endRow);
+        }
+
+        // Notify that fold data has changed.
+        this.$modified = true;
+        this._dispatchEvent("changeFold", { data: fold });
+    }
+
+    this.removeFolds = function(folds) {
+        // We need to clone the folds array passed in as it might be the folds
+        // array of a fold line and as we call this.removeFold(fold), folds
+        // are removed from folds and changes the current index.
+        var cloneFolds = [];
+        for (var i = 0; i < folds.length; i++) {
+            cloneFolds.push(folds[i]);
+        }
+
+        cloneFolds.forEach(function(fold) {
+            this.removeFold(fold);
+        }, this);
+        this.$modified = true;
+    }
+
+    this.expandFold = function(fold) {
+        this.removeFold(fold);
+        fold.subFolds.forEach(function(fold) {
+            this.addFold(fold);
+        }, this);
+        fold.subFolds = [];
+    }
+
+    this.expandFolds = function(folds) {
+        folds.forEach(function(fold) {
+            this.expandFold(fold);
+        }, this);
+    }
+
+    /**
+     * Checks if a given documentRow is folded. This is true if there are some
+     * folded parts such that some parts of the line is still visible.
+     **/
+    this.isRowFolded = function(docRow, startFoldRow) {
+        return !!this.getFoldLine(docRow, startFoldRow);
+    };
+
+    this.getRowFoldEnd = function(docRow, startFoldRow) {
+        var foldLine = this.getFoldLine(docRow, startFoldRow);
+        return (foldLine
+                    ? foldLine.end.row
+                    : docRow)
+    };
+
+    this.getFoldDisplayLine = function(foldLine, endRow, endColumn, startRow, startColumn) {
+        if (startRow == null) {
+            startRow = foldLine.start.row;
+            startColumn = 0;
+        }
+
+        if (endRow == null) {
+            endRow = foldLine.end.row;
+            endColumn = this.getLine(endRow).length;
+        }
+
+        // Build the textline using the FoldLine walker.
+        var line = "";
+        var lines = this.doc.$lines;
+        var textLine = "";
+
+        foldLine.walk(function(placeholder, row, column, lastColumn, isNewRow) {
+            if (row < startRow) {
+                return;
+            } else if (row == startRow) {
+                if (column < startColumn) {
+                    return;
+                }
+                lastColumn = Math.max(startColumn, lastColumn);
+            }
+            if (placeholder) {
+                textLine += placeholder;
+            } else {
+                textLine += lines[row].substring(lastColumn, column);
+            }
+        }.bind(this), endRow, endColumn);
+        return textLine;
+    };
+
+    this.getDisplayLine = function(row, endColumn, startRow, startColumn) {
+        var foldLine = this.getFoldLine(row);
+
+        if (!foldLine) {
+            var line;
+            line = this.doc.$lines[row];
+            return line.substring(startColumn || 0, endColumn || line.length);
+        } else {
+            return this.getFoldDisplayLine(
+                foldLine, row, endColumn, startRow, startColumn);
+        }
+    };
+}
+
+exports.Folding = Folding;
+
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/edit_session/fold_line', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+
+var Range = require("ace/range").Range;
+
+/**
+ * If the an array is passed in, the folds are expected to be sorted already.
+ */
+function FoldLine(foldData, folds) {
+    this.foldData = foldData;
+    if (Array.isArray(folds)) {
+        this.folds = folds;
+    } else {
+        folds = this.folds = [ folds ];
+    }
+
+    var last = folds[folds.length - 1]
+    this.range = new Range(folds[0].start.row, folds[0].start.column,
+                           last.end.row, last.end.column);
+    this.start = this.range.start;
+    this.end   = this.range.end;
+
+    this.folds.forEach(function(fold) {
+        fold.foldLine = this;
+    }, this);
+}
+
+(function() {
+    /**
+     * Note: This doesn't update wrapData!
+     */
+    this.shiftRow = function(shift) {
+        this.start.row += shift;
+        this.end.row += shift;
+        this.folds.forEach(function(fold) {
+            fold.start.row += shift;
+            fold.end.row += shift;
+        });
+    }
+
+    this.addFold = function(fold) {
+        if (fold.sameRow) {
+            if (fold.start.row < this.startRow || fold.endRow > this.endRow) {
+                throw "Can't add a fold to this FoldLine as it has no connection";
+            }
+            this.folds.push(fold);
+            this.folds.sort(function(a, b) {
+                return -a.range.compareEnd(b.start.row, b.start.column);
+            });
+            if (this.range.compareEnd(fold.start.row, fold.start.column) > 0) {
+                this.end.row = fold.end.row;
+                this.end.column =  fold.end.column;
+            } else if (this.range.compareStart(fold.end.row, fold.end.column) < 0) {
+                this.start.row = fold.start.row;
+                this.start.column = fold.start.column;
+            }
+        } else if (fold.start.row == this.end.row) {
+            this.folds.push(fold);
+            this.end.row = fold.end.row;
+            this.end.column = fold.end.column;
+        } else if (fold.end.row == this.start.row) {
+            this.folds.unshift(fold);
+            this.start.row = fold.start.row;
+            this.start.column = fold.start.column;
+        } else {
+            throw "Trying to add fold to FoldRow that doesn't have a matching row";
+        }
+        fold.foldLine = this;
+    }
+
+    this.containsRow = function(row) {
+        return row >= this.start.row && row <= this.end.row;
+    }
+
+    this.walk = function(callback, endRow, endColumn) {
+        var lastEnd = 0,
+            folds = this.folds,
+            fold,
+            comp, stop, isNewRow = true;
+
+        if (endRow == null) {
+            endRow = this.end.row;
+            endColumn = this.end.column;
+        }
+
+        for (var i = 0; i < folds.length; i++) {
+            fold = folds[i];
+
+            comp = fold.range.compareStart(endRow, endColumn);
+            // This fold is after the endRow/Column.
+            if (comp == -1) {
+                callback(null, endRow, endColumn, lastEnd, isNewRow);
+                return;
+            }
+
+            stop = callback(null, fold.start.row, fold.start.column, lastEnd, isNewRow);
+            stop = !stop && callback(fold.placeholder, fold.start.row, fold.start.column, lastEnd);
+
+            // If the user requested to stop the walk or endRow/endColumn is
+            // inside of this fold (comp == 0), then end here.
+            if (stop || comp == 0) {
+                return;
+            }
+
+            // Note the new lastEnd might not be on the same line. However,
+            // it's the callback's job to recognize this.
+            isNewRow = !fold.sameRow;
+            lastEnd = fold.end.column;
+        }
+        callback(null, endRow, endColumn, lastEnd, isNewRow);
+    }
+
+    this.getNextFoldTo = function(row, column) {
+        var fold, cmp;
+        for (var i = 0; i < this.folds.length; i++) {
+            fold = this.folds[i];
+            cmp = fold.range.compareEnd(row, column);
+            if (cmp == -1) {
+                return {
+                    fold: fold,
+                    kind: "after"
+                };
+            } else if (cmp == 0) {
+                return {
+                    fold: fold,
+                    kind: "inside"
+                }
+            }
+        }
+        return null;
+    }
+
+    this.addRemoveChars = function(row, column, len) {
+        var ret = this.getNextFoldTo(row, column),
+            fold, folds;
+        if (ret) {
+            fold = ret.fold;
+            if (ret.kind == "inside"
+                && fold.start.column != column
+                && fold.start.row != row)
+            {
+                throw "Moving characters inside of a fold should never be reached";
+            } else if (fold.start.row == row) {
+                folds = this.folds;
+                var i = folds.indexOf(fold);
+                if (i == 0) {
+                    this.start.column += len;
+                }
+                for (i; i < folds.length; i++) {
+                    fold = folds[i];
+                    fold.start.column += len;
+                    if (!fold.sameRow) {
+                        return;
+                    }
+                    fold.end.column += len;
+                }
+                this.end.column += len;
+            }
+        }
+    }
+
+    this.split = function(row, column) {
+        var fold = this.getNextFoldTo(row, column).fold,
+            folds = this.folds;
+        var foldData = this.foldData;
+
+        if (!fold) {
+            return null;
+        }
+        var i = folds.indexOf(fold);
+        var foldBefore = folds[i - 1];
+        this.end.row = foldBefore.end.row;
+        this.end.column = foldBefore.end.column;
+
+        // Remove the folds after row/column and create a new FoldLine
+        // containing these removed folds.
+        folds = folds.splice(i, folds.length - i);
+
+        var newFoldLine = new FoldLine(foldData, folds);
+        foldData.splice(foldData.indexOf(this) + 1, 0, newFoldLine);
+        return newFoldLine;
+    }
+
+    this.merge = function(foldLineNext) {
+        var folds = foldLineNext.folds;
+        for (var i = 0; i < folds.length; i++) {
+            this.addFold(folds[i]);
+        }
+        // Remove the foldLineNext - no longer needed, as
+        // it's merged now with foldLineNext.
+        var foldData = this.foldData;
+        foldData.splice(foldData.indexOf(foldLineNext), 1);
+    }
+
+    this.toString = function() {
+        var ret = [this.range.toString() + ": [" ];
+
+        this.folds.forEach(function(fold) {
+            ret.push("  " + fold.toString());
+        });
+        ret.push("]")
+        return ret.join("\n");
+    }
+
+    this.idxToPosition = function(idx) {
+        var lastFoldEndColumn = 0;
+        var fold;
+
+        for (var i = 0; i < this.folds.length; i++) {
+            var fold = this.folds[i];
+
+            idx -= fold.start.column - lastFoldEndColumn;
+            if (idx < 0) {
+                return {
+                    row: fold.start.row,
+                    column: fold.start.column + idx
+                };
+            }
+
+            idx -= fold.placeholder.length;
+            if (idx < 0) {
+                return fold.start;
+            }
+
+            lastFoldEndColumn = fold.end.column;
+        }
+
+        return {
+            row: this.end.row,
+            column: this.end.column + idx
+        };
+    }
+}).call(FoldLine.prototype);
+
+exports.FoldLine = FoldLine;
+});/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
  *
@@ -10970,6 +12243,7 @@ var UndoManager = function() {
         var deltas = options.args[0];
         this.$doc  = options.args[1];
         this.$undoStack.push(deltas);
+        this.$redoStack = [];
     };
 
     this.undo = function() {
@@ -10987,7 +12261,7 @@ var UndoManager = function() {
             this.$undoStack.push(deltas);
         }
     };
-    
+
     this.reset = function() {
         this.$undoStack = [];
         this.$redoStack = [];
@@ -11111,6 +12385,11 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
 .ace-tm .ace_line .ace_invalid {\
   background-color: rgb(153, 0, 0);\
   color: white;\
+}\
+\
+.ace-tm .ace_line .ace_fold {\
+    background-color: #E4E4E4;\
+    border-radius: 3px;\
 }\
 \
 .ace-tm .ace_line .ace_support.ace_function {\
@@ -11550,7 +12829,7 @@ var VirtualRenderer = function(container, theme) {
     this.getPrintMarginColumn = function() {
         return this.$printMarginColumn;
     };
-    
+
     this.getShowGutter = function(){
         return this.showGutter;
     }
@@ -11752,11 +13031,19 @@ var VirtualRenderer = function(container, theme) {
         // Map lines on the screen to lines in the document.
         var firstRowScreen, firstRowHeight;
         var lineHeight = { lineHeight: this.lineHeight };
-        firstRow = session.screenToDocumentRow(firstRow);
-        firstRowScreen = session.documentToScreenRow(firstRow);
+        firstRow = session.screenToDocumentRow(firstRow, 0);
+
+        // Check if firstRow is inside of a foldLine. If true, then use the first
+        // row of the foldLine.
+        var foldLine = session.getFoldLine(firstRow);
+        if (foldLine) {
+            firstRow = foldLine.start.row;
+        }
+
+        firstRowScreen = session.documentToScreenRow(firstRow, 0);
         firstRowHeight = session.getRowHeight(lineHeight, firstRow);
 
-        lastRow = Math.min(session.screenToDocumentRow(lastRow), session.getLength() - 1);
+        lastRow = Math.min(session.screenToDocumentRow(lastRow, 0), session.getLength() - 1);
         minHeight = this.$size.scrollerHeight + session.getRowHeight(lineHeight, lastRow)+
                                                 firstRowHeight;
 
@@ -11774,6 +13061,9 @@ var VirtualRenderer = function(container, theme) {
             offset : offset,
             height : this.$size.scrollerHeight
         };
+
+        // For debugging.
+        // console.log(JSON.stringify(layerConfig));
 
         this.$gutterLayer.element.style.marginTop = (-offset) + "px";
         this.content.style.marginTop = (-offset) + "px";
@@ -11865,7 +13155,7 @@ var VirtualRenderer = function(container, theme) {
         // the editor is not visible
         if (this.$size.scrollerHeight === 0)
             return;
-            
+
         var pos = this.$cursorLayer.getPixelPosition();
 
         var left = pos.left + this.$padding;
@@ -11919,7 +13209,7 @@ var VirtualRenderer = function(container, theme) {
         for (var l = 1; l < line; l++) {
             offset += this.session.getRowHeight(lineHeight, l-1);
         }
-            
+
         if (center) {
             offset -= this.$size.scrollerHeight / 2;
         }
@@ -12081,7 +13371,7 @@ exports.VirtualRenderer = VirtualRenderer;
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
- *      Julian Viereck <julian.viereck@gmail.com>
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -12133,12 +13423,12 @@ var Gutter = function(parentEl) {
 
     this.setAnnotations = function(annotations) {
         // iterate over sparse array
-        this.$annotations = [];        
+        this.$annotations = [];
         for (var row in annotations) if (annotations.hasOwnProperty(row)) {
             var rowAnnotations = annotations[row];
             if (!rowAnnotations)
                 continue;
-                
+
             var rowInfo = this.$annotations[row] = {
                 text: []
             };
@@ -12171,6 +13461,9 @@ var Gutter = function(parentEl) {
                 annotation.className,
                 "' title='", annotation.text.join("\n"),
                 "' style='height:", this.session.getRowHeight(config, i), "px;'>", (i+1), "</div>");
+
+
+            i = this.session.getRowFoldEnd(i);
         }
 		this.element = dom.setInnerHtml(this.element, html.join(""));
         this.element.style.height = config.minHeight + "px";
@@ -12384,7 +13677,7 @@ exports.Marker = Marker;
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
- *      Julian Viereck <julian.viereck@gmail.com>
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *      Mihai Sucan <mihai.sucan@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -12549,18 +13842,34 @@ var Text = function(parentEl) {
         var first = Math.max(firstRow, config.firstRow);
         var last = Math.min(lastRow, config.lastRow);
 
-        var lineElements = this.element.childNodes;
-        var tokens = this.session.getTokens(first, last);
+        var lineElements = this.element.childNodes,
+            lineElementsIdx = 0;
+
+        for (var row = config.firstRow; row < first; row++) {
+            var foldLine = this.session.getFoldLine(row);
+            if (foldLine) {
+                if (foldLine.containsRow(first)) {
+                    break;
+                } else {
+                    row = foldLine.end.row;
+                }
+            }
+            lineElementsIdx ++;
+        }
+
         for (var i=first; i<=last; i++) {
-            var lineElement = lineElements[i - config.firstRow];
+            var lineElement = lineElements[lineElementsIdx++];
             if (!lineElement)
                 continue;
 
             var html = [];
-            this.$renderLine(html, i, tokens[i-first].tokens);
+            var tokens = this.session.getTokens(i, i);
+            this.$renderLine(html, i, tokens[0].tokens);
             lineElement = dom.setInnerHtml(lineElement, html.join(""));
             lineElement.style.height =
                     this.session.getRowHeight(config, i) + "px";
+
+            i = this.session.getRowFoldEnd(i);
         }
     };
 
@@ -12578,11 +13887,11 @@ var Text = function(parentEl) {
         var el = this.element;
 
         if (oldConfig.firstRow < config.firstRow)
-            for (var row=oldConfig.firstRow; row<config.firstRow; row++)
+            for (var row=oldConfig.firstRow; row<config.firstRow; row = this.session.getRowFoldEnd(row) + 1)
                 el.removeChild(el.firstChild);
 
         if (oldConfig.lastRow > config.lastRow)
-            for (var row=config.lastRow+1; row<=oldConfig.lastRow; row++)
+            for (var row=config.lastRow+1; row<=oldConfig.lastRow; row = this.session.getRowFoldEnd(row) + 1)
                 el.removeChild(el.lastChild);
 
         if (config.firstRow < oldConfig.firstRow) {
@@ -12601,20 +13910,28 @@ var Text = function(parentEl) {
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
         var fragment = document.createDocumentFragment();
-        var tokens = this.session.getTokens(firstRow, lastRow);
         for (var row=firstRow; row<=lastRow; row++) {
             var lineEl = dom.createElement("div");
+
             lineEl.className = "ace_line";
             var style = lineEl.style;
             style.height = this.session.getRowHeight(config, row) + "px";
             style.width = config.width + "px";
 
             var html = [];
-            if (tokens.length > row-firstRow)
-                this.$renderLine(html, row, tokens[row-firstRow].tokens);
+            // Get the tokens per line as there might be some lines in between
+            // beeing folded.
+            // OPTIMIZE: If there is a long block of unfolded lines, just make
+            // this call once for that big block of unfolded lines.
+            var tokens = this.session.getTokens(row, row);
+            if (tokens.length == 1)
+                this.$renderLine(html, row, tokens[0].tokens);
+
             // don't use setInnerHtml since we are working with an empty DIV
             lineEl.innerHTML = html.join("");
             fragment.appendChild(lineEl);
+
+            row = this.session.getRowFoldEnd(row);
         }
         return fragment;
     };
@@ -12638,50 +13955,60 @@ var Text = function(parentEl) {
         "lparen": true
     };
 
-    this.$renderLine = function(stringBuilder, row, tokens) {
-        var _self = this,
-            characterWidth = this.config.characterWidth,
-            screenColumn = 0;
-
-        function addToken(token, value) {
-            var output = value
-                    .replace(/\t|&|<|( +)|([\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000])|[\u1100-\u115F]|[\u11A3-\u11A7]|[\u11FA-\u11FF]|[\u2329-\u232A]|[\u2E80-\u2E99]|[\u2E9B-\u2EF3]|[\u2F00-\u2FD5]|[\u2FF0-\u2FFB]|[\u3000-\u303E]|[\u3041-\u3096]|[\u3099-\u30FF]|[\u3105-\u312D]|[\u3131-\u318E]|[\u3190-\u31BA]|[\u31C0-\u31E3]|[\u31F0-\u321E]|[\u3220-\u3247]|[\u3250-\u32FE]|[\u3300-\u4DBF]|[\u4E00-\uA48C]|[\uA490-\uA4C6]|[\uA960-\uA97C]|[\uAC00-\uD7A3]|[\uD7B0-\uD7C6]|[\uD7CB-\uD7FB]|[\uF900-\uFAFF]|[\uFE10-\uFE19]|[\uFE30-\uFE52]|[\uFE54-\uFE66]|[\uFE68-\uFE6B]|[\uFF01-\uFF60]|[\uFFE0-\uFFE6]/g, function(c, a, b, tabIdx, idx4) {
-                        if (c.charCodeAt(0) == 32) {
-                            return new Array(c.length+1).join("&#160;");
-                        } else if (c == "\t") {
-                            var tabSize = _self.session.
-                                    getScreenTabSize(screenColumn + tabIdx);
-                            screenColumn += tabSize - 1;
-                            return _self.$tabStrings[tabSize];
-                        } else if (c == "&") {
-                            return "&amp";
-                        } else if (c == "<") {
-                            return "&lt;";
-                        } else if (c.match(/[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/)) {
-                            if (this.showInvisibles) {
-                                var space = new Array(c.length+1).join(self.SPACE_CHAR);
-                                return "<span class='ace_invisible'>" + space + "</span>";
-                            } else {
-                                return "&#160;"
-                            }
-                        } else {
-                            screenColumn += 1;
-                            return "<span class='ace_cjk' style='width:" + (characterWidth * 2) + "px'>" + c + "</span>"
-                        }
-                    });
-                screenColumn += value.length;
-
-            if (!_self.$textToken[token.type]) {
-                var classes = "ace_" + token.type.replace(/\./g, " ace_");
-                stringBuilder.push("<span class='", classes, "'>", output, "</span>");
-            }
-            else {
-                stringBuilder.push(output);
+    this.$renderToken = function(stringBuilder, screenColumn, token, value) {
+        var self = this;
+        var replaceReg = /\t|&|<|( +)|([\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000])|[\u1100-\u115F]|[\u11A3-\u11A7]|[\u11FA-\u11FF]|[\u2329-\u232A]|[\u2E80-\u2E99]|[\u2E9B-\u2EF3]|[\u2F00-\u2FD5]|[\u2FF0-\u2FFB]|[\u3000-\u303E]|[\u3041-\u3096]|[\u3099-\u30FF]|[\u3105-\u312D]|[\u3131-\u318E]|[\u3190-\u31BA]|[\u31C0-\u31E3]|[\u31F0-\u321E]|[\u3220-\u3247]|[\u3250-\u32FE]|[\u3300-\u4DBF]|[\u4E00-\uA48C]|[\uA490-\uA4C6]|[\uA960-\uA97C]|[\uAC00-\uD7A3]|[\uD7B0-\uD7C6]|[\uD7CB-\uD7FB]|[\uF900-\uFAFF]|[\uFE10-\uFE19]|[\uFE30-\uFE52]|[\uFE54-\uFE66]|[\uFE68-\uFE6B]|[\uFF01-\uFF60]|[\uFFE0-\uFFE6]/g;
+        var replaceFunc = function(c, a, b, tabIdx, idx4) {
+            if (c.charCodeAt(0) == 32) {
+                return new Array(c.length+1).join("&#160;");
+            } else if (c == "\t") {
+                var tabSize = self.session.
+                        getScreenTabSize(screenColumn + tabIdx);
+                screenColumn += tabSize - 1;
+                return self.$tabStrings[tabSize];
+            } else if (c == "&") {
+                return "&amp";
+            } else if (c == "<") {
+                return "&lt;";
+            } else if (c.match(/[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/)) {
+                if (self.showInvisibles) {
+                    var space = new Array(c.length+1).join(self.SPACE_CHAR);
+                    return "<span class='ace_invisible'>" + space + "</span>";
+                } else {
+                    return "&#160;";
+                }
+            } else {
+                screenColumn += 1;
+                return "<span class='ace_cjk' style='width:" + (
+                        self.config.characterWidth * 2) +
+                        "px'>" + c + "</span>";
             }
         }
 
-        var splits = this.session.getRowSplitData(row);
-        var chars = 0, split = 0, splitChars;
+        var output = value.replace(replaceReg, replaceFunc);
+
+        if (!this.$textToken[token.type]) {
+            var classes = "ace_" + token.type.replace(/\./g, " ace_");
+            stringBuilder.push("<span class='", classes, "'>", output, "</span>");
+        }
+        else {
+            stringBuilder.push(output);
+        }
+        return value.length;
+    }
+
+    this.$renderLineCore = function(stringBuilder, lastRow, tokens, splits) {
+        var chars = 0,
+            split = 0,
+            splitChars,
+            characterWidth = this.config.characterWidth,
+            screenColumn = 0,
+            self = this;
+
+        function addToken(token, value) {
+            screenColumn += self.$renderToken(
+                stringBuilder, screenColumn, token, value);
+        }
 
         if (!splits || splits.length == 0) {
             splitChars = Number.MAX_VALUE;
@@ -12721,13 +14048,90 @@ var Text = function(parentEl) {
         };
 
         if (this.showInvisibles) {
-            if (row !== this.session.getLength() - 1) {
+            if (lastRow !== this.session.getLength() - 1) {
                 stringBuilder.push("<span class='ace_invisible'>" + this.EOL_CHAR + "</span>");
             } else {
                 stringBuilder.push("<span class='ace_invisible'>" + this.EOF_CHAR + "</span>");
             }
         }
         stringBuilder.push("</div>");
+    }
+
+    this.$renderLine = function(stringBuilder, row, tokens) {
+        // Check if the line to render is folded or not. If not, things are
+        // simple, otherwise, we need to fake some things...
+        if (!this.session.isRowFolded(row)) {
+            var splits = this.session.getRowSplitData(row);
+            this.$renderLineCore(stringBuilder, row, tokens, splits)
+        } else {
+            this.$renderFoldLine(stringBuilder, row, tokens, splits);
+        }
+    };
+
+    this.$renderFoldLine = function(stringBuilder, row, tokens) {
+        var session = this.session,
+            foldLine = session.getFoldLine(row),
+            renderTokens = [];
+
+        function addTokens(tokens, from, to) {
+            var idx = 0, col = 0;
+            while ((col + tokens[idx].value.length) < from) {
+                col += tokens[idx].value.length
+                idx++
+
+                if (idx == tokens.length) {
+                    return;
+                }
+            }
+            if (col != from) {
+                var value = tokens[idx].value.substring(from - col);
+                // Check if the token value is longer then the from...to spacing.
+                if (value.length > (to - from)) {
+                    value = value.substring(0, to - from);
+                }
+
+                renderTokens.push({
+                    type: tokens[idx].type,
+                    value: value
+                });
+
+                col = from + value.length;
+                idx += 1
+            }
+
+            while (col < to) {
+                var value = tokens[idx].value;
+                if (value.length + col > to) {
+                    value = value.substring(0, to - col);
+                }
+                renderTokens.push({
+                    type: tokens[idx].type,
+                    value: value
+                });
+                col += value.length;
+                idx += 1;
+            }
+        }
+
+        foldLine.walk(function(placeholder, row, column, lastColumn, isNewRow) {
+            if (placeholder) {
+               renderTokens.push({
+                    type: "fold",
+                    value: placeholder
+                });
+            } else {
+                if (isNewRow) {
+                   tokens = this.session.getTokens(row, row)[0].tokens;
+                }
+                if (tokens.length != 0) {
+                    addTokens(tokens, lastColumn, column);
+                }
+            }
+        }.bind(this), foldLine.end.row, this.session.getLine(foldLine.end.row).length);
+
+        // TODO: Build a fake splits array!
+        var splits = this.session.$wrapData[row];
+        this.$renderLineCore(stringBuilder, row, renderTokens, splits);
     };
 
 }).call(Text.prototype);
