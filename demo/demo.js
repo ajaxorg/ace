@@ -21,6 +21,7 @@
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -40,8 +41,9 @@
 define(function(require, exports, module) {
 
 exports.launch = function(env) {
-
+    var canon = require("pilot/canon");
     var event = require("pilot/event");
+    var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
@@ -59,6 +61,8 @@ exports.launch = function(env) {
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
+    var OcamlMode = require("ace/mode/ocaml").Mode;
+    var SvgMode = require("ace/mode/svg").Mode;
     var TextileMode = require("ace/mode/textile").Mode;
     var TextMode = require("ace/mode/text").Mode;
     var UndoManager = require("ace/undomanager").UndoManager;
@@ -114,6 +118,7 @@ exports.launch = function(env) {
     docs.java = new EditSession(document.getElementById("javatext").innerHTML);
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
+    docs.java.addFold("...", new Range(8, 44, 13, 4));
 
     docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
     docs.ruby.setMode(new RubyMode());
@@ -135,6 +140,14 @@ exports.launch = function(env) {
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
+    docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml.setMode(new OcamlMode());
+    docs.ocaml.setUndoManager(new UndoManager());
+
+    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg.setMode(new SvgMode());
+    docs.svg.setUndoManager(new UndoManager());
+
     docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
@@ -145,6 +158,7 @@ exports.launch = function(env) {
     var modes = {
         text: new TextMode(),
         textile: new TextileMode(),
+        svg: new SvgMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
@@ -156,7 +170,8 @@ exports.launch = function(env) {
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
         perl: new PerlMode(),
-				csharp: new CSharpMode()
+        ocaml: new OcamlMode(),
+        csharp: new CSharpMode()
     };
 
     function getMode() {
@@ -204,8 +219,14 @@ exports.launch = function(env) {
         else if (mode instanceof PerlMode) {
             modeEl.value = "perl";
         }
+        else if (mode instanceof OcamlMode) {
+            modeEl.value = "ocaml";
+        }
         else if (mode instanceof CSharpMode) {
             modeEl.value = "csharp";
+        }
+        else if (mode instanceof SvgMode) {
+            modeEl.value = "svg";
         }
         else if (mode instanceof TextileMode) {
             modeEl.value = "textile";
@@ -292,6 +313,10 @@ exports.launch = function(env) {
         env.editor.renderer.setHScrollBarAlwaysVisible(checked);
     });
 
+    bindCheckbox("soft_tab", function(checked) {
+        env.editor.getSession().setUseSoftTabs(checked);
+    });
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
@@ -360,6 +385,8 @@ exports.launch = function(env) {
                     mode = "coffee";
                 } else if (/^.*\.(pl|pm)$/i.test(file.name)) {
                     mode = "perl";
+                } else if (/^.*\.(ml|mli)$/i.test(file.name)) {
+                    mode = "ocaml";
                 }
 
                 env.editor.onTextInput(reader.result);
@@ -374,6 +401,98 @@ exports.launch = function(env) {
     });
 
     window.env = env;
+
+    /**
+     * This demonstrates how you can define commands and bind shortcuts to them.
+     */
+
+    // Command to focus the command line from the editor.
+    canon.addCommand({
+        name: "focuscli",
+        bindKey: {
+            win: "Ctrl-J",
+            mac: "Command-J",
+            sender: "editor"
+        },
+        exec: function() {
+            env.cli.cliView.element.focus();
+        }
+    });
+
+    // Command to focus the editor line from the command line.
+    canon.addCommand({
+        name: "focuseditor",
+        bindKey: {
+            win: "Ctrl-J",
+            mac: "Command-J",
+            sender: "cli"
+        },
+        exec: function() {
+            env.editor.focus();
+        }
+    });
+
+    // Fake-Save, works from the editor and the command line.
+    canon.addCommand({
+        name: "save",
+        bindKey: {
+            win: "Ctrl-S",
+            mac: "Command-S",
+            sender: "editor|cli"
+        },
+        exec: function() {
+            alert("Fake Save File");
+        }
+    });
+
+    // Fake-Print with custom lookup-sender-match function.
+    canon.addCommand({
+        name: "save",
+        bindKey: {
+            win: "Ctrl-P",
+            mac: "Command-P",
+            sender: function(env, sender, hashId, keyString) {
+                if (sender == "editor") {
+                    return true;
+                } else {
+                    alert("Sorry, can only print from the editor");
+                }
+            }
+        },
+        exec: function() {
+            alert("Fake Print File");
+        }
+    });
+
+    canon.addCommand({
+        name: "fold",
+        bindKey: {
+            win: "Alt-L",
+            mac: "Alt-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange(),
+                placeHolder = session.getTextRange(range).substring(0, 3) + "...";
+
+            session.addFold(placeHolder, range);
+        }
+    });
+
+    canon.addCommand({
+        name: "undfold",
+        bindKey: {
+            win: "Alt-Shift-L",
+            mac: "Alt-Shift-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange();
+            session.expandFolds(session.getFoldsInRange(range));
+        }
+    });
 };
 
 });

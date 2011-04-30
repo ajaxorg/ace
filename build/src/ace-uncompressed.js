@@ -59,6 +59,9 @@ var _define = function(module, deps, payload) {
         return;
     }
 
+    if (arguments.length == 2)
+        payload = deps;
+
     if (!define.modules)
         define.modules = {};
         
@@ -131,274 +134,247 @@ var lookup = function(moduleName) {
     return module;
 };
 
-})();/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
+})();// vim:set ts=4 sts=4 sw=4 st:
+// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
+// -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
+// -- dantman Daniel Friesen Copyright(C) 2010 XXX No License Specified
+// -- fschaefer Florian Schäfer Copyright (C) 2010 MIT License
+// -- Irakli Gozalishvili Copyright (C) 2010 MIT License
+
+/*!
+    Copyright (c) 2009, 280 North Inc. http://280north.com/
+    MIT License. http://github.com/280north/narwhal/blob/master/README.md
+*/
 
 define('pilot/fixoldbrowsers', ['require', 'exports', 'module' ], function(require, exports, module) {
 
-// Should be the first thing, as we want to use that in this module.
+/**
+ * Brings an environment as close to ECMAScript 5 compliance
+ * as is possible with the facilities of erstwhile engines.
+ *
+ * ES5 Draft
+ * http://www.ecma-international.org/publications/files/drafts/tc39-2009-050.pdf
+ *
+ * NOTE: this is a draft, and as such, the URL is subject to change.  If the
+ * link is broken, check in the parent directory for the latest TC39 PDF.
+ * http://www.ecma-international.org/publications/files/drafts/
+ *
+ * Previous ES5 Draft
+ * http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+ * This is a broken link to the previous draft of ES5 on which most of the
+ * numbered specification references and quotes herein were taken.  Updating
+ * these references and quotes to reflect the new document would be a welcome
+ * volunteer project.
+ *
+ * @module
+ */
+
+/*whatsupdoc*/
+
+//
+// Function
+// ========
+//
+
+// ES-5 15.3.4.5
+// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+
 if (!Function.prototype.bind) {
-    // from MDC
-    // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
-    Function.prototype.bind = function (obj) {
-        var slice = [].slice;
-        var args = slice.call(arguments, 1);
-        var self = this;
-        var nop = function () {};
+    var slice = Array.prototype.slice;
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof target.apply !== "function" || typeof target.call !== "function")
+            return new TypeError();
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        var args = slice.call(arguments);
+        // 4. Let F be a new native ECMAScript object.
+        // 9. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 10. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 11. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 12. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        // 13. The [[Scope]] internal property of F is unused and need not
+        //   exist.
+        var bound = function bound() {
 
-        // optimize common case
-        if (arguments.length == 1) {
-          var bound = function() {
-              var useThis = self.prototype === undefined ?
-                                this instanceof arguments.callee :
-                                this instanceof nop;
-              return self.apply(useThis ? this : obj, arguments);
-          };
-        }
-        else {
-          var bound = function () {
-              var useThis = self.prototype === undefined ?
-                                this instanceof arguments.callee :
-                                this instanceof nop;
-              return self.apply(
-                  useThis ? this : ( obj || {} ),
-                  args.concat( slice.call(arguments) )
-              );
-          };
-        }
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
 
-        nop.prototype = self.prototype;
-        bound.prototype = new nop();
+                var self = Object.create(target.prototype);
+                target.apply(self, args.concat(slice.call(arguments)));
+                return self;
 
-        // From Narwhal
-        bound.name = this.name;
-        bound.displayName = this.displayName;
-        bound.length = this.length;
-        bound.unbound = self;
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the list
+                //   boundArgs in the same order followed by the same values as
+                //   the list ExtraArgs in the same order. 5.  Return the
+                //   result of calling the [[Call]] internal method of target
+                //   providing boundThis as the this value and providing args
+                //   as the arguments.
 
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.call.apply(
+                    target,
+                    args.concat(slice.call(arguments))
+                );
+
+            }
+
+        };
+        bound.length = (
+            // 14. If the [[Class]] internal property of Target is "Function", then
+            typeof target === "function" ?
+            // a. Let L be the length property of Target minus the length of A.
+            // b. Set the length own property of F to either 0 or L, whichever is larger.
+            Math.max(target.length - args.length, 0) :
+            // 15. Else set the length own property of F to 0.
+            0
+        )
+        // 16. The length own property of F is given attributes as specified in
+        //   15.3.5.1.
+        // TODO
+        // 17. Set the [[Extensible]] internal property of F to true.
+        // TODO
+        // 18. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // 19. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property.
+        // XXX can't delete it in pure-js.
         return bound;
     };
 }
 
-
-var F = function() {}
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
 var call = Function.prototype.call;
-// Shortcut for `Object.prototype.hasOwnProperty.call`.
-var owns = call.bind(Object.prototype.hasOwnProperty);
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
 
-// Shortcuts for getter / setter utilities if supported by JS engine.
-var getGetter, getSetter, setGetter, setSetter
-getGetter = getSetter = setGetter = setSetter = F;
+var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
+// If JS engine supports accessors creating shortcuts.
+if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
 
-if (Object.prototype.__lookupGetter__)
-    getGetter = call.bind(Object.prototype.__lookupGetter__);
-if (Object.prototype.__lookupSetter__)
-    getSetter = call.bind(Object.prototype.__lookupSetter__);
-if (Object.prototype.__defineGetter__)
-    setGetter = call.bind(Object.prototype.__defineGetter__);
-if (Object.prototype.__defineSetter__)
-    setSetter = call.bind(Object.prototype.__defineSetter__);
 
-/**
- * Array detector.
- * Firefox 3.5 and Safari 4 have this already. Chrome 4 however ...
- * Note to Dojo - your isArray is still broken: instanceof doesn't work with
- * Arrays taken from a different frame/window.
- */
+//
+// Array
+// =====
+//
+
 // ES5 15.4.3.2
 if (!Array.isArray) {
-    Array.isArray = function(data) {
-        return data && Object.prototype.toString.call(data) === "[object Array]";
+    Array.isArray = function isArray(obj) {
+        return Object.prototype.toString.call(obj) === "[object Array]";
     };
 }
 
-// from MDC
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(searchElement /*, fromIndex */)
-  {
-    if (this === void 0 || this === null)
-        throw new TypeError();
-
-    var t = Object(this);
-    var len = t.length >>> 0;
-    if (len === 0)
-        return -1;
-
-    var n = 0, zero = n;
-    if (arguments.length > 0) {
-        n = Number(arguments[1]);
-        if (n !== n)
-            n = 0;
-        else if (n !== 0 && n !== (1 / zero) && n !== -(1 / zero))
-            n = (n > 0 || -1) * Math.floor(Math.abs(n));
-    }
-
-    if (n >= len)
-        return -1;
-
-    var k = n >= 0
-        ? n
-        : Math.max(len - Math.abs(n), 0);
-
-    for (; k < len; k++) {
-      if (k in t && t[k] === searchElement)
-          return k;
-    }
-    return -1;
-  };
-}
-
-// from MDC
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf
-if (!Array.prototype.lastIndexOf)
-{
-  Array.prototype.lastIndexOf = function(searchElement /*, fromIndex*/)
-  {
-    "use strict";
-
-    if (this === void 0 || this === null)
-      throw new TypeError();
-
-    var t = Object(this);
-    var len = t.length >>> 0;
-    if (len === 0)
-      return -1;
-
-    var n = len, zero = false | 0;
-    if (arguments.length > 0)
-    {
-      n = Number(arguments[1]);
-      if (n !== n)
-        n = 0;
-      else if (n !== 0 && n !== (1 / zero) && n !== -(1 / zero))
-        n = (n > 0 || -1) * Math.floor(Math.abs(n));
-    }
-
-    var k = n >= 0
-          ? Math.min(n, len - 1)
-          : len - Math.abs(n);
-
-    while (k >= 0)
-    {
-      if (k in t && t[k] === searchElement)
-        return k;
-    }
-    return -1;
-  };
-}
-
-// from MDC
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/map
-// ES5 15.4.4.19
-if (!Array.prototype.map) {
-    Array.prototype.map = function(fun /*, thisp */) {
-    if (this === void 0 || this === null)
-        throw new TypeError();
-
-    var t = Object(this);
-    var len = t.length >>> 0;
-    if (typeof fun !== "function")
-        throw new TypeError();
-
-      res = new Array(len);
-    var thisp = arguments[1];
-    for (var i = 0; i < len; i++) {
-      if (i in t)
-          res[i] = fun.call(thisp, t[i], i, t);
-    }
-
-      return res;
-  };
-}
-
-// from MDC
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
 // ES5 15.4.4.18
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach = function(fun /*, thisp */) {
-    if (this === void 0 || this === null)
-        throw new TypeError();
+    Array.prototype.forEach =  function forEach(block, thisObject) {
+        var len = +this.length;
+        for (var i = 0; i < len; i++) {
+            if (i in this) {
+                block.call(thisObject, this[i], i, this);
+            }
+        }
+    };
+}
 
-    var t = Object(this);
-    var len = t.length >>> 0;
-    if (typeof fun !== "function")
-        throw new TypeError();
+// ES5 15.4.4.19
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
+if (!Array.prototype.map) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
+        var len = +this.length;
+        if (typeof fun !== "function")
+          throw new TypeError();
 
-    var thisp = arguments[1];
-    for (var i = 0; i < len; i++) {
-      if (i in t)
-          fun.call(thisp, t[i], i, t);
-    }
-  };
+        var res = new Array(len);
+        var thisp = arguments[1];
+        for (var i = 0; i < len; i++) {
+            if (i in this)
+                res[i] = fun.call(thisp, this[i], i, this);
+        }
+
+        return res;
+    };
 }
 
 // ES5 15.4.4.20
 if (!Array.prototype.filter) {
-    Array.prototype.filter = function filter(callback, scope) {
-        var values = [], i, ii;
-        for (i = 0, ii = this.length; i < ii; i++) {
-            if (callback.call(scope, this[i])) values.push(this[i]);
-        }
+    Array.prototype.filter = function filter(block /*, thisp */) {
+        var values = [];
+        var thisp = arguments[1];
+        for (var i = 0; i < this.length; i++)
+            if (block.call(thisp, this[i]))
+                values.push(this[i]);
         return values;
     };
 }
 
 // ES5 15.4.4.16
 if (!Array.prototype.every) {
-    Array.prototype.every = function every(callback, scope) {
-        var i, ii;
-        for (i = 0, ii = this.length; i < ii; i++) {
-            if (!callback.call(scope, this[i])) return false;
-        }
+    Array.prototype.every = function every(block /*, thisp */) {
+        var thisp = arguments[1];
+        for (var i = 0; i < this.length; i++)
+            if (!block.call(thisp, this[i]))
+                return false;
         return true;
     };
 }
 
 // ES5 15.4.4.17
 if (!Array.prototype.some) {
-    Array.prototype.some = function (callback, scope) {
-        var i, ii;
-        for (i = 0, ii = this.length; i < ii; i++) {
-            if (callback.call(scope, this[i])) return true;
-        }
+    Array.prototype.some = function some(block /*, thisp */) {
+        var thisp = arguments[1];
+        for (var i = 0; i < this.length; i++)
+            if (block.call(thisp, this[i]))
+                return true;
         return false;
     };
 }
@@ -406,13 +382,13 @@ if (!Array.prototype.some) {
 // ES5 15.4.4.21
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
 if (!Array.prototype.reduce) {
-    Array.prototype.reduce = function(fun /*, initial*/) {
-        var len = this.length >>> 0;
-        if (typeof fun != "function")
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
+        var len = +this.length;
+        if (typeof fun !== "function")
             throw new TypeError();
 
         // no value to return if no initial value and an empty array
-        if (len == 0 && arguments.length == 1)
+        if (len === 0 && arguments.length === 1)
             throw new TypeError();
 
         var i = 0;
@@ -443,13 +419,13 @@ if (!Array.prototype.reduce) {
 // ES5 15.4.4.22
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
 if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function(fun /*, initial*/) {
-        var len = this.length >>> 0;
-        if (typeof fun != "function")
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
+        var len = +this.length;
+        if (typeof fun !== "function")
             throw new TypeError();
 
         // no value to return if no initial value, empty array
-        if (len == 0 && arguments.length == 1)
+        if (len === 0 && arguments.length === 1)
             throw new TypeError();
 
         var i = len - 1;
@@ -477,107 +453,203 @@ if (!Array.prototype.reduceRight) {
     };
 }
 
-
-/**
- * Retrieves the list of keys on an object.
- */
-if (!Object.keys) {
-    Object.keys = function keys(object) {
-        var name, names = [];
-        for (name in object)
-            if (owns(object, name)) names.push(name);
-
-        return names;
+// ES5 15.4.4.14
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function indexOf(value /*, fromIndex */ ) {
+        var length = this.length;
+        if (!length)
+            return -1;
+        var i = arguments[1] || 0;
+        if (i >= length)
+            return -1;
+        if (i < 0)
+            i += length;
+        for (; i < length; i++) {
+            if (!owns(this, i))
+                continue;
+            if (value === this[i])
+                return i;
+        }
+        return -1;
     };
 }
 
-// Can not be implemented so we default to the Object.keys
-// ES5 15.2.3.4
-if (!Object.getOwnPropertyNames) {
-    Object.getOwnPropertyNames = Object.keys;
+// ES5 15.4.4.15
+if (!Array.prototype.lastIndexOf) {
+    Array.prototype.lastIndexOf = function lastIndexOf(value /*, fromIndex */) {
+        var length = this.length;
+        if (!length)
+            return -1;
+        var i = arguments[1] || length;
+        if (i < 0)
+            i += length;
+        i = Math.min(i, length - 1);
+        for (; i >= 0; i--) {
+            if (!owns(this, i))
+                continue;
+            if (value === this[i])
+                return i;
+        }
+        return -1;
+    };
+}
+
+//
+// Object
+// ======
+//
+
+// ES5 15.2.3.2
+if (!Object.getPrototypeOf) {
+    // https://github.com/kriskowal/es5-shim/issues#issue/2
+    // http://ejohn.org/blog/objectgetprototypeof/
+    // recommended by fschaefer on github
+    Object.getPrototypeOf = function getPrototypeOf(object) {
+        return object.__proto__ || object.constructor.prototype;
+        // or undefined if not available in this engine
+    };
 }
 
 // ES5 15.2.3.3
-var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a non-object"
 if (!Object.getOwnPropertyDescriptor) {
-    Object.getOwnPropertyDescriptor =
-        function getOwnPropertyDescriptor(object, name) {
-            var descriptor, getter, setter;
+    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
+                         "non-object: ";
+    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+        if ((typeof object !== "object" && typeof object !== "function") || object === null)
+            throw new TypeError(ERR_NON_OBJECT + object);
+        // If object does not owns property return undefined immediately.
+        if (!owns(object, property))
+            return undefined;
 
-            if (typeof object !== "object" && typeof object !== "function"
-                || object === null) throw new TypeError(ERR_NON_OBJECT);
+        var despriptor, getter, setter;
 
-            if (owns(object, name)) {
-                descriptor = { configurable: true, enumerable: true };
-                getter = descriptor.get = getGetter(object, name);
-                setter = descriptor.set = getSetter(object, name);
-                // If nor getter nor setter is not defined we default to
-                // normal value. This can mean that either it's data
-                // property or js engine does not supports getters / setters.
-                if (!getter && !setter) {
-                    descriptor.writeable = true;
-                    descriptor.value = object[name]
-                }
+        // If object has a property then it's for sure both `enumerable` and
+        // `configurable`.
+        despriptor =  { enumerable: true, configurable: true };
+
+        // If JS engine supports accessor properties then property may be a
+        // getter or setter.
+        if (supportsAccessors) {
+            // Unfortunately `__lookupGetter__` will return a getter even
+            // if object has own non getter property along with a same named
+            // inherited getter. To avoid misbehavior we temporary remove
+            // `__proto__` so that `__lookupGetter__` will return getter only
+            // if it's owned by an object.
+            var prototype = object.__proto__;
+            object.__proto__ = prototypeOfObject;
+
+            var getter = lookupGetter(object, property);
+            var setter = lookupSetter(object, property);
+
+            // Once we have getter and setter we can put values back.
+            object.__proto__ = prototype;
+
+            if (getter || setter) {
+                if (getter) descriptor.get = getter;
+                if (setter) descriptor.set = setter;
+
+                // If it was accessor property we're done and return here
+                // in order to avoid adding `value` to the descriptor.
+                return descriptor;
             }
-            return descriptor
         }
+
+        // If we got this far we know that object has an own property that is
+        // not an accessor so we set it as a value and return descriptor.
+        descriptor.value = object[property];
+        return descriptor;
+    };
 }
 
-// Returning `__proto__` of an object or `object.constructor.prototype` for IE.
-if (!Object.getPrototypeOf) {
-    Object.getPrototypeOf = function getPrototypeOf(object) {
-        return object.__proto__ || object.constructor.prototype;
-    }
+// ES5 15.2.3.4
+if (!Object.getOwnPropertyNames) {
+    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
+        return Object.keys(object);
+    };
 }
 
 // ES5 15.2.3.5
 if (!Object.create) {
     Object.create = function create(prototype, properties) {
         var object;
-
         if (prototype === null) {
-            object = { __proto__: null };
-        } else if (typeof prototype !== "object") {
-            throw new TypeError(prototype + " is not an object or null");
+            object = { "__proto__": null };
         } else {
-            F.prototype = prototype;
-            object = new F();
+            if (typeof prototype !== "object")
+                throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
+            var Type = function () {};
+            Type.prototype = prototype;
+            object = new Type();
+            // IE has no built-in implementation of `Object.getPrototypeOf`
+            // neither `__proto__`, but this manually setting `__proto__` will
+            // guarantee that `Object.getPrototypeOf` will work as expected with
+            // objects created using `Object.create`
+            object.__proto__ = prototype;
         }
-
         if (typeof properties !== "undefined")
             Object.defineProperties(object, properties);
-
         return object;
     };
 }
 
 // ES5 15.2.3.6
 if (!Object.defineProperty) {
-    Object.defineProperty = function defineProperty(object, name, descriptor) {
-        var proto, setter, getter;
+    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
+                                      "on this javascript engine";
 
-        if ("object" !== typeof object && "function" !== typeof object)
-            throw new TypeError(object + "is not an object");
-        if (descriptor && 'object' !== typeof descriptor)
-            throw new TypeError('Property descriptor map must be an object');
-        if ('value' in descriptor) { // if it's a data property
-            if ('get' in descriptor || 'set' in descriptor) {
-                throw new TypeError('Invalid property. "value" present on '
-                    + 'property with getter or setter.');
+    Object.defineProperty = function defineProperty(object, property, descriptor) {
+        if (typeof object !== "object" && typeof object !== "function")
+            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+        if (typeof object !== "object" || object === null)
+            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+
+        // If it's a data property.
+        if (owns(descriptor, "value")) {
+            // fail silently if "writable", "enumerable", or "configurable"
+            // are requested but not supported
+            /*
+            // alternate approach:
+            if ( // can't implement these features; allow false but not true
+                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
+                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
+                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
+            )
+                throw new RangeError(
+                    "This implementation of Object.defineProperty does not " +
+                    "support configurable, enumerable, or writable."
+                );
+            */
+
+            if (supportsAccessors && (lookupGetter(object, property) ||
+                                      lookupSetter(object, property)))
+            {
+                // As accessors are supported only on engines implementing
+                // `__proto__` we can safely override `__proto__` while defining
+                // a property to make sure that we don't hit an inherited
+                // accessor.
+                var prototype = object.__proto__;
+                object.__proto__ = prototypeOfObject;
+                // Deleting a property anyway since getter / setter may be
+                // defined on object itself.
+                delete object[property];
+                object[property] = descriptor.value;
+                // Setting original `__proto__` back now.
+                object.prototype;
+            } else {
+                object[property] = descriptor.value;
             }
-
-            // Swapping __proto__ with default one to avoid calling inherited
-            // getters / setters with this `name`.
-            if (proto = object.__proto__) object.__proto__ = Object.prototype;
-            // Delete property cause it may be a setter.
-            delete object[name];
-            object[name] = descriptor.value;
-            // Return __proto__ back.
-            if (proto) object.__proto__ = proto;
         } else {
-            if (getter = descriptor.get) setGetter(object, getter);
-            if (setter = descriptor.set) setSetter(object, setter);
+            if (!supportsAccessors)
+                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+            // If we got that far then getters and setters can be defined !!
+            if (owns(descriptor, "get"))
+                defineGetter(object, property, descriptor.get);
+            if (owns(descriptor, "set"))
+                defineSetter(object, property, descriptor.set);
         }
+
         return object;
     };
 }
@@ -585,55 +657,321 @@ if (!Object.defineProperty) {
 // ES5 15.2.3.7
 if (!Object.defineProperties) {
     Object.defineProperties = function defineProperties(object, properties) {
-        Object.getOwnPropertyNames(properties).forEach(function (name) {
-            Object.defineProperty(object, name, properties[name]);
-        });
+        for (var property in properties) {
+            if (owns(properties, property))
+                Object.defineProperty(object, property, properties[property]);
+        }
         return object;
     };
 }
 
-var passThrough = function(object) { return object };
 // ES5 15.2.3.8
-if (!Object.seal) Object.seal = passThrough;
+if (!Object.seal) {
+    Object.seal = function seal(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
 
 // ES5 15.2.3.9
-if (!Object.freeze) Object.freeze = passThrough;
+if (!Object.freeze) {
+    Object.freeze = function freeze(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// detect a Rhino bug and patch it
+try {
+    Object.freeze(function () {});
+} catch (exception) {
+    Object.freeze = (function freeze(freezeObject) {
+        return function freeze(object) {
+            if (typeof object === "function") {
+                return object;
+            } else {
+                return freezeObject(object);
+            }
+        };
+    })(Object.freeze);
+}
 
 // ES5 15.2.3.10
-if (!Object.preventExtensions) Object.preventExtension = passThrough;
-
-var no = function() { return false };
-var yes = function() { return true };
+if (!Object.preventExtensions) {
+    Object.preventExtensions = function preventExtensions(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
 
 // ES5 15.2.3.11
-if (!Object.isSealed) Object.isSealed = no;
+if (!Object.isSealed) {
+    Object.isSealed = function isSealed(object) {
+        return false;
+    };
+}
+
 // ES5 15.2.3.12
-if (!Object.isFrozen) Object.isFrozen = no;
+if (!Object.isFrozen) {
+    Object.isFrozen = function isFrozen(object) {
+        return false;
+    };
+}
+
 // ES5 15.2.3.13
-if (!Object.isExtensible) Object.isExtensible = yes;
+if (!Object.isExtensible) {
+    Object.isExtensible = function isExtensible(object) {
+        return true;
+    };
+}
 
+// ES5 15.2.3.14
+// http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
+if (!Object.keys) {
+
+    var hasDontEnumBug = true,
+        dontEnums = [
+            'toString',
+            'toLocaleString',
+            'valueOf',
+            'hasOwnProperty',
+            'isPrototypeOf',
+            'propertyIsEnumerable',
+            'constructor'
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    for (var key in {"toString": null})
+        hasDontEnumBug = false;
+
+    Object.keys = function keys(object) {
+
+        if (
+            typeof object !== "object" && typeof object !== "function"
+            || object === null
+        )
+            throw new TypeError("Object.keys called on a non-object");
+
+        var keys = [];
+        for (var name in object) {
+            if (owns(object, name)) {
+                keys.push(name);
+            }
+        }
+
+        if (hasDontEnumBug) {
+            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
+                var dontEnum = dontEnums[i];
+                if (owns(object, dontEnum)) {
+                    keys.push(dontEnum);
+                }
+            }
+        }
+
+        return keys;
+    };
+
+}
+
+//
+// Date
+// ====
+//
+
+// ES5 15.9.5.43
+// Format a Date object as a string according to a subset of the ISO-8601 standard.
+// Useful in Atom, among other things.
+if (!Date.prototype.toISOString) {
+    Date.prototype.toISOString = function toISOString() {
+        return (
+            this.getUTCFullYear() + "-" +
+            (this.getUTCMonth() + 1) + "-" +
+            this.getUTCDate() + "T" +
+            this.getUTCHours() + ":" +
+            this.getUTCMinutes() + ":" +
+            this.getUTCSeconds() + "Z"
+        );
+    }
+}
+
+// ES5 15.9.4.4
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+
+// ES5 15.9.5.44
+if (!Date.prototype.toJSON) {
+    Date.prototype.toJSON = function toJSON(key) {
+        // This function provides a String representation of a Date object for
+        // use by JSON.stringify (15.12.3). When the toJSON method is called
+        // with argument key, the following steps are taken:
+
+        // 1.  Let O be the result of calling ToObject, giving it the this
+        // value as its argument.
+        // 2. Let tv be ToPrimitive(O, hint Number).
+        // 3. If tv is a Number and is not finite, return null.
+        // XXX
+        // 4. Let toISO be the result of calling the [[Get]] internal method of
+        // O with argument "toISOString".
+        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
+        if (typeof this.toISOString !== "function")
+            throw new TypeError();
+        // 6. Return the result of calling the [[Call]] internal method of
+        // toISO with O as the this value and an empty argument list.
+        return this.toISOString();
+
+        // NOTE 1 The argument is ignored.
+
+        // NOTE 2 The toJSON function is intentionally generic; it does not
+        // require that its this value be a Date object. Therefore, it can be
+        // transferred to other kinds of objects for use as a method. However,
+        // it does require that any such object have a toISOString method. An
+        // object is free to use the argument key to filter its
+        // stringification.
+    };
+}
+
+// 15.9.4.2 Date.parse (string)
+// 15.9.1.15 Date Time String Format
+// Date.parse
+// based on work shared by Daniel Friesen (dantman)
+// http://gist.github.com/303249
+if (isNaN(Date.parse("T00:00"))) {
+    // XXX global assignment won't work in embeddings that use
+    // an alternate object for the context.
+    Date = (function(NativeDate) {
+
+        // Date.length === 7
+        var Date = function(Y, M, D, h, m, s, ms) {
+            var length = arguments.length;
+            if (this instanceof NativeDate) {
+                var date = length === 1 && String(Y) === Y ? // isString(Y)
+                    // We explicitly pass it through parse:
+                    new NativeDate(Date.parse(Y)) :
+                    // We have to manually make calls depending on argument
+                    // length here
+                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
+                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
+                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
+                    length >= 4 ? new NativeDate(Y, M, D, h) :
+                    length >= 3 ? new NativeDate(Y, M, D) :
+                    length >= 2 ? new NativeDate(Y, M) :
+                    length >= 1 ? new NativeDate(Y) :
+                                  new NativeDate();
+                // Prevent mixups with unfixed Date object
+                date.constructor = Date;
+                return date;
+            }
+            return NativeDate.apply(this, arguments);
+        };
+
+        // 15.9.1.15 Date Time String Format
+        var isoDateExpression = new RegExp("^" +
+            "(?:" + // optional year-month-day
+                "(" + // year capture
+                    "(?:[+-]\\d\\d)?" + // 15.9.1.15.1 Extended years
+                    "\\d\\d\\d\\d" + // four-digit year
+                ")" +
+                "(?:-" + // optional month-day
+                    "(\\d\\d)" + // month capture
+                    "(?:-" + // optional day
+                        "(\\d\\d)" + // day capture
+                    ")?" +
+                ")?" +
+            ")?" +
+            "(?:T" + // hour:minute:second.subsecond
+                "(\\d\\d)" + // hour capture
+                ":(\\d\\d)" + // minute capture
+                "(?::" + // optional :second.subsecond
+                    "(\\d\\d)" + // second capture
+                    "(?:\\.(\\d\\d\\d))?" + // milisecond capture
+                ")?" +
+            ")?" +
+            "(?:" + // time zone
+                "Z|" + // UTC capture
+                "([+-])(\\d\\d):(\\d\\d)" + // timezone offset
+                // capture sign, hour, minute
+            ")?" +
+        "$");
+
+        // Copy any custom methods a 3rd party library may have added
+        for (var key in NativeDate)
+            Date[key] = NativeDate[key];
+
+        // Copy "native" methods explicitly; they may be non-enumerable
+        Date.now = NativeDate.now;
+        Date.UTC = NativeDate.UTC;
+        Date.prototype = NativeDate.prototype;
+        Date.prototype.constructor = Date;
+
+        // Upgrade Date.parse to handle the ISO dates we use
+        // TODO review specification to ascertain whether it is
+        // necessary to implement partial ISO date strings.
+        Date.parse = function parse(string) {
+            var match = isoDateExpression.exec(string);
+            if (match) {
+                match.shift(); // kill match[0], the full match
+                // recognize times without dates before normalizing the
+                // numeric values, for later use
+                var timeOnly = match[0] === undefined;
+                // parse numerics
+                for (var i = 0; i < 10; i++) {
+                    // skip + or - for the timezone offset
+                    if (i === 7)
+                        continue;
+                    // Note: parseInt would read 0-prefix numbers as
+                    // octal.  Number constructor or unary + work better
+                    // here:
+                    match[i] = +(match[i] || (i < 3 ? 1 : 0));
+                    // match[1] is the month. Months are 0-11 in JavaScript
+                    // Date objects, but 1-12 in ISO notation, so we
+                    // decrement.
+                    if (i === 1)
+                        match[i]--;
+                }
+                // if no year-month-date is provided, return a milisecond
+                // quantity instead of a UTC date number value.
+                if (timeOnly)
+                    return ((match[3] * 60 + match[4]) * 60 + match[5]) * 1000 + match[6];
+
+                // account for an explicit time zone offset if provided
+                var offset = (match[8] * 60 + match[9]) * 60 * 1000;
+                if (match[6] === "-")
+                    offset = -offset;
+
+                return NativeDate.UTC.apply(this, match.slice(0, 7)) + offset;
+            }
+            return NativeDate.parse.apply(this, arguments);
+        };
+
+        return Date;
+    })(Date);
+}
+
+//
+// String
+// ======
+//
+
+// ES5 15.5.4.20
 if (!String.prototype.trim) {
-    String.prototype.trim = function() {
-        return this.trimLeft().trimRight();
-    }
+    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
+    var trimBeginRegexp = /^\s\s*/;
+    var trimEndRegexp = /\s\s*$/;
+    String.prototype.trim = function trim() {
+        return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
+    };
 }
 
-if (!String.prototype.trimRight) {
-    String.prototype.trimRight = function() {
-        return this.replace(/[\t\v\f\s\u00a0\ufeff]+$/, "");
-    }
-}
-
-if (!String.prototype.trimLeft) {
-    String.prototype.trimLeft = function() {
-        return this.replace(/^[\t\v\f\s\u00a0\ufeff]+/, "");
-    }
-}
-
-exports.globalsLoaded = true;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -1004,7 +1342,12 @@ ArrayType.prototype.name = 'array';
 /**
  * Registration and de-registration.
  */
+var isStarted = false;
 exports.startup = function() {
+    if (isStarted) {
+        return;
+    }
+    isStarted = true;
     types.registerType(text);
     types.registerType(number);
     types.registerType(bool);
@@ -1014,6 +1357,7 @@ exports.startup = function() {
 };
 
 exports.shutdown = function() {
+    isStarted = false;
     types.unregisterType(text);
     types.unregisterType(number);
     types.unregisterType(bool);
@@ -1106,9 +1450,9 @@ var Status = {
      */
     combine: function(statuses) {
         var combined = Status.VALID;
-        for (var i = 0; i < arguments; i++) {
-            if (arguments[i] > combined) {
-                combined = arguments[i];
+        for (var i = 0; i < statuses.length; i++) {
+            if (statuses[i].valueOf() > combined.valueOf()) {
+                combined = statuses[i];
             }
         }
         return combined;
@@ -1418,12 +1762,15 @@ exports.shutdown = function() {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/canon', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/event_emitter', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(require, exports, module) {
+define('pilot/canon', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/useragent', 'pilot/keys', 'pilot/event_emitter', 'pilot/typecheck', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(require, exports, module) {
 
 var console = require('pilot/console');
 var Trace = require('pilot/stacktrace').Trace;
 var oop = require('pilot/oop');
+var useragent = require('pilot/useragent');
+var keyUtil = require('pilot/keys');
 var EventEmitter = require('pilot/event_emitter').EventEmitter;
+var typecheck = require('pilot/typecheck');
 var catalog = require('pilot/catalog');
 var Status = require('pilot/types').Status;
 var types = require('pilot/types');
@@ -1491,6 +1838,123 @@ var thingCommand = {
 var commands = {};
 
 /**
+ * A lookup has for command key bindings that use a string as sender.
+ */
+var commmandKeyBinding = {};
+
+/**
+ * Array with command key bindings that use a function to determ the sender.
+ */
+var commandKeyBindingFunc = { };
+
+function splitSafe(s, separator, limit, bLowerCase) {
+    return (bLowerCase && s.toLowerCase() || s)
+        .replace(/(?:^\s+|\n|\s+$)/g, "")
+        .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
+}
+
+function parseKeys(keys, val, ret) {
+    var key,
+        hashId = 0,
+        parts  = splitSafe(keys, "\\-", null, true),
+        i      = 0,
+        l      = parts.length;
+
+    for (; i < l; ++i) {
+        if (keyUtil.KEY_MODS[parts[i]])
+            hashId = hashId | keyUtil.KEY_MODS[parts[i]];
+        else
+            key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
+    }
+
+    if (ret == null) {
+        return {
+            key: key,
+            hashId: hashId
+        }   
+    } else {
+        (ret[hashId] || (ret[hashId] = {}))[key] = val;
+    }
+}
+
+var platform = useragent.isMac ? "mac" : "win";
+function buildKeyHash(command) {
+    var binding = command.bindKey,
+        key = binding[platform],
+        ckb = commmandKeyBinding,
+        ckbf = commandKeyBindingFunc
+
+    if (!binding.sender) {
+        throw new Error('All key bindings must have a sender');   
+    }
+    if (!binding.mac && binding.mac !== null) {
+        throw new Error('All key bindings must have a mac key binding');
+    }
+    if (!binding.win && binding.win !== null) {
+        throw new Error('All key bindings must have a windows key binding');
+    }
+    if(!binding[platform]) {
+        // No keymapping for this platform.
+        return;   
+    }
+    if (typeof binding.sender == 'string') {
+        var targets = splitSafe(binding.sender, "\\|", null, true);
+        targets.forEach(function(target) {
+            if (!ckb[target]) {
+                ckb[target] = { };
+            }
+            key.split("|").forEach(function(keyPart) {
+                parseKeys(keyPart, command, ckb[target]);        
+            });
+        });
+    } else if (typecheck.isFunction(binding.sender)) {
+        var val = {
+            command: command,
+            sender:  binding.sender
+        };
+        
+        keyData = parseKeys(key);
+        if (!ckbf[keyData.hashId]) {
+            ckbf[keyData.hashId] = { };
+        }
+        if (!ckbf[keyData.hashId][keyData.key]) {
+            ckbf[keyData.hashId][keyData.key] = [ val ];   
+        } else {
+            ckbf[keyData.hashId][keyData.key].push(val);
+        }
+    } else {
+        throw new Error('Key binding must have a sender that is a string or function');   
+    }
+}
+
+function findKeyCommand(env, sender, hashId, textOrKey) {
+    // Convert keyCode to the string representation.
+    if (typecheck.isNumber(textOrKey)) {
+        textOrKey = keyUtil.keyCodeToString(textOrKey);
+    }
+    
+    // Check bindings with functions as sender first.    
+    var bindFuncs = (commandKeyBindingFunc[hashId]  || {})[textOrKey] || [];
+    for (var i = 0; i < bindFuncs.length; i++) {
+        if (bindFuncs[i].sender(env, sender, hashId, textOrKey)) {
+            return bindFuncs[i].command;
+        }
+    }
+    
+    var ckbr = commmandKeyBinding[sender]
+    return ckbr && ckbr[hashId] && ckbr[hashId][textOrKey];
+}
+
+function execKeyCommand(env, sender, hashId, textOrKey) {
+    var command = findKeyCommand(env, sender, hashId, textOrKey);
+    if (command) {
+        return exec(command, env, sender, { });   
+    } else {
+        return false;
+    }
+}
+
+/**
  * A sorted list of command names, we regularly want them in order, so pre-sort
  */
 var commandNames = [];
@@ -1520,6 +1984,10 @@ function addCommand(command) {
     }, this);
     commands[command.name] = command;
 
+    if (command.bindKey) {
+        buildKeyHash(command);   
+    }
+
     commandNames.push(command.name);
     commandNames.sort();
 };
@@ -1548,11 +2016,55 @@ function getCommandNames() {
 };
 
 /**
- * Entry point for keyboard accelerators or anything else that knows
- * everything it needs to about the command params
- * @param command Either a command, or the name of one
+ * Default ArgumentProvider that is used if no ArgumentProvider is provided
+ * by the command's sender.
  */
-function exec(command, env, args, typed) {
+function defaultArgsProvider(request, callback) {
+    var args  = request.args,
+        params = request.command.params;
+
+    for (var i = 0; i < params.length; i++) {
+        var param = params[i];
+
+        // If the parameter is already valid, then don't ask for it anymore.
+        if (request.getParamStatus(param) != Status.VALID ||
+            // Ask for optional parameters as well.
+            param.defaultValue === null) 
+        {
+            var paramPrompt = param.description;
+            if (param.defaultValue === null) {
+                paramPrompt += " (optional)";
+            }
+            var value = prompt(paramPrompt, param.defaultValue || "");
+            // No value but required -> nope.
+            if (!value) {
+                callback();
+                return;
+            } else {
+                args[param.name] = value;
+            }           
+        }
+    }
+    callback();
+}
+
+/**
+ * Entry point for keyboard accelerators or anything else that wants to execute
+ * a command. A new request object is created and a check performed, if the
+ * passed in arguments are VALID/INVALID or INCOMPLETE. If they are INCOMPLETE
+ * the ArgumentProvider on the sender is called or otherwise the default 
+ * ArgumentProvider to get the still required arguments.
+ * If they are valid (or valid after the ArgumentProvider is done), the command
+ * is executed.
+ * 
+ * @param command   Either a command, or the name of one
+ * @param env       Current environment to execute the command in
+ * @param sender    String that should be the same as the senderObject stored on 
+ *                  the environment in env[sender]
+ * @param args      Arguments for the command
+ * @param typed     (Optional)
+ */
+function exec(command, env, sender, args, typed) {
     if (typeof command === 'string') {
         command = commands[command];
     }
@@ -1562,19 +2074,63 @@ function exec(command, env, args, typed) {
     }
 
     var request = new Request({
+        sender: sender,
         command: command,
-        args: args,
+        args: args || {},
         typed: typed
     });
-    command.exec(env, args || {}, request);
-    return true;
+    
+    /**
+     * Executes the command and ensures request.done is called on the request in 
+     * case it's not marked to be done already or async.
+     */
+    function execute() {
+        command.exec(env, request.args, request);
+        
+        // If the request isn't asnync and isn't done, then make it done.
+        if (!request.isAsync && !request.isDone) {
+            request.done();
+        }
+    }
+    
+    
+    if (request.getStatus() == Status.INVALID) {
+        console.error("Canon.exec: Invalid parameter(s) passed to " + 
+                            command.name);
+        return false;   
+    } 
+    // If the request isn't complete yet, try to complete it.
+    else if (request.getStatus() == Status.INCOMPLETE) {
+        // Check if the sender has a ArgsProvider, otherwise use the default
+        // build in one.
+        var argsProvider;
+        var senderObj = env[sender];
+        if (!senderObj || !senderObj.getArgsProvider ||
+            !(argsProvider = senderObj.getArgsProvider())) 
+        {
+            argsProvider = defaultArgsProvider;
+        }
+
+        // Ask the paramProvider to complete the request.
+        argsProvider(request, function() {
+            if (request.getStatus() == Status.VALID) {
+                execute();
+            }
+        });
+        return true;
+    } else {
+        execute();
+        return true;
+    }
 };
 
 exports.removeCommand = removeCommand;
 exports.addCommand = addCommand;
 exports.getCommand = getCommand;
 exports.getCommandNames = getCommandNames;
+exports.findKeyCommand = findKeyCommand;
 exports.exec = exec;
+exports.execKeyCommand = execKeyCommand;
 exports.upgradeType = upgradeType;
 
 
@@ -1645,6 +2201,87 @@ function Request(options) {
 oop.implement(Request.prototype, EventEmitter);
 
 /**
+ * Return the status of a parameter on the request object.
+ */
+Request.prototype.getParamStatus = function(param) {
+    var args = this.args || {};
+    
+    // Check if there is already a value for this parameter.
+    if (param.name in args) {
+        // If there is no value set and then the value is VALID if it's not
+        // required or INCOMPLETE if not set yet.
+        if (args[param.name] == null) {
+            if (param.defaultValue === null) {
+                return Status.VALID;
+            } else {
+                return Status.INCOMPLETE;   
+            } 
+        }
+        
+        // Check if the parameter value is valid.
+        var reply,
+            // The passed in value when parsing a type is a string.
+            argsValue = args[param.name].toString();
+        
+        // Type.parse can throw errors. 
+        try {
+            reply = param.type.parse(argsValue);
+        } catch (e) {
+            return Status.INVALID;   
+        }
+        
+        if (reply.status != Status.VALID) {
+            return reply.status;   
+        }
+    } 
+    // Check if the param is marked as required.
+    else if (param.defaultValue === undefined) {
+        // The parameter is not set on the args object but it's required,
+        // which means, things are invalid.
+        return Status.INCOMPLETE;
+    }
+    
+    return Status.VALID;
+}
+
+/**
+ * Return the status of a parameter name on the request object.
+ */
+Request.prototype.getParamNameStatus = function(paramName) {
+    var params = this.command.params || [];
+    
+    for (var i = 0; i < params.length; i++) {
+        if (params[i].name == paramName) {
+            return this.getParamStatus(params[i]);   
+        }
+    }
+    
+    throw "Parameter '" + paramName + 
+                "' not defined on command '" + this.command.name + "'"; 
+}
+
+/**
+ * Checks if all required arguments are set on the request such that it can
+ * get executed.
+ */
+Request.prototype.getStatus = function() {
+    var args = this.args || {},
+        params = this.command.params;
+
+    // If there are not parameters, then it's valid.
+    if (!params || params.length == 0) {
+        return Status.VALID;
+    }
+
+    var status = [];
+    for (var i = 0; i < params.length; i++) {
+        status.push(this.getParamStatus(params[i]));        
+    }
+
+    return Status.combine(status);
+}
+
+/**
  * Lazy init to register with the history should only be done on output.
  * init() is expensive, and won't be used in the majority of cases
  */
@@ -1676,6 +2313,7 @@ Request.prototype.doneWithError = function(content) {
  * the command exits
  */
 Request.prototype.async = function() {
+    this.isAsync = true;
     if (!this._begunOutput) {
         this._beginOutput();
     }
@@ -1696,6 +2334,7 @@ Request.prototype.output = function(content) {
     }
 
     this.outputs.push(content);
+    this.isDone = true;
     this._dispatchEvent('output', {});
 
     return this;
@@ -1713,8 +2352,12 @@ Request.prototype.done = function(content) {
     if (content) {
         this.output(content);
     }
-
-    this._dispatchEvent('output', {});
+    
+    // Ensure to finish the request only once.
+    if (!this.isDone) {
+        this.isDone = true;
+        this._dispatchEvent('output', {});   
+    }
 };
 exports.Request = Request;
 
@@ -2285,6 +2928,124 @@ exports.implement = function(proto, mixin) {
 };
 
 });
+/*! @license
+==========================================================================
+SproutCore -- JavaScript Application Framework
+copyright 2006-2009, Sprout Systems Inc., Apple Inc. and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+SproutCore and the SproutCore logo are trademarks of Sprout Systems, Inc.
+
+For more information about SproutCore, visit http://www.sproutcore.com
+
+
+==========================================================================
+@license */
+
+// Most of the following code is taken from SproutCore with a few changes.
+
+define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+
+/**
+ * Helper functions and hashes for key handling.
+ */
+var Keys = (function() {
+    var ret = {
+        MODIFIER_KEYS: {
+            16: 'Shift', 17: 'Ctrl', 18: 'Alt', 224: 'Meta'
+        },
+
+        KEY_MODS: {
+            "ctrl": 1, "alt": 2, "option" : 2,
+            "shift": 4, "meta": 8, "command": 8
+        },
+
+        FUNCTION_KEYS : {
+            8  : "Backspace",
+            9  : "Tab",
+            13 : "Return",
+            19 : "Pause",
+            27 : "Esc",
+            32 : "Space",
+            33 : "PageUp",
+            34 : "PageDown",
+            35 : "End",
+            36 : "Home",
+            37 : "Left",
+            38 : "Up",
+            39 : "Right",
+            40 : "Down",
+            44 : "Print",
+            45 : "Insert",
+            46 : "Delete",
+            112: "F1",
+            113: "F2",
+            114: "F3",
+            115: "F4",
+            116: "F5",
+            117: "F6",
+            118: "F7",
+            119: "F8",
+            120: "F9",
+            121: "F10",
+            122: "F11",
+            123: "F12",
+            144: "Numlock",
+            145: "Scrolllock"
+        },
+
+        PRINTABLE_KEYS: {
+           32: ' ',  48: '0',  49: '1',  50: '2',  51: '3',  52: '4', 53:  '5',
+           54: '6',  55: '7',  56: '8',  57: '9',  59: ';',  61: '=', 65:  'a',
+           66: 'b',  67: 'c',  68: 'd',  69: 'e',  70: 'f',  71: 'g', 72:  'h',
+           73: 'i',  74: 'j',  75: 'k',  76: 'l',  77: 'm',  78: 'n', 79:  'o',
+           80: 'p',  81: 'q',  82: 'r',  83: 's',  84: 't',  85: 'u', 86:  'v',
+           87: 'w',  88: 'x',  89: 'y',  90: 'z', 107: '+', 109: '-', 110: '.',
+          188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\',
+          221: ']', 222: '\"'
+        }
+    };
+
+    // A reverse map of FUNCTION_KEYS
+    for (i in ret.FUNCTION_KEYS) {
+        var name = ret.FUNCTION_KEYS[i].toUpperCase();
+        ret[name] = parseInt(i, 10);
+    }
+
+    // Add the MODIFIER_KEYS, FUNCTION_KEYS and PRINTABLE_KEYS to the KEY
+    // variables as well.
+    oop.mixin(ret, ret.MODIFIER_KEYS);
+    oop.mixin(ret, ret.PRINTABLE_KEYS);
+    oop.mixin(ret, ret.FUNCTION_KEYS);
+
+    return ret;
+})();
+oop.mixin(exports, Keys);
+
+exports.keyCodeToString = function(keyCode) {
+    return (Keys[keyCode] || String.fromCharCode(keyCode)).toLowerCase();
+}
+
+});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -2378,6 +3139,85 @@ exports.EventEmitter = EventEmitter;
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Joe Walker (jwalker@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/typecheck', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var objectToString = Object.prototype.toString;
+
+/**
+ * Return true if it is a String
+ */
+exports.isString = function(it) {
+    return it && objectToString.call(it) === "[object String]";
+};
+
+/**
+ * Returns true if it is a Boolean.
+ */
+exports.isBoolean = function(it) {
+    return it && objectToString.call(it) === "[object Boolean]";
+};
+
+/**
+ * Returns true if it is a Number.
+ */
+exports.isNumber = function(it) {
+    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
+};
+
+/**
+ * Hack copied from dojo.
+ */
+exports.isObject = function(it) {
+    return it !== undefined &&
+        (it === null || typeof it == "object" ||
+        Array.isArray(it) || exports.isFunction(it));
+};
+
+/**
+ * Is the passed object a function?
+ * From dojo.isFunction()
+ */
+exports.isFunction = function(it) {
+    return it && objectToString.call(it) === "[object Function]";
+};
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -2487,6 +3327,17 @@ exports.stringReverse = function(string) {
 
 exports.stringRepeat = function (string, count) {
      return new Array(count + 1).join(string);
+};
+
+var trimBeginRegexp = /^\s\s*/;
+var trimEndRegexp = /\s\s*$/;
+
+exports.stringTrimLeft = function (string) {
+    return string.replace(trimBeginRegexp, '')
+};
+
+exports.stringTrimRight = function (string) {
+    return string.replace(trimEndRegexp, ''); 
 };
 
 exports.copyObject = function(obj) {
@@ -3442,85 +4293,6 @@ exports.shutdown = function(data, reason) {
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/typecheck', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var objectToString = Object.prototype.toString;
-
-/**
- * Return true if it is a String
- */
-exports.isString = function(it) {
-    return it && objectToString.call(it) === "[object String]";
-};
-
-/**
- * Returns true if it is a Boolean.
- */
-exports.isBoolean = function(it) {
-    return it && objectToString.call(it) === "[object Boolean]";
-};
-
-/**
- * Returns true if it is a Number.
- */
-exports.isNumber = function(it) {
-    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
-};
-
-/**
- * Hack copied from dojo.
- */
-exports.isObject = function(it) {
-    return it !== undefined &&
-        (it === null || typeof it == "object" ||
-        Array.isArray(it) || exports.isFunction(it));
-};
-
-/**
- * Is the passed object a function?
- * From dojo.isFunction()
- */
-exports.isFunction = function(it) {
-    return it && objectToString.call(it) === "[object Function]";
-};
-
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
  * The Original Code is Mozilla Skywriter.
  *
  * The Initial Developer of the Original Code is
@@ -4157,7 +4929,7 @@ var Editor =function(renderer, session) {
 
     this.getKeyboardHandler = function() {
         return this.keyBinding.getKeyboardHandler();
-    }
+    };
 
     this.setSession = function(session) {
         if (this.session == session) return;
@@ -4289,13 +5061,16 @@ var Editor =function(renderer, session) {
     };
 
     this.focus = function() {
-        // Safari need the timeout
+        // Safari needs the timeout
         // iOS and Firefox need it called immediately
         // to be on the save side we do both
+        // except for IE
         var _self = this;
-        setTimeout(function() {
-            _self.textInput.focus();
-        });
+        if (!useragent.isIE) {        
+            setTimeout(function() {
+                _self.textInput.focus();
+            });
+        }
         this.textInput.focus();
     };
 
@@ -4954,7 +5729,7 @@ var Editor =function(renderer, session) {
 
     this.getCursorPositionScreen = function() {
         return this.session.documentToScreenPosition(this.getCursorPosition());
-    }
+    };
 
     this.getSelectionRange = function() {
         return this.selection.getRange();
@@ -5471,120 +6246,6 @@ exports.addCommandKeyListener = function(el, callback) {
 };
 
 });
-/*! @license
-==========================================================================
-SproutCore -- JavaScript Application Framework
-copyright 2006-2009, Sprout Systems Inc., Apple Inc. and contributors.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-
-SproutCore and the SproutCore logo are trademarks of Sprout Systems, Inc.
-
-For more information about SproutCore, visit http://www.sproutcore.com
-
-
-==========================================================================
-@license */
-
-// Most of the following code is taken from SproutCore with a few changes.
-
-define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
-
-var oop = require("pilot/oop");
-
-/**
- * Helper functions and hashes for key handling.
- */
-var Keys = (function() {
-    var ret = {
-        MODIFIER_KEYS: {
-            16: 'Shift', 17: 'Ctrl', 18: 'Alt', 224: 'Meta'
-        },
-
-        KEY_MODS: {
-            "ctrl": 1, "alt": 2, "option" : 2,
-            "shift": 4, "meta": 8, "command": 8
-        },
-
-        FUNCTION_KEYS : {
-            8  : "Backspace",
-            9  : "Tab",
-            13 : "Return",
-            19 : "Pause",
-            27 : "Esc",
-            32 : "Space",
-            33 : "PageUp",
-            34 : "PageDown",
-            35 : "End",
-            36 : "Home",
-            37 : "Left",
-            38 : "Up",
-            39 : "Right",
-            40 : "Down",
-            44 : "Print",
-            45 : "Insert",
-            46 : "Delete",
-            112: "F1",
-            113: "F2",
-            114: "F3",
-            115: "F4",
-            116: "F5",
-            117: "F6",
-            118: "F7",
-            119: "F8",
-            120: "F9",
-            121: "F10",
-            122: "F11",
-            123: "F12",
-            144: "Numlock",
-            145: "Scrolllock"
-        },
-
-        PRINTABLE_KEYS: {
-           32: ' ',  48: '0',  49: '1',  50: '2',  51: '3',  52: '4', 53:  '5',
-           54: '6',  55: '7',  56: '8',  57: '9',  59: ';',  61: '=', 65:  'a',
-           66: 'b',  67: 'c',  68: 'd',  69: 'e',  70: 'f',  71: 'g', 72:  'h',
-           73: 'i',  74: 'j',  75: 'k',  76: 'l',  77: 'm',  78: 'n', 79:  'o',
-           80: 'p',  81: 'q',  82: 'r',  83: 's',  84: 't',  85: 'u', 86:  'v',
-           87: 'w',  88: 'x',  89: 'y',  90: 'z', 107: '+', 109: '-', 110: '.',
-          188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\',
-          221: ']', 222: '\"'
-        }
-    };
-
-    // A reverse map of FUNCTION_KEYS
-    for (i in ret.FUNCTION_KEYS) {
-        var name = ret.FUNCTION_KEYS[i].toUpperCase();
-        ret[name] = parseInt(i, 10);
-    }
-
-    // Add the MODIFIER_KEYS, FUNCTION_KEYS and PRINTABLE_KEYS to the KEY
-    // variables as well.
-    oop.mixin(ret, ret.MODIFIER_KEYS);
-    oop.mixin(ret, ret.PRINTABLE_KEYS);
-    oop.mixin(ret, ret.FUNCTION_KEYS);
-
-    return ret;
-})();
-oop.mixin(exports, Keys);
-
-});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -5835,7 +6496,7 @@ exports.getInnerText = function(el) {
     if (document.body && "textContent" in document.body)
         return el.textContent;
     else
-         return el.innerText || el.textContent;
+         return el.innerText || el.textContent || "";
 };
 
 exports.getParentWindow = function(document) {
@@ -6224,8 +6885,8 @@ var MouseHandler = function(editor) {
         var state = STATE_UNKNOWN;
         var inSelection = false;
     
-        var button = event.getButton(e)
-        if (button != 0) {
+        var button = event.getButton(e);
+        if (button !== 0) {
             if (selectionEmpty) {
                 editor.moveCursorToPosition(pos);
             }
@@ -6234,10 +6895,11 @@ var MouseHandler = function(editor) {
                 event.capture(editor.container, function(){}, editor.textInput.onContextMenuClose);
             }
             return;
-        } else
-            inSelection = !editor.getReadOnly() &&
-                          !selectionEmpty &&
-                          selectionRange.contains(pos.row, pos.column);
+        } else {
+            inSelection = !editor.getReadOnly()
+                && !selectionEmpty
+                && selectionRange.contains(pos.row, pos.column);
+        }
 
         if (!inSelection) {
             // Directly pick STATE_SELECT, since the user is not clicking inside
@@ -6249,8 +6911,8 @@ var MouseHandler = function(editor) {
     
         var mousePageX, mousePageY;
         var overwrite = editor.getOverwrite();
-        var dragCursor = null;
         var mousedownTime = (new Date()).getTime();
+        var dragCursor, dragRange;
     
         var onMouseSelection = function(e) {
             mousePageX = event.getDocumentX(e);
@@ -6270,6 +6932,7 @@ var MouseHandler = function(editor) {
 
         var onMouseDragSelectionEnd = function() {
             dom.removeCssClass(editor.container, "ace_dragging");
+            editor.session.removeMarker(dragSelectionMarker);
 
             if (!self.$clickSelection) {
                 if (!dragCursor) {
@@ -6281,14 +6944,13 @@ var MouseHandler = function(editor) {
             if (!dragCursor)
                 return;
 
-            var selection = editor.getSelectionRange();
-            if (selection.contains(dragCursor.row, dragCursor.column)) {
+            if (dragRange.contains(dragCursor.row, dragCursor.column)) {
                 dragCursor = null;
                 return;
             }
 
             editor.clearSelection();
-            var newRange = editor.moveText(selection, dragCursor);
+            var newRange = editor.moveText(dragRange, dragCursor);
             if (!newRange) {
                 dragCursor = null;
                 return;
@@ -6313,6 +6975,10 @@ var MouseHandler = function(editor) {
                     onStartSelect(cursor);
                 } else if ((time - mousedownTime) > DRAG_TIMER) {
                     state = STATE_DRAG;
+                    dragRange = editor.getSelectionRange();
+                    var style = editor.getSelectionStyle();
+                    dragSelectionMarker = editor.session.addMarker(dragRange, "ace_selection", style);
+                    editor.clearSelection();
                     dom.addCssClass(editor.container, "ace_dragging");
                 }
 
@@ -6365,8 +7031,7 @@ var MouseHandler = function(editor) {
             dragCursor.row = Math.max(0, Math.min(dragCursor.row,
                                                   editor.session.getLength() - 1));
 
-            editor.renderer.updateCursor(dragCursor, overwrite);
-            editor.renderer.scrollCursorIntoView();
+            editor.moveCursorToPosition(dragCursor);
         };
 
         event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
@@ -6444,25 +7109,19 @@ exports.MouseHandler = MouseHandler;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'ace/keyboard/hash_handler', 'ace/keyboard/keybinding/default_mac', 'ace/keyboard/keybinding/default_win', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
+define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
 
 var useragent = require("pilot/useragent");
 var keyUtil  = require("pilot/keys");
 var event = require("pilot/event");
 var settings  = require("pilot/settings").settings;
-var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-var default_mac = require("ace/keyboard/keybinding/default_mac").bindings;
-var default_win = require("ace/keyboard/keybinding/default_win").bindings;
 var canon = require("pilot/canon");
 require("ace/commands/default_commands");
 
-var KeyBinding = function(editor, config) {
+var KeyBinding = function(editor) {
     this.$editor = editor;
     this.$data = { };
     this.$keyboardHandler = null;
-    this.$defaulKeyboardHandler = new HashHandler(config || (useragent.isMac
-        ? default_mac
-        : default_win));
 };
 
 (function() {
@@ -6478,7 +7137,9 @@ var KeyBinding = function(editor, config) {
     };
 
     this.$callKeyboardHandler = function (e, hashId, keyOrText, keyCode) {
-        var toExecute;
+        var env = {editor: this.$editor},
+            toExecute;
+
         if (this.$keyboardHandler) {
             toExecute =
                 this.$keyboardHandler.handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
@@ -6486,13 +7147,23 @@ var KeyBinding = function(editor, config) {
 
         // If there is nothing to execute yet, then use the default keymapping.
         if (!toExecute || !toExecute.command) {
-            toExecute = this.$defaulKeyboardHandler.
-                handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
+            if (hashId != 0 || keyCode != 0) {
+                toExecute = {
+                    command: canon.findKeyCommand(env, "editor", hashId, keyOrText)
+                }
+            } else {
+                toExecute = {
+                    command: "inserttext",
+                    args: {
+                        text: keyOrText
+                    }
+                }
+            }
         }
 
         if (toExecute) {
             var success = canon.exec(toExecute.command,
-                                        {editor: this.$editor}, toExecute.args);
+                                        env, "editor", toExecute.args);
             if (success) {
                 return event.stopEvent(e);
             }
@@ -6500,10 +7171,8 @@ var KeyBinding = function(editor, config) {
     };
 
     this.onCommandKey = function(e, hashId, keyCode) {
-        key = (keyUtil[keyCode] ||
-                String.fromCharCode(keyCode)).toLowerCase();
-
-        this.$callKeyboardHandler(e, hashId, key, keyCode);
+        var keyString = keyUtil.keyCodeToString(keyCode);
+        this.$callKeyboardHandler(e, hashId, keyString, keyCode);
     };
 
     this.onTextInput = function(text) {
@@ -6513,306 +7182,6 @@ var KeyBinding = function(editor, config) {
 }).call(KeyBinding.prototype);
 
 exports.KeyBinding = KeyBinding;
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Fabian Jakobs <fabian AT ajax DOT org>
- *   Julian Viereck (julian.viereck@gmail.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'pilot/keys'], function(require, exports, module) {
-
-var keyUtil  = require("pilot/keys");
-
-function HashHandler(config) {
-    this.setConfig(config);
-}
-
-(function() {
-    function splitSafe(s, separator, limit, bLowerCase) {
-        return (bLowerCase && s.toLowerCase() || s)
-            .replace(/(?:^\s+|\n|\s+$)/g, "")
-            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
-    }
-
-    function parseKeys(keys, val, ret) {
-        var key,
-            hashId = 0,
-            parts  = splitSafe(keys, "\\-", null, true),
-            i      = 0,
-            l      = parts.length;
-
-        for (; i < l; ++i) {
-            if (keyUtil.KEY_MODS[parts[i]])
-                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
-            else
-                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
-        }
-
-        (ret[hashId] || (ret[hashId] = {}))[key] = val;
-        return ret;
-    }
-
-    function objectReverse(obj, keySplit) {
-        var i, j, l, key,
-            ret = {};
-        for (i in obj) {
-            key = obj[i];
-            if (keySplit && typeof key == "string") {
-                key = key.split(keySplit);
-                for (j = 0, l = key.length; j < l; ++j)
-                    parseKeys.call(this, key[j], i, ret);
-            }
-            else {
-                parseKeys.call(this, key, i, ret);
-            }
-        }
-        return ret;
-    }
-
-    this.setConfig = function(config) {
-        this.$config = config;
-        if (typeof this.$config.reverse == "undefined")
-            this.$config.reverse = objectReverse.call(this, this.$config, "|");
-    };
-
-    /**
-     * This function is called by keyBinding.
-     */
-    this.handleKeyboard = function(data, hashId, textOrKey, keyCode) {
-        // Figure out if a commandKey was pressed or just some text was insert.
-        if (hashId != 0 || keyCode != 0) {
-            return {
-                command: (this.$config.reverse[hashId] || {})[textOrKey]
-            }
-        } else {
-            return {
-                command: "inserttext",
-                args: {
-                    text: textOrKey
-                }
-            }
-        }
-    }
-}).call(HashHandler.prototype)
-
-exports.HashHandler = HashHandler;
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/keybinding/default_mac', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-exports.bindings = {
-    "selectall": "Command-A",
-    "removeline": "Command-D",
-    "gotoline": "Command-L",
-    "togglecomment": "Command-7",
-    "findnext": "Command-G",
-    "findprevious": "Command-Shift-G",
-    "find": "Command-F",
-    "replace": "Alt-Command-R",
-    "undo": "Command-Z",
-    "redo": "Command-Shift-Z|Command-Y",
-    "overwrite": "Insert",
-    "copylinesup": "Command-Option-Up",
-    "movelinesup": "Option-Up",
-    "selecttostart": "Command-Shift-Up",
-    "gotostart": "Command-Home|Command-Up",
-    "selectup": "Shift-Up",
-    "golineup": "Up|Ctrl-P",
-    "copylinesdown": "Command-Option-Down",
-    "movelinesdown": "Option-Down",
-    "selecttoend": "Command-Shift-Down",
-    "gotoend": "Command-End|Command-Down",
-    "selectdown": "Shift-Down",
-    "golinedown": "Down|Ctrl-N",
-    "selectwordleft": "Option-Shift-Left",
-    "gotowordleft": "Option-Left",
-    "selecttolinestart": "Command-Shift-Left",
-    "gotolinestart": "Command-Left|Home|Ctrl-A",
-    "selectleft": "Shift-Left",
-    "gotoleft": "Left|Ctrl-B",
-    "selectwordright": "Option-Shift-Right",
-    "gotowordright": "Option-Right",
-    "selecttolineend": "Command-Shift-Right",
-    "gotolineend": "Command-Right|End|Ctrl-E",
-    "selectright": "Shift-Right",
-    "gotoright": "Right|Ctrl-F",
-    "selectpagedown": "Shift-PageDown",
-    "pagedown": "PageDown",
-    "gotopagedown": "Option-PageDown|Ctrl-V",
-    "selectpageup": "Shift-PageUp",
-    "pageup": "PageUp",
-    "gotopageup": "Option-PageUp",
-    "selectlinestart": "Shift-Home",
-    "selectlineend": "Shift-End",
-    "del": "Delete|Ctrl-D",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H",
-    "removetolineend": "Ctrl-K",
-    "removetolinestart": "Option-Backspace",
-    "removewordleft": "Alt-Backspace|Ctrl-Alt-Backspace",
-    "removewordright": "Alt-Delete",
-    "outdent": "Shift-Tab",
-    "indent": "Tab",
-    "transposeletters": "Ctrl-T",
-    "splitline": "Ctrl-O",
-    "centerselection": "Ctrl-L"
-};
-
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/keybinding/default_win', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-exports.bindings = {
-    "selectall": "Ctrl-A",
-    "removeline": "Ctrl-D",
-    "gotoline": "Ctrl-L",
-    "togglecomment": "Ctrl-7",
-    "findnext": "Ctrl-K",
-    "findprevious": "Ctrl-Shift-K",
-    "find": "Ctrl-F",
-    "replace": "Alt-Ctrl-R",
-    "undo": "Ctrl-Z",
-    "redo": "Ctrl-Shift-Z|Ctrl-Y",
-    "overwrite": "Insert",
-    "copylinesup": "Ctrl-Alt-Up",
-    "movelinesup": "Alt-Up",
-    "selecttostart": "Alt-Shift-Up",
-    "gotostart": "Ctrl-Home|Ctrl-Up",
-    "selectup": "Shift-Up",
-    "golineup": "Up",
-    "copylinesdown": "Ctrl-Alt-Down",
-    "movelinesdown": "Alt-Down",
-    "selecttoend": "Alt-Shift-Down",
-    "gotoend": "Ctrl-End|Ctrl-Down",
-    "selectdown": "Shift-Down",
-    "golinedown": "Down",
-    "selectwordleft": "Ctrl-Shift-Left",
-    "gotowordleft": "Ctrl-Left",
-    "selecttolinestart": "Alt-Shift-Left",
-    "gotolinestart": "Alt-Left|Home",
-    "selectleft": "Shift-Left",
-    "gotoleft": "Left",
-    "selectwordright": "Ctrl-Shift-Right",
-    "gotowordright": "Ctrl-Right",
-    "selecttolineend": "Alt-Shift-Right",
-    "gotolineend": "Alt-Right|End",
-    "selectright": "Shift-Right",
-    "gotoright": "Right",
-    "selectpagedown": "Shift-PageDown",
-    "gotopagedown": "PageDown",
-    "selectpageup": "Shift-PageUp",
-    "gotopageup": "PageUp",
-    "selectlinestart": "Shift-Home",
-    "selectlineend": "Shift-End",
-    "del": "Delete",
-    "backspace": "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
-    "outdent": "Shift-Tab",
-    "indent": "Tab"
-};
-
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -6859,6 +7228,14 @@ define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot
 var lang = require("pilot/lang");
 var canon = require("pilot/canon");
 
+function bindKey(win, mac) {
+    return {
+        win: win,
+        mac: mac,
+        sender: "editor"
+    };
+}
+
 canon.addCommand({
     name: "null",
     exec: function(env, args, request) {  }
@@ -6866,14 +7243,17 @@ canon.addCommand({
 
 canon.addCommand({
     name: "selectall",
+    bindKey: bindKey("Ctrl-A", "Command-A"),
     exec: function(env, args, request) { env.editor.selectAll(); }
 });
 canon.addCommand({
     name: "removeline",
+    bindKey: bindKey("Ctrl-D", "Command-D"),
     exec: function(env, args, request) { env.editor.removeLines(); }
 });
 canon.addCommand({
     name: "gotoline",
+    bindKey: bindKey("Ctrl-L", "Command-L"),
     exec: function(env, args, request) {
         var line = parseInt(prompt("Enter line number:"));
         if (!isNaN(line)) {
@@ -6883,18 +7263,22 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "togglecomment",
+    bindKey: bindKey("Ctrl-7", "Command-7"),
     exec: function(env, args, request) { env.editor.toggleCommentLines(); }
 });
 canon.addCommand({
     name: "findnext",
+    bindKey: bindKey("Ctrl-K", "Command-G"),
     exec: function(env, args, request) { env.editor.findNext(); }
 });
 canon.addCommand({
     name: "findprevious",
+    bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
     exec: function(env, args, request) { env.editor.findPrevious(); }
 });
 canon.addCommand({
     name: "find",
+    bindKey: bindKey("Ctrl-F", "Command-F"),
     exec: function(env, args, request) {
         var needle = prompt("Find:");
         env.editor.find(needle);
@@ -6902,6 +7286,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "replace",
+    bindKey: bindKey("Ctrl-R", "Command-Option-F"),
     exec: function(env, args, request) {
         var needle = prompt("Find:");
         if (!needle)
@@ -6914,6 +7299,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "replaceall",
+    bindKey: bindKey("Ctrl-Shift-R", "Command-Shift-Option-F"),
     exec: function(env, args, request) {
         var needle = prompt("Find:");
         if (!needle)
@@ -6926,186 +7312,220 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "undo",
+    bindKey: bindKey("Ctrl-Z", "Command-Z"),
     exec: function(env, args, request) { env.editor.undo(); }
 });
 canon.addCommand({
     name: "redo",
-    exec: function(env, args, request) { env.editor.redo(); }
-});
-canon.addCommand({
-    name: "redo",
+    bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
     exec: function(env, args, request) { env.editor.redo(); }
 });
 canon.addCommand({
     name: "overwrite",
+    bindKey: bindKey("Insert", "Insert"),
     exec: function(env, args, request) { env.editor.toggleOverwrite(); }
 });
 canon.addCommand({
     name: "copylinesup",
+    bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
     exec: function(env, args, request) { env.editor.copyLinesUp(); }
 });
 canon.addCommand({
     name: "movelinesup",
+    bindKey: bindKey("Alt-Up", "Option-Up"),
     exec: function(env, args, request) { env.editor.moveLinesUp(); }
 });
 canon.addCommand({
     name: "selecttostart",
+    bindKey: bindKey("Alt-Shift-Up", "Command-Shift-Up"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
 });
 canon.addCommand({
     name: "gotostart",
+    bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
     exec: function(env, args, request) { env.editor.navigateFileStart(); }
 });
 canon.addCommand({
     name: "selectup",
+    bindKey: bindKey("Shift-Up", "Shift-Up"),
     exec: function(env, args, request) { env.editor.getSelection().selectUp(); }
 });
 canon.addCommand({
     name: "golineup",
+    bindKey: bindKey("Up", "Up|Ctrl-P"),
     exec: function(env, args, request) { env.editor.navigateUp(args.times); }
 });
 canon.addCommand({
     name: "copylinesdown",
+    bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
     exec: function(env, args, request) { env.editor.copyLinesDown(); }
 });
 canon.addCommand({
     name: "movelinesdown",
+    bindKey: bindKey("Alt-Down", "Option-Down"),
     exec: function(env, args, request) { env.editor.moveLinesDown(); }
 });
 canon.addCommand({
     name: "selecttoend",
+    bindKey: bindKey("Alt-Shift-Down", "Command-Shift-Down"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
 });
 canon.addCommand({
     name: "gotoend",
+    bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
     exec: function(env, args, request) { env.editor.navigateFileEnd(); }
 });
 canon.addCommand({
     name: "selectdown",
+    bindKey: bindKey("Shift-Down", "Shift-Down"),
     exec: function(env, args, request) { env.editor.getSelection().selectDown(); }
 });
 canon.addCommand({
     name: "golinedown",
+    bindKey: bindKey("Down", "Down|Ctrl-N"),
     exec: function(env, args, request) { env.editor.navigateDown(args.times); }
 });
 canon.addCommand({
     name: "selectwordleft",
+    bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
     exec: function(env, args, request) { env.editor.getSelection().selectWordLeft(); }
 });
 canon.addCommand({
     name: "gotowordleft",
+    bindKey: bindKey("Ctrl-Left", "Option-Left"),
     exec: function(env, args, request) { env.editor.navigateWordLeft(); }
 });
 canon.addCommand({
     name: "selecttolinestart",
+    bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
 });
 canon.addCommand({
     name: "gotolinestart",
+    bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
     exec: function(env, args, request) { env.editor.navigateLineStart(); }
 });
 canon.addCommand({
     name: "selectleft",
+    bindKey: bindKey("Shift-Left", "Shift-Left"),
     exec: function(env, args, request) { env.editor.getSelection().selectLeft(); }
 });
 canon.addCommand({
     name: "gotoleft",
+    bindKey: bindKey("Left", "Left|Ctrl-B"),
     exec: function(env, args, request) { env.editor.navigateLeft(args.times); }
 });
 canon.addCommand({
     name: "selectwordright",
+    bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
     exec: function(env, args, request) { env.editor.getSelection().selectWordRight(); }
 });
 canon.addCommand({
     name: "gotowordright",
+    bindKey: bindKey("Ctrl-Right", "Option-Right"),
     exec: function(env, args, request) { env.editor.navigateWordRight(); }
 });
 canon.addCommand({
     name: "selecttolineend",
+    bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
 });
 canon.addCommand({
     name: "gotolineend",
+    bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
     exec: function(env, args, request) { env.editor.navigateLineEnd(); }
 });
 canon.addCommand({
     name: "selectright",
+    bindKey: bindKey("Shift-Right", "Shift-Right"),
     exec: function(env, args, request) { env.editor.getSelection().selectRight(); }
 });
 canon.addCommand({
     name: "gotoright",
+    bindKey: bindKey("Right", "Right|Ctrl-F"),
     exec: function(env, args, request) { env.editor.navigateRight(args.times); }
 });
 canon.addCommand({
     name: "selectpagedown",
+    bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
     exec: function(env, args, request) { env.editor.selectPageDown(); }
 });
 canon.addCommand({
     name: "pagedown",
+    bindKey: bindKey(null, "PageDown"),
     exec: function(env, args, request) { env.editor.scrollPageDown(); }
 });
 canon.addCommand({
     name: "gotopagedown",
+    bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
     exec: function(env, args, request) { env.editor.gotoPageDown(); }
 });
 canon.addCommand({
     name: "selectpageup",
+    bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
     exec: function(env, args, request) { env.editor.selectPageUp(); }
 });
 canon.addCommand({
     name: "pageup",
+    bindKey: bindKey(null, "PageUp"),
     exec: function(env, args, request) { env.editor.scrollPageUp(); }
 });
 canon.addCommand({
     name: "gotopageup",
+    bindKey: bindKey("PageUp", "Option-PageUp"),
     exec: function(env, args, request) { env.editor.gotoPageUp(); }
 });
 canon.addCommand({
     name: "selectlinestart",
+    bindKey: bindKey("Shift-Home", "Shift-Home"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
 });
 canon.addCommand({
-    name: "gotolinestart",
-    exec: function(env, args, request) { env.editor.navigateLineStart(); }
-});
-canon.addCommand({
     name: "selectlineend",
+    bindKey: bindKey("Shift-End", "Shift-End"),
     exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
 });
 canon.addCommand({
-    name: "gotolineend",
-    exec: function(env, args, request) { env.editor.navigateLineEnd(); }
-});
-canon.addCommand({
     name: "del",
+    bindKey: bindKey("Delete", "Delete|Ctrl-D"),
     exec: function(env, args, request) { env.editor.removeRight(); }
 });
 canon.addCommand({
     name: "backspace",
+    bindKey: bindKey(
+        "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+        "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
+    ),
     exec: function(env, args, request) { env.editor.removeLeft(); }
 });
 canon.addCommand({
     name: "removetolinestart",
+    bindKey: bindKey(null, "Option-Backspace"),
     exec: function(env, args, request) { env.editor.removeToLineStart(); }
 });
 canon.addCommand({
     name: "removetolineend",
+    bindKey: bindKey(null, "Ctrl-K"),
     exec: function(env, args, request) { env.editor.removeToLineEnd(); }
 });
 canon.addCommand({
     name: "removewordleft",
+    bindKey: bindKey(null, "Alt-Backspace|Ctrl-Alt-Backspace"),
     exec: function(env, args, request) { env.editor.removeWordLeft(); }
 });
 canon.addCommand({
     name: "removewordright",
+    bindKey: bindKey(null, "Alt-Delete"),
     exec: function(env, args, request) { env.editor.removeWordRight(); }
 });
 canon.addCommand({
     name: "outdent",
+    bindKey: bindKey("Shift-Tab", "Shift-Tab"),
     exec: function(env, args, request) { env.editor.blockOutdent(); }
 });
 canon.addCommand({
     name: "indent",
+    bindKey: bindKey("Tab", "Tab"),
     exec: function(env, args, request) { env.editor.indent(); }
 });
 canon.addCommand({
@@ -7116,20 +7536,21 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "centerselection",
+    bindKey: bindKey(null, "Ctrl-L"),
     exec: function(env, args, request) { env.editor.centerSelection(); }
 });
 canon.addCommand({
     name: "splitline",
+    bindKey: bindKey(null, "Ctrl-O"),
     exec: function(env, args, request) { env.editor.splitLine(); }
 });
 canon.addCommand({
     name: "transposeletters",
+    bindKey: bindKey("Ctrl-T", "Ctrl-T"),
     exec: function(env, args, request) { env.editor.transposeLetters(); }
 });
 
-
-});
-/* vim:ts=4:sts=4:sw=4:
+});/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -7479,16 +7900,16 @@ var EditSession = function(text, mode) {
     this.setUseWorker = function(useWorker) {
         if (this.$useWorker == useWorker)
             return;
-            
+
         if (useWorker && !this.$worker && window.Worker)
             this.$worker = mode.createWorker(this);
-            
+
         if (!useWorker && this.$worker) {
             this.$worker.terminate();
             this.$worker = null;
         }
     };
-    
+
     this.getUseWorker = function() {
         return this.$useWorker;
     };
@@ -7545,17 +7966,13 @@ var EditSession = function(text, mode) {
             var lines = this.doc.getAllLines();
             var longestLine = 0;
             var longestScreenLine = 0;
-            var tabSize = this.getTabSize();
 
             for ( var i = 0; i < lines.length; i++) {
-                var len = lines[i].length;
+                var line = lines[i],
+                    len = line.length,
+                    screenLen = this.$getStringScreenWidth(line);
                 longestLine = Math.max(longestLine, len);
-
-                lines[i].replace(/\t/g, function(m) {
-                    len += tabSize-1;
-                    return m;
-                });
-                longestScreenLine = Math.max(longestScreenLine, len);
+                longestScreenLine = Math.max(longestScreenLine, screenLen);
             }
             this.width = longestLine;
 
@@ -7572,14 +7989,6 @@ var EditSession = function(text, mode) {
      */
     this.getLine = function(row) {
         return this.doc.getLine(row);
-    };
-
-    /**
-     * Get a line as it is displayed on screen. Tabs are replaced by spaces.
-     */
-    this.getDisplayLine = function(row) {
-        var tab = new Array(this.getTabSize()+1).join(" ");
-        return this.doc.getLine(row).replace(/\t/g, tab);
     };
 
     this.getLines = function(firstRow, lastRow) {
@@ -7732,7 +8141,7 @@ var EditSession = function(text, mode) {
 
 
         var actions = [{}];
-        
+
         // collapse insert and remove operations
         for (var i=0; i<deltas.length; i++) {
             var delta = deltas[i];
@@ -7746,7 +8155,7 @@ var EditSession = function(text, mode) {
                 })
             }
             else {
-                if (isInsert)    
+                if (isInsert)
                     action.end = delta.range.end;
                 else
                     action.start = delta.range.start;
@@ -7756,12 +8165,12 @@ var EditSession = function(text, mode) {
         // update selection based on last operation
         this.selection.clearSelection();
         var action = actions[actions.length-1];
-        if (action.isInsert) 
+        if (action.isInsert)
             this.selection.setSelectionRange(Range.fromPoints(action.start, action.end));
-        else 
+        else
             this.selection.moveCursorToPosition(action.end);
     },
-    
+
     this.replace = function(range, text) {
         return this.doc.replace(range, text);
     };
@@ -8012,7 +8421,7 @@ var EditSession = function(text, mode) {
         TAB_SPACE = 5;
 
     this.$computeWrapSplits = function(textLine, wrapLimit, tabSize) {
-        textLine = textLine.trimRight();
+        textLine = lang.stringTrimRight(textLine);
         if (textLine.length == 0) {
             return [];
         }
@@ -8030,9 +8439,9 @@ var EditSession = function(text, mode) {
             // and multipleWidth characters.
             var len = displayed.length;
             displayed.join("").
-                // Get all the tabs.
-                replace(/4/g, function(m) {
-                    len -= tabSize - 1;
+                // Get all the tabs spaces.
+                replace(/5/g, function(m) {
+                    len -= 1;
                 }).
                 // Get all the multipleWidth characters.
                 replace(/2/g, function(m) {
@@ -8078,29 +8487,24 @@ var EditSession = function(text, mode) {
 
     this.$getDisplayTokens = function(str) {
         var arr = [];
-        var tabSize = this.getTabSize();
+        var tabSize;
 
         for (var i = 0; i < str.length; i++) {
-			var c = str.charCodeAt(i);
-			// Tab
-			if (c == 9) {
-			    arr.push(TAB);
-			    for (var n = 1; n < tabSize; n++) {
-			        arr.push(TAB_SPACE);
-			    }
-			}
+            var c = str.charCodeAt(i);
+            // Tab
+            if (c == 9) {
+                tabSize = this.getScreenTabSize(arr.length);
+                arr.push(TAB);
+                for (var n = 1; n < tabSize; n++) {
+                    arr.push(TAB_SPACE);
+                }
+            }
 			// Space
 			else if(c == 32) {
 			    arr.push(SPACE);
 			}
-    		// CJK characters
-            else if (
-                c >= 0x3040 && c <= 0x309F || // Hiragana
-                c >= 0x30A0 && c <= 0x30FF || // Katakana
-                c >= 0x4E00 && c <= 0x9FFF || // Single CJK ideographs
-                c >= 0xF900 && c <= 0xFAFF ||
-                c >= 0x3400 && c <= 0x4DBF
-            ) {
+    		// full width characters
+            else if (isFullWidth(c)) {
                 arr.push(CHAR, CHAR_EXT);
             } else {
                 arr.push(CHAR);
@@ -8119,21 +8523,15 @@ var EditSession = function(text, mode) {
     this.$getStringScreenWidth = function(str) {
         var screenColumn = 0;
         var tabSize = this.getTabSize();
-		
-		for (var i=0; i<str.length; i++) {
-			var c = str.charCodeAt(i);
-			// tab
-			if (c == 9) {
-				screenColumn += tabSize;
-			}
-    		// CJK characters
-            else if (
-                c >= 0x3040 && c <= 0x309F || // Hiragana
-                c >= 0x30A0 && c <= 0x30FF || // Katakana
-                c >= 0x4E00 && c <= 0x9FFF || // Single CJK ideographs
-                c >= 0xF900 && c <= 0xFAFF ||
-                c >= 0x3400 && c <= 0x4DBF
-            ) {
+
+        for (var i=0; i<str.length; i++) {
+            var c = str.charCodeAt(i);
+            // tab
+            if (c == 9) {
+                screenColumn += this.getScreenTabSize(screenColumn);
+            }
+    		// full width characters
+            else if (isFullWidth(c)) {
             	screenColumn += 2;
 			} else {
 				screenColumn += 1;
@@ -8237,6 +8635,13 @@ var EditSession = function(text, mode) {
         return this.screenToDocumentPosition(screenRow, screenColumn).column;
     };
 
+    /**
+     * Returns the width of a tab character at screenColumn.
+     */
+    this.getScreenTabSize = function(screenColumn) {
+        return this.$tabSize - screenColumn % this.$tabSize;
+    };
+
     this.screenToDocumentPosition = function(row, column) {
         var line;
         var docRow;
@@ -8251,21 +8656,22 @@ var EditSession = function(text, mode) {
         } else {
             var wrapData = this.$wrapData;
 
-			var docRow = 0;
-			while (docRow < linesCount && row >= wrapData[docRow].length + 1) {
-				row -= wrapData[docRow].length + 1;
-				docRow ++;
-			}
+            var docRow = 0;
+            while (docRow < linesCount && row >= wrapData[docRow].length + 1) {
+                row -= wrapData[docRow].length + 1;
+                docRow ++;
+            }
 
             if (docRow >= linesCount) {
                 docRow = linesCount-1
-				row = wrapData[docRow].length;
+                row = wrapData[docRow].length;
             }
             docColumn = wrapData[docRow][row - 1] || 0;
             line = this.getLine(docRow).substring(docColumn);
         }
 
-        var tabSize = this.getTabSize();
+        var tabSize,
+            screenColumn = 0;
         for(var i = 0; i < line.length; i++) {
             var c = line.charCodeAt(i);
 
@@ -8273,21 +8679,17 @@ var EditSession = function(text, mode) {
                 docColumn += 1;
                 // tab
                 if (c == 9) {
+                    tabSize = this.getScreenTabSize(screenColumn);
                     if (remaining >= tabSize) {
                         remaining -= tabSize;
+                        screenColumn += tabSize;
                     } else {
                         remaining = 0;
                         docColumn -= 1;
                     }
                 }
-                // CJK characters
-                else if (
-                    c >= 0x3040 && c <= 0x309F || // Hiragana
-                    c >= 0x30A0 && c <= 0x30FF || // Katakana
-                    c >= 0x4E00 && c <= 0x9FFF || // Single CJK ideographs
-                    c >= 0xF900 && c <= 0xFAFF ||
-                    c >= 0x3400 && c <= 0x4DBF
-                ) {
+                // full width characters
+                else if (isFullWidth(c)) {
                     if (remaining >= 2) {
                         remaining -= 2;
                     } else {
@@ -8295,6 +8697,7 @@ var EditSession = function(text, mode) {
                         docColumn -= 1;
                     }
                 } else {
+                    screenColumn += 1;
                     remaining -= 1;
                 }
             } else {
@@ -8305,7 +8708,7 @@ var EditSession = function(text, mode) {
         // Clamp docColumn.
         if (this.$useWrapMode) {
             column = wrapData[docRow][row]
-			if (docColumn >= column) {
+            if (docColumn >= column) {
                 // We remove one character at the end such that the docColumn
                 // position returned is not associated to the next row on the
                 // screen.
@@ -8423,6 +8826,41 @@ var EditSession = function(text, mode) {
         }
         return screenRows;
     }
+    
+    function isFullWidth(c) {
+        return c >= 0x1100 && c <= 0x115F ||
+               c >= 0x11A3 && c <= 0x11A7 ||
+               c >= 0x11FA && c <= 0x11FF ||
+               c >= 0x2329 && c <= 0x232A ||
+               c >= 0x2E80 && c <= 0x2E99 ||
+               c >= 0x2E9B && c <= 0x2EF3 ||
+               c >= 0x2F00 && c <= 0x2FD5 ||
+               c >= 0x2FF0 && c <= 0x2FFB ||
+               c >= 0x3000 && c <= 0x303E ||
+               c >= 0x3041 && c <= 0x3096 ||
+               c >= 0x3099 && c <= 0x30FF ||
+               c >= 0x3105 && c <= 0x312D ||
+               c >= 0x3131 && c <= 0x318E ||
+               c >= 0x3190 && c <= 0x31BA ||
+               c >= 0x31C0 && c <= 0x31E3 ||
+               c >= 0x31F0 && c <= 0x321E ||
+               c >= 0x3220 && c <= 0x3247 ||
+               c >= 0x3250 && c <= 0x32FE ||
+               c >= 0x3300 && c <= 0x4DBF ||
+               c >= 0x4E00 && c <= 0xA48C ||
+               c >= 0xA490 && c <= 0xA4C6 ||
+               c >= 0xA960 && c <= 0xA97C ||
+               c >= 0xAC00 && c <= 0xD7A3 ||
+               c >= 0xD7B0 && c <= 0xD7C6 ||
+               c >= 0xD7CB && c <= 0xD7FB ||
+               c >= 0xF900 && c <= 0xFAFF ||
+               c >= 0xFE10 && c <= 0xFE19 ||
+               c >= 0xFE30 && c <= 0xFE52 ||
+               c >= 0xFE54 && c <= 0xFE66 ||
+               c >= 0xFE68 && c <= 0xFE6B ||
+               c >= 0xFF01 && c <= 0xFF60 ||
+               c >= 0xFFE0 && c <= 0xFFE6;
+    }
 
 }).call(EditSession.prototype);
 
@@ -8480,7 +8918,7 @@ var Selection = function(session) {
     this.clearSelection();
     this.selectionLead = this.doc.createAnchor(0, 0);
     this.selectionAnchor = this.doc.createAnchor(0, 0);
-    
+
     var _self = this;
     this.selectionLead.on("change", function(e) {
         _self._dispatchEvent("changeCursor");
@@ -8489,7 +8927,7 @@ var Selection = function(session) {
         if (e.old.row == e.value.row)
             _self.$updateDesiredColumn();
     });
-    
+
     this.selectionAnchor.on("change", function() {
         if (!_self.$isEmpty)
             _self._dispatchEvent("changeSelection");
@@ -8812,19 +9250,14 @@ var Selection = function(session) {
     };
 
     this.moveCursorBy = function(rows, chars) {
-        if (this.session.getUseWrapMode()) {
-            var screenPos = this.session.documentToScreenPosition(
-                this.selectionLead.row, 
-                this.selectionLead.column
-            );
-            var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
-            var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-            
-            this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
-        } else {
-            var docColumn = (chars == 0 && this.$desiredColumn) || this.selectionLead.column;
-            this.moveCursorTo(this.selectionLead.row + rows, docColumn + chars, chars == 0);
-        }
+        var screenPos = this.session.documentToScreenPosition(
+            this.selectionLead.row,
+            this.selectionLead.column
+        );
+        var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
+        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
+
+        this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
     };
 
     this.moveCursorToPosition = function(position) {
@@ -8838,11 +9271,9 @@ var Selection = function(session) {
     };
 
     this.moveCursorToScreen = function(row, column, preventUpdateDesiredColumn) {
-        if (this.session.getUseWrapMode()) {
-            var pos = this.session.screenToDocumentPosition(row, column);
-            row = pos.row;
-            column = pos.column;
-        }
+        var pos = this.session.screenToDocumentPosition(row, column);
+        row = pos.row;
+        column = pos.column;
         this.moveCursorTo(row, column, preventUpdateDesiredColumn);
     };
 
@@ -10866,7 +11297,7 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
+define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text/ace/css/editor.css'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
@@ -10879,7 +11310,7 @@ var CursorLayer = require("ace/layer/cursor").Cursor;
 var ScrollBar = require("ace/scrollbar").ScrollBar;
 var RenderLoop = require("ace/renderloop").RenderLoop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var editorCss = require("text!ace/css/editor.css");
+var editorCss = require("text/ace/css/editor.css");
 
 // import CSS once
 dom.importCssString(editorCss);
@@ -11020,6 +11451,10 @@ var VirtualRenderer = function(container, theme) {
         this.$loop.schedule(this.CHANGE_FULL);
     };
 
+    this.updateFontSize = function() {
+        this.$textLayer.checkForSizeChanges();
+    };
+
     /**
      * Triggers resize of the editor
      */
@@ -11105,6 +11540,10 @@ var VirtualRenderer = function(container, theme) {
     this.getPrintMarginColumn = function() {
         return this.$printMarginColumn;
     };
+    
+    this.getShowGutter = function(){
+        return this.showGutter;
+    }
 
     this.setShowGutter = function(show){
         if(this.showGutter === show)
@@ -11192,6 +11631,10 @@ var VirtualRenderer = function(container, theme) {
         this.$loop.schedule(this.CHANGE_FULL);
         this.$updatePrintMargin();
     };
+
+    this.getHScrollBarAlwaysVisible = function() {
+        return this.$horizScrollAlwaysVisible;
+    }
 
     this.setHScrollBarAlwaysVisible = function(alwaysVisible) {
         if (this.$horizScrollAlwaysVisible != alwaysVisible) {
@@ -11960,7 +12403,7 @@ var Text = function(parentEl) {
     this.element.className = "ace_layer ace_text-layer";
     parentEl.appendChild(this.element);
 
-    this.$characterSize = this.$measureSizes();
+    this.$characterSize = this.$measureSizes() || {width: 0, height: 0};
     this.$pollSizeChanges();
 };
 
@@ -11985,14 +12428,18 @@ var Text = function(parentEl) {
         return this.$characterSize.width || 1;
     };
 
+    this.checkForSizeChanges = function() {
+        var size = this.$measureSizes();
+        if (size && (this.$characterSize.width !== size.width || this.$characterSize.height !== size.height)) {
+            this.$characterSize = size;
+            this._dispatchEvent("changeCharaterSize", {data: size});
+        }
+    };
+
     this.$pollSizeChanges = function() {
         var self = this;
         setInterval(function() {
-            var size = self.$measureSizes();
-            if (self.$characterSize.width !== size.width || self.$characterSize.height !== size.height) {
-                self.$characterSize = size;
-                self._dispatchEvent("changeCharaterSize", {data: size});
-            }
+            self.checkForSizeChanges();
         }, 500);
     };
 
@@ -12002,7 +12449,7 @@ var Text = function(parentEl) {
         fontWeight : 1,
         fontStyle : 1,
         lineHeight : 1
-    },
+    };
 
     this.$measureSizes = function() {
         var n = 1000;
@@ -12023,11 +12470,15 @@ var Text = function(parentEl) {
             // Note: characterWidth can be a float!
             measureNode.innerHTML = lang.stringRepeat("Xy", n);
 
-            var container = this.element.parentNode;
-            while (!dom.hasCssClass(container, "ace_editor"))
-                container = container.parentNode;
+            if (document.body) {
+                document.body.appendChild(measureNode);
+            } else {
+                var container = this.element.parentNode;
+                while (!dom.hasCssClass(container, "ace_editor"))
+                    container = container.parentNode;
+                container.appendChild(measureNode);
+            }
 
-            container.appendChild(measureNode);
         }
 
         var style = this.$measureNode.style;
@@ -12040,6 +12491,12 @@ var Text = function(parentEl) {
             height: this.$measureNode.offsetHeight,
             width: this.$measureNode.offsetWidth / (n * 2)
         };
+
+        // Size and width can be null if the editor is not visible or
+        // detached from the document
+        if (size.width == 0 && size.height == 0)
+            return null;
+
         return size;
     };
 
@@ -12056,18 +12513,21 @@ var Text = function(parentEl) {
         return true;
     };
 
+    this.$tabStrings = [];
     this.$computeTabString = function() {
         var tabSize = this.session.getTabSize();
-        if (this.showInvisibles) {
-            var halfTab = (tabSize) / 2;
-            this.$tabString = "<span class='ace_invisible'>"
-                + new Array(Math.floor(halfTab)).join("&#160;")
-                + this.TAB_CHAR
-                + new Array(Math.ceil(halfTab)+1).join("&#160;")
-                + "</span>";
-        } else {
-            this.$tabString = new Array(tabSize+1).join("&#160;");
+        var tabStr = this.$tabStrings = [0];
+        for (var i = 1; i < tabSize + 1; i++) {
+            if (this.showInvisibles) {
+                tabStr.push("<span class='ace_invisible'>"
+                    + this.TAB_CHAR
+                    + new Array(i).join("&#160;")
+                    + "</span>");
+            } else {
+                tabStr.push(new Array(i+1).join("&#160;"));
+            }
         }
+
     };
 
     this.updateLines = function(config, firstRow, lastRow) {
@@ -12173,35 +12633,37 @@ var Text = function(parentEl) {
     };
 
     this.$renderLine = function(stringBuilder, row, tokens) {
-        if (this.showInvisibles) {
-            var self = this;
-            var spaceRe = /( +)|([\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000])/g;
-            var spaceReplace = function(space) {
-                if (space.charCodeAt(0) == 32)
-                    return new Array(space.length+1).join("&#160;");
-                else {
-                    var space = new Array(space.length+1).join(self.SPACE_CHAR);
-                    return "<span class='ace_invisible'>" + space + "</span>";
-                }
+        var _self = this,
+            characterWidth = this.config.characterWidth,
+            screenColumn = 0;
 
-            };
-        }
-        else {
-            var spaceRe = /[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/g;
-            var spaceReplace = "&#160;";
-        }
-
-        var _self = this;
-        var characterWidth = this.config.characterWidth;
         function addToken(token, value) {
             var output = value
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(spaceRe, spaceReplace)
-                .replace(/\t/g, _self.$tabString)
-                .replace(/[\u3040-\u309F]|[\u30A0-\u30FF]|[\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF]/g, function(c) {
-                    return "<span class='ace_cjk' style='width:" + (characterWidth * 2) + "px'>" + c + "</span>"
-                });
+                    .replace(/\t|&|<|( +)|([\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000])|[\u1100-\u115F]|[\u11A3-\u11A7]|[\u11FA-\u11FF]|[\u2329-\u232A]|[\u2E80-\u2E99]|[\u2E9B-\u2EF3]|[\u2F00-\u2FD5]|[\u2FF0-\u2FFB]|[\u3000-\u303E]|[\u3041-\u3096]|[\u3099-\u30FF]|[\u3105-\u312D]|[\u3131-\u318E]|[\u3190-\u31BA]|[\u31C0-\u31E3]|[\u31F0-\u321E]|[\u3220-\u3247]|[\u3250-\u32FE]|[\u3300-\u4DBF]|[\u4E00-\uA48C]|[\uA490-\uA4C6]|[\uA960-\uA97C]|[\uAC00-\uD7A3]|[\uD7B0-\uD7C6]|[\uD7CB-\uD7FB]|[\uF900-\uFAFF]|[\uFE10-\uFE19]|[\uFE30-\uFE52]|[\uFE54-\uFE66]|[\uFE68-\uFE6B]|[\uFF01-\uFF60]|[\uFFE0-\uFFE6]/g, function(c, a, b, tabIdx, idx4) {
+                        if (c.charCodeAt(0) == 32) {
+                            return new Array(c.length+1).join("&#160;");
+                        } else if (c == "\t") {
+                            var tabSize = _self.session.
+                                    getScreenTabSize(screenColumn + tabIdx);
+                            screenColumn += tabSize - 1;
+                            return _self.$tabStrings[tabSize];
+                        } else if (c == "&") {
+                            return "&amp";
+                        } else if (c == "<") {
+                            return "&lt;";
+                        } else if (c.match(/[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/)) {
+                            if (this.showInvisibles) {
+                                var space = new Array(c.length+1).join(self.SPACE_CHAR);
+                                return "<span class='ace_invisible'>" + space + "</span>";
+                            } else {
+                                return "&#160;"
+                            }
+                        } else {
+                            screenColumn += 1;
+                            return "<span class='ace_cjk' style='width:" + (characterWidth * 2) + "px'>" + c + "</span>"
+                        }
+                    });
+                screenColumn += value.length;
 
             if (!_self.$textToken[token.type]) {
                 var classes = "ace_" + token.type.replace(/\./g, " ace_");
@@ -12240,7 +12702,9 @@ var Text = function(parentEl) {
                         "<div style='height:",
                         this.config.lineHeight, "px",
                         "'>");
+
                     split ++;
+                    screenColumn = 0;
                     splitChars = splits[split] || Number.MAX_VALUE;
                 }
                 if (value.length != 0) {
@@ -12586,7 +13050,7 @@ var RenderLoop = function(onRender) {
 
 exports.RenderLoop = RenderLoop;
 });
-define("text!ace/css/editor.css", [], ".ace_editor {" +
+define("text/ace/css/editor.css", [], ".ace_editor {" +
   "    position: absolute;" +
   "    overflow: hidden;" +
   "" +
@@ -12746,268 +13210,7 @@ define("text!ace/css/editor.css", [], ".ace_editor {" +
   "}" +
   "");
 
-define("text!icons/epl.html", [], "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
-  "<!-- saved from url=(0049)http://www.eclipse.org/org/documents/epl-v10.html -->" +
-  "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" +
-  "" +
-  "<title>Eclipse Public License - Version 1.0</title>" +
-  "<style type=\"text/css\">" +
-  "  body {" +
-  "    size: 8.5in 11.0in;" +
-  "    margin: 0.25in 0.5in 0.25in 0.5in;" +
-  "    tab-interval: 0.5in;" +
-  "    }" +
-  "  p {  	" +
-  "    margin-left: auto;" +
-  "    margin-top:  0.5em;" +
-  "    margin-bottom: 0.5em;" +
-  "    }" +
-  "  p.list {" +
-  "  	margin-left: 0.5in;" +
-  "    margin-top:  0.05em;" +
-  "    margin-bottom: 0.05em;" +
-  "    }" +
-  "  </style>" +
-  "" +
-  "<script src=\"chrome-extension://jgghnecdoiloelcogfmgjgcacadpaejf/inject.js\"></script></head>" +
-  "" +
-  "<body lang=\"EN-US\">" +
-  "" +
-  "<h2>Eclipse Public License - v 1.0</h2>" +
-  "" +
-  "<p>THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE" +
-  "PUBLIC LICENSE (\"AGREEMENT\"). ANY USE, REPRODUCTION OR" +
-  "DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS" +
-  "AGREEMENT.</p>" +
-  "" +
-  "<p><b>1. DEFINITIONS</b></p>" +
-  "" +
-  "<p>\"Contribution\" means:</p>" +
-  "" +
-  "<p class=\"list\">a) in the case of the initial Contributor, the initial" +
-  "code and documentation distributed under this Agreement, and</p>" +
-  "<p class=\"list\">b) in the case of each subsequent Contributor:</p>" +
-  "<p class=\"list\">i) changes to the Program, and</p>" +
-  "<p class=\"list\">ii) additions to the Program;</p>" +
-  "<p class=\"list\">where such changes and/or additions to the Program" +
-  "originate from and are distributed by that particular Contributor. A" +
-  "Contribution 'originates' from a Contributor if it was added to the" +
-  "Program by such Contributor itself or anyone acting on such" +
-  "Contributor's behalf. Contributions do not include additions to the" +
-  "Program which: (i) are separate modules of software distributed in" +
-  "conjunction with the Program under their own license agreement, and (ii)" +
-  "are not derivative works of the Program.</p>" +
-  "" +
-  "<p>\"Contributor\" means any person or entity that distributes" +
-  "the Program.</p>" +
-  "" +
-  "<p>\"Licensed Patents\" mean patent claims licensable by a" +
-  "Contributor which are necessarily infringed by the use or sale of its" +
-  "Contribution alone or when combined with the Program.</p>" +
-  "" +
-  "<p>\"Program\" means the Contributions distributed in accordance" +
-  "with this Agreement.</p>" +
-  "" +
-  "<p>\"Recipient\" means anyone who receives the Program under" +
-  "this Agreement, including all Contributors.</p>" +
-  "" +
-  "<p><b>2. GRANT OF RIGHTS</b></p>" +
-  "" +
-  "<p class=\"list\">a) Subject to the terms of this Agreement, each" +
-  "Contributor hereby grants Recipient a non-exclusive, worldwide," +
-  "royalty-free copyright license to reproduce, prepare derivative works" +
-  "of, publicly display, publicly perform, distribute and sublicense the" +
-  "Contribution of such Contributor, if any, and such derivative works, in" +
-  "source code and object code form.</p>" +
-  "" +
-  "<p class=\"list\">b) Subject to the terms of this Agreement, each" +
-  "Contributor hereby grants Recipient a non-exclusive, worldwide," +
-  "royalty-free patent license under Licensed Patents to make, use, sell," +
-  "offer to sell, import and otherwise transfer the Contribution of such" +
-  "Contributor, if any, in source code and object code form. This patent" +
-  "license shall apply to the combination of the Contribution and the" +
-  "Program if, at the time the Contribution is added by the Contributor," +
-  "such addition of the Contribution causes such combination to be covered" +
-  "by the Licensed Patents. The patent license shall not apply to any other" +
-  "combinations which include the Contribution. No hardware per se is" +
-  "licensed hereunder.</p>" +
-  "" +
-  "<p class=\"list\">c) Recipient understands that although each Contributor" +
-  "grants the licenses to its Contributions set forth herein, no assurances" +
-  "are provided by any Contributor that the Program does not infringe the" +
-  "patent or other intellectual property rights of any other entity. Each" +
-  "Contributor disclaims any liability to Recipient for claims brought by" +
-  "any other entity based on infringement of intellectual property rights" +
-  "or otherwise. As a condition to exercising the rights and licenses" +
-  "granted hereunder, each Recipient hereby assumes sole responsibility to" +
-  "secure any other intellectual property rights needed, if any. For" +
-  "example, if a third party patent license is required to allow Recipient" +
-  "to distribute the Program, it is Recipient's responsibility to acquire" +
-  "that license before distributing the Program.</p>" +
-  "" +
-  "<p class=\"list\">d) Each Contributor represents that to its knowledge it" +
-  "has sufficient copyright rights in its Contribution, if any, to grant" +
-  "the copyright license set forth in this Agreement.</p>" +
-  "" +
-  "<p><b>3. REQUIREMENTS</b></p>" +
-  "" +
-  "<p>A Contributor may choose to distribute the Program in object code" +
-  "form under its own license agreement, provided that:</p>" +
-  "" +
-  "<p class=\"list\">a) it complies with the terms and conditions of this" +
-  "Agreement; and</p>" +
-  "" +
-  "<p class=\"list\">b) its license agreement:</p>" +
-  "" +
-  "<p class=\"list\">i) effectively disclaims on behalf of all Contributors" +
-  "all warranties and conditions, express and implied, including warranties" +
-  "or conditions of title and non-infringement, and implied warranties or" +
-  "conditions of merchantability and fitness for a particular purpose;</p>" +
-  "" +
-  "<p class=\"list\">ii) effectively excludes on behalf of all Contributors" +
-  "all liability for damages, including direct, indirect, special," +
-  "incidental and consequential damages, such as lost profits;</p>" +
-  "" +
-  "<p class=\"list\">iii) states that any provisions which differ from this" +
-  "Agreement are offered by that Contributor alone and not by any other" +
-  "party; and</p>" +
-  "" +
-  "<p class=\"list\">iv) states that source code for the Program is available" +
-  "from such Contributor, and informs licensees how to obtain it in a" +
-  "reasonable manner on or through a medium customarily used for software" +
-  "exchange.</p>" +
-  "" +
-  "<p>When the Program is made available in source code form:</p>" +
-  "" +
-  "<p class=\"list\">a) it must be made available under this Agreement; and</p>" +
-  "" +
-  "<p class=\"list\">b) a copy of this Agreement must be included with each" +
-  "copy of the Program.</p>" +
-  "" +
-  "<p>Contributors may not remove or alter any copyright notices contained" +
-  "within the Program.</p>" +
-  "" +
-  "<p>Each Contributor must identify itself as the originator of its" +
-  "Contribution, if any, in a manner that reasonably allows subsequent" +
-  "Recipients to identify the originator of the Contribution.</p>" +
-  "" +
-  "<p><b>4. COMMERCIAL DISTRIBUTION</b></p>" +
-  "" +
-  "<p>Commercial distributors of software may accept certain" +
-  "responsibilities with respect to end users, business partners and the" +
-  "like. While this license is intended to facilitate the commercial use of" +
-  "the Program, the Contributor who includes the Program in a commercial" +
-  "product offering should do so in a manner which does not create" +
-  "potential liability for other Contributors. Therefore, if a Contributor" +
-  "includes the Program in a commercial product offering, such Contributor" +
-  "(\"Commercial Contributor\") hereby agrees to defend and" +
-  "indemnify every other Contributor (\"Indemnified Contributor\")" +
-  "against any losses, damages and costs (collectively \"Losses\")" +
-  "arising from claims, lawsuits and other legal actions brought by a third" +
-  "party against the Indemnified Contributor to the extent caused by the" +
-  "acts or omissions of such Commercial Contributor in connection with its" +
-  "distribution of the Program in a commercial product offering. The" +
-  "obligations in this section do not apply to any claims or Losses" +
-  "relating to any actual or alleged intellectual property infringement. In" +
-  "order to qualify, an Indemnified Contributor must: a) promptly notify" +
-  "the Commercial Contributor in writing of such claim, and b) allow the" +
-  "Commercial Contributor to control, and cooperate with the Commercial" +
-  "Contributor in, the defense and any related settlement negotiations. The" +
-  "Indemnified Contributor may participate in any such claim at its own" +
-  "expense.</p>" +
-  "" +
-  "<p>For example, a Contributor might include the Program in a commercial" +
-  "product offering, Product X. That Contributor is then a Commercial" +
-  "Contributor. If that Commercial Contributor then makes performance" +
-  "claims, or offers warranties related to Product X, those performance" +
-  "claims and warranties are such Commercial Contributor's responsibility" +
-  "alone. Under this section, the Commercial Contributor would have to" +
-  "defend claims against the other Contributors related to those" +
-  "performance claims and warranties, and if a court requires any other" +
-  "Contributor to pay any damages as a result, the Commercial Contributor" +
-  "must pay those damages.</p>" +
-  "" +
-  "<p><b>5. NO WARRANTY</b></p>" +
-  "" +
-  "<p>EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS" +
-  "PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS" +
-  "OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION," +
-  "ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY" +
-  "OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely" +
-  "responsible for determining the appropriateness of using and" +
-  "distributing the Program and assumes all risks associated with its" +
-  "exercise of rights under this Agreement , including but not limited to" +
-  "the risks and costs of program errors, compliance with applicable laws," +
-  "damage to or loss of data, programs or equipment, and unavailability or" +
-  "interruption of operations.</p>" +
-  "" +
-  "<p><b>6. DISCLAIMER OF LIABILITY</b></p>" +
-  "" +
-  "<p>EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT" +
-  "NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT," +
-  "INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING" +
-  "WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF" +
-  "LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING" +
-  "NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR" +
-  "DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED" +
-  "HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>" +
-  "" +
-  "<p><b>7. GENERAL</b></p>" +
-  "" +
-  "<p>If any provision of this Agreement is invalid or unenforceable under" +
-  "applicable law, it shall not affect the validity or enforceability of" +
-  "the remainder of the terms of this Agreement, and without further action" +
-  "by the parties hereto, such provision shall be reformed to the minimum" +
-  "extent necessary to make such provision valid and enforceable.</p>" +
-  "" +
-  "<p>If Recipient institutes patent litigation against any entity" +
-  "(including a cross-claim or counterclaim in a lawsuit) alleging that the" +
-  "Program itself (excluding combinations of the Program with other" +
-  "software or hardware) infringes such Recipient's patent(s), then such" +
-  "Recipient's rights granted under Section 2(b) shall terminate as of the" +
-  "date such litigation is filed.</p>" +
-  "" +
-  "<p>All Recipient's rights under this Agreement shall terminate if it" +
-  "fails to comply with any of the material terms or conditions of this" +
-  "Agreement and does not cure such failure in a reasonable period of time" +
-  "after becoming aware of such noncompliance. If all Recipient's rights" +
-  "under this Agreement terminate, Recipient agrees to cease use and" +
-  "distribution of the Program as soon as reasonably practicable. However," +
-  "Recipient's obligations under this Agreement and any licenses granted by" +
-  "Recipient relating to the Program shall continue and survive.</p>" +
-  "" +
-  "<p>Everyone is permitted to copy and distribute copies of this" +
-  "Agreement, but in order to avoid inconsistency the Agreement is" +
-  "copyrighted and may only be modified in the following manner. The" +
-  "Agreement Steward reserves the right to publish new versions (including" +
-  "revisions) of this Agreement from time to time. No one other than the" +
-  "Agreement Steward has the right to modify this Agreement. The Eclipse" +
-  "Foundation is the initial Agreement Steward. The Eclipse Foundation may" +
-  "assign the responsibility to serve as the Agreement Steward to a" +
-  "suitable separate entity. Each new version of the Agreement will be" +
-  "given a distinguishing version number. The Program (including" +
-  "Contributions) may always be distributed subject to the version of the" +
-  "Agreement under which it was received. In addition, after a new version" +
-  "of the Agreement is published, Contributor may elect to distribute the" +
-  "Program (including its Contributions) under the new version. Except as" +
-  "expressly stated in Sections 2(a) and 2(b) above, Recipient receives no" +
-  "rights or licenses to the intellectual property of any Contributor under" +
-  "this Agreement, whether expressly, by implication, estoppel or" +
-  "otherwise. All rights in the Program not expressly granted under this" +
-  "Agreement are reserved.</p>" +
-  "" +
-  "<p>This Agreement is governed by the laws of the State of New York and" +
-  "the intellectual property laws of the United States of America. No party" +
-  "to this Agreement will bring a legal action under this Agreement more" +
-  "than one year after the cause of action arose. Each party waives its" +
-  "rights to a jury trial in any resulting litigation.</p>" +
-  "" +
-  "" +
-  "" +
-  "" +
-  "</body></html>");
-
-define("text!styles.css", [], "html {" +
+define("text/styles.css", [], "html {" +
   "    height: 100%;" +
   "    overflow: hidden;" +
   "}" +
@@ -13054,12 +13257,6 @@ define("text!styles.css", [], "html {" +
   "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
   "    background: #DDD; color: #000;" +
   "}");
-
-define("text!icons/error_obj.gif", [], "data:image/gif;base64,R0lGODlhEAAQANUAAPVvcvWHiPVucvRuc+ttcfV6f91KVN5LU99PV/FZY/JhaM4oN84pONE4Rd1ATfJLWutVYPRgbdxpcsgWKMgZKs4lNfE/UvE/U+artcpdSc5uXveimslHPuBhW/eJhfV5efaCgO2CgP+/v+PExP///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZwwJJwSCwaj8jSSJPhZDQj5IjTCW1CHU60OPWQQGCSR1uUID4i0ock+iAkxQZBACCxBwJCoziJWC52F4IRE3EQD2kkD4sQe0QSDmkJkgkOcEQYFSQKnGkFDBhGGAsHBAEEBqBIGBINFA0SoUmztLVJQQA7");
-
-define("text!icons/warning_obj.gif", [], "data:image/gif;base64,R0lGODlhEAAQANUAAP/bcv/egf/ijf/ij//klv/jl//lnf/mnv/uwf/IWv/Na//Qc//Ugf/Vgv/Vg//cl//enf/nuP/MbHtRE4BVFYJXFoFVFolbGIdbGIxeGpRkHcWDLcmHL8aELsaFLs2LMsmHMcuKM82LNdyYP9+bQuCcQ+GlVcuHMc+LNdGNNtuXQN+aQt2ZQuOwcOfMrv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAZhwJdwSCwaj0ihq1RyJYcrBIL0fLlYkQjLmRwhJhOEKmlKOSgVR8qEFAEalwwDgDqaPoGEPhEIsYsgAhIPGBoPCgMnRhwECxAWGBALBRxGHS0GB5qaLR5HG6ChoFWkpaZCQQA7");
-
-define("text!logo.png", [], "data:image/png;base64,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");
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
