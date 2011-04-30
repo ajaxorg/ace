@@ -4854,7 +4854,7 @@ exports.create = create;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/background_tokenizer', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
+define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 
@@ -4868,7 +4868,6 @@ var MouseHandler = require("ace/mouse_handler").MouseHandler;
 var KeyBinding = require("ace/keyboard/keybinding").KeyBinding;
 var EditSession = require("ace/edit_session").EditSession;
 var Search = require("ace/search").Search;
-var BackgroundTokenizer = require("ace/background_tokenizer").BackgroundTokenizer;
 var Range = require("ace/range").Range;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
@@ -4938,6 +4937,7 @@ var Editor =function(renderer, session) {
             var oldSession = this.session;
             this.session.removeEventListener("change", this.$onDocumentChange);
             this.session.removeEventListener("changeMode", this.$onChangeMode);
+            this.session.removeEventListener("tokenizerUpdate", this.$onTokenizerUpdate);
             this.session.removeEventListener("changeTabSize", this.$onChangeTabSize);
             this.session.removeEventListener("changeWrapLimit", this.$onChangeWrapLimit);
             this.session.removeEventListener("changeWrapMode", this.$onChangeWrapMode);
@@ -4962,6 +4962,9 @@ var Editor =function(renderer, session) {
 
         this.$onChangeMode = this.onChangeMode.bind(this);
         session.addEventListener("changeMode", this.$onChangeMode);
+
+        this.$onTokenizerUpdate = this.onTokenizerUpdate.bind(this);
+        session.addEventListener("tokenizerUpdate", this.$onTokenizerUpdate);
 
         this.$onChangeTabSize = this.renderer.updateText.bind(this.renderer);
         session.addEventListener("changeTabSize", this.$onChangeTabSize);
@@ -4994,8 +4997,6 @@ var Editor =function(renderer, session) {
         this.selection.addEventListener("changeSelection", this.$onSelectionChange);
 
         this.onChangeMode();
-        this.bgTokenizer.setDocument(session.getDocument());
-        this.bgTokenizer.start(0);
 
         this.onCursorChange();
         this.onSelectionChange();
@@ -5094,7 +5095,6 @@ var Editor =function(renderer, session) {
         var delta = e.data;
         var range = delta.range;
 
-        this.bgTokenizer.start(range.start.row);
         if (range.start.row == range.end.row && delta.action != "insertLines" && delta.action != "removeLines")
             var lastRow = range.end.row;
         else
@@ -5157,7 +5157,7 @@ var Editor =function(renderer, session) {
         this.onCursorChange(e);
 
         if (this.$highlightSelectedWord)
-            this.mode.highlightSelection(this);
+            this.session.getMode().highlightSelection(this);
     };
 
     this.onChangeFrontMarker = function() {
@@ -5177,22 +5177,7 @@ var Editor =function(renderer, session) {
     };
 
     this.onChangeMode = function() {
-        var mode = this.session.getMode();
-        if (this.mode == mode)
-            return;
-
-        this.mode = mode;
-        var tokenizer = mode.getTokenizer();
-
-        if (!this.bgTokenizer) {
-            var onUpdate = this.onTokenizerUpdate.bind(this);
-            this.bgTokenizer = new BackgroundTokenizer(tokenizer, this);
-            this.bgTokenizer.addEventListener("update", onUpdate);
-        } else {
-            this.bgTokenizer.setTokenizer(tokenizer);
-        }
-
-        this.renderer.setTokenizer(this.bgTokenizer);
+        this.renderer.updateText()
     };
 
     this.onChangeWrapLimit = function() {
@@ -5226,6 +5211,9 @@ var Editor =function(renderer, session) {
         if (this.$readOnly)
             return;
 
+        var session = this.session;
+        var mode = session.getMode();
+        
         var cursor = this.getCursorPosition();
         text = text.replace("\t", this.session.getTabString());
 
@@ -5242,28 +5230,27 @@ var Editor =function(renderer, session) {
 
         this.clearSelection();
 
-        var lineState     = this.bgTokenizer.getState(cursor.row);
-        var shouldOutdent = this.mode.checkOutdent(lineState, this.session.getLine(cursor.row), text);
-        var line          = this.session.getLine(cursor.row);
-        var lineIndent    = this.mode.getNextLineIndent(lineState, line.slice(0, cursor.column), this.session.getTabString());
-        var end           = this.session.insert(cursor, text);
+        var lineState     = session.getState(cursor.row);
+        var shouldOutdent = mode.checkOutdent(lineState, session.getLine(cursor.row), text);
+        var line          = session.getLine(cursor.row);
+        var lineIndent    = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
+        var end           = session.insert(cursor, text);
 
         
-        var lineState = this.bgTokenizer.getState(cursor.row);
+        var lineState = session.getState(cursor.row);
         // TODO disabled multiline auto indent
         // possibly doing the indent before inserting the text
         // if (cursor.row !== end.row) {
-        if (this.session.getDocument().isNewLine(text)) {
+        if (session.getDocument().isNewLine(text)) {
             this.moveCursorTo(cursor.row+1, 0);
             
-            var size        = this.session.getTabSize(),
-                minIndent   = Number.MAX_VALUE;
+            var size = session.getTabSize();
+            var minIndent = Number.MAX_VALUE;
 
-            
             for (var row = cursor.row + 1; row <= end.row; ++row) {
                 var indent = 0;
 
-                line = this.session.getLine(row);
+                line = session.getLine(row);
                 for (var i = 0; i < line.length; ++i)
                     if (line.charAt(i) == '\t')
                         indent += size;
@@ -5278,18 +5265,18 @@ var Editor =function(renderer, session) {
             for (var row = cursor.row + 1; row <= end.row; ++row) {
                 var outdent = minIndent;
 
-                line = this.session.getLine(row);
+                line = session.getLine(row);
                 for (var i = 0; i < line.length && outdent > 0; ++i)
                     if (line.charAt(i) == '\t')
                         outdent -= size;
                     else if (line.charAt(i) == ' ')
                         outdent -= 1;
-                this.session.remove(new Range(row, 0, row, i));
+                session.remove(new Range(row, 0, row, i));
             }
-            this.session.indentRows(cursor.row + 1, end.row, lineIndent);
+            session.indentRows(cursor.row + 1, end.row, lineIndent);
         } else {
             if (shouldOutdent) {
-                this.mode.autoOutdent(lineState, this.session, cursor.row);
+                mode.autoOutdent(lineState, session, cursor.row);
             }
         };        
     }
@@ -5303,7 +5290,7 @@ var Editor =function(renderer, session) {
     };
 
     this.setOverwrite = function(overwrite) {
-        this.session.setOverwrite();        
+        this.session.setOverwrite(overwrite);
     };
 
     this.getOverwrite = function() {
@@ -5354,9 +5341,9 @@ var Editor =function(renderer, session) {
 
         this.$highlightSelectedWord = shouldHighlight;
         if (shouldHighlight)
-            this.mode.highlightSelection(this);
+            this.session.getMode().highlightSelection(this);
         else
-            this.mode.clearSelectionHighlight(this);
+            this.session.getMode().clearSelectionHighlight(this);
     };
 
     this.getHighlightSelectedWord = function() {
@@ -5542,9 +5529,9 @@ var Editor =function(renderer, session) {
         if (this.$readOnly)
             return;
 
-        var state = this.bgTokenizer.getState(this.getCursorPosition().row);
+        var state = this.session.getState(this.getCursorPosition().row);
         var rows = this.$getSelectedRows()
-        this.mode.toggleCommentLines(state, this.session, rows.first, rows.last);
+        this.session.getMode().toggleCommentLines(state, this.session, rows.first, rows.last);
     };
 
     this.removeLines = function() {
@@ -6559,6 +6546,7 @@ exports.setSelectionEnd = function(textarea, end) {
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -7589,7 +7577,7 @@ canon.addCommand({
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/edit_session', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document'], function(require, exports, module) {
+define('ace/edit_session', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'pilot/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var lang = require("pilot/lang");
@@ -7598,6 +7586,7 @@ var Selection = require("ace/selection").Selection;
 var TextMode = require("ace/mode/text").Mode;
 var Range = require("ace/range").Range;
 var Document = require("ace/document").Document;
+var BackgroundTokenizer = require("ace/background_tokenizer").BackgroundTokenizer;
 
 var EditSession = function(text, mode) {
     this.$modified = true;
@@ -7616,6 +7605,8 @@ var EditSession = function(text, mode) {
     this.selection = new Selection(this);
     if (mode)
         this.setMode(mode);
+    else
+        this.setMode(new TextMode());
 };
 
 
@@ -7644,6 +7635,8 @@ var EditSession = function(text, mode) {
         }
 
         this.$updateWrapDataOnChange(e);
+        
+        this.bgTokenizer.start(delta.range.start.row);
         this._dispatchEvent("change", e);
     };
 
@@ -7660,6 +7653,14 @@ var EditSession = function(text, mode) {
 
     this.getSelection = function() {
         return this.selection;
+    };
+
+    this.getState = function(row) {
+        return this.bgTokenizer.getState(row);
+    };
+    
+    this.getTokens = function(firstRow, lastRow) {
+        return this.bgTokenizer.getTokens(firstRow, lastRow);
     };
 
     this.setUndoManager = function(undoManager) {
@@ -7908,6 +7909,8 @@ var EditSession = function(text, mode) {
             this.$worker.terminate();
             this.$worker = null;
         }
+
+        this.$useWorker = useWorker;
     };
 
     this.getUseWorker = function() {
@@ -7921,19 +7924,31 @@ var EditSession = function(text, mode) {
         if (this.$worker)
             this.$worker.terminate();
 
-        if (this.$useWorker && window.Worker && !require.noWorker)
+        if (this.$useWorker && typeof Worker !== "undefined" && !require.noWorker)
             this.$worker = mode.createWorker(this);
         else
             this.$worker = null;
+
+        var tokenizer = mode.getTokenizer();
+
+        if (!this.bgTokenizer) {
+            this.bgTokenizer = new BackgroundTokenizer(tokenizer);
+            var _self = this;
+            this.bgTokenizer.addEventListener("update", function(e) {
+                _self._dispatchEvent("tokenizerUpdate", e);
+            });
+        } else {
+            this.bgTokenizer.setTokenizer(tokenizer);
+        }
+        
+        this.bgTokenizer.setDocument(this.getDocument());
+        this.bgTokenizer.start(0);
 
         this.$mode = mode;
         this._dispatchEvent("changeMode");
     };
 
     this.getMode = function() {
-        if (!this.$mode) {
-            this.$mode = new TextMode();
-        }
         return this.$mode;
     };
 
@@ -8827,7 +8842,11 @@ var EditSession = function(text, mode) {
         return screenRows;
     }
     
+    // For every keystroke this gets called once per char in the whole doc!!
+    // Wouldn't hurt to make it a bit faster for c >= 0x1100
     function isFullWidth(c) {
+        if (c < 0x1100)
+            return false;
         return c >= 0x1100 && c <= 0x115F ||
                c >= 0x11A3 && c <= 0x11A7 ||
                c >= 0x11FA && c <= 0x11FF ||
@@ -10397,6 +10416,175 @@ var Anchor = exports.Anchor = function(doc, row, column) {
 }).call(Anchor.prototype);
 
 });
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/background_tokenizer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
+
+var BackgroundTokenizer = function(tokenizer, editor) {
+    this.running = false;    
+    this.lines = [];
+    this.currentLine = 0;
+    this.tokenizer = tokenizer;
+
+    var self = this;
+
+    this.$worker = function() {
+        if (!self.running) { return; }
+
+        var workerStart = new Date();
+        var startLine = self.currentLine;
+        var doc = self.doc;
+
+        var processedLines = 0;
+
+        var len = doc.getLength();
+        while (self.currentLine < len) {
+            self.lines[self.currentLine] = self.$tokenizeRows(self.currentLine, self.currentLine)[0];
+            self.currentLine++;
+
+            // only check every 5 lines
+            processedLines += 1;
+            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
+                self.fireUpdateEvent(startLine, self.currentLine-1);
+                self.running = setTimeout(self.$worker, 20);
+                return;
+            }
+        }
+
+        self.running = false;
+
+        self.fireUpdateEvent(startLine, len - 1);
+    };
+};
+
+(function(){
+
+    oop.implement(this, EventEmitter);
+
+    this.setTokenizer = function(tokenizer) {
+        this.tokenizer = tokenizer;
+        this.lines = [];
+
+        this.start(0);
+    };
+
+    this.setDocument = function(doc) {
+        this.doc = doc;
+        this.lines = [];
+
+        this.stop();
+    };
+
+    this.fireUpdateEvent = function(firstRow, lastRow) {
+        var data = {
+            first: firstRow,
+            last: lastRow
+        };
+        this._dispatchEvent("update", {data: data});
+    };
+
+    this.start = function(startRow) {
+        this.currentLine = Math.min(startRow || 0, this.currentLine,
+                                    this.doc.getLength());
+
+        // remove all cached items below this line
+        this.lines.splice(this.currentLine, this.lines.length);
+
+        this.stop();
+        // pretty long delay to prevent the tokenizer from interfering with the user
+        this.running = setTimeout(this.$worker, 700);
+    };
+
+    this.stop = function() {
+        if (this.running)
+            clearTimeout(this.running);
+        this.running = false;
+    };
+
+    this.getTokens = function(firstRow, lastRow) {
+        return this.$tokenizeRows(firstRow, lastRow);
+    };
+
+    this.getState = function(row) {
+        return this.$tokenizeRows(row, row)[0].state;
+    };
+
+    this.$tokenizeRows = function(firstRow, lastRow) {
+        if (!this.doc)
+            return [];
+            
+        var rows = [];
+
+        // determine start state
+        var state = "start";
+        var doCache = false;
+        if (firstRow > 0 && this.lines[firstRow - 1]) {
+            state = this.lines[firstRow - 1].state;
+            doCache = true;
+        }
+
+        var lines = this.doc.getLines(firstRow, lastRow);
+        for (var row=firstRow; row<=lastRow; row++) {
+            if (!this.lines[row]) {
+                var tokens = this.tokenizer.getLineTokens(lines[row-firstRow] || "", state);
+                var state = tokens.state;
+                rows.push(tokens);
+
+                if (doCache) {
+                    this.lines[row] = tokens;
+                }
+            }
+            else {
+                var tokens = this.lines[row];
+                state = tokens.state;
+                rows.push(tokens);
+            }
+        }
+        return rows;
+    };
+
+}).call(BackgroundTokenizer.prototype);
+
+exports.BackgroundTokenizer = BackgroundTokenizer;
+});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -10730,178 +10918,6 @@ Search.SELECTION = 2;
 }).call(Search.prototype);
 
 exports.Search = Search;
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/background_tokenizer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event_emitter'], function(require, exports, module) {
-
-var oop = require("pilot/oop");
-var EventEmitter = require("pilot/event_emitter").EventEmitter;
-
-var BackgroundTokenizer = function(tokenizer, editor) {
-    this.running = false;    
-    this.lines = [];
-    this.currentLine = 0;
-    this.tokenizer = tokenizer;
-
-    var self = this;
-
-    this.$worker = function() {
-        if (!self.running) { return; }
-
-        var workerStart = new Date();
-        var startLine = self.currentLine;
-        var doc = self.doc;
-
-        var processedLines = 0;
-        var lastVisibleRow = editor.getLastVisibleRow();
-
-        var len = doc.getLength();
-        while (self.currentLine < len) {
-            self.lines[self.currentLine] = self.$tokenizeRows(self.currentLine, self.currentLine)[0];
-            self.currentLine++;
-
-            // only check every 5 lines
-            processedLines += 1;
-            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {
-                self.fireUpdateEvent(startLine, self.currentLine-1);
-
-                var timeout = self.currentLine < lastVisibleRow ? 20 : 100;
-                self.running = setTimeout(self.$worker, timeout);
-                return;
-            }
-        }
-
-        self.running = false;
-
-        self.fireUpdateEvent(startLine, len - 1);
-    };
-};
-
-(function(){
-
-    oop.implement(this, EventEmitter);
-
-    this.setTokenizer = function(tokenizer) {
-        this.tokenizer = tokenizer;
-        this.lines = [];
-
-        this.start(0);
-    };
-
-    this.setDocument = function(doc) {
-        this.doc = doc;
-        this.lines = [];
-
-        this.stop();
-    };
-
-    this.fireUpdateEvent = function(firstRow, lastRow) {
-        var data = {
-            first: firstRow,
-            last: lastRow
-        };
-        this._dispatchEvent("update", {data: data});
-    };
-
-    this.start = function(startRow) {
-        this.currentLine = Math.min(startRow || 0, this.currentLine,
-                                    this.doc.getLength());
-
-        // remove all cached items below this line
-        this.lines.splice(this.currentLine, this.lines.length);
-
-        this.stop();
-        // pretty long delay to prevent the tokenizer from interfering with the user
-        this.running = setTimeout(this.$worker, 700);
-    };
-
-    this.stop = function() {
-        if (this.running)
-            clearTimeout(this.running);
-        this.running = false;
-    };
-
-    this.getTokens = function(firstRow, lastRow) {
-        return this.$tokenizeRows(firstRow, lastRow);
-    };
-
-    this.getState = function(row) {
-        return this.$tokenizeRows(row, row)[0].state;
-    };
-
-    this.$tokenizeRows = function(firstRow, lastRow) {
-        if (!this.doc)
-            return [];
-            
-        var rows = [];
-
-        // determine start state
-        var state = "start";
-        var doCache = false;
-        if (firstRow > 0 && this.lines[firstRow - 1]) {
-            state = this.lines[firstRow - 1].state;
-            doCache = true;
-        }
-
-        var lines = this.doc.getLines(firstRow, lastRow);
-        for (var row=firstRow; row<=lastRow; row++) {
-            if (!this.lines[row]) {
-                var tokens = this.tokenizer.getLineTokens(lines[row-firstRow] || "", state);
-                var state = tokens.state;
-                rows.push(tokens);
-
-                if (doCache) {
-                    this.lines[row] = tokens;
-                }
-            }
-            else {
-                var tokens = this.lines[row];
-                state = tokens.state;
-                rows.push(tokens);
-            }
-        }
-        return rows;
-    };
-
-}).call(BackgroundTokenizer.prototype);
-
-exports.BackgroundTokenizer = BackgroundTokenizer;
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -11496,12 +11512,6 @@ var VirtualRenderer = function(container, theme) {
         this.$loop.schedule(changes);
     };
 
-    this.setTokenizer = function(tokenizer) {
-        this.$tokenizer = tokenizer;
-        this.$textLayer.setTokenizer(tokenizer);
-        this.$loop.schedule(this.CHANGE_TEXT);
-    };
-
     this.$onGutterClick = function(e) {
         var pageX = event.getDocumentX(e);
         var pageY = event.getDocumentY(e);
@@ -11654,7 +11664,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$renderChanges = function(changes) {
-        if (!changes || !this.session || !this.$tokenizer)
+        if (!changes || !this.session)
             return;
 
         // text, scrolling and resize changes can cause the view port size to change
@@ -12416,10 +12426,6 @@ var Text = function(parentEl) {
     this.TAB_CHAR = "&rarr;";
     this.SPACE_CHAR = "&middot;";
 
-    this.setTokenizer = function(tokenizer) {
-        this.tokenizer = tokenizer;
-    };
-
     this.getLineHeight = function() {
         return this.$characterSize.height || 1;
     };
@@ -12544,7 +12550,7 @@ var Text = function(parentEl) {
         var last = Math.min(lastRow, config.lastRow);
 
         var lineElements = this.element.childNodes;
-        var tokens = this.tokenizer.getTokens(first, last);
+        var tokens = this.session.getTokens(first, last);
         for (var i=first; i<=last; i++) {
             var lineElement = lineElements[i - config.firstRow];
             if (!lineElement)
@@ -12595,7 +12601,7 @@ var Text = function(parentEl) {
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
         var fragment = document.createDocumentFragment();
-        var tokens = this.tokenizer.getTokens(firstRow, lastRow);
+        var tokens = this.session.getTokens(firstRow, lastRow);
         for (var row=firstRow; row<=lastRow; row++) {
             var lineEl = dom.createElement("div");
             lineEl.className = "ace_line";
@@ -12618,7 +12624,7 @@ var Text = function(parentEl) {
         this.config = config;
 
         var html = [];
-        var tokens = this.tokenizer.getTokens(config.firstRow, config.lastRow)
+        var tokens = this.session.getTokens(config.firstRow, config.lastRow)
         var fragment = this.$renderLinesFragment(config, config.firstRow, config.lastRow);
 
         // Clear the current content of the element and add the rendered fragment.
