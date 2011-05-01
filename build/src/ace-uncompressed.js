@@ -5412,7 +5412,7 @@ var Editor =function(renderer, session) {
 
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
-    
+
     // TODO detect touch event support
     if (useragent.isIPad) {
         //this.$mouseHandler = new TouchHandler(this);
@@ -5475,6 +5475,7 @@ var Editor =function(renderer, session) {
             this.session.removeEventListener("changeTabSize", this.$onChangeTabSize);
             this.session.removeEventListener("changeWrapLimit", this.$onChangeWrapLimit);
             this.session.removeEventListener("changeWrapMode", this.$onChangeWrapMode);
+            this.session.removeEventListener("onChangeFold", this.$onChangeFold);
             this.session.removeEventListener("changeFrontMarker", this.$onChangeFrontMarker);
             this.session.removeEventListener("changeBackMarker", this.$onChangeBackMarker);
             this.session.removeEventListener("changeBreakpoint", this.$onChangeBreakpoint);
@@ -5509,18 +5510,21 @@ var Editor =function(renderer, session) {
         this.$onChangeWrapMode = this.onChangeWrapMode.bind(this);
         session.addEventListener("changeWrapMode", this.$onChangeWrapMode);
 
+        this.$onChangeFold = this.onChangeFold.bind(this);
+        session.addEventListener("changeFold", this.$onChangeFold);
+
         this.$onChangeFrontMarker = this.onChangeFrontMarker.bind(this);
         this.session.addEventListener("changeFrontMarker", this.$onChangeFrontMarker);
-        
+
         this.$onChangeBackMarker = this.onChangeBackMarker.bind(this);
         this.session.addEventListener("changeBackMarker", this.$onChangeBackMarker);
-        
+
         this.$onChangeBreakpoint = this.onChangeBreakpoint.bind(this);
         this.session.addEventListener("changeBreakpoint", this.$onChangeBreakpoint);
 
         this.$onChangeAnnotation = this.onChangeAnnotation.bind(this);
         this.session.addEventListener("changeAnnotation", this.$onChangeAnnotation);
-        
+
         this.$onCursorChange = this.onCursorChange.bind(this);
         this.session.addEventListener("changeOverwrite", this.$onCursorChange);
 
@@ -5601,7 +5605,7 @@ var Editor =function(renderer, session) {
         // to be on the save side we do both
         // except for IE
         var _self = this;
-        if (!useragent.isIE) {        
+        if (!useragent.isIE) {
             setTimeout(function() {
                 _self.textInput.focus();
             });
@@ -5661,22 +5665,28 @@ var Editor =function(renderer, session) {
 
     this.$updateHighlightActiveLine = function() {
         var session = this.getSession();
-        
+
         if (session.$highlightLineMarker) {
             session.removeMarker(session.$highlightLineMarker);
         }
         session.$highlightLineMarker = null;
 
         if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
-            var cursor = this.getCursorPosition();
-            var range = new Range(cursor.row, 0, cursor.row+1, 0);
+            var cursor = this.getCursorPosition(),
+                foldLine = this.session.getFoldLine(cursor.row);
+            var range;
+            if (foldLine) {
+                range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
+            } else {
+                range = new Range(cursor.row, 0, cursor.row+1, 0);
+            }
             session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "line");
         }
     };
 
     this.onSelectionChange = function(e) {
         var session = this.getSession();
-        
+
         if (session.$selectionMarker) {
             session.removeMarker(session.$selectionMarker);
         }
@@ -5697,11 +5707,11 @@ var Editor =function(renderer, session) {
     this.onChangeFrontMarker = function() {
         this.renderer.updateFrontMarkers();
     };
-    
+
     this.onChangeBackMarker = function() {
         this.renderer.updateBackMarkers();
     };
-    
+
     this.onChangeBreakpoint = function() {
         this.renderer.setBreakpoints(this.session.getBreakpoints());
     };
@@ -5720,6 +5730,11 @@ var Editor =function(renderer, session) {
 
     this.onChangeWrapMode = function() {
         this.renderer.onResize(true);
+    };
+
+    this.onChangeFold = function() {
+        // TODO: This might be too much updating. Okay for now.
+        this.renderer.updateFull();
     };
 
     this.getCopyText = function() {
@@ -5747,7 +5762,7 @@ var Editor =function(renderer, session) {
 
         var session = this.session;
         var mode = session.getMode();
-        
+
         var cursor = this.getCursorPosition();
         text = text.replace("\t", this.session.getTabString());
 
@@ -5770,14 +5785,14 @@ var Editor =function(renderer, session) {
         var lineIndent    = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
         var end           = session.insert(cursor, text);
 
-        
         var lineState = session.getState(cursor.row);
+
         // TODO disabled multiline auto indent
         // possibly doing the indent before inserting the text
         // if (cursor.row !== end.row) {
         if (session.getDocument().isNewLine(text)) {
             this.moveCursorTo(cursor.row+1, 0);
-            
+
             var size = session.getTabSize();
             var minIndent = Number.MAX_VALUE;
 
@@ -5812,7 +5827,7 @@ var Editor =function(renderer, session) {
             if (shouldOutdent) {
                 mode.autoOutdent(lineState, session, cursor.row);
             }
-        };        
+        };
     }
 
     this.onTextInput = function(text) {
@@ -5941,7 +5956,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeWordRight = function() {
         if (this.$readOnly)
             return;
@@ -5952,7 +5967,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeWordLeft = function() {
         if (this.$readOnly)
             return;
@@ -5963,7 +5978,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeToLineStart = function() {
         if (this.$readOnly)
             return;
@@ -5974,7 +5989,7 @@ var Editor =function(renderer, session) {
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
     };
-    
+
     this.removeToLineEnd = function() {
         if (this.$readOnly)
             return;
@@ -5989,30 +6004,30 @@ var Editor =function(renderer, session) {
     this.splitLine = function() {
         if (this.$readOnly)
             return;
-        
+
         if (!this.selection.isEmpty()) {
             this.session.remove(this.getSelectionRange());
             this.clearSelection();
         }
-    
+
         var cursor = this.getCursorPosition();
         this.insert("\n");
         this.moveCursorToPosition(cursor);
     };
-    
+
     this.transposeLetters = function() {
         if (this.$readOnly)
             return;
-        
+
         if (!this.selection.isEmpty()) {
             return;
         }
-    
+
         var cursor = this.getCursorPosition();
         var column = cursor.column;
         if (column == 0)
             return;
-        
+
         var line = this.session.getLine(cursor.row);
         if (column < line.length) {
             var swap = line.charAt(column) + line.charAt(column-1);
@@ -6024,7 +6039,7 @@ var Editor =function(renderer, session) {
         }
         this.session.replace(range, swap);
     };
-    
+
     this.indent = function() {
         if (this.$readOnly)
             return;
@@ -6237,7 +6252,7 @@ var Editor =function(renderer, session) {
     this.scrollToLine = function(line, center) {
         this.renderer.scrollToLine(line, center);
     };
-    
+
     this.centerSelection = function() {
         var range = this.getSelectionRange();
         var line = Math.floor(range.start.row + (range.end.row - range.start.row) / 2);
@@ -6262,7 +6277,7 @@ var Editor =function(renderer, session) {
         this.selection.selectAll();
         this.$blockScrolling -= 1;
     };
-    
+
     this.clearSelection = function() {
         this.selection.clearSelection();
     };
@@ -6389,7 +6404,7 @@ var Editor =function(renderer, session) {
         this.$blockScrolling += 1;
         for (var i = ranges.length - 1; i >= 0; --i)
             this.$tryReplace(ranges[i], replacement);
-        
+
         this.selection.setSelectionRange(selection);
         this.$blockScrolling -= 1;
     },
