@@ -73,16 +73,7 @@ copy({
             project: project,
             require: [
                 "pilot/fixoldbrowsers",
-                "pilot/index",
-                "pilot/plugin_manager",
-                "pilot/environment",
-                "ace/editor",
-                "ace/edit_session",
-                "ace/undomanager",
-                "ace/theme/textmate",
-                "ace/mode/text",
-                "ace/mode/matching_brace_outdent",
-                "ace/virtual_renderer"
+                "ace/ace"
             ]
         })
     ],
