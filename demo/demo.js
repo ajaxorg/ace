@@ -488,7 +488,7 @@ exports.launch = function(env) {
         }
     });
 
-    function toggleFold(tryToUnfold) {
+    function toggleFold(env, tryToUnfold) {
         var session = env.editor.session,
             selection = env.editor.selection,
             range = selection.getRange(), addFold;
@@ -501,14 +501,16 @@ exports.launch = function(env) {
                 selection.setSelectionRange(fold.range)
             } else if(br) {
                 if(range.compare(br.row,br.column) == 1)
-                    range.end = br
+                    range.end = br;
                 else
-                    range.start = br
+                    range.start = br;
                 addFold = true;
             }
         } else {
             var folds = session.getFoldsInRange(range);
             if(tryToUnfold && folds.length)
+                session.expandFolds(folds);
+            else if(folds.length == 1 && folds[0].range.compare(range) == 0)
                 session.expandFolds(folds);
             else
                 addFold = true;
