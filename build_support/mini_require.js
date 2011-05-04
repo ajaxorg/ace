@@ -35,59 +35,103 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-function require(module, callback) {
+/**
+ * Define a module along with a payload
+ * @param module a name for the payload
+ * @param payload a function to call with (require, exports, module) params
+ */
+ 
+(function() {
+    
+if (window.require) {
+    require.packaged = true;
+    return;
+}
+    
+var _define = function(module, deps, payload) {
+    if (typeof module !== 'string') {
+        if (_define.original)
+            _define.original.apply(window, arguments);
+        else {
+            console.error('dropping module because define wasn\'t a string.');
+            console.trace();
+        }
+        return;
+    }
 
-    if (Array.isArray(module)) {
+    if (arguments.length == 2)
+        payload = deps;
+
+    if (!define.modules)
+        define.modules = {};
+        
+    define.modules[module] = payload;
+};
+if (window.define)
+    _define.original = window.define;
+    
+window.define = _define;
+
+
+/**
+ * Get at functionality define()ed using the function above
+ */
+var _require = function(module, callback) {
+    if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
-        module.forEach(function(m) {
-            params.push(require._lookup(m));
-        }, this);
-
+        for (var i = 0, l = module.length; i < l; ++i) {
+            var dep = lookup(module[i]);
+            if (!dep && _require.original)
+                return _require.original.apply(window, arguments);
+            params.push(dep);
+        }
         if (callback) {
             callback.apply(null, params);
         }
     }
-
-    if (typeof module === 'string') {
-        payload = require._lookup(module);
+    else if (typeof module === 'string') {
+        var payload = lookup(module);
+        if (!payload && _require.original)
+            return _require.original.apply(window, arguments);
+        
         if (callback) {
             callback();
         }
+    
         return payload;
     }
-}
-require.modules = {};
-
-require._lookup = function(moduleName) {
-    var payload = require.modules[moduleName];
-    var module_name = moduleName;
-    if (payload == null) {
-        console.error('Missing module: ' + moduleName);
-        console.trace();
+    else {
+        if (_require.original)
+            return _require.original.apply(window, arguments);
     }
-
-    if (typeof payload === 'function') {
-        var exports = {};
-        var module = {
-             id: moduleName,
-             uri: ''
-        };
-        payload(require, exports, module);
-        payload = exports;
-        // cache the resulting module object for next time
-        require.modules[module_name] = payload;
-    }
-
-    return payload;
 };
 
-function define(module, payload) {
-    if (typeof module !== 'string') {
-        console.error('dropping module because define wasn\'t munged.');
-        console.trace();
-        return;
+if (window.require)
+    _require.original = window.require;
+    
+window.require = _require;
+require.packaged = true;
+
+/**
+ * Internal function to lookup moduleNames and resolve them by calling the
+ * definition function if needed.
+ */
+var lookup = function(moduleName) {
+    var module = define.modules[moduleName];
+    if (module == null) {
+        console.error('Missing module: ' + moduleName);
+        return null;
     }
 
-    console.log('defining module: ' + module + ' as a ' + typeof payload);
-    require.modules[module] = payload;
-}
+    if (typeof module === 'function') {
+        var exports = {};
+        module(require, exports, { id: moduleName, uri: '' });
+        // cache the resulting module object for next time
+        define.modules[moduleName] = exports;
+        return exports;
+    }
+
+    return module;
+};
+
+})();

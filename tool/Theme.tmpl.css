@@ -146,3 +146,7 @@
 .%cssClass% .ace_xml_pe {
   %xml_pe%
 }
+
+.%cssClass% .ace_collab.ace_user1 {
+  %collab.user1%   
+}

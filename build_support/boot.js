@@ -35,41 +35,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
-             "pilot/environment" ];
-
-require(deps, function() {
-    var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins([ "pilot/index" ]);
+require(["ace/ace"], function(ace) {
+    window.ace = ace;
 });
-
-var ace = {
-    edit: function(el) {
-        if (typeof(el) == "string") {
-            el = document.getElementById(el);
-        }
-        var env = require("pilot/environment").create();
-        var catalog = require("pilot/plugin_manager").catalog;
-        catalog.startupPlugins({ env: env }).then(function() {
-            var Document = require("ace/document").Document;
-            var JavaScriptMode = require("ace/mode/javascript").Mode;
-            var UndoManager = require("ace/undomanager").UndoManager;
-            var Editor = require("ace/editor").Editor;
-            var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-            var theme = require("ace/theme/textmate");
-
-            var doc = new Document(el.innerHTML);
-            el.innerHTML = '';
-            doc.setMode(new JavaScriptMode());
-            doc.setUndoManager(new UndoManager());
-            env.document = doc;
-            env.editor = new Editor(new Renderer(el, theme));
-            env.editor.setDocument(doc);
-            env.editor.resize();
-            window.addEventListener("resize", function() {
-                env.editor.resize();
-            }, false);
-            el.env = env;
-        });
-    }
-};

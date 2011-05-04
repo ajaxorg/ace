@@ -1,90 +1,481 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-    <title>ajaxorg/ace @ GitHub</title>
-    
-    <style type="text/css">
-        body {
-        margin-top: 1.0em;
-        background-color: rgb(14, 98, 165);
-        font-family: "Helvetica,Arial,FreeSans";
-        color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #d5f1c8; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #d5f1c8; }
-    h3 { text-align: center; color: #d5f1c8; }
-    a { color: #d5f1c8; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-        pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-    </style>
-    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Editor</title>
+    <meta name="author" content="Fabian Jakobs">
+    <link rel="stylesheet" href="demo/styles.css" type="text/css" media="screen" charset="utf-8">
 </head>
-
 <body>
-  <a href="http://github.com/ajaxorg/ace"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+    <table id="controls">
+      <tr>
+      <td align="right">
+        <label for="doc">Document:</label>
+        <select id="doc" size="1">
+          <option value="js">JavaScript Document</option>
+          <option value="plain">Text Document</option>
+          <option value="svg">SVG Document</option>
+          <option value="html">HTML Document</option>
+          <option value="css">CSS Document</option>
+          <option value="coffee">CoffeeScript Document</option>
+          <option value="python">Python Document</option>
+          <option value="ruby">Ruby Document</option>
+          <option value="perl">Perl Document</option>
+          <option value="php">PHP Document</option>
+          <option value="java">Java Document</option>
+          <option value="csharp">C# Document</option>
+          <option value="c_cpp">C++ Document</option>
+          <option value="svg">SVG Document</option>
+          <option value="ocaml">OCaml Document</option>
+          <option value="textile">Textile Document</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="theme">Theme:</label>
+        <select id="theme" size="1">
+          <option value="ace/theme/textmate">TextMate</option>
+          <option value="ace/theme/eclipse">Eclipse</option>
+          <option value="ace/theme/dawn">Dawn</option>
+          <option value="ace/theme/idle_fingers">idleFingers</option>
+          <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
+          <option value="ace/theme/twilight">Twilight</option>
+          <option value="ace/theme/clouds">Clouds</option>
+          <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
+          <option value="ace/theme/kr_theme">krTheme</option>
+          <option value="ace/theme/mono_industrial">Mono Industrial</option>
+          <option value="ace/theme/monokai">Monokai</option>
+          <option value="ace/theme/merbivore">Merbivore</option>
+          <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+          <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+          <option value="ace/theme/solarized_dark">Solarized Dark</option>
+          <option value="ace/theme/solarized_light">Solarized Light</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="fontsize">Font Size:</label>
+        <select id="fontsize" size="1">
+          <option value="10px">10px</option>
+          <option value="11px">11px</option>
+          <option value="12px" selected="selected">12px</option>
+          <option value="14px">14px</option>
+          <option value="16px">16px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="select_style">Full Line Selection</label>
+        <input type="checkbox" name="select_style" id="select_style" checked>
+      </td>
+      <td align="right">
+        <label for="highlight_active">Highlight Active Line</label>
+        <input type="checkbox" name="highlight_active" id="highlight_active" checked>
+      </td>
+      <td align="right">
+        <label for="show_hidden">Show Invisibles</label>
+        <input type="checkbox" name="show_hidden" id="show_hidden" checked>
+      </td>
+      <td align="right">
+        <label for="show_hscroll">Persistent HScroll</label>
+        <input type="checkbox" name="show_hscroll" id="show_hscroll">
+      </td>
+      <td align="right" rowspan="2">
+        <img src="demo/logo.png">
+      </td>
+      </tr>
+      <tr>
+      <td align="right">
+        <label for="mode">Mode:</label>
+        <select id="mode" size="1">
+          <option value="text">Plain Text</option>
+          <option value="javascript">JavaScript</option>
+          <option value="xml">XML</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="python">Python</option>
+          <option value="php">PHP</option>
+          <option value="java">Java</option>
+          <option value="ruby">Ruby</option>
+          <option value="c_cpp">C/C++</option>
+          <option value="coffee">CoffeeScript</option>
+          <option value="perl">Perl</option>
+          <option value="ocaml">OCaml</option>
+          <option value="csharp">C-Sharp</option>
+          <option value="svg">SVG</option>
+          <option value="textile">Textile</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="keybinding">Key Binding:</label>
+        <select id="keybinding" size="1">
+          <option value="ace">Ace</option>
+          <option value="vim">Vim</option>
+          <option value="emacs">Emacs</option>
+          <option value="custom">Custom</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="soft_wrap">Soft Wrap:</label>
+        <select id="soft_wrap" size="1">
+          <option value="off">Off</option>
+          <option value="40">40 Chars</option>
+          <option value="80">80 Chars</option>
+          <option value="free">Free</option>
+        </select>
+      </td>
+      <td align="right">
+        <label for="show_gutter">Show Gutter</label>
+        <input type="checkbox" id="show_gutter" checked>
+      </td>
+      <td align="right">
+        <label for="show_print_margin">Show Print Margin</label>
+        <input type="checkbox" id="show_print_margin" checked>
+      </td>
+      <td align="right">
+        <label for="soft_tab">Use Soft Tab:</label>
+        <input type="checkbox" id="soft_tab" checked>
+      </td>
+      <td align="right">
+        <label for="highlight_selected_word">Highlight selected word</label>
+        <input type="checkbox" id="highlight_selected_word" checked>
+      </td>
+      </tr>
+    </table>
 
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/ajaxorg/ace/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/ajaxorg/ace/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    <div id="editor">
     </div>
+        <script type="text/editor" id="csharptext">public void HelloWorld() {
+   //Say Hello!
+   Console.WriteLine("Hello World");
+}</script>
+    <script type="text/editor" id="jstext">function foo(items) {
+    for (var i=0; i<items.length; i++) {
+        alert(items[i] + "juhu");
+    }	// Real Tab.
+}
+// A magic character: >> ぁ <<
+</script>
 
-    <h1><a href="http://github.com/ajaxorg/ace">ace</a>
-      <span class="small">by <a href="http://github.com/ajaxorg">ajax.org</a></span></h1>
+    <script type="text/editor" id="csstext">.text-layer {
+    font-family: Monaco, "Courier New", monospace;
+    font-size: 12px;
+    cursor: text;
+}</script>
 
-    <div class="description">
-      Ajax.org Code Editor
-    </div>
+    <script type="text/editor" id="htmltext"><html>
+<head>
 
-    <h2>License</h2>
-<p>LGPL</p>
-<h2>Authors</h2>
-<p>Fabian Jakobs (fabian.jakobs@web.de)
-<br/>Mike de Boer (info@mikedeboer.nl)
-<br/>Rik Arends (rik@ajax.org)
-<br/>Ruben Daniels (ruben@ajax.org)
-<br/>
-<br/>      </p>
-<h2>Demo</h2>
-Check out the <a href="editor-build.html">demo</a>.
-<h2>Contact</h2>
-<p>Fabian Jakobs (fabian.jakobs@web.de)
-<br/>      </p>
+<style type="text/css">
+.text-layer {
+    font-family: Monaco, "Courier New", monospace;
+    font-size: 12px;
+    cursor: text;
+}
+</style>
+
+</head>
+<body>
+    <h1 style="color:red">Juhu Kinners</h1>
+</body>
+</html></script>
+
+    <script type="text/editor" id="javatext">public class InfiniteLoop {
+
+    /*
+     * This will cause the program to hang...
+     *
+     * Taken from:
+     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/
+     */
+    public static void main(String[] args) {
+        double d = Double.parseDouble("2.2250738585072012e-308");
+
+        // unreachable code
+        System.out.println("Value: " + d);
+    }
+}</script>
+
+    <script type="text/editor" id="pythontext">#!/usr/local/bin/python
+
+import string, sys
+
+# If no arguments were given, print a helpful message
+if len(sys.argv)==1:
+    print 'Usage: celsius temp1 temp2 ...'
+    sys.exit(0)
+
+# Loop over the arguments
+for i in sys.argv[1:]:
+    try:
+        fahrenheit=float(string.atoi(i))
+    except string.atoi_error:
+        print repr(i), "not a numeric value"
+    else:
+        celsius=(fahrenheit-32)*5.0/9.0
+        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))
+</script>
+
+    <script type="text/editor" id="phptext"><?php
+
+function nfact($n) {
+  if ($n == 0) {
+    return 1;
+  }
+  else {
+    return $n * nfact($n - 1);
+  }
+}
+
+echo "\n\nPlease enter a whole number ... ";
+$num = trim(fgets(STDIN));
+
+// ===== PROCESS - Determing the factorial of the input number =====
+$output = "\n\nFactorial " . $num . " = " . nfact($num) . "\n\n";
+echo $output;
+
+?></script>
+
+  <script type="text/editor" id="plaintext">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+</script>
+
+    <script type="text/editor" id="rubytext">#!/usr/bin/ruby
+
+# Program to find the factorial of a number
+def fact(n)
+    if n == 0
+        1
+    else
+        n * fact(n-1)
+    end
+end
+
+puts fact(ARGV[0].to_i)
+</script>
+
+<script type="text/editor" id="cpptext">// compound assignment operators
+
+#include <iostream>
+using namespace std;
+
+int main ()
+{
+    int a, b=3; /* foobar */
+    a = b;
+    a+=2; // equivalent to a=a+2
+    cout << a;
+    return 0;
+}
+</script>
+
+<script type="text/editor" id="coffeetext">#!/usr/bin/env coffee
+
+try
+    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)
+catch e
+    console.log 'qstring' + "qqstring" + '''
+        qdoc
+    ''' + """
+        qqdoc
+    """
+
+do ->
+    ###
+    herecomment
+    ###
+    re = /regex/imgy.test ///
+        heregex  # comment
+    ///imgy
+    this isnt: `just JavaScript`
+    undefined
+
+var illegal</script>
+
+<script type="text/editor" id="perltext">
+#!/usr/bin/perl
+use strict;
+use warnings;
+my $num_primes = 0;
+my @primes;
+
+# Put 2 as the first prime so we won't have an empty array
+$primes[$num_primes] = 2;
+$num_primes++;
+
+MAIN_LOOP:
+for my $number_to_check (3 .. 200)
+{
+    for my $p (0 .. ($num_primes-1))
+    {
+        if ($number_to_check % $primes[$p] == 0)
+        {
+            next MAIN_LOOP;
+        }
+    }
+
+    # If we reached this point it means $number_to_check is not
+    # divisable by any prime number that came before it.
+    $primes[$num_primes] = $number_to_check;
+    $num_primes++;
+}
+
+for my $p (0 .. ($num_primes-1))
+{
+    print $primes[$p], ", ";
+}
+print "\n";
+
+</script>
+
+<script type="text/editor" id="ocamltext">(*
+ * Example of early return implementation taken from
+ * http://ocaml.janestreet.com/?q=node/91
+ *)
+
+let with_return (type t) (f : _ -> t) =
+  let module M =
+     struct exception Return of t end
+  in
+  let return = { return = (fun x -> raise (M.Return x)); } in
+  try f return with M.Return x -> x
 
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/ajaxorg/ace/zipball/master">zip</a> or
-      <a href="http://github.com/ajaxorg/ace/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/ajaxorg/ace</pre>
-    </p>
+(* Function that uses the 'early return' functionality provided by `with_return` *)
+let sum_until_first_negative list =
+  with_return (fun r ->
+    List.fold list ~init:0 ~f:(fun acc x ->
+      if x >= 0 then acc + x else r.return acc))
+</script>
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/ajaxorg/ace">ajaxorg/ace</a>
-    </div>
+<script type="text/editor" id="svgtext"><svg
+  width="800" height="600"
+  xmlns="http://www.w3.org/2000/svg"
+  onload="StartAnimation(evt)">
 
-  </div>
+  <title>Test Tube Progress Bar</title>
+  <desc>Created for the Web Directions SVG competition</desc>
 
-  
+  <script type="text/ecmascript"><![CDATA[
+    var timevalue = 0;
+    var timer_increment = 1;
+    var max_time = 100;
+    var hickory;
+    var dickory;
+    var dock;
+    var i;
+
+    function StartAnimation(evt) {
+        hickory  = evt.target.ownerDocument.getElementById("hickory");
+        dickory = evt.target.ownerDocument.getElementById("dickory");
+        dock = evt.target.ownerDocument.getElementById("dock");
+
+        ShowAndGrowElement();
+    }
+    function ShowAndGrowElement() {
+        timevalue = timevalue + timer_increment;
+        if (timevalue > max_time)
+            return;
+        // Scale the text string gradually until it is 20 times larger
+        scalefactor = (timevalue * 650) / max_time;
+
+        if (timevalue < 30) {
+            hickory.setAttribute("display", "");
+            hickory.setAttribute("transform", "translate(" + (600+scalefactor*3*-1 ) + ", -144 )");
+        }
+
+        if (timevalue > 30 && timevalue < 66) {
+            dickory.setAttribute("display", "");
+            dickory.setAttribute("transform", "translate(" + (-795+scalefactor*2) + ", 0 )");
+        }
+        if (timevalue > 66) {
+            dock.setAttribute("display", "");
+            dock.setAttribute("transform", "translate(" + (1450+scalefactor*2*-1) + ", 144 )");
+        }
+
+        // Call ShowAndGrowElement again <timer_increment> milliseconds later.
+        setTimeout("ShowAndGrowElement()", timer_increment)
+    }
+    window.ShowAndGrowElement = ShowAndGrowElement
+  ]]>&lt;/script>
+
+  <rect
+    fill="#2e3436"
+    fill-rule="nonzero"
+    stroke-width="3"
+    y="0"
+    x="0"
+    height="600"
+    width="800"
+    id="rect3590"/>
+
+    <text
+       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
+       x="50"
+       y="350"
+       id="hickory"
+       display="none">
+        Hickory,</text>
+    <text
+       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
+       x="50"
+       y="350"
+       id="dickory"
+       display="none">
+        dickory,</text>
+    <text
+       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
+       x="50"
+       y="350"
+       id="dock"
+       display="none">
+        dock!</text>
+</svg></script>
+<script type="text/editor" id="textiletext">h1. Textile document
+
+h2. Heading Two
+
+h3. A two-line
+    header
+
+h2. Another two-line
+header
+
+Paragraph:
+one, two,
+thee lines!
+
+p(classone two three). This is a paragraph with classes
+
+p(#id). (one with an id)
+
+p(one two three#my_id). ..classes + id
+
+* Unordered list
+** sublist
+* back again!
+** sublist again..
+
+# ordered
+
+bg. Blockquote!
+    This is a two-list blockquote..!
+
+</script>
+
+  <input id="cockpitInput" type="text"/>
+
+  <script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
+  <script src="demo/boot.js" type="text/javascript"></script>
 </body>
 </html>
