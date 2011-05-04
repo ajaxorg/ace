@@ -2,9 +2,6 @@
 .DS_Store
 *.swp
 *.tmp
-*.local.*
-.pinf-*
-.tmp*
 
 # Project files that should not be in the repo
 .project
