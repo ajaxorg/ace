@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -43,7 +42,8 @@ var aceHome = __dirname;
 console.log('# ace ---------');
 
 var project = copy.createCommonJsProject([
-    aceHome + '/support/pilot/lib',
+    aceHome + '/support/gcli/support/pilot/lib',
+    aceHome + '/support/gcli/lib',
     aceHome + '/lib',
     aceHome + '/demo'
 ]);
@@ -190,7 +190,8 @@ console.log('# worker ---------');
 
 var jsWorker = copy.createDataObject();
 var workerProject = copy.createCommonJsProject([
-    aceHome + '/support/pilot/lib',
+    aceHome + '/support/gcli/support/pilot/lib',
+    aceHome + '/support/gcli/lib',
     aceHome + '/lib'
 ]);
 copy({

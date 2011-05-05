@@ -39,8 +39,8 @@ require({
     paths: {
         demo: "../demo",
         ace: "../lib/ace",
-        gcli: "../support/cockpit/lib/gcli",
-        pilot: "../support/cockpit/support/pilot/lib/pilot"
+        gcli: "../support/gcli/lib/gcli",
+        pilot: "../support/gcli/support/pilot/lib/pilot"
     }
 });
 
