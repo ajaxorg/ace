@@ -13,9 +13,19 @@
 
 # A handy place to put stuff that git should ignore:
 /ignore/
+
 support/async/
 support/dryice/
 support/jsdom/
 support/node-htmlparser/
 support/node-o3-xml/
 support/requirejs/
+
+build/ace-uncompressed.js
+build/ace.js
+build/cockpit-uncompressed.js
+build/cockpit.js
+build/editor2.html
+
+node_modules/
+
