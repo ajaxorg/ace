@@ -21,6 +21,7 @@
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -42,6 +43,7 @@ define(function(require, exports, module) {
 exports.launch = function(env) {
     var canon = require("pilot/canon");
     var event = require("pilot/event");
+    var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
@@ -59,6 +61,7 @@ exports.launch = function(env) {
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
+    var OcamlMode = require("ace/mode/ocaml").Mode;
     var SvgMode = require("ace/mode/svg").Mode;
     var TextileMode = require("ace/mode/textile").Mode;
     var TextMode = require("ace/mode/text").Mode;
@@ -115,6 +118,7 @@ exports.launch = function(env) {
     docs.java = new EditSession(document.getElementById("javatext").innerHTML);
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
+    docs.java.addFold("...", new Range(8, 44, 13, 4));
 
     docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
     docs.ruby.setMode(new RubyMode());
@@ -135,6 +139,10 @@ exports.launch = function(env) {
     docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
+
+    docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml.setMode(new OcamlMode());
+    docs.ocaml.setUndoManager(new UndoManager());
 
     docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
     docs.svg.setMode(new SvgMode());
@@ -162,7 +170,8 @@ exports.launch = function(env) {
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
         perl: new PerlMode(),
-				csharp: new CSharpMode()
+        ocaml: new OcamlMode(),
+        csharp: new CSharpMode()
     };
 
     function getMode() {
@@ -209,6 +218,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PerlMode) {
             modeEl.value = "perl";
+        }
+        else if (mode instanceof OcamlMode) {
+            modeEl.value = "ocaml";
         }
         else if (mode instanceof CSharpMode) {
             modeEl.value = "csharp";
@@ -373,6 +385,8 @@ exports.launch = function(env) {
                     mode = "coffee";
                 } else if (/^.*\.(pl|pm)$/i.test(file.name)) {
                     mode = "perl";
+                } else if (/^.*\.(ml|mli)$/i.test(file.name)) {
+                    mode = "ocaml";
                 }
 
                 env.editor.onTextInput(reader.result);
@@ -447,6 +461,36 @@ exports.launch = function(env) {
         },
         exec: function() {
             alert("Fake Print File");
+        }
+    });
+
+    canon.addCommand({
+        name: "fold",
+        bindKey: {
+            win: "Alt-L",
+            mac: "Alt-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange(),
+                placeHolder = session.getTextRange(range).substring(0, 3) + "...";
+
+            session.addFold(placeHolder, range);
+        }
+    });
+
+    canon.addCommand({
+        name: "undfold",
+        bindKey: {
+            win: "Alt-Shift-L",
+            mac: "Alt-Shift-L",
+            sender: "editor"
+        },
+        exec: function() {
+            var session = env.editor.session,
+                range = env.editor.selection.getRange();
+            session.expandFolds(session.getFoldsInRange(range));
         }
     });
 };

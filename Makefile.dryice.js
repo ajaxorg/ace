@@ -73,16 +73,7 @@ copy({
             project: project,
             require: [
                 "pilot/fixoldbrowsers",
-                "pilot/index",
-                "pilot/plugin_manager",
-                "pilot/environment",
-                "ace/editor",
-                "ace/edit_session",
-                "ace/undomanager",
-                "ace/theme/textmate",
-                "ace/mode/text",
-                "ace/mode/matching_brace_outdent",
-                "ace/virtual_renderer"
+                "ace/ace"
             ]
         })
     ],
@@ -170,7 +161,7 @@ console.log('# ace modes ---------');
 project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
-    "coffee", "perl", "csharp", "svg"
+    "coffee", "perl", "csharp", "svg", "clojure"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
