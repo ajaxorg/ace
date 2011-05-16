@@ -8065,13 +8065,13 @@ var EditSession = function(text, mode) {
     
     this.$startWorker = function() {
         if (typeof Worker !== "undefined" && !require.noWorker) {
-            try {
+            //try {
                 this.$worker = this.$mode.createWorker(this);
-            } catch (e) {
-                console.log("Could not load worker");
-                console.log(e);
-                this.$worker = null;                
-            }
+//            } catch (e) {
+//                console.log("Could not load worker");
+//                console.log(e);
+//                this.$worker = null;                
+//            }
         }
         else
             this.$worker = null;
@@ -13262,9 +13262,10 @@ var Gutter = function(parentEl) {
 
         var emptyAnno = {className: "", text: []};
         var html = [];
-        var i = config.firstRow, lastRow = config.lastRow
-            fold = this.session.getNextFold(i),
-            foldStart = fold ?fold.start.row :Infinity;
+        var i = config.firstRow;
+        var lastRow = config.lastRow;
+        var fold = this.session.getNextFold(i);
+        var foldStart = fold ? fold.start.row : Infinity;
 
         while (true) {
             if(i > foldStart) {
