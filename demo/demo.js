@@ -337,7 +337,7 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        var width = (document.documentElement.clientWidth - 300);
+        var width = (document.documentElement.clientWidth - 280);
         container.style.width = width + "px";
         cockpitInput.style.width = width + "px";
         container.style.height = (document.documentElement.clientHeight - 22) + "px";
