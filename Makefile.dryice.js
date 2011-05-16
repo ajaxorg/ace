@@ -178,33 +178,36 @@ project.assumeAllFilesLoaded();
 
 console.log('# worker ---------');
 
-var jsWorker = copy.createDataObject();
-var workerProject = copy.createCommonJsProject([
-    aceHome + '/support/pilot/lib',
-    aceHome + '/lib'
-]);
-copy({
-    source: [
-        copy.source.commonjs({
-            project: workerProject,
-            require: [
-                'pilot/fixoldbrowsers',
-                'pilot/event_emitter',
-                'pilot/oop',
-                'ace/mode/javascript_worker'
-            ]
-        })
-    ],
-    filter: [ copy.filter.moduleDefines],
-    dest: jsWorker
-});
-copy({
-    source: [
-        aceHome + "/lib/ace/worker/worker.js",
-        jsWorker
-    ],
-    filter: [ copy.filter.uglifyjs, filterTextPlugin ],
-    dest: "build/src/worker-javascript.js"
+["javascript", "coffee"].forEach(function(mode) {
+    console.log("worker for " + mode + " mode");
+    var worker = copy.createDataObject();
+    var workerProject = copy.createCommonJsProject([
+        aceHome + '/support/pilot/lib',
+        aceHome + '/lib'
+    ]);
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: workerProject,
+                require: [
+                    'pilot/fixoldbrowsers',
+                    'pilot/event_emitter',
+                    'pilot/oop',
+                    'ace/mode/' + mode + '_worker'
+                ]
+            })
+        ],
+        filter: [ copy.filter.moduleDefines],
+        dest: worker
+    });
+    copy({
+        source: [
+            aceHome + "/lib/ace/worker/worker.js",
+            worker
+        ],
+        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
+        dest: "build/src/worker-" + mode + ".js"
+    });
 });
 
 console.log('# ace themes ---------');
