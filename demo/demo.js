@@ -347,6 +347,9 @@ exports.launch = function(env) {
     window.onresize = onResize;
     onResize();
 
+    // Call resize on the cli explizit. This is necessary for Firefox.
+    env.cli.cliView.resizer()
+
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
     });
