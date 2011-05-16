@@ -123,6 +123,7 @@
 
 .ace_marker-layer {
     cursor: text;
+    pointer-events: none;
 }
 
 .ace_marker-layer .ace_step {
