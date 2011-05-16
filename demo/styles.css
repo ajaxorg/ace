@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    width: 100%;    
     overflow: hidden;
 }
 
@@ -18,7 +19,7 @@ body {
 #editor {
     position: absolute;
     top:  0px;
-    left: 180px;
+    left: 300px;
     bottom: 0px;
     right: 0px;
     background: white;
@@ -28,9 +29,17 @@ body {
     padding: 5px;
 }
 
+#controls td {
+    text-align: right;
+}
+
+#controls td + td {
+    text-align: left;
+}
+
 #cockpitInput {
     position: absolute;
-    left: 180px;
+    left: 300px;
     right: 0px;
     bottom: 0;
 

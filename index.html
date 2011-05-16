@@ -9,15 +9,16 @@
     <link rel="stylesheet" href="demo/styles.css" type="text/css" media="screen" charset="utf-8">
 </head>
 <body>
-    <table id="controls">
-    <tr>
-      <td >
+  <table id="controls">
+    <tr colspan="2">
+      <td align="center">
         <img src="demo/logo.png">
       </td>
     </tr>
     <tr>
-      <td >
-        <label for="doc">Document:</label>
+      <td>
+        <label for="doc">Document</label>
+      </td><td>
         <select id="doc" size="1">
           <option value="js">JavaScript</option>
           <option value="plain">Plain Text</option>
@@ -40,68 +41,8 @@
     </tr>
     <tr>
       <td >
-        <label for="theme">Theme:</label>
-        <select id="theme" size="1">
-          <option value="ace/theme/textmate">TextMate</option>
-          <option value="ace/theme/eclipse">Eclipse</option>
-          <option value="ace/theme/dawn">Dawn</option>
-          <option value="ace/theme/idle_fingers">idleFingers</option>
-          <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
-          <option value="ace/theme/twilight">Twilight</option>
-          <option value="ace/theme/clouds">Clouds</option>
-          <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
-          <option value="ace/theme/kr_theme">krTheme</option>
-          <option value="ace/theme/mono_industrial">Mono Industrial</option>
-          <option value="ace/theme/monokai">Monokai</option>
-          <option value="ace/theme/merbivore">Merbivore</option>
-          <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
-          <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
-          <option value="ace/theme/solarized_dark">Solarized Dark</option>
-          <option value="ace/theme/solarized_light">Solarized Light</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="fontsize">Font Size:</label>
-        <select id="fontsize" size="1">
-          <option value="10px">10px</option>
-          <option value="11px">11px</option>
-          <option value="12px" selected="selected">12px</option>
-          <option value="14px">14px</option>
-          <option value="16px">16px</option>
-          <option value="20px">20px</option>
-          <option value="24px">24px</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="select_style">Full Line Selection</label>
-        <input type="checkbox" name="select_style" id="select_style" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="highlight_active">Highlight Active Line</label>
-        <input type="checkbox" name="highlight_active" id="highlight_active" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="show_hidden">Show Invisibles</label>
-        <input type="checkbox" name="show_hidden" id="show_hidden" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="show_hscroll">Persistent HScroll</label>
-        <input type="checkbox" name="show_hscroll" id="show_hscroll">
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="mode">Mode:</label>
+        <label for="mode">Mode</label>
+      </td><td>
         <select id="mode" size="1">
           <option value="text">Plain Text</option>
           <option value="javascript">JavaScript</option>
@@ -124,7 +65,75 @@
     </tr>
     <tr>
       <td >
-        <label for="keybinding">Key Binding:</label>
+        <label for="theme">Theme</label>
+      </td><td>
+        <select id="theme" size="1">
+          <option value="ace/theme/textmate">TextMate</option>
+          <option value="ace/theme/eclipse">Eclipse</option>
+          <option value="ace/theme/dawn">Dawn</option>
+          <option value="ace/theme/idle_fingers">idleFingers</option>
+          <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
+          <option value="ace/theme/twilight">Twilight</option>
+          <option value="ace/theme/clouds">Clouds</option>
+          <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
+          <option value="ace/theme/kr_theme">krTheme</option>
+          <option value="ace/theme/mono_industrial">Mono Industrial</option>
+          <option value="ace/theme/monokai">Monokai</option>
+          <option value="ace/theme/merbivore">Merbivore</option>
+          <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
+          <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+          <option value="ace/theme/solarized_dark">Solarized Dark</option>
+          <option value="ace/theme/solarized_light">Solarized Light</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="fontsize">Font Size</label>
+      </td><td>
+        <select id="fontsize" size="1">
+          <option value="10px">10px</option>
+          <option value="11px">11px</option>
+          <option value="12px" selected="selected">12px</option>
+          <option value="14px">14px</option>
+          <option value="16px">16px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="select_style">Full Line Selection</label>
+      </td><td>        
+        <input type="checkbox" name="select_style" id="select_style" checked>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="highlight_active">Highlight Active Line</label>
+      </td><td>
+        <input type="checkbox" name="highlight_active" id="highlight_active" checked>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="show_hidden">Show Invisibles</label>
+      </td><td>        
+        <input type="checkbox" name="show_hidden" id="show_hidden" checked>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="show_hscroll">Persistent HScroll</label>
+      </td><td>        
+        <input type="checkbox" name="show_hscroll" id="show_hscroll">
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="keybinding">Key Binding</label>
+      </td><td>        
         <select id="keybinding" size="1">
           <option value="ace">Ace</option>
           <option value="vim">Vim</option>
@@ -135,7 +144,8 @@
     </tr>
     <tr>
       <td >
-        <label for="soft_wrap">Soft Wrap:</label>
+        <label for="soft_wrap">Soft Wrap</label>
+      </td><td>        
         <select id="soft_wrap" size="1">
           <option value="off">Off</option>
           <option value="40">40 Chars</option>
@@ -147,24 +157,28 @@
     <tr>
       <td >
         <label for="show_gutter">Show Gutter</label>
+      </td><td>        
         <input type="checkbox" id="show_gutter" checked>
       </td>
     </tr>
     <tr>
       <td >
         <label for="show_print_margin">Show Print Margin</label>
+      </td><td>        
         <input type="checkbox" id="show_print_margin" checked>
       </td>
     </tr>
     <tr>
       <td >
-        <label for="soft_tab">Use Soft Tab:</label>
+        <label for="soft_tab">Use Soft Tab</label>
+      </td><td>        
         <input type="checkbox" id="soft_tab" checked>
       </td>
     </tr>
     <tr>
       <td >
         <label for="highlight_selected_word">Highlight selected word</label>
+      </td><td>        
         <input type="checkbox" id="highlight_selected_word" checked>
       </td>
       </tr>
