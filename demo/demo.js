@@ -336,8 +336,8 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        container.style.width = (document.documentElement.clientWidth) + "px";
-        container.style.height = (document.documentElement.clientHeight - 60 - 22) + "px";
+        container.style.width = (document.documentElement.clientWidth - 180) + "px";
+        container.style.height = (document.documentElement.clientHeight - 22) + "px";
         env.editor.resize();
     };
 
