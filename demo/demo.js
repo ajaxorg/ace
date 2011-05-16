@@ -153,6 +153,7 @@ exports.launch = function(env) {
     docs.textile.setUndoManager(new UndoManager());
 
     var container = document.getElementById("editor");
+    var cockpitInput = document.getElementById("cockpitInput");
     env.editor = new Editor(new Renderer(container, theme));
 
     var modes = {
@@ -336,7 +337,9 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        container.style.width = (document.documentElement.clientWidth - 180) + "px";
+        var width = (document.documentElement.clientWidth - 300);
+        container.style.width = width + "px";
+        cockpitInput.style.width = width + "px";
         container.style.height = (document.documentElement.clientHeight - 22) + "px";
         env.editor.resize();
     };
