@@ -17,18 +17,21 @@ body {
 
 #editor {
     position: absolute;
-    top: 60px;
-    left: 0px;
+    top:  0px;
+    left: 180px;
+    bottom: 0px;
+    right: 0px;
     background: white;
 }
 
 #controls {
-    width: 100%;
+    padding: 5px;
 }
 
 #cockpitInput {
     position: absolute;
-    width: 100%;
+    left: 180px;
+    right: 0px;
     bottom: 0;
 
     border: none; outline: none;
