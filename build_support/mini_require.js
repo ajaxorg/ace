@@ -43,19 +43,16 @@
  
 (function() {
     
+// if we find an existing require function use it.
 if (window.require) {
     require.packaged = true;
     return;
 }
     
-var _define = function(module, deps, payload) {
+window.define = function(module, deps, payload) {
     if (typeof module !== 'string') {
-        if (_define.original)
-            _define.original.apply(window, arguments);
-        else {
-            console.error('dropping module because define wasn\'t a string.');
-            console.trace();
-        }
+        console.error('dropping module because define wasn\'t a string.');
+        console.trace();
         return;
     }
 
@@ -67,22 +64,15 @@ var _define = function(module, deps, payload) {
         
     define.modules[module] = payload;
 };
-if (window.define)
-    _define.original = window.define;
-    
-window.define = _define;
-
 
 /**
  * Get at functionality define()ed using the function above
  */
-var _require = function(module, callback) {
+window.require = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
             var dep = lookup(module[i]);
-            if (!dep && _require.original)
-                return _require.original.apply(window, arguments);
             params.push(dep);
         }
         if (callback) {
@@ -91,8 +81,6 @@ var _require = function(module, callback) {
     }
     else if (typeof module === 'string') {
         var payload = lookup(module);
-        if (!payload && _require.original)
-            return _require.original.apply(window, arguments);
         
         if (callback) {
             callback();
@@ -100,16 +88,7 @@ var _require = function(module, callback) {
     
         return payload;
     }
-    else {
-        if (_require.original)
-            return _require.original.apply(window, arguments);
-    }
 };
-
-if (window.require)
-    _require.original = window.require;
-    
-window.require = _require;
 require.packaged = true;
 
 /**
