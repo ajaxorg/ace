@@ -43,19 +43,16 @@
  
 (function() {
     
+// if we find an existing require function use it.
 if (window.require) {
     require.packaged = true;
     return;
 }
     
-var _define = function(module, deps, payload) {
+window.define = function(module, deps, payload) {
     if (typeof module !== 'string') {
-        if (_define.original)
-            _define.original.apply(window, arguments);
-        else {
-            console.error('dropping module because define wasn\'t a string.');
-            console.trace();
-        }
+        console.error('dropping module because define wasn\'t a string.');
+        console.trace();
         return;
     }
 
@@ -67,22 +64,15 @@ var _define = function(module, deps, payload) {
         
     define.modules[module] = payload;
 };
-if (window.define)
-    _define.original = window.define;
-    
-window.define = _define;
-
 
 /**
  * Get at functionality define()ed using the function above
  */
-var _require = function(module, callback) {
+window.require = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
             var dep = lookup(module[i]);
-            if (!dep && _require.original)
-                return _require.original.apply(window, arguments);
             params.push(dep);
         }
         if (callback) {
@@ -91,8 +81,6 @@ var _require = function(module, callback) {
     }
     else if (typeof module === 'string') {
         var payload = lookup(module);
-        if (!payload && _require.original)
-            return _require.original.apply(window, arguments);
         
         if (callback) {
             callback();
@@ -100,16 +88,7 @@ var _require = function(module, callback) {
     
         return payload;
     }
-    else {
-        if (_require.original)
-            return _require.original.apply(window, arguments);
-    }
 };
-
-if (window.require)
-    _require.original = window.require;
-    
-window.require = _require;
 require.packaged = true;
 
 /**
@@ -134,10 +113,12 @@ var lookup = function(moduleName) {
     return module;
 };
 
-})();// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
+})();// vim:set ts=4 sts=4 sw=4 st:
+// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
 // -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
 // -- dantman Daniel Friesen Copyright(C) 2010 XXX No License Specified
 // -- fschaefer Florian Schäfer Copyright (C) 2010 MIT License
+// -- Irakli Gozalishvili Copyright (C) 2010 MIT License
 
 /*!
     Copyright (c) 2009, 280 North Inc. http://280north.com/
@@ -163,30 +144,158 @@ define('pilot/fixoldbrowsers', ['require', 'exports', 'module' ], function(requi
  * numbered specification references and quotes herein were taken.  Updating
  * these references and quotes to reflect the new document would be a welcome
  * volunteer project.
- * 
+ *
  * @module
  */
 
 /*whatsupdoc*/
 
-// this is often accessed, so avoid multiple dereference costs universally
-var has = Object.prototype.hasOwnProperty;
+//
+// Function
+// ========
+//
+
+// ES-5 15.3.4.5
+// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+
+if (!Function.prototype.bind) {
+    var slice = Array.prototype.slice;
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof target.apply !== "function" || typeof target.call !== "function")
+            return new TypeError();
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        var args = slice.call(arguments);
+        // 4. Let F be a new native ECMAScript object.
+        // 9. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 10. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 11. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 12. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        // 13. The [[Scope]] internal property of F is unused and need not
+        //   exist.
+        var bound = function bound() {
+
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+
+                var self = Object.create(target.prototype);
+                target.apply(self, args.concat(slice.call(arguments)));
+                return self;
+
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the list
+                //   boundArgs in the same order followed by the same values as
+                //   the list ExtraArgs in the same order. 5.  Return the
+                //   result of calling the [[Call]] internal method of target
+                //   providing boundThis as the this value and providing args
+                //   as the arguments.
+
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.call.apply(
+                    target,
+                    args.concat(slice.call(arguments))
+                );
+
+            }
+
+        };
+        bound.length = (
+            // 14. If the [[Class]] internal property of Target is "Function", then
+            typeof target === "function" ?
+            // a. Let L be the length property of Target minus the length of A.
+            // b. Set the length own property of F to either 0 or L, whichever is larger.
+            Math.max(target.length - args.length, 0) :
+            // 15. Else set the length own property of F to 0.
+            0
+        )
+        // 16. The length own property of F is given attributes as specified in
+        //   15.3.5.1.
+        // TODO
+        // 17. Set the [[Extensible]] internal property of F to true.
+        // TODO
+        // 18. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // 19. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property.
+        // XXX can't delete it in pure-js.
+        return bound;
+    };
+}
+
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
+var call = Function.prototype.call;
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
+
+var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
+// If JS engine supports accessors creating shortcuts.
+if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
+
 
 //
 // Array
 // =====
 //
 
-// ES5 15.4.3.2 
+// ES5 15.4.3.2
 if (!Array.isArray) {
-    Array.isArray = function(obj) {
-        return Object.prototype.toString.call(obj) == "[object Array]";
+    Array.isArray = function isArray(obj) {
+        return Object.prototype.toString.call(obj) === "[object Array]";
     };
 }
 
 // ES5 15.4.4.18
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach =  function(block, thisObject) {
+    Array.prototype.forEach =  function forEach(block, thisObject) {
         var len = +this.length;
         for (var i = 0; i < len; i++) {
             if (i in this) {
@@ -199,9 +308,9 @@ if (!Array.prototype.forEach) {
 // ES5 15.4.4.19
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
 if (!Array.prototype.map) {
-    Array.prototype.map = function(fun /*, thisp*/) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
         var len = +this.length;
-        if (typeof fun != "function")
+        if (typeof fun !== "function")
           throw new TypeError();
 
         var res = new Array(len);
@@ -217,7 +326,7 @@ if (!Array.prototype.map) {
 
 // ES5 15.4.4.20
 if (!Array.prototype.filter) {
-    Array.prototype.filter = function (block /*, thisp */) {
+    Array.prototype.filter = function filter(block /*, thisp */) {
         var values = [];
         var thisp = arguments[1];
         for (var i = 0; i < this.length; i++)
@@ -229,7 +338,7 @@ if (!Array.prototype.filter) {
 
 // ES5 15.4.4.16
 if (!Array.prototype.every) {
-    Array.prototype.every = function (block /*, thisp */) {
+    Array.prototype.every = function every(block /*, thisp */) {
         var thisp = arguments[1];
         for (var i = 0; i < this.length; i++)
             if (!block.call(thisp, this[i]))
@@ -240,7 +349,7 @@ if (!Array.prototype.every) {
 
 // ES5 15.4.4.17
 if (!Array.prototype.some) {
-    Array.prototype.some = function (block /*, thisp */) {
+    Array.prototype.some = function some(block /*, thisp */) {
         var thisp = arguments[1];
         for (var i = 0; i < this.length; i++)
             if (block.call(thisp, this[i]))
@@ -252,13 +361,13 @@ if (!Array.prototype.some) {
 // ES5 15.4.4.21
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
 if (!Array.prototype.reduce) {
-    Array.prototype.reduce = function(fun /*, initial*/) {
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
         var len = +this.length;
-        if (typeof fun != "function")
+        if (typeof fun !== "function")
             throw new TypeError();
 
         // no value to return if no initial value and an empty array
-        if (len == 0 && arguments.length == 1)
+        if (len === 0 && arguments.length === 1)
             throw new TypeError();
 
         var i = 0;
@@ -289,13 +398,13 @@ if (!Array.prototype.reduce) {
 // ES5 15.4.4.22
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
 if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function(fun /*, initial*/) {
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
         var len = +this.length;
-        if (typeof fun != "function")
+        if (typeof fun !== "function")
             throw new TypeError();
 
         // no value to return if no initial value, empty array
-        if (len == 0 && arguments.length == 1)
+        if (len === 0 && arguments.length === 1)
             throw new TypeError();
 
         var i = len - 1;
@@ -325,7 +434,7 @@ if (!Array.prototype.reduceRight) {
 
 // ES5 15.4.4.14
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function (value /*, fromIndex */ ) {
+    Array.prototype.indexOf = function indexOf(value /*, fromIndex */ ) {
         var length = this.length;
         if (!length)
             return -1;
@@ -335,7 +444,7 @@ if (!Array.prototype.indexOf) {
         if (i < 0)
             i += length;
         for (; i < length; i++) {
-            if (!has.call(this, i))
+            if (!owns(this, i))
                 continue;
             if (value === this[i])
                 return i;
@@ -346,7 +455,7 @@ if (!Array.prototype.indexOf) {
 
 // ES5 15.4.4.15
 if (!Array.prototype.lastIndexOf) {
-    Array.prototype.lastIndexOf = function (value /*, fromIndex */) {
+    Array.prototype.lastIndexOf = function lastIndexOf(value /*, fromIndex */) {
         var length = this.length;
         if (!length)
             return -1;
@@ -355,7 +464,7 @@ if (!Array.prototype.lastIndexOf) {
             i += length;
         i = Math.min(i, length - 1);
         for (; i >= 0; i--) {
-            if (!has.call(this, i))
+            if (!owns(this, i))
                 continue;
             if (value === this[i])
                 return i;
@@ -367,14 +476,14 @@ if (!Array.prototype.lastIndexOf) {
 //
 // Object
 // ======
-// 
+//
 
 // ES5 15.2.3.2
 if (!Object.getPrototypeOf) {
     // https://github.com/kriskowal/es5-shim/issues#issue/2
     // http://ejohn.org/blog/objectgetprototypeof/
     // recommended by fschaefer on github
-    Object.getPrototypeOf = function (object) {
+    Object.getPrototypeOf = function getPrototypeOf(object) {
         return object.__proto__ || object.constructor.prototype;
         // or undefined if not available in this engine
     };
@@ -382,38 +491,79 @@ if (!Object.getPrototypeOf) {
 
 // ES5 15.2.3.3
 if (!Object.getOwnPropertyDescriptor) {
-    Object.getOwnPropertyDescriptor = function (object, property) {
-        if (typeof object !== "object" && typeof object !== "function" || object === null)
-            throw new TypeError("Object.getOwnPropertyDescriptor called on a non-object");
+    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
+                         "non-object: ";
+    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+        if ((typeof object !== "object" && typeof object !== "function") || object === null)
+            throw new TypeError(ERR_NON_OBJECT + object);
+        // If object does not owns property return undefined immediately.
+        if (!owns(object, property))
+            return undefined;
 
-        return has.call(object, property) ? {
-            value: object[property],
-            enumerable: true,
-            configurable: true,
-            writeable: true
-        } : undefined;
+        var despriptor, getter, setter;
+
+        // If object has a property then it's for sure both `enumerable` and
+        // `configurable`.
+        despriptor =  { enumerable: true, configurable: true };
+
+        // If JS engine supports accessor properties then property may be a
+        // getter or setter.
+        if (supportsAccessors) {
+            // Unfortunately `__lookupGetter__` will return a getter even
+            // if object has own non getter property along with a same named
+            // inherited getter. To avoid misbehavior we temporary remove
+            // `__proto__` so that `__lookupGetter__` will return getter only
+            // if it's owned by an object.
+            var prototype = object.__proto__;
+            object.__proto__ = prototypeOfObject;
+
+            var getter = lookupGetter(object, property);
+            var setter = lookupSetter(object, property);
+
+            // Once we have getter and setter we can put values back.
+            object.__proto__ = prototype;
+
+            if (getter || setter) {
+                if (getter) descriptor.get = getter;
+                if (setter) descriptor.set = setter;
+
+                // If it was accessor property we're done and return here
+                // in order to avoid adding `value` to the descriptor.
+                return descriptor;
+            }
+        }
+
+        // If we got this far we know that object has an own property that is
+        // not an accessor so we set it as a value and return descriptor.
+        descriptor.value = object[property];
+        return descriptor;
     };
 }
 
 // ES5 15.2.3.4
 if (!Object.getOwnPropertyNames) {
-    Object.getOwnPropertyNames = function (object) {
+    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
         return Object.keys(object);
     };
 }
 
-// ES5 15.2.3.5 
+// ES5 15.2.3.5
 if (!Object.create) {
-    Object.create = function(prototype, properties) {
+    Object.create = function create(prototype, properties) {
         var object;
         if (prototype === null) {
-            object = {"__proto__": null};
+            object = { "__proto__": null };
         } else {
-            if (typeof prototype != "object")
+            if (typeof prototype !== "object")
                 throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
             var Type = function () {};
             Type.prototype = prototype;
             object = new Type();
+            // IE has no built-in implementation of `Object.getPrototypeOf`
+            // neither `__proto__`, but this manually setting `__proto__` will
+            // guarantee that `Object.getPrototypeOf` will work as expected with
+            // objects created using `Object.create`
+            object.__proto__ = prototype;
         }
         if (typeof properties !== "undefined")
             Object.defineProperties(object, properties);
@@ -423,44 +573,71 @@ if (!Object.create) {
 
 // ES5 15.2.3.6
 if (!Object.defineProperty) {
-    Object.defineProperty = function(object, property, descriptor) {
-        if (typeof descriptor == "object" && object.__defineGetter__) {
-            if (has.call(descriptor, "value")) {
-                if (!object.__lookupGetter__(property) && !object.__lookupSetter__(property))
-                    // data property defined and no pre-existing accessors
-                    object[property] = descriptor.value;
-                if (has.call(descriptor, "get") || has.call(descriptor, "set"))
-                    // descriptor has a value property but accessor already exists
-                    throw new TypeError("Object doesn't support this action");
-            }
+    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
+                                      "on this javascript engine";
+
+    Object.defineProperty = function defineProperty(object, property, descriptor) {
+        if (typeof object !== "object" && typeof object !== "function")
+            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+        if (typeof object !== "object" || object === null)
+            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+
+        // If it's a data property.
+        if (owns(descriptor, "value")) {
             // fail silently if "writable", "enumerable", or "configurable"
             // are requested but not supported
             /*
             // alternate approach:
             if ( // can't implement these features; allow false but not true
-                !(has.call(descriptor, "writable") ? descriptor.writable : true) ||
-                !(has.call(descriptor, "enumerable") ? descriptor.enumerable : true) ||
-                !(has.call(descriptor, "configurable") ? descriptor.configurable : true)
+                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
+                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
+                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
             )
                 throw new RangeError(
                     "This implementation of Object.defineProperty does not " +
                     "support configurable, enumerable, or writable."
                 );
             */
-            else if (typeof descriptor.get == "function")
-                object.__defineGetter__(property, descriptor.get);
-            if (typeof descriptor.set == "function")
-                object.__defineSetter__(property, descriptor.set);
+
+            if (supportsAccessors && (lookupGetter(object, property) ||
+                                      lookupSetter(object, property)))
+            {
+                // As accessors are supported only on engines implementing
+                // `__proto__` we can safely override `__proto__` while defining
+                // a property to make sure that we don't hit an inherited
+                // accessor.
+                var prototype = object.__proto__;
+                object.__proto__ = prototypeOfObject;
+                // Deleting a property anyway since getter / setter may be
+                // defined on object itself.
+                delete object[property];
+                object[property] = descriptor.value;
+                // Setting original `__proto__` back now.
+                object.prototype;
+            } else {
+                object[property] = descriptor.value;
+            }
+        } else {
+            if (!supportsAccessors)
+                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+            // If we got that far then getters and setters can be defined !!
+            if (owns(descriptor, "get"))
+                defineGetter(object, property, descriptor.get);
+            if (owns(descriptor, "set"))
+                defineSetter(object, property, descriptor.set);
         }
+
         return object;
     };
 }
 
 // ES5 15.2.3.7
 if (!Object.defineProperties) {
-    Object.defineProperties = function(object, properties) {
+    Object.defineProperties = function defineProperties(object, properties) {
         for (var property in properties) {
-            if (has.call(properties, property))
+            if (owns(properties, property))
                 Object.defineProperty(object, property, properties[property]);
         }
         return object;
@@ -469,7 +646,7 @@ if (!Object.defineProperties) {
 
 // ES5 15.2.3.8
 if (!Object.seal) {
-    Object.seal = function (object) {
+    Object.seal = function seal(object) {
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
         // but insecure code.
@@ -479,7 +656,7 @@ if (!Object.seal) {
 
 // ES5 15.2.3.9
 if (!Object.freeze) {
-    Object.freeze = function (object) {
+    Object.freeze = function freeze(object) {
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
         // but insecure code.
@@ -491,12 +668,12 @@ if (!Object.freeze) {
 try {
     Object.freeze(function () {});
 } catch (exception) {
-    Object.freeze = (function (freeze) {
-        return function (object) {
-            if (typeof object == "function") {
+    Object.freeze = (function freeze(freezeObject) {
+        return function freeze(object) {
+            if (typeof object === "function") {
                 return object;
             } else {
-                return freeze(object);
+                return freezeObject(object);
             }
         };
     })(Object.freeze);
@@ -504,7 +681,7 @@ try {
 
 // ES5 15.2.3.10
 if (!Object.preventExtensions) {
-    Object.preventExtensions = function (object) {
+    Object.preventExtensions = function preventExtensions(object) {
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
         // but insecure code.
@@ -514,21 +691,21 @@ if (!Object.preventExtensions) {
 
 // ES5 15.2.3.11
 if (!Object.isSealed) {
-    Object.isSealed = function (object) {
+    Object.isSealed = function isSealed(object) {
         return false;
     };
 }
 
 // ES5 15.2.3.12
 if (!Object.isFrozen) {
-    Object.isFrozen = function (object) {
+    Object.isFrozen = function isFrozen(object) {
         return false;
     };
 }
 
 // ES5 15.2.3.13
 if (!Object.isExtensible) {
-    Object.isExtensible = function (object) {
+    Object.isExtensible = function isExtensible(object) {
         return true;
     };
 }
@@ -552,7 +729,7 @@ if (!Object.keys) {
     for (var key in {"toString": null})
         hasDontEnumBug = false;
 
-    Object.keys = function (object) {
+    Object.keys = function keys(object) {
 
         if (
             typeof object !== "object" && typeof object !== "function"
@@ -562,7 +739,7 @@ if (!Object.keys) {
 
         var keys = [];
         for (var name in object) {
-            if (has.call(object, name)) {
+            if (owns(object, name)) {
                 keys.push(name);
             }
         }
@@ -570,7 +747,7 @@ if (!Object.keys) {
         if (hasDontEnumBug) {
             for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
                 var dontEnum = dontEnums[i];
-                if (has.call(object, dontEnum)) {
+                if (owns(object, dontEnum)) {
                     keys.push(dontEnum);
                 }
             }
@@ -590,7 +767,7 @@ if (!Object.keys) {
 // Format a Date object as a string according to a subset of the ISO-8601 standard.
 // Useful in Atom, among other things.
 if (!Date.prototype.toISOString) {
-    Date.prototype.toISOString = function() {
+    Date.prototype.toISOString = function toISOString() {
         return (
             this.getUTCFullYear() + "-" +
             (this.getUTCMonth() + 1) + "-" +
@@ -598,20 +775,20 @@ if (!Date.prototype.toISOString) {
             this.getUTCHours() + ":" +
             this.getUTCMinutes() + ":" +
             this.getUTCSeconds() + "Z"
-        ); 
+        );
     }
 }
 
 // ES5 15.9.4.4
 if (!Date.now) {
-    Date.now = function () {
+    Date.now = function now() {
         return new Date().getTime();
     };
 }
 
 // ES5 15.9.5.44
 if (!Date.prototype.toJSON) {
-    Date.prototype.toJSON = function (key) {
+    Date.prototype.toJSON = function toJSON(key) {
         // This function provides a String representation of a Date object for
         // use by JSON.stringify (15.12.3). When the toJSON method is called
         // with argument key, the following steps are taken:
@@ -624,7 +801,7 @@ if (!Date.prototype.toJSON) {
         // 4. Let toISO be the result of calling the [[Get]] internal method of
         // O with argument "toISOString".
         // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof this.toISOString != "function")
+        if (typeof this.toISOString !== "function")
             throw new TypeError();
         // 6. Return the result of calling the [[Call]] internal method of
         // toISO with O as the this value and an empty argument list.
@@ -688,7 +865,7 @@ if (isNaN(Date.parse("T00:00"))) {
                         "(\\d\\d)" + // day capture
                     ")?" +
                 ")?" +
-            ")?" + 
+            ")?" +
             "(?:T" + // hour:minute:second.subsecond
                 "(\\d\\d)" + // hour capture
                 ":(\\d\\d)" + // minute capture
@@ -717,7 +894,7 @@ if (isNaN(Date.parse("T00:00"))) {
         // Upgrade Date.parse to handle the ISO dates we use
         // TODO review specification to ascertain whether it is
         // necessary to implement partial ISO date strings.
-        Date.parse = function(string) {
+        Date.parse = function parse(string) {
             var match = isoDateExpression.exec(string);
             if (match) {
                 match.shift(); // kill match[0], the full match
@@ -758,127 +935,6 @@ if (isNaN(Date.parse("T00:00"))) {
     })(Date);
 }
 
-// 
-// Function
-// ========
-// 
-
-// ES-5 15.3.4.5
-// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
-var slice = Array.prototype.slice;
-if (!Function.prototype.bind) {
-    Function.prototype.bind = function (that) { // .length is 1
-        // 1. Let Target be the this value.
-        var target = this;
-        // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        // XXX this gets pretty close, for all intents and purposes, letting 
-        // some duck-types slide
-        if (typeof target.apply != "function" || typeof target.call != "function")
-            return new TypeError();
-        // 3. Let A be a new (possibly empty) internal list of all of the
-        //   argument values provided after thisArg (arg1, arg2 etc), in order.
-        var args = slice.call(arguments);
-        // 4. Let F be a new native ECMAScript object.
-        // 9. Set the [[Prototype]] internal property of F to the standard
-        //   built-in Function prototype object as specified in 15.3.3.1.
-        // 10. Set the [[Call]] internal property of F as described in
-        //   15.3.4.5.1.
-        // 11. Set the [[Construct]] internal property of F as described in
-        //   15.3.4.5.2.
-        // 12. Set the [[HasInstance]] internal property of F as described in
-        //   15.3.4.5.3.
-        // 13. The [[Scope]] internal property of F is unused and need not
-        //   exist.
-        var bound = function () {
-
-            if (this instanceof bound) {
-                // 15.3.4.5.2 [[Construct]]
-                // When the [[Construct]] internal method of a function object,
-                // F that was created using the bind function is called with a
-                // list of arguments ExtraArgs the following steps are taken:
-                // 1. Let target be the value of F's [[TargetFunction]]
-                //   internal property.
-                // 2. If target has no [[Construct]] internal method, a
-                //   TypeError exception is thrown.
-                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the
-                //   list boundArgs in the same order followed by the same
-                //   values as the list ExtraArgs in the same order.
-
-                var self = Object.create(target.prototype);
-                target.apply(self, args.concat(slice.call(arguments)));
-                return self;
-
-            } else {
-                // 15.3.4.5.1 [[Call]]
-                // When the [[Call]] internal method of a function object, F,
-                // which was created using the bind function is called with a
-                // this value and a list of arguments ExtraArgs the following
-                // steps are taken:
-                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 2. Let boundThis be the value of F's [[BoundThis]] internal
-                //   property.
-                // 3. Let target be the value of F's [[TargetFunction]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the list
-                //   boundArgs in the same order followed by the same values as
-                //   the list ExtraArgs in the same order. 5.  Return the
-                //   result of calling the [[Call]] internal method of target
-                //   providing boundThis as the this value and providing args
-                //   as the arguments.
-
-                // equiv: target.call(this, ...boundArgs, ...args)
-                return target.call.apply(
-                    target,
-                    args.concat(slice.call(arguments))
-                );
-
-            }
-
-        };
-        // 5. Set the [[TargetFunction]] internal property of F to Target.
-        // extra:
-        bound.bound = target;
-        // 6. Set the [[BoundThis]] internal property of F to the value of
-        // thisArg.
-        // extra:
-        bound.boundTo = that;
-        // 7. Set the [[BoundArgs]] internal property of F to A.
-        // extra:
-        bound.boundArgs = args;
-        bound.length = (
-            // 14. If the [[Class]] internal property of Target is "Function", then
-            typeof target == "function" ?
-            // a. Let L be the length property of Target minus the length of A.
-            // b. Set the length own property of F to either 0 or L, whichever is larger.
-            Math.max(target.length - args.length, 0) :
-            // 15. Else set the length own property of F to 0.
-            0
-        )
-        // 16. The length own property of F is given attributes as specified in
-        //   15.3.5.1.
-        // TODO
-        // 17. Set the [[Extensible]] internal property of F to true.
-        // TODO
-        // 18. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // 19. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // NOTE Function objects created using Function.prototype.bind do not
-        // have a prototype property.
-        // XXX can't delete it in pure-js.
-        return bound;
-    };
-}
-
 //
 // String
 // ======
@@ -889,12 +945,10 @@ if (!String.prototype.trim) {
     // http://blog.stevenlevithan.com/archives/faster-trim-javascript
     var trimBeginRegexp = /^\s\s*/;
     var trimEndRegexp = /\s\s*$/;
-    String.prototype.trim = function () {
+    String.prototype.trim = function trim() {
         return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
     };
 }
-
-exports.globalsLoaded = true;
 
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -3755,10 +3809,32 @@ exports.stringRepeat = function (string, count) {
      return new Array(count + 1).join(string);
 };
 
+var trimBeginRegexp = /^\s\s*/;
+var trimEndRegexp = /\s\s*$/;
+
+exports.stringTrimLeft = function (string) {
+    return string.replace(trimBeginRegexp, '')
+};
+
+exports.stringTrimRight = function (string) {
+    return string.replace(trimEndRegexp, '');
+};
+
 exports.copyObject = function(obj) {
     var copy = {};
     for (var key in obj) {
         copy[key] = obj[key];
+    }
+    return copy;
+};
+
+exports.copyArray = function(array){
+    var copy = [];
+    for (i=0, l=array.length; i<l; i++) {
+        if (array[i] && typeof array[i] == "object")
+            copy[i] = this.copyObject( array[i] );
+        else 
+            copy[i] = array[i]
     }
     return copy;
 };
@@ -3803,7 +3879,7 @@ exports.deferredCall = function(fcn) {
     }
 
     deferred.schedule = deferred;
-    
+
     deferred.call = function() {
         this.cancel();
         fcn();
@@ -3815,7 +3891,7 @@ exports.deferredCall = function(fcn) {
         timer = null;
         return deferred;
     };
-    
+
     return deferred;
 };
 
@@ -5252,15 +5328,17 @@ exports.addMultiMouseDownListener = function(el, button, count, timeout, callbac
             }, timeout || 600);
         }
 
-        if (exports.getButton(e) != button
-          || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
+        var isButton = exports.getButton(e) == button;
+        if (!isButton || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
             clicks = 0;
 
         if (clicks == count) {
             clicks = 0;
             callback(e);
         }
-        return exports.preventDefault(e);
+        
+        if (isButton)
+            return exports.preventDefault(e);
     };
 
     exports.addListener(el, "mousedown", listener);
@@ -5697,8 +5775,6 @@ var Editor =function(renderer, session) {
             var style = this.getSelectionStyle();
             session.$selectionMarker = session.addMarker(range, "ace_selection", style);
         }
-
-        this.onCursorChange(e);
 
         if (this.$highlightSelectedWord)
             this.session.getMode().highlightSelection(this);
@@ -6848,8 +6924,6 @@ var MouseHandler = function(editor) {
             onStartSelect(pos);
         }
 
-        editor.renderer.scrollCursorIntoView();
-    
         var mousePageX, mousePageY;
         var overwrite = editor.getOverwrite();
         var mousedownTime = (new Date()).getTime();
@@ -7278,7 +7352,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "selecttostart",
-    bindKey: bindKey("Alt-Shift-Up", "Command-Shift-Up"),
+    bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
 });
 canon.addCommand({
@@ -7308,7 +7382,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "selecttoend",
-    bindKey: bindKey("Alt-Shift-Down", "Command-Shift-Down"),
+    bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
 });
 canon.addCommand({
@@ -7599,11 +7673,11 @@ var EditSession = function(text, mode) {
     };
 
     this.$resetRowCache = function(row) {
-        var rowCache = this.$rowCache;
         if (row == 0) {
-            rowCache = [];
+            this.$rowCache = [];
             return;
         }
+        var rowCache = this.$rowCache;
         for (var i = 0; i < rowCache.length; i++) {
             if (rowCache[i].docRow >= row) {
                 rowCache.splice(i, rowCache.length);
@@ -8184,7 +8258,7 @@ var EditSession = function(text, mode) {
             if (delta.group == "doc") {
                 this.doc.revertDeltas(delta.deltas);
                 lastUndoRange =
-                    this.$setUndoSelection(delta.deltas, true, lastUndoRange);
+                    this.$getUndoSelection(delta.deltas, true, lastUndoRange);
             } else {
                 delta.deltas.forEach(function(foldDelta) {
                     this.addFolds(foldDelta.folds);
@@ -8192,6 +8266,7 @@ var EditSession = function(text, mode) {
             }
         }
         this.$fromUndo = false;
+        lastUndoRange && this.selection.setSelectionRange(lastUndoRange);
     },
 
     this.redoChanges = function(deltas) {
@@ -8205,13 +8280,14 @@ var EditSession = function(text, mode) {
             if (delta.group == "doc") {
                 this.doc.applyDeltas(delta.deltas);
                 lastUndoRange =
-                    this.$setUndoSelection(delta.deltas, false, lastUndoRange);
+                    this.$getUndoSelection(delta.deltas, false, lastUndoRange);
             }
         }
         this.$fromUndo = false;
+        lastUndoRange && this.selection.setSelectionRange(lastUndoRange);
     },
 
-    this.$setUndoSelection = function(deltas, isUndo, lastUndoRange) {
+    this.$getUndoSelection = function(deltas, isUndo, lastUndoRange) {
         function isInsert(delta) {
             var insert =
                 delta.action == "insertText" || delta.action == "insertLines";
@@ -8219,7 +8295,7 @@ var EditSession = function(text, mode) {
         }
 
         var delta = deltas[0];
-        var range;
+        var range, point;
         var lastDeltaIsInsert = false;
         if (isInsert(delta)) {
             range = delta.range.clone();
@@ -8232,15 +8308,18 @@ var EditSession = function(text, mode) {
         for (var i = 1; i < deltas.length; i++) {
             delta = deltas[i];
             if (isInsert(delta)) {
-                if (range.compare(delta.range.start) == -1) {
+                point = delta.range.start;
+                if (range.compare(point.row, point.column) == -1) {
                     range.setStart(delta.range.start);
                 }
-                if (range.compare(delta.range.end) == 1) {
+                point = delta.range.end;
+                if (range.compare(point.row, point.column) == 1) {
                     range.setEnd(delta.range.end);
                 }
                 lastDeltaIsInsert = true;
             } else {
-                if (range.compare(delta.range.start) == -1) {
+                point = delta.range.start;
+                if (range.compare(point.row, point.column) == -1) {
                     range =
                         Range.fromPoints(delta.range.start, delta.range.start);
                 }
@@ -8259,11 +8338,6 @@ var EditSession = function(text, mode) {
             }
         }
 
-        if (!range.isEmpty()) {
-            this.selection.setSelectionRange(range);
-        } else {
-            this.selection.moveCursorToPosition(range.start);
-        }
         return range;
     },
 
@@ -8882,12 +8956,10 @@ var EditSession = function(text, mode) {
         var docRow = 0;
         var docColumn = 0;
         var column;
-        var foldLine;
         var foldLineRowLength;
         var row = 0;
         var rowLength = 0;
         var splits = null;
-        var split = 0;
 
         var rowCache = this.$rowCache;
         var doCache = !rowCache.length;
@@ -8899,6 +8971,11 @@ var EditSession = function(text, mode) {
             }
         }
         var docRowCacheLast = docRow;
+        // clamp row before clamping column, for selection on last line 
+        var maxRow = this.getLength() - 1;
+
+        var foldLine = this.getNextFold(docRow);
+        var foldStart = foldLine ?foldLine.start.row :Infinity;
 
         while (row <= screenRow) {
             if (doCache
@@ -8910,30 +8987,41 @@ var EditSession = function(text, mode) {
                 docRowCacheLast = docRow;
             }
             rowLength = this.getRowLength(docRow);
-            if (row + rowLength - 1 >= screenRow) {
+            if (row + rowLength - 1 >= screenRow || docRow >= maxRow) {
                 break;
             } else {
                 row += rowLength;
-                docRow = this.getRowFoldEnd(docRow) + 1;
+                docRow++;
+                if(docRow > foldStart) {
+                    docRow = foldLine.end.row+1;
+                    foldLine = this.getNextFold(docRow);
+                    foldStart = foldLine ?foldLine.start.row :Infinity;
+                }
             }
         }
 
-        splits = this.$wrapData[docRow] || [];
-        foldLine = this.getFoldLine(docRow);
-        line = foldLine
-                ? this.getFoldDisplayLine(foldLine)
-                : this.getLine(docRow);
+        if (foldLine && foldLine.start.row <= docRow)
+            line = this.getFoldDisplayLine(foldLine);
+        else { 
+            line = this.getLine(docRow);
+            foldLine = null;
+        }
 
         if (this.$useWrapMode) {
-            docColumn = split = splits[screenRow - row - 1] || 0;
-            line = line.substring(split);
+            splits = this.$wrapData[docRow];
+            if (splits) {
+                column = splits[screenRow - row]
+                if(screenRow > row && splits.length) {
+                    docColumn = splits[screenRow - row - 1] || splits[splits.length - 1];
+                    line = line.substring(docColumn);
+                }
+            }
         }
 
         docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
 
         // Need to do some clamping action here.
         if (this.$useWrapMode) {
-            column = splits[screenRow - row]
             if (docColumn >= column) {
                 // We remove one character at the end such that the docColumn
                 // position returned is not associated to the next row on the
@@ -11230,7 +11318,11 @@ function Folding() {
 
     this.getFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData;
-        var i = Math.max(foldData.indexOf(startFoldLine), 0);
+        var i = 0;
+        if(startFoldLine)
+            i = foldData.indexOf(startFoldLine);
+        if(i == -1)
+            i = 0;
         for (i; i < foldData.length; i++) {
             var foldLine = foldData[i];
             if (foldLine.start.row <= docRow && foldLine.end.row >= docRow) {
@@ -11240,6 +11332,47 @@ function Folding() {
             }
         }
         return null;
+    }
+
+    // returns the fold which starts after or contains docRow
+    this.getNextFold = function(docRow, startFoldLine) {
+        var foldData = this.$foldData, ans;
+        var i = 0;
+        if(startFoldLine)
+            i = foldData.indexOf(startFoldLine);
+        if(i == -1)
+            i = 0;
+        for (i; i < foldData.length; i++) {
+            var foldLine = foldData[i];
+            if (foldLine.end.row >= docRow) {
+                return foldLine;
+            }
+        }
+        return null;
+    }
+
+    this.getFoldedRowCount = function(first, last) {
+        var foldData = this.$foldData, rowCount = last-first+1;
+        for (var i = 0; i < foldData.length; i++) {
+            var foldLine = foldData[i],
+                end = foldLine.end.row,
+                start = foldLine.start.row;
+            if(end >= last) {
+                if(start < last) {
+                    if(start >= first)
+                        rowCount -= last-start;
+                    else
+                        rowCount = 0;//in one fold
+                }
+                break;
+            } else if(end >= first){
+                if (start >= first) //fold inside range
+                    rowCount -=  end-start;
+                else
+                    rowCount -=  end-first+1;
+            }
+        }
+        return rowCount;
     }
 
     this.$addFoldLine = function(foldLine) {
@@ -11467,6 +11600,7 @@ function Folding() {
     };
 
     this.getRowFoldEnd = function(docRow, startFoldRow) {
+        //console.trace()
         var foldLine = this.getFoldLine(docRow, startFoldRow);
         return (foldLine
                     ? foldLine.end.row
@@ -11523,8 +11657,7 @@ function Folding() {
 
 exports.Folding = Folding;
 
-});
-/* vim:ts=4:sts=4:sw=4:
+});/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -12629,7 +12762,6 @@ var VirtualRenderer = function(container, theme) {
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
             this.$updateScrollBar();
-            this.scrollCursorIntoView();
             return;
         }
 
@@ -13114,12 +13246,22 @@ var Gutter = function(parentEl) {
     this.update = function(config) {
         this.$config = config;
 
+        var emptyAnno = {className: "", text: []};
         var html = [];
-        for ( var i = config.firstRow; i <= config.lastRow; i++) {
-            var annotation = this.$annotations[i] || {
-                className: "",
-                text: []
-            };
+        var i = config.firstRow, lastRow = config.lastRow
+            fold = this.session.getNextFold(i),
+            foldStart = fold ?fold.start.row :Infinity;
+
+        while (true) {
+            if(i > foldStart) {
+                i = fold.end.row+1;
+                fold = this.session.getNextFold(i);
+                foldStart = fold ?fold.start.row :Infinity;
+            }
+            if(i > lastRow)
+                break;
+
+            var annotation = this.$annotations[i] || emptyAnno;
             html.push("<div class='ace_gutter-cell",
                 this.$decorations[i] || "",
                 this.$breakpoints[i] ? " ace_breakpoint " : " ",
@@ -13127,10 +13269,9 @@ var Gutter = function(parentEl) {
                 "' title='", annotation.text.join("\n"),
                 "' style='height:", this.session.getRowHeight(config, i), "px;'>", (i+1), "</div>");
 
-
-            i = this.session.getRowFoldEnd(i);
+            i++;
         }
-		this.element = dom.setInnerHtml(this.element, html.join(""));
+        this.element = dom.setInnerHtml(this.element, html.join(""));
         this.element.style.height = config.minHeight + "px";
     };
 
@@ -13359,11 +13500,12 @@ exports.Marker = Marker;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/text', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/lang', 'pilot/event_emitter'], function(require, exports, module) {
+define('ace/layer/text', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/lang', 'pilot/useragent', 'pilot/event_emitter'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
 var lang = require("pilot/lang");
+var useragent = require("pilot/useragent");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 var Text = function(parentEl) {
@@ -13550,13 +13692,12 @@ var Text = function(parentEl) {
             return this.update(config);
 
         var el = this.element;
-
         if (oldConfig.firstRow < config.firstRow)
-            for (var row=oldConfig.firstRow; row<config.firstRow; row = this.session.getRowFoldEnd(row) + 1)
+            for (var row=this.session.getFoldedRowCount(oldConfig.firstRow, config.firstRow - 1); row>0; row--)
                 el.removeChild(el.firstChild);
 
         if (oldConfig.lastRow > config.lastRow)
-            for (var row=config.lastRow+1; row<=oldConfig.lastRow; row = this.session.getRowFoldEnd(row) + 1)
+            for (var row=this.session.getFoldedRowCount(config.lastRow + 1, oldConfig.lastRow); row>0; row--)
                 el.removeChild(el.lastChild);
 
         if (config.firstRow < oldConfig.firstRow) {
@@ -13574,8 +13715,20 @@ var Text = function(parentEl) {
     };
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
-        var fragment = document.createDocumentFragment();
-        for (var row=firstRow; row<=lastRow; row++) {
+        var fragment = document.createDocumentFragment(),
+            row = firstRow,
+            fold = this.session.getNextFold(row),
+            foldStart = fold ?fold.start.row :Infinity;
+
+        while (true) {
+            if(row > foldStart) {
+                row = fold.end.row+1;
+                fold = this.session.getNextFold(row);
+                foldStart = fold ?fold.start.row :Infinity;
+            }
+            if(row > lastRow)
+                break;
+
             var lineEl = dom.createElement("div");
 
             lineEl.className = "ace_line";
@@ -13596,7 +13749,7 @@ var Text = function(parentEl) {
             lineEl.innerHTML = html.join("");
             fragment.appendChild(lineEl);
 
-            row = this.session.getRowFoldEnd(row);
+            row++;
         }
         return fragment;
     };
@@ -13606,12 +13759,36 @@ var Text = function(parentEl) {
         this.config = config;
 
         var html = [];
-        var tokens = this.session.getTokens(config.firstRow, config.lastRow)
-        var fragment = this.$renderLinesFragment(config, config.firstRow, config.lastRow);
+        var firstRow = config.firstRow, lastRow = config.lastRow;
 
-        // Clear the current content of the element and add the rendered fragment.
-        this.element.innerHTML =  "";
-        this.element.appendChild(fragment);
+        var row = firstRow,
+            fold = this.session.getNextFold(row),
+            foldStart = fold ?fold.start.row :Infinity;
+
+        while (true) {
+            if(row > foldStart) {
+                row = fold.end.row+1;
+                fold = this.session.getNextFold(row);
+                foldStart = fold ?fold.start.row :Infinity;
+            }
+            if(row > lastRow)
+                break;
+
+            html.push("<div class='ace_line' style='height:",
+                this.session.getRowHeight(config, row) + "px;", "width",  config.width + "px'>"
+            )
+            // Get the tokens per line as there might be some lines in between
+            // beeing folded.
+            // OPTIMIZE: If there is a long block of unfolded lines, just make
+            // this call once for that big block of unfolded lines.
+            var tokens = this.session.getTokens(row, row);
+            if (tokens.length == 1)
+                this.$renderLine(html, row, tokens[0].tokens);
+            html.push("</div>")
+
+            row++;
+        }
+        this.element = dom.setInnerHtml(this.element, html.join(""));
     };
 
     this.$textToken = {
@@ -13632,6 +13809,9 @@ var Text = function(parentEl) {
                 screenColumn += tabSize - 1;
                 return self.$tabStrings[tabSize];
             } else if (c == "&") {
+              if (useragent.isOldGecko)
+                return "&";
+              else
                 return "&amp";
             } else if (c == "<") {
                 return "&lt;";
@@ -14095,7 +14275,16 @@ var RenderLoop = function(onRender) {
         }
     };
 
-    if (window.postMessage) {
+    this.setTimeoutZero = window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame;
+
+    if (this.setTimeoutZero) {
+
+        this.setTimeoutZero = this.setTimeoutZero.bind(window)
+    } else if (window.postMessage) {
 
         this.messageName = "zero-timeout-message";
 
@@ -14177,6 +14366,7 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
 .ace-tm .ace_gutter {\
   width: 50px;\
   background: #e8e8e8;\
+  border-right: 1px solid rgb(159, 159, 159);	 \
   color: #333;\
   overflow : hidden;\
 }\
@@ -14497,6 +14687,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   "" +
   ".ace_marker-layer {" +
   "    cursor: text;" +
+  "    pointer-events: none;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_step {" +
@@ -14534,6 +14725,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
 
 define("text/styles.css", [], "html {" +
   "    height: 100%;" +
+  "    width: 100%;    " +
   "    overflow: hidden;" +
   "}" +
   "" +
@@ -14551,18 +14743,29 @@ define("text/styles.css", [], "html {" +
   "" +
   "#editor {" +
   "    position: absolute;" +
-  "    top: 60px;" +
-  "    left: 0px;" +
+  "    top:  0px;" +
+  "    left: 300px;" +
+  "    bottom: 0px;" +
+  "    right: 0px;" +
   "    background: white;" +
   "}" +
   "" +
   "#controls {" +
-  "    width: 100%;" +
+  "    padding: 5px;" +
+  "}" +
+  "" +
+  "#controls td {" +
+  "    text-align: right;" +
+  "}" +
+  "" +
+  "#controls td + td {" +
+  "    text-align: left;" +
   "}" +
   "" +
   "#cockpitInput {" +
   "    position: absolute;" +
-  "    width: 100%;" +
+  "    left: 300px;" +
+  "    right: 0px;" +
   "    bottom: 0;" +
   "" +
   "    border: none; outline: none;" +
