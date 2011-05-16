@@ -51,6 +51,15 @@ The easiest version is simply:
         var editor = ace.edit("editor");
     };
     </script>
+
+With "editor" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.
+
+    #editor { 
+        position: absolute;
+        width: 500px;
+        height: 400px;
+    }
+
     
 To change the theme simply include the Theme's JavaScript file
 

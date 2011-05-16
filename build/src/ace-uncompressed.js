@@ -987,10 +987,10 @@ if (!String.prototype.trim) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/ace', ['require', 'exports', 'module' , 'pilot/plugin_manager', 'pilot/index', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
+define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/plugin_manager', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
 
-    var catalog = require("pilot/plugin_manager").catalog;
     require("pilot/index");
+    var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
 
     var Dom = require("pilot/dom");
@@ -1041,934 +1041,6 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/plugin_manager', 'pil
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
-
-var Promise = require("pilot/promise").Promise;
-
-exports.REASONS = {
-    APP_STARTUP: 1,
-    APP_SHUTDOWN: 2,
-    PLUGIN_ENABLE: 3,
-    PLUGIN_DISABLE: 4,
-    PLUGIN_INSTALL: 5,
-    PLUGIN_UNINSTALL: 6,
-    PLUGIN_UPGRADE: 7,
-    PLUGIN_DOWNGRADE: 8
-};
-
-exports.Plugin = function(name) {
-    this.name = name;
-    this.status = this.INSTALLED;
-};
-
-exports.Plugin.prototype = {
-    /**
-     * constants for the state
-     */
-    NEW: 0,
-    INSTALLED: 1,
-    REGISTERED: 2,
-    STARTED: 3,
-    UNREGISTERED: 4,
-    SHUTDOWN: 5,
-
-    install: function(data, reason) {
-        var pr = new Promise();
-        if (this.status > this.NEW) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.install) {
-                pluginModule.install(data, reason);
-            }
-            this.status = this.INSTALLED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    register: function(data, reason) {
-        var pr = new Promise();
-        if (this.status != this.INSTALLED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.register) {
-                pluginModule.register(data, reason);
-            }
-            this.status = this.REGISTERED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    startup: function(data, reason) {
-        reason = reason || exports.REASONS.APP_STARTUP;
-        var pr = new Promise();
-        if (this.status != this.REGISTERED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.startup) {
-                pluginModule.startup(data, reason);
-            }
-            this.status = this.STARTED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    shutdown: function(data, reason) {
-        if (this.status != this.STARTED) {
-            return;
-        }
-        pluginModule = require(this.name);
-        if (pluginModule.shutdown) {
-            pluginModule.shutdown(data, reason);
-        }
-    }
-};
-
-exports.PluginCatalog = function() {
-    this.plugins = {};
-};
-
-exports.PluginCatalog.prototype = {
-    registerPlugins: function(pluginList, data, reason) {
-        var registrationPromises = [];
-        pluginList.forEach(function(pluginName) {
-            var plugin = this.plugins[pluginName];
-            if (plugin === undefined) {
-                plugin = new exports.Plugin(pluginName);
-                this.plugins[pluginName] = plugin;
-                registrationPromises.push(plugin.register(data, reason));
-            }
-        }.bind(this));
-        return Promise.group(registrationPromises);
-    },
-
-    startupPlugins: function(data, reason) {
-        var startupPromises = [];
-        for (var pluginName in this.plugins) {
-            var plugin = this.plugins[pluginName];
-            startupPromises.push(plugin.startup(data, reason));
-        }
-        return Promise.group(startupPromises);
-    }
-};
-
-exports.catalog = new exports.PluginCatalog();
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
-
-var console = require("pilot/console");
-var Trace = require('pilot/stacktrace').Trace;
-
-/**
- * A promise can be in one of 2 states.
- * The ERROR and SUCCESS states are terminal, the PENDING state is the only
- * start state.
- */
-var ERROR = -1;
-var PENDING = 0;
-var SUCCESS = 1;
-
-/**
- * We give promises and ID so we can track which are outstanding
- */
-var _nextId = 0;
-
-/**
- * Debugging help if 2 things try to complete the same promise.
- * This can be slow (especially on chrome due to the stack trace unwinding) so
- * we should leave this turned off in normal use.
- */
-var _traceCompletion = false;
-
-/**
- * Outstanding promises. Handy list for debugging only.
- */
-var _outstanding = [];
-
-/**
- * Recently resolved promises. Also for debugging only.
- */
-var _recent = [];
-
-/**
- * Create an unfulfilled promise
- */
-Promise = function () {
-    this._status = PENDING;
-    this._value = undefined;
-    this._onSuccessHandlers = [];
-    this._onErrorHandlers = [];
-
-    // Debugging help
-    this._id = _nextId++;
-    //this._createTrace = new Trace(new Error());
-    _outstanding[this._id] = this;
-};
-
-/**
- * Yeay for RTTI.
- */
-Promise.prototype.isPromise = true;
-
-/**
- * Have we either been resolve()ed or reject()ed?
- */
-Promise.prototype.isComplete = function() {
-    return this._status != PENDING;
-};
-
-/**
- * Have we resolve()ed?
- */
-Promise.prototype.isResolved = function() {
-    return this._status == SUCCESS;
-};
-
-/**
- * Have we reject()ed?
- */
-Promise.prototype.isRejected = function() {
-    return this._status == ERROR;
-};
-
-/**
- * Take the specified action of fulfillment of a promise, and (optionally)
- * a different action on promise rejection.
- */
-Promise.prototype.then = function(onSuccess, onError) {
-    if (typeof onSuccess === 'function') {
-        if (this._status === SUCCESS) {
-            onSuccess.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onSuccessHandlers.push(onSuccess);
-        }
-    }
-
-    if (typeof onError === 'function') {
-        if (this._status === ERROR) {
-            onError.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onErrorHandlers.push(onError);
-        }
-    }
-
-    return this;
-};
-
-/**
- * Like then() except that rather than returning <tt>this</tt> we return
- * a promise which
- */
-Promise.prototype.chainPromise = function(onSuccess) {
-    var chain = new Promise();
-    chain._chainedFrom = this;
-    this.then(function(data) {
-        try {
-            chain.resolve(onSuccess(data));
-        } catch (ex) {
-            chain.reject(ex);
-        }
-    }, function(ex) {
-        chain.reject(ex);
-    });
-    return chain;
-};
-
-/**
- * Supply the fulfillment of a promise
- */
-Promise.prototype.resolve = function(data) {
-    return this._complete(this._onSuccessHandlers, SUCCESS, data, 'resolve');
-};
-
-/**
- * Renege on a promise
- */
-Promise.prototype.reject = function(data) {
-    return this._complete(this._onErrorHandlers, ERROR, data, 'reject');
-};
-
-/**
- * Internal method to be called on resolve() or reject().
- * @private
- */
-Promise.prototype._complete = function(list, status, data, name) {
-    // Complain if we've already been completed
-    if (this._status != PENDING) {
-        console.group('Promise already closed');
-        console.error('Attempted ' + name + '() with ', data);
-        console.error('Previous status = ', this._status,
-                ', previous value = ', this._value);
-        console.trace();
-
-        if (this._completeTrace) {
-            console.error('Trace of previous completion:');
-            this._completeTrace.log(5);
-        }
-        console.groupEnd();
-        return this;
-    }
-
-    if (_traceCompletion) {
-        this._completeTrace = new Trace(new Error());
-    }
-
-    this._status = status;
-    this._value = data;
-
-    // Call all the handlers, and then delete them
-    list.forEach(function(handler) {
-        handler.call(null, this._value);
-    }, this);
-    this._onSuccessHandlers.length = 0;
-    this._onErrorHandlers.length = 0;
-
-    // Remove the given {promise} from the _outstanding list, and add it to the
-    // _recent list, pruning more than 20 recent promises from that list.
-    delete _outstanding[this._id];
-    _recent.push(this);
-    while (_recent.length > 20) {
-        _recent.shift();
-    }
-
-    return this;
-};
-
-/**
- * Takes an array of promises and returns a promise that that is fulfilled once
- * all the promises in the array are fulfilled
- * @param group The array of promises
- * @return the promise that is fulfilled when all the array is fulfilled
- */
-Promise.group = function(promiseList) {
-    if (!(promiseList instanceof Array)) {
-        promiseList = Array.prototype.slice.call(arguments);
-    }
-
-    // If the original array has nothing in it, return now to avoid waiting
-    if (promiseList.length === 0) {
-        return new Promise().resolve([]);
-    }
-
-    var groupPromise = new Promise();
-    var results = [];
-    var fulfilled = 0;
-
-    var onSuccessFactory = function(index) {
-        return function(data) {
-            results[index] = data;
-            fulfilled++;
-            // If the group has already failed, silently drop extra results
-            if (groupPromise._status !== ERROR) {
-                if (fulfilled === promiseList.length) {
-                    groupPromise.resolve(results);
-                }
-            }
-        };
-    };
-
-    promiseList.forEach(function(promise, index) {
-        var onSuccess = onSuccessFactory(index);
-        var onError = groupPromise.reject.bind(groupPromise);
-        promise.then(onSuccess, onError);
-    });
-
-    return groupPromise;
-};
-
-exports.Promise = Promise;
-exports._outstanding = _outstanding;
-exports._recent = _recent;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *   Patrick Walton (pwalton@mozilla.com)
- *   Julian Viereck (jviereck@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-define('pilot/console', ['require', 'exports', 'module' ], function(require, exports, module) {
-    
-/**
- * This object represents a "safe console" object that forwards debugging
- * messages appropriately without creating a dependency on Firebug in Firefox.
- */
-
-var noop = function() {};
-
-// These are the functions that are available in Chrome 4/5, Safari 4
-// and Firefox 3.6. Don't add to this list without checking browser support
-var NAMES = [
-    "assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd",
-    "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"
-];
-
-if (typeof(window) === 'undefined') {
-    // We're in a web worker. Forward to the main thread so the messages
-    // will show up.
-    NAMES.forEach(function(name) {
-        exports[name] = function() {
-            var args = Array.prototype.slice.call(arguments);
-            var msg = { op: 'log', method: name, args: args };
-            postMessage(JSON.stringify(msg));
-        };
-    });
-} else {
-    // For each of the console functions, copy them if they exist, stub if not
-    NAMES.forEach(function(name) {
-        if (window.console && window.console[name]) {
-            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
-        } else {
-            exports[name] = noop;
-        }
-    });
-}
-
-});
-define('pilot/stacktrace', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(require, exports, module) {
-    
-var ua = require("pilot/useragent");
-var console = require('pilot/console');
-
-// Changed to suit the specific needs of running within Skywriter
-
-// Domain Public by Eric Wendelin http://eriwen.com/ (2008)
-//                  Luke Smith http://lucassmith.name/ (2008)
-//                  Loic Dachary <loic@dachary.org> (2008)
-//                  Johan Euphrosine <proppy@aminche.com> (2008)
-//                  Øyvind Sean Kinsey http://kinsey.no/blog
-//
-// Information and discussions
-// http://jspoker.pokersource.info/skin/test-printstacktrace.html
-// http://eriwen.com/javascript/js-stack-trace/
-// http://eriwen.com/javascript/stacktrace-update/
-// http://pastie.org/253058
-// http://browsershots.org/http://jspoker.pokersource.info/skin/test-printstacktrace.html
-//
-
-//
-// guessFunctionNameFromLines comes from firebug
-//
-// Software License Agreement (BSD License)
-//
-// Copyright (c) 2007, Parakey Inc.
-// All rights reserved.
-//
-// Redistribution and use of this software in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above
-//   copyright notice, this list of conditions and the
-//   following disclaimer.
-//
-// * Redistributions in binary form must reproduce the above
-//   copyright notice, this list of conditions and the
-//   following disclaimer in the documentation and/or other
-//   materials provided with the distribution.
-//
-// * Neither the name of Parakey Inc. nor the names of its
-//   contributors may be used to endorse or promote products
-//   derived from this software without specific prior
-//   written permission of Parakey Inc.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-/**
- * Different browsers create stack traces in different ways.
- * <strike>Feature</strike> Browser detection baby ;).
- */
-var mode = (function() {
-
-    // We use SC's browser detection here to avoid the "break on error"
-    // functionality provided by Firebug. Firebug tries to do the right
-    // thing here and break, but it happens every time you load the page.
-    // bug 554105
-    if (ua.isGecko) {
-        return 'firefox';
-    } else if (ua.isOpera) {
-        return 'opera';
-    } else {
-        return 'other';
-    }
-
-    // SC doesn't do any detection of Chrome at this time.
-
-    // this is the original feature detection code that is used as a
-    // fallback.
-    try {
-        (0)();
-    } catch (e) {
-        if (e.arguments) {
-            return 'chrome';
-        }
-        if (e.stack) {
-            return 'firefox';
-        }
-        if (window.opera && !('stacktrace' in e)) { //Opera 9-
-            return 'opera';
-        }
-    }
-    return 'other';
-})();
-
-/**
- *
- */
-function stringifyArguments(args) {
-    for (var i = 0; i < args.length; ++i) {
-        var argument = args[i];
-        if (typeof argument == 'object') {
-            args[i] = '#object';
-        } else if (typeof argument == 'function') {
-            args[i] = '#function';
-        } else if (typeof argument == 'string') {
-            args[i] = '"' + argument + '"';
-        }
-    }
-    return args.join(',');
-}
-
-/**
- * Extract a stack trace from the format emitted by each browser.
- */
-var decoders = {
-    chrome: function(e) {
-        var stack = e.stack;
-        if (!stack) {
-            console.log(e);
-            return [];
-        }
-        return stack.replace(/^.*?\n/, '').
-                replace(/^.*?\n/, '').
-                replace(/^.*?\n/, '').
-                replace(/^[^\(]+?[\n$]/gm, '').
-                replace(/^\s+at\s+/gm, '').
-                replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@').
-                split('\n');
-    },
-
-    firefox: function(e) {
-        var stack = e.stack;
-        if (!stack) {
-            console.log(e);
-            return [];
-        }
-        // stack = stack.replace(/^.*?\n/, '');
-        stack = stack.replace(/(?:\n@:0)?\s+$/m, '');
-        stack = stack.replace(/^\(/gm, '{anonymous}(');
-        return stack.split('\n');
-    },
-
-    // Opera 7.x and 8.x only!
-    opera: function(e) {
-        var lines = e.message.split('\n'), ANON = '{anonymous}',
-            lineRE = /Line\s+(\d+).*?script\s+(http\S+)(?:.*?in\s+function\s+(\S+))?/i, i, j, len;
-
-        for (i = 4, j = 0, len = lines.length; i < len; i += 2) {
-            if (lineRE.test(lines[i])) {
-                lines[j++] = (RegExp.$3 ? RegExp.$3 + '()@' + RegExp.$2 + RegExp.$1 : ANON + '()@' + RegExp.$2 + ':' + RegExp.$1) +
-                ' -- ' +
-                lines[i + 1].replace(/^\s+/, '');
-            }
-        }
-
-        lines.splice(j, lines.length - j);
-        return lines;
-    },
-
-    // Safari, Opera 9+, IE, and others
-    other: function(curr) {
-        var ANON = '{anonymous}', fnRE = /function\s*([\w\-$]+)?\s*\(/i, stack = [], j = 0, fn, args;
-
-        var maxStackSize = 10;
-        while (curr && stack.length < maxStackSize) {
-            fn = fnRE.test(curr.toString()) ? RegExp.$1 || ANON : ANON;
-            args = Array.prototype.slice.call(curr['arguments']);
-            stack[j++] = fn + '(' + stringifyArguments(args) + ')';
-
-            //Opera bug: if curr.caller does not exist, Opera returns curr (WTF)
-            if (curr === curr.caller && window.opera) {
-                //TODO: check for same arguments if possible
-                break;
-            }
-            curr = curr.caller;
-        }
-        return stack;
-    }
-};
-
-/**
- *
- */
-function NameGuesser() {
-}
-
-NameGuesser.prototype = {
-
-    sourceCache: {},
-
-    ajax: function(url) {
-        var req = this.createXMLHTTPObject();
-        if (!req) {
-            return;
-        }
-        req.open('GET', url, false);
-        req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-        req.send('');
-        return req.responseText;
-    },
-
-    createXMLHTTPObject: function() {
-	    // Try XHR methods in order and store XHR factory
-        var xmlhttp, XMLHttpFactories = [
-            function() {
-                return new XMLHttpRequest();
-            }, function() {
-                return new ActiveXObject('Msxml2.XMLHTTP');
-            }, function() {
-                return new ActiveXObject('Msxml3.XMLHTTP');
-            }, function() {
-                return new ActiveXObject('Microsoft.XMLHTTP');
-            }
-        ];
-        for (var i = 0; i < XMLHttpFactories.length; i++) {
-            try {
-                xmlhttp = XMLHttpFactories[i]();
-                // Use memoization to cache the factory
-                this.createXMLHTTPObject = XMLHttpFactories[i];
-                return xmlhttp;
-            } catch (e) {}
-        }
-    },
-
-    getSource: function(url) {
-        if (!(url in this.sourceCache)) {
-            this.sourceCache[url] = this.ajax(url).split('\n');
-        }
-        return this.sourceCache[url];
-    },
-
-    guessFunctions: function(stack) {
-        for (var i = 0; i < stack.length; ++i) {
-            var reStack = /{anonymous}\(.*\)@(\w+:\/\/([-\w\.]+)+(:\d+)?[^:]+):(\d+):?(\d+)?/;
-            var frame = stack[i], m = reStack.exec(frame);
-            if (m) {
-                var file = m[1], lineno = m[4]; //m[7] is character position in Chrome
-                if (file && lineno) {
-                    var functionName = this.guessFunctionName(file, lineno);
-                    stack[i] = frame.replace('{anonymous}', functionName);
-                }
-            }
-        }
-        return stack;
-    },
-
-    guessFunctionName: function(url, lineNo) {
-        try {
-            return this.guessFunctionNameFromLines(lineNo, this.getSource(url));
-        } catch (e) {
-            return 'getSource failed with url: ' + url + ', exception: ' + e.toString();
-        }
-    },
-
-    guessFunctionNameFromLines: function(lineNo, source) {
-        var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
-        var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
-        // Walk backwards from the first line in the function until we find the line which
-        // matches the pattern above, which is the function definition
-        var line = '', maxLines = 10;
-        for (var i = 0; i < maxLines; ++i) {
-            line = source[lineNo - i] + line;
-            if (line !== undefined) {
-                var m = reGuessFunction.exec(line);
-                if (m) {
-                    return m[1];
-                }
-                else {
-                    m = reFunctionArgNames.exec(line);
-                }
-                if (m && m[1]) {
-                    return m[1];
-                }
-            }
-        }
-        return '(?)';
-    }
-};
-
-var guesser = new NameGuesser();
-
-var frameIgnorePatterns = [
-    /http:\/\/localhost:4020\/sproutcore.js:/
-];
-
-exports.ignoreFramesMatching = function(regex) {
-    frameIgnorePatterns.push(regex);
-};
-
-/**
- * Create a stack trace from an exception
- * @param ex {Error} The error to create a stacktrace from (optional)
- * @param guess {Boolean} If we should try to resolve the names of anonymous functions
- */
-exports.Trace = function Trace(ex, guess) {
-    this._ex = ex;
-    this._stack = decoders[mode](ex);
-
-    if (guess) {
-        this._stack = guesser.guessFunctions(this._stack);
-    }
-};
-
-/**
- * Log to the console a number of lines (default all of them)
- * @param lines {number} Maximum number of lines to wrote to console
- */
-exports.Trace.prototype.log = function(lines) {
-    if (lines <= 0) {
-        // You aren't going to have more lines in your stack trace than this
-        // and it still fits in a 32bit integer
-        lines = 999999999;
-    }
-
-    var printed = 0;
-    for (var i = 0; i < this._stack.length && printed < lines; i++) {
-        var frame = this._stack[i];
-        var display = true;
-        frameIgnorePatterns.forEach(function(regex) {
-            if (regex.test(frame)) {
-                display = false;
-            }
-        });
-        if (display) {
-            console.debug(frame);
-            printed++;
-        }
-    }
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
-var ua = navigator.userAgent;
-var av = navigator.appVersion;
-
-/** Is the user using a browser that identifies itself as Windows */
-exports.isWin = (os == "win");
-
-/** Is the user using a browser that identifies itself as Mac OS */
-exports.isMac = (os == "mac");
-
-/** Is the user using a browser that identifies itself as Linux */
-exports.isLinux = (os == "linux");
-
-exports.isIE = ! + "\v1";
-
-/** Is this Firefox or related? */
-exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
-
-/** oldGecko == rev < 2.0 **/
-exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
-
-/** Is this Opera */
-exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
-
-/** Is the user using a browser that identifies itself as WebKit */
-exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
-
-exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
-
-exports.isIPad = ua.indexOf("iPad") >= 0;
-
-/**
- * I hate doing this, but we need some way to determine if the user is on a Mac
- * The reason is that users have different expectations of their key combinations.
- *
- * Take copy as an example, Mac people expect to use CMD or APPLE + C
- * Windows folks expect to use CTRL + C
- */
-exports.OS = {
-    LINUX: 'LINUX',
-    MAC: 'MAC',
-    WINDOWS: 'WINDOWS'
-};
-
-/**
- * Return an exports.OS constant
- */
-exports.getOS = function() {
-    if (exports.isMac) {
-        return exports.OS['MAC'];
-    } else if (exports.isLinux) {
-        return exports.OS['LINUX'];
-    } else {
-        return exports.OS['WINDOWS'];
-    }
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
  * The Original Code is Mozilla Skywriter.
  *
  * The Initial Developer of the Original Code is
@@ -1995,9 +1067,9 @@ exports.getOS = function() {
 
 define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
-exports.startup = function(data, reason) {
-    require('pilot/fixoldbrowsers');
+require('pilot/fixoldbrowsers');
 
+exports.startup = function(data, reason) {
     require('pilot/types/basic').startup(data, reason);
     require('pilot/types/command').startup(data, reason);
     require('pilot/types/settings').startup(data, reason);
@@ -3346,6 +2418,511 @@ Request.prototype.done = function(content) {
 };
 exports.Request = Request;
 
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Joe Walker (jwalker@mozilla.com)
+ *   Patrick Walton (pwalton@mozilla.com)
+ *   Julian Viereck (jviereck@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+define('pilot/console', ['require', 'exports', 'module' ], function(require, exports, module) {
+    
+/**
+ * This object represents a "safe console" object that forwards debugging
+ * messages appropriately without creating a dependency on Firebug in Firefox.
+ */
+
+var noop = function() {};
+
+// These are the functions that are available in Chrome 4/5, Safari 4
+// and Firefox 3.6. Don't add to this list without checking browser support
+var NAMES = [
+    "assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd",
+    "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"
+];
+
+if (typeof(window) === 'undefined') {
+    // We're in a web worker. Forward to the main thread so the messages
+    // will show up.
+    NAMES.forEach(function(name) {
+        exports[name] = function() {
+            var args = Array.prototype.slice.call(arguments);
+            var msg = { op: 'log', method: name, args: args };
+            postMessage(JSON.stringify(msg));
+        };
+    });
+} else {
+    // For each of the console functions, copy them if they exist, stub if not
+    NAMES.forEach(function(name) {
+        if (window.console && window.console[name]) {
+            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
+        } else {
+            exports[name] = noop;
+        }
+    });
+}
+
+});
+define('pilot/stacktrace', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(require, exports, module) {
+    
+var ua = require("pilot/useragent");
+var console = require('pilot/console');
+
+// Changed to suit the specific needs of running within Skywriter
+
+// Domain Public by Eric Wendelin http://eriwen.com/ (2008)
+//                  Luke Smith http://lucassmith.name/ (2008)
+//                  Loic Dachary <loic@dachary.org> (2008)
+//                  Johan Euphrosine <proppy@aminche.com> (2008)
+//                  Øyvind Sean Kinsey http://kinsey.no/blog
+//
+// Information and discussions
+// http://jspoker.pokersource.info/skin/test-printstacktrace.html
+// http://eriwen.com/javascript/js-stack-trace/
+// http://eriwen.com/javascript/stacktrace-update/
+// http://pastie.org/253058
+// http://browsershots.org/http://jspoker.pokersource.info/skin/test-printstacktrace.html
+//
+
+//
+// guessFunctionNameFromLines comes from firebug
+//
+// Software License Agreement (BSD License)
+//
+// Copyright (c) 2007, Parakey Inc.
+// All rights reserved.
+//
+// Redistribution and use of this software in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+//
+// * Redistributions of source code must retain the above
+//   copyright notice, this list of conditions and the
+//   following disclaimer.
+//
+// * Redistributions in binary form must reproduce the above
+//   copyright notice, this list of conditions and the
+//   following disclaimer in the documentation and/or other
+//   materials provided with the distribution.
+//
+// * Neither the name of Parakey Inc. nor the names of its
+//   contributors may be used to endorse or promote products
+//   derived from this software without specific prior
+//   written permission of Parakey Inc.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+/**
+ * Different browsers create stack traces in different ways.
+ * <strike>Feature</strike> Browser detection baby ;).
+ */
+var mode = (function() {
+
+    // We use SC's browser detection here to avoid the "break on error"
+    // functionality provided by Firebug. Firebug tries to do the right
+    // thing here and break, but it happens every time you load the page.
+    // bug 554105
+    if (ua.isGecko) {
+        return 'firefox';
+    } else if (ua.isOpera) {
+        return 'opera';
+    } else {
+        return 'other';
+    }
+
+    // SC doesn't do any detection of Chrome at this time.
+
+    // this is the original feature detection code that is used as a
+    // fallback.
+    try {
+        (0)();
+    } catch (e) {
+        if (e.arguments) {
+            return 'chrome';
+        }
+        if (e.stack) {
+            return 'firefox';
+        }
+        if (window.opera && !('stacktrace' in e)) { //Opera 9-
+            return 'opera';
+        }
+    }
+    return 'other';
+})();
+
+/**
+ *
+ */
+function stringifyArguments(args) {
+    for (var i = 0; i < args.length; ++i) {
+        var argument = args[i];
+        if (typeof argument == 'object') {
+            args[i] = '#object';
+        } else if (typeof argument == 'function') {
+            args[i] = '#function';
+        } else if (typeof argument == 'string') {
+            args[i] = '"' + argument + '"';
+        }
+    }
+    return args.join(',');
+}
+
+/**
+ * Extract a stack trace from the format emitted by each browser.
+ */
+var decoders = {
+    chrome: function(e) {
+        var stack = e.stack;
+        if (!stack) {
+            console.log(e);
+            return [];
+        }
+        return stack.replace(/^.*?\n/, '').
+                replace(/^.*?\n/, '').
+                replace(/^.*?\n/, '').
+                replace(/^[^\(]+?[\n$]/gm, '').
+                replace(/^\s+at\s+/gm, '').
+                replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@').
+                split('\n');
+    },
+
+    firefox: function(e) {
+        var stack = e.stack;
+        if (!stack) {
+            console.log(e);
+            return [];
+        }
+        // stack = stack.replace(/^.*?\n/, '');
+        stack = stack.replace(/(?:\n@:0)?\s+$/m, '');
+        stack = stack.replace(/^\(/gm, '{anonymous}(');
+        return stack.split('\n');
+    },
+
+    // Opera 7.x and 8.x only!
+    opera: function(e) {
+        var lines = e.message.split('\n'), ANON = '{anonymous}',
+            lineRE = /Line\s+(\d+).*?script\s+(http\S+)(?:.*?in\s+function\s+(\S+))?/i, i, j, len;
+
+        for (i = 4, j = 0, len = lines.length; i < len; i += 2) {
+            if (lineRE.test(lines[i])) {
+                lines[j++] = (RegExp.$3 ? RegExp.$3 + '()@' + RegExp.$2 + RegExp.$1 : ANON + '()@' + RegExp.$2 + ':' + RegExp.$1) +
+                ' -- ' +
+                lines[i + 1].replace(/^\s+/, '');
+            }
+        }
+
+        lines.splice(j, lines.length - j);
+        return lines;
+    },
+
+    // Safari, Opera 9+, IE, and others
+    other: function(curr) {
+        var ANON = '{anonymous}', fnRE = /function\s*([\w\-$]+)?\s*\(/i, stack = [], j = 0, fn, args;
+
+        var maxStackSize = 10;
+        while (curr && stack.length < maxStackSize) {
+            fn = fnRE.test(curr.toString()) ? RegExp.$1 || ANON : ANON;
+            args = Array.prototype.slice.call(curr['arguments']);
+            stack[j++] = fn + '(' + stringifyArguments(args) + ')';
+
+            //Opera bug: if curr.caller does not exist, Opera returns curr (WTF)
+            if (curr === curr.caller && window.opera) {
+                //TODO: check for same arguments if possible
+                break;
+            }
+            curr = curr.caller;
+        }
+        return stack;
+    }
+};
+
+/**
+ *
+ */
+function NameGuesser() {
+}
+
+NameGuesser.prototype = {
+
+    sourceCache: {},
+
+    ajax: function(url) {
+        var req = this.createXMLHTTPObject();
+        if (!req) {
+            return;
+        }
+        req.open('GET', url, false);
+        req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+        req.send('');
+        return req.responseText;
+    },
+
+    createXMLHTTPObject: function() {
+	    // Try XHR methods in order and store XHR factory
+        var xmlhttp, XMLHttpFactories = [
+            function() {
+                return new XMLHttpRequest();
+            }, function() {
+                return new ActiveXObject('Msxml2.XMLHTTP');
+            }, function() {
+                return new ActiveXObject('Msxml3.XMLHTTP');
+            }, function() {
+                return new ActiveXObject('Microsoft.XMLHTTP');
+            }
+        ];
+        for (var i = 0; i < XMLHttpFactories.length; i++) {
+            try {
+                xmlhttp = XMLHttpFactories[i]();
+                // Use memoization to cache the factory
+                this.createXMLHTTPObject = XMLHttpFactories[i];
+                return xmlhttp;
+            } catch (e) {}
+        }
+    },
+
+    getSource: function(url) {
+        if (!(url in this.sourceCache)) {
+            this.sourceCache[url] = this.ajax(url).split('\n');
+        }
+        return this.sourceCache[url];
+    },
+
+    guessFunctions: function(stack) {
+        for (var i = 0; i < stack.length; ++i) {
+            var reStack = /{anonymous}\(.*\)@(\w+:\/\/([-\w\.]+)+(:\d+)?[^:]+):(\d+):?(\d+)?/;
+            var frame = stack[i], m = reStack.exec(frame);
+            if (m) {
+                var file = m[1], lineno = m[4]; //m[7] is character position in Chrome
+                if (file && lineno) {
+                    var functionName = this.guessFunctionName(file, lineno);
+                    stack[i] = frame.replace('{anonymous}', functionName);
+                }
+            }
+        }
+        return stack;
+    },
+
+    guessFunctionName: function(url, lineNo) {
+        try {
+            return this.guessFunctionNameFromLines(lineNo, this.getSource(url));
+        } catch (e) {
+            return 'getSource failed with url: ' + url + ', exception: ' + e.toString();
+        }
+    },
+
+    guessFunctionNameFromLines: function(lineNo, source) {
+        var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
+        var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
+        // Walk backwards from the first line in the function until we find the line which
+        // matches the pattern above, which is the function definition
+        var line = '', maxLines = 10;
+        for (var i = 0; i < maxLines; ++i) {
+            line = source[lineNo - i] + line;
+            if (line !== undefined) {
+                var m = reGuessFunction.exec(line);
+                if (m) {
+                    return m[1];
+                }
+                else {
+                    m = reFunctionArgNames.exec(line);
+                }
+                if (m && m[1]) {
+                    return m[1];
+                }
+            }
+        }
+        return '(?)';
+    }
+};
+
+var guesser = new NameGuesser();
+
+var frameIgnorePatterns = [
+    /http:\/\/localhost:4020\/sproutcore.js:/
+];
+
+exports.ignoreFramesMatching = function(regex) {
+    frameIgnorePatterns.push(regex);
+};
+
+/**
+ * Create a stack trace from an exception
+ * @param ex {Error} The error to create a stacktrace from (optional)
+ * @param guess {Boolean} If we should try to resolve the names of anonymous functions
+ */
+exports.Trace = function Trace(ex, guess) {
+    this._ex = ex;
+    this._stack = decoders[mode](ex);
+
+    if (guess) {
+        this._stack = guesser.guessFunctions(this._stack);
+    }
+};
+
+/**
+ * Log to the console a number of lines (default all of them)
+ * @param lines {number} Maximum number of lines to wrote to console
+ */
+exports.Trace.prototype.log = function(lines) {
+    if (lines <= 0) {
+        // You aren't going to have more lines in your stack trace than this
+        // and it still fits in a 32bit integer
+        lines = 999999999;
+    }
+
+    var printed = 0;
+    for (var i = 0; i < this._stack.length && printed < lines; i++) {
+        var frame = this._stack[i];
+        var display = true;
+        frameIgnorePatterns.forEach(function(regex) {
+            if (regex.test(frame)) {
+                display = false;
+            }
+        });
+        if (display) {
+            console.debug(frame);
+            printed++;
+        }
+    }
+};
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
+var ua = navigator.userAgent;
+var av = navigator.appVersion;
+
+/** Is the user using a browser that identifies itself as Windows */
+exports.isWin = (os == "win");
+
+/** Is the user using a browser that identifies itself as Mac OS */
+exports.isMac = (os == "mac");
+
+/** Is the user using a browser that identifies itself as Linux */
+exports.isLinux = (os == "linux");
+
+exports.isIE = ! + "\v1";
+
+/** Is this Firefox or related? */
+exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
+
+/** oldGecko == rev < 2.0 **/
+exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
+
+/** Is this Opera */
+exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
+
+/** Is the user using a browser that identifies itself as WebKit */
+exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
+
+exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
+
+exports.isIPad = ua.indexOf("iPad") >= 0;
+
+/**
+ * I hate doing this, but we need some way to determine if the user is on a Mac
+ * The reason is that users have different expectations of their key combinations.
+ *
+ * Take copy as an example, Mac people expect to use CMD or APPLE + C
+ * Windows folks expect to use CTRL + C
+ */
+exports.OS = {
+    LINUX: 'LINUX',
+    MAC: 'MAC',
+    WINDOWS: 'WINDOWS'
+};
+
+/**
+ * Return an exports.OS constant
+ */
+exports.getOS = function() {
+    if (exports.isMac) {
+        return exports.OS['MAC'];
+    } else if (exports.isLinux) {
+        return exports.OS['LINUX'];
+    } else {
+        return exports.OS['WINDOWS'];
+    }
+};
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
@@ -4826,6 +4403,429 @@ exports.shutdown = function(data, reason) {
     data.env.settings.removeSetting(historyLengthSetting);
 };
 
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Kevin Dangoor (kdangoor@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
+
+var Promise = require("pilot/promise").Promise;
+
+exports.REASONS = {
+    APP_STARTUP: 1,
+    APP_SHUTDOWN: 2,
+    PLUGIN_ENABLE: 3,
+    PLUGIN_DISABLE: 4,
+    PLUGIN_INSTALL: 5,
+    PLUGIN_UNINSTALL: 6,
+    PLUGIN_UPGRADE: 7,
+    PLUGIN_DOWNGRADE: 8
+};
+
+exports.Plugin = function(name) {
+    this.name = name;
+    this.status = this.INSTALLED;
+};
+
+exports.Plugin.prototype = {
+    /**
+     * constants for the state
+     */
+    NEW: 0,
+    INSTALLED: 1,
+    REGISTERED: 2,
+    STARTED: 3,
+    UNREGISTERED: 4,
+    SHUTDOWN: 5,
+
+    install: function(data, reason) {
+        var pr = new Promise();
+        if (this.status > this.NEW) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.install) {
+                pluginModule.install(data, reason);
+            }
+            this.status = this.INSTALLED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
+
+    register: function(data, reason) {
+        var pr = new Promise();
+        if (this.status != this.INSTALLED) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.register) {
+                pluginModule.register(data, reason);
+            }
+            this.status = this.REGISTERED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
+
+    startup: function(data, reason) {
+        reason = reason || exports.REASONS.APP_STARTUP;
+        var pr = new Promise();
+        if (this.status != this.REGISTERED) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.startup) {
+                pluginModule.startup(data, reason);
+            }
+            this.status = this.STARTED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
+
+    shutdown: function(data, reason) {
+        if (this.status != this.STARTED) {
+            return;
+        }
+        pluginModule = require(this.name);
+        if (pluginModule.shutdown) {
+            pluginModule.shutdown(data, reason);
+        }
+    }
+};
+
+exports.PluginCatalog = function() {
+    this.plugins = {};
+};
+
+exports.PluginCatalog.prototype = {
+    registerPlugins: function(pluginList, data, reason) {
+        var registrationPromises = [];
+        pluginList.forEach(function(pluginName) {
+            var plugin = this.plugins[pluginName];
+            if (plugin === undefined) {
+                plugin = new exports.Plugin(pluginName);
+                this.plugins[pluginName] = plugin;
+                registrationPromises.push(plugin.register(data, reason));
+            }
+        }.bind(this));
+        return Promise.group(registrationPromises);
+    },
+
+    startupPlugins: function(data, reason) {
+        var startupPromises = [];
+        for (var pluginName in this.plugins) {
+            var plugin = this.plugins[pluginName];
+            startupPromises.push(plugin.startup(data, reason));
+        }
+        return Promise.group(startupPromises);
+    }
+};
+
+exports.catalog = new exports.PluginCatalog();
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Joe Walker (jwalker@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
+
+var console = require("pilot/console");
+var Trace = require('pilot/stacktrace').Trace;
+
+/**
+ * A promise can be in one of 2 states.
+ * The ERROR and SUCCESS states are terminal, the PENDING state is the only
+ * start state.
+ */
+var ERROR = -1;
+var PENDING = 0;
+var SUCCESS = 1;
+
+/**
+ * We give promises and ID so we can track which are outstanding
+ */
+var _nextId = 0;
+
+/**
+ * Debugging help if 2 things try to complete the same promise.
+ * This can be slow (especially on chrome due to the stack trace unwinding) so
+ * we should leave this turned off in normal use.
+ */
+var _traceCompletion = false;
+
+/**
+ * Outstanding promises. Handy list for debugging only.
+ */
+var _outstanding = [];
+
+/**
+ * Recently resolved promises. Also for debugging only.
+ */
+var _recent = [];
+
+/**
+ * Create an unfulfilled promise
+ */
+Promise = function () {
+    this._status = PENDING;
+    this._value = undefined;
+    this._onSuccessHandlers = [];
+    this._onErrorHandlers = [];
+
+    // Debugging help
+    this._id = _nextId++;
+    //this._createTrace = new Trace(new Error());
+    _outstanding[this._id] = this;
+};
+
+/**
+ * Yeay for RTTI.
+ */
+Promise.prototype.isPromise = true;
+
+/**
+ * Have we either been resolve()ed or reject()ed?
+ */
+Promise.prototype.isComplete = function() {
+    return this._status != PENDING;
+};
+
+/**
+ * Have we resolve()ed?
+ */
+Promise.prototype.isResolved = function() {
+    return this._status == SUCCESS;
+};
+
+/**
+ * Have we reject()ed?
+ */
+Promise.prototype.isRejected = function() {
+    return this._status == ERROR;
+};
+
+/**
+ * Take the specified action of fulfillment of a promise, and (optionally)
+ * a different action on promise rejection.
+ */
+Promise.prototype.then = function(onSuccess, onError) {
+    if (typeof onSuccess === 'function') {
+        if (this._status === SUCCESS) {
+            onSuccess.call(null, this._value);
+        } else if (this._status === PENDING) {
+            this._onSuccessHandlers.push(onSuccess);
+        }
+    }
+
+    if (typeof onError === 'function') {
+        if (this._status === ERROR) {
+            onError.call(null, this._value);
+        } else if (this._status === PENDING) {
+            this._onErrorHandlers.push(onError);
+        }
+    }
+
+    return this;
+};
+
+/**
+ * Like then() except that rather than returning <tt>this</tt> we return
+ * a promise which
+ */
+Promise.prototype.chainPromise = function(onSuccess) {
+    var chain = new Promise();
+    chain._chainedFrom = this;
+    this.then(function(data) {
+        try {
+            chain.resolve(onSuccess(data));
+        } catch (ex) {
+            chain.reject(ex);
+        }
+    }, function(ex) {
+        chain.reject(ex);
+    });
+    return chain;
+};
+
+/**
+ * Supply the fulfillment of a promise
+ */
+Promise.prototype.resolve = function(data) {
+    return this._complete(this._onSuccessHandlers, SUCCESS, data, 'resolve');
+};
+
+/**
+ * Renege on a promise
+ */
+Promise.prototype.reject = function(data) {
+    return this._complete(this._onErrorHandlers, ERROR, data, 'reject');
+};
+
+/**
+ * Internal method to be called on resolve() or reject().
+ * @private
+ */
+Promise.prototype._complete = function(list, status, data, name) {
+    // Complain if we've already been completed
+    if (this._status != PENDING) {
+        console.group('Promise already closed');
+        console.error('Attempted ' + name + '() with ', data);
+        console.error('Previous status = ', this._status,
+                ', previous value = ', this._value);
+        console.trace();
+
+        if (this._completeTrace) {
+            console.error('Trace of previous completion:');
+            this._completeTrace.log(5);
+        }
+        console.groupEnd();
+        return this;
+    }
+
+    if (_traceCompletion) {
+        this._completeTrace = new Trace(new Error());
+    }
+
+    this._status = status;
+    this._value = data;
+
+    // Call all the handlers, and then delete them
+    list.forEach(function(handler) {
+        handler.call(null, this._value);
+    }, this);
+    this._onSuccessHandlers.length = 0;
+    this._onErrorHandlers.length = 0;
+
+    // Remove the given {promise} from the _outstanding list, and add it to the
+    // _recent list, pruning more than 20 recent promises from that list.
+    delete _outstanding[this._id];
+    _recent.push(this);
+    while (_recent.length > 20) {
+        _recent.shift();
+    }
+
+    return this;
+};
+
+/**
+ * Takes an array of promises and returns a promise that that is fulfilled once
+ * all the promises in the array are fulfilled
+ * @param group The array of promises
+ * @return the promise that is fulfilled when all the array is fulfilled
+ */
+Promise.group = function(promiseList) {
+    if (!(promiseList instanceof Array)) {
+        promiseList = Array.prototype.slice.call(arguments);
+    }
+
+    // If the original array has nothing in it, return now to avoid waiting
+    if (promiseList.length === 0) {
+        return new Promise().resolve([]);
+    }
+
+    var groupPromise = new Promise();
+    var results = [];
+    var fulfilled = 0;
+
+    var onSuccessFactory = function(index) {
+        return function(data) {
+            results[index] = data;
+            fulfilled++;
+            // If the group has already failed, silently drop extra results
+            if (groupPromise._status !== ERROR) {
+                if (fulfilled === promiseList.length) {
+                    groupPromise.resolve(results);
+                }
+            }
+        };
+    };
+
+    promiseList.forEach(function(promise, index) {
+        var onSuccess = onSuccessFactory(index);
+        var onError = groupPromise.reject.bind(groupPromise);
+        promise.then(onSuccess, onError);
+    });
+
+    return groupPromise;
+};
+
+exports.Promise = Promise;
+exports._outstanding = _outstanding;
+exports._recent = _recent;
 
 });
 /* vim:ts=4:sts=4:sw=4:
@@ -8006,15 +8006,11 @@ var EditSession = function(text, mode) {
         if (this.$useWorker == useWorker)
             return;
 
-        if (useWorker && !this.$worker && window.Worker)
-            this.$worker = mode.createWorker(this);
-
-        if (!useWorker && this.$worker) {
-            this.$worker.terminate();
-            this.$worker = null;
-        }
-
         this.$useWorker = useWorker;
+
+        this.$stopWorker();
+        if (useWorker)
+            this.$startWorker();
     };
 
     this.getUseWorker = function() {
@@ -8030,14 +8026,12 @@ var EditSession = function(text, mode) {
     this.$mode = null;
     this.setMode = function(mode) {
         if (this.$mode === mode) return;
+        this.$mode = mode;
 
-        if (this.$worker)
-            this.$worker.terminate();
+        this.$stopWorker();
 
-        if (this.$useWorker && typeof Worker !== "undefined" && !require.noWorker)
-            this.$worker = mode.createWorker(this);
-        else
-            this.$worker = null;
+        if (this.$useWorker)    
+            this.$startWorker();
 
         var tokenizer = mode.getTokenizer();
 
@@ -8059,8 +8053,28 @@ var EditSession = function(text, mode) {
         this.bgTokenizer.setDocument(this.getDocument());
         this.bgTokenizer.start(0);
 
-        this.$mode = mode;
         this._dispatchEvent("changeMode");
+    };
+
+    this.$stopWorker = function() {
+        if (this.$worker)
+            this.$worker.terminate();
+        
+        this.$worker = null;
+    };
+    
+    this.$startWorker = function() {
+        if (typeof Worker !== "undefined" && !require.noWorker) {
+            try {
+                this.$worker = this.$mode.createWorker(this);
+            } catch (e) {
+                console.log("Could not load worker");
+                console.log(e);
+                this.$worker = null;                
+            }
+        }
+        else
+            this.$worker = null;
     };
 
     this.getMode = function() {
@@ -14739,6 +14753,11 @@ define("text/styles.css", [], "html {" +
   "    font-size: 12px;" +
   "    background: rgb(14, 98, 165);" +
   "    color: white;" +
+  "}" +
+  "" +
+  "#logo {" +
+  "    padding: 15px;" +
+  "    margin-left: 65px;" +
   "}" +
   "" +
   "#editor {" +
