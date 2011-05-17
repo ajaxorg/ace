@@ -155,6 +155,8 @@ exports.launch = function(env) {
     var container = document.getElementById("editor");
     var cockpitInput = document.getElementById("cockpitInput");
     env.editor = new Editor(new Renderer(container, theme));
+    window.env = env;
+    window.ace = env.editor;
 
     var modes = {
         text: new TextMode(),
@@ -337,7 +339,7 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        var width = (document.documentElement.clientWidth - 300);
+        var width = (document.documentElement.clientWidth - 280);
         container.style.width = width + "px";
         cockpitInput.style.width = width + "px";
         container.style.height = (document.documentElement.clientHeight - 22) + "px";
