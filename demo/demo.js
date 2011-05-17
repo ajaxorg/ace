@@ -155,6 +155,8 @@ exports.launch = function(env) {
     var container = document.getElementById("editor");
     var cockpitInput = document.getElementById("cockpitInput");
     env.editor = new Editor(new Renderer(container, theme));
+    window.env = env;
+    window.ace = env.editor;
 
     var modes = {
         text: new TextMode(),
