@@ -379,8 +379,8 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
-	              } else if (/^.*\.cs$/i.test(file.name)) {
-	                  mode = "csharp";
+                } else if (/^.*\.cs$/i.test(file.name)) {
+                    mode = "csharp";
                 } else if (/^.*\.java$/i.test(file.name)) {
                     mode = "java";
                 } else if (/^.*\.rb$/i.test(file.name)) {
@@ -477,28 +477,58 @@ exports.launch = function(env) {
             mac: "Alt-L",
             sender: "editor"
         },
-        exec: function() {
-            var session = env.editor.session,
-                range = env.editor.selection.getRange(),
-                placeHolder = session.getTextRange(range).substring(0, 3) + "...";
-
-            session.addFold(placeHolder, range);
+        exec: function(env) {
+            toggleFold(env, false)
         }
     });
 
     canon.addCommand({
-        name: "undfold",
+        name: "unfold",
         bindKey: {
             win: "Alt-Shift-L",
             mac: "Alt-Shift-L",
             sender: "editor"
         },
-        exec: function() {
-            var session = env.editor.session,
-                range = env.editor.selection.getRange();
-            session.expandFolds(session.getFoldsInRange(range));
+        exec: function(env) {
+            toggleFold(env, true)
         }
     });
+
+    function toggleFold(env, tryToUnfold) {
+        var session = env.editor.session,
+            selection = env.editor.selection,
+            range = selection.getRange(), addFold;
+
+        if(range.isEmpty()) {
+            var br = session.findMatchingBracket(range.start);
+            var fold = session.getFoldAt(range.start.row, range.start.column)
+            if(fold) {
+                session.expandFold(fold);
+                selection.setSelectionRange(fold.range)
+            } else if(br) {
+                if(range.compare(br.row,br.column) == 1)
+                    range.end = br;
+                else
+                    range.start = br;
+                addFold = true;
+            }
+        } else {
+            var folds = session.getFoldsInRange(range);
+            if(tryToUnfold && folds.length)
+                session.expandFolds(folds);
+            else if(folds.length == 1 && folds[0].range.compare(range) == 0)
+                session.expandFolds(folds);
+            else
+                addFold = true;
+        }
+        if(addFold) {
+            var placeHolder = session.getTextRange(range);
+            if(placeHolder.length < 3)
+                return;
+            placeHolder = placeHolder.trim().substring(0, 3).replace(' ','','g') + "...";
+            session.addFold(placeHolder, range);
+        }
+    }
 };
 
 });
