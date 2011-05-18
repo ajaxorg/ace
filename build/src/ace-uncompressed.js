@@ -1067,9 +1067,9 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/plugin
 
 define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
-require('pilot/fixoldbrowsers');
-
 exports.startup = function(data, reason) {
+    require('pilot/fixoldbrowsers');
+
     require('pilot/types/basic').startup(data, reason);
     require('pilot/types/command').startup(data, reason);
     require('pilot/types/settings').startup(data, reason);
@@ -8030,7 +8030,7 @@ var EditSession = function(text, mode) {
 
         this.$stopWorker();
 
-        if (this.$useWorker)    
+        if (this.$useWorker)
             this.$startWorker();
 
         var tokenizer = mode.getTokenizer();
@@ -8059,19 +8059,19 @@ var EditSession = function(text, mode) {
     this.$stopWorker = function() {
         if (this.$worker)
             this.$worker.terminate();
-        
+
         this.$worker = null;
     };
-    
+
     this.$startWorker = function() {
         if (typeof Worker !== "undefined" && !require.noWorker) {
-            //try {
+            try {
                 this.$worker = this.$mode.createWorker(this);
-//            } catch (e) {
-//                console.log("Could not load worker");
-//                console.log(e);
-//                this.$worker = null;                
-//            }
+            } catch (e) {
+                console.log("Could not load worker");
+                console.log(e);
+                this.$worker = null;
+            }
         }
         else
             this.$worker = null;
@@ -8577,7 +8577,7 @@ var EditSession = function(text, mode) {
                 removedFolds = this.getFoldsInRange(e.data.range);
                 this.removeFolds(removedFolds);
 
-                var foldLine = this.getFoldLine(lastRow);
+                var foldLine = this.getFoldLine(end.row);
                 var idx = 0;
                 if (foldLine) {
                     foldLine.addRemoveChars(end.row, end.column, start.column - end.column);
@@ -8593,7 +8593,7 @@ var EditSession = function(text, mode) {
 
                 for (idx; idx < foldLines.length; idx++) {
                     var foldLine = foldLines[idx];
-                    if (foldLine.start.row >= lastRow) {
+                    if (foldLine.start.row >= end.row) {
                         foldLine.shiftRow(-len);
                     }
                 }
@@ -8985,7 +8985,7 @@ var EditSession = function(text, mode) {
             }
         }
         var docRowCacheLast = docRow;
-        // clamp row before clamping column, for selection on last line 
+        // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
 
         var foldLine = this.getNextFold(docRow);
@@ -9016,7 +9016,7 @@ var EditSession = function(text, mode) {
 
         if (foldLine && foldLine.start.row <= docRow)
             line = this.getFoldDisplayLine(foldLine);
-        else { 
+        else {
             line = this.getLine(docRow);
             foldLine = null;
         }
@@ -9163,21 +9163,29 @@ var EditSession = function(text, mode) {
     };
 
     this.getScreenLength = function() {
-        var length = this.getLength();
         var screenRows = 0;
+        var lastFoldLine = null;
+        var foldLine = null;
         if (!this.$useWrapMode) {
-            screenRows = length;
+            screenRows = this.getLength();
+
+            // Remove the folded lines again.
+            var foldData = this.$foldData;
+            for (var i = 0; i < foldData.length; i++) {
+                foldLine = foldData[i];
+                screenRows -= foldLine.end.row - foldLine.start.row;
+            }
         } else {
             for (var row = 0; row < this.$wrapData.length; row++) {
-                screenRows += this.$wrapData[row].length + 1;
+                if (foldLine = this.getFoldLine(row, lastFoldLine)) {
+                    row = foldLine.end.row;
+                    screenRows += 1;
+                } else {
+                    screenRows += this.$wrapData[row].length + 1;
+                }
             }
         }
 
-        var foldData = this.$foldData;
-        for (var i = 0; i < foldData.length; i++) {
-            var foldLine = foldData[i];
-            screenRows -= foldLine.end.row - foldLine.start.row;
-        }
         return screenRows;
     }
 
@@ -14740,7 +14748,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
 
 define("text/styles.css", [], "html {" +
   "    height: 100%;" +
-  "    width: 100%;    " +
+  "    width: 100%;" +
   "    overflow: hidden;" +
   "}" +
   "" +
@@ -14764,7 +14772,7 @@ define("text/styles.css", [], "html {" +
   "#editor {" +
   "    position: absolute;" +
   "    top:  0px;" +
-  "    left: 300px;" +
+  "    left: 280px;" +
   "    bottom: 0px;" +
   "    right: 0px;" +
   "    background: white;" +
@@ -14784,7 +14792,7 @@ define("text/styles.css", [], "html {" +
   "" +
   "#cockpitInput {" +
   "    position: absolute;" +
-  "    left: 300px;" +
+  "    left: 280px;" +
   "    right: 0px;" +
   "    bottom: 0;" +
   "" +
