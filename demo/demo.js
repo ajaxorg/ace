@@ -154,7 +154,13 @@ exports.launch = function(env) {
 
     var container = document.getElementById("editor");
     var cockpitInput = document.getElementById("cockpitInput");
-    env.editor = new Editor(new Renderer(container, theme));
+
+    // Splitting.
+    var Split = require("ace/split").Split;
+    var split = new Split(container, theme, 1);
+    env.editor = split.getEditor(0);
+    env.split = split;
+//    env.editor = new Editor(new Renderer(container, theme));
     window.env = env;
     window.ace = env.editor;
 
@@ -343,7 +349,8 @@ exports.launch = function(env) {
         container.style.width = width + "px";
         cockpitInput.style.width = width + "px";
         container.style.height = (document.documentElement.clientHeight - 22) + "px";
-        env.editor.resize();
+        env.split.resize();
+//        env.editor.resize();
     };
 
     window.onresize = onResize;
