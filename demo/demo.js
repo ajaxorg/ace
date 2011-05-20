@@ -365,14 +365,10 @@ exports.launch = function(env) {
         env.editor.getSession().setUseSoftTabs(checked);
     });
 
-    var secondSplitSession = null;
     bindDropdown("split", function(value) {
         var sp = env.split;
         if (value == "none") {
-            if (sp.getSplits() == 2) {
-                secondSplitSession = sp.getEditor(1).session;
-                sp.setSplits(1);
-            }
+            sp.setSplits(1);
         } else {
             var newEditor = (sp.getSplits() == 1);
             if (value == "below") {
@@ -383,7 +379,7 @@ exports.launch = function(env) {
             sp.setSplits(2);
 
             if (newEditor) {
-                var session = secondSplitSession || sp.getEditor(0).session;
+                var session = sp.getEditor(0).session;
                 var newSession = sp.setSession(session, 1);
                 newSession.name = session.name;
             }
