@@ -304,7 +304,7 @@ exports.launch = function(env) {
     });
 
     bindDropdown("fontsize", function(value) {
-        document.getElementById("editor").style.fontSize = value;
+        env.split.setFontSize(value);
     });
 
     bindDropdown("soft_wrap", function(value) {
