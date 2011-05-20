@@ -152,6 +152,11 @@ exports.launch = function(env) {
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
+    // Add a "name" property to all docs
+    for (doc in docs) {
+        docs[doc].name = doc;
+    }
+
     var container = document.getElementById("editor");
     var cockpitInput = document.getElementById("cockpitInput");
 
@@ -159,8 +164,11 @@ exports.launch = function(env) {
     var Split = require("ace/split").Split;
     var split = new Split(container, theme, 1);
     env.editor = split.getEditor(0);
+    split.on("focus", function(editor) {
+        env.editor = editor;
+        updateUIEditorOptions();
+    });
     env.split = split;
-//    env.editor = new Editor(new Renderer(container, theme));
     window.env = env;
     window.ace = env.editor;
 
@@ -187,14 +195,36 @@ exports.launch = function(env) {
         return modes[modeEl.value];
     }
 
+    var docEl = document.getElementById("doc");
     var modeEl = document.getElementById("mode");
     var wrapModeEl = document.getElementById("soft_wrap");
+    var themeEl = document.getElementById("theme");
+    var selectStyleEl = document.getElementById("select_style");
+    var highlightActiveEl = document.getElementById("highlight_active");
+    var showHiddenEl = document.getElementById("show_hidden");
+    var showGutterEl = document.getElementById("show_gutter");
+    var showPrintMarginEl = document.getElementById("show_print_margin");
+    var highlightSelectedWordE = document.getElementById("highlight_selected_word");
+    var showHScrollEl = document.getElementById("show_hscroll");
+    var softTabEl = document.getElementById("soft_tab");
 
     bindDropdown("doc", function(value) {
         var doc = docs[value];
-        env.editor.setSession(doc);
+        var session = env.split.setSession(doc);
+        session.name = doc.name;
 
-        var mode = doc.getMode();
+        updateUIEditorOptions();
+
+        env.editor.focus();
+    });
+
+    function updateUIEditorOptions() {
+        var editor = env.editor;
+        var session = editor.session;
+
+        docEl.value = session.name;
+
+        var mode = session.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript";
         }
@@ -244,13 +274,22 @@ exports.launch = function(env) {
             modeEl.value = "text";
         }
 
-        if (!doc.getUseWrapMode()) {
+        if (!session.getUseWrapMode()) {
             wrapModeEl.value = "off";
         } else {
-            wrapModeEl.value = doc.getWrapLimitRange().min || "free";
+            wrapModeEl.value = session.getWrapLimitRange().min || "free";
         }
-        env.editor.focus();
-    });
+
+        selectStyleEl.checked = editor.getSelectionStyle() == "line"
+        themeEl.value = editor.getTheme();
+        highlightActiveEl.checked = editor.getHighlightActiveLine();
+        showHiddenEl.checked = editor.getShowInvisibles();
+        showGutterEl.checked = editor.renderer.getShowGutter();
+        showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
+        highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
+        showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
+        softTabEl.checked = session.getUseSoftTabs();
+    }
 
     bindDropdown("mode", function(value) {
         env.editor.getSession().setMode(modes[value] || modes.text);
@@ -538,6 +577,11 @@ exports.launch = function(env) {
             session.addFold(placeHolder, range);
         }
     }
+
+    env.split.setSplits(2);
+    sp = env.split;
+    session = sp.setSession(sp.getEditor(0).session, 1);
+    session.name = sp.getEditor(0).session.name;
 };
 
 });
