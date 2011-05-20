@@ -369,7 +369,10 @@ exports.launch = function(env) {
     bindDropdown("split", function(value) {
         var sp = env.split;
         if (value == "none") {
-            sp.setSplits(1);
+            if (sp.getSplits() == 2) {
+                secondSplitSession = sp.getEditor(1).session;
+                sp.setSplits(1);
+            }
         } else {
             var newEditor = (sp.getSplits() == 1);
             if (value == "below") {
@@ -383,7 +386,6 @@ exports.launch = function(env) {
                 var session = secondSplitSession || sp.getEditor(0).session;
                 var newSession = sp.setSession(session, 1);
                 newSession.name = session.name;
-                secondSplitSession = newSession;
             }
         }
     });
