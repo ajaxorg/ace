@@ -365,9 +365,13 @@ exports.launch = function(env) {
         env.editor.getSession().setUseSoftTabs(checked);
     });
 
+    var secondSession = null;
     bindDropdown("split", function(value) {
         var sp = env.split;
         if (value == "none") {
+            if (sp.getSplits() == 2) {
+                secondSession = sp.getEditor(1).session;
+            }
             sp.setSplits(1);
         } else {
             var newEditor = (sp.getSplits() == 1);
@@ -379,7 +383,7 @@ exports.launch = function(env) {
             sp.setSplits(2);
 
             if (newEditor) {
-                var session = sp.getEditor(0).session;
+                var session = secondSession || sp.getEditor(0).session;
                 var newSession = sp.setSession(session, 1);
                 newSession.name = session.name;
             }
