@@ -496,14 +496,34 @@ exports.launch = function(env) {
         }
     });
 
+    function isCommentRow(row) {
+        var session = env.editor.session;
+        var token;
+        var tokens = session.getTokens(row, row)[0].tokens;
+        var c = 0;
+        for (var i = 0; i < tokens.length; i++) {
+            token = tokens[i];
+            if (/^comment/.test(token.type)) {
+                return c;
+            } else if (!/^text/.test(token.type)) {
+                return false;
+            }
+            c += token.value.length;
+        }
+        return false;
+    };
+
     function toggleFold(env, tryToUnfold) {
-        var session = env.editor.session,
-            selection = env.editor.selection,
-            range = selection.getRange(), addFold;
+        var session = env.editor.session;
+        var selection = env.editor.selection;
+        var range = selection.getRange();
+        var addFold;
 
         if(range.isEmpty()) {
             var br = session.findMatchingBracket(range.start);
-            var fold = session.getFoldAt(range.start.row, range.start.column)
+            var fold = session.getFoldAt(range.start.row, range.start.column);
+            var column;
+
             if(fold) {
                 session.expandFold(fold);
                 selection.setSelectionRange(fold.range)
@@ -512,6 +532,22 @@ exports.launch = function(env) {
                     range.end = br;
                 else
                     range.start = br;
+                addFold = true;
+            } else if ((column = isCommentRow(range.start.row)) !== false) {
+                var firstCommentRow = range.start.row;
+                var lastCommentRow = range.start.row;
+                var t;
+                while ((t = isCommentRow(firstCommentRow - 1)) !== false) {
+                    firstCommentRow --;
+                    column = t;
+                }
+                while (isCommentRow(lastCommentRow + 1) !== false) {
+                    lastCommentRow ++;
+                }
+                range.start.row = firstCommentRow;
+                range.start.column = column + 2;
+                range.end.row = lastCommentRow;
+                range.end.column = session.getLine(lastCommentRow).length - 1;
                 addFold = true;
             }
         } else {
