@@ -365,6 +365,29 @@ exports.launch = function(env) {
         env.editor.getSession().setUseSoftTabs(checked);
     });
 
+    var secondSplitSession = null;
+    bindDropdown("split", function(value) {
+        var sp = env.split;
+        if (value == "none") {
+            sp.setSplits(1);
+        } else {
+            var newEditor = (sp.getSplits() == 1);
+            if (value == "below") {
+                sp.setOriantation(sp.BELOW);
+            } else {
+                sp.setOriantation(sp.BESIDE);
+            }
+            sp.setSplits(2);
+
+            if (newEditor) {
+                var session = secondSplitSession || sp.getEditor(0).session;
+                var newSession = sp.setSession(session, 1);
+                newSession.name = session.name;
+                secondSplitSession = newSession;
+            }
+        }
+    });
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
@@ -577,11 +600,6 @@ exports.launch = function(env) {
             session.addFold(placeHolder, range);
         }
     }
-
-    env.split.setSplits(2);
-    sp = env.split;
-    session = sp.setSession(sp.getEditor(0).session, 1);
-    session.name = sp.getEditor(0).session.name;
 };
 
 });
