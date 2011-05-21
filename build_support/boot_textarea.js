@@ -39,20 +39,8 @@
 (function() {
 
 var require = window.__ace_shadowed__.require;
-var deps = [
-    "pilot/fixoldbrowsers",
-    "pilot/index",
-    "pilot/plugin_manager",
-    "pilot/environment",
-    "ace/editor",
-    "ace/edit_session",
-    "ace/virtual_renderer",
-    "ace/undomanager",
-    "ace/theme/textmate"
-];
 
-require(deps, function() {
-
+require("pilot/index");
 var catalog = require("pilot/plugin_manager").catalog;
 catalog.registerPlugins([ "pilot/index" ]);
 
@@ -64,6 +52,9 @@ var Editor = require("ace/editor").Editor;
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+
+var catalog = require("pilot/plugin_manager").catalog;
+catalog.registerPlugins([ "pilot/index" ]);
 
 window.__ace_shadowed__.edit = function(el) {
     if (typeof(el) == "string") {
@@ -373,6 +364,10 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                 case "showPrintMargin":
                     renderer.setShowPrintMargin(toBool(value));
                 break
+
+                case "showInvisibles":
+                    editor.setShowInvisibles(toBool(value));
+                break;
             }
 
             options[key] = value;
@@ -407,7 +402,8 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         fontSize:        "Font Size:",
         softWrap:        "Soft Wrap:",
         showPrintMargin: "Show Print Margin:",
-        useSoftTabs:     "Use Soft Tabs:"
+        useSoftTabs:     "Use Soft Tabs:",
+        showInvisibles:  "Show Invisibles"
     }
 
     var optionValues = {
@@ -417,11 +413,16 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             coffee:     "CoffeeScript",
             html:       "HTML",
             css:        "CSS",
+            xml:        "XML",
+            svg:        "SVG",
             c_cpp:      "C++",
+            csharp:     "C#",
+            java:       "Java",
             php:        "PHP",
             ruby:       "Ruby",
-            python:     "Python"
-
+            perl:       "Perl",
+            python:     "Python",
+            clojure:    "Clojure"
         },
         theme: {
             textmate:         "Textmate",
@@ -451,8 +452,9 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             80:     "80",
             free:   "Free"
         },
-        showPrintMargin: BOOL,
-        useSoftTabs: BOOL
+        showPrintMargin:    BOOL,
+        useSoftTabs:        BOOL,
+        showInvisibles:     BOOL
     }
 
     var table = [];
@@ -511,15 +513,14 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
 
 // Default startup options.
 window.__ace_shadowed__.options = {
-    mode:       "text",
-    theme:      "textmate",
-    gutter:     "false",
-    fontSize:   "12px",
-    softWrap:   "off",
-    showPrintMargin: "false",
-    useSoftTabs: "true"
+    mode:               "text",
+    theme:              "textmate",
+    gutter:             "false",
+    fontSize:           "12px",
+    softWrap:           "off",
+    showPrintMargin:    "false",
+    useSoftTabs:        "true",
+    showInvisibles:     "true"
 }
-
-});
 
 })()

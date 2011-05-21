@@ -75,6 +75,7 @@ function inject() {
 
     load('ace.js', 'text!ace/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
+        ace.options.mode = "javascript";
         var Event = ace.require('pilot/event');
         var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
