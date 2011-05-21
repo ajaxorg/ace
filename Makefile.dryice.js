@@ -21,6 +21,7 @@
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Julian Viereck <julian.viereck@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -93,6 +94,10 @@ if (target == "normal") {
     copy({
         source: "build_support/editor_textarea.html",
         dest:   targetDir + '/editor.html'
+    });
+    copy({
+        source: "build_support/style.css",
+        dest:   targetDir + '/style.css'
     });
 }
 
