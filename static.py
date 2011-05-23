@@ -18,8 +18,8 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to:
 
-The Free Software Foundation, Inc., 
-51 Franklin Street, Fifth Floor, 
+The Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor,
 Boston, MA  02110-1301, USA.
 
 Luke Arno can be found at http://lukearno.com/
@@ -49,14 +49,14 @@ class MagicError(Exception): pass
 
 class StatusApp:
     """Used by WSGI apps to return some HTTP status."""
-    
+
     def __init__(self, status, message=None):
         self.status = status
         if message is None:
             self.message = status
         else:
             self.message = message
-        
+
     def __call__(self, environ, start_response, headers=[]):
         if self.message:
             Headers(headers).add_header('Content-type', 'text/plain')
@@ -69,9 +69,9 @@ class StatusApp:
 
 class Cling(object):
     """A stupidly simple way to serve static content via WSGI.
-    
+
     Serve the file of the same path as PATH_INFO in self.datadir.
-    
+
     Look up the Content-type in self.content_types by extension
     or use 'text/plain' if the extension is not found.
 
@@ -173,17 +173,17 @@ def iter_and_close(file_like, block_size):
             else: raise StopIteration
         except StopIteration, si:
             file_like.close()
-            return 
+            return
 
 
 def cling_wrap(package_name, dir_name, **kw):
     """Return a Cling that serves from the given package and dir_name.
-    
+
     This uses pkg_resources.resource_filename which is not the
-    recommended way, since it extracts the files. 
-    
-    I think this works fine unless you have some _very_ serious 
-    requirements for static content, in which case you probably 
+    recommended way, since it extracts the files.
+
+    I think this works fine unless you have some _very_ serious
+    requirements for static content, in which case you probably
     shouldn't be serving it through a WSGI app, IMHO. YMMV.
     """
     resource = Requirement.parse(package_name)
@@ -191,7 +191,7 @@ def cling_wrap(package_name, dir_name, **kw):
 
 
 def command():
-    parser = OptionParser(usage="%prog DIR [HOST][:][PORT]", 
+    parser = OptionParser(usage="%prog DIR [HOST][:][PORT]",
                           version="static 0.3.6")
     options, args = parser.parse_args()
     if len(args) in (1, 2):
@@ -209,7 +209,7 @@ def command():
         if not host:
             host = '0.0.0.0'
         if not port:
-            port = 9999
+            port = 8888
         try:
             port = int(port)
         except:
@@ -230,8 +230,8 @@ def test():
     from wsgiref.validate import validator
     app = Cling(getcwd())
     try:
-        print "Serving " + getcwd() + " to http://localhost:9999"
-        make_server('0.0.0.0', 9999, validator(app)).serve_forever()
+        print "Serving " + getcwd() + " to http://localhost:8888"
+        make_server('0.0.0.0', 8888, validator(app)).serve_forever()
     except KeyboardInterrupt, ki:
         print ""
         print "Ciao, baby!"
