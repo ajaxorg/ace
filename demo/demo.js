@@ -551,13 +551,7 @@ exports.launch = function(env) {
                 addFold = true;
             }
         } else {
-            var folds = session.getFoldsInRange(range);
-            if(tryToUnfold && folds.length)
-                session.expandFolds(folds);
-            else if(folds.length == 1 && folds[0].range.compare(range) == 0)
-                session.expandFolds(folds);
-            else
-                addFold = true;
+            addFold = true;
         }
         if(addFold) {
             var placeHolder = session.getTextRange(range);
