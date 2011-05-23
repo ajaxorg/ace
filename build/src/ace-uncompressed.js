@@ -1067,9 +1067,9 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/plugin
 
 define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
-exports.startup = function(data, reason) {
-    require('pilot/fixoldbrowsers');
+require('pilot/fixoldbrowsers');
 
+exports.startup = function(data, reason) {
     require('pilot/types/basic').startup(data, reason);
     require('pilot/types/command').startup(data, reason);
     require('pilot/types/settings').startup(data, reason);
@@ -11155,6 +11155,9 @@ var BackgroundTokenizer = function(tokenizer, editor) {
         if (firstRow > 0 && this.lines[firstRow - 1]) {
             state = this.lines[firstRow - 1].state;
             doCache = true;
+        } else if (firstRow == 0) {
+            state = "start";
+            doCache = true;
         }
 
         var lines = this.doc.getLines(firstRow, lastRow);
@@ -11164,6 +11167,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
                 var state = tokens.state;
                 rows.push(tokens);
 
+                console.log("do cache", doCache, row, state)
                 if (doCache) {
                     this.lines[row] = tokens;
                 }
