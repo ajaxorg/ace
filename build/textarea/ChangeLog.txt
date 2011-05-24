@@ -1,0 +1,50 @@
+2011.02.14, Version 0.1.6
+
+* Floating Anchors
+  - An Anchor is a floating pointer in the document. 
+  - Whenever text is inserted or deleted before the cursor, the position of the cursor is updated
+  - Usesd for the cursor and selection
+  - Basis for bookmarks, multiple cursors and snippets in the future
+* Extensive support for Cocoa style keybindings on the Mac <https://github.com/ajaxorg/ace/issues/closed#issue/116/comment/767803>
+* New commands:
+  - center selection in viewport
+  - remove to end/start of line
+  - split line
+  - transpose letters
+* Refator markers  
+  - Custom code can be used to render markers
+  - Markers can be in front or behind the text
+  - Markers are now stored in the session (was in the renderer)
+* Lots of IE8 fixes including copy, cut and selections
+* Unit tests can also be run in the browser <https://github.com/ajaxorg/ace/blob/master/lib/ace/test/tests.html>
+* Soft wrap can adapt to the width of the editor (Mike Ratcliffe, Joe Cheng)
+* Add minimal node server server.js to run the Ace demo in Chrome
+* The top level editor.html demo has been renamed to index.html
+* Bug fixes
+  - Fixed gotoLine to consider wrapped lines when calculating where to scroll to (James Allen)
+  - Fixed isues when the editor was scrolled in the web page (Eric Allam)
+  - Highlighting of Python string literals
+  - Syntax rule for PHP comments
+
+2011.02.08, Version 0.1.5
+
+* Add Coffeescript Mode (Satoshi Murakami)
+* Fix word wrap bug (Julian Viereck)
+* Fix packaged version of the Eclipse mode
+* Loading of workers is more robust
+* Fix "click selection"
+* Allow tokizing empty lines (Daniel Krech)
+* Make PageUp/Down behavior more consistent with native OS (Joe Cheng)
+
+2011.02.04, Version 0.1.4
+
+* Add C/C++ mode contributed by Gastón Kleiman
+* Fix exception in key input
+
+2011.02.04, Version 0.1.3
+
+* Let the packaged version play nice with requireJS
+* Add Ruby mode contributed by Shlomo Zalman Heigh
+* Add Java mode contributed by Tom Tasche
+* Fix annotation bug
+* Changing a document added a new empty line at the end
