@@ -987,9 +987,10 @@ if (!String.prototype.trim) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/plugin_manager', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
+define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
 
     require("pilot/index");
+    require("pilot/fixoldbrowsers");
     var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
 
@@ -1067,9 +1068,9 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/plugin
 
 define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
-require('pilot/fixoldbrowsers');
-
 exports.startup = function(data, reason) {
+    require('pilot/fixoldbrowsers');
+
     require('pilot/types/basic').startup(data, reason);
     require('pilot/types/command').startup(data, reason);
     require('pilot/types/settings').startup(data, reason);
@@ -5774,6 +5775,8 @@ var Editor =function(renderer, session) {
             var range = this.selection.getRange();
             var style = this.getSelectionStyle();
             session.$selectionMarker = session.addMarker(range, "ace_selection", style);
+        } else {
+            this.$updateHighlightActiveLine();
         }
 
         if (this.$highlightSelectedWord)
@@ -5809,6 +5812,9 @@ var Editor =function(renderer, session) {
     };
 
     this.onChangeFold = function() {
+        // Update the active line marker as due to folding changes the current
+        // line range on the screen might have changed.
+        this.$updateHighlightActiveLine();
         // TODO: This might be too much updating. Okay for now.
         this.renderer.updateFull();
     };
@@ -6652,12 +6658,17 @@ var TextInput = function(parentNode, host) {
         host.onCompositionUpdate(text.value);
     };
 
-    var onCompositionEnd = function() {
+    var onCompositionEnd = function(e) {
         inCompostion = false;
         host.onCompositionEnd();
-        setTimeout(function () {
-            sendText();
-        }, 0);
+        if (useragent.isGecko) {
+          sendText();
+        } else {
+          setTimeout(function () {
+              if (!inCompostion)
+                  sendText();
+          }, 0);
+        }
     };
 
     var onCopy = function(e) {
@@ -10150,6 +10161,44 @@ var Mode = function() {
 
         editor.session.$selectionOccurrences = [];
     };
+    
+    this.createModeDelegates = function (mapping) {
+        if (!this.$embeds) {
+            return;
+        }
+        this.$modes = {};
+        for (var i = 0; i < this.$embeds.length; i++) {
+            this.$modes[this.$embeds[i]] = new mapping[this.$embeds[i]]();
+        }
+        
+        var delegations = ['toggleCommentLines', 'getNextLineIndent', 'checkOutdent', 'autoOutdent'];
+
+        for (var i = 0; i < delegations.length; i++) {
+            (function(scope) {
+              var functionName = delegations[i];
+              var defaultHandler = scope[functionName];
+              scope[delegations[i]] = function() {
+                  return this.$delegator(functionName, arguments, defaultHandler);
+              }
+            } (this));
+        }
+    }
+    
+    this.$delegator = function(method, args, defaultHandler) {
+        var state = args[0];
+        
+        for (var i = 0; i < this.$embeds.length; i++) {
+            var split = state.split(this.$embeds[i]);
+        
+            if (!split[0] && split[1]) {
+                args[0] = split[1];
+                var mode = this.$modes[this.$embeds[i]];
+                return mode[method].apply(mode, args);
+            }
+        }
+        
+        return defaultHandler ? defaultHandler.apply(this, args) : undefined;
+    };
 
 }).call(Mode.prototype);
 
@@ -10394,6 +10443,34 @@ var TextHighlightRules = function() {
     this.getRules = function() {
         return this.$rules;
     };
+    
+    this.embedRules = function (HighlightRules, prefix, escapeRules, states) {
+        var embedRules = new HighlightRules().getRules();
+        if (states) {
+            for (var i = 0; i < states.length; i++) {
+                states[i] = prefix + states[i];
+            }
+        } else {
+            states = [];
+            for (var key in embedRules) {
+                states.push(prefix + key);
+            }
+        }
+        this.addRules(embedRules, prefix);
+        
+        for (var i = 0; i < states.length; i++) {
+            Array.prototype.unshift.apply(this.$rules[states[i]], escapeRules);
+        }
+        
+        if (!this.$embeds) {
+            this.$embeds = [];
+        }
+        this.$embeds.push(prefix);
+    }
+    
+    this.getEmbeds = function() {
+        return this.$embeds;
+    }
 
 }).call(TextHighlightRules.prototype);
 
@@ -11158,6 +11235,9 @@ var BackgroundTokenizer = function(tokenizer, editor) {
         } else if (firstRow == 0) {
             state = "start";
             doCache = true;
+        } else if (this.lines.length > 0) {
+            // Guess that we haven't changed state.
+            state = this.lines[this.lines.length-1].state;
         }
 
         var lines = this.doc.getLines(firstRow, lastRow);
@@ -11167,7 +11247,6 @@ var BackgroundTokenizer = function(tokenizer, editor) {
                 var state = tokens.state;
                 rows.push(tokens);
 
-                console.log("do cache", doCache, row, state)
                 if (doCache) {
                     this.lines[row] = tokens;
                 }

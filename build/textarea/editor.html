@@ -3,37 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <title>Ace Bookmarklet Builder</title>
 </head>
 <body>
 
-<h1>Ace Bookmarklet Builder</h1>
+<div id="wrapper">
+<div class="content" style="width: 950px">
+    <div class="column1" style="margin-top: 47px">
+        <textarea id="textarea" style="width:300px; height:300px">
+/**
+ * This is Ace injected using a bookmarklet.
+ */
+function foo() {
+    var bar = true;
+}</textarea><br>
+        SourceUrl: <br>
+        <input id="srcURL" style="width:300px" value="http://ajaxorg.github.com/ace/build/textarea/src/"></input><br>
+        <button id="buBuild">Build Link</button> <br> <a href="#"></a>
+    </div>
+    <div class="column2">
+        <h1>Ace Bookmarklet Builder</h1>
 
-<p>
-WARNING: Currently, this is only fully supported in non IE browsers.
-</p>
+        <p id="first">
+        <strong>WARNING:</strong> Currently, this is only supported in non IE browsers.
+        </p>
 
-<p>
-How to use it:
-<ul>
-    <li>Select the options below as you want them to be by default.</li>
-    <li>Enter the "SourceUrl" where you placed the source data which you find under build/textarea/src (you can also leave the default to server the scripts from GitHub).</li>
-    <li>Click the "Build Link" button to generate your custom Ace Bookmarklet.</li>
-    <li>Drag the generated link to your toolbar or store it somewhere else.</li>
-    <li>Go to a page with an textarea element and click the bookmarklet - wait a little bit till the files are loaded.</li>
-    <li>Click 3 times on the textarea you want to replace - Ace will replace it.</li>
-    <li>To change settings, just click the red icon in the bottom right corner.</li>
-</ul>
-</p>
-
-<textarea id="textarea" style="width:300px; height:300px">
-    function foo() {
-        var bar = true;
-    }
-</textarea><br>
-SourceUrl: <input id="srcURL" value="http://ajaxorg.github.com/ace/build/textarea/src/"></input>
-
-<button id="buBuild">Build Link</button> <br> <a href="#"></a>
+        <h2>How to use it:</h2>
+        <ul>
+            <li>Select the options as you want them to be by default.</li>
+            <li>Enter the "SourceUrl". This has to be the URL pointing to build/textarea/src/ (you can leave the default to server the scripts from GitHub).</li>
+            <li>Click the "Build Link" button to generate your custom Ace Bookmarklet.</li>
+            <li>Drag the generated link to your toolbar or store it somewhere else.</li>
+            <li>Go to a page with a textarea element and click the bookmarklet - wait a little bit till the files are loaded.</li>
+            <li>Click three times on the textarea you want to replace - Ace will replace it.</li>
+            <li>To change settings, just click the red icon in the bottom right corner.</li>
+        </ul>
+    </div>
+</div>
+</div>
 
 <script>
 function inject() {
@@ -75,6 +83,7 @@ function inject() {
 
     load('ace.js', 'text!ace/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
+        ace.options.mode = "javascript";
         var Event = ace.require('pilot/event');
         var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
