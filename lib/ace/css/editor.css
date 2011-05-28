@@ -3,13 +3,13 @@
     overflow: hidden;
 
     font-family: "Menlo", "Monaco", "Courier New", monospace;
-    font-size: 12px;  
+    font-size: 12px;
 }
 
 .ace_scroller {
     position: absolute;
     overflow-x: scroll;
-    overflow-y: hidden;     
+    overflow-y: hidden;
 }
 
 .ace_content {
@@ -90,7 +90,7 @@
 .ace_layer {
     z-index: 1;
     position: absolute;
-    overflow: hidden;  
+    overflow: hidden;
     white-space: nowrap;
     height: 100%;
     width: 100%;
@@ -123,6 +123,7 @@
 
 .ace_marker-layer {
     cursor: text;
+    pointer-events: none;
 }
 
 .ace_marker-layer .ace_step {
@@ -151,6 +152,10 @@
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+
+.ace_line .ace_fold {
+    cursor: pointer;
 }
 
 .ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {

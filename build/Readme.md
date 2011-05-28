@@ -16,6 +16,10 @@ Features
 * Highlight matching parentheses
 * Toggle between soft tabs and real tabs
 * Displays hidden characters
+* Drap and drop text using the mouse
+* Line wrapping
+* Unstructured / user code folding
+* Live syntax checker (currently JavaScript/CoffeeScript)
 
 Take Ace for a spin!
 --------------------
@@ -35,6 +39,7 @@ Getting the code
 Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the Mozilla tri-license (MPL/GPL/LGPL), the same license used by Firefox. This license is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
 
     git clone git://github.com/ajaxorg/ace.git
+    cd ace
     git submodule update --init --recursive
 
 Embedding Ace
@@ -51,23 +56,41 @@ The easiest version is simply:
         var editor = ace.edit("editor");
     };
     </script>
-    
+
+With "editor" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.
+
+    #editor {
+        position: absolute;
+        width: 500px;
+        height: 400px;
+    }
+
+
 To change the theme simply include the Theme's JavaScript file
 
     <script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
-    
+
 and configure the editor to use the theme:
 
     editor.setTheme("ace/theme/twilight");
-    
+
 By default the editor only supports plain text mode; many other languages are available as separate modules. After including the mode's JavaScript file:
 
     <script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-    
+
 Then the mode can be used like this:
 
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
+
+Documentation
+-------------
+
+You find a lot more sample code in the [demo app](https://github.com/ajaxorg/ace/blob/master/demo/demo.js).
+
+There is also some documentation on the [wiki page](https://github.com/ajaxorg/ace/wiki).
+
+If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss).
 
 Running Ace
 -----------
@@ -76,7 +99,11 @@ After the checkout Ace works out of the box. No build step is required. Open 'ed
 
     ./static.py
 
-The editor can then be opened at http://localhost:9999/editor.html.
+Or using Node.JS
+
+    ./static.js
+
+The editor can then be opened at http://localhost:8888/index.html.
 
 Package Ace
 -----------
@@ -87,9 +114,13 @@ To package Ace we use the dryice build tool developed by the Mozilla Skywriter t
 
 Afterwards Ace can be built by calling
 
-    ./Makefile.dryice.js
+    ./Makefile.dryice.js normal
 
 The packaged Ace will be put in the 'build' folder.
+
+To build the bookmarklet version execute
+
+    ./Makefile.dryice.js bm
 
 Running the Unit Tests
 ----------------------
@@ -101,6 +132,14 @@ The Ace unit tests run on node.js. Before the first run a couple of node modules
 To run the tests call:
 
     node lib/ace/test/all.js
+
+You can also run the tests in your browser by serving:
+
+    http://localhost:8888/lib/ace/test/tests.html
+
+This makes debugging failing tests way more easier.
+
+_Note_: Currently (2011-05-21) the tests seem to run on Chrome only.
 
 Contributing
 ------------

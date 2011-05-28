@@ -43,19 +43,16 @@
  
 (function() {
     
+// if we find an existing require function use it.
 if (window.require) {
     require.packaged = true;
     return;
 }
     
-var _define = function(module, deps, payload) {
+window.define = function(module, deps, payload) {
     if (typeof module !== 'string') {
-        if (_define.original)
-            _define.original.apply(window, arguments);
-        else {
-            console.error('dropping module because define wasn\'t a string.');
-            console.trace();
-        }
+        console.error('dropping module because define wasn\'t a string.');
+        console.trace();
         return;
     }
 
@@ -67,22 +64,15 @@ var _define = function(module, deps, payload) {
         
     define.modules[module] = payload;
 };
-if (window.define)
-    _define.original = window.define;
-    
-window.define = _define;
-
 
 /**
  * Get at functionality define()ed using the function above
  */
-var _require = function(module, callback) {
+window.require = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
             var dep = lookup(module[i]);
-            if (!dep && _require.original)
-                return _require.original.apply(window, arguments);
             params.push(dep);
         }
         if (callback) {
@@ -91,8 +81,6 @@ var _require = function(module, callback) {
     }
     else if (typeof module === 'string') {
         var payload = lookup(module);
-        if (!payload && _require.original)
-            return _require.original.apply(window, arguments);
         
         if (callback) {
             callback();
@@ -100,16 +88,7 @@ var _require = function(module, callback) {
     
         return payload;
     }
-    else {
-        if (_require.original)
-            return _require.original.apply(window, arguments);
-    }
 };
-
-if (window.require)
-    _require.original = window.require;
-    
-window.require = _require;
 require.packaged = true;
 
 /**
@@ -134,10 +113,12 @@ var lookup = function(moduleName) {
     return module;
 };
 
-})();// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
+})();// vim:set ts=4 sts=4 sw=4 st:
+// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
 // -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
 // -- dantman Daniel Friesen Copyright(C) 2010 XXX No License Specified
 // -- fschaefer Florian Schäfer Copyright (C) 2010 MIT License
+// -- Irakli Gozalishvili Copyright (C) 2010 MIT License
 
 /*!
     Copyright (c) 2009, 280 North Inc. http://280north.com/
@@ -163,30 +144,158 @@ define('pilot/fixoldbrowsers', ['require', 'exports', 'module' ], function(requi
  * numbered specification references and quotes herein were taken.  Updating
  * these references and quotes to reflect the new document would be a welcome
  * volunteer project.
- * 
+ *
  * @module
  */
 
 /*whatsupdoc*/
 
-// this is often accessed, so avoid multiple dereference costs universally
-var has = Object.prototype.hasOwnProperty;
+//
+// Function
+// ========
+//
+
+// ES-5 15.3.4.5
+// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+
+if (!Function.prototype.bind) {
+    var slice = Array.prototype.slice;
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof target.apply !== "function" || typeof target.call !== "function")
+            return new TypeError();
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        var args = slice.call(arguments);
+        // 4. Let F be a new native ECMAScript object.
+        // 9. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 10. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 11. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 12. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        // 13. The [[Scope]] internal property of F is unused and need not
+        //   exist.
+        var bound = function bound() {
+
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+
+                var self = Object.create(target.prototype);
+                target.apply(self, args.concat(slice.call(arguments)));
+                return self;
+
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the list
+                //   boundArgs in the same order followed by the same values as
+                //   the list ExtraArgs in the same order. 5.  Return the
+                //   result of calling the [[Call]] internal method of target
+                //   providing boundThis as the this value and providing args
+                //   as the arguments.
+
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.call.apply(
+                    target,
+                    args.concat(slice.call(arguments))
+                );
+
+            }
+
+        };
+        bound.length = (
+            // 14. If the [[Class]] internal property of Target is "Function", then
+            typeof target === "function" ?
+            // a. Let L be the length property of Target minus the length of A.
+            // b. Set the length own property of F to either 0 or L, whichever is larger.
+            Math.max(target.length - args.length, 0) :
+            // 15. Else set the length own property of F to 0.
+            0
+        )
+        // 16. The length own property of F is given attributes as specified in
+        //   15.3.5.1.
+        // TODO
+        // 17. Set the [[Extensible]] internal property of F to true.
+        // TODO
+        // 18. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // 19. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property.
+        // XXX can't delete it in pure-js.
+        return bound;
+    };
+}
+
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
+var call = Function.prototype.call;
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
+
+var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
+// If JS engine supports accessors creating shortcuts.
+if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
+
 
 //
 // Array
 // =====
 //
 
-// ES5 15.4.3.2 
+// ES5 15.4.3.2
 if (!Array.isArray) {
-    Array.isArray = function(obj) {
-        return Object.prototype.toString.call(obj) == "[object Array]";
+    Array.isArray = function isArray(obj) {
+        return Object.prototype.toString.call(obj) === "[object Array]";
     };
 }
 
 // ES5 15.4.4.18
 if (!Array.prototype.forEach) {
-    Array.prototype.forEach =  function(block, thisObject) {
+    Array.prototype.forEach =  function forEach(block, thisObject) {
         var len = +this.length;
         for (var i = 0; i < len; i++) {
             if (i in this) {
@@ -199,9 +308,9 @@ if (!Array.prototype.forEach) {
 // ES5 15.4.4.19
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
 if (!Array.prototype.map) {
-    Array.prototype.map = function(fun /*, thisp*/) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
         var len = +this.length;
-        if (typeof fun != "function")
+        if (typeof fun !== "function")
           throw new TypeError();
 
         var res = new Array(len);
@@ -217,7 +326,7 @@ if (!Array.prototype.map) {
 
 // ES5 15.4.4.20
 if (!Array.prototype.filter) {
-    Array.prototype.filter = function (block /*, thisp */) {
+    Array.prototype.filter = function filter(block /*, thisp */) {
         var values = [];
         var thisp = arguments[1];
         for (var i = 0; i < this.length; i++)
@@ -229,7 +338,7 @@ if (!Array.prototype.filter) {
 
 // ES5 15.4.4.16
 if (!Array.prototype.every) {
-    Array.prototype.every = function (block /*, thisp */) {
+    Array.prototype.every = function every(block /*, thisp */) {
         var thisp = arguments[1];
         for (var i = 0; i < this.length; i++)
             if (!block.call(thisp, this[i]))
@@ -240,7 +349,7 @@ if (!Array.prototype.every) {
 
 // ES5 15.4.4.17
 if (!Array.prototype.some) {
-    Array.prototype.some = function (block /*, thisp */) {
+    Array.prototype.some = function some(block /*, thisp */) {
         var thisp = arguments[1];
         for (var i = 0; i < this.length; i++)
             if (block.call(thisp, this[i]))
@@ -252,13 +361,13 @@ if (!Array.prototype.some) {
 // ES5 15.4.4.21
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
 if (!Array.prototype.reduce) {
-    Array.prototype.reduce = function(fun /*, initial*/) {
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
         var len = +this.length;
-        if (typeof fun != "function")
+        if (typeof fun !== "function")
             throw new TypeError();
 
         // no value to return if no initial value and an empty array
-        if (len == 0 && arguments.length == 1)
+        if (len === 0 && arguments.length === 1)
             throw new TypeError();
 
         var i = 0;
@@ -289,13 +398,13 @@ if (!Array.prototype.reduce) {
 // ES5 15.4.4.22
 // https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
 if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function(fun /*, initial*/) {
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
         var len = +this.length;
-        if (typeof fun != "function")
+        if (typeof fun !== "function")
             throw new TypeError();
 
         // no value to return if no initial value, empty array
-        if (len == 0 && arguments.length == 1)
+        if (len === 0 && arguments.length === 1)
             throw new TypeError();
 
         var i = len - 1;
@@ -325,7 +434,7 @@ if (!Array.prototype.reduceRight) {
 
 // ES5 15.4.4.14
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function (value /*, fromIndex */ ) {
+    Array.prototype.indexOf = function indexOf(value /*, fromIndex */ ) {
         var length = this.length;
         if (!length)
             return -1;
@@ -335,7 +444,7 @@ if (!Array.prototype.indexOf) {
         if (i < 0)
             i += length;
         for (; i < length; i++) {
-            if (!has.call(this, i))
+            if (!owns(this, i))
                 continue;
             if (value === this[i])
                 return i;
@@ -346,7 +455,7 @@ if (!Array.prototype.indexOf) {
 
 // ES5 15.4.4.15
 if (!Array.prototype.lastIndexOf) {
-    Array.prototype.lastIndexOf = function (value /*, fromIndex */) {
+    Array.prototype.lastIndexOf = function lastIndexOf(value /*, fromIndex */) {
         var length = this.length;
         if (!length)
             return -1;
@@ -355,7 +464,7 @@ if (!Array.prototype.lastIndexOf) {
             i += length;
         i = Math.min(i, length - 1);
         for (; i >= 0; i--) {
-            if (!has.call(this, i))
+            if (!owns(this, i))
                 continue;
             if (value === this[i])
                 return i;
@@ -367,14 +476,14 @@ if (!Array.prototype.lastIndexOf) {
 //
 // Object
 // ======
-// 
+//
 
 // ES5 15.2.3.2
 if (!Object.getPrototypeOf) {
     // https://github.com/kriskowal/es5-shim/issues#issue/2
     // http://ejohn.org/blog/objectgetprototypeof/
     // recommended by fschaefer on github
-    Object.getPrototypeOf = function (object) {
+    Object.getPrototypeOf = function getPrototypeOf(object) {
         return object.__proto__ || object.constructor.prototype;
         // or undefined if not available in this engine
     };
@@ -382,38 +491,79 @@ if (!Object.getPrototypeOf) {
 
 // ES5 15.2.3.3
 if (!Object.getOwnPropertyDescriptor) {
-    Object.getOwnPropertyDescriptor = function (object, property) {
-        if (typeof object !== "object" && typeof object !== "function" || object === null)
-            throw new TypeError("Object.getOwnPropertyDescriptor called on a non-object");
+    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
+                         "non-object: ";
+    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+        if ((typeof object !== "object" && typeof object !== "function") || object === null)
+            throw new TypeError(ERR_NON_OBJECT + object);
+        // If object does not owns property return undefined immediately.
+        if (!owns(object, property))
+            return undefined;
 
-        return has.call(object, property) ? {
-            value: object[property],
-            enumerable: true,
-            configurable: true,
-            writeable: true
-        } : undefined;
+        var despriptor, getter, setter;
+
+        // If object has a property then it's for sure both `enumerable` and
+        // `configurable`.
+        despriptor =  { enumerable: true, configurable: true };
+
+        // If JS engine supports accessor properties then property may be a
+        // getter or setter.
+        if (supportsAccessors) {
+            // Unfortunately `__lookupGetter__` will return a getter even
+            // if object has own non getter property along with a same named
+            // inherited getter. To avoid misbehavior we temporary remove
+            // `__proto__` so that `__lookupGetter__` will return getter only
+            // if it's owned by an object.
+            var prototype = object.__proto__;
+            object.__proto__ = prototypeOfObject;
+
+            var getter = lookupGetter(object, property);
+            var setter = lookupSetter(object, property);
+
+            // Once we have getter and setter we can put values back.
+            object.__proto__ = prototype;
+
+            if (getter || setter) {
+                if (getter) descriptor.get = getter;
+                if (setter) descriptor.set = setter;
+
+                // If it was accessor property we're done and return here
+                // in order to avoid adding `value` to the descriptor.
+                return descriptor;
+            }
+        }
+
+        // If we got this far we know that object has an own property that is
+        // not an accessor so we set it as a value and return descriptor.
+        descriptor.value = object[property];
+        return descriptor;
     };
 }
 
 // ES5 15.2.3.4
 if (!Object.getOwnPropertyNames) {
-    Object.getOwnPropertyNames = function (object) {
+    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
         return Object.keys(object);
     };
 }
 
-// ES5 15.2.3.5 
+// ES5 15.2.3.5
 if (!Object.create) {
-    Object.create = function(prototype, properties) {
+    Object.create = function create(prototype, properties) {
         var object;
         if (prototype === null) {
-            object = {"__proto__": null};
+            object = { "__proto__": null };
         } else {
-            if (typeof prototype != "object")
+            if (typeof prototype !== "object")
                 throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
             var Type = function () {};
             Type.prototype = prototype;
             object = new Type();
+            // IE has no built-in implementation of `Object.getPrototypeOf`
+            // neither `__proto__`, but this manually setting `__proto__` will
+            // guarantee that `Object.getPrototypeOf` will work as expected with
+            // objects created using `Object.create`
+            object.__proto__ = prototype;
         }
         if (typeof properties !== "undefined")
             Object.defineProperties(object, properties);
@@ -423,44 +573,71 @@ if (!Object.create) {
 
 // ES5 15.2.3.6
 if (!Object.defineProperty) {
-    Object.defineProperty = function(object, property, descriptor) {
-        if (typeof descriptor == "object" && object.__defineGetter__) {
-            if (has.call(descriptor, "value")) {
-                if (!object.__lookupGetter__(property) && !object.__lookupSetter__(property))
-                    // data property defined and no pre-existing accessors
-                    object[property] = descriptor.value;
-                if (has.call(descriptor, "get") || has.call(descriptor, "set"))
-                    // descriptor has a value property but accessor already exists
-                    throw new TypeError("Object doesn't support this action");
-            }
+    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
+                                      "on this javascript engine";
+
+    Object.defineProperty = function defineProperty(object, property, descriptor) {
+        if (typeof object !== "object" && typeof object !== "function")
+            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+        if (typeof object !== "object" || object === null)
+            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+
+        // If it's a data property.
+        if (owns(descriptor, "value")) {
             // fail silently if "writable", "enumerable", or "configurable"
             // are requested but not supported
             /*
             // alternate approach:
             if ( // can't implement these features; allow false but not true
-                !(has.call(descriptor, "writable") ? descriptor.writable : true) ||
-                !(has.call(descriptor, "enumerable") ? descriptor.enumerable : true) ||
-                !(has.call(descriptor, "configurable") ? descriptor.configurable : true)
+                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
+                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
+                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
             )
                 throw new RangeError(
                     "This implementation of Object.defineProperty does not " +
                     "support configurable, enumerable, or writable."
                 );
             */
-            else if (typeof descriptor.get == "function")
-                object.__defineGetter__(property, descriptor.get);
-            if (typeof descriptor.set == "function")
-                object.__defineSetter__(property, descriptor.set);
+
+            if (supportsAccessors && (lookupGetter(object, property) ||
+                                      lookupSetter(object, property)))
+            {
+                // As accessors are supported only on engines implementing
+                // `__proto__` we can safely override `__proto__` while defining
+                // a property to make sure that we don't hit an inherited
+                // accessor.
+                var prototype = object.__proto__;
+                object.__proto__ = prototypeOfObject;
+                // Deleting a property anyway since getter / setter may be
+                // defined on object itself.
+                delete object[property];
+                object[property] = descriptor.value;
+                // Setting original `__proto__` back now.
+                object.prototype;
+            } else {
+                object[property] = descriptor.value;
+            }
+        } else {
+            if (!supportsAccessors)
+                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+            // If we got that far then getters and setters can be defined !!
+            if (owns(descriptor, "get"))
+                defineGetter(object, property, descriptor.get);
+            if (owns(descriptor, "set"))
+                defineSetter(object, property, descriptor.set);
         }
+
         return object;
     };
 }
 
 // ES5 15.2.3.7
 if (!Object.defineProperties) {
-    Object.defineProperties = function(object, properties) {
+    Object.defineProperties = function defineProperties(object, properties) {
         for (var property in properties) {
-            if (has.call(properties, property))
+            if (owns(properties, property))
                 Object.defineProperty(object, property, properties[property]);
         }
         return object;
@@ -469,7 +646,7 @@ if (!Object.defineProperties) {
 
 // ES5 15.2.3.8
 if (!Object.seal) {
-    Object.seal = function (object) {
+    Object.seal = function seal(object) {
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
         // but insecure code.
@@ -479,7 +656,7 @@ if (!Object.seal) {
 
 // ES5 15.2.3.9
 if (!Object.freeze) {
-    Object.freeze = function (object) {
+    Object.freeze = function freeze(object) {
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
         // but insecure code.
@@ -491,12 +668,12 @@ if (!Object.freeze) {
 try {
     Object.freeze(function () {});
 } catch (exception) {
-    Object.freeze = (function (freeze) {
-        return function (object) {
-            if (typeof object == "function") {
+    Object.freeze = (function freeze(freezeObject) {
+        return function freeze(object) {
+            if (typeof object === "function") {
                 return object;
             } else {
-                return freeze(object);
+                return freezeObject(object);
             }
         };
     })(Object.freeze);
@@ -504,7 +681,7 @@ try {
 
 // ES5 15.2.3.10
 if (!Object.preventExtensions) {
-    Object.preventExtensions = function (object) {
+    Object.preventExtensions = function preventExtensions(object) {
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
         // but insecure code.
@@ -514,21 +691,21 @@ if (!Object.preventExtensions) {
 
 // ES5 15.2.3.11
 if (!Object.isSealed) {
-    Object.isSealed = function (object) {
+    Object.isSealed = function isSealed(object) {
         return false;
     };
 }
 
 // ES5 15.2.3.12
 if (!Object.isFrozen) {
-    Object.isFrozen = function (object) {
+    Object.isFrozen = function isFrozen(object) {
         return false;
     };
 }
 
 // ES5 15.2.3.13
 if (!Object.isExtensible) {
-    Object.isExtensible = function (object) {
+    Object.isExtensible = function isExtensible(object) {
         return true;
     };
 }
@@ -552,7 +729,7 @@ if (!Object.keys) {
     for (var key in {"toString": null})
         hasDontEnumBug = false;
 
-    Object.keys = function (object) {
+    Object.keys = function keys(object) {
 
         if (
             typeof object !== "object" && typeof object !== "function"
@@ -562,7 +739,7 @@ if (!Object.keys) {
 
         var keys = [];
         for (var name in object) {
-            if (has.call(object, name)) {
+            if (owns(object, name)) {
                 keys.push(name);
             }
         }
@@ -570,7 +747,7 @@ if (!Object.keys) {
         if (hasDontEnumBug) {
             for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
                 var dontEnum = dontEnums[i];
-                if (has.call(object, dontEnum)) {
+                if (owns(object, dontEnum)) {
                     keys.push(dontEnum);
                 }
             }
@@ -590,7 +767,7 @@ if (!Object.keys) {
 // Format a Date object as a string according to a subset of the ISO-8601 standard.
 // Useful in Atom, among other things.
 if (!Date.prototype.toISOString) {
-    Date.prototype.toISOString = function() {
+    Date.prototype.toISOString = function toISOString() {
         return (
             this.getUTCFullYear() + "-" +
             (this.getUTCMonth() + 1) + "-" +
@@ -598,20 +775,20 @@ if (!Date.prototype.toISOString) {
             this.getUTCHours() + ":" +
             this.getUTCMinutes() + ":" +
             this.getUTCSeconds() + "Z"
-        ); 
+        );
     }
 }
 
 // ES5 15.9.4.4
 if (!Date.now) {
-    Date.now = function () {
+    Date.now = function now() {
         return new Date().getTime();
     };
 }
 
 // ES5 15.9.5.44
 if (!Date.prototype.toJSON) {
-    Date.prototype.toJSON = function (key) {
+    Date.prototype.toJSON = function toJSON(key) {
         // This function provides a String representation of a Date object for
         // use by JSON.stringify (15.12.3). When the toJSON method is called
         // with argument key, the following steps are taken:
@@ -624,7 +801,7 @@ if (!Date.prototype.toJSON) {
         // 4. Let toISO be the result of calling the [[Get]] internal method of
         // O with argument "toISOString".
         // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof this.toISOString != "function")
+        if (typeof this.toISOString !== "function")
             throw new TypeError();
         // 6. Return the result of calling the [[Call]] internal method of
         // toISO with O as the this value and an empty argument list.
@@ -688,7 +865,7 @@ if (isNaN(Date.parse("T00:00"))) {
                         "(\\d\\d)" + // day capture
                     ")?" +
                 ")?" +
-            ")?" + 
+            ")?" +
             "(?:T" + // hour:minute:second.subsecond
                 "(\\d\\d)" + // hour capture
                 ":(\\d\\d)" + // minute capture
@@ -717,7 +894,7 @@ if (isNaN(Date.parse("T00:00"))) {
         // Upgrade Date.parse to handle the ISO dates we use
         // TODO review specification to ascertain whether it is
         // necessary to implement partial ISO date strings.
-        Date.parse = function(string) {
+        Date.parse = function parse(string) {
             var match = isoDateExpression.exec(string);
             if (match) {
                 match.shift(); // kill match[0], the full match
@@ -758,127 +935,6 @@ if (isNaN(Date.parse("T00:00"))) {
     })(Date);
 }
 
-// 
-// Function
-// ========
-// 
-
-// ES-5 15.3.4.5
-// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
-var slice = Array.prototype.slice;
-if (!Function.prototype.bind) {
-    Function.prototype.bind = function (that) { // .length is 1
-        // 1. Let Target be the this value.
-        var target = this;
-        // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        // XXX this gets pretty close, for all intents and purposes, letting 
-        // some duck-types slide
-        if (typeof target.apply != "function" || typeof target.call != "function")
-            return new TypeError();
-        // 3. Let A be a new (possibly empty) internal list of all of the
-        //   argument values provided after thisArg (arg1, arg2 etc), in order.
-        var args = slice.call(arguments);
-        // 4. Let F be a new native ECMAScript object.
-        // 9. Set the [[Prototype]] internal property of F to the standard
-        //   built-in Function prototype object as specified in 15.3.3.1.
-        // 10. Set the [[Call]] internal property of F as described in
-        //   15.3.4.5.1.
-        // 11. Set the [[Construct]] internal property of F as described in
-        //   15.3.4.5.2.
-        // 12. Set the [[HasInstance]] internal property of F as described in
-        //   15.3.4.5.3.
-        // 13. The [[Scope]] internal property of F is unused and need not
-        //   exist.
-        var bound = function () {
-
-            if (this instanceof bound) {
-                // 15.3.4.5.2 [[Construct]]
-                // When the [[Construct]] internal method of a function object,
-                // F that was created using the bind function is called with a
-                // list of arguments ExtraArgs the following steps are taken:
-                // 1. Let target be the value of F's [[TargetFunction]]
-                //   internal property.
-                // 2. If target has no [[Construct]] internal method, a
-                //   TypeError exception is thrown.
-                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the
-                //   list boundArgs in the same order followed by the same
-                //   values as the list ExtraArgs in the same order.
-
-                var self = Object.create(target.prototype);
-                target.apply(self, args.concat(slice.call(arguments)));
-                return self;
-
-            } else {
-                // 15.3.4.5.1 [[Call]]
-                // When the [[Call]] internal method of a function object, F,
-                // which was created using the bind function is called with a
-                // this value and a list of arguments ExtraArgs the following
-                // steps are taken:
-                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 2. Let boundThis be the value of F's [[BoundThis]] internal
-                //   property.
-                // 3. Let target be the value of F's [[TargetFunction]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the list
-                //   boundArgs in the same order followed by the same values as
-                //   the list ExtraArgs in the same order. 5.  Return the
-                //   result of calling the [[Call]] internal method of target
-                //   providing boundThis as the this value and providing args
-                //   as the arguments.
-
-                // equiv: target.call(this, ...boundArgs, ...args)
-                return target.call.apply(
-                    target,
-                    args.concat(slice.call(arguments))
-                );
-
-            }
-
-        };
-        // 5. Set the [[TargetFunction]] internal property of F to Target.
-        // extra:
-        bound.bound = target;
-        // 6. Set the [[BoundThis]] internal property of F to the value of
-        // thisArg.
-        // extra:
-        bound.boundTo = that;
-        // 7. Set the [[BoundArgs]] internal property of F to A.
-        // extra:
-        bound.boundArgs = args;
-        bound.length = (
-            // 14. If the [[Class]] internal property of Target is "Function", then
-            typeof target == "function" ?
-            // a. Let L be the length property of Target minus the length of A.
-            // b. Set the length own property of F to either 0 or L, whichever is larger.
-            Math.max(target.length - args.length, 0) :
-            // 15. Else set the length own property of F to 0.
-            0
-        )
-        // 16. The length own property of F is given attributes as specified in
-        //   15.3.5.1.
-        // TODO
-        // 17. Set the [[Extensible]] internal property of F to true.
-        // TODO
-        // 18. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // 19. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // NOTE Function objects created using Function.prototype.bind do not
-        // have a prototype property.
-        // XXX can't delete it in pure-js.
-        return bound;
-    };
-}
-
 //
 // String
 // ======
@@ -889,12 +945,10 @@ if (!String.prototype.trim) {
     // http://blog.stevenlevithan.com/archives/faster-trim-javascript
     var trimBeginRegexp = /^\s\s*/;
     var trimEndRegexp = /\s\s*$/;
-    String.prototype.trim = function () {
+    String.prototype.trim = function trim() {
         return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
     };
 }
-
-exports.globalsLoaded = true;
 
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -933,10 +987,11 @@ exports.globalsLoaded = true;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/ace', ['require', 'exports', 'module' , 'pilot/plugin_manager', 'pilot/index', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
+define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
 
-    var catalog = require("pilot/plugin_manager").catalog;
     require("pilot/index");
+    require("pilot/fixoldbrowsers");
+    var catalog = require("pilot/plugin_manager").catalog;
     catalog.registerPlugins([ "pilot/index" ]);
 
     var Dom = require("pilot/dom");
@@ -975,934 +1030,6 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/plugin_manager', 'pil
         return editor;
     };
 });/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
-
-var Promise = require("pilot/promise").Promise;
-
-exports.REASONS = {
-    APP_STARTUP: 1,
-    APP_SHUTDOWN: 2,
-    PLUGIN_ENABLE: 3,
-    PLUGIN_DISABLE: 4,
-    PLUGIN_INSTALL: 5,
-    PLUGIN_UNINSTALL: 6,
-    PLUGIN_UPGRADE: 7,
-    PLUGIN_DOWNGRADE: 8
-};
-
-exports.Plugin = function(name) {
-    this.name = name;
-    this.status = this.INSTALLED;
-};
-
-exports.Plugin.prototype = {
-    /**
-     * constants for the state
-     */
-    NEW: 0,
-    INSTALLED: 1,
-    REGISTERED: 2,
-    STARTED: 3,
-    UNREGISTERED: 4,
-    SHUTDOWN: 5,
-
-    install: function(data, reason) {
-        var pr = new Promise();
-        if (this.status > this.NEW) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.install) {
-                pluginModule.install(data, reason);
-            }
-            this.status = this.INSTALLED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    register: function(data, reason) {
-        var pr = new Promise();
-        if (this.status != this.INSTALLED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.register) {
-                pluginModule.register(data, reason);
-            }
-            this.status = this.REGISTERED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    startup: function(data, reason) {
-        reason = reason || exports.REASONS.APP_STARTUP;
-        var pr = new Promise();
-        if (this.status != this.REGISTERED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.startup) {
-                pluginModule.startup(data, reason);
-            }
-            this.status = this.STARTED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    shutdown: function(data, reason) {
-        if (this.status != this.STARTED) {
-            return;
-        }
-        pluginModule = require(this.name);
-        if (pluginModule.shutdown) {
-            pluginModule.shutdown(data, reason);
-        }
-    }
-};
-
-exports.PluginCatalog = function() {
-    this.plugins = {};
-};
-
-exports.PluginCatalog.prototype = {
-    registerPlugins: function(pluginList, data, reason) {
-        var registrationPromises = [];
-        pluginList.forEach(function(pluginName) {
-            var plugin = this.plugins[pluginName];
-            if (plugin === undefined) {
-                plugin = new exports.Plugin(pluginName);
-                this.plugins[pluginName] = plugin;
-                registrationPromises.push(plugin.register(data, reason));
-            }
-        }.bind(this));
-        return Promise.group(registrationPromises);
-    },
-
-    startupPlugins: function(data, reason) {
-        var startupPromises = [];
-        for (var pluginName in this.plugins) {
-            var plugin = this.plugins[pluginName];
-            startupPromises.push(plugin.startup(data, reason));
-        }
-        return Promise.group(startupPromises);
-    }
-};
-
-exports.catalog = new exports.PluginCatalog();
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
-
-var console = require("pilot/console");
-var Trace = require('pilot/stacktrace').Trace;
-
-/**
- * A promise can be in one of 2 states.
- * The ERROR and SUCCESS states are terminal, the PENDING state is the only
- * start state.
- */
-var ERROR = -1;
-var PENDING = 0;
-var SUCCESS = 1;
-
-/**
- * We give promises and ID so we can track which are outstanding
- */
-var _nextId = 0;
-
-/**
- * Debugging help if 2 things try to complete the same promise.
- * This can be slow (especially on chrome due to the stack trace unwinding) so
- * we should leave this turned off in normal use.
- */
-var _traceCompletion = false;
-
-/**
- * Outstanding promises. Handy list for debugging only.
- */
-var _outstanding = [];
-
-/**
- * Recently resolved promises. Also for debugging only.
- */
-var _recent = [];
-
-/**
- * Create an unfulfilled promise
- */
-Promise = function () {
-    this._status = PENDING;
-    this._value = undefined;
-    this._onSuccessHandlers = [];
-    this._onErrorHandlers = [];
-
-    // Debugging help
-    this._id = _nextId++;
-    //this._createTrace = new Trace(new Error());
-    _outstanding[this._id] = this;
-};
-
-/**
- * Yeay for RTTI.
- */
-Promise.prototype.isPromise = true;
-
-/**
- * Have we either been resolve()ed or reject()ed?
- */
-Promise.prototype.isComplete = function() {
-    return this._status != PENDING;
-};
-
-/**
- * Have we resolve()ed?
- */
-Promise.prototype.isResolved = function() {
-    return this._status == SUCCESS;
-};
-
-/**
- * Have we reject()ed?
- */
-Promise.prototype.isRejected = function() {
-    return this._status == ERROR;
-};
-
-/**
- * Take the specified action of fulfillment of a promise, and (optionally)
- * a different action on promise rejection.
- */
-Promise.prototype.then = function(onSuccess, onError) {
-    if (typeof onSuccess === 'function') {
-        if (this._status === SUCCESS) {
-            onSuccess.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onSuccessHandlers.push(onSuccess);
-        }
-    }
-
-    if (typeof onError === 'function') {
-        if (this._status === ERROR) {
-            onError.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onErrorHandlers.push(onError);
-        }
-    }
-
-    return this;
-};
-
-/**
- * Like then() except that rather than returning <tt>this</tt> we return
- * a promise which
- */
-Promise.prototype.chainPromise = function(onSuccess) {
-    var chain = new Promise();
-    chain._chainedFrom = this;
-    this.then(function(data) {
-        try {
-            chain.resolve(onSuccess(data));
-        } catch (ex) {
-            chain.reject(ex);
-        }
-    }, function(ex) {
-        chain.reject(ex);
-    });
-    return chain;
-};
-
-/**
- * Supply the fulfillment of a promise
- */
-Promise.prototype.resolve = function(data) {
-    return this._complete(this._onSuccessHandlers, SUCCESS, data, 'resolve');
-};
-
-/**
- * Renege on a promise
- */
-Promise.prototype.reject = function(data) {
-    return this._complete(this._onErrorHandlers, ERROR, data, 'reject');
-};
-
-/**
- * Internal method to be called on resolve() or reject().
- * @private
- */
-Promise.prototype._complete = function(list, status, data, name) {
-    // Complain if we've already been completed
-    if (this._status != PENDING) {
-        console.group('Promise already closed');
-        console.error('Attempted ' + name + '() with ', data);
-        console.error('Previous status = ', this._status,
-                ', previous value = ', this._value);
-        console.trace();
-
-        if (this._completeTrace) {
-            console.error('Trace of previous completion:');
-            this._completeTrace.log(5);
-        }
-        console.groupEnd();
-        return this;
-    }
-
-    if (_traceCompletion) {
-        this._completeTrace = new Trace(new Error());
-    }
-
-    this._status = status;
-    this._value = data;
-
-    // Call all the handlers, and then delete them
-    list.forEach(function(handler) {
-        handler.call(null, this._value);
-    }, this);
-    this._onSuccessHandlers.length = 0;
-    this._onErrorHandlers.length = 0;
-
-    // Remove the given {promise} from the _outstanding list, and add it to the
-    // _recent list, pruning more than 20 recent promises from that list.
-    delete _outstanding[this._id];
-    _recent.push(this);
-    while (_recent.length > 20) {
-        _recent.shift();
-    }
-
-    return this;
-};
-
-/**
- * Takes an array of promises and returns a promise that that is fulfilled once
- * all the promises in the array are fulfilled
- * @param group The array of promises
- * @return the promise that is fulfilled when all the array is fulfilled
- */
-Promise.group = function(promiseList) {
-    if (!(promiseList instanceof Array)) {
-        promiseList = Array.prototype.slice.call(arguments);
-    }
-
-    // If the original array has nothing in it, return now to avoid waiting
-    if (promiseList.length === 0) {
-        return new Promise().resolve([]);
-    }
-
-    var groupPromise = new Promise();
-    var results = [];
-    var fulfilled = 0;
-
-    var onSuccessFactory = function(index) {
-        return function(data) {
-            results[index] = data;
-            fulfilled++;
-            // If the group has already failed, silently drop extra results
-            if (groupPromise._status !== ERROR) {
-                if (fulfilled === promiseList.length) {
-                    groupPromise.resolve(results);
-                }
-            }
-        };
-    };
-
-    promiseList.forEach(function(promise, index) {
-        var onSuccess = onSuccessFactory(index);
-        var onError = groupPromise.reject.bind(groupPromise);
-        promise.then(onSuccess, onError);
-    });
-
-    return groupPromise;
-};
-
-exports.Promise = Promise;
-exports._outstanding = _outstanding;
-exports._recent = _recent;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *   Patrick Walton (pwalton@mozilla.com)
- *   Julian Viereck (jviereck@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-define('pilot/console', ['require', 'exports', 'module' ], function(require, exports, module) {
-    
-/**
- * This object represents a "safe console" object that forwards debugging
- * messages appropriately without creating a dependency on Firebug in Firefox.
- */
-
-var noop = function() {};
-
-// These are the functions that are available in Chrome 4/5, Safari 4
-// and Firefox 3.6. Don't add to this list without checking browser support
-var NAMES = [
-    "assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd",
-    "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"
-];
-
-if (typeof(window) === 'undefined') {
-    // We're in a web worker. Forward to the main thread so the messages
-    // will show up.
-    NAMES.forEach(function(name) {
-        exports[name] = function() {
-            var args = Array.prototype.slice.call(arguments);
-            var msg = { op: 'log', method: name, args: args };
-            postMessage(JSON.stringify(msg));
-        };
-    });
-} else {
-    // For each of the console functions, copy them if they exist, stub if not
-    NAMES.forEach(function(name) {
-        if (window.console && window.console[name]) {
-            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
-        } else {
-            exports[name] = noop;
-        }
-    });
-}
-
-});
-define('pilot/stacktrace', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(require, exports, module) {
-    
-var ua = require("pilot/useragent");
-var console = require('pilot/console');
-
-// Changed to suit the specific needs of running within Skywriter
-
-// Domain Public by Eric Wendelin http://eriwen.com/ (2008)
-//                  Luke Smith http://lucassmith.name/ (2008)
-//                  Loic Dachary <loic@dachary.org> (2008)
-//                  Johan Euphrosine <proppy@aminche.com> (2008)
-//                  Øyvind Sean Kinsey http://kinsey.no/blog
-//
-// Information and discussions
-// http://jspoker.pokersource.info/skin/test-printstacktrace.html
-// http://eriwen.com/javascript/js-stack-trace/
-// http://eriwen.com/javascript/stacktrace-update/
-// http://pastie.org/253058
-// http://browsershots.org/http://jspoker.pokersource.info/skin/test-printstacktrace.html
-//
-
-//
-// guessFunctionNameFromLines comes from firebug
-//
-// Software License Agreement (BSD License)
-//
-// Copyright (c) 2007, Parakey Inc.
-// All rights reserved.
-//
-// Redistribution and use of this software in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above
-//   copyright notice, this list of conditions and the
-//   following disclaimer.
-//
-// * Redistributions in binary form must reproduce the above
-//   copyright notice, this list of conditions and the
-//   following disclaimer in the documentation and/or other
-//   materials provided with the distribution.
-//
-// * Neither the name of Parakey Inc. nor the names of its
-//   contributors may be used to endorse or promote products
-//   derived from this software without specific prior
-//   written permission of Parakey Inc.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-/**
- * Different browsers create stack traces in different ways.
- * <strike>Feature</strike> Browser detection baby ;).
- */
-var mode = (function() {
-
-    // We use SC's browser detection here to avoid the "break on error"
-    // functionality provided by Firebug. Firebug tries to do the right
-    // thing here and break, but it happens every time you load the page.
-    // bug 554105
-    if (ua.isGecko) {
-        return 'firefox';
-    } else if (ua.isOpera) {
-        return 'opera';
-    } else {
-        return 'other';
-    }
-
-    // SC doesn't do any detection of Chrome at this time.
-
-    // this is the original feature detection code that is used as a
-    // fallback.
-    try {
-        (0)();
-    } catch (e) {
-        if (e.arguments) {
-            return 'chrome';
-        }
-        if (e.stack) {
-            return 'firefox';
-        }
-        if (window.opera && !('stacktrace' in e)) { //Opera 9-
-            return 'opera';
-        }
-    }
-    return 'other';
-})();
-
-/**
- *
- */
-function stringifyArguments(args) {
-    for (var i = 0; i < args.length; ++i) {
-        var argument = args[i];
-        if (typeof argument == 'object') {
-            args[i] = '#object';
-        } else if (typeof argument == 'function') {
-            args[i] = '#function';
-        } else if (typeof argument == 'string') {
-            args[i] = '"' + argument + '"';
-        }
-    }
-    return args.join(',');
-}
-
-/**
- * Extract a stack trace from the format emitted by each browser.
- */
-var decoders = {
-    chrome: function(e) {
-        var stack = e.stack;
-        if (!stack) {
-            console.log(e);
-            return [];
-        }
-        return stack.replace(/^.*?\n/, '').
-                replace(/^.*?\n/, '').
-                replace(/^.*?\n/, '').
-                replace(/^[^\(]+?[\n$]/gm, '').
-                replace(/^\s+at\s+/gm, '').
-                replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@').
-                split('\n');
-    },
-
-    firefox: function(e) {
-        var stack = e.stack;
-        if (!stack) {
-            console.log(e);
-            return [];
-        }
-        // stack = stack.replace(/^.*?\n/, '');
-        stack = stack.replace(/(?:\n@:0)?\s+$/m, '');
-        stack = stack.replace(/^\(/gm, '{anonymous}(');
-        return stack.split('\n');
-    },
-
-    // Opera 7.x and 8.x only!
-    opera: function(e) {
-        var lines = e.message.split('\n'), ANON = '{anonymous}',
-            lineRE = /Line\s+(\d+).*?script\s+(http\S+)(?:.*?in\s+function\s+(\S+))?/i, i, j, len;
-
-        for (i = 4, j = 0, len = lines.length; i < len; i += 2) {
-            if (lineRE.test(lines[i])) {
-                lines[j++] = (RegExp.$3 ? RegExp.$3 + '()@' + RegExp.$2 + RegExp.$1 : ANON + '()@' + RegExp.$2 + ':' + RegExp.$1) +
-                ' -- ' +
-                lines[i + 1].replace(/^\s+/, '');
-            }
-        }
-
-        lines.splice(j, lines.length - j);
-        return lines;
-    },
-
-    // Safari, Opera 9+, IE, and others
-    other: function(curr) {
-        var ANON = '{anonymous}', fnRE = /function\s*([\w\-$]+)?\s*\(/i, stack = [], j = 0, fn, args;
-
-        var maxStackSize = 10;
-        while (curr && stack.length < maxStackSize) {
-            fn = fnRE.test(curr.toString()) ? RegExp.$1 || ANON : ANON;
-            args = Array.prototype.slice.call(curr['arguments']);
-            stack[j++] = fn + '(' + stringifyArguments(args) + ')';
-
-            //Opera bug: if curr.caller does not exist, Opera returns curr (WTF)
-            if (curr === curr.caller && window.opera) {
-                //TODO: check for same arguments if possible
-                break;
-            }
-            curr = curr.caller;
-        }
-        return stack;
-    }
-};
-
-/**
- *
- */
-function NameGuesser() {
-}
-
-NameGuesser.prototype = {
-
-    sourceCache: {},
-
-    ajax: function(url) {
-        var req = this.createXMLHTTPObject();
-        if (!req) {
-            return;
-        }
-        req.open('GET', url, false);
-        req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-        req.send('');
-        return req.responseText;
-    },
-
-    createXMLHTTPObject: function() {
-	    // Try XHR methods in order and store XHR factory
-        var xmlhttp, XMLHttpFactories = [
-            function() {
-                return new XMLHttpRequest();
-            }, function() {
-                return new ActiveXObject('Msxml2.XMLHTTP');
-            }, function() {
-                return new ActiveXObject('Msxml3.XMLHTTP');
-            }, function() {
-                return new ActiveXObject('Microsoft.XMLHTTP');
-            }
-        ];
-        for (var i = 0; i < XMLHttpFactories.length; i++) {
-            try {
-                xmlhttp = XMLHttpFactories[i]();
-                // Use memoization to cache the factory
-                this.createXMLHTTPObject = XMLHttpFactories[i];
-                return xmlhttp;
-            } catch (e) {}
-        }
-    },
-
-    getSource: function(url) {
-        if (!(url in this.sourceCache)) {
-            this.sourceCache[url] = this.ajax(url).split('\n');
-        }
-        return this.sourceCache[url];
-    },
-
-    guessFunctions: function(stack) {
-        for (var i = 0; i < stack.length; ++i) {
-            var reStack = /{anonymous}\(.*\)@(\w+:\/\/([-\w\.]+)+(:\d+)?[^:]+):(\d+):?(\d+)?/;
-            var frame = stack[i], m = reStack.exec(frame);
-            if (m) {
-                var file = m[1], lineno = m[4]; //m[7] is character position in Chrome
-                if (file && lineno) {
-                    var functionName = this.guessFunctionName(file, lineno);
-                    stack[i] = frame.replace('{anonymous}', functionName);
-                }
-            }
-        }
-        return stack;
-    },
-
-    guessFunctionName: function(url, lineNo) {
-        try {
-            return this.guessFunctionNameFromLines(lineNo, this.getSource(url));
-        } catch (e) {
-            return 'getSource failed with url: ' + url + ', exception: ' + e.toString();
-        }
-    },
-
-    guessFunctionNameFromLines: function(lineNo, source) {
-        var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
-        var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
-        // Walk backwards from the first line in the function until we find the line which
-        // matches the pattern above, which is the function definition
-        var line = '', maxLines = 10;
-        for (var i = 0; i < maxLines; ++i) {
-            line = source[lineNo - i] + line;
-            if (line !== undefined) {
-                var m = reGuessFunction.exec(line);
-                if (m) {
-                    return m[1];
-                }
-                else {
-                    m = reFunctionArgNames.exec(line);
-                }
-                if (m && m[1]) {
-                    return m[1];
-                }
-            }
-        }
-        return '(?)';
-    }
-};
-
-var guesser = new NameGuesser();
-
-var frameIgnorePatterns = [
-    /http:\/\/localhost:4020\/sproutcore.js:/
-];
-
-exports.ignoreFramesMatching = function(regex) {
-    frameIgnorePatterns.push(regex);
-};
-
-/**
- * Create a stack trace from an exception
- * @param ex {Error} The error to create a stacktrace from (optional)
- * @param guess {Boolean} If we should try to resolve the names of anonymous functions
- */
-exports.Trace = function Trace(ex, guess) {
-    this._ex = ex;
-    this._stack = decoders[mode](ex);
-
-    if (guess) {
-        this._stack = guesser.guessFunctions(this._stack);
-    }
-};
-
-/**
- * Log to the console a number of lines (default all of them)
- * @param lines {number} Maximum number of lines to wrote to console
- */
-exports.Trace.prototype.log = function(lines) {
-    if (lines <= 0) {
-        // You aren't going to have more lines in your stack trace than this
-        // and it still fits in a 32bit integer
-        lines = 999999999;
-    }
-
-    var printed = 0;
-    for (var i = 0; i < this._stack.length && printed < lines; i++) {
-        var frame = this._stack[i];
-        var display = true;
-        frameIgnorePatterns.forEach(function(regex) {
-            if (regex.test(frame)) {
-                display = false;
-            }
-        });
-        if (display) {
-            console.debug(frame);
-            printed++;
-        }
-    }
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
-var ua = navigator.userAgent;
-var av = navigator.appVersion;
-
-/** Is the user using a browser that identifies itself as Windows */
-exports.isWin = (os == "win");
-
-/** Is the user using a browser that identifies itself as Mac OS */
-exports.isMac = (os == "mac");
-
-/** Is the user using a browser that identifies itself as Linux */
-exports.isLinux = (os == "linux");
-
-exports.isIE = ! + "\v1";
-
-/** Is this Firefox or related? */
-exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
-
-/** oldGecko == rev < 2.0 **/
-exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
-
-/** Is this Opera */
-exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
-
-/** Is the user using a browser that identifies itself as WebKit */
-exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
-
-exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
-
-exports.isIPad = ua.indexOf("iPad") >= 0;
-
-/**
- * I hate doing this, but we need some way to determine if the user is on a Mac
- * The reason is that users have different expectations of their key combinations.
- *
- * Take copy as an example, Mac people expect to use CMD or APPLE + C
- * Windows folks expect to use CTRL + C
- */
-exports.OS = {
-    LINUX: 'LINUX',
-    MAC: 'MAC',
-    WINDOWS: 'WINDOWS'
-};
-
-/**
- * Return an exports.OS constant
- */
-exports.getOS = function() {
-    if (exports.isMac) {
-        return exports.OS['MAC'];
-    } else if (exports.isLinux) {
-        return exports.OS['LINUX'];
-    } else {
-        return exports.OS['WINDOWS'];
-    }
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -3307,6 +2434,511 @@ exports.Request = Request;
  * for the specific language governing rights and limitations under the
  * License.
  *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Joe Walker (jwalker@mozilla.com)
+ *   Patrick Walton (pwalton@mozilla.com)
+ *   Julian Viereck (jviereck@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+define('pilot/console', ['require', 'exports', 'module' ], function(require, exports, module) {
+    
+/**
+ * This object represents a "safe console" object that forwards debugging
+ * messages appropriately without creating a dependency on Firebug in Firefox.
+ */
+
+var noop = function() {};
+
+// These are the functions that are available in Chrome 4/5, Safari 4
+// and Firefox 3.6. Don't add to this list without checking browser support
+var NAMES = [
+    "assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd",
+    "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"
+];
+
+if (typeof(window) === 'undefined') {
+    // We're in a web worker. Forward to the main thread so the messages
+    // will show up.
+    NAMES.forEach(function(name) {
+        exports[name] = function() {
+            var args = Array.prototype.slice.call(arguments);
+            var msg = { op: 'log', method: name, args: args };
+            postMessage(JSON.stringify(msg));
+        };
+    });
+} else {
+    // For each of the console functions, copy them if they exist, stub if not
+    NAMES.forEach(function(name) {
+        if (window.console && window.console[name]) {
+            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
+        } else {
+            exports[name] = noop;
+        }
+    });
+}
+
+});
+define('pilot/stacktrace', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(require, exports, module) {
+    
+var ua = require("pilot/useragent");
+var console = require('pilot/console');
+
+// Changed to suit the specific needs of running within Skywriter
+
+// Domain Public by Eric Wendelin http://eriwen.com/ (2008)
+//                  Luke Smith http://lucassmith.name/ (2008)
+//                  Loic Dachary <loic@dachary.org> (2008)
+//                  Johan Euphrosine <proppy@aminche.com> (2008)
+//                  Øyvind Sean Kinsey http://kinsey.no/blog
+//
+// Information and discussions
+// http://jspoker.pokersource.info/skin/test-printstacktrace.html
+// http://eriwen.com/javascript/js-stack-trace/
+// http://eriwen.com/javascript/stacktrace-update/
+// http://pastie.org/253058
+// http://browsershots.org/http://jspoker.pokersource.info/skin/test-printstacktrace.html
+//
+
+//
+// guessFunctionNameFromLines comes from firebug
+//
+// Software License Agreement (BSD License)
+//
+// Copyright (c) 2007, Parakey Inc.
+// All rights reserved.
+//
+// Redistribution and use of this software in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+//
+// * Redistributions of source code must retain the above
+//   copyright notice, this list of conditions and the
+//   following disclaimer.
+//
+// * Redistributions in binary form must reproduce the above
+//   copyright notice, this list of conditions and the
+//   following disclaimer in the documentation and/or other
+//   materials provided with the distribution.
+//
+// * Neither the name of Parakey Inc. nor the names of its
+//   contributors may be used to endorse or promote products
+//   derived from this software without specific prior
+//   written permission of Parakey Inc.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+/**
+ * Different browsers create stack traces in different ways.
+ * <strike>Feature</strike> Browser detection baby ;).
+ */
+var mode = (function() {
+
+    // We use SC's browser detection here to avoid the "break on error"
+    // functionality provided by Firebug. Firebug tries to do the right
+    // thing here and break, but it happens every time you load the page.
+    // bug 554105
+    if (ua.isGecko) {
+        return 'firefox';
+    } else if (ua.isOpera) {
+        return 'opera';
+    } else {
+        return 'other';
+    }
+
+    // SC doesn't do any detection of Chrome at this time.
+
+    // this is the original feature detection code that is used as a
+    // fallback.
+    try {
+        (0)();
+    } catch (e) {
+        if (e.arguments) {
+            return 'chrome';
+        }
+        if (e.stack) {
+            return 'firefox';
+        }
+        if (window.opera && !('stacktrace' in e)) { //Opera 9-
+            return 'opera';
+        }
+    }
+    return 'other';
+})();
+
+/**
+ *
+ */
+function stringifyArguments(args) {
+    for (var i = 0; i < args.length; ++i) {
+        var argument = args[i];
+        if (typeof argument == 'object') {
+            args[i] = '#object';
+        } else if (typeof argument == 'function') {
+            args[i] = '#function';
+        } else if (typeof argument == 'string') {
+            args[i] = '"' + argument + '"';
+        }
+    }
+    return args.join(',');
+}
+
+/**
+ * Extract a stack trace from the format emitted by each browser.
+ */
+var decoders = {
+    chrome: function(e) {
+        var stack = e.stack;
+        if (!stack) {
+            console.log(e);
+            return [];
+        }
+        return stack.replace(/^.*?\n/, '').
+                replace(/^.*?\n/, '').
+                replace(/^.*?\n/, '').
+                replace(/^[^\(]+?[\n$]/gm, '').
+                replace(/^\s+at\s+/gm, '').
+                replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@').
+                split('\n');
+    },
+
+    firefox: function(e) {
+        var stack = e.stack;
+        if (!stack) {
+            console.log(e);
+            return [];
+        }
+        // stack = stack.replace(/^.*?\n/, '');
+        stack = stack.replace(/(?:\n@:0)?\s+$/m, '');
+        stack = stack.replace(/^\(/gm, '{anonymous}(');
+        return stack.split('\n');
+    },
+
+    // Opera 7.x and 8.x only!
+    opera: function(e) {
+        var lines = e.message.split('\n'), ANON = '{anonymous}',
+            lineRE = /Line\s+(\d+).*?script\s+(http\S+)(?:.*?in\s+function\s+(\S+))?/i, i, j, len;
+
+        for (i = 4, j = 0, len = lines.length; i < len; i += 2) {
+            if (lineRE.test(lines[i])) {
+                lines[j++] = (RegExp.$3 ? RegExp.$3 + '()@' + RegExp.$2 + RegExp.$1 : ANON + '()@' + RegExp.$2 + ':' + RegExp.$1) +
+                ' -- ' +
+                lines[i + 1].replace(/^\s+/, '');
+            }
+        }
+
+        lines.splice(j, lines.length - j);
+        return lines;
+    },
+
+    // Safari, Opera 9+, IE, and others
+    other: function(curr) {
+        var ANON = '{anonymous}', fnRE = /function\s*([\w\-$]+)?\s*\(/i, stack = [], j = 0, fn, args;
+
+        var maxStackSize = 10;
+        while (curr && stack.length < maxStackSize) {
+            fn = fnRE.test(curr.toString()) ? RegExp.$1 || ANON : ANON;
+            args = Array.prototype.slice.call(curr['arguments']);
+            stack[j++] = fn + '(' + stringifyArguments(args) + ')';
+
+            //Opera bug: if curr.caller does not exist, Opera returns curr (WTF)
+            if (curr === curr.caller && window.opera) {
+                //TODO: check for same arguments if possible
+                break;
+            }
+            curr = curr.caller;
+        }
+        return stack;
+    }
+};
+
+/**
+ *
+ */
+function NameGuesser() {
+}
+
+NameGuesser.prototype = {
+
+    sourceCache: {},
+
+    ajax: function(url) {
+        var req = this.createXMLHTTPObject();
+        if (!req) {
+            return;
+        }
+        req.open('GET', url, false);
+        req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+        req.send('');
+        return req.responseText;
+    },
+
+    createXMLHTTPObject: function() {
+	    // Try XHR methods in order and store XHR factory
+        var xmlhttp, XMLHttpFactories = [
+            function() {
+                return new XMLHttpRequest();
+            }, function() {
+                return new ActiveXObject('Msxml2.XMLHTTP');
+            }, function() {
+                return new ActiveXObject('Msxml3.XMLHTTP');
+            }, function() {
+                return new ActiveXObject('Microsoft.XMLHTTP');
+            }
+        ];
+        for (var i = 0; i < XMLHttpFactories.length; i++) {
+            try {
+                xmlhttp = XMLHttpFactories[i]();
+                // Use memoization to cache the factory
+                this.createXMLHTTPObject = XMLHttpFactories[i];
+                return xmlhttp;
+            } catch (e) {}
+        }
+    },
+
+    getSource: function(url) {
+        if (!(url in this.sourceCache)) {
+            this.sourceCache[url] = this.ajax(url).split('\n');
+        }
+        return this.sourceCache[url];
+    },
+
+    guessFunctions: function(stack) {
+        for (var i = 0; i < stack.length; ++i) {
+            var reStack = /{anonymous}\(.*\)@(\w+:\/\/([-\w\.]+)+(:\d+)?[^:]+):(\d+):?(\d+)?/;
+            var frame = stack[i], m = reStack.exec(frame);
+            if (m) {
+                var file = m[1], lineno = m[4]; //m[7] is character position in Chrome
+                if (file && lineno) {
+                    var functionName = this.guessFunctionName(file, lineno);
+                    stack[i] = frame.replace('{anonymous}', functionName);
+                }
+            }
+        }
+        return stack;
+    },
+
+    guessFunctionName: function(url, lineNo) {
+        try {
+            return this.guessFunctionNameFromLines(lineNo, this.getSource(url));
+        } catch (e) {
+            return 'getSource failed with url: ' + url + ', exception: ' + e.toString();
+        }
+    },
+
+    guessFunctionNameFromLines: function(lineNo, source) {
+        var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
+        var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
+        // Walk backwards from the first line in the function until we find the line which
+        // matches the pattern above, which is the function definition
+        var line = '', maxLines = 10;
+        for (var i = 0; i < maxLines; ++i) {
+            line = source[lineNo - i] + line;
+            if (line !== undefined) {
+                var m = reGuessFunction.exec(line);
+                if (m) {
+                    return m[1];
+                }
+                else {
+                    m = reFunctionArgNames.exec(line);
+                }
+                if (m && m[1]) {
+                    return m[1];
+                }
+            }
+        }
+        return '(?)';
+    }
+};
+
+var guesser = new NameGuesser();
+
+var frameIgnorePatterns = [
+    /http:\/\/localhost:4020\/sproutcore.js:/
+];
+
+exports.ignoreFramesMatching = function(regex) {
+    frameIgnorePatterns.push(regex);
+};
+
+/**
+ * Create a stack trace from an exception
+ * @param ex {Error} The error to create a stacktrace from (optional)
+ * @param guess {Boolean} If we should try to resolve the names of anonymous functions
+ */
+exports.Trace = function Trace(ex, guess) {
+    this._ex = ex;
+    this._stack = decoders[mode](ex);
+
+    if (guess) {
+        this._stack = guesser.guessFunctions(this._stack);
+    }
+};
+
+/**
+ * Log to the console a number of lines (default all of them)
+ * @param lines {number} Maximum number of lines to wrote to console
+ */
+exports.Trace.prototype.log = function(lines) {
+    if (lines <= 0) {
+        // You aren't going to have more lines in your stack trace than this
+        // and it still fits in a 32bit integer
+        lines = 999999999;
+    }
+
+    var printed = 0;
+    for (var i = 0; i < this._stack.length && printed < lines; i++) {
+        var frame = this._stack[i];
+        var display = true;
+        frameIgnorePatterns.forEach(function(regex) {
+            if (regex.test(frame)) {
+                display = false;
+            }
+        });
+        if (display) {
+            console.debug(frame);
+            printed++;
+        }
+    }
+};
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
+var ua = navigator.userAgent;
+var av = navigator.appVersion;
+
+/** Is the user using a browser that identifies itself as Windows */
+exports.isWin = (os == "win");
+
+/** Is the user using a browser that identifies itself as Mac OS */
+exports.isMac = (os == "mac");
+
+/** Is the user using a browser that identifies itself as Linux */
+exports.isLinux = (os == "linux");
+
+exports.isIE = ! + "\v1";
+
+/** Is this Firefox or related? */
+exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
+
+/** oldGecko == rev < 2.0 **/
+exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
+
+/** Is this Opera */
+exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
+
+/** Is the user using a browser that identifies itself as WebKit */
+exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
+
+exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
+
+exports.isIPad = ua.indexOf("iPad") >= 0;
+
+/**
+ * I hate doing this, but we need some way to determine if the user is on a Mac
+ * The reason is that users have different expectations of their key combinations.
+ *
+ * Take copy as an example, Mac people expect to use CMD or APPLE + C
+ * Windows folks expect to use CTRL + C
+ */
+exports.OS = {
+    LINUX: 'LINUX',
+    MAC: 'MAC',
+    WINDOWS: 'WINDOWS'
+};
+
+/**
+ * Return an exports.OS constant
+ */
+exports.getOS = function() {
+    if (exports.isMac) {
+        return exports.OS['MAC'];
+    } else if (exports.isLinux) {
+        return exports.OS['LINUX'];
+    } else {
+        return exports.OS['WINDOWS'];
+    }
+};
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
  * The Original Code is Ajax.org Code Editor (ACE).
  *
  * The Initial Developer of the Original Code is
@@ -3755,10 +3387,32 @@ exports.stringRepeat = function (string, count) {
      return new Array(count + 1).join(string);
 };
 
+var trimBeginRegexp = /^\s\s*/;
+var trimEndRegexp = /\s\s*$/;
+
+exports.stringTrimLeft = function (string) {
+    return string.replace(trimBeginRegexp, '')
+};
+
+exports.stringTrimRight = function (string) {
+    return string.replace(trimEndRegexp, '');
+};
+
 exports.copyObject = function(obj) {
     var copy = {};
     for (var key in obj) {
         copy[key] = obj[key];
+    }
+    return copy;
+};
+
+exports.copyArray = function(array){
+    var copy = [];
+    for (i=0, l=array.length; i<l; i++) {
+        if (array[i] && typeof array[i] == "object")
+            copy[i] = this.copyObject( array[i] );
+        else 
+            copy[i] = array[i]
     }
     return copy;
 };
@@ -3803,7 +3457,7 @@ exports.deferredCall = function(fcn) {
     }
 
     deferred.schedule = deferred;
-    
+
     deferred.call = function() {
         this.cancel();
         fcn();
@@ -3815,7 +3469,7 @@ exports.deferredCall = function(fcn) {
         timer = null;
         return deferred;
     };
-    
+
     return deferred;
 };
 
@@ -4752,6 +4406,429 @@ exports.shutdown = function(data, reason) {
 
 
 });
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Kevin Dangoor (kdangoor@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
+
+var Promise = require("pilot/promise").Promise;
+
+exports.REASONS = {
+    APP_STARTUP: 1,
+    APP_SHUTDOWN: 2,
+    PLUGIN_ENABLE: 3,
+    PLUGIN_DISABLE: 4,
+    PLUGIN_INSTALL: 5,
+    PLUGIN_UNINSTALL: 6,
+    PLUGIN_UPGRADE: 7,
+    PLUGIN_DOWNGRADE: 8
+};
+
+exports.Plugin = function(name) {
+    this.name = name;
+    this.status = this.INSTALLED;
+};
+
+exports.Plugin.prototype = {
+    /**
+     * constants for the state
+     */
+    NEW: 0,
+    INSTALLED: 1,
+    REGISTERED: 2,
+    STARTED: 3,
+    UNREGISTERED: 4,
+    SHUTDOWN: 5,
+
+    install: function(data, reason) {
+        var pr = new Promise();
+        if (this.status > this.NEW) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.install) {
+                pluginModule.install(data, reason);
+            }
+            this.status = this.INSTALLED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
+
+    register: function(data, reason) {
+        var pr = new Promise();
+        if (this.status != this.INSTALLED) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.register) {
+                pluginModule.register(data, reason);
+            }
+            this.status = this.REGISTERED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
+
+    startup: function(data, reason) {
+        reason = reason || exports.REASONS.APP_STARTUP;
+        var pr = new Promise();
+        if (this.status != this.REGISTERED) {
+            pr.resolve(this);
+            return pr;
+        }
+        require([this.name], function(pluginModule) {
+            if (pluginModule.startup) {
+                pluginModule.startup(data, reason);
+            }
+            this.status = this.STARTED;
+            pr.resolve(this);
+        }.bind(this));
+        return pr;
+    },
+
+    shutdown: function(data, reason) {
+        if (this.status != this.STARTED) {
+            return;
+        }
+        pluginModule = require(this.name);
+        if (pluginModule.shutdown) {
+            pluginModule.shutdown(data, reason);
+        }
+    }
+};
+
+exports.PluginCatalog = function() {
+    this.plugins = {};
+};
+
+exports.PluginCatalog.prototype = {
+    registerPlugins: function(pluginList, data, reason) {
+        var registrationPromises = [];
+        pluginList.forEach(function(pluginName) {
+            var plugin = this.plugins[pluginName];
+            if (plugin === undefined) {
+                plugin = new exports.Plugin(pluginName);
+                this.plugins[pluginName] = plugin;
+                registrationPromises.push(plugin.register(data, reason));
+            }
+        }.bind(this));
+        return Promise.group(registrationPromises);
+    },
+
+    startupPlugins: function(data, reason) {
+        var startupPromises = [];
+        for (var pluginName in this.plugins) {
+            var plugin = this.plugins[pluginName];
+            startupPromises.push(plugin.startup(data, reason));
+        }
+        return Promise.group(startupPromises);
+    }
+};
+
+exports.catalog = new exports.PluginCatalog();
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Joe Walker (jwalker@mozilla.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
+
+var console = require("pilot/console");
+var Trace = require('pilot/stacktrace').Trace;
+
+/**
+ * A promise can be in one of 2 states.
+ * The ERROR and SUCCESS states are terminal, the PENDING state is the only
+ * start state.
+ */
+var ERROR = -1;
+var PENDING = 0;
+var SUCCESS = 1;
+
+/**
+ * We give promises and ID so we can track which are outstanding
+ */
+var _nextId = 0;
+
+/**
+ * Debugging help if 2 things try to complete the same promise.
+ * This can be slow (especially on chrome due to the stack trace unwinding) so
+ * we should leave this turned off in normal use.
+ */
+var _traceCompletion = false;
+
+/**
+ * Outstanding promises. Handy list for debugging only.
+ */
+var _outstanding = [];
+
+/**
+ * Recently resolved promises. Also for debugging only.
+ */
+var _recent = [];
+
+/**
+ * Create an unfulfilled promise
+ */
+Promise = function () {
+    this._status = PENDING;
+    this._value = undefined;
+    this._onSuccessHandlers = [];
+    this._onErrorHandlers = [];
+
+    // Debugging help
+    this._id = _nextId++;
+    //this._createTrace = new Trace(new Error());
+    _outstanding[this._id] = this;
+};
+
+/**
+ * Yeay for RTTI.
+ */
+Promise.prototype.isPromise = true;
+
+/**
+ * Have we either been resolve()ed or reject()ed?
+ */
+Promise.prototype.isComplete = function() {
+    return this._status != PENDING;
+};
+
+/**
+ * Have we resolve()ed?
+ */
+Promise.prototype.isResolved = function() {
+    return this._status == SUCCESS;
+};
+
+/**
+ * Have we reject()ed?
+ */
+Promise.prototype.isRejected = function() {
+    return this._status == ERROR;
+};
+
+/**
+ * Take the specified action of fulfillment of a promise, and (optionally)
+ * a different action on promise rejection.
+ */
+Promise.prototype.then = function(onSuccess, onError) {
+    if (typeof onSuccess === 'function') {
+        if (this._status === SUCCESS) {
+            onSuccess.call(null, this._value);
+        } else if (this._status === PENDING) {
+            this._onSuccessHandlers.push(onSuccess);
+        }
+    }
+
+    if (typeof onError === 'function') {
+        if (this._status === ERROR) {
+            onError.call(null, this._value);
+        } else if (this._status === PENDING) {
+            this._onErrorHandlers.push(onError);
+        }
+    }
+
+    return this;
+};
+
+/**
+ * Like then() except that rather than returning <tt>this</tt> we return
+ * a promise which
+ */
+Promise.prototype.chainPromise = function(onSuccess) {
+    var chain = new Promise();
+    chain._chainedFrom = this;
+    this.then(function(data) {
+        try {
+            chain.resolve(onSuccess(data));
+        } catch (ex) {
+            chain.reject(ex);
+        }
+    }, function(ex) {
+        chain.reject(ex);
+    });
+    return chain;
+};
+
+/**
+ * Supply the fulfillment of a promise
+ */
+Promise.prototype.resolve = function(data) {
+    return this._complete(this._onSuccessHandlers, SUCCESS, data, 'resolve');
+};
+
+/**
+ * Renege on a promise
+ */
+Promise.prototype.reject = function(data) {
+    return this._complete(this._onErrorHandlers, ERROR, data, 'reject');
+};
+
+/**
+ * Internal method to be called on resolve() or reject().
+ * @private
+ */
+Promise.prototype._complete = function(list, status, data, name) {
+    // Complain if we've already been completed
+    if (this._status != PENDING) {
+        console.group('Promise already closed');
+        console.error('Attempted ' + name + '() with ', data);
+        console.error('Previous status = ', this._status,
+                ', previous value = ', this._value);
+        console.trace();
+
+        if (this._completeTrace) {
+            console.error('Trace of previous completion:');
+            this._completeTrace.log(5);
+        }
+        console.groupEnd();
+        return this;
+    }
+
+    if (_traceCompletion) {
+        this._completeTrace = new Trace(new Error());
+    }
+
+    this._status = status;
+    this._value = data;
+
+    // Call all the handlers, and then delete them
+    list.forEach(function(handler) {
+        handler.call(null, this._value);
+    }, this);
+    this._onSuccessHandlers.length = 0;
+    this._onErrorHandlers.length = 0;
+
+    // Remove the given {promise} from the _outstanding list, and add it to the
+    // _recent list, pruning more than 20 recent promises from that list.
+    delete _outstanding[this._id];
+    _recent.push(this);
+    while (_recent.length > 20) {
+        _recent.shift();
+    }
+
+    return this;
+};
+
+/**
+ * Takes an array of promises and returns a promise that that is fulfilled once
+ * all the promises in the array are fulfilled
+ * @param group The array of promises
+ * @return the promise that is fulfilled when all the array is fulfilled
+ */
+Promise.group = function(promiseList) {
+    if (!(promiseList instanceof Array)) {
+        promiseList = Array.prototype.slice.call(arguments);
+    }
+
+    // If the original array has nothing in it, return now to avoid waiting
+    if (promiseList.length === 0) {
+        return new Promise().resolve([]);
+    }
+
+    var groupPromise = new Promise();
+    var results = [];
+    var fulfilled = 0;
+
+    var onSuccessFactory = function(index) {
+        return function(data) {
+            results[index] = data;
+            fulfilled++;
+            // If the group has already failed, silently drop extra results
+            if (groupPromise._status !== ERROR) {
+                if (fulfilled === promiseList.length) {
+                    groupPromise.resolve(results);
+                }
+            }
+        };
+    };
+
+    promiseList.forEach(function(promise, index) {
+        var onSuccess = onSuccessFactory(index);
+        var onError = groupPromise.reject.bind(groupPromise);
+        promise.then(onSuccess, onError);
+    });
+
+    return groupPromise;
+};
+
+exports.Promise = Promise;
+exports._outstanding = _outstanding;
+exports._recent = _recent;
+
+});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -5252,15 +5329,17 @@ exports.addMultiMouseDownListener = function(el, button, count, timeout, callbac
             }, timeout || 600);
         }
 
-        if (exports.getButton(e) != button
-          || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
+        var isButton = exports.getButton(e) == button;
+        if (!isButton || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
             clicks = 0;
 
         if (clicks == count) {
             clicks = 0;
             callback(e);
         }
-        return exports.preventDefault(e);
+        
+        if (isButton)
+            return exports.preventDefault(e);
     };
 
     exports.addListener(el, "mousedown", listener);
@@ -5567,6 +5646,10 @@ var Editor =function(renderer, session) {
         this.renderer.setTheme(theme);
     };
 
+    this.getTheme = function() {
+        return this.renderer.getTheme();
+    }
+
     this.setStyle = function(style) {
         this.renderer.setStyle(style)
     };
@@ -5696,9 +5779,9 @@ var Editor =function(renderer, session) {
             var range = this.selection.getRange();
             var style = this.getSelectionStyle();
             session.$selectionMarker = session.addMarker(range, "ace_selection", style);
+        } else {
+            this.$updateHighlightActiveLine();
         }
-
-        this.onCursorChange(e);
 
         if (this.$highlightSelectedWord)
             this.session.getMode().highlightSelection(this);
@@ -5733,6 +5816,9 @@ var Editor =function(renderer, session) {
     };
 
     this.onChangeFold = function() {
+        // Update the active line marker as due to folding changes the current
+        // line range on the screen might have changed.
+        this.$updateHighlightActiveLine();
         // TODO: This might be too much updating. Okay for now.
         this.renderer.updateFull();
     };
@@ -6471,6 +6557,10 @@ var Editor =function(renderer, session) {
         this.session.getUndoManager().redo();
     };
 
+    this.destroy = function() {
+        this.renderer.destroy();
+    }
+
 }).call(Editor.prototype);
 
 
@@ -6576,12 +6666,17 @@ var TextInput = function(parentNode, host) {
         host.onCompositionUpdate(text.value);
     };
 
-    var onCompositionEnd = function() {
+    var onCompositionEnd = function(e) {
         inCompostion = false;
         host.onCompositionEnd();
-        setTimeout(function () {
-            sendText();
-        }, 0);
+        if (useragent.isGecko) {
+          sendText();
+        } else {
+          setTimeout(function () {
+              if (!inCompostion)
+                  sendText();
+          }, 0);
+        }
     };
 
     var onCopy = function(e) {
@@ -6783,7 +6878,7 @@ var MouseHandler = function(editor) {
     event.addListener(editor.container, "selectstart", function(e) {
         return event.preventDefault(e);
     });
-    
+
     var mouseTarget = editor.renderer.getMouseEventTarget();
     event.addListener(mouseTarget, "mousedown", this.onMouseDown.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 2, 500, this.onMouseDoubleClick.bind(this));
@@ -6798,7 +6893,7 @@ var MouseHandler = function(editor) {
     this.setScrollSpeed = function(speed) {
         this.$scrollSpeed = speed;
     };
-    
+
     this.getScrollSpeed = function() {
         return this.$scrollSpeed;
     };
@@ -6825,7 +6920,7 @@ var MouseHandler = function(editor) {
         var selectionEmpty = selectionRange.isEmpty();
         var state = STATE_UNKNOWN;
         var inSelection = false;
-    
+
         var button = event.getButton(e);
         if (button !== 0) {
             if (selectionEmpty) {
@@ -6837,6 +6932,13 @@ var MouseHandler = function(editor) {
             }
             return;
         } else {
+            // Select the fold as the user clicks it.
+            var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
+            if (fold) {
+                editor.selection.setSelectionRange(fold.range);
+                return;
+            }
+
             inSelection = !editor.getReadOnly()
                 && !selectionEmpty
                 && selectionRange.contains(pos.row, pos.column);
@@ -6848,25 +6950,23 @@ var MouseHandler = function(editor) {
             onStartSelect(pos);
         }
 
-        editor.renderer.scrollCursorIntoView();
-    
         var mousePageX, mousePageY;
         var overwrite = editor.getOverwrite();
         var mousedownTime = (new Date()).getTime();
         var dragCursor, dragRange;
-    
+
         var onMouseSelection = function(e) {
             mousePageX = event.getDocumentX(e);
             mousePageY = event.getDocumentY(e);
         };
-    
+
         var onMouseSelectionEnd = function() {
             clearInterval(timerId);
             if (state == STATE_UNKNOWN)
                 onStartSelect(pos);
             else if (state == STATE_DRAG)
                 onMouseDragSelectionEnd();
-                
+
             self.$clickSelection = null;
             state = STATE_UNKNOWN;
         };
@@ -6899,7 +6999,7 @@ var MouseHandler = function(editor) {
 
             editor.selection.setSelectionRange(newRange);
         };
-    
+
         var onSelectionInterval = function() {
             if (mousePageX === undefined || mousePageY === undefined)
                 return;
@@ -6908,7 +7008,7 @@ var MouseHandler = function(editor) {
                 var distance = self.$distance(pageX, pageY, mousePageX, mousePageY);
                 var time = (new Date()).getTime();
 
-                
+
                 if (distance > DRAG_OFFSET) {
                     state = STATE_SELECT;
                     var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
@@ -6924,13 +7024,13 @@ var MouseHandler = function(editor) {
                 }
 
             }
-            
+
             if (state == STATE_DRAG)
                 onDragSelectionInterval();
             else if (state == STATE_SELECT)
                 onUpdateSelectionInterval();
         };
-    
+
         function onStartSelect(pos) {
             if (e.shiftKey)
                 editor.selection.selectToPosition(pos)
@@ -6942,12 +7042,12 @@ var MouseHandler = function(editor) {
             }
             state = STATE_SELECT;
         }
-        
+
         var onUpdateSelectionInterval = function() {
             var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
             cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
-    
-            if (self.$clickSelection) {                
+
+            if (self.$clickSelection) {
                 if (self.$clickSelection.contains(cursor.row, cursor.column)) {
                     editor.selection.setSelectionRange(self.$clickSelection);
                 } else {
@@ -6963,7 +7063,7 @@ var MouseHandler = function(editor) {
             else {
                 editor.selection.selectToPosition(cursor);
             }
-    
+
             editor.renderer.scrollCursorIntoView();
         };
 
@@ -6977,32 +7077,40 @@ var MouseHandler = function(editor) {
 
         event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
         var timerId = setInterval(onSelectionInterval, 20);
-    
+
         return event.preventDefault(e);
     };
-    
+
     this.onMouseDoubleClick = function(e) {
+        var editor = this.editor;
         var pos = this.$getEventPosition(e);
-        this.editor.moveCursorToPosition(pos);
-        this.editor.selection.selectWord();
-        this.$clickSelection = this.editor.getSelectionRange();
+
+        // If the user dclicked on a fold, then expand it.
+        var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
+        if (fold) {
+            editor.session.expandFold(fold);
+        } else {
+            editor.moveCursorToPosition(pos);
+            editor.selection.selectWord();
+            this.$clickSelection = editor.getSelectionRange();
+        }
     };
-    
+
     this.onMouseTripleClick = function(e) {
         var pos = this.$getEventPosition(e);
         this.editor.moveCursorToPosition(pos);
         this.editor.selection.selectLine();
         this.$clickSelection = this.editor.getSelectionRange();
     };
-    
+
     this.onMouseQuadClick = function(e) {
         this.editor.selectAll();
         this.$clickSelection = this.editor.getSelectionRange();
     };
-    
+
     this.onMouseWheel = function(e) {
         var speed = this.$scrollSpeed * 2;
-    
+
         this.editor.renderer.scrollBy(e.wheelX * speed, e.wheelY * speed);
         return event.preventDefault(e);
     };
@@ -7278,7 +7386,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "selecttostart",
-    bindKey: bindKey("Alt-Shift-Up", "Command-Shift-Up"),
+    bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
 });
 canon.addCommand({
@@ -7308,7 +7416,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "selecttoend",
-    bindKey: bindKey("Alt-Shift-Down", "Command-Shift-Down"),
+    bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
     exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
 });
 canon.addCommand({
@@ -7599,11 +7707,11 @@ var EditSession = function(text, mode) {
     };
 
     this.$resetRowCache = function(row) {
-        var rowCache = this.$rowCache;
         if (row == 0) {
-            rowCache = [];
+            this.$rowCache = [];
             return;
         }
+        var rowCache = this.$rowCache;
         for (var i = 0; i < rowCache.length; i++) {
             if (rowCache[i].docRow >= row) {
                 rowCache.splice(i, rowCache.length);
@@ -7932,15 +8040,11 @@ var EditSession = function(text, mode) {
         if (this.$useWorker == useWorker)
             return;
 
-        if (useWorker && !this.$worker && window.Worker)
-            this.$worker = mode.createWorker(this);
-
-        if (!useWorker && this.$worker) {
-            this.$worker.terminate();
-            this.$worker = null;
-        }
-
         this.$useWorker = useWorker;
+
+        this.$stopWorker();
+        if (useWorker)
+            this.$startWorker();
     };
 
     this.getUseWorker = function() {
@@ -7956,14 +8060,12 @@ var EditSession = function(text, mode) {
     this.$mode = null;
     this.setMode = function(mode) {
         if (this.$mode === mode) return;
+        this.$mode = mode;
 
-        if (this.$worker)
-            this.$worker.terminate();
+        this.$stopWorker();
 
-        if (this.$useWorker && typeof Worker !== "undefined" && !require.noWorker)
-            this.$worker = mode.createWorker(this);
-        else
-            this.$worker = null;
+        if (this.$useWorker)
+            this.$startWorker();
 
         var tokenizer = mode.getTokenizer();
 
@@ -7985,8 +8087,28 @@ var EditSession = function(text, mode) {
         this.bgTokenizer.setDocument(this.getDocument());
         this.bgTokenizer.start(0);
 
-        this.$mode = mode;
         this._dispatchEvent("changeMode");
+    };
+
+    this.$stopWorker = function() {
+        if (this.$worker)
+            this.$worker.terminate();
+
+        this.$worker = null;
+    };
+
+    this.$startWorker = function() {
+        if (typeof Worker !== "undefined" && !require.noWorker) {
+            try {
+                this.$worker = this.$mode.createWorker(this);
+            } catch (e) {
+                console.log("Could not load worker");
+                console.log(e);
+                this.$worker = null;
+            }
+        }
+        else
+            this.$worker = null;
     };
 
     this.getMode = function() {
@@ -8173,7 +8295,7 @@ var EditSession = function(text, mode) {
         return this.doc.remove(range);
     };
 
-    this.undoChanges = function(deltas) {
+    this.undoChanges = function(deltas, dontSelect) {
         if (!deltas.length)
             return;
 
@@ -8184,7 +8306,7 @@ var EditSession = function(text, mode) {
             if (delta.group == "doc") {
                 this.doc.revertDeltas(delta.deltas);
                 lastUndoRange =
-                    this.$setUndoSelection(delta.deltas, true, lastUndoRange);
+                    this.$getUndoSelection(delta.deltas, true, lastUndoRange);
             } else {
                 delta.deltas.forEach(function(foldDelta) {
                     this.addFolds(foldDelta.folds);
@@ -8192,9 +8314,13 @@ var EditSession = function(text, mode) {
             }
         }
         this.$fromUndo = false;
+        lastUndoRange &&
+            !dontSelect &&
+            this.selection.setSelectionRange(lastUndoRange);
+        return lastUndoRange;
     },
 
-    this.redoChanges = function(deltas) {
+    this.redoChanges = function(deltas, dontSelect) {
         if (!deltas.length)
             return;
 
@@ -8205,13 +8331,17 @@ var EditSession = function(text, mode) {
             if (delta.group == "doc") {
                 this.doc.applyDeltas(delta.deltas);
                 lastUndoRange =
-                    this.$setUndoSelection(delta.deltas, false, lastUndoRange);
+                    this.$getUndoSelection(delta.deltas, false, lastUndoRange);
             }
         }
         this.$fromUndo = false;
+        lastUndoRange &&
+            !dontSelect &&
+            this.selection.setSelectionRange(lastUndoRange);
+        return lastUndoRange;
     },
 
-    this.$setUndoSelection = function(deltas, isUndo, lastUndoRange) {
+    this.$getUndoSelection = function(deltas, isUndo, lastUndoRange) {
         function isInsert(delta) {
             var insert =
                 delta.action == "insertText" || delta.action == "insertLines";
@@ -8219,7 +8349,7 @@ var EditSession = function(text, mode) {
         }
 
         var delta = deltas[0];
-        var range;
+        var range, point;
         var lastDeltaIsInsert = false;
         if (isInsert(delta)) {
             range = delta.range.clone();
@@ -8232,15 +8362,18 @@ var EditSession = function(text, mode) {
         for (var i = 1; i < deltas.length; i++) {
             delta = deltas[i];
             if (isInsert(delta)) {
-                if (range.compare(delta.range.start) == -1) {
+                point = delta.range.start;
+                if (range.compare(point.row, point.column) == -1) {
                     range.setStart(delta.range.start);
                 }
-                if (range.compare(delta.range.end) == 1) {
+                point = delta.range.end;
+                if (range.compare(point.row, point.column) == 1) {
                     range.setEnd(delta.range.end);
                 }
                 lastDeltaIsInsert = true;
             } else {
-                if (range.compare(delta.range.start) == -1) {
+                point = delta.range.start;
+                if (range.compare(point.row, point.column) == -1) {
                     range =
                         Range.fromPoints(delta.range.start, delta.range.start);
                 }
@@ -8259,11 +8392,6 @@ var EditSession = function(text, mode) {
             }
         }
 
-        if (!range.isEmpty()) {
-            this.selection.setSelectionRange(range);
-        } else {
-            this.selection.moveCursorToPosition(range.start);
-        }
         return range;
     },
 
@@ -8489,7 +8617,7 @@ var EditSession = function(text, mode) {
                 removedFolds = this.getFoldsInRange(e.data.range);
                 this.removeFolds(removedFolds);
 
-                var foldLine = this.getFoldLine(lastRow);
+                var foldLine = this.getFoldLine(end.row);
                 var idx = 0;
                 if (foldLine) {
                     foldLine.addRemoveChars(end.row, end.column, start.column - end.column);
@@ -8505,7 +8633,7 @@ var EditSession = function(text, mode) {
 
                 for (idx; idx < foldLines.length; idx++) {
                     var foldLine = foldLines[idx];
-                    if (foldLine.start.row >= lastRow) {
+                    if (foldLine.start.row >= end.row) {
                         foldLine.shiftRow(-len);
                     }
                 }
@@ -8567,8 +8695,8 @@ var EditSession = function(text, mode) {
             }
         }
 
-        if (useWrapMode && this.$wrapData.length != this.doc.$lines.length) {
-            console.error("The length of doc.$lines and $wrapData have to be the same!");
+        if (useWrapMode && this.$wrapData.length != this.doc.getLength()) {
+            console.error("doc.getLength() and $wrapData.length have to be the same!");
         }
 
         useWrapMode && this.$updateWrapData(firstRow, lastRow);
@@ -8882,12 +9010,10 @@ var EditSession = function(text, mode) {
         var docRow = 0;
         var docColumn = 0;
         var column;
-        var foldLine;
         var foldLineRowLength;
         var row = 0;
         var rowLength = 0;
         var splits = null;
-        var split = 0;
 
         var rowCache = this.$rowCache;
         var doCache = !rowCache.length;
@@ -8899,6 +9025,11 @@ var EditSession = function(text, mode) {
             }
         }
         var docRowCacheLast = docRow;
+        // clamp row before clamping column, for selection on last line
+        var maxRow = this.getLength() - 1;
+
+        var foldLine = this.getNextFold(docRow);
+        var foldStart = foldLine ?foldLine.start.row :Infinity;
 
         while (row <= screenRow) {
             if (doCache
@@ -8910,30 +9041,41 @@ var EditSession = function(text, mode) {
                 docRowCacheLast = docRow;
             }
             rowLength = this.getRowLength(docRow);
-            if (row + rowLength - 1 >= screenRow) {
+            if (row + rowLength - 1 >= screenRow || docRow >= maxRow) {
                 break;
             } else {
                 row += rowLength;
-                docRow = this.getRowFoldEnd(docRow) + 1;
+                docRow++;
+                if(docRow > foldStart) {
+                    docRow = foldLine.end.row+1;
+                    foldLine = this.getNextFold(docRow);
+                    foldStart = foldLine ?foldLine.start.row :Infinity;
+                }
             }
         }
 
-        splits = this.$wrapData[docRow] || [];
-        foldLine = this.getFoldLine(docRow);
-        line = foldLine
-                ? this.getFoldDisplayLine(foldLine)
-                : this.getLine(docRow);
+        if (foldLine && foldLine.start.row <= docRow)
+            line = this.getFoldDisplayLine(foldLine);
+        else {
+            line = this.getLine(docRow);
+            foldLine = null;
+        }
 
         if (this.$useWrapMode) {
-            docColumn = split = splits[screenRow - row - 1] || 0;
-            line = line.substring(split);
+            splits = this.$wrapData[docRow];
+            if (splits) {
+                column = splits[screenRow - row]
+                if(screenRow > row && splits.length) {
+                    docColumn = splits[screenRow - row - 1] || splits[splits.length - 1];
+                    line = line.substring(docColumn);
+                }
+            }
         }
 
         docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
 
         // Need to do some clamping action here.
         if (this.$useWrapMode) {
-            column = splits[screenRow - row]
             if (docColumn >= column) {
                 // We remove one character at the end such that the docColumn
                 // position returned is not associated to the next row on the
@@ -8962,7 +9104,6 @@ var EditSession = function(text, mode) {
         }
 
         var wrapData;
-
         // Special case in wrapMode if the doc is at the end of the document.
         if (this.$useWrapMode) {
             wrapData = this.$wrapData;
@@ -8976,13 +9117,10 @@ var EditSession = function(text, mode) {
             }
         }
 
-        var screenRow = 0,
-            screenColumn = 0,
-            foldStartRow = null,
-            fold = null,
-            folds,
-            comp,
-            foldLine = null;
+        var screenRow = 0;
+        var screenColumn = 0;
+        var foldStartRow = null;
+        var fold = null;
 
         // Clamp the docRow position in case it's inside of a folded block.
         fold = this.getFoldAt(docRow, docColumn, 1);
@@ -9004,7 +9142,19 @@ var EditSession = function(text, mode) {
         }
         var docRowCacheLast = row;
 
+        var foldLine = this.getNextFold(row);
+        var foldStart = foldLine ?foldLine.start.row :Infinity;
+
         while (row < docRow) {
+            if (row >= foldStart) {
+                rowEnd = foldLine.end.row + 1;
+                if (rowEnd > docRow)
+                    break;
+                foldLine = this.getNextFold(rowEnd);
+                foldStart = foldLine ?foldLine.start.row :Infinity;
+            } else {
+                rowEnd = row + 1;
+            }
             if (doCache
                 && row - docRowCacheLast > this.$rowCacheSize) {
                 rowCache.push({
@@ -9014,26 +9164,20 @@ var EditSession = function(text, mode) {
                 docRowCacheLast = row;
             }
 
-            rowEnd = this.getRowFoldEnd(row);
-            if (rowEnd >= docRow) {
-                break;
-            }
             screenRow += this.getRowLength(row);
-            row = rowEnd + 1;
+            row = rowEnd;
         }
 
         // Calculate the text line that is displayed in docRow on the screen.
         var textLine = "";
-        foldLine = this.getFoldLine(docRow);
         // Check if the final row we want to reach is inside of a fold.
-        if (!foldLine) {
-            textLine = this.getLine(docRow).substring(0, docColumn);
-            foldStartRow = docRow;
-        } else {
+        if (foldLine && row >= foldStart) {
             textLine = this.getFoldDisplayLine(foldLine, docRow, docColumn);
             foldStartRow = foldLine.start.row;
+        } else {
+            textLine = this.getLine(docRow).substring(0, docColumn);
+            foldStartRow = docRow;
         }
-
         // Clamp textLine if in wrapMode.
         if (this.$useWrapMode) {
             var wrapRow = wrapData[foldStartRow];
@@ -9061,21 +9205,29 @@ var EditSession = function(text, mode) {
     };
 
     this.getScreenLength = function() {
-        var length = this.getLength();
         var screenRows = 0;
+        var lastFoldLine = null;
+        var foldLine = null;
         if (!this.$useWrapMode) {
-            screenRows = length;
+            screenRows = this.getLength();
+
+            // Remove the folded lines again.
+            var foldData = this.$foldData;
+            for (var i = 0; i < foldData.length; i++) {
+                foldLine = foldData[i];
+                screenRows -= foldLine.end.row - foldLine.start.row;
+            }
         } else {
             for (var row = 0; row < this.$wrapData.length; row++) {
-                screenRows += this.$wrapData[row].length + 1;
+                if (foldLine = this.getFoldLine(row, lastFoldLine)) {
+                    row = foldLine.end.row;
+                    screenRows += 1;
+                } else {
+                    screenRows += this.$wrapData[row].length + 1;
+                }
             }
         }
 
-        var foldData = this.$foldData;
-        for (var i = 0; i < foldData.length; i++) {
-            var foldLine = foldData[i];
-            screenRows -= foldLine.end.row - foldLine.start.row;
-        }
         return screenRows;
     }
 
@@ -10040,6 +10192,44 @@ var Mode = function() {
 
         editor.session.$selectionOccurrences = [];
     };
+    
+    this.createModeDelegates = function (mapping) {
+        if (!this.$embeds) {
+            return;
+        }
+        this.$modes = {};
+        for (var i = 0; i < this.$embeds.length; i++) {
+            this.$modes[this.$embeds[i]] = new mapping[this.$embeds[i]]();
+        }
+        
+        var delegations = ['toggleCommentLines', 'getNextLineIndent', 'checkOutdent', 'autoOutdent'];
+
+        for (var i = 0; i < delegations.length; i++) {
+            (function(scope) {
+              var functionName = delegations[i];
+              var defaultHandler = scope[functionName];
+              scope[delegations[i]] = function() {
+                  return this.$delegator(functionName, arguments, defaultHandler);
+              }
+            } (this));
+        }
+    }
+    
+    this.$delegator = function(method, args, defaultHandler) {
+        var state = args[0];
+        
+        for (var i = 0; i < this.$embeds.length; i++) {
+            var split = state.split(this.$embeds[i]);
+        
+            if (!split[0] && split[1]) {
+                args[0] = split[1];
+                var mode = this.$modes[this.$embeds[i]];
+                return mode[method].apply(mode, args);
+            }
+        }
+        
+        return defaultHandler ? defaultHandler.apply(this, args) : undefined;
+    };
 
 }).call(Mode.prototype);
 
@@ -10088,13 +10278,32 @@ var Tokenizer = function(rules) {
     this.rules = rules;
 
     this.regExps = {};
+    this.matchMappings = {};
     for ( var key in this.rules) {
         var rule = this.rules[key];
         var state = rule;
         var ruleRegExps = [];
-
-        for ( var i = 0; i < state.length; i++)
-            ruleRegExps.push(state[i].regex);
+        var matchTotal = 0;
+        var mapping = this.matchMappings[key] = {};
+        
+        for ( var i = 0; i < state.length; i++) {
+            // Count number of matching groups. 2 extra groups from the full match
+            // And the catch-all on the end (used to force a match);
+            var matchcount = new RegExp("(?:(" + state[i].regex + ")|(.))").exec("a").length - 2;
+        
+            // Replace any backreferences and offset appropriately.
+            var adjustedregex = state[i].regex.replace(/\\([0-9]+)/g, function (match, digit) {
+                return "\\" + (parseInt(digit, 10) + matchTotal + 1);
+            });
+            
+            mapping[matchTotal] = {
+                rule: i,
+                len: matchcount
+            };
+            matchTotal += matchcount;
+            
+            ruleRegExps.push(adjustedregex);
+        }
 
         this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
         
@@ -10106,34 +10315,40 @@ var Tokenizer = function(rules) {
     this.getLineTokens = function(line, startState) {
         var currentState = startState;
         var state = this.rules[currentState];
+        var mapping = this.matchMappings[currentState];
         var re = this.regExps[currentState];
         re.lastIndex = 0;
-
+        
         var match, tokens = [];
-
+        
         var lastIndex = 0;
-
+        
         var token = {
             type: null,
             value: ""
         };
-
+        
         while (match = re.exec(line)) {
             var type = "text";
-            var value = match[0];
+            var value = [match[0]];
 
-            for ( var i = 0; i < state.length; i++) {
-                if (match[i + 1]) {
-                    var rule = state[i];
+            for ( var i = 0; i < match.length-2; i++) {
+                if (match[i + 1] !== undefined) {
+                    var rule = state[mapping[i].rule];
+                    
+                    if (mapping[i].len > 1) {
+                        value = match.slice(i+2, i+1+mapping[i].len);
+                    }
                     
                     if (typeof rule.token == "function")
-                        type = rule.token(match[0]);
+                        type = rule.token.apply(this, value);
                     else
                         type = rule.token;
 
                     if (rule.next && rule.next !== currentState) {
                         currentState = rule.next;
                         state = this.rules[currentState];
+                        mapping = this.matchMappings[currentState];
                         lastIndex = re.lastIndex;
 
                         re = this.regExps[currentState];
@@ -10143,17 +10358,26 @@ var Tokenizer = function(rules) {
                 }
             };
             
-                  
-            if (token.type !== type) {
-                if (token.type)
-                    tokens.push(token);
+            if (typeof type == "string") {
+                if (typeof value != "string") {
+                    value = [value.join("")];
+                }
+                type = [type];
+            }
+            
+            for ( var i = 0; i < value.length; i++) {
+                if (token.type !== type[i]) {
+                    if (token.type) {
+                        tokens.push(token);
+                    }
                     
-                token = {
-                    type: type,
-                    value: value
-                };
-            } else {
-                token.value += value;
+                    token = {
+                        type: type[i],
+                        value: value[i]
+                    }
+                } else {
+                    token.value += value[i];
+                }
             }
             
             if (lastIndex == line.length)
@@ -10250,6 +10474,34 @@ var TextHighlightRules = function() {
     this.getRules = function() {
         return this.$rules;
     };
+    
+    this.embedRules = function (HighlightRules, prefix, escapeRules, states) {
+        var embedRules = new HighlightRules().getRules();
+        if (states) {
+            for (var i = 0; i < states.length; i++) {
+                states[i] = prefix + states[i];
+            }
+        } else {
+            states = [];
+            for (var key in embedRules) {
+                states.push(prefix + key);
+            }
+        }
+        this.addRules(embedRules, prefix);
+        
+        for (var i = 0; i < states.length; i++) {
+            Array.prototype.unshift.apply(this.$rules[states[i]], escapeRules);
+        }
+        
+        if (!this.$embeds) {
+            this.$embeds = [];
+        }
+        this.$embeds.push(prefix);
+    }
+    
+    this.getEmbeds = function() {
+        return this.$embeds;
+    }
 
 }).call(TextHighlightRules.prototype);
 
@@ -10385,7 +10637,7 @@ var Document = function(text) {
      * Get a verbatim copy of the given line as it is in the document
      */
     this.getLine = function(row) {
-        return this.getLines(row, row + 1)[0] || "";
+        return this.$lines[row] || "";
     };
 
     this.getLines = function(firstRow, lastRow) {
@@ -11011,6 +11263,12 @@ var BackgroundTokenizer = function(tokenizer, editor) {
         if (firstRow > 0 && this.lines[firstRow - 1]) {
             state = this.lines[firstRow - 1].state;
             doCache = true;
+        } else if (firstRow == 0) {
+            state = "start";
+            doCache = true;
+        } else if (this.lines.length > 0) {
+            // Guess that we haven't changed state.
+            state = this.lines[this.lines.length-1].state;
         }
 
         var lines = this.doc.getLines(firstRow, lastRow);
@@ -11096,6 +11354,22 @@ function Fold(range, placeholder) {
 
 Fold.prototype.toString = function() {
     return '"' + this.placeholder + '" ' + this.range.toString();
+}
+
+Fold.prototype.setFoldLine = function(foldLine) {
+    this.foldLine = foldLine;
+    this.subFolds.forEach(function(fold) {
+        fold.setFoldLine(foldLine);
+    });
+}
+
+Fold.prototype.clone = function() {
+    var range = this.range.clone();
+    var fold = new Fold(range, this.placeholder);
+    this.subFolds.forEach(function(subFold) {
+        fold.subFolds.push(subFold.clone());
+    });
+    return fold;
 }
 
 function Folding() {
@@ -11230,7 +11504,11 @@ function Folding() {
 
     this.getFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData;
-        var i = Math.max(foldData.indexOf(startFoldLine), 0);
+        var i = 0;
+        if(startFoldLine)
+            i = foldData.indexOf(startFoldLine);
+        if(i == -1)
+            i = 0;
         for (i; i < foldData.length; i++) {
             var foldLine = foldData[i];
             if (foldLine.start.row <= docRow && foldLine.end.row >= docRow) {
@@ -11240,6 +11518,47 @@ function Folding() {
             }
         }
         return null;
+    }
+
+    // returns the fold which starts after or contains docRow
+    this.getNextFold = function(docRow, startFoldLine) {
+        var foldData = this.$foldData, ans;
+        var i = 0;
+        if(startFoldLine)
+            i = foldData.indexOf(startFoldLine);
+        if(i == -1)
+            i = 0;
+        for (i; i < foldData.length; i++) {
+            var foldLine = foldData[i];
+            if (foldLine.end.row >= docRow) {
+                return foldLine;
+            }
+        }
+        return null;
+    }
+
+    this.getFoldedRowCount = function(first, last) {
+        var foldData = this.$foldData, rowCount = last-first+1;
+        for (var i = 0; i < foldData.length; i++) {
+            var foldLine = foldData[i],
+                end = foldLine.end.row,
+                start = foldLine.start.row;
+            if(end >= last) {
+                if(start < last) {
+                    if(start >= first)
+                        rowCount -= last-start;
+                    else
+                        rowCount = 0;//in one fold
+                }
+                break;
+            } else if(end >= first){
+                if (start >= first) //fold inside range
+                    rowCount -=  end-start;
+                else
+                    rowCount -=  end-first+1;
+            }
+        }
+        return rowCount;
     }
 
     this.$addFoldLine = function(foldLine) {
@@ -11311,7 +11630,7 @@ function Folding() {
             throw "A fold can't end inside of an already existing fold";
         }
 
-        if (endRow >= this.doc.$lines.length) {
+        if (endRow >= this.doc.getLength()) {
             throw "End of fold is outside of the document.";
         }
 
@@ -11486,7 +11805,7 @@ function Folding() {
 
         // Build the textline using the FoldLine walker.
         var line = "";
-        var lines = this.doc.$lines;
+        var doc = this.doc;
         var textLine = "";
 
         foldLine.walk(function(placeholder, row, column, lastColumn, isNewRow) {
@@ -11501,7 +11820,7 @@ function Folding() {
             if (placeholder) {
                 textLine += placeholder;
             } else {
-                textLine += lines[row].substring(lastColumn, column);
+                textLine += doc.getLine(row).substring(lastColumn, column);
             }
         }.bind(this), endRow, endColumn);
         return textLine;
@@ -11512,19 +11831,31 @@ function Folding() {
 
         if (!foldLine) {
             var line;
-            line = this.doc.$lines[row];
+            line = this.doc.getLine(row);
             return line.substring(startColumn || 0, endColumn || line.length);
         } else {
             return this.getFoldDisplayLine(
                 foldLine, row, endColumn, startRow, startColumn);
         }
     };
+
+    this.$cloneFoldData = function() {
+        var foldData = this.$foldData;
+        var fd = [];
+        fd = this.$foldData.map(function(foldLine) {
+            var folds = foldLine.folds.map(function(fold) {
+                return fold.clone();
+            });
+            return new FoldLine(fd, folds);
+        });
+
+        return fd;
+    };
 }
 
 exports.Folding = Folding;
 
-});
-/* vim:ts=4:sts=4:sw=4:
+});/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -11584,7 +11915,7 @@ function FoldLine(foldData, folds) {
     this.end   = this.range.end;
 
     this.folds.forEach(function(fold) {
-        fold.foldLine = this;
+        fold.setFoldLine(this);
     }, this);
 }
 
@@ -12184,20 +12515,26 @@ var UndoManager = function() {
         this.$redoStack = [];
     };
 
-    this.undo = function() {
+    this.undo = function(dontSelect) {
         var deltas = this.$undoStack.pop();
+        var undoSelectionRange = null;
         if (deltas) {
-            this.$doc.undoChanges(deltas);
+            undoSelectionRange =
+                this.$doc.undoChanges(deltas, dontSelect);
             this.$redoStack.push(deltas);
         }
+        return undoSelectionRange;
     };
 
-    this.redo = function() {
+    this.redo = function(dontSelect) {
         var deltas = this.$redoStack.pop();
+        var redoSelectionRange = null;
         if (deltas) {
-            this.$doc.redoChanges(deltas);
+            redoSelectionRange =
+                this.$doc.redoChanges(deltas, dontSelect);
             this.$undoStack.push(deltas);
         }
+        return redoSelectionRange;
     };
 
     this.reset = function() {
@@ -12314,7 +12651,7 @@ var VirtualRenderer = function(container, theme) {
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", this.onScroll.bind(this));
 
-    this.scrollTop = 0;
+    this.scrollTop = this.desiredScrollTop = 0;
 
     this.cursorPos = {
         row : 0,
@@ -12603,7 +12940,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$updateScrollBar = function() {
-        this.scrollBar.setInnerHeight(this.session.getScreenLength() * this.lineHeight);
+        this.scrollBar.setInnerHeight(this.layerConfig.maxHeight);
         this.scrollBar.setScrollTop(this.scrollTop);
     };
 
@@ -12629,7 +12966,6 @@ var VirtualRenderer = function(container, theme) {
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
             this.$updateScrollBar();
-            this.scrollCursorIntoView();
             return;
         }
 
@@ -12689,6 +13025,10 @@ var VirtualRenderer = function(container, theme) {
         if (horizScrollChanged)
             this.scroller.style.overflowX = horizScroll ? "scroll" : "hidden";
 
+        var maxHeight = this.session.getScreenLength() * this.lineHeight;
+        this.scrollTop = this.desiredScrollTop =
+                Math.max(0, Math.min(this.desiredScrollTop, maxHeight - this.$size.scrollerHeight));
+
         var lineCount = Math.ceil(minHeight / this.lineHeight) - 1;
         var firstRow = Math.max(0, Math.round((this.scrollTop - offset) / this.lineHeight));
         var lastRow = firstRow + lineCount;
@@ -12714,7 +13054,7 @@ var VirtualRenderer = function(container, theme) {
 
         offset = this.scrollTop - firstRowScreen * this.lineHeight;
 
-        var layerConfig = this.layerConfig = {
+        this.layerConfig = {
             width : longestLine,
             padding : this.$padding,
             firstRow : firstRow,
@@ -12723,17 +13063,24 @@ var VirtualRenderer = function(container, theme) {
             lineHeight : this.lineHeight,
             characterWidth : this.characterWidth,
             minHeight : minHeight,
+            maxHeight : maxHeight,
             offset : offset,
             height : this.$size.scrollerHeight
         };
 
         // For debugging.
-        // console.log(JSON.stringify(layerConfig));
+        // console.log(JSON.stringify(this.layerConfig));
 
         this.$gutterLayer.element.style.marginTop = (-offset) + "px";
         this.content.style.marginTop = (-offset) + "px";
         this.content.style.width = longestLine + "px";
         this.content.style.height = minHeight + "px";
+
+        // scroller.scrollWidth was smaller than scrollLeft we needed
+        if (this.$desiredScrollLeft) {
+            this.scrollToX(this.$desiredScrollLeft);
+            this.$desiredScrollLeft = 0;
+        }
 
         // Horizontal scrollbar visibility may have changed, which changes
         // the client height of the scroller
@@ -12835,16 +13182,17 @@ var VirtualRenderer = function(container, theme) {
             this.scrollToY(top + this.lineHeight - this.$size.scrollerHeight);
         }
 
-        if (this.scroller.scrollLeft > left) {
+        var scrollLeft = this.scroller.scrollLeft;
+
+        if (scrollLeft > left) {
             this.scrollToX(left);
         }
 
-        if (this.scroller.scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
-
-            if (left + this.characterWidth > this.scroller.scrollWidth)
-                this.$renderChanges(this.CHANGE_SIZE);
-
-            this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
+        if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
+            if (left > this.layerConfig.width)
+                this.$desiredScrollLeft = left + 2 * this.characterWidth;
+            else
+                this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
         }
     },
 
@@ -12882,12 +13230,11 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.scrollToY = function(scrollTop) {
-        var maxHeight = this.session.getScreenLength() * this.lineHeight - this.$size.scrollerHeight;
-        var scrollTop = Math.max(0, Math.min(maxHeight, scrollTop));
-
+        // after calling scrollBar.setScrollTop
+        // scrollbar sends us event with same scrollTop. ignore it
         if (this.scrollTop !== scrollTop) {
-            this.scrollTop = scrollTop;
             this.$loop.schedule(this.CHANGE_SCROLL);
+            this.desiredScrollTop = scrollTop;
         }
     };
 
@@ -12970,6 +13317,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.setTheme = function(theme) {
         var _self = this;
+        this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             theme = theme || "ace/theme/textmate";
             require([theme], function(theme) {
@@ -12997,6 +13345,10 @@ var VirtualRenderer = function(container, theme) {
         }
     };
 
+    this.getTheme = function() {
+        return this.$themeValue;
+    }
+
     // Methods allows to add / remove CSS classnames to the editor element.
     // This feature can be used by plug-ins to provide a visual indication of
     // a certain mode that editor is in.
@@ -13008,6 +13360,11 @@ var VirtualRenderer = function(container, theme) {
     this.unsetStyle = function unsetStyle(style) {
       dom.removeCssClass(this.container, style)
     };
+
+    this.destroy = function() {
+        this.$textLayer.destroy();
+        this.$cursorLayer.destroy();
+    }
 
 }).call(VirtualRenderer.prototype);
 
@@ -13114,23 +13471,40 @@ var Gutter = function(parentEl) {
     this.update = function(config) {
         this.$config = config;
 
+        var emptyAnno = {className: "", text: []};
         var html = [];
-        for ( var i = config.firstRow; i <= config.lastRow; i++) {
-            var annotation = this.$annotations[i] || {
-                className: "",
-                text: []
-            };
+        var i = config.firstRow;
+        var lastRow = config.lastRow;
+        var fold = this.session.getNextFold(i);
+        var foldStart = fold ? fold.start.row : Infinity;
+
+        while (true) {
+            if(i > foldStart) {
+                i = fold.end.row + 1;
+                fold = this.session.getNextFold(i);
+                foldStart = fold ?fold.start.row :Infinity;
+            }
+            if(i > lastRow)
+                break;
+
+            var annotation = this.$annotations[i] || emptyAnno;
             html.push("<div class='ace_gutter-cell",
                 this.$decorations[i] || "",
                 this.$breakpoints[i] ? " ace_breakpoint " : " ",
                 annotation.className,
                 "' title='", annotation.text.join("\n"),
-                "' style='height:", this.session.getRowHeight(config, i), "px;'>", (i+1), "</div>");
+                "' style='height:", config.lineHeight, "px;'>", (i+1));
 
+            var wrappedRowLength = this.session.getRowLength(i) - 1;
+            while (wrappedRowLength--) {
+                html.push("</div><div class='ace_gutter-cell' style='height:", config.lineHeight, "px'>&brvbar;</div>");
+            }
 
-            i = this.session.getRowFoldEnd(i);
+            html.push("</div>");
+
+            i++;
         }
-		this.element = dom.setInnerHtml(this.element, html.join(""));
+        this.element = dom.setInnerHtml(this.element, html.join(""));
         this.element.style.height = config.minHeight + "px";
     };
 
@@ -13359,11 +13733,12 @@ exports.Marker = Marker;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/text', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/lang', 'pilot/event_emitter'], function(require, exports, module) {
+define('ace/layer/text', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/lang', 'pilot/useragent', 'pilot/event_emitter'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
 var lang = require("pilot/lang");
+var useragent = require("pilot/useragent");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 var Text = function(parentEl) {
@@ -13402,7 +13777,7 @@ var Text = function(parentEl) {
 
     this.$pollSizeChanges = function() {
         var self = this;
-        setInterval(function() {
+        this.$pollSizeChangesTimer = setInterval(function() {
             self.checkForSizeChanges();
         }, 500);
     };
@@ -13531,8 +13906,6 @@ var Text = function(parentEl) {
             var tokens = this.session.getTokens(i, i);
             this.$renderLine(html, i, tokens[0].tokens);
             lineElement = dom.setInnerHtml(lineElement, html.join(""));
-            lineElement.style.height =
-                    this.session.getRowHeight(config, i) + "px";
 
             i = this.session.getRowFoldEnd(i);
         }
@@ -13550,13 +13923,12 @@ var Text = function(parentEl) {
             return this.update(config);
 
         var el = this.element;
-
         if (oldConfig.firstRow < config.firstRow)
-            for (var row=oldConfig.firstRow; row<config.firstRow; row = this.session.getRowFoldEnd(row) + 1)
+            for (var row=this.session.getFoldedRowCount(oldConfig.firstRow, config.firstRow - 1); row>0; row--)
                 el.removeChild(el.firstChild);
 
         if (oldConfig.lastRow > config.lastRow)
-            for (var row=config.lastRow+1; row<=oldConfig.lastRow; row = this.session.getRowFoldEnd(row) + 1)
+            for (var row=this.session.getFoldedRowCount(config.lastRow + 1, oldConfig.lastRow); row>0; row--)
                 el.removeChild(el.lastChild);
 
         if (config.firstRow < oldConfig.firstRow) {
@@ -13574,14 +13946,23 @@ var Text = function(parentEl) {
     };
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
-        var fragment = document.createDocumentFragment();
-        for (var row=firstRow; row<=lastRow; row++) {
+        var fragment = document.createDocumentFragment(),
+            row = firstRow,
+            fold = this.session.getNextFold(row),
+            foldStart = fold ?fold.start.row :Infinity;
+
+        while (true) {
+            if(row > foldStart) {
+                row = fold.end.row+1;
+                fold = this.session.getNextFold(row);
+                foldStart = fold ?fold.start.row :Infinity;
+            }
+            if(row > lastRow)
+                break;
+
             var lineEl = dom.createElement("div");
 
             lineEl.className = "ace_line";
-            var style = lineEl.style;
-            style.height = this.session.getRowHeight(config, row) + "px";
-            style.width = config.width + "px";
 
             var html = [];
             // Get the tokens per line as there might be some lines in between
@@ -13596,7 +13977,7 @@ var Text = function(parentEl) {
             lineEl.innerHTML = html.join("");
             fragment.appendChild(lineEl);
 
-            row = this.session.getRowFoldEnd(row);
+            row++;
         }
         return fragment;
     };
@@ -13606,12 +13987,34 @@ var Text = function(parentEl) {
         this.config = config;
 
         var html = [];
-        var tokens = this.session.getTokens(config.firstRow, config.lastRow)
-        var fragment = this.$renderLinesFragment(config, config.firstRow, config.lastRow);
+        var firstRow = config.firstRow, lastRow = config.lastRow;
 
-        // Clear the current content of the element and add the rendered fragment.
-        this.element.innerHTML =  "";
-        this.element.appendChild(fragment);
+        var row = firstRow,
+            fold = this.session.getNextFold(row),
+            foldStart = fold ?fold.start.row :Infinity;
+
+        while (true) {
+            if(row > foldStart) {
+                row = fold.end.row+1;
+                fold = this.session.getNextFold(row);
+                foldStart = fold ?fold.start.row :Infinity;
+            }
+            if(row > lastRow)
+                break;
+
+            html.push("<div class='ace_line'>")
+            // Get the tokens per line as there might be some lines in between
+            // beeing folded.
+            // OPTIMIZE: If there is a long block of unfolded lines, just make
+            // this call once for that big block of unfolded lines.
+            var tokens = this.session.getTokens(row, row);
+            if (tokens.length == 1)
+                this.$renderLine(html, row, tokens[0].tokens);
+            html.push("</div>")
+
+            row++;
+        }
+        this.element = dom.setInnerHtml(this.element, html.join(""));
     };
 
     this.$textToken = {
@@ -13632,6 +14035,9 @@ var Text = function(parentEl) {
                 screenColumn += tabSize - 1;
                 return self.$tabStrings[tabSize];
             } else if (c == "&") {
+              if (useragent.isOldGecko)
+                return "&";
+              else
                 return "&amp";
             } else if (c == "<") {
                 return "&lt;";
@@ -13795,8 +14201,12 @@ var Text = function(parentEl) {
         }.bind(this), foldLine.end.row, this.session.getLine(foldLine.end.row).length);
 
         // TODO: Build a fake splits array!
-        var splits = this.session.$wrapData[row];
+        var splits = this.session.$useWrapMode?this.session.$wrapData[row]:null;
         this.$renderLineCore(stringBuilder, row, renderTokens, splits);
+    };
+
+    this.destroy = function() {
+        clearInterval(this.$pollSizeChangesTimer);
     };
 
 }).call(Text.prototype);
@@ -13926,18 +14336,21 @@ var Cursor = function(parentEl) {
         this.cursor.style.width = config.characterWidth + "px";
         this.cursor.style.height = config.lineHeight + "px";
 
-        if (this.isVisible) {
-            this.element.appendChild(this.cursor);
+        var overwrite = this.session.getOverwrite()
+        if (overwrite != this.overwrite) {
+            this.overwrite = overwrite;
+            if (overwrite)
+                dom.addCssClass(this.cursor, "ace_overwrite");
+            else
+                dom.removeCssClass(this.cursor, "ace_overwrite");
         }
-        
-        if (this.session.getOverwrite()) {
-            dom.addCssClass(this.cursor, "ace_overwrite");
-        } else {
-            dom.removeCssClass(this.cursor, "ace_overwrite");
-        }
-        
+
         this.restartTimer();
     };
+
+    this.destroy = function() {
+        clearInterval(this.blinkId);
+    }
 
 }).call(Cursor.prototype);
 
@@ -14095,7 +14508,16 @@ var RenderLoop = function(onRender) {
         }
     };
 
-    if (window.postMessage) {
+    this.setTimeoutZero = window.requestAnimationFrame ||
+         window.webkitRequestAnimationFrame ||
+         window.mozRequestAnimationFrame ||
+         window.oRequestAnimationFrame ||
+         window.msRequestAnimationFrame;
+
+    if (this.setTimeoutZero) {
+
+        this.setTimeoutZero = this.setTimeoutZero.bind(window)
+    } else if (window.postMessage) {
 
         this.messageName = "zero-timeout-message";
 
@@ -14177,6 +14599,7 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
 .ace-tm .ace_gutter {\
   width: 50px;\
   background: #e8e8e8;\
+  border-right: 1px solid rgb(159, 159, 159);	 \
   color: #333;\
   overflow : hidden;\
 }\
@@ -14377,13 +14800,13 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   "    overflow: hidden;" +
   "" +
   "    font-family: \"Menlo\", \"Monaco\", \"Courier New\", monospace;" +
-  "    font-size: 12px;  " +
+  "    font-size: 12px;" +
   "}" +
   "" +
   ".ace_scroller {" +
   "    position: absolute;" +
   "    overflow-x: scroll;" +
-  "    overflow-y: hidden;     " +
+  "    overflow-y: hidden;" +
   "}" +
   "" +
   ".ace_content {" +
@@ -14464,7 +14887,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   ".ace_layer {" +
   "    z-index: 1;" +
   "    position: absolute;" +
-  "    overflow: hidden;  " +
+  "    overflow: hidden;" +
   "    white-space: nowrap;" +
   "    height: 100%;" +
   "    width: 100%;" +
@@ -14497,6 +14920,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   "" +
   ".ace_marker-layer {" +
   "    cursor: text;" +
+  "    pointer-events: none;" +
   "}" +
   "" +
   ".ace_marker-layer .ace_step {" +
@@ -14527,6 +14951,10 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   "    -webkit-box-sizing: border-box;" +
   "}" +
   "" +
+  ".ace_line .ace_fold {" +
+  "    cursor: pointer;" +
+  "}" +
+  "" +
   ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {" +
   "  cursor: move;" +
   "}" +
@@ -14534,6 +14962,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
 
 define("text/styles.css", [], "html {" +
   "    height: 100%;" +
+  "    width: 100%;" +
   "    overflow: hidden;" +
   "}" +
   "" +
@@ -14549,20 +14978,36 @@ define("text/styles.css", [], "html {" +
   "    color: white;" +
   "}" +
   "" +
+  "#logo {" +
+  "    padding: 15px;" +
+  "    margin-left: 65px;" +
+  "}" +
+  "" +
   "#editor {" +
   "    position: absolute;" +
-  "    top: 60px;" +
-  "    left: 0px;" +
+  "    top:  0px;" +
+  "    left: 280px;" +
+  "    bottom: 0px;" +
+  "    right: 0px;" +
   "    background: white;" +
   "}" +
   "" +
   "#controls {" +
-  "    width: 100%;" +
+  "    padding: 5px;" +
+  "}" +
+  "" +
+  "#controls td {" +
+  "    text-align: right;" +
+  "}" +
+  "" +
+  "#controls td + td {" +
+  "    text-align: left;" +
   "}" +
   "" +
   "#cockpitInput {" +
   "    position: absolute;" +
-  "    width: 100%;" +
+  "    left: 280px;" +
+  "    right: 0px;" +
   "    bottom: 0;" +
   "" +
   "    border: none; outline: none;" +

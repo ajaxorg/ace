@@ -152,8 +152,25 @@ exports.launch = function(env) {
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
+    // Add a "name" property to all docs
+    for (doc in docs) {
+        docs[doc].name = doc;
+    }
+
     var container = document.getElementById("editor");
-    env.editor = new Editor(new Renderer(container, theme));
+    var cockpitInput = document.getElementById("cockpitInput");
+
+    // Splitting.
+    var Split = require("ace/split").Split;
+    var split = new Split(container, theme, 1);
+    env.editor = split.getEditor(0);
+    split.on("focus", function(editor) {
+        env.editor = editor;
+        updateUIEditorOptions();
+    });
+    env.split = split;
+    window.env = env;
+    window.ace = env.editor;
 
     var modes = {
         text: new TextMode(),
@@ -178,14 +195,36 @@ exports.launch = function(env) {
         return modes[modeEl.value];
     }
 
+    var docEl = document.getElementById("doc");
     var modeEl = document.getElementById("mode");
     var wrapModeEl = document.getElementById("soft_wrap");
+    var themeEl = document.getElementById("theme");
+    var selectStyleEl = document.getElementById("select_style");
+    var highlightActiveEl = document.getElementById("highlight_active");
+    var showHiddenEl = document.getElementById("show_hidden");
+    var showGutterEl = document.getElementById("show_gutter");
+    var showPrintMarginEl = document.getElementById("show_print_margin");
+    var highlightSelectedWordE = document.getElementById("highlight_selected_word");
+    var showHScrollEl = document.getElementById("show_hscroll");
+    var softTabEl = document.getElementById("soft_tab");
 
     bindDropdown("doc", function(value) {
         var doc = docs[value];
-        env.editor.setSession(doc);
+        var session = env.split.setSession(doc);
+        session.name = doc.name;
 
-        var mode = doc.getMode();
+        updateUIEditorOptions();
+
+        env.editor.focus();
+    });
+
+    function updateUIEditorOptions() {
+        var editor = env.editor;
+        var session = editor.session;
+
+        docEl.value = session.name;
+
+        var mode = session.getMode();
         if (mode instanceof JavaScriptMode) {
             modeEl.value = "javascript";
         }
@@ -235,13 +274,22 @@ exports.launch = function(env) {
             modeEl.value = "text";
         }
 
-        if (!doc.getUseWrapMode()) {
+        if (!session.getUseWrapMode()) {
             wrapModeEl.value = "off";
         } else {
-            wrapModeEl.value = doc.getWrapLimitRange().min || "free";
+            wrapModeEl.value = session.getWrapLimitRange().min || "free";
         }
-        env.editor.focus();
-    });
+
+        selectStyleEl.checked = editor.getSelectionStyle() == "line"
+        themeEl.value = editor.getTheme();
+        highlightActiveEl.checked = editor.getHighlightActiveLine();
+        showHiddenEl.checked = editor.getShowInvisibles();
+        showGutterEl.checked = editor.renderer.getShowGutter();
+        showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
+        highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
+        showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
+        softTabEl.checked = session.getUseSoftTabs();
+    }
 
     bindDropdown("mode", function(value) {
         env.editor.getSession().setMode(modes[value] || modes.text);
@@ -256,7 +304,7 @@ exports.launch = function(env) {
     });
 
     bindDropdown("fontsize", function(value) {
-        document.getElementById("editor").style.fontSize = value;
+        env.split.setFontSize(value);
     });
 
     bindDropdown("soft_wrap", function(value) {
@@ -317,6 +365,31 @@ exports.launch = function(env) {
         env.editor.getSession().setUseSoftTabs(checked);
     });
 
+    var secondSession = null;
+    bindDropdown("split", function(value) {
+        var sp = env.split;
+        if (value == "none") {
+            if (sp.getSplits() == 2) {
+                secondSession = sp.getEditor(1).session;
+            }
+            sp.setSplits(1);
+        } else {
+            var newEditor = (sp.getSplits() == 1);
+            if (value == "below") {
+                sp.setOriantation(sp.BELOW);
+            } else {
+                sp.setOriantation(sp.BESIDE);
+            }
+            sp.setSplits(2);
+
+            if (newEditor) {
+                var session = secondSession || sp.getEditor(0).session;
+                var newSession = sp.setSession(session, 1);
+                newSession.name = session.name;
+            }
+        }
+    });
+
     function bindCheckbox(id, callback) {
         var el = document.getElementById(id);
         var onCheck = function() {
@@ -336,13 +409,19 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        container.style.width = (document.documentElement.clientWidth) + "px";
-        container.style.height = (document.documentElement.clientHeight - 60 - 22) + "px";
-        env.editor.resize();
+        var width = (document.documentElement.clientWidth - 280);
+        container.style.width = width + "px";
+        cockpitInput.style.width = width + "px";
+        container.style.height = (document.documentElement.clientHeight - 22) + "px";
+        env.split.resize();
+//        env.editor.resize();
     };
 
     window.onresize = onResize;
     onResize();
+
+    // Call resize on the cli explizit. This is necessary for Firefox.
+    env.cli.cliView.resizer()
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
@@ -373,8 +452,8 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
-	              } else if (/^.*\.cs$/i.test(file.name)) {
-	                  mode = "csharp";
+                } else if (/^.*\.cs$/i.test(file.name)) {
+                    mode = "csharp";
                 } else if (/^.*\.java$/i.test(file.name)) {
                     mode = "java";
                 } else if (/^.*\.rb$/i.test(file.name)) {
@@ -471,28 +550,88 @@ exports.launch = function(env) {
             mac: "Alt-L",
             sender: "editor"
         },
-        exec: function() {
-            var session = env.editor.session,
-                range = env.editor.selection.getRange(),
-                placeHolder = session.getTextRange(range).substring(0, 3) + "...";
-
-            session.addFold(placeHolder, range);
+        exec: function(env) {
+            toggleFold(env, false)
         }
     });
 
     canon.addCommand({
-        name: "undfold",
+        name: "unfold",
         bindKey: {
             win: "Alt-Shift-L",
             mac: "Alt-Shift-L",
             sender: "editor"
         },
-        exec: function() {
-            var session = env.editor.session,
-                range = env.editor.selection.getRange();
-            session.expandFolds(session.getFoldsInRange(range));
+        exec: function(env) {
+            toggleFold(env, true)
         }
     });
+
+    function isCommentRow(row) {
+        var session = env.editor.session;
+        var token;
+        var tokens = session.getTokens(row, row)[0].tokens;
+        var c = 0;
+        for (var i = 0; i < tokens.length; i++) {
+            token = tokens[i];
+            if (/^comment/.test(token.type)) {
+                return c;
+            } else if (!/^text/.test(token.type)) {
+                return false;
+            }
+            c += token.value.length;
+        }
+        return false;
+    };
+
+    function toggleFold(env, tryToUnfold) {
+        var session = env.editor.session;
+        var selection = env.editor.selection;
+        var range = selection.getRange();
+        var addFold;
+
+        if(range.isEmpty()) {
+            var br = session.findMatchingBracket(range.start);
+            var fold = session.getFoldAt(range.start.row, range.start.column);
+            var column;
+
+            if(fold) {
+                session.expandFold(fold);
+                selection.setSelectionRange(fold.range)
+            } else if(br) {
+                if(range.compare(br.row,br.column) == 1)
+                    range.end = br;
+                else
+                    range.start = br;
+                addFold = true;
+            } else if ((column = isCommentRow(range.start.row)) !== false) {
+                var firstCommentRow = range.start.row;
+                var lastCommentRow = range.start.row;
+                var t;
+                while ((t = isCommentRow(firstCommentRow - 1)) !== false) {
+                    firstCommentRow --;
+                    column = t;
+                }
+                while (isCommentRow(lastCommentRow + 1) !== false) {
+                    lastCommentRow ++;
+                }
+                range.start.row = firstCommentRow;
+                range.start.column = column + 2;
+                range.end.row = lastCommentRow;
+                range.end.column = session.getLine(lastCommentRow).length - 1;
+                addFold = true;
+            }
+        } else {
+            addFold = true;
+        }
+        if(addFold) {
+            var placeHolder = session.getTextRange(range);
+            if(placeHolder.length < 3)
+                return;
+            placeHolder = placeHolder.trim().substring(0, 3).replace(' ','','g') + "...";
+            session.addFold(placeHolder, range);
+        }
+    }
 };
 
 });
