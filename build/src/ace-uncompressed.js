@@ -3417,6 +3417,22 @@ exports.copyArray = function(array){
     return copy;
 };
 
+exports.deepCopy = function (obj) {
+    if (typeof obj[key] != "object") {
+        return obj;
+    }
+    
+    var copy = obj.constructor();
+    for (var key in obj) {
+        if (typeof obj[key] == "object") {
+            copy[key] = this.deepCopy(obj[key]);
+        } else {
+            copy[key] = obj[key];
+        }
+    }
+    return copy;
+}
+
 exports.arrayToMap = function(arr) {
     var map = {};
     for (var i=0; i<arr.length; i++) {
@@ -5850,6 +5866,14 @@ var Editor =function(renderer, session) {
         var mode = session.getMode();
 
         var cursor = this.getCursorPosition();
+        
+        if (this.getBehavioursEnabled()) {
+            // Get a transform if the current mode wants one.
+            var transform = mode.transformAction(session.getState(cursor.row), 'insertion', this, session, text);
+            if (transform)
+                text = transform.text;
+        }
+        
         text = text.replace("\t", this.session.getTabString());
 
         // remove selected text
@@ -5865,12 +5889,27 @@ var Editor =function(renderer, session) {
 
         this.clearSelection();
 
+        var start         = cursor.column;
         var lineState     = session.getState(cursor.row);
         var shouldOutdent = mode.checkOutdent(lineState, session.getLine(cursor.row), text);
         var line          = session.getLine(cursor.row);
         var lineIndent    = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
         var end           = session.insert(cursor, text);
-
+        
+        if (transform && transform.selection) {
+            if (transform.selection.length == 2) { // Transform relative to the current column
+                this.selection.setSelectionRange(
+                    new Range(cursor.row, start + transform.selection[0],
+                              cursor.row, start + transform.selection[1]));
+            } else { // Transform relative to the current row.
+                this.selection.setSelectionRange(
+                    new Range(cursor.row + transform.selection[0],
+                              transform.selection[1],
+                              cursor.row + transform.selection[2],
+                              transform.selection[3]));
+            }
+        }
+        
         var lineState = session.getState(cursor.row);
 
         // TODO disabled multiline auto indent
@@ -6020,6 +6059,15 @@ var Editor =function(renderer, session) {
     this.getReadOnly = function() {
         return this.$readOnly;
     };
+    
+    this.$modeBehaviours = false;
+    this.setBehavioursEnabled = function (enabled) {
+        this.$modeBehaviours = enabled;
+    }
+    
+    this.getBehavioursEnabled = function () {
+        return this.$modeBehaviours;
+    }
 
     this.removeRight = function() {
         if (this.$readOnly)
@@ -6038,8 +6086,18 @@ var Editor =function(renderer, session) {
 
         if (this.selection.isEmpty())
             this.selection.selectLeft();
+        
+        var range = this.getSelectionRange();
+        if (this.getBehavioursEnabled()) {
+            var session = this.session;
+            var state = session.getState(range.start.row);
+            var new_range = session.getMode().transformAction(state, 'deletion', this, session, range);
+            if (new_range !== false) {
+                range = new_range;
+            }
+        }
 
-        this.session.remove(this.getSelectionRange());
+        this.session.remove(range);
         this.clearSelection();
     };
 
@@ -10074,6 +10132,7 @@ exports.Range = Range;
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
+ *      Chris Spencer <chris.ag.spencer AT googlemail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -10089,13 +10148,15 @@ exports.Range = Range;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/text', ['require', 'exports', 'module' , 'ace/tokenizer', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/text', ['require', 'exports', 'module' , 'ace/tokenizer', 'ace/mode/text_highlight_rules', 'ace/mode/behaviour'], function(require, exports, module) {
 
 var Tokenizer = require("ace/tokenizer").Tokenizer;
 var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var Behaviour = require("ace/mode/behaviour").Behaviour;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());
+    this.$behaviour = new Behaviour();
 };
 
 (function() {
@@ -10199,10 +10260,12 @@ var Mode = function() {
         }
         this.$modes = {};
         for (var i = 0; i < this.$embeds.length; i++) {
-            this.$modes[this.$embeds[i]] = new mapping[this.$embeds[i]]();
+            if (mapping[this.$embeds[i]]) {
+                this.$modes[this.$embeds[i]] = new mapping[this.$embeds[i]]();
+            }
         }
         
-        var delegations = ['toggleCommentLines', 'getNextLineIndent', 'checkOutdent', 'autoOutdent'];
+        var delegations = ['toggleCommentLines', 'getNextLineIndent', 'checkOutdent', 'autoOutdent', 'transformAction'];
 
         for (var i = 0; i < delegations.length; i++) {
             (function(scope) {
@@ -10219,18 +10282,34 @@ var Mode = function() {
         var state = args[0];
         
         for (var i = 0; i < this.$embeds.length; i++) {
+            if (!this.$modes[this.$embeds[i]]) continue;
+            
             var split = state.split(this.$embeds[i]);
-        
             if (!split[0] && split[1]) {
                 args[0] = split[1];
                 var mode = this.$modes[this.$embeds[i]];
                 return mode[method].apply(mode, args);
             }
         }
-        
-        return defaultHandler ? defaultHandler.apply(this, args) : undefined;
+        var ret = defaultHandler.apply(this, args);
+        return defaultHandler ? ret : undefined;
     };
-
+    
+    this.transformAction = function(state, action, editor, session, param) {
+        if (this.$behaviour) {
+            var behaviours = this.$behaviour.getBehaviours();
+            for (var key in behaviours) {
+                if (behaviours[key][action]) {
+                    var ret = behaviours[key][action].apply(this, arguments);
+                    if (ret !== false) {
+                        return ret;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
@@ -10436,7 +10515,9 @@ exports.Tokenizer = Tokenizer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/text_highlight_rules', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/mode/text_highlight_rules', ['require', 'exports', 'module' , 'pilot/lang'], function(require, exports, module) {
+
+var lang = require("pilot/lang");
 
 var TextHighlightRules = function() {
 
@@ -10490,7 +10571,7 @@ var TextHighlightRules = function() {
         this.addRules(embedRules, prefix);
         
         for (var i = 0; i < states.length; i++) {
-            Array.prototype.unshift.apply(this.$rules[states[i]], escapeRules);
+            Array.prototype.unshift.apply(this.$rules[states[i]], lang.deepCopy(escapeRules));
         }
         
         if (!this.$embeds) {
@@ -10507,7 +10588,103 @@ var TextHighlightRules = function() {
 
 exports.TextHighlightRules = TextHighlightRules;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Chris Spencer <chris.ag.spencer AT googlemail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/behaviour', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var Behaviour = function() {
+   this.$behaviours = {};
+};
+
+(function () {
+
+    this.add = function (name, action, callback) {
+        switch (undefined) {
+          case this.$behaviours:
+              this.$behaviours = {};
+          case this.$behaviours[name]:
+              this.$behaviours[name] = {};
+        }
+        this.$behaviours[name][action] = callback;
+    }
+    
+    this.addBehaviours = function (behaviours) {
+        for (var key in behaviours) {
+            for (var action in behaviours[key]) {
+                this.add(key, action, behaviours[key][action]);
+            }
+        }
+    }
+    
+    this.remove = function (name) {
+        if (this.$behaviours && this.$behaviours[name]) {
+            delete this.$behaviours[name];
+        }
+    }
+    
+    this.inherit = function (mode, filter) {
+        if (typeof mode === "function") {
+            var behaviours = new mode().getBehaviours(filter);
+        } else {
+            var behaviours = mode.getBehaviours(filter);
+        }
+        this.addBehaviours(behaviours);
+    }
+    
+    this.getBehaviours = function (filter) {
+        if (!filter) {
+            return this.$behaviours;
+        } else {
+            var ret = {}
+            for (var i = 0; i < filter.length; i++) {
+                if (this.$behaviours[filter[i]]) {
+                    ret[filter[i]] = this.$behaviours[filter[i]];
+                }
+            }
+            return ret;
+        }
+    }
+
+}).call(Behaviour.prototype);
+
+exports.Behaviour = Behaviour;
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -10637,7 +10814,7 @@ var Document = function(text) {
      * Get a verbatim copy of the given line as it is in the document
      */
     this.getLine = function(row) {
-        return this.$lines[row] || "";
+        return this.$lines ? (this.$lines[row] || "") : "";
     };
 
     this.getLines = function(firstRow, lastRow) {
@@ -14599,7 +14776,6 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
 .ace-tm .ace_gutter {\
   width: 50px;\
   background: #e8e8e8;\
-  border-right: 1px solid rgb(159, 159, 159);	 \
   color: #333;\
   overflow : hidden;\
 }\
