@@ -6,7 +6,7 @@ var connect = require('connect');
  * Example:
  *
  *     var connect = require('connect');
- *     var ace = require('ace-connect')('/js/ace');
+ *     var ace = require('ace-connect').connect('/js/ace');
  *     var server = connect.createServer(ace);
  *     server.listen(3000);
  *
@@ -14,7 +14,7 @@ var connect = require('connect');
  *
  * @param path the path under which the ace files will be mounted.
  */
-module.exports = function(path) {
+exports.connect = function(path) {
   var aceFiles = connect.static(__dirname);
 
   return function(req, res, next) {
