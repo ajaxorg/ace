@@ -3418,7 +3418,7 @@ exports.copyArray = function(array){
 };
 
 exports.deepCopy = function (obj) {
-    if (typeof obj[key] != "object") {
+    if (typeof obj != "object") {
         return obj;
     }
     
@@ -5027,14 +5027,18 @@ else {
     };
 }
 
-exports.computedStyle = function(element, style) {
-    if (window.getComputedStyle) {
-        return (window.getComputedStyle(element, "") || {})[style] || "";
-    }
-    else {
-        return element.currentStyle[style];
-    }
-};
+if (window.getComputedStyle)
+    exports.computedStyle = function(element, style) {
+        if (style)
+            return (window.getComputedStyle(element, "") || {})[style] || "";
+        return window.getComputedStyle(element, "") || {}
+    };
+else
+    exports.computedStyle = function(element, style) {
+        if (style)
+            return element.currentStyle[style];
+        return element.currentStyle
+    };
 
 exports.scrollbarWidth = function() {
 
@@ -10814,7 +10818,7 @@ var Document = function(text) {
      * Get a verbatim copy of the given line as it is in the document
      */
     this.getLine = function(row) {
-        return this.$lines ? (this.$lines[row] || "") : "";
+        return this.$lines[row] || "";
     };
 
     this.getLines = function(firstRow, lastRow) {
@@ -14440,7 +14444,8 @@ var Cursor = function(parentEl) {
     parentEl.appendChild(this.element);
 
     this.cursor = dom.createElement("div");
-    this.cursor.className = "ace_cursor";
+    this.cursor.className = "ace_cursor ace_hidden";
+    this.element.appendChild(this.cursor);
 
     this.isVisible = false;
 };
@@ -14453,18 +14458,14 @@ var Cursor = function(parentEl) {
 
     this.hideCursor = function() {
         this.isVisible = false;
-        if (this.cursor.parentNode) {
-            this.cursor.parentNode.removeChild(this.cursor);
-        }
+        dom.addCssClass(this.cursor, "ace_hidden");
         clearInterval(this.blinkId);
     };
 
     this.showCursor = function() {
-        this.isVisible = true;
-        this.element.appendChild(this.cursor);
-
-        var cursor = this.cursor;
-        cursor.style.visibility = "visible";
+        this.isVisible = true;   
+        dom.removeCssClass(this.cursor, "ace_hidden");
+        this.cursor.style.visibility = "visible";
         this.restartTimer();
     };
 
@@ -15088,6 +15089,10 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   ".ace_cursor {" +
   "    z-index: 4;" +
   "    position: absolute;" +
+  "}" +
+  "" +
+  ".ace_cursor.ace_hidden {" +
+  "    opacity: 0.2;" +
   "}" +
   "" +
   ".ace_line {" +
