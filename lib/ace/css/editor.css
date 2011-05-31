@@ -117,6 +117,10 @@
     position: absolute;
 }
 
+.ace_cursor.ace_hidden {
+    opacity: 0.2;
+}
+
 .ace_line {
     white-space: nowrap;
 }
