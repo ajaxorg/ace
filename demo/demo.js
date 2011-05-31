@@ -47,7 +47,8 @@ exports.launch = function(env) {
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
-    var EditSession = require("ace/edit_session").EditSession;
+//    var EditSession = require("ace/edit_session").EditSession;
+    var SplitEditSession = require("ace/split_edit_session").SplitEditSession;
 
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
@@ -89,66 +90,66 @@ exports.launch = function(env) {
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
-    docs.plain = new EditSession(loreIpsum);
+    docs.plain = new SplitEditSession(loreIpsum);
     docs.plain.setUseWrapMode(true);
     docs.plain.setWrapLimitRange(80, 80)
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
+    docs.js = new SplitEditSession(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
+    docs.css = new SplitEditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
+    docs.html = new SplitEditSession(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
+    docs.python = new SplitEditSession(document.getElementById("pythontext").innerHTML);
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
+    docs.php = new SplitEditSession(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(document.getElementById("javatext").innerHTML);
+    docs.java = new SplitEditSession(document.getElementById("javatext").innerHTML);
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby = new SplitEditSession(document.getElementById("rubytext").innerHTML);
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp = new SplitEditSession(document.getElementById("csharptext").innerHTML);
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp = new SplitEditSession(document.getElementById("cpptext").innerHTML);
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(document.getElementById("coffeetext").innerHTML);
+    docs.coffee = new SplitEditSession(document.getElementById("coffeetext").innerHTML);
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
+    docs.perl = new SplitEditSession(document.getElementById("perltext").innerHTML);
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml = new SplitEditSession(document.getElementById("ocamltext").innerHTML);
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg = new SplitEditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
+    docs.textile = new SplitEditSession(document.getElementById("textiletext").innerHTML);
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
@@ -210,8 +211,7 @@ exports.launch = function(env) {
 
     bindDropdown("doc", function(value) {
         var doc = docs[value];
-        var session = env.split.setSession(doc);
-        session.name = doc.name;
+        env.split.setSession(doc);
 
         updateUIEditorOptions();
 
@@ -219,8 +219,8 @@ exports.launch = function(env) {
     });
 
     function updateUIEditorOptions() {
-        var editor = env.editor;
-        var session = editor.session;
+        var editor = env.split.getEditor();
+        var session = env.split.getSession();
 
         docEl.value = session.name;
 
@@ -292,15 +292,15 @@ exports.launch = function(env) {
     }
 
     bindDropdown("mode", function(value) {
-        env.editor.getSession().setMode(modes[value] || modes.text);
+        env.split.getSession().setMode(modes[value] || modes.text);
     });
 
     bindDropdown("theme", function(value) {
-        env.editor.setTheme(value);
+        env.split.setTheme(value);
     });
 
     bindDropdown("keybinding", function(value) {
-        env.editor.setKeyboardHandler(keybindings[value]);
+        env.split.setKeyboardHandler(keybindings[value]);
     });
 
     bindDropdown("fontsize", function(value) {
@@ -308,8 +308,8 @@ exports.launch = function(env) {
     });
 
     bindDropdown("soft_wrap", function(value) {
-        var session = env.editor.getSession();
-        var renderer = env.editor.renderer;
+        var session = env.split.getSession();
+        var renderer = env.split.getRenderer();
         switch (value) {
             case "off":
                 session.setUseWrapMode(false);
@@ -365,13 +365,9 @@ exports.launch = function(env) {
         env.editor.getSession().setUseSoftTabs(checked);
     });
 
-    var secondSession = null;
     bindDropdown("split", function(value) {
         var sp = env.split;
         if (value == "none") {
-            if (sp.getSplits() == 2) {
-                secondSession = sp.getEditor(1).session;
-            }
             sp.setSplits(1);
         } else {
             var newEditor = (sp.getSplits() == 1);
@@ -382,11 +378,11 @@ exports.launch = function(env) {
             }
             sp.setSplits(2);
 
-            if (newEditor) {
-                var session = secondSession || sp.getEditor(0).session;
-                var newSession = sp.setSession(session, 1);
-                newSession.name = session.name;
-            }
+//            if (newEditor) {
+//                var session = secondSession || sp.getEditor(0).session;
+//                var newSession = sp.setSession(session, 1);
+//                newSession.name = session.name;
+//            }
         }
     });
 
@@ -567,34 +563,14 @@ exports.launch = function(env) {
         }
     });
 
-    function isCommentRow(row) {
-        var session = env.editor.session;
-        var token;
-        var tokens = session.getTokens(row, row)[0].tokens;
-        var c = 0;
-        for (var i = 0; i < tokens.length; i++) {
-            token = tokens[i];
-            if (/^comment/.test(token.type)) {
-                return c;
-            } else if (!/^text/.test(token.type)) {
-                return false;
-            }
-            c += token.value.length;
-        }
-        return false;
-    };
-
     function toggleFold(env, tryToUnfold) {
-        var session = env.editor.session;
-        var selection = env.editor.selection;
-        var range = selection.getRange();
-        var addFold;
+        var session = env.editor.session,
+            selection = env.editor.selection,
+            range = selection.getRange(), addFold;
 
         if(range.isEmpty()) {
             var br = session.findMatchingBracket(range.start);
-            var fold = session.getFoldAt(range.start.row, range.start.column);
-            var column;
-
+            var fold = session.getFoldAt(range.start.row, range.start.column)
             if(fold) {
                 session.expandFold(fold);
                 selection.setSelectionRange(fold.range)
@@ -604,25 +580,15 @@ exports.launch = function(env) {
                 else
                     range.start = br;
                 addFold = true;
-            } else if ((column = isCommentRow(range.start.row)) !== false) {
-                var firstCommentRow = range.start.row;
-                var lastCommentRow = range.start.row;
-                var t;
-                while ((t = isCommentRow(firstCommentRow - 1)) !== false) {
-                    firstCommentRow --;
-                    column = t;
-                }
-                while (isCommentRow(lastCommentRow + 1) !== false) {
-                    lastCommentRow ++;
-                }
-                range.start.row = firstCommentRow;
-                range.start.column = column + 2;
-                range.end.row = lastCommentRow;
-                range.end.column = session.getLine(lastCommentRow).length - 1;
-                addFold = true;
             }
         } else {
-            addFold = true;
+            var folds = session.getFoldsInRange(range);
+            if(tryToUnfold && folds.length)
+                session.expandFolds(folds);
+            else if(folds.length == 1 && folds[0].range.compare(range) == 0)
+                session.expandFolds(folds);
+            else
+                addFold = true;
         }
         if(addFold) {
             var placeHolder = session.getTextRange(range);
