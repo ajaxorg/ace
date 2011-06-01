@@ -48,7 +48,7 @@ exports.launch = function(env) {
     var SplitEditor = require("ace/split").SplitEditor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
-//    var EditSession = require("ace/edit_session").EditSession;
+    var EditSession = require("ace/edit_session").EditSession;
     var SplitEditSession = require("ace/split_edit_session").SplitEditSession;
 
     var JavaScriptMode = require("ace/mode/javascript").Mode;
@@ -84,6 +84,23 @@ exports.launch = function(env) {
       })
     }
 
+    /**
+     * You can use this demo with or without an EditorSplit. An EditorSplit
+     * allows you to view multiple sessions beside each other (aka SplitView).
+     *
+     * If you want to use the EditorSplit, you have to use the SplitEditSession
+     * and *NOT* the EditSession, as the SplitEditSession is capable of
+     * managing the same session beeing displayed in multiple splits - the
+     * EditSession is not.
+     */
+    var ENABLE_SPLIT = true;
+    var EditSessionProto;
+    if (ENABLE_SPLIT) {
+        EditSessionProto = SplitEditSession;
+    } else {
+        EditSessionProto = EditSession;
+    }
+
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
@@ -91,66 +108,66 @@ exports.launch = function(env) {
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
-    docs.plain = new SplitEditSession(loreIpsum);
+    docs.plain = new EditSessionProto(loreIpsum);
     docs.plain.setUseWrapMode(true);
     docs.plain.setWrapLimitRange(80, 80)
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new SplitEditSession(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSessionProto(document.getElementById("jstext").innerHTML);
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new SplitEditSession(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSessionProto(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.html = new SplitEditSession(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSessionProto(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new SplitEditSession(document.getElementById("pythontext").innerHTML);
+    docs.python = new EditSessionProto(document.getElementById("pythontext").innerHTML);
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new SplitEditSession(document.getElementById("phptext").innerHTML);
+    docs.php = new EditSessionProto(document.getElementById("phptext").innerHTML);
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new SplitEditSession(document.getElementById("javatext").innerHTML);
+    docs.java = new EditSessionProto(document.getElementById("javatext").innerHTML);
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new SplitEditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby = new EditSessionProto(document.getElementById("rubytext").innerHTML);
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new SplitEditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp = new EditSessionProto(document.getElementById("csharptext").innerHTML);
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new SplitEditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp = new EditSessionProto(document.getElementById("cpptext").innerHTML);
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new SplitEditSession(document.getElementById("coffeetext").innerHTML);
+    docs.coffee = new EditSessionProto(document.getElementById("coffeetext").innerHTML);
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.perl = new SplitEditSession(document.getElementById("perltext").innerHTML);
+    docs.perl = new EditSessionProto(document.getElementById("perltext").innerHTML);
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.ocaml = new SplitEditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml = new EditSessionProto(document.getElementById("ocamltext").innerHTML);
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new SplitEditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg = new EditSessionProto(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new SplitEditSession(document.getElementById("textiletext").innerHTML);
+    docs.textile = new EditSessionProto(document.getElementById("textiletext").innerHTML);
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
@@ -162,14 +179,18 @@ exports.launch = function(env) {
     var container = document.getElementById("editor");
     var cockpitInput = document.getElementById("cockpitInput");
 
-    // Splitting.
-    var editor = new SplitEditor(container, theme, 1);
-    env.editor = editor;//split.getEditor(0);
-//    split.on("focus", function(editor) {
-//        env.editor = editor;
-//        updateUIEditorOptions();
-//    });
-    env.split = split;
+    /**
+     * Create the editor instance. If we want to use SplitEditor/Views, the
+     * constructor is a little bit different, as we have to pass in the
+     * Renderer constructor function instead of a renderer instance.
+     */
+    var editor;
+    if (ENABLE_SPLIT) {
+        editor = new SplitEditor(Renderer, container, theme);
+    } else {
+        editor = new Editor(new Renderer(container, theme));
+    }
+    env.editor = editor;
     window.env = env;
     window.ace = env.editor;
 
@@ -368,8 +389,15 @@ exports.launch = function(env) {
     bindDropdown("split", function(value) {
         var editor = env.editor;
         if (value == "none") {
-            editor.setSplits(1);
+            ENABLE_SPLIT && editor.setSplits(1);
         } else {
+            if (!ENABLE_SPLIT) {
+                alert("Splits are not enabled right now.\nPlease change the " +
+                        "'ENABLE_SPLIT' flag in the demo.js file to get this " +
+                        "feature enabled in the demo.");
+                return;
+            }
+
             var newEditor = (editor.getSplits() == 1);
             if (value == "below") {
                 editor.setOriantation(editor.BELOW);
