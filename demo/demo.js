@@ -45,6 +45,7 @@ exports.launch = function(env) {
     var event = require("pilot/event");
     var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
+    var SplitEditor = require("ace/split").SplitEditor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
 //    var EditSession = require("ace/edit_session").EditSession;
@@ -162,13 +163,12 @@ exports.launch = function(env) {
     var cockpitInput = document.getElementById("cockpitInput");
 
     // Splitting.
-    var Split = require("ace/split").Split;
-    var split = new Split(container, theme, 1);
-    env.editor = split.getEditor(0);
-    split.on("focus", function(editor) {
-        env.editor = editor;
-        updateUIEditorOptions();
-    });
+    var editor = new SplitEditor(container, theme, 1);
+    env.editor = editor;//split.getEditor(0);
+//    split.on("focus", function(editor) {
+//        env.editor = editor;
+//        updateUIEditorOptions();
+//    });
     env.split = split;
     window.env = env;
     window.ace = env.editor;
@@ -211,7 +211,7 @@ exports.launch = function(env) {
 
     bindDropdown("doc", function(value) {
         var doc = docs[value];
-        env.split.setSession(doc);
+        env.editor.setSession(doc);
 
         updateUIEditorOptions();
 
@@ -219,8 +219,8 @@ exports.launch = function(env) {
     });
 
     function updateUIEditorOptions() {
-        var editor = env.split.getEditor();
-        var session = env.split.getSession();
+        var editor = env.editor;
+        var session = editor.getSession();
 
         docEl.value = session.name;
 
@@ -292,24 +292,24 @@ exports.launch = function(env) {
     }
 
     bindDropdown("mode", function(value) {
-        env.split.getSession().setMode(modes[value] || modes.text);
+        env.editor.getSession().setMode(modes[value] || modes.text);
     });
 
     bindDropdown("theme", function(value) {
-        env.split.setTheme(value);
+        env.editor.setTheme(value);
     });
 
     bindDropdown("keybinding", function(value) {
-        env.split.setKeyboardHandler(keybindings[value]);
+        env.editor.setKeyboardHandler(keybindings[value]);
     });
 
     bindDropdown("fontsize", function(value) {
-        env.split.setFontSize(value);
+        env.editor.setFontSize(value);
     });
 
     bindDropdown("soft_wrap", function(value) {
-        var session = env.split.getSession();
-        var editor = env.split.getEditor();
+        var editor = env.editor;
+        var session = editor.getSession();
         switch (value) {
             case "off":
                 session.setUseWrapMode(false);
@@ -346,11 +346,11 @@ exports.launch = function(env) {
     });
 
     bindCheckbox("show_gutter", function(checked) {
-        env.editor.renderer.setShowGutter(checked);
+        env.editor.setShowGutter(checked);
     });
 
     bindCheckbox("show_print_margin", function(checked) {
-        env.editor.renderer.setShowPrintMargin(checked);
+        env.editor.setShowPrintMargin(checked);
     });
 
     bindCheckbox("highlight_selected_word", function(checked) {
@@ -358,7 +358,7 @@ exports.launch = function(env) {
     });
 
     bindCheckbox("show_hscroll", function(checked) {
-        env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+        env.editor.setHScrollBarAlwaysVisible(checked);
     });
 
     bindCheckbox("soft_tab", function(checked) {
@@ -366,23 +366,17 @@ exports.launch = function(env) {
     });
 
     bindDropdown("split", function(value) {
-        var sp = env.split;
+        var editor = env.editor;
         if (value == "none") {
-            sp.setSplits(1);
+            editor.setSplits(1);
         } else {
-            var newEditor = (sp.getSplits() == 1);
+            var newEditor = (editor.getSplits() == 1);
             if (value == "below") {
-                sp.setOriantation(sp.BELOW);
+                editor.setOriantation(editor.BELOW);
             } else {
-                sp.setOriantation(sp.BESIDE);
+                editor.setOriantation(editor.BESIDE);
             }
-            sp.setSplits(2);
-
-//            if (newEditor) {
-//                var session = secondSession || sp.getEditor(0).session;
-//                var newSession = sp.setSession(session, 1);
-//                newSession.name = session.name;
-//            }
+            editor.setSplits(2);
         }
     });
 
@@ -409,7 +403,7 @@ exports.launch = function(env) {
         container.style.width = width + "px";
         cockpitInput.style.width = width + "px";
         container.style.height = (document.documentElement.clientHeight - 22) + "px";
-        env.split.resize();
+        env.editor.resize();
 //        env.editor.resize();
     };
 
