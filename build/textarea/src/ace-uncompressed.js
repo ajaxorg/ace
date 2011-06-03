@@ -15570,6 +15570,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             coffee:     "CoffeeScript",
             html:       "HTML",
             css:        "CSS",
+            scss:       "SCSS",
             xml:        "XML",
             svg:        "SVG",
             c_cpp:      "C++",

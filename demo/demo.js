@@ -51,6 +51,7 @@ exports.launch = function(env) {
 
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
+    var ScssMode = require("ace/mode/scss").Mode;
     var HtmlMode = require("ace/mode/html").Mode;
     var XmlMode = require("ace/mode/xml").Mode;
     var PythonMode = require("ace/mode/python").Mode;
@@ -102,6 +103,10 @@ exports.launch = function(env) {
     docs.css = new EditSession(document.getElementById("csstext").innerHTML);
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
+
+    docs.scss = new EditSession(document.getElementById("scsstext").innerHTML);
+    docs.scss.setMode(new ScssMode());
+    docs.scss.setUndoManager(new UndoManager());
 
     docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
@@ -179,6 +184,7 @@ exports.launch = function(env) {
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
+        scss: new ScssMode(),
         javascript: new JavaScriptMode(),
         python: new PythonMode(),
         php: new PhpMode(),
@@ -230,6 +236,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof CssMode) {
             modeEl.value = "css";
+        }
+        else if (mode instanceof ScssMode) {
+            modeEl.value = "scss";
         }
         else if (mode instanceof HtmlMode) {
             modeEl.value = "html";
@@ -448,6 +457,8 @@ exports.launch = function(env) {
                     mode = "html";
                 } else if (/^.*\.css$/i.test(file.name)) {
                     mode = "css";
+                } else if (/^.*\.scss$/i.test(file.name)) {
+                    mode = "scss";
                 } else if (/^.*\.py$/i.test(file.name)) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
