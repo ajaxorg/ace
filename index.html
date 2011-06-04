@@ -32,6 +32,7 @@
           <option value="svg">SVG</option>
           <option value="html">HTML</option>
           <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
           <option value="coffee">CoffeeScript</option>
           <option value="python">Python</option>
           <option value="ruby">Ruby</option>
@@ -56,6 +57,7 @@
           <option value="xml">XML</option>
           <option value="html">HTML</option>
           <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
           <option value="python">Python</option>
           <option value="php">PHP</option>
           <option value="java">Java</option>
@@ -209,6 +211,20 @@
     font-family: Monaco, "Courier New", monospace;
     font-size: 12px;
     cursor: text;
+}</script>
+
+    <script type="text/editor" id="scsstext">@import 'compass/css3';
+
+$stdFont: Monaco, "Courier New", monospace;
+
+.text-layer {
+    font-family: $stdFont;
+    font-size: 12px + 4px;
+}
+
+header {
+    @extend .text-layer;
+	color: hsla(120,40%,40%,0.5);	
 }</script>
 
     <script type="text/editor" id="htmltext"><html>
