@@ -13354,12 +13354,11 @@ var VirtualRenderer = function(container, theme) {
         var left = pos.left + this.$padding;
         var top = pos.top;
 
-        if (this.getScrollTop() > top) {
+        if (this.desiredScrollTop > top) {
             this.scrollToY(top);
         }
 
-        if (this.getScrollTop() + this.$size.scrollerHeight < top
-                + this.lineHeight) {
+        if (this.desiredScrollTop + this.$size.scrollerHeight < top + this.lineHeight) {
             this.scrollToY(top + this.lineHeight - this.$size.scrollerHeight);
         }
 
@@ -13413,7 +13412,7 @@ var VirtualRenderer = function(container, theme) {
     this.scrollToY = function(scrollTop) {
         // after calling scrollBar.setScrollTop
         // scrollbar sends us event with same scrollTop. ignore it
-        if (this.scrollTop !== scrollTop) {
+        if (this.desiredScrollTop !== scrollTop) {
             this.$loop.schedule(this.CHANGE_SCROLL);
             this.desiredScrollTop = scrollTop;
         }
