@@ -13,17 +13,6 @@
   <table id="controls">
     <tr>
       <td>
-        <label for="split">Split</label>
-      </td><td>
-        <select id="split" size="1">
-          <option value="none">None</option>
-          <option value="below">Below</option>
-          <option value="beside">Beside</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td>
         <label for="doc">Document</label>
       </td><td>
         <select id="doc" size="1">
@@ -69,6 +58,17 @@
           <option value="csharp">C-Sharp</option>
           <option value="svg">SVG</option>
           <option value="textile">Textile</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="split">Split</label>
+      </td><td>
+        <select id="split" size="1">
+          <option value="none">None</option>
+          <option value="below">Below</option>
+          <option value="beside">Beside</option>
         </select>
       </td>
     </tr>
@@ -213,18 +213,25 @@
     cursor: text;
 }</script>
 
-    <script type="text/editor" id="scsstext">@import 'compass/css3';
+    <script type="text/editor" id="scsstext">/* style.scss */
 
-$stdFont: Monaco, "Courier New", monospace;
+#navbar {
+    $navbar-width: 800px;
+    $items: 5;
+    $navbar-color: #ce4dd6;
 
-.text-layer {
-    font-family: $stdFont;
-    font-size: 12px + 4px;
-}
+    width: $navbar-width;
+    border-bottom: 2px solid $navbar-color;
 
-header {
-    @extend .text-layer;
-	color: hsla(120,40%,40%,0.5);	
+    li {
+        float: left;
+        width: $navbar-width/$items - 10px;
+
+        background-color: lighten($navbar-color, 20%);
+        &:hover {
+            background-color: lighten($navbar-color, 10%);
+        }
+    }
 }</script>
 
     <script type="text/editor" id="htmltext"><html>
