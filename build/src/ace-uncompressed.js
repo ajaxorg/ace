@@ -6145,7 +6145,13 @@ var Editor =function(renderer, session) {
         if (this.selection.isEmpty())
             this.selection.selectLineEnd();
 
-        this.session.remove(this.getSelectionRange());
+        var range = this.getSelectionRange();
+        if (range.start.column == range.end.column && range.start.row == range.end.row) {
+            range.end.column = 0;
+            range.end.row++;
+        }
+
+        this.session.remove(range);
         this.clearSelection();
     };
 

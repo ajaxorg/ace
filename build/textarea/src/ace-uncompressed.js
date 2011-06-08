@@ -6160,7 +6160,13 @@ var Editor =function(renderer, session) {
         if (this.selection.isEmpty())
             this.selection.selectLineEnd();
 
-        this.session.remove(this.getSelectionRange());
+        var range = this.getSelectionRange();
+        if (range.start.column == range.end.column && range.start.row == range.end.row) {
+            range.end.column = 0;
+            range.end.row++;
+        }
+
+        this.session.remove(range);
         this.clearSelection();
     };
 
@@ -12847,7 +12853,7 @@ var VirtualRenderer = function(container, theme) {
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", this.onScroll.bind(this));
 
-    this.scrollTop = this.desiredScrollTop = 0;
+    this.scrollTop = 0;
 
     this.cursorPos = {
         row : 0,
@@ -13222,8 +13228,7 @@ var VirtualRenderer = function(container, theme) {
             this.scroller.style.overflowX = horizScroll ? "scroll" : "hidden";
 
         var maxHeight = this.session.getScreenLength() * this.lineHeight;
-        this.scrollTop = this.desiredScrollTop =
-                Math.max(0, Math.min(this.desiredScrollTop, maxHeight - this.$size.scrollerHeight));
+        this.scrollTop = Math.max(0, Math.min(this.scrollTop, maxHeight - this.$size.scrollerHeight));
 
         var lineCount = Math.ceil(minHeight / this.lineHeight) - 1;
         var firstRow = Math.max(0, Math.round((this.scrollTop - offset) / this.lineHeight));
@@ -13369,11 +13374,11 @@ var VirtualRenderer = function(container, theme) {
         var left = pos.left + this.$padding;
         var top = pos.top;
 
-        if (this.desiredScrollTop > top) {
+        if (this.scrollTop > top) {
             this.scrollToY(top);
         }
 
-        if (this.desiredScrollTop + this.$size.scrollerHeight < top + this.lineHeight) {
+        if (this.scrollTop + this.$size.scrollerHeight < top + this.lineHeight) {
             this.scrollToY(top + this.lineHeight - this.$size.scrollerHeight);
         }
 
@@ -13427,9 +13432,10 @@ var VirtualRenderer = function(container, theme) {
     this.scrollToY = function(scrollTop) {
         // after calling scrollBar.setScrollTop
         // scrollbar sends us event with same scrollTop. ignore it
-        if (this.desiredScrollTop !== scrollTop) {
+        scrollTop = Math.max(0, scrollTop);
+        if (this.scrollTop !== scrollTop) {
             this.$loop.schedule(this.CHANGE_SCROLL);
-            this.desiredScrollTop = scrollTop;
+            this.scrollTop = scrollTop;
         }
     };
 
@@ -14016,10 +14022,9 @@ var Text = function(parentEl) {
         }
 
         var style = this.$measureNode.style;
-        for (var prop in this.$fontStyles) {
-            var value = dom.computedStyle(this.element, prop);
-            style[prop] = value;
-        }
+        var computedStyle = dom.computedStyle(this.element);
+        for (var prop in this.$fontStyles)
+            style[prop] = computedStyle[prop];
 
         var size = {
             height: this.$measureNode.offsetHeight,
