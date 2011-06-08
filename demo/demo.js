@@ -62,6 +62,7 @@ exports.launch = function(env) {
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
+    var ClojureMode = require("ace/mode/clojure").Mode;
     var OcamlMode = require("ace/mode/ocaml").Mode;
     var SvgMode = require("ace/mode/svg").Mode;
     var TextileMode = require("ace/mode/textile").Mode;
@@ -145,6 +146,10 @@ exports.launch = function(env) {
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
+    docs.clojure = new EditSession(document.getElementById("clojuretext").innerHTML);
+    docs.clojure.setMode(new ClojureMode());
+    docs.clojure.setUndoManager(new UndoManager());
+
     docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
@@ -193,6 +198,7 @@ exports.launch = function(env) {
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
         perl: new PerlMode(),
+        clojure: new ClojureMode(),
         ocaml: new OcamlMode(),
         csharp: new CSharpMode()
     };
@@ -266,6 +272,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PerlMode) {
             modeEl.value = "perl";
+        }
+        else if (mode instanceof ClojureMode) {
+            modeEl.value = "clojure";
         }
         else if (mode instanceof OcamlMode) {
             modeEl.value = "ocaml";

@@ -31,6 +31,7 @@
           <option value="csharp">C#</option>
           <option value="c_cpp">C++</option>
           <option value="svg">SVG</option>
+          <option value="clojure">Clojure</option>
           <option value="ocaml">OCaml</option>
           <option value="textile">Textile</option>
         </select>
@@ -54,6 +55,7 @@
           <option value="c_cpp">C/C++</option>
           <option value="coffee">CoffeeScript</option>
           <option value="perl">Perl</option>
+          <option value="clojure">Clojure</option>
           <option value="ocaml">OCaml</option>
           <option value="csharp">C-Sharp</option>
           <option value="svg">SVG</option>
@@ -370,8 +372,7 @@ do ->
     this isnt: `just JavaScript`
     undefined</script>
 
-<script type="text/editor" id="perltext">
-#!/usr/bin/perl
+<script type="text/editor" id="perltext">#!/usr/bin/perl
 use strict;
 use warnings;
 my $num_primes = 0;
@@ -425,6 +426,26 @@ let sum_until_first_negative list =
     List.fold list ~init:0 ~f:(fun acc x ->
       if x >= 0 then acc + x else r.return acc))
 </script>
+
+<script type="text/editor" id="clojuretext">(defn parting
+  "returns a String parting in a given language"
+  ([] (parting "World"))
+  ([name] (parting name "en"))
+  ([name language]
+    ; condp is similar to a case statement in other languages.
+    ; It is described in more detail later.
+    ; It is used here to take different actions based on whether the
+    ; parameter "language" is set to "en", "es" or something else.
+    (condp = language
+      "en" (str "Goodbye, " name)
+      "es" (str "Adios, " name)
+      (throw (IllegalArgumentException.
+        (str "unsupported language " language))))))
+
+(println (parting)) ; -> Goodbye, World
+(println (parting "Mark")) ; -> Goodbye, Mark
+(println (parting "Mark" "es")) ; -> Adios, Mark
+(println (parting "Mark", "xy")) ; -> java.lang.IllegalArgumentException: unsupported language xy</script>
 
 <script type="text/editor" id="svgtext"><svg
   width="800" height="600"
