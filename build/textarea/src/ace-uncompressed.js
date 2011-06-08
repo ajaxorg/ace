@@ -5971,8 +5971,8 @@ var Editor =function(renderer, session) {
             if (shouldOutdent) {
                 mode.autoOutdent(lineState, session, cursor.row);
             }
-        };
-    }
+        }
+    };
 
     this.onTextInput = function(text) {
         this.keyBinding.onTextInput(text);
@@ -13036,7 +13036,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.getShowGutter = function(){
         return this.showGutter;
-    }
+    };
 
     this.setShowGutter = function(show){
         if(this.showGutter === show)
@@ -13044,10 +13044,10 @@ var VirtualRenderer = function(container, theme) {
         this.$gutter.style.display = show ? "block" : "none";
         this.showGutter = show;
         this.onResize(true);
-    }
+    };
 
     this.$updatePrintMargin = function() {
-        var containerEl
+        var containerEl;
 
         if (!this.$showPrintMargin && !this.$printMarginEl)
             return;
@@ -13055,7 +13055,7 @@ var VirtualRenderer = function(container, theme) {
         if (!this.$printMarginEl) {
             containerEl = dom.createElement("div");
             containerEl.className = "ace_print_margin_layer";
-            this.$printMarginEl = dom.createElement("div")
+            this.$printMarginEl = dom.createElement("div");
             this.$printMarginEl.className = "ace_print_margin";
             containerEl.appendChild(this.$printMarginEl);
             this.content.insertBefore(containerEl, this.$textLayer.element);
@@ -13102,8 +13102,8 @@ var VirtualRenderer = function(container, theme) {
         if (!this.layerConfig)
             return 0;
 
-        return this.layerConfig.firstRow + (this.layerConfig.offset == 0 ? 0 : 1);
-    }
+        return this.layerConfig.firstRow + (this.layerConfig.offset === 0 ? 0 : 1);
+    };
 
     this.getLastFullyVisibleRow = function() {
         if (!this.layerConfig)
@@ -13111,7 +13111,7 @@ var VirtualRenderer = function(container, theme) {
 
         var flint = Math.floor((this.layerConfig.height + this.layerConfig.offset) / this.layerConfig.lineHeight);
         return this.layerConfig.firstRow - 1 + flint;
-    }
+    };
 
     this.getLastVisibleRow = function() {
         return (this.layerConfig || {}).lastRow || 0;
@@ -13127,7 +13127,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.getHScrollBarAlwaysVisible = function() {
         return this.$horizScrollAlwaysVisible;
-    }
+    };
 
     this.setHScrollBarAlwaysVisible = function(alwaysVisible) {
         if (this.$horizScrollAlwaysVisible != alwaysVisible) {
@@ -13135,7 +13135,7 @@ var VirtualRenderer = function(container, theme) {
             if (!this.$horizScrollAlwaysVisible || !this.$horizScroll)
                 this.$loop.schedule(this.CHANGE_SCROLL);
         }
-    }
+    };
 
     this.onScroll = function(e) {
         this.scrollToY(e.data);
@@ -13163,7 +13163,8 @@ var VirtualRenderer = function(container, theme) {
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.update(this.layerConfig);
-            this.showGutter && this.$gutterLayer.update(this.layerConfig);
+            if (this.showGutter)
+                this.$gutterLayer.update(this.layerConfig);
             this.$markerBack.update(this.layerConfig);
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
@@ -13177,7 +13178,9 @@ var VirtualRenderer = function(container, theme) {
                 this.$textLayer.update(this.layerConfig);
             else
                 this.$textLayer.scrollLines(this.layerConfig);
-            this.showGutter && this.$gutterLayer.update(this.layerConfig);
+                
+            if (this.showGutter)
+                this.$gutterLayer.update(this.layerConfig);
             this.$markerBack.update(this.layerConfig);
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
@@ -13187,14 +13190,17 @@ var VirtualRenderer = function(container, theme) {
 
         if (changes & this.CHANGE_TEXT) {
             this.$textLayer.update(this.layerConfig);
-            this.showGutter && this.$gutterLayer.update(this.layerConfig);
+            if (this.showGutter)
+                this.$gutterLayer.update(this.layerConfig);
         }
         else if (changes & this.CHANGE_LINES) {
             this.$updateLines();
             this.$updateScrollBar();
-            this.showGutter && this.$gutterLayer.update(this.layerConfig);
+            if (this.showGutter)
+                this.$gutterLayer.update(this.layerConfig);
         } else if (changes & this.CHANGE_GUTTER) {
-            this.showGutter && this.$gutterLayer.update(this.layerConfig);
+            if (this.showGutter)
+                this.$gutterLayer.update(this.layerConfig);
         }
 
         if (changes & this.CHANGE_CURSOR)
@@ -13305,7 +13311,8 @@ var VirtualRenderer = function(container, theme) {
 
         // if the last row is unknown -> redraw everything
         if (lastRow === Infinity) {
-            this.showGutter && this.$gutterLayer.update(layerConfig);
+            if (this.showGutter)
+                this.$gutterLayer.update(layerConfig);
             this.$textLayer.update(layerConfig);
             return;
         }
@@ -13335,12 +13342,12 @@ var VirtualRenderer = function(container, theme) {
     this.addGutterDecoration = function(row, className){
         this.$gutterLayer.addGutterDecoration(row, className);
         this.$loop.schedule(this.CHANGE_GUTTER);
-    }
+    };
 
     this.removeGutterDecoration = function(row, className){
         this.$gutterLayer.removeGutterDecoration(row, className);
         this.$loop.schedule(this.CHANGE_GUTTER);
-    }
+    };
 
     this.setBreakpoints = function(rows) {
         this.$gutterLayer.setBreakpoints(rows);
@@ -13394,7 +13401,7 @@ var VirtualRenderer = function(container, theme) {
             else
                 this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
         }
-    },
+    };
 
     this.getScrollTop = function() {
         return this.scrollTop;
@@ -13410,7 +13417,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.getScrollBottomRow = function() {
         return Math.max(0, Math.floor((this.scrollTop + this.$size.scrollerHeight) / this.lineHeight) - 1);
-    }
+    };
 
     this.scrollToRow = function(row) {
         this.scrollToY(row * this.lineHeight);
@@ -13472,7 +13479,7 @@ var VirtualRenderer = function(container, theme) {
         return {
             pageX: canvasPos.left + x - this.getScrollLeft(),
             pageY: canvasPos.top + y - this.getScrollTop()
-        }
+        };
     };
 
     this.visualizeFocus = function() {
@@ -13518,6 +13525,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.setTheme = function(theme) {
         var _self = this;
+        
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             theme = theme || "ace/theme/textmate";
@@ -13528,7 +13536,6 @@ var VirtualRenderer = function(container, theme) {
             afterLoad(theme);
         }
 
-        var _self = this;
         function afterLoad(theme) {
             if (_self.$theme)
                 dom.removeCssClass(_self.container, _self.$theme);
@@ -13548,24 +13555,24 @@ var VirtualRenderer = function(container, theme) {
 
     this.getTheme = function() {
         return this.$themeValue;
-    }
+    };
 
     // Methods allows to add / remove CSS classnames to the editor element.
     // This feature can be used by plug-ins to provide a visual indication of
     // a certain mode that editor is in.
 
     this.setStyle = function setStyle(style) {
-      dom.addCssClass(this.container, style)
+      dom.addCssClass(this.container, style);
     };
 
     this.unsetStyle = function unsetStyle(style) {
-      dom.removeCssClass(this.container, style)
+      dom.removeCssClass(this.container, style);
     };
 
     this.destroy = function() {
         this.$textLayer.destroy();
         this.$cursorLayer.destroy();
-    }
+    };
 
 }).call(VirtualRenderer.prototype);
 
@@ -14202,7 +14209,7 @@ var Text = function(parentEl) {
             if(row > lastRow)
                 break;
 
-            html.push("<div class='ace_line'>")
+            html.push("<div class='ace_line'>");
             // Get the tokens per line as there might be some lines in between
             // beeing folded.
             // OPTIMIZE: If there is a long block of unfolded lines, just make
@@ -14210,7 +14217,7 @@ var Text = function(parentEl) {
             var tokens = this.session.getTokens(row, row);
             if (tokens.length == 1)
                 this.$renderLine(html, row, tokens[0].tokens);
-            html.push("</div>")
+            html.push("</div>");
 
             row++;
         }
@@ -14223,22 +14230,21 @@ var Text = function(parentEl) {
         "lparen": true
     };
 
-    this.$renderToken = function(stringBuilder, screenColumn, token, value) {
+    this.$renderToken = function(stringBuilder, screenColumn, token, value) {        
         var self = this;
         var replaceReg = /\t|&|<|( +)|([\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000])|[\u1100-\u115F]|[\u11A3-\u11A7]|[\u11FA-\u11FF]|[\u2329-\u232A]|[\u2E80-\u2E99]|[\u2E9B-\u2EF3]|[\u2F00-\u2FD5]|[\u2FF0-\u2FFB]|[\u3000-\u303E]|[\u3041-\u3096]|[\u3099-\u30FF]|[\u3105-\u312D]|[\u3131-\u318E]|[\u3190-\u31BA]|[\u31C0-\u31E3]|[\u31F0-\u321E]|[\u3220-\u3247]|[\u3250-\u32FE]|[\u3300-\u4DBF]|[\u4E00-\uA48C]|[\uA490-\uA4C6]|[\uA960-\uA97C]|[\uAC00-\uD7A3]|[\uD7B0-\uD7C6]|[\uD7CB-\uD7FB]|[\uF900-\uFAFF]|[\uFE10-\uFE19]|[\uFE30-\uFE52]|[\uFE54-\uFE66]|[\uFE68-\uFE6B]|[\uFF01-\uFF60]|[\uFFE0-\uFFE6]/g;
         var replaceFunc = function(c, a, b, tabIdx, idx4) {
             if (c.charCodeAt(0) == 32) {
                 return new Array(c.length+1).join("&#160;");
             } else if (c == "\t") {
-                var tabSize = self.session.
-                        getScreenTabSize(screenColumn + tabIdx);
+                var tabSize = self.session.getScreenTabSize(screenColumn + tabIdx);
                 screenColumn += tabSize - 1;
                 return self.$tabStrings[tabSize];
             } else if (c == "&") {
-              if (useragent.isOldGecko)
-                return "&";
-              else
-                return "&amp";
+                if (useragent.isOldGecko)
+                    return "&";
+                else
+                    return "&amp;";
             } else if (c == "<") {
                 return "&lt;";
             } else if (c.match(/[\v\f \u00a0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000]/)) {
@@ -14250,11 +14256,11 @@ var Text = function(parentEl) {
                 }
             } else {
                 screenColumn += 1;
-                return "<span class='ace_cjk' style='width:" + (
-                        self.config.characterWidth * 2) +
-                        "px'>" + c + "</span>";
+                return "<span class='ace_cjk' style='width:" +
+                    (self.config.characterWidth * 2) +
+                    "px'>" + c + "</span>";
             }
-        }
+        };
 
         var output = value.replace(replaceReg, replaceFunc);
 
@@ -14266,7 +14272,7 @@ var Text = function(parentEl) {
             stringBuilder.push(output);
         }
         return value.length;
-    }
+    };
 
     this.$renderLineCore = function(stringBuilder, lastRow, tokens, splits) {
         var chars = 0,
@@ -14316,7 +14322,7 @@ var Text = function(parentEl) {
                     addToken(token, value);
                 }
             }
-        };
+        }
 
         if (this.showInvisibles) {
             if (lastRow !== this.session.getLength() - 1) {
@@ -14326,16 +14332,16 @@ var Text = function(parentEl) {
             }
         }
         stringBuilder.push("</div>");
-    }
+    };
 
     this.$renderLine = function(stringBuilder, row, tokens) {
         // Check if the line to render is folded or not. If not, things are
         // simple, otherwise, we need to fake some things...
         if (!this.session.isRowFolded(row)) {
             var splits = this.session.getRowSplitData(row);
-            this.$renderLineCore(stringBuilder, row, tokens, splits)
+            this.$renderLineCore(stringBuilder, row, tokens, splits);
         } else {
-            this.$renderFoldLine(stringBuilder, row, tokens, splits);
+            this.$renderFoldLine(stringBuilder, row, tokens);
         }
     };
 
@@ -14347,8 +14353,8 @@ var Text = function(parentEl) {
         function addTokens(tokens, from, to) {
             var idx = 0, col = 0;
             while ((col + tokens[idx].value.length) < from) {
-                col += tokens[idx].value.length
-                idx++
+                col += tokens[idx].value.length;
+                idx++;
 
                 if (idx == tokens.length) {
                     return;
@@ -14367,7 +14373,7 @@ var Text = function(parentEl) {
                 });
 
                 col = from + value.length;
-                idx += 1
+                idx += 1;
             }
 
             while (col < to) {
