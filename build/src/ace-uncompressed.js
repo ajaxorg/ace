@@ -5044,6 +5044,7 @@ exports.scrollbarWidth = function() {
 
     var inner = exports.createElement("p");
     inner.style.width = "100%";
+    inner.style.innerWidth = "0px";
     inner.style.height = "200px";
 
     var outer = exports.createElement("div");
@@ -5053,6 +5054,7 @@ exports.scrollbarWidth = function() {
     style.left = "-10000px";
     style.overflow = "hidden";
     style.width = "200px";
+    style.width = "0px";
     style.height = "150px";
 
     outer.appendChild(inner);
