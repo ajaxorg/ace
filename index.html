@@ -22,6 +22,7 @@
           <option value="html">HTML</option>
           <option value="css">CSS</option>
           <option value="scss">SCSS</option>
+          <option value="mapcss">MapCSS</option>
           <option value="coffee">CoffeeScript</option>
           <option value="python">Python</option>
           <option value="ruby">Ruby</option>
@@ -48,6 +49,7 @@
           <option value="html">HTML</option>
           <option value="css">CSS</option>
           <option value="scss">SCSS</option>
+          <option value="mapcss">MapCSS</option>
           <option value="python">Python</option>
           <option value="php">PHP</option>
           <option value="java">Java</option>
@@ -235,6 +237,31 @@
         }
     }
 }</script>
+
+    <script type="text/editor" id="mapcsstext">
+canvas {fill-color:  #C4D4F5}
+
+area|z10-[residential=rural]
+{fill-color:#f4d7c7; z-index:2}
+
+area|z16-[landuse=residential]
+{ width: 0.3; color:#cb8904; z-index:2}
+
+area|z10-[landuse=allotments],
+area|z10-15[leisure=garden],
+area|z10-15[landuse=orchard]
+       {fill-color:#edf2c1; z-index:3}
+
+
+node|z7-12[natural=peak][ele>2500]
+{icon-image: mountain_peak6.png;
+text:ele; text-offset:3; font-size:7; font-family: DejaVu Sans Mono Book; text-halo-radius:0; text-color:#664229;text-halo-color:#ffffff;-x-mapnik-min-distance:0;
+}
+node|z12-[natural=peak]
+{icon-image: mountain_peak6.png;
+text:name; text-offset:3; font-size:7; font-family: DejaVu Sans Mono Book; text-halo-radius:0; text-color:#664229;text-halo-color:#ffffff;-x-mapnik-min-distance:0;
+}
+</script>
 
     <script type="text/editor" id="htmltext"><html>
 <head>

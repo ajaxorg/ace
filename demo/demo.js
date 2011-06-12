@@ -52,6 +52,7 @@ exports.launch = function(env) {
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
     var ScssMode = require("ace/mode/scss").Mode;
+    var MapcssMode = require("ace/mode/mapcss").Mode;
     var HtmlMode = require("ace/mode/html").Mode;
     var XmlMode = require("ace/mode/xml").Mode;
     var PythonMode = require("ace/mode/python").Mode;
@@ -108,6 +109,10 @@ exports.launch = function(env) {
     docs.scss = new EditSession(document.getElementById("scsstext").innerHTML);
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
+
+    docs.mapcss = new EditSession(document.getElementById("mapcsstext").innerHTML);
+    docs.mapcss.setMode(new MapcssMode());
+    docs.mapcss.setUndoManager(new UndoManager());
 
     docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
     docs.html.setMode(new HtmlMode());
@@ -190,6 +195,7 @@ exports.launch = function(env) {
         html: new HtmlMode(),
         css: new CssMode(),
         scss: new ScssMode(),
+        mapcss: new MapcssMode(),
         javascript: new JavaScriptMode(),
         python: new PythonMode(),
         php: new PhpMode(),
@@ -245,6 +251,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof ScssMode) {
             modeEl.value = "scss";
+        }
+        else if (mode instanceof MapcssMode) {
+            modeEl.value = "mapcss";
         }
         else if (mode instanceof HtmlMode) {
             modeEl.value = "html";
@@ -468,6 +477,8 @@ exports.launch = function(env) {
                     mode = "css";
                 } else if (/^.*\.scss$/i.test(file.name)) {
                     mode = "scss";
+                } else if (/^.*\.mapcss$/i.test(file.name)) {
+                    mode = "mapcss";
                 } else if (/^.*\.py$/i.test(file.name)) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
