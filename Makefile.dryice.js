@@ -202,7 +202,7 @@ project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
     "coffee", "perl", "csharp", "svg", "clojure", "scss", "json", "groovy",
-    "ocaml", "scala", "textile"
+    "ocaml", "scala", "textile", "scad"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
