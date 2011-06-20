@@ -255,7 +255,7 @@ if (target == "bm") {
 
 console.log('# ace worker ---------');
 
-["javascript", "coffee"].forEach(function(mode) {
+["javascript", "coffee", "css"].forEach(function(mode) {
     console.log("worker for " + mode + " mode");
     var worker = copy.createDataObject();
     var workerProject = copy.createCommonJsProject([

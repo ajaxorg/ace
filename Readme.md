@@ -16,7 +16,7 @@ Features
 * Highlight matching parentheses
 * Toggle between soft tabs and real tabs
 * Displays hidden characters
-* Drap and drop text using the mouse
+* Drag and drop text using the mouse
 * Line wrapping
 * Unstructured / user code folding
 * Live syntax checker (currently JavaScript/CoffeeScript)
