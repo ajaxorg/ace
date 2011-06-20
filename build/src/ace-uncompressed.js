@@ -43,16 +43,24 @@
  
 (function() {
     
+var global = (function() {
+    return this;
+})();
+    
 // if we find an existing require function use it.
-if (window.require) {
+if (global.require && global.define) {
     require.packaged = true;
     return;
 }
     
-window.define = function(module, deps, payload) {
+var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
-        console.error('dropping module because define wasn\'t a string.');
-        console.trace();
+        if (_define.original)
+            _define.original.apply(window, arguments);
+        else {
+            console.error('dropping module because define wasn\'t a string.');
+            console.trace();
+        }
         return;
     }
 
@@ -64,15 +72,22 @@ window.define = function(module, deps, payload) {
         
     define.modules[module] = payload;
 };
+if (global.define)
+    _define.original = global.define;
+    
+global.define = _define;
+
 
 /**
  * Get at functionality define()ed using the function above
  */
-window.require = function(module, callback) {
+var _require = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
             var dep = lookup(module[i]);
+            if (!dep && _require.original)
+                return _require.original.apply(window, arguments);
             params.push(dep);
         }
         if (callback) {
@@ -81,6 +96,8 @@ window.require = function(module, callback) {
     }
     else if (typeof module === 'string') {
         var payload = lookup(module);
+        if (!payload && _require.original)
+            return _require.original.apply(window, arguments);
         
         if (callback) {
             callback();
@@ -88,7 +105,16 @@ window.require = function(module, callback) {
     
         return payload;
     }
+    else {
+        if (_require.original)
+            return _require.original.apply(window, arguments);
+    }
 };
+
+if (global.require)
+    _require.original = global.require;
+    
+global.require = _require;
 require.packaged = true;
 
 /**
