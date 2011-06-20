@@ -43,13 +43,17 @@
  
 (function() {
     
+var global = (function() {
+    return this;
+})();
+    
 // if we find an existing require function use it.
-if (window.require) {
+if (global.require) {
     require.packaged = true;
     return;
 }
     
-window.define = function(module, deps, payload) {
+global.define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         console.error('dropping module because define wasn\'t a string.');
         console.trace();
@@ -68,7 +72,7 @@ window.define = function(module, deps, payload) {
 /**
  * Get at functionality define()ed using the function above
  */
-window.require = function(module, callback) {
+global.require = function(module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
