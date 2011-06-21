@@ -61,6 +61,7 @@ exports.launch = function(env) {
     var RubyMode = require("ace/mode/ruby").Mode;
     var CCPPMode = require("ace/mode/c_cpp").Mode;
     var CoffeeMode = require("ace/mode/coffee").Mode;
+    var JsonMode = require("ace/mode/json").Mode;
     var PerlMode = require("ace/mode/perl").Mode;
     var ClojureMode = require("ace/mode/clojure").Mode;
     var OcamlMode = require("ace/mode/ocaml").Mode;
@@ -142,6 +143,10 @@ exports.launch = function(env) {
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
+    docs.json = new EditSession(document.getElementById("jsontext").innerHTML);
+    docs.json.setMode(new JsonMode());
+    docs.json.setUndoManager(new UndoManager());
+
     docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
@@ -197,6 +202,7 @@ exports.launch = function(env) {
         ruby: new RubyMode(),
         c_cpp: new CCPPMode(),
         coffee: new CoffeeMode(),
+        json: new JsonMode(),
         perl: new PerlMode(),
         clojure: new ClojureMode(),
         ocaml: new OcamlMode(),
@@ -269,6 +275,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof CoffeeMode) {
             modeEl.value = "coffee";
+        }
+        else if (mode instanceof JsonMode) {
+            modeEl.value = "json";
         }
         else if (mode instanceof PerlMode) {
             modeEl.value = "perl";
@@ -482,6 +491,8 @@ exports.launch = function(env) {
                     mode = "c_cpp";
                 } else if (/^.*\.coffee$/i.test(file.name)) {
                     mode = "coffee";
+                } else if (/^.*\.json$/i.test(file.name)) {
+                    mode = "json";
                 } else if (/^.*\.(pl|pm)$/i.test(file.name)) {
                     mode = "perl";
                 } else if (/^.*\.(ml|mli)$/i.test(file.name)) {
