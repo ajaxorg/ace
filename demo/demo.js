@@ -170,13 +170,13 @@ exports.launch = function(env) {
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(document.getElementById("groovy").innerHTML);
-    docs.textile.setMode(new GroovyMode());
-    docs.textile.setUndoManager(new UndoManager());
+    docs.groovy = new EditSession(document.getElementById("groovy").innerHTML);
+    docs.groovy.setMode(new GroovyMode());
+    docs.groovy.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(document.getElementById("scala").innerHTML);
-    docs.textile.setMode(new ScalaMode());
-    docs.textile.setUndoManager(new UndoManager());
+    docs.scala = new EditSession(document.getElementById("scala").innerHTML);
+    docs.scala.setMode(new ScalaMode());
+    docs.scala.setUndoManager(new UndoManager());
 
     
     
