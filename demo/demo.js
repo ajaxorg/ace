@@ -68,6 +68,9 @@ exports.launch = function(env) {
     var SvgMode = require("ace/mode/svg").Mode;
     var TextileMode = require("ace/mode/textile").Mode;
     var TextMode = require("ace/mode/text").Mode;
+    var GroovyMode = require("ace/mode/groovy").Mode;
+    var ScalaMode = require("ace/mode/scala").Mode;
+
     var UndoManager = require("ace/undomanager").UndoManager;
 
     var vim = require("ace/keyboard/keybinding/vim").Vim;
@@ -167,6 +170,17 @@ exports.launch = function(env) {
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
+    docs.textile = new EditSession(document.getElementById("groovy").innerHTML);
+    docs.textile.setMode(new GroovyMode());
+    docs.textile.setUndoManager(new UndoManager());
+
+    docs.textile = new EditSession(document.getElementById("scala").innerHTML);
+    docs.textile.setMode(new ScalaMode());
+    docs.textile.setUndoManager(new UndoManager());
+
+    
+    
+
     // Add a "name" property to all docs
     for (doc in docs) {
         docs[doc].name = doc;
@@ -206,7 +220,9 @@ exports.launch = function(env) {
         perl: new PerlMode(),
         clojure: new ClojureMode(),
         ocaml: new OcamlMode(),
-        csharp: new CSharpMode()
+        csharp: new CSharpMode(),
+        groovy: new GroovyMode(),
+        scala: new ScalaMode()
     };
 
     function getMode() {
@@ -296,6 +312,12 @@ exports.launch = function(env) {
         }
         else if (mode instanceof TextileMode) {
             modeEl.value = "textile";
+        }
+        else if (mode instanceof GroovyMode) {
+            modeEl.value = "groovy";
+        }
+        else if (mode instanceof ScalaMode) {
+            modeEl.value = "scala";
         }
         else {
             modeEl.value = "text";
@@ -455,8 +477,9 @@ exports.launch = function(env) {
     });
 
     event.addListener(container, "drop", function(e) {
+        var file
         try {
-            var file = e.dataTransfer.files[0];
+            file = e.dataTransfer.files[0];
         } catch(e) {
             return event.stopEvent();
         }
@@ -497,6 +520,10 @@ exports.launch = function(env) {
                     mode = "perl";
                 } else if (/^.*\.(ml|mli)$/i.test(file.name)) {
                     mode = "ocaml";
+                } else if (/^.*\.(groovy)$/i.test(file.name)) {
+                    mode = "groovy";
+                } else if (/^.*\.(scala)$/i.test(file.name)) {
+                    mode = "scala";
                 }
 
                 env.editor.onTextInput(reader.result);
