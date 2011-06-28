@@ -382,7 +382,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
         }
     }
 
-    for (option in ace.options) {
+    for (var option in ace.options) {
         ret.setOption(option, ace.options[option]);
     }
 
