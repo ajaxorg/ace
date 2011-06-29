@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -15,20 +16,36 @@ body {
     color: white;
 }
 
+#logo {
+    padding: 15px;
+    margin-left: 65px;
+}
+
 #editor {
     position: absolute;
-    top: 60px;
-    left: 0px;
+    top:  0px;
+    left: 280px;
+    bottom: 0px;
+    right: 0px;
     background: white;
 }
 
 #controls {
-    width: 100%;
+    padding: 5px;
+}
+
+#controls td {
+    text-align: right;
+}
+
+#controls td + td {
+    text-align: left;
 }
 
 #cockpitInput {
     position: absolute;
-    width: 100%;
+    left: 280px;
+    right: 0px;
     bottom: 0;
 
     border: none; outline: none;

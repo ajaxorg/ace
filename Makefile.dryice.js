@@ -21,6 +21,7 @@
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Julian Viereck <julian.viereck@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -36,22 +37,72 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var args = process.argv;
+var target = null;
+var targetDir = null;
+if (args.length == 3) {
+    target = args[2];
+    // Check if 'target' contains some allowed value.
+    if (target != "normal" && target != "bm") {
+        target = null;
+    }
+}
+
+if (!target) {
+    console.log("--- Ace Dryice Build Tool ---");
+    console.log("");
+    console.log("Options:");
+    console.log("  normal      Runs embedded build of Ace");
+    console.log("  bm          Runs bookmarklet build of Ace");
+    process.exit(0);
+} else {
+    if (target == "normal") {
+        targetDir = "build";
+    } else {
+        targetDir = "build/textarea";
+        function shadow(input) {
+            if (typeof input !== 'string') {
+                input = input.toString();
+            }
+
+            return input.replace(/define\(/g, "__ace_shadowed__.define(");
+        }
+    }
+}
+
+console.log("using targetDir '", targetDir, "'");
+
 var copy = require('dryice').copy;
 
 var aceHome = __dirname;
 
 console.log('# ace ---------');
 
-var project = copy.createCommonJsProject([
+var aceProject = [
     aceHome + '/support/pilot/lib',
-    aceHome + '/lib',
-    aceHome + '/demo'
-]);
+    aceHome + '/lib'
+];
 
-copy({
-    source: "build_support/editor.html",
-    dest: 'build/editor.html'
-});
+if (target == "normal") {
+    aceProject.push(aceHome + '/demo');
+
+    copy({
+        source: "build_support/editor.html",
+        dest:   targetDir + '/editor.html'
+    });
+} else if(target == "bm") {
+    copy({
+        source: "build_support/editor_textarea.html",
+        dest:   targetDir + '/editor.html'
+    });
+    copy({
+        source: "build_support/style.css",
+        dest:   targetDir + '/style.css'
+    });
+}
+
+var project = copy.createCommonJsProject(aceProject);
+
 
 function filterTextPlugin(text) {
     return text.replace(/(['"])text\!/g, "$1text/");
@@ -63,7 +114,9 @@ function filterTextPlugin(text) {
 var ace = copy.createDataObject();
 copy({
     source: [
-        'build_support/mini_require.js'
+        target == "normal"
+            ? 'build_support/mini_require.js'
+            : 'build_support/mini_require_textarea.js'
     ],
     dest: ace
 });
@@ -73,16 +126,7 @@ copy({
             project: project,
             require: [
                 "pilot/fixoldbrowsers",
-                "pilot/index",
-                "pilot/plugin_manager",
-                "pilot/environment",
-                "ace/editor",
-                "ace/edit_session",
-                "ace/undomanager",
-                "ace/theme/textmate",
-                "ace/mode/text",
-                "ace/mode/matching_brace_outdent",
-                "ace/virtual_renderer"
+                "ace/ace"
             ]
         })
     ],
@@ -100,22 +144,164 @@ copy({
 });
 copy({
     source: [
-        'build_support/boot.js'
+        target == "normal"
+            ? 'build_support/boot.js'
+            : 'build_support/boot_textarea.js'
     ],
     dest: ace
 });
 
+if (target == "normal") {
+    // Create the compressed and uncompressed output files
+    copy({
+        source: ace,
+        filter: [copy.filter.uglifyjs, filterTextPlugin],
+        dest:   targetDir + '/src/ace.js'
+    });
+    copy({
+        source: ace,
+        filter: [filterTextPlugin],
+        dest:   targetDir + '/src/ace-uncompressed.js'
+    });
+} else if (target == "bm") {
+    copy({
+        source: ace,
+        filter: [
+            shadow,
+            copy.filter.uglifyjs
+        ],
+        dest:   targetDir + '/src/ace.js'
+    });
+    copy({
+        source: ace,
+        filter: [
+            shadow
+        ],
+        dest:   targetDir + '/src/ace-uncompressed.js'
+    });
+}
 
-// Create the compressed and uncompressed output files
+var modeThemeFilters;
+if (target == "normal") {
+    modeThemeFilters = [
+        copy.filter.moduleDefines,
+        copy.filter.uglifyjs,
+        filterTextPlugin
+    ];
+} else if (target == "bm") {
+    modeThemeFilters = [
+        copy.filter.moduleDefines,
+        shadow,
+        copy.filter.uglifyjs
+    ]
+}
+
+console.log('# ace modes ---------');
+
+project.assumeAllFilesLoaded();
+[
+    "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
+    "coffee", "perl", "csharp", "svg", "clojure", "scss", "json"
+].forEach(function(mode) {
+    console.log("mode " + mode);
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: project.clone(),
+                require: [ 'ace/mode/' + mode ]
+            })
+        ],
+        filter: modeThemeFilters,
+        dest:   targetDir + "/src/mode-" + mode + ".js"
+    });
+});
+
+console.log('# ace themes ---------');
+
+[
+    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse",
+    "merbivore", "merbivore_soft", "vibrant_ink"
+].forEach(function(theme) {
+    copy({
+        source: [{
+            root: aceHome + '/lib',
+            include: "ace/theme/" + theme + ".js"
+        }],
+        filter: modeThemeFilters,
+        dest:   targetDir + "/src/theme-" + theme + ".js"
+    });
+});
+
+console.log('# ace License | Readme | Changelog ---------');
+
 copy({
-    source: ace,
-    filter: [copy.filter.uglifyjs, filterTextPlugin],
-    dest: 'build/src/ace.js'
+    source: aceHome + "/LICENSE",
+    dest:   targetDir + '/LICENSE'
 });
 copy({
-    source: ace,
-    filter: [filterTextPlugin],
-    dest: 'build/src/ace-uncompressed.js'
+    source: aceHome + "/Readme.md",
+    dest:   targetDir + '/Readme.md'
+});
+copy({
+    source: aceHome + "/ChangeLog.txt",
+    dest:   targetDir + '/ChangeLog.txt'
+});
+
+// For the bookmarklet build, we are done.
+if (target == "bm") {
+    process.exit(0);
+}
+
+console.log('# ace worker ---------');
+
+["javascript", "coffee", "css"].forEach(function(mode) {
+    console.log("worker for " + mode + " mode");
+    var worker = copy.createDataObject();
+    var workerProject = copy.createCommonJsProject([
+        aceHome + '/support/pilot/lib',
+        aceHome + '/lib'
+    ]);
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: workerProject,
+                require: [
+                    'pilot/fixoldbrowsers',
+                    'pilot/event_emitter',
+                    'pilot/oop',
+                    'ace/mode/' + mode + '_worker'
+                ]
+            })
+        ],
+        filter: [ copy.filter.moduleDefines],
+        dest: worker
+    });
+    copy({
+        source: [
+            aceHome + "/lib/ace/worker/worker.js",
+            worker
+        ],
+        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
+        dest: "build/src/worker-" + mode + ".js"
+    });
+});
+
+console.log('# ace key bindings ---------');
+
+// copy key bindings
+project.assumeAllFilesLoaded();
+["vim", "emacs"].forEach(function(keybinding) {
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: project.clone(),
+                require: [ 'ace/keyboard/keybinding/' + keybinding ]
+            })
+        ],
+        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
+        dest: "build/src/keybinding-" + keybinding + ".js"
+    });
 });
 
 console.log('# cockpit ---------');
@@ -162,106 +348,6 @@ copy({
 copy({
     source: cockpit,
     dest: 'build/src/cockpit-uncompressed.js'
-});
-
-
-console.log('# ace modes ---------');
-
-project.assumeAllFilesLoaded();
-[
-    "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
-    "coffee", "perl", "csharp", "svg"
-].forEach(function(mode) {
-    console.log("mode " + mode);
-    copy({
-        source: [
-            copy.source.commonjs({
-                project: project.clone(),
-                require: [ 'ace/mode/' + mode ]
-            })
-        ],
-        filter: [ copy.filter.debug, copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
-        dest: "build/src/mode-" + mode + ".js"
-    });
-});
-
-console.log('# worker ---------');
-
-var jsWorker = copy.createDataObject();
-var workerProject = copy.createCommonJsProject([
-    aceHome + '/support/pilot/lib',
-    aceHome + '/lib'
-]);
-copy({
-    source: [
-        copy.source.commonjs({
-            project: workerProject,
-            require: [
-                'pilot/fixoldbrowsers',
-                'pilot/event_emitter',
-                'pilot/oop',
-                'ace/mode/javascript_worker'
-            ]
-        })
-    ],
-    filter: [ copy.filter.moduleDefines],
-    dest: jsWorker
-});
-copy({
-    source: [
-        aceHome + "/lib/ace/worker/worker.js",
-        jsWorker
-    ],
-    filter: [ copy.filter.uglifyjs, filterTextPlugin ],
-    dest: "build/src/worker-javascript.js"
-});
-
-console.log('# ace themes ---------');
-
-[
-    "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
-    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse",
-    "merbivore", "merbivore_soft", "vibrant_ink"
-].forEach(function(theme) {
-    copy({
-        source: [{
-            root: aceHome + '/lib',
-            include: "ace/theme/" + theme + ".js"
-        }],
-        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
-        dest: "build/src/theme-" + theme + ".js"
-    });
-});
-
-// copy key bindings
-project.assumeAllFilesLoaded();
-["vim", "emacs"].forEach(function(keybinding) {
-    copy({
-        source: [
-            copy.source.commonjs({
-                project: project.clone(),
-                require: [ 'ace/keyboard/keybinding/' + keybinding ]
-            })
-        ],
-        filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
-        dest: "build/src/keybinding-" + keybinding + ".js"
-    });
-});
-
-
-console.log('# License | Readme | Changelog ---------');
-
-copy({
-    source: aceHome + "/LICENSE",
-    dest: 'build/LICENSE'
-});
-copy({
-    source: aceHome + "/Readme.md",
-    dest: 'build/Readme.md'
-});
-copy({
-    source: aceHome + "/ChangeLog.txt",
-    dest: 'build/ChangeLog.txt'
 });
 
 // copy complex demo

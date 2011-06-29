@@ -9,29 +9,77 @@
     <link rel="stylesheet" href="demo/styles.css" type="text/css" media="screen" charset="utf-8">
 </head>
 <body>
-    <table id="controls">
-      <tr>
-      <td align="right">
-        <label for="doc">Document:</label>
+  <img id="logo" src="demo/logo.png">
+  <table id="controls">
+    <tr>
+      <td>
+        <label for="doc">Document</label>
+      </td><td>
         <select id="doc" size="1">
-          <option value="js">JavaScript Document</option>
-          <option value="html">HTML Document</option>
-          <option value="css">CSS Document</option>
-          <option value="coffee">CoffeeScript Document</option>
-          <option value="python">Python Document</option>
-          <option value="ruby">Ruby Document</option>
-          <option value="perl">Perl Document</option>
-          <option value="php">PHP Document</option>
-          <option value="java">Java Document</option>
-          <option value="csharp">C# Document</option>
-          <option value="c_cpp">C++ Document</option>
-          <option value="svg">SVG Document</option>
-          <option value="textile">Textile Document</option>
-          <option value="plain">Text Document</option>
+          <option value="js">JavaScript</option>
+          <option value="plain">Plain Text</option>
+          <option value="svg">SVG</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
+          <option value="coffee">CoffeeScript</option>
+          <option value="json">JSON</option>
+          <option value="python">Python</option>
+          <option value="ruby">Ruby</option>
+          <option value="perl">Perl</option>
+          <option value="php">PHP</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="c_cpp">C++</option>
+          <option value="svg">SVG</option>
+          <option value="clojure">Clojure</option>
+          <option value="ocaml">OCaml</option>
+          <option value="textile">Textile</option>
         </select>
       </td>
-      <td align="right">
-        <label for="theme">Theme:</label>
+    </tr>
+    <tr>
+      <td >
+        <label for="mode">Mode</label>
+      </td><td>
+        <select id="mode" size="1">
+          <option value="text">Plain Text</option>
+          <option value="javascript">JavaScript</option>
+          <option value="xml">XML</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="scss">SCSS</option>
+          <option value="python">Python</option>
+          <option value="php">PHP</option>
+          <option value="java">Java</option>
+          <option value="ruby">Ruby</option>
+          <option value="c_cpp">C/C++</option>
+          <option value="coffee">CoffeeScript</option>
+          <option value="json">JSON</option>
+          <option value="perl">Perl</option>
+          <option value="clojure">Clojure</option>
+          <option value="ocaml">OCaml</option>
+          <option value="csharp">C-Sharp</option>
+          <option value="svg">SVG</option>
+          <option value="textile">Textile</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="split">Split</label>
+      </td><td>
+        <select id="split" size="1">
+          <option value="none">None</option>
+          <option value="below">Below</option>
+          <option value="beside">Beside</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="theme">Theme</label>
+      </td><td>
         <select id="theme" size="1">
           <option value="ace/theme/textmate">TextMate</option>
           <option value="ace/theme/eclipse">Eclipse</option>
@@ -47,10 +95,15 @@
           <option value="ace/theme/merbivore">Merbivore</option>
           <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
           <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
+          <option value="ace/theme/solarized_dark">Solarized Dark</option>
+          <option value="ace/theme/solarized_light">Solarized Light</option>
         </select>
       </td>
-      <td align="right">
-        <label for="fontsize">Font Size:</label>
+    </tr>
+    <tr>
+      <td >
+        <label for="fontsize">Font Size</label>
+      </td><td>
         <select id="fontsize" size="1">
           <option value="10px">10px</option>
           <option value="11px">11px</option>
@@ -61,49 +114,39 @@
           <option value="24px">24px</option>
         </select>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="select_style">Full Line Selection</label>
+      </td><td>
         <input type="checkbox" name="select_style" id="select_style" checked>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="highlight_active">Highlight Active Line</label>
+      </td><td>
         <input type="checkbox" name="highlight_active" id="highlight_active" checked>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="show_hidden">Show Invisibles</label>
+      </td><td>
         <input type="checkbox" name="show_hidden" id="show_hidden" checked>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="show_hscroll">Persistent HScroll</label>
+      </td><td>
         <input type="checkbox" name="show_hscroll" id="show_hscroll">
       </td>
-      <td align="right" rowspan="2">
-        <img src="demo/logo.png">
-      </td>
-      </tr>
-      <tr>
-      <td align="right">
-        <label for="mode">Mode:</label>
-        <select id="mode" size="1">
-          <option value="text">Plain Text</option>
-          <option value="javascript">JavaScript</option>
-          <option value="xml">XML</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="python">Python</option>
-          <option value="php">PHP</option>
-          <option value="java">Java</option>
-          <option value="ruby">Ruby</option>
-          <option value="c_cpp">C/C++</option>
-          <option value="coffee">CoffeeScript</option>
-          <option value="perl">Perl</option>
-          <option value="csharp">C-Sharp</option>
-          <option value="svg">SVG</option>
-          <option value="textile">Textile</option>
-        </select>
-      </td>
-      <td align="right">
-        <label for="keybinding">Key Binding:</label>
+    </tr>
+    <tr>
+      <td >
+        <label for="keybinding">Key Binding</label>
+      </td><td>
         <select id="keybinding" size="1">
           <option value="ace">Ace</option>
           <option value="vim">Vim</option>
@@ -111,8 +154,11 @@
           <option value="custom">Custom</option>
         </select>
       </td>
-      <td align="right">
-        <label for="soft_wrap">Soft Wrap:</label>
+    </tr>
+    <tr>
+      <td >
+        <label for="soft_wrap">Soft Wrap</label>
+      </td><td>
         <select id="soft_wrap" size="1">
           <option value="off">Off</option>
           <option value="40">40 Chars</option>
@@ -120,20 +166,32 @@
           <option value="free">Free</option>
         </select>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="show_gutter">Show Gutter</label>
+      </td><td>
         <input type="checkbox" id="show_gutter" checked>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="show_print_margin">Show Print Margin</label>
+      </td><td>
         <input type="checkbox" id="show_print_margin" checked>
       </td>
-      <td align="right">
-        <label for="soft_tab">Use Soft Tab:</label>
+    </tr>
+    <tr>
+      <td >
+        <label for="soft_tab">Use Soft Tab</label>
+      </td><td>
         <input type="checkbox" id="soft_tab" checked>
       </td>
-      <td align="right">
+    </tr>
+    <tr>
+      <td >
         <label for="highlight_selected_word">Highlight selected word</label>
+      </td><td>
         <input type="checkbox" id="highlight_selected_word" checked>
       </td>
       </tr>
@@ -157,6 +215,27 @@
     font-family: Monaco, "Courier New", monospace;
     font-size: 12px;
     cursor: text;
+}</script>
+
+    <script type="text/editor" id="scsstext">/* style.scss */
+
+#navbar {
+    $navbar-width: 800px;
+    $items: 5;
+    $navbar-color: #ce4dd6;
+
+    width: $navbar-width;
+    border-bottom: 2px solid $navbar-color;
+
+    li {
+        float: left;
+        width: $navbar-width/$items - 10px;
+
+        background-color: lighten($navbar-color, 20%);
+        &:hover {
+            background-color: lighten($navbar-color, 10%);
+        }
+    }
 }</script>
 
     <script type="text/editor" id="htmltext"><html>
@@ -293,12 +372,76 @@ do ->
         heregex  # comment
     ///imgy
     this isnt: `just JavaScript`
-    undefined
+    undefined</script>
 
-var illegal</script>
+<script type="text/editor" id="jsontext">{
+ "query": {
+  "count": 10,
+  "created": "2011-06-21T08:10:46Z",
+  "lang": "en-US",
+  "results": {
+   "photo": [
+    {
+     "farm": "6",
+     "id": "5855620975",
+     "isfamily": "0",
+     "isfriend": "0",
+     "ispublic": "1",
+     "owner": "32021554@N04",
+     "secret": "f1f5e8515d",
+     "server": "5110",
+     "title": "7087 bandit cat"
+    },
+    {
+     "farm": "4",
+     "id": "5856170534",
+     "isfamily": "0",
+     "isfriend": "0",
+     "ispublic": "1",
+     "owner": "32021554@N04",
+     "secret": "ff1efb2a6f",
+     "server": "3217",
+     "title": "6975 rusty cat"
+    },
+    {
+     "farm": "6",
+     "id": "5856172972",
+     "isfamily": "0",
+     "isfriend": "0",
+     "ispublic": "1",
+     "owner": "51249875@N03",
+     "secret": "6c6887347c",
+     "server": "5192",
+     "title": "watermarked-cats"
+    },
+    {
+     "farm": "6",
+     "id": "5856168328",
+     "isfamily": "0",
+     "isfriend": "0",
+     "ispublic": "1",
+     "owner": "32021554@N04",
+     "secret": "0c1cfdf64c",
+     "server": "5078",
+     "title": "7020 mandy cat"
+    },
+    {
+     "farm": "3",
+     "id": "5856171774",
+     "isfamily": "0",
+     "isfriend": "0",
+     "ispublic": "1",
+     "owner": "32021554@N04",
+     "secret": "7f5a3180ab",
+     "server": "2696",
+     "title": "7448 bobby cat"
+    }
+   ]
+  }
+ }
+}</script>
 
-<script type="text/editor" id="perltext">
-#!/usr/bin/perl
+<script type="text/editor" id="perltext">#!/usr/bin/perl
 use strict;
 use warnings;
 my $num_primes = 0;
@@ -332,6 +475,46 @@ for my $p (0 .. ($num_primes-1))
 print "\n";
 
 </script>
+
+<script type="text/editor" id="ocamltext">(*
+ * Example of early return implementation taken from
+ * http://ocaml.janestreet.com/?q=node/91
+ *)
+
+let with_return (type t) (f : _ -> t) =
+  let module M =
+     struct exception Return of t end
+  in
+  let return = { return = (fun x -> raise (M.Return x)); } in
+  try f return with M.Return x -> x
+
+
+(* Function that uses the 'early return' functionality provided by `with_return` *)
+let sum_until_first_negative list =
+  with_return (fun r ->
+    List.fold list ~init:0 ~f:(fun acc x ->
+      if x >= 0 then acc + x else r.return acc))
+</script>
+
+<script type="text/editor" id="clojuretext">(defn parting
+  "returns a String parting in a given language"
+  ([] (parting "World"))
+  ([name] (parting name "en"))
+  ([name language]
+    ; condp is similar to a case statement in other languages.
+    ; It is described in more detail later.
+    ; It is used here to take different actions based on whether the
+    ; parameter "language" is set to "en", "es" or something else.
+    (condp = language
+      "en" (str "Goodbye, " name)
+      "es" (str "Adios, " name)
+      (throw (IllegalArgumentException.
+        (str "unsupported language " language))))))
+
+(println (parting)) ; -> Goodbye, World
+(println (parting "Mark")) ; -> Goodbye, Mark
+(println (parting "Mark" "es")) ; -> Adios, Mark
+(println (parting "Mark", "xy")) ; -> java.lang.IllegalArgumentException: unsupported language xy</script>
 
 <script type="text/editor" id="svgtext"><svg
   width="800" height="600"

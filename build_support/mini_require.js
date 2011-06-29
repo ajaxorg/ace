@@ -43,7 +43,12 @@
  
 (function() {
     
-if (window.require) {
+var global = (function() {
+    return this;
+})();
+    
+// if we find an existing require function use it.
+if (global.require && global.define) {
     require.packaged = true;
     return;
 }
@@ -67,10 +72,10 @@ var _define = function(module, deps, payload) {
         
     define.modules[module] = payload;
 };
-if (window.define)
-    _define.original = window.define;
+if (global.define)
+    _define.original = global.define;
     
-window.define = _define;
+global.define = _define;
 
 
 /**
@@ -106,10 +111,10 @@ var _require = function(module, callback) {
     }
 };
 
-if (window.require)
-    _require.original = window.require;
+if (global.require)
+    _require.original = global.require;
     
-window.require = _require;
+global.require = _require;
 require.packaged = true;
 
 /**
