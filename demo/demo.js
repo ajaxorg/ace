@@ -84,7 +84,11 @@ exports.launch = function(env) {
       emacs: emacs,
       // This is a way to define simple keyboard remappings
       custom: new HashHandler({
-          "gotoright": "Tab"
+          "gotoright":      "Tab",
+          "indent":         "]",
+          "outdent":        "[",
+          "gotolinestart":  "^",
+          "gotolineend":    "$"
       })
     }
 
