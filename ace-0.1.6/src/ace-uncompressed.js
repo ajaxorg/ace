@@ -5667,6 +5667,7 @@ var Editor =function(renderer, session) {
         this.onChangeBackMarker();
         this.onChangeBreakpoint();
         this.onChangeAnnotation();
+        this.session.getUseWrapMode() && this.renderer.adjustWrapLimit();
         this.renderer.scrollToRow(session.getScrollTopRow());
         this.renderer.updateFull();
 
@@ -5694,15 +5695,19 @@ var Editor =function(renderer, session) {
 
     this.getTheme = function() {
         return this.renderer.getTheme();
-    }
+    };
 
     this.setStyle = function(style) {
-        this.renderer.setStyle(style)
+        this.renderer.setStyle(style);
     };
 
     this.unsetStyle = function(style) {
-        this.renderer.unsetStyle(style)
-    }
+        this.renderer.unsetStyle(style);
+    };
+    
+    this.setFontSize = function(size) {
+        this.container.style.fontSize = size;
+    };
 
     this.$highlightBrackets = function() {
         if (this.session.$bracketHighlight) {
@@ -7653,7 +7658,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "removewordleft",
-    bindKey: bindKey(null, "Alt-Backspace|Ctrl-Alt-Backspace"),
+    bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
     exec: function(env, args, request) { env.editor.removeWordLeft(); }
 });
 canon.addCommand({
@@ -12970,13 +12975,15 @@ var VirtualRenderer = function(container, theme) {
      */
     this.onResize = function(force) {
         var changes = this.CHANGE_SIZE;
+        var size = this.$size;
 
         var height = dom.getInnerHeight(this.container);
-        if (force || this.$size.height != height) {
-            this.$size.height = height;
+        if (force || size.height != height) {
+            size.height = height;
 
             this.scroller.style.height = height + "px";
-            this.scrollBar.setHeight(this.scroller.clientHeight);
+            size.scrollerHeight = this.scroller.clientHeight;
+            this.scrollBar.setHeight(size.scrollerHeight);
 
             if (this.session) {
                 this.scrollToY(this.getScrollTop());
@@ -12985,25 +12992,25 @@ var VirtualRenderer = function(container, theme) {
         }
 
         var width = dom.getInnerWidth(this.container);
-        if (force || this.$size.width != width) {
-            this.$size.width = width;
+        if (force || size.width != width) {
+            size.width = width;
 
             var gutterWidth = this.showGutter ? this.$gutter.offsetWidth : 0;
             this.scroller.style.left = gutterWidth + "px";
-            this.scroller.style.width = Math.max(0, width - gutterWidth - this.scrollBar.getWidth()) + "px";
+            size.scrollerWidth = Math.max(0, width - gutterWidth - this.scrollBar.getWidth())
+            this.scroller.style.width = size.scrollerWidth + "px";
 
-            if (this.session.getUseWrapMode()) {
-                var availableWidth = this.scroller.clientWidth - this.$padding * 2;
-                var limit = Math.floor(availableWidth / this.characterWidth) - 1;
-                if (this.session.adjustWrapLimit(limit) || force) {
-                    changes = changes | this.CHANGE_FULL;
-                }
-            }
+            if (this.session.getUseWrapMode() && this.adjustWrapLimit() || force)
+                changes = changes | this.CHANGE_FULL;
         }
 
-        this.$size.scrollerWidth = this.scroller.clientWidth;
-        this.$size.scrollerHeight = this.scroller.clientHeight;
         this.$loop.schedule(changes);
+    };
+
+    this.adjustWrapLimit = function(){
+        var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
+        var limit = Math.floor(availableWidth / this.characterWidth) - 1;
+        return this.session.adjustWrapLimit(limit);
     };
 
     this.$onGutterClick = function(e) {
@@ -13189,7 +13196,7 @@ var VirtualRenderer = function(container, theme) {
                 this.$textLayer.update(this.layerConfig);
             else
                 this.$textLayer.scrollLines(this.layerConfig);
-                
+
             if (this.showGutter)
                 this.$gutterLayer.update(this.layerConfig);
             this.$markerBack.update(this.layerConfig);
@@ -13536,7 +13543,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.setTheme = function(theme) {
         var _self = this;
-        
+
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             theme = theme || "ace/theme/textmate";
