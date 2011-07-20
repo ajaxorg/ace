@@ -72,7 +72,7 @@ if (!target) {
 
 console.log("using targetDir '", targetDir, "'");
 
-var copy = require('dryice').copy;
+var copy = require('./support/dryice/lib/dryice').copy;
 
 var aceHome = __dirname;
 
