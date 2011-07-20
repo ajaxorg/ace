@@ -3785,6 +3785,9 @@ Setting.prototype = {
      */
     resetValue: function() {
         this.set(this.defaultValue);
+    },
+    toString: function () {
+        return this.name;
     }
 };
 oop.implement(Setting.prototype, EventEmitter);
@@ -5070,6 +5073,7 @@ exports.scrollbarWidth = function() {
 
     var inner = exports.createElement("p");
     inner.style.width = "100%";
+    inner.style.minWidth = "0px";
     inner.style.height = "200px";
 
     var outer = exports.createElement("div");
@@ -5079,6 +5083,7 @@ exports.scrollbarWidth = function() {
     style.left = "-10000px";
     style.overflow = "hidden";
     style.width = "200px";
+    style.minWidth = "0px";
     style.height = "150px";
 
     outer.appendChild(inner);
@@ -5164,8 +5169,7 @@ exports.setSelectionEnd = function(textarea, end) {
     return textarea.selectionEnd = end;
 };
 
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -5901,14 +5905,14 @@ var Editor =function(renderer, session) {
         var mode = session.getMode();
 
         var cursor = this.getCursorPosition();
-        
+
         if (this.getBehavioursEnabled()) {
             // Get a transform if the current mode wants one.
             var transform = mode.transformAction(session.getState(cursor.row), 'insertion', this, session, text);
             if (transform)
                 text = transform.text;
         }
-        
+
         text = text.replace("\t", this.session.getTabString());
 
         // remove selected text
@@ -5930,7 +5934,7 @@ var Editor =function(renderer, session) {
         var line          = session.getLine(cursor.row);
         var lineIndent    = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
         var end           = session.insert(cursor, text);
-        
+
         if (transform && transform.selection) {
             if (transform.selection.length == 2) { // Transform relative to the current column
                 this.selection.setSelectionRange(
@@ -5944,7 +5948,7 @@ var Editor =function(renderer, session) {
                               transform.selection[3]));
             }
         }
-        
+
         var lineState = session.getState(cursor.row);
 
         // TODO disabled multiline auto indent
@@ -5990,8 +5994,27 @@ var Editor =function(renderer, session) {
         }
     };
 
-    this.onTextInput = function(text) {
-        this.keyBinding.onTextInput(text);
+    this.onTextInput = function(text, notPasted) {
+        // In case the text was not pasted and we got only one character, then
+        // handel it as a command key stroke.
+        if (notPasted && text.length == 1) {
+            // Note: The `null` as `keyCode` is important here, as there are
+            // some checks in the code for `keyCode == 0` meaning the text comes
+            // from the keyBinding.onTextInput code path.
+            var handled = this.keyBinding.onCommandKey({}, 0, null, text);
+
+            // Check if the text was handled. If not, then handled it as "normal"
+            // text and insert it to the editor directly. This shouldn't be done
+            // using the this.keyBinding.onTextInput(text) function, as it would
+            // make the `text` get sent to the keyboardHandler twice, which might
+            // turn out to be a bad thing in case there is a custome keyboard
+            // handler like the StateHandler.
+            if (!handled) {
+                this.insert(text);
+            }
+        } else {
+            this.keyBinding.onTextInput(text);
+        }
     };
 
     this.onCommandKey = function(e, hashId, keyCode) {
@@ -6094,12 +6117,12 @@ var Editor =function(renderer, session) {
     this.getReadOnly = function() {
         return this.$readOnly;
     };
-    
+
     this.$modeBehaviours = false;
     this.setBehavioursEnabled = function (enabled) {
         this.$modeBehaviours = enabled;
     }
-    
+
     this.getBehavioursEnabled = function () {
         return this.$modeBehaviours;
     }
@@ -6121,7 +6144,7 @@ var Editor =function(renderer, session) {
 
         if (this.selection.isEmpty())
             this.selection.selectLeft();
-        
+
         var range = this.getSelectionRange();
         if (this.getBehavioursEnabled()) {
             var session = this.session;
@@ -6721,6 +6744,7 @@ var TextInput = function(parentNode, host) {
 
     var inCompostion = false;
     var copied = false;
+    var pasted = false;
     var tempStyle = '';
 
     function sendText(valueToSend) {
@@ -6731,15 +6755,18 @@ var TextInput = function(parentNode, host) {
                     value = value.slice(0, -1);
                     if (value)
                         host.onTextInput(value);
-                } else
+                } else {
                     host.onTextInput(value);
+                }
 
                 // If editor is no longer focused we quit immediately, since
                 // it means that something else like CLI is in charge now.
                 if (!isFocused()) return false;
             }
         }
+
         copied = false;
+        pasted = false;
 
         // Safari doesn't fire copy events if no text is selected
         text.value = PLACEHOLDER;
@@ -6824,6 +6851,8 @@ var TextInput = function(parentNode, host) {
     };
     event.addListener(text, "textInput", onTextInput);
     event.addListener(text, "paste", function(e) {
+        // Mark that the next input text comes from past.
+        pasted = true;
         // Some browsers support the event.clipboardData API. Use this to get
         // the pasted content which increases speed if pasting a lot of lines.
         if (e.clipboardData && e.clipboardData.getData) {
@@ -6841,7 +6870,7 @@ var TextInput = function(parentNode, host) {
     };
 
     if (useragent.isIE) {
-        event.addListener(text, "beforecopy", function(e) {        
+        event.addListener(text, "beforecopy", function(e) {
             var copyText = host.getCopyText();
             if(copyText)
                 clipboardData.setData("Text", copyText);
@@ -7318,22 +7347,27 @@ var KeyBinding = function(editor) {
             }
         }
 
+        var success = false;
         if (toExecute) {
-            var success = canon.exec(toExecute.command,
+            success = canon.exec(toExecute.command,
                                         env, "editor", toExecute.args);
             if (success) {
-                return event.stopEvent(e);
+                event.stopEvent(e);
             }
         }
+        return success;
     };
 
-    this.onCommandKey = function(e, hashId, keyCode) {
-        var keyString = keyUtil.keyCodeToString(keyCode);
-        this.$callKeyboardHandler(e, hashId, keyString, keyCode);
+    this.onCommandKey = function(e, hashId, keyCode, keyString) {
+        // In case there is no keyString, try to interprete the keyCode.
+        if (!keyString) {
+            keyString = keyUtil.keyCodeToString(keyCode);
+        }
+        return this.$callKeyboardHandler(e, hashId, keyString, keyCode);
     };
 
     this.onTextInput = function(text) {
-        this.$callKeyboardHandler({}, 0, text, 0);
+        return this.$callKeyboardHandler({}, 0, text, 0);
     }
 
 }).call(KeyBinding.prototype);
@@ -7765,7 +7799,6 @@ var EditSession = function(text, mode) {
     this.$backMarkers = {};
     this.$markerId = 1;
     this.$rowCache = [];
-    this.$rowCacheSize = 1000;
     this.$wrapData = [];
     this.$foldData = [];
     this.$foldData.toString = function() {
@@ -9061,6 +9094,9 @@ var EditSession = function(text, mode) {
         return [screenColumn, column];
     }
 
+    /**
+     * Returns the number of rows required to render this row on the screen
+     */
     this.getRowLength = function(row) {
         if (!this.$useWrapMode || !this.$wrapData[row]) {
             return 1;
@@ -9069,14 +9105,14 @@ var EditSession = function(text, mode) {
         }
     }
 
+    /**
+     * Returns the height in pixels required to render this row on the screen
+     **/
     this.getRowHeight = function(config, row) {
         return this.getRowLength(row) * config.lineHeight;
     }
 
     this.getScreenLastRowColumn = function(screenRow) {
-        // Note: This won't work if someone has more then
-        // 1.7976931348623158e+307 characters in one row. But I think we can
-        // live with this limitation ;)
         return this.screenToDocumentColumn(screenRow, Number.MAX_VALUE / 10)
     };
 
@@ -9114,6 +9150,13 @@ var EditSession = function(text, mode) {
     };
 
     this.screenToDocumentPosition = function(screenRow, screenColumn) {
+        if (screenRow < 0) {
+            return {
+                row: 0,
+                column: 0
+            }
+        }
+        
         var line;
         var docRow = 0;
         var docColumn = 0;
@@ -9121,7 +9164,6 @@ var EditSession = function(text, mode) {
         var foldLineRowLength;
         var row = 0;
         var rowLength = 0;
-        var splits = null;
 
         var rowCache = this.$rowCache;
         var doCache = !rowCache.length;
@@ -9132,21 +9174,18 @@ var EditSession = function(text, mode) {
                 doCache = i == rowCache.length - 1;
             }
         }
-        var docRowCacheLast = docRow;
         // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
 
         var foldLine = this.getNextFold(docRow);
-        var foldStart = foldLine ?foldLine.start.row :Infinity;
+        var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (row <= screenRow) {
-            if (doCache
-                && docRow - docRowCacheLast > this.$rowCacheSize) {
+            if (doCache) {
                 rowCache.push({
                     docRow: docRow,
                     screenRow: row
                 });
-                docRowCacheLast = docRow;
             }
             rowLength = this.getRowLength(docRow);
             if (row + rowLength - 1 >= screenRow || docRow >= maxRow) {
@@ -9154,10 +9193,10 @@ var EditSession = function(text, mode) {
             } else {
                 row += rowLength;
                 docRow++;
-                if(docRow > foldStart) {
+                if (docRow > foldStart) {
                     docRow = foldLine.end.row+1;
                     foldLine = this.getNextFold(docRow);
-                    foldStart = foldLine ?foldLine.start.row :Infinity;
+                    foldStart = foldLine ? foldLine.start.row : Infinity;
                 }
             }
         }
@@ -9169,6 +9208,7 @@ var EditSession = function(text, mode) {
             foldLine = null;
         }
 
+        var splits = [];
         if (this.$useWrapMode) {
             splits = this.$wrapData[docRow];
             if (splits) {
@@ -9181,6 +9221,10 @@ var EditSession = function(text, mode) {
         }
 
         docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
+
+        // clip row at the end of the documen
+        if (row + splits.length < screenRow)
+            docColumn = Number.MAX_VALUE;
 
         // Need to do some clamping action here.
         if (this.$useWrapMode) {
@@ -9248,7 +9292,6 @@ var EditSession = function(text, mode) {
                 doCache = i == rowCache.length - 1;
             }
         }
-        var docRowCacheLast = row;
 
         var foldLine = this.getNextFold(row);
         var foldStart = foldLine ?foldLine.start.row :Infinity;
@@ -9263,13 +9306,11 @@ var EditSession = function(text, mode) {
             } else {
                 rowEnd = row + 1;
             }
-            if (doCache
-                && row - docRowCacheLast > this.$rowCacheSize) {
+            if (doCache) {
                 rowCache.push({
                     docRow: row,
                     screenRow: screenRow
                 });
-                docRowCacheLast = row;
             }
 
             screenRow += this.getRowLength(row);
@@ -9295,7 +9336,8 @@ var EditSession = function(text, mode) {
                 screenRowOffset++;
             }
             textLine = textLine.substring(
-                wrapRow[screenRowOffset - 1] || 0,  textLine.length);
+                wrapRow[screenRowOffset - 1] || 0, textLine.length
+            );
         }
 
         return {
@@ -9442,8 +9484,6 @@ var Selection = function(session) {
         _self._dispatchEvent("changeCursor");
         if (!_self.$isEmpty)
             _self._dispatchEvent("changeSelection");
-        if (e.old.row == e.value.row)
-            _self.$updateDesiredColumn();
     });
 
     this.selectionAnchor.on("change", function() {
@@ -9683,7 +9723,8 @@ var Selection = function(session) {
             fold;
         if (fold = this.session.getFoldAt(cursor.row, cursor.column, 1)) {
             this.moveCursorTo(fold.end.row, fold.end.column);
-        } else if (this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
+        }
+        else if (this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
             if (this.selectionLead.row < this.doc.getLength() - 1) {
                 this.moveCursorTo(this.selectionLead.row + 1, 0);
             }
@@ -9704,25 +9745,25 @@ var Selection = function(session) {
         var screenRow = this.session.documentToScreenRow(row, column);
 
         // Determ the doc-position of the first character at the screen line.
-        var firstColumnPosition =
-            this.session.screenToDocumentPosition(screenRow, 0);
+        var firstColumnPosition = this.session.screenToDocumentPosition(screenRow, 0);
 
-        // Determ the string "before" the cursor.
+        // Determ the line
         var beforeCursor = this.session.getDisplayLine(
-                row, column,
-                firstColumnPosition.row, firstColumnPosition.column);
+            row, null,
+            firstColumnPosition.row, firstColumnPosition.column
+        );
 
-        //
         var leadingSpace = beforeCursor.match(/^\s*/);
-        if (leadingSpace[0].length == 0
-            || leadingSpace[0].length >= column - firstColumnPosition.column)
-        {
+        if (leadingSpace[0].length == column) {
             this.moveCursorTo(
-                firstColumnPosition.row, firstColumnPosition.column);
-        } else {
+                firstColumnPosition.row, firstColumnPosition.column
+            );
+        }
+        else {
             this.moveCursorTo(
                 firstColumnPosition.row,
-                firstColumnPosition.column + leadingSpace[0].length);
+                firstColumnPosition.column + leadingSpace[0].length
+            );
         }
     };
 
@@ -9820,7 +9861,6 @@ var Selection = function(session) {
         );
         var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-
         this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
     };
 
@@ -13155,7 +13195,10 @@ var VirtualRenderer = function(container, theme) {
     this.$padding = null;
     this.setPadding = function(padding) {
         this.$padding = padding;
-        this.content.style.padding = "0 " + padding + "px";
+        this.$textLayer.setPadding(padding);
+        this.$cursorLayer.setPadding(padding);
+        this.$markerFront.setPadding(padding);
+        this.$markerBack.setPadding(padding);
         this.$loop.schedule(this.CHANGE_FULL);
         this.$updatePrintMargin();
     };
@@ -13360,7 +13403,7 @@ var VirtualRenderer = function(container, theme) {
         if (this.$textLayer.showInvisibles)
             charCount += 1;
 
-        return Math.max(this.$size.scrollerWidth - this.$padding * 2, Math.round(charCount * this.characterWidth));
+        return Math.max(this.$size.scrollerWidth, Math.round(charCount * this.characterWidth));
     };
 
     this.updateFrontMarkers = function() {
@@ -13807,6 +13850,12 @@ var Marker = function(parentEl) {
 
 (function() {
 
+    this.$padding = 0;
+
+    this.setPadding = function(padding) {
+        this.$padding = padding;
+    };
+
     this.setSession = function(session) {
         this.session = session;
     };
@@ -13822,7 +13871,7 @@ var Marker = function(parentEl) {
 
         this.config = config;
 
-        var html = [];        
+        var html = [];
         for ( var key in this.markers) {
             var marker = this.markers[key];
 
@@ -13833,7 +13882,9 @@ var Marker = function(parentEl) {
 
             if (marker.renderer) {
                 var top = this.$getTop(range.start.row, config);
-                var left = Math.round(range.start.column * config.characterWidth);        
+                var left = Math.round(this.$padding +
+                                      range.start.column *
+                                      config.characterWidth);
                 marker.renderer(html, range, left, top, config);
             }
             else if (range.isMultiLine()) {
@@ -13919,7 +13970,8 @@ var Marker = function(parentEl) {
         var height = layerConfig.lineHeight;
         var width = Math.round((range.end.column + (extraLength || 0) - range.start.column) * layerConfig.characterWidth);
         var top = this.$getTop(range.start.row, layerConfig);
-        var left = Math.round(range.start.column * layerConfig.characterWidth);
+        var left = Math.round(this.$padding +
+                              range.start.column * layerConfig.characterWidth);
 
         stringBuilder.push(
             "<div class='", clazz, "' style='",
@@ -13986,6 +14038,7 @@ var EventEmitter = require("pilot/event_emitter").EventEmitter;
 var Text = function(parentEl) {
     this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_text-layer";
+    this.element.style.width = "auto";
     parentEl.appendChild(this.element);
 
     this.$characterSize = this.$measureSizes() || {width: 0, height: 0};
@@ -14000,6 +14053,12 @@ var Text = function(parentEl) {
     this.EOL_CHAR = "&not;";
     this.TAB_CHAR = "&rarr;";
     this.SPACE_CHAR = "&middot;";
+    this.$padding = 0;
+
+    this.setPadding = function(padding) {
+        this.$padding = padding;
+        this.element.style.padding = "0 " + padding + "px";
+    };
 
     this.getLineHeight = function() {
         return this.$characterSize.height || 1;
@@ -14511,6 +14570,11 @@ var Cursor = function(parentEl) {
 
 (function() {
 
+    this.$padding = 0;
+    this.setPadding = function(padding) {
+        this.$padding = padding;
+    };
+
     this.setSession = function(session) {
         this.session = session;
     };
@@ -14522,7 +14586,7 @@ var Cursor = function(parentEl) {
     };
 
     this.showCursor = function() {
-        this.isVisible = true;   
+        this.isVisible = true;
         dom.removeCssClass(this.cursor, "ace_hidden");
         this.cursor.style.visibility = "visible";
         this.restartTimer();
@@ -14553,7 +14617,8 @@ var Cursor = function(parentEl) {
 
         var position = this.session.selection.getCursor();
         var pos = this.session.documentToScreenPosition(position);
-        var cursorLeft = Math.round(pos.column * this.config.characterWidth);
+        var cursorLeft = Math.round(this.$padding +
+                                    pos.column * this.config.characterWidth);
         var cursorTop = (pos.row - (onScreen ? this.config.firstRowScreen : 0)) *
             this.config.lineHeight;
 
