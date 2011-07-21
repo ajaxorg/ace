@@ -109,7 +109,7 @@
 .ace_cursor-layer {
     z-index: 4;
     cursor: text;
-    pointer-events: none;
+    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */
 }
 
 .ace_cursor {
