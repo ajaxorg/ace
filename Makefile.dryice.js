@@ -221,7 +221,7 @@ console.log('# ace themes ---------');
 [
     "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme",
     "mono_industrial", "monokai", "pastel_on_dark", "twilight", "eclipse",
-    "merbivore", "merbivore_soft", "vibrant_ink"
+    "merbivore", "merbivore_soft", "vibrant_ink", "crimson_editor"
 ].forEach(function(theme) {
     copy({
         source: [{
