@@ -81,6 +81,7 @@
     opacity: 0;
     background: transparent;
     appearance: none;
+    -moz-appearance: none;
     border: none;
     resize: none;
     outline: none;
