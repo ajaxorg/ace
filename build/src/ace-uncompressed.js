@@ -5169,7 +5169,8 @@ exports.setSelectionEnd = function(textarea, end) {
     return textarea.selectionEnd = end;
 };
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -5818,7 +5819,7 @@ var Editor =function(renderer, session) {
             } else {
                 range = new Range(cursor.row, 0, cursor.row+1, 0);
             }
-            session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "line");
+            session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
         }
     };
 
@@ -5928,12 +5929,12 @@ var Editor =function(renderer, session) {
 
         this.clearSelection();
 
-        var start         = cursor.column;
-        var lineState     = session.getState(cursor.row);
+        var start = cursor.column;
+        var lineState = session.getState(cursor.row);
         var shouldOutdent = mode.checkOutdent(lineState, session.getLine(cursor.row), text);
-        var line          = session.getLine(cursor.row);
-        var lineIndent    = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
-        var end           = session.insert(cursor, text);
+        var line = session.getLine(cursor.row);
+        var lineIndent = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());
+        var end = session.insert(cursor, text);
 
         if (transform && transform.selection) {
             if (transform.selection.length == 2) { // Transform relative to the current column
@@ -9113,7 +9114,8 @@ var EditSession = function(text, mode) {
     }
 
     this.getScreenLastRowColumn = function(screenRow) {
-        return this.screenToDocumentColumn(screenRow, Number.MAX_VALUE / 10)
+        //return this.screenToDocumentColumn(screenRow, Number.MAX_VALUE / 10)
+        return this.documentToScreenColumn(screenRow, this.doc.getLine(screenRow).length);
     };
 
     this.getDocumentLastRowColumn = function(docRow, docColumn) {
@@ -9484,6 +9486,8 @@ var Selection = function(session) {
         _self._dispatchEvent("changeCursor");
         if (!_self.$isEmpty)
             _self._dispatchEvent("changeSelection");
+        if (!_self.$preventUpdateDesiredColumnOnChange && e.old.column != e.value.column)
+            _self.$updateDesiredColumn();
     });
 
     this.selectionAnchor.on("change", function() {
@@ -9875,7 +9879,11 @@ var Selection = function(session) {
             row = fold.start.row;
             column = fold.start.column;
         }
+        
+        this.$preventUpdateDesiredColumnOnChange = true;
         this.selectionLead.setPosition(row, column);
+        this.$preventUpdateDesiredColumnOnChange = false;
+        
         if (!preventUpdateDesiredColumn)
             this.$updateDesiredColumn(this.selectionLead.column);
     };
@@ -10183,6 +10191,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             session.documentToScreenPosition(this.start);
         var screenPosEnd =
             session.documentToScreenPosition(this.end);
+
         return new Range(
             screenPosStart.row, screenPosStart.column,
             screenPosEnd.row, screenPosEnd.column
@@ -13855,7 +13864,6 @@ var Marker = function(parentEl) {
     this.setPadding = function(padding) {
         this.$padding = padding;
     };
-
     this.setSession = function(session) {
         this.session = session;
     };
@@ -13871,6 +13879,7 @@ var Marker = function(parentEl) {
 
         this.config = config;
 
+
         var html = [];
         for ( var key in this.markers) {
             var marker = this.markers[key];
@@ -13879,23 +13888,28 @@ var Marker = function(parentEl) {
             if (range.isEmpty()) continue;
 
             range = range.toScreenRange(this.session);
-
             if (marker.renderer) {
                 var top = this.$getTop(range.start.row, config);
-                var left = Math.round(this.$padding +
-                                      range.start.column *
-                                      config.characterWidth);
+                var left = Math.round(
+                    this.$padding + range.start.column * config.characterWidth
+                );
                 marker.renderer(html, range, left, top, config);
             }
             else if (range.isMultiLine()) {
                 if (marker.type == "text") {
                     this.drawTextMarker(html, range, marker.clazz, config);
                 } else {
-                    this.drawMultiLineMarker(html, range, marker.clazz, config);
+                    this.drawMultiLineMarker(
+                        html, range, marker.clazz, config,
+                        marker.type === "background"
+                    );
                 }
             }
             else {
-                this.drawSingleLineMarker(html, range, marker.clazz, config);
+                this.drawSingleLineMarker(
+                    html, range, marker.clazz, config,
+                    null, marker.type === "background"
+                );
             }
         }
         this.element = dom.setInnerHtml(this.element, html.join(""));
@@ -13905,20 +13919,25 @@ var Marker = function(parentEl) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
     };
 
+    /**
+     * Draws a marker, which spans a range of text in a single line
+     */ 
     this.drawTextMarker = function(stringBuilder, range, clazz, layerConfig) {
         // selection start
         var row = range.start.row;
 
-        var lineRange = new Range(row, range.start.column,
-                                  row, this.session.getScreenLastRowColumn(row));
+        var lineRange = new Range(
+            row, range.start.column,
+            row, this.session.getScreenLastRowColumn(row)
+        );
         this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig, 1);
 
         // selection end
-        var row = range.end.row;
-        var lineRange = new Range(row, 0, row, range.end.column);
+        row = range.end.row;
+        lineRange = new Range(row, 0, row, range.end.column);
         this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig);
 
-        for (var row = range.start.row + 1; row < range.end.row; row++) {
+        for (row = range.start.row + 1; row < range.end.row; row++) {
             lineRange.start.row = row;
             lineRange.end.row = row;
             lineRange.end.column = this.session.getScreenLastRowColumn(row);
@@ -13926,12 +13945,18 @@ var Marker = function(parentEl) {
         }
     };
 
-    this.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig) {
+    /**
+     * Draws a multi line marker, where lines span the full width
+     */
+     this.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig, ignorePadding) {
         // from selection start to the end of the line
+        var padding = ignorePadding ? 0 : this.$padding;
         var height = layerConfig.lineHeight;
         var width = Math.round(layerConfig.width - (range.start.column * layerConfig.characterWidth));
         var top = this.$getTop(range.start.row, layerConfig);
-        var left = Math.round(range.start.column * layerConfig.characterWidth);
+        var left = Math.round(
+            padding + range.start.column * layerConfig.characterWidth
+        );
 
         stringBuilder.push(
             "<div class='", clazz, "' style='",
@@ -13942,36 +13967,44 @@ var Marker = function(parentEl) {
         );
 
         // from start of the last line to the selection end
-        var top = this.$getTop(range.end.row, layerConfig);
-        var width = Math.round(range.end.column * layerConfig.characterWidth);
+        top = this.$getTop(range.end.row, layerConfig);
+        width = Math.round(range.end.column * layerConfig.characterWidth);
 
         stringBuilder.push(
             "<div class='", clazz, "' style='",
             "height:", height, "px;",
+            "width:", width, "px;",
             "top:", top, "px;",
-            "width:", width, "px;'></div>"
+            "left:", padding, "px;'></div>"
         );
 
         // all the complete lines
-        var height = (range.end.row - range.start.row - 1) * layerConfig.lineHeight;
+        height = (range.end.row - range.start.row - 1) * layerConfig.lineHeight;
         if (height < 0)
             return;
-        var top = this.$getTop(range.start.row + 1, layerConfig);
+        top = this.$getTop(range.start.row + 1, layerConfig);
+        width = layerConfig.width;
 
         stringBuilder.push(
             "<div class='", clazz, "' style='",
             "height:", height, "px;",
-            "width:", layerConfig.width, "px;",
-            "top:", top, "px;'></div>"
+            "width:", width, "px;",
+            "top:", top, "px;",
+            "left:", padding, "px;'></div>"
         );
     };
 
-    this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig, extraLength) {
+    /**
+     * Draws a marker which covers one single full line
+     */
+    this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig, extraLength, ignorePadding) {
+        var padding = ignorePadding ? 0 : this.$padding;
         var height = layerConfig.lineHeight;
         var width = Math.round((range.end.column + (extraLength || 0) - range.start.column) * layerConfig.characterWidth);
         var top = this.$getTop(range.start.row, layerConfig);
-        var left = Math.round(this.$padding +
-                              range.start.column * layerConfig.characterWidth);
+        var left = Math.round(
+            padding + range.start.column * layerConfig.characterWidth
+        );
 
         stringBuilder.push(
             "<div class='", clazz, "' style='",
@@ -14712,8 +14745,11 @@ var ScrollBar = function(parent) {
 
     parent.appendChild(this.element);
 
+    // in OSX lion the scrollbars appear to have no width. In this case resize
+    // the to show the scrollbar but still pretend that the scrollbar has a width
+    // of 0px
     this.width = dom.scrollbarWidth();
-    this.element.style.width = this.width + "px";
+    this.element.style.width = (this.width || 15) + "px";
 
     event.addListener(this.element, "scroll", this.onScroll.bind(this));
 };
@@ -15207,7 +15243,7 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   ".ace_cursor-layer {" +
   "    z-index: 4;" +
   "    cursor: text;" +
-  "    pointer-events: none;" +
+  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */" +
   "}" +
   "" +
   ".ace_cursor {" +
