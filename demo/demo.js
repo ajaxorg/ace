@@ -41,7 +41,6 @@
 define(function(require, exports, module) {
 
 exports.launch = function(env) {
-    var commands = require("ace/commands/command_manager");
     var event = require("pilot/event");
     var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
@@ -554,6 +553,8 @@ exports.launch = function(env) {
      */
 
     // Fake-Save, works from the editor and the command line.
+    var commands = env.editor.commands;
+    
     commands.addCommand({
         name: "save",
         bindKey: {
