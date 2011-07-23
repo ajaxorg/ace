@@ -41,8 +41,6 @@
 var require = window.__ace_shadowed__.require;
 
 require("pilot/index");
-var catalog = require("pilot/plugin_manager").catalog;
-catalog.registerPlugins([ "pilot/index" ]);
 
 var Dom = require("pilot/dom");
 var Event = require("pilot/event");
@@ -52,9 +50,6 @@ var Editor = require("ace/editor").Editor;
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-
-var catalog = require("pilot/plugin_manager").catalog;
-catalog.registerPlugins([ "pilot/index" ]);
 
 window.__ace_shadowed__.edit = function(el) {
     if (typeof(el) == "string") {
@@ -68,16 +63,14 @@ window.__ace_shadowed__.edit = function(el) {
     var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
     editor.setSession(doc);
 
-    var env = require("pilot/environment").create();
-    catalog.startupPlugins({ env: env }).then(function() {
-        env.document = doc;
-        env.editor = env;
+    var env = {};
+    env.document = doc;
+    env.editor = env;
+    editor.resize();
+    Event.addListener(window, "resize", function() {
         editor.resize();
-        Event.addListener(window, "resize", function() {
-            editor.resize();
-        });
-        el.env = env;
     });
+    el.env = env;
     return editor;
 }
 

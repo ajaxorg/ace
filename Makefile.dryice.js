@@ -336,7 +336,7 @@ function demo() {
         source: [
             copy.source.commonjs({
                 project: project,
-                require: [ "pilot/index", "ace/defaults", "demo/boot" ]
+                require: [ "demo/boot" ]
             })
         ],
         filter: [ copy.filter.moduleDefines ],

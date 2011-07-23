@@ -41,7 +41,7 @@
 define(function(require, exports, module) {
 
 exports.launch = function(env) {
-    var canon = require("pilot/canon");
+    var commands = require("ace/commands/command_manager");
     var event = require("pilot/event");
     var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
@@ -189,7 +189,6 @@ exports.launch = function(env) {
     }
 
     var container = document.getElementById("editor");
-    var cockpitInput = document.getElementById("cockpitInput");
 
     // Splitting.
     var Split = require("ace/split").Split;
@@ -555,7 +554,7 @@ exports.launch = function(env) {
      */
 
     // Fake-Save, works from the editor and the command line.
-    canon.addCommand({
+    commands.addCommand({
         name: "save",
         bindKey: {
             win: "Ctrl-S",
@@ -586,7 +585,7 @@ exports.launch = function(env) {
         }
     });
 
-    canon.addCommand({
+    commands.addCommand({
         name: "fold",
         bindKey: {
             win: "Alt-L",
@@ -598,7 +597,7 @@ exports.launch = function(env) {
         }
     });
 
-    canon.addCommand({
+    commands.addCommand({
         name: "unfold",
         bindKey: {
             win: "Alt-Shift-L",
