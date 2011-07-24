@@ -245,6 +245,7 @@ exports.launch = function(env) {
     var highlightSelectedWordE = document.getElementById("highlight_selected_word");
     var showHScrollEl = document.getElementById("show_hscroll");
     var softTabEl = document.getElementById("soft_tab");
+    var behavioursEl = document.getElementById("enable_behaviours");
 
     bindDropdown("doc", function(value) {
         var doc = docs[value];
@@ -342,6 +343,7 @@ exports.launch = function(env) {
         highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
         showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
         softTabEl.checked = session.getUseSoftTabs();
+        behavioursEl.checked = editor.getBehavioursEnabled()
     }
 
     bindDropdown("mode", function(value) {
@@ -416,6 +418,10 @@ exports.launch = function(env) {
 
     bindCheckbox("soft_tab", function(checked) {
         env.editor.getSession().setUseSoftTabs(checked);
+    });
+
+    bindCheckbox("enable_behaviours", function(checked) {
+        env.editor.setBehavioursEnabled(checked);
     });
 
     var secondSession = null;
