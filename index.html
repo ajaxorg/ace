@@ -680,7 +680,16 @@ object implicits extends Application {
 </script>
   <input id="cockpitInput" type="text"/>
 
-  <script src="demo/require.js" type="text/javascript" charset="utf-8"></script>
-  <script src="demo/boot.js" type="text/javascript"></script>
+  <script type="text/javascript">
+      var require = {
+          paths: {
+              demo: "../demo",
+              ace: "../lib/ace",
+              cockpit: "../support/cockpit/lib/cockpit",
+              pilot: "../support/pilot/lib/pilot"
+          }
+      };
+  </script>
+  <script src="demo/require.js" data-main="demo/boot" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>

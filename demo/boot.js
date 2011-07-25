@@ -35,14 +35,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require({
-    paths: {
-        demo: "../demo",
-        ace: "../lib/ace",
-        cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/pilot/lib/pilot"
-    }
-});
 
 var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
              "pilot/environment", "demo/demo" ];
