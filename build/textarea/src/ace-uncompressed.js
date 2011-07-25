@@ -5740,6 +5740,10 @@ var Editor =function(renderer, session) {
         }
         this.textInput.focus();
     };
+    
+    this.isFocused = function() {
+        return this.textInput.isFocused();
+    };
 
     this.blur = function() {
         this.textInput.blur();
@@ -6984,10 +6988,11 @@ exports.TextInput = TextInput;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/mouse_handler', ['require', 'exports', 'module' , 'pilot/event', 'pilot/dom'], function(require, exports, module) {
+__ace_shadowed__.define('ace/mouse_handler', ['require', 'exports', 'module' , 'pilot/event', 'pilot/dom', 'pilot/browser_focus'], function(require, exports, module) {
 
 var event = require("pilot/event");
 var dom = require("pilot/dom");
+var BrowserFocus = require("pilot/browser_focus").BrowserFocus;
 
 var STATE_UNKNOWN = 0;
 var STATE_SELECT = 1;
@@ -6998,6 +7003,8 @@ var DRAG_OFFSET = 5; // pixels
 
 var MouseHandler = function(editor) {
     this.editor = editor;
+    
+    this.browserFocus = new BrowserFocus();
     event.addListener(editor.container, "mousedown", function(e) {
         editor.focus();
         return event.preventDefault(e);
@@ -7038,6 +7045,15 @@ var MouseHandler = function(editor) {
     };
 
     this.onMouseDown = function(e) {
+        // if this click caused the editor to be focused ignore the click
+        // for selection and cursor placement
+        if (
+            !this.browserFocus.isFocused()
+            || new Date().getTime() - this.browserFocus.lastFocus < 20
+            || !this.editor.isFocused()
+        )
+            return;
+        
         var pageX = event.getDocumentX(e);
         var pageY = event.getDocumentY(e);
         var pos = this.$getEventPosition(e);
@@ -7246,6 +7262,97 @@ var MouseHandler = function(editor) {
 }).call(MouseHandler.prototype);
 
 exports.MouseHandler = MouseHandler;
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
+ *      Julian Viereck <julian.viereck@gmail.com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('pilot/browser_focus', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/event', 'pilot/event_emitter'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var event = require("pilot/event");
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
+
+/**
+ * This class keeps track of the focus state of the given window.
+ * Focus changes for example when the user switches a browser tab,
+ * goes to the location bar or switches to another application.
+ */ 
+var BrowserFocus = function(win) {
+    win = win || window;
+    
+    this.lastFocus = new Date().getTime();
+    this._isFocused = true;
+    
+    var _self = this;
+    event.addListener(win, "blur", function(e) {
+        _self._setFocused(false);
+    });
+
+    event.addListener(win, "focus", function(e) {
+        _self._setFocused(true);
+    });
+};
+
+(function(){
+
+    oop.implement(this, EventEmitter);
+    
+    this.isFocused = function() {
+        return this._isFocused;
+    };
+    
+    this._setFocused = function(isFocused) {
+        if (this._isFocused == isFocused)
+            return;
+            
+        if (isFocused)
+            this.lastFocus = new Date().getTime();
+            
+        this._isFocused = isFocused;
+        this._emit("changeFocus");
+    };
+
+}).call(BrowserFocus.prototype);
+
+
+exports.BrowserFocus = BrowserFocus;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -7798,7 +7905,6 @@ var EditSession = function(text, mode) {
         });
         return str;
     }
-    this.$docChangeCounter = 0;
 
     if (text instanceof Document) {
         this.setDocument(text);
@@ -7824,17 +7930,11 @@ var EditSession = function(text, mode) {
 
         this.doc = doc;
         doc.on("change", this.onChange.bind(this));
-        doc.on("changeStart", this.onChangeStart.bind(this));
-        doc.on("changeEnd",   this.onChangeEnd.bind(this));
         this.on("changeFold", this.onChangeFold.bind(this));
     };
 
     this.getDocument = function() {
         return this.doc;
-    };
-
-    this.onChangeStart = function() {
-        this.$docChangeCounter ++;
     };
 
     this.$resetRowCache = function(row) {
@@ -7848,29 +7948,6 @@ var EditSession = function(text, mode) {
                 rowCache.splice(i, rowCache.length);
                 return;
             }
-        }
-    }
-
-    this.onChangeEnd = function() {
-        this.$docChangeCounter --;
-        if (this.$docChangeCounter == 0
-            && !this.$fromUndo && this.$undoManager)
-        {
-            if (this.$deltasFold.length) {
-                this.$deltas.push({
-                    group: "fold",
-                    deltas: this.$deltasFold
-                });
-                this.$deltasFold = [];
-            }
-            if (this.$deltasDoc) {
-                this.$deltas.push({
-                    group: "doc",
-                    deltas: this.$deltasDoc
-                });
-                this.$deltasDoc = [];
-            }
-            this.$informUndoManager.schedule();
         }
     };
 
@@ -7894,6 +7971,8 @@ var EditSession = function(text, mode) {
                     folds:  removedFolds
                 });
             }
+            
+            this.$informUndoManager.schedule();
         }
 
         this.bgTokenizer.start(delta.range.start.row);
@@ -7902,6 +7981,9 @@ var EditSession = function(text, mode) {
 
     this.setValue = function(text) {
         this.doc.setValue(text);
+        this.selection.moveCursorTo(0, 0);
+        this.selection.clearSelection();
+        
         this.$resetRowCache(0);
         this.$deltas = [];
         this.$deltasDoc = [];
@@ -7933,19 +8015,37 @@ var EditSession = function(text, mode) {
         this.$deltasDoc = [];
         this.$deltasFold = [];
 
-        if (this.$informUndoManager) {
+        if (this.$informUndoManager)
             this.$informUndoManager.cancel();
-        }
 
         if (undoManager) {
             var self = this;
             this.$syncInformUndoManager = function() {
                 self.$informUndoManager.cancel();
-                if (self.$deltas.length > 0)
-                    undoManager.execute({
-                        action : "aceupdate",
-                        args   : [self.$deltas, self]
+                
+                if (self.$deltasFold.length) {
+                    self.$deltas.push({
+                        group: "fold",
+                        deltas: self.$deltasFold
                     });
+                    self.$deltasFold = [];
+                }
+                
+                if (self.$deltasDoc.length) {
+                    self.$deltas.push({
+                        group: "doc",
+                        deltas: self.$deltasDoc
+                    });
+                    self.$deltasDoc = [];
+                }
+                
+                if (self.$deltas.length > 0) {
+                    undoManager.execute({
+                        action: "aceupdate",
+                        args: [self.$deltas, self]
+                    });
+                }
+                
                 self.$deltas = [];
             }
             this.$informUndoManager =
@@ -9157,14 +9257,17 @@ var EditSession = function(text, mode) {
         var rowLength = 0;
 
         var rowCache = this.$rowCache;
-        var doCache = !rowCache.length;
         for (var i = 0; i < rowCache.length; i++) {
             if (rowCache[i].screenRow < screenRow) {
                 row = rowCache[i].screenRow;
                 docRow = rowCache[i].docRow;
-                doCache = i == rowCache.length - 1;
+            }
+            else {
+                break;
             }
         }
+        var doCache = !rowCache.length || i == rowCache.length;
+        
         // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
 
@@ -9172,12 +9275,6 @@ var EditSession = function(text, mode) {
         var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (row <= screenRow) {
-            if (doCache) {
-                rowCache.push({
-                    docRow: docRow,
-                    screenRow: row
-                });
-            }
             rowLength = this.getRowLength(docRow);
             if (row + rowLength - 1 >= screenRow || docRow >= maxRow) {
                 break;
@@ -9189,6 +9286,12 @@ var EditSession = function(text, mode) {
                     foldLine = this.getNextFold(docRow);
                     foldStart = foldLine ? foldLine.start.row : Infinity;
                 }
+            }
+            if (doCache) {
+                rowCache.push({
+                    docRow: docRow,
+                    screenRow: row
+                });
             }
         }
 
@@ -9274,15 +9377,16 @@ var EditSession = function(text, mode) {
 
         var rowEnd, row = 0;
         var rowCache = this.$rowCache;
-        //
-        var doCache = !rowCache.length;
+
         for (var i = 0; i < rowCache.length; i++) {
             if (rowCache[i].docRow < docRow) {
                 screenRow = rowCache[i].screenRow;
                 row = rowCache[i].docRow;
-                doCache = i == rowCache.length - 1;
+            } else {
+                break;
             }
         }
+        var doCache = !rowCache.length || i == rowCache.length;
 
         var foldLine = this.getNextFold(row);
         var foldStart = foldLine ?foldLine.start.row :Infinity;
@@ -9294,18 +9398,20 @@ var EditSession = function(text, mode) {
                     break;
                 foldLine = this.getNextFold(rowEnd);
                 foldStart = foldLine ?foldLine.start.row :Infinity;
-            } else {
+            }
+            else {
                 rowEnd = row + 1;
             }
+
+            screenRow += this.getRowLength(row);
+            row = rowEnd;
+                        
             if (doCache) {
                 rowCache.push({
                     docRow: row,
                     screenRow: screenRow
                 });
             }
-
-            screenRow += this.getRowLength(row);
-            row = rowEnd;
         }
 
         // Calculate the text line that is displayed in docRow on the screen.
@@ -9462,6 +9568,13 @@ var lang = require("pilot/lang");
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 var Range = require("ace/range").Range;
 
+/**
+ * Keeps cursor position and the text selection of an edit session.
+ * 
+ * The row/columns used in the selection are in document coordinates
+ * representing ths coordinates as thez appear in the document
+ * before applying soft wrap and folding.
+ */ 
 var Selection = function(session) {
     this.session = session;
     this.doc = session.getDocument();
@@ -10957,14 +11070,12 @@ var Document = function(text) {
         var firstLine = lines.splice(0, 1)[0];
         var lastLine = lines.length == 0 ? null : lines.splice(lines.length - 1, 1)[0];
 
-        this._dispatchEvent("changeStart");
         position = this.insertInLine(position, firstLine);
         if (lastLine !== null) {
             position = this.insertNewLine(position); // terminate first line
             position = this.insertLines(position.row, lines);
             position = this.insertInLine(position, lastLine || "");
         }
-        this._dispatchEvent("changeEnd");
         return position;
     };
 
@@ -10976,7 +11087,6 @@ var Document = function(text) {
         args.push.apply(args, lines);
         this.$lines.splice.apply(this.$lines, args);
 
-        this._dispatchEvent("changeStart");
         var range = new Range(row, 0, row + lines.length, 0);
         var delta = {
             action: "insertLines",
@@ -10984,7 +11094,6 @@ var Document = function(text) {
             lines: lines
         };
         this._dispatchEvent("change", { data: delta });
-        this._dispatchEvent("changeEnd");
         return range.end;
     },
 
@@ -10992,7 +11101,6 @@ var Document = function(text) {
         position = this.$clipPosition(position);
         var line = this.$lines[position.row] || "";
 
-        this._dispatchEvent("changeStart");
         this.$lines[position.row] = line.substring(0, position.column);
         this.$lines.splice(position.row + 1, 0, line.substring(position.column, line.length));
 
@@ -11007,7 +11115,6 @@ var Document = function(text) {
             text: this.getNewLineCharacter()
         };
         this._dispatchEvent("change", { data: delta });
-        this._dispatchEvent("changeEnd");
 
         return end;
     };
@@ -11018,7 +11125,6 @@ var Document = function(text) {
 
         var line = this.$lines[position.row] || "";
 
-        this._dispatchEvent("changeStart");
         this.$lines[position.row] = line.substring(0, position.column) + text
                 + line.substring(position.column);
 
@@ -11033,7 +11139,6 @@ var Document = function(text) {
             text: text
         };
         this._dispatchEvent("change", { data: delta });
-        this._dispatchEvent("changeEnd");
 
         return end;
     };
@@ -11049,7 +11154,6 @@ var Document = function(text) {
         var firstRow = range.start.row;
         var lastRow = range.end.row;
 
-        this._dispatchEvent("changeStart");
         if (range.isMultiLine()) {
             var firstFullRow = range.start.column == 0 ? firstRow : firstRow + 1;
             var lastFullRow = lastRow - 1;
@@ -11068,7 +11172,6 @@ var Document = function(text) {
         else {
             this.removeInLine(firstRow, range.start.column, range.end.column);
         }
-        this._dispatchEvent("changeEnd");
         return range.start;
     };
 
@@ -11080,7 +11183,6 @@ var Document = function(text) {
         var line = this.getLine(row);
         var removed = line.substring(startColumn, endColumn);
         var newLine = line.substring(0, startColumn) + line.substring(endColumn, line.length);
-        this._dispatchEvent("changeStart");
         this.$lines.splice(row, 1, newLine);
 
         var delta = {
@@ -11089,7 +11191,6 @@ var Document = function(text) {
             text: removed
         };
         this._dispatchEvent("change", { data: delta });
-        this._dispatchEvent("changeEnd");
         return range.start;
     };
 
@@ -11101,7 +11202,6 @@ var Document = function(text) {
      * @return {String[]} The removed lines
      */
     this.removeLines = function(firstRow, lastRow) {
-        this._dispatchEvent("changeStart");
         var range = new Range(firstRow, 0, lastRow + 1, 0);
         var removed = this.$lines.splice(firstRow, lastRow - firstRow + 1);
 
@@ -11112,7 +11212,6 @@ var Document = function(text) {
             lines: removed
         };
         this._dispatchEvent("change", { data: delta });
-        this._dispatchEvent("changeEnd");
         return removed;
     };
 
@@ -11123,7 +11222,6 @@ var Document = function(text) {
         var range = new Range(row, firstLine.length, row+1, 0);
         var line = firstLine + secondLine;
 
-        this._dispatchEvent("changeStart");
         this.$lines.splice(row, 2, line);
 
         var delta = {
@@ -11132,7 +11230,6 @@ var Document = function(text) {
             text: this.getNewLineCharacter()
         };
         this._dispatchEvent("change", { data: delta });
-        this._dispatchEvent("changeEnd");
     };
 
     this.replace = function(range, text) {
@@ -11144,7 +11241,6 @@ var Document = function(text) {
         if (text == this.getTextRange(range))
             return range.end;
 
-        this._dispatchEvent("changeStart");
         this.remove(range);
         if (text) {
             var end = this.insert(range.start, text);
@@ -11152,7 +11248,6 @@ var Document = function(text) {
         else {
             end = range.start;
         }
-        this._dispatchEvent("changeEnd");
 
         return end;
     };
@@ -11598,44 +11693,11 @@ exports.BackgroundTokenizer = BackgroundTokenizer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/edit_session/folding', ['require', 'exports', 'module' , 'ace/range', 'ace/edit_session/fold_line'], function(require, exports, module) {
+__ace_shadowed__.define('ace/edit_session/folding', ['require', 'exports', 'module' , 'ace/range', 'ace/edit_session/fold_line', 'ace/edit_session/fold'], function(require, exports, module) {
 
 var Range = require("ace/range").Range;
 var FoldLine = require("ace/edit_session/fold_line").FoldLine;
-
-/**
- * Simple fold-data struct.
- **/
-function Fold(range, placeholder) {
-    this.foldLine = null;
-    this.placeholder = placeholder;
-    this.range = range;
-    this.start = range.start;
-    this.end = range.end;
-
-    this.sameRow = range.start.row == range.end.row;
-    this.subFolds = [];
-}
-
-Fold.prototype.toString = function() {
-    return '"' + this.placeholder + '" ' + this.range.toString();
-}
-
-Fold.prototype.setFoldLine = function(foldLine) {
-    this.foldLine = foldLine;
-    this.subFolds.forEach(function(fold) {
-        fold.setFoldLine(foldLine);
-    });
-}
-
-Fold.prototype.clone = function() {
-    var range = this.range.clone();
-    var fold = new Fold(range, this.placeholder);
-    this.subFolds.forEach(function(subFold) {
-        fold.subFolds.push(subFold.clone());
-    });
-    return fold;
-}
+var Fold = require("ace/edit_session/fold").Fold;
 
 function Folding() {
     /**
@@ -11645,25 +11707,22 @@ function Folding() {
      */
     this.getFoldAt = function(row, column, side) {
         var foldLine = this.getFoldLine(row);
-        if (foldLine) {
-            var folds = foldLine.folds,
-                fold;
-
-            for (var i = 0; i < folds.length; i++) {
-                fold = folds[i];
-                if (fold.range.contains(row, column)) {
-                    if (side == 1 && fold.range.isEnd(row, column)) {
-                        continue;
-                    } else if (side == -1 && fold.range.isStart(row, column)) {
-                        continue;
-                    }
-                    return fold;
-                }
-            }
-        } else {
+        if (!foldLine)
             return null;
+            
+        var folds = foldLine.folds;
+        for (var i = 0; i < folds.length; i++) {
+            var fold = folds[i];
+            if (fold.range.contains(row, column)) {
+                if (side == 1 && fold.range.isEnd(row, column)) {
+                    continue;
+                } else if (side == -1 && fold.range.isStart(row, column)) {
+                    continue;
+                }
+                return fold;
+            }
         }
-    }
+    };
 
     /**
      * Returns all folds in the given range. Note, that this will return folds
@@ -11671,33 +11730,30 @@ function Folding() {
      */
     this.getFoldsInRange = function(range) {
         range = range.clone();
-        var start = range.start,
-            end = range.end;
-        var foldLines = this.$foldData,
-            folds,
-            fold;
-        var cmp,
-            foundFolds = [];
+        var start = range.start;
+        var end = range.end;
+        var foldLines = this.$foldData;
+        var foundFolds = [];
 
         start.column += 1;
         end.column -= 1;
 
         for (var i = 0; i < foldLines.length; i++) {
-            cmp = foldLines[i].range.compareRange(range);
-            // Range is before foldLine. No intersection. This means,
-            // there might be other foldLines that intersect.
+            var cmp = foldLines[i].range.compareRange(range);
             if (cmp == 2) {
+                // Range is before foldLine. No intersection. This means,
+                // there might be other foldLines that intersect.
                 continue;
-            } else
-            // Range is after foldLine. There can't be any other foldLines then,
-            // so let's give up.
-            if (cmp == -2) {
+            }
+            else if (cmp == -2) {
+                // Range is after foldLine. There can't be any other foldLines then,
+                // so let's give up.
                 break;
             }
 
-            folds = foldLines[i].folds;
+            var folds = foldLines[i].folds;
             for (var j = 0; j < folds.length; j++) {
-                fold = folds[j];
+                var fold = folds[j];
                 cmp = fold.range.compareRange(range);
                 if (cmp == -2) {
                     break;
@@ -11733,46 +11789,44 @@ function Folding() {
      */
     this.getFoldStringAt = function(row, column, trim, foldLine) {
         var foldLine = foldLine || this.getFoldLine(row);
-        if (!foldLine) {
+        if (!foldLine)
             return null;
-        } else {
-            var fold, lastFold, cmp, str;
-            lastFold = {
-                end: { column: 0 }
-            };
-            // TODO: Refactor to use getNextFoldTo function.
-            for (var i = 0; i < foldLine.folds.length; i++) {
-                fold = foldLine.folds[i];
-                cmp = fold.range.compareEnd(row, column);
-                if (cmp == -1) {
-                    str = this.getLine(fold.start.row).
-                                substring(lastFold.end.column, fold.start.column);
-                    break;
-                } else if (cmp == 0) {
-                    return null;
-                }
-                lastFold = fold;
+            
+        var lastFold = {
+            end: { column: 0 }
+        };
+        // TODO: Refactor to use getNextFoldTo function.
+        for (var i = 0; i < foldLine.folds.length; i++) {
+            var fold = foldLine.folds[i];
+            var cmp = fold.range.compareEnd(row, column);
+            if (cmp == -1) {
+                var str = this
+                    .getLine(fold.start.row)
+                    .substring(lastFold.end.column, fold.start.column);
+                break;
             }
-            if (!str) {
-                str = this.getLine(fold.start.row).
-                                substring(lastFold.end.column);
+            else if (cmp == 0) {
+                return null;
             }
-            if (trim == -1) {
-                return str.substring(0, column - lastFold.end.column);
-            } else if (trim == 1) {
-                return str.substring(column - lastFold.end.column)
-            } else {
-                return str;
-            }
+            lastFold = fold;
         }
+        if (!str)
+            str = this.getLine(fold.start.row).substring(lastFold.end.column);
+
+        if (trim == -1)
+            return str.substring(0, column - lastFold.end.column);
+        else if (trim == 1)
+            return str.substring(column - lastFold.end.column)
+        else
+            return str;
     }
 
     this.getFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData;
         var i = 0;
-        if(startFoldLine)
+        if (startFoldLine)
             i = foldData.indexOf(startFoldLine);
-        if(i == -1)
+        if (i == -1)
             i = 0;
         for (i; i < foldData.length; i++) {
             var foldLine = foldData[i];
@@ -11789,9 +11843,9 @@ function Folding() {
     this.getNextFold = function(docRow, startFoldLine) {
         var foldData = this.$foldData, ans;
         var i = 0;
-        if(startFoldLine)
+        if (startFoldLine)
             i = foldData.indexOf(startFoldLine);
-        if(i == -1)
+        if (i == -1)
             i = 0;
         for (i; i < foldData.length; i++) {
             var foldLine = foldData[i];
@@ -11808,7 +11862,7 @@ function Folding() {
             var foldLine = foldData[i],
                 end = foldLine.end.row,
                 start = foldLine.start.row;
-            if(end >= last) {
+            if (end >= last) {
                 if(start < last) {
                     if(start >= first)
                         rowCount -= last-start;
@@ -11841,76 +11895,52 @@ function Folding() {
      *      The new created Fold object or an existing fold object in case the
      *      passed in range fits an existing fold exactly.
      */
-    this.addFold = function(placeholder, startRow, startColumn, endRow, endColumn) {
-        var range;
+    this.addFold = function(placeholder, range) {
         var foldData = this.$foldData;
-        var foldRow  = null;
-        var foldLine;
-        var fold;
-        var argsFold;
-        var folds;
         var added = false;
 
-        if (placeholder instanceof Fold) {
-            argsFold = placeholder;
-            startRow = argsFold.range;
-            placeholder = argsFold.placeholder;
-        }
+        if (placeholder instanceof Fold)
+            var fold = placeholder;
+        else
+            fold = new Fold(range, placeholder);
 
-        // Normalize parameters.
-        if (!(startRow instanceof Range)) {
-            range = new Range(startRow, startColumn, endRow, endColumn);
-        } else {
-            range = startRow;
-            startRow = range.start.row;
-            startColumn = range.start.column;
-            endRow = range.end.row;
-            endColumn = range.end.column;
-        }
-
+        var startRow = fold.start.row;
+        var startColumn = fold.start.column;
+        var endRow = fold.end.row;
+        var endColumn = fold.end.column;
+        
         // --- Some checking ---
-        if (placeholder.length < 2) {
+        if (fold.placeholder.length < 2)
             throw "Placeholder has to be at least 2 characters";
-        }
 
-        if (startRow == endRow && endColumn - startColumn < 2) {
+        if (startRow == endRow && endColumn - startColumn < 2)
             throw "The range has to be at least 2 characters width";
-        }
 
-        fold = this.getFoldAt(startRow, startColumn, 1);
-        if (fold
-            && fold.range.isEnd(endRow, endColumn)
-            && fold.range.isStart(startRow, startColumn))
-        {
+        var existingFold = this.getFoldAt(startRow, startColumn, 1);
+        if (
+            existingFold
+            && existingFold.range.isEnd(endRow, endColumn)
+            && existingFold.range.isStart(startRow, startColumn)
+        ) {
             return fold;
         }
 
-        fold = this.getFoldAt(startRow, startColumn, 1);
-        if (fold && !fold.range.isStart(startRow, startColumn)) {
+        existingFold = this.getFoldAt(startRow, startColumn, 1);
+        if (existingFold && !existingFold.range.isStart(startRow, startColumn))
             throw "A fold can't start inside of an already existing fold";
-        }
 
-        fold = this.getFoldAt(endRow, endColumn, -1);
-        if (fold && !fold.range.isEnd(endRow, endColumn)) {
+        existingFold = this.getFoldAt(endRow, endColumn, -1);
+        if (existingFold && !existingFold.range.isEnd(endRow, endColumn))
             throw "A fold can't end inside of an already existing fold";
-        }
 
-        if (endRow >= this.doc.getLength()) {
+        if (endRow >= this.doc.getLength())
             throw "End of fold is outside of the document.";
-        }
 
-        if (endColumn > this.getLine(endRow).length
-            || startColumn > this.getLine(startRow).length)
-        {
+        if (endColumn > this.getLine(endRow).length || startColumn > this.getLine(startRow).length)
             throw "End of fold is outside of the document.";
-        }
-
-        // --- Start adding the fold ---
-        // Use the passed in fold or create a new one.
-        fold = argsFold || new Fold(range, placeholder);
 
         // Check if there are folds in the range we create the new fold for.
-        folds = this.getFoldsInRange(range);
+        var folds = this.getFoldsInRange(fold.range);
         if (folds.length > 0) {
             // Remove the folds from fold data.
             this.removeFolds(folds);
@@ -11919,12 +11949,13 @@ function Folding() {
         }
 
         for (var i = 0; i < foldData.length; i++) {
-            foldLine = foldData[i];
+            var foldLine = foldData[i];
             if (endRow == foldLine.start.row) {
                 foldLine.addFold(fold);
                 added = true;
                 break;
-            } else if (startRow == foldLine.end.row) {
+            }
+            else if (startRow == foldLine.end.row) {
                 foldLine.addFold(fold);
                 added = true;
                 if (!fold.sameRow) {
@@ -11937,18 +11968,17 @@ function Folding() {
                     }
                 }
                 break;
-            } else if (endRow <= foldLine.start.row) {
+            }
+            else if (endRow <= foldLine.start.row) {
                 break;
             }
         }
 
-        if (!added) {
+        if (!added)
             foldLine = this.$addFoldLine(new FoldLine(this.$foldData, fold));
-        }
 
-        if (this.$useWrapMode) {
+        if (this.$useWrapMode)
             this.$updateWrapData(foldLine.start.row, foldLine.start.row);
-        }
 
         // Notify that fold data has changed.
         this.$modified = true;
@@ -12392,6 +12422,84 @@ function FoldLine(foldData, folds) {
 }).call(FoldLine.prototype);
 
 exports.FoldLine = FoldLine;
+});/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('ace/edit_session/fold', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+/**
+ * Simple fold-data struct.
+ **/
+var Fold = exports.Fold = function(range, placeholder) {
+    this.foldLine = null;
+    this.placeholder = placeholder;
+    this.range = range;
+    this.start = range.start;
+    this.end = range.end;
+
+    this.sameRow = range.start.row == range.end.row;
+    this.subFolds = [];
+};
+
+(function() {
+
+    this.toString = function() {
+        return '"' + this.placeholder + '" ' + this.range.toString();
+    };
+
+    this.setFoldLine = function(foldLine) {
+        this.foldLine = foldLine;
+        this.subFolds.forEach(function(fold) {
+            fold.setFoldLine(foldLine);
+        });
+    };
+
+    this.clone = function() {
+        var range = this.range.clone();
+        var fold = new Fold(range, this.placeholder);
+        this.subFolds.forEach(function(subFold) {
+            fold.subFolds.push(subFold.clone());
+        });
+        return fold;
+    };
+
+}).call(Fold.prototype);
+
 });/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -15204,6 +15312,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], ".ace_editor {" +
   "    opacity: 0;" +
   "    background: transparent;" +
   "    appearance: none;" +
+  "    -moz-appearance: none;" +
   "    border: none;" +
   "    resize: none;" +
   "    outline: none;" +
