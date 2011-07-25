@@ -657,11 +657,11 @@ exports.launch = function(env) {
             var fold = session.getFoldAt(range.start.row, range.start.column);
             var column;
 
-            if(fold) {
+            if (fold) {
                 session.expandFold(fold);
                 selection.setSelectionRange(fold.range)
-            } else if(br) {
-                if(range.compare(br.row,br.column) == 1)
+            } else if (br) {
+                if (range.compare(br.row, br.column) == 1)
                     range.end = br;
                 else
                     range.start = br;
@@ -686,7 +686,7 @@ exports.launch = function(env) {
         } else {
             addFold = true;
         }
-        if(addFold) {
+        if (addFold) {
             var placeHolder = session.getTextRange(range);
             if(placeHolder.length < 3)
                 return;
