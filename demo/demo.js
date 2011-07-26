@@ -40,7 +40,9 @@
 
 define(function(require, exports, module) {
 
-exports.launch = function(env) {
+    require("pilot/fixoldbrowsers");
+
+    var env = {};
     var event = require("pilot/event");
     var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
