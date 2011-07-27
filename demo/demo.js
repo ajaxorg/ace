@@ -339,7 +339,7 @@ define(function(require, exports, module) {
         showGutterEl.checked = editor.getShowGutter();
         showPrintMarginEl.checked = editor.getShowPrintMargin();
         highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
-        showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
+        showHScrollEl.checked = editor.getHScrollBarAlwaysVisible();
         softTabEl.checked = session.getUseSoftTabs();
         behavioursEl.checked = editor.getBehavioursEnabled()
     }
@@ -418,7 +418,7 @@ define(function(require, exports, module) {
     });
 
     bindCheckbox("show_hscroll", function(checked) {
-        env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+        env.editor.setHScrollBarAlwaysVisible(checked);
     });
 
     bindCheckbox("soft_tab", function(checked) {
