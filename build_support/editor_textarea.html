@@ -81,7 +81,7 @@ function inject() {
     load.scripts = {};
     window.__ace_shadowed_load__ = load;
 
-    load('ace.js', 'text!ace/css/editor.css', function() {
+    load('ace.js', 'text!ace/view/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
         ace.options.mode = "javascript";
         var Event = ace.require('pilot/event');
