@@ -48,6 +48,7 @@ var UA = require("pilot/useragent")
 
 var Editor = require("ace/editor").Editor;
 var Buffer = require("ace/model/buffer").Buffer;
+var Window = require("ace/model/window").Window;
 var UndoManager = require("ace/undomanager").UndoManager;
 var Renderer = require("ace/view/window_view").WindowView;
 
@@ -61,7 +62,7 @@ window.__ace_shadowed__.edit = function(el) {
     doc.setUndoManager(new UndoManager());
     el.innerHTML = '';
 
-    var editor = new Editor(new Renderer(el, "ace/theme/textmate"));
+    var editor = new Editor(new Renderer(new Window(), el, "ace/theme/textmate"));
     editor.setSession(doc);
 
     var env = {};
@@ -297,7 +298,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
 
             switch (key) {
                 case "gutter":
-                    renderer.setShowGutter(toBool(value));
+                    editor.setShowGutter(toBool(value));
                 break;
 
                 case "mode":
@@ -331,12 +332,12 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                     switch (value) {
                         case "off":
                             session.setUseWrapMode(false);
-                            renderer.setPrintMarginColumn(80);
+                            editor.setPrintMarginColumn(80);
                         break;
                         case "40":
                             session.setUseWrapMode(true);
                             session.setWrapLimitRange(40, 40);
-                            renderer.setPrintMarginColumn(40);
+                            editor.setPrintMarginColumn(40);
                         break;
                         case "80":
                             session.setUseWrapMode(true);
@@ -346,7 +347,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options) {
                         case "free":
                             session.setUseWrapMode(true);
                             session.setWrapLimitRange(null, null);
-                            renderer.setPrintMarginColumn(80);
+                            editor.setPrintMarginColumn(80);
                         break;
                     }
                 break;

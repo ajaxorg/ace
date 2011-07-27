@@ -336,8 +336,8 @@ define(function(require, exports, module) {
         themeEl.value = editor.getTheme();
         highlightActiveEl.checked = editor.getHighlightActiveLine();
         showHiddenEl.checked = editor.getShowInvisibles();
-        showGutterEl.checked = editor.renderer.getShowGutter();
-        showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
+        showGutterEl.checked = editor.getShowGutter();
+        showPrintMarginEl.checked = editor.getShowPrintMargin();
         highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
         showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
         softTabEl.checked = session.getUseSoftTabs();
@@ -369,26 +369,26 @@ define(function(require, exports, module) {
 
     bindDropdown("soft_wrap", function(value) {
         var session = env.editor.getSession();
-        var renderer = env.editor.renderer;
+        var editor = env.editor;
         switch (value) {
             case "off":
                 session.setUseWrapMode(false);
-                renderer.setPrintMarginColumn(80);
+                editor.setPrintMarginColumn(80);
                 break;
             case "40":
                 session.setUseWrapMode(true);
                 session.setWrapLimitRange(40, 40);
-                renderer.setPrintMarginColumn(40);
+                editor.setPrintMarginColumn(40);
                 break;
             case "80":
                 session.setUseWrapMode(true);
                 session.setWrapLimitRange(80, 80);
-                renderer.setPrintMarginColumn(80);
+                editor.setPrintMarginColumn(80);
                 break;
             case "free":
                 session.setUseWrapMode(true);
                 session.setWrapLimitRange(null, null);
-                renderer.setPrintMarginColumn(80);
+                editor.setPrintMarginColumn(80);
                 break;
         }
     });
@@ -406,11 +406,11 @@ define(function(require, exports, module) {
     });
 
     bindCheckbox("show_gutter", function(checked) {
-        env.editor.renderer.setShowGutter(checked);
+        env.editor.setShowGutter(checked);
     });
 
     bindCheckbox("show_print_margin", function(checked) {
-        env.editor.renderer.setShowPrintMargin(checked);
+        env.editor.setShowPrintMargin(checked);
     });
 
     bindCheckbox("highlight_selected_word", function(checked) {
