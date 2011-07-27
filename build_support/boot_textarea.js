@@ -62,7 +62,7 @@ window.__ace_shadowed__.edit = function(el) {
     doc.setUndoManager(new UndoManager());
     el.innerHTML = '';
 
-    var editor = new Editor(new Renderer(new Window(), el, "ace/theme/textmate"));
+    var editor = new Editor(new Renderer(new Window("ace/theme/textmate"), el));
     editor.setSession(doc);
 
     var env = {};
