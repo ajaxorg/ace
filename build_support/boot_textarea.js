@@ -49,7 +49,8 @@ var UA = require("pilot/useragent")
 var Editor = require("ace/editor").Editor;
 var Buffer = require("ace/model/buffer").Buffer;
 var UndoManager = require("ace/undomanager").UndoManager;
-var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var Renderer = require("ace/view/window_view").WindowView;
+
 
 window.__ace_shadowed__.edit = function(el) {
     if (typeof(el) == "string") {

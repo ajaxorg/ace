@@ -46,7 +46,7 @@ define(function(require, exports, module) {
     var event = require("pilot/event");
     var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+    var Renderer = require("ace/view/window_view").WindowView;
     var theme = require("ace/theme/textmate");
     var Buffer = require("ace/model/buffer").Buffer;
 
