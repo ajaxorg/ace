@@ -47,7 +47,7 @@ var Event = require("pilot/event");
 var UA = require("pilot/useragent")
 
 var Editor = require("ace/editor").Editor;
-var EditSession = require("ace/edit_session").EditSession;
+var Buffer = require("ace/model/buffer").Buffer;
 var UndoManager = require("ace/undomanager").UndoManager;
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 
@@ -56,7 +56,7 @@ window.__ace_shadowed__.edit = function(el) {
         el = document.getElementById(el);
     }
 
-    var doc = new EditSession(Dom.getInnerText(el));
+    var doc = new Buffer(Dom.getInnerText(el));
     doc.setUndoManager(new UndoManager());
     el.innerHTML = '';
 

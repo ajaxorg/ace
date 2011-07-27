@@ -48,7 +48,7 @@ define(function(require, exports, module) {
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
     var theme = require("ace/theme/textmate");
-    var EditSession = require("ace/edit_session").EditSession;
+    var Buffer = require("ace/model/buffer").Buffer;
 
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var CssMode = require("ace/mode/css").Mode;
@@ -100,86 +100,86 @@ define(function(require, exports, module) {
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
-    docs.plain = new EditSession(loreIpsum);
+    docs.plain = new Buffer(loreIpsum);
     docs.plain.setUseWrapMode(true);
     docs.plain.setWrapLimitRange(80, 80)
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(require("text!demo/docs/javascript.js"));
+    docs.js = new Buffer(require("text!demo/docs/javascript.js"));
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(require("text!demo/docs/css.css"));
+    docs.css = new Buffer(require("text!demo/docs/css.css"));
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.scss = new EditSession(require("text!demo/docs/scss.scss"));
+    docs.scss = new Buffer(require("text!demo/docs/scss.scss"));
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(require("text!demo/docs/html.html"));
+    docs.html = new Buffer(require("text!demo/docs/html.html"));
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(require("text!demo/docs/python.py"));
+    docs.python = new Buffer(require("text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(require("text!demo/docs/php.php"));
+    docs.php = new Buffer(require("text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(require("text!demo/docs/java.java"));
+    docs.java = new Buffer(require("text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(require("text!demo/docs/ruby.rb"));
+    docs.ruby = new Buffer(require("text!demo/docs/ruby.rb"));
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(require("text!demo/docs/csharp.cs"));
+    docs.csharp = new Buffer(require("text!demo/docs/csharp.cs"));
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(require("text!demo/docs/cpp.cpp"));
+    docs.c_cpp = new Buffer(require("text!demo/docs/cpp.cpp"));
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(require("text!demo/docs/coffeescript.coffee"));
+    docs.coffee = new Buffer(require("text!demo/docs/coffeescript.coffee"));
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.json = new EditSession(require("text!demo/docs/json.json"));
+    docs.json = new Buffer(require("text!demo/docs/json.json"));
     docs.json.setMode(new JsonMode());
     docs.json.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(require("text!demo/docs/perl.pl"));
+    docs.perl = new Buffer(require("text!demo/docs/perl.pl"));
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.clojure = new EditSession(require("text!demo/docs/clojure.clj"));
+    docs.clojure = new Buffer(require("text!demo/docs/clojure.clj"));
     docs.clojure.setMode(new ClojureMode());
     docs.clojure.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(require("text!demo/docs/ocaml.ml"));
+    docs.ocaml = new Buffer(require("text!demo/docs/ocaml.ml"));
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(require("text!demo/docs/svg.svg"));
+    docs.svg = new Buffer(require("text!demo/docs/svg.svg"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(require("text!demo/docs/textile.textile"));
+    docs.textile = new Buffer(require("text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.groovy = new EditSession(require("text!demo/docs/groovy.groovy"));
+    docs.groovy = new Buffer(require("text!demo/docs/groovy.groovy"));
     docs.groovy.setMode(new GroovyMode());
     docs.groovy.setUndoManager(new UndoManager());
 
-    docs.scala = new EditSession(require("text!demo/docs/scala.scala"));
+    docs.scala = new Buffer(require("text!demo/docs/scala.scala"));
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
