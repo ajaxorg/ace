@@ -4,6 +4,3 @@
 [submodule "node_modules/dryice"]
 	path = node_modules/dryice
 	url = git://github.com/ajaxorg/dryice.git
-[submodule "node_modules/pilot"]
-    path = node_modules/pilot
-    url = git://github.com/ajaxorg/pilot.git

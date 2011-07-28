@@ -19,8 +19,7 @@
     var require = {
         paths: {
             demo: "..",
-            ace: "../../lib/ace",
-            pilot: "../../support/pilot/lib/pilot"
+            ace: "../../lib/ace"
         }
     };
 </script>
@@ -32,7 +31,7 @@ require(["ace/ext/static_highlight", "ace/mode/javascript", "ace/theme/twilight"
     var highlighter = require("ace/ext/static_highlight");
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     var theme = require("ace/theme/twilight");
-    var dom = require("pilot/dom");
+    var dom = require("ace/lib/dom");
 
     var codeEl = document.getElementById("code");
     var data = document.body.innerHTML;

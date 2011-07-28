@@ -89,7 +89,6 @@ var aceHome = __dirname;
 console.log('# ace ---------');
 
 var aceProject = [
-    aceHome + '/node_modules/pilot/lib',
     aceHome + '/lib',
     aceHome
 ];
@@ -135,7 +134,7 @@ copy({
         copy.source.commonjs({
             project: project,
             require: [
-                "pilot/fixoldbrowsers",
+                "ace/lib/fixoldbrowsers",
                 "ace/ace"
             ]
         })
@@ -274,7 +273,6 @@ console.log('# ace worker ---------');
     console.log("worker for " + mode + " mode");
     var worker = copy.createDataObject();
     var workerProject = copy.createCommonJsProject([
-        aceHome + '/node_modules/pilot/lib',
         aceHome + '/lib'
     ]);
     copy({
@@ -282,9 +280,9 @@ console.log('# ace worker ---------');
             copy.source.commonjs({
                 project: workerProject,
                 require: [
-                    'pilot/fixoldbrowsers',
-                    'pilot/event_emitter',
-                    'pilot/oop',
+                    'ace/lib/fixoldbrowsers',
+                    'ace/lib/event_emitter',
+                    'ace/lib/oop',
                     'ace/mode/' + mode + '_worker'
                 ]
             })

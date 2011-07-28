@@ -40,11 +40,11 @@
 
 define(function(require, exports, module) {
 
-require("pilot/fixoldbrowsers");
+require("ace/lib/fixoldbrowsers");
 var env = {};
     
 var net = require("ace/lib/net");
-var event = require("pilot/event");
+var event = require("ace/lib/event");
 var Range = require("ace/range").Range;
 var Editor = require("ace/editor").Editor;
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
