@@ -37,7 +37,7 @@
 
 define(function(require, exports, module) {
 
-    var dom = require("pilot/dom");
+    var dom = require("ace/lib/dom");
 
     var cssText = %css%;
 

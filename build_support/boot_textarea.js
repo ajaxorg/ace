@@ -40,11 +40,9 @@
 
 var require = window.__ace_shadowed__.require;
 
-require("pilot/index");
-
-var Dom = require("pilot/dom");
-var Event = require("pilot/event");
-var UA = require("pilot/useragent")
+var Dom = require("ace/lib/dom");
+var Event = require("ace/lib/event");
+var UA = require("ace/lib/useragent")
 
 var Editor = require("ace/editor").Editor;
 var Buffer = require("ace/model/buffer").Buffer;
