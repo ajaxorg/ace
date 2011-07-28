@@ -1,8 +1,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-
-    font-family: "Menlo", "Monaco", "Courier New", monospace;
+    font-family: Monaco, "Menlo", "Courier New", monospace;
     font-size: 12px;
 }
 
@@ -98,7 +97,6 @@
 }
 
 .ace_text-layer {
-    font-family: Monaco, "Courier New", monospace;
     color: black;
 }
 
