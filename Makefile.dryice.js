@@ -201,7 +201,8 @@ console.log('# ace modes ---------');
 project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "xml", "ruby", "java", "c_cpp",
-    "coffee", "perl", "csharp", "svg", "clojure", "scss", "json"
+    "coffee", "perl", "csharp", "svg", "clojure", "scss", "json", "groovy",
+    "ocaml", "scala", "textile"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
