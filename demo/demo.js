@@ -594,7 +594,7 @@ exports.launch = function(env) {
 
     // Fake-Print with custom lookup-sender-match function.
     canon.addCommand({
-        name: "save",
+        name: "print",
         bindKey: {
             win: "Ctrl-P",
             mac: "Command-P",
