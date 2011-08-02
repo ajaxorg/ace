@@ -1944,7 +1944,7 @@ function parseKeys(keys, val, ret) {
         return {
             key: key,
             hashId: hashId
-        }   
+        }
     } else {
         (ret[hashId] || (ret[hashId] = {}))[key] = val;
     }
@@ -2014,7 +2014,7 @@ function findKeyCommand(env, sender, hashId, textOrKey) {
         }
     }
     
-    var ckbr = commmandKeyBinding[sender]
+    var ckbr = commmandKeyBinding[sender];
     return ckbr && ckbr[hashId] && ckbr[hashId][textOrKey];
 }
 
@@ -2076,8 +2076,32 @@ function upgradeType(name, param) {
 
 function removeCommand(command) {
     var name = (typeof command === 'string' ? command : command.name);
+    command = commands[name];
     delete commands[name];
     lang.arrayRemove(commandNames, name);
+
+    // exaustive search is a little bit brute force but since removeCommand is
+    // not a performance critical operation this should be OK
+    var ckb = commmandKeyBinding;
+    for (var k1 in ckb) {
+        for (var k2 in ckb[k1]) {
+            for (var k3 in ckb[k1][k2]) {
+                if (ckb[k1][k2][k3] == command)
+                    delete ckb[k1][k2][k3];
+            }
+        }
+    }
+    
+    var ckbf = commandKeyBindingFunc;
+    for (var k1 in ckbf) {
+        for (var k2 in ckbf[k1]) {
+            ckbf[k1][k2].forEach(function(cmd, i) {
+                if (cmd.command == command) {
+                    ckbf[k1][k2].splice(i, 1);
+                }
+            })
+        }
+    }
 };
 
 function getCommand(name) {
