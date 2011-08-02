@@ -6302,7 +6302,14 @@ var Editor =function(renderer, session) {
             return;
 
         var rows = this.$getSelectedRows();
-        this.session.remove(new Range(rows.first, 0, rows.last+1, 0));
+        if (rows.last == 0 || rows.last+1 < this.session.getLength())
+            var range = new Range(rows.first, 0, rows.last+1, 0)
+        else
+            var range = new Range(
+                rows.first-1, this.session.getLine(rows.first).length,
+                rows.last, this.session.getLine(rows.last).length
+            );
+        this.session.remove(range);
         this.clearSelection();
     };
 
@@ -10640,7 +10647,6 @@ var Tokenizer = function(rules) {
         }
 
         this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
-        
     }
 };
 
@@ -10664,11 +10670,12 @@ var Tokenizer = function(rules) {
         
         while (match = re.exec(line)) {
             var type = "text";
+            var rule = null;
             var value = [match[0]];
 
-            for ( var i = 0; i < match.length-2; i++) {
+            for (var i = 0; i < match.length-2; i++) {
                 if (match[i + 1] !== undefined) {
-                    var rule = state[mapping[i].rule];
+                    rule = state[mapping[i].rule];
                     
                     if (mapping[i].len > 1) {
                         value = match.slice(i+2, i+1+mapping[i].len);
@@ -10699,9 +10706,10 @@ var Tokenizer = function(rules) {
                     value = [value.join("")];
                     type = [type];
                 }
-            
                 for (var i = 0; i < value.length; i++) {
-                    if (token.type !== type[i]) {
+                    if ((!rule || rule.merge || type[i] === "text") && token.type === type[i]) {
+                        token.value += value[i];
+                    } else {
                         if (token.type) {
                             tokens.push(token);
                         }
@@ -10710,8 +10718,6 @@ var Tokenizer = function(rules) {
                             type: type[i],
                             value: value[i]
                         }
-                    } else {
-                        token.value += value[i];
                     }
                 }
             }
@@ -10782,13 +10788,13 @@ var TextHighlightRules = function() {
     // regexps are ordered -> the first match is used
 
     this.$rules = {
-        "start" : [ {
+        "start" : [{
             token : "empty_line",
             regex : '^$'
         }, {
             token : "text",
             regex : ".+"
-        } ]
+        }]
     };
 };
 
@@ -14670,17 +14676,10 @@ var Text = function(parentEl) {
         var screenColumn = 0;
         var self = this;
 
-        function addToken(token, value) {
-            screenColumn = self.$renderToken(
-                stringBuilder, screenColumn, token, value
-            );
-        }
-
-        if (!splits || splits.length == 0) {
+        if (!splits || splits.length == 0)
             splitChars = Number.MAX_VALUE;
-        } else {
+        else
             splitChars = splits[0];
-        }
 
         if (!onlyContents) {
             stringBuilder.push("<div class='ace_line' style='height:",
@@ -14694,11 +14693,17 @@ var Text = function(parentEl) {
             var value = token.value;
 
             if (chars + value.length < splitChars) {
-                addToken(token, value);
+                screenColumn = self.$renderToken(
+                    stringBuilder, screenColumn, token, value
+                );
                 chars += value.length;
-            } else {
+            }
+            else {
                 while (chars + value.length >= splitChars) {
-                    addToken(token, value.substring(0, splitChars - chars));
+                    screenColumn = self.$renderToken(
+                        stringBuilder, screenColumn, 
+                        token, value.substring(0, splitChars - chars)
+                    );
                     value = value.substring(splitChars - chars);
                     chars = splitChars;
                     
@@ -14716,17 +14721,18 @@ var Text = function(parentEl) {
                 }
                 if (value.length != 0) {
                     chars += value.length;
-                    addToken(token, value);
+                    screenColumn = self.$renderToken(
+                        stringBuilder, screenColumn, token, value
+                    );
                 }
             }
         }
 
         if (this.showInvisibles) {
-            if (lastRow !== this.session.getLength() - 1) {
+            if (lastRow !== this.session.getLength() - 1)
                 stringBuilder.push("<span class='ace_invisible'>" + this.EOL_CHAR + "</span>");
-            } else {
+            else
                 stringBuilder.push("<span class='ace_invisible'>" + this.EOF_CHAR + "</span>");
-            }
         }
         stringBuilder.push("</div>");
     };
@@ -14810,6 +14816,9 @@ var Text = function(parentEl) {
 
     this.destroy = function() {
         clearInterval(this.$pollSizeChangesTimer);
+        if (this.$measureNode)
+            this.$measureNode.parentNode.removeChild(this.$measureNode);
+        delete this.$measureNode;
     };
 
 }).call(Text.prototype);
