@@ -38,14 +38,29 @@
     Hjelle)
   - Vibrant Ink (Michael Schwartz)
 
+* Small Features/Enhancements
+  - Lots of render performance optimizations (Harutyun Amirjanyan)
+  - Improved Ruby highlighting (Chris Wanstrath, Trent Ogren)
+  - Improved PHP highlighting (Thomas Hruska)
+  - Improved CSS highlighting (Sean Kellogg)
+  - Clicks which cause the editor to be focused don't reset the selection
+  - Make padding text layer specific so that print margin and active line
+    highlight are not affected (Irakli Gozalishvili)
+  - Added setFontSize method
+  - Improved vi keybindings (Trent Ogren)
+  - When unfocused make cursor transparent instead of removing it (Harutyun
+    Amirjanyan)
+  - Support for matching groups in tokenizer with arrays of tokens (Chris
+    Spencer)
+
 * Bug fixes
   - Add support for the new OSX scroll bars
-  - properly highlight JavaScript regexp literals
-  - proper handling of unicode characters in JavaScript identifiers
-  - proper highlighting of Ruby namespaces (Chris Wanstrath)
-  - fix remove lines command on last line (Harutyun Amirjanyan)
-  - Clicks which cause the editor to be focused don't reset the selection
-  - fix scroll wheel sluggishness in Safari
+  - Properly highlight JavaScript regexp literals
+  - Proper handling of unicode characters in JavaScript identifiers
+  - Fix remove lines command on last line (Harutyun Amirjanyan)
+  - Fix scroll wheel sluggishness in Safari
+  - Make keyboard infrastructure route keys like []^$ the right way (Julian
+    Viereck)
 
 2011.02.14, Version 0.1.6
 
