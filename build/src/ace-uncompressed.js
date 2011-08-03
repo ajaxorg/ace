@@ -15633,6 +15633,303 @@ define("text/ace/css/editor.css", [], ".ace_editor {" +
   "}" +
   "");
 
+define("text/ace-0.2.0/demo/styles.css", [], "html {" +
+  "    height: 100%;" +
+  "    width: 100%;" +
+  "    overflow: hidden;" +
+  "}" +
+  "" +
+  "body {" +
+  "    overflow: hidden;" +
+  "    margin: 0;" +
+  "    padding: 0;" +
+  "    height: 100%;" +
+  "    width: 100%;" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;" +
+  "    font-size: 12px;" +
+  "    background: rgb(14, 98, 165);" +
+  "    color: white;" +
+  "}" +
+  "" +
+  "#logo {" +
+  "    padding: 15px;" +
+  "    margin-left: 65px;" +
+  "}" +
+  "" +
+  "#editor {" +
+  "    position: absolute;" +
+  "    top:  0px;" +
+  "    left: 280px;" +
+  "    bottom: 0px;" +
+  "    right: 0px;" +
+  "    background: white;" +
+  "}" +
+  "" +
+  "#controls {" +
+  "    padding: 5px;" +
+  "}" +
+  "" +
+  "#controls td {" +
+  "    text-align: right;" +
+  "}" +
+  "" +
+  "#controls td + td {" +
+  "    text-align: left;" +
+  "}" +
+  "" +
+  "#cockpitInput {" +
+  "    position: absolute;" +
+  "    left: 280px;" +
+  "    right: 0px;" +
+  "    bottom: 0;" +
+  "" +
+  "    border: none; outline: none;" +
+  "    font-family: consolas, courier, monospace;" +
+  "    font-size: 120%;" +
+  "}" +
+  "" +
+  "#cockpitOutput {" +
+  "    padding: 10px;" +
+  "    margin: 0 15px;" +
+  "    border: 1px solid #AAA;" +
+  "    -moz-border-radius-topleft: 10px;" +
+  "    -moz-border-radius-topright: 10px;" +
+  "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
+  "    background: #DDD; color: #000;" +
+  "}");
+
+define("text/ace-0.2.0/textarea/style.css", [], "body {" +
+  "    margin:0;" +
+  "    padding:0;" +
+  "    background-color:#e6f5fc;" +
+  "    " +
+  "}" +
+  "" +
+  "H2, H3, H4 {" +
+  "    font-family:Trebuchet MS;" +
+  "    font-weight:bold;" +
+  "    margin:0;" +
+  "    padding:0;" +
+  "}" +
+  "" +
+  "H2 {" +
+  "    font-size:28px;" +
+  "    color:#263842;" +
+  "    padding-bottom:6px;" +
+  "}" +
+  "" +
+  "H3 {" +
+  "    font-family:Trebuchet MS;" +
+  "    font-weight:bold;" +
+  "    font-size:22px;" +
+  "    color:#253741;" +
+  "    margin-top:43px;" +
+  "    margin-bottom:8px;" +
+  "}" +
+  "" +
+  "H4 {" +
+  "    font-family:Trebuchet MS;" +
+  "    font-weight:bold;" +
+  "    font-size:21px;" +
+  "    color:#222222;" +
+  "    margin-bottom:4px;" +
+  "}" +
+  "" +
+  "P {" +
+  "    padding:13px 0;" +
+  "    margin:0;" +
+  "    line-height:22px;" +
+  "}" +
+  "" +
+  "UL{" +
+  "    line-height : 22px;" +
+  "}" +
+  "" +
+  "PRE{" +
+  "    background : #333;" +
+  "    color : white;" +
+  "    padding : 10px;" +
+  "}" +
+  "" +
+  "#header {" +
+  "    height : 227px;" +
+  "    position:relative;" +
+  "    overflow:hidden;" +
+  "    background: url(images/background.png) repeat-x 0 0;" +
+  "    border-bottom:1px solid #c9e8fa;   " +
+  "}" +
+  "" +
+  "#header .content .signature {" +
+  "    font-family:Trebuchet MS;" +
+  "    font-size:11px;" +
+  "    color:#ebe4d6;" +
+  "    position:absolute;" +
+  "    bottom:5px;" +
+  "    right:42px;" +
+  "    letter-spacing : 1px;" +
+  "}" +
+  "" +
+  ".content {" +
+  "    width:970px;" +
+  "    position:relative;" +
+  "    overflow:hidden;" +
+  "    margin:0 auto;" +
+  "}" +
+  "" +
+  "#header .content {" +
+  "    height:184px;" +
+  "    margin-top:22px;" +
+  "}" +
+  "" +
+  "#header .content .logo {" +
+  "    width  : 282px;" +
+  "    height : 184px;" +
+  "    background:url(images/logo.png) no-repeat 0 0;" +
+  "    position:absolute;" +
+  "    top:0;" +
+  "    left:0;" +
+  "}" +
+  "" +
+  "#header .content .title {" +
+  "    width  : 605px;" +
+  "    height : 58px;" +
+  "    background:url(images/ace.png) no-repeat 0 0;" +
+  "    position:absolute;" +
+  "    top:98px;" +
+  "    left:329px;" +
+  "}" +
+  "" +
+  "#wrapper {" +
+  "    background:url(images/body_background.png) repeat-x 0 0;" +
+  "    min-height:250px;" +
+  "}" +
+  "" +
+  "#wrapper .content {" +
+  "    font-family:Arial;" +
+  "    font-size:14px;" +
+  "    color:#222222;" +
+  "    width:1000px;" +
+  "}" +
+  "" +
+  "#wrapper .content .column1 {" +
+  "    position:relative;" +
+  "    overflow:hidden;" +
+  "    float:left;" +
+  "    width:315px;" +
+  "    margin-right:31px;" +
+  "}" +
+  "" +
+  "#wrapper .content .column2 {" +
+  "    position:relative;" +
+  "    overflow:hidden;" +
+  "    float:left;" +
+  "    width:600px;" +
+  "    padding-top:47px;" +
+  "}" +
+  "" +
+  ".fork_on_github {" +
+  "    width:310px;" +
+  "    height:80px;" +
+  "    background:url(images/fork_on_github.png) no-repeat 0 0;" +
+  "    position:relative;" +
+  "    overflow:hidden;" +
+  "    margin-top:49px;" +
+  "    cursor:pointer;" +
+  "}" +
+  "" +
+  ".fork_on_github:hover {" +
+  "    background-position:0 -80px;" +
+  "}" +
+  "" +
+  ".divider {" +
+  "    height:3px;" +
+  "    background-color:#bedaea;" +
+  "    margin-bottom:3px;" +
+  "}" +
+  "" +
+  ".menu {" +
+  "    padding:23px 0 0 24px;" +
+  "}" +
+  "" +
+  "UL.content-list {" +
+  "    padding:15px;" +
+  "    margin:0;" +
+  "}" +
+  "" +
+  "UL.menu-list {" +
+  "    padding:0;" +
+  "    margin:0 0 20px 0;" +
+  "    list-style-type:none;" +
+  "    line-height : 16px;" +
+  "}" +
+  "" +
+  "UL.menu-list LI {" +
+  "    color:#2557b4;" +
+  "    font-family:Trebuchet MS;" +
+  "    font-size:14px;" +
+  "    padding:7px 0;" +
+  "    border-bottom:1px dotted #d6e2e7;" +
+  "}" +
+  "" +
+  "UL.menu-list LI:last-child {" +
+  "    border-bottom:0;" +
+  "}" +
+  "" +
+  "A {" +
+  "    color:#2557b4;" +
+  "    text-decoration:none;" +
+  "}" +
+  "" +
+  "A:hover {" +
+  "    text-decoration:underline;" +
+  "}" +
+  "" +
+  "P#first{" +
+  "    background : rgba(255,255,255,0.5);" +
+  "    padding : 20px;" +
+  "    font-size : 16px;" +
+  "    line-height : 24px;" +
+  "    margin : 0 0 20px 0;" +
+  "}" +
+  "" +
+  "#footer {" +
+  "    height:40px;" +
+  "    position:relative;" +
+  "    overflow:hidden;" +
+  "    background:url(images/bottombar.png) repeat-x 0 0;" +
+  "    position:relative;" +
+  "    margin-top:40px;" +
+  "}" +
+  "" +
+  "UL.menu-footer {" +
+  "    padding:0;" +
+  "    margin:8px 11px 0 0;" +
+  "    list-style-type:none;" +
+  "    float:right;" +
+  "}" +
+  "" +
+  "UL.menu-footer LI {" +
+  "    color:white;" +
+  "    font-family:Arial;" +
+  "    font-size:12px;" +
+  "    display:inline-block;" +
+  "    margin:0 1px;" +
+  "}" +
+  "" +
+  "UL.menu-footer LI A {" +
+  "    color:#8dd0ff;" +
+  "    text-decoration:none;" +
+  "}" +
+  "" +
+  "UL.menu-footer LI A:hover {" +
+  "    text-decoration:underline;" +
+  "}" +
+  "" +
+  "" +
+  "" +
+  "" +
+  "");
+
 define("text/build/demo/styles.css", [], "html {" +
   "    height: 100%;" +
   "    width: 100%;" +
