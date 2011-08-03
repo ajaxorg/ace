@@ -8,7 +8,7 @@
   - Unstructured code folding
   - Will be the basis for language aware folding
 
-* Mode bahaviours (Chris Spencer)
+* Mode behaviours (Chris Spencer)
   - Adds mode specific hooks which allow transformations of entered text
   - Autoclosing of braces, paranthesis and quotation marks in C style modes
   - Autoclosing of angular brackets in XML style modes
