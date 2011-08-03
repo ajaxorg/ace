@@ -570,7 +570,7 @@ define(function(require, exports, module) {
     });
 
     // Fake-Print with custom lookup-sender-match function.
-    canon.addCommand({
+    commands.addCommand({
         name: "print",
         bindKey: {
             win: "Ctrl-P",
