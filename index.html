@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Editor</title>
+    <title>Ace Kitchen Sink</title>
     <meta name="author" content="Fabian Jakobs">
     <link rel="stylesheet" href="demo/styles.css" type="text/css" media="screen" charset="utf-8">
 </head>
@@ -685,6 +685,7 @@ object implicits extends Application {
 }</script>
   <input id="cockpitInput" type="text"/>
 
+<!-- DEVEL-->
   <script type="text/javascript">
       var require = {
           paths: {
@@ -696,5 +697,14 @@ object implicits extends Application {
       };
   </script>
   <script src="demo/require.js" data-main="demo/boot" type="text/javascript" charset="utf-8"></script>
+<!--DEVEL -->
+  
+<!--PACKAGE
+  <script src="demo/kitchen-sink.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+    require("demo/boot");
+  </script>
+PACKAGE-->
+
 </body>
 </html>

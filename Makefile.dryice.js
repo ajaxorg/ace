@@ -80,7 +80,9 @@ console.log('# ace ---------');
 
 var aceProject = [
     aceHome + '/support/pilot/lib',
-    aceHome + '/lib'
+    aceHome + '/support/cockpit/lib',
+    aceHome + '/lib',
+    aceHome
 ];
 
 if (target == "normal") {
@@ -90,6 +92,8 @@ if (target == "normal") {
         source: "build_support/editor.html",
         dest:   targetDir + '/editor.html'
     });
+    
+    demo();
 } else if(target == "bm") {
     copy({
         source: "build_support/editor_textarea.html",
@@ -309,7 +313,6 @@ project.assumeAllFilesLoaded();
 console.log('# cockpit ---------');
 
 project.assumeAllFilesLoaded();
-project.addRoot(aceHome + '/support/cockpit/lib');
 
 var cockpit = copy.createDataObject();
 copy({
@@ -351,3 +354,66 @@ copy({
     source: cockpit,
     dest: 'build/src/cockpit-uncompressed.js'
 });
+
+function demo() {
+    console.log('# kitchen sink ---------');
+
+    copy({
+        source: "index.html",
+        dest:   "build/kitchen-sink.html",
+        filter: [ function(data) {
+            return (data
+                .replace("DEVEL-->", "")
+                .replace("<!--DEVEL", "")
+                .replace("PACKAGE-->", "")
+                .replace("<!--PACKAGE", ""));
+        }]
+    });
+
+    var project = copy.createCommonJsProject(aceProject);
+    var demo = copy.createDataObject();
+    copy({
+        source: [
+            'build_support/mini_require.js'
+        ],
+        dest: demo
+    });
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: project,
+                require: [ "cockpit/index", "pilot/index", "ace/defaults", "demo/boot" ]
+            })
+        ],
+        filter: [ copy.filter.moduleDefines ],
+        dest: demo
+    });
+    copy({
+        source: {
+            root: project,
+            include: /.*\.css$/,
+            exclude: /tests?\//
+        },
+        filter: [ copy.filter.addDefines ],
+        dest: demo
+    });
+    copy({
+        source: {
+            root: aceHome + '/support/cockpit/lib',
+            include: /.*\.css$|.*\.html$/,
+            exclude: /tests?\//
+        },
+        filter: [ copy.filter.addDefines ],
+        dest: demo
+    });
+
+    copy({
+        source: demo,
+        filter: copy.filter.uglifyjs,
+        dest: 'build/demo/kitchen-sink.js'
+    });
+    copy({
+        source: demo,
+        dest: 'build/demo/kitchen-sink-uncompressed.js'
+    });
+}
