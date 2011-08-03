@@ -2934,6 +2934,8 @@ exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) =
 /** Is the user using a browser that identifies itself as WebKit */
 exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
 
+exports.isChrome = parseFloat(ua.split(" Chrome/")[1]) || undefined;
+
 exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
 
 exports.isIPad = ua.indexOf("iPad") >= 0;
@@ -4177,23 +4179,6 @@ var checks = require("pilot/typecheck");
 var canon = require('pilot/canon');
 
 /**
- * 
- */
-var helpMessages = {
-    plainPrefix:
-        '<h2>Welcome to Skywriter - Code in the Cloud</h2><ul>' +
-        '<li><a href="http://labs.mozilla.com/projects/skywriter" target="_blank">Home Page</a></li>' +
-        '<li><a href="https://wiki.mozilla.org/Labs/Skywriter" target="_blank">Wiki</a></li>' +
-        '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/UserGuide" target="_blank">User Guide</a></li>' +
-        '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/Tips" target="_blank">Tips and Tricks</a></li>' +
-        '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/FAQ" target="_blank">FAQ</a></li>' +
-        '<li><a href="https://wiki.mozilla.org/Labs/Skywriter/DeveloperGuide" target="_blank">Developers Guide</a></li>' +
-        '</ul>',
-    plainSuffix:
-        'For more information, see the <a href="https://wiki.mozilla.org/Labs/Skywriter">Skywriter Wiki</a>.'
-};
-
-/**
  * 'help' command
  */
 var helpCommandSpec = {
@@ -4218,10 +4203,6 @@ var helpCommandSpec = {
                     'No description for ' + args.search);
         } else {
             var showHidden = false;
-
-            if (!args.search && helpMessages.plainPrefix) {
-                output.push(helpMessages.plainPrefix);
-            }
 
             if (command) {
                 // We must be looking at sub-commands
@@ -4273,10 +4254,6 @@ var helpCommandSpec = {
                 output.push('</tr>');
             }
             output.push('</table>');
-
-            if (!args.search && helpMessages.plainSuffix) {
-                output.push(helpMessages.plainSuffix);
-            }
         }
 
         request.done(output.join(''));
@@ -4356,53 +4333,16 @@ var evalCommandSpec = {
     }
 };
 
-/**
- * 'version' command
- */
-var versionCommandSpec = {
-    name: 'version',
-    description: 'show the Skywriter version',
-    hidden: true,
-    exec: function(env, args, request) {
-        var version = 'Skywriter ' + skywriter.versionNumber + ' (' +
-                skywriter.versionCodename + ')';
-        request.done(version);
-    }
-};
-
-/**
- * 'skywriter' command
- */
-var skywriterCommandSpec = {
-    name: 'skywriter',
-    hidden: true,
-    exec: function(env, args, request) {
-        var index = Math.floor(Math.random() * messages.length);
-        request.done('Skywriter ' + messages[index]);
-    }
-};
-var messages = [
-    'really wants you to trick it out in some way.',
-    'is your Web editor.',
-    'would love to be like Emacs on the Web.',
-    'is written on the Web platform, so you can tweak it.'
-];
-
-
 var canon = require('pilot/canon');
 
 exports.startup = function(data, reason) {
     canon.addCommand(helpCommandSpec);
     canon.addCommand(evalCommandSpec);
-    // canon.addCommand(versionCommandSpec);
-    canon.addCommand(skywriterCommandSpec);
 };
 
 exports.shutdown = function(data, reason) {
     canon.removeCommand(helpCommandSpec);
     canon.removeCommand(evalCommandSpec);
-    // canon.removeCommand(versionCommandSpec);
-    canon.removeCommand(skywriterCommandSpec);
 };
 
 
@@ -6617,6 +6557,9 @@ var Editor =function(renderer, session) {
             this.$search.set(options);
 
         var range = this.$search.find(this.session);
+        if (!range)
+            return;
+
         this.$tryReplace(range, replacement);
         if (range !== null)
             this.selection.setSelectionRange(range);
@@ -6781,13 +6724,15 @@ var TextInput = function(parentNode, host) {
                     value = value.slice(0, -1);
                     if (value)
                         host.onTextInput(value, !pasted);
-                } else {
+                }
+                else {
                     host.onTextInput(value, !pasted);
                 }
 
                 // If editor is no longer focused we quit immediately, since
-                // it means that something else like CLI is in charge now.
-                if (!isFocused()) return false;
+                // it means that something else is in charge now.
+                if (!isFocused())
+                    return false;
             }
         }
 
@@ -6800,6 +6745,13 @@ var TextInput = function(parentNode, host) {
     }
 
     var onTextInput = function(e) {
+        setTimeout(function () {
+            if (!inCompostion)
+                sendText(e.data);                
+        }, 0);
+    };
+    
+    var onKeyPress = function(e) {
         if (useragent.isIE && text.value.charCodeAt(0) > 128) return;
         setTimeout(function() {
             if (!inCompostion)
@@ -6809,10 +6761,6 @@ var TextInput = function(parentNode, host) {
 
     var onCompositionStart = function(e) {
         inCompostion = true;
-        if (!useragent.isIE) {
-            sendText();
-            text.value = "";
-        };
         host.onCompositionStart();
         if (!useragent.isGecko) setTimeout(onCompositionUpdate, 0);
     };
@@ -6825,14 +6773,6 @@ var TextInput = function(parentNode, host) {
     var onCompositionEnd = function(e) {
         inCompostion = false;
         host.onCompositionEnd();
-        if (useragent.isGecko) {
-          sendText();
-        } else {
-          setTimeout(function () {
-              if (!inCompostion)
-                  sendText();
-          }, 0);
-        }
     };
 
     var onCopy = function(e) {
@@ -6863,7 +6803,6 @@ var TextInput = function(parentNode, host) {
     };
 
     event.addCommandKeyListener(text, host.onCommandKey.bind(host));
-    event.addListener(text, "keypress", onTextInput);
     if (useragent.isIE) {
         var keytable = { 13:1, 27:1 };
         event.addListener(text, "keyup", function (e) {
@@ -6875,7 +6814,23 @@ var TextInput = function(parentNode, host) {
             inCompostion ? onCompositionUpdate() : onCompositionStart();
         });
     };
-    event.addListener(text, "textInput", onTextInput);
+
+    if (text.attachEvent) {
+        // Old IE + Opera
+        event.addListener(text, "propertychange", onKeyPress);
+    }
+    else {
+        if (useragent.isChrome || useragent.isSafari)
+            event.addListener(text, "textInput", onTextInput);
+        else if (useragent.isIE)
+            // IE9
+            event.addListener(text, "textinput", onTextInput);
+        else
+            // All browsers except old IE
+            event.addListener(text, "input", onTextInput);
+    }
+    
+    
     event.addListener(text, "paste", function(e) {
         // Mark that the next input text comes from past.
         pasted = true;
@@ -6884,16 +6839,13 @@ var TextInput = function(parentNode, host) {
         if (e.clipboardData && e.clipboardData.getData) {
             sendText(e.clipboardData.getData("text/plain"));
             e.preventDefault();
-        } else
-        // If a browser doesn't support any of the things above, use the regular
-        // method to detect the pasted input.
-        {
-            onTextInput();
+        } 
+        else {
+            // If a browser doesn't support any of the things above, use the regular
+            // method to detect the pasted input.
+            onKeyPress();
         }
     });
-    if (!useragent.isIE) {
-        event.addListener(text, "propertychange", onTextInput);
-    };
 
     if (useragent.isIE) {
         event.addListener(text, "beforecopy", function(e) {
@@ -15354,7 +15306,7 @@ __ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' , 
 }\
 \
 .ace-tm .ace_marker-layer .ace_active_line {\
-  background: rgb(232, 242, 254);\
+  background: rgba(0, 0, 0, 0.07);\
 }\
 \
 .ace-tm .ace_marker-layer .ace_selected_word {\
