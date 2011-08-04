@@ -825,73 +825,43 @@ var Editor = function(windowView, buffer) {
     };
 
     this.navigateUp = function(times) {
-        this.selection.clearSelection();
-        times = times || 1;
-        this.selection.moveCursorBy(-times, 0);
+        this.windowModel.navigateUp(times);
     };
 
     this.navigateDown = function(times) {
-        this.selection.clearSelection();
-        times = times || 1;
-        this.selection.moveCursorBy(times, 0);
+        this.windowModel.navigateDown(times);
     };
 
     this.navigateLeft = function(times) {
-        if (!this.selection.isEmpty()) {
-            var selectionStart = this.getSelectionRange().start;
-            this.moveCursorToPosition(selectionStart);
-        }
-        else {
-            times = times || 1;
-            while (times--) {
-                this.selection.moveCursorLeft();
-            }
-        }
-        this.clearSelection();
+        this.windowModel.navigateLeft(times);
     };
 
     this.navigateRight = function(times) {
-        if (!this.selection.isEmpty()) {
-            var selectionEnd = this.getSelectionRange().end;
-            this.moveCursorToPosition(selectionEnd);
-        }
-        else {
-            times = times || 1;
-            while (times--) {
-                this.selection.moveCursorRight();
-            }
-        }
-        this.clearSelection();
+        this.windowModel.navigateRight(times);
     };
 
     this.navigateLineStart = function() {
-        this.selection.moveCursorLineStart();
-        this.clearSelection();
+        this.windowModel.navigateLineStart()
     };
 
     this.navigateLineEnd = function() {
-        this.selection.moveCursorLineEnd();
-        this.clearSelection();
+        this.windowModel.navigateLineEnd();
     };
 
     this.navigateFileEnd = function() {
-        this.selection.moveCursorFileEnd();
-        this.clearSelection();
+        this.windowModel.navigateFileEnd();
     };
 
     this.navigateFileStart = function() {
-        this.selection.moveCursorFileStart();
-        this.clearSelection();
+        this.windowModel.navigateFileStart();
     };
 
     this.navigateWordRight = function() {
-        this.selection.moveCursorWordRight();
-        this.clearSelection();
+        this.windowModel.navigateWordRight();
     };
 
     this.navigateWordLeft = function() {
-        this.selection.moveCursorWordLeft();
-        this.clearSelection();
+        this.windowModel.navigateWordLeft();
     };
 
     this.replace = function(replacement, options) {

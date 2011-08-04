@@ -390,7 +390,6 @@ var Window = exports.Window = function(theme, search) {
         this._blockScrolling += 1;
         this.moveCursorTo(lineNumber-1, column || 0);
         this._blockScrolling -= 1;
-
         if (!this.isRowVisible(this.getCursorPosition().row))
             this.scrollToLine(lineNumber, true);
     };
@@ -398,6 +397,76 @@ var Window = exports.Window = function(theme, search) {
     this.navigateTo = function(row, column) {
         this.clearSelection();
         this.moveCursorTo(row, column);
+    };
+
+    this.navigateUp = function(times) {
+        this.selection.clearSelection();
+        times = times || 1;
+        this.selection.moveCursorBy(-times, 0);
+    };
+
+    this.navigateDown = function(times) {
+        this.selection.clearSelection();
+        times = times || 1;
+        this.selection.moveCursorBy(times, 0);
+    };
+
+    this.navigateLeft = function(times) {
+        if (!this.selection.isEmpty()) {
+            var selectionStart = this.getSelectionRange().start;
+            this.moveCursorToPosition(selectionStart);
+        }
+        else {
+            times = times || 1;
+            while (times--) {
+                this.selection.moveCursorLeft();
+            }
+        }
+        this.clearSelection();
+    };
+
+    this.navigateRight = function(times) {
+        if (!this.selection.isEmpty()) {
+            var selectionEnd = this.getSelectionRange().end;
+            this.moveCursorToPosition(selectionEnd);
+        }
+        else {
+            times = times || 1;
+            while (times--) {
+                this.selection.moveCursorRight();
+            }
+        }
+        this.clearSelection();
+    };
+
+    this.navigateLineStart = function() {
+        this.selection.moveCursorLineStart();
+        this.clearSelection();
+    };
+
+    this.navigateLineEnd = function() {
+        this.selection.moveCursorLineEnd();
+        this.clearSelection();
+    };
+
+    this.navigateFileEnd = function() {
+        this.selection.moveCursorFileEnd();
+        this.clearSelection();
+    };
+
+    this.navigateFileStart = function() {
+        this.selection.moveCursorFileStart();
+        this.clearSelection();
+    };
+
+    this.navigateWordRight = function() {
+        this.selection.moveCursorWordRight();
+        this.clearSelection();
+    };
+
+    this.navigateWordLeft = function() {
+        this.selection.moveCursorWordLeft();
+        this.clearSelection();
     };
 
     // SCROLLING
@@ -458,7 +527,7 @@ var Window = exports.Window = function(theme, search) {
         this.scrollToY(offset);
     };
 
-    this.scrollCursorIntoView = function() {
+    this.scrollCursorIntoView = function() {    
         // the editor is not visible
         if (this.size.scrollerHeight === 0)
             return;
@@ -471,18 +540,16 @@ var Window = exports.Window = function(theme, search) {
         var left = pos.left;
         var top = pos.top;
 
-        if (this.scrollTop > top) {
+        if (this.scrollTop > top)
             this.scrollToY(top);
-        }
 
         if (this.scrollTop + this.size.scrollerHeight < top + this.charSize.height)
             this.scrollToY(top + this.charSize.height - this.size.scrollerHeight);
 
         var scrollLeft = this.scrollLeft;
 
-        if (scrollLeft > left) {
+        if (scrollLeft > left)
             this.scrollToX(left);
-        }
 
         if (scrollLeft + this.size.scrollerWidth < left + this.charSize.width)
             this.scrollToX(Math.round(left + this.charSize.width - this.size.scrollerWidth));
