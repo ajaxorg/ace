@@ -3,7 +3,10 @@
 	url = git://github.com/ajaxorg/cockpit.git
 [submodule "support/pilot"]
 	path = support/pilot
-	url = git://github.com/ajaxorg/pilot.git
+	url = git://github.com/PuffTheMagic/pilot.git
 [submodule "support/dryice"]
 	path = support/dryice
 	url = git://github.com/ajaxorg/dryice.git
+[submodule "node_modules/uglify-js"]
+	path = node_modules/uglify-js
+	url = git://github.com/mishoo/UglifyJS.git
