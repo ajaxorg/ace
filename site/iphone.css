@@ -1,0 +1,25 @@
+#wrapper {
+    position:relative;
+    overflow:hidden;
+}
+
+#wrapper .content .column1 {
+    margin:0 16px 0 15px;
+}
+
+#header .content .signature {
+    font-size:18px;
+    bottom:0;
+}
+
+UL.menu-list LI {
+    font-size:22px;
+}
+
+UL.menu-footer LI {
+    font-size:22px;
+}
+
+PRE{
+    font-size:22px;
+}
