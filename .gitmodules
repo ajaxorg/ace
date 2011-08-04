@@ -7,3 +7,6 @@
 [submodule "support/dryice"]
 	path = support/dryice
 	url = git://github.com/ajaxorg/dryice.git
+[submodule "doc/wiki"]
+	path = doc/wiki
+	url = git://github.com/ajaxorg/ace.git
