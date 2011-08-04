@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require("../../../support/paths");
+require("../../support/paths");
 
 var test = require("asyncjs").test;
 test.walkTestCases(__dirname + "/..").exec()

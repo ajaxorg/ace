@@ -46,7 +46,7 @@ var EventEmitter = require("ace/lib/event_emitter").EventEmitter;
 var Selection = require("ace/selection").Selection;
 var TextMode = require("ace/mode/text").Mode;
 var Range = require("ace/range").Range;
-var Document = require("ace/document").Document;
+var Document = require("ace/model/document").Document;
 var BackgroundTokenizer = require("ace/background_tokenizer").BackgroundTokenizer;
 
 var Buffer = function(text, mode) {

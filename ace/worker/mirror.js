@@ -1,7 +1,7 @@
 
 define(function(require, exports, module) {
     
-var Document = require("ace/document").Document;
+var Document = require("ace/model/document").Document;
 var lang = require("ace/lib/lang");
     
 var Mirror = exports.Mirror = function(sender) {

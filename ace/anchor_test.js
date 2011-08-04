@@ -36,12 +36,12 @@
  * ***** END LICENSE BLOCK ***** */
 
 if (typeof process !== "undefined") {
-    require("../../support/paths");
+    require("../support/paths");
 }
 
 define(function(require, exports, module) {
     
-var Document = require("ace/document").Document;
+var Document = require("ace/model/document").Document;
 var Anchor = require("ace/anchor").Anchor;
 var Range = require("ace/range").Range;
 var assert = require("ace/test/assertions");

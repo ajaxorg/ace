@@ -43,7 +43,7 @@ if (typeof process !== "undefined") {
 
 define(function(require, exports, module) {
     
-var Document = require("ace/document").Document;
+var Document = require("ace/model/document").Document;
 var Range = require("ace/range").Range;
 var assert = require("ace/test/assertions");
 

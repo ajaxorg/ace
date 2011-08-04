@@ -1,12 +1,7 @@
 define(function(require, exports, module) {
 
-<<<<<<< HEAD
-require("pilot/fixoldbrowsers");
-var AsyncTest = require("asyncjs/test");
-=======
 require("ace/lib/fixoldbrowsers");
 var AsyncTest = require("asyncjs").test;
->>>>>>> move pilot code back into Ace
 var async = require("asyncjs");
 var dom = require("ace/lib/dom");
 
@@ -16,7 +11,6 @@ var log = document.getElementById("log")
 
 var tests = [
      require("ace/anchor_test"),
-     require("ace/document_test"),
      require("ace/edit_session_test"),
      require("ace/editor_change_document_test"),
      require("ace/editor_highlight_selected_word_test"),
@@ -24,6 +18,8 @@ var tests = [
      require("ace/editor_text_edit_test"),
      require("ace/layer/text_test"),
      require("ace/mode/coffee/parser_test"),
+     require("ace/model/document_test"),
+     require("ace/view/window_view_test"),
      require("ace/mode/css_test"),
      require("ace/mode/css_tokenizer_test"),
      require("ace/mode/css_worker"),
@@ -39,8 +35,7 @@ var tests = [
      require("ace/range_test"),
      require("ace/search_test"),
      require("ace/selection_test"),
-     require("ace/test/event_emitter_test"),
-     require("ace/virtual_renderer_test")
+     require("ace/test/event_emitter_test")
 ]
 
 async.list(tests)

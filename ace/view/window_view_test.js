@@ -36,7 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 if (typeof process !== "undefined") {
-    require("../../../support/paths");    
+    require("../../support/paths");    
     require("ace/test/mockdom");
 }
 
