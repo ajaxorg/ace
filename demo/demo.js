@@ -677,27 +677,26 @@ define(function(require, exports, module) {
             session.addFold(placeHolder, range);
         }
     }
-};
-
-var themes = {};
-function loadTheme(name, callback) {
-    if (themes[name])
-        return;
-        
-    themes[name] = 1;
-    var base = name.split("/").pop();
-    var fileName = "src/theme-" + base + ".js";
-    loadScriptFile(fileName, callback)
-}
-
-function loadScriptFile(path, callback) {
-    var head = document.getElementsByTagName('head')[0];
-    var s = document.createElement('script');
-
-    s.src = path;
-    head.appendChild(s);
     
-    s.onload = callback;
-}
+    var themes = {};
+    function loadTheme(name, callback) {
+        if (themes[name])
+            return;
+
+        themes[name] = 1;
+        var base = name.split("/").pop();
+        var fileName = "src/theme-" + base + ".js";
+        loadScriptFile(fileName, callback)
+    }
+
+    function loadScriptFile(path, callback) {
+        var head = document.getElementsByTagName('head')[0];
+        var s = document.createElement('script');
+
+        s.src = path;
+        head.appendChild(s);
+
+        s.onload = callback;
+    }
 
 });
