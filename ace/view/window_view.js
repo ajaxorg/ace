@@ -89,7 +89,6 @@ var WindowView = function(windowModel, container) {
     windowModel.setComputedCharacterSize(measureText.getCharacterSize());
 
     this.$cursorLayer = new CursorLayer(windowModel, this.content);
-    this.$horizScroll = true;
 
     var _self = this;
     this.scrollBar = new ScrollBar(container);
@@ -323,8 +322,19 @@ var WindowView = function(windowModel, container) {
             changes & this.CHANGE_TEXT ||
             changes & this.CHANGE_LINES ||
             changes & this.CHANGE_SCROLL
-        )
-            this.$computeLayerConfig();
+        ) {
+            var config = this.model.updateLayerConfig();
+            
+            this.$gutterLayer.element.style.marginTop = (-config.offset) + "px";
+            this.content.style.marginTop = (-config.offset) + "px";
+            this.content.style.width = config.width + "px";
+            this.content.style.height = config.minHeight + "px";
+            
+            if (config.horizScrollChanged) {
+                this.scroller.style.overflowX = config.horizScroll ? "scroll" : "hidden";
+                this._emit("resize");
+            }
+        }
 
         // full
         if (changes & this.CHANGE_FULL) {
@@ -384,76 +394,6 @@ var WindowView = function(windowModel, container) {
             this.$updateScrollBar();
     };
 
-    this.$computeLayerConfig = function() {
-        var buffer = this.model.buffer;
-
-        var charSize = this.model.charSize;
-        var offset = this.model.scrollTop % charSize.height;
-        var minHeight = this.model.size.scrollerHeight + charSize.height;
-
-        var longestLine = this.$getLongestLine();
-        var widthChanged = this.model.layerConfig.width != longestLine;
-
-        var horizScroll = this.model.horizScrollAlwaysVisible || this.model.size.scrollerWidth - longestLine < 0;
-        var horizScrollChanged = this.$horizScroll !== horizScroll;
-        this.$horizScroll = horizScroll;
-        if (horizScrollChanged)
-            this.scroller.style.overflowX = horizScroll ? "scroll" : "hidden";
-
-        var maxHeight = buffer.getScreenLength() * charSize.height;
-        this.model.scrollToY(Math.max(0, Math.min(this.model.scrollTop, maxHeight - this.model.size.scrollerHeight)));
-
-        var lineCount = Math.ceil(minHeight / charSize.height) - 1;
-        var firstRow = Math.max(0, Math.round((this.model.scrollTop - offset) / charSize.height));
-        var lastRow = firstRow + lineCount;
-
-        // Map lines on the screen to lines in the document.
-        var firstRowScreen, firstRowHeight;
-        firstRow = buffer.screenToDocumentRow(firstRow, 0);
-
-        // Check if firstRow is inside of a foldLine. If true, then use the first
-        // row of the foldLine.
-        var foldLine = buffer.getFoldLine(firstRow);
-        if (foldLine) {
-            firstRow = foldLine.start.row;
-        }
-
-        firstRowScreen = buffer.documentToScreenRow(firstRow, 0);
-        firstRowHeight = this.model.getRowHeight(firstRow);
-
-        lastRow = Math.min(buffer.screenToDocumentRow(lastRow, 0), buffer.getLength() - 1);
-        minHeight = this.model.size.scrollerHeight
-            + this.model.getRowHeight(lastRow)
-            + firstRowHeight;
-
-        offset = this.model.scrollTop - firstRowScreen * charSize.height;
-
-        this.model.layerConfig = {
-            width : longestLine,
-            padding : this.model.padding,
-            firstRow : firstRow,
-            firstRowScreen: firstRowScreen,
-            lastRow : lastRow,
-            minHeight : minHeight,
-            maxHeight : maxHeight,
-            offset : offset,
-            height : this.model.size.scrollerHeight
-        };
-
-        // For debugging.
-        // console.log(JSON.stringify(this.layerConfig));
-
-        this.$gutterLayer.element.style.marginTop = (-offset) + "px";
-        this.content.style.marginTop = (-offset) + "px";
-        this.content.style.width = longestLine + "px";
-        this.content.style.height = minHeight + "px";
-
-        // Horizontal scrollbar visibility may have changed, which changes
-        // the client height of the scroller
-        if (horizScrollChanged)
-            this._emit("resize");
-    };
-
     this.$updateLines = function() {
         var firstRow = this.$changedLines.firstRow;
         var lastRow = this.$changedLines.lastRow;
@@ -462,7 +402,7 @@ var WindowView = function(windowModel, container) {
         var layerConfig = this.model.layerConfig;
 
         // if the update changes the width of the document do a full redraw
-        if (layerConfig.width != this.$getLongestLine())
+        if (layerConfig.width != this.model.getLongestLine())
             return this.$textLayer.update();
 
         if (firstRow > layerConfig.lastRow + 1) { return; }
@@ -478,14 +418,6 @@ var WindowView = function(windowModel, container) {
 
         // else update only the changed rows
         this.$textLayer.updateLines(firstRow, lastRow);
-    };
-
-    this.$getLongestLine = function() {
-        var charCount = this.model.buffer.getScreenWidth() + 1;
-        if (this.model.showInvisibles)
-            charCount += 1;
-
-        return Math.max(this.model.size.scrollerWidth, Math.round(charCount * this.model.charSize.width));
     };
 
     this.updateFrontMarkers = function() {

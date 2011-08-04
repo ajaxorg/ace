@@ -61,7 +61,8 @@ var Window = exports.Window = function(theme, search) {
         minHeight : 1,
         maxHeight : 1,
         offset : 0,
-        height : 1
+        height : 1,
+        horizScroll: null
     };
     
     this.size = {
@@ -119,6 +120,73 @@ var Window = exports.Window = function(theme, search) {
             
         this.charSize = size;
         this._emit("changeCharacterSize")
+    };
+    
+    // LAYER UPDATE COMPUTATION
+    
+    this.updateLayerConfig = function() {
+        var buffer = this.buffer;
+
+        var charSize = this.charSize;
+        var offset = this.scrollTop % charSize.height;
+        var minHeight = this.size.scrollerHeight + charSize.height;
+
+        var longestLine = this.getLongestLine();
+        var widthChanged = this.layerConfig.width != longestLine;
+
+        var horizScroll = this.horizScrollAlwaysVisible || this.size.scrollerWidth - longestLine < 0;
+        var horizScrollChanged = this.layerConfig.horizScroll !== horizScroll;
+        
+        var maxHeight = buffer.getScreenLength() * charSize.height;
+        this.scrollToY(Math.max(0, Math.min(this.scrollTop, maxHeight - this.size.scrollerHeight)));
+
+        var lineCount = Math.ceil(minHeight / charSize.height) - 1;
+        var firstRow = Math.max(0, Math.round((this.scrollTop - offset) / charSize.height));
+        var lastRow = firstRow + lineCount;
+
+        // Map lines on the screen to lines in the document.
+        var firstRowScreen, firstRowHeight;
+        firstRow = buffer.screenToDocumentRow(firstRow, 0);
+
+        // Check if firstRow is inside of a foldLine. If true, then use the first
+        // row of the foldLine.
+        var foldLine = buffer.getFoldLine(firstRow);
+        if (foldLine)
+            firstRow = foldLine.start.row;
+
+        firstRowScreen = buffer.documentToScreenRow(firstRow, 0);
+        firstRowHeight = this.getRowHeight(firstRow);
+
+        lastRow = Math.min(buffer.screenToDocumentRow(lastRow, 0), buffer.getLength() - 1);
+        minHeight = this.size.scrollerHeight
+            + this.getRowHeight(lastRow)
+            + firstRowHeight;
+
+        offset = this.scrollTop - firstRowScreen * charSize.height;
+
+        this.layerConfig = {
+            width : longestLine,
+            padding : this.padding,
+            firstRow : firstRow,
+            firstRowScreen: firstRowScreen,
+            lastRow : lastRow,
+            minHeight : minHeight,
+            maxHeight : maxHeight,
+            offset : offset,
+            height : this.size.scrollerHeight,
+            horizScrollChanged: horizScrollChanged,
+            horizScroll: horizScroll
+        };
+
+        return this.layerConfig;
+    };
+    
+    this.getLongestLine = function() {
+        var charCount = this.buffer.getScreenWidth() + 1;
+        if (this.showInvisibles)
+            charCount += 1;
+
+        return Math.max(this.size.scrollerWidth, Math.round(charCount * this.charSize.width));
     };
     
     // VIEWPORT COMPUTATIONS

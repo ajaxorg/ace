@@ -90,7 +90,7 @@ module.exports = {
             scrollerWidth: 600
         });
         win.setComputedCharacterSize({width: 10, height: 20});
-        //win.updateLayerConfig();
+        win.updateLayerConfig();
 
         win.navigateTo(0, 0);
         win.gotoLine(101);
