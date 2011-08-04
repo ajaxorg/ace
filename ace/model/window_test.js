@@ -50,17 +50,47 @@ module.exports = {
 
     setUp: function() {
         this.win = new Window();
+        this.win.setBuffer(this.createBuffer(200, 5));
+        this.win.setSizes({
+            heigth: 410,
+            width: 640,
+            scrollerHeight: 400,
+            scrollerWidth: 600
+        });
+        this.win.setComputedCharacterSize({width: 10, height: 20});    
+        this.win.updateLayerConfig();
+    },
+    
+    createBuffer: function(rows, cols) {
+        var line = new Array(cols + 1).join("a");
+        var text = new Array(rows).join(line + "\n") + line;
+        return new Buffer(text);
     },
     
     "test setting a buffer chould emit a change event": function() {
         assert.eventFired(this.win, "changeBuffer", function() {
             this.win.setBuffer(new Buffer(""));
         }, this);
+    },
+    
+    "test compute layer config when scrolled to the top": function() {
+        var config = this.win.layerConfig;
+        assert.equal(config.width, 600);
+        assert.equal(config.height, 400);
+        assert.equal(config.minHeight, 440); // ??
+        assert.equal(config.maxHeight, 200*20);
+        assert.equal(config.offset, 0);
+        assert.equal(config.firstRow, 0);
+        assert.equal(config.lastRow, 20);
+    },
+    
+    "test get last visible row": function() {
+        assert.equal(this.win.getLastVisibleRow(), 19);
     }
 };
 
 });
 
 if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs/test").testcase(module.exports).exec()
+    require("asyncjs").test.testcase(module.exports).exec()
 }

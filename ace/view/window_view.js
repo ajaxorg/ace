@@ -127,7 +127,7 @@ var WindowView = function(windowModel, container) {
 
     oop.implement(this, EventEmitter);
 
-    // TODO refctor
+    // TODO refactor
     // remove
     this.setSession = function(session) {
         this.$textLayer.setSession(session);
@@ -169,10 +169,6 @@ var WindowView = function(windowModel, container) {
      */
     this.updateFull = function() {
         this.$loop.schedule(this.CHANGE_FULL);
-    };
-
-    this.updateFontSize = function() {
-        this.$textLayer.checkForSizeChanges();
     };
 
     this.measureSizes = function() {

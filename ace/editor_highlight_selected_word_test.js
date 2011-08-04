@@ -73,15 +73,13 @@ var lipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
 
 module.exports = {
     
-    setUp: function(next) {
+    setUp: function() {
         this.buffer = new Buffer(lipsum);
         this.selection = this.buffer.getSelection();
         this.search = new Search();
         this.win = new Window({}, this.search);    
-        this.winController = new WindowController(this.win, new WindowViewMock());
-        
+        this.winController = new WindowController(this.win, new WindowViewMock());    
         this.win.setBuffer(this.buffer);
-        next();
     },
 
     "test: highlight selected words by default": function() {

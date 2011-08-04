@@ -95,10 +95,10 @@ var WindowController = exports.WindowController = function(model, view) {
             oldBuffer.removeListener("changeBackMarker", this._onChangeBackMarker);
             oldBuffer.removeListener("changeBreakpoint", this._onChangeBreakpoint);
             oldBuffer.removeListener("changeAnnotation", this._onChangeAnnotation);
-            oldBuffer.removeListener("changeOverwrite", this._onCursorChange);
+            oldBuffer.removeListener("changeOverwrite", this._onChangeCursor);
 
             var selection = oldBuffer.getSelection();
-            selection.removeEventListener("changeCursor", this._onCursorChange);
+            selection.removeEventListener("changeCursor", this._onChangeCursor);
             selection.removeEventListener("changeSelection", this._onSelectionChange);
         }
 
@@ -138,11 +138,11 @@ var WindowController = exports.WindowController = function(model, view) {
         this._onChangeAnnotation = this.onChangeAnnotation.bind(this);
         buffer.on("changeAnnotation", this._onChangeAnnotation);
 
-        this._onCursorChange = this.onCursorChange.bind(this);
-        buffer.on("changeOverwrite", this._onCursorChange);
+        this._onChangeCursor = this.onChangeCursor.bind(this);
+        buffer.on("changeOverwrite", this._onChangeCursor);
 
         this.selection = buffer.getSelection();
-        this.selection.on("changeCursor", this._onCursorChange);
+        this.selection.on("changeCursor", this._onChangeCursor);
 
         this._onSelectionChange = this.onSelectionChange.bind(this);
         this.selection.on("changeSelection", this._onSelectionChange);
@@ -154,7 +154,7 @@ var WindowController = exports.WindowController = function(model, view) {
         if (buffer.getUseWrapMode())
             this.view.adjustWrapLimit();
             
-        this.onCursorChange();
+        this.onChangeCursor();
         this.onSelectionChange();
         
         this.view.updateFull();
@@ -199,7 +199,7 @@ var WindowController = exports.WindowController = function(model, view) {
         this.view.setAnnotations(this.model.buffer.getAnnotations());
     };
 
-    this.onCursorChange = function(e) {
+    this.onChangeCursor = function(e) {
         this.view.updateCursor();
         this.model.scrollCursorIntoView();
 
