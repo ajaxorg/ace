@@ -7,3 +7,6 @@
 [submodule "support/dryice"]
 	path = support/dryice
 	url = git://github.com/ajaxorg/dryice.git
+[submodule "node_modules/uglify-js"]
+	path = node_modules/uglify-js
+	url = git://github.com/mishoo/UglifyJS.git
