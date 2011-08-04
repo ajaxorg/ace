@@ -79,7 +79,6 @@ var aceHome = __dirname;
 console.log('# ace ---------');
 
 var aceProject = [
-    aceHome + '/lib',
     aceHome
 ];
 
@@ -126,10 +125,7 @@ copy({
     source: [
         copy.source.commonjs({
             project: project,
-            require: [
-                "ace/lib/fixoldbrowsers",
-                "ace/ace"
-            ]
+            require: ["ace/ace"]
         })
     ],
     filter: [ copy.filter.moduleDefines ],
@@ -229,7 +225,7 @@ console.log('# ace themes ---------');
 ].forEach(function(theme) {
     copy({
         source: [{
-            root: aceHome + '/lib',
+            root: aceHome,
             include: "ace/theme/" + theme + ".js"
         }],
         filter: modeThemeFilters,
@@ -263,7 +259,7 @@ console.log('# ace worker ---------');
     console.log("worker for " + mode + " mode");
     var worker = copy.createDataObject();
     var workerProject = copy.createCommonJsProject([
-        aceHome + '/lib'
+        aceHome
     ]);
     copy({
         source: [
@@ -282,7 +278,7 @@ console.log('# ace worker ---------');
     });
     copy({
         source: [
-            aceHome + "/lib/ace/worker/worker.js",
+            aceHome + "/ace/worker/worker.js",
             worker
         ],
         filter: [ copy.filter.uglifyjs, filterTextPlugin ],

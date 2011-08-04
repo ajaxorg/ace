@@ -40,6 +40,27 @@
 
 define(function(require, exports, module) {
 
+    var themes = {};
+    function loadTheme(name, callback) {
+        if (themes[name])
+            return;
+
+        themes[name] = 1;
+        var base = name.split("/").pop();
+        var fileName = "src/theme-" + base + ".js";
+        loadScriptFile(fileName, callback)
+    }
+
+    function loadScriptFile(path, callback) {
+        var head = document.getElementsByTagName('head')[0];
+        var s = document.createElement('script');
+
+        s.src = path;
+        head.appendChild(s);
+
+        s.onload = callback;
+    }
+
     require("ace/lib/fixoldbrowsers");
 
     var env = {};
@@ -676,27 +697,6 @@ define(function(require, exports, module) {
             placeHolder = placeHolder.trim().substring(0, 3).replace(' ','','g') + "...";
             session.addFold(placeHolder, range);
         }
-    }
-    
-    var themes = {};
-    function loadTheme(name, callback) {
-        if (themes[name])
-            return;
-
-        themes[name] = 1;
-        var base = name.split("/").pop();
-        var fileName = "src/theme-" + base + ".js";
-        loadScriptFile(fileName, callback)
-    }
-
-    function loadScriptFile(path, callback) {
-        var head = document.getElementsByTagName('head')[0];
-        var s = document.createElement('script');
-
-        s.src = path;
-        head.appendChild(s);
-
-        s.onload = callback;
     }
 
 });
