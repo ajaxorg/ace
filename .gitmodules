@@ -9,4 +9,4 @@
 	url = git://github.com/ajaxorg/dryice.git
 [submodule "doc/wiki"]
 	path = doc/wiki
-	url = git://github.com/ajaxorg/ace.git
+	url = git://github.com/ajaxorg/ace.wiki.git
