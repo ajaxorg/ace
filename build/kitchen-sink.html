@@ -1,710 +1,127 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Ace Kitchen Sink</title>
-    <meta name="author" content="Fabian Jakobs">
-    <link rel="stylesheet" href="demo/styles.css" type="text/css" media="screen" charset="utf-8">
-</head>
-<body>
-  <img id="logo" src="demo/logo.png">
-  <table id="controls">
-    <tr>
-      <td>
-        <label for="doc">Document</label>
-      </td><td>
-        <select id="doc" size="1">
-          <option value="js">JavaScript</option>
-          <option value="plain">Plain Text</option>
-          <option value="svg">SVG</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="scss">SCSS</option>
-          <option value="coffee">CoffeeScript</option>
-          <option value="json">JSON</option>
-          <option value="python">Python</option>
-          <option value="ruby">Ruby</option>
-          <option value="perl">Perl</option>
-          <option value="php">PHP</option>
-          <option value="java">Java</option>
-          <option value="csharp">C#</option>
-          <option value="c_cpp">C++</option>
-          <option value="clojure">Clojure</option>
-          <option value="ocaml">OCaml</option>
-          <option value="textile">Textile</option>
-          <option value="groovy">Groovy</option>
-          <option value="scala">Scala</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="mode">Mode</label>
-      </td><td>
-        <select id="mode" size="1">
-          <option value="text">Plain Text</option>
-          <option value="javascript">JavaScript</option>
-          <option value="xml">XML</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="scss">SCSS</option>
-          <option value="python">Python</option>
-          <option value="php">PHP</option>
-          <option value="java">Java</option>
-          <option value="ruby">Ruby</option>
-          <option value="c_cpp">C/C++</option>
-          <option value="coffee">CoffeeScript</option>
-          <option value="json">JSON</option>
-          <option value="perl">Perl</option>
-          <option value="clojure">Clojure</option>
-          <option value="ocaml">OCaml</option>
-          <option value="csharp">C#</option>
-          <option value="svg">SVG</option>
-          <option value="textile">Textile</option>
-          <option value="groovy">Groovy</option>
-          <option value="scala">Scala</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label for="split">Split</label>
-      </td><td>
-        <select id="split" size="1">
-          <option value="none">None</option>
-          <option value="below">Below</option>
-          <option value="beside">Beside</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="theme">Theme</label>
-      </td><td>
-        <select id="theme" size="1">
-          <option value="ace/theme/clouds">Clouds</option>
-          <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
-          <option value="ace/theme/cobalt">Cobalt</option>
-          <option value="ace/theme/crimson_editor">Crimson Editor</option>
-          <option value="ace/theme/dawn">Dawn</option>
-          <option value="ace/theme/eclipse">Eclipse</option>
-          <option value="ace/theme/idle_fingers">idleFingers</option>
-          <option value="ace/theme/kr_theme">krTheme</option>
-          <option value="ace/theme/merbivore">Merbivore</option>
-          <option value="ace/theme/merbivore_soft">Merbivore Soft</option>
-          <option value="ace/theme/mono_industrial">Mono Industrial</option>
-          <option value="ace/theme/monokai">Monokai</option>
-          <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
-          <option value="ace/theme/solarized_dark">Solarized Dark</option>
-          <option value="ace/theme/solarized_light">Solarized Light</option>
-          <option value="ace/theme/textmate" selected="selected">TextMate</option>
-          <option value="ace/theme/twilight">Twilight</option>
-          <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="fontsize">Font Size</label>
-      </td><td>
-        <select id="fontsize" size="1">
-          <option value="10px">10px</option>
-          <option value="11px">11px</option>
-          <option value="12px" selected="selected">12px</option>
-          <option value="14px">14px</option>
-          <option value="16px">16px</option>
-          <option value="20px">20px</option>
-          <option value="24px">24px</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="select_style">Full Line Selection</label>
-      </td><td>
-        <input type="checkbox" name="select_style" id="select_style" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="highlight_active">Highlight Active Line</label>
-      </td><td>
-        <input type="checkbox" name="highlight_active" id="highlight_active" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="show_hidden">Show Invisibles</label>
-      </td><td>
-        <input type="checkbox" name="show_hidden" id="show_hidden" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="show_hscroll">Persistent HScroll</label>
-      </td><td>
-        <input type="checkbox" name="show_hscroll" id="show_hscroll">
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="keybinding">Key Binding</label>
-      </td><td>
-        <select id="keybinding" size="1">
-          <option value="ace">Ace</option>
-          <option value="vim">Vim</option>
-          <option value="emacs">Emacs</option>
-          <option value="custom">Custom</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="soft_wrap">Soft Wrap</label>
-      </td><td>
-        <select id="soft_wrap" size="1">
-          <option value="off">Off</option>
-          <option value="40">40 Chars</option>
-          <option value="80">80 Chars</option>
-          <option value="free">Free</option>
-        </select>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="show_gutter">Show Gutter</label>
-      </td><td>
-        <input type="checkbox" id="show_gutter" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="show_print_margin">Show Print Margin</label>
-      </td><td>
-        <input type="checkbox" id="show_print_margin" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="soft_tab">Use Soft Tab</label>
-      </td><td>
-        <input type="checkbox" id="soft_tab" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="highlight_selected_word">Highlight selected word</label>
-      </td>
-      <td>
-        <input type="checkbox" id="highlight_selected_word" checked>
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="enable_behaviours">Enable Behaviours</label>
-      </td>
-      <td>
-        <input type="checkbox" id="enable_behaviours">
-      </td>
-    </tr>
-    </table>
-
-    <div id="editor">
-    </div>
-        <script type="text/editor" id="csharptext">public void HelloWorld() {
-   //Say Hello!
-   Console.WriteLine("Hello World");
-}</script>
-    <script type="text/editor" id="jstext">function foo(items) {
-    for (var i=0; i<items.length; i++) {
-        alert(items[i] + "juhu");
-    }	// Real Tab.
-}</script>
-
-    <script type="text/editor" id="csstext">.text-layer {
-    font-family: Monaco, "Courier New", monospace;
-    font-size: 12px;
-    cursor: text;
-}</script>
-
-    <script type="text/editor" id="scsstext">/* style.scss */
-
-#navbar {
-    $navbar-width: 800px;
-    $items: 5;
-    $navbar-color: #ce4dd6;
-
-    width: $navbar-width;
-    border-bottom: 2px solid $navbar-color;
-
-    li {
-        float: left;
-        width: $navbar-width/$items - 10px;
-
-        background-color: lighten($navbar-color, 20%);
-        &:hover {
-            background-color: lighten($navbar-color, 10%);
-        }
-    }
-}</script>
-
-    <script type="text/editor" id="htmltext"><html>
-<head>
-
-<style type="text/css">
-.text-layer {
-    font-family: Monaco, "Courier New", monospace;
-    font-size: 12px;
-    cursor: text;
-}
-</style>
-
-</head>
-<body>
-    <h1 style="color:red">Juhu Kinners</h1>
-</body>
-</html></script>
-
-    <script type="text/editor" id="javatext">public class InfiniteLoop {
-
-    /*
-     * This will cause the program to hang...
-     *
-     * Taken from:
-     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/
-     */
-    public static void main(String[] args) {
-        double d = Double.parseDouble("2.2250738585072012e-308");
-
-        // unreachable code
-        System.out.println("Value: " + d);
-    }
-}</script>
-
-    <script type="text/editor" id="pythontext">#!/usr/local/bin/python
-
-import string, sys
-
-# If no arguments were given, print a helpful message
-if len(sys.argv)==1:
-    print 'Usage: celsius temp1 temp2 ...'
-    sys.exit(0)
-
-# Loop over the arguments
-for i in sys.argv[1:]:
-    try:
-        fahrenheit=float(string.atoi(i))
-    except string.atoi_error:
-        print repr(i), "not a numeric value"
-    else:
-        celsius=(fahrenheit-32)*5.0/9.0
-        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))</script>
-
-    <script type="text/editor" id="phptext"><?php
-
-function nfact($n) {
-  if ($n == 0) {
-    return 1;
-  }
-  else {
-    return $n * nfact($n - 1);
-  }
-}
-
-echo "\n\nPlease enter a whole number ... ";
-$num = trim(fgets(STDIN));
-
-// ===== PROCESS - Determing the factorial of the input number =====
-$output = "\n\nFactorial " . $num . " = " . nfact($num) . "\n\n";
-echo $output;
-
-?></script>
-
-  <script type="text/editor" id="plaintext">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
-
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
-
-At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-</script>
-
-    <script type="text/editor" id="rubytext">#!/usr/bin/ruby
-
-# Program to find the factorial of a number
-def fact(n)
-    if n == 0
-        1
-    else
-        n * fact(n-1)
-    end
-end
-
-puts fact(ARGV[0].to_i)
-</script>
-
-<script type="text/editor" id="cpptext">// compound assignment operators
-
-#include <iostream>
-using namespace std;
-
-int main ()
-{
-    int a, b=3; /* foobar */
-    a = b;
-    a+=2; // equivalent to a=a+2
-    cout << a;
-    return 0;
-}
-</script>
-
-<script type="text/editor" id="coffeetext">#!/usr/bin/env coffee
-
-try
-    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)
-catch e
-    console.log 'qstring' + "qqstring" + '''
-        qdoc
-    ''' + """
-        qqdoc
-    """
-
-do ->
-    ###
-    herecomment
-    ###
-    re = /regex/imgy.test ///
-        heregex  # comment
-    ///imgy
-    this isnt: `just JavaScript`
-    undefined</script>
-
-<script type="text/editor" id="jsontext">{
- "query": {
-  "count": 10,
-  "created": "2011-06-21T08:10:46Z",
-  "lang": "en-US",
-  "results": {
-   "photo": [
-    {
-     "farm": "6",
-     "id": "5855620975",
-     "isfamily": "0",
-     "isfriend": "0",
-     "ispublic": "1",
-     "owner": "32021554@N04",
-     "secret": "f1f5e8515d",
-     "server": "5110",
-     "title": "7087 bandit cat"
-    },
-    {
-     "farm": "4",
-     "id": "5856170534",
-     "isfamily": "0",
-     "isfriend": "0",
-     "ispublic": "1",
-     "owner": "32021554@N04",
-     "secret": "ff1efb2a6f",
-     "server": "3217",
-     "title": "6975 rusty cat"
-    },
-    {
-     "farm": "6",
-     "id": "5856172972",
-     "isfamily": "0",
-     "isfriend": "0",
-     "ispublic": "1",
-     "owner": "51249875@N03",
-     "secret": "6c6887347c",
-     "server": "5192",
-     "title": "watermarked-cats"
-    },
-    {
-     "farm": "6",
-     "id": "5856168328",
-     "isfamily": "0",
-     "isfriend": "0",
-     "ispublic": "1",
-     "owner": "32021554@N04",
-     "secret": "0c1cfdf64c",
-     "server": "5078",
-     "title": "7020 mandy cat"
-    },
-    {
-     "farm": "3",
-     "id": "5856171774",
-     "isfamily": "0",
-     "isfriend": "0",
-     "ispublic": "1",
-     "owner": "32021554@N04",
-     "secret": "7f5a3180ab",
-     "server": "2696",
-     "title": "7448 bobby cat"
-    }
-   ]
-  }
- }
-}</script>
-
-<script type="text/editor" id="perltext">#!/usr/bin/perl
-use strict;
-use warnings;
-my $num_primes = 0;
-my @primes;
-
-# Put 2 as the first prime so we won't have an empty array
-$primes[$num_primes] = 2;
-$num_primes++;
-
-MAIN_LOOP:
-for my $number_to_check (3 .. 200)
-{
-    for my $p (0 .. ($num_primes-1))
-    {
-        if ($number_to_check % $primes[$p] == 0)
-        {
-            next MAIN_LOOP;
-        }
-    }
-
-    # If we reached this point it means $number_to_check is not
-    # divisable by any prime number that came before it.
-    $primes[$num_primes] = $number_to_check;
-    $num_primes++;
-}
-
-for my $p (0 .. ($num_primes-1))
-{
-    print $primes[$p], ", ";
-}
-print "\n";
-
-</script>
-
-<script type="text/editor" id="ocamltext">(*
- * Example of early return implementation taken from
- * http://ocaml.janestreet.com/?q=node/91
- *)
-
-let with_return (type t) (f : _ -> t) =
-  let module M =
-     struct exception Return of t end
-  in
-  let return = { return = (fun x -> raise (M.Return x)); } in
-  try f return with M.Return x -> x
-
-
-(* Function that uses the 'early return' functionality provided by `with_return` *)
-let sum_until_first_negative list =
-  with_return (fun r ->
-    List.fold list ~init:0 ~f:(fun acc x ->
-      if x >= 0 then acc + x else r.return acc))
-</script>
-
-<script type="text/editor" id="clojuretext">(defn parting
-  "returns a String parting in a given language"
-  ([] (parting "World"))
-  ([name] (parting name "en"))
-  ([name language]
-    ; condp is similar to a case statement in other languages.
-    ; It is described in more detail later.
-    ; It is used here to take different actions based on whether the
-    ; parameter "language" is set to "en", "es" or something else.
-    (condp = language
-      "en" (str "Goodbye, " name)
-      "es" (str "Adios, " name)
-      (throw (IllegalArgumentException.
-        (str "unsupported language " language))))))
-
-(println (parting)) ; -> Goodbye, World
-(println (parting "Mark")) ; -> Goodbye, Mark
-(println (parting "Mark" "es")) ; -> Adios, Mark
-(println (parting "Mark", "xy")) ; -> java.lang.IllegalArgumentException: unsupported language xy</script>
-
-<script type="text/editor" id="svgtext"><svg
-  width="800" height="600"
-  xmlns="http://www.w3.org/2000/svg"
-  onload="StartAnimation(evt)">
-
-  <title>Test Tube Progress Bar</title>
-  <desc>Created for the Web Directions SVG competition</desc>
-
-  <script type="text/ecmascript"><![CDATA[
-    var timevalue = 0;
-    var timer_increment = 1;
-    var max_time = 100;
-    var hickory;
-    var dickory;
-    var dock;
-    var i;
-
-    function StartAnimation(evt) {
-        hickory  = evt.target.ownerDocument.getElementById("hickory");
-        dickory = evt.target.ownerDocument.getElementById("dickory");
-        dock = evt.target.ownerDocument.getElementById("dock");
-
-        ShowAndGrowElement();
-    }
-    function ShowAndGrowElement() {
-        timevalue = timevalue + timer_increment;
-        if (timevalue > max_time)
-            return;
-        // Scale the text string gradually until it is 20 times larger
-        scalefactor = (timevalue * 650) / max_time;
-
-        if (timevalue < 30) {
-            hickory.setAttribute("display", "");
-            hickory.setAttribute("transform", "translate(" + (600+scalefactor*3*-1 ) + ", -144 )");
-        }
-
-        if (timevalue > 30 && timevalue < 66) {
-            dickory.setAttribute("display", "");
-            dickory.setAttribute("transform", "translate(" + (-795+scalefactor*2) + ", 0 )");
-        }
-        if (timevalue > 66) {
-            dock.setAttribute("display", "");
-            dock.setAttribute("transform", "translate(" + (1450+scalefactor*2*-1) + ", 144 )");
-        }
-
-        // Call ShowAndGrowElement again <timer_increment> milliseconds later.
-        setTimeout("ShowAndGrowElement()", timer_increment)
-    }
-    window.ShowAndGrowElement = ShowAndGrowElement
-  ]]>&lt;/script>
-
-  <rect
-    fill="#2e3436"
-    fill-rule="nonzero"
-    stroke-width="3"
-    y="0"
-    x="0"
-    height="600"
-    width="800"
-    id="rect3590"/>
-
-    <text
-       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="50"
-       y="350"
-       id="hickory"
-       display="none">
-        Hickory,</text>
-    <text
-       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="50"
-       y="350"
-       id="dickory"
-       display="none">
-        dickory,</text>
-    <text
-       style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold"
-       x="50"
-       y="350"
-       id="dock"
-       display="none">
-        dock!</text>
-</svg></script>
-<script type="text/editor" id="textiletext">h1. Textile document
-
-h2. Heading Two
-
-h3. A two-line
-    header
-
-h2. Another two-line
-header
-
-Paragraph:
-one, two,
-thee lines!
-
-p(classone two three). This is a paragraph with classes
-
-p(#id). (one with an id)
-
-p(one two three#my_id). ..classes + id
-
-* Unordered list
-** sublist
-* back again!
-** sublist again..
-
-# ordered
-
-bg. Blockquote!
-    This is a two-list blockquote..!
-
-</script>
-
-<script type="text/editor" id="groovy">
-//http://groovy.codehaus.org/Concurrency+with+Groovy
-import java.util.concurrent.atomic.AtomicInteger
-
-def counter = new AtomicInteger()
-
-synchronized out(message) {
-    println(message)
-}
-
-def th = Thread.start {
-    for( i in 1..8 ) {
-        sleep 30
-        out "thread loop $i"
-        counter.incrementAndGet()
-    }
-}
-
-for( j in 1..4 ) {
-    sleep 50
-    out "main loop $j"
-    counter.incrementAndGet()
-}
-
-th.join()
-
-assert counter.get() == 12
-</script>
-
-<script type="text/editor" id="scala">//http://www.scala-lang.org/node/227
-/* Defines a new method 'sort' for array objects */
-object implicits extends Application {
-  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =
-    new {
-      def sort(p: (A, A) => Boolean) = {
-        util.Sorting.stableSort(x, p); x
-      }
-    }
-  val x = Array(2, 3, 1, 4)
-  println("x = "+ x.sort((x: Int, y: Int) => x < y))
-}</script>
-  <input id="cockpitInput" type="text"/>
-
-<!-- 
-  <script type="text/javascript">
-      var require = {
-          paths: {
-              demo: "../demo",
-              ace: "../lib/ace",
-              cockpit: "../support/cockpit/lib/cockpit",
-              pilot: "../support/pilot/lib/pilot"
-          }
-      };
-  </script>
-  <script src="demo/require.js" data-main="demo/boot" type="text/javascript" charset="utf-8"></script>
- -->
-  
-
-  <script src="demo/kitchen-sink.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
-  <script type="text/javascript" charset="utf-8">
-    require("demo/boot");
-  </script>
-
-
-</body>
-</html>
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+    <head profile="http://www.w3.org/2005/10/profile"> 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+        <title>ACE - Ajax.org Cloud9 Editor</title> 
+        <meta name="description" content=""/> 
+        <meta name="keywords" content=""/> 
+        <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
+        <link rel="stylesheet" media="all and (max-device-width: 480px)" href="doc/site/iphone.css"> 
+        <link rel="stylesheet" media="all and (min-device-width: 481px) and (max-device-width: 1024px)" href="doc/site/iphone.css"> 
+    </head> 
+    <body> 
+        <div id="header"> 
+            <div class="content"> 
+                <div class="logo"></div> 
+                <div class="title"></div> 
+                <div class="signature">Previously Skywriter, Bespin</div> 
+            </div> 
+        </div> 
+        <div id="wrapper"> 
+            <div class="content"> 
+                <div class="column1"> 
+                    <a href="http://github.com/ajaxorg/ace"><div class="fork_on_github"></div></a> 
+                    <div class="menu"> 
+                        <h4>User Resources</h4> 
+                        <ul class="menu-list"> 
+                            <li><a href="http://groups.google.com/group/ace-discuss">Ace Google Group</a></li> 
+                            <li><a href="http://groups.google.com/group/ace-internals">Ace Core Google Group</a></li> 
+                            <li><a href="irc://irc.freenode.net/%23ace">irc.freenode.net #ace</a></li> 
+                        </ul> 
+                        <h4>Related Projects</h4> 
+                        <ul class="menu-list"> 
+                            <li><a href="https://github.com/joewalker/pilot">Pilot</a></li> 
+                            <li><a href="https://github.com/joewalker/gcli">GCLI</a></li> 
+                            <li><a href="https://github.com/mozilla/dryice">DryIce</a></li>
+                            <li><a href="https://github.com/cadorn/ace-extjs">Ace wrapper for ExtJS</a></li>
+                            <li><a href="https://github.com/daveho/AceGWT">Ace wrapper for GWT</a></li>
+                        </ul> 
+                        <h4>Projects Using Ace</h4> 
+                        <ul class="menu-list"> 
+                            <li><a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a></li> 
+                            <li><a href="https://github.com/Gozala/sky-edit">Sky Edit</a></li> 
+                            <li><a href="http://www.bluegriffon.org/">Blue Griffon</a></li>
+                            <li><a href="http://rstudio.org/">RStudio</a></li>
+                            <li><a href="http://www.playmycode.com/">Play My Code</a></li>
+                            <li><a href="http://demo.qooxdoo.org/devel/playground/#">Qooxdoo playground</a></li> 
+                            <li><a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a></li> 
+                            <li><a href="http://developercompanion.com/">Developer Companion</a></li> 
+                            <li><a href="https://builder.addons.mozilla.org/">Mozilla Add-on Builder</a></li> 
+                            <li><a href="http://www.projectdirigible.com/">Dirigible</a></li> 
+                            <li><a href="http://shiftedit.net/">shiftEdit</a></li> 
+                            <li><a href="http://www.akshell.com/">Akshell</a></li>
+                            <li><a href="http://beanstalkapp.com/">beanstalk</a></li>
+                        </ul> 
+                        <h4>Syntax Highlighters</h4> 
+                        <ul class="menu-list"> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">Javascript</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">HTML</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">CSS</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">XML</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">Python</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">PHP</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">Java</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">Ruby</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">C++</a></li> 
+                            <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">CoffeeScript</a></li> 
+                        </ul> 
+                    </div> 
+                </div> 
+                <div class="column2"> 
+                    <p id="first">Ace is a standalone code editor written in JavaScript. Our goal is to create a web based code editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page and JavaScript application. Ace is developed as the primary editor for <a href="http://www.cloud9ide.com">Cloud9 IDE</a> and the successor of the Mozilla Skywriter (Bespin) Project.</p> 
+ 
+                    <h2>Features</h2> 
+                    <div class="divider"></div> 
+ 
+<ul class="content-list"> 
+    <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a></li> 
+    <li>Auto indentation and outdent</li> 
+    <li><a href="https://github.com/joewalker/cockpit">An optional command line</a></li> 
+    <li>Work with huge documents (100,000 lines and more are no problem)</li> 
+    <li>Fully customizable key bindings including VI and Emacs modes</li> 
+    <li>Themes (TextMate themes can be imported)</li> 
+    <li>Search and replace with regular expressions</li> 
+    <li>Highlight matching parentheses</li> 
+    <li>Toggle between soft tabs and real tabs</li> 
+    <li>Displays hidden characters</li> 
+    <li>Highlight selected word</li> 
+</ul> 
+ 
+                    <h2>Take Ace for a spin!</h2> 
+                    <div class="divider"></div> 
+<p>Check out the <a href="build/kitchen-sink.html">Ace live demo</a> or get a <a href="http://c9.io">Cloud9 IDE account</a> to experience Ace while editing one of your own GitHub projects.</p> 
+ 
+                    <h2>History</h2> 
+                    <div class="divider"></div> 
+                    <p>Previously known as “Bespin” or lately “Skywriter” it’s now known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started as two independent projects both aiming to build a no compromise code editor component for the web. Bespin started as part of Mozilla Labs and was based on the &lt;canvas> tag, while Ace is the Editor component of the <a href="http://cloud9ide.com">Cloud9 IDE</a> and is using the DOM for rendering. After the release of Ace at <a href="http://jsconf.eu/2010/speaker/kick_ass_code_editing_and_end.html">JSConf.eu 2010</a> in Berlin the Skywriter team decided to merge Ace with a simplified version of Skywriter's plugin system  and some of Skywriter's  extensibility points. All these changes have been merged back to Ace now, which supersedes Skywriter. Both <a href="http://ajax.org">Ajax.org</a> and <a href="http://mozilla.org">Mozilla</a> are actively developing and maintaining Ace.</p> 
+ 
+                    
+                    <h2>Getting the code</h2> 
+                    <div class="divider"></div> 
+                    <p>Ace is a community project. We actively encourage and support contributions. The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>. It is released under the Mozilla tri-license (MPL/GPL/LGPL). This is the same license used by Firefox. This license is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
+                    <pre>git clone git://github.com/ajaxorg/ace.git</pre></p> 
+ 
+                </div> 
+            </div> 
+        </div> 
+        <div id="footer"> 
+            <ul class="menu-footer"> 
+                <li><a href="http://www.cloud9ide.com">About Cloud9</a></li> 
+                <li>|</li> 
+                <li>Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2011</li> 
+            </ul> 
+        </div> 
+ 
+        <script type="text/javascript"> 
+ var _gaq = _gaq || [];
+ _gaq.push(['_setAccount', 'UA-18736001-1']);
+ _gaq.push(['_trackPageview']);
+ 
+ (function() {
+   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+        </script> 
+    </body> 
+</html> 
