@@ -359,7 +359,7 @@ function demo() {
     console.log('# kitchen sink ---------');
 
     copy({
-        source: "index.html",
+        source: "kitchen-sink.html",
         dest:   "build/kitchen-sink.html",
         filter: [ function(data) {
             return (data
