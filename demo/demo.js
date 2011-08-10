@@ -84,7 +84,11 @@ exports.launch = function(env) {
       emacs: emacs,
       // This is a way to define simple keyboard remappings
       custom: new HashHandler({
-          "gotoright": "Tab"
+          "gotoright":      "Tab",
+          "indent":         "]",
+          "outdent":        "[",
+          "gotolinestart":  "^",
+          "gotolineend":    "$"
       })
     }
 
@@ -241,6 +245,7 @@ exports.launch = function(env) {
     var highlightSelectedWordE = document.getElementById("highlight_selected_word");
     var showHScrollEl = document.getElementById("show_hscroll");
     var softTabEl = document.getElementById("soft_tab");
+    var behavioursEl = document.getElementById("enable_behaviours");
 
     bindDropdown("doc", function(value) {
         var doc = docs[value];
@@ -338,6 +343,7 @@ exports.launch = function(env) {
         highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
         showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
         softTabEl.checked = session.getUseSoftTabs();
+        behavioursEl.checked = editor.getBehavioursEnabled()
     }
 
     bindDropdown("mode", function(value) {
@@ -345,7 +351,14 @@ exports.launch = function(env) {
     });
 
     bindDropdown("theme", function(value) {
-        env.editor.setTheme(value);
+        if (require.packaged) {
+            loadTheme(value, function() {
+                env.editor.setTheme(value);
+            });
+        }
+        else {
+            env.editor.setTheme(value);
+        }
     });
 
     bindDropdown("keybinding", function(value) {
@@ -412,6 +425,10 @@ exports.launch = function(env) {
 
     bindCheckbox("soft_tab", function(checked) {
         env.editor.getSession().setUseSoftTabs(checked);
+    });
+
+    bindCheckbox("enable_behaviours", function(checked) {
+        env.editor.setBehavioursEnabled(checked);
     });
 
     var secondSession = null;
@@ -584,7 +601,7 @@ exports.launch = function(env) {
 
     // Fake-Print with custom lookup-sender-match function.
     canon.addCommand({
-        name: "save",
+        name: "print",
         bindKey: {
             win: "Ctrl-P",
             mac: "Command-P",
@@ -653,11 +670,11 @@ exports.launch = function(env) {
             var fold = session.getFoldAt(range.start.row, range.start.column);
             var column;
 
-            if(fold) {
+            if (fold) {
                 session.expandFold(fold);
                 selection.setSelectionRange(fold.range)
-            } else if(br) {
-                if(range.compare(br.row,br.column) == 1)
+            } else if (br) {
+                if (range.compare(br.row, br.column) == 1)
                     range.end = br;
                 else
                     range.start = br;
@@ -682,7 +699,7 @@ exports.launch = function(env) {
         } else {
             addFold = true;
         }
-        if(addFold) {
+        if (addFold) {
             var placeHolder = session.getTextRange(range);
             if(placeHolder.length < 3)
                 return;
@@ -691,5 +708,26 @@ exports.launch = function(env) {
         }
     }
 };
+
+var themes = {};
+function loadTheme(name, callback) {
+    if (themes[name])
+        return;
+        
+    themes[name] = 1;
+    var base = name.split("/").pop();
+    var fileName = "src/theme-" + base + ".js";
+    loadScriptFile(fileName, callback)
+}
+
+function loadScriptFile(path, callback) {
+    var head = document.getElementsByTagName('head')[0];
+    var s = document.createElement('script');
+
+    s.src = path;
+    head.appendChild(s);
+    
+    s.onload = callback;
+}
 
 });

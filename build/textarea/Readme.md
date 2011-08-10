@@ -108,9 +108,9 @@ The editor can then be opened at http://localhost:8888/index.html.
 Package Ace
 -----------
 
-To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. To install dryice and all its dependencies simply call:
+To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Before you can build you need to make sure that the submodules are up to date.
 
-    npm link .
+    git submodule update --init --recursive
 
 Afterwards Ace can be built by calling
 

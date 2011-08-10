@@ -37,3 +37,5 @@ http.createServer(function(request, response) {
     });
   });
 }).listen(port, "0.0.0.0");
+
+console.log("http://localhost:" + port);

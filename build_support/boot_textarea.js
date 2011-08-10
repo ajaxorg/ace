@@ -410,34 +410,45 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         mode: {
             text:       "Plain",
             javascript: "JavaScript",
-            coffee:     "CoffeeScript",
+            xml:        "XML",
             html:       "HTML",
             css:        "CSS",
             scss:       "SCSS",
-            xml:        "XML",
-            svg:        "SVG",
-            c_cpp:      "C++",
-            csharp:     "C#",
-            java:       "Java",
-            php:        "PHP",
-            ruby:       "Ruby",
-            perl:       "Perl",
             python:     "Python",
-            clojure:    "Clojure"
+            php:        "PHP",
+            java:       "Java",
+            ruby:       "Ruby",
+            c_cpp:      "C/C++",
+            coffee:     "CoffeeScript",
+            json:       "json",
+            perl:       "Perl",
+            clojure:    "Clojure",
+            ocaml:      "OCaml",
+            csharp:     "C#",
+            svg:        "SVG",
+            textile:    "Textile",
+            groovy:     "Groovy",
+            Scala:      "Scala"
         },
         theme: {
-            textmate:         "Textmate",
-            eclipse:          "Eclipse",
             clouds:           "Clouds",
             clouds_midnight:  "Clouds Midnight",
             cobalt:           "Cobalt",
+            crimson_editor:   "Crimson Editor",
             dawn:             "Dawn",
+            eclipse:          "Eclipse",
             idle_fingers:     "Idle Fingers",
             kr_theme:         "Kr Theme",
+            merbivore:        "Merbivore",
+            merbivore_soft:   "Merbivore Soft",
             mono_industrial:  "Mono Industrial",
             monokai:          "Monokai",
             pastel_on_dark:   "Pastel On Dark",
-            twilight:         "Twilight"
+            solarized_dark:   "Solarized Dark",
+            solarized_light:  "Solarized Light",
+            textmate:         "Textmate",
+            twilight:         "Twilight",
+            vibrant_ink:      "Vibrant Ink"
         },
         gutter: BOOL,
         fontSize: {
@@ -456,7 +467,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
         showPrintMargin:    BOOL,
         useSoftTabs:        BOOL,
         showInvisibles:     BOOL
-    }
+    };
 
     var table = [];
     table.push("<table><tr><th>Setting</th><th>Value</th></tr>");

@@ -1,8 +1,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-
-    font-family: "Menlo", "Monaco", "Courier New", monospace;
+    font-family: Monaco, "Menlo", "Courier New", monospace;
     font-size: 12px;
 }
 
@@ -81,6 +80,7 @@
     opacity: 0;
     background: transparent;
     appearance: none;
+    -moz-appearance: none;
     border: none;
     resize: none;
     outline: none;
@@ -97,7 +97,6 @@
 }
 
 .ace_text-layer {
-    font-family: Monaco, "Courier New", monospace;
     color: black;
 }
 
@@ -109,7 +108,7 @@
 .ace_cursor-layer {
     z-index: 4;
     cursor: text;
-    pointer-events: none;
+    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */
 }
 
 .ace_cursor {
