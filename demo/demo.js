@@ -70,6 +70,7 @@ exports.launch = function(env) {
     var TextMode = require("ace/mode/text").Mode;
     var GroovyMode = require("ace/mode/groovy").Mode;
     var ScalaMode = require("ace/mode/scala").Mode;
+    var LatexMode = require("ace/mode/latex").Mode;
 
     var UndoManager = require("ace/undomanager").UndoManager;
 
@@ -182,6 +183,9 @@ exports.launch = function(env) {
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
+    docs.latex = new EditSession(document.getElementById("latex").innerHTML);
+    docs.latex.setMode(new LatexMode());
+    docs.latex.setUndoManager(new UndoManager());
     
     
 
@@ -226,7 +230,8 @@ exports.launch = function(env) {
         ocaml: new OcamlMode(),
         csharp: new CSharpMode(),
         groovy: new GroovyMode(),
-        scala: new ScalaMode()
+        scala: new ScalaMode(),
+        latex: new LatexMode()
     };
 
     function getMode() {
@@ -323,6 +328,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof ScalaMode) {
             modeEl.value = "scala";
+        }
+        else if (mode instanceof LatexMode) {
+            modeEl.value = "latex";
         }
         else {
             modeEl.value = "text";
