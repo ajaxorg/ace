@@ -83,7 +83,11 @@ var supportedScopes = {
    "variable": "variable",
    "variable.language": "variable.language",
    
+   "meta": "meta",   
    "meta.tag.sgml.doctype": "xml_pe",
+   "meta.tag": "meta.tag",
+   "meta.tag.form": "meta.tag.form",
+   "entity.other.attribute-name": "entity.other.attribute-name",
    
    "collab.user1": "collab.user1"
 };
@@ -171,7 +175,7 @@ function createTheme(name, styles, cssTemplate, jsTemplate) {
 };
 
 function hyphenate(str) {
-    return str.replace(/([A-Z])/g, "-$1").replace("_", "-").toLowerCase();
+    return str.replace(/([A-Z])/g, "-$1").replace(/_/g, "-").toLowerCase();
 }
 
 var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
@@ -182,13 +186,17 @@ var themes = {
     "idle_fingers": "idleFingers",
     "twilight": "Twilight",
     "monokai": "Monokai",
+    "merbivore": "Merbivore",
+    "merbivore_soft": "Merbivore Soft",
+    "pastel_on_dark": "Pastels on Dark",
     "cobalt": "Cobalt",
     "mono_industrial": "monoindustrial",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
     "kr_theme": "krTheme",
-	"solarized_light": "Solarized-light",
-	"solarized_dark": "Solarized-dark"
+    "solarized_light": "Solarized-light",
+    "solarized_dark": "Solarized-dark",
+    "vibrant_ink": "Vibrant Ink"
 }
 
 for (var name in themes) {

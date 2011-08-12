@@ -147,6 +147,23 @@
   %xml_pe%
 }
 
+.%cssClass% .ace_meta {
+  %meta%
+}
+
+.%cssClass% .ace_meta.ace_tag {
+  %meta.tag%
+}
+
+.%cssClass% .ace_meta.ace_tag.ace_input {
+  %ace.meta.tag.input%
+}
+
+.%cssClass% .ace_entity.ace_other.ace_attribute-name {
+  %entity.other.attribute-name%
+}
+
+
 .%cssClass% .ace_collab.ace_user1 {
   %collab.user1%   
 }
