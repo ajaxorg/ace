@@ -14484,7 +14484,7 @@ var Text = function(parentEl) {
 
             var html = [];
             var tokens = this.session.getTokens(i, i);
-            this.$renderLine(html, i, tokens[0].tokens, true);
+            this.$renderLine(html, i, tokens[0].tokens, !this.$useLineGroups());
             lineElement = dom.setInnerHtml(lineElement, html.join(""));
 
             i = this.session.getRowFoldEnd(i);
@@ -14553,9 +14553,14 @@ var Text = function(parentEl) {
 
             // don't use setInnerHtml since we are working with an empty DIV
             container.innerHTML = html.join("");
-            var lines = container.childNodes
-            while(lines.length)
-                fragment.appendChild(lines[0]);
+            if (this.$useLineGroups()) {
+                container.className = 'ace_line_group';
+                fragment.appendChild(container);
+            } else {
+                var lines = container.childNodes
+                while(lines.length)
+                    fragment.appendChild(lines[0]);
+            }
 
             row++;
         }
@@ -14582,6 +14587,9 @@ var Text = function(parentEl) {
             if(row > lastRow)
                 break;
 
+            if (this.$useLineGroups())
+                html.push("<div class='ace_line_group'>")
+
             // Get the tokens per line as there might be some lines in between
             // beeing folded.
             // OPTIMIZE: If there is a long block of unfolded lines, just make
@@ -14589,6 +14597,9 @@ var Text = function(parentEl) {
             var tokens = this.session.getTokens(row, row);
             if (tokens.length == 1)
                 this.$renderLine(html, row, tokens[0].tokens, false);
+
+            if (this.$useLineGroups())
+                html.push("</div>"); // end the line group
 
             row++;
         }
@@ -14798,6 +14809,15 @@ var Text = function(parentEl) {
         // TODO: Build a fake splits array!
         var splits = this.session.$useWrapMode?this.session.$wrapData[row]:null;
         this.$renderLineCore(stringBuilder, row, renderTokens, splits, onlyContents);
+    };
+    
+    this.$useLineGroups = function() {
+        // For the updateLines function to work correctly, it's important that the
+        // child nodes of this.element correspond on a 1-to-1 basis to rows in the 
+        // document (as distinct from lines on the screen). For sessions that are
+        // wrapped, this means we need to add a layer to the node hierarchy (tagged
+        // with the class name ace_line_group).
+        return this.session.getUseWrapMode();
     };
 
     this.destroy = function() {
