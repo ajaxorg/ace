@@ -4,7 +4,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-    font-family: 'Droid Sans Mono', 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;
     font-size: 12px;
 }
 
