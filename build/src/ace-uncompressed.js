@@ -15361,6 +15361,10 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
   border: 1px solid rgb(200, 200, 250);\
 }\
 \
+.ace-tm .ace_meta.ace_tag {\
+  color:rgb(28, 2, 255);\
+}\
+\
 .ace-tm .ace_string.ace_regex {\
   color: rgb(255, 0, 0)\
 }";
@@ -17502,6 +17506,23 @@ define("text/tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {" +
   ".%cssClass% .ace_xml_pe {" +
   "  %xml_pe%" +
   "}" +
+  "" +
+  ".%cssClass% .ace_meta {" +
+  "  %meta%" +
+  "}" +
+  "" +
+  ".%cssClass% .ace_meta.ace_tag {" +
+  "  %meta.tag%" +
+  "}" +
+  "" +
+  ".%cssClass% .ace_meta.ace_tag.ace_input {" +
+  "  %ace.meta.tag.input%" +
+  "}" +
+  "" +
+  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {" +
+  "  %entity.other.attribute-name%" +
+  "}" +
+  "" +
   "" +
   ".%cssClass% .ace_collab.ace_user1 {" +
   "  %collab.user1%   " +

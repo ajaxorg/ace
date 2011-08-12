@@ -18560,6 +18560,10 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
   border: 1px solid rgb(200, 200, 250);\
 }\
 \
+.ace-tm .ace_meta.ace_tag {\
+  color:rgb(28, 2, 255);\
+}\
+\
 .ace-tm .ace_string.ace_regex {\
   color: rgb(255, 0, 0)\
 }";
@@ -20524,7 +20528,6 @@ var HtmlHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
-
     function string(state) {
         return [
             {
@@ -20558,6 +20561,36 @@ var HtmlHighlightRules = function() {
             regex : '.+'
         }]
     }
+    
+    function tag(states, name, nextState) {
+        states[name] = [{
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token : "meta.tag",
+            regex : "[-_a-zA-Z0-9:]+",
+            next : name + "-attribute-list" 
+        }, {
+            token: "empty",
+            regex: "",
+            next : name + "-attribute-list"
+        }];
+
+        states[name + "-attribute-list"] = [{
+            token : "text",
+            regex : ">",
+            next : nextState
+        }, {
+            token : "entity.other.attribute-name",
+            regex : "[-_a-zA-Z0-9:]+"
+        }, {
+            token : "constant.numeric", // float
+            regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }].concat(string("attribute-list"));
+    };
 
     this.$rules = {
         start : [ {
@@ -20593,42 +20626,6 @@ var HtmlHighlightRules = function() {
             regex : "[^<]+"
         } ],
 
-        script : [ {
-            token : "text",
-            regex : ">",
-            next : "js-start"
-        }, {
-            token : "keyword",
-            regex : "[-_a-zA-Z0-9:]+"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }].concat(string("script")),
-
-        css : [ {
-            token : "text",
-            regex : ">",
-            next : "css-start"
-        }, {
-            token : "keyword",
-            regex : "[-_a-zA-Z0-9:]+"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }].concat(string("style")),
-
-        tag : [ {
-            token : "text",
-            regex : ">",
-            next : "start"
-        }, {
-            token : "keyword",
-            regex : "[-_a-zA-Z0-9:]+"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }].concat(string("tag")),
-        
         "style-qstring": multiLineString("'", "style"),
         "style-qqstring": multiLineString('"', "style"),
         "script-qstring": multiLineString("'", "script"),
@@ -20660,6 +20657,10 @@ var HtmlHighlightRules = function() {
             regex : ".+"
         } ]
     };
+    
+    tag(this.$rules, "tag", "start");
+    tag(this.$rules, "css", "css-start");
+    tag(this.$rules, "script", "js-start");
     
     this.embedRules(JavaScriptHighlightRules, "js-", [{
         token: "comment",
@@ -28872,6 +28873,23 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {" +
   ".%cssClass% .ace_xml_pe {" +
   "  %xml_pe%" +
   "}" +
+  "" +
+  ".%cssClass% .ace_meta {" +
+  "  %meta%" +
+  "}" +
+  "" +
+  ".%cssClass% .ace_meta.ace_tag {" +
+  "  %meta.tag%" +
+  "}" +
+  "" +
+  ".%cssClass% .ace_meta.ace_tag.ace_input {" +
+  "  %ace.meta.tag.input%" +
+  "}" +
+  "" +
+  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {" +
+  "  %entity.other.attribute-name%" +
+  "}" +
+  "" +
   "" +
   ".%cssClass% .ace_collab.ace_user1 {" +
   "  %collab.user1%   " +
