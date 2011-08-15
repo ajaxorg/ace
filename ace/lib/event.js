@@ -168,14 +168,26 @@ else {
 }
 
 exports.addMouseWheelListener = function(el, callback) {
+    var max = 0;
     var listener = function(e) {
         if (e.wheelDelta !== undefined) {
+            
+            // some versions of Safari (e.g. 5.0.5) report insanely high
+            // scroll values. These browsers require a higher factor
+            if (e.wheelDeltaY > max)
+                max = e.wheelDeltaY 
+
+            if (max > 1000)
+                factor = 400;
+            else
+                factor = 8;
+                
             if (e.wheelDeltaX !== undefined) {
-                e.wheelX = -e.wheelDeltaX / 8;
-                e.wheelY = -e.wheelDeltaY / 8;
+                e.wheelX = -e.wheelDeltaX / factor;
+                e.wheelY = -e.wheelDeltaY / factor;
             } else {
                 e.wheelX = 0;
-                e.wheelY = -e.wheelDelta / 8;
+                e.wheelY = -e.wheelDelta / factor;
             }
         }
         else {
