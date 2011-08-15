@@ -186,7 +186,7 @@ exports.launch = function(env) {
     
 
     // Add a "name" property to all docs
-    for (doc in docs) {
+    for (var doc in docs) {
         docs[doc].name = doc;
     }
 
