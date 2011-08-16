@@ -140,7 +140,9 @@ window.__ace_shadowed__ = {
     MIT License. http://github.com/280north/narwhal/blob/master/README.md
 */
 
-__ace_shadowed__.define('pilot/fixoldbrowsers', ['require', 'exports', 'module' ], function(require, exports, module) {
+__ace_shadowed__.define('pilot/fixoldbrowsers', ['require', 'exports', 'module' , 'pilot/regexp'], function(require, exports, module) {
+
+require("pilot/regexp");
 
 /**
  * Brings an environment as close to ECMAScript 5 compliance
@@ -964,6 +966,112 @@ if (!String.prototype.trim) {
         return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
     };
 }
+
+});__ace_shadowed__.define('pilot/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+// Based on code from:
+//
+// XRegExp 1.5.0
+// (c) 2007-2010 Steven Levithan
+// MIT License
+// <http://xregexp.com>
+// Provides an augmented, extensible, cross-browser implementation of regular expressions,
+// including support for additional syntax, flags, and methods
+
+    //---------------------------------
+    //  Private variables
+    //---------------------------------
+
+    var real = {
+            exec: RegExp.prototype.exec,
+            test: RegExp.prototype.test,
+            match: String.prototype.match,
+            replace: String.prototype.replace,
+            split: String.prototype.split
+        },
+        compliantExecNpcg = real.exec.call(/()??/, "")[1] === undefined, // check `exec` handling of nonparticipating capturing groups
+        compliantLastIndexIncrement = function () {
+            var x = /^/g;
+            real.test.call(x, "");
+            return !x.lastIndex;
+        }();
+
+    //---------------------------------
+    //  Overriden native methods
+    //---------------------------------
+
+    // Adds named capture support (with backreferences returned as `result.name`), and fixes two
+    // cross-browser issues per ES3:
+    // - Captured values for nonparticipating capturing groups should be returned as `undefined`,
+    //   rather than the empty string.
+    // - `lastIndex` should not be incremented after zero-length matches.
+    RegExp.prototype.exec = function (str) {
+        var match = real.exec.apply(this, arguments),
+            name, r2;
+        if (match) {
+            // Fix browsers whose `exec` methods don't consistently return `undefined` for
+            // nonparticipating capturing groups
+            if (!compliantExecNpcg && match.length > 1 && indexOf(match, "") > -1) {
+                r2 = RegExp(this.source, real.replace.call(getNativeFlags(this), "g", ""));
+                // Using `str.slice(match.index)` rather than `match[0]` in case lookahead allowed
+                // matching due to characters outside the match
+                real.replace.call(str.slice(match.index), r2, function () {
+                    for (var i = 1; i < arguments.length - 2; i++) {
+                        if (arguments[i] === undefined)
+                            match[i] = undefined;
+                    }
+                });
+            }
+            // Attach named capture properties
+            if (this._xregexp && this._xregexp.captureNames) {
+                for (var i = 1; i < match.length; i++) {
+                    name = this._xregexp.captureNames[i - 1];
+                    if (name)
+                       match[name] = match[i];
+                }
+            }
+            // Fix browsers that increment `lastIndex` after zero-length matches
+            if (!compliantLastIndexIncrement && this.global && !match[0].length && (this.lastIndex > match.index))
+                this.lastIndex--;
+        }
+        return match;
+    };
+
+    // Don't override `test` if it won't change anything
+    if (!compliantLastIndexIncrement) {
+        // Fix browser bug in native method
+        RegExp.prototype.test = function (str) {
+            // Use the native `exec` to skip some processing overhead, even though the overriden
+            // `exec` would take care of the `lastIndex` fix
+            var match = real.exec.call(this, str);
+            // Fix browsers that increment `lastIndex` after zero-length matches
+            if (match && this.global && !match[0].length && (this.lastIndex > match.index))
+                this.lastIndex--;
+            return !!match;
+        };
+    }
+
+    //---------------------------------
+    //  Private helper functions
+    //---------------------------------
+
+    function getNativeFlags (regex) {
+        return (regex.global     ? "g" : "") +
+               (regex.ignoreCase ? "i" : "") +
+               (regex.multiline  ? "m" : "") +
+               (regex.extended   ? "x" : "") + // Proposed for ES4; included in AS3
+               (regex.sticky     ? "y" : "");
+    };
+
+    function indexOf (array, item, from) {
+        if (Array.prototype.indexOf) // Use the native array method if available
+            return array.indexOf(item, from);
+        for (var i = from || 0; i < array.length; i++) {
+            if (array[i] === item)
+                return i;
+        }
+        return -1;
+    };
 
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -2939,6 +3047,8 @@ exports.isChrome = parseFloat(ua.split(" Chrome/")[1]) || undefined;
 exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
 
 exports.isIPad = ua.indexOf("iPad") >= 0;
+
+exports.isTouchPad = ua.indexOf("TouchPad") >= 0;
 
 /**
  * I hate doing this, but we need some way to determine if the user is on a Mac
@@ -5253,9 +5363,14 @@ if (document.documentElement.setCapture) {
             return exports.stopPropagation(e);
         }
 
+        var called = false;
         function onReleaseCapture(e) {
-            eventHandler && eventHandler(e);
-            releaseCaptureHandler && releaseCaptureHandler();
+            eventHandler(e);
+            
+            if (!called) {
+                called = true;
+                releaseCaptureHandler();
+            }
 
             exports.removeListener(el, "mousemove", eventHandler);
             exports.removeListener(el, "mouseup", onReleaseCapture);
@@ -5293,14 +5408,26 @@ else {
 }
 
 exports.addMouseWheelListener = function(el, callback) {
+    var max = 0;
     var listener = function(e) {
         if (e.wheelDelta !== undefined) {
+            
+            // some versions of Safari (e.g. 5.0.5) report insanely high
+            // scroll values. These browsers require a higher factor
+            if (e.wheelDeltaY > max)
+                max = e.wheelDeltaY 
+
+            if (max > 1000)
+                factor = 400;
+            else
+                factor = 8;
+                
             if (e.wheelDeltaX !== undefined) {
-                e.wheelX = -e.wheelDeltaX / 8;
-                e.wheelY = -e.wheelDeltaY / 8;
+                e.wheelX = -e.wheelDeltaX / factor;
+                e.wheelY = -e.wheelDeltaY / factor;
             } else {
                 e.wheelX = 0;
-                e.wheelY = -e.wheelDelta / 8;
+                e.wheelY = -e.wheelDelta / factor;
             }
         }
         else {
@@ -5696,13 +5823,10 @@ var Editor =function(renderer, session) {
         // Safari needs the timeout
         // iOS and Firefox need it called immediately
         // to be on the save side we do both
-        // except for IE
         var _self = this;
-        if (!useragent.isIE) {
-            setTimeout(function() {
-                _self.textInput.focus();
-            });
-        }
+        setTimeout(function() {
+            _self.textInput.focus();
+        });
         this.textInput.focus();
     };
     
@@ -6722,6 +6846,12 @@ var TextInput = function(parentNode, host) {
     var pasted = false;
     var tempStyle = '';
 
+    function select() {
+        try {
+            text.select();
+        } catch (e) {}
+    };
+
     function sendText(valueToSend) {
         if (!copied) {
             var value = valueToSend || text.value;
@@ -6747,7 +6877,7 @@ var TextInput = function(parentNode, host) {
 
         // Safari doesn't fire copy events if no text is selected
         text.value = PLACEHOLDER;
-        text.select();
+        select();
     }
 
     var onTextInput = function(e) {
@@ -6757,7 +6887,7 @@ var TextInput = function(parentNode, host) {
         }, 0);
     };
     
-    var onKeyPress = function(e) {
+    var onPropertyChange = function(e) {
         if (useragent.isIE && text.value.charCodeAt(0) > 128) return;
         setTimeout(function() {
             if (!inCompostion)
@@ -6788,12 +6918,12 @@ var TextInput = function(parentNode, host) {
             text.value = copyText;
         else
             e.preventDefault();
-        text.select();
+        select();
         setTimeout(function () {
             sendText();
         }, 0);
     };
-
+    
     var onCut = function(e) {
         copied = true;
         var copyText = host.getCopyText();
@@ -6802,7 +6932,7 @@ var TextInput = function(parentNode, host) {
             host.onCut();
         } else
             e.preventDefault();
-        text.select();
+        select();
         setTimeout(function () {
             sendText();
         }, 0);
@@ -6820,22 +6950,11 @@ var TextInput = function(parentNode, host) {
             inCompostion ? onCompositionUpdate() : onCompositionStart();
         });
     };
-
-    if (text.attachEvent) {
-        // Old IE + Opera
-        event.addListener(text, "propertychange", onKeyPress);
-    }
-    else {
-        if (useragent.isChrome || useragent.isSafari)
-            event.addListener(text, "textInput", onTextInput);
-        else if (useragent.isIE)
-            // IE9
-            event.addListener(text, "textinput", onTextInput);
-        else
-            // All browsers except old IE
-            event.addListener(text, "input", onTextInput);
-    }
     
+    if ("onpropertychange" in text && !("oninput" in text))
+        event.addListener(text, "propertychange", onPropertyChange);
+    else
+        event.addListener(text, "input", onTextInput);
     
     event.addListener(text, "paste", function(e) {
         // Mark that the next input text comes from past.
@@ -6849,7 +6968,7 @@ var TextInput = function(parentNode, host) {
         else {
             // If a browser doesn't support any of the things above, use the regular
             // method to detect the pasted input.
-            onKeyPress();
+            onPropertyChange();
         }
     });
 
@@ -6892,12 +7011,12 @@ var TextInput = function(parentNode, host) {
 
     event.addListener(text, "focus", function() {
         host.onFocus();
-        text.select();
+        select();
     });
 
     this.focus = function() {
         host.onFocus();
-        text.select();
+        select();
         text.focus();
     };
 
@@ -7035,24 +7154,33 @@ var MouseHandler = function(editor) {
     };
 
     this.onMouseDown = function(e) {
-        // if this click caused the editor to be focused ignore the click
-        // for selection and cursor placement
-        if (
-            !this.browserFocus.isFocused()
-            || new Date().getTime() - this.browserFocus.lastFocus < 20
-            || !this.editor.isFocused()
-        )
-            return;
-        
         var pageX = event.getDocumentX(e);
         var pageY = event.getDocumentY(e);
+        
         var pos = this.$getEventPosition(e);
+        
         var editor = this.editor;
         var self = this;
         var selectionRange = editor.getSelectionRange();
         var selectionEmpty = selectionRange.isEmpty();
+        var inSelection = !editor.getReadOnly()
+            && !selectionEmpty
+            && selectionRange.contains(pos.row, pos.column);
+        
         var state = STATE_UNKNOWN;
-        var inSelection = false;
+        
+        // if this click caused the editor to be focused should not clear the
+        // selection
+        if (
+            inSelection && (
+                !this.browserFocus.isFocused()
+                || new Date().getTime() - this.browserFocus.lastFocus < 20
+                || !this.editor.isFocused()
+            )
+        ) {
+            this.editor.focus();
+            return;
+        }
 
         var button = event.getButton(e);
         if (button !== 0) {
@@ -7071,10 +7199,6 @@ var MouseHandler = function(editor) {
                 editor.selection.setSelectionRange(fold.range);
                 return;
             }
-
-            inSelection = !editor.getReadOnly()
-                && !selectionEmpty
-                && selectionRange.contains(pos.row, pos.column);
         }
 
         if (!inSelection) {
@@ -7202,8 +7326,7 @@ var MouseHandler = function(editor) {
 
         var onDragSelectionInterval = function() {
             dragCursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            dragCursor.row = Math.max(0, Math.min(dragCursor.row,
-                                                  editor.session.getLength() - 1));
+            dragCursor.row = Math.max(0, Math.min(dragCursor.row, editor.session.getLength() - 1));
 
             editor.moveCursorToPosition(dragCursor);
         };
@@ -7311,13 +7434,26 @@ var BrowserFocus = function(win) {
     this._isFocused = true;
     
     var _self = this;
-    event.addListener(win, "blur", function(e) {
-        _self._setFocused(false);
-    });
 
-    event.addListener(win, "focus", function(e) {
-        _self._setFocused(true);
-    });
+    // IE < 9 supports focusin and focusout events
+    if ("onfocusin" in win.document) {
+        event.addListener(win.document, "focusin", function(e) {
+            _self._setFocused(true);
+        });
+
+        event.addListener(win.document, "focusout", function(e) {
+            _self._setFocused(!!e.toElement);
+        });
+    }
+    else {
+        event.addListener(win, "blur", function(e) {
+            _self._setFocused(false);
+        });
+
+        event.addListener(win, "focus", function(e) {
+            _self._setFocused(true);
+        });
+    }
 };
 
 (function(){
@@ -15417,87 +15553,13 @@ exports.create = create;
 
 
 });
-__ace_shadowed__.define("text!cockpit/ui/cli_view.css", [], "" +
-  "#cockpitInput { padding-left: 16px; }" +
-  "" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }" +
-  "" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }" +
-  ".cptCompletion.VALID { background: #FFF; }" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }" +
-  ".cptCompletion.INVALID { background: #DDD; }" +
-  ".cptCompletion span { color: #FFF; }" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }" +
+__ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);" +
   "" +
   "" +
-  ".cptHints {" +
-  "  color: #000;" +
-  "  position: absolute;" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);" +
-  "  background: rgba(250, 250, 250, 0.8);" +
-  "  -moz-border-radius-topleft: 10px;" +
-  "  -moz-border-radius-topright: 10px;" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;" +
-  "  z-index: 1000;" +
-  "  padding: 8px;" +
-  "  display: none;" +
-  "}" +
-  "" +
-  ".cptFocusPopup { display: block; }" +
-  ".cptFocusPopup.cptNoPopup { display: none; }" +
-  "" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }" +
-  "" +
-  ".cptGt { font-weight: bold; font-size: 120%; }" +
-  "");
-
-__ace_shadowed__.define("text!cockpit/ui/request_view.css", [], "" +
-  ".cptRowIn {" +
-  "  display: box; display: -moz-box; display: -webkit-box;" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;" +
-  "  color: #333;" +
-  "  background-color: #EEE;" +
-  "  width: 100%;" +
-  "  font-family: consolas, courier, monospace;" +
-  "}" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }" +
-  ".cptRowIn > img { cursor: pointer; }" +
-  ".cptHover { display: none; }" +
-  ".cptRowIn:hover > .cptHover { display: block; }" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }" +
-  ".cptOutTyped {" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;" +
-  "  font-weight: bold; color: #000; font-size: 120%;" +
-  "}" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }" +
-  ".cptRowOutput strong," +
-  ".cptRowOutput b," +
-  ".cptRowOutput th," +
-  ".cptRowOutput h1," +
-  ".cptRowOutput h2," +
-  ".cptRowOutput h3 { color: #000; }" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }" +
-  ".cptRowOutput input[type=password]," +
-  ".cptRowOutput input[type=text]," +
-  ".cptRowOutput textarea {" +
-  "  color: #000; font-size: 120%;" +
-  "  background: transparent; padding: 3px;" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;" +
-  "}" +
-  ".cptRowOutput table," +
-  ".cptRowOutput td," +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }" +
-  ".cptRowOutput .right { text-align: right; }" +
-  "");
-
-__ace_shadowed__.define("text!ace/css/editor.css", [], ".ace_editor {" +
+  ".ace_editor {" +
   "    position: absolute;" +
   "    overflow: hidden;" +
-  "    font-family: Monaco, \"Menlo\", \"Courier New\", monospace;" +
+  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;" +
   "    font-size: 12px;" +
   "}" +
   "" +
@@ -15704,27 +15766,6 @@ __ace_shadowed__.define("text!build/demo/styles.css", [], "html {" +
   "" +
   "#controls td + td {" +
   "    text-align: left;" +
-  "}" +
-  "" +
-  "#cockpitInput {" +
-  "    position: absolute;" +
-  "    left: 280px;" +
-  "    right: 0px;" +
-  "    bottom: 0;" +
-  "" +
-  "    border: none; outline: none;" +
-  "    font-family: consolas, courier, monospace;" +
-  "    font-size: 120%;" +
-  "}" +
-  "" +
-  "#cockpitOutput {" +
-  "    padding: 10px;" +
-  "    margin: 0 15px;" +
-  "    border: 1px solid #AAA;" +
-  "    -moz-border-radius-topleft: 10px;" +
-  "    -moz-border-radius-topright: 10px;" +
-  "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
-  "    background: #DDD; color: #000;" +
   "}");
 
 __ace_shadowed__.define("text!build/textarea/style.css", [], "body {" +
@@ -16191,6 +16232,12 @@ __ace_shadowed__.define("text!build_support/style.css", [], "body {" +
   "" +
   "");
 
+__ace_shadowed__.define("text!demo/docs/css.css", [], ".text-layer {" +
+  "    font-family: Monaco, \"Courier New\", monospace;" +
+  "    font-size: 12px;" +
+  "    cursor: text;" +
+  "}");
+
 __ace_shadowed__.define("text!demo/styles.css", [], "html {" +
   "    height: 100%;" +
   "    width: 100%;" +
@@ -16233,27 +16280,6 @@ __ace_shadowed__.define("text!demo/styles.css", [], "html {" +
   "" +
   "#controls td + td {" +
   "    text-align: left;" +
-  "}" +
-  "" +
-  "#cockpitInput {" +
-  "    position: absolute;" +
-  "    left: 280px;" +
-  "    right: 0px;" +
-  "    bottom: 0;" +
-  "" +
-  "    border: none; outline: none;" +
-  "    font-family: consolas, courier, monospace;" +
-  "    font-size: 120%;" +
-  "}" +
-  "" +
-  "#cockpitOutput {" +
-  "    padding: 10px;" +
-  "    margin: 0 15px;" +
-  "    border: 1px solid #AAA;" +
-  "    -moz-border-radius-topleft: 10px;" +
-  "    -moz-border-radius-topright: 10px;" +
-  "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
-  "    background: #DDD; color: #000;" +
   "}");
 
 __ace_shadowed__.define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";" +
@@ -17257,10 +17283,13 @@ __ace_shadowed__.define("text!doc/site/style.css", [], "body {" +
   "" +
   "");
 
-__ace_shadowed__.define("text!lib/ace/css/editor.css", [], ".ace_editor {" +
+__ace_shadowed__.define("text!lib/ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);" +
+  "" +
+  "" +
+  ".ace_editor {" +
   "    position: absolute;" +
   "    overflow: hidden;" +
-  "    font-family: Monaco, \"Menlo\", \"Courier New\", monospace;" +
+  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;" +
   "    font-size: 12px;" +
   "}" +
   "" +

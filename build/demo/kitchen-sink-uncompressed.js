@@ -176,63 +176,6 @@ var lookup = function(moduleName) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('cockpit/index', ['require', 'exports', 'module' , 'pilot/index', 'cockpit/cli', 'cockpit/ui/settings', 'cockpit/ui/cli_view', 'cockpit/commands/basic'], function(require, exports, module) {
-
-
-exports.startup = function(data, reason) {
-  require('pilot/index');
-  require('cockpit/cli').startup(data, reason);
-  // window.testCli = require('cockpit/test/testCli');
-
-  require('cockpit/ui/settings').startup(data, reason);
-  require('cockpit/ui/cli_view').startup(data, reason);
-  require('cockpit/commands/basic').startup(data, reason);
-};
-
-/*
-exports.shutdown(data, reason) {
-};
-*/
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
 define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
 exports.startup = function(data, reason) {
@@ -273,7 +216,9 @@ exports.shutdown = function(data, reason) {
     MIT License. http://github.com/280north/narwhal/blob/master/README.md
 */
 
-define('pilot/fixoldbrowsers', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('pilot/fixoldbrowsers', ['require', 'exports', 'module' , 'pilot/regexp'], function(require, exports, module) {
+
+require("pilot/regexp");
 
 /**
  * Brings an environment as close to ECMAScript 5 compliance
@@ -1097,6 +1042,112 @@ if (!String.prototype.trim) {
         return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
     };
 }
+
+});define('pilot/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+// Based on code from:
+//
+// XRegExp 1.5.0
+// (c) 2007-2010 Steven Levithan
+// MIT License
+// <http://xregexp.com>
+// Provides an augmented, extensible, cross-browser implementation of regular expressions,
+// including support for additional syntax, flags, and methods
+
+    //---------------------------------
+    //  Private variables
+    //---------------------------------
+
+    var real = {
+            exec: RegExp.prototype.exec,
+            test: RegExp.prototype.test,
+            match: String.prototype.match,
+            replace: String.prototype.replace,
+            split: String.prototype.split
+        },
+        compliantExecNpcg = real.exec.call(/()??/, "")[1] === undefined, // check `exec` handling of nonparticipating capturing groups
+        compliantLastIndexIncrement = function () {
+            var x = /^/g;
+            real.test.call(x, "");
+            return !x.lastIndex;
+        }();
+
+    //---------------------------------
+    //  Overriden native methods
+    //---------------------------------
+
+    // Adds named capture support (with backreferences returned as `result.name`), and fixes two
+    // cross-browser issues per ES3:
+    // - Captured values for nonparticipating capturing groups should be returned as `undefined`,
+    //   rather than the empty string.
+    // - `lastIndex` should not be incremented after zero-length matches.
+    RegExp.prototype.exec = function (str) {
+        var match = real.exec.apply(this, arguments),
+            name, r2;
+        if (match) {
+            // Fix browsers whose `exec` methods don't consistently return `undefined` for
+            // nonparticipating capturing groups
+            if (!compliantExecNpcg && match.length > 1 && indexOf(match, "") > -1) {
+                r2 = RegExp(this.source, real.replace.call(getNativeFlags(this), "g", ""));
+                // Using `str.slice(match.index)` rather than `match[0]` in case lookahead allowed
+                // matching due to characters outside the match
+                real.replace.call(str.slice(match.index), r2, function () {
+                    for (var i = 1; i < arguments.length - 2; i++) {
+                        if (arguments[i] === undefined)
+                            match[i] = undefined;
+                    }
+                });
+            }
+            // Attach named capture properties
+            if (this._xregexp && this._xregexp.captureNames) {
+                for (var i = 1; i < match.length; i++) {
+                    name = this._xregexp.captureNames[i - 1];
+                    if (name)
+                       match[name] = match[i];
+                }
+            }
+            // Fix browsers that increment `lastIndex` after zero-length matches
+            if (!compliantLastIndexIncrement && this.global && !match[0].length && (this.lastIndex > match.index))
+                this.lastIndex--;
+        }
+        return match;
+    };
+
+    // Don't override `test` if it won't change anything
+    if (!compliantLastIndexIncrement) {
+        // Fix browser bug in native method
+        RegExp.prototype.test = function (str) {
+            // Use the native `exec` to skip some processing overhead, even though the overriden
+            // `exec` would take care of the `lastIndex` fix
+            var match = real.exec.call(this, str);
+            // Fix browsers that increment `lastIndex` after zero-length matches
+            if (match && this.global && !match[0].length && (this.lastIndex > match.index))
+                this.lastIndex--;
+            return !!match;
+        };
+    }
+
+    //---------------------------------
+    //  Private helper functions
+    //---------------------------------
+
+    function getNativeFlags (regex) {
+        return (regex.global     ? "g" : "") +
+               (regex.ignoreCase ? "i" : "") +
+               (regex.multiline  ? "m" : "") +
+               (regex.extended   ? "x" : "") + // Proposed for ES4; included in AS3
+               (regex.sticky     ? "y" : "");
+    };
+
+    function indexOf (array, item, from) {
+        if (Array.prototype.indexOf) // Use the native array method if available
+            return array.indexOf(item, from);
+        for (var i = from || 0; i < array.length; i++) {
+            if (array[i] === item)
+                return i;
+        }
+        return -1;
+    };
 
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -2929,6 +2980,8 @@ exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
 
 exports.isIPad = ua.indexOf("iPad") >= 0;
 
+exports.isTouchPad = ua.indexOf("TouchPad") >= 0;
+
 /**
  * I hate doing this, but we need some way to determine if the user is on a Mac
  * The reason is that users have different expectations of their key combinations.
@@ -4393,2931 +4446,6 @@ exports.shutdown = function(data, reason) {
 
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('cockpit/cli', ['require', 'exports', 'module' , 'pilot/console', 'pilot/lang', 'pilot/oop', 'pilot/event_emitter', 'pilot/types', 'pilot/canon'], function(require, exports, module) {
-
-
-var console = require('pilot/console');
-var lang = require('pilot/lang');
-var oop = require('pilot/oop');
-var EventEmitter = require('pilot/event_emitter').EventEmitter;
-
-//var keyboard = require('keyboard/keyboard');
-var types = require('pilot/types');
-var Status = require('pilot/types').Status;
-var Conversion = require('pilot/types').Conversion;
-var canon = require('pilot/canon');
-
-/**
- * Normally type upgrade is done when the owning command is registered, but
- * out commandParam isn't part of a command, so it misses out.
- */
-exports.startup = function(data, reason) {
-    canon.upgradeType('command', commandParam);
-};
-
-/**
- * The information required to tell the user there is a problem with their
- * input.
- * TODO: There a several places where {start,end} crop up. Perhaps we should
- * have a Cursor object.
- */
-function Hint(status, message, start, end, predictions) {
-    this.status = status;
-    this.message = message;
-
-    if (typeof start === 'number') {
-        this.start = start;
-        this.end = end;
-        this.predictions = predictions;
-    }
-    else {
-        var arg = start;
-        this.start = arg.start;
-        this.end = arg.end;
-        this.predictions = arg.predictions;
-    }
-}
-Hint.prototype = {
-};
-/**
- * Loop over the array of hints finding the one we should display.
- * @param hints array of hints
- */
-Hint.sort = function(hints, cursor) {
-    // Calculate 'distance from cursor'
-    if (cursor !== undefined) {
-        hints.forEach(function(hint) {
-            if (hint.start === Argument.AT_CURSOR) {
-                hint.distance = 0;
-            }
-            else if (cursor < hint.start) {
-                hint.distance = hint.start - cursor;
-            }
-            else if (cursor > hint.end) {
-                hint.distance = cursor - hint.end;
-            }
-            else {
-                hint.distance = 0;
-            }
-        }, this);
-    }
-    // Sort
-    hints.sort(function(hint1, hint2) {
-        // Compare first based on distance from cursor
-        if (cursor !== undefined) {
-            var diff = hint1.distance - hint2.distance;
-            if (diff != 0) {
-                return diff;
-            }
-        }
-        // otherwise go with hint severity
-        return hint2.status - hint1.status;
-    });
-    // tidy-up
-    if (cursor !== undefined) {
-        hints.forEach(function(hint) {
-            delete hint.distance;
-        }, this);
-    }
-    return hints;
-};
-exports.Hint = Hint;
-
-/**
- * A Hint that arose as a result of a Conversion
- */
-function ConversionHint(conversion, arg) {
-    this.status = conversion.status;
-    this.message = conversion.message;
-    if (arg) {
-        this.start = arg.start;
-        this.end = arg.end;
-    }
-    else {
-        this.start = 0;
-        this.end = 0;
-    }
-    this.predictions = conversion.predictions;
-};
-oop.inherits(ConversionHint, Hint);
-
-
-/**
- * We record where in the input string an argument comes so we can report errors
- * against those string positions.
- * We publish a 'change' event when-ever the text changes
- * @param emitter Arguments use something else to pass on change events.
- * Currently this will be the creating Requisition. This prevents dependency
- * loops and prevents us from needing to merge listener lists.
- * @param text The string (trimmed) that contains the argument
- * @param start The position of the text in the original input string
- * @param end See start
- * @param prefix Knowledge of quotation marks and whitespace used prior to the
- * text in the input string allows us to re-generate the original input from
- * the arguments.
- * @param suffix Any quotation marks and whitespace used after the text.
- * Whitespace is normally placed in the prefix to the succeeding argument, but
- * can be used here when this is the last argument.
- * @constructor
- */
-function Argument(emitter, text, start, end, prefix, suffix) {
-    this.emitter = emitter;
-    this.setText(text);
-    this.start = start;
-    this.end = end;
-    this.prefix = prefix;
-    this.suffix = suffix;
-}
-Argument.prototype = {
-    /**
-     * Return the result of merging these arguments.
-     * TODO: What happens when we're merging arguments for the single string
-     * case and some of the arguments are in quotation marks?
-     */
-    merge: function(following) {
-        if (following.emitter != this.emitter) {
-            throw new Error('Can\'t merge Arguments from different EventEmitters');
-        }
-        return new Argument(
-            this.emitter,
-            this.text + this.suffix + following.prefix + following.text,
-            this.start, following.end,
-            this.prefix,
-            following.suffix);
-    },
-
-    /**
-     * See notes on events in Assignment. We might need to hook changes here
-     * into a CliRequisition so they appear of the command line.
-     */
-    setText: function(text) {
-        if (text == null) {
-            throw new Error('Illegal text for Argument: ' + text);
-        }
-        var ev = { argument: this, oldText: this.text, text: text };
-        this.text = text;
-        this.emitter._dispatchEvent('argumentChange', ev);
-    },
-
-    /**
-     * Helper when we're putting arguments back together
-     */
-    toString: function() {
-        // TODO: There is a bug here - we should re-escape escaped characters
-        // But can we do that reliably?
-        return this.prefix + this.text + this.suffix;
-    }
-};
-
-/**
- * Merge an array of arguments into a single argument.
- * All Arguments in the array are expected to have the same emitter
- */
-Argument.merge = function(argArray, start, end) {
-    start = (start === undefined) ? 0 : start;
-    end = (end === undefined) ? argArray.length : end;
-
-    var joined;
-    for (var i = start; i < end; i++) {
-        var arg = argArray[i];
-        if (!joined) {
-            joined = arg;
-        }
-        else {
-            joined = joined.merge(arg);
-        }
-    }
-    return joined;
-};
-
-/**
- * We sometimes need a way to say 'this error occurs where ever the cursor is'
- */
-Argument.AT_CURSOR = -1;
-
-
-/**
- * A link between a parameter and the data for that parameter.
- * The data for the parameter is available as in the preferred type and as
- * an Argument for the CLI.
- * <p>We also record validity information where applicable.
- * <p>For values, null and undefined have distinct definitions. null means
- * that a value has been provided, undefined means that it has not.
- * Thus, null is a valid default value, and common because it identifies an
- * parameter that is optional. undefined means there is no value from
- * the command line.
- * @constructor
- */
-function Assignment(param, requisition) {
-    this.param = param;
-    this.requisition = requisition;
-    this.setValue(param.defaultValue);
-};
-Assignment.prototype = {
-    /**
-     * The parameter that we are assigning to
-     * @readonly
-     */
-    param: undefined,
-
-    /**
-     * Report on the status of the last parse() conversion.
-     * @see types.Conversion
-     */
-    conversion: undefined,
-
-    /**
-     * The current value in a type as specified by param.type
-     */
-    value: undefined,
-
-    /**
-     * The string version of the current value
-     */
-    arg: undefined,
-
-    /**
-     * The current value (i.e. not the string representation)
-     * Use setValue() to mutate
-     */
-    value: undefined,
-    setValue: function(value) {
-        if (this.value === value) {
-            return;
-        }
-
-        if (value === undefined) {
-            this.value = this.param.defaultValue;
-            this.conversion = this.param.getDefault ?
-                    this.param.getDefault() :
-                    this.param.type.getDefault();
-            this.arg = undefined;
-        } else {
-            this.value = value;
-            this.conversion = undefined;
-            var text = (value == null) ? '' : this.param.type.stringify(value);
-            if (this.arg) {
-                this.arg.setText(text);
-            }
-        }
-
-        this.requisition._assignmentChanged(this);
-    },
-
-    /**
-     * The textual representation of the current value
-     * Use setValue() to mutate
-     */
-    arg: undefined,
-    setArgument: function(arg) {
-        if (this.arg === arg) {
-            return;
-        }
-        this.arg = arg;
-        this.conversion = this.param.type.parse(arg.text);
-        this.conversion.arg = arg; // TODO: make this automatic?
-        this.value = this.conversion.value;
-        this.requisition._assignmentChanged(this);
-    },
-
-    /**
-     * Create a list of the hints associated with this parameter assignment.
-     * Generally there will be only one hint generated because we're currently
-     * only displaying one hint at a time, ordering by distance from cursor
-     * and severity. Since distance from cursor will be the same for all hints
-     * from this assignment all but the most severe will ever be used. It might
-     * make sense with more experience to alter this to function to be getHint()
-     */
-    getHint: function() {
-        // Allow the parameter to provide documentation
-        if (this.param.getCustomHint && this.value && this.arg) {
-            var hint = this.param.getCustomHint(this.value, this.arg);
-            if (hint) {
-                return hint;
-            }
-        }
-
-        // If there is no argument, use the cursor position
-        var message = '<strong>' + this.param.name + '</strong>: ';
-        if (this.param.description) {
-            // TODO: This should be a short description - do we need to trim?
-            message += this.param.description.trim();
-
-            // Ensure the help text ends with '. '
-            if (message.charAt(message.length - 1) !== '.') {
-                message += '.';
-            }
-            if (message.charAt(message.length - 1) !== ' ') {
-                message += ' ';
-            }
-        }
-        var status = Status.VALID;
-        var start = this.arg ? this.arg.start : Argument.AT_CURSOR;
-        var end = this.arg ? this.arg.end : Argument.AT_CURSOR;
-        var predictions;
-
-        // Non-valid conversions will have useful information to pass on
-        if (this.conversion) {
-            status = this.conversion.status;
-            if (this.conversion.message) {
-                message += this.conversion.message;
-            }
-            predictions = this.conversion.predictions;
-        }
-
-        // Hint if the param is required, but not provided
-        var argProvided = this.arg && this.arg.text !== '';
-        var dataProvided = this.value !== undefined || argProvided;
-        if (this.param.defaultValue === undefined && !dataProvided) {
-            status = Status.INVALID;
-            message += '<strong>Required<\strong>';
-        }
-
-        return new Hint(status, message, start, end, predictions);
-    },
-
-    /**
-     * Basically <tt>setValue(conversion.predictions[0])</tt> done in a safe
-     * way.
-     */
-    complete: function() {
-        if (this.conversion && this.conversion.predictions &&
-                this.conversion.predictions.length > 0) {
-            this.setValue(this.conversion.predictions[0]);
-        }
-    },
-
-    /**
-     * If the cursor is at 'position', do we have sufficient data to start
-     * displaying the next hint. This is both complex and important.
-     * For example, if the user has just typed:<ul>
-     * <li>'set tabstop ' then they clearly want to know about the valid
-     *     values for the tabstop setting, so the hint is based on the next
-     *     parameter.
-     * <li>'set tabstop' (without trailing space) - they will probably still
-     *     want to know about the valid values for the tabstop setting because
-     *     there is no confusion about the setting in question.
-     * <li>'set tabsto' they've not finished typing a setting name so the hint
-     *     should be based on the current parameter.
-     * <li>'set tabstop' (when there is an additional tabstopstyle setting) we
-     *     can't make assumptions about the setting - we're not finished.
-     * </ul>
-     * <p>Note that the input for 2 and 4 is identical, only the configuration
-     * has changed, so hint display is environmental.
-     *
-     * <p>This function works out if the cursor is before the end of this
-     * assignment (assuming that we've asked the same thing of the previous
-     * assignment) and then attempts to work out if we should use the hint from
-     * the next assignment even though technically the cursor is still inside
-     * this one due to the rules above.
-     */
-    isPositionCaptured: function(position) {
-        if (!this.arg) {
-            return false;
-        }
-
-        // Note we don't check if position >= this.arg.start because that's
-        // implied by the fact that we're asking the assignments in turn, and
-        // we want to avoid thing falling between the cracks, but we do need
-        // to check that the argument does have a position
-        if (this.arg.start === -1) {
-            return false;
-        }
-
-        // We're clearly done if the position is past the end of the text
-        if (position > this.arg.end) {
-            return false;
-        }
-
-        // If we're AT the end, the position is captured if either the status
-        // is not valid or if there are other valid options including current
-        if (position === this.arg.end) {
-            return this.conversion.status !== Status.VALID ||
-                    this.conversion.predictions.length !== 0;
-        }
-
-        // Otherwise we're clearly inside
-        return true;
-    },
-
-    /**
-     * Replace the current value with the lower value if such a concept
-     * exists.
-     */
-    decrement: function() {
-        var replacement = this.param.type.decrement(this.value);
-        if (replacement != null) {
-            this.setValue(replacement);
-        }
-    },
-
-    /**
-     * Replace the current value with the higher value if such a concept
-     * exists.
-     */
-    increment: function() {
-        var replacement = this.param.type.increment(this.value);
-        if (replacement != null) {
-            this.setValue(replacement);
-        }
-    },
-
-    /**
-     * Helper when we're rebuilding command lines.
-     */
-    toString: function() {
-        return this.arg ? this.arg.toString() : '';
-    }
-};
-exports.Assignment = Assignment;
-
-
-/**
- * This is a special parameter to reflect the command itself.
- */
-var commandParam = {
-    name: '__command',
-    type: 'command',
-    description: 'The command to execute',
-
-    /**
-     * Provide some documentation for a command.
-     */
-    getCustomHint: function(command, arg) {
-        var docs = [];
-        docs.push('<strong><tt> &gt; ');
-        docs.push(command.name);
-        if (command.params && command.params.length > 0) {
-            command.params.forEach(function(param) {
-                if (param.defaultValue === undefined) {
-                    docs.push(' [' + param.name + ']');
-                }
-                else {
-                    docs.push(' <em>[' + param.name + ']</em>');
-                }
-            }, this);
-        }
-        docs.push('</tt></strong><br/>');
-
-        docs.push(command.description ? command.description : '(No description)');
-        docs.push('<br/>');
-
-        if (command.params && command.params.length > 0) {
-            docs.push('<ul>');
-            command.params.forEach(function(param) {
-                docs.push('<li>');
-                docs.push('<strong><tt>' + param.name + '</tt></strong>: ');
-                docs.push(param.description ? param.description : '(No description)');
-                if (param.defaultValue === undefined) {
-                    docs.push(' <em>[Required]</em>');
-                }
-                else if (param.defaultValue === null) {
-                    docs.push(' <em>[Optional]</em>');
-                }
-                else {
-                    docs.push(' <em>[Default: ' + param.defaultValue + ']</em>');
-                }
-                docs.push('</li>');
-            }, this);
-            docs.push('</ul>');
-        }
-
-        return new Hint(Status.VALID, docs.join(''), arg);
-    }
-};
-
-/**
- * A Requisition collects the information needed to execute a command.
- * There is no point in a requisition for parameter-less commands because there
- * is no information to collect. A Requisition is a collection of assignments
- * of values to parameters, each handled by an instance of Assignment.
- * CliRequisition adds functions for parsing input from a command line to this
- * class.
- * <h2>Events<h2>
- * We publish the following events:<ul>
- * <li>argumentChange: The text of some argument has changed. It is likely that
- * any UI component displaying this argument will need to be updated. (Note that
- * this event is actually published by the Argument itself - see the docs for
- * Argument for more details)
- * The event object looks like: { argument: A, oldText: B, text: B }
- * <li>commandChange: The command has changed. It is likely that a UI
- * structure will need updating to match the parameters of the new command.
- * The event object looks like { command: A }
- * @constructor
- */
-function Requisition(env) {
-    this.env = env;
-    this.commandAssignment = new Assignment(commandParam, this);
-}
-
-Requisition.prototype = {
-    /**
-     * The command that we are about to execute.
-     * @see setCommandConversion()
-     * @readonly
-     */
-    commandAssignment: undefined,
-
-    /**
-     * The count of assignments. Excludes the commandAssignment
-     * @readonly
-     */
-    assignmentCount: undefined,
-
-    /**
-     * The object that stores of Assignment objects that we are filling out.
-     * The Assignment objects are stored under their param.name for named
-     * lookup. Note: We make use of the property of Javascript objects that
-     * they are not just hashmaps, but linked-list hashmaps which iterate in
-     * insertion order.
-     * Excludes the commandAssignment.
-     */
-    _assignments: undefined,
-
-    /**
-     * The store of hints generated by the assignments. We are trying to prevent
-     * the UI from needing to access this in broad form, but instead use
-     * methods that query part of this structure.
-     */
-    _hints: undefined,
-
-    /**
-     * When the command changes, we need to keep a bunch of stuff in sync
-     */
-    _assignmentChanged: function(assignment) {
-        // This is all about re-creating Assignments
-        if (assignment.param.name !== '__command') {
-            return;
-        }
-
-        this._assignments = {};
-
-        if (assignment.value) {
-            assignment.value.params.forEach(function(param) {
-                this._assignments[param.name] = new Assignment(param, this);
-            }, this);
-        }
-
-        this.assignmentCount = Object.keys(this._assignments).length;
-        this._dispatchEvent('commandChange', { command: assignment.value });
-    },
-
-    /**
-     * Assignments have an order, so we need to store them in an array.
-     * But we also need named access ...
-     */
-    getAssignment: function(nameOrNumber) {
-        var name = (typeof nameOrNumber === 'string') ?
-            nameOrNumber :
-            Object.keys(this._assignments)[nameOrNumber];
-        return this._assignments[name];
-    },
-
-    /**
-     * Where parameter name == assignment names - they are the same.
-     */
-    getParameterNames: function() {
-        return Object.keys(this._assignments);
-    },
-
-    /**
-     * A *shallow* clone of the assignments.
-     * This is useful for systems that wish to go over all the assignments
-     * finding values one way or another and wish to trim an array as they go.
-     */
-    cloneAssignments: function() {
-        return Object.keys(this._assignments).map(function(name) {
-            return this._assignments[name];
-        }, this);
-    },
-
-    /**
-     * Collect the statuses from the Assignments.
-     * The hints returned are sorted by severity
-     */
-    _updateHints: function() {
-        // TODO: work out when to clear this out for the plain Requisition case
-        // this._hints = [];
-        this.getAssignments(true).forEach(function(assignment) {
-            this._hints.push(assignment.getHint());
-        }, this);
-        Hint.sort(this._hints);
-
-        // We would like to put some initial help here, but for anyone but
-        // a complete novice a 'type help' message is very annoying, so we
-        // need to find a way to only display this message once, or for
-        // until the user click a 'close' button or similar
-        // TODO: Add special case for '' input
-    },
-
-    /**
-     * Returns the most severe status
-     */
-    getWorstHint: function() {
-        return this._hints[0];
-    },
-
-    /**
-     * Extract the names and values of all the assignments, and return as
-     * an object.
-     */
-    getArgsObject: function() {
-        var args = {};
-        this.getAssignments().forEach(function(assignment) {
-            args[assignment.param.name] = assignment.value;
-        }, this);
-        return args;
-    },
-
-    /**
-     * Access the arguments as an array.
-     * @param includeCommand By default only the parameter arguments are
-     * returned unless (includeCommand === true), in which case the list is
-     * prepended with commandAssignment.arg
-     */
-    getAssignments: function(includeCommand) {
-        var args = [];
-        if (includeCommand === true) {
-            args.push(this.commandAssignment);
-        }
-        Object.keys(this._assignments).forEach(function(name) {
-            args.push(this.getAssignment(name));
-        }, this);
-        return args;
-    },
-
-    /**
-     * Reset all the assignments to their default values
-     */
-    setDefaultValues: function() {
-        this.getAssignments().forEach(function(assignment) {
-            assignment.setValue(undefined);
-        }, this);
-    },
-
-    /**
-     * Helper to call canon.exec
-     */
-    exec: function() {
-        canon.exec(this.commandAssignment.value,
-              this.env,
-              "cli",
-              this.getArgsObject(),
-              this.toCanonicalString());
-    },
-
-    /**
-     * Extract a canonical version of the input
-     */
-    toCanonicalString: function() {
-        var line = [];
-        line.push(this.commandAssignment.value.name);
-        Object.keys(this._assignments).forEach(function(name) {
-            var assignment = this._assignments[name];
-            var type = assignment.param.type;
-            // TODO: This will cause problems if there is a non-default value
-            // after a default value. Also we need to decide when to use
-            // named parameters in place of positional params. Both can wait.
-            if (assignment.value !== assignment.param.defaultValue) {
-                line.push(' ');
-                line.push(type.stringify(assignment.value));
-            }
-        }, this);
-        return line.join('');
-    }
-};
-oop.implement(Requisition.prototype, EventEmitter);
-exports.Requisition = Requisition;
-
-
-/**
- * An object used during command line parsing to hold the various intermediate
- * data steps.
- * <p>The 'output' of the update is held in 2 objects: input.hints which is an
- * array of hints to display to the user. In the future this will become a
- * single value.
- * <p>The other output value is input.requisition which gives access to an
- * args object for use in executing the final command.
- *
- * <p>The majority of the functions in this class are called in sequence by the
- * constructor. Their task is to add to <tt>hints</tt> fill out the requisition.
- * <p>The general sequence is:<ul>
- * <li>_tokenize(): convert _typed into _parts
- * <li>_split(): convert _parts into _command and _unparsedArgs
- * <li>_assign(): convert _unparsedArgs into requisition
- * </ul>
- *
- * @param typed {string} The instruction as typed by the user so far
- * @param options {object} A list of optional named parameters. Can be any of:
- * <b>flags</b>: Flags for us to check against the predicates specified with the
- * commands. Defaulted to <tt>keyboard.buildFlags({ });</tt>
- * if not specified.
- * @constructor
- */
-function CliRequisition(env, options) {
-    Requisition.call(this, env);
-
-    if (options && options.flags) {
-        /**
-         * TODO: We were using a default of keyboard.buildFlags({ });
-         * This allowed us to have commands that only existed in certain contexts
-         * - i.e. Javascript specific commands.
-         */
-        this.flags = options.flags;
-    }
-}
-oop.inherits(CliRequisition, Requisition);
-(function() {
-    /**
-     * Called by the UI when ever the user interacts with a command line input
-     * @param input A structure that details the state of the input field.
-     * It should look something like: { typed:a, cursor: { start:b, end:c } }
-     * Where a is the contents of the input field, and b and c are the start
-     * and end of the cursor/selection respectively.
-     */
-    CliRequisition.prototype.update = function(input) {
-        this.input = input;
-        this._hints = [];
-
-        var args = this._tokenize(input.typed);
-        this._split(args);
-
-        if (this.commandAssignment.value) {
-            this._assign(args);
-        }
-
-        this._updateHints();
-    };
-
-    /**
-     * Return an array of Status scores so we can create a marked up
-     * version of the command line input.
-     */
-    CliRequisition.prototype.getInputStatusMarkup = function() {
-        // 'scores' is an array which tells us what chars are errors
-        // Initialize with everything VALID
-        var scores = this.toString().split('').map(function(ch) {
-            return Status.VALID;
-        });
-        // For all chars in all hints, check and upgrade the score
-        this._hints.forEach(function(hint) {
-            for (var i = hint.start; i <= hint.end; i++) {
-                if (hint.status > scores[i]) {
-                    scores[i] = hint.status;
-                }
-            }
-        }, this);
-        return scores;
-    };
-
-    /**
-     * Reconstitute the input from the args
-     */
-    CliRequisition.prototype.toString = function() {
-        return this.getAssignments(true).map(function(assignment) {
-            return assignment.toString();
-        }, this).join('');
-    };
-
-    var superUpdateHints = CliRequisition.prototype._updateHints;
-    /**
-     * Marks up hints in a number of ways:
-     * - Makes INCOMPLETE hints that are not near the cursor INVALID since
-     *   they can't be completed by typing
-     * - Finds the most severe hint, and annotates the array with it
-     * - Finds the hint to display, and also annotates the array with it
-     * TODO: I'm wondering if array annotation is evil and we should replace
-     * this with an object. Need to find out more.
-     */
-    CliRequisition.prototype._updateHints = function() {
-        superUpdateHints.call(this);
-
-        // Not knowing about cursor positioning, the requisition and assignments
-        // can't know this, but anything they mark as INCOMPLETE is actually
-        // INVALID unless the cursor is actually inside that argument.
-        var c = this.input.cursor;
-        this._hints.forEach(function(hint) {
-            var startInHint = c.start >= hint.start && c.start <= hint.end;
-            var endInHint = c.end >= hint.start && c.end <= hint.end;
-            var inHint = startInHint || endInHint;
-            if (!inHint && hint.status === Status.INCOMPLETE) {
-                 hint.status = Status.INVALID;
-            }
-        }, this);
-
-        Hint.sort(this._hints);
-    };
-
-    /**
-     * Accessor for the hints array.
-     * While we could just use the hints property, using getHints() is
-     * preferred for symmetry with Requisition where it needs a function due to
-     * lack of an atomic update system.
-     */
-    CliRequisition.prototype.getHints = function() {
-        return this._hints;
-    };
-
-    /**
-     * Look through the arguments attached to our assignments for the assignment
-     * at the given position.
-     */
-    CliRequisition.prototype.getAssignmentAt = function(position) {
-        var assignments = this.getAssignments(true);
-        for (var i = 0; i < assignments.length; i++) {
-            var assignment = assignments[i];
-            if (!assignment.arg) {
-                // There is no argument in this assignment, we've fallen off
-                // the end of the obvious answers - it must be this one.
-                return assignment;
-            }
-            if (assignment.isPositionCaptured(position)) {
-                return assignment;
-            }
-        }
-
-        return assignment;
-    };
-
-    /**
-     * Split up the input taking into account ' and "
-     */
-    CliRequisition.prototype._tokenize = function(typed) {
-        // For blank input, place a dummy empty argument into the list
-        if (typed == null || typed.length === 0) {
-            return [ new Argument(this, '', 0, 0, '', '') ];
-        }
-
-        var OUTSIDE = 1;     // The last character was whitespace
-        var IN_SIMPLE = 2;   // The last character was part of a parameter
-        var IN_SINGLE_Q = 3; // We're inside a single quote: '
-        var IN_DOUBLE_Q = 4; // We're inside double quotes: "
-
-        var mode = OUTSIDE;
-
-        // First we un-escape. This list was taken from:
-        // https://developer.mozilla.org/en/Core_JavaScript_1.5_Guide/Core_Language_Features#Unicode
-        // We are generally converting to their real values except for \', \"
-        // and '\ ' which we are converting to unicode private characters so we
-        // can distinguish them from ', " and ' ', which have special meaning.
-        // They need swapping back post-split - see unescape2()
-        typed = typed
-                .replace(/\\\\/g, '\\')
-                .replace(/\\b/g, '\b')
-                .replace(/\\f/g, '\f')
-                .replace(/\\n/g, '\n')
-                .replace(/\\r/g, '\r')
-                .replace(/\\t/g, '\t')
-                .replace(/\\v/g, '\v')
-                .replace(/\\n/g, '\n')
-                .replace(/\\r/g, '\r')
-                .replace(/\\ /g, '\uF000')
-                .replace(/\\'/g, '\uF001')
-                .replace(/\\"/g, '\uF002');
-
-        function unescape2(str) {
-            return str
-                .replace(/\uF000/g, ' ')
-                .replace(/\uF001/g, '\'')
-                .replace(/\uF002/g, '"');
-        }
-
-        var i = 0;
-        var start = 0; // Where did this section start?
-        var prefix = '';
-        var args = [];
-
-        while (true) {
-            if (i >= typed.length) {
-                // There is nothing else to read - tidy up
-                if (mode !== OUTSIDE) {
-                    var str = unescape2(typed.substring(start, i));
-                    args.push(new Argument(this, str, start, i, prefix, ''));
-                }
-                else {
-                    if (i !== start) {
-                        // There's a bunch of whitespace at the end of the
-                        // command add it to the last argument's suffix,
-                        // creating an empty argument if needed.
-                        var extra = typed.substring(start, i);
-                        var lastArg = args[args.length - 1];
-                        if (!lastArg) {
-                            lastArg = new Argument(this, '', i, i, extra, '');
-                            args.push(lastArg);
-                        }
-                        else {
-                            lastArg.suffix += extra;
-                        }
-                    }
-                }
-                break;
-            }
-
-            var c = typed[i];
-            switch (mode) {
-                case OUTSIDE:
-                    if (c === '\'') {
-                        prefix = typed.substring(start, i + 1);
-                        mode = IN_SINGLE_Q;
-                        start = i + 1;
-                    }
-                    else if (c === '"') {
-                        prefix = typed.substring(start, i + 1);
-                        mode = IN_DOUBLE_Q;
-                        start = i + 1;
-                    }
-                    else if (/ /.test(c)) {
-                        // Still whitespace, do nothing
-                    }
-                    else {
-                        prefix = typed.substring(start, i);
-                        mode = IN_SIMPLE;
-                        start = i;
-                    }
-                    break;
-
-                case IN_SIMPLE:
-                    // There is an edge case of xx'xx which we are assuming to
-                    // be a single parameter (and same with ")
-                    if (c === ' ') {
-                        var str = unescape2(typed.substring(start, i));
-                        args.push(new Argument(this, str,
-                                start, i, prefix, ''));
-                        mode = OUTSIDE;
-                        start = i;
-                        prefix = '';
-                    }
-                    break;
-
-                case IN_SINGLE_Q:
-                    if (c === '\'') {
-                        var str = unescape2(typed.substring(start, i));
-                        args.push(new Argument(this, str,
-                                start - 1, i + 1, prefix, c));
-                        mode = OUTSIDE;
-                        start = i + 1;
-                        prefix = '';
-                    }
-                    break;
-
-                case IN_DOUBLE_Q:
-                    if (c === '"') {
-                        var str = unescape2(typed.substring(start, i));
-                        args.push(new Argument(this, str,
-                                start - 1, i + 1, prefix, c));
-                        mode = OUTSIDE;
-                        start = i + 1;
-                        prefix = '';
-                    }
-                    break;
-            }
-
-            i++;
-        }
-
-        return args;
-    };
-
-    /**
-     * Looks in the canon for a command extension that matches what has been
-     * typed at the command line.
-     */
-    CliRequisition.prototype._split = function(args) {
-        var argsUsed = 1;
-        var arg;
-
-        while (argsUsed <= args.length) {
-            var arg = Argument.merge(args, 0, argsUsed);
-            this.commandAssignment.setArgument(arg);
-
-            if (!this.commandAssignment.value) {
-                // Not found. break with value == null
-                break;
-            }
-
-            /*
-            // Previously we needed a way to hide commands depending context.
-            // We have not resurrected that feature yet.
-            if (!keyboard.flagsMatch(command.predicates, this.flags)) {
-                // If the predicates say 'no match' then go LA LA LA
-                command = null;
-                break;
-            }
-            */
-
-            if (this.commandAssignment.value.exec) {
-                // Valid command, break with command valid
-                for (var i = 0; i < argsUsed; i++) {
-                    args.shift();
-                }
-                break;
-            }
-
-            argsUsed++;
-        }
-    };
-
-    /**
-     * Work out which arguments are applicable to which parameters.
-     * <p>This takes #_command.params and #_unparsedArgs and creates a map of
-     * param names to 'assignment' objects, which have the following properties:
-     * <ul>
-     * <li>param - The matching parameter.
-     * <li>index - Zero based index into where the match came from on the input
-     * <li>value - The matching input
-     * </ul>
-     */
-    CliRequisition.prototype._assign = function(args) {
-        if (args.length === 0) {
-            this.setDefaultValues();
-            return;
-        }
-
-        // Create an error if the command does not take parameters, but we have
-        // been given them ...
-        if (this.assignmentCount === 0) {
-            // TODO: previously we were doing some extra work to avoid this if
-            // we determined that we had args that were all whitespace, but
-            // probably given our tighter tokenize() this won't be an issue?
-            this._hints.push(new Hint(Status.INVALID,
-                    this.commandAssignment.value.name +
-                    ' does not take any parameters',
-                    Argument.merge(args)));
-            return;
-        }
-
-        // Special case: if there is only 1 parameter, and that's of type
-        // text we put all the params into the first param
-        if (this.assignmentCount === 1) {
-            var assignment = this.getAssignment(0);
-            if (assignment.param.type.name === 'text') {
-                assignment.setArgument(Argument.merge(args));
-                return;
-            }
-        }
-
-        var assignments = this.cloneAssignments();
-        var names = this.getParameterNames();
-
-        // Extract all the named parameters
-        var used = [];
-        assignments.forEach(function(assignment) {
-            var namedArgText = '--' + assignment.name;
-
-            var i = 0;
-            while (true) {
-                var arg = args[i];
-                if (namedArgText !== arg.text) {
-                    i++;
-                    if (i >= args.length) {
-                        break;
-                    }
-                    continue;
-                }
-
-                // boolean parameters don't have values, default to false
-                if (assignment.param.type.name === 'boolean') {
-                    assignment.setValue(true);
-                }
-                else {
-                    if (i + 1 < args.length) {
-                        // Missing value portion of this named param
-                        this._hints.push(new Hint(Status.INCOMPLETE,
-                                'Missing value for: ' + namedArgText,
-                                args[i]));
-                    }
-                    else {
-                        args.splice(i + 1, 1);
-                        assignment.setArgument(args[i + 1]);
-                    }
-                }
-
-                lang.arrayRemove(names, assignment.name);
-                args.splice(i, 1);
-                // We don't need to i++ if we splice
-            }
-        }, this);
-
-        // What's left are positional parameters assign in order
-        names.forEach(function(name) {
-            var assignment = this.getAssignment(name);
-            if (args.length === 0) {
-                // No more values
-                assignment.setValue(undefined); // i.e. default
-            }
-            else {
-                var arg = args[0];
-                args.splice(0, 1);
-                assignment.setArgument(arg);
-            }
-        }, this);
-
-        if (args.length > 0) {
-            var remaining = Argument.merge(args);
-            this._hints.push(new Hint(Status.INVALID,
-                    'Input \'' + remaining.text + '\' makes no sense.',
-                    remaining));
-        }
-    };
-
-})();
-exports.CliRequisition = CliRequisition;
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('cockpit/ui/settings', ['require', 'exports', 'module' , 'pilot/types', 'pilot/types/basic'], function(require, exports, module) {
-
-
-var types = require("pilot/types");
-var SelectionType = require('pilot/types/basic').SelectionType;
-
-var direction = new SelectionType({
-    name: 'direction',
-    data: [ 'above', 'below' ]
-});
-
-var hintDirectionSetting = {
-    name: "hintDirection",
-    description: "Are hints shown above or below the command line?",
-    type: "direction",
-    defaultValue: "above"
-};
-
-var outputDirectionSetting = {
-    name: "outputDirection",
-    description: "Is the output window shown above or below the command line?",
-    type: "direction",
-    defaultValue: "above"
-};
-
-var outputHeightSetting = {
-    name: "outputHeight",
-    description: "What height should the output panel be?",
-    type: "number",
-    defaultValue: 300
-};
-
-exports.startup = function(data, reason) {
-    types.registerType(direction);
-    data.env.settings.addSetting(hintDirectionSetting);
-    data.env.settings.addSetting(outputDirectionSetting);
-    data.env.settings.addSetting(outputHeightSetting);
-};
-
-exports.shutdown = function(data, reason) {
-    types.unregisterType(direction);
-    data.env.settings.removeSetting(hintDirectionSetting);
-    data.env.settings.removeSetting(outputDirectionSetting);
-    data.env.settings.removeSetting(outputHeightSetting);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('cockpit/ui/cli_view', ['require', 'exports', 'module' , 'text!cockpit/ui/cli_view.css', 'pilot/event', 'pilot/dom', 'pilot/keys', 'pilot/canon', 'pilot/types', 'cockpit/cli', 'cockpit/ui/request_view'], function(require, exports, module) {
-
-
-var editorCss = require("text!cockpit/ui/cli_view.css");
-var event = require("pilot/event");
-var dom = require("pilot/dom");
-
-dom.importCssString(editorCss);
-
-var event = require("pilot/event");
-var keys = require("pilot/keys");
-var canon = require("pilot/canon");
-var Status = require('pilot/types').Status;
-
-var CliRequisition = require('cockpit/cli').CliRequisition;
-var Hint = require('cockpit/cli').Hint;
-var RequestView = require('cockpit/ui/request_view').RequestView;
-
-var NO_HINT = new Hint(Status.VALID, '', 0, 0);
-
-/**
- * On startup we need to:
- * 1. Add 3 sets of elements to the DOM for:
- * - command line output
- * - input hints
- * - completion
- * 2. Attach a set of events so the command line works
- */
-exports.startup = function(data, reason) {
-    var cli = new CliRequisition(data.env);
-    var cliView = new CliView(cli, data.env);
-    data.env.cli = cli;
-};
-
-/**
- * A class to handle the simplest UI implementation
- */
-function CliView(cli, env) {
-    cli.cliView = this;
-    this.cli = cli;
-    this.doc = document;
-    this.win = dom.getParentWindow(this.doc);
-    this.env = env;
-
-    // TODO: we should have a better way to specify command lines???
-    this.element = this.doc.getElementById('cockpitInput');
-    if (!this.element) {
-        // console.log('No element with an id of cockpit. Bailing on cli');
-        return;
-    }
-
-    this.settings = env.settings;
-    this.hintDirection = this.settings.getSetting('hintDirection');
-    this.outputDirection = this.settings.getSetting('outputDirection');
-    this.outputHeight = this.settings.getSetting('outputHeight');
-
-    // If the requisition tells us something has changed, we use this to know
-    // if we should ignore it
-    this.isUpdating = false;
-
-    this.createElements();
-    this.update();
-}
-CliView.prototype = {
-    /**
-     * Create divs for completion, hints and output
-     */
-    createElements: function() {
-        var input = this.element;
-
-        this.element.spellcheck = false;
-
-        this.output = this.doc.getElementById('cockpitOutput');
-        this.popupOutput = (this.output == null);
-        if (!this.output) {
-            this.output = this.doc.createElement('div');
-            this.output.id = 'cockpitOutput';
-            this.output.className = 'cptOutput';
-            input.parentNode.insertBefore(this.output, input.nextSibling);
-
-            var setMaxOutputHeight = function() {
-                this.output.style.maxHeight = this.outputHeight.get() + 'px';
-            }.bind(this);
-            this.outputHeight.addEventListener('change', setMaxOutputHeight);
-            setMaxOutputHeight();
-        }
-
-        this.completer = this.doc.createElement('div');
-        this.completer.className = 'cptCompletion VALID';
-
-        this.completer.style.color = dom.computedStyle(input, "color");
-        this.completer.style.fontSize = dom.computedStyle(input, "fontSize");
-        this.completer.style.fontFamily = dom.computedStyle(input, "fontFamily");
-        this.completer.style.fontWeight = dom.computedStyle(input, "fontWeight");
-        this.completer.style.fontStyle = dom.computedStyle(input, "fontStyle");
-        input.parentNode.insertBefore(this.completer, input.nextSibling);
-
-        // Transfer background styling to the completer.
-        this.completer.style.backgroundColor = input.style.backgroundColor;
-        input.style.backgroundColor = 'transparent';
-
-        this.hinter = this.doc.createElement('div');
-        this.hinter.className = 'cptHints';
-        input.parentNode.insertBefore(this.hinter, input.nextSibling);
-
-        var resizer = this.resizer.bind(this);
-        event.addListener(this.win, 'resize', resizer);
-        this.hintDirection.addEventListener('change', resizer);
-        this.outputDirection.addEventListener('change', resizer);
-        resizer();
-
-        canon.addEventListener('output',  function(ev) {
-            new RequestView(ev.request, this);
-        }.bind(this));
-        event.addCommandKeyListener(input, this.onCommandKey.bind(this));
-        event.addListener(input, 'keyup', this.onKeyUp.bind(this));
-
-        // cursor position affects hint severity. TODO: shortcuts for speed
-        event.addListener(input, 'mouseup', function(ev) {
-            this.isUpdating = true;
-            this.update();
-            this.isUpdating = false;
-        }.bind(this));
-
-        this.cli.addEventListener('argumentChange', this.onArgChange.bind(this));
-
-        event.addListener(input, "focus", function() {
-            dom.addCssClass(this.output, "cptFocusPopup");
-            dom.addCssClass(this.hinter, "cptFocusPopup");
-        }.bind(this));
-
-        function hideOutput() {
-            dom.removeCssClass(this.output, "cptFocusPopup");
-            dom.removeCssClass(this.hinter, "cptFocusPopup");
-        };
-        event.addListener(input, "blur", hideOutput.bind(this));
-        hideOutput.call(this);
-    },
-
-    /**
-     * We need to see the output of the latest command entered
-     */
-    scrollOutputToBottom: function() {
-        // Certain browsers have a bug such that scrollHeight is too small
-        // when content does not fill the client area of the element
-        var scrollHeight = Math.max(this.output.scrollHeight, this.output.clientHeight);
-        this.output.scrollTop = scrollHeight - this.output.clientHeight;
-    },
-
-    /**
-     * To be called on window resize or any time we want to align the elements
-     * with the input box.
-     */
-    resizer: function() {
-        var rect = this.element.getClientRects()[0];
-
-        this.completer.style.top = rect.top + 'px';
-        var height = rect.bottom - rect.top;
-        this.completer.style.height = height + 'px';
-        this.completer.style.lineHeight = height + 'px';
-        this.completer.style.left = rect.left + 'px';
-        var width = rect.right - rect.left;
-        this.completer.style.width = width + 'px';
-
-        if (this.hintDirection.get() === 'below') {
-            this.hinter.style.top = rect.bottom + 'px';
-            this.hinter.style.bottom = 'auto';
-        }
-        else {
-            this.hinter.style.top = 'auto';
-            this.hinter.style.bottom = (this.doc.documentElement.clientHeight - rect.top) + 'px';
-        }
-        this.hinter.style.left = (rect.left + 30) + 'px';
-        this.hinter.style.maxWidth = (width - 110) + 'px';
-
-        if (this.popupOutput) {
-            if (this.outputDirection.get() === 'below') {
-                this.output.style.top = rect.bottom + 'px';
-                this.output.style.bottom = 'auto';
-            }
-            else {
-                this.output.style.top = 'auto';
-                this.output.style.bottom = (this.doc.documentElement.clientHeight - rect.top) + 'px';
-            }
-            this.output.style.left = rect.left + 'px';
-            this.output.style.width = (width - 80) + 'px';
-        }
-    },
-
-    /**
-     * Ensure that TAB isn't handled by the browser
-     */
-onCommandKey: function(ev, hashId, keyCode) {
-        var stopEvent;
-        if (keyCode === keys.TAB ||
-                keyCode === keys.UP ||
-                keyCode === keys.DOWN) {
-            stopEvent = true;
-        } else if (hashId != 0 || keyCode != 0) {
-            stopEvent = canon.execKeyCommand(this.env, 'cli', hashId, keyCode);
-        }
-        stopEvent && event.stopEvent(ev);
-    },
-
-    /**
-     * The main keyboard processing loop
-     */
-    onKeyUp: function(ev) {
-        var handled;
-        /*
-        var handled = keyboardManager.processKeyEvent(ev, this, {
-            isCommandLine: true, isKeyUp: true
-        });
-        */
-
-        // RETURN does a special exec/highlight thing
-        if (ev.keyCode === keys.RETURN) {
-            var worst = this.cli.getWorstHint();
-            // Deny RETURN unless the command might work
-            if (worst.status === Status.VALID) {
-                this.cli.exec();
-                this.element.value = '';
-            }
-            else {
-                // If we've denied RETURN because the command was not VALID,
-                // select the part of the command line that is causing problems
-                // TODO: if there are 2 errors are we picking the right one?
-                dom.setSelectionStart(this.element, worst.start);
-                dom.setSelectionEnd(this.element, worst.end);
-            }
-        }
-
-        this.update();
-
-        // Special actions which delegate to the assignment
-        var current = this.cli.getAssignmentAt(dom.getSelectionStart(this.element));
-        if (current) {
-            // TAB does a special complete thing
-            if (ev.keyCode === keys.TAB) {
-                current.complete();
-                this.update();
-            }
-
-            // UP/DOWN look for some history
-            if (ev.keyCode === keys.UP) {
-                current.increment();
-                this.update();
-            }
-            if (ev.keyCode === keys.DOWN) {
-                current.decrement();
-                this.update();
-            }
-        }
-
-        return handled;
-    },
-
-    /**
-     * Actually parse the input and make sure we're all up to date
-     */
-    update: function() {
-        this.isUpdating = true;
-        var input = {
-            typed: this.element.value,
-            cursor: {
-                start: dom.getSelectionStart(this.element),
-                end: dom.getSelectionEnd(this.element.selectionEnd)
-            }
-        };
-        this.cli.update(input);
-
-        var display = this.cli.getAssignmentAt(input.cursor.start).getHint();
-
-        // 1. Update the completer with prompt/error marker/TAB info
-        dom.removeCssClass(this.completer, Status.VALID.toString());
-        dom.removeCssClass(this.completer, Status.INCOMPLETE.toString());
-        dom.removeCssClass(this.completer, Status.INVALID.toString());
-
-        var completion = '<span class="cptPrompt">&gt;</span> ';
-        if (this.element.value.length > 0) {
-            var scores = this.cli.getInputStatusMarkup();
-            completion += this.markupStatusScore(scores);
-        }
-
-        // Display the "-> prediction" at the end of the completer
-        if (this.element.value.length > 0 &&
-                display.predictions && display.predictions.length > 0) {
-            var tab = display.predictions[0];
-            completion += ' &nbsp;&#x21E5; ' + (tab.name ? tab.name : tab);
-        }
-        this.completer.innerHTML = completion;
-        dom.addCssClass(this.completer, this.cli.getWorstHint().status.toString());
-
-        // 2. Update the hint element
-        var hint = '';
-        if (this.element.value.length !== 0) {
-            hint += display.message;
-            if (display.predictions && display.predictions.length > 0) {
-                hint += ': [ ';
-                display.predictions.forEach(function(prediction) {
-                    hint += (prediction.name ? prediction.name : prediction);
-                    hint += ' | ';
-                }, this);
-                hint = hint.replace(/\| $/, ']');
-            }
-        }
-
-        this.hinter.innerHTML = hint;
-        if (hint.length === 0) {
-            dom.addCssClass(this.hinter, 'cptNoPopup');
-        }
-        else {
-            dom.removeCssClass(this.hinter, 'cptNoPopup');
-        }
-
-        this.isUpdating = false;
-    },
-
-    /**
-     * Markup an array of Status values with spans
-     */
-    markupStatusScore: function(scores) {
-        var completion = '';
-        // Create mark-up
-        var i = 0;
-        var lastStatus = -1;
-        while (true) {
-            if (lastStatus !== scores[i]) {
-                completion += '<span class=' + scores[i].toString() + '>';
-                lastStatus = scores[i];
-            }
-            completion += this.element.value[i];
-            i++;
-            if (i === this.element.value.length) {
-                completion += '</span>';
-                break;
-            }
-            if (lastStatus !== scores[i]) {
-                completion += '</span>';
-            }
-        }
-
-        return completion;
-    },
-
-    /**
-     * Update the input element to reflect the changed argument
-     */
-    onArgChange: function(ev) {
-        if (this.isUpdating) {
-            return;
-        }
-
-        var prefix = this.element.value.substring(0, ev.argument.start);
-        var suffix = this.element.value.substring(ev.argument.end);
-        var insert = typeof ev.text === 'string' ? ev.text : ev.text.name;
-        this.element.value = prefix + insert + suffix;
-        // Fix the cursor.
-        var insertEnd = (prefix + insert).length;
-        this.element.selectionStart = insertEnd;
-        this.element.selectionEnd = insertEnd;
-    }
-};
-exports.CliView = CliView;
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/event', ['require', 'exports', 'module' , 'pilot/keys', 'pilot/useragent', 'pilot/dom'], function(require, exports, module) {
-
-var keys = require("pilot/keys");
-var useragent = require("pilot/useragent");
-var dom = require("pilot/dom");
-
-exports.addListener = function(elem, type, callback) {
-    if (elem.addEventListener) {
-        return elem.addEventListener(type, callback, false);
-    }
-    if (elem.attachEvent) {
-        var wrapper = function() {
-            callback(window.event);
-        };
-        callback._wrapper = wrapper;
-        elem.attachEvent("on" + type, wrapper);
-    }
-};
-
-exports.removeListener = function(elem, type, callback) {
-    if (elem.removeEventListener) {
-        return elem.removeEventListener(type, callback, false);
-    }
-    if (elem.detachEvent) {
-        elem.detachEvent("on" + type, callback._wrapper || callback);
-    }
-};
-
-/**
-* Prevents propagation and clobbers the default action of the passed event
-*/
-exports.stopEvent = function(e) {
-    exports.stopPropagation(e);
-    exports.preventDefault(e);
-    return false;
-};
-
-exports.stopPropagation = function(e) {
-    if (e.stopPropagation)
-        e.stopPropagation();
-    else
-        e.cancelBubble = true;
-};
-
-exports.preventDefault = function(e) {
-    if (e.preventDefault)
-        e.preventDefault();
-    else
-        e.returnValue = false;
-};
-
-exports.getDocumentX = function(e) {
-    if (e.clientX) {        
-        return e.clientX + dom.getPageScrollLeft();
-    } else {
-        return e.pageX;
-    }
-};
-
-exports.getDocumentY = function(e) {
-    if (e.clientY) {
-        return e.clientY + dom.getPageScrollTop();
-    } else {
-        return e.pageY;
-    }
-};
-
-/**
- * @return {Number} 0 for left button, 1 for middle button, 2 for right button
- */
-exports.getButton = function(e) {
-    if (e.type == "dblclick")
-        return 0;
-    else if (e.type == "contextmenu")
-        return 2;
-        
-    // DOM Event
-    if (e.preventDefault) {
-        return e.button;
-    }
-    // old IE
-    else {
-        return {1:0, 2:2, 4:1}[e.button];
-    }
-};
-
-if (document.documentElement.setCapture) {
-    exports.capture = function(el, eventHandler, releaseCaptureHandler) {
-        function onMouseMove(e) {
-            eventHandler(e);
-            return exports.stopPropagation(e);
-        }
-
-        function onReleaseCapture(e) {
-            eventHandler && eventHandler(e);
-            releaseCaptureHandler && releaseCaptureHandler();
-
-            exports.removeListener(el, "mousemove", eventHandler);
-            exports.removeListener(el, "mouseup", onReleaseCapture);
-            exports.removeListener(el, "losecapture", onReleaseCapture);
-
-            el.releaseCapture();
-        }
-
-        exports.addListener(el, "mousemove", eventHandler);
-        exports.addListener(el, "mouseup", onReleaseCapture);
-        exports.addListener(el, "losecapture", onReleaseCapture);
-        el.setCapture();
-    };
-}
-else {
-    exports.capture = function(el, eventHandler, releaseCaptureHandler) {
-        function onMouseMove(e) {
-            eventHandler(e);
-            e.stopPropagation();
-        }
-
-        function onMouseUp(e) {
-            eventHandler && eventHandler(e);
-            releaseCaptureHandler && releaseCaptureHandler();
-
-            document.removeEventListener("mousemove", onMouseMove, true);
-            document.removeEventListener("mouseup", onMouseUp, true);
-
-            e.stopPropagation();
-        }
-
-        document.addEventListener("mousemove", onMouseMove, true);
-        document.addEventListener("mouseup", onMouseUp, true);
-    };
-}
-
-exports.addMouseWheelListener = function(el, callback) {
-    var listener = function(e) {
-        if (e.wheelDelta !== undefined) {
-            if (e.wheelDeltaX !== undefined) {
-                e.wheelX = -e.wheelDeltaX / 8;
-                e.wheelY = -e.wheelDeltaY / 8;
-            } else {
-                e.wheelX = 0;
-                e.wheelY = -e.wheelDelta / 8;
-            }
-        }
-        else {
-            if (e.axis && e.axis == e.HORIZONTAL_AXIS) {
-                e.wheelX = (e.detail || 0) * 5;
-                e.wheelY = 0;
-            } else {
-                e.wheelX = 0;
-                e.wheelY = (e.detail || 0) * 5;
-            }
-        }
-        callback(e);
-    };
-    exports.addListener(el, "DOMMouseScroll", listener);
-    exports.addListener(el, "mousewheel", listener);
-};
-
-exports.addMultiMouseDownListener = function(el, button, count, timeout, callback) {
-    var clicks = 0;
-    var startX, startY;
-
-    var listener = function(e) {
-        clicks += 1;
-        if (clicks == 1) {
-            startX = e.clientX;
-            startY = e.clientY;
-
-            setTimeout(function() {
-                clicks = 0;
-            }, timeout || 600);
-        }
-
-        var isButton = exports.getButton(e) == button;
-        if (!isButton || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
-            clicks = 0;
-
-        if (clicks == count) {
-            clicks = 0;
-            callback(e);
-        }
-        
-        if (isButton)
-            return exports.preventDefault(e);
-    };
-
-    exports.addListener(el, "mousedown", listener);
-    useragent.isIE && exports.addListener(el, "dblclick", listener);
-};
-
-function normalizeCommandKeys(callback, e, keyCode) {
-    var hashId = 0;
-    if (useragent.isOpera && useragent.isMac) {
-        hashId = 0 | (e.metaKey ? 1 : 0) | (e.altKey ? 2 : 0)
-            | (e.shiftKey ? 4 : 0) | (e.ctrlKey ? 8 : 0);
-    } else {
-        hashId = 0 | (e.ctrlKey ? 1 : 0) | (e.altKey ? 2 : 0)
-            | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);
-    }
-
-    if (keyCode in keys.MODIFIER_KEYS) {
-        switch (keys.MODIFIER_KEYS[keyCode]) {
-            case "Alt":
-                hashId = 2;
-                break;
-            case "Shift":
-                hashId = 4;
-                break
-            case "Ctrl":
-                hashId = 1;
-                break;
-            default:
-                hashId = 8;
-                break;
-        }
-        keyCode = 0;
-    }
-
-    if (hashId & 8 && (keyCode == 91 || keyCode == 93)) {
-        keyCode = 0;
-    }
-
-    // If there is no hashID and the keyCode is not a function key, then
-    // we don't call the callback as we don't handle a command key here
-    // (it's a normal key/character input).
-    if (hashId == 0 && !(keyCode in keys.FUNCTION_KEYS)) {
-        return false;
-    }
-
-    return callback(e, hashId, keyCode);
-}
-
-exports.addCommandKeyListener = function(el, callback) {
-    var addListener = exports.addListener;
-    if (useragent.isOldGecko) {
-        // Old versions of Gecko aka. Firefox < 4.0 didn't repeat the keydown
-        // event if the user pressed the key for a longer time. Instead, the
-        // keydown event was fired once and later on only the keypress event.
-        // To emulate the 'right' keydown behavior, the keyCode of the initial
-        // keyDown event is stored and in the following keypress events the
-        // stores keyCode is used to emulate a keyDown event.
-        var lastKeyDownKeyCode = null;
-        addListener(el, "keydown", function(e) {
-            lastKeyDownKeyCode = e.keyCode;
-        });
-        addListener(el, "keypress", function(e) {
-            return normalizeCommandKeys(callback, e, lastKeyDownKeyCode);
-        });
-    } else {
-        var lastDown = null;
-
-        addListener(el, "keydown", function(e) {
-            lastDown = e.keyIdentifier || e.keyCode;
-            return normalizeCommandKeys(callback, e, e.keyCode);
-        });
-
-        // repeated keys are fired as keypress and not keydown events
-        if (useragent.isMac && useragent.isOpera) {
-            addListener(el, "keypress", function(e) {
-                var keyId = e.keyIdentifier || e.keyCode;
-                if (lastDown !== keyId) {
-                    return normalizeCommandKeys(callback, e, e.keyCode);
-                } else {
-                    lastDown = null;
-                }
-            });
-        }
-    }
-};
-
-});
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *      Mihai Sucan <mihai AT sucan AT gmail ODT com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/dom', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var XHTML_NS = "http://www.w3.org/1999/xhtml";
-
-exports.createElement = function(tag, ns) {
-    return document.createElementNS ?
-           document.createElementNS(ns || XHTML_NS, tag) :
-           document.createElement(tag);
-};
-
-exports.setText = function(elem, text) {
-    if (elem.innerText !== undefined) {
-        elem.innerText = text;
-    }
-    if (elem.textContent !== undefined) {
-        elem.textContent = text;
-    }
-};
-
-if (!document.documentElement.classList) {
-    exports.hasCssClass = function(el, name) {
-        var classes = el.className.split(/\s+/g);
-        return classes.indexOf(name) !== -1;
-    };
-
-    /**
-    * Add a CSS class to the list of classes on the given node
-    */
-    exports.addCssClass = function(el, name) {
-        if (!exports.hasCssClass(el, name)) {
-            el.className += " " + name;
-        }
-    };
-
-    /**
-    * Remove a CSS class from the list of classes on the given node
-    */
-    exports.removeCssClass = function(el, name) {
-        var classes = el.className.split(/\s+/g);
-        while (true) {
-            var index = classes.indexOf(name);
-            if (index == -1) {
-                break;
-            }
-            classes.splice(index, 1);
-        }
-        el.className = classes.join(" ");
-    };
-
-    exports.toggleCssClass = function(el, name) {
-        var classes = el.className.split(/\s+/g), add = true;
-        while (true) {
-            var index = classes.indexOf(name);
-            if (index == -1) {
-                break;
-            }
-            add = false;
-            classes.splice(index, 1);
-        }
-        if(add)
-            classes.push(name);
-
-        el.className = classes.join(" ");
-        return add;
-    };
-} else {
-    exports.hasCssClass = function(el, name) {
-        return el.classList.contains(name);
-    };
-
-    exports.addCssClass = function(el, name) {
-        el.classList.add(name);
-    };
-
-    exports.removeCssClass = function(el, name) {
-        el.classList.remove(name);
-    };
-
-    exports.toggleCssClass = function(el, name) {
-        return el.classList.toggle(name);
-    };
-}
-
-/**
- * Add or remove a CSS class from the list of classes on the given node
- * depending on the value of <tt>include</tt>
- */
-exports.setCssClass = function(node, className, include) {
-    if (include) {
-        exports.addCssClass(node, className);
-    } else {
-        exports.removeCssClass(node, className);
-    }
-};
-
-exports.importCssString = function(cssText, doc){
-    doc = doc || document;
-
-    if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet();
-        sheet.cssText = cssText;
-    }
-    else {
-        var style = doc.createElementNS ?
-                    doc.createElementNS(XHTML_NS, "style") :
-                    doc.createElement("style");
-
-        style.appendChild(doc.createTextNode(cssText));
-
-        var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
-        head.appendChild(style);
-    }
-};
-
-exports.getInnerWidth = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingLeft"))
-            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
-};
-
-exports.getInnerHeight = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingTop"))
-            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
-};
-
-if (window.pageYOffset !== undefined) {
-    exports.getPageScrollTop = function() {
-        return window.pageYOffset;
-    };
-
-    exports.getPageScrollLeft = function() {
-        return window.pageXOffset;
-    };
-}
-else {
-    exports.getPageScrollTop = function() {
-        return document.body.scrollTop;
-    };
-
-    exports.getPageScrollLeft = function() {
-        return document.body.scrollLeft;
-    };
-}
-
-if (window.getComputedStyle)
-    exports.computedStyle = function(element, style) {
-        if (style)
-            return (window.getComputedStyle(element, "") || {})[style] || "";
-        return window.getComputedStyle(element, "") || {}
-    };
-else
-    exports.computedStyle = function(element, style) {
-        if (style)
-            return element.currentStyle[style];
-        return element.currentStyle
-    };
-
-exports.scrollbarWidth = function() {
-
-    var inner = exports.createElement("p");
-    inner.style.width = "100%";
-    inner.style.minWidth = "0px";
-    inner.style.height = "200px";
-
-    var outer = exports.createElement("div");
-    var style = outer.style;
-
-    style.position = "absolute";
-    style.left = "-10000px";
-    style.overflow = "hidden";
-    style.width = "200px";
-    style.minWidth = "0px";
-    style.height = "150px";
-
-    outer.appendChild(inner);
-
-    var body = document.body || document.documentElement;
-    body.appendChild(outer);
-
-    var noScrollbar = inner.offsetWidth;
-
-    style.overflow = "scroll";
-    var withScrollbar = inner.offsetWidth;
-
-    if (noScrollbar == withScrollbar) {
-        withScrollbar = outer.clientWidth;
-    }
-
-    body.removeChild(outer);
-
-    return noScrollbar-withScrollbar;
-};
-
-/**
- * Optimized set innerHTML. This is faster than plain innerHTML if the element
- * already contains a lot of child elements.
- *
- * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
- */
-exports.setInnerHtml = function(el, innerHtml) {
-    var element = el.cloneNode(false);//document.createElement("div");
-    element.innerHTML = innerHtml;
-    el.parentNode.replaceChild(element, el);
-    return element;
-};
-
-exports.setInnerText = function(el, innerText) {
-    if (document.body && "textContent" in document.body)
-        el.textContent = innerText;
-    else
-        el.innerText = innerText;
-
-};
-
-exports.getInnerText = function(el) {
-    if (document.body && "textContent" in document.body)
-        return el.textContent;
-    else
-         return el.innerText || el.textContent || "";
-};
-
-exports.getParentWindow = function(document) {
-    return document.defaultView || document.parentWindow;
-};
-
-exports.getSelectionStart = function(textarea) {
-    // TODO IE
-    var start;
-    try {
-        start = textarea.selectionStart || 0;
-    } catch (e) {
-        start = 0;
-    }
-    return start;
-};
-
-exports.setSelectionStart = function(textarea, start) {
-    // TODO IE
-    return textarea.selectionStart = start;
-};
-
-exports.getSelectionEnd = function(textarea) {
-    // TODO IE
-    var end;
-    try {
-        end = textarea.selectionEnd || 0;
-    } catch (e) {
-        end = 0;
-    }
-    return end;
-};
-
-exports.setSelectionEnd = function(textarea, end) {
-    // TODO IE
-    return textarea.selectionEnd = end;
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('cockpit/ui/request_view', ['require', 'exports', 'module' , 'pilot/dom', 'pilot/event', 'text!cockpit/ui/request_view.html', 'pilot/domtemplate', 'text!cockpit/ui/request_view.css'], function(require, exports, module) {
-
-var dom = require("pilot/dom");
-var event = require("pilot/event");
-var requestViewHtml = require("text!cockpit/ui/request_view.html");
-var Templater = require("pilot/domtemplate").Templater;
-
-var requestViewCss = require("text!cockpit/ui/request_view.css");
-dom.importCssString(requestViewCss);
-
-/**
- * Pull the HTML into the DOM, but don't add it to the document
- */
-var templates = document.createElement('div');
-templates.innerHTML = requestViewHtml;
-var row = templates.querySelector('.cptRow');
-
-/**
- * Work out the path for images.
- * TODO: This should probably live in some utility area somewhere
- */
-function imageUrl(path) {
-    var dataUrl;
-    try {
-        dataUrl = require('text!cockpit/ui/' + path);
-    } catch (e) { }
-    if (dataUrl) {
-        return dataUrl;
-    }
-
-    var filename = module.id.split('/').pop() + '.js';
-    var imagePath;
-
-    if (module.uri.substr(-filename.length) !== filename) {
-        console.error('Can\'t work out path from module.uri/module.id');
-        return path;
-    }
-
-    if (module.uri) {
-        var end = module.uri.length - filename.length - 1;
-        return module.uri.substr(0, end) + "/" + path;
-    }
-
-    return filename + path;
-}
-
-
-/**
- * Adds a row to the CLI output display
- */
-function RequestView(request, cliView) {
-    this.request = request;
-    this.cliView = cliView;
-    this.imageUrl = imageUrl;
-
-    // Elements attached to this by the templater. For info only
-    this.rowin = null;
-    this.rowout = null;
-    this.output = null;
-    this.hide = null;
-    this.show = null;
-    this.duration = null;
-    this.throb = null;
-
-    new Templater().processNode(row.cloneNode(true), this);
-
-    this.cliView.output.appendChild(this.rowin);
-    this.cliView.output.appendChild(this.rowout);
-
-    this.request.addEventListener('output', this.onRequestChange.bind(this));
-};
-
-RequestView.prototype = {
-    /**
-     * A single click on an invocation line in the console copies the command to
-     * the command line
-     */
-    copyToInput: function() {
-        this.cliView.element.value = this.request.typed;
-    },
-
-    /**
-     * A double click on an invocation line in the console executes the command
-     */
-    executeRequest: function(ev) {
-        this.cliView.cli.update({
-            typed: this.request.typed,
-            cursor: { start:0, end:0 }
-        });
-        this.cliView.cli.exec();
-    },
-
-    hideOutput: function(ev) {
-        this.output.style.display = 'none';
-        dom.addCssClass(this.hide, 'cmd_hidden');
-        dom.removeCssClass(this.show, 'cmd_hidden');
-
-        event.stopPropagation(ev);
-    },
-
-    showOutput: function(ev) {
-        this.output.style.display = 'block';
-        dom.removeCssClass(this.hide, 'cmd_hidden');
-        dom.addCssClass(this.show, 'cmd_hidden');
-
-        event.stopPropagation(ev);
-    },
-
-    remove: function(ev) {
-        this.cliView.output.removeChild(this.rowin);
-        this.cliView.output.removeChild(this.rowout);
-        event.stopPropagation(ev);
-    },
-
-    onRequestChange: function(ev) {
-        this.duration.innerHTML = this.request.duration ?
-            'completed in ' + (this.request.duration / 1000) + ' sec ' :
-            '';
-
-        this.output.innerHTML = '';
-        this.request.outputs.forEach(function(output) {
-            var node;
-            if (typeof output == 'string') {
-                node = document.createElement('p');
-                node.innerHTML = output;
-            } else {
-                node = output;
-            }
-            this.output.appendChild(node);
-        }, this);
-        this.cliView.scrollOutputToBottom();
-
-        dom.setCssClass(this.output, 'cmd_error', this.request.error);
-
-        this.throb.style.display = this.request.completed ? 'none' : 'block';
-    }
-};
-exports.RequestView = RequestView;
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is DomTemplate.
- *
- * The Initial Developer of the Original Code is Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com) (original author)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/domtemplate', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-
-// WARNING: do not 'use_strict' without reading the notes in envEval;
-
-/**
- * A templater that allows one to quickly template DOM nodes.
- */
-function Templater() {
-  this.scope = [];
-};
-
-/**
- * Recursive function to walk the tree processing the attributes as it goes.
- * @param node the node to process. If you pass a string in instead of a DOM
- * element, it is assumed to be an id for use with document.getElementById()
- * @param data the data to use for node processing.
- */
-Templater.prototype.processNode = function(node, data) {
-  if (typeof node === 'string') {
-    node = document.getElementById(node);
-  }
-  if (data === null || data === undefined) {
-    data = {};
-  }
-  this.scope.push(node.nodeName + (node.id ? '#' + node.id : ''));
-  try {
-    // Process attributes
-    if (node.attributes && node.attributes.length) {
-      // We need to handle 'foreach' and 'if' first because they might stop
-      // some types of processing from happening, and foreach must come first
-      // because it defines new data on which 'if' might depend.
-      if (node.hasAttribute('foreach')) {
-        this.processForEach(node, data);
-        return;
-      }
-      if (node.hasAttribute('if')) {
-        if (!this.processIf(node, data)) {
-          return;
-        }
-      }
-      // Only make the node available once we know it's not going away
-      data.__element = node;
-      // It's good to clean up the attributes when we've processed them,
-      // but if we do it straight away, we mess up the array index
-      var attrs = Array.prototype.slice.call(node.attributes);
-      for (var i = 0; i < attrs.length; i++) {
-        var value = attrs[i].value;
-        var name = attrs[i].name;
-        this.scope.push(name);
-        try {
-          if (name === 'save') {
-            // Save attributes are a setter using the node
-            value = this.stripBraces(value);
-            this.property(value, data, node);
-            node.removeAttribute('save');
-          } else if (name.substring(0, 2) === 'on') {
-            // Event registration relies on property doing a bind
-            value = this.stripBraces(value);
-            var func = this.property(value, data);
-            if (typeof func !== 'function') {
-              this.handleError('Expected ' + value +
-                ' to resolve to a function, but got ' + typeof func);
-            }
-            node.removeAttribute(name);
-            var capture = node.hasAttribute('capture' + name.substring(2));
-            node.addEventListener(name.substring(2), func, capture);
-            if (capture) {
-              node.removeAttribute('capture' + name.substring(2));
-            }
-          } else {
-            // Replace references in all other attributes
-            var self = this;
-            var newValue = value.replace(/\$\{[^}]*\}/g, function(path) {
-              return self.envEval(path.slice(2, -1), data, value);
-            });
-            // Remove '_' prefix of attribute names so the DOM won't try
-            // to use them before we've processed the template
-            if (name.charAt(0) === '_') {
-              node.removeAttribute(name);
-              node.setAttribute(name.substring(1), newValue);
-            } else if (value !== newValue) {
-              attrs[i].value = newValue;
-            }
-          }
-        } finally {
-          this.scope.pop();
-        }
-      }
-    }
-
-    // Loop through our children calling processNode. First clone them, so the
-    // set of nodes that we visit will be unaffected by additions or removals.
-    var childNodes = Array.prototype.slice.call(node.childNodes);
-    for (var j = 0; j < childNodes.length; j++) {
-      this.processNode(childNodes[j], data);
-    }
-
-    if (node.nodeType === Node.TEXT_NODE) {
-      this.processTextNode(node, data);
-    }
-  } finally {
-    this.scope.pop();
-  }
-};
-
-/**
- * Handle <x if="${...}">
- * @param node An element with an 'if' attribute
- * @param data The data to use with envEval
- * @returns true if processing should continue, false otherwise
- */
-Templater.prototype.processIf = function(node, data) {
-  this.scope.push('if');
-  try {
-    var originalValue = node.getAttribute('if');
-    var value = this.stripBraces(originalValue);
-    var recurse = true;
-    try {
-      var reply = this.envEval(value, data, originalValue);
-      recurse = !!reply;
-    } catch (ex) {
-      this.handleError('Error with \'' + value + '\'', ex);
-      recurse = false;
-    }
-    if (!recurse) {
-      node.parentNode.removeChild(node);
-    }
-    node.removeAttribute('if');
-    return recurse;
-  } finally {
-    this.scope.pop();
-  }
-};
-
-/**
- * Handle <x foreach="param in ${array}"> and the special case of
- * <loop foreach="param in ${array}">
- * @param node An element with a 'foreach' attribute
- * @param data The data to use with envEval
- */
-Templater.prototype.processForEach = function(node, data) {
-  this.scope.push('foreach');
-  try {
-    var originalValue = node.getAttribute('foreach');
-    var value = originalValue;
-
-    var paramName = 'param';
-    if (value.charAt(0) === '$') {
-      // No custom loop variable name. Use the default: 'param'
-      value = this.stripBraces(value);
-    } else {
-      // Extract the loop variable name from 'NAME in ${ARRAY}'
-      var nameArr = value.split(' in ');
-      paramName = nameArr[0].trim();
-      value = this.stripBraces(nameArr[1].trim());
-    }
-    node.removeAttribute('foreach');
-    try {
-      var self = this;
-      // Process a single iteration of a loop
-      var processSingle = function(member, clone, ref) {
-        ref.parentNode.insertBefore(clone, ref);
-        data[paramName] = member;
-        self.processNode(clone, data);
-        delete data[paramName];
-      };
-
-      // processSingle is no good for <loop> nodes where we want to work on
-      // the childNodes rather than the node itself
-      var processAll = function(scope, member) {
-        self.scope.push(scope);
-        try {
-          if (node.nodeName === 'LOOP') {
-            for (var i = 0; i < node.childNodes.length; i++) {
-              var clone = node.childNodes[i].cloneNode(true);
-              processSingle(member, clone, node);
-            }
-          } else {
-            var clone = node.cloneNode(true);
-            clone.removeAttribute('foreach');
-            processSingle(member, clone, node);
-          }
-        } finally {
-          self.scope.pop();
-        }
-      };
-
-      var reply = this.envEval(value, data, originalValue);
-      if (Array.isArray(reply)) {
-        reply.forEach(function(data, i) {
-          processAll('' + i, data);
-        }, this);
-      } else {
-        for (var param in reply) {
-          if (reply.hasOwnProperty(param)) {
-            processAll(param, param);
-          }
-        }
-      }
-      node.parentNode.removeChild(node);
-    } catch (ex) {
-      this.handleError('Error with \'' + value + '\'', ex);
-    }
-  } finally {
-    this.scope.pop();
-  }
-};
-
-/**
- * Take a text node and replace it with another text node with the ${...}
- * sections parsed out. We replace the node by altering node.parentNode but
- * we could probably use a DOM Text API to achieve the same thing.
- * @param node The Text node to work on
- * @param data The data to use in calls to envEval
- */
-Templater.prototype.processTextNode = function(node, data) {
-  // Replace references in other attributes
-  var value = node.data;
-  // We can't use the string.replace() with function trick (see generic
-  // attribute processing in processNode()) because we need to support
-  // functions that return DOM nodes, so we can't have the conversion to a
-  // string.
-  // Instead we process the string as an array of parts. In order to split
-  // the string up, we first replace '${' with '\uF001$' and '}' with '\uF002'
-  // We can then split using \uF001 or \uF002 to get an array of strings
-  // where scripts are prefixed with $.
-  // \uF001 and \uF002 are just unicode chars reserved for private use.
-  value = value.replace(/\$\{([^}]*)\}/g, '\uF001$$$1\uF002');
-  var parts = value.split(/\uF001|\uF002/);
-  if (parts.length > 1) {
-    parts.forEach(function(part) {
-      if (part === null || part === undefined || part === '') {
-        return;
-      }
-      if (part.charAt(0) === '$') {
-        part = this.envEval(part.slice(1), data, node.data);
-      }
-      // It looks like this was done a few lines above but see envEval
-      if (part === null) {
-        part = "null";
-      }
-      if (part === undefined) {
-        part = "undefined";
-      }
-      // if (isDOMElement(part)) { ... }
-      if (typeof part.cloneNode !== 'function') {
-        part = node.ownerDocument.createTextNode(part.toString());
-      }
-      node.parentNode.insertBefore(part, node);
-    }, this);
-    node.parentNode.removeChild(node);
-  }
-};
-
-/**
- * Warn of string does not begin '${' and end '}'
- * @param str the string to check.
- * @return The string stripped of ${ and }, or untouched if it does not match
- */
-Templater.prototype.stripBraces = function(str) {
-  if (!str.match(/\$\{.*\}/g)) {
-    this.handleError('Expected ' + str + ' to match ${...}');
-    return str;
-  }
-  return str.slice(2, -1);
-};
-
-/**
- * Combined getter and setter that works with a path through some data set.
- * For example:
- * <ul>
- * <li>property('a.b', { a: { b: 99 }}); // returns 99
- * <li>property('a', { a: { b: 99 }}); // returns { b: 99 }
- * <li>property('a', { a: { b: 99 }}, 42); // returns 99 and alters the
- * input data to be { a: { b: 42 }}
- * </ul>
- * @param path An array of strings indicating the path through the data, or
- * a string to be cut into an array using <tt>split('.')</tt>
- * @param data An object to look in for the <tt>path</tt> argument
- * @param newValue (optional) If defined, this value will replace the
- * original value for the data at the path specified.
- * @return The value pointed to by <tt>path</tt> before any
- * <tt>newValue</tt> is applied.
- */
-Templater.prototype.property = function(path, data, newValue) {
-  this.scope.push(path);
-  try {
-    if (typeof path === 'string') {
-      path = path.split('.');
-    }
-    var value = data[path[0]];
-    if (path.length === 1) {
-      if (newValue !== undefined) {
-        data[path[0]] = newValue;
-      }
-      if (typeof value === 'function') {
-        return function() {
-          return value.apply(data, arguments);
-        };
-      }
-      return value;
-    }
-    if (!value) {
-      this.handleError('Can\'t find path=' + path);
-      return null;
-    }
-    return this.property(path.slice(1), value, newValue);
-  } finally {
-    this.scope.pop();
-  }
-};
-
-/**
- * Like eval, but that creates a context of the variables in <tt>env</tt> in
- * which the script is evaluated.
- * WARNING: This script uses 'with' which is generally regarded to be evil.
- * The alternative is to create a Function at runtime that takes X parameters
- * according to the X keys in the env object, and then call that function using
- * the values in the env object. This is likely to be slow, but workable.
- * @param script The string to be evaluated.
- * @param env The environment in which to eval the script.
- * @param context Optional debugging string in case of failure
- * @return The return value of the script, or the error message if the script
- * execution failed.
- */
-Templater.prototype.envEval = function(script, env, context) {
-  with (env) {
-    try {
-      this.scope.push(context);
-      return eval(script);
-    } catch (ex) {
-      this.handleError('Template error evaluating \'' + script + '\'', ex);
-      return script;
-    } finally {
-      this.scope.pop();
-    }
-  }
-};
-
-/**
- * A generic way of reporting errors, for easy overloading in different
- * environments.
- * @param message the error message to report.
- * @param ex optional associated exception.
- */
-Templater.prototype.handleError = function(message, ex) {
-  this.logError(message);
-  this.logError('In: ' + this.scope.join(' > '));
-  if (ex) {
-    this.logError(ex);
-  }
-};
-
-
-/**
- * A generic way of reporting errors, for easy overloading in different
- * environments.
- * @param message the error message to report.
- */
-Templater.prototype.logError = function(message) {
-  window.console && window.console.log && console.log(message);
-};
-
-exports.Templater = Templater;
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Skywriter Team (skywriter@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('cockpit/commands/basic', ['require', 'exports', 'module' , 'pilot/canon'], function(require, exports, module) {
-
-
-var canon = require('pilot/canon');
-
-/**
- * '!' command
- */
-var bangCommandSpec = {
-    name: 'sh',
-    description: 'Execute a system command (requires server support)',
-    params: [
-        {
-            name: 'command',
-            type: 'text',
-            description: 'The string to send to the os shell.'
-        }
-    ],
-    exec: function(env, args, request) {
-        var req = new XMLHttpRequest();
-        req.open('GET', '/exec?args=' + args.command, true);
-        req.onreadystatechange = function(ev) {
-          if (req.readyState == 4) {
-            if (req.status == 200) {
-              request.done('<pre>' + req.responseText + '</pre>');
-            }
-          }
-        };
-        req.send(null);
-    }
-};
-
-var canon = require('pilot/canon');
-
-exports.startup = function(data, reason) {
-    canon.addCommand(bangCommandSpec);
-};
-
-exports.shutdown = function(data, reason) {
-    canon.removeCommand(bangCommandSpec);
-};
-
-
-});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -7503,19 +4631,17 @@ exports.shutdown = function shutdown(data, reason) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('demo/boot', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/settings', 'pilot/environment', 'demo/demo', 'pilot/index', 'cockpit/index', 'ace/defaults'], function(require, exports, module) {
+define('demo/boot', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/environment', 'demo/demo', 'pilot/index', 'ace/defaults'], function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 require("pilot/plugin_manager");
-require("pilot/settings");
 require("pilot/environment");
 require("demo/demo");
 
 require("pilot/index");
-require("cockpit/index");
 require("ace/defaults");
 
-var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
+var plugins = [ "pilot/index"];
 var catalog = require("pilot/plugin_manager").catalog;
 catalog.registerPlugins(plugins).then(function() {
     var env = require("pilot/environment").create();
@@ -8041,7 +5167,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
 
 exports.launch = function(env) {
     var canon = require("pilot/canon");
@@ -8098,7 +5224,7 @@ exports.launch = function(env) {
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
-    var loreIpsum = document.getElementById("plaintext").innerHTML;
+    var loreIpsum = require("text!demo/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -8108,88 +5234,86 @@ exports.launch = function(env) {
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSession(require("text!demo/docs/javascript.js"));
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSession(require("text!demo/docs/css.css"));
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.scss = new EditSession(document.getElementById("scsstext").innerHTML);
+    docs.scss = new EditSession(require("text!demo/docs/scss.scss"));
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSession(require("text!demo/docs/html.html"));
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
+    docs.python = new EditSession(require("text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
+    docs.php = new EditSession(require("text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(document.getElementById("javatext").innerHTML);
+    docs.java = new EditSession(require("text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby = new EditSession(require("text!demo/docs/ruby.rb"));
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp = new EditSession(require("text!demo/docs/csharp.cs"));
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp = new EditSession(require("text!demo/docs/cpp.cpp"));
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(document.getElementById("coffeetext").innerHTML);
+    docs.coffee = new EditSession(require("text!demo/docs/coffeescript.coffee"));
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.json = new EditSession(document.getElementById("jsontext").innerHTML);
+    docs.json = new EditSession(require("text!demo/docs/json.json"));
     docs.json.setMode(new JsonMode());
     docs.json.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
+    docs.perl = new EditSession(require("text!demo/docs/perl.pl"));
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.clojure = new EditSession(document.getElementById("clojuretext").innerHTML);
+    docs.clojure = new EditSession(require("text!demo/docs/clojure.clj"));
     docs.clojure.setMode(new ClojureMode());
     docs.clojure.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml = new EditSession(require("text!demo/docs/ocaml.ml"));
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg = new EditSession(require("text!demo/docs/svg.svg"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
+    docs.textile = new EditSession(require("text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.groovy = new EditSession(document.getElementById("groovy").innerHTML);
+    docs.groovy = new EditSession(require("text!demo/docs/groovy.groovy"));
     docs.groovy.setMode(new GroovyMode());
     docs.groovy.setUndoManager(new UndoManager());
 
-    docs.scala = new EditSession(document.getElementById("scala").innerHTML);
+    docs.scala = new EditSession(require("text!demo/docs/scala.scala"));
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
-    
-    
 
     // Add a "name" property to all docs
-    for (doc in docs) {
+    for (var doc in docs) {
         docs[doc].name = doc;
     }
 
@@ -8464,7 +5588,7 @@ exports.launch = function(env) {
         var onCheck = function() {
             callback(!!el.checked);
         };
-        el.onclick = onCheck;
+        el.onCheckck = onCheck;
         onCheck();
     }
 
@@ -8480,17 +5604,13 @@ exports.launch = function(env) {
     function onResize() {
         var width = (document.documentElement.clientWidth - 280);
         container.style.width = width + "px";
-        cockpitInput.style.width = width + "px";
-        container.style.height = (document.documentElement.clientHeight - 22) + "px";
+        container.style.height = document.documentElement.clientHeight + "px";
         env.split.resize();
 //        env.editor.resize();
     };
 
     window.onresize = onResize;
     onResize();
-
-    // Call resize on the cli explizit. This is necessary for Firefox.
-    env.cli.cliView.resizer()
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
@@ -8563,39 +5683,13 @@ exports.launch = function(env) {
      * This demonstrates how you can define commands and bind shortcuts to them.
      */
 
-    // Command to focus the command line from the editor.
-    canon.addCommand({
-        name: "focuscli",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "editor"
-        },
-        exec: function() {
-            env.cli.cliView.element.focus();
-        }
-    });
-
-    // Command to focus the editor line from the command line.
-    canon.addCommand({
-        name: "focuseditor",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "cli"
-        },
-        exec: function() {
-            env.editor.focus();
-        }
-    });
-
     // Fake-Save, works from the editor and the command line.
     canon.addCommand({
         name: "save",
         bindKey: {
             win: "Ctrl-S",
             mac: "Command-S",
-            sender: "editor|cli"
+            sender: "editor"
         },
         exec: function() {
             alert("Fake Save File");
@@ -8732,6 +5826,627 @@ function loadScriptFile(path, callback) {
     
     s.onload = callback;
 }
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/event', ['require', 'exports', 'module' , 'pilot/keys', 'pilot/useragent', 'pilot/dom'], function(require, exports, module) {
+
+var keys = require("pilot/keys");
+var useragent = require("pilot/useragent");
+var dom = require("pilot/dom");
+
+exports.addListener = function(elem, type, callback) {
+    if (elem.addEventListener) {
+        return elem.addEventListener(type, callback, false);
+    }
+    if (elem.attachEvent) {
+        var wrapper = function() {
+            callback(window.event);
+        };
+        callback._wrapper = wrapper;
+        elem.attachEvent("on" + type, wrapper);
+    }
+};
+
+exports.removeListener = function(elem, type, callback) {
+    if (elem.removeEventListener) {
+        return elem.removeEventListener(type, callback, false);
+    }
+    if (elem.detachEvent) {
+        elem.detachEvent("on" + type, callback._wrapper || callback);
+    }
+};
+
+/**
+* Prevents propagation and clobbers the default action of the passed event
+*/
+exports.stopEvent = function(e) {
+    exports.stopPropagation(e);
+    exports.preventDefault(e);
+    return false;
+};
+
+exports.stopPropagation = function(e) {
+    if (e.stopPropagation)
+        e.stopPropagation();
+    else
+        e.cancelBubble = true;
+};
+
+exports.preventDefault = function(e) {
+    if (e.preventDefault)
+        e.preventDefault();
+    else
+        e.returnValue = false;
+};
+
+exports.getDocumentX = function(e) {
+    if (e.clientX) {        
+        return e.clientX + dom.getPageScrollLeft();
+    } else {
+        return e.pageX;
+    }
+};
+
+exports.getDocumentY = function(e) {
+    if (e.clientY) {
+        return e.clientY + dom.getPageScrollTop();
+    } else {
+        return e.pageY;
+    }
+};
+
+/**
+ * @return {Number} 0 for left button, 1 for middle button, 2 for right button
+ */
+exports.getButton = function(e) {
+    if (e.type == "dblclick")
+        return 0;
+    else if (e.type == "contextmenu")
+        return 2;
+        
+    // DOM Event
+    if (e.preventDefault) {
+        return e.button;
+    }
+    // old IE
+    else {
+        return {1:0, 2:2, 4:1}[e.button];
+    }
+};
+
+if (document.documentElement.setCapture) {
+    exports.capture = function(el, eventHandler, releaseCaptureHandler) {
+        function onMouseMove(e) {
+            eventHandler(e);
+            return exports.stopPropagation(e);
+        }
+
+        var called = false;
+        function onReleaseCapture(e) {
+            eventHandler(e);
+            
+            if (!called) {
+                called = true;
+                releaseCaptureHandler();
+            }
+
+            exports.removeListener(el, "mousemove", eventHandler);
+            exports.removeListener(el, "mouseup", onReleaseCapture);
+            exports.removeListener(el, "losecapture", onReleaseCapture);
+
+            el.releaseCapture();
+        }
+
+        exports.addListener(el, "mousemove", eventHandler);
+        exports.addListener(el, "mouseup", onReleaseCapture);
+        exports.addListener(el, "losecapture", onReleaseCapture);
+        el.setCapture();
+    };
+}
+else {
+    exports.capture = function(el, eventHandler, releaseCaptureHandler) {
+        function onMouseMove(e) {
+            eventHandler(e);
+            e.stopPropagation();
+        }
+
+        function onMouseUp(e) {
+            eventHandler && eventHandler(e);
+            releaseCaptureHandler && releaseCaptureHandler();
+
+            document.removeEventListener("mousemove", onMouseMove, true);
+            document.removeEventListener("mouseup", onMouseUp, true);
+
+            e.stopPropagation();
+        }
+
+        document.addEventListener("mousemove", onMouseMove, true);
+        document.addEventListener("mouseup", onMouseUp, true);
+    };
+}
+
+exports.addMouseWheelListener = function(el, callback) {
+    var max = 0;
+    var listener = function(e) {
+        if (e.wheelDelta !== undefined) {
+            
+            // some versions of Safari (e.g. 5.0.5) report insanely high
+            // scroll values. These browsers require a higher factor
+            if (e.wheelDeltaY > max)
+                max = e.wheelDeltaY 
+
+            if (max > 1000)
+                factor = 400;
+            else
+                factor = 8;
+                
+            if (e.wheelDeltaX !== undefined) {
+                e.wheelX = -e.wheelDeltaX / factor;
+                e.wheelY = -e.wheelDeltaY / factor;
+            } else {
+                e.wheelX = 0;
+                e.wheelY = -e.wheelDelta / factor;
+            }
+        }
+        else {
+            if (e.axis && e.axis == e.HORIZONTAL_AXIS) {
+                e.wheelX = (e.detail || 0) * 5;
+                e.wheelY = 0;
+            } else {
+                e.wheelX = 0;
+                e.wheelY = (e.detail || 0) * 5;
+            }
+        }
+        callback(e);
+    };
+    exports.addListener(el, "DOMMouseScroll", listener);
+    exports.addListener(el, "mousewheel", listener);
+};
+
+exports.addMultiMouseDownListener = function(el, button, count, timeout, callback) {
+    var clicks = 0;
+    var startX, startY;
+
+    var listener = function(e) {
+        clicks += 1;
+        if (clicks == 1) {
+            startX = e.clientX;
+            startY = e.clientY;
+
+            setTimeout(function() {
+                clicks = 0;
+            }, timeout || 600);
+        }
+
+        var isButton = exports.getButton(e) == button;
+        if (!isButton || Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5)
+            clicks = 0;
+
+        if (clicks == count) {
+            clicks = 0;
+            callback(e);
+        }
+        
+        if (isButton)
+            return exports.preventDefault(e);
+    };
+
+    exports.addListener(el, "mousedown", listener);
+    useragent.isIE && exports.addListener(el, "dblclick", listener);
+};
+
+function normalizeCommandKeys(callback, e, keyCode) {
+    var hashId = 0;
+    if (useragent.isOpera && useragent.isMac) {
+        hashId = 0 | (e.metaKey ? 1 : 0) | (e.altKey ? 2 : 0)
+            | (e.shiftKey ? 4 : 0) | (e.ctrlKey ? 8 : 0);
+    } else {
+        hashId = 0 | (e.ctrlKey ? 1 : 0) | (e.altKey ? 2 : 0)
+            | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);
+    }
+
+    if (keyCode in keys.MODIFIER_KEYS) {
+        switch (keys.MODIFIER_KEYS[keyCode]) {
+            case "Alt":
+                hashId = 2;
+                break;
+            case "Shift":
+                hashId = 4;
+                break
+            case "Ctrl":
+                hashId = 1;
+                break;
+            default:
+                hashId = 8;
+                break;
+        }
+        keyCode = 0;
+    }
+
+    if (hashId & 8 && (keyCode == 91 || keyCode == 93)) {
+        keyCode = 0;
+    }
+
+    // If there is no hashID and the keyCode is not a function key, then
+    // we don't call the callback as we don't handle a command key here
+    // (it's a normal key/character input).
+    if (hashId == 0 && !(keyCode in keys.FUNCTION_KEYS)) {
+        return false;
+    }
+
+    return callback(e, hashId, keyCode);
+}
+
+exports.addCommandKeyListener = function(el, callback) {
+    var addListener = exports.addListener;
+    if (useragent.isOldGecko) {
+        // Old versions of Gecko aka. Firefox < 4.0 didn't repeat the keydown
+        // event if the user pressed the key for a longer time. Instead, the
+        // keydown event was fired once and later on only the keypress event.
+        // To emulate the 'right' keydown behavior, the keyCode of the initial
+        // keyDown event is stored and in the following keypress events the
+        // stores keyCode is used to emulate a keyDown event.
+        var lastKeyDownKeyCode = null;
+        addListener(el, "keydown", function(e) {
+            lastKeyDownKeyCode = e.keyCode;
+        });
+        addListener(el, "keypress", function(e) {
+            return normalizeCommandKeys(callback, e, lastKeyDownKeyCode);
+        });
+    } else {
+        var lastDown = null;
+
+        addListener(el, "keydown", function(e) {
+            lastDown = e.keyIdentifier || e.keyCode;
+            return normalizeCommandKeys(callback, e, e.keyCode);
+        });
+
+        // repeated keys are fired as keypress and not keydown events
+        if (useragent.isMac && useragent.isOpera) {
+            addListener(el, "keypress", function(e) {
+                var keyId = e.keyIdentifier || e.keyCode;
+                if (lastDown !== keyId) {
+                    return normalizeCommandKeys(callback, e, e.keyCode);
+                } else {
+                    lastDown = null;
+                }
+            });
+        }
+    }
+};
+
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai AT sucan AT gmail ODT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/dom', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var XHTML_NS = "http://www.w3.org/1999/xhtml";
+
+exports.createElement = function(tag, ns) {
+    return document.createElementNS ?
+           document.createElementNS(ns || XHTML_NS, tag) :
+           document.createElement(tag);
+};
+
+exports.setText = function(elem, text) {
+    if (elem.innerText !== undefined) {
+        elem.innerText = text;
+    }
+    if (elem.textContent !== undefined) {
+        elem.textContent = text;
+    }
+};
+
+if (!document.documentElement.classList) {
+    exports.hasCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g);
+        return classes.indexOf(name) !== -1;
+    };
+
+    /**
+    * Add a CSS class to the list of classes on the given node
+    */
+    exports.addCssClass = function(el, name) {
+        if (!exports.hasCssClass(el, name)) {
+            el.className += " " + name;
+        }
+    };
+
+    /**
+    * Remove a CSS class from the list of classes on the given node
+    */
+    exports.removeCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g);
+        while (true) {
+            var index = classes.indexOf(name);
+            if (index == -1) {
+                break;
+            }
+            classes.splice(index, 1);
+        }
+        el.className = classes.join(" ");
+    };
+
+    exports.toggleCssClass = function(el, name) {
+        var classes = el.className.split(/\s+/g), add = true;
+        while (true) {
+            var index = classes.indexOf(name);
+            if (index == -1) {
+                break;
+            }
+            add = false;
+            classes.splice(index, 1);
+        }
+        if(add)
+            classes.push(name);
+
+        el.className = classes.join(" ");
+        return add;
+    };
+} else {
+    exports.hasCssClass = function(el, name) {
+        return el.classList.contains(name);
+    };
+
+    exports.addCssClass = function(el, name) {
+        el.classList.add(name);
+    };
+
+    exports.removeCssClass = function(el, name) {
+        el.classList.remove(name);
+    };
+
+    exports.toggleCssClass = function(el, name) {
+        return el.classList.toggle(name);
+    };
+}
+
+/**
+ * Add or remove a CSS class from the list of classes on the given node
+ * depending on the value of <tt>include</tt>
+ */
+exports.setCssClass = function(node, className, include) {
+    if (include) {
+        exports.addCssClass(node, className);
+    } else {
+        exports.removeCssClass(node, className);
+    }
+};
+
+exports.importCssString = function(cssText, doc){
+    doc = doc || document;
+
+    if (doc.createStyleSheet) {
+        var sheet = doc.createStyleSheet();
+        sheet.cssText = cssText;
+    }
+    else {
+        var style = doc.createElementNS ?
+                    doc.createElementNS(XHTML_NS, "style") :
+                    doc.createElement("style");
+
+        style.appendChild(doc.createTextNode(cssText));
+
+        var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
+        head.appendChild(style);
+    }
+};
+
+exports.getInnerWidth = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingLeft"))
+            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
+};
+
+exports.getInnerHeight = function(element) {
+    return (parseInt(exports.computedStyle(element, "paddingTop"))
+            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
+};
+
+if (window.pageYOffset !== undefined) {
+    exports.getPageScrollTop = function() {
+        return window.pageYOffset;
+    };
+
+    exports.getPageScrollLeft = function() {
+        return window.pageXOffset;
+    };
+}
+else {
+    exports.getPageScrollTop = function() {
+        return document.body.scrollTop;
+    };
+
+    exports.getPageScrollLeft = function() {
+        return document.body.scrollLeft;
+    };
+}
+
+if (window.getComputedStyle)
+    exports.computedStyle = function(element, style) {
+        if (style)
+            return (window.getComputedStyle(element, "") || {})[style] || "";
+        return window.getComputedStyle(element, "") || {}
+    };
+else
+    exports.computedStyle = function(element, style) {
+        if (style)
+            return element.currentStyle[style];
+        return element.currentStyle
+    };
+
+exports.scrollbarWidth = function() {
+
+    var inner = exports.createElement("p");
+    inner.style.width = "100%";
+    inner.style.minWidth = "0px";
+    inner.style.height = "200px";
+
+    var outer = exports.createElement("div");
+    var style = outer.style;
+
+    style.position = "absolute";
+    style.left = "-10000px";
+    style.overflow = "hidden";
+    style.width = "200px";
+    style.minWidth = "0px";
+    style.height = "150px";
+
+    outer.appendChild(inner);
+
+    var body = document.body || document.documentElement;
+    body.appendChild(outer);
+
+    var noScrollbar = inner.offsetWidth;
+
+    style.overflow = "scroll";
+    var withScrollbar = inner.offsetWidth;
+
+    if (noScrollbar == withScrollbar) {
+        withScrollbar = outer.clientWidth;
+    }
+
+    body.removeChild(outer);
+
+    return noScrollbar-withScrollbar;
+};
+
+/**
+ * Optimized set innerHTML. This is faster than plain innerHTML if the element
+ * already contains a lot of child elements.
+ *
+ * See http://blog.stevenlevithan.com/archives/faster-than-innerhtml for details
+ */
+exports.setInnerHtml = function(el, innerHtml) {
+    var element = el.cloneNode(false);//document.createElement("div");
+    element.innerHTML = innerHtml;
+    el.parentNode.replaceChild(element, el);
+    return element;
+};
+
+exports.setInnerText = function(el, innerText) {
+    if (document.body && "textContent" in document.body)
+        el.textContent = innerText;
+    else
+        el.innerText = innerText;
+
+};
+
+exports.getInnerText = function(el) {
+    if (document.body && "textContent" in document.body)
+        return el.textContent;
+    else
+         return el.innerText || el.textContent || "";
+};
+
+exports.getParentWindow = function(document) {
+    return document.defaultView || document.parentWindow;
+};
+
+exports.getSelectionStart = function(textarea) {
+    // TODO IE
+    var start;
+    try {
+        start = textarea.selectionStart || 0;
+    } catch (e) {
+        start = 0;
+    }
+    return start;
+};
+
+exports.setSelectionStart = function(textarea, start) {
+    // TODO IE
+    return textarea.selectionStart = start;
+};
+
+exports.getSelectionEnd = function(textarea) {
+    // TODO IE
+    var end;
+    try {
+        end = textarea.selectionEnd || 0;
+    } catch (e) {
+        end = 0;
+    }
+    return end;
+};
+
+exports.setSelectionEnd = function(textarea, end) {
+    // TODO IE
+    return textarea.selectionEnd = end;
+};
 
 });
 /* ***** BEGIN LICENSE BLOCK *****
@@ -9307,13 +7022,10 @@ var Editor =function(renderer, session) {
         // Safari needs the timeout
         // iOS and Firefox need it called immediately
         // to be on the save side we do both
-        // except for IE
         var _self = this;
-        if (!useragent.isIE) {
-            setTimeout(function() {
-                _self.textInput.focus();
-            });
-        }
+        setTimeout(function() {
+            _self.textInput.focus();
+        });
         this.textInput.focus();
     };
     
@@ -10333,6 +8045,12 @@ var TextInput = function(parentNode, host) {
     var pasted = false;
     var tempStyle = '';
 
+    function select() {
+        try {
+            text.select();
+        } catch (e) {}
+    };
+
     function sendText(valueToSend) {
         if (!copied) {
             var value = valueToSend || text.value;
@@ -10358,7 +8076,7 @@ var TextInput = function(parentNode, host) {
 
         // Safari doesn't fire copy events if no text is selected
         text.value = PLACEHOLDER;
-        text.select();
+        select();
     }
 
     var onTextInput = function(e) {
@@ -10368,7 +8086,7 @@ var TextInput = function(parentNode, host) {
         }, 0);
     };
     
-    var onKeyPress = function(e) {
+    var onPropertyChange = function(e) {
         if (useragent.isIE && text.value.charCodeAt(0) > 128) return;
         setTimeout(function() {
             if (!inCompostion)
@@ -10399,12 +8117,12 @@ var TextInput = function(parentNode, host) {
             text.value = copyText;
         else
             e.preventDefault();
-        text.select();
+        select();
         setTimeout(function () {
             sendText();
         }, 0);
     };
-
+    
     var onCut = function(e) {
         copied = true;
         var copyText = host.getCopyText();
@@ -10413,7 +8131,7 @@ var TextInput = function(parentNode, host) {
             host.onCut();
         } else
             e.preventDefault();
-        text.select();
+        select();
         setTimeout(function () {
             sendText();
         }, 0);
@@ -10431,22 +8149,11 @@ var TextInput = function(parentNode, host) {
             inCompostion ? onCompositionUpdate() : onCompositionStart();
         });
     };
-
-    if (text.attachEvent) {
-        // Old IE + Opera
-        event.addListener(text, "propertychange", onKeyPress);
-    }
-    else {
-        if (useragent.isChrome || useragent.isSafari)
-            event.addListener(text, "textInput", onTextInput);
-        else if (useragent.isIE)
-            // IE9
-            event.addListener(text, "textinput", onTextInput);
-        else
-            // All browsers except old IE
-            event.addListener(text, "input", onTextInput);
-    }
     
+    if ("onpropertychange" in text && !("oninput" in text))
+        event.addListener(text, "propertychange", onPropertyChange);
+    else
+        event.addListener(text, "input", onTextInput);
     
     event.addListener(text, "paste", function(e) {
         // Mark that the next input text comes from past.
@@ -10460,7 +8167,7 @@ var TextInput = function(parentNode, host) {
         else {
             // If a browser doesn't support any of the things above, use the regular
             // method to detect the pasted input.
-            onKeyPress();
+            onPropertyChange();
         }
     });
 
@@ -10503,12 +8210,12 @@ var TextInput = function(parentNode, host) {
 
     event.addListener(text, "focus", function() {
         host.onFocus();
-        text.select();
+        select();
     });
 
     this.focus = function() {
         host.onFocus();
-        text.select();
+        select();
         text.focus();
     };
 
@@ -10646,24 +8353,33 @@ var MouseHandler = function(editor) {
     };
 
     this.onMouseDown = function(e) {
-        // if this click caused the editor to be focused ignore the click
-        // for selection and cursor placement
-        if (
-            !this.browserFocus.isFocused()
-            || new Date().getTime() - this.browserFocus.lastFocus < 20
-            || !this.editor.isFocused()
-        )
-            return;
-        
         var pageX = event.getDocumentX(e);
         var pageY = event.getDocumentY(e);
+        
         var pos = this.$getEventPosition(e);
+        
         var editor = this.editor;
         var self = this;
         var selectionRange = editor.getSelectionRange();
         var selectionEmpty = selectionRange.isEmpty();
+        var inSelection = !editor.getReadOnly()
+            && !selectionEmpty
+            && selectionRange.contains(pos.row, pos.column);
+        
         var state = STATE_UNKNOWN;
-        var inSelection = false;
+        
+        // if this click caused the editor to be focused should not clear the
+        // selection
+        if (
+            inSelection && (
+                !this.browserFocus.isFocused()
+                || new Date().getTime() - this.browserFocus.lastFocus < 20
+                || !this.editor.isFocused()
+            )
+        ) {
+            this.editor.focus();
+            return;
+        }
 
         var button = event.getButton(e);
         if (button !== 0) {
@@ -10682,10 +8398,6 @@ var MouseHandler = function(editor) {
                 editor.selection.setSelectionRange(fold.range);
                 return;
             }
-
-            inSelection = !editor.getReadOnly()
-                && !selectionEmpty
-                && selectionRange.contains(pos.row, pos.column);
         }
 
         if (!inSelection) {
@@ -10813,8 +8525,7 @@ var MouseHandler = function(editor) {
 
         var onDragSelectionInterval = function() {
             dragCursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            dragCursor.row = Math.max(0, Math.min(dragCursor.row,
-                                                  editor.session.getLength() - 1));
+            dragCursor.row = Math.max(0, Math.min(dragCursor.row, editor.session.getLength() - 1));
 
             editor.moveCursorToPosition(dragCursor);
         };
@@ -10922,13 +8633,26 @@ var BrowserFocus = function(win) {
     this._isFocused = true;
     
     var _self = this;
-    event.addListener(win, "blur", function(e) {
-        _self._setFocused(false);
-    });
 
-    event.addListener(win, "focus", function(e) {
-        _self._setFocused(true);
-    });
+    // IE < 9 supports focusin and focusout events
+    if ("onfocusin" in win.document) {
+        event.addListener(win.document, "focusin", function(e) {
+            _self._setFocused(true);
+        });
+
+        event.addListener(win.document, "focusout", function(e) {
+            _self._setFocused(!!e.toElement);
+        });
+    }
+    else {
+        event.addListener(win, "blur", function(e) {
+            _self._setFocused(false);
+        });
+
+        event.addListener(win, "focus", function(e) {
+            _self._setFocused(true);
+        });
+    }
 };
 
 (function(){
@@ -20529,8 +18253,7 @@ var HtmlHighlightRules = function() {
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
     function string(state) {
-        return [
-            {
+        return [{
             token : "string",
             regex : '".*?"'
         }, {
@@ -20576,6 +18299,9 @@ var HtmlHighlightRules = function() {
             next : name + "-attribute-list"
         }];
 
+        states[name + "-qstring"] = multiLineString("'", name);
+        states[name + "-qqstring"] = multiLineString("\"", name);
+        
         states[name + "-attribute-list"] = [{
             token : "text",
             regex : ">",
@@ -20589,7 +18315,7 @@ var HtmlHighlightRules = function() {
         }, {
             token : "text",
             regex : "\\s+"
-        }].concat(string("attribute-list"));
+        }].concat(string(name));
     };
 
     this.$rules = {
@@ -20625,14 +18351,7 @@ var HtmlHighlightRules = function() {
             token : "text",
             regex : "[^<]+"
         } ],
-
-        "style-qstring": multiLineString("'", "style"),
-        "style-qqstring": multiLineString('"', "style"),
-        "script-qstring": multiLineString("'", "script"),
-        "script-qqstring": multiLineString('"', "script"),
-        "tag-qstring": multiLineString("'", "tag"),
-        "tag-qqstring": multiLineString('"', "tag"),
-        
+    
         cdata : [ {
             token : "text",
             regex : "\\]\\]>",
@@ -26654,6 +24373,7 @@ var Split = function(container, theme, splits) {
         this.$editors.forEach(callback, scope);
     };
 
+    this.$fontSize = "";
     this.setFontSize = function(size) {
         this.$fontSize = size;
         this.forEach(function(editor) {
@@ -26795,2276 +24515,2742 @@ function UndoManagerProxy(undoManager, session) {
 
 exports.Split = Split;
 });
-define("text!cockpit/ui/cli_view.css", [], "" +
-  "#cockpitInput { padding-left: 16px; }" +
-  "" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }" +
-  "" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }" +
-  ".cptCompletion.VALID { background: #FFF; }" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }" +
-  ".cptCompletion.INVALID { background: #DDD; }" +
-  ".cptCompletion span { color: #FFF; }" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }" +
-  "" +
-  "" +
-  ".cptHints {" +
-  "  color: #000;" +
-  "  position: absolute;" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);" +
-  "  background: rgba(250, 250, 250, 0.8);" +
-  "  -moz-border-radius-topleft: 10px;" +
-  "  -moz-border-radius-topright: 10px;" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;" +
-  "  z-index: 1000;" +
-  "  padding: 8px;" +
-  "  display: none;" +
-  "}" +
-  "" +
-  ".cptFocusPopup { display: block; }" +
-  ".cptFocusPopup.cptNoPopup { display: none; }" +
-  "" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }" +
-  "" +
-  ".cptGt { font-weight: bold; font-size: 120%; }" +
-  "");
+define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
+  "  \"returns a String parting in a given language\"\n" +
+  "  ([] (parting \"World\"))\n" +
+  "  ([name] (parting name \"en\"))\n" +
+  "  ([name language]\n" +
+  "    ; condp is similar to a case statement in other languages.\n" +
+  "    ; It is described in more detail later.\n" +
+  "    ; It is used here to take different actions based on whether the\n" +
+  "    ; parameter \"language\" is set to \"en\", \"es\" or something else.\n" +
+  "    (condp = language\n" +
+  "      \"en\" (str \"Goodbye, \" name)\n" +
+  "      \"es\" (str \"Adios, \" name)\n" +
+  "      (throw (IllegalArgumentException.\n" +
+  "        (str \"unsupported language \" language))))))\n" +
+  "\n" +
+  "(println (parting)) ; -> Goodbye, World\n" +
+  "(println (parting \"Mark\")) ; -> Goodbye, Mark\n" +
+  "(println (parting \"Mark\" \"es\")) ; -> Adios, Mark\n" +
+  "(println (parting \"Mark\", \"xy\")) ; -> java.lang.IllegalArgumentException: unsupported language xy");
 
-define("text!cockpit/ui/request_view.css", [], "" +
-  ".cptRowIn {" +
-  "  display: box; display: -moz-box; display: -webkit-box;" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;" +
-  "  color: #333;" +
-  "  background-color: #EEE;" +
-  "  width: 100%;" +
-  "  font-family: consolas, courier, monospace;" +
-  "}" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }" +
-  ".cptRowIn > img { cursor: pointer; }" +
-  ".cptHover { display: none; }" +
-  ".cptRowIn:hover > .cptHover { display: block; }" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }" +
-  ".cptOutTyped {" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;" +
-  "  font-weight: bold; color: #000; font-size: 120%;" +
-  "}" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }" +
-  ".cptRowOutput strong," +
-  ".cptRowOutput b," +
-  ".cptRowOutput th," +
-  ".cptRowOutput h1," +
-  ".cptRowOutput h2," +
-  ".cptRowOutput h3 { color: #000; }" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }" +
-  ".cptRowOutput input[type=password]," +
-  ".cptRowOutput input[type=text]," +
-  ".cptRowOutput textarea {" +
-  "  color: #000; font-size: 120%;" +
-  "  background: transparent; padding: 3px;" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;" +
-  "}" +
-  ".cptRowOutput table," +
-  ".cptRowOutput td," +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }" +
-  ".cptRowOutput .right { text-align: right; }" +
-  "");
+define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
+  "\n" +
+  "try\n" +
+  "    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)\n" +
+  "catch e\n" +
+  "    console.log 'qstring' + \"qqstring\" + '''\n" +
+  "        qdoc\n" +
+  "    ''' + \"\"\"\n" +
+  "        qqdoc\n" +
+  "    \"\"\"\n" +
+  "\n" +
+  "do ->\n" +
+  "    ###\n" +
+  "    herecomment\n" +
+  "    ###\n" +
+  "    re = /regex/imgy.test ///\n" +
+  "        heregex  # comment\n" +
+  "    ///imgy\n" +
+  "    this isnt: `just JavaScript`\n" +
+  "    undefined");
 
-define("text!ace/css/editor.css", [], ".ace_editor {" +
-  "    position: absolute;" +
-  "    overflow: hidden;" +
-  "    font-family: Monaco, \"Menlo\", \"Courier New\", monospace;" +
-  "    font-size: 12px;" +
-  "}" +
-  "" +
-  ".ace_scroller {" +
-  "    position: absolute;" +
-  "    overflow-x: scroll;" +
-  "    overflow-y: hidden;" +
-  "}" +
-  "" +
-  ".ace_content {" +
-  "    position: absolute;" +
-  "    box-sizing: border-box;" +
-  "    -moz-box-sizing: border-box;" +
-  "    -webkit-box-sizing: border-box;" +
-  "}" +
-  "" +
-  ".ace_composition {" +
-  "    position: absolute;" +
-  "    background: #555;" +
-  "    color: #DDD;" +
-  "    z-index: 4;" +
-  "}" +
-  "" +
-  ".ace_gutter {" +
-  "    position: absolute;" +
-  "    overflow-x: hidden;" +
-  "    overflow-y: hidden;" +
-  "    height: 100%;" +
-  "}" +
-  "" +
-  ".ace_gutter-cell.ace_error {" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: 4px center;" +
-  "}" +
-  "" +
-  ".ace_gutter-cell.ace_warning {" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: 4px center;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_sb {" +
-  "    position: absolute;" +
-  "    overflow-x: hidden;" +
-  "    overflow-y: scroll;" +
-  "    right: 0;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_sb div {" +
-  "    position: absolute;" +
-  "    width: 1px;" +
-  "    left: 0;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_print_margin_layer {" +
-  "    z-index: 0;" +
-  "    position: absolute;" +
-  "    overflow: hidden;" +
-  "    margin: 0;" +
-  "    left: 0;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_print_margin {" +
-  "    position: absolute;" +
-  "    height: 100%;" +
-  "}" +
-  "" +
-  ".ace_editor textarea {" +
-  "    position: fixed;" +
-  "    z-index: -1;" +
-  "    width: 10px;" +
-  "    height: 30px;" +
-  "    opacity: 0;" +
-  "    background: transparent;" +
-  "    appearance: none;" +
-  "    -moz-appearance: none;" +
-  "    border: none;" +
-  "    resize: none;" +
-  "    outline: none;" +
-  "    overflow: hidden;" +
-  "}" +
-  "" +
-  ".ace_layer {" +
-  "    z-index: 1;" +
-  "    position: absolute;" +
-  "    overflow: hidden;" +
-  "    white-space: nowrap;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "}" +
-  "" +
-  ".ace_text-layer {" +
-  "    color: black;" +
-  "}" +
-  "" +
-  ".ace_cjk {" +
-  "    display: inline-block;" +
-  "    text-align: center;" +
-  "}" +
-  "" +
-  ".ace_cursor-layer {" +
-  "    z-index: 4;" +
-  "    cursor: text;" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */" +
-  "}" +
-  "" +
-  ".ace_cursor {" +
-  "    z-index: 4;" +
-  "    position: absolute;" +
-  "}" +
-  "" +
-  ".ace_cursor.ace_hidden {" +
-  "    opacity: 0.2;" +
-  "}" +
-  "" +
-  ".ace_line {" +
-  "    white-space: nowrap;" +
-  "}" +
-  "" +
-  ".ace_marker-layer {" +
-  "    cursor: text;" +
-  "    pointer-events: none;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_step {" +
-  "    position: absolute;" +
-  "    z-index: 3;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_selection {" +
-  "    position: absolute;" +
-  "    z-index: 4;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_bracket {" +
-  "    position: absolute;" +
-  "    z-index: 5;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_active_line {" +
-  "    position: absolute;" +
-  "    z-index: 2;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_selected_word {" +
-  "    position: absolute;" +
-  "    z-index: 6;" +
-  "    box-sizing: border-box;" +
-  "    -moz-box-sizing: border-box;" +
-  "    -webkit-box-sizing: border-box;" +
-  "}" +
-  "" +
-  ".ace_line .ace_fold {" +
-  "    cursor: pointer;" +
-  "}" +
-  "" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {" +
-  "  cursor: move;" +
-  "}" +
-  "");
-
-define("text!build/demo/styles.css", [], "html {" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "    overflow: hidden;" +
-  "}" +
-  "" +
-  "body {" +
-  "    overflow: hidden;" +
-  "    margin: 0;" +
-  "    padding: 0;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;" +
-  "    font-size: 12px;" +
-  "    background: rgb(14, 98, 165);" +
-  "    color: white;" +
-  "}" +
-  "" +
-  "#logo {" +
-  "    padding: 15px;" +
-  "    margin-left: 65px;" +
-  "}" +
-  "" +
-  "#editor {" +
-  "    position: absolute;" +
-  "    top:  0px;" +
-  "    left: 280px;" +
-  "    bottom: 0px;" +
-  "    right: 0px;" +
-  "    background: white;" +
-  "}" +
-  "" +
-  "#controls {" +
-  "    padding: 5px;" +
-  "}" +
-  "" +
-  "#controls td {" +
-  "    text-align: right;" +
-  "}" +
-  "" +
-  "#controls td + td {" +
-  "    text-align: left;" +
-  "}" +
-  "" +
-  "#cockpitInput {" +
-  "    position: absolute;" +
-  "    left: 280px;" +
-  "    right: 0px;" +
-  "    bottom: 0;" +
-  "" +
-  "    border: none; outline: none;" +
-  "    font-family: consolas, courier, monospace;" +
-  "    font-size: 120%;" +
-  "}" +
-  "" +
-  "#cockpitOutput {" +
-  "    padding: 10px;" +
-  "    margin: 0 15px;" +
-  "    border: 1px solid #AAA;" +
-  "    -moz-border-radius-topleft: 10px;" +
-  "    -moz-border-radius-topright: 10px;" +
-  "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
-  "    background: #DDD; color: #000;" +
+define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
+  "\n" +
+  "#include <iostream>\n" +
+  "using namespace std;\n" +
+  "\n" +
+  "int main ()\n" +
+  "{\n" +
+  "    int a, b=3; /* foobar */\n" +
+  "    a = b;\n" +
+  "    a+=2; // equivalent to a=a+2\n" +
+  "    cout << a;\n" +
+  "    return 0;\n" +
   "}");
 
-define("text!build_support/style.css", [], "body {" +
-  "    margin:0;" +
-  "    padding:0;" +
-  "    background-color:#e6f5fc;" +
-  "    " +
-  "}" +
-  "" +
-  "H2, H3, H4 {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-weight:bold;" +
-  "    margin:0;" +
-  "    padding:0;" +
-  "}" +
-  "" +
-  "H2 {" +
-  "    font-size:28px;" +
-  "    color:#263842;" +
-  "    padding-bottom:6px;" +
-  "}" +
-  "" +
-  "H3 {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-weight:bold;" +
-  "    font-size:22px;" +
-  "    color:#253741;" +
-  "    margin-top:43px;" +
-  "    margin-bottom:8px;" +
-  "}" +
-  "" +
-  "H4 {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-weight:bold;" +
-  "    font-size:21px;" +
-  "    color:#222222;" +
-  "    margin-bottom:4px;" +
-  "}" +
-  "" +
-  "P {" +
-  "    padding:13px 0;" +
-  "    margin:0;" +
-  "    line-height:22px;" +
-  "}" +
-  "" +
-  "UL{" +
-  "    line-height : 22px;" +
-  "}" +
-  "" +
-  "PRE{" +
-  "    background : #333;" +
-  "    color : white;" +
-  "    padding : 10px;" +
-  "}" +
-  "" +
-  "#header {" +
-  "    height : 227px;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    background: url(images/background.png) repeat-x 0 0;" +
-  "    border-bottom:1px solid #c9e8fa;   " +
-  "}" +
-  "" +
-  "#header .content .signature {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-size:11px;" +
-  "    color:#ebe4d6;" +
-  "    position:absolute;" +
-  "    bottom:5px;" +
-  "    right:42px;" +
-  "    letter-spacing : 1px;" +
-  "}" +
-  "" +
-  ".content {" +
-  "    width:970px;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    margin:0 auto;" +
-  "}" +
-  "" +
-  "#header .content {" +
-  "    height:184px;" +
-  "    margin-top:22px;" +
-  "}" +
-  "" +
-  "#header .content .logo {" +
-  "    width  : 282px;" +
-  "    height : 184px;" +
-  "    background:url(images/logo.png) no-repeat 0 0;" +
-  "    position:absolute;" +
-  "    top:0;" +
-  "    left:0;" +
-  "}" +
-  "" +
-  "#header .content .title {" +
-  "    width  : 605px;" +
-  "    height : 58px;" +
-  "    background:url(images/ace.png) no-repeat 0 0;" +
-  "    position:absolute;" +
-  "    top:98px;" +
-  "    left:329px;" +
-  "}" +
-  "" +
-  "#wrapper {" +
-  "    background:url(images/body_background.png) repeat-x 0 0;" +
-  "    min-height:250px;" +
-  "}" +
-  "" +
-  "#wrapper .content {" +
-  "    font-family:Arial;" +
-  "    font-size:14px;" +
-  "    color:#222222;" +
-  "    width:1000px;" +
-  "}" +
-  "" +
-  "#wrapper .content .column1 {" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    float:left;" +
-  "    width:315px;" +
-  "    margin-right:31px;" +
-  "}" +
-  "" +
-  "#wrapper .content .column2 {" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    float:left;" +
-  "    width:600px;" +
-  "    padding-top:47px;" +
-  "}" +
-  "" +
-  ".fork_on_github {" +
-  "    width:310px;" +
-  "    height:80px;" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    margin-top:49px;" +
-  "    cursor:pointer;" +
-  "}" +
-  "" +
-  ".fork_on_github:hover {" +
-  "    background-position:0 -80px;" +
-  "}" +
-  "" +
-  ".divider {" +
-  "    height:3px;" +
-  "    background-color:#bedaea;" +
-  "    margin-bottom:3px;" +
-  "}" +
-  "" +
-  ".menu {" +
-  "    padding:23px 0 0 24px;" +
-  "}" +
-  "" +
-  "UL.content-list {" +
-  "    padding:15px;" +
-  "    margin:0;" +
-  "}" +
-  "" +
-  "UL.menu-list {" +
-  "    padding:0;" +
-  "    margin:0 0 20px 0;" +
-  "    list-style-type:none;" +
-  "    line-height : 16px;" +
-  "}" +
-  "" +
-  "UL.menu-list LI {" +
-  "    color:#2557b4;" +
-  "    font-family:Trebuchet MS;" +
-  "    font-size:14px;" +
-  "    padding:7px 0;" +
-  "    border-bottom:1px dotted #d6e2e7;" +
-  "}" +
-  "" +
-  "UL.menu-list LI:last-child {" +
-  "    border-bottom:0;" +
-  "}" +
-  "" +
-  "A {" +
-  "    color:#2557b4;" +
-  "    text-decoration:none;" +
-  "}" +
-  "" +
-  "A:hover {" +
-  "    text-decoration:underline;" +
-  "}" +
-  "" +
-  "P#first{" +
-  "    background : rgba(255,255,255,0.5);" +
-  "    padding : 20px;" +
-  "    font-size : 16px;" +
-  "    line-height : 24px;" +
-  "    margin : 0 0 20px 0;" +
-  "}" +
-  "" +
-  "#footer {" +
-  "    height:40px;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;" +
-  "    position:relative;" +
-  "    margin-top:40px;" +
-  "}" +
-  "" +
-  "UL.menu-footer {" +
-  "    padding:0;" +
-  "    margin:8px 11px 0 0;" +
-  "    list-style-type:none;" +
-  "    float:right;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI {" +
-  "    color:white;" +
-  "    font-family:Arial;" +
-  "    font-size:12px;" +
-  "    display:inline-block;" +
-  "    margin:0 1px;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI A {" +
-  "    color:#8dd0ff;" +
-  "    text-decoration:none;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI A:hover {" +
-  "    text-decoration:underline;" +
-  "}" +
-  "" +
-  "" +
-  "" +
-  "" +
-  "");
-
-define("text!demo/styles.css", [], "html {" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "    overflow: hidden;" +
-  "}" +
-  "" +
-  "body {" +
-  "    overflow: hidden;" +
-  "    margin: 0;" +
-  "    padding: 0;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;" +
-  "    font-size: 12px;" +
-  "    background: rgb(14, 98, 165);" +
-  "    color: white;" +
-  "}" +
-  "" +
-  "#logo {" +
-  "    padding: 15px;" +
-  "    margin-left: 65px;" +
-  "}" +
-  "" +
-  "#editor {" +
-  "    position: absolute;" +
-  "    top:  0px;" +
-  "    left: 280px;" +
-  "    bottom: 0px;" +
-  "    right: 0px;" +
-  "    background: white;" +
-  "}" +
-  "" +
-  "#controls {" +
-  "    padding: 5px;" +
-  "}" +
-  "" +
-  "#controls td {" +
-  "    text-align: right;" +
-  "}" +
-  "" +
-  "#controls td + td {" +
-  "    text-align: left;" +
-  "}" +
-  "" +
-  "#cockpitInput {" +
-  "    position: absolute;" +
-  "    left: 280px;" +
-  "    right: 0px;" +
-  "    bottom: 0;" +
-  "" +
-  "    border: none; outline: none;" +
-  "    font-family: consolas, courier, monospace;" +
-  "    font-size: 120%;" +
-  "}" +
-  "" +
-  "#cockpitOutput {" +
-  "    padding: 10px;" +
-  "    margin: 0 15px;" +
-  "    border: 1px solid #AAA;" +
-  "    -moz-border-radius-topleft: 10px;" +
-  "    -moz-border-radius-topright: 10px;" +
-  "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
-  "    background: #DDD; color: #000;" +
+define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
+  "    //Say Hello!\n" +
+  "    Console.WriteLine(\"Hello World\");\n" +
   "}");
 
-define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";" +
-  "" +
-  "@import url(\"booya.css\") print,screen;" +
-  "@import \"whatup.css\" screen;" +
-  "@import \"wicked.css\";" +
-  "" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";" +
-  "" +
-  "li.inline #foo {" +
-  "  background: url(\"something.png\");" +
-  "  display: inline;" +
-  "  padding-left: 3px;" +
-  "  padding-right: 7px;" +
-  "  border-right: 1px dotted #066;" +
-  "}" +
-  "" +
-  "li.last.first {" +
-  "  display: inline;" +
-  "  padding-left: 3px !important;" +
-  "  padding-right: 3px;" +
-  "  border-right: 0px;" +
-  "}" +
-  "" +
-  "@media print {" +
-  "    li.inline {" +
-  "      color: black;" +
-  "    }" +
-  "" +
-  "" +
-  "@charset \"UTF-8\"; " +
-  "" +
-  "@page {" +
-  "  margin: 10%;" +
-  "  counter-increment: page;" +
-  "" +
-  "  @top-center {" +
-  "    font-family: sans-serif;" +
-  "    font-weight: bold;" +
-  "    font-size: 2em;" +
-  "    content: counter(page);" +
-  "  }" +
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
   "}");
 
-define("text!deps/requirejs/dist/ie.css", [], "" +
-  "body .sect {" +
-  "    display: none;" +
-  "}" +
-  "" +
-  "" +
-  "#content ul.index {" +
-  "    list-style: none;" +
-  "}" +
-  "");
+define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
+  "import java.util.concurrent.atomic.AtomicInteger\n" +
+  "\n" +
+  "def counter = new AtomicInteger()\n" +
+  "\n" +
+  "synchronized out(message) {\n" +
+  "    println(message)\n" +
+  "}\n" +
+  "\n" +
+  "def th = Thread.start {\n" +
+  "    for( i in 1..8 ) {\n" +
+  "        sleep 30\n" +
+  "        out \"thread loop $i\"\n" +
+  "        counter.incrementAndGet()\n" +
+  "    }\n" +
+  "}\n" +
+  "\n" +
+  "for( j in 1..4 ) {\n" +
+  "    sleep 50\n" +
+  "    out \"main loop $j\"\n" +
+  "    counter.incrementAndGet()\n" +
+  "}\n" +
+  "\n" +
+  "th.join()\n" +
+  "\n" +
+  "assert counter.get() == 12");
 
-define("text!deps/requirejs/dist/main.css", [], "@font-face {" +
-  "    font-family: Inconsolata;" +
-  "    src: url(\"fonts/Inconsolata.ttf\");" +
-  "}" +
-  "" +
-  "* {" +
-  "    -moz-box-sizing: border-box;" +
-  "    -webkit-box-sizing: border-box;" +
-  "    box-sizing: border-box;" +
-  "    margin: 0;" +
-  "    padding: 0;" +
-  "}" +
-  "" +
-  "body {" +
-  "    font-size: 12px;" +
-  "    line-height: 21px;" +
-  "    background-color: #fff;" +
-  "    font-family: \"Helvetica Neue\", Helvetica, Arial, Verdana, sans-serif;" +
-  "    color: #0a0a0a;" +
-  "}" +
-  "" +
-  "#wrapper {" +
-  "    margin: 0;" +
-  "}" +
-  "" +
-  "#grid {" +
-  "    position: fixed;" +
-  "    top: 0;" +
-  "    left: 0;" +
-  "    width: 796px;" +
-  "    background-image: url(\"i/grid.png\");" +
-  "    z-index: 100;" +
-  "}" +
-  "" +
-  "pre {" +
-  "    line-height: 18px;" +
-  "    font-size: 13px;" +
-  "    margin: 7px 0 21px;" +
-  "    padding: 5px 10px;" +
-  "    overflow: auto;" +
-  "    background-color: #fafafa;" +
-  "    border: 1px solid #e6e6e6;" +
-  "    -moz-border-radius: 5px;" +
-  "    -webkit-border-radius: 5px;" +
-  "    border-radius: 5px;" +
-  "    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);" +
-  "    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);" +
-  "    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);" +
-  "}" +
-  "" +
-  "/*" +
-  "    typography stuff" +
-  "*/" +
-  ".mono {" +
-  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;" +
-  "}" +
-  "" +
-  ".sans {" +
-  "    font-family: \"Helvetica Neue\", Helvetica, Arial, Verdana, sans-serif;" +
-  "}" +
-  "" +
-  ".serif {" +
-  "    font-family: \"Georgia\", Times New Roman, Times, serif;" +
-  "}" +
-  "" +
-  "a {" +
-  "    color: #2e87dd;" +
-  "    text-decoration: none;" +
-  "}" +
-  "" +
-  "a:hover {" +
-  "    text-decoration: underline;" +
-  "}" +
-  "" +
-  "/*" +
-  "    navigation" +
-  "*/" +
-  "" +
-  "#navBg {" +
-  "    background-color: #f2f2f2;" +
-  "    background-image: url(\"i/shadow.png\");" +
-  "    background-position: right top;" +
-  "    background-repeat: repeat-y;" +
-  "    width: 220px;" +
-  "    position: fixed;" +
-  "    top: 0;" +
-  "    left: 0;" +
-  "    z-index: 0;" +
-  "}" +
-  "" +
-  "#nav {" +
-  "    background-image: url(\"i/logo.png\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: center 10px;" +
-  "    width: 220px;" +
-  "    float: left;" +
-  "    margin: 0;" +
-  "    padding: 150px 20px 0;" +
-  "    font-size: 13px;" +
-  "    text-shadow: 1px 1px #fff;" +
-  "    position: relative;" +
-  "    z-index: 1;" +
-  "}" +
-  "" +
-  "#nav .homeImageLink {" +
-  "    position: absolute;" +
-  "    display: block;" +
-  "    top: 10px;" +
-  "    left: 0;" +
-  "    width: 220px;" +
-  "    height: 138px;" +
-  "}" +
-  "#nav ul {" +
-  "    list-style-type:none;" +
-  "    padding: 0;" +
-  "    margin: 21px 0 0 0;" +
-  "}" +
-  "" +
-  "#nav ul li {" +
-  "    width: 100%;" +
-  "}" +
-  "" +
-  "#nav ul li.version {" +
-  "    text-align: center;" +
-  "    color: #4d4d4d;" +
-  "}" +
-  "" +
-  "#nav h1 {" +
-  "    color: #4d4d4d;" +
-  "    text-align: center;" +
-  "    font-size: 15px;" +
-  "    font-weight: normal;" +
-  "    text-transform: uppercase;" +
-  "    letter-spacing: 3px;" +
-  "}" +
-  "" +
-  "span.spacer {" +
-  "    color: #2e87dd;" +
-  "    margin: 0 3px 0 5px;" +
-  "    background-image: url(\"i/dot.png\");" +
-  "    background-repeat: repeat-x;" +
-  "    background-position: left 13px;" +
-  "}" +
-  "" +
-  "/*" +
-  "    icons" +
-  "*/" +
-  "" +
-  "span.icon {" +
-  "    width: 16px;" +
-  "    display: block;" +
-  "    background-image: url(\"i/sprite.png\");" +
-  "    background-repeat: no-repeat;" +
-  "}" +
-  "" +
-  "span.icon.home {" +
-  "    background-position: center 5px;" +
-  "}" +
-  "" +
-  "span.icon.start {" +
-  "    background-position: center -27px;" +
-  "}" +
-  "" +
-  "span.icon.download {" +
-  "    background-position: center -59px;" +
-  "}" +
-  "" +
-  "span.icon.api {" +
-  "    background-position: center -89px;" +
-  "}" +
-  "" +
-  "span.icon.optimize {" +
-  "    background-position: center -119px;" +
-  "}" +
-  "" +
-  "span.icon.script {" +
-  "    background-position: center -150px;" +
-  "}" +
-  "" +
-  "span.icon.question {" +
-  "    background-position: center -182px;" +
-  "}" +
-  "" +
-  "span.icon.requirement {" +
-  "    background-position: center -214px;" +
-  "}" +
-  "" +
-  "span.icon.history {" +
-  "    background-position: center -247px;" +
-  "}" +
-  "" +
-  "span.icon.help {" +
-  "    background-position: center -279px;" +
-  "}" +
-  "" +
-  "span.icon.blog {" +
-  "    background-position: center -311px;" +
-  "}" +
-  "" +
-  "span.icon.twitter {" +
-  "    background-position: center -343px;" +
-  "}" +
-  "" +
-  "span.icon.git {" +
-  "    background-position: center -375px;" +
-  "}" +
-  "" +
-  "span.icon.fork {" +
-  "    background-position: center -407px;" +
-  "}" +
-  "" +
-  "/*" +
-  "    content" +
-  "*/" +
-  "" +
-  "#content {" +
-  "    margin: 0 0 0 220px;" +
-  "    padding: 0 20px;" +
-  "    background-color: #fff;" +
-  "    font-family: \"Georgia\", Times New Roman, Times, serif;" +
-  "    position: relative;" +
-  "}" +
-  "" +
-  "#content p {" +
-  "    padding: 7px 0;" +
-  "    color: #333;" +
-  "    font-size: 14px;" +
-  "}" +
-  "" +
-  "#content h1," +
-  "#content h2," +
-  "#content h3," +
-  "#content h4," +
-  "#content h5 {" +
-  "    font-weight: normal;" +
-  "    padding: 21px 0 7px;" +
-  "}" +
-  "" +
-  "#content h1 {" +
-  "    font-size: 21px;" +
-  "}" +
-  "" +
-  "#content h2 {" +
-  "    padding: 0 0 18px 0;" +
-  "    margin: 0 0 7px 0;" +
-  "    font-weight: normal;" +
-  "    font-size: 21px;" +
-  "    line-height: 24px;" +
-  "    text-align: center;" +
-  "    color: #222;" +
-  "    background-image: url(\"i/arrow.png\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: center bottom;" +
-  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;" +
-  "    text-transform: uppercase;" +
-  "    letter-spacing: 2px;" +
-  "    text-shadow: 1px 1px 0 #fff;" +
-  "}" +
-  "" +
-  "#content h2 a {" +
-  "    color: #222;" +
-  "}" +
-  "" +
-  "#content h2 a:hover," +
-  "#content h3 a:hover," +
-  "#content h4 a:hover {" +
-  "    text-decoration: none;" +
-  "}" +
-  "" +
-  "span.sectionMark {" +
-  "    display: block;" +
-  "    color: #aaa;" +
-  "    text-shadow: 1px 1px 0 #fff;" +
-  "    font-size: 15px;" +
-  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;" +
-  "}" +
-  "" +
-  "#content h3 {" +
-  "    font-size: 17px;" +
-  "}" +
-  "" +
-  "#content h4 {" +
-  "    padding-top: 0;" +
-  "    font-size: 15px;" +
-  "}" +
-  "" +
-  "#content h5 {" +
-  "    font-size: 10px;" +
-  "}" +
-  "" +
-  "#content ul {" +
-  "    list-style-type: disc;" +
-  "}" +
-  "" +
-  "#content ul," +
-  "#content ol {" +
-  "    /* border-left: 1px solid #333; */" +
-  "    color: #333;" +
-  "    font-size: 14px;" +
-  "    list-style-position: outside;" +
-  "    margin: 7px 0 21px 0;" +
-  "    /* padding: 0 0 0 28px; */" +
-  "}" +
-  "" +
-  "#content ul {" +
-  "    font-style: italic;" +
-  "}" +
-  "" +
-  "#content ol {" +
-  "    border: none;" +
-  "    list-style-position: inside;" +
-  "    padding: 0;" +
-  "    font-family: \"Georgia\", Times New Roman, Times, serif;" +
-  "}" +
-  "" +
-  "#content ul ul," +
-  "#content ol ol {" +
-  "    border: none;" +
-  "    padding: 0;" +
-  "    margin: 0 0 0 28px;" +
-  "}" +
-  "" +
-  "#content .section {" +
-  "    padding: 48px 0;" +
-  "    background-image: url(\"i/line.png\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: center bottom;" +
-  "    width: 576px;" +
-  "    margin: 0 auto;" +
-  "}" +
-  "" +
-  "#content .section .subSection {" +
-  "    padding: 0 0 0 48px;" +
-  "    margin: 28px 0 0 0;" +
-  "    display: block;" +
-  "    border-left: 2px solid #ddd;" +
-  "}" +
-  "" +
-  "#content .section:last-child {" +
-  "    background-image: none;" +
-  "}" +
-  "" +
-  "#content .note {" +
-  "    color: #222;" +
-  "    background-color: #ffff99;" +
-  "    padding: 5px 10px;" +
-  "    margin: 7px 0;" +
-  "    display: inline-block;" +
-  "}" +
-  "" +
-  "/*" +
-  "    page directory" +
-  "*/" +
-  "" +
-  "#content #directory.section {" +
-  "    background-color: #fff;" +
-  "    width: 576px;" +
-  "}" +
-  "" +
-  "#content #directory.section ul ul ul {" +
-  "    margin: 0 0 0 48px;" +
-  "}" +
-  "" +
-  "#content #directory.section ul ul li {" +
-  "    background-image: url(\"i/sprite.png\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: left -437px;" +
-  "    padding-left: 18px;" +
-  "    font-style: normal;" +
-  "}" +
-  "" +
-  "#content #directory h1 {" +
-  "    padding: 0 0 65px 0;" +
-  "    margin: 0 0 14px 0;" +
-  "    font-weight: normal;" +
-  "    font-size: 21px;" +
-  "    text-align: center;" +
-  "    text-transform: uppercase;" +
-  "    letter-spacing: 2px;" +
-  "    color: #222;" +
-  "    background-image: url(\"i/arrow-x.png\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: center bottom;" +
-  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;" +
-  "}" +
-  "" +
-  "" +
-  "#content ul.index {" +
-  "    padding: 0;" +
-  "    background-color: transparent;" +
-  "    border: none;" +
-  "    -moz-box-shadow: none;" +
-  "    font-style: normal;" +
-  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;" +
-  "}" +
-  "" +
-  "#content ul.index li {" +
-  "    width: 100%;" +
-  "    font-size: 15px;" +
-  "    color: #333;" +
-  "    padding: 0 0 7px 0;" +
-  "}" +
-  "" +
-  "" +
-  "/*" +
-  "    intro page specific" +
-  "*/" +
-  "" +
-  "#content #intro {" +
-  "    width: 576px;" +
-  "    margin: 0 auto;" +
-  "    padding: 21px 0;" +
-  "}" +
-  "" +
-  "#content #intro p," +
-  "#content #intro h1 {" +
-  "    font-size: 19px;" +
-  "    line-height: 28px;" +
-  "    color: green;" +
-  "    letter-spacing: 2px;" +
-  "    padding: 0 0 28px 0;" +
-  "}" +
-  "" +
-  "#content #intro p:last-child," +
-  "#content #intro h1:last-child {" +
-  "    padding: 0;" +
-  "}" +
-  "" +
-  "#content #intro p a {" +
-  "    color: green;" +
-  "    text-decoration: underline;" +
-  "}" +
-  "" +
-  "/*" +
-  "    download page" +
-  "*/" +
-  "" +
-  "#content h4 a.download {" +
-  "    -webkit-border-radius: 5px;" +
-  "    -moz-border-radius: 5px;" +
-  "    background-color: #F2F2F2;" +
-  "    background-image: url(\"i/sprite.png\"), -moz-linear-gradient(center top , #FAFAFA 0%, #F2F2F2 100%);" +
-  "    background-image: url(\"i/sprite.png\"), -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fafafa), color-stop(100%, #f2f2f2));" +
-  "    background-position: 7px -58px, center center;" +
-  "    background-repeat: no-repeat, no-repeat;" +
-  "    border: 1px solid #CCCCCC;" +
-  "    color: #333333;" +
-  "    font-size: 12px;" +
-  "    margin: 0 0 0 5px;" +
-  "    padding: 0 10px 0 25px;" +
-  "    text-shadow: 1px 1px 0 #FFFFFF;" +
-  "}" +
-  "" +
-  "/*" +
-  "    footer" +
-  "*/" +
-  "#footer {" +
-  "    color: #4d4d4d;" +
-  "    padding: 65px 20px 20px;" +
-  "    margin: 20px 0 0 220px;" +
-  "    text-align: center;" +
-  "    display: block;" +
-  "    font-size: 13px;" +
-  "    background-image: url(\"i/arrow-x.png\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: center top;" +
-  "    background-color: #fff;" +
-  "}" +
-  "" +
-  "#footer .line {" +
-  "    display: block;" +
-  "}" +
-  "" +
-  "#footer .line a {" +
-  "    color: #4d4d4d;" +
-  "    text-decoration: underline;" +
-  "}" +
-  "" +
-  "/*" +
-  "    Pygments manni style" +
-  "*/" +
-  "" +
-  "code {background-color: #fafafa; color: #333;}" +
-  "" +
-  "code .comment {color: green; font-style: italic}" +
-  "code .comment.preproc {color: #099; font-style: normal}" +
-  "code .comment.special {font-weight: bold}" +
-  "" +
-  "code .keyword {color: #069; font-weight: bold}" +
-  "code .keyword.pseudo {font-weight: normal}" +
-  "code .keyword.type {color: #078}" +
-  "" +
-  "code .operator {color: #555}" +
-  "code .operator.word {color: #000; font-weight: bold}" +
-  "" +
-  "code .name.builtin {color: #366}" +
-  "code .name.function {color: #c0f}" +
-  "code .name.class {color: #0a8; font-weight: bold}" +
-  "code .name.namespace {color: #0cf; font-weight: bold}" +
-  "code .name.exception {color: #c00; font-weight: bold}" +
-  "code .name.variable {color: #033}" +
-  "code .name.constant {color: #360}" +
-  "code .name.label {color: #99f}" +
-  "code .name.entity {color: #999; font-weight: bold}" +
-  "code .name.attribute {color: #309}" +
-  "code .name.tag {color: #309; font-weight: bold}" +
-  "code .name.decorator {color: #99f}" +
-  "" +
-  "code .string {color: #c30}" +
-  "code .string.doc {font-style: italic}" +
-  "code .string.interpol {color: #a00}" +
-  "code .string.escape {color: #c30; font-weight: bold}" +
-  "code .string.regex {color: #3aa}" +
-  "code .string.symbol {color: #fc3}" +
-  "code .string.other {color: #c30}" +
-  "" +
-  "code .number {color: #f60}" +
-  "" +
-  "" +
-  "/*" +
-  "    webkit scroll bars" +
-  "*/" +
-  "" +
-  "pre::-webkit-scrollbar {" +
-  "    width: 6px;" +
-  "    height: 6px;" +
-  "}" +
-  "" +
-  "pre::-webkit-scrollbar-button:start:decrement," +
-  "pre::-webkit-scrollbar-button:end:increment {" +
-  "    display: block;" +
-  "    height: 0;" +
-  "    width: 0;" +
-  "}" +
-  "" +
-  "pre::-webkit-scrollbar-button:vertical:increment," +
-  "pre::-webkit-scrollbar-button:horizontal:increment {" +
-  "    background-color: transparent;" +
-  "    display: block;" +
-  "    height: 0;" +
-  "    width: 0;" +
-  "}" +
-  "" +
-  "pre::-webkit-scrollbar-track-piece {" +
-  "    -webkit-border-radius: 3px;" +
-  "}" +
-  "" +
-  "pre::-webkit-scrollbar-thumb:vertical {" +
-  "    background-color: #aaa;" +
-  "    -webkit-border-radius: 3px;" +
-  "" +
-  "}" +
-  "" +
-  "pre::-webkit-scrollbar-thumb:horizontal {" +
-  "    background-color: #aaa;" +
-  "    -webkit-border-radius: 3px;" +
-  "}" +
-  "" +
-  "/*" +
-  "    hbox" +
-  "*/" +
-  "" +
-  ".hbox {" +
-  "	display: -webkit-box;" +
-  "	-webkit-box-orient: horizontal;" +
-  "	-webkit-box-align: stretch;" +
-  "" +
-  "	display: -moz-box;" +
-  "	-moz-box-orient: horizontal;" +
-  "	-moz-box-align: stretch;" +
-  "" +
-  "	display: box;" +
-  "	box-orient: horizontal;" +
-  "	box-align: stretch;" +
-  "" +
-  "	width: 100%;" +
-  "}" +
-  "" +
-  ".hbox > * {" +
-  "	-webkit-box-flex: 0;" +
-  "	-moz-box-flex: 0;" +
-  "	box-flex: 0;" +
-  "	display: block;" +
-  "}" +
-  "" +
-  ".vbox {" +
-  "	display: -webkit-box;" +
-  "	-webkit-box-orient: vertical;" +
-  "	-webkit-box-align: stretch;" +
-  "" +
-  "	display: -moz-box;" +
-  "	-moz-box-orient: vertical;" +
-  "	-moz-box-align: stretch;" +
-  "" +
-  "	display: box;" +
-  "	box-orient: vertical;" +
-  "	box-align: stretch;" +
-  "}" +
-  "" +
-  ".vbox > * {" +
-  "	-webkit-box-flex: 0;" +
-  "	-moz-box-flex: 0;" +
-  "	box-flex: 0;" +
-  "	display: block;" +
-  "}" +
-  "" +
-  ".spacer {" +
-  "	-webkit-box-flex: 1;" +
-  "	-moz-box-flex: 1;" +
-  "	box-flex: 1;" +
-  "}" +
-  "" +
-  ".reverse {" +
-  "	-webkit-box-direction: reverse;" +
-  "	-moz-box-direction: reverse;" +
-  "	box-direction: reverse;" +
-  "}" +
-  "" +
-  ".boxFlex0 {" +
-  "	-webkit-box-flex: 0;" +
-  "	-moz-box-flex: 0;" +
-  "	box-flex: 0;" +
-  "}" +
-  "" +
-  ".boxFlex1, .boxFlex {" +
-  "	-webkit-box-flex: 1;" +
-  "	-moz-box-flex: 1;" +
-  "	box-flex: 1;" +
-  "}" +
-  "" +
-  ".boxFlex2 {" +
-  "	-webkit-box-flex: 2;" +
-  "	-moz-box-flex: 2;" +
-  "	box-flex: 2;" +
-  "}" +
-  "" +
-  ".boxGroup1 {" +
-  "	-webkit-box-flex-group: 1;" +
-  "	-moz-box-flex-group: 1;" +
-  "	box-flex-group: 1;" +
-  "}" +
-  "" +
-  ".boxGroup2 {" +
-  "	-webkit-box-flex-group: 2;" +
-  "	-moz-box-flex-group: 2;" +
-  "	box-flex-group: 2;" +
-  "}" +
-  "" +
-  ".start {" +
-  "	-webkit-box-pack: start;" +
-  "	-moz-box-pack: start;" +
-  "	box-pack: start;" +
-  "}" +
-  "" +
-  ".end {" +
-  "	-webkit-box-pack: end;" +
-  "	-moz-box-pack: end;" +
-  "	box-pack: end;" +
-  "}" +
-  "" +
-  ".center {" +
-  "	-webkit-box-pack: center;" +
-  "	-moz-box-pack: center;" +
-  "	box-pack: center;" +
-  "}" +
-  "" +
-  "/*" +
-  "    clearfix" +
-  "*/" +
-  "" +
-  ".clearfix:after {" +
-  "	content: \".\";" +
-  "	display: block;" +
-  "	clear: both;" +
-  "	visibility: hidden;" +
-  "	line-height: 0;" +
-  "	height: 0;" +
-  "}" +
-  "" +
-  "html[xmlns] .clearfix {" +
-  "	display: block;" +
-  "}" +
-  "" +
-  "* html .clearfix {" +
-  "	height: 1%;" +
+define("text!demo/docs/html.html", [], "<html>\n" +
+  "    <head>\n" +
+  "\n" +
+  "    <style type=\"text/css\">\n" +
+  "        .text-layer {\n" +
+  "            font-family: Monaco, \"Courier New\", monospace;\n" +
+  "            font-size: 12px;\n" +
+  "            cursor: text;\n" +
+  "        }\n" +
+  "    </style>\n" +
+  "\n" +
+  "    </head>\n" +
+  "    <body>\n" +
+  "        <h1 style=\"color:red\">Juhu Kinners</h1>\n" +
+  "    </body>\n" +
+  "</html>");
+
+define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
+  "\n" +
+  "    /*\n" +
+  "     * This will cause the program to hang...\n" +
+  "     *\n" +
+  "     * Taken from:\n" +
+  "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/\n" +
+  "     */\n" +
+  "    public static void main(String[] args) {\n" +
+  "        double d = Double.parseDouble(\"2.2250738585072012e-308\");\n" +
+  "\n" +
+  "        // unreachable code\n" +
+  "        System.out.println(\"Value: \" + d);\n" +
+  "    }\n" +
   "}");
 
-define("text!doc/site/iphone.css", [], "#wrapper {" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "}" +
-  "" +
-  "#wrapper .content .column1 {" +
-  "    margin:0 16px 0 15px;" +
-  "}" +
-  "" +
-  "#header .content .signature {" +
-  "    font-size:18px;" +
-  "    bottom:0;" +
-  "}" +
-  "" +
-  "UL.menu-list LI {" +
-  "    font-size:22px;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI {" +
-  "    font-size:22px;" +
-  "}" +
-  "" +
-  "PRE{" +
-  "    font-size:22px;" +
-  "}" +
-  "");
-
-define("text!doc/site/style.css", [], "body {" +
-  "    margin:0;" +
-  "    padding:0;" +
-  "    background-color:#e6f5fc;" +
-  "    " +
-  "}" +
-  "" +
-  "H2, H3, H4 {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-weight:bold;" +
-  "    margin:0;" +
-  "    padding:0;" +
-  "}" +
-  "" +
-  "H2 {" +
-  "    font-size:28px;" +
-  "    color:#263842;" +
-  "    padding-bottom:6px;" +
-  "}" +
-  "" +
-  "H3 {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-weight:bold;" +
-  "    font-size:22px;" +
-  "    color:#253741;" +
-  "    margin-top:43px;" +
-  "    margin-bottom:8px;" +
-  "}" +
-  "" +
-  "H4 {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-weight:bold;" +
-  "    font-size:21px;" +
-  "    color:#222222;" +
-  "    margin-bottom:4px;" +
-  "}" +
-  "" +
-  "P {" +
-  "    padding:13px 0;" +
-  "    margin:0;" +
-  "    line-height:22px;" +
-  "}" +
-  "" +
-  "UL{" +
-  "    line-height : 22px;" +
-  "}" +
-  "" +
-  "PRE{" +
-  "    background : #333;" +
-  "    color : white;" +
-  "    padding : 10px;" +
-  "}" +
-  "" +
-  "#header {" +
-  "    height : 227px;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    background: url(images/background.png) repeat-x 0 0;" +
-  "    border-bottom:1px solid #c9e8fa;   " +
-  "}" +
-  "" +
-  "#header .content .signature {" +
-  "    font-family:Trebuchet MS;" +
-  "    font-size:11px;" +
-  "    color:#ebe4d6;" +
-  "    position:absolute;" +
-  "    bottom:5px;" +
-  "    right:42px;" +
-  "    letter-spacing : 1px;" +
-  "}" +
-  "" +
-  ".content {" +
-  "    width:970px;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    margin:0 auto;" +
-  "}" +
-  "" +
-  "#header .content {" +
-  "    height:184px;" +
-  "    margin-top:22px;" +
-  "}" +
-  "" +
-  "#header .content .logo {" +
-  "    width  : 282px;" +
-  "    height : 184px;" +
-  "    background:url(images/logo.png) no-repeat 0 0;" +
-  "    position:absolute;" +
-  "    top:0;" +
-  "    left:0;" +
-  "}" +
-  "" +
-  "#header .content .title {" +
-  "    width  : 605px;" +
-  "    height : 58px;" +
-  "    background:url(images/ace.png) no-repeat 0 0;" +
-  "    position:absolute;" +
-  "    top:98px;" +
-  "    left:329px;" +
-  "}" +
-  "" +
-  "#wrapper {" +
-  "    background:url(images/body_background.png) repeat-x 0 0;" +
-  "    min-height:250px;" +
-  "}" +
-  "" +
-  "#wrapper .content {" +
-  "    font-family:Arial;" +
-  "    font-size:14px;" +
-  "    color:#222222;" +
-  "    width:1000px;" +
-  "}" +
-  "" +
-  "#wrapper .content .column1 {" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    float:left;" +
-  "    width:315px;" +
-  "    margin-right:31px;" +
-  "}" +
-  "" +
-  "#wrapper .content .column2 {" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    float:left;" +
-  "    width:600px;" +
-  "    padding-top:47px;" +
-  "}" +
-  "" +
-  ".fork_on_github {" +
-  "    width:310px;" +
-  "    height:80px;" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    margin-top:49px;" +
-  "    cursor:pointer;" +
-  "}" +
-  "" +
-  ".fork_on_github:hover {" +
-  "    background-position:0 -80px;" +
-  "}" +
-  "" +
-  ".divider {" +
-  "    height:3px;" +
-  "    background-color:#bedaea;" +
-  "    margin-bottom:3px;" +
-  "}" +
-  "" +
-  ".menu {" +
-  "    padding:23px 0 0 24px;" +
-  "}" +
-  "" +
-  "UL.content-list {" +
-  "    padding:15px;" +
-  "    margin:0;" +
-  "}" +
-  "" +
-  "UL.menu-list {" +
-  "    padding:0;" +
-  "    margin:0 0 20px 0;" +
-  "    list-style-type:none;" +
-  "    line-height : 16px;" +
-  "}" +
-  "" +
-  "UL.menu-list LI {" +
-  "    color:#2557b4;" +
-  "    font-family:Trebuchet MS;" +
-  "    font-size:14px;" +
-  "    padding:7px 0;" +
-  "    border-bottom:1px dotted #d6e2e7;" +
-  "}" +
-  "" +
-  "UL.menu-list LI:last-child {" +
-  "    border-bottom:0;" +
-  "}" +
-  "" +
-  "A {" +
-  "    color:#2557b4;" +
-  "    text-decoration:none;" +
-  "}" +
-  "" +
-  "A:hover {" +
-  "    text-decoration:underline;" +
-  "}" +
-  "" +
-  "P#first{" +
-  "    background : rgba(255,255,255,0.5);" +
-  "    padding : 20px;" +
-  "    font-size : 16px;" +
-  "    line-height : 24px;" +
-  "    margin : 0 0 20px 0;" +
-  "}" +
-  "" +
-  "#footer {" +
-  "    height:40px;" +
-  "    position:relative;" +
-  "    overflow:hidden;" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;" +
-  "    position:relative;" +
-  "    margin-top:40px;" +
-  "}" +
-  "" +
-  "UL.menu-footer {" +
-  "    padding:0;" +
-  "    margin:8px 11px 0 0;" +
-  "    list-style-type:none;" +
-  "    float:right;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI {" +
-  "    color:white;" +
-  "    font-family:Arial;" +
-  "    font-size:12px;" +
-  "    display:inline-block;" +
-  "    margin:0 1px;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI A {" +
-  "    color:#8dd0ff;" +
-  "    text-decoration:none;" +
-  "}" +
-  "" +
-  "UL.menu-footer LI A:hover {" +
-  "    text-decoration:underline;" +
-  "}" +
-  "" +
-  "" +
-  "" +
-  "" +
-  "");
-
-define("text!lib/ace/css/editor.css", [], ".ace_editor {" +
-  "    position: absolute;" +
-  "    overflow: hidden;" +
-  "    font-family: Monaco, \"Menlo\", \"Courier New\", monospace;" +
-  "    font-size: 12px;" +
-  "}" +
-  "" +
-  ".ace_scroller {" +
-  "    position: absolute;" +
-  "    overflow-x: scroll;" +
-  "    overflow-y: hidden;" +
-  "}" +
-  "" +
-  ".ace_content {" +
-  "    position: absolute;" +
-  "    box-sizing: border-box;" +
-  "    -moz-box-sizing: border-box;" +
-  "    -webkit-box-sizing: border-box;" +
-  "}" +
-  "" +
-  ".ace_composition {" +
-  "    position: absolute;" +
-  "    background: #555;" +
-  "    color: #DDD;" +
-  "    z-index: 4;" +
-  "}" +
-  "" +
-  ".ace_gutter {" +
-  "    position: absolute;" +
-  "    overflow-x: hidden;" +
-  "    overflow-y: hidden;" +
-  "    height: 100%;" +
-  "}" +
-  "" +
-  ".ace_gutter-cell.ace_error {" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: 4px center;" +
-  "}" +
-  "" +
-  ".ace_gutter-cell.ace_warning {" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");" +
-  "    background-repeat: no-repeat;" +
-  "    background-position: 4px center;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_sb {" +
-  "    position: absolute;" +
-  "    overflow-x: hidden;" +
-  "    overflow-y: scroll;" +
-  "    right: 0;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_sb div {" +
-  "    position: absolute;" +
-  "    width: 1px;" +
-  "    left: 0;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_print_margin_layer {" +
-  "    z-index: 0;" +
-  "    position: absolute;" +
-  "    overflow: hidden;" +
-  "    margin: 0;" +
-  "    left: 0;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "}" +
-  "" +
-  ".ace_editor .ace_print_margin {" +
-  "    position: absolute;" +
-  "    height: 100%;" +
-  "}" +
-  "" +
-  ".ace_editor textarea {" +
-  "    position: fixed;" +
-  "    z-index: -1;" +
-  "    width: 10px;" +
-  "    height: 30px;" +
-  "    opacity: 0;" +
-  "    background: transparent;" +
-  "    appearance: none;" +
-  "    -moz-appearance: none;" +
-  "    border: none;" +
-  "    resize: none;" +
-  "    outline: none;" +
-  "    overflow: hidden;" +
-  "}" +
-  "" +
-  ".ace_layer {" +
-  "    z-index: 1;" +
-  "    position: absolute;" +
-  "    overflow: hidden;" +
-  "    white-space: nowrap;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "}" +
-  "" +
-  ".ace_text-layer {" +
-  "    color: black;" +
-  "}" +
-  "" +
-  ".ace_cjk {" +
-  "    display: inline-block;" +
-  "    text-align: center;" +
-  "}" +
-  "" +
-  ".ace_cursor-layer {" +
-  "    z-index: 4;" +
-  "    cursor: text;" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */" +
-  "}" +
-  "" +
-  ".ace_cursor {" +
-  "    z-index: 4;" +
-  "    position: absolute;" +
-  "}" +
-  "" +
-  ".ace_cursor.ace_hidden {" +
-  "    opacity: 0.2;" +
-  "}" +
-  "" +
-  ".ace_line {" +
-  "    white-space: nowrap;" +
-  "}" +
-  "" +
-  ".ace_marker-layer {" +
-  "    cursor: text;" +
-  "    pointer-events: none;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_step {" +
-  "    position: absolute;" +
-  "    z-index: 3;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_selection {" +
-  "    position: absolute;" +
-  "    z-index: 4;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_bracket {" +
-  "    position: absolute;" +
-  "    z-index: 5;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_active_line {" +
-  "    position: absolute;" +
-  "    z-index: 2;" +
-  "}" +
-  "" +
-  ".ace_marker-layer .ace_selected_word {" +
-  "    position: absolute;" +
-  "    z-index: 6;" +
-  "    box-sizing: border-box;" +
-  "    -moz-box-sizing: border-box;" +
-  "    -webkit-box-sizing: border-box;" +
-  "}" +
-  "" +
-  ".ace_line .ace_fold {" +
-  "    cursor: pointer;" +
-  "}" +
-  "" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {" +
-  "  cursor: move;" +
-  "}" +
-  "");
-
-define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }" +
-  "body { max-width: 60em; }" +
-  ".title  { text-align: center; }" +
-  ".todo   { color: red; }" +
-  ".done   { color: green; }" +
-  ".tag    { background-color:lightblue; font-weight:normal }" +
-  ".target { }" +
-  ".timestamp { color: grey }" +
-  ".timestamp-kwd { color: CadetBlue }" +
-  "p.verse { margin-left: 3% }" +
-  "pre {" +
-  "  border: 1pt solid #AEBDCC;" +
-  "  background-color: #F3F5F7;" +
-  "  padding: 5pt;" +
-  "  font-family: monospace;" +
-  "  font-size: 90%;" +
-  "  overflow:auto;" +
-  "}" +
-  "pre.src {" +
-  "  background-color: #eee; color: #112; border: 1px solid #000;" +
-  "}" +
-  "table { border-collapse: collapse; }" +
-  "td, th { vertical-align: top; }" +
-  "dt { font-weight: bold; }" +
-  "div.figure { padding: 0.5em; }" +
-  "div.figure p { text-align: center; }" +
-  ".linenr { font-size:smaller }" +
-  ".code-highlighted {background-color:#ffff00;}" +
-  ".org-info-js_info-navigation { border-style:none; }" +
-  "#org-info-js_console-label { font-size:10px; font-weight:bold;" +
-  "  white-space:nowrap; }" +
-  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;" +
-  "  font-weight:bold; }" +
-  "" +
-  "sup {" +
-  "  vertical-align: baseline;" +
-  "  position: relative;" +
-  "  top: -0.5em;" +
-  "  font-size: 80%;" +
-  "}" +
-  "" +
-  "sup a:link, sup a:visited {" +
-  "  text-decoration: none;" +
-  "  color: #c00;" +
-  "}" +
-  "" +
-  "sup a:before { content: \"[\"; color: #999; }" +
-  "sup a:after { content: \"]\"; color: #999; }" +
-  "" +
-  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }" +
-  "" +
-  "#postamble {" +
-  "  color: #777;" +
-  "  font-size: 90%;" +
-  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;" +
-  "  margin-top: 2em;" +
-  "  padding-left: 2em;" +
-  "  padding-right: 2em;" +
-  "  text-align: right;" +
-  "}" +
-  "" +
-  "#postamble p { margin: 0; }" +
-  "" +
-  "#footnotes { border-top: 1px solid #000; }" +
-  "" +
-  "h1 { font-size: 200% }" +
-  "h2 { font-size: 175% }" +
-  "h3 { font-size: 150% }" +
-  "h4 { font-size: 125% }" +
-  "" +
-  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }" +
-  "" +
-  "@media print {" +
-  "  html { font-size: 11pt; }" +
-  "}" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "" +
-  "#cockpitInput { padding-left: 16px; }" +
-  "" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }" +
-  "" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }" +
-  ".cptCompletion.VALID { background: #FFF; }" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }" +
-  ".cptCompletion.INVALID { background: #DDD; }" +
-  ".cptCompletion span { color: #FFF; }" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }" +
-  "" +
-  "" +
-  ".cptHints {" +
-  "  color: #000;" +
-  "  position: absolute;" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);" +
-  "  background: rgba(250, 250, 250, 0.8);" +
-  "  -moz-border-radius-topleft: 10px;" +
-  "  -moz-border-radius-topright: 10px;" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;" +
-  "  z-index: 1000;" +
-  "  padding: 8px;" +
-  "  display: none;" +
-  "}" +
-  "" +
-  ".cptFocusPopup { display: block; }" +
-  ".cptFocusPopup.cptNoPopup { display: none; }" +
-  "" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }" +
-  "" +
-  ".cptGt { font-weight: bold; font-size: 120%; }" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "" +
-  ".cptRowIn {" +
-  "  display: box; display: -moz-box; display: -webkit-box;" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;" +
-  "  color: #333;" +
-  "  background-color: #EEE;" +
-  "  width: 100%;" +
-  "  font-family: consolas, courier, monospace;" +
-  "}" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }" +
-  ".cptRowIn > img { cursor: pointer; }" +
-  ".cptHover { display: none; }" +
-  ".cptRowIn:hover > .cptHover { display: block; }" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }" +
-  ".cptOutTyped {" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;" +
-  "  font-weight: bold; color: #000; font-size: 120%;" +
-  "}" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }" +
-  ".cptRowOutput strong," +
-  ".cptRowOutput b," +
-  ".cptRowOutput th," +
-  ".cptRowOutput h1," +
-  ".cptRowOutput h2," +
-  ".cptRowOutput h3 { color: #000; }" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }" +
-  ".cptRowOutput input[type=password]," +
-  ".cptRowOutput input[type=text]," +
-  ".cptRowOutput textarea {" +
-  "  color: #000; font-size: 120%;" +
-  "  background: transparent; padding: 3px;" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;" +
-  "}" +
-  ".cptRowOutput table," +
-  ".cptRowOutput td," +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }" +
-  ".cptRowOutput .right { text-align: right; }" +
-  "");
-
-define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {" +
-  "  border: 2px solid rgb(159, 159, 159);" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_editor.ace_focus {" +
-  "  border: 2px solid #327fbd;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_gutter {" +
-  "  width: 50px;" +
-  "  background: #e8e8e8;" +
-  "  color: #333;" +
-  "  overflow : hidden;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_gutter-layer {" +
-  "  width: 100%;" +
-  "  text-align: right;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {" +
-  "  padding-right: 6px;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_print_margin {" +
-  "  width: 1px;" +
-  "  background: %printMargin%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_scroller {" +
-  "  background-color: %background%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_text-layer {" +
-  "  cursor: text;" +
-  "  color: %foreground%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_cursor {" +
-  "  border-left: 2px solid %cursor%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_cursor.ace_overwrite {" +
-  "  border-left: 0px;" +
-  "  border-bottom: 1px solid %overwrite%;" +
-  "}" +
-  " " +
-  ".%cssClass% .ace_marker-layer .ace_selection {" +
-  "  background: %selection%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_marker-layer .ace_step {" +
-  "  background: %step%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_marker-layer .ace_bracket {" +
-  "  margin: -1px 0 0 -1px;" +
-  "  border: 1px solid %bracket%;" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_marker-layer .ace_active_line {" +
-  "  background: %active_line%;" +
-  "}" +
-  "" +
-  "       " +
-  ".%cssClass% .ace_invisible {" +
-  "  %invisible%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_keyword {" +
-  "  %keyword%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_keyword.ace_operator {" +
-  "  %keyword.operator%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_constant {" +
-  "  %constant%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_constant.ace_language {" +
-  "  %constant.language%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_constant.ace_library {" +
-  "  %constant.library%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_constant.ace_numeric {" +
-  "  %constant.numeric%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_invalid {" +
-  "  %invalid%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_invalid.ace_illegal {" +
-  "  %invalid.illegal%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_invalid.ace_deprecated {" +
-  "  %invalid.deprecated%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_support {" +
-  "  %support%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_support.ace_function {" +
-  "  %support.function%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_function.ace_buildin {" +
-  "  %function.buildin%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_string {" +
-  "  %string%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_string.ace_regexp {" +
-  "  %string.regexp%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_comment {" +
-  "  %comment%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_comment.ace_doc {" +
-  "  %comment.doc%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_comment.ace_doc.ace_tag {" +
-  "  %comment.doc.tag%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_variable {" +
-  "  %variable%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_variable.ace_language {" +
-  "  %variable.language%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_xml_pe {" +
-  "  %xml_pe%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_meta {" +
-  "  %meta%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_meta.ace_tag {" +
-  "  %meta.tag%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_meta.ace_tag.ace_input {" +
-  "  %ace.meta.tag.input%" +
-  "}" +
-  "" +
-  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {" +
-  "  %entity.other.attribute-name%" +
-  "}" +
-  "" +
-  "" +
-  ".%cssClass% .ace_collab.ace_user1 {" +
-  "  %collab.user1%   " +
+define("text!demo/docs/javascript.js", [], "function foo(items) {\n" +
+  "    for (var i=0; i<items.length; i++) {\n" +
+  "        alert(items[i] + \"juhu\");\n" +
+  "    }	// Real Tab.\n" +
   "}");
 
-define("text!styles.css", [], "html {" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "    overflow: hidden;" +
-  "}" +
-  "" +
-  "body {" +
-  "    overflow: hidden;" +
-  "    margin: 0;" +
-  "    padding: 0;" +
-  "    height: 100%;" +
-  "    width: 100%;" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;" +
-  "    font-size: 12px;" +
-  "    background: rgb(14, 98, 165);" +
-  "    color: white;" +
-  "}" +
-  "" +
-  "#logo {" +
-  "    padding: 15px;" +
-  "    margin-left: 65px;" +
-  "}" +
-  "" +
-  "#editor {" +
-  "    position: absolute;" +
-  "    top:  0px;" +
-  "    left: 280px;" +
-  "    bottom: 0px;" +
-  "    right: 0px;" +
-  "    background: white;" +
-  "}" +
-  "" +
-  "#controls {" +
-  "    padding: 5px;" +
-  "}" +
-  "" +
-  "#controls td {" +
-  "    text-align: right;" +
-  "}" +
-  "" +
-  "#controls td + td {" +
-  "    text-align: left;" +
-  "}" +
-  "" +
-  "#cockpitInput {" +
-  "    position: absolute;" +
-  "    left: 280px;" +
-  "    right: 0px;" +
-  "    bottom: 0;" +
-  "" +
-  "    border: none; outline: none;" +
-  "    font-family: consolas, courier, monospace;" +
-  "    font-size: 120%;" +
-  "}" +
-  "" +
-  "#cockpitOutput {" +
-  "    padding: 10px;" +
-  "    margin: 0 15px;" +
-  "    border: 1px solid #AAA;" +
-  "    -moz-border-radius-topleft: 10px;" +
-  "    -moz-border-radius-topright: 10px;" +
-  "    border-top-left-radius: 4px; border-top-right-radius: 4px;" +
-  "    background: #DDD; color: #000;" +
+define("text!demo/docs/json.json", [], "{\n" +
+  " \"query\": {\n" +
+  "  \"count\": 10,\n" +
+  "  \"created\": \"2011-06-21T08:10:46Z\",\n" +
+  "  \"lang\": \"en-US\",\n" +
+  "  \"results\": {\n" +
+  "   \"photo\": [\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5855620975\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"f1f5e8515d\",\n" +
+  "     \"server\": \"5110\",\n" +
+  "     \"title\": \"7087 bandit cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"4\",\n" +
+  "     \"id\": \"5856170534\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"ff1efb2a6f\",\n" +
+  "     \"server\": \"3217\",\n" +
+  "     \"title\": \"6975 rusty cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5856172972\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"51249875@N03\",\n" +
+  "     \"secret\": \"6c6887347c\",\n" +
+  "     \"server\": \"5192\",\n" +
+  "     \"title\": \"watermarked-cats\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5856168328\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"0c1cfdf64c\",\n" +
+  "     \"server\": \"5078\",\n" +
+  "     \"title\": \"7020 mandy cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"3\",\n" +
+  "     \"id\": \"5856171774\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"7f5a3180ab\",\n" +
+  "     \"server\": \"2696\",\n" +
+  "     \"title\": \"7448 bobby cat\"\n" +
+  "    }\n" +
+  "   ]\n" +
+  "  }\n" +
+  " }\n" +
   "}");
 
-define("text!cockpit/ui/cli_view.css", [], "" +
-  "#cockpitInput { padding-left: 16px; }" +
-  "" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }" +
-  "" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }" +
-  ".cptCompletion.VALID { background: #FFF; }" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }" +
-  ".cptCompletion.INVALID { background: #DDD; }" +
-  ".cptCompletion span { color: #FFF; }" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }" +
-  "" +
-  "" +
-  ".cptHints {" +
-  "  color: #000;" +
-  "  position: absolute;" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);" +
-  "  background: rgba(250, 250, 250, 0.8);" +
-  "  -moz-border-radius-topleft: 10px;" +
-  "  -moz-border-radius-topright: 10px;" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;" +
-  "  z-index: 1000;" +
-  "  padding: 8px;" +
-  "  display: none;" +
-  "}" +
-  "" +
-  ".cptFocusPopup { display: block; }" +
-  ".cptFocusPopup.cptNoPopup { display: none; }" +
-  "" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }" +
-  "" +
-  ".cptGt { font-weight: bold; font-size: 120%; }" +
+define("text!demo/docs/ocaml.ml", [], "(*\n" +
+  " * Example of early return implementation taken from\n" +
+  " * http://ocaml.janestreet.com/?q=node/91\n" +
+  " *)\n" +
+  "\n" +
+  "let with_return (type t) (f : _ -> t) =\n" +
+  "  let module M =\n" +
+  "     struct exception Return of t end\n" +
+  "  in\n" +
+  "  let return = { return = (fun x -> raise (M.Return x)); } in\n" +
+  "  try f return with M.Return x -> x\n" +
+  "\n" +
+  "\n" +
+  "(* Function that uses the 'early return' functionality provided by `with_return` *)\n" +
+  "let sum_until_first_negative list =\n" +
+  "  with_return (fun r ->\n" +
+  "    List.fold list ~init:0 ~f:(fun acc x ->\n" +
+  "      if x >= 0 then acc + x else r.return acc))");
+
+define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
+  "use strict;\n" +
+  "use warnings;\n" +
+  "my $num_primes = 0;\n" +
+  "my @primes;\n" +
+  "\n" +
+  "# Put 2 as the first prime so we won't have an empty array\n" +
+  "$primes[$num_primes] = 2;\n" +
+  "$num_primes++;\n" +
+  "\n" +
+  "MAIN_LOOP:\n" +
+  "for my $number_to_check (3 .. 200)\n" +
+  "{\n" +
+  "    for my $p (0 .. ($num_primes-1))\n" +
+  "    {\n" +
+  "        if ($number_to_check % $primes[$p] == 0)\n" +
+  "        {\n" +
+  "            next MAIN_LOOP;\n" +
+  "        }\n" +
+  "    }\n" +
+  "\n" +
+  "    # If we reached this point it means $number_to_check is not\n" +
+  "    # divisable by any prime number that came before it.\n" +
+  "    $primes[$num_primes] = $number_to_check;\n" +
+  "    $num_primes++;\n" +
+  "}\n" +
+  "\n" +
+  "for my $p (0 .. ($num_primes-1))\n" +
+  "{\n" +
+  "    print $primes[$p], \", \";\n" +
+  "}\n" +
+  "print \"\n\";\n" +
   "");
 
-define("text!cockpit/ui/request_view.css", [], "" +
-  ".cptRowIn {" +
-  "  display: box; display: -moz-box; display: -webkit-box;" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;" +
-  "  color: #333;" +
-  "  background-color: #EEE;" +
-  "  width: 100%;" +
-  "  font-family: consolas, courier, monospace;" +
-  "}" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }" +
-  ".cptRowIn > img { cursor: pointer; }" +
-  ".cptHover { display: none; }" +
-  ".cptRowIn:hover > .cptHover { display: block; }" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }" +
-  ".cptOutTyped {" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;" +
-  "  font-weight: bold; color: #000; font-size: 120%;" +
-  "}" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }" +
-  ".cptRowOutput strong," +
-  ".cptRowOutput b," +
-  ".cptRowOutput th," +
-  ".cptRowOutput h1," +
-  ".cptRowOutput h2," +
-  ".cptRowOutput h3 { color: #000; }" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }" +
-  ".cptRowOutput input[type=password]," +
-  ".cptRowOutput input[type=text]," +
-  ".cptRowOutput textarea {" +
-  "  color: #000; font-size: 120%;" +
-  "  background: transparent; padding: 3px;" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;" +
-  "}" +
-  ".cptRowOutput table," +
-  ".cptRowOutput td," +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }" +
-  ".cptRowOutput .right { text-align: right; }" +
+define("text!demo/docs/php.php", [], "<?php\n" +
+  "\n" +
+  "function nfact($n) {\n" +
+  "    if ($n == 0) {\n" +
+  "        return 1;\n" +
+  "    }\n" +
+  "    else {\n" +
+  "        return $n * nfact($n - 1);\n" +
+  "    }\n" +
+  "}\n" +
+  "\n" +
+  "echo \"\n\nPlease enter a whole number ... \";\n" +
+  "$num = trim(fgets(STDIN));\n" +
+  "\n" +
+  "// ===== PROCESS - Determing the factorial of the input number =====\n" +
+  "$output = \"\n\nFactorial \" . $num . \" = \" . nfact($num) . \"\n\n\";\n" +
+  "echo $output;\n" +
+  "\n" +
+  "?>");
+
+define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
+  "\n" +
+  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
+  "\n" +
+  "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n" +
+  "\n" +
+  "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\n" +
+  "\n" +
+  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n" +
+  "\n" +
+  "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
+
+define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
+  "\n" +
+  "import string, sys\n" +
+  "\n" +
+  "# If no arguments were given, print a helpful message\n" +
+  "if len(sys.argv)==1:\n" +
+  "print 'Usage: celsius temp1 temp2 ...'\n" +
+  "sys.exit(0)\n" +
+  "\n" +
+  "# Loop over the arguments\n" +
+  "for i in sys.argv[1:]:\n" +
+  "try:\n" +
+  "    fahrenheit=float(string.atoi(i))\n" +
+  "except string.atoi_error:\n" +
+  "    print repr(i), \"not a numeric value\"\n" +
+  "else:\n" +
+  "    celsius=(fahrenheit-32)*5.0/9.0\n" +
+  "    print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))");
+
+define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
+  "\n" +
+  "# Program to find the factorial of a number\n" +
+  "def fact(n)\n" +
+  "    if n == 0\n" +
+  "        1\n" +
+  "    else\n" +
+  "        n * fact(n-1)\n" +
+  "    end\n" +
+  "end\n" +
+  "\n" +
+  "puts fact(ARGV[0].to_i)");
+
+define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
+  "/* Defines a new method 'sort' for array objects */\n" +
+  "object implicits extends Application {\n" +
+  "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
+  "    new {\n" +
+  "      def sort(p: (A, A) => Boolean) = {\n" +
+  "        util.Sorting.stableSort(x, p); x\n" +
+  "      }\n" +
+  "    }\n" +
+  "  val x = Array(2, 3, 1, 4)\n" +
+  "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
+  "}");
+
+define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
+  "\n" +
+  "#navbar {\n" +
+  "    $navbar-width: 800px;\n" +
+  "    $items: 5;\n" +
+  "    $navbar-color: #ce4dd6;\n" +
+  "\n" +
+  "    width: $navbar-width;\n" +
+  "    border-bottom: 2px solid $navbar-color;\n" +
+  "\n" +
+  "    li {\n" +
+  "        float: left;\n" +
+  "        width: $navbar-width/$items - 10px;\n" +
+  "\n" +
+  "        background-color: lighten($navbar-color, 20%);\n" +
+  "        &:hover {\n" +
+  "            background-color: lighten($navbar-color, 10%);\n" +
+  "        }\n" +
+  "    }\n" +
+  "}");
+
+define("text!demo/docs/svg.svg", [], "<svg\n" +
+  "  width=\"800\" height=\"600\"\n" +
+  "  xmlns=\"http://www.w3.org/2000/svg\"\n" +
+  "  onload=\"StartAnimation(evt)\">\n" +
+  "\n" +
+  "  <title>Test Tube Progress Bar</title>\n" +
+  "  <desc>Created for the Web Directions SVG competition</desc>\n" +
+  "\n" +
+  "  <script type=\"text/ecmascript\"><![CDATA[\n" +
+  "    var timevalue = 0;\n" +
+  "    var timer_increment = 1;\n" +
+  "    var max_time = 100;\n" +
+  "    var hickory;\n" +
+  "    var dickory;\n" +
+  "    var dock;\n" +
+  "    var i;\n" +
+  "\n" +
+  "    function StartAnimation(evt) {\n" +
+  "        hickory  = evt.target.ownerDocument.getElementById(\"hickory\");\n" +
+  "        dickory = evt.target.ownerDocument.getElementById(\"dickory\");\n" +
+  "        dock = evt.target.ownerDocument.getElementById(\"dock\");\n" +
+  "\n" +
+  "        ShowAndGrowElement();\n" +
+  "    }\n" +
+  "    function ShowAndGrowElement() {\n" +
+  "        timevalue = timevalue + timer_increment;\n" +
+  "        if (timevalue > max_time)\n" +
+  "            return;\n" +
+  "        // Scale the text string gradually until it is 20 times larger\n" +
+  "        scalefactor = (timevalue * 650) / max_time;\n" +
+  "\n" +
+  "        if (timevalue < 30) {\n" +
+  "            hickory.setAttribute(\"display\", \"\");\n" +
+  "            hickory.setAttribute(\"transform\", \"translate(\" + (600+scalefactor*3*-1 ) + \", -144 )\");\n" +
+  "        }\n" +
+  "\n" +
+  "        if (timevalue > 30 && timevalue < 66) {\n" +
+  "            dickory.setAttribute(\"display\", \"\");\n" +
+  "            dickory.setAttribute(\"transform\", \"translate(\" + (-795+scalefactor*2) + \", 0 )\");\n" +
+  "        }\n" +
+  "        if (timevalue > 66) {\n" +
+  "            dock.setAttribute(\"display\", \"\");\n" +
+  "            dock.setAttribute(\"transform\", \"translate(\" + (1450+scalefactor*2*-1) + \", 144 )\");\n" +
+  "        }\n" +
+  "\n" +
+  "        // Call ShowAndGrowElement again <timer_increment> milliseconds later.\n" +
+  "        setTimeout(\"ShowAndGrowElement()\", timer_increment)\n" +
+  "    }\n" +
+  "    window.ShowAndGrowElement = ShowAndGrowElement\n" +
+  "  ]]</script>\n" +
+  "\n" +
+  "  <rect\n" +
+  "    fill=\"#2e3436\"\n" +
+  "    fill-rule=\"nonzero\"\n" +
+  "    stroke-width=\"3\"\n" +
+  "    y=\"0\"\n" +
+  "    x=\"0\"\n" +
+  "    height=\"600\"\n" +
+  "    width=\"800\"\n" +
+  "    id=\"rect3590\"/>\n" +
+  "\n" +
+  "    <text\n" +
+  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
+  "       x=\"50\"\n" +
+  "       y=\"350\"\n" +
+  "       id=\"hickory\"\n" +
+  "       display=\"none\">\n" +
+  "        Hickory,</text>\n" +
+  "    <text\n" +
+  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
+  "       x=\"50\"\n" +
+  "       y=\"350\"\n" +
+  "       id=\"dickory\"\n" +
+  "       display=\"none\">\n" +
+  "        dickory,</text>\n" +
+  "    <text\n" +
+  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
+  "       x=\"50\"\n" +
+  "       y=\"350\"\n" +
+  "       id=\"dock\"\n" +
+  "       display=\"none\">\n" +
+  "        dock!</text>\n" +
+  "</svg>");
+
+define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
+  "\n" +
+  "h2. Heading Two\n" +
+  "\n" +
+  "h3. A two-line\n" +
+  "    header\n" +
+  "\n" +
+  "h2. Another two-line\n" +
+  "header\n" +
+  "\n" +
+  "Paragraph:\n" +
+  "one, two,\n" +
+  "thee lines!\n" +
+  "\n" +
+  "p(classone two three). This is a paragraph with classes\n" +
+  "\n" +
+  "p(#id). (one with an id)\n" +
+  "\n" +
+  "p(one two three#my_id). ..classes + id\n" +
+  "\n" +
+  "* Unordered list\n" +
+  "** sublist\n" +
+  "* back again!\n" +
+  "** sublist again..\n" +
+  "\n" +
+  "# ordered\n" +
+  "\n" +
+  "bg. Blockquote!\n" +
+  "    This is a two-list blockquote..!");
+
+define("text!ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
+  "\n" +
+  "\n" +
+  ".ace_editor {\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "    font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_scroller {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: scroll;\n" +
+  "    overflow-y: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_content {\n" +
+  "    position: absolute;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_composition {\n" +
+  "    position: absolute;\n" +
+  "    background: #555;\n" +
+  "    color: #DDD;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: hidden;\n" +
+  "    height: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_error {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_warning {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: scroll;\n" +
+  "    right: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb div {\n" +
+  "    position: absolute;\n" +
+  "    width: 1px;\n" +
+  "    left: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_print_margin_layer {\n" +
+  "    z-index: 0;\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    left: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_print_margin {\n" +
+  "    position: absolute;\n" +
+  "    height: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor textarea {\n" +
+  "    position: fixed;\n" +
+  "    z-index: -1;\n" +
+  "    width: 10px;\n" +
+  "    height: 30px;\n" +
+  "    opacity: 0;\n" +
+  "    background: transparent;\n" +
+  "    appearance: none;\n" +
+  "    -moz-appearance: none;\n" +
+  "    border: none;\n" +
+  "    resize: none;\n" +
+  "    outline: none;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_layer {\n" +
+  "    z-index: 1;\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    white-space: nowrap;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_text-layer {\n" +
+  "    color: black;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cjk {\n" +
+  "    display: inline-block;\n" +
+  "    text-align: center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor-layer {\n" +
+  "    z-index: 4;\n" +
+  "    cursor: text;\n" +
+  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor {\n" +
+  "    z-index: 4;\n" +
+  "    position: absolute;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor.ace_hidden {\n" +
+  "    opacity: 0.2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line {\n" +
+  "    white-space: nowrap;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer {\n" +
+  "    cursor: text;\n" +
+  "    pointer-events: none;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_step {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 3;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selection {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_bracket {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_active_line {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selected_word {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 6;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line .ace_fold {\n" +
+  "    cursor: pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  "  cursor: move;\n" +
+  "}\n" +
   "");
 
-define("text!cockpit/ui/request_view.html", [], "" +
-  "<div class=cptRow>" +
-  "  <!-- The div for the input (i.e. what was typed) -->" +
-  "  <div class=\"cptRowIn\" save=\"${rowin}\"" +
-  "      onclick=\"${copyToInput}\"" +
-  "      ondblclick=\"${executeRequest}\">" +
-  "" +
-  "    <!-- What the user actually typed -->" +
-  "    <div class=\"cptGt\">&gt; </div>" +
-  "    <div class=\"cptOutTyped\">${request.typed}</div>" +
-  "" +
-  "    <!-- The extra details that appear on hover -->" +
-  "    <div class=cptHover save=\"${duration}\"></div>" +
-  "    <img class=cptHover onclick=\"${hideOutput}\" save=\"${hide}\"" +
-  "        alt=\"Hide command output\" _src=\"${imageUrl('images/minus.png')}\"/>" +
-  "    <img class=\"cptHover cptHidden\" onclick=\"${showOutput}\" save=\"${show}\"" +
-  "        alt=\"Show command output\" _src=\"${imageUrl('images/plus.png')}\"/>" +
-  "    <img class=cptHover onclick=\"${remove}\"" +
-  "        alt=\"Remove this command from the history\"" +
-  "        _src=\"${imageUrl('images/closer.png')}\"/>" +
-  "" +
-  "  </div>" +
-  "" +
-  "  <!-- The div for the command output -->" +
-  "  <div class=\"cptRowOut\" save=\"${rowout}\">" +
-  "    <div class=\"cptRowOutput\" save=\"${output}\"></div>" +
-  "    <img _src=\"${imageUrl('images/throbber.gif')}\" save=\"${throb}\"/>" +
-  "  </div>" +
-  "</div>" +
+define("text!build/demo/styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
+  "\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
+
+define("text!build/textarea/style.css", [], "body {\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "    background-color:#e6f5fc;\n" +
+  "    \n" +
+  "}\n" +
+  "\n" +
+  "H2, H3, H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "}\n" +
+  "\n" +
+  "H2 {\n" +
+  "    font-size:28px;\n" +
+  "    color:#263842;\n" +
+  "    padding-bottom:6px;\n" +
+  "}\n" +
+  "\n" +
+  "H3 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:22px;\n" +
+  "    color:#253741;\n" +
+  "    margin-top:43px;\n" +
+  "    margin-bottom:8px;\n" +
+  "}\n" +
+  "\n" +
+  "H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:21px;\n" +
+  "    color:#222222;\n" +
+  "    margin-bottom:4px;\n" +
+  "}\n" +
+  "\n" +
+  "P {\n" +
+  "    padding:13px 0;\n" +
+  "    margin:0;\n" +
+  "    line-height:22px;\n" +
+  "}\n" +
+  "\n" +
+  "UL{\n" +
+  "    line-height : 22px;\n" +
+  "}\n" +
+  "\n" +
+  "PRE{\n" +
+  "    background : #333;\n" +
+  "    color : white;\n" +
+  "    padding : 10px;\n" +
+  "}\n" +
+  "\n" +
+  "#header {\n" +
+  "    height : 227px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background: url(images/background.png) repeat-x 0 0;\n" +
+  "    border-bottom:1px solid #c9e8fa;   \n" +
+  "}\n" +
+  "\n" +
+  "#header .content .signature {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:11px;\n" +
+  "    color:#ebe4d6;\n" +
+  "    position:absolute;\n" +
+  "    bottom:5px;\n" +
+  "    right:42px;\n" +
+  "    letter-spacing : 1px;\n" +
+  "}\n" +
+  "\n" +
+  ".content {\n" +
+  "    width:970px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin:0 auto;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content {\n" +
+  "    height:184px;\n" +
+  "    margin-top:22px;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .logo {\n" +
+  "    width  : 282px;\n" +
+  "    height : 184px;\n" +
+  "    background:url(images/logo.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:0;\n" +
+  "    left:0;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .title {\n" +
+  "    width  : 605px;\n" +
+  "    height : 58px;\n" +
+  "    background:url(images/ace.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:98px;\n" +
+  "    left:329px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper {\n" +
+  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
+  "    min-height:250px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content {\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:14px;\n" +
+  "    color:#222222;\n" +
+  "    width:1000px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column1 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:315px;\n" +
+  "    margin-right:31px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column2 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:600px;\n" +
+  "    padding-top:47px;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github {\n" +
+  "    width:310px;\n" +
+  "    height:80px;\n" +
+  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin-top:49px;\n" +
+  "    cursor:pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github:hover {\n" +
+  "    background-position:0 -80px;\n" +
+  "}\n" +
+  "\n" +
+  ".divider {\n" +
+  "    height:3px;\n" +
+  "    background-color:#bedaea;\n" +
+  "    margin-bottom:3px;\n" +
+  "}\n" +
+  "\n" +
+  ".menu {\n" +
+  "    padding:23px 0 0 24px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.content-list {\n" +
+  "    padding:15px;\n" +
+  "    margin:0;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list {\n" +
+  "    padding:0;\n" +
+  "    margin:0 0 20px 0;\n" +
+  "    list-style-type:none;\n" +
+  "    line-height : 16px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI {\n" +
+  "    color:#2557b4;\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:14px;\n" +
+  "    padding:7px 0;\n" +
+  "    border-bottom:1px dotted #d6e2e7;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI:last-child {\n" +
+  "    border-bottom:0;\n" +
+  "}\n" +
+  "\n" +
+  "A {\n" +
+  "    color:#2557b4;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "P#first{\n" +
+  "    background : rgba(255,255,255,0.5);\n" +
+  "    padding : 20px;\n" +
+  "    font-size : 16px;\n" +
+  "    line-height : 24px;\n" +
+  "    margin : 0 0 20px 0;\n" +
+  "}\n" +
+  "\n" +
+  "#footer {\n" +
+  "    height:40px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
+  "    position:relative;\n" +
+  "    margin-top:40px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer {\n" +
+  "    padding:0;\n" +
+  "    margin:8px 11px 0 0;\n" +
+  "    list-style-type:none;\n" +
+  "    float:right;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI {\n" +
+  "    color:white;\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:12px;\n" +
+  "    display:inline-block;\n" +
+  "    margin:0 1px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A {\n" +
+  "    color:#8dd0ff;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "\n" +
   "");
+
+define("text!build_support/style.css", [], "body {\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "    background-color:#e6f5fc;\n" +
+  "    \n" +
+  "}\n" +
+  "\n" +
+  "H2, H3, H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "}\n" +
+  "\n" +
+  "H2 {\n" +
+  "    font-size:28px;\n" +
+  "    color:#263842;\n" +
+  "    padding-bottom:6px;\n" +
+  "}\n" +
+  "\n" +
+  "H3 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:22px;\n" +
+  "    color:#253741;\n" +
+  "    margin-top:43px;\n" +
+  "    margin-bottom:8px;\n" +
+  "}\n" +
+  "\n" +
+  "H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:21px;\n" +
+  "    color:#222222;\n" +
+  "    margin-bottom:4px;\n" +
+  "}\n" +
+  "\n" +
+  "P {\n" +
+  "    padding:13px 0;\n" +
+  "    margin:0;\n" +
+  "    line-height:22px;\n" +
+  "}\n" +
+  "\n" +
+  "UL{\n" +
+  "    line-height : 22px;\n" +
+  "}\n" +
+  "\n" +
+  "PRE{\n" +
+  "    background : #333;\n" +
+  "    color : white;\n" +
+  "    padding : 10px;\n" +
+  "}\n" +
+  "\n" +
+  "#header {\n" +
+  "    height : 227px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background: url(images/background.png) repeat-x 0 0;\n" +
+  "    border-bottom:1px solid #c9e8fa;   \n" +
+  "}\n" +
+  "\n" +
+  "#header .content .signature {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:11px;\n" +
+  "    color:#ebe4d6;\n" +
+  "    position:absolute;\n" +
+  "    bottom:5px;\n" +
+  "    right:42px;\n" +
+  "    letter-spacing : 1px;\n" +
+  "}\n" +
+  "\n" +
+  ".content {\n" +
+  "    width:970px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin:0 auto;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content {\n" +
+  "    height:184px;\n" +
+  "    margin-top:22px;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .logo {\n" +
+  "    width  : 282px;\n" +
+  "    height : 184px;\n" +
+  "    background:url(images/logo.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:0;\n" +
+  "    left:0;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .title {\n" +
+  "    width  : 605px;\n" +
+  "    height : 58px;\n" +
+  "    background:url(images/ace.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:98px;\n" +
+  "    left:329px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper {\n" +
+  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
+  "    min-height:250px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content {\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:14px;\n" +
+  "    color:#222222;\n" +
+  "    width:1000px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column1 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:315px;\n" +
+  "    margin-right:31px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column2 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:600px;\n" +
+  "    padding-top:47px;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github {\n" +
+  "    width:310px;\n" +
+  "    height:80px;\n" +
+  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin-top:49px;\n" +
+  "    cursor:pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github:hover {\n" +
+  "    background-position:0 -80px;\n" +
+  "}\n" +
+  "\n" +
+  ".divider {\n" +
+  "    height:3px;\n" +
+  "    background-color:#bedaea;\n" +
+  "    margin-bottom:3px;\n" +
+  "}\n" +
+  "\n" +
+  ".menu {\n" +
+  "    padding:23px 0 0 24px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.content-list {\n" +
+  "    padding:15px;\n" +
+  "    margin:0;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list {\n" +
+  "    padding:0;\n" +
+  "    margin:0 0 20px 0;\n" +
+  "    list-style-type:none;\n" +
+  "    line-height : 16px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI {\n" +
+  "    color:#2557b4;\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:14px;\n" +
+  "    padding:7px 0;\n" +
+  "    border-bottom:1px dotted #d6e2e7;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI:last-child {\n" +
+  "    border-bottom:0;\n" +
+  "}\n" +
+  "\n" +
+  "A {\n" +
+  "    color:#2557b4;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "P#first{\n" +
+  "    background : rgba(255,255,255,0.5);\n" +
+  "    padding : 20px;\n" +
+  "    font-size : 16px;\n" +
+  "    line-height : 24px;\n" +
+  "    margin : 0 0 20px 0;\n" +
+  "}\n" +
+  "\n" +
+  "#footer {\n" +
+  "    height:40px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
+  "    position:relative;\n" +
+  "    margin-top:40px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer {\n" +
+  "    padding:0;\n" +
+  "    margin:8px 11px 0 0;\n" +
+  "    list-style-type:none;\n" +
+  "    float:right;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI {\n" +
+  "    color:white;\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:12px;\n" +
+  "    display:inline-block;\n" +
+  "    margin:0 1px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A {\n" +
+  "    color:#8dd0ff;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "");
+
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
+
+define("text!demo/styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
+  "\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
+
+define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
+  "\n" +
+  "@import url(\"booya.css\") print,screen;\n" +
+  "@import \"whatup.css\" screen;\n" +
+  "@import \"wicked.css\";\n" +
+  "\n" +
+  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
+  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
+  "\n" +
+  "li.inline #foo {\n" +
+  "  background: url(\"something.png\");\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px;\n" +
+  "  padding-right: 7px;\n" +
+  "  border-right: 1px dotted #066;\n" +
+  "}\n" +
+  "\n" +
+  "li.last.first {\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px !important;\n" +
+  "  padding-right: 3px;\n" +
+  "  border-right: 0px;\n" +
+  "}\n" +
+  "\n" +
+  "@media print {\n" +
+  "    li.inline {\n" +
+  "      color: black;\n" +
+  "    }\n" +
+  "\n" +
+  "\n" +
+  "@charset \"UTF-8\"; \n" +
+  "\n" +
+  "@page {\n" +
+  "  margin: 10%;\n" +
+  "  counter-increment: page;\n" +
+  "\n" +
+  "  @top-center {\n" +
+  "    font-family: sans-serif;\n" +
+  "    font-weight: bold;\n" +
+  "    font-size: 2em;\n" +
+  "    content: counter(page);\n" +
+  "  }\n" +
+  "}");
+
+define("text!deps/requirejs/dist/ie.css", [], "\n" +
+  "body .sect {\n" +
+  "    display: none;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "#content ul.index {\n" +
+  "    list-style: none;\n" +
+  "}\n" +
+  "");
+
+define("text!deps/requirejs/dist/main.css", [], "@font-face {\n" +
+  "    font-family: Inconsolata;\n" +
+  "    src: url(\"fonts/Inconsolata.ttf\");\n" +
+  "}\n" +
+  "\n" +
+  "* {\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "    box-sizing: border-box;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "}\n" +
+  "\n" +
+  "body {\n" +
+  "    font-size: 12px;\n" +
+  "    line-height: 21px;\n" +
+  "    background-color: #fff;\n" +
+  "    font-family: \"Helvetica Neue\", Helvetica, Arial, Verdana, sans-serif;\n" +
+  "    color: #0a0a0a;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper {\n" +
+  "    margin: 0;\n" +
+  "}\n" +
+  "\n" +
+  "#grid {\n" +
+  "    position: fixed;\n" +
+  "    top: 0;\n" +
+  "    left: 0;\n" +
+  "    width: 796px;\n" +
+  "    background-image: url(\"i/grid.png\");\n" +
+  "    z-index: 100;\n" +
+  "}\n" +
+  "\n" +
+  "pre {\n" +
+  "    line-height: 18px;\n" +
+  "    font-size: 13px;\n" +
+  "    margin: 7px 0 21px;\n" +
+  "    padding: 5px 10px;\n" +
+  "    overflow: auto;\n" +
+  "    background-color: #fafafa;\n" +
+  "    border: 1px solid #e6e6e6;\n" +
+  "    -moz-border-radius: 5px;\n" +
+  "    -webkit-border-radius: 5px;\n" +
+  "    border-radius: 5px;\n" +
+  "    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n" +
+  "    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n" +
+  "    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    typography stuff\n" +
+  "*/\n" +
+  ".mono {\n" +
+  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;\n" +
+  "}\n" +
+  "\n" +
+  ".sans {\n" +
+  "    font-family: \"Helvetica Neue\", Helvetica, Arial, Verdana, sans-serif;\n" +
+  "}\n" +
+  "\n" +
+  ".serif {\n" +
+  "    font-family: \"Georgia\", Times New Roman, Times, serif;\n" +
+  "}\n" +
+  "\n" +
+  "a {\n" +
+  "    color: #2e87dd;\n" +
+  "    text-decoration: none;\n" +
+  "}\n" +
+  "\n" +
+  "a:hover {\n" +
+  "    text-decoration: underline;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    navigation\n" +
+  "*/\n" +
+  "\n" +
+  "#navBg {\n" +
+  "    background-color: #f2f2f2;\n" +
+  "    background-image: url(\"i/shadow.png\");\n" +
+  "    background-position: right top;\n" +
+  "    background-repeat: repeat-y;\n" +
+  "    width: 220px;\n" +
+  "    position: fixed;\n" +
+  "    top: 0;\n" +
+  "    left: 0;\n" +
+  "    z-index: 0;\n" +
+  "}\n" +
+  "\n" +
+  "#nav {\n" +
+  "    background-image: url(\"i/logo.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: center 10px;\n" +
+  "    width: 220px;\n" +
+  "    float: left;\n" +
+  "    margin: 0;\n" +
+  "    padding: 150px 20px 0;\n" +
+  "    font-size: 13px;\n" +
+  "    text-shadow: 1px 1px #fff;\n" +
+  "    position: relative;\n" +
+  "    z-index: 1;\n" +
+  "}\n" +
+  "\n" +
+  "#nav .homeImageLink {\n" +
+  "    position: absolute;\n" +
+  "    display: block;\n" +
+  "    top: 10px;\n" +
+  "    left: 0;\n" +
+  "    width: 220px;\n" +
+  "    height: 138px;\n" +
+  "}\n" +
+  "#nav ul {\n" +
+  "    list-style-type:none;\n" +
+  "    padding: 0;\n" +
+  "    margin: 21px 0 0 0;\n" +
+  "}\n" +
+  "\n" +
+  "#nav ul li {\n" +
+  "    width: 100%;\n" +
+  "}\n" +
+  "\n" +
+  "#nav ul li.version {\n" +
+  "    text-align: center;\n" +
+  "    color: #4d4d4d;\n" +
+  "}\n" +
+  "\n" +
+  "#nav h1 {\n" +
+  "    color: #4d4d4d;\n" +
+  "    text-align: center;\n" +
+  "    font-size: 15px;\n" +
+  "    font-weight: normal;\n" +
+  "    text-transform: uppercase;\n" +
+  "    letter-spacing: 3px;\n" +
+  "}\n" +
+  "\n" +
+  "span.spacer {\n" +
+  "    color: #2e87dd;\n" +
+  "    margin: 0 3px 0 5px;\n" +
+  "    background-image: url(\"i/dot.png\");\n" +
+  "    background-repeat: repeat-x;\n" +
+  "    background-position: left 13px;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    icons\n" +
+  "*/\n" +
+  "\n" +
+  "span.icon {\n" +
+  "    width: 16px;\n" +
+  "    display: block;\n" +
+  "    background-image: url(\"i/sprite.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.home {\n" +
+  "    background-position: center 5px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.start {\n" +
+  "    background-position: center -27px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.download {\n" +
+  "    background-position: center -59px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.api {\n" +
+  "    background-position: center -89px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.optimize {\n" +
+  "    background-position: center -119px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.script {\n" +
+  "    background-position: center -150px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.question {\n" +
+  "    background-position: center -182px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.requirement {\n" +
+  "    background-position: center -214px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.history {\n" +
+  "    background-position: center -247px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.help {\n" +
+  "    background-position: center -279px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.blog {\n" +
+  "    background-position: center -311px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.twitter {\n" +
+  "    background-position: center -343px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.git {\n" +
+  "    background-position: center -375px;\n" +
+  "}\n" +
+  "\n" +
+  "span.icon.fork {\n" +
+  "    background-position: center -407px;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    content\n" +
+  "*/\n" +
+  "\n" +
+  "#content {\n" +
+  "    margin: 0 0 0 220px;\n" +
+  "    padding: 0 20px;\n" +
+  "    background-color: #fff;\n" +
+  "    font-family: \"Georgia\", Times New Roman, Times, serif;\n" +
+  "    position: relative;\n" +
+  "}\n" +
+  "\n" +
+  "#content p {\n" +
+  "    padding: 7px 0;\n" +
+  "    color: #333;\n" +
+  "    font-size: 14px;\n" +
+  "}\n" +
+  "\n" +
+  "#content h1,\n" +
+  "#content h2,\n" +
+  "#content h3,\n" +
+  "#content h4,\n" +
+  "#content h5 {\n" +
+  "    font-weight: normal;\n" +
+  "    padding: 21px 0 7px;\n" +
+  "}\n" +
+  "\n" +
+  "#content h1 {\n" +
+  "    font-size: 21px;\n" +
+  "}\n" +
+  "\n" +
+  "#content h2 {\n" +
+  "    padding: 0 0 18px 0;\n" +
+  "    margin: 0 0 7px 0;\n" +
+  "    font-weight: normal;\n" +
+  "    font-size: 21px;\n" +
+  "    line-height: 24px;\n" +
+  "    text-align: center;\n" +
+  "    color: #222;\n" +
+  "    background-image: url(\"i/arrow.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: center bottom;\n" +
+  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;\n" +
+  "    text-transform: uppercase;\n" +
+  "    letter-spacing: 2px;\n" +
+  "    text-shadow: 1px 1px 0 #fff;\n" +
+  "}\n" +
+  "\n" +
+  "#content h2 a {\n" +
+  "    color: #222;\n" +
+  "}\n" +
+  "\n" +
+  "#content h2 a:hover,\n" +
+  "#content h3 a:hover,\n" +
+  "#content h4 a:hover {\n" +
+  "    text-decoration: none;\n" +
+  "}\n" +
+  "\n" +
+  "span.sectionMark {\n" +
+  "    display: block;\n" +
+  "    color: #aaa;\n" +
+  "    text-shadow: 1px 1px 0 #fff;\n" +
+  "    font-size: 15px;\n" +
+  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;\n" +
+  "}\n" +
+  "\n" +
+  "#content h3 {\n" +
+  "    font-size: 17px;\n" +
+  "}\n" +
+  "\n" +
+  "#content h4 {\n" +
+  "    padding-top: 0;\n" +
+  "    font-size: 15px;\n" +
+  "}\n" +
+  "\n" +
+  "#content h5 {\n" +
+  "    font-size: 10px;\n" +
+  "}\n" +
+  "\n" +
+  "#content ul {\n" +
+  "    list-style-type: disc;\n" +
+  "}\n" +
+  "\n" +
+  "#content ul,\n" +
+  "#content ol {\n" +
+  "    /* border-left: 1px solid #333; */\n" +
+  "    color: #333;\n" +
+  "    font-size: 14px;\n" +
+  "    list-style-position: outside;\n" +
+  "    margin: 7px 0 21px 0;\n" +
+  "    /* padding: 0 0 0 28px; */\n" +
+  "}\n" +
+  "\n" +
+  "#content ul {\n" +
+  "    font-style: italic;\n" +
+  "}\n" +
+  "\n" +
+  "#content ol {\n" +
+  "    border: none;\n" +
+  "    list-style-position: inside;\n" +
+  "    padding: 0;\n" +
+  "    font-family: \"Georgia\", Times New Roman, Times, serif;\n" +
+  "}\n" +
+  "\n" +
+  "#content ul ul,\n" +
+  "#content ol ol {\n" +
+  "    border: none;\n" +
+  "    padding: 0;\n" +
+  "    margin: 0 0 0 28px;\n" +
+  "}\n" +
+  "\n" +
+  "#content .section {\n" +
+  "    padding: 48px 0;\n" +
+  "    background-image: url(\"i/line.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: center bottom;\n" +
+  "    width: 576px;\n" +
+  "    margin: 0 auto;\n" +
+  "}\n" +
+  "\n" +
+  "#content .section .subSection {\n" +
+  "    padding: 0 0 0 48px;\n" +
+  "    margin: 28px 0 0 0;\n" +
+  "    display: block;\n" +
+  "    border-left: 2px solid #ddd;\n" +
+  "}\n" +
+  "\n" +
+  "#content .section:last-child {\n" +
+  "    background-image: none;\n" +
+  "}\n" +
+  "\n" +
+  "#content .note {\n" +
+  "    color: #222;\n" +
+  "    background-color: #ffff99;\n" +
+  "    padding: 5px 10px;\n" +
+  "    margin: 7px 0;\n" +
+  "    display: inline-block;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    page directory\n" +
+  "*/\n" +
+  "\n" +
+  "#content #directory.section {\n" +
+  "    background-color: #fff;\n" +
+  "    width: 576px;\n" +
+  "}\n" +
+  "\n" +
+  "#content #directory.section ul ul ul {\n" +
+  "    margin: 0 0 0 48px;\n" +
+  "}\n" +
+  "\n" +
+  "#content #directory.section ul ul li {\n" +
+  "    background-image: url(\"i/sprite.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: left -437px;\n" +
+  "    padding-left: 18px;\n" +
+  "    font-style: normal;\n" +
+  "}\n" +
+  "\n" +
+  "#content #directory h1 {\n" +
+  "    padding: 0 0 65px 0;\n" +
+  "    margin: 0 0 14px 0;\n" +
+  "    font-weight: normal;\n" +
+  "    font-size: 21px;\n" +
+  "    text-align: center;\n" +
+  "    text-transform: uppercase;\n" +
+  "    letter-spacing: 2px;\n" +
+  "    color: #222;\n" +
+  "    background-image: url(\"i/arrow-x.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: center bottom;\n" +
+  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "#content ul.index {\n" +
+  "    padding: 0;\n" +
+  "    background-color: transparent;\n" +
+  "    border: none;\n" +
+  "    -moz-box-shadow: none;\n" +
+  "    font-style: normal;\n" +
+  "    font-family: \"Inconsolata\", Andale Mono, Monaco, Monospace;\n" +
+  "}\n" +
+  "\n" +
+  "#content ul.index li {\n" +
+  "    width: 100%;\n" +
+  "    font-size: 15px;\n" +
+  "    color: #333;\n" +
+  "    padding: 0 0 7px 0;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "/*\n" +
+  "    intro page specific\n" +
+  "*/\n" +
+  "\n" +
+  "#content #intro {\n" +
+  "    width: 576px;\n" +
+  "    margin: 0 auto;\n" +
+  "    padding: 21px 0;\n" +
+  "}\n" +
+  "\n" +
+  "#content #intro p,\n" +
+  "#content #intro h1 {\n" +
+  "    font-size: 19px;\n" +
+  "    line-height: 28px;\n" +
+  "    color: green;\n" +
+  "    letter-spacing: 2px;\n" +
+  "    padding: 0 0 28px 0;\n" +
+  "}\n" +
+  "\n" +
+  "#content #intro p:last-child,\n" +
+  "#content #intro h1:last-child {\n" +
+  "    padding: 0;\n" +
+  "}\n" +
+  "\n" +
+  "#content #intro p a {\n" +
+  "    color: green;\n" +
+  "    text-decoration: underline;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    download page\n" +
+  "*/\n" +
+  "\n" +
+  "#content h4 a.download {\n" +
+  "    -webkit-border-radius: 5px;\n" +
+  "    -moz-border-radius: 5px;\n" +
+  "    background-color: #F2F2F2;\n" +
+  "    background-image: url(\"i/sprite.png\"), -moz-linear-gradient(center top , #FAFAFA 0%, #F2F2F2 100%);\n" +
+  "    background-image: url(\"i/sprite.png\"), -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fafafa), color-stop(100%, #f2f2f2));\n" +
+  "    background-position: 7px -58px, center center;\n" +
+  "    background-repeat: no-repeat, no-repeat;\n" +
+  "    border: 1px solid #CCCCCC;\n" +
+  "    color: #333333;\n" +
+  "    font-size: 12px;\n" +
+  "    margin: 0 0 0 5px;\n" +
+  "    padding: 0 10px 0 25px;\n" +
+  "    text-shadow: 1px 1px 0 #FFFFFF;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    footer\n" +
+  "*/\n" +
+  "#footer {\n" +
+  "    color: #4d4d4d;\n" +
+  "    padding: 65px 20px 20px;\n" +
+  "    margin: 20px 0 0 220px;\n" +
+  "    text-align: center;\n" +
+  "    display: block;\n" +
+  "    font-size: 13px;\n" +
+  "    background-image: url(\"i/arrow-x.png\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: center top;\n" +
+  "    background-color: #fff;\n" +
+  "}\n" +
+  "\n" +
+  "#footer .line {\n" +
+  "    display: block;\n" +
+  "}\n" +
+  "\n" +
+  "#footer .line a {\n" +
+  "    color: #4d4d4d;\n" +
+  "    text-decoration: underline;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    Pygments manni style\n" +
+  "*/\n" +
+  "\n" +
+  "code {background-color: #fafafa; color: #333;}\n" +
+  "\n" +
+  "code .comment {color: green; font-style: italic}\n" +
+  "code .comment.preproc {color: #099; font-style: normal}\n" +
+  "code .comment.special {font-weight: bold}\n" +
+  "\n" +
+  "code .keyword {color: #069; font-weight: bold}\n" +
+  "code .keyword.pseudo {font-weight: normal}\n" +
+  "code .keyword.type {color: #078}\n" +
+  "\n" +
+  "code .operator {color: #555}\n" +
+  "code .operator.word {color: #000; font-weight: bold}\n" +
+  "\n" +
+  "code .name.builtin {color: #366}\n" +
+  "code .name.function {color: #c0f}\n" +
+  "code .name.class {color: #0a8; font-weight: bold}\n" +
+  "code .name.namespace {color: #0cf; font-weight: bold}\n" +
+  "code .name.exception {color: #c00; font-weight: bold}\n" +
+  "code .name.variable {color: #033}\n" +
+  "code .name.constant {color: #360}\n" +
+  "code .name.label {color: #99f}\n" +
+  "code .name.entity {color: #999; font-weight: bold}\n" +
+  "code .name.attribute {color: #309}\n" +
+  "code .name.tag {color: #309; font-weight: bold}\n" +
+  "code .name.decorator {color: #99f}\n" +
+  "\n" +
+  "code .string {color: #c30}\n" +
+  "code .string.doc {font-style: italic}\n" +
+  "code .string.interpol {color: #a00}\n" +
+  "code .string.escape {color: #c30; font-weight: bold}\n" +
+  "code .string.regex {color: #3aa}\n" +
+  "code .string.symbol {color: #fc3}\n" +
+  "code .string.other {color: #c30}\n" +
+  "\n" +
+  "code .number {color: #f60}\n" +
+  "\n" +
+  "\n" +
+  "/*\n" +
+  "    webkit scroll bars\n" +
+  "*/\n" +
+  "\n" +
+  "pre::-webkit-scrollbar {\n" +
+  "    width: 6px;\n" +
+  "    height: 6px;\n" +
+  "}\n" +
+  "\n" +
+  "pre::-webkit-scrollbar-button:start:decrement,\n" +
+  "pre::-webkit-scrollbar-button:end:increment {\n" +
+  "    display: block;\n" +
+  "    height: 0;\n" +
+  "    width: 0;\n" +
+  "}\n" +
+  "\n" +
+  "pre::-webkit-scrollbar-button:vertical:increment,\n" +
+  "pre::-webkit-scrollbar-button:horizontal:increment {\n" +
+  "    background-color: transparent;\n" +
+  "    display: block;\n" +
+  "    height: 0;\n" +
+  "    width: 0;\n" +
+  "}\n" +
+  "\n" +
+  "pre::-webkit-scrollbar-track-piece {\n" +
+  "    -webkit-border-radius: 3px;\n" +
+  "}\n" +
+  "\n" +
+  "pre::-webkit-scrollbar-thumb:vertical {\n" +
+  "    background-color: #aaa;\n" +
+  "    -webkit-border-radius: 3px;\n" +
+  "\n" +
+  "}\n" +
+  "\n" +
+  "pre::-webkit-scrollbar-thumb:horizontal {\n" +
+  "    background-color: #aaa;\n" +
+  "    -webkit-border-radius: 3px;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    hbox\n" +
+  "*/\n" +
+  "\n" +
+  ".hbox {\n" +
+  "	display: -webkit-box;\n" +
+  "	-webkit-box-orient: horizontal;\n" +
+  "	-webkit-box-align: stretch;\n" +
+  "\n" +
+  "	display: -moz-box;\n" +
+  "	-moz-box-orient: horizontal;\n" +
+  "	-moz-box-align: stretch;\n" +
+  "\n" +
+  "	display: box;\n" +
+  "	box-orient: horizontal;\n" +
+  "	box-align: stretch;\n" +
+  "\n" +
+  "	width: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".hbox > * {\n" +
+  "	-webkit-box-flex: 0;\n" +
+  "	-moz-box-flex: 0;\n" +
+  "	box-flex: 0;\n" +
+  "	display: block;\n" +
+  "}\n" +
+  "\n" +
+  ".vbox {\n" +
+  "	display: -webkit-box;\n" +
+  "	-webkit-box-orient: vertical;\n" +
+  "	-webkit-box-align: stretch;\n" +
+  "\n" +
+  "	display: -moz-box;\n" +
+  "	-moz-box-orient: vertical;\n" +
+  "	-moz-box-align: stretch;\n" +
+  "\n" +
+  "	display: box;\n" +
+  "	box-orient: vertical;\n" +
+  "	box-align: stretch;\n" +
+  "}\n" +
+  "\n" +
+  ".vbox > * {\n" +
+  "	-webkit-box-flex: 0;\n" +
+  "	-moz-box-flex: 0;\n" +
+  "	box-flex: 0;\n" +
+  "	display: block;\n" +
+  "}\n" +
+  "\n" +
+  ".spacer {\n" +
+  "	-webkit-box-flex: 1;\n" +
+  "	-moz-box-flex: 1;\n" +
+  "	box-flex: 1;\n" +
+  "}\n" +
+  "\n" +
+  ".reverse {\n" +
+  "	-webkit-box-direction: reverse;\n" +
+  "	-moz-box-direction: reverse;\n" +
+  "	box-direction: reverse;\n" +
+  "}\n" +
+  "\n" +
+  ".boxFlex0 {\n" +
+  "	-webkit-box-flex: 0;\n" +
+  "	-moz-box-flex: 0;\n" +
+  "	box-flex: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".boxFlex1, .boxFlex {\n" +
+  "	-webkit-box-flex: 1;\n" +
+  "	-moz-box-flex: 1;\n" +
+  "	box-flex: 1;\n" +
+  "}\n" +
+  "\n" +
+  ".boxFlex2 {\n" +
+  "	-webkit-box-flex: 2;\n" +
+  "	-moz-box-flex: 2;\n" +
+  "	box-flex: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".boxGroup1 {\n" +
+  "	-webkit-box-flex-group: 1;\n" +
+  "	-moz-box-flex-group: 1;\n" +
+  "	box-flex-group: 1;\n" +
+  "}\n" +
+  "\n" +
+  ".boxGroup2 {\n" +
+  "	-webkit-box-flex-group: 2;\n" +
+  "	-moz-box-flex-group: 2;\n" +
+  "	box-flex-group: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".start {\n" +
+  "	-webkit-box-pack: start;\n" +
+  "	-moz-box-pack: start;\n" +
+  "	box-pack: start;\n" +
+  "}\n" +
+  "\n" +
+  ".end {\n" +
+  "	-webkit-box-pack: end;\n" +
+  "	-moz-box-pack: end;\n" +
+  "	box-pack: end;\n" +
+  "}\n" +
+  "\n" +
+  ".center {\n" +
+  "	-webkit-box-pack: center;\n" +
+  "	-moz-box-pack: center;\n" +
+  "	box-pack: center;\n" +
+  "}\n" +
+  "\n" +
+  "/*\n" +
+  "    clearfix\n" +
+  "*/\n" +
+  "\n" +
+  ".clearfix:after {\n" +
+  "	content: \".\";\n" +
+  "	display: block;\n" +
+  "	clear: both;\n" +
+  "	visibility: hidden;\n" +
+  "	line-height: 0;\n" +
+  "	height: 0;\n" +
+  "}\n" +
+  "\n" +
+  "html[xmlns] .clearfix {\n" +
+  "	display: block;\n" +
+  "}\n" +
+  "\n" +
+  "* html .clearfix {\n" +
+  "	height: 1%;\n" +
+  "}");
+
+define("text!doc/site/iphone.css", [], "#wrapper {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column1 {\n" +
+  "    margin:0 16px 0 15px;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .signature {\n" +
+  "    font-size:18px;\n" +
+  "    bottom:0;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI {\n" +
+  "    font-size:22px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI {\n" +
+  "    font-size:22px;\n" +
+  "}\n" +
+  "\n" +
+  "PRE{\n" +
+  "    font-size:22px;\n" +
+  "}\n" +
+  "");
+
+define("text!doc/site/style.css", [], "body {\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "    background-color:#e6f5fc;\n" +
+  "    \n" +
+  "}\n" +
+  "\n" +
+  "H2, H3, H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "}\n" +
+  "\n" +
+  "H2 {\n" +
+  "    font-size:28px;\n" +
+  "    color:#263842;\n" +
+  "    padding-bottom:6px;\n" +
+  "}\n" +
+  "\n" +
+  "H3 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:22px;\n" +
+  "    color:#253741;\n" +
+  "    margin-top:43px;\n" +
+  "    margin-bottom:8px;\n" +
+  "}\n" +
+  "\n" +
+  "H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:21px;\n" +
+  "    color:#222222;\n" +
+  "    margin-bottom:4px;\n" +
+  "}\n" +
+  "\n" +
+  "P {\n" +
+  "    padding:13px 0;\n" +
+  "    margin:0;\n" +
+  "    line-height:22px;\n" +
+  "}\n" +
+  "\n" +
+  "UL{\n" +
+  "    line-height : 22px;\n" +
+  "}\n" +
+  "\n" +
+  "PRE{\n" +
+  "    background : #333;\n" +
+  "    color : white;\n" +
+  "    padding : 10px;\n" +
+  "}\n" +
+  "\n" +
+  "#header {\n" +
+  "    height : 227px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background: url(images/background.png) repeat-x 0 0;\n" +
+  "    border-bottom:1px solid #c9e8fa;   \n" +
+  "}\n" +
+  "\n" +
+  "#header .content .signature {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:11px;\n" +
+  "    color:#ebe4d6;\n" +
+  "    position:absolute;\n" +
+  "    bottom:5px;\n" +
+  "    right:42px;\n" +
+  "    letter-spacing : 1px;\n" +
+  "}\n" +
+  "\n" +
+  ".content {\n" +
+  "    width:970px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin:0 auto;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content {\n" +
+  "    height:184px;\n" +
+  "    margin-top:22px;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .logo {\n" +
+  "    width  : 282px;\n" +
+  "    height : 184px;\n" +
+  "    background:url(images/logo.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:0;\n" +
+  "    left:0;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .title {\n" +
+  "    width  : 605px;\n" +
+  "    height : 58px;\n" +
+  "    background:url(images/ace.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:98px;\n" +
+  "    left:329px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper {\n" +
+  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
+  "    min-height:250px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content {\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:14px;\n" +
+  "    color:#222222;\n" +
+  "    width:1000px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column1 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:315px;\n" +
+  "    margin-right:31px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column2 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:600px;\n" +
+  "    padding-top:47px;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github {\n" +
+  "    width:310px;\n" +
+  "    height:80px;\n" +
+  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin-top:49px;\n" +
+  "    cursor:pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github:hover {\n" +
+  "    background-position:0 -80px;\n" +
+  "}\n" +
+  "\n" +
+  ".divider {\n" +
+  "    height:3px;\n" +
+  "    background-color:#bedaea;\n" +
+  "    margin-bottom:3px;\n" +
+  "}\n" +
+  "\n" +
+  ".menu {\n" +
+  "    padding:23px 0 0 24px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.content-list {\n" +
+  "    padding:15px;\n" +
+  "    margin:0;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list {\n" +
+  "    padding:0;\n" +
+  "    margin:0 0 20px 0;\n" +
+  "    list-style-type:none;\n" +
+  "    line-height : 16px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI {\n" +
+  "    color:#2557b4;\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:14px;\n" +
+  "    padding:7px 0;\n" +
+  "    border-bottom:1px dotted #d6e2e7;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI:last-child {\n" +
+  "    border-bottom:0;\n" +
+  "}\n" +
+  "\n" +
+  "A {\n" +
+  "    color:#2557b4;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "P#first{\n" +
+  "    background : rgba(255,255,255,0.5);\n" +
+  "    padding : 20px;\n" +
+  "    font-size : 16px;\n" +
+  "    line-height : 24px;\n" +
+  "    margin : 0 0 20px 0;\n" +
+  "}\n" +
+  "\n" +
+  "#footer {\n" +
+  "    height:40px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
+  "    position:relative;\n" +
+  "    margin-top:40px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer {\n" +
+  "    padding:0;\n" +
+  "    margin:8px 11px 0 0;\n" +
+  "    list-style-type:none;\n" +
+  "    float:right;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI {\n" +
+  "    color:white;\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:12px;\n" +
+  "    display:inline-block;\n" +
+  "    margin:0 1px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A {\n" +
+  "    color:#8dd0ff;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "");
+
+define("text!lib/ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
+  "\n" +
+  "\n" +
+  ".ace_editor {\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "    font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_scroller {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: scroll;\n" +
+  "    overflow-y: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_content {\n" +
+  "    position: absolute;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_composition {\n" +
+  "    position: absolute;\n" +
+  "    background: #555;\n" +
+  "    color: #DDD;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: hidden;\n" +
+  "    height: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_error {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_warning {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: scroll;\n" +
+  "    right: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb div {\n" +
+  "    position: absolute;\n" +
+  "    width: 1px;\n" +
+  "    left: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_print_margin_layer {\n" +
+  "    z-index: 0;\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    left: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_print_margin {\n" +
+  "    position: absolute;\n" +
+  "    height: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor textarea {\n" +
+  "    position: fixed;\n" +
+  "    z-index: -1;\n" +
+  "    width: 10px;\n" +
+  "    height: 30px;\n" +
+  "    opacity: 0;\n" +
+  "    background: transparent;\n" +
+  "    appearance: none;\n" +
+  "    -moz-appearance: none;\n" +
+  "    border: none;\n" +
+  "    resize: none;\n" +
+  "    outline: none;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_layer {\n" +
+  "    z-index: 1;\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    white-space: nowrap;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_text-layer {\n" +
+  "    color: black;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cjk {\n" +
+  "    display: inline-block;\n" +
+  "    text-align: center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor-layer {\n" +
+  "    z-index: 4;\n" +
+  "    cursor: text;\n" +
+  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor {\n" +
+  "    z-index: 4;\n" +
+  "    position: absolute;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor.ace_hidden {\n" +
+  "    opacity: 0.2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line {\n" +
+  "    white-space: nowrap;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer {\n" +
+  "    cursor: text;\n" +
+  "    pointer-events: none;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_step {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 3;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selection {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_bracket {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_active_line {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selected_word {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 6;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line .ace_fold {\n" +
+  "    cursor: pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  "  cursor: move;\n" +
+  "}\n" +
+  "");
+
+define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
+  "body { max-width: 60em; }\n" +
+  ".title  { text-align: center; }\n" +
+  ".todo   { color: red; }\n" +
+  ".done   { color: green; }\n" +
+  ".tag    { background-color:lightblue; font-weight:normal }\n" +
+  ".target { }\n" +
+  ".timestamp { color: grey }\n" +
+  ".timestamp-kwd { color: CadetBlue }\n" +
+  "p.verse { margin-left: 3% }\n" +
+  "pre {\n" +
+  "  border: 1pt solid #AEBDCC;\n" +
+  "  background-color: #F3F5F7;\n" +
+  "  padding: 5pt;\n" +
+  "  font-family: monospace;\n" +
+  "  font-size: 90%;\n" +
+  "  overflow:auto;\n" +
+  "}\n" +
+  "pre.src {\n" +
+  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
+  "}\n" +
+  "table { border-collapse: collapse; }\n" +
+  "td, th { vertical-align: top; }\n" +
+  "dt { font-weight: bold; }\n" +
+  "div.figure { padding: 0.5em; }\n" +
+  "div.figure p { text-align: center; }\n" +
+  ".linenr { font-size:smaller }\n" +
+  ".code-highlighted {background-color:#ffff00;}\n" +
+  ".org-info-js_info-navigation { border-style:none; }\n" +
+  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
+  "  white-space:nowrap; }\n" +
+  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
+  "  font-weight:bold; }\n" +
+  "\n" +
+  "sup {\n" +
+  "  vertical-align: baseline;\n" +
+  "  position: relative;\n" +
+  "  top: -0.5em;\n" +
+  "  font-size: 80%;\n" +
+  "}\n" +
+  "\n" +
+  "sup a:link, sup a:visited {\n" +
+  "  text-decoration: none;\n" +
+  "  color: #c00;\n" +
+  "}\n" +
+  "\n" +
+  "sup a:before { content: \"[\"; color: #999; }\n" +
+  "sup a:after { content: \"]\"; color: #999; }\n" +
+  "\n" +
+  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
+  "\n" +
+  "#postamble {\n" +
+  "  color: #777;\n" +
+  "  font-size: 90%;\n" +
+  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
+  "  margin-top: 2em;\n" +
+  "  padding-left: 2em;\n" +
+  "  padding-right: 2em;\n" +
+  "  text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#postamble p { margin: 0; }\n" +
+  "\n" +
+  "#footnotes { border-top: 1px solid #000; }\n" +
+  "\n" +
+  "h1 { font-size: 200% }\n" +
+  "h2 { font-size: 175% }\n" +
+  "h3 { font-size: 150% }\n" +
+  "h4 { font-size: 125% }\n" +
+  "\n" +
+  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
+  "\n" +
+  "@media print {\n" +
+  "  html { font-size: 11pt; }\n" +
+  "}\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
+  "#cockpitInput { padding-left: 16px; }\n" +
+  "\n" +
+  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
+  "\n" +
+  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
+  ".cptCompletion.VALID { background: #FFF; }\n" +
+  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
+  ".cptCompletion.INVALID { background: #DDD; }\n" +
+  ".cptCompletion span { color: #FFF; }\n" +
+  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
+  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
+  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
+  "\n" +
+  "\n" +
+  ".cptHints {\n" +
+  "  color: #000;\n" +
+  "  position: absolute;\n" +
+  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
+  "  background: rgba(250, 250, 250, 0.8);\n" +
+  "  -moz-border-radius-topleft: 10px;\n" +
+  "  -moz-border-radius-topright: 10px;\n" +
+  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
+  "  z-index: 1000;\n" +
+  "  padding: 8px;\n" +
+  "  display: none;\n" +
+  "}\n" +
+  "\n" +
+  ".cptFocusPopup { display: block; }\n" +
+  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
+  "\n" +
+  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "\n" +
+  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
+  ".cptRowIn {\n" +
+  "  display: box; display: -moz-box; display: -webkit-box;\n" +
+  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
+  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
+  "  color: #333;\n" +
+  "  background-color: #EEE;\n" +
+  "  width: 100%;\n" +
+  "  font-family: consolas, courier, monospace;\n" +
+  "}\n" +
+  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
+  ".cptRowIn > img { cursor: pointer; }\n" +
+  ".cptHover { display: none; }\n" +
+  ".cptRowIn:hover > .cptHover { display: block; }\n" +
+  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
+  ".cptOutTyped {\n" +
+  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
+  "  font-weight: bold; color: #000; font-size: 120%;\n" +
+  "}\n" +
+  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
+  ".cptRowOutput strong,\n" +
+  ".cptRowOutput b,\n" +
+  ".cptRowOutput th,\n" +
+  ".cptRowOutput h1,\n" +
+  ".cptRowOutput h2,\n" +
+  ".cptRowOutput h3 { color: #000; }\n" +
+  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
+  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
+  ".cptRowOutput input[type=password],\n" +
+  ".cptRowOutput input[type=text],\n" +
+  ".cptRowOutput textarea {\n" +
+  "  color: #000; font-size: 120%;\n" +
+  "  background: transparent; padding: 3px;\n" +
+  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
+  "}\n" +
+  ".cptRowOutput table,\n" +
+  ".cptRowOutput td,\n" +
+  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
+  ".cptRowOutput .right { text-align: right; }\n" +
+  "");
+
+define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
+  "  border: 2px solid rgb(159, 159, 159);\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_editor.ace_focus {\n" +
+  "  border: 2px solid #327fbd;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter {\n" +
+  "  width: 50px;\n" +
+  "  background: #e8e8e8;\n" +
+  "  color: #333;\n" +
+  "  overflow : hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter-layer {\n" +
+  "  width: 100%;\n" +
+  "  text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {\n" +
+  "  padding-right: 6px;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_print_margin {\n" +
+  "  width: 1px;\n" +
+  "  background: %printMargin%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_scroller {\n" +
+  "  background-color: %background%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_text-layer {\n" +
+  "  cursor: text;\n" +
+  "  color: %foreground%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_cursor {\n" +
+  "  border-left: 2px solid %cursor%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_cursor.ace_overwrite {\n" +
+  "  border-left: 0px;\n" +
+  "  border-bottom: 1px solid %overwrite%;\n" +
+  "}\n" +
+  " \n" +
+  ".%cssClass% .ace_marker-layer .ace_selection {\n" +
+  "  background: %selection%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_step {\n" +
+  "  background: %step%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
+  "  margin: -1px 0 0 -1px;\n" +
+  "  border: 1px solid %bracket%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_active_line {\n" +
+  "  background: %active_line%;\n" +
+  "}\n" +
+  "\n" +
+  "       \n" +
+  ".%cssClass% .ace_invisible {\n" +
+  "  %invisible%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_keyword {\n" +
+  "  %keyword%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_keyword.ace_operator {\n" +
+  "  %keyword.operator%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant {\n" +
+  "  %constant%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_language {\n" +
+  "  %constant.language%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_library {\n" +
+  "  %constant.library%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_numeric {\n" +
+  "  %constant.numeric%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid {\n" +
+  "  %invalid%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid.ace_illegal {\n" +
+  "  %invalid.illegal%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid.ace_deprecated {\n" +
+  "  %invalid.deprecated%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_support {\n" +
+  "  %support%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_support.ace_function {\n" +
+  "  %support.function%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_function.ace_buildin {\n" +
+  "  %function.buildin%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_string {\n" +
+  "  %string%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_string.ace_regexp {\n" +
+  "  %string.regexp%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment {\n" +
+  "  %comment%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment.ace_doc {\n" +
+  "  %comment.doc%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment.ace_doc.ace_tag {\n" +
+  "  %comment.doc.tag%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_variable {\n" +
+  "  %variable%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_variable.ace_language {\n" +
+  "  %variable.language%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_xml_pe {\n" +
+  "  %xml_pe%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta {\n" +
+  "  %meta%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta.ace_tag {\n" +
+  "  %meta.tag%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta.ace_tag.ace_input {\n" +
+  "  %ace.meta.tag.input%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
+  "  %entity.other.attribute-name%\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  ".%cssClass% .ace_collab.ace_user1 {\n" +
+  "  %collab.user1%   \n" +
+  "}");
+
+define("text!docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
+
+define("text!styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
+  "\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
 
