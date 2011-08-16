@@ -95,7 +95,7 @@ exports.launch = function(env) {
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
-    var loreIpsum = document.getElementById("plaintext").innerHTML;
+    var loreIpsum = require("text!demo/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -105,85 +105,83 @@ exports.launch = function(env) {
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSession(require("text!demo/docs/javascript.js"));
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSession(require("text!demo/docs/css.css"));
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.scss = new EditSession(document.getElementById("scsstext").innerHTML);
+    docs.scss = new EditSession(require("text!demo/docs/scss.scss"));
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSession(require("text!demo/docs/html.html"));
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
+    docs.python = new EditSession(require("text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
+    docs.php = new EditSession(require("text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(document.getElementById("javatext").innerHTML);
+    docs.java = new EditSession(require("text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby = new EditSession(require("text!demo/docs/ruby.rb"));
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp = new EditSession(require("text!demo/docs/csharp.cs"));
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp = new EditSession(require("text!demo/docs/cpp.cpp"));
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(document.getElementById("coffeetext").innerHTML);
+    docs.coffee = new EditSession(require("text!demo/docs/coffeescript.coffee"));
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.json = new EditSession(document.getElementById("jsontext").innerHTML);
+    docs.json = new EditSession(require("text!demo/docs/json.json"));
     docs.json.setMode(new JsonMode());
     docs.json.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
+    docs.perl = new EditSession(require("text!demo/docs/perl.pl"));
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.clojure = new EditSession(document.getElementById("clojuretext").innerHTML);
+    docs.clojure = new EditSession(require("text!demo/docs/clojure.clj"));
     docs.clojure.setMode(new ClojureMode());
     docs.clojure.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml = new EditSession(require("text!demo/docs/ocaml.ml"));
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg = new EditSession(require("text!demo/docs/svg.svg"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
+    docs.textile = new EditSession(require("text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.groovy = new EditSession(document.getElementById("groovy").innerHTML);
+    docs.groovy = new EditSession(require("text!demo/docs/groovy.groovy"));
     docs.groovy.setMode(new GroovyMode());
     docs.groovy.setUndoManager(new UndoManager());
 
-    docs.scala = new EditSession(document.getElementById("scala").innerHTML);
+    docs.scala = new EditSession(require("text!demo/docs/scala.scala"));
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
-    
-    
 
     // Add a "name" property to all docs
     for (var doc in docs) {
@@ -461,7 +459,7 @@ exports.launch = function(env) {
         var onCheck = function() {
             callback(!!el.checked);
         };
-        el.onclick = onCheck;
+        el.onCheckck = onCheck;
         onCheck();
     }
 
@@ -562,7 +560,7 @@ exports.launch = function(env) {
         bindKey: {
             win: "Ctrl-S",
             mac: "Command-S",
-            sender: "editor|cli"
+            sender: "editor"
         },
         exec: function() {
             alert("Fake Save File");
