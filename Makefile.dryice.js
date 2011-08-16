@@ -80,7 +80,6 @@ console.log('# ace ---------');
 
 var aceProject = [
     aceHome + '/support/pilot/lib',
-    aceHome + '/support/cockpit/lib',
     aceHome + '/lib',
     aceHome
 ];
@@ -310,51 +309,6 @@ project.assumeAllFilesLoaded();
     });
 });
 
-console.log('# cockpit ---------');
-
-project.assumeAllFilesLoaded();
-
-var cockpit = copy.createDataObject();
-copy({
-    source: [
-        copy.source.commonjs({
-            project: project,
-            require: [ 'cockpit/index' ]
-        })
-    ],
-    filter: [ copy.filter.moduleDefines ],
-    dest: cockpit
-});
-copy({
-    source: {
-        root: aceHome + '/support/cockpit/lib',
-        include: /.*\.css$|.*\.html$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.addDefines ],
-    dest: cockpit
-});
-copy({
-    source: {
-        root: aceHome + '/support/cockpit/lib',
-        include: /.*\.png$|.*\.gif$/,
-        exclude: /tests?\//
-    },
-    filter: [ copy.filter.base64 ],
-    dest: cockpit
-});
-
-// Create the compressed and uncompressed output files
-copy({
-    source: cockpit,
-    filter: copy.filter.uglifyjs,
-    dest: 'build/src/cockpit.js'
-});
-copy({
-    source: cockpit,
-    dest: 'build/src/cockpit-uncompressed.js'
-});
-
 function demo() {
     console.log('# kitchen sink ---------');
 
@@ -382,7 +336,7 @@ function demo() {
         source: [
             copy.source.commonjs({
                 project: project,
-                require: [ "cockpit/index", "pilot/index", "ace/defaults", "demo/boot" ]
+                require: [ "pilot/index", "ace/defaults", "demo/boot" ]
             })
         ],
         filter: [ copy.filter.moduleDefines ],
@@ -391,7 +345,7 @@ function demo() {
     copy({
         source: {
             root: project,
-            include: /.*\.css$/,
+            include: /demo\/docs\/.*$/,
             exclude: /tests?\//
         },
         filter: [ copy.filter.addDefines ],
@@ -399,8 +353,8 @@ function demo() {
     });
     copy({
         source: {
-            root: aceHome + '/support/cockpit/lib',
-            include: /.*\.css$|.*\.html$/,
+            root: project,
+            include: /.*\.css$/,
             exclude: /tests?\//
         },
         filter: [ copy.filter.addDefines ],
