@@ -56,13 +56,25 @@ var BrowserFocus = function(win) {
     this._isFocused = true;
     
     var _self = this;
-    event.addListener(win, "blur", function(e) {
-        _self._setFocused(false);
-    });
+    // IE < 9 supports focusin and focusout events
+    if ("onfocusin" in win.document) {
+        event.addListener(win.document, "focusin", function(e) {
+            _self._setFocused(true);
+        });
 
-    event.addListener(win, "focus", function(e) {
-        _self._setFocused(true);
-    });
+        event.addListener(win.document, "focusout", function(e) {
+            _self._setFocused(!!e.toElement);
+        });
+    }
+    else {
+        event.addListener(win, "blur", function(e) {
+            _self._setFocused(false);
+        });
+
+        event.addListener(win, "focus", function(e) {
+            _self._setFocused(true);
+        });
+    }
 };
 
 (function(){
