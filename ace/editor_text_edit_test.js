@@ -46,13 +46,13 @@ var Buffer = require("ace/model/buffer").Buffer;
 var Editor = require("ace/editor").Editor;
 var JavaScriptMode = require("ace/mode/javascript").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
-var MockRenderer = require("ace/view/window_view_mock").MockRenderer;
+var WindowViewMock = require("ace/view/window_view_mock").WindowViewMock;
 var assert = require("ace/test/assertions");
 
 module.exports = {
     "test: delete line from the middle" : function() {
         var session = new Buffer(["a", "b", "c", "d"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 1);
         editor.removeLines();
@@ -78,7 +78,7 @@ module.exports = {
 
     "test: delete multiple selected lines" : function() {
         var session = new Buffer(["a", "b", "c", "d"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectDown();
@@ -90,7 +90,7 @@ module.exports = {
 
     "test: delete first line" : function() {
         var session = new Buffer(["a", "b", "c"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.removeLines();
 
@@ -100,7 +100,7 @@ module.exports = {
 
     "test: delete last should also delete the new line of the previous line" : function() {
         var session = new Buffer(["a", "b", "c", ""].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(3, 0);
 
@@ -115,7 +115,7 @@ module.exports = {
 
     "test: indent block" : function() {
         var session = new Buffer(["a12345", "b12345", "c12345"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 3);
         editor.getSelection().selectDown();
@@ -133,7 +133,7 @@ module.exports = {
 
     "test: indent selected lines" : function() {
         var session = new Buffer(["a12345", "b12345", "c12345"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 0);
         editor.getSelection().selectDown();
@@ -144,7 +144,7 @@ module.exports = {
 
     "test: no auto indent if cursor is before the {" : function() {
         var session = new Buffer("{", new JavaScriptMode());
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 0);
         editor.onTextInput("\n");
@@ -153,7 +153,7 @@ module.exports = {
 	
     "test: outdent block" : function() {
         var session = new Buffer(["        a12345", "    b12345", "        c12345"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 5);
         editor.getSelection().selectDown();
@@ -178,7 +178,7 @@ module.exports = {
 
     "test: outent without a selection should update cursor" : function() {
         var session = new Buffer("        12");
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 3);
         editor.blockOutdent("  ");
@@ -189,7 +189,7 @@ module.exports = {
 
     "test: comment lines should perserve selection" : function() {
         var session = new Buffer(["  abc", "cde"].join("\n"), new JavaScriptMode());
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 2);
         editor.getSelection().selectDown();
@@ -204,7 +204,7 @@ module.exports = {
 
     "test: uncomment lines should perserve selection" : function() {
         var session = new Buffer(["//  abc", "//cde"].join("\n"), new JavaScriptMode());
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 1);
         editor.getSelection().selectDown();
@@ -219,7 +219,7 @@ module.exports = {
 
     "test: toggle comment lines twice should return the original text" : function() {
         var session = new Buffer(["  abc", "cde", "fg"], new JavaScriptMode());
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 0);
         editor.getSelection().selectDown();
@@ -235,7 +235,7 @@ module.exports = {
     "test: comment lines - if the selection end is at the line start it should stay there": function() {
         //select down
         var session = new Buffer(["abc", "cde"].join("\n"), new JavaScriptMode());
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 0);
         editor.getSelection().selectDown();
@@ -245,7 +245,7 @@ module.exports = {
 
         // select up
         var session = new Buffer(["abc", "cde"].join("\n"), new JavaScriptMode());
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 0);
         editor.getSelection().selectUp();
@@ -256,7 +256,7 @@ module.exports = {
 
     "test: move lines down should select moved lines" : function() {
         var session = new Buffer(["11", "22", "33", "44"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(0, 1);
         editor.getSelection().selectDown();
@@ -283,7 +283,7 @@ module.exports = {
 
     "test: move lines up should select moved lines" : function() {
         var session = new Buffer(["11", "22", "33", "44"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(2, 1);
         editor.getSelection().selectDown();
@@ -304,7 +304,7 @@ module.exports = {
     "test: move line without active selection should move cursor to start of the moved line" : function()
     {
         var session = new Buffer(["11", "22", "33", "44"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 1);
         editor.clearSelection();
@@ -322,7 +322,7 @@ module.exports = {
 
     "test: copy lines down should select lines and place cursor at the selection start" : function() {
         var session = new Buffer(["11", "22", "33", "44"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectDown();
@@ -337,7 +337,7 @@ module.exports = {
 
     "test: copy lines up should select lines and place cursor at the selection start" : function() {
         var session = new Buffer(["11", "22", "33", "44"].join("\n"));
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectDown();
@@ -352,7 +352,7 @@ module.exports = {
 
     "test: input a tab with soft tab should convert it to spaces" : function() {
         var session = new Buffer("");
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         session.setTabSize(2);
         session.setUseSoftTabs(true);
@@ -367,7 +367,7 @@ module.exports = {
 
     "test: input tab without soft tabs should keep the tab character" : function() {
         var session = new Buffer("");
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         session.setUseSoftTabs(false);
 
@@ -381,7 +381,7 @@ module.exports = {
         session.setUndoManager(undoManager);
 
         var initialText = session.toString();
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
 
         editor.removeLines();
         var step1 = session.toString();
@@ -418,7 +418,7 @@ module.exports = {
     "test: remove left should remove character left of the cursor" : function() {
         var session = new Buffer(["123", "456"]);
 
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 1);
         editor.removeLeft();
         assert.equal(session.toString(), "123\n56");
@@ -427,7 +427,7 @@ module.exports = {
     "test: remove left should remove line break if cursor is at line start" : function() {
         var session = new Buffer(["123", "456"]);
 
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 0);
         editor.removeLeft();
         assert.equal(session.toString(), "123456");
@@ -438,7 +438,7 @@ module.exports = {
         session.setUseSoftTabs(true);
         session.setTabSize(4);
 
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 8);
         editor.removeLeft();
         assert.equal(session.toString(), "123\n    456");
@@ -447,7 +447,7 @@ module.exports = {
     "test: transpose at line start should be a noop": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 0);
         editor.transposeLetters();
         
@@ -457,7 +457,7 @@ module.exports = {
     "test: transpose in line should swap the charaters before and after the cursor": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 2);
         editor.transposeLetters();
         
@@ -467,7 +467,7 @@ module.exports = {
     "test: transpose at line end should swap the last two characters": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 4);
         editor.transposeLetters();
         
@@ -477,7 +477,7 @@ module.exports = {
     "test: transpose with non empty selection should be a noop": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 1);
         editor.getSelection().selectRight();
         editor.transposeLetters();
@@ -488,7 +488,7 @@ module.exports = {
     "test: transpose should move the cursor behind the last swapped character": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 2);
         editor.transposeLetters();
         assert.position(editor.getCursorPosition(), 1, 3);
@@ -497,7 +497,7 @@ module.exports = {
     "test: remove to line end": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 2);
         editor.removeToLineEnd();
         assert.equal(session.getValue(), ["123", "45", "89"].join("\n"));
@@ -506,7 +506,7 @@ module.exports = {
     "test: remove to line end at line end should remove the new line": function() {
         var session = new Buffer(["123", "4567", "89"]);
         
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         editor.moveCursorTo(1, 4);
         editor.removeToLineEnd();
         assert.position(editor.getCursorPosition(), 1, 4);

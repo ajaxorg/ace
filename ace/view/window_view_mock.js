@@ -40,8 +40,10 @@ define(function(require, exports, module) {
 
 var Window = require("ace/model/window").Window;
 
-exports.MockRenderer = exports.WindowViewMock = WindowViewMock = function() {
-    this.container = {};
+exports.WindowViewMock = WindowViewMock = function() {
+    this.container = {
+        appendChild: function() {}
+    };
     this.isWindowViewMock = true;
     this.model = new Window({});
 };

@@ -66,8 +66,8 @@ module.exports = {
         document.body.appendChild(el);
 
         var renderer = new WindowView(new Window(), el);
-        renderer.setPadding(0);
-        renderer.setSession(new Buffer("1234"));
+        renderer.model.setPadding(0);
+        renderer.model.setBuffer(new Buffer("1234"));
 
         assert.position(renderer.screenToTextCoordinates(0, 0), 0, 0);
         assert.position(renderer.screenToTextCoordinates(4, 0), 0, 0);

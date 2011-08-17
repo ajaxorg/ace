@@ -47,7 +47,7 @@ var lang = require("ace/lib/lang");
 var Buffer = require("ace/model/buffer").Buffer;
 var Editor = require("ace/editor").Editor;
 var UndoManager = require("ace/undomanager").UndoManager;
-var MockRenderer = require("ace/view/window_view_mock").MockRenderer;
+var WindowViewMock = require("ace/view/window_view_mock").WindowViewMock;
 var Range = require("ace/range").Range;
 var assert = require("ace/test/assertions");
 
@@ -381,7 +381,7 @@ module.exports = {
 
     "test issue 83": function() {
         var session = new Buffer("");
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         var document = session.getDocument();
 
         session.setUseWrapMode(true);
@@ -393,7 +393,7 @@ module.exports = {
 
     "test wrapMode init has to create wrapData array": function() {
         var session = new Buffer("foo bar\nfoo bar");
-        var editor = new Editor(new MockRenderer(), session);
+        var editor = new Editor(new WindowViewMock(), session);
         var document = session.getDocument();
 
         session.setUseWrapMode(true);

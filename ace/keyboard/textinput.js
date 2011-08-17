@@ -67,13 +67,14 @@ var TextInput = function(parentNode, host) {
         if (!copied) {
             var value = valueToSend || text.value;
             if (value) {
-                if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0)) {
+                if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0))
                     value = value.slice(0, -1);
-                    if (value)
-                        host.onTextInput(value, !pasted);
-                }
-                else {
-                    host.onTextInput(value, !pasted);
+
+                if (value) {
+                    if (pasted)
+                        host.onPaste(value);
+                    else
+                        host.onTextInput(value);
                 }
 
                 // If editor is no longer focused we quit immediately, since

@@ -314,13 +314,10 @@ var Editor = function(windowView, buffer) {
         }
     };
 
-    this.onTextInput = function(text, notPasted) {
-        if (!notPasted)
-            this._emit("paste", text);
-            
-        // In case the text was not pasted and we got only one character, then
+    this.onTextInput = function(text) {
+        // In case we got only one character, then
         // handel it as a command key stroke.
-        if (notPasted && text.length == 1) {
+        if (text.length == 1) {
             // Note: The `null` as `keyCode` is important here, as there are
             // some checks in the code for `keyCode == 0` meaning the text comes
             // from the keyBinding.onTextInput code path.
@@ -338,6 +335,11 @@ var Editor = function(windowView, buffer) {
         } else {
             this.keyBinding.onTextInput(text);
         }
+    };
+
+    this.onPaste = function(text) {
+        this._emit("paste", text);
+        this.keyBinding.onTextInput(text);
     };
 
     this.onCommandKey = function(e, hashId, keyCode) {

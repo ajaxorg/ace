@@ -257,6 +257,10 @@ var Window = exports.Window = function(theme, search) {
     
     // SELECTION HANDLING
     
+    this.getSelection = function() {
+        return this.selection;
+    };
+    
     this.centerSelection = function() {
          var range = this.getSelectionRange();
          var line = Math.floor(range.start.row + (range.end.row - range.start.row) / 2);
@@ -569,6 +573,10 @@ var Window = exports.Window = function(theme, search) {
         this.selection = buffer.getSelection();
         
         this._emit("changeBuffer", {oldValue: oldValue, value: buffer});
+    };
+    
+    this.getBuffer = function() {
+        return this.buffer;
     };
     
     this.setTheme = function(theme) {
