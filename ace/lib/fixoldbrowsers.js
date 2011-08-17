@@ -12,6 +12,8 @@
 
 define(function(require, exports, module) {
 
+require("ace/lib/regexp");
+
 /**
  * Brings an environment as close to ECMAScript 5 compliance
  * as is possible with the facilities of erstwhile engines.
