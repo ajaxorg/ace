@@ -174,10 +174,10 @@ exports.addMouseWheelListener = function(el, callback) {
             
             // some versions of Safari (e.g. 5.0.5) report insanely high
             // scroll values. These browsers require a higher factor
-            if (e.wheelDeltaY > max)
-                max = e.wheelDeltaY 
+            if (Math.abs(e.wheelDeltaY) > max)
+                max = Math.abs(e.wheelDeltaY) 
 
-            if (max > 1000)
+            if (max > 5000)
                 factor = 400;
             else
                 factor = 8;
