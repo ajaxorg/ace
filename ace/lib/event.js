@@ -128,9 +128,14 @@ if (document.documentElement.setCapture) {
             return exports.stopPropagation(e);
         }
 
+        var called = false;
         function onReleaseCapture(e) {
-            eventHandler && eventHandler(e);
-            releaseCaptureHandler && releaseCaptureHandler();
+            eventHandler(e);
+            
+            if (!called) {
+                called = true;
+                releaseCaptureHandler();
+            }
 
             exports.removeListener(el, "mousemove", eventHandler);
             exports.removeListener(el, "mouseup", onReleaseCapture);
