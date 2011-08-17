@@ -166,8 +166,6 @@ You can also run the tests in your browser by serving:
 
 This makes debugging failing tests way more easier.
 
-_Note_: As of 2011-05-21, only Chrome runs the tests.
-
 Contributing
 ------------
 
