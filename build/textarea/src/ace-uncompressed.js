@@ -3030,7 +3030,9 @@ exports.isLinux = (os == "linux");
 
 exports.isIE = 
     navigator.appName == "Microsoft Internet Explorer"
-    && parseFloat(navigator.userAgent.match(/MSIE ([0-9]+[\.0-9]+)/)[1])
+    && parseFloat(navigator.userAgent.match(/MSIE ([0-9]+[\.0-9]+)/)[1]);
+    
+exports.isOldIE = exports.isIE && exports.isIE < 9;
 
 /** Is this Firefox or related? */
 exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
@@ -5476,7 +5478,7 @@ exports.addMultiMouseDownListener = function(el, button, count, timeout, callbac
     };
 
     exports.addListener(el, "mousedown", listener);
-    useragent.isIE && exports.addListener(el, "dblclick", listener);
+    useragent.isOldIE && exports.addListener(el, "dblclick", listener);
 };
 
 function normalizeCommandKeys(callback, e, keyCode) {
@@ -6888,7 +6890,7 @@ var TextInput = function(parentNode, host) {
     };
     
     var onPropertyChange = function(e) {
-        if (useragent.isIE && text.value.charCodeAt(0) > 128) return;
+        if (useragent.isOldIE && text.value.charCodeAt(0) > 128) return;
         setTimeout(function() {
             if (!inCompostion)
                 sendText();
@@ -6939,7 +6941,7 @@ var TextInput = function(parentNode, host) {
     };
 
     event.addCommandKeyListener(text, host.onCommandKey.bind(host));
-    if (useragent.isIE) {
+    if (useragent.isOldIE) {
         var keytable = { 13:1, 27:1 };
         event.addListener(text, "keyup", function (e) {
             if (inCompostion && (!text.value || keytable[e.keyCode]))
@@ -13543,6 +13545,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.moveTextAreaToCursor = function(textarea) {
         // in IE the native cursor always shines through
+        // this persists in IE9
         if (useragent.isIE)
             return;
 
@@ -18085,7 +18088,7 @@ window.__ace_shadowed__.transformTextarea = function(element) {
         overflow: "auto",
         fontSize: "14px"
     };
-    if (!UA.isIE || UA.isIE >= 9) {
+    if (!UA.isOldIE) {
         settingDivStyles.backgroundColor = "rgba(0, 0, 0, 0.6)";
     } else {
         settingDivStyles.backgroundColor = "#333";
