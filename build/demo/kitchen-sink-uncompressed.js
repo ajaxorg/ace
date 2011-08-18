@@ -18863,18 +18863,7 @@ oop.inherits(Mode, TextMode);
             if (match) {
                 indent += tab;
             }
-        } else if (state == "doc-start") {
-            if (endState == "start") {
-                return "";
-            }
-            var match = line.match(/^\s*(\/?)\*/);
-            if (match) {
-                if (match[1]) {
-                    indent += " ";
-                }
-                indent += "* ";
-            }
-        }
+        } 
 
         return indent;
     };
