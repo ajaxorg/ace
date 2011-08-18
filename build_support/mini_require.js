@@ -46,13 +46,7 @@
 var global = (function() {
     return this;
 })();
-    
-// if we find an existing require function use it.
-if (global.require && global.define) {
-    require.packaged = true;
-    return;
-}
-    
+
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
@@ -110,12 +104,13 @@ var _require = function(module, callback) {
             return _require.original.apply(window, arguments);
     }
 };
+_require.packaged = true;
 
 if (global.require)
     _require.original = global.require;
     
 global.require = _require;
-require.packaged = true;
+
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
