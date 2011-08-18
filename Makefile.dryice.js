@@ -108,10 +108,7 @@ var project = copy.createCommonJsProject(aceProject);
 
 
 function filterTextPlugin(text) {
-    return text.replace(/(['"])text\!/g, "$1text/");
-    /*return text
-        .replace(/define\(\s*['"]text\!\)/g, "text/")
-        .replace(/require\(\s*['"]text\!\)/g, "text/")*/
+    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text/");
 }
 
 var ace = copy.createDataObject();
@@ -363,11 +360,12 @@ function demo() {
 
     copy({
         source: demo,
-        filter: copy.filter.uglifyjs,
+        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
         dest: 'build/demo/kitchen-sink.js'
     });
     copy({
         source: demo,
+        filter: [ filterTextPlugin ],
         dest: 'build/demo/kitchen-sink-uncompressed.js'
     });
 }

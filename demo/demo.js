@@ -43,6 +43,7 @@ define(function(require, exports, module) {
 exports.launch = function(env) {
     var canon = require("pilot/canon");
     var event = require("pilot/event");
+    var net = require("ace/lib/net");
     var Range = require("ace/range").Range;
     var Editor = require("ace/editor").Editor;
     var Renderer = require("ace/virtual_renderer").VirtualRenderer;
@@ -95,7 +96,7 @@ exports.launch = function(env) {
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
-    var loreIpsum = require("text!demo/docs/plaintext.txt");
+    var loreIpsum = require("ace/requirejs/text!demo/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -105,80 +106,80 @@ exports.launch = function(env) {
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(require("text!demo/docs/javascript.js"));
+    docs.js = new EditSession(require("ace/requirejs/text!demo/docs/javascript.js"));
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(require("text!demo/docs/css.css"));
+    docs.css = new EditSession(require("ace/requirejs/text!demo/docs/css.css"));
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.scss = new EditSession(require("text!demo/docs/scss.scss"));
+    docs.scss = new EditSession(require("ace/requirejs/text!demo/docs/scss.scss"));
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(require("text!demo/docs/html.html"));
+    docs.html = new EditSession(require("ace/requirejs/text!demo/docs/html.html"));
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(require("text!demo/docs/python.py"));
+    docs.python = new EditSession(require("ace/requirejs/text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(require("text!demo/docs/php.php"));
+    docs.php = new EditSession(require("ace/requirejs/text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(require("text!demo/docs/java.java"));
+    docs.java = new EditSession(require("ace/requirejs/text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(require("text!demo/docs/ruby.rb"));
+    docs.ruby = new EditSession(require("ace/requirejs/text!demo/docs/ruby.rb"));
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(require("text!demo/docs/csharp.cs"));
+    docs.csharp = new EditSession(require("ace/requirejs/text!demo/docs/csharp.cs"));
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(require("text!demo/docs/cpp.cpp"));
+    docs.c_cpp = new EditSession(require("ace/requirejs/text!demo/docs/cpp.cpp"));
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(require("text!demo/docs/coffeescript.coffee"));
+    docs.coffee = new EditSession(require("ace/requirejs/text!demo/docs/coffeescript.coffee"));
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.json = new EditSession(require("text!demo/docs/json.json"));
+    docs.json = new EditSession(require("ace/requirejs/text!demo/docs/json.json"));
     docs.json.setMode(new JsonMode());
     docs.json.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(require("text!demo/docs/perl.pl"));
+    docs.perl = new EditSession(require("ace/requirejs/text!demo/docs/perl.pl"));
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.clojure = new EditSession(require("text!demo/docs/clojure.clj"));
+    docs.clojure = new EditSession(require("ace/requirejs/text!demo/docs/clojure.clj"));
     docs.clojure.setMode(new ClojureMode());
     docs.clojure.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(require("text!demo/docs/ocaml.ml"));
+    docs.ocaml = new EditSession(require("ace/requirejs/text!demo/docs/ocaml.ml"));
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(require("text!demo/docs/svg.svg"));
+    docs.svg = new EditSession(require("ace/requirejs/text!demo/docs/svg.svg"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(require("text!demo/docs/textile.textile"));
+    docs.textile = new EditSession(require("ace/requirejs/text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.groovy = new EditSession(require("text!demo/docs/groovy.groovy"));
+    docs.groovy = new EditSession(require("ace/requirejs/text!demo/docs/groovy.groovy"));
     docs.groovy.setMode(new GroovyMode());
     docs.groovy.setUndoManager(new UndoManager());
 
-    docs.scala = new EditSession(require("text!demo/docs/scala.scala"));
+    docs.scala = new EditSession(require("ace/requirejs/text!demo/docs/scala.scala"));
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
@@ -685,17 +686,7 @@ function loadTheme(name, callback) {
     themes[name] = 1;
     var base = name.split("/").pop();
     var fileName = "src/theme-" + base + ".js";
-    loadScriptFile(fileName, callback)
-}
-
-function loadScriptFile(path, callback) {
-    var head = document.getElementsByTagName('head')[0];
-    var s = document.createElement('script');
-
-    s.src = path;
-    head.appendChild(s);
-    
-    s.onload = callback;
+    net.loadScript(fileName, callback)
 }
 
 });
