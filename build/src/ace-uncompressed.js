@@ -3034,7 +3034,9 @@ exports.isMac = (os == "mac");
 /** Is the user using a browser that identifies itself as Linux */
 exports.isLinux = (os == "linux");
 
-exports.isIE = ! + "\v1";
+exports.isIE = 
+    navigator.appName == "Microsoft Internet Explorer"
+    && parseFloat(navigator.userAgent.match(/MSIE ([0-9]+[\.0-9]+)/)[1])
 
 /** Is this Firefox or related? */
 exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
@@ -6976,7 +6978,7 @@ var TextInput = function(parentNode, host) {
         }
     });
 
-    if (useragent.isIE) {
+    if ("onbeforecopy" in text) {
         event.addListener(text, "beforecopy", function(e) {
             var copyText = host.getCopyText();
             if(copyText)

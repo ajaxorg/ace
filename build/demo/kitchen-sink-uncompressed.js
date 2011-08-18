@@ -2955,7 +2955,9 @@ exports.isMac = (os == "mac");
 /** Is the user using a browser that identifies itself as Linux */
 exports.isLinux = (os == "linux");
 
-exports.isIE = ! + "\v1";
+exports.isIE = 
+    navigator.appName == "Microsoft Internet Explorer"
+    && parseFloat(navigator.userAgent.match(/MSIE ([0-9]+[\.0-9]+)/)[1])
 
 /** Is this Firefox or related? */
 exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
@@ -8228,7 +8230,7 @@ var TextInput = function(parentNode, host) {
         }
     });
 
-    if (useragent.isIE) {
+    if ("onbeforecopy" in text) {
         event.addListener(text, "beforecopy", function(e) {
             var copyText = host.getCopyText();
             if(copyText)
@@ -23956,6 +23958,22 @@ define('ace/keyboard/keybinding/vim', ['require', 'exports', 'module' , 'ace/key
 var StateHandler = require("ace/keyboard/state_handler").StateHandler;
 var matchCharacterOnly =  require("ace/keyboard/state_handler").matchCharacterOnly;
 
+var vimcommand = function(key, exec, then) {
+    return {
+        regex:  [ "([0-9]*)", key ],
+        exec:   exec,
+        params: [
+            {
+                name:     "times",
+                match:    1,
+                type:     "number",
+                defaultValue:     1
+            }
+        ],
+        then:   then
+    }
+}
+
 var vimStates = {
     start: [
         {
@@ -23991,78 +24009,20 @@ var vimStates = {
             exec:   "overwrite",
             then:   "replaceMode"
         },
-        {
-            regex:  [ "([0-9]*)", "(k|up)" ],
-            exec:   "golineup",
-            params: [
-                {
-                    name:     "times",
-                    match:    1,
-                    type:     "number",
-                    defaultValue:     1
-                }
-            ]
-        },
-        {
-            regex:  [ "([0-9]*)", "(j|down|enter)" ],
-            exec:   "golinedown",
-            params: [
-                {
-                    name:    "times",
-                    match:   1,
-                    type:    "number",
-                    defaultValue:    1
-                }
-            ]
-        },
-        {
-            regex:  [ "([0-9]*)", "(l|right)" ],
-            exec:   "gotoright",
-            params: [
-                {
-                    name:   "times",
-                    match:  1,
-                    type:   "number",
-                    defaultValue:     1
-                }
-            ]
-        },
-        {
-            regex:  [ "([0-9]*)", "(h|left)" ],
-            exec:   "gotoleft",
-            params: [
-                {
-                    name:     "times",
-                    match:    1,
-                    type:     "number",
-                    defaultValue:     1
-                }
-            ]
-        },
+        vimcommand("(k|up)", "golineup"),
+        vimcommand("(j|down)", "golinedown"),
+        vimcommand("(l|right)", "golineright"),
+        vimcommand("(h|left)", "golineleft"),
         {
             key:    "shift-g",
             exec:   "gotoend"
         },
-        {
-            key:    "b",
-            exec:   "gotowordleft"
-        },
-        {
-            key:    "e",
-            exec:   "gotowordright"
-        },
-        {
-            key:    "x",
-            exec:   "del"
-        },
-        {
-            key:    "shift-x",
-            exec:   "backspace"
-        },
-        {
-            key:    "shift-d",
-            exec:   "removetolineend"
-        },
+        vimcommand("b", "gotowordleft"),
+        vimcommand("e", "gotowordright"),
+        vimcommand("x", "del"),
+        vimcommand("shift-x", "backspace"),
+        vimcommand("shift-d", "removetolineend"),
+        vimcommand("u", "undo"), // [count] on this may/may not work, depending on browser implementation...
         {
             comment:    "Catch some keyboard input to stop it here",
             match:      matchCharacterOnly
