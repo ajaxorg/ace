@@ -54,6 +54,7 @@ var CssMode = require("ace/mode/css").Mode;
 var ScssMode = require("ace/mode/scss").Mode;
 var HtmlMode = require("ace/mode/html").Mode;
 var XmlMode = require("ace/mode/xml").Mode;
+var LuaMode = require("ace/mode/lua").Mode;
 var PythonMode = require("ace/mode/python").Mode;
 var PhpMode = require("ace/mode/php").Mode;
 var JavaMode = require("ace/mode/java").Mode;
@@ -124,9 +125,14 @@ exports.launch = function(env) {
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
+    docs.lua = new EditSession(require("ace/requirejs/text!demo/docs/lua.lua"));
+    docs.lua.setMode(new LuaMode());
+    docs.lua.setUndoManager(new UndoManager());
+
     docs.python = new EditSession(require("ace/requirejs/text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
+
 
     docs.php = new EditSession(require("ace/requirejs/text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
@@ -222,6 +228,7 @@ exports.launch = function(env) {
         css: new CssMode(),
         scss: new ScssMode(),
         javascript: new JavaScriptMode(),
+        lua: new LuaMode(),
         python: new PythonMode(),
         php: new PhpMode(),
         java: new JavaMode(),
@@ -286,6 +293,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof XmlMode) {
             modeEl.value = "xml";
+        }
+        else if (mode instanceof LuaMode){
+            modeEl.value = "lua";
         }
         else if (mode instanceof PythonMode) {
             modeEl.value = "python";
@@ -524,6 +534,8 @@ exports.launch = function(env) {
                     mode = "css";
                 } else if (/^.*\.scss$/i.test(file.name)) {
                     mode = "scss";
+                } else if (/^.*\.lua$/i.test(file.name)) {
+                    mode = "lua";
                 } else if (/^.*\.py$/i.test(file.name)) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {

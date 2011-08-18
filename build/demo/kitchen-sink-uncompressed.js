@@ -5166,7 +5166,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/lua', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/lua.lua', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5182,6 +5182,7 @@ var CssMode = require("ace/mode/css").Mode;
 var ScssMode = require("ace/mode/scss").Mode;
 var HtmlMode = require("ace/mode/html").Mode;
 var XmlMode = require("ace/mode/xml").Mode;
+var LuaMode = require("ace/mode/lua").Mode;
 var PythonMode = require("ace/mode/python").Mode;
 var PhpMode = require("ace/mode/php").Mode;
 var JavaMode = require("ace/mode/java").Mode;
@@ -5252,9 +5253,14 @@ exports.launch = function(env) {
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
+    docs.lua = new EditSession(require("text!demo/docs/lua.lua"));
+    docs.lua.setMode(new LuaMode());
+    docs.lua.setUndoManager(new UndoManager());
+
     docs.python = new EditSession(require("text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
+
 
     docs.php = new EditSession(require("text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
@@ -5350,6 +5356,7 @@ exports.launch = function(env) {
         css: new CssMode(),
         scss: new ScssMode(),
         javascript: new JavaScriptMode(),
+        lua: new LuaMode(),
         python: new PythonMode(),
         php: new PhpMode(),
         java: new JavaMode(),
@@ -5414,6 +5421,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof XmlMode) {
             modeEl.value = "xml";
+        }
+        else if (mode instanceof LuaMode){
+            modeEl.value = "lua";
         }
         else if (mode instanceof PythonMode) {
             modeEl.value = "python";
@@ -5652,6 +5662,8 @@ exports.launch = function(env) {
                     mode = "css";
                 } else if (/^.*\.scss$/i.test(file.name)) {
                     mode = "scss";
+                } else if (/^.*\.lua$/i.test(file.name)) {
+                    mode = "lua";
                 } else if (/^.*\.py$/i.test(file.name)) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
@@ -18807,6 +18819,530 @@ exports.XmlHighlightRules = XmlHighlightRules;
 * Contributor(s):
 *      Fabian Jakobs <fabian AT ajax DOT org>
 *      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>
+*      Lee Gao
+*
+* Alternatively, the contents of this file may be used under the terms of
+* either the GNU General Public License Version 2 or later (the "GPL"), or
+* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+* in which case the provisions of the GPL or the LGPL are applicable instead
+* of those above. If you wish to allow use of your version of this file only
+* under the terms of either the GPL or the LGPL, and not to allow others to
+* use your version of this file under the terms of the MPL, indicate your
+* decision by deleting the provisions above and replace them with the notice
+* and other provisions required by the GPL or the LGPL. If you do not delete
+* the provisions above, a recipient may use your version of this file under
+* the terms of any one of the MPL, the GPL or the LGPL.
+*
+* ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/lua', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/lua_highlight_rules'], function(require, exports, module) {
+var oop = require("pilot/oop");
+var TextMode = require("ace/mode/text").Mode;
+var Tokenizer = require("ace/tokenizer").Tokenizer;
+var LuaHighlightRules = require("ace/mode/lua_highlight_rules").LuaHighlightRules;
+
+var Mode = function() {
+    this.$tokenizer = new Tokenizer(new LuaHighlightRules().getRules());
+};
+oop.inherits(Mode, TextMode);
+
+(function() {
+    this.getNextLineIndent = function(state, line, tab) {
+        var indent = this.$getIndent(line);
+
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+        var tokens = tokenizedLine.tokens;
+        var endState = tokenizedLine.state;
+
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {
+            return indent;
+        }
+
+        if (state == "start") {
+            var match = line.match(/^.*[\{\(\[]\s*$/);
+            if (match) {
+                indent += tab;
+            }
+        } else if (state == "doc-start") {
+            if (endState == "start") {
+                return "";
+            }
+            var match = line.match(/^\s*(\/?)\*/);
+            if (match) {
+                if (match[1]) {
+                    indent += " ";
+                }
+                indent += "* ";
+            }
+        }
+
+        return indent;
+    };
+    
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
+
+
+/* ***** BEGIN LICENSE BLOCK *****
+* Version: MPL 1.1/GPL 2.0/LGPL 2.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Original Code is Ajax.org Code Editor (ACE).
+*
+* The Initial Developer of the Original Code is
+* Ajax.org B.V.
+* Portions created by the Initial Developer are Copyright (C) 2010
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s):
+*      Fabian Jakobs <fabian AT ajax DOT org>
+*      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>
+*      Lee Gao
+*
+* Alternatively, the contents of this file may be used under the terms of
+* either the GNU General Public License Version 2 or later (the "GPL"), or
+* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+* in which case the provisions of the GPL or the LGPL are applicable instead
+* of those above. If you wish to allow use of your version of this file only
+* under the terms of either the GPL or the LGPL, and not to allow others to
+* use your version of this file under the terms of the MPL, indicate your
+* decision by deleting the provisions above and replace them with the notice
+* and other provisions required by the GPL or the LGPL. If you do not delete
+* the provisions above, a recipient may use your version of this file under
+* the terms of any one of the MPL, the GPL or the LGPL.
+*
+* ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/lua_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var lang = require("pilot/lang");
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+
+var LuaHighlightRules = function() {
+
+    var keywords = lang.arrayToMap(
+        ("break|do|else|elseif|end|for|function|if|in|local|repeat|"+
+         "return|then|until|while|or|and|not").split("|")
+    );
+
+    var builtinConstants = lang.arrayToMap(
+        ("true|false|nil|_G|_VERSION").split("|")
+    );
+
+    var builtinFunctions = lang.arrayToMap(
+        ("string|xpcall|package|tostring|print|os|unpack|require|"+
+        "getfenv|setmetatable|next|assert|tonumber|io|rawequal|"+
+        "collectgarbage|getmetatable|module|rawset|math|debug|"+
+        "pcall|table|newproxy|type|coroutine|_G|select|gcinfo|"+
+        "pairs|rawget|loadstring|ipairs|_VERSION|dofile|setfenv|"+
+        "load|error|loadfile|"+
+
+        "sub|upper|len|gfind|rep|find|match|char|dump|gmatch|"+
+        "reverse|byte|format|gsub|lower|preload|loadlib|loaded|"+
+        "loaders|cpath|config|path|seeall|exit|setlocale|date|"+
+        "getenv|difftime|remove|time|clock|tmpname|rename|execute|"+
+        "lines|write|close|flush|open|output|type|read|stderr|"+
+        "stdin|input|stdout|popen|tmpfile|log|max|acos|huge|"+
+        "ldexp|pi|cos|tanh|pow|deg|tan|cosh|sinh|random|randomseed|"+
+        "frexp|ceil|floor|rad|abs|sqrt|modf|asin|min|mod|fmod|log10|"+
+        "atan2|exp|sin|atan|getupvalue|debug|sethook|getmetatable|"+
+        "gethook|setmetatable|setlocal|traceback|setfenv|getinfo|"+
+        "setupvalue|getlocal|getregistry|getfenv|setn|insert|getn|"+
+        "foreachi|maxn|foreach|concat|sort|remove|resume|yield|"+
+        "status|wrap|create|running").split("|")
+    );
+    
+    var stdLibaries = lang.arrayToMap(
+        ("string|package|os|io|math|debug|table|coroutine").split("|")
+    );
+    
+    var metatableMethods = lang.arrayToMap(
+        ("__add|__sub|__mod|__unm|__concat|__lt|__index|__call|__gc|__metatable|"+
+         "__mul|__div|__pow|__len|__eq|__le|__newindex|__tostring|__mode|__tonumber").split("|")
+    );
+
+    var futureReserved = lang.arrayToMap(
+        ("").split("|")
+    );
+    
+    var deprecatedIn5152 = lang.arrayToMap(
+        ("setn|foreach|foreachi|gcinfo|log10|maxn").split("|")
+    );
+
+    var strPre = "";
+
+    var decimalInteger = "(?:(?:[1-9]\\d*)|(?:0))";
+    var hexInteger = "(?:0[xX][\\dA-Fa-f]+)";
+    var integer = "(?:" + decimalInteger + "|" + hexInteger + ")";
+
+    var fraction = "(?:\\.\\d+)";
+    var intPart = "(?:\\d+)";
+    var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\.))";
+    var floatNumber = "(?:" + pointFloat + ")";
+    
+    var comment_stack = [];
+    
+    this.$rules = {
+        "start" : 
+
+		
+        // bracketed comments
+        [{
+            token : "comment",           // --[[ comment
+            regex : strPre + '\\-\\-\\[\\[.*\\]\\]'
+        }, {
+            token : "comment",           // --[=[ comment
+            regex : strPre + '\\-\\-\\[\\=\\[.*\\]\\=\\]'
+        }, {
+            token : "comment",           // --[==[ comment
+            regex : strPre + '\\-\\-\\[\\={2}\\[.*\\]\\={2}\\]'
+        }, {
+            token : "comment",           // --[===[ comment
+            regex : strPre + '\\-\\-\\[\\={3}\\[.*\\]\\={3}\\]'
+        }, {
+            token : "comment",           // --[====[ comment
+            regex : strPre + '\\-\\-\\[\\={4}\\[.*\\]\\={4}\\]'
+        }, {
+            token : "comment",           // --[====+[ comment
+            regex : strPre + '\\-\\-\\[\\={5}\\=*\\[.*\\]\\={5}\\=*\\]'
+        },
+		
+		// multiline bracketed comments
+		{
+            token : "comment",           // --[[ comment
+            regex : strPre + '\\-\\-\\[\\[.*$',
+            merge : true,
+            next  : "qcomment"
+        }, {
+            token : "comment",           // --[=[ comment
+            regex : strPre + '\\-\\-\\[\\=\\[.*$',
+            merge : true,
+            next  : "qcomment1"
+        }, {
+            token : "comment",           // --[==[ comment
+            regex : strPre + '\\-\\-\\[\\={2}\\[.*$',
+            merge : true,
+            next  : "qcomment2"
+        }, {
+            token : "comment",           // --[===[ comment
+            regex : strPre + '\\-\\-\\[\\={3}\\[.*$',
+            merge : true,
+            next  : "qcomment3"
+        }, {
+            token : "comment",           // --[====[ comment
+            regex : strPre + '\\-\\-\\[\\={4}\\[.*$',
+            merge : true,
+            next  : "qcomment4"
+        }, {
+            token : function(value){     // --[====+[ comment
+                // WARNING: EXTREMELY SLOW, but this is the only way to circumvent the
+                // limits imposed by the current automaton.
+                // I've never personally seen any practical code where 5 or more '='s are
+                // used for string or commenting, so this will rarely be invoked.
+                var pattern = /\-\-\[(\=+)\[/, match;
+                // you can never be too paranoid ;)
+                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined)
+                    comment_stack.push(match.length);
+                
+                return "comment";
+            },
+            regex : strPre + '\\-\\-\\[\\={5}\\=*\\[.*$',
+            merge : true,
+            next  : "qcomment5"
+        },
+        
+        // single line comments
+        {
+            token : "comment",
+            regex : "\\-\\-.*$"
+        }, 
+        
+        // bracketed strings
+		{
+            token : "string",           // [[ string
+            regex : strPre + '\\[\\[.*\\]\\]'
+        }, {
+            token : "string",           // [=[ string
+            regex : strPre + '\\[\\=\\[.*\\]\\=\\]'
+        }, {
+            token : "string",           // [==[ string
+            regex : strPre + '\\[\\={2}\\[.*\\]\\={2}\\]'
+        }, {
+            token : "string",           // [===[ string
+            regex : strPre + '\\[\\={3}\\[.*\\]\\={3}\\]'
+        }, {
+            token : "string",           // [====[ string
+            regex : strPre + '\\[\\={4}\\[.*\\]\\={4}\\]'
+        }, {
+            token : "string",           // [====+[ string
+            regex : strPre + '\\[\\={5}\\=*\\[.*\\]\\={5}\\=*\\]'
+        },
+		
+		// multiline bracketed strings
+        {
+            token : "string",           // [[ string
+            regex : strPre + '\\[\\[.*$',
+            merge : true,
+            next  : "qstring"
+        }, {
+            token : "string",           // [=[ string
+            regex : strPre + '\\[\\=\\[.*$',
+            merge : true,
+            next  : "qstring1"
+        }, {
+            token : "string",           // [==[ string
+            regex : strPre + '\\[\\={2}\\[.*$',
+            merge : true,
+            next  : "qstring2"
+        }, {
+            token : "string",           // [===[ string
+            regex : strPre + '\\[\\={3}\\[.*$',
+            merge : true,
+            next  : "qstring3"
+        }, {
+            token : "string",           // [====[ string
+            regex : strPre + '\\[\\={4}\\[.*$',
+            merge : true,
+            next  : "qstring4"
+        }, {
+            token : function(value){     // --[====+[ string
+                // WARNING: EXTREMELY SLOW, see above.
+                var pattern = /\[(\=+)\[/, match;
+                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined)
+                    comment_stack.push(match.length);
+                
+                return "string";
+            },
+            regex : strPre + '\\[\\={5}\\=*\\[.*$',
+            merge : true,
+            next  : "qstring5"
+        }, 
+        
+        {
+            token : "string",           // " string
+            regex : strPre + '"(?:[^\\\\]|\\\\.)*?"'
+        }, {
+            token : "string",           // ' string
+            regex : strPre + "'(?:[^\\\\]|\\\\.)*?'"
+        }, {
+            token : "constant.numeric", // float
+            regex : floatNumber
+        }, {
+            token : "constant.numeric", // integer
+            regex : integer + "\\b"
+        }, {
+            token : function(value) {
+                if (keywords.hasOwnProperty(value))
+                    return "keyword";
+                else if (builtinConstants.hasOwnProperty(value))
+                    return "constant.language";
+                else if (futureReserved.hasOwnProperty(value))
+                    return "invalid.illegal";
+                else if (stdLibaries.hasOwnProperty(value))
+                    return "constant.library";
+                else if (deprecatedIn5152.hasOwnProperty(value))
+                    return "invalid.deprecated";
+                else if (builtinFunctions.hasOwnProperty(value))
+                    return "support.function";
+                else if (metatableMethods.hasOwnProperty(value))
+                    return "support.function";
+                else
+                    return "identifier";
+            },
+            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+        }, {
+            token : "keyword.operator",
+            regex : "\\+|\\-|\\*|\\/|%|\\#|\\^|~|<|>|<=|=>|==|~=|=|\\:|\\.\\.\\.|\\.\\."
+        }, {
+            token : "lparen",
+            regex : "[\\[\\(\\{]"
+        }, {
+            token : "rparen",
+            regex : "[\\]\\)\\}]"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        } ],
+        
+        "qcomment": [ {
+            token : "comment",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\]",
+            next  : "start"
+        }, {
+            token : "comment",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qcomment1": [ {
+            token : "comment",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\=\\]",
+            next  : "start"
+        }, {
+            token : "comment",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qcomment2": [ {
+            token : "comment",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={2}\\]",
+            next  : "start"
+        }, {
+            token : "comment",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qcomment3": [ {
+            token : "comment",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={3}\\]",
+            next  : "start"
+        }, {
+            token : "comment",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qcomment4": [ {
+            token : "comment",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={4}\\]",
+            next  : "start"
+        }, {
+            token : "comment",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qcomment5": [ {
+            token : function(value){ 
+                // very hackish, mutates the qcomment5 field on the fly.
+                var pattern = /\](\=+)\]/, rule = this.rules.qcomment5[0], match;
+                rule.next = "start";
+                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined){
+                    var found = match.length, expected;
+                    if ((expected = comment_stack.pop()) != found){
+                        comment_stack.push(expected);
+                        rule.next = "qcomment5";
+                    }
+                }
+                
+                return "comment";
+            },
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={5}\\=*\\]",
+            next  : "start"
+        }, {
+            token : "comment",
+            merge : true,
+            regex : '.+'
+        } ],
+        
+        "qstring": [ {
+            token : "string",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\]",
+            next  : "start"
+        }, {
+            token : "string",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qstring1": [ {
+            token : "string",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\=\\]",
+            next  : "start"
+        }, {
+            token : "string",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qstring2": [ {
+            token : "string",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={2}\\]",
+            next  : "start"
+        }, {
+            token : "string",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qstring3": [ {
+            token : "string",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={3}\\]",
+            next  : "start"
+        }, {
+            token : "string",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qstring4": [ {
+            token : "string",
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={4}\\]",
+            next  : "start"
+        }, {
+            token : "string",
+            merge : true,
+            regex : '.+'
+        } ],
+        "qstring5": [ {
+            token : function(value){ 
+                // very hackish, mutates the qstring5 field on the fly.
+                var pattern = /\](\=+)\]/, rule = this.rules.qstring5[0], match;
+                rule.next = "start";
+                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined){
+                    var found = match.length, expected;
+                    if ((expected = comment_stack.pop()) != found){
+                        comment_stack.push(expected);
+                        rule.next = "qstring5";
+                    }
+                }
+                
+                return "string";
+            },
+            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={5}\\=*\\]",
+            next  : "start"
+        }, {
+            token : "string",
+            merge : true,
+            regex : '.+'
+        } ]
+        
+    };
+
+}
+
+oop.inherits(LuaHighlightRules, TextHighlightRules);
+
+exports.LuaHighlightRules = LuaHighlightRules;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+* Version: MPL 1.1/GPL 2.0/LGPL 2.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Original Code is Ajax.org Code Editor (ACE).
+*
+* The Initial Developer of the Original Code is
+* Ajax.org B.V.
+* Portions created by the Initial Developer are Copyright (C) 2010
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s):
+*      Fabian Jakobs <fabian AT ajax DOT org>
+*      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>
 *
 * Alternatively, the contents of this file may be used under the terms of
 * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -25226,6 +25762,44 @@ define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
   "    //Say Hello!\n" +
   "    Console.WriteLine(\"Hello World\");\n" +
   "}");
+
+define("text!demo/docs/lua.lua", [], "--[[--\n" +
+  "num_args takes in 5.1 byte code and extracts the number of arguments\n" +
+  "from its function header.\n" +
+  "--]]--\n" +
+  "\n" +
+  "function int(t)\n" +
+  "	return t:byte(1)+t:byte(2)*0x100+t:byte(3)*0x10000+t:byte(4)*0x1000000\n" +
+  "end\n" +
+  "\n" +
+  "function num_args(func)\n" +
+  "	local dump = string.dump(func)\n" +
+  "	local offset, cursor = int(dump:sub(13)), offset + 26\n" +
+  "	--Get the params and var flag (whether there's a ... in the param)\n" +
+  "	return dump:sub(cursor):byte(), dump:sub(cursor+1):byte()\n" +
+  "end\n" +
+  "\n" +
+  "-- Usage:\n" +
+  "num_args(function(a,b,c,d, ...) end) -- return 4, 7\n" +
+  "\n" +
+  "-- Python styled string format operator\n" +
+  "local gm = debug.getmetatable(\"\")\n" +
+  "\n" +
+  "gm.__mod=function(self, other)\n" +
+  "    if type(other) ~= \"table\" then other = {other} end\n" +
+  "    for i,v in ipairs(other) do other[i] = tostring(v) end\n" +
+  "    return self:format(unpack(other))\n" +
+  "end\n" +
+  "\n" +
+  "print([===[\n" +
+  "    blah blah %s, (%d %d)\n" +
+  "]===]%{\"blah\", num_args(int)})\n" +
+  "\n" +
+  "--[=[--\n" +
+  "table.maxn is deprecated, use # instead.\n" +
+  "--]=]--\n" +
+  "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
+  "");
 
 define("text!demo/docs/html.html", [], "<html>\n" +
   "    <head>\n" +
