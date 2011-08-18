@@ -6073,11 +6073,9 @@ var Editor =function(renderer, session) {
                 session.remove(new Range(row, 0, row, i));
             }
             session.indentRows(cursor.row + 1, end.row, lineIndent);
-        } else {
-            if (shouldOutdent) {
-                mode.autoOutdent(lineState, session, cursor.row);
-            }
         }
+        if (shouldOutdent)
+            mode.autoOutdent(lineState, session, cursor.row);
     };
 
     this.onTextInput = function(text, notPasted) {
@@ -8798,9 +8796,8 @@ var EditSession = function(text, mode) {
 
     this.indentRows = function(startRow, endRow, indentString) {
         indentString = indentString.replace(/\t/g, this.getTabString());
-        for (var row=startRow; row<=endRow; row++) {
+        for (var row=startRow; row<=endRow; row++)
             this.insert({row: row, column:0}, indentString);
-        }
     };
 
     this.outdentRows = function (range) {
