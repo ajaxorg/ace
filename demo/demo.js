@@ -66,6 +66,7 @@ var PerlMode = require("ace/mode/perl").Mode;
 var ClojureMode = require("ace/mode/clojure").Mode;
 var OcamlMode = require("ace/mode/ocaml").Mode;
 var SvgMode = require("ace/mode/svg").Mode;
+var MarkdownMode = require("ace/mode/markdown").Mode;
 var TextileMode = require("ace/mode/textile").Mode;
 var TextMode = require("ace/mode/text").Mode;
 var GroovyMode = require("ace/mode/groovy").Mode;
@@ -172,6 +173,12 @@ exports.launch = function(env) {
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
+    docs.markdown = new EditSession(require("ace/requirejs/text!demo/docs/markdown.md"));
+    docs.markdown.setMode(new MarkdownMode());
+    docs.markdown.setUseWrapMode(true);
+    docs.markdown.setWrapLimitRange(80, 80);
+    docs.markdown.setUndoManager(new UndoManager());
+    
     docs.textile = new EditSession(require("ace/requirejs/text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
@@ -208,6 +215,7 @@ exports.launch = function(env) {
     var modes = {
         text: new TextMode(),
         textile: new TextileMode(),
+        markdown: new MarkdownMode(),
         svg: new SvgMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
@@ -314,6 +322,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof SvgMode) {
             modeEl.value = "svg";
+        }
+        else if (mode instanceof MarkdownMode) {
+            modeEl.value = "markdown";
         }
         else if (mode instanceof TextileMode) {
             modeEl.value = "textile";
