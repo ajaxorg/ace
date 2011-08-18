@@ -5167,46 +5167,47 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'pilot/canon', 'pilot/event', 'ace/lib/net', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text/demo/docs/plaintext.txt', 'text/demo/docs/javascript.js', 'text/demo/docs/css.css', 'text/demo/docs/scss.scss', 'text/demo/docs/html.html', 'text/demo/docs/python.py', 'text/demo/docs/php.php', 'text/demo/docs/java.java', 'text/demo/docs/ruby.rb', 'text/demo/docs/csharp.cs', 'text/demo/docs/cpp.cpp', 'text/demo/docs/coffeescript.coffee', 'text/demo/docs/json.json', 'text/demo/docs/perl.pl', 'text/demo/docs/clojure.clj', 'text/demo/docs/ocaml.ml', 'text/demo/docs/svg.svg', 'text/demo/docs/textile.textile', 'text/demo/docs/groovy.groovy', 'text/demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
+
+var net = require("ace/lib/net");
+var canon = require("pilot/canon");
+var event = require("pilot/event");
+var Range = require("ace/range").Range;
+var Editor = require("ace/editor").Editor;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var theme = require("ace/theme/textmate");
+var EditSession = require("ace/edit_session").EditSession;
+
+var JavaScriptMode = require("ace/mode/javascript").Mode;
+var CssMode = require("ace/mode/css").Mode;
+var ScssMode = require("ace/mode/scss").Mode;
+var HtmlMode = require("ace/mode/html").Mode;
+var XmlMode = require("ace/mode/xml").Mode;
+var PythonMode = require("ace/mode/python").Mode;
+var PhpMode = require("ace/mode/php").Mode;
+var JavaMode = require("ace/mode/java").Mode;
+var CSharpMode = require("ace/mode/csharp").Mode;
+var RubyMode = require("ace/mode/ruby").Mode;
+var CCPPMode = require("ace/mode/c_cpp").Mode;
+var CoffeeMode = require("ace/mode/coffee").Mode;
+var JsonMode = require("ace/mode/json").Mode;
+var PerlMode = require("ace/mode/perl").Mode;
+var ClojureMode = require("ace/mode/clojure").Mode;
+var OcamlMode = require("ace/mode/ocaml").Mode;
+var SvgMode = require("ace/mode/svg").Mode;
+var TextileMode = require("ace/mode/textile").Mode;
+var TextMode = require("ace/mode/text").Mode;
+var GroovyMode = require("ace/mode/groovy").Mode;
+var ScalaMode = require("ace/mode/scala").Mode;
+
+var UndoManager = require("ace/undomanager").UndoManager;
+
+var vim = require("ace/keyboard/keybinding/vim").Vim;
+var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 exports.launch = function(env) {
-    var canon = require("pilot/canon");
-    var event = require("pilot/event");
-    var net = require("ace/lib/net");
-    var Range = require("ace/range").Range;
-    var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var EditSession = require("ace/edit_session").EditSession;
-
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    var CssMode = require("ace/mode/css").Mode;
-    var ScssMode = require("ace/mode/scss").Mode;
-    var HtmlMode = require("ace/mode/html").Mode;
-    var XmlMode = require("ace/mode/xml").Mode;
-    var PythonMode = require("ace/mode/python").Mode;
-    var PhpMode = require("ace/mode/php").Mode;
-    var JavaMode = require("ace/mode/java").Mode;
-    var CSharpMode = require("ace/mode/csharp").Mode;
-    var RubyMode = require("ace/mode/ruby").Mode;
-    var CCPPMode = require("ace/mode/c_cpp").Mode;
-    var CoffeeMode = require("ace/mode/coffee").Mode;
-    var JsonMode = require("ace/mode/json").Mode;
-    var PerlMode = require("ace/mode/perl").Mode;
-    var ClojureMode = require("ace/mode/clojure").Mode;
-    var OcamlMode = require("ace/mode/ocaml").Mode;
-    var SvgMode = require("ace/mode/svg").Mode;
-    var TextileMode = require("ace/mode/textile").Mode;
-    var TextMode = require("ace/mode/text").Mode;
-    var GroovyMode = require("ace/mode/groovy").Mode;
-    var ScalaMode = require("ace/mode/scala").Mode;
-
-    var UndoManager = require("ace/undomanager").UndoManager;
-
-    var vim = require("ace/keyboard/keybinding/vim").Vim;
-    var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
-    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-
+    
     var keybindings = {
       // Null = use "default" keymapping
       ace: null,
@@ -5225,7 +5226,7 @@ exports.launch = function(env) {
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
-    var loreIpsum = require("text/demo/docs/plaintext.txt");
+    var loreIpsum = require("text!demo/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -5235,80 +5236,80 @@ exports.launch = function(env) {
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(require("text/demo/docs/javascript.js"));
+    docs.js = new EditSession(require("text!demo/docs/javascript.js"));
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(require("text/demo/docs/css.css"));
+    docs.css = new EditSession(require("text!demo/docs/css.css"));
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.scss = new EditSession(require("text/demo/docs/scss.scss"));
+    docs.scss = new EditSession(require("text!demo/docs/scss.scss"));
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(require("text/demo/docs/html.html"));
+    docs.html = new EditSession(require("text!demo/docs/html.html"));
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(require("text/demo/docs/python.py"));
+    docs.python = new EditSession(require("text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(require("text/demo/docs/php.php"));
+    docs.php = new EditSession(require("text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(require("text/demo/docs/java.java"));
+    docs.java = new EditSession(require("text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(require("text/demo/docs/ruby.rb"));
+    docs.ruby = new EditSession(require("text!demo/docs/ruby.rb"));
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(require("text/demo/docs/csharp.cs"));
+    docs.csharp = new EditSession(require("text!demo/docs/csharp.cs"));
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(require("text/demo/docs/cpp.cpp"));
+    docs.c_cpp = new EditSession(require("text!demo/docs/cpp.cpp"));
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(require("text/demo/docs/coffeescript.coffee"));
+    docs.coffee = new EditSession(require("text!demo/docs/coffeescript.coffee"));
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.json = new EditSession(require("text/demo/docs/json.json"));
+    docs.json = new EditSession(require("text!demo/docs/json.json"));
     docs.json.setMode(new JsonMode());
     docs.json.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(require("text/demo/docs/perl.pl"));
+    docs.perl = new EditSession(require("text!demo/docs/perl.pl"));
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.clojure = new EditSession(require("text/demo/docs/clojure.clj"));
+    docs.clojure = new EditSession(require("text!demo/docs/clojure.clj"));
     docs.clojure.setMode(new ClojureMode());
     docs.clojure.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(require("text/demo/docs/ocaml.ml"));
+    docs.ocaml = new EditSession(require("text!demo/docs/ocaml.ml"));
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(require("text/demo/docs/svg.svg"));
+    docs.svg = new EditSession(require("text!demo/docs/svg.svg"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(require("text/demo/docs/textile.textile"));
+    docs.textile = new EditSession(require("text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.groovy = new EditSession(require("text/demo/docs/groovy.groovy"));
+    docs.groovy = new EditSession(require("text!demo/docs/groovy.groovy"));
     docs.groovy.setMode(new GroovyMode());
     docs.groovy.setUndoManager(new UndoManager());
 
-    docs.scala = new EditSession(require("text/demo/docs/scala.scala"));
+    docs.scala = new EditSession(require("text!demo/docs/scala.scala"));
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
@@ -5819,7 +5820,68 @@ function loadTheme(name, callback) {
 }
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+
+/**
+ * based on code from:
+ * 
+ * @license RequireJS text 0.25.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/requirejs for details
+ */
+define('ace/lib/net', ['require', 'exports', 'module' ], function(require, exports, module) {
+    
+exports.get = function (url, callback) {
+    var xhr = exports.createXhr();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function (evt) {
+        //Do not explicitly handle errors, those should be
+        //visible via console output in the browser.
+        if (xhr.readyState === 4) {
+            callback(xhr.responseText);
+        }
+    };
+    xhr.send(null);
+};
+
+var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
+
+exports.createXhr = function () {
+    //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
+    var xhr, i, progId;
+    if (typeof XMLHttpRequest !== "undefined") {
+        return new XMLHttpRequest();
+    } else {
+        for (i = 0; i < 3; i++) {
+            progId = progIds[i];
+            try {
+                xhr = new ActiveXObject(progId);
+            } catch (e) {}
+
+            if (xhr) {
+                progIds = [progId];  // so faster next time
+                break;
+            }
+        }
+    }
+
+    if (!xhr) {
+        throw new Error("createXhr(): XMLHttpRequest not available");
+    }
+
+    return xhr;
+};
+
+exports.loadScript = function(path, callback) {
+    var head = document.getElementsByTagName('head')[0];
+    var s = document.createElement('script');
+
+    s.src = path;
+    head.appendChild(s);
+    
+    s.onload = callback;
+};
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -6440,68 +6502,7 @@ exports.setSelectionEnd = function(textarea, end) {
 };
 
 });
-
-/**
- * based on code from:
- * 
- * @license RequireJS text 0.25.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/requirejs for details
- */
-define('ace/lib/net', ['require', 'exports', 'module' ], function(require, exports, module) {
-    
-exports.get = function (url, callback) {
-    var xhr = exports.createXhr();
-    xhr.open('GET', url, true);
-    xhr.onreadystatechange = function (evt) {
-        //Do not explicitly handle errors, those should be
-        //visible via console output in the browser.
-        if (xhr.readyState === 4) {
-            callback(xhr.responseText);
-        }
-    };
-    xhr.send(null);
-};
-
-var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
-
-exports.createXhr = function () {
-    //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
-    var xhr, i, progId;
-    if (typeof XMLHttpRequest !== "undefined") {
-        return new XMLHttpRequest();
-    } else {
-        for (i = 0; i < 3; i++) {
-            progId = progIds[i];
-            try {
-                xhr = new ActiveXObject(progId);
-            } catch (e) {}
-
-            if (xhr) {
-                progIds = [progId];  // so faster next time
-                break;
-            }
-        }
-    }
-
-    if (!xhr) {
-        throw new Error("createXhr(): XMLHttpRequest not available");
-    }
-
-    return xhr;
-};
-
-exports.loadScript = function(path, callback) {
-    var head = document.getElementsByTagName('head')[0];
-    var s = document.createElement('script');
-
-    s.src = path;
-    head.appendChild(s);
-    
-    s.onload = callback;
-};
-
-});/* ***** BEGIN LICENSE BLOCK *****
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -14091,7 +14092,7 @@ exports.Search = Search;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text/ace/css/editor.css'], function(require, exports, module) {
+define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
@@ -14104,7 +14105,7 @@ var CursorLayer = require("ace/layer/cursor").Cursor;
 var ScrollBar = require("ace/scrollbar").ScrollBar;
 var RenderLoop = require("ace/renderloop").RenderLoop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var editorCss = require("text/ace/css/editor.css");
+var editorCss = require("text!ace/css/editor.css");
 
 // import CSS once
 dom.importCssString(editorCss);
@@ -25282,6 +25283,238 @@ define("text!build/demo/styles.css", [], "html {\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
   "}");
+
+define("text!build/textarea/style.css", [], "body {\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "    background-color:#e6f5fc;\n" +
+  "    \n" +
+  "}\n" +
+  "\n" +
+  "H2, H3, H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    margin:0;\n" +
+  "    padding:0;\n" +
+  "}\n" +
+  "\n" +
+  "H2 {\n" +
+  "    font-size:28px;\n" +
+  "    color:#263842;\n" +
+  "    padding-bottom:6px;\n" +
+  "}\n" +
+  "\n" +
+  "H3 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:22px;\n" +
+  "    color:#253741;\n" +
+  "    margin-top:43px;\n" +
+  "    margin-bottom:8px;\n" +
+  "}\n" +
+  "\n" +
+  "H4 {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-weight:bold;\n" +
+  "    font-size:21px;\n" +
+  "    color:#222222;\n" +
+  "    margin-bottom:4px;\n" +
+  "}\n" +
+  "\n" +
+  "P {\n" +
+  "    padding:13px 0;\n" +
+  "    margin:0;\n" +
+  "    line-height:22px;\n" +
+  "}\n" +
+  "\n" +
+  "UL{\n" +
+  "    line-height : 22px;\n" +
+  "}\n" +
+  "\n" +
+  "PRE{\n" +
+  "    background : #333;\n" +
+  "    color : white;\n" +
+  "    padding : 10px;\n" +
+  "}\n" +
+  "\n" +
+  "#header {\n" +
+  "    height : 227px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background: url(images/background.png) repeat-x 0 0;\n" +
+  "    border-bottom:1px solid #c9e8fa;   \n" +
+  "}\n" +
+  "\n" +
+  "#header .content .signature {\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:11px;\n" +
+  "    color:#ebe4d6;\n" +
+  "    position:absolute;\n" +
+  "    bottom:5px;\n" +
+  "    right:42px;\n" +
+  "    letter-spacing : 1px;\n" +
+  "}\n" +
+  "\n" +
+  ".content {\n" +
+  "    width:970px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin:0 auto;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content {\n" +
+  "    height:184px;\n" +
+  "    margin-top:22px;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .logo {\n" +
+  "    width  : 282px;\n" +
+  "    height : 184px;\n" +
+  "    background:url(images/logo.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:0;\n" +
+  "    left:0;\n" +
+  "}\n" +
+  "\n" +
+  "#header .content .title {\n" +
+  "    width  : 605px;\n" +
+  "    height : 58px;\n" +
+  "    background:url(images/ace.png) no-repeat 0 0;\n" +
+  "    position:absolute;\n" +
+  "    top:98px;\n" +
+  "    left:329px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper {\n" +
+  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
+  "    min-height:250px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content {\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:14px;\n" +
+  "    color:#222222;\n" +
+  "    width:1000px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column1 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:315px;\n" +
+  "    margin-right:31px;\n" +
+  "}\n" +
+  "\n" +
+  "#wrapper .content .column2 {\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    float:left;\n" +
+  "    width:600px;\n" +
+  "    padding-top:47px;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github {\n" +
+  "    width:310px;\n" +
+  "    height:80px;\n" +
+  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    margin-top:49px;\n" +
+  "    cursor:pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".fork_on_github:hover {\n" +
+  "    background-position:0 -80px;\n" +
+  "}\n" +
+  "\n" +
+  ".divider {\n" +
+  "    height:3px;\n" +
+  "    background-color:#bedaea;\n" +
+  "    margin-bottom:3px;\n" +
+  "}\n" +
+  "\n" +
+  ".menu {\n" +
+  "    padding:23px 0 0 24px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.content-list {\n" +
+  "    padding:15px;\n" +
+  "    margin:0;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list {\n" +
+  "    padding:0;\n" +
+  "    margin:0 0 20px 0;\n" +
+  "    list-style-type:none;\n" +
+  "    line-height : 16px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI {\n" +
+  "    color:#2557b4;\n" +
+  "    font-family:Trebuchet MS;\n" +
+  "    font-size:14px;\n" +
+  "    padding:7px 0;\n" +
+  "    border-bottom:1px dotted #d6e2e7;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-list LI:last-child {\n" +
+  "    border-bottom:0;\n" +
+  "}\n" +
+  "\n" +
+  "A {\n" +
+  "    color:#2557b4;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "P#first{\n" +
+  "    background : rgba(255,255,255,0.5);\n" +
+  "    padding : 20px;\n" +
+  "    font-size : 16px;\n" +
+  "    line-height : 24px;\n" +
+  "    margin : 0 0 20px 0;\n" +
+  "}\n" +
+  "\n" +
+  "#footer {\n" +
+  "    height:40px;\n" +
+  "    position:relative;\n" +
+  "    overflow:hidden;\n" +
+  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
+  "    position:relative;\n" +
+  "    margin-top:40px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer {\n" +
+  "    padding:0;\n" +
+  "    margin:8px 11px 0 0;\n" +
+  "    list-style-type:none;\n" +
+  "    float:right;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI {\n" +
+  "    color:white;\n" +
+  "    font-family:Arial;\n" +
+  "    font-size:12px;\n" +
+  "    display:inline-block;\n" +
+  "    margin:0 1px;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A {\n" +
+  "    color:#8dd0ff;\n" +
+  "    text-decoration:none;\n" +
+  "}\n" +
+  "\n" +
+  "UL.menu-footer LI A:hover {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "\n" +
+  "");
 
 define("text!build_support/style.css", [], "body {\n" +
   "    margin:0;\n" +
