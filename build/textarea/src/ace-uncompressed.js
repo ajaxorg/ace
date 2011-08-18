@@ -15466,6 +15466,18 @@ __ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' , 
   color: rgb(104, 104, 91);\
 }\
 \
+.ace-tm .ace_markup.ace_underline {\
+    text-decoration:underline;\
+}\
+\
+.ace-tm .ace_markup.ace_heading {\
+  color: rgb(12, 7, 255);\
+}\
+\
+.ace-tm .ace_markup.ace_list {\
+  color:rgb(185, 6, 144);\
+}\
+\
 .ace-tm .ace_marker-layer .ace_selection {\
   background: rgb(181, 213, 255);\
 }\
@@ -17779,6 +17791,41 @@ __ace_shadowed__.define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor
   "  %entity.other.attribute-name%\n" +
   "}\n" +
   "\n" +
+  ".%cssClass% .ace_markup.ace_underline {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading {\n" +
+  "  %markup.heading%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
+  "  %markup.heading.1%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
+  "  %markup.heading.2%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
+  "  %markup.heading.3%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
+  "  %markup.heading.4%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
+  "  %markup.heading.5%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
+  "  %markup.heading.6%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_list {\n" +
+  "  %markup.list%\n" +
+  "}\n" +
   "\n" +
   ".%cssClass% .ace_collab.ace_user1 {\n" +
   "  %collab.user1%   \n" +

@@ -5162,7 +5162,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5190,6 +5190,7 @@ var PerlMode = require("ace/mode/perl").Mode;
 var ClojureMode = require("ace/mode/clojure").Mode;
 var OcamlMode = require("ace/mode/ocaml").Mode;
 var SvgMode = require("ace/mode/svg").Mode;
+var MarkdownMode = require("ace/mode/markdown").Mode;
 var TextileMode = require("ace/mode/textile").Mode;
 var TextMode = require("ace/mode/text").Mode;
 var GroovyMode = require("ace/mode/groovy").Mode;
@@ -5296,6 +5297,12 @@ exports.launch = function(env) {
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
+    docs.markdown = new EditSession(require("text!demo/docs/markdown.md"));
+    docs.markdown.setMode(new MarkdownMode());
+    docs.markdown.setUseWrapMode(true);
+    docs.markdown.setWrapLimitRange(80, 80);
+    docs.markdown.setUndoManager(new UndoManager());
+    
     docs.textile = new EditSession(require("text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
@@ -5332,6 +5339,7 @@ exports.launch = function(env) {
     var modes = {
         text: new TextMode(),
         textile: new TextileMode(),
+        markdown: new MarkdownMode(),
         svg: new SvgMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
@@ -5438,6 +5446,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof SvgMode) {
             modeEl.value = "svg";
+        }
+        else if (mode instanceof MarkdownMode) {
+            modeEl.value = "markdown";
         }
         else if (mode instanceof TextileMode) {
             modeEl.value = "textile";
@@ -16312,6 +16323,18 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
   color: rgb(104, 104, 91);\
 }\
 \
+.ace-tm .ace_markup.ace_underline {\
+    text-decoration:underline;\
+}\
+\
+.ace-tm .ace_markup.ace_heading {\
+  color: rgb(12, 7, 255);\
+}\
+\
+.ace-tm .ace_markup.ace_list {\
+  color:rgb(185, 6, 144);\
+}\
+\
 .ace-tm .ace_marker-layer .ace_selection {\
   background: rgb(181, 213, 255);\
 }\
@@ -23012,7 +23035,280 @@ oop.inherits(SvgHighlightRules, XmlHighlightRules);
 
 exports.SvgHighlightRules = SvgHighlightRules;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
+ *      Chris Spencer <chris.ag.spencer AT googlemail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/markdown', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/mode/javascript', 'ace/mode/xml', 'ace/mode/html', 'ace/tokenizer', 'ace/mode/markdown_highlight_rules', 'ace/range'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var TextMode = require("ace/mode/text").Mode;
+var JavaScriptMode = require("ace/mode/javascript").Mode;
+var XmlMode = require("ace/mode/xml").Mode;
+var HtmlMode = require("ace/mode/html").Mode;
+var Tokenizer = require("ace/tokenizer").Tokenizer;
+var MarkdownHighlightRules = require("ace/mode/markdown_highlight_rules").MarkdownHighlightRules;
+var Range = require("ace/range").Range;
+
+var Mode = function() {
+    var highlighter = new MarkdownHighlightRules();
+    
+    this.$tokenizer = new Tokenizer(highlighter.getRules());
+    this.$embeds = highlighter.getEmbeds();
+    this.createModeDelegates({
+      "js-": JavaScriptMode,
+      "xml-": XmlMode,
+      "html-": HtmlMode
+    });
+};
+oop.inherits(Mode, TextMode);
+
+(function() {
+    this.getNextLineIndent = function(state, line, tab) {
+        if (state == "listblock") {
+            var match = /^((?:.+)?)([-+*][ ]+)/.exec(line);
+            if (match) {
+                return new Array(match[1].length + 1).join(" ") + match[2];
+            } else {
+                return "";
+            }
+        } else {
+            return this.$getIndent(line);
+        }
+    };
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Chris Spencer <chris.ag.spencer AT googlemail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/markdown_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules', 'ace/mode/javascript_highlight_rules', 'ace/mode/xml_highlight_rules', 'ace/mode/html_highlight_rules', 'ace/mode/css_highlight_rules'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+var JavaScriptHighlightRules = require("ace/mode/javascript_highlight_rules").JavaScriptHighlightRules;
+var XmlHighlightRules = require("ace/mode/xml_highlight_rules").XmlHighlightRules;
+var HtmlHighlightRules = require("ace/mode/html_highlight_rules").HtmlHighlightRules;
+var CssHighlightRules = require("ace/mode/css_highlight_rules").CssHighlightRules;
+
+function github_embed(tag, prefix) {
+  return { // Github style block
+    token : "support.function",
+    regex : "^```" + tag + "\\s*$",
+    next  : prefix + "start"
+  }
+}
+
+var MarkdownHighlightRules = function() {
+
+    // regexp must not have capturing parentheses
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        "start" : [ {
+            token : "empty_line",
+            regex : '^$'
+        }, { // code span `
+            token : "support.function",
+            regex : "(`+)([^\\r]*?[^`])(\\1)"
+        }, { // code block
+            token : "support.function",
+            regex : "^[ ]{4}.+"
+        }, { // h1
+            token: "markup.heading.1",
+            regex: "^=+(?=\\s*$)"
+        }, { // h2
+            token: "markup.heading.1",
+            regex: "^\\-+(?=\\s*$)"
+        }, { // header
+            token : function(value) {
+                return "markup.heading." + value.length;
+            },
+            regex : "^#{1,6}"
+        }, github_embed("javascript", "js-"),
+           github_embed("xml", "xml-"),
+           github_embed("html", "html-"),
+           github_embed("css", "css-"),
+        { // Github style block
+            token : "support.function",
+            regex : "^```[a-zA-Z]+\\s*$",
+            next  : "githubblock"
+        }, { // block quote
+            token : "string",
+            regex : "^>[ ].+$",
+            next  : "blockquote"
+        }, { // reference
+            token : ["text", "constant", "text", "url", "string", "text"],
+            regex : "^([ ]{0,3}\\[)([^\\]]+)(\\]:\\s*)([^ ]+)(\\s*(?:[\"][^\"]+[\"])?\\s*)$"
+        }, { // link by reference
+            token : ["text", "string", "text", "constant", "text"],
+            regex : "(\\[)((?:[[^\\]]*\\]|[^\\[\\]])*)(\\][ ]?(?:\\n[ ]*)?\\[)(.*?)(\\])"
+        }, { // link by url
+            token : ["text", "string", "text", "markup.underline", "string", "text"],
+            regex : "(\\[)"+
+                    "(\\[[^\\]]*\\]|[^\\[\\]]*)"+
+                    "(\\]\\([ \\t]*)"+
+                    "(<?(?:(?:[^\\(]*?\\([^\\)]*?\\)\\S*?)|(?:.*?))>?)"+
+                    "((?:[ \t]*\"(?:.*?)\"[ \\t]*)?)"+
+                    "(\\))"
+        }, { // HR *
+            token : "constant",
+            regex : "^[ ]{0,2}(?:[ ]?\\*[ ]?){3,}\\s*$"
+        }, { // HR -
+            token : "constant",
+            regex : "^[ ]{0,2}(?:[ ]?\\-[ ]?){3,}\\s*$"
+        }, { // HR _
+            token : "constant",
+            regex : "^[ ]{0,2}(?:[ ]?\\_[ ]?){3,}\\s*$"
+        }, { // list
+            token : "markup.list",
+            regex : "^\\s{0,3}(?:[*+-]|\\d+\\.)\\s+",
+            next  : "listblock"
+        }, { // strong ** __
+            token : "string",
+            regex : "([*]{2}|[_]{2}(?=\\S))([^\\r]*?\\S[*_]*)(\\1)"
+        }, { // emphasis * _
+            token : "string",
+            regex : "([*]|[_](?=\\S))([^\\r]*?\\S[*_]*)(\\1)"
+        }, { // 
+            token : ["text", "url", "text"],
+            regex : "(<)("+
+                      "(?:https?|ftp|dict):[^'\">\\s]+"+
+                      "|"+
+                      "(?:mailto:)?[-.\\w]+\\@[-a-z0-9]+(?:\\.[-a-z0-9]+)*\\.[a-z]+"+
+                    ")(>)"
+        }, {
+            token : "text",
+            regex : "[^\\*_%$`\\[#<>]+"
+        } ],
+        
+        "listblock" : [ { // Lists only escape on completely blank lines.
+            token : "empty_line",
+            regex : "^$",
+            next  : "start"
+        }, {
+            token : "markup.list",
+            regex : ".+"
+        } ],
+        
+        "blockquote" : [ { // BLockquotes only escape on blank lines.
+            token : "empty_line",
+            regex : "^\\s*$",
+            next  : "start"
+        }, {
+            token : "string",
+            regex : ".+"
+        } ],
+        
+        "githubblock" : [ {
+            token : "support.function",
+            regex : "^```",
+            next  : "start"
+        }, {
+            token : "support.function",
+            regex : ".+"
+        } ]
+    };
+    
+    this.embedRules(JavaScriptHighlightRules, "js-", [{
+       token : "support.function",
+       regex : "^```",
+       next  : "start"
+    }]);
+    
+    this.embedRules(HtmlHighlightRules, "html-", [{
+       token : "support.function",
+       regex : "^```",
+       next  : "start"
+    }]);
+    
+    this.embedRules(CssHighlightRules, "css-", [{
+       token : "support.function",
+       regex : "^```",
+       next  : "start"
+    }]);
+    
+    this.embedRules(XmlHighlightRules, "xml-", [{
+       token : "support.function",
+       regex : "^```",
+       next  : "start"
+    }]);
+};
+oop.inherits(MarkdownHighlightRules, TextHighlightRules);
+
+exports.MarkdownHighlightRules = MarkdownHighlightRules;
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -23135,6 +23431,12 @@ var TextileHighlightRules = function() {
         "start" : [
             {
                 token : "keyword", // start of block
+                token : function(value) {
+                    if (value.match(/^h\d$/))
+                        return "markup.heading." + value.charAt(1);
+                    else
+                        return "markup.heading";
+                },
                 regex : "h1|h2|h3|h4|h5|h6|bq|p|bc|pre",
                 next  : "blocktag"
             },
@@ -24797,6 +25099,193 @@ define("text!demo/docs/json.json", [], "{\n" +
   "  }\n" +
   " }\n" +
   "}");
+
+define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
+  "============================\n" +
+  "\n" +
+  "Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](http://www.cloud9ide.com/) and the successor of the Mozilla Skywriter (Bespin) Project.\n" +
+  "\n" +
+  "Features\n" +
+  "--------\n" +
+  "\n" +
+  "* Syntax highlighting\n" +
+  "* Automatic indent and outdent\n" +
+  "* An optional command line\n" +
+  "* Handles huge documents (100,000 lines and more are no problem)\n" +
+  "* Fully customizable key bindings including VI and Emacs modes\n" +
+  "* Themes (TextMate themes can be imported)\n" +
+  "* Search and replace with regular expressions\n" +
+  "* Highlight matching parentheses\n" +
+  "* Toggle between soft tabs and real tabs\n" +
+  "* Displays hidden characters\n" +
+  "* Drag and drop text using the mouse\n" +
+  "* Line wrapping\n" +
+  "* Unstructured / user code folding\n" +
+  "* Live syntax checker (currently JavaScript/CoffeeScript)\n" +
+  "\n" +
+  "Take Ace for a spin!\n" +
+  "--------------------\n" +
+  "\n" +
+  "Check out the Ace live [demo](http://ajaxorg.github.com/ace/) or get a [Cloud9 IDE account](http://run.cloud9ide.com) to experience Ace while editing one of your own GitHub projects.\n" +
+  "\n" +
+  "If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace/build/textarea/editor.html).\n" +
+  "\n" +
+  "History\n" +
+  "-------\n" +
+  "\n" +
+  "Previously known as “Bespin” and “Skywriter” it’s now known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started as two independent projects, both aiming to build a no-compromise code editor component for the web. Bespin started as part of Mozilla Labs and was based on the canvas tag, while Ace is the Editor component of the Cloud9 IDE and is using the DOM for rendering. After the release of Ace at JSConf.eu 2010 in Berlin the Skywriter team decided to merge Ace with a simplified version of Skywriter's plugin system and some of Skywriter's extensibility points. All these changes have been merged back to Ace. Both Ajax.org and Mozilla are actively developing and maintaining Ace.\n" +
+  "\n" +
+  "Getting the code\n" +
+  "----------------\n" +
+  "\n" +
+  "Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the Mozilla tri-license (MPL/GPL/LGPL), the same license used by Firefox. This license is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!\n" +
+  "\n" +
+  "```bash\n" +
+  "    git clone git://github.com/ajaxorg/ace.git\n" +
+  "    cd ace\n" +
+  "    git submodule update --init --recursive\n" +
+  "```\n" +
+  "\n" +
+  "Embedding Ace\n" +
+  "-------------\n" +
+  "\n" +
+  "Ace can be easily embedded into any existing web page. The Ace git repository ships with a pre-packaged version of Ace inside of the `build` directory. The same packaged files are also available as a separate [download](https://github.com/ajaxorg/ace/downloads). Simply copy the contents of the `src` subdirectory somewhere into your project and take a look at the included demos of how to use Ace.\n" +
+  "\n" +
+  "The easiest version is simply:\n" +
+  "\n" +
+  "```html\n" +
+  "    <div id=\"editor\">some text</div>\n" +
+  "    <script src=\"src/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n" +
+  "    <script>\n" +
+  "    window.onload = function() {\n" +
+  "        var editor = ace.edit(\"editor\");\n" +
+  "    };\n" +
+  "    </script>\n" +
+  "```\n" +
+  "\n" +
+  "With \"editor\" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.\n" +
+  "\n" +
+  "```css\n" +
+  "    #editor {\n" +
+  "        position: absolute;\n" +
+  "        width: 500px;\n" +
+  "        height: 400px;\n" +
+  "    }\n" +
+  "```\n" +
+  "\n" +
+  "To change the theme simply include the Theme's JavaScript file\n" +
+  "\n" +
+  "```html\n" +
+  "    <script src=\"src/theme-twilight.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n" +
+  "```\n" +
+  "\n" +
+  "and configure the editor to use the theme:\n" +
+  "\n" +
+  "```javascript\n" +
+  "    editor.setTheme(\"ace/theme/twilight\");\n" +
+  "```\n" +
+  "\n" +
+  "By default the editor only supports plain text mode; many other languages are available as separate modules. After including the mode's JavaScript file:\n" +
+  "\n" +
+  "```html\n" +
+  "    <script src=\"src/mode-javascript.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n" +
+  "```\n" +
+  "\n" +
+  "Then the mode can be used like this:\n" +
+  "\n" +
+  "```javascript\n" +
+  "    var JavaScriptMode = require(\"ace/mode/javascript\").Mode;\n" +
+  "    editor.getSession().setMode(new JavaScriptMode());\n" +
+  "```\n" +
+  "\n" +
+  "Documentation\n" +
+  "-------------\n" +
+  "\n" +
+  "You find a lot more sample code in the [demo app](https://github.com/ajaxorg/ace/blob/master/demo/demo.js).\n" +
+  "\n" +
+  "There is also some documentation on the [wiki page](https://github.com/ajaxorg/ace/wiki).\n" +
+  "\n" +
+  "If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss).\n" +
+  "\n" +
+  "Running Ace\n" +
+  "-----------\n" +
+  "\n" +
+  "After the checkout Ace works out of the box. No build step is required. Open 'editor.html' in any browser except Google Chrome. Google Chrome doesn't allow XMLHTTPRequests from files loaded from disc (i.e. with a file:/// URL). To open Ace in Chrome simply start the bundled mini HTTP server:\n" +
+  "\n" +
+  "```bash\n" +
+  "    ./static.py\n" +
+  "```\n" +
+  "\n" +
+  "Or using Node.JS\n" +
+  "\n" +
+  "```bash\n" +
+  "    ./static.js\n" +
+  "```\n" +
+  "\n" +
+  "The editor can then be opened at http://localhost:8888/index.html.\n" +
+  "\n" +
+  "Package Ace\n" +
+  "-----------\n" +
+  "\n" +
+  "To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Before you can build you need to make sure that the submodules are up to date.\n" +
+  "\n" +
+  "```bash\n" +
+  "    git submodule update --init --recursive\n" +
+  "```\n" +
+  "\n" +
+  "Afterwards Ace can be built by calling\n" +
+  "\n" +
+  "```bash\n" +
+  "    ./Makefile.dryice.js normal\n" +
+  "```\n" +
+  "\n" +
+  "The packaged Ace will be put in the 'build' folder.\n" +
+  "\n" +
+  "To build the bookmarklet version execute\n" +
+  "\n" +
+  "```bash\n" +
+  "    ./Makefile.dryice.js bm\n" +
+  "```\n" +
+  "\n" +
+  "Running the Unit Tests\n" +
+  "----------------------\n" +
+  "\n" +
+  "The Ace unit tests run on node.js. Before the first run a couple of node modules have to be installed. The easiest way to do this is by using the node package manager (npm). In the Ace base directory simply call\n" +
+  "\n" +
+  "```bash\n" +
+  "    npm link .\n" +
+  "```\n" +
+  "\n" +
+  "To run the tests call:\n" +
+  "\n" +
+  "```bash\n" +
+  "    node lib/ace/test/all.js\n" +
+  "```\n" +
+  "\n" +
+  "You can also run the tests in your browser by serving:\n" +
+  "\n" +
+  "    http://localhost:8888/lib/ace/test/tests.html\n" +
+  "\n" +
+  "This makes debugging failing tests way more easier.\n" +
+  "\n" +
+  "Contributing\n" +
+  "------------\n" +
+  "\n" +
+  "Ace wouldn't be what it is without contributions! Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. To protect the interests of the Ace contributors and users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is the simplest of agreements, requiring that the contributions you make to an ajax.org project are only those you're allowed to make. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes ten minutes, and only needs to be completed once.  There are two versions of the agreement:\n" +
+  "\n" +
+  "1. [The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting.\n" +
+  "2. [The Corporate CLA](https://github.com/ajaxorg/ace/raw/master/doc/Corporate_Contributor_License_Agreement-v2.pdf): have your corporate lawyer review and submit this if your company is going to be contributing to ajax.org  projects\n" +
+  "\n" +
+  "If you want to contribute to an ajax.org project please print the CLA and fill it out and sign it. Then either send it by snail mail or fax to us or send it back scanned (or as a photo) by email.\n" +
+  "\n" +
+  "Email: fabian.jakobs@web.de\n" +
+  "\n" +
+  "Fax: +31 (0) 206388953\n" +
+  "\n" +
+  "Address: Ajax.org B.V.\n" +
+  "  Keizersgracht 241\n" +
+  "  1016 EA, Amsterdam\n" +
+  "  the Netherlands");
 
 define("text!demo/docs/ocaml.ml", [], "(*\n" +
   " * Example of early return implementation taken from\n" +
@@ -27052,6 +27541,41 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "  %entity.other.attribute-name%\n" +
   "}\n" +
   "\n" +
+  ".%cssClass% .ace_markup.ace_underline {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading {\n" +
+  "  %markup.heading%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
+  "  %markup.heading.1%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
+  "  %markup.heading.2%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
+  "  %markup.heading.3%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
+  "  %markup.heading.4%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
+  "  %markup.heading.5%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
+  "  %markup.heading.6%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_list {\n" +
+  "  %markup.list%\n" +
+  "}\n" +
   "\n" +
   ".%cssClass% .ace_collab.ace_user1 {\n" +
   "  %collab.user1%   \n" +
