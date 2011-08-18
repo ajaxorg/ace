@@ -163,6 +163,41 @@
   %entity.other.attribute-name%
 }
 
+.%cssClass% .ace_markup.ace_underline {
+    text-decoration:underline;
+}
+
+.%cssClass% .ace_markup.ace_heading {
+  %markup.heading%
+}
+
+.%cssClass% .ace_markup.ace_heading.ace_1 {
+  %markup.heading.1%
+}
+
+.%cssClass% .ace_markup.ace_heading.ace_2 {
+  %markup.heading.2%
+}
+
+.%cssClass% .ace_markup.ace_heading.ace_3 {
+  %markup.heading.3%
+}
+
+.%cssClass% .ace_markup.ace_heading.ace_4 {
+  %markup.heading.4%
+}
+
+.%cssClass% .ace_markup.ace_heading.ace_5 {
+  %markup.heading.5%
+}
+
+.%cssClass% .ace_markup.ace_heading.ace_6 {
+  %markup.heading.6%
+}
+
+.%cssClass% .ace_markup.ace_list {
+  %markup.list%
+}
 
 .%cssClass% .ace_collab.ace_user1 {
   %collab.user1%   
