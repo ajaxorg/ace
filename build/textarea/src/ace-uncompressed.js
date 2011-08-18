@@ -7127,7 +7127,7 @@ var MouseHandler = function(editor) {
     event.addMultiMouseDownListener(mouseTarget, 0, 2, 500, this.onMouseDoubleClick.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 3, 600, this.onMouseTripleClick.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 4, 600, this.onMouseQuadClick.bind(this));
-    event.addMouseWheelListener(mouseTarget, this.onMouseWheel.bind(this));
+    event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this));
 };
 
 (function() {
@@ -7368,7 +7368,8 @@ var MouseHandler = function(editor) {
         var speed = this.$scrollSpeed * 2;
 
         this.editor.renderer.scrollBy(e.wheelX * speed, e.wheelY * speed);
-        return event.preventDefault(e);
+        if (this.editor.renderer.isScrollableBy(e.wheelX, e.wheelY))
+            return event.preventDefault(e);
     };
 
 
@@ -13243,7 +13244,7 @@ exports.UndoManager = UndoManager;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
+__ace_shadowed__.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'ace/requirejs/text!ace/css/editor.css'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
@@ -13256,7 +13257,7 @@ var CursorLayer = require("ace/layer/cursor").Cursor;
 var ScrollBar = require("ace/scrollbar").ScrollBar;
 var RenderLoop = require("ace/renderloop").RenderLoop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var editorCss = require("text!ace/css/editor.css");
+var editorCss = require("ace/requirejs/text!ace/css/editor.css");
 
 // import CSS once
 dom.importCssString(editorCss);
@@ -13915,6 +13916,14 @@ var VirtualRenderer = function(container, theme) {
     this.scrollBy = function(deltaX, deltaY) {
         deltaY && this.scrollToY(this.scrollTop + deltaY);
         deltaX && this.scrollToX(this.scroller.scrollLeft + deltaX);
+    };
+
+    this.isScrollableBy = function(deltaX, deltaY) {
+        if (deltaY < 0 && this.scrollTop > 0)
+           return true;
+        if (deltaY > 0 && this.scrollTop + this.$size.scrollerHeight < this.layerConfig.maxHeight)
+           return true;
+        // todo: handle horizontal scrolling
     };
 
     this.screenToTextCoordinates = function(pageX, pageY) {
