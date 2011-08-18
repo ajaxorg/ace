@@ -108,7 +108,7 @@ var project = copy.createCommonJsProject(aceProject);
 
 
 function filterTextPlugin(text) {
-    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text/");
+    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text!");
 }
 
 var ace = copy.createDataObject();

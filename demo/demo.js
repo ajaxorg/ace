@@ -40,44 +40,45 @@
 
 define(function(require, exports, module) {
 
+var net = require("ace/lib/net");
+var canon = require("pilot/canon");
+var event = require("pilot/event");
+var Range = require("ace/range").Range;
+var Editor = require("ace/editor").Editor;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var theme = require("ace/theme/textmate");
+var EditSession = require("ace/edit_session").EditSession;
+
+var JavaScriptMode = require("ace/mode/javascript").Mode;
+var CssMode = require("ace/mode/css").Mode;
+var ScssMode = require("ace/mode/scss").Mode;
+var HtmlMode = require("ace/mode/html").Mode;
+var XmlMode = require("ace/mode/xml").Mode;
+var PythonMode = require("ace/mode/python").Mode;
+var PhpMode = require("ace/mode/php").Mode;
+var JavaMode = require("ace/mode/java").Mode;
+var CSharpMode = require("ace/mode/csharp").Mode;
+var RubyMode = require("ace/mode/ruby").Mode;
+var CCPPMode = require("ace/mode/c_cpp").Mode;
+var CoffeeMode = require("ace/mode/coffee").Mode;
+var JsonMode = require("ace/mode/json").Mode;
+var PerlMode = require("ace/mode/perl").Mode;
+var ClojureMode = require("ace/mode/clojure").Mode;
+var OcamlMode = require("ace/mode/ocaml").Mode;
+var SvgMode = require("ace/mode/svg").Mode;
+var TextileMode = require("ace/mode/textile").Mode;
+var TextMode = require("ace/mode/text").Mode;
+var GroovyMode = require("ace/mode/groovy").Mode;
+var ScalaMode = require("ace/mode/scala").Mode;
+
+var UndoManager = require("ace/undomanager").UndoManager;
+
+var vim = require("ace/keyboard/keybinding/vim").Vim;
+var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+
 exports.launch = function(env) {
-    var canon = require("pilot/canon");
-    var event = require("pilot/event");
-    var net = require("ace/lib/net");
-    var Range = require("ace/range").Range;
-    var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var EditSession = require("ace/edit_session").EditSession;
-
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    var CssMode = require("ace/mode/css").Mode;
-    var ScssMode = require("ace/mode/scss").Mode;
-    var HtmlMode = require("ace/mode/html").Mode;
-    var XmlMode = require("ace/mode/xml").Mode;
-    var PythonMode = require("ace/mode/python").Mode;
-    var PhpMode = require("ace/mode/php").Mode;
-    var JavaMode = require("ace/mode/java").Mode;
-    var CSharpMode = require("ace/mode/csharp").Mode;
-    var RubyMode = require("ace/mode/ruby").Mode;
-    var CCPPMode = require("ace/mode/c_cpp").Mode;
-    var CoffeeMode = require("ace/mode/coffee").Mode;
-    var JsonMode = require("ace/mode/json").Mode;
-    var PerlMode = require("ace/mode/perl").Mode;
-    var ClojureMode = require("ace/mode/clojure").Mode;
-    var OcamlMode = require("ace/mode/ocaml").Mode;
-    var SvgMode = require("ace/mode/svg").Mode;
-    var TextileMode = require("ace/mode/textile").Mode;
-    var TextMode = require("ace/mode/text").Mode;
-    var GroovyMode = require("ace/mode/groovy").Mode;
-    var ScalaMode = require("ace/mode/scala").Mode;
-
-    var UndoManager = require("ace/undomanager").UndoManager;
-
-    var vim = require("ace/keyboard/keybinding/vim").Vim;
-    var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
-    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-
+    
     var keybindings = {
       // Null = use "default" keymapping
       ace: null,
