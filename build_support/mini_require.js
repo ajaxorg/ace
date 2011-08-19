@@ -47,6 +47,9 @@ var global = (function() {
     return this;
 })();
 
+if (typeof requirejs !== "undefined")
+    return;
+
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
@@ -119,7 +122,6 @@ global.require = _require;
 var lookup = function(moduleName) {
     var module = define.modules[moduleName];
     if (module == null) {
-        console.error('Missing module: ' + moduleName);
         return null;
     }
 
