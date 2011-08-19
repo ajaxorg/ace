@@ -47,6 +47,9 @@ var global = (function() {
     return this;
 })();
 
+if (typeof requirejs !== "undefined")
+    return;
+
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
@@ -119,7 +122,6 @@ global.require = _require;
 var lookup = function(moduleName) {
     var module = define.modules[moduleName];
     if (module == null) {
-        console.error('Missing module: ' + moduleName);
         return null;
     }
 
@@ -211,832 +213,10 @@ exports.shutdown = function(data, reason) {
     MIT License. http://github.com/280north/narwhal/blob/master/README.md
 */
 
-define('pilot/fixoldbrowsers', ['require', 'exports', 'module' , 'pilot/regexp'], function(require, exports, module) {
+define('pilot/fixoldbrowsers', ['require', 'exports', 'module' , 'pilot/regexp', 'pilot/es5-shim'], function(require, exports, module) {
 
 require("pilot/regexp");
-
-/**
- * Brings an environment as close to ECMAScript 5 compliance
- * as is possible with the facilities of erstwhile engines.
- *
- * ES5 Draft
- * http://www.ecma-international.org/publications/files/drafts/tc39-2009-050.pdf
- *
- * NOTE: this is a draft, and as such, the URL is subject to change.  If the
- * link is broken, check in the parent directory for the latest TC39 PDF.
- * http://www.ecma-international.org/publications/files/drafts/
- *
- * Previous ES5 Draft
- * http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
- * This is a broken link to the previous draft of ES5 on which most of the
- * numbered specification references and quotes herein were taken.  Updating
- * these references and quotes to reflect the new document would be a welcome
- * volunteer project.
- *
- * @module
- */
-
-/*whatsupdoc*/
-
-//
-// Function
-// ========
-//
-
-// ES-5 15.3.4.5
-// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
-
-if (!Function.prototype.bind) {
-    var slice = Array.prototype.slice;
-    Function.prototype.bind = function bind(that) { // .length is 1
-        // 1. Let Target be the this value.
-        var target = this;
-        // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        // XXX this gets pretty close, for all intents and purposes, letting
-        // some duck-types slide
-        if (typeof target.apply !== "function" || typeof target.call !== "function")
-            return new TypeError();
-        // 3. Let A be a new (possibly empty) internal list of all of the
-        //   argument values provided after thisArg (arg1, arg2 etc), in order.
-        var args = slice.call(arguments);
-        // 4. Let F be a new native ECMAScript object.
-        // 9. Set the [[Prototype]] internal property of F to the standard
-        //   built-in Function prototype object as specified in 15.3.3.1.
-        // 10. Set the [[Call]] internal property of F as described in
-        //   15.3.4.5.1.
-        // 11. Set the [[Construct]] internal property of F as described in
-        //   15.3.4.5.2.
-        // 12. Set the [[HasInstance]] internal property of F as described in
-        //   15.3.4.5.3.
-        // 13. The [[Scope]] internal property of F is unused and need not
-        //   exist.
-        var bound = function bound() {
-
-            if (this instanceof bound) {
-                // 15.3.4.5.2 [[Construct]]
-                // When the [[Construct]] internal method of a function object,
-                // F that was created using the bind function is called with a
-                // list of arguments ExtraArgs the following steps are taken:
-                // 1. Let target be the value of F's [[TargetFunction]]
-                //   internal property.
-                // 2. If target has no [[Construct]] internal method, a
-                //   TypeError exception is thrown.
-                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the
-                //   list boundArgs in the same order followed by the same
-                //   values as the list ExtraArgs in the same order.
-
-                var self = Object.create(target.prototype);
-                target.apply(self, args.concat(slice.call(arguments)));
-                return self;
-
-            } else {
-                // 15.3.4.5.1 [[Call]]
-                // When the [[Call]] internal method of a function object, F,
-                // which was created using the bind function is called with a
-                // this value and a list of arguments ExtraArgs the following
-                // steps are taken:
-                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 2. Let boundThis be the value of F's [[BoundThis]] internal
-                //   property.
-                // 3. Let target be the value of F's [[TargetFunction]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the list
-                //   boundArgs in the same order followed by the same values as
-                //   the list ExtraArgs in the same order. 5.  Return the
-                //   result of calling the [[Call]] internal method of target
-                //   providing boundThis as the this value and providing args
-                //   as the arguments.
-
-                // equiv: target.call(this, ...boundArgs, ...args)
-                return target.call.apply(
-                    target,
-                    args.concat(slice.call(arguments))
-                );
-
-            }
-
-        };
-        bound.length = (
-            // 14. If the [[Class]] internal property of Target is "Function", then
-            typeof target === "function" ?
-            // a. Let L be the length property of Target minus the length of A.
-            // b. Set the length own property of F to either 0 or L, whichever is larger.
-            Math.max(target.length - args.length, 0) :
-            // 15. Else set the length own property of F to 0.
-            0
-        )
-        // 16. The length own property of F is given attributes as specified in
-        //   15.3.5.1.
-        // TODO
-        // 17. Set the [[Extensible]] internal property of F to true.
-        // TODO
-        // 18. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // 19. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // NOTE Function objects created using Function.prototype.bind do not
-        // have a prototype property.
-        // XXX can't delete it in pure-js.
-        return bound;
-    };
-}
-
-// Shortcut to an often accessed properties, in order to avoid multiple
-// dereference that costs universally.
-// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
-// us it in defining shortcuts.
-var call = Function.prototype.call;
-var prototypeOfArray = Array.prototype;
-var prototypeOfObject = Object.prototype;
-var owns = call.bind(prototypeOfObject.hasOwnProperty);
-
-var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
-// If JS engine supports accessors creating shortcuts.
-if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
-    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
-    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
-    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
-    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
-}
-
-
-//
-// Array
-// =====
-//
-
-// ES5 15.4.3.2
-if (!Array.isArray) {
-    Array.isArray = function isArray(obj) {
-        return Object.prototype.toString.call(obj) === "[object Array]";
-    };
-}
-
-// ES5 15.4.4.18
-if (!Array.prototype.forEach) {
-    Array.prototype.forEach =  function forEach(block, thisObject) {
-        var len = +this.length;
-        for (var i = 0; i < len; i++) {
-            if (i in this) {
-                block.call(thisObject, this[i], i, this);
-            }
-        }
-    };
-}
-
-// ES5 15.4.4.19
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
-if (!Array.prototype.map) {
-    Array.prototype.map = function map(fun /*, thisp*/) {
-        var len = +this.length;
-        if (typeof fun !== "function")
-          throw new TypeError();
-
-        var res = new Array(len);
-        var thisp = arguments[1];
-        for (var i = 0; i < len; i++) {
-            if (i in this)
-                res[i] = fun.call(thisp, this[i], i, this);
-        }
-
-        return res;
-    };
-}
-
-// ES5 15.4.4.20
-if (!Array.prototype.filter) {
-    Array.prototype.filter = function filter(block /*, thisp */) {
-        var values = [];
-        var thisp = arguments[1];
-        for (var i = 0; i < this.length; i++)
-            if (block.call(thisp, this[i]))
-                values.push(this[i]);
-        return values;
-    };
-}
-
-// ES5 15.4.4.16
-if (!Array.prototype.every) {
-    Array.prototype.every = function every(block /*, thisp */) {
-        var thisp = arguments[1];
-        for (var i = 0; i < this.length; i++)
-            if (!block.call(thisp, this[i]))
-                return false;
-        return true;
-    };
-}
-
-// ES5 15.4.4.17
-if (!Array.prototype.some) {
-    Array.prototype.some = function some(block /*, thisp */) {
-        var thisp = arguments[1];
-        for (var i = 0; i < this.length; i++)
-            if (block.call(thisp, this[i]))
-                return true;
-        return false;
-    };
-}
-
-// ES5 15.4.4.21
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
-if (!Array.prototype.reduce) {
-    Array.prototype.reduce = function reduce(fun /*, initial*/) {
-        var len = +this.length;
-        if (typeof fun !== "function")
-            throw new TypeError();
-
-        // no value to return if no initial value and an empty array
-        if (len === 0 && arguments.length === 1)
-            throw new TypeError();
-
-        var i = 0;
-        if (arguments.length >= 2) {
-            var rv = arguments[1];
-        } else {
-            do {
-                if (i in this) {
-                    rv = this[i++];
-                    break;
-                }
-
-                // if array contains no values, no initial value to return
-                if (++i >= len)
-                    throw new TypeError();
-            } while (true);
-        }
-
-        for (; i < len; i++) {
-            if (i in this)
-                rv = fun.call(null, rv, this[i], i, this);
-        }
-
-        return rv;
-    };
-}
-
-// ES5 15.4.4.22
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
-if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
-        var len = +this.length;
-        if (typeof fun !== "function")
-            throw new TypeError();
-
-        // no value to return if no initial value, empty array
-        if (len === 0 && arguments.length === 1)
-            throw new TypeError();
-
-        var i = len - 1;
-        if (arguments.length >= 2) {
-            var rv = arguments[1];
-        } else {
-            do {
-                if (i in this) {
-                    rv = this[i--];
-                    break;
-                }
-
-                // if array contains no values, no initial value to return
-                if (--i < 0)
-                    throw new TypeError();
-            } while (true);
-        }
-
-        for (; i >= 0; i--) {
-            if (i in this)
-                rv = fun.call(null, rv, this[i], i, this);
-        }
-
-        return rv;
-    };
-}
-
-// ES5 15.4.4.14
-if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function indexOf(value /*, fromIndex */ ) {
-        var length = this.length;
-        if (!length)
-            return -1;
-        var i = arguments[1] || 0;
-        if (i >= length)
-            return -1;
-        if (i < 0)
-            i += length;
-        for (; i < length; i++) {
-            if (!owns(this, i))
-                continue;
-            if (value === this[i])
-                return i;
-        }
-        return -1;
-    };
-}
-
-// ES5 15.4.4.15
-if (!Array.prototype.lastIndexOf) {
-    Array.prototype.lastIndexOf = function lastIndexOf(value /*, fromIndex */) {
-        var length = this.length;
-        if (!length)
-            return -1;
-        var i = arguments[1] || length;
-        if (i < 0)
-            i += length;
-        i = Math.min(i, length - 1);
-        for (; i >= 0; i--) {
-            if (!owns(this, i))
-                continue;
-            if (value === this[i])
-                return i;
-        }
-        return -1;
-    };
-}
-
-//
-// Object
-// ======
-//
-
-// ES5 15.2.3.2
-if (!Object.getPrototypeOf) {
-    // https://github.com/kriskowal/es5-shim/issues#issue/2
-    // http://ejohn.org/blog/objectgetprototypeof/
-    // recommended by fschaefer on github
-    Object.getPrototypeOf = function getPrototypeOf(object) {
-        return object.__proto__ || object.constructor.prototype;
-        // or undefined if not available in this engine
-    };
-}
-
-// ES5 15.2.3.3
-if (!Object.getOwnPropertyDescriptor) {
-    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
-                         "non-object: ";
-    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
-        if ((typeof object !== "object" && typeof object !== "function") || object === null)
-            throw new TypeError(ERR_NON_OBJECT + object);
-        // If object does not owns property return undefined immediately.
-        if (!owns(object, property))
-            return undefined;
-
-        var despriptor, getter, setter;
-
-        // If object has a property then it's for sure both `enumerable` and
-        // `configurable`.
-        despriptor =  { enumerable: true, configurable: true };
-
-        // If JS engine supports accessor properties then property may be a
-        // getter or setter.
-        if (supportsAccessors) {
-            // Unfortunately `__lookupGetter__` will return a getter even
-            // if object has own non getter property along with a same named
-            // inherited getter. To avoid misbehavior we temporary remove
-            // `__proto__` so that `__lookupGetter__` will return getter only
-            // if it's owned by an object.
-            var prototype = object.__proto__;
-            object.__proto__ = prototypeOfObject;
-
-            var getter = lookupGetter(object, property);
-            var setter = lookupSetter(object, property);
-
-            // Once we have getter and setter we can put values back.
-            object.__proto__ = prototype;
-
-            if (getter || setter) {
-                if (getter) descriptor.get = getter;
-                if (setter) descriptor.set = setter;
-
-                // If it was accessor property we're done and return here
-                // in order to avoid adding `value` to the descriptor.
-                return descriptor;
-            }
-        }
-
-        // If we got this far we know that object has an own property that is
-        // not an accessor so we set it as a value and return descriptor.
-        descriptor.value = object[property];
-        return descriptor;
-    };
-}
-
-// ES5 15.2.3.4
-if (!Object.getOwnPropertyNames) {
-    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
-        return Object.keys(object);
-    };
-}
-
-// ES5 15.2.3.5
-if (!Object.create) {
-    Object.create = function create(prototype, properties) {
-        var object;
-        if (prototype === null) {
-            object = { "__proto__": null };
-        } else {
-            if (typeof prototype !== "object")
-                throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
-            var Type = function () {};
-            Type.prototype = prototype;
-            object = new Type();
-            // IE has no built-in implementation of `Object.getPrototypeOf`
-            // neither `__proto__`, but this manually setting `__proto__` will
-            // guarantee that `Object.getPrototypeOf` will work as expected with
-            // objects created using `Object.create`
-            object.__proto__ = prototype;
-        }
-        if (typeof properties !== "undefined")
-            Object.defineProperties(object, properties);
-        return object;
-    };
-}
-
-// ES5 15.2.3.6
-if (!Object.defineProperty) {
-    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
-    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
-    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
-                                      "on this javascript engine";
-
-    Object.defineProperty = function defineProperty(object, property, descriptor) {
-        if (typeof object !== "object" && typeof object !== "function")
-            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
-        if (typeof object !== "object" || object === null)
-            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
-
-        // If it's a data property.
-        if (owns(descriptor, "value")) {
-            // fail silently if "writable", "enumerable", or "configurable"
-            // are requested but not supported
-            /*
-            // alternate approach:
-            if ( // can't implement these features; allow false but not true
-                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
-                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
-                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
-            )
-                throw new RangeError(
-                    "This implementation of Object.defineProperty does not " +
-                    "support configurable, enumerable, or writable."
-                );
-            */
-
-            if (supportsAccessors && (lookupGetter(object, property) ||
-                                      lookupSetter(object, property)))
-            {
-                // As accessors are supported only on engines implementing
-                // `__proto__` we can safely override `__proto__` while defining
-                // a property to make sure that we don't hit an inherited
-                // accessor.
-                var prototype = object.__proto__;
-                object.__proto__ = prototypeOfObject;
-                // Deleting a property anyway since getter / setter may be
-                // defined on object itself.
-                delete object[property];
-                object[property] = descriptor.value;
-                // Setting original `__proto__` back now.
-                object.prototype;
-            } else {
-                object[property] = descriptor.value;
-            }
-        } else {
-            if (!supportsAccessors)
-                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
-            // If we got that far then getters and setters can be defined !!
-            if (owns(descriptor, "get"))
-                defineGetter(object, property, descriptor.get);
-            if (owns(descriptor, "set"))
-                defineSetter(object, property, descriptor.set);
-        }
-
-        return object;
-    };
-}
-
-// ES5 15.2.3.7
-if (!Object.defineProperties) {
-    Object.defineProperties = function defineProperties(object, properties) {
-        for (var property in properties) {
-            if (owns(properties, property))
-                Object.defineProperty(object, property, properties[property]);
-        }
-        return object;
-    };
-}
-
-// ES5 15.2.3.8
-if (!Object.seal) {
-    Object.seal = function seal(object) {
-        // this is misleading and breaks feature-detection, but
-        // allows "securable" code to "gracefully" degrade to working
-        // but insecure code.
-        return object;
-    };
-}
-
-// ES5 15.2.3.9
-if (!Object.freeze) {
-    Object.freeze = function freeze(object) {
-        // this is misleading and breaks feature-detection, but
-        // allows "securable" code to "gracefully" degrade to working
-        // but insecure code.
-        return object;
-    };
-}
-
-// detect a Rhino bug and patch it
-try {
-    Object.freeze(function () {});
-} catch (exception) {
-    Object.freeze = (function freeze(freezeObject) {
-        return function freeze(object) {
-            if (typeof object === "function") {
-                return object;
-            } else {
-                return freezeObject(object);
-            }
-        };
-    })(Object.freeze);
-}
-
-// ES5 15.2.3.10
-if (!Object.preventExtensions) {
-    Object.preventExtensions = function preventExtensions(object) {
-        // this is misleading and breaks feature-detection, but
-        // allows "securable" code to "gracefully" degrade to working
-        // but insecure code.
-        return object;
-    };
-}
-
-// ES5 15.2.3.11
-if (!Object.isSealed) {
-    Object.isSealed = function isSealed(object) {
-        return false;
-    };
-}
-
-// ES5 15.2.3.12
-if (!Object.isFrozen) {
-    Object.isFrozen = function isFrozen(object) {
-        return false;
-    };
-}
-
-// ES5 15.2.3.13
-if (!Object.isExtensible) {
-    Object.isExtensible = function isExtensible(object) {
-        return true;
-    };
-}
-
-// ES5 15.2.3.14
-// http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
-if (!Object.keys) {
-
-    var hasDontEnumBug = true,
-        dontEnums = [
-            'toString',
-            'toLocaleString',
-            'valueOf',
-            'hasOwnProperty',
-            'isPrototypeOf',
-            'propertyIsEnumerable',
-            'constructor'
-        ],
-        dontEnumsLength = dontEnums.length;
-
-    for (var key in {"toString": null})
-        hasDontEnumBug = false;
-
-    Object.keys = function keys(object) {
-
-        if (
-            typeof object !== "object" && typeof object !== "function"
-            || object === null
-        )
-            throw new TypeError("Object.keys called on a non-object");
-
-        var keys = [];
-        for (var name in object) {
-            if (owns(object, name)) {
-                keys.push(name);
-            }
-        }
-
-        if (hasDontEnumBug) {
-            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
-                var dontEnum = dontEnums[i];
-                if (owns(object, dontEnum)) {
-                    keys.push(dontEnum);
-                }
-            }
-        }
-
-        return keys;
-    };
-
-}
-
-//
-// Date
-// ====
-//
-
-// ES5 15.9.5.43
-// Format a Date object as a string according to a subset of the ISO-8601 standard.
-// Useful in Atom, among other things.
-if (!Date.prototype.toISOString) {
-    Date.prototype.toISOString = function toISOString() {
-        return (
-            this.getUTCFullYear() + "-" +
-            (this.getUTCMonth() + 1) + "-" +
-            this.getUTCDate() + "T" +
-            this.getUTCHours() + ":" +
-            this.getUTCMinutes() + ":" +
-            this.getUTCSeconds() + "Z"
-        );
-    }
-}
-
-// ES5 15.9.4.4
-if (!Date.now) {
-    Date.now = function now() {
-        return new Date().getTime();
-    };
-}
-
-// ES5 15.9.5.44
-if (!Date.prototype.toJSON) {
-    Date.prototype.toJSON = function toJSON(key) {
-        // This function provides a String representation of a Date object for
-        // use by JSON.stringify (15.12.3). When the toJSON method is called
-        // with argument key, the following steps are taken:
-
-        // 1.  Let O be the result of calling ToObject, giving it the this
-        // value as its argument.
-        // 2. Let tv be ToPrimitive(O, hint Number).
-        // 3. If tv is a Number and is not finite, return null.
-        // XXX
-        // 4. Let toISO be the result of calling the [[Get]] internal method of
-        // O with argument "toISOString".
-        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof this.toISOString !== "function")
-            throw new TypeError();
-        // 6. Return the result of calling the [[Call]] internal method of
-        // toISO with O as the this value and an empty argument list.
-        return this.toISOString();
-
-        // NOTE 1 The argument is ignored.
-
-        // NOTE 2 The toJSON function is intentionally generic; it does not
-        // require that its this value be a Date object. Therefore, it can be
-        // transferred to other kinds of objects for use as a method. However,
-        // it does require that any such object have a toISOString method. An
-        // object is free to use the argument key to filter its
-        // stringification.
-    };
-}
-
-// 15.9.4.2 Date.parse (string)
-// 15.9.1.15 Date Time String Format
-// Date.parse
-// based on work shared by Daniel Friesen (dantman)
-// http://gist.github.com/303249
-if (isNaN(Date.parse("T00:00"))) {
-    // XXX global assignment won't work in embeddings that use
-    // an alternate object for the context.
-    Date = (function(NativeDate) {
-
-        // Date.length === 7
-        var Date = function(Y, M, D, h, m, s, ms) {
-            var length = arguments.length;
-            if (this instanceof NativeDate) {
-                var date = length === 1 && String(Y) === Y ? // isString(Y)
-                    // We explicitly pass it through parse:
-                    new NativeDate(Date.parse(Y)) :
-                    // We have to manually make calls depending on argument
-                    // length here
-                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
-                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
-                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
-                    length >= 4 ? new NativeDate(Y, M, D, h) :
-                    length >= 3 ? new NativeDate(Y, M, D) :
-                    length >= 2 ? new NativeDate(Y, M) :
-                    length >= 1 ? new NativeDate(Y) :
-                                  new NativeDate();
-                // Prevent mixups with unfixed Date object
-                date.constructor = Date;
-                return date;
-            }
-            return NativeDate.apply(this, arguments);
-        };
-
-        // 15.9.1.15 Date Time String Format
-        var isoDateExpression = new RegExp("^" +
-            "(?:" + // optional year-month-day
-                "(" + // year capture
-                    "(?:[+-]\\d\\d)?" + // 15.9.1.15.1 Extended years
-                    "\\d\\d\\d\\d" + // four-digit year
-                ")" +
-                "(?:-" + // optional month-day
-                    "(\\d\\d)" + // month capture
-                    "(?:-" + // optional day
-                        "(\\d\\d)" + // day capture
-                    ")?" +
-                ")?" +
-            ")?" +
-            "(?:T" + // hour:minute:second.subsecond
-                "(\\d\\d)" + // hour capture
-                ":(\\d\\d)" + // minute capture
-                "(?::" + // optional :second.subsecond
-                    "(\\d\\d)" + // second capture
-                    "(?:\\.(\\d\\d\\d))?" + // milisecond capture
-                ")?" +
-            ")?" +
-            "(?:" + // time zone
-                "Z|" + // UTC capture
-                "([+-])(\\d\\d):(\\d\\d)" + // timezone offset
-                // capture sign, hour, minute
-            ")?" +
-        "$");
-
-        // Copy any custom methods a 3rd party library may have added
-        for (var key in NativeDate)
-            Date[key] = NativeDate[key];
-
-        // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
-        Date.UTC = NativeDate.UTC;
-        Date.prototype = NativeDate.prototype;
-        Date.prototype.constructor = Date;
-
-        // Upgrade Date.parse to handle the ISO dates we use
-        // TODO review specification to ascertain whether it is
-        // necessary to implement partial ISO date strings.
-        Date.parse = function parse(string) {
-            var match = isoDateExpression.exec(string);
-            if (match) {
-                match.shift(); // kill match[0], the full match
-                // recognize times without dates before normalizing the
-                // numeric values, for later use
-                var timeOnly = match[0] === undefined;
-                // parse numerics
-                for (var i = 0; i < 10; i++) {
-                    // skip + or - for the timezone offset
-                    if (i === 7)
-                        continue;
-                    // Note: parseInt would read 0-prefix numbers as
-                    // octal.  Number constructor or unary + work better
-                    // here:
-                    match[i] = +(match[i] || (i < 3 ? 1 : 0));
-                    // match[1] is the month. Months are 0-11 in JavaScript
-                    // Date objects, but 1-12 in ISO notation, so we
-                    // decrement.
-                    if (i === 1)
-                        match[i]--;
-                }
-                // if no year-month-date is provided, return a milisecond
-                // quantity instead of a UTC date number value.
-                if (timeOnly)
-                    return ((match[3] * 60 + match[4]) * 60 + match[5]) * 1000 + match[6];
-
-                // account for an explicit time zone offset if provided
-                var offset = (match[8] * 60 + match[9]) * 60 * 1000;
-                if (match[6] === "-")
-                    offset = -offset;
-
-                return NativeDate.UTC.apply(this, match.slice(0, 7)) + offset;
-            }
-            return NativeDate.parse.apply(this, arguments);
-        };
-
-        return Date;
-    })(Date);
-}
-
-//
-// String
-// ======
-//
-
-// ES5 15.5.4.20
-if (!String.prototype.trim) {
-    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
-    var trimBeginRegexp = /^\s\s*/;
-    var trimEndRegexp = /\s\s*$/;
-    String.prototype.trim = function trim() {
-        return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
-    };
-}
+require("pilot/es5-shim");
 
 });define('pilot/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
 
@@ -1143,6 +323,929 @@ if (!String.prototype.trim) {
         }
         return -1;
     };
+
+});// vim:set ts=4 sts=4 sw=4 st:
+// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
+// -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
+// -- dantman Daniel Friesen Copyright(C) 2010 XXX No License Specified
+// -- fschaefer Florian Schäfer Copyright (C) 2010 MIT License
+// -- Irakli Gozalishvili Copyright (C) 2010 MIT License
+// -- kitcambridge Kit Cambridge Copyright (C) 2011 MIT License
+
+/*!
+    Copyright (c) 2009, 280 North Inc. http://280north.com/
+    MIT License. http://github.com/280north/narwhal/blob/master/README.md
+*/
+
+define('pilot/es5-shim', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+/**
+ * Brings an environment as close to ECMAScript 5 compliance
+ * as is possible with the facilities of erstwhile engines.
+ *
+ * ES5 Draft
+ * http://www.ecma-international.org/publications/files/drafts/tc39-2009-050.pdf
+ *
+ * NOTE: this is a draft, and as such, the URL is subject to change.  If the
+ * link is broken, check in the parent directory for the latest TC39 PDF.
+ * http://www.ecma-international.org/publications/files/drafts/
+ *
+ * Previous ES5 Draft
+ * http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+ * This is a broken link to the previous draft of ES5 on which most of the
+ * numbered specification references and quotes herein were taken.  Updating
+ * these references and quotes to reflect the new document would be a welcome
+ * volunteer project.
+ *
+ * @module
+ */
+
+/*whatsupdoc*/
+
+//
+// Function
+// ========
+//
+
+// ES-5 15.3.4.5
+// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof target.apply != "function" || typeof target.call != "function")
+            return new TypeError();
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        // XXX slicedArgs will stand in for "A" if used
+        var args = slice.call(arguments, 1); // for normal call
+        // 4. Let F be a new native ECMAScript object.
+        // 9. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 10. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 11. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 12. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        // 13. The [[Scope]] internal property of F is unused and need not
+        //   exist.
+        var bound = function () {
+
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+
+                var self = Object.create(target.prototype);
+                var result = target.apply(
+                    self,
+                    args.concat(slice.call(arguments))
+                );
+                if (result !== null && Object(result) === result)
+                    return result;
+                return self;
+
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the list
+                //   boundArgs in the same order followed by the same values as
+                //   the list ExtraArgs in the same order. 5.  Return the
+                //   result of calling the [[Call]] internal method of target
+                //   providing boundThis as the this value and providing args
+                //   as the arguments.
+
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.apply(
+                    that,
+                    args.concat(slice.call(arguments))
+                );
+
+            }
+
+        };
+
+        // XXX bound.length is never writable, so don't even try
+        //
+        // 16. The length own property of F is given attributes as specified in
+        //   15.3.5.1.
+        // TODO
+        // 17. Set the [[Extensible]] internal property of F to true.
+        // TODO
+        // 18. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // 19. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property.
+        // XXX can't delete it in pure-js.
+        return bound;
+    };
+}
+
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
+var call = Function.prototype.call;
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var slice = prototypeOfArray.slice;
+var toString = prototypeOfObject.toString;
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
+
+var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
+// If JS engine supports accessors creating shortcuts.
+if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
+
+//
+// Array
+// =====
+//
+
+// ES5 15.4.3.2
+if (!Array.isArray) {
+    Array.isArray = function isArray(obj) {
+        return Object.prototype.toString.call(obj) == "[object Array]";
+    };
+}
+
+// ES5 15.4.4.18
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach
+if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function forEach(fun /*, thisp*/) {
+        var self = Object(this),
+            thisp = arguments[1],
+            i = 0,
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (!fun || !fun.call) {
+            throw new TypeError();
+        }
+
+        while (i < length) {
+            if (i in self) {
+                // Invoke the callback function with call, passing arguments:
+                // context, property value, property key, thisArg object context
+                fun.call(thisp, self[i], i, self);
+            }
+            i++;
+        }
+    };
+}
+
+// ES5 15.4.4.19
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
+if (!Array.prototype.map) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (typeof fun != "function")
+            throw new TypeError();
+        var result = new Array(length);
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++) {
+            if (i in self)
+                result[i] = fun.call(thisp, self[i], i, self);
+        }
+        return result;
+    };
+}
+
+// ES5 15.4.4.20
+if (!Array.prototype.filter) {
+    Array.prototype.filter = function filter(fun /*, thisp */) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (typeof fun != "function")
+            throw new TypeError();
+        var result = [];
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++)
+            if (i in self && fun.call(thisp, self[i], i, self))
+                result.push(self[i]);
+        return result;
+    };
+}
+
+// ES5 15.4.4.16
+if (!Array.prototype.every) {
+    Array.prototype.every = function every(fun /*, thisp */) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        if (typeof fun !== "function")
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++) {
+            if (i in self && !fun.call(thisp, self[i], i, self))
+                return false;
+        }
+        return true;
+    };
+}
+
+// ES5 15.4.4.17
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
+if (!Array.prototype.some) {
+    Array.prototype.some = function some(fun /*, thisp */) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        if (typeof fun !== "function")
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++) {
+            if (i in self && fun.call(thisp, self[i], i, self))
+                return true;
+        }
+        return false;
+    };
+}
+
+// ES5 15.4.4.21
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
+if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        // Whether to include (... || fun instanceof RegExp)
+        // in the following expression to trap cases where
+        // the provided function was actually a regular
+        // expression literal, which in V8 and
+        // JavaScriptCore is a typeof "function".  Only in
+        // V8 are regular expression literals permitted as
+        // reduce parameters, so it is desirable in the
+        // general case for the shim to match the more
+        // strict and common behavior of rejecting regular
+        // expressions.  However, the only case where the
+        // shim is applied is IE's Trident (and perhaps very
+        // old revisions of other engines).  In Trident,
+        // regular expressions are a typeof "object", so the
+        // following guard alone is sufficient.
+        if (Object.prototype.toString.call(fun) != "[object Function]")
+            throw new TypeError();
+
+        // no value to return if no initial value and an empty array
+        if (!length && arguments.length == 1)
+            throw new TypeError();
+
+        var i = 0;
+        var result;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i++];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (++i >= length)
+                    throw new TypeError();
+            } while (true);
+        }
+
+        for (; i < length; i++) {
+            if (i in self)
+                result = fun.call(null, result, self[i], i, self);
+        }
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.22
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
+if (!Array.prototype.reduceRight) {
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (Object.prototype.toString.call(fun) != "[object Function]")
+            throw new TypeError();
+        // no value to return if no initial value, empty array
+        if (!length && arguments.length == 1)
+            throw new TypeError();
+
+        var result, i = length - 1;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i--];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (--i < 0)
+                    throw new TypeError();
+            } while (true);
+        }
+
+        do {
+            if (i in this)
+                result = fun.call(null, result, self[i], i, self);
+        } while (i--);
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.14
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function indexOf(sought /*, fromIndex */ ) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (!length)
+            return -1;
+        var i = 0;
+        if (arguments.length > 1)
+            i = toInteger(arguments[1]);
+        // handle negative indicies
+        i = i >= 0 ? i : length - Math.abs(i);
+        for (; i < length; i++) {
+            if (i in self && self[i] === sought) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+// ES5 15.4.4.15
+if (!Array.prototype.lastIndexOf) {
+    Array.prototype.lastIndexOf = function lastIndexOf(sought /*, fromIndex */) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (!length)
+            return -1;
+        var i = length - 1;
+        if (arguments.length > 1)
+            i = toInteger(arguments[1]);
+        // handle negative indicies
+        i = i >= 0 ? i : length - Math.abs(i);
+        for (; i >= 0; i--) {
+            if (i in self && sought === self[i])
+                return i;
+        }
+        return -1;
+    };
+}
+
+//
+// Object
+// ======
+//
+
+// ES5 15.2.3.2
+if (!Object.getPrototypeOf) {
+    // https://github.com/kriskowal/es5-shim/issues#issue/2
+    // http://ejohn.org/blog/objectgetprototypeof/
+    // recommended by fschaefer on github
+    Object.getPrototypeOf = function getPrototypeOf(object) {
+        return object.__proto__ || object.constructor.prototype;
+        // or undefined if not available in this engine
+    };
+}
+
+// ES5 15.2.3.3
+if (!Object.getOwnPropertyDescriptor) {
+    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
+                         "non-object: ";
+    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+        if ((typeof object != "object" && typeof object != "function") || object === null)
+            throw new TypeError(ERR_NON_OBJECT + object);
+        // If object does not owns property return undefined immediately.
+        if (!owns(object, property))
+            return undefined;
+
+        var descriptor, getter, setter;
+
+        // If object has a property then it's for sure both `enumerable` and
+        // `configurable`.
+        descriptor =  { enumerable: true, configurable: true };
+
+        // If JS engine supports accessor properties then property may be a
+        // getter or setter.
+        if (supportsAccessors) {
+            // Unfortunately `__lookupGetter__` will return a getter even
+            // if object has own non getter property along with a same named
+            // inherited getter. To avoid misbehavior we temporary remove
+            // `__proto__` so that `__lookupGetter__` will return getter only
+            // if it's owned by an object.
+            var prototype = object.__proto__;
+            object.__proto__ = prototypeOfObject;
+
+            var getter = lookupGetter(object, property);
+            var setter = lookupSetter(object, property);
+
+            // Once we have getter and setter we can put values back.
+            object.__proto__ = prototype;
+
+            if (getter || setter) {
+                if (getter) descriptor.get = getter;
+                if (setter) descriptor.set = setter;
+
+                // If it was accessor property we're done and return here
+                // in order to avoid adding `value` to the descriptor.
+                return descriptor;
+            }
+        }
+
+        // If we got this far we know that object has an own property that is
+        // not an accessor so we set it as a value and return descriptor.
+        descriptor.value = object[property];
+        return descriptor;
+    };
+}
+
+// ES5 15.2.3.4
+if (!Object.getOwnPropertyNames) {
+    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
+        return Object.keys(object);
+    };
+}
+
+// ES5 15.2.3.5
+if (!Object.create) {
+    Object.create = function create(prototype, properties) {
+        var object;
+        if (prototype === null) {
+            object = { "__proto__": null };
+        } else {
+            if (typeof prototype != "object")
+                throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
+            var Type = function () {};
+            Type.prototype = prototype;
+            object = new Type();
+            // IE has no built-in implementation of `Object.getPrototypeOf`
+            // neither `__proto__`, but this manually setting `__proto__` will
+            // guarantee that `Object.getPrototypeOf` will work as expected with
+            // objects created using `Object.create`
+            object.__proto__ = prototype;
+        }
+        if (typeof properties != "undefined")
+            Object.defineProperties(object, properties);
+        return object;
+    };
+}
+
+// ES5 15.2.3.6
+var oldDefineProperty = Object.defineProperty;
+var defineProperty = !!oldDefineProperty;
+if (defineProperty) {
+    // detect IE 8's DOM-only implementation of defineProperty;
+    var subject = {};
+    Object.defineProperty(subject, "", {});
+    defineProperty = "" in subject;
+}
+if (!defineProperty) {
+    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
+                                      "on this javascript engine";
+
+    Object.defineProperty = function defineProperty(object, property, descriptor) {
+        if (typeof object != "object" && typeof object != "function")
+            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+        if (typeof descriptor != "object" || descriptor === null)
+            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+        // make a valiant attempt to use the real defineProperty
+        // for I8's DOM elements.
+        if (oldDefineProperty && object.nodeType)
+            return oldDefineProperty(object, property, descriptor);
+
+        // If it's a data property.
+        if (owns(descriptor, "value")) {
+            // fail silently if "writable", "enumerable", or "configurable"
+            // are requested but not supported
+            /*
+            // alternate approach:
+            if ( // can't implement these features; allow false but not true
+                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
+                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
+                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
+            )
+                throw new RangeError(
+                    "This implementation of Object.defineProperty does not " +
+                    "support configurable, enumerable, or writable."
+                );
+            */
+
+            if (supportsAccessors && (lookupGetter(object, property) ||
+                                      lookupSetter(object, property)))
+            {
+                // As accessors are supported only on engines implementing
+                // `__proto__` we can safely override `__proto__` while defining
+                // a property to make sure that we don't hit an inherited
+                // accessor.
+                var prototype = object.__proto__;
+                object.__proto__ = prototypeOfObject;
+                // Deleting a property anyway since getter / setter may be
+                // defined on object itself.
+                delete object[property];
+                object[property] = descriptor.value;
+                // Setting original `__proto__` back now.
+                object.__proto__ = prototype;
+            } else {
+                object[property] = descriptor.value;
+            }
+        } else {
+            if (!supportsAccessors)
+                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+            // If we got that far then getters and setters can be defined !!
+            if (owns(descriptor, "get"))
+                defineGetter(object, property, descriptor.get);
+            if (owns(descriptor, "set"))
+                defineSetter(object, property, descriptor.set);
+        }
+
+        return object;
+    };
+}
+
+// ES5 15.2.3.7
+if (!Object.defineProperties) {
+    Object.defineProperties = function defineProperties(object, properties) {
+        for (var property in properties) {
+            if (owns(properties, property))
+                Object.defineProperty(object, property, properties[property]);
+        }
+        return object;
+    };
+}
+
+// ES5 15.2.3.8
+if (!Object.seal) {
+    Object.seal = function seal(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// ES5 15.2.3.9
+if (!Object.freeze) {
+    Object.freeze = function freeze(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// detect a Rhino bug and patch it
+try {
+    Object.freeze(function () {});
+} catch (exception) {
+    Object.freeze = (function freeze(freezeObject) {
+        return function freeze(object) {
+            if (typeof object == "function") {
+                return object;
+            } else {
+                return freezeObject(object);
+            }
+        };
+    })(Object.freeze);
+}
+
+// ES5 15.2.3.10
+if (!Object.preventExtensions) {
+    Object.preventExtensions = function preventExtensions(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// ES5 15.2.3.11
+if (!Object.isSealed) {
+    Object.isSealed = function isSealed(object) {
+        return false;
+    };
+}
+
+// ES5 15.2.3.12
+if (!Object.isFrozen) {
+    Object.isFrozen = function isFrozen(object) {
+        return false;
+    };
+}
+
+// ES5 15.2.3.13
+if (!Object.isExtensible) {
+    Object.isExtensible = function isExtensible(object) {
+        return true;
+    };
+}
+
+// ES5 15.2.3.14
+// http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
+if (!Object.keys) {
+
+    var hasDontEnumBug = true,
+        dontEnums = [
+            'toString',
+            'toLocaleString',
+            'valueOf',
+            'hasOwnProperty',
+            'isPrototypeOf',
+            'propertyIsEnumerable',
+            'constructor'
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    for (var key in {"toString": null})
+        hasDontEnumBug = false;
+
+    Object.keys = function keys(object) {
+
+        if (
+            typeof object != "object" && typeof object != "function"
+            || object === null
+        )
+            throw new TypeError("Object.keys called on a non-object");
+
+        var keys = [];
+        for (var name in object) {
+            if (owns(object, name)) {
+                keys.push(name);
+            }
+        }
+
+        if (hasDontEnumBug) {
+            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
+                var dontEnum = dontEnums[i];
+                if (owns(object, dontEnum)) {
+                    keys.push(dontEnum);
+                }
+            }
+        }
+
+        return keys;
+    };
+
+}
+
+//
+// Date
+// ====
+//
+
+// ES5 15.9.5.43
+// Format a Date object as a string according to a simplified subset of the ISO 8601
+// standard as defined in 15.9.1.15.
+if (!Date.prototype.toISOString) {
+    Date.prototype.toISOString = function toISOString() {
+        var result, length, value;
+        if (!isFinite(this))
+            throw new RangeError;
+
+        // the date time string format is specified in 15.9.1.15.
+        result = [this.getUTCFullYear(), this.getUTCMonth() + 1, this.getUTCDate(),
+            this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds()];
+
+        length = result.length;
+        while (length--) {
+            value = result[length];
+            // pad months, days, hours, minutes, and seconds to have two digits.
+            if (value < 10)
+                result[length] = '0' + value;
+        }
+        // pad milliseconds to have three digits.
+        return result.slice(0, 3).join('-') + 'T' + result.slice(3).join(':') + '.' +
+            ('000' + this.getUTCMilliseconds()).slice(-3) + 'Z';
+    }
+}
+
+// ES5 15.9.4.4
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+
+// ES5 15.9.5.44
+if (!Date.prototype.toJSON) {
+    Date.prototype.toJSON = function toJSON(key) {
+        // This function provides a String representation of a Date object for
+        // use by JSON.stringify (15.12.3). When the toJSON method is called
+        // with argument key, the following steps are taken:
+
+        // 1.  Let O be the result of calling ToObject, giving it the this
+        // value as its argument.
+        // 2. Let tv be ToPrimitive(O, hint Number).
+        // 3. If tv is a Number and is not finite, return null.
+        // XXX
+        // 4. Let toISO be the result of calling the [[Get]] internal method of
+        // O with argument "toISOString".
+        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof this.toISOString.call != "function")
+            throw new TypeError();
+        // 6. Return the result of calling the [[Call]] internal method of
+        // toISO with O as the this value and an empty argument list.
+        return this.toISOString.call(this);
+
+        // NOTE 1 The argument is ignored.
+
+        // NOTE 2 The toJSON function is intentionally generic; it does not
+        // require that its this value be a Date object. Therefore, it can be
+        // transferred to other kinds of objects for use as a method. However,
+        // it does require that any such object have a toISOString method. An
+        // object is free to use the argument key to filter its
+        // stringification.
+    };
+}
+
+// 15.9.4.2 Date.parse (string)
+// 15.9.1.15 Date Time String Format
+// Date.parse
+// based on work shared by Daniel Friesen (dantman)
+// http://gist.github.com/303249
+if (isNaN(Date.parse("2011-06-15T21:40:05+06:00"))) {
+    // XXX global assignment won't work in embeddings that use
+    // an alternate object for the context.
+    Date = (function(NativeDate) {
+
+        // Date.length === 7
+        var Date = function(Y, M, D, h, m, s, ms) {
+            var length = arguments.length;
+            if (this instanceof NativeDate) {
+                var date = length == 1 && String(Y) === Y ? // isString(Y)
+                    // We explicitly pass it through parse:
+                    new NativeDate(Date.parse(Y)) :
+                    // We have to manually make calls depending on argument
+                    // length here
+                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
+                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
+                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
+                    length >= 4 ? new NativeDate(Y, M, D, h) :
+                    length >= 3 ? new NativeDate(Y, M, D) :
+                    length >= 2 ? new NativeDate(Y, M) :
+                    length >= 1 ? new NativeDate(Y) :
+                                  new NativeDate();
+                // Prevent mixups with unfixed Date object
+                date.constructor = Date;
+                return date;
+            }
+            return NativeDate.apply(this, arguments);
+        };
+
+        // 15.9.1.15 Date Time String Format. This pattern does not implement
+        // extended years ((15.9.1.15.1), as `Date.UTC` cannot parse them.
+        var isoDateExpression = new RegExp("^" +
+            "(\d{4})" + // four-digit year capture
+            "(?:-(\d{2})" + // optional month capture
+            "(?:-(\d{2})" + // optional day capture
+            "(?:" + // capture hours:minutes:seconds.milliseconds
+                "T(\d{2})" + // hours capture
+                ":(\d{2})" + // minutes capture
+                "(?:" + // optional :seconds.milliseconds
+                    ":(\d{2})" + // seconds capture
+                    "(?:\.(\d{3}))?" + // milliseconds capture
+                ")?" +
+            "(?:" + // capture UTC offset component
+                "Z|" + // UTC capture
+                "(?:" + // offset specifier +/-hours:minutes
+                    "([-+])" + // sign capture
+                    "(\d{2})" + // hours offset capture
+                    ":(\d{2})" + // minutes offest capture
+                ")" +
+            ")?)?)?)?" +
+        "$");
+
+        // Copy any custom methods a 3rd party library may have added
+        for (var key in NativeDate)
+            Date[key] = NativeDate[key];
+
+        // Copy "native" methods explicitly; they may be non-enumerable
+        Date.now = NativeDate.now;
+        Date.UTC = NativeDate.UTC;
+        Date.prototype = NativeDate.prototype;
+        Date.prototype.constructor = Date;
+
+        // Upgrade Date.parse to handle simplified ISO 8601 strings
+        Date.parse = function parse(string) {
+            var match = isoDateExpression.exec(string);
+            if (match) {
+                match.shift(); // kill match[0], the full match
+                // parse months, days, hours, minutes, seconds, and milliseconds
+                for (var i = 1; i < 7; i++) {
+                    // provide default values if necessary
+                    match[i] = +(match[i] || (i < 3 ? 1 : 0));
+                    // match[1] is the month. Months are 0-11 in JavaScript
+                    // `Date` objects, but 1-12 in ISO notation, so we
+                    // decrement.
+                    if (i == 1)
+                        match[i]--;
+                }
+
+                // parse the UTC offset component
+                var minutesOffset = +match.pop(), hourOffset = +match.pop(), sign = match.pop();
+
+                // compute the explicit time zone offset if specified
+                var offset = 0;
+                if (sign) {
+                    // detect invalid offsets and return early
+                    if (hourOffset > 23 || minuteOffset > 59)
+                        return NaN;
+
+                    // express the provided time zone offset in minutes. The offset is
+                    // negative for time zones west of UTC; positive otherwise.
+                    offset = (hourOffset * 60 + minuteOffset) * 6e4 * (sign == "+" ? -1 : 1);
+                }
+
+                // compute a new UTC date value, accounting for the optional offset
+                return NativeDate.UTC.apply(this, match) + offset;
+            }
+            return NativeDate.parse.apply(this, arguments);
+        };
+
+        return Date;
+    })(Date);
+}
+
+//
+// String
+// ======
+//
+
+// ES5 15.5.4.20
+if (!String.prototype.trim) {
+    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
+    // http://perfectionkills.com/whitespace-deviations/
+    var s = "[\x09\x0A\-\x0D\x20\xA0\u1680\u180E\u2000-\u200A\u202F" +
+        "\u205F\u3000\u2028\u2029\uFEFF]"
+    var trimBeginRegexp = new RegExp("^" + s + s + "*");
+    var trimEndRegexp = new RegExp(s + s + "*$");
+    String.prototype.trim = function trim() {
+        return String(this).replace(trimBeginRegexp, "").replace(trimEndRegexp, "");
+    };
+}
+
+//
+// Util
+// ======
+//
+
+// http://jsperf.com/to-integer
+var toInteger = function (n) {
+    n = +n;
+    if (n !== n) // isNaN
+        n = -1;
+    else if (n !== 0 && n !== (1/0) && n !== -(1/0))
+        n = (n > 0 || -1) * Math.floor(Math.abs(n));
+    return n;
+};
 
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -5166,7 +5269,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/lua', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/lua.lua', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5182,7 +5285,6 @@ var CssMode = require("ace/mode/css").Mode;
 var ScssMode = require("ace/mode/scss").Mode;
 var HtmlMode = require("ace/mode/html").Mode;
 var XmlMode = require("ace/mode/xml").Mode;
-var LuaMode = require("ace/mode/lua").Mode;
 var PythonMode = require("ace/mode/python").Mode;
 var PhpMode = require("ace/mode/php").Mode;
 var JavaMode = require("ace/mode/java").Mode;
@@ -5253,14 +5355,9 @@ exports.launch = function(env) {
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.lua = new EditSession(require("text!demo/docs/lua.lua"));
-    docs.lua.setMode(new LuaMode());
-    docs.lua.setUndoManager(new UndoManager());
-
     docs.python = new EditSession(require("text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
-
 
     docs.php = new EditSession(require("text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
@@ -5356,7 +5453,6 @@ exports.launch = function(env) {
         css: new CssMode(),
         scss: new ScssMode(),
         javascript: new JavaScriptMode(),
-        lua: new LuaMode(),
         python: new PythonMode(),
         php: new PhpMode(),
         java: new JavaMode(),
@@ -5421,9 +5517,6 @@ exports.launch = function(env) {
         }
         else if (mode instanceof XmlMode) {
             modeEl.value = "xml";
-        }
-        else if (mode instanceof LuaMode){
-            modeEl.value = "lua";
         }
         else if (mode instanceof PythonMode) {
             modeEl.value = "python";
@@ -5662,8 +5755,6 @@ exports.launch = function(env) {
                     mode = "css";
                 } else if (/^.*\.scss$/i.test(file.name)) {
                     mode = "scss";
-                } else if (/^.*\.lua$/i.test(file.name)) {
-                    mode = "lua";
                 } else if (/^.*\.py$/i.test(file.name)) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
@@ -8107,6 +8198,8 @@ var dom = require("pilot/dom");
 var TextInput = function(parentNode, host) {
 
     var text = dom.createElement("textarea");
+    if (useragent.isTouchPad)
+    	text.setAttribute('x-palm-disable-auto-cap',true);
     text.style.left = "-10000px";
     parentNode.appendChild(text);
 
@@ -8244,7 +8337,7 @@ var TextInput = function(parentNode, host) {
         }
     });
 
-    if ("onbeforecopy" in text) {
+    if ("onbeforecopy" in text && typeof clipboardData !== "undefined") {
         event.addListener(text, "beforecopy", function(e) {
             var copyText = host.getCopyText();
             if(copyText)
@@ -8967,7 +9060,7 @@ canon.addCommand({
     name: "find",
     bindKey: bindKey("Ctrl-F", "Command-F"),
     exec: function(env, args, request) {
-        var needle = prompt("Find:");
+        var needle = prompt("Find:", env.editor.getCopyText());
         env.editor.find(needle);
     }
 });
@@ -8975,7 +9068,7 @@ canon.addCommand({
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
     exec: function(env, args, request) {
-        var needle = prompt("Find:");
+        var needle = prompt("Find:", env.editor.getCopyText());
         if (!needle)
             return;
         var replacement = prompt("Replacement:");
@@ -16045,8 +16138,10 @@ var ScrollBar = function(parent) {
     // in OSX lion the scrollbars appear to have no width. In this case resize
     // the to show the scrollbar but still pretend that the scrollbar has a width
     // of 0px
+    // in Firefox 6+ scrollbar is hidden if element has the same width as scrollbar
+    // make element a little bit wider to retain scrollbar when page is zoomed 
     this.width = dom.scrollbarWidth();
-    this.element.style.width = (this.width || 15) + "px";
+    this.element.style.width = (this.width || 15) + 5 + "px";
 
     event.addListener(this.element, "scroll", this.onScroll.bind(this));
 };
@@ -18795,561 +18890,6 @@ var XmlHighlightRules = function() {
 oop.inherits(XmlHighlightRules, TextHighlightRules);
 
 exports.XmlHighlightRules = XmlHighlightRules;
-});
-/* ***** BEGIN LICENSE BLOCK *****
-* Version: MPL 1.1/GPL 2.0/LGPL 2.1
-*
-* The contents of this file are subject to the Mozilla Public License Version
-* 1.1 (the "License"); you may not use this file except in compliance with
-* the License. You may obtain a copy of the License at
-* http://www.mozilla.org/MPL/
-*
-* Software distributed under the License is distributed on an "AS IS" basis,
-* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-* for the specific language governing rights and limitations under the
-* License.
-*
-* The Original Code is Ajax.org Code Editor (ACE).
-*
-* The Initial Developer of the Original Code is
-* Ajax.org B.V.
-* Portions created by the Initial Developer are Copyright (C) 2010
-* the Initial Developer. All Rights Reserved.
-*
-* Contributor(s):
-*      Fabian Jakobs <fabian AT ajax DOT org>
-*      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>
-*      Lee Gao
-*
-* Alternatively, the contents of this file may be used under the terms of
-* either the GNU General Public License Version 2 or later (the "GPL"), or
-* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
-* in which case the provisions of the GPL or the LGPL are applicable instead
-* of those above. If you wish to allow use of your version of this file only
-* under the terms of either the GPL or the LGPL, and not to allow others to
-* use your version of this file under the terms of the MPL, indicate your
-* decision by deleting the provisions above and replace them with the notice
-* and other provisions required by the GPL or the LGPL. If you do not delete
-* the provisions above, a recipient may use your version of this file under
-* the terms of any one of the MPL, the GPL or the LGPL.
-*
-* ***** END LICENSE BLOCK ***** */
-
-define('ace/mode/lua', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/lua_highlight_rules', 'ace/range'], function(require, exports, module) {
-var oop = require("pilot/oop");
-var TextMode = require("ace/mode/text").Mode;
-var Tokenizer = require("ace/tokenizer").Tokenizer;
-var LuaHighlightRules = require("ace/mode/lua_highlight_rules").LuaHighlightRules;
-var Range = require("ace/range").Range;
-
-var Mode = function() {
-    this.$tokenizer = new Tokenizer(new LuaHighlightRules().getRules());
-};
-oop.inherits(Mode, TextMode);
-
-(function() {
-    this.getNextLineIndent = function(state, line, tab) {
-        var indent = this.$getIndent(line);
-
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
-        var tokens = tokenizedLine.tokens;
-        var endState = tokenizedLine.state;
-	
-        var chunks = ["function", "then", "do", "repeat"];
-        
-        if (state == "start") {
-            var match = line.match(/^.*[\{\(\[]\s*$/);
-            if (match) {
-                indent += tab;
-            } else {
-                for (var i in tokens){
-                    var token = tokens[i];
-                    if (token.type != "keyword") continue;
-                    var chunk_i = chunks.indexOf(token.value);
-                    if (chunk_i != -1){
-                        indent += tab;
-                        break;
-                    }
-                }
-            }
-        } 
-
-        return indent;
-    };
-    
-    /*this.checkOutdent = function(state, line, input) {
-        if (input !== "\r\n" && input !== "\r" && input !== "\n")
-            return false;
-
-        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;
-        
-        if (!tokens)
-            return false;
-        
-        // ignore trailing comments
-        do {
-            var last = tokens.pop();
-        } while (last && (last.type == "comment" || (last.type == "text" && last.value.match(/^\s+$/))));
-        
-        if (!last)
-            return false;
-        var outdents = {
-            "end" : 1,
-            "until" : 1,
-            "else" : 1
-        }
-        return (last.type == "keyword" && outdents[last.value]);
-    };
-    
-    this.autoOutdent = function(state, doc, row) {
-        console.log(doc, row);
-        var indent = this.$getIndent(doc.getLine(row));
-        var tab = doc.getTabString();
-        if (indent.slice(-tab.length) == tab)
-            doc.remove(new Range(row, indent.length-tab.length, row, indent.length));
-
-    };*/
-    
-}).call(Mode.prototype);
-
-exports.Mode = Mode;
-});
-
-
-/* ***** BEGIN LICENSE BLOCK *****
-* Version: MPL 1.1/GPL 2.0/LGPL 2.1
-*
-* The contents of this file are subject to the Mozilla Public License Version
-* 1.1 (the "License"); you may not use this file except in compliance with
-* the License. You may obtain a copy of the License at
-* http://www.mozilla.org/MPL/
-*
-* Software distributed under the License is distributed on an "AS IS" basis,
-* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-* for the specific language governing rights and limitations under the
-* License.
-*
-* The Original Code is Ajax.org Code Editor (ACE).
-*
-* The Initial Developer of the Original Code is
-* Ajax.org B.V.
-* Portions created by the Initial Developer are Copyright (C) 2010
-* the Initial Developer. All Rights Reserved.
-*
-* Contributor(s):
-*      Fabian Jakobs <fabian AT ajax DOT org>
-*      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>
-*      Lee Gao
-*
-* Alternatively, the contents of this file may be used under the terms of
-* either the GNU General Public License Version 2 or later (the "GPL"), or
-* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
-* in which case the provisions of the GPL or the LGPL are applicable instead
-* of those above. If you wish to allow use of your version of this file only
-* under the terms of either the GPL or the LGPL, and not to allow others to
-* use your version of this file under the terms of the MPL, indicate your
-* decision by deleting the provisions above and replace them with the notice
-* and other provisions required by the GPL or the LGPL. If you do not delete
-* the provisions above, a recipient may use your version of this file under
-* the terms of any one of the MPL, the GPL or the LGPL.
-*
-* ***** END LICENSE BLOCK ***** */
-
-define('ace/mode/lua_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
-
-var oop = require("pilot/oop");
-var lang = require("pilot/lang");
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
-
-var LuaHighlightRules = function() {
-
-    var keywords = lang.arrayToMap(
-        ("break|do|else|elseif|end|for|function|if|in|local|repeat|"+
-         "return|then|until|while|or|and|not").split("|")
-    );
-
-    var builtinConstants = lang.arrayToMap(
-        ("true|false|nil|_G|_VERSION").split("|")
-    );
-
-    var builtinFunctions = lang.arrayToMap(
-        ("string|xpcall|package|tostring|print|os|unpack|require|"+
-        "getfenv|setmetatable|next|assert|tonumber|io|rawequal|"+
-        "collectgarbage|getmetatable|module|rawset|math|debug|"+
-        "pcall|table|newproxy|type|coroutine|_G|select|gcinfo|"+
-        "pairs|rawget|loadstring|ipairs|_VERSION|dofile|setfenv|"+
-        "load|error|loadfile|"+
-
-        "sub|upper|len|gfind|rep|find|match|char|dump|gmatch|"+
-        "reverse|byte|format|gsub|lower|preload|loadlib|loaded|"+
-        "loaders|cpath|config|path|seeall|exit|setlocale|date|"+
-        "getenv|difftime|remove|time|clock|tmpname|rename|execute|"+
-        "lines|write|close|flush|open|output|type|read|stderr|"+
-        "stdin|input|stdout|popen|tmpfile|log|max|acos|huge|"+
-        "ldexp|pi|cos|tanh|pow|deg|tan|cosh|sinh|random|randomseed|"+
-        "frexp|ceil|floor|rad|abs|sqrt|modf|asin|min|mod|fmod|log10|"+
-        "atan2|exp|sin|atan|getupvalue|debug|sethook|getmetatable|"+
-        "gethook|setmetatable|setlocal|traceback|setfenv|getinfo|"+
-        "setupvalue|getlocal|getregistry|getfenv|setn|insert|getn|"+
-        "foreachi|maxn|foreach|concat|sort|remove|resume|yield|"+
-        "status|wrap|create|running").split("|")
-    );
-    
-    var stdLibaries = lang.arrayToMap(
-        ("string|package|os|io|math|debug|table|coroutine").split("|")
-    );
-    
-    var metatableMethods = lang.arrayToMap(
-        ("__add|__sub|__mod|__unm|__concat|__lt|__index|__call|__gc|__metatable|"+
-         "__mul|__div|__pow|__len|__eq|__le|__newindex|__tostring|__mode|__tonumber").split("|")
-    );
-
-    var futureReserved = lang.arrayToMap(
-        ("").split("|")
-    );
-    
-    var deprecatedIn5152 = lang.arrayToMap(
-        ("setn|foreach|foreachi|gcinfo|log10|maxn").split("|")
-    );
-
-    var strPre = "";
-
-    var decimalInteger = "(?:(?:[1-9]\\d*)|(?:0))";
-    var hexInteger = "(?:0[xX][\\dA-Fa-f]+)";
-    var integer = "(?:" + decimalInteger + "|" + hexInteger + ")";
-
-    var fraction = "(?:\\.\\d+)";
-    var intPart = "(?:\\d+)";
-    var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\.))";
-    var floatNumber = "(?:" + pointFloat + ")";
-    
-    var comment_stack = [];
-    
-    this.$rules = {
-        "start" : 
-
-		
-        // bracketed comments
-        [{
-            token : "comment",           // --[[ comment
-            regex : strPre + '\\-\\-\\[\\[.*\\]\\]'
-        }, {
-            token : "comment",           // --[=[ comment
-            regex : strPre + '\\-\\-\\[\\=\\[.*\\]\\=\\]'
-        }, {
-            token : "comment",           // --[==[ comment
-            regex : strPre + '\\-\\-\\[\\={2}\\[.*\\]\\={2}\\]'
-        }, {
-            token : "comment",           // --[===[ comment
-            regex : strPre + '\\-\\-\\[\\={3}\\[.*\\]\\={3}\\]'
-        }, {
-            token : "comment",           // --[====[ comment
-            regex : strPre + '\\-\\-\\[\\={4}\\[.*\\]\\={4}\\]'
-        }, {
-            token : "comment",           // --[====+[ comment
-            regex : strPre + '\\-\\-\\[\\={5}\\=*\\[.*\\]\\={5}\\=*\\]'
-        },
-		
-		// multiline bracketed comments
-		{
-            token : "comment",           // --[[ comment
-            regex : strPre + '\\-\\-\\[\\[.*$',
-            merge : true,
-            next  : "qcomment"
-        }, {
-            token : "comment",           // --[=[ comment
-            regex : strPre + '\\-\\-\\[\\=\\[.*$',
-            merge : true,
-            next  : "qcomment1"
-        }, {
-            token : "comment",           // --[==[ comment
-            regex : strPre + '\\-\\-\\[\\={2}\\[.*$',
-            merge : true,
-            next  : "qcomment2"
-        }, {
-            token : "comment",           // --[===[ comment
-            regex : strPre + '\\-\\-\\[\\={3}\\[.*$',
-            merge : true,
-            next  : "qcomment3"
-        }, {
-            token : "comment",           // --[====[ comment
-            regex : strPre + '\\-\\-\\[\\={4}\\[.*$',
-            merge : true,
-            next  : "qcomment4"
-        }, {
-            token : function(value){     // --[====+[ comment
-                // WARNING: EXTREMELY SLOW, but this is the only way to circumvent the
-                // limits imposed by the current automaton.
-                // I've never personally seen any practical code where 5 or more '='s are
-                // used for string or commenting, so this will rarely be invoked.
-                var pattern = /\-\-\[(\=+)\[/, match;
-                // you can never be too paranoid ;)
-                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined)
-                    comment_stack.push(match.length);
-                
-                return "comment";
-            },
-            regex : strPre + '\\-\\-\\[\\={5}\\=*\\[.*$',
-            merge : true,
-            next  : "qcomment5"
-        },
-        
-        // single line comments
-        {
-            token : "comment",
-            regex : "\\-\\-.*$"
-        }, 
-        
-        // bracketed strings
-		{
-            token : "string",           // [[ string
-            regex : strPre + '\\[\\[.*\\]\\]'
-        }, {
-            token : "string",           // [=[ string
-            regex : strPre + '\\[\\=\\[.*\\]\\=\\]'
-        }, {
-            token : "string",           // [==[ string
-            regex : strPre + '\\[\\={2}\\[.*\\]\\={2}\\]'
-        }, {
-            token : "string",           // [===[ string
-            regex : strPre + '\\[\\={3}\\[.*\\]\\={3}\\]'
-        }, {
-            token : "string",           // [====[ string
-            regex : strPre + '\\[\\={4}\\[.*\\]\\={4}\\]'
-        }, {
-            token : "string",           // [====+[ string
-            regex : strPre + '\\[\\={5}\\=*\\[.*\\]\\={5}\\=*\\]'
-        },
-		
-		// multiline bracketed strings
-        {
-            token : "string",           // [[ string
-            regex : strPre + '\\[\\[.*$',
-            merge : true,
-            next  : "qstring"
-        }, {
-            token : "string",           // [=[ string
-            regex : strPre + '\\[\\=\\[.*$',
-            merge : true,
-            next  : "qstring1"
-        }, {
-            token : "string",           // [==[ string
-            regex : strPre + '\\[\\={2}\\[.*$',
-            merge : true,
-            next  : "qstring2"
-        }, {
-            token : "string",           // [===[ string
-            regex : strPre + '\\[\\={3}\\[.*$',
-            merge : true,
-            next  : "qstring3"
-        }, {
-            token : "string",           // [====[ string
-            regex : strPre + '\\[\\={4}\\[.*$',
-            merge : true,
-            next  : "qstring4"
-        }, {
-            token : function(value){     // --[====+[ string
-                // WARNING: EXTREMELY SLOW, see above.
-                var pattern = /\[(\=+)\[/, match;
-                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined)
-                    comment_stack.push(match.length);
-                
-                return "string";
-            },
-            regex : strPre + '\\[\\={5}\\=*\\[.*$',
-            merge : true,
-            next  : "qstring5"
-        }, 
-        
-        {
-            token : "string",           // " string
-            regex : strPre + '"(?:[^\\\\]|\\\\.)*?"'
-        }, {
-            token : "string",           // ' string
-            regex : strPre + "'(?:[^\\\\]|\\\\.)*?'"
-        }, {
-            token : "constant.numeric", // float
-            regex : floatNumber
-        }, {
-            token : "constant.numeric", // integer
-            regex : integer + "\\b"
-        }, {
-            token : function(value) {
-                if (keywords.hasOwnProperty(value))
-                    return "keyword";
-                else if (builtinConstants.hasOwnProperty(value))
-                    return "constant.language";
-                else if (futureReserved.hasOwnProperty(value))
-                    return "invalid.illegal";
-                else if (stdLibaries.hasOwnProperty(value))
-                    return "constant.library";
-                else if (deprecatedIn5152.hasOwnProperty(value))
-                    return "invalid.deprecated";
-                else if (builtinFunctions.hasOwnProperty(value))
-                    return "support.function";
-                else if (metatableMethods.hasOwnProperty(value))
-                    return "support.function";
-                else
-                    return "identifier";
-            },
-            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
-        }, {
-            token : "keyword.operator",
-            regex : "\\+|\\-|\\*|\\/|%|\\#|\\^|~|<|>|<=|=>|==|~=|=|\\:|\\.\\.\\.|\\.\\."
-        }, {
-            token : "lparen",
-            regex : "[\\[\\(\\{]"
-        }, {
-            token : "rparen",
-            regex : "[\\]\\)\\}]"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        } ],
-        
-        "qcomment": [ {
-            token : "comment",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\]",
-            next  : "start"
-        }, {
-            token : "comment",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qcomment1": [ {
-            token : "comment",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\=\\]",
-            next  : "start"
-        }, {
-            token : "comment",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qcomment2": [ {
-            token : "comment",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={2}\\]",
-            next  : "start"
-        }, {
-            token : "comment",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qcomment3": [ {
-            token : "comment",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={3}\\]",
-            next  : "start"
-        }, {
-            token : "comment",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qcomment4": [ {
-            token : "comment",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={4}\\]",
-            next  : "start"
-        }, {
-            token : "comment",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qcomment5": [ {
-            token : function(value){ 
-                // very hackish, mutates the qcomment5 field on the fly.
-                var pattern = /\](\=+)\]/, rule = this.rules.qcomment5[0], match;
-                rule.next = "start";
-                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined){
-                    var found = match.length, expected;
-                    if ((expected = comment_stack.pop()) != found){
-                        comment_stack.push(expected);
-                        rule.next = "qcomment5";
-                    }
-                }
-                
-                return "comment";
-            },
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={5}\\=*\\]",
-            next  : "start"
-        }, {
-            token : "comment",
-            merge : true,
-            regex : '.+'
-        } ],
-        
-        "qstring": [ {
-            token : "string",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\]",
-            next  : "start"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qstring1": [ {
-            token : "string",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\=\\]",
-            next  : "start"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qstring2": [ {
-            token : "string",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={2}\\]",
-            next  : "start"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qstring3": [ {
-            token : "string",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={3}\\]",
-            next  : "start"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qstring4": [ {
-            token : "string",
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={4}\\]",
-            next  : "start"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        } ],
-        "qstring5": [ {
-            token : function(value){ 
-                // very hackish, mutates the qstring5 field on the fly.
-                var pattern = /\](\=+)\]/, rule = this.rules.qstring5[0], match;
-                rule.next = "start";
-                if ((match = pattern.exec(value)) != null && (match = match[1]) != undefined){
-                    var found = match.length, expected;
-                    if ((expected = comment_stack.pop()) != found){
-                        comment_stack.push(expected);
-                        rule.next = "qstring5";
-                    }
-                }
-                
-                return "string";
-            },
-            regex : "(?:[^\\\\]|\\\\.)*?\\]\\={5}\\=*\\]",
-            next  : "start"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        } ]
-        
-    };
-
-}
-
-oop.inherits(LuaHighlightRules, TextHighlightRules);
-
-exports.LuaHighlightRules = LuaHighlightRules;
 });
 /* ***** BEGIN LICENSE BLOCK *****
 * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -25431,123 +24971,25 @@ function UndoManagerProxy(undoManager, session) {
 
 exports.Split = Split;
 });
-define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
+define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
+  "  \"returns a String parting in a given language\"\n" +
+  "  ([] (parting \"World\"))\n" +
+  "  ([name] (parting name \"en\"))\n" +
+  "  ([name language]\n" +
+  "    ; condp is similar to a case statement in other languages.\n" +
+  "    ; It is described in more detail later.\n" +
+  "    ; It is used here to take different actions based on whether the\n" +
+  "    ; parameter \"language\" is set to \"en\", \"es\" or something else.\n" +
+  "    (condp = language\n" +
+  "      \"en\" (str \"Goodbye, \" name)\n" +
+  "      \"es\" (str \"Adios, \" name)\n" +
+  "      (throw (IllegalArgumentException.\n" +
+  "        (str \"unsupported language \" language))))))\n" +
   "\n" +
-  "#navbar {\n" +
-  "    $navbar-width: 800px;\n" +
-  "    $items: 5;\n" +
-  "    $navbar-color: #ce4dd6;\n" +
-  "\n" +
-  "    width: $navbar-width;\n" +
-  "    border-bottom: 2px solid $navbar-color;\n" +
-  "\n" +
-  "    li {\n" +
-  "        float: left;\n" +
-  "        width: $navbar-width/$items - 10px;\n" +
-  "\n" +
-  "        background-color: lighten($navbar-color, 20%);\n" +
-  "        &:hover {\n" +
-  "            background-color: lighten($navbar-color, 10%);\n" +
-  "        }\n" +
-  "    }\n" +
-  "}");
-
-define("text!demo/docs/svg.svg", [], "<svg\n" +
-  "  width=\"800\" height=\"600\"\n" +
-  "  xmlns=\"http://www.w3.org/2000/svg\"\n" +
-  "  onload=\"StartAnimation(evt)\">\n" +
-  "\n" +
-  "  <title>Test Tube Progress Bar</title>\n" +
-  "  <desc>Created for the Web Directions SVG competition</desc>\n" +
-  "\n" +
-  "  <script type=\"text/ecmascript\"><![CDATA[\n" +
-  "    var timevalue = 0;\n" +
-  "    var timer_increment = 1;\n" +
-  "    var max_time = 100;\n" +
-  "    var hickory;\n" +
-  "    var dickory;\n" +
-  "    var dock;\n" +
-  "    var i;\n" +
-  "\n" +
-  "    function StartAnimation(evt) {\n" +
-  "        hickory  = evt.target.ownerDocument.getElementById(\"hickory\");\n" +
-  "        dickory = evt.target.ownerDocument.getElementById(\"dickory\");\n" +
-  "        dock = evt.target.ownerDocument.getElementById(\"dock\");\n" +
-  "\n" +
-  "        ShowAndGrowElement();\n" +
-  "    }\n" +
-  "    function ShowAndGrowElement() {\n" +
-  "        timevalue = timevalue + timer_increment;\n" +
-  "        if (timevalue > max_time)\n" +
-  "            return;\n" +
-  "        // Scale the text string gradually until it is 20 times larger\n" +
-  "        scalefactor = (timevalue * 650) / max_time;\n" +
-  "\n" +
-  "        if (timevalue < 30) {\n" +
-  "            hickory.setAttribute(\"display\", \"\");\n" +
-  "            hickory.setAttribute(\"transform\", \"translate(\" + (600+scalefactor*3*-1 ) + \", -144 )\");\n" +
-  "        }\n" +
-  "\n" +
-  "        if (timevalue > 30 && timevalue < 66) {\n" +
-  "            dickory.setAttribute(\"display\", \"\");\n" +
-  "            dickory.setAttribute(\"transform\", \"translate(\" + (-795+scalefactor*2) + \", 0 )\");\n" +
-  "        }\n" +
-  "        if (timevalue > 66) {\n" +
-  "            dock.setAttribute(\"display\", \"\");\n" +
-  "            dock.setAttribute(\"transform\", \"translate(\" + (1450+scalefactor*2*-1) + \", 144 )\");\n" +
-  "        }\n" +
-  "\n" +
-  "        // Call ShowAndGrowElement again <timer_increment> milliseconds later.\n" +
-  "        setTimeout(\"ShowAndGrowElement()\", timer_increment)\n" +
-  "    }\n" +
-  "    window.ShowAndGrowElement = ShowAndGrowElement\n" +
-  "  ]]</script>\n" +
-  "\n" +
-  "  <rect\n" +
-  "    fill=\"#2e3436\"\n" +
-  "    fill-rule=\"nonzero\"\n" +
-  "    stroke-width=\"3\"\n" +
-  "    y=\"0\"\n" +
-  "    x=\"0\"\n" +
-  "    height=\"600\"\n" +
-  "    width=\"800\"\n" +
-  "    id=\"rect3590\"/>\n" +
-  "\n" +
-  "    <text\n" +
-  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
-  "       x=\"50\"\n" +
-  "       y=\"350\"\n" +
-  "       id=\"hickory\"\n" +
-  "       display=\"none\">\n" +
-  "        Hickory,</text>\n" +
-  "    <text\n" +
-  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
-  "       x=\"50\"\n" +
-  "       y=\"350\"\n" +
-  "       id=\"dickory\"\n" +
-  "       display=\"none\">\n" +
-  "        dickory,</text>\n" +
-  "    <text\n" +
-  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
-  "       x=\"50\"\n" +
-  "       y=\"350\"\n" +
-  "       id=\"dock\"\n" +
-  "       display=\"none\">\n" +
-  "        dock!</text>\n" +
-  "</svg>");
-
-define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
-  "/* Defines a new method 'sort' for array objects */\n" +
-  "object implicits extends Application {\n" +
-  "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
-  "    new {\n" +
-  "      def sort(p: (A, A) => Boolean) = {\n" +
-  "        util.Sorting.stableSort(x, p); x\n" +
-  "      }\n" +
-  "    }\n" +
-  "  val x = Array(2, 3, 1, 4)\n" +
-  "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
-  "}");
+  "(println (parting)) ; -> Goodbye, World\n" +
+  "(println (parting \"Mark\")) ; -> Goodbye, Mark\n" +
+  "(println (parting \"Mark\" \"es\")) ; -> Adios, Mark\n" +
+  "(println (parting \"Mark\", \"xy\")) ; -> java.lang.IllegalArgumentException: unsupported language xy");
 
 define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
   "\n" +
@@ -25570,37 +25012,163 @@ define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
   "    this isnt: `just JavaScript`\n" +
   "    undefined");
 
-define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
-  "  \"returns a String parting in a given language\"\n" +
-  "  ([] (parting \"World\"))\n" +
-  "  ([name] (parting name \"en\"))\n" +
-  "  ([name language]\n" +
-  "    ; condp is similar to a case statement in other languages.\n" +
-  "    ; It is described in more detail later.\n" +
-  "    ; It is used here to take different actions based on whether the\n" +
-  "    ; parameter \"language\" is set to \"en\", \"es\" or something else.\n" +
-  "    (condp = language\n" +
-  "      \"en\" (str \"Goodbye, \" name)\n" +
-  "      \"es\" (str \"Adios, \" name)\n" +
-  "      (throw (IllegalArgumentException.\n" +
-  "        (str \"unsupported language \" language))))))\n" +
+define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
   "\n" +
-  "(println (parting)) ; -> Goodbye, World\n" +
-  "(println (parting \"Mark\")) ; -> Goodbye, Mark\n" +
-  "(println (parting \"Mark\" \"es\")) ; -> Adios, Mark\n" +
-  "(println (parting \"Mark\", \"xy\")) ; -> java.lang.IllegalArgumentException: unsupported language xy");
+  "#include <iostream>\n" +
+  "using namespace std;\n" +
+  "\n" +
+  "int main ()\n" +
+  "{\n" +
+  "    int a, b=3; /* foobar */\n" +
+  "    a = b;\n" +
+  "    a+=2; // equivalent to a=a+2\n" +
+  "    cout << a;\n" +
+  "    return 0;\n" +
+  "}");
 
-define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
+define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
+  "    //Say Hello!\n" +
+  "    Console.WriteLine(\"Hello World\");\n" +
+  "}");
+
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
+
+define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
+  "import java.util.concurrent.atomic.AtomicInteger\n" +
   "\n" +
-  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
+  "def counter = new AtomicInteger()\n" +
   "\n" +
-  "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n" +
+  "synchronized out(message) {\n" +
+  "    println(message)\n" +
+  "}\n" +
   "\n" +
-  "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\n" +
+  "def th = Thread.start {\n" +
+  "    for( i in 1..8 ) {\n" +
+  "        sleep 30\n" +
+  "        out \"thread loop $i\"\n" +
+  "        counter.incrementAndGet()\n" +
+  "    }\n" +
+  "}\n" +
   "\n" +
-  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n" +
+  "for( j in 1..4 ) {\n" +
+  "    sleep 50\n" +
+  "    out \"main loop $j\"\n" +
+  "    counter.incrementAndGet()\n" +
+  "}\n" +
   "\n" +
-  "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
+  "th.join()\n" +
+  "\n" +
+  "assert counter.get() == 12");
+
+define("text!demo/docs/html.html", [], "<html>\n" +
+  "    <head>\n" +
+  "\n" +
+  "    <style type=\"text/css\">\n" +
+  "        .text-layer {\n" +
+  "            font-family: Monaco, \"Courier New\", monospace;\n" +
+  "            font-size: 12px;\n" +
+  "            cursor: text;\n" +
+  "        }\n" +
+  "    </style>\n" +
+  "\n" +
+  "    </head>\n" +
+  "    <body>\n" +
+  "        <h1 style=\"color:red\">Juhu Kinners</h1>\n" +
+  "    </body>\n" +
+  "</html>");
+
+define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
+  "\n" +
+  "    /*\n" +
+  "     * This will cause the program to hang...\n" +
+  "     *\n" +
+  "     * Taken from:\n" +
+  "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/\n" +
+  "     */\n" +
+  "    public static void main(String[] args) {\n" +
+  "        double d = Double.parseDouble(\"2.2250738585072012e-308\");\n" +
+  "\n" +
+  "        // unreachable code\n" +
+  "        System.out.println(\"Value: \" + d);\n" +
+  "    }\n" +
+  "}");
+
+define("text!demo/docs/javascript.js", [], "function foo(items) {\n" +
+  "    for (var i=0; i<items.length; i++) {\n" +
+  "        alert(items[i] + \"juhu\");\n" +
+  "    }	// Real Tab.\n" +
+  "}");
+
+define("text!demo/docs/json.json", [], "{\n" +
+  " \"query\": {\n" +
+  "  \"count\": 10,\n" +
+  "  \"created\": \"2011-06-21T08:10:46Z\",\n" +
+  "  \"lang\": \"en-US\",\n" +
+  "  \"results\": {\n" +
+  "   \"photo\": [\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5855620975\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"f1f5e8515d\",\n" +
+  "     \"server\": \"5110\",\n" +
+  "     \"title\": \"7087 bandit cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"4\",\n" +
+  "     \"id\": \"5856170534\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"ff1efb2a6f\",\n" +
+  "     \"server\": \"3217\",\n" +
+  "     \"title\": \"6975 rusty cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5856172972\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"51249875@N03\",\n" +
+  "     \"secret\": \"6c6887347c\",\n" +
+  "     \"server\": \"5192\",\n" +
+  "     \"title\": \"watermarked-cats\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5856168328\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"0c1cfdf64c\",\n" +
+  "     \"server\": \"5078\",\n" +
+  "     \"title\": \"7020 mandy cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"3\",\n" +
+  "     \"id\": \"5856171774\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"7f5a3180ab\",\n" +
+  "     \"server\": \"2696\",\n" +
+  "     \"title\": \"7448 bobby cat\"\n" +
+  "    }\n" +
+  "   ]\n" +
+  "  }\n" +
+  " }\n" +
+  "}");
 
 define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "============================\n" +
@@ -25789,262 +25357,24 @@ define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "  1016 EA, Amsterdam\n" +
   "  the Netherlands");
 
-define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
-  "    //Say Hello!\n" +
-  "    Console.WriteLine(\"Hello World\");\n" +
-  "}");
-
-define("text!demo/docs/lua.lua", [], "--[[--\n" +
-  "num_args takes in 5.1 byte code and extracts the number of arguments\n" +
-  "from its function header.\n" +
-  "--]]--\n" +
+define("text!demo/docs/ocaml.ml", [], "(*\n" +
+  " * Example of early return implementation taken from\n" +
+  " * http://ocaml.janestreet.com/?q=node/91\n" +
+  " *)\n" +
   "\n" +
-  "function int(t)\n" +
-  "	return t:byte(1)+t:byte(2)*0x100+t:byte(3)*0x10000+t:byte(4)*0x1000000\n" +
-  "end\n" +
+  "let with_return (type t) (f : _ -> t) =\n" +
+  "  let module M =\n" +
+  "     struct exception Return of t end\n" +
+  "  in\n" +
+  "  let return = { return = (fun x -> raise (M.Return x)); } in\n" +
+  "  try f return with M.Return x -> x\n" +
   "\n" +
-  "function num_args(func)\n" +
-  "	local dump = string.dump(func)\n" +
-  "	local offset, cursor = int(dump:sub(13)), offset + 26\n" +
-  "	--Get the params and var flag (whether there's a ... in the param)\n" +
-  "	return dump:sub(cursor):byte(), dump:sub(cursor+1):byte()\n" +
-  "end\n" +
   "\n" +
-  "-- Usage:\n" +
-  "num_args(function(a,b,c,d, ...) end) -- return 4, 7\n" +
-  "\n" +
-  "-- Python styled string format operator\n" +
-  "local gm = debug.getmetatable(\"\")\n" +
-  "\n" +
-  "gm.__mod=function(self, other)\n" +
-  "    if type(other) ~= \"table\" then other = {other} end\n" +
-  "    for i,v in ipairs(other) do other[i] = tostring(v) end\n" +
-  "    return self:format(unpack(other))\n" +
-  "end\n" +
-  "\n" +
-  "print([===[\n" +
-  "    blah blah %s, (%d %d)\n" +
-  "]===]%{\"blah\", num_args(int)})\n" +
-  "\n" +
-  "--[=[--\n" +
-  "table.maxn is deprecated, use # instead.\n" +
-  "--]=]--\n" +
-  "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
-  "");
-
-define("text!demo/docs/html.html", [], "<html>\n" +
-  "    <head>\n" +
-  "\n" +
-  "    <style type=\"text/css\">\n" +
-  "        .text-layer {\n" +
-  "            font-family: Monaco, \"Courier New\", monospace;\n" +
-  "            font-size: 12px;\n" +
-  "            cursor: text;\n" +
-  "        }\n" +
-  "    </style>\n" +
-  "\n" +
-  "    </head>\n" +
-  "    <body>\n" +
-  "        <h1 style=\"color:red\">Juhu Kinners</h1>\n" +
-  "    </body>\n" +
-  "</html>");
-
-define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
-  "\n" +
-  "import string, sys\n" +
-  "\n" +
-  "# If no arguments were given, print a helpful message\n" +
-  "if len(sys.argv)==1:\n" +
-  "print '''Usage:\n" +
-  "    celsius temp1 temp2 ...'''\n" +
-  "sys.exit(0)\n" +
-  "\n" +
-  "# Loop over the arguments\n" +
-  "for i in sys.argv[1:]:\n" +
-  "    try:\n" +
-  "        fahrenheit=float(string.atoi(i))\n" +
-  "    except string.atoi_error:\n" +
-  "        print repr(i), \"not a numeric value\"\n" +
-  "    else:\n" +
-  "        celsius=(fahrenheit-32)*5.0/9.0\n" +
-  "        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))");
-
-define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
-  "\n" +
-  "# Program to find the factorial of a number\n" +
-  "def fact(n)\n" +
-  "    if n == 0\n" +
-  "        1\n" +
-  "    else\n" +
-  "        n * fact(n-1)\n" +
-  "    end\n" +
-  "end\n" +
-  "\n" +
-  "puts fact(ARGV[0].to_i)");
-
-define("text!demo/docs/php.php", [], "<?php\n" +
-  "\n" +
-  "function nfact($n) {\n" +
-  "    if ($n == 0) {\n" +
-  "        return 1;\n" +
-  "    }\n" +
-  "    else {\n" +
-  "        return $n * nfact($n - 1);\n" +
-  "    }\n" +
-  "}\n" +
-  "\n" +
-  "echo \"\n\nPlease enter a whole number ... \";\n" +
-  "$num = trim(fgets(STDIN));\n" +
-  "\n" +
-  "// ===== PROCESS - Determing the factorial of the input number =====\n" +
-  "$output = \"\n\nFactorial \" . $num . \" = \" . nfact($num) . \"\n\n\";\n" +
-  "echo $output;\n" +
-  "\n" +
-  "?>");
-
-define("text!demo/docs/javascript.js", [], "function foo(items) {\n" +
-  "    for (var i=0; i<items.length; i++) {\n" +
-  "        alert(items[i] + \"juhu\");\n" +
-  "    }	// Real Tab.\n" +
-  "}");
-
-define("text!demo/docs/json.json", [], "{\n" +
-  " \"query\": {\n" +
-  "  \"count\": 10,\n" +
-  "  \"created\": \"2011-06-21T08:10:46Z\",\n" +
-  "  \"lang\": \"en-US\",\n" +
-  "  \"results\": {\n" +
-  "   \"photo\": [\n" +
-  "    {\n" +
-  "     \"farm\": \"6\",\n" +
-  "     \"id\": \"5855620975\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"f1f5e8515d\",\n" +
-  "     \"server\": \"5110\",\n" +
-  "     \"title\": \"7087 bandit cat\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"4\",\n" +
-  "     \"id\": \"5856170534\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"ff1efb2a6f\",\n" +
-  "     \"server\": \"3217\",\n" +
-  "     \"title\": \"6975 rusty cat\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"6\",\n" +
-  "     \"id\": \"5856172972\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"51249875@N03\",\n" +
-  "     \"secret\": \"6c6887347c\",\n" +
-  "     \"server\": \"5192\",\n" +
-  "     \"title\": \"watermarked-cats\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"6\",\n" +
-  "     \"id\": \"5856168328\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"0c1cfdf64c\",\n" +
-  "     \"server\": \"5078\",\n" +
-  "     \"title\": \"7020 mandy cat\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"3\",\n" +
-  "     \"id\": \"5856171774\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"7f5a3180ab\",\n" +
-  "     \"server\": \"2696\",\n" +
-  "     \"title\": \"7448 bobby cat\"\n" +
-  "    }\n" +
-  "   ]\n" +
-  "  }\n" +
-  " }\n" +
-  "}");
-
-define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
-  "\n" +
-  "#include <iostream>\n" +
-  "using namespace std;\n" +
-  "\n" +
-  "int main ()\n" +
-  "{\n" +
-  "    int a, b=3; /* foobar */\n" +
-  "    a = b;\n" +
-  "    a+=2; // equivalent to a=a+2\n" +
-  "    cout << a;\n" +
-  "    return 0;\n" +
-  "}");
-
-define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
-  "import java.util.concurrent.atomic.AtomicInteger\n" +
-  "\n" +
-  "def counter = new AtomicInteger()\n" +
-  "\n" +
-  "synchronized out(message) {\n" +
-  "    println(message)\n" +
-  "}\n" +
-  "\n" +
-  "def th = Thread.start {\n" +
-  "    for( i in 1..8 ) {\n" +
-  "        sleep 30\n" +
-  "        out \"thread loop $i\"\n" +
-  "        counter.incrementAndGet()\n" +
-  "    }\n" +
-  "}\n" +
-  "\n" +
-  "for( j in 1..4 ) {\n" +
-  "    sleep 50\n" +
-  "    out \"main loop $j\"\n" +
-  "    counter.incrementAndGet()\n" +
-  "}\n" +
-  "\n" +
-  "th.join()\n" +
-  "\n" +
-  "assert counter.get() == 12");
-
-define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
-  "\n" +
-  "h2. Heading Two\n" +
-  "\n" +
-  "h3. A two-line\n" +
-  "    header\n" +
-  "\n" +
-  "h2. Another two-line\n" +
-  "header\n" +
-  "\n" +
-  "Paragraph:\n" +
-  "one, two,\n" +
-  "thee lines!\n" +
-  "\n" +
-  "p(classone two three). This is a paragraph with classes\n" +
-  "\n" +
-  "p(#id). (one with an id)\n" +
-  "\n" +
-  "p(one two three#my_id). ..classes + id\n" +
-  "\n" +
-  "* Unordered list\n" +
-  "** sublist\n" +
-  "* back again!\n" +
-  "** sublist again..\n" +
-  "\n" +
-  "# ordered\n" +
-  "\n" +
-  "bg. Blockquote!\n" +
-  "    This is a two-list blockquote..!");
+  "(* Function that uses the 'early return' functionality provided by `with_return` *)\n" +
+  "let sum_until_first_negative list =\n" +
+  "  with_return (fun r ->\n" +
+  "    List.fold list ~init:0 ~f:(fun acc x ->\n" +
+  "      if x >= 0 then acc + x else r.return acc))");
 
 define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "use strict;\n" +
@@ -26080,46 +25410,218 @@ define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "print \"\n\";\n" +
   "");
 
-define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
+define("text!demo/docs/php.php", [], "<?php\n" +
   "\n" +
-  "    /*\n" +
-  "     * This will cause the program to hang...\n" +
-  "     *\n" +
-  "     * Taken from:\n" +
-  "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/\n" +
-  "     */\n" +
-  "    public static void main(String[] args) {\n" +
-  "        double d = Double.parseDouble(\"2.2250738585072012e-308\");\n" +
+  "function nfact($n) {\n" +
+  "    if ($n == 0) {\n" +
+  "        return 1;\n" +
+  "    }\n" +
+  "    else {\n" +
+  "        return $n * nfact($n - 1);\n" +
+  "    }\n" +
+  "}\n" +
   "\n" +
-  "        // unreachable code\n" +
-  "        System.out.println(\"Value: \" + d);\n" +
+  "echo \"\n\nPlease enter a whole number ... \";\n" +
+  "$num = trim(fgets(STDIN));\n" +
+  "\n" +
+  "// ===== PROCESS - Determing the factorial of the input number =====\n" +
+  "$output = \"\n\nFactorial \" . $num . \" = \" . nfact($num) . \"\n\n\";\n" +
+  "echo $output;\n" +
+  "\n" +
+  "?>");
+
+define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
+  "\n" +
+  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
+  "\n" +
+  "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n" +
+  "\n" +
+  "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\n" +
+  "\n" +
+  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n" +
+  "\n" +
+  "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
+
+define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
+  "\n" +
+  "import string, sys\n" +
+  "\n" +
+  "# If no arguments were given, print a helpful message\n" +
+  "if len(sys.argv)==1:\n" +
+  "print '''Usage:\n" +
+  "    celsius temp1 temp2 ...'''\n" +
+  "sys.exit(0)\n" +
+  "\n" +
+  "# Loop over the arguments\n" +
+  "for i in sys.argv[1:]:\n" +
+  "    try:\n" +
+  "        fahrenheit=float(string.atoi(i))\n" +
+  "    except string.atoi_error:\n" +
+  "        print repr(i), \"not a numeric value\"\n" +
+  "    else:\n" +
+  "        celsius=(fahrenheit-32)*5.0/9.0\n" +
+  "        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))");
+
+define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
+  "\n" +
+  "# Program to find the factorial of a number\n" +
+  "def fact(n)\n" +
+  "    if n == 0\n" +
+  "        1\n" +
+  "    else\n" +
+  "        n * fact(n-1)\n" +
+  "    end\n" +
+  "end\n" +
+  "\n" +
+  "puts fact(ARGV[0].to_i)");
+
+define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
+  "/* Defines a new method 'sort' for array objects */\n" +
+  "object implicits extends Application {\n" +
+  "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
+  "    new {\n" +
+  "      def sort(p: (A, A) => Boolean) = {\n" +
+  "        util.Sorting.stableSort(x, p); x\n" +
+  "      }\n" +
+  "    }\n" +
+  "  val x = Array(2, 3, 1, 4)\n" +
+  "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
+  "}");
+
+define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
+  "\n" +
+  "#navbar {\n" +
+  "    $navbar-width: 800px;\n" +
+  "    $items: 5;\n" +
+  "    $navbar-color: #ce4dd6;\n" +
+  "\n" +
+  "    width: $navbar-width;\n" +
+  "    border-bottom: 2px solid $navbar-color;\n" +
+  "\n" +
+  "    li {\n" +
+  "        float: left;\n" +
+  "        width: $navbar-width/$items - 10px;\n" +
+  "\n" +
+  "        background-color: lighten($navbar-color, 20%);\n" +
+  "        &:hover {\n" +
+  "            background-color: lighten($navbar-color, 10%);\n" +
+  "        }\n" +
   "    }\n" +
   "}");
 
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
+define("text!demo/docs/svg.svg", [], "<svg\n" +
+  "  width=\"800\" height=\"600\"\n" +
+  "  xmlns=\"http://www.w3.org/2000/svg\"\n" +
+  "  onload=\"StartAnimation(evt)\">\n" +
+  "\n" +
+  "  <title>Test Tube Progress Bar</title>\n" +
+  "  <desc>Created for the Web Directions SVG competition</desc>\n" +
+  "\n" +
+  "  <script type=\"text/ecmascript\"><![CDATA[\n" +
+  "    var timevalue = 0;\n" +
+  "    var timer_increment = 1;\n" +
+  "    var max_time = 100;\n" +
+  "    var hickory;\n" +
+  "    var dickory;\n" +
+  "    var dock;\n" +
+  "    var i;\n" +
+  "\n" +
+  "    function StartAnimation(evt) {\n" +
+  "        hickory  = evt.target.ownerDocument.getElementById(\"hickory\");\n" +
+  "        dickory = evt.target.ownerDocument.getElementById(\"dickory\");\n" +
+  "        dock = evt.target.ownerDocument.getElementById(\"dock\");\n" +
+  "\n" +
+  "        ShowAndGrowElement();\n" +
+  "    }\n" +
+  "    function ShowAndGrowElement() {\n" +
+  "        timevalue = timevalue + timer_increment;\n" +
+  "        if (timevalue > max_time)\n" +
+  "            return;\n" +
+  "        // Scale the text string gradually until it is 20 times larger\n" +
+  "        scalefactor = (timevalue * 650) / max_time;\n" +
+  "\n" +
+  "        if (timevalue < 30) {\n" +
+  "            hickory.setAttribute(\"display\", \"\");\n" +
+  "            hickory.setAttribute(\"transform\", \"translate(\" + (600+scalefactor*3*-1 ) + \", -144 )\");\n" +
+  "        }\n" +
+  "\n" +
+  "        if (timevalue > 30 && timevalue < 66) {\n" +
+  "            dickory.setAttribute(\"display\", \"\");\n" +
+  "            dickory.setAttribute(\"transform\", \"translate(\" + (-795+scalefactor*2) + \", 0 )\");\n" +
+  "        }\n" +
+  "        if (timevalue > 66) {\n" +
+  "            dock.setAttribute(\"display\", \"\");\n" +
+  "            dock.setAttribute(\"transform\", \"translate(\" + (1450+scalefactor*2*-1) + \", 144 )\");\n" +
+  "        }\n" +
+  "\n" +
+  "        // Call ShowAndGrowElement again <timer_increment> milliseconds later.\n" +
+  "        setTimeout(\"ShowAndGrowElement()\", timer_increment)\n" +
+  "    }\n" +
+  "    window.ShowAndGrowElement = ShowAndGrowElement\n" +
+  "  ]]</script>\n" +
+  "\n" +
+  "  <rect\n" +
+  "    fill=\"#2e3436\"\n" +
+  "    fill-rule=\"nonzero\"\n" +
+  "    stroke-width=\"3\"\n" +
+  "    y=\"0\"\n" +
+  "    x=\"0\"\n" +
+  "    height=\"600\"\n" +
+  "    width=\"800\"\n" +
+  "    id=\"rect3590\"/>\n" +
+  "\n" +
+  "    <text\n" +
+  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
+  "       x=\"50\"\n" +
+  "       y=\"350\"\n" +
+  "       id=\"hickory\"\n" +
+  "       display=\"none\">\n" +
+  "        Hickory,</text>\n" +
+  "    <text\n" +
+  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
+  "       x=\"50\"\n" +
+  "       y=\"350\"\n" +
+  "       id=\"dickory\"\n" +
+  "       display=\"none\">\n" +
+  "        dickory,</text>\n" +
+  "    <text\n" +
+  "       style=\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"\n" +
+  "       x=\"50\"\n" +
+  "       y=\"350\"\n" +
+  "       id=\"dock\"\n" +
+  "       display=\"none\">\n" +
+  "        dock!</text>\n" +
+  "</svg>");
 
-define("text!demo/docs/ocaml.ml", [], "(*\n" +
-  " * Example of early return implementation taken from\n" +
-  " * http://ocaml.janestreet.com/?q=node/91\n" +
-  " *)\n" +
+define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
   "\n" +
-  "let with_return (type t) (f : _ -> t) =\n" +
-  "  let module M =\n" +
-  "     struct exception Return of t end\n" +
-  "  in\n" +
-  "  let return = { return = (fun x -> raise (M.Return x)); } in\n" +
-  "  try f return with M.Return x -> x\n" +
+  "h2. Heading Two\n" +
   "\n" +
+  "h3. A two-line\n" +
+  "    header\n" +
   "\n" +
-  "(* Function that uses the 'early return' functionality provided by `with_return` *)\n" +
-  "let sum_until_first_negative list =\n" +
-  "  with_return (fun r ->\n" +
-  "    List.fold list ~init:0 ~f:(fun acc x ->\n" +
-  "      if x >= 0 then acc + x else r.return acc))");
+  "h2. Another two-line\n" +
+  "header\n" +
+  "\n" +
+  "Paragraph:\n" +
+  "one, two,\n" +
+  "thee lines!\n" +
+  "\n" +
+  "p(classone two three). This is a paragraph with classes\n" +
+  "\n" +
+  "p(#id). (one with an id)\n" +
+  "\n" +
+  "p(one two three#my_id). ..classes + id\n" +
+  "\n" +
+  "* Unordered list\n" +
+  "** sublist\n" +
+  "* back again!\n" +
+  "** sublist again..\n" +
+  "\n" +
+  "# ordered\n" +
+  "\n" +
+  "bg. Blockquote!\n" +
+  "    This is a two-list blockquote..!");
 
 define("text!ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
@@ -26292,264 +25794,49 @@ define("text!ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/c
   "}\n" +
   "");
 
-define("text!node_modules/jsdom/node_modules/cssom/docs/bar.css", [], "body * {\n" +
-  "	color: red !important;\n" +
-  "}");
-
-define("text!node_modules/jsdom/node_modules/cssom/docs/demo.css", [], "");
-
-define("text!node_modules/jsdom/node_modules/cssom/docs/foo.css", [], "@import \"bar.css\" screen;\n" +
-  "body {\n" +
-  "	background: black !important;\n" +
-  "}");
-
-define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
-  "body { max-width: 60em; }\n" +
-  ".title  { text-align: center; }\n" +
-  ".todo   { color: red; }\n" +
-  ".done   { color: green; }\n" +
-  ".tag    { background-color:lightblue; font-weight:normal }\n" +
-  ".target { }\n" +
-  ".timestamp { color: grey }\n" +
-  ".timestamp-kwd { color: CadetBlue }\n" +
-  "p.verse { margin-left: 3% }\n" +
-  "pre {\n" +
-  "  border: 1pt solid #AEBDCC;\n" +
-  "  background-color: #F3F5F7;\n" +
-  "  padding: 5pt;\n" +
-  "  font-family: monospace;\n" +
-  "  font-size: 90%;\n" +
-  "  overflow:auto;\n" +
-  "}\n" +
-  "pre.src {\n" +
-  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
-  "}\n" +
-  "table { border-collapse: collapse; }\n" +
-  "td, th { vertical-align: top; }\n" +
-  "dt { font-weight: bold; }\n" +
-  "div.figure { padding: 0.5em; }\n" +
-  "div.figure p { text-align: center; }\n" +
-  ".linenr { font-size:smaller }\n" +
-  ".code-highlighted {background-color:#ffff00;}\n" +
-  ".org-info-js_info-navigation { border-style:none; }\n" +
-  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
-  "  white-space:nowrap; }\n" +
-  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
-  "  font-weight:bold; }\n" +
-  "\n" +
-  "sup {\n" +
-  "  vertical-align: baseline;\n" +
-  "  position: relative;\n" +
-  "  top: -0.5em;\n" +
-  "  font-size: 80%;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:link, sup a:visited {\n" +
-  "  text-decoration: none;\n" +
-  "  color: #c00;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:before { content: \"[\"; color: #999; }\n" +
-  "sup a:after { content: \"]\"; color: #999; }\n" +
-  "\n" +
-  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
-  "\n" +
-  "#postamble {\n" +
-  "  color: #777;\n" +
-  "  font-size: 90%;\n" +
-  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
-  "  margin-top: 2em;\n" +
-  "  padding-left: 2em;\n" +
-  "  padding-right: 2em;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#postamble p { margin: 0; }\n" +
-  "\n" +
-  "#footnotes { border-top: 1px solid #000; }\n" +
-  "\n" +
-  "h1 { font-size: 200% }\n" +
-  "h2 { font-size: 175% }\n" +
-  "h3 { font-size: 150% }\n" +
-  "h4 { font-size: 125% }\n" +
-  "\n" +
-  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
-  "\n" +
-  "@media print {\n" +
-  "  html { font-size: 11pt; }\n" +
-  "}\n" +
-  "");
-
-define("text!lib/ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
-  "\n" +
-  "\n" +
-  ".ace_editor {\n" +
-  "    position: absolute;\n" +
-  "    overflow: hidden;\n" +
-  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
-  "    font-size: 12px;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_scroller {\n" +
-  "    position: absolute;\n" +
-  "    overflow-x: scroll;\n" +
-  "    overflow-y: hidden;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_content {\n" +
-  "    position: absolute;\n" +
-  "    box-sizing: border-box;\n" +
-  "    -moz-box-sizing: border-box;\n" +
-  "    -webkit-box-sizing: border-box;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_composition {\n" +
-  "    position: absolute;\n" +
-  "    background: #555;\n" +
-  "    color: #DDD;\n" +
-  "    z-index: 4;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_gutter {\n" +
-  "    position: absolute;\n" +
-  "    overflow-x: hidden;\n" +
-  "    overflow-y: hidden;\n" +
+define("text!build/demo/styles.css", [], "html {\n" +
   "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
   "}\n" +
   "\n" +
-  ".ace_gutter-cell.ace_error {\n" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
-  "    background-repeat: no-repeat;\n" +
-  "    background-position: 4px center;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_gutter-cell.ace_warning {\n" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
-  "    background-repeat: no-repeat;\n" +
-  "    background-position: 4px center;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_editor .ace_sb {\n" +
-  "    position: absolute;\n" +
-  "    overflow-x: hidden;\n" +
-  "    overflow-y: scroll;\n" +
-  "    right: 0;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_editor .ace_sb div {\n" +
-  "    position: absolute;\n" +
-  "    width: 1px;\n" +
-  "    left: 0;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_editor .ace_print_margin_layer {\n" +
-  "    z-index: 0;\n" +
-  "    position: absolute;\n" +
+  "body {\n" +
   "    overflow: hidden;\n" +
   "    margin: 0;\n" +
-  "    left: 0;\n" +
+  "    padding: 0;\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
   "}\n" +
   "\n" +
-  ".ace_editor .ace_print_margin {\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
   "    position: absolute;\n" +
-  "    height: 100%;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
   "}\n" +
   "\n" +
-  ".ace_editor textarea {\n" +
-  "    position: fixed;\n" +
-  "    z-index: -1;\n" +
-  "    width: 10px;\n" +
-  "    height: 30px;\n" +
-  "    opacity: 0;\n" +
-  "    background: transparent;\n" +
-  "    appearance: none;\n" +
-  "    -moz-appearance: none;\n" +
-  "    border: none;\n" +
-  "    resize: none;\n" +
-  "    outline: none;\n" +
-  "    overflow: hidden;\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
   "}\n" +
   "\n" +
-  ".ace_layer {\n" +
-  "    z-index: 1;\n" +
-  "    position: absolute;\n" +
-  "    overflow: hidden;\n" +
-  "    white-space: nowrap;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
   "}\n" +
   "\n" +
-  ".ace_text-layer {\n" +
-  "    color: black;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cjk {\n" +
-  "    display: inline-block;\n" +
-  "    text-align: center;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cursor-layer {\n" +
-  "    z-index: 4;\n" +
-  "    cursor: text;\n" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cursor {\n" +
-  "    z-index: 4;\n" +
-  "    position: absolute;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cursor.ace_hidden {\n" +
-  "    opacity: 0.2;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_line {\n" +
-  "    white-space: nowrap;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer {\n" +
-  "    cursor: text;\n" +
-  "    pointer-events: none;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_step {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 3;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_selection {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 4;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_bracket {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 5;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_active_line {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 2;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_selected_word {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 6;\n" +
-  "    box-sizing: border-box;\n" +
-  "    -moz-box-sizing: border-box;\n" +
-  "    -webkit-box-sizing: border-box;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_line .ace_fold {\n" +
-  "    cursor: pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
-  "  cursor: move;\n" +
-  "}\n" +
-  "");
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
 
 define("text!build_support/style.css", [], "body {\n" +
   "    margin:0;\n" +
@@ -26783,82 +26070,99 @@ define("text!build_support/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
-  ".cptRowIn {\n" +
-  "  display: box; display: -moz-box; display: -webkit-box;\n" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
-  "  color: #333;\n" +
-  "  background-color: #EEE;\n" +
-  "  width: 100%;\n" +
-  "  font-family: consolas, courier, monospace;\n" +
-  "}\n" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
-  ".cptRowIn > img { cursor: pointer; }\n" +
-  ".cptHover { display: none; }\n" +
-  ".cptRowIn:hover > .cptHover { display: block; }\n" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
-  ".cptOutTyped {\n" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
-  "  font-weight: bold; color: #000; font-size: 120%;\n" +
-  "}\n" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
-  ".cptRowOutput strong,\n" +
-  ".cptRowOutput b,\n" +
-  ".cptRowOutput th,\n" +
-  ".cptRowOutput h1,\n" +
-  ".cptRowOutput h2,\n" +
-  ".cptRowOutput h3 { color: #000; }\n" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
-  ".cptRowOutput input[type=password],\n" +
-  ".cptRowOutput input[type=text],\n" +
-  ".cptRowOutput textarea {\n" +
-  "  color: #000; font-size: 120%;\n" +
-  "  background: transparent; padding: 3px;\n" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
-  "}\n" +
-  ".cptRowOutput table,\n" +
-  ".cptRowOutput td,\n" +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
-  ".cptRowOutput .right { text-align: right; }\n" +
-  "");
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
 
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
-  "#cockpitInput { padding-left: 16px; }\n" +
-  "\n" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
-  "\n" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
-  ".cptCompletion.VALID { background: #FFF; }\n" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
-  ".cptCompletion.INVALID { background: #DDD; }\n" +
-  ".cptCompletion span { color: #FFF; }\n" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
-  "\n" +
-  "\n" +
-  ".cptHints {\n" +
-  "  color: #000;\n" +
-  "  position: absolute;\n" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
-  "  background: rgba(250, 250, 250, 0.8);\n" +
-  "  -moz-border-radius-topleft: 10px;\n" +
-  "  -moz-border-radius-topright: 10px;\n" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
-  "  z-index: 1000;\n" +
-  "  padding: 8px;\n" +
-  "  display: none;\n" +
+define("text!demo/styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
   "}\n" +
   "\n" +
-  ".cptFocusPopup { display: block; }\n" +
-  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
   "\n" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
   "\n" +
-  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
-  "");
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
+
+define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
+  "\n" +
+  "@import url(\"booya.css\") print,screen;\n" +
+  "@import \"whatup.css\" screen;\n" +
+  "@import \"wicked.css\";\n" +
+  "\n" +
+  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
+  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
+  "\n" +
+  "li.inline #foo {\n" +
+  "  background: url(\"something.png\");\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px;\n" +
+  "  padding-right: 7px;\n" +
+  "  border-right: 1px dotted #066;\n" +
+  "}\n" +
+  "\n" +
+  "li.last.first {\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px !important;\n" +
+  "  padding-right: 3px;\n" +
+  "  border-right: 0px;\n" +
+  "}\n" +
+  "\n" +
+  "@media print {\n" +
+  "    li.inline {\n" +
+  "      color: black;\n" +
+  "    }\n" +
+  "\n" +
+  "\n" +
+  "@charset \"UTF-8\"; \n" +
+  "\n" +
+  "@page {\n" +
+  "  margin: 10%;\n" +
+  "  counter-increment: page;\n" +
+  "\n" +
+  "  @top-center {\n" +
+  "    font-family: sans-serif;\n" +
+  "    font-weight: bold;\n" +
+  "    font-size: 2em;\n" +
+  "    content: counter(page);\n" +
+  "  }\n" +
+  "}");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
   "    position:relative;\n" +
@@ -27119,281 +26423,330 @@ define("text!doc/site/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!build/textarea/style.css", [], "body {\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "    background-color:#e6f5fc;\n" +
-  "    \n" +
-  "}\n" +
-  "\n" +
-  "H2, H3, H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "}\n" +
-  "\n" +
-  "H2 {\n" +
-  "    font-size:28px;\n" +
-  "    color:#263842;\n" +
-  "    padding-bottom:6px;\n" +
-  "}\n" +
-  "\n" +
-  "H3 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:22px;\n" +
-  "    color:#253741;\n" +
-  "    margin-top:43px;\n" +
-  "    margin-bottom:8px;\n" +
-  "}\n" +
-  "\n" +
-  "H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:21px;\n" +
-  "    color:#222222;\n" +
-  "    margin-bottom:4px;\n" +
-  "}\n" +
-  "\n" +
-  "P {\n" +
-  "    padding:13px 0;\n" +
-  "    margin:0;\n" +
-  "    line-height:22px;\n" +
-  "}\n" +
-  "\n" +
-  "UL{\n" +
-  "    line-height : 22px;\n" +
-  "}\n" +
-  "\n" +
-  "PRE{\n" +
-  "    background : #333;\n" +
-  "    color : white;\n" +
-  "    padding : 10px;\n" +
-  "}\n" +
-  "\n" +
-  "#header {\n" +
-  "    height : 227px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background: url(images/background.png) repeat-x 0 0;\n" +
-  "    border-bottom:1px solid #c9e8fa;   \n" +
-  "}\n" +
-  "\n" +
-  "#header .content .signature {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:11px;\n" +
-  "    color:#ebe4d6;\n" +
-  "    position:absolute;\n" +
-  "    bottom:5px;\n" +
-  "    right:42px;\n" +
-  "    letter-spacing : 1px;\n" +
-  "}\n" +
-  "\n" +
-  ".content {\n" +
-  "    width:970px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin:0 auto;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content {\n" +
-  "    height:184px;\n" +
-  "    margin-top:22px;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .logo {\n" +
-  "    width  : 282px;\n" +
-  "    height : 184px;\n" +
-  "    background:url(images/logo.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:0;\n" +
-  "    left:0;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .title {\n" +
-  "    width  : 605px;\n" +
-  "    height : 58px;\n" +
-  "    background:url(images/ace.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:98px;\n" +
-  "    left:329px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper {\n" +
-  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
-  "    min-height:250px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content {\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:14px;\n" +
-  "    color:#222222;\n" +
-  "    width:1000px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column1 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:315px;\n" +
-  "    margin-right:31px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column2 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:600px;\n" +
-  "    padding-top:47px;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github {\n" +
-  "    width:310px;\n" +
-  "    height:80px;\n" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin-top:49px;\n" +
-  "    cursor:pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github:hover {\n" +
-  "    background-position:0 -80px;\n" +
-  "}\n" +
-  "\n" +
-  ".divider {\n" +
-  "    height:3px;\n" +
-  "    background-color:#bedaea;\n" +
-  "    margin-bottom:3px;\n" +
-  "}\n" +
-  "\n" +
-  ".menu {\n" +
-  "    padding:23px 0 0 24px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.content-list {\n" +
-  "    padding:15px;\n" +
-  "    margin:0;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list {\n" +
-  "    padding:0;\n" +
-  "    margin:0 0 20px 0;\n" +
-  "    list-style-type:none;\n" +
-  "    line-height : 16px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI {\n" +
-  "    color:#2557b4;\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:14px;\n" +
-  "    padding:7px 0;\n" +
-  "    border-bottom:1px dotted #d6e2e7;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI:last-child {\n" +
-  "    border-bottom:0;\n" +
-  "}\n" +
-  "\n" +
-  "A {\n" +
-  "    color:#2557b4;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "P#first{\n" +
-  "    background : rgba(255,255,255,0.5);\n" +
-  "    padding : 20px;\n" +
-  "    font-size : 16px;\n" +
-  "    line-height : 24px;\n" +
-  "    margin : 0 0 20px 0;\n" +
-  "}\n" +
-  "\n" +
-  "#footer {\n" +
-  "    height:40px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
-  "    position:relative;\n" +
-  "    margin-top:40px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer {\n" +
-  "    padding:0;\n" +
-  "    margin:8px 11px 0 0;\n" +
-  "    list-style-type:none;\n" +
-  "    float:right;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI {\n" +
-  "    color:white;\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:12px;\n" +
-  "    display:inline-block;\n" +
-  "    margin:0 1px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A {\n" +
-  "    color:#8dd0ff;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
+define("text!lib/ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
-  "\n" +
-  "\n" +
-  "");
-
-define("text!build/demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
+  ".ace_editor {\n" +
+  "    position: absolute;\n" +
   "    overflow: hidden;\n" +
+  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "    font-size: 12px;\n" +
   "}\n" +
   "\n" +
-  "body {\n" +
+  ".ace_scroller {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: scroll;\n" +
+  "    overflow-y: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_content {\n" +
+  "    position: absolute;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_composition {\n" +
+  "    position: absolute;\n" +
+  "    background: #555;\n" +
+  "    color: #DDD;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: hidden;\n" +
+  "    height: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_error {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_warning {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: scroll;\n" +
+  "    right: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb div {\n" +
+  "    position: absolute;\n" +
+  "    width: 1px;\n" +
+  "    left: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_print_margin_layer {\n" +
+  "    z-index: 0;\n" +
+  "    position: absolute;\n" +
   "    overflow: hidden;\n" +
   "    margin: 0;\n" +
-  "    padding: 0;\n" +
+  "    left: 0;\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
   "}\n" +
   "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
+  ".ace_editor .ace_print_margin {\n" +
   "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 280px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
+  "    height: 100%;\n" +
   "}\n" +
   "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
+  ".ace_editor textarea {\n" +
+  "    position: fixed;\n" +
+  "    z-index: -1;\n" +
+  "    width: 10px;\n" +
+  "    height: 30px;\n" +
+  "    opacity: 0;\n" +
+  "    background: transparent;\n" +
+  "    appearance: none;\n" +
+  "    -moz-appearance: none;\n" +
+  "    border: none;\n" +
+  "    resize: none;\n" +
+  "    outline: none;\n" +
+  "    overflow: hidden;\n" +
   "}\n" +
   "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
+  ".ace_layer {\n" +
+  "    z-index: 1;\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    white-space: nowrap;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
   "}\n" +
   "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
-  "}");
+  ".ace_text-layer {\n" +
+  "    color: black;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cjk {\n" +
+  "    display: inline-block;\n" +
+  "    text-align: center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor-layer {\n" +
+  "    z-index: 4;\n" +
+  "    cursor: text;\n" +
+  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor {\n" +
+  "    z-index: 4;\n" +
+  "    position: absolute;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor.ace_hidden {\n" +
+  "    opacity: 0.2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line {\n" +
+  "    white-space: nowrap;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer {\n" +
+  "    cursor: text;\n" +
+  "    pointer-events: none;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_step {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 3;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selection {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_bracket {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_active_line {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selected_word {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 6;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line .ace_fold {\n" +
+  "    cursor: pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  "  cursor: move;\n" +
+  "}\n" +
+  "");
+
+define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
+  "body { max-width: 60em; }\n" +
+  ".title  { text-align: center; }\n" +
+  ".todo   { color: red; }\n" +
+  ".done   { color: green; }\n" +
+  ".tag    { background-color:lightblue; font-weight:normal }\n" +
+  ".target { }\n" +
+  ".timestamp { color: grey }\n" +
+  ".timestamp-kwd { color: CadetBlue }\n" +
+  "p.verse { margin-left: 3% }\n" +
+  "pre {\n" +
+  "  border: 1pt solid #AEBDCC;\n" +
+  "  background-color: #F3F5F7;\n" +
+  "  padding: 5pt;\n" +
+  "  font-family: monospace;\n" +
+  "  font-size: 90%;\n" +
+  "  overflow:auto;\n" +
+  "}\n" +
+  "pre.src {\n" +
+  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
+  "}\n" +
+  "table { border-collapse: collapse; }\n" +
+  "td, th { vertical-align: top; }\n" +
+  "dt { font-weight: bold; }\n" +
+  "div.figure { padding: 0.5em; }\n" +
+  "div.figure p { text-align: center; }\n" +
+  ".linenr { font-size:smaller }\n" +
+  ".code-highlighted {background-color:#ffff00;}\n" +
+  ".org-info-js_info-navigation { border-style:none; }\n" +
+  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
+  "  white-space:nowrap; }\n" +
+  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
+  "  font-weight:bold; }\n" +
+  "\n" +
+  "sup {\n" +
+  "  vertical-align: baseline;\n" +
+  "  position: relative;\n" +
+  "  top: -0.5em;\n" +
+  "  font-size: 80%;\n" +
+  "}\n" +
+  "\n" +
+  "sup a:link, sup a:visited {\n" +
+  "  text-decoration: none;\n" +
+  "  color: #c00;\n" +
+  "}\n" +
+  "\n" +
+  "sup a:before { content: \"[\"; color: #999; }\n" +
+  "sup a:after { content: \"]\"; color: #999; }\n" +
+  "\n" +
+  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
+  "\n" +
+  "#postamble {\n" +
+  "  color: #777;\n" +
+  "  font-size: 90%;\n" +
+  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
+  "  margin-top: 2em;\n" +
+  "  padding-left: 2em;\n" +
+  "  padding-right: 2em;\n" +
+  "  text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#postamble p { margin: 0; }\n" +
+  "\n" +
+  "#footnotes { border-top: 1px solid #000; }\n" +
+  "\n" +
+  "h1 { font-size: 200% }\n" +
+  "h2 { font-size: 175% }\n" +
+  "h3 { font-size: 150% }\n" +
+  "h4 { font-size: 125% }\n" +
+  "\n" +
+  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
+  "\n" +
+  "@media print {\n" +
+  "  html { font-size: 11pt; }\n" +
+  "}\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
+  "#cockpitInput { padding-left: 16px; }\n" +
+  "\n" +
+  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
+  "\n" +
+  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
+  ".cptCompletion.VALID { background: #FFF; }\n" +
+  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
+  ".cptCompletion.INVALID { background: #DDD; }\n" +
+  ".cptCompletion span { color: #FFF; }\n" +
+  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
+  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
+  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
+  "\n" +
+  "\n" +
+  ".cptHints {\n" +
+  "  color: #000;\n" +
+  "  position: absolute;\n" +
+  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
+  "  background: rgba(250, 250, 250, 0.8);\n" +
+  "  -moz-border-radius-topleft: 10px;\n" +
+  "  -moz-border-radius-topright: 10px;\n" +
+  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
+  "  z-index: 1000;\n" +
+  "  padding: 8px;\n" +
+  "  display: none;\n" +
+  "}\n" +
+  "\n" +
+  ".cptFocusPopup { display: block; }\n" +
+  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
+  "\n" +
+  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "\n" +
+  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
+  ".cptRowIn {\n" +
+  "  display: box; display: -moz-box; display: -webkit-box;\n" +
+  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
+  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
+  "  color: #333;\n" +
+  "  background-color: #EEE;\n" +
+  "  width: 100%;\n" +
+  "  font-family: consolas, courier, monospace;\n" +
+  "}\n" +
+  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
+  ".cptRowIn > img { cursor: pointer; }\n" +
+  ".cptHover { display: none; }\n" +
+  ".cptRowIn:hover > .cptHover { display: block; }\n" +
+  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
+  ".cptOutTyped {\n" +
+  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
+  "  font-weight: bold; color: #000; font-size: 120%;\n" +
+  "}\n" +
+  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
+  ".cptRowOutput strong,\n" +
+  ".cptRowOutput b,\n" +
+  ".cptRowOutput th,\n" +
+  ".cptRowOutput h1,\n" +
+  ".cptRowOutput h2,\n" +
+  ".cptRowOutput h3 { color: #000; }\n" +
+  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
+  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
+  ".cptRowOutput input[type=password],\n" +
+  ".cptRowOutput input[type=text],\n" +
+  ".cptRowOutput textarea {\n" +
+  "  color: #000; font-size: 120%;\n" +
+  "  background: transparent; padding: 3px;\n" +
+  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
+  "}\n" +
+  ".cptRowOutput table,\n" +
+  ".cptRowOutput td,\n" +
+  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
+  ".cptRowOutput .right { text-align: right; }\n" +
+  "");
 
 define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "  border: 2px solid rgb(159, 159, 159);\n" +
@@ -27598,56 +26951,6 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "\n" +
   ".%cssClass% .ace_collab.ace_user1 {\n" +
   "  %collab.user1%   \n" +
-  "}");
-
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
-  "}\n" +
-  "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
-  "}\n" +
-  "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 280px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
   "}");
 
 define("text!docs/css.css", [], ".text-layer {\n" +
