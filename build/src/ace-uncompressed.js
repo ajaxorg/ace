@@ -148,832 +148,10 @@ var lookup = function(moduleName) {
     MIT License. http://github.com/280north/narwhal/blob/master/README.md
 */
 
-define('pilot/fixoldbrowsers', ['require', 'exports', 'module' , 'pilot/regexp'], function(require, exports, module) {
+define('pilot/fixoldbrowsers', ['require', 'exports', 'module' , 'pilot/regexp', 'pilot/es5-shim'], function(require, exports, module) {
 
 require("pilot/regexp");
-
-/**
- * Brings an environment as close to ECMAScript 5 compliance
- * as is possible with the facilities of erstwhile engines.
- *
- * ES5 Draft
- * http://www.ecma-international.org/publications/files/drafts/tc39-2009-050.pdf
- *
- * NOTE: this is a draft, and as such, the URL is subject to change.  If the
- * link is broken, check in the parent directory for the latest TC39 PDF.
- * http://www.ecma-international.org/publications/files/drafts/
- *
- * Previous ES5 Draft
- * http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
- * This is a broken link to the previous draft of ES5 on which most of the
- * numbered specification references and quotes herein were taken.  Updating
- * these references and quotes to reflect the new document would be a welcome
- * volunteer project.
- *
- * @module
- */
-
-/*whatsupdoc*/
-
-//
-// Function
-// ========
-//
-
-// ES-5 15.3.4.5
-// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
-
-if (!Function.prototype.bind) {
-    var slice = Array.prototype.slice;
-    Function.prototype.bind = function bind(that) { // .length is 1
-        // 1. Let Target be the this value.
-        var target = this;
-        // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        // XXX this gets pretty close, for all intents and purposes, letting
-        // some duck-types slide
-        if (typeof target.apply !== "function" || typeof target.call !== "function")
-            return new TypeError();
-        // 3. Let A be a new (possibly empty) internal list of all of the
-        //   argument values provided after thisArg (arg1, arg2 etc), in order.
-        var args = slice.call(arguments);
-        // 4. Let F be a new native ECMAScript object.
-        // 9. Set the [[Prototype]] internal property of F to the standard
-        //   built-in Function prototype object as specified in 15.3.3.1.
-        // 10. Set the [[Call]] internal property of F as described in
-        //   15.3.4.5.1.
-        // 11. Set the [[Construct]] internal property of F as described in
-        //   15.3.4.5.2.
-        // 12. Set the [[HasInstance]] internal property of F as described in
-        //   15.3.4.5.3.
-        // 13. The [[Scope]] internal property of F is unused and need not
-        //   exist.
-        var bound = function bound() {
-
-            if (this instanceof bound) {
-                // 15.3.4.5.2 [[Construct]]
-                // When the [[Construct]] internal method of a function object,
-                // F that was created using the bind function is called with a
-                // list of arguments ExtraArgs the following steps are taken:
-                // 1. Let target be the value of F's [[TargetFunction]]
-                //   internal property.
-                // 2. If target has no [[Construct]] internal method, a
-                //   TypeError exception is thrown.
-                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the
-                //   list boundArgs in the same order followed by the same
-                //   values as the list ExtraArgs in the same order.
-
-                var self = Object.create(target.prototype);
-                target.apply(self, args.concat(slice.call(arguments)));
-                return self;
-
-            } else {
-                // 15.3.4.5.1 [[Call]]
-                // When the [[Call]] internal method of a function object, F,
-                // which was created using the bind function is called with a
-                // this value and a list of arguments ExtraArgs the following
-                // steps are taken:
-                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
-                //   property.
-                // 2. Let boundThis be the value of F's [[BoundThis]] internal
-                //   property.
-                // 3. Let target be the value of F's [[TargetFunction]] internal
-                //   property.
-                // 4. Let args be a new list containing the same values as the list
-                //   boundArgs in the same order followed by the same values as
-                //   the list ExtraArgs in the same order. 5.  Return the
-                //   result of calling the [[Call]] internal method of target
-                //   providing boundThis as the this value and providing args
-                //   as the arguments.
-
-                // equiv: target.call(this, ...boundArgs, ...args)
-                return target.call.apply(
-                    target,
-                    args.concat(slice.call(arguments))
-                );
-
-            }
-
-        };
-        bound.length = (
-            // 14. If the [[Class]] internal property of Target is "Function", then
-            typeof target === "function" ?
-            // a. Let L be the length property of Target minus the length of A.
-            // b. Set the length own property of F to either 0 or L, whichever is larger.
-            Math.max(target.length - args.length, 0) :
-            // 15. Else set the length own property of F to 0.
-            0
-        )
-        // 16. The length own property of F is given attributes as specified in
-        //   15.3.5.1.
-        // TODO
-        // 17. Set the [[Extensible]] internal property of F to true.
-        // TODO
-        // 18. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // 19. Call the [[DefineOwnProperty]] internal method of F with
-        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
-        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
-        //   false}, and false.
-        // TODO
-        // NOTE Function objects created using Function.prototype.bind do not
-        // have a prototype property.
-        // XXX can't delete it in pure-js.
-        return bound;
-    };
-}
-
-// Shortcut to an often accessed properties, in order to avoid multiple
-// dereference that costs universally.
-// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
-// us it in defining shortcuts.
-var call = Function.prototype.call;
-var prototypeOfArray = Array.prototype;
-var prototypeOfObject = Object.prototype;
-var owns = call.bind(prototypeOfObject.hasOwnProperty);
-
-var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
-// If JS engine supports accessors creating shortcuts.
-if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
-    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
-    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
-    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
-    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
-}
-
-
-//
-// Array
-// =====
-//
-
-// ES5 15.4.3.2
-if (!Array.isArray) {
-    Array.isArray = function isArray(obj) {
-        return Object.prototype.toString.call(obj) === "[object Array]";
-    };
-}
-
-// ES5 15.4.4.18
-if (!Array.prototype.forEach) {
-    Array.prototype.forEach =  function forEach(block, thisObject) {
-        var len = +this.length;
-        for (var i = 0; i < len; i++) {
-            if (i in this) {
-                block.call(thisObject, this[i], i, this);
-            }
-        }
-    };
-}
-
-// ES5 15.4.4.19
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
-if (!Array.prototype.map) {
-    Array.prototype.map = function map(fun /*, thisp*/) {
-        var len = +this.length;
-        if (typeof fun !== "function")
-          throw new TypeError();
-
-        var res = new Array(len);
-        var thisp = arguments[1];
-        for (var i = 0; i < len; i++) {
-            if (i in this)
-                res[i] = fun.call(thisp, this[i], i, this);
-        }
-
-        return res;
-    };
-}
-
-// ES5 15.4.4.20
-if (!Array.prototype.filter) {
-    Array.prototype.filter = function filter(block /*, thisp */) {
-        var values = [];
-        var thisp = arguments[1];
-        for (var i = 0; i < this.length; i++)
-            if (block.call(thisp, this[i]))
-                values.push(this[i]);
-        return values;
-    };
-}
-
-// ES5 15.4.4.16
-if (!Array.prototype.every) {
-    Array.prototype.every = function every(block /*, thisp */) {
-        var thisp = arguments[1];
-        for (var i = 0; i < this.length; i++)
-            if (!block.call(thisp, this[i]))
-                return false;
-        return true;
-    };
-}
-
-// ES5 15.4.4.17
-if (!Array.prototype.some) {
-    Array.prototype.some = function some(block /*, thisp */) {
-        var thisp = arguments[1];
-        for (var i = 0; i < this.length; i++)
-            if (block.call(thisp, this[i]))
-                return true;
-        return false;
-    };
-}
-
-// ES5 15.4.4.21
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
-if (!Array.prototype.reduce) {
-    Array.prototype.reduce = function reduce(fun /*, initial*/) {
-        var len = +this.length;
-        if (typeof fun !== "function")
-            throw new TypeError();
-
-        // no value to return if no initial value and an empty array
-        if (len === 0 && arguments.length === 1)
-            throw new TypeError();
-
-        var i = 0;
-        if (arguments.length >= 2) {
-            var rv = arguments[1];
-        } else {
-            do {
-                if (i in this) {
-                    rv = this[i++];
-                    break;
-                }
-
-                // if array contains no values, no initial value to return
-                if (++i >= len)
-                    throw new TypeError();
-            } while (true);
-        }
-
-        for (; i < len; i++) {
-            if (i in this)
-                rv = fun.call(null, rv, this[i], i, this);
-        }
-
-        return rv;
-    };
-}
-
-// ES5 15.4.4.22
-// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
-if (!Array.prototype.reduceRight) {
-    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
-        var len = +this.length;
-        if (typeof fun !== "function")
-            throw new TypeError();
-
-        // no value to return if no initial value, empty array
-        if (len === 0 && arguments.length === 1)
-            throw new TypeError();
-
-        var i = len - 1;
-        if (arguments.length >= 2) {
-            var rv = arguments[1];
-        } else {
-            do {
-                if (i in this) {
-                    rv = this[i--];
-                    break;
-                }
-
-                // if array contains no values, no initial value to return
-                if (--i < 0)
-                    throw new TypeError();
-            } while (true);
-        }
-
-        for (; i >= 0; i--) {
-            if (i in this)
-                rv = fun.call(null, rv, this[i], i, this);
-        }
-
-        return rv;
-    };
-}
-
-// ES5 15.4.4.14
-if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function indexOf(value /*, fromIndex */ ) {
-        var length = this.length;
-        if (!length)
-            return -1;
-        var i = arguments[1] || 0;
-        if (i >= length)
-            return -1;
-        if (i < 0)
-            i += length;
-        for (; i < length; i++) {
-            if (!owns(this, i))
-                continue;
-            if (value === this[i])
-                return i;
-        }
-        return -1;
-    };
-}
-
-// ES5 15.4.4.15
-if (!Array.prototype.lastIndexOf) {
-    Array.prototype.lastIndexOf = function lastIndexOf(value /*, fromIndex */) {
-        var length = this.length;
-        if (!length)
-            return -1;
-        var i = arguments[1] || length;
-        if (i < 0)
-            i += length;
-        i = Math.min(i, length - 1);
-        for (; i >= 0; i--) {
-            if (!owns(this, i))
-                continue;
-            if (value === this[i])
-                return i;
-        }
-        return -1;
-    };
-}
-
-//
-// Object
-// ======
-//
-
-// ES5 15.2.3.2
-if (!Object.getPrototypeOf) {
-    // https://github.com/kriskowal/es5-shim/issues#issue/2
-    // http://ejohn.org/blog/objectgetprototypeof/
-    // recommended by fschaefer on github
-    Object.getPrototypeOf = function getPrototypeOf(object) {
-        return object.__proto__ || object.constructor.prototype;
-        // or undefined if not available in this engine
-    };
-}
-
-// ES5 15.2.3.3
-if (!Object.getOwnPropertyDescriptor) {
-    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
-                         "non-object: ";
-    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
-        if ((typeof object !== "object" && typeof object !== "function") || object === null)
-            throw new TypeError(ERR_NON_OBJECT + object);
-        // If object does not owns property return undefined immediately.
-        if (!owns(object, property))
-            return undefined;
-
-        var despriptor, getter, setter;
-
-        // If object has a property then it's for sure both `enumerable` and
-        // `configurable`.
-        despriptor =  { enumerable: true, configurable: true };
-
-        // If JS engine supports accessor properties then property may be a
-        // getter or setter.
-        if (supportsAccessors) {
-            // Unfortunately `__lookupGetter__` will return a getter even
-            // if object has own non getter property along with a same named
-            // inherited getter. To avoid misbehavior we temporary remove
-            // `__proto__` so that `__lookupGetter__` will return getter only
-            // if it's owned by an object.
-            var prototype = object.__proto__;
-            object.__proto__ = prototypeOfObject;
-
-            var getter = lookupGetter(object, property);
-            var setter = lookupSetter(object, property);
-
-            // Once we have getter and setter we can put values back.
-            object.__proto__ = prototype;
-
-            if (getter || setter) {
-                if (getter) descriptor.get = getter;
-                if (setter) descriptor.set = setter;
-
-                // If it was accessor property we're done and return here
-                // in order to avoid adding `value` to the descriptor.
-                return descriptor;
-            }
-        }
-
-        // If we got this far we know that object has an own property that is
-        // not an accessor so we set it as a value and return descriptor.
-        descriptor.value = object[property];
-        return descriptor;
-    };
-}
-
-// ES5 15.2.3.4
-if (!Object.getOwnPropertyNames) {
-    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
-        return Object.keys(object);
-    };
-}
-
-// ES5 15.2.3.5
-if (!Object.create) {
-    Object.create = function create(prototype, properties) {
-        var object;
-        if (prototype === null) {
-            object = { "__proto__": null };
-        } else {
-            if (typeof prototype !== "object")
-                throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
-            var Type = function () {};
-            Type.prototype = prototype;
-            object = new Type();
-            // IE has no built-in implementation of `Object.getPrototypeOf`
-            // neither `__proto__`, but this manually setting `__proto__` will
-            // guarantee that `Object.getPrototypeOf` will work as expected with
-            // objects created using `Object.create`
-            object.__proto__ = prototype;
-        }
-        if (typeof properties !== "undefined")
-            Object.defineProperties(object, properties);
-        return object;
-    };
-}
-
-// ES5 15.2.3.6
-if (!Object.defineProperty) {
-    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
-    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
-    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
-                                      "on this javascript engine";
-
-    Object.defineProperty = function defineProperty(object, property, descriptor) {
-        if (typeof object !== "object" && typeof object !== "function")
-            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
-        if (typeof object !== "object" || object === null)
-            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
-
-        // If it's a data property.
-        if (owns(descriptor, "value")) {
-            // fail silently if "writable", "enumerable", or "configurable"
-            // are requested but not supported
-            /*
-            // alternate approach:
-            if ( // can't implement these features; allow false but not true
-                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
-                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
-                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
-            )
-                throw new RangeError(
-                    "This implementation of Object.defineProperty does not " +
-                    "support configurable, enumerable, or writable."
-                );
-            */
-
-            if (supportsAccessors && (lookupGetter(object, property) ||
-                                      lookupSetter(object, property)))
-            {
-                // As accessors are supported only on engines implementing
-                // `__proto__` we can safely override `__proto__` while defining
-                // a property to make sure that we don't hit an inherited
-                // accessor.
-                var prototype = object.__proto__;
-                object.__proto__ = prototypeOfObject;
-                // Deleting a property anyway since getter / setter may be
-                // defined on object itself.
-                delete object[property];
-                object[property] = descriptor.value;
-                // Setting original `__proto__` back now.
-                object.prototype;
-            } else {
-                object[property] = descriptor.value;
-            }
-        } else {
-            if (!supportsAccessors)
-                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
-            // If we got that far then getters and setters can be defined !!
-            if (owns(descriptor, "get"))
-                defineGetter(object, property, descriptor.get);
-            if (owns(descriptor, "set"))
-                defineSetter(object, property, descriptor.set);
-        }
-
-        return object;
-    };
-}
-
-// ES5 15.2.3.7
-if (!Object.defineProperties) {
-    Object.defineProperties = function defineProperties(object, properties) {
-        for (var property in properties) {
-            if (owns(properties, property))
-                Object.defineProperty(object, property, properties[property]);
-        }
-        return object;
-    };
-}
-
-// ES5 15.2.3.8
-if (!Object.seal) {
-    Object.seal = function seal(object) {
-        // this is misleading and breaks feature-detection, but
-        // allows "securable" code to "gracefully" degrade to working
-        // but insecure code.
-        return object;
-    };
-}
-
-// ES5 15.2.3.9
-if (!Object.freeze) {
-    Object.freeze = function freeze(object) {
-        // this is misleading and breaks feature-detection, but
-        // allows "securable" code to "gracefully" degrade to working
-        // but insecure code.
-        return object;
-    };
-}
-
-// detect a Rhino bug and patch it
-try {
-    Object.freeze(function () {});
-} catch (exception) {
-    Object.freeze = (function freeze(freezeObject) {
-        return function freeze(object) {
-            if (typeof object === "function") {
-                return object;
-            } else {
-                return freezeObject(object);
-            }
-        };
-    })(Object.freeze);
-}
-
-// ES5 15.2.3.10
-if (!Object.preventExtensions) {
-    Object.preventExtensions = function preventExtensions(object) {
-        // this is misleading and breaks feature-detection, but
-        // allows "securable" code to "gracefully" degrade to working
-        // but insecure code.
-        return object;
-    };
-}
-
-// ES5 15.2.3.11
-if (!Object.isSealed) {
-    Object.isSealed = function isSealed(object) {
-        return false;
-    };
-}
-
-// ES5 15.2.3.12
-if (!Object.isFrozen) {
-    Object.isFrozen = function isFrozen(object) {
-        return false;
-    };
-}
-
-// ES5 15.2.3.13
-if (!Object.isExtensible) {
-    Object.isExtensible = function isExtensible(object) {
-        return true;
-    };
-}
-
-// ES5 15.2.3.14
-// http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
-if (!Object.keys) {
-
-    var hasDontEnumBug = true,
-        dontEnums = [
-            'toString',
-            'toLocaleString',
-            'valueOf',
-            'hasOwnProperty',
-            'isPrototypeOf',
-            'propertyIsEnumerable',
-            'constructor'
-        ],
-        dontEnumsLength = dontEnums.length;
-
-    for (var key in {"toString": null})
-        hasDontEnumBug = false;
-
-    Object.keys = function keys(object) {
-
-        if (
-            typeof object !== "object" && typeof object !== "function"
-            || object === null
-        )
-            throw new TypeError("Object.keys called on a non-object");
-
-        var keys = [];
-        for (var name in object) {
-            if (owns(object, name)) {
-                keys.push(name);
-            }
-        }
-
-        if (hasDontEnumBug) {
-            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
-                var dontEnum = dontEnums[i];
-                if (owns(object, dontEnum)) {
-                    keys.push(dontEnum);
-                }
-            }
-        }
-
-        return keys;
-    };
-
-}
-
-//
-// Date
-// ====
-//
-
-// ES5 15.9.5.43
-// Format a Date object as a string according to a subset of the ISO-8601 standard.
-// Useful in Atom, among other things.
-if (!Date.prototype.toISOString) {
-    Date.prototype.toISOString = function toISOString() {
-        return (
-            this.getUTCFullYear() + "-" +
-            (this.getUTCMonth() + 1) + "-" +
-            this.getUTCDate() + "T" +
-            this.getUTCHours() + ":" +
-            this.getUTCMinutes() + ":" +
-            this.getUTCSeconds() + "Z"
-        );
-    }
-}
-
-// ES5 15.9.4.4
-if (!Date.now) {
-    Date.now = function now() {
-        return new Date().getTime();
-    };
-}
-
-// ES5 15.9.5.44
-if (!Date.prototype.toJSON) {
-    Date.prototype.toJSON = function toJSON(key) {
-        // This function provides a String representation of a Date object for
-        // use by JSON.stringify (15.12.3). When the toJSON method is called
-        // with argument key, the following steps are taken:
-
-        // 1.  Let O be the result of calling ToObject, giving it the this
-        // value as its argument.
-        // 2. Let tv be ToPrimitive(O, hint Number).
-        // 3. If tv is a Number and is not finite, return null.
-        // XXX
-        // 4. Let toISO be the result of calling the [[Get]] internal method of
-        // O with argument "toISOString".
-        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
-        if (typeof this.toISOString !== "function")
-            throw new TypeError();
-        // 6. Return the result of calling the [[Call]] internal method of
-        // toISO with O as the this value and an empty argument list.
-        return this.toISOString();
-
-        // NOTE 1 The argument is ignored.
-
-        // NOTE 2 The toJSON function is intentionally generic; it does not
-        // require that its this value be a Date object. Therefore, it can be
-        // transferred to other kinds of objects for use as a method. However,
-        // it does require that any such object have a toISOString method. An
-        // object is free to use the argument key to filter its
-        // stringification.
-    };
-}
-
-// 15.9.4.2 Date.parse (string)
-// 15.9.1.15 Date Time String Format
-// Date.parse
-// based on work shared by Daniel Friesen (dantman)
-// http://gist.github.com/303249
-if (isNaN(Date.parse("T00:00"))) {
-    // XXX global assignment won't work in embeddings that use
-    // an alternate object for the context.
-    Date = (function(NativeDate) {
-
-        // Date.length === 7
-        var Date = function(Y, M, D, h, m, s, ms) {
-            var length = arguments.length;
-            if (this instanceof NativeDate) {
-                var date = length === 1 && String(Y) === Y ? // isString(Y)
-                    // We explicitly pass it through parse:
-                    new NativeDate(Date.parse(Y)) :
-                    // We have to manually make calls depending on argument
-                    // length here
-                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
-                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
-                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
-                    length >= 4 ? new NativeDate(Y, M, D, h) :
-                    length >= 3 ? new NativeDate(Y, M, D) :
-                    length >= 2 ? new NativeDate(Y, M) :
-                    length >= 1 ? new NativeDate(Y) :
-                                  new NativeDate();
-                // Prevent mixups with unfixed Date object
-                date.constructor = Date;
-                return date;
-            }
-            return NativeDate.apply(this, arguments);
-        };
-
-        // 15.9.1.15 Date Time String Format
-        var isoDateExpression = new RegExp("^" +
-            "(?:" + // optional year-month-day
-                "(" + // year capture
-                    "(?:[+-]\\d\\d)?" + // 15.9.1.15.1 Extended years
-                    "\\d\\d\\d\\d" + // four-digit year
-                ")" +
-                "(?:-" + // optional month-day
-                    "(\\d\\d)" + // month capture
-                    "(?:-" + // optional day
-                        "(\\d\\d)" + // day capture
-                    ")?" +
-                ")?" +
-            ")?" +
-            "(?:T" + // hour:minute:second.subsecond
-                "(\\d\\d)" + // hour capture
-                ":(\\d\\d)" + // minute capture
-                "(?::" + // optional :second.subsecond
-                    "(\\d\\d)" + // second capture
-                    "(?:\\.(\\d\\d\\d))?" + // milisecond capture
-                ")?" +
-            ")?" +
-            "(?:" + // time zone
-                "Z|" + // UTC capture
-                "([+-])(\\d\\d):(\\d\\d)" + // timezone offset
-                // capture sign, hour, minute
-            ")?" +
-        "$");
-
-        // Copy any custom methods a 3rd party library may have added
-        for (var key in NativeDate)
-            Date[key] = NativeDate[key];
-
-        // Copy "native" methods explicitly; they may be non-enumerable
-        Date.now = NativeDate.now;
-        Date.UTC = NativeDate.UTC;
-        Date.prototype = NativeDate.prototype;
-        Date.prototype.constructor = Date;
-
-        // Upgrade Date.parse to handle the ISO dates we use
-        // TODO review specification to ascertain whether it is
-        // necessary to implement partial ISO date strings.
-        Date.parse = function parse(string) {
-            var match = isoDateExpression.exec(string);
-            if (match) {
-                match.shift(); // kill match[0], the full match
-                // recognize times without dates before normalizing the
-                // numeric values, for later use
-                var timeOnly = match[0] === undefined;
-                // parse numerics
-                for (var i = 0; i < 10; i++) {
-                    // skip + or - for the timezone offset
-                    if (i === 7)
-                        continue;
-                    // Note: parseInt would read 0-prefix numbers as
-                    // octal.  Number constructor or unary + work better
-                    // here:
-                    match[i] = +(match[i] || (i < 3 ? 1 : 0));
-                    // match[1] is the month. Months are 0-11 in JavaScript
-                    // Date objects, but 1-12 in ISO notation, so we
-                    // decrement.
-                    if (i === 1)
-                        match[i]--;
-                }
-                // if no year-month-date is provided, return a milisecond
-                // quantity instead of a UTC date number value.
-                if (timeOnly)
-                    return ((match[3] * 60 + match[4]) * 60 + match[5]) * 1000 + match[6];
-
-                // account for an explicit time zone offset if provided
-                var offset = (match[8] * 60 + match[9]) * 60 * 1000;
-                if (match[6] === "-")
-                    offset = -offset;
-
-                return NativeDate.UTC.apply(this, match.slice(0, 7)) + offset;
-            }
-            return NativeDate.parse.apply(this, arguments);
-        };
-
-        return Date;
-    })(Date);
-}
-
-//
-// String
-// ======
-//
-
-// ES5 15.5.4.20
-if (!String.prototype.trim) {
-    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
-    var trimBeginRegexp = /^\s\s*/;
-    var trimEndRegexp = /\s\s*$/;
-    String.prototype.trim = function trim() {
-        return String(this).replace(trimBeginRegexp, '').replace(trimEndRegexp, '');
-    };
-}
+require("pilot/es5-shim");
 
 });define('pilot/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
 
@@ -1080,6 +258,929 @@ if (!String.prototype.trim) {
         }
         return -1;
     };
+
+});// vim:set ts=4 sts=4 sw=4 st:
+// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
+// -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
+// -- dantman Daniel Friesen Copyright(C) 2010 XXX No License Specified
+// -- fschaefer Florian Schäfer Copyright (C) 2010 MIT License
+// -- Irakli Gozalishvili Copyright (C) 2010 MIT License
+// -- kitcambridge Kit Cambridge Copyright (C) 2011 MIT License
+
+/*!
+    Copyright (c) 2009, 280 North Inc. http://280north.com/
+    MIT License. http://github.com/280north/narwhal/blob/master/README.md
+*/
+
+define('pilot/es5-shim', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+/**
+ * Brings an environment as close to ECMAScript 5 compliance
+ * as is possible with the facilities of erstwhile engines.
+ *
+ * ES5 Draft
+ * http://www.ecma-international.org/publications/files/drafts/tc39-2009-050.pdf
+ *
+ * NOTE: this is a draft, and as such, the URL is subject to change.  If the
+ * link is broken, check in the parent directory for the latest TC39 PDF.
+ * http://www.ecma-international.org/publications/files/drafts/
+ *
+ * Previous ES5 Draft
+ * http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+ * This is a broken link to the previous draft of ES5 on which most of the
+ * numbered specification references and quotes herein were taken.  Updating
+ * these references and quotes to reflect the new document would be a welcome
+ * volunteer project.
+ *
+ * @module
+ */
+
+/*whatsupdoc*/
+
+//
+// Function
+// ========
+//
+
+// ES-5 15.3.4.5
+// http://www.ecma-international.org/publications/files/drafts/tc39-2009-025.pdf
+
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof target.apply != "function" || typeof target.call != "function")
+            return new TypeError();
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        // XXX slicedArgs will stand in for "A" if used
+        var args = slice.call(arguments, 1); // for normal call
+        // 4. Let F be a new native ECMAScript object.
+        // 9. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 10. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 11. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 12. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        // 13. The [[Scope]] internal property of F is unused and need not
+        //   exist.
+        var bound = function () {
+
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+
+                var self = Object.create(target.prototype);
+                var result = target.apply(
+                    self,
+                    args.concat(slice.call(arguments))
+                );
+                if (result !== null && Object(result) === result)
+                    return result;
+                return self;
+
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the list
+                //   boundArgs in the same order followed by the same values as
+                //   the list ExtraArgs in the same order. 5.  Return the
+                //   result of calling the [[Call]] internal method of target
+                //   providing boundThis as the this value and providing args
+                //   as the arguments.
+
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.apply(
+                    that,
+                    args.concat(slice.call(arguments))
+                );
+
+            }
+
+        };
+
+        // XXX bound.length is never writable, so don't even try
+        //
+        // 16. The length own property of F is given attributes as specified in
+        //   15.3.5.1.
+        // TODO
+        // 17. Set the [[Extensible]] internal property of F to true.
+        // TODO
+        // 18. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // 19. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Value]]: null,
+        //   [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]:
+        //   false}, and false.
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property.
+        // XXX can't delete it in pure-js.
+        return bound;
+    };
+}
+
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
+var call = Function.prototype.call;
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var slice = prototypeOfArray.slice;
+var toString = prototypeOfObject.toString;
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
+
+var defineGetter, defineSetter, lookupGetter, lookupSetter, supportsAccessors;
+// If JS engine supports accessors creating shortcuts.
+if ((supportsAccessors = owns(prototypeOfObject, '__defineGetter__'))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
+
+//
+// Array
+// =====
+//
+
+// ES5 15.4.3.2
+if (!Array.isArray) {
+    Array.isArray = function isArray(obj) {
+        return Object.prototype.toString.call(obj) == "[object Array]";
+    };
+}
+
+// ES5 15.4.4.18
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach
+if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function forEach(fun /*, thisp*/) {
+        var self = Object(this),
+            thisp = arguments[1],
+            i = 0,
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (!fun || !fun.call) {
+            throw new TypeError();
+        }
+
+        while (i < length) {
+            if (i in self) {
+                // Invoke the callback function with call, passing arguments:
+                // context, property value, property key, thisArg object context
+                fun.call(thisp, self[i], i, self);
+            }
+            i++;
+        }
+    };
+}
+
+// ES5 15.4.4.19
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
+if (!Array.prototype.map) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (typeof fun != "function")
+            throw new TypeError();
+        var result = new Array(length);
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++) {
+            if (i in self)
+                result[i] = fun.call(thisp, self[i], i, self);
+        }
+        return result;
+    };
+}
+
+// ES5 15.4.4.20
+if (!Array.prototype.filter) {
+    Array.prototype.filter = function filter(fun /*, thisp */) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (typeof fun != "function")
+            throw new TypeError();
+        var result = [];
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++)
+            if (i in self && fun.call(thisp, self[i], i, self))
+                result.push(self[i]);
+        return result;
+    };
+}
+
+// ES5 15.4.4.16
+if (!Array.prototype.every) {
+    Array.prototype.every = function every(fun /*, thisp */) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        if (typeof fun !== "function")
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++) {
+            if (i in self && !fun.call(thisp, self[i], i, self))
+                return false;
+        }
+        return true;
+    };
+}
+
+// ES5 15.4.4.17
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
+if (!Array.prototype.some) {
+    Array.prototype.some = function some(fun /*, thisp */) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        if (typeof fun !== "function")
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        var thisp = arguments[1];
+        for (var i = 0; i < length; i++) {
+            if (i in self && fun.call(thisp, self[i], i, self))
+                return true;
+        }
+        return false;
+    };
+}
+
+// ES5 15.4.4.21
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
+if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        // Whether to include (... || fun instanceof RegExp)
+        // in the following expression to trap cases where
+        // the provided function was actually a regular
+        // expression literal, which in V8 and
+        // JavaScriptCore is a typeof "function".  Only in
+        // V8 are regular expression literals permitted as
+        // reduce parameters, so it is desirable in the
+        // general case for the shim to match the more
+        // strict and common behavior of rejecting regular
+        // expressions.  However, the only case where the
+        // shim is applied is IE's Trident (and perhaps very
+        // old revisions of other engines).  In Trident,
+        // regular expressions are a typeof "object", so the
+        // following guard alone is sufficient.
+        if (Object.prototype.toString.call(fun) != "[object Function]")
+            throw new TypeError();
+
+        // no value to return if no initial value and an empty array
+        if (!length && arguments.length == 1)
+            throw new TypeError();
+
+        var i = 0;
+        var result;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i++];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (++i >= length)
+                    throw new TypeError();
+            } while (true);
+        }
+
+        for (; i < length; i++) {
+            if (i in self)
+                result = fun.call(null, result, self[i], i, self);
+        }
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.22
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
+if (!Array.prototype.reduceRight) {
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (Object.prototype.toString.call(fun) != "[object Function]")
+            throw new TypeError();
+        // no value to return if no initial value, empty array
+        if (!length && arguments.length == 1)
+            throw new TypeError();
+
+        var result, i = length - 1;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i--];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (--i < 0)
+                    throw new TypeError();
+            } while (true);
+        }
+
+        do {
+            if (i in this)
+                result = fun.call(null, result, self[i], i, self);
+        } while (i--);
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.14
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function indexOf(sought /*, fromIndex */ ) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (!length)
+            return -1;
+        var i = 0;
+        if (arguments.length > 1)
+            i = toInteger(arguments[1]);
+        // handle negative indicies
+        i = i >= 0 ? i : length - Math.abs(i);
+        for (; i < length; i++) {
+            if (i in self && self[i] === sought) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+// ES5 15.4.4.15
+if (!Array.prototype.lastIndexOf) {
+    Array.prototype.lastIndexOf = function lastIndexOf(sought /*, fromIndex */) {
+        if (this === void 0 || this === null)
+            throw new TypeError();
+        var self = Object(this);
+        var length = self.length >>> 0;
+        if (!length)
+            return -1;
+        var i = length - 1;
+        if (arguments.length > 1)
+            i = toInteger(arguments[1]);
+        // handle negative indicies
+        i = i >= 0 ? i : length - Math.abs(i);
+        for (; i >= 0; i--) {
+            if (i in self && sought === self[i])
+                return i;
+        }
+        return -1;
+    };
+}
+
+//
+// Object
+// ======
+//
+
+// ES5 15.2.3.2
+if (!Object.getPrototypeOf) {
+    // https://github.com/kriskowal/es5-shim/issues#issue/2
+    // http://ejohn.org/blog/objectgetprototypeof/
+    // recommended by fschaefer on github
+    Object.getPrototypeOf = function getPrototypeOf(object) {
+        return object.__proto__ || object.constructor.prototype;
+        // or undefined if not available in this engine
+    };
+}
+
+// ES5 15.2.3.3
+if (!Object.getOwnPropertyDescriptor) {
+    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a " +
+                         "non-object: ";
+    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+        if ((typeof object != "object" && typeof object != "function") || object === null)
+            throw new TypeError(ERR_NON_OBJECT + object);
+        // If object does not owns property return undefined immediately.
+        if (!owns(object, property))
+            return undefined;
+
+        var descriptor, getter, setter;
+
+        // If object has a property then it's for sure both `enumerable` and
+        // `configurable`.
+        descriptor =  { enumerable: true, configurable: true };
+
+        // If JS engine supports accessor properties then property may be a
+        // getter or setter.
+        if (supportsAccessors) {
+            // Unfortunately `__lookupGetter__` will return a getter even
+            // if object has own non getter property along with a same named
+            // inherited getter. To avoid misbehavior we temporary remove
+            // `__proto__` so that `__lookupGetter__` will return getter only
+            // if it's owned by an object.
+            var prototype = object.__proto__;
+            object.__proto__ = prototypeOfObject;
+
+            var getter = lookupGetter(object, property);
+            var setter = lookupSetter(object, property);
+
+            // Once we have getter and setter we can put values back.
+            object.__proto__ = prototype;
+
+            if (getter || setter) {
+                if (getter) descriptor.get = getter;
+                if (setter) descriptor.set = setter;
+
+                // If it was accessor property we're done and return here
+                // in order to avoid adding `value` to the descriptor.
+                return descriptor;
+            }
+        }
+
+        // If we got this far we know that object has an own property that is
+        // not an accessor so we set it as a value and return descriptor.
+        descriptor.value = object[property];
+        return descriptor;
+    };
+}
+
+// ES5 15.2.3.4
+if (!Object.getOwnPropertyNames) {
+    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
+        return Object.keys(object);
+    };
+}
+
+// ES5 15.2.3.5
+if (!Object.create) {
+    Object.create = function create(prototype, properties) {
+        var object;
+        if (prototype === null) {
+            object = { "__proto__": null };
+        } else {
+            if (typeof prototype != "object")
+                throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
+            var Type = function () {};
+            Type.prototype = prototype;
+            object = new Type();
+            // IE has no built-in implementation of `Object.getPrototypeOf`
+            // neither `__proto__`, but this manually setting `__proto__` will
+            // guarantee that `Object.getPrototypeOf` will work as expected with
+            // objects created using `Object.create`
+            object.__proto__ = prototype;
+        }
+        if (typeof properties != "undefined")
+            Object.defineProperties(object, properties);
+        return object;
+    };
+}
+
+// ES5 15.2.3.6
+var oldDefineProperty = Object.defineProperty;
+var defineProperty = !!oldDefineProperty;
+if (defineProperty) {
+    // detect IE 8's DOM-only implementation of defineProperty;
+    var subject = {};
+    Object.defineProperty(subject, "", {});
+    defineProperty = "" in subject;
+}
+if (!defineProperty) {
+    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
+                                      "on this javascript engine";
+
+    Object.defineProperty = function defineProperty(object, property, descriptor) {
+        if (typeof object != "object" && typeof object != "function")
+            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+        if (typeof descriptor != "object" || descriptor === null)
+            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+        // make a valiant attempt to use the real defineProperty
+        // for I8's DOM elements.
+        if (oldDefineProperty && object.nodeType)
+            return oldDefineProperty(object, property, descriptor);
+
+        // If it's a data property.
+        if (owns(descriptor, "value")) {
+            // fail silently if "writable", "enumerable", or "configurable"
+            // are requested but not supported
+            /*
+            // alternate approach:
+            if ( // can't implement these features; allow false but not true
+                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
+                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
+                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
+            )
+                throw new RangeError(
+                    "This implementation of Object.defineProperty does not " +
+                    "support configurable, enumerable, or writable."
+                );
+            */
+
+            if (supportsAccessors && (lookupGetter(object, property) ||
+                                      lookupSetter(object, property)))
+            {
+                // As accessors are supported only on engines implementing
+                // `__proto__` we can safely override `__proto__` while defining
+                // a property to make sure that we don't hit an inherited
+                // accessor.
+                var prototype = object.__proto__;
+                object.__proto__ = prototypeOfObject;
+                // Deleting a property anyway since getter / setter may be
+                // defined on object itself.
+                delete object[property];
+                object[property] = descriptor.value;
+                // Setting original `__proto__` back now.
+                object.__proto__ = prototype;
+            } else {
+                object[property] = descriptor.value;
+            }
+        } else {
+            if (!supportsAccessors)
+                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+            // If we got that far then getters and setters can be defined !!
+            if (owns(descriptor, "get"))
+                defineGetter(object, property, descriptor.get);
+            if (owns(descriptor, "set"))
+                defineSetter(object, property, descriptor.set);
+        }
+
+        return object;
+    };
+}
+
+// ES5 15.2.3.7
+if (!Object.defineProperties) {
+    Object.defineProperties = function defineProperties(object, properties) {
+        for (var property in properties) {
+            if (owns(properties, property))
+                Object.defineProperty(object, property, properties[property]);
+        }
+        return object;
+    };
+}
+
+// ES5 15.2.3.8
+if (!Object.seal) {
+    Object.seal = function seal(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// ES5 15.2.3.9
+if (!Object.freeze) {
+    Object.freeze = function freeze(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// detect a Rhino bug and patch it
+try {
+    Object.freeze(function () {});
+} catch (exception) {
+    Object.freeze = (function freeze(freezeObject) {
+        return function freeze(object) {
+            if (typeof object == "function") {
+                return object;
+            } else {
+                return freezeObject(object);
+            }
+        };
+    })(Object.freeze);
+}
+
+// ES5 15.2.3.10
+if (!Object.preventExtensions) {
+    Object.preventExtensions = function preventExtensions(object) {
+        // this is misleading and breaks feature-detection, but
+        // allows "securable" code to "gracefully" degrade to working
+        // but insecure code.
+        return object;
+    };
+}
+
+// ES5 15.2.3.11
+if (!Object.isSealed) {
+    Object.isSealed = function isSealed(object) {
+        return false;
+    };
+}
+
+// ES5 15.2.3.12
+if (!Object.isFrozen) {
+    Object.isFrozen = function isFrozen(object) {
+        return false;
+    };
+}
+
+// ES5 15.2.3.13
+if (!Object.isExtensible) {
+    Object.isExtensible = function isExtensible(object) {
+        return true;
+    };
+}
+
+// ES5 15.2.3.14
+// http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
+if (!Object.keys) {
+
+    var hasDontEnumBug = true,
+        dontEnums = [
+            'toString',
+            'toLocaleString',
+            'valueOf',
+            'hasOwnProperty',
+            'isPrototypeOf',
+            'propertyIsEnumerable',
+            'constructor'
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    for (var key in {"toString": null})
+        hasDontEnumBug = false;
+
+    Object.keys = function keys(object) {
+
+        if (
+            typeof object != "object" && typeof object != "function"
+            || object === null
+        )
+            throw new TypeError("Object.keys called on a non-object");
+
+        var keys = [];
+        for (var name in object) {
+            if (owns(object, name)) {
+                keys.push(name);
+            }
+        }
+
+        if (hasDontEnumBug) {
+            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
+                var dontEnum = dontEnums[i];
+                if (owns(object, dontEnum)) {
+                    keys.push(dontEnum);
+                }
+            }
+        }
+
+        return keys;
+    };
+
+}
+
+//
+// Date
+// ====
+//
+
+// ES5 15.9.5.43
+// Format a Date object as a string according to a simplified subset of the ISO 8601
+// standard as defined in 15.9.1.15.
+if (!Date.prototype.toISOString) {
+    Date.prototype.toISOString = function toISOString() {
+        var result, length, value;
+        if (!isFinite(this))
+            throw new RangeError;
+
+        // the date time string format is specified in 15.9.1.15.
+        result = [this.getUTCFullYear(), this.getUTCMonth() + 1, this.getUTCDate(),
+            this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds()];
+
+        length = result.length;
+        while (length--) {
+            value = result[length];
+            // pad months, days, hours, minutes, and seconds to have two digits.
+            if (value < 10)
+                result[length] = '0' + value;
+        }
+        // pad milliseconds to have three digits.
+        return result.slice(0, 3).join('-') + 'T' + result.slice(3).join(':') + '.' +
+            ('000' + this.getUTCMilliseconds()).slice(-3) + 'Z';
+    }
+}
+
+// ES5 15.9.4.4
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+
+// ES5 15.9.5.44
+if (!Date.prototype.toJSON) {
+    Date.prototype.toJSON = function toJSON(key) {
+        // This function provides a String representation of a Date object for
+        // use by JSON.stringify (15.12.3). When the toJSON method is called
+        // with argument key, the following steps are taken:
+
+        // 1.  Let O be the result of calling ToObject, giving it the this
+        // value as its argument.
+        // 2. Let tv be ToPrimitive(O, hint Number).
+        // 3. If tv is a Number and is not finite, return null.
+        // XXX
+        // 4. Let toISO be the result of calling the [[Get]] internal method of
+        // O with argument "toISOString".
+        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
+        // XXX this gets pretty close, for all intents and purposes, letting
+        // some duck-types slide
+        if (typeof this.toISOString.call != "function")
+            throw new TypeError();
+        // 6. Return the result of calling the [[Call]] internal method of
+        // toISO with O as the this value and an empty argument list.
+        return this.toISOString.call(this);
+
+        // NOTE 1 The argument is ignored.
+
+        // NOTE 2 The toJSON function is intentionally generic; it does not
+        // require that its this value be a Date object. Therefore, it can be
+        // transferred to other kinds of objects for use as a method. However,
+        // it does require that any such object have a toISOString method. An
+        // object is free to use the argument key to filter its
+        // stringification.
+    };
+}
+
+// 15.9.4.2 Date.parse (string)
+// 15.9.1.15 Date Time String Format
+// Date.parse
+// based on work shared by Daniel Friesen (dantman)
+// http://gist.github.com/303249
+if (isNaN(Date.parse("2011-06-15T21:40:05+06:00"))) {
+    // XXX global assignment won't work in embeddings that use
+    // an alternate object for the context.
+    Date = (function(NativeDate) {
+
+        // Date.length === 7
+        var Date = function(Y, M, D, h, m, s, ms) {
+            var length = arguments.length;
+            if (this instanceof NativeDate) {
+                var date = length == 1 && String(Y) === Y ? // isString(Y)
+                    // We explicitly pass it through parse:
+                    new NativeDate(Date.parse(Y)) :
+                    // We have to manually make calls depending on argument
+                    // length here
+                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
+                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
+                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
+                    length >= 4 ? new NativeDate(Y, M, D, h) :
+                    length >= 3 ? new NativeDate(Y, M, D) :
+                    length >= 2 ? new NativeDate(Y, M) :
+                    length >= 1 ? new NativeDate(Y) :
+                                  new NativeDate();
+                // Prevent mixups with unfixed Date object
+                date.constructor = Date;
+                return date;
+            }
+            return NativeDate.apply(this, arguments);
+        };
+
+        // 15.9.1.15 Date Time String Format. This pattern does not implement
+        // extended years ((15.9.1.15.1), as `Date.UTC` cannot parse them.
+        var isoDateExpression = new RegExp("^" +
+            "(\d{4})" + // four-digit year capture
+            "(?:-(\d{2})" + // optional month capture
+            "(?:-(\d{2})" + // optional day capture
+            "(?:" + // capture hours:minutes:seconds.milliseconds
+                "T(\d{2})" + // hours capture
+                ":(\d{2})" + // minutes capture
+                "(?:" + // optional :seconds.milliseconds
+                    ":(\d{2})" + // seconds capture
+                    "(?:\.(\d{3}))?" + // milliseconds capture
+                ")?" +
+            "(?:" + // capture UTC offset component
+                "Z|" + // UTC capture
+                "(?:" + // offset specifier +/-hours:minutes
+                    "([-+])" + // sign capture
+                    "(\d{2})" + // hours offset capture
+                    ":(\d{2})" + // minutes offest capture
+                ")" +
+            ")?)?)?)?" +
+        "$");
+
+        // Copy any custom methods a 3rd party library may have added
+        for (var key in NativeDate)
+            Date[key] = NativeDate[key];
+
+        // Copy "native" methods explicitly; they may be non-enumerable
+        Date.now = NativeDate.now;
+        Date.UTC = NativeDate.UTC;
+        Date.prototype = NativeDate.prototype;
+        Date.prototype.constructor = Date;
+
+        // Upgrade Date.parse to handle simplified ISO 8601 strings
+        Date.parse = function parse(string) {
+            var match = isoDateExpression.exec(string);
+            if (match) {
+                match.shift(); // kill match[0], the full match
+                // parse months, days, hours, minutes, seconds, and milliseconds
+                for (var i = 1; i < 7; i++) {
+                    // provide default values if necessary
+                    match[i] = +(match[i] || (i < 3 ? 1 : 0));
+                    // match[1] is the month. Months are 0-11 in JavaScript
+                    // `Date` objects, but 1-12 in ISO notation, so we
+                    // decrement.
+                    if (i == 1)
+                        match[i]--;
+                }
+
+                // parse the UTC offset component
+                var minutesOffset = +match.pop(), hourOffset = +match.pop(), sign = match.pop();
+
+                // compute the explicit time zone offset if specified
+                var offset = 0;
+                if (sign) {
+                    // detect invalid offsets and return early
+                    if (hourOffset > 23 || minuteOffset > 59)
+                        return NaN;
+
+                    // express the provided time zone offset in minutes. The offset is
+                    // negative for time zones west of UTC; positive otherwise.
+                    offset = (hourOffset * 60 + minuteOffset) * 6e4 * (sign == "+" ? -1 : 1);
+                }
+
+                // compute a new UTC date value, accounting for the optional offset
+                return NativeDate.UTC.apply(this, match) + offset;
+            }
+            return NativeDate.parse.apply(this, arguments);
+        };
+
+        return Date;
+    })(Date);
+}
+
+//
+// String
+// ======
+//
+
+// ES5 15.5.4.20
+if (!String.prototype.trim) {
+    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
+    // http://perfectionkills.com/whitespace-deviations/
+    var s = "[\x09\x0A\-\x0D\x20\xA0\u1680\u180E\u2000-\u200A\u202F" +
+        "\u205F\u3000\u2028\u2029\uFEFF]"
+    var trimBeginRegexp = new RegExp("^" + s + s + "*");
+    var trimEndRegexp = new RegExp(s + s + "*$");
+    String.prototype.trim = function trim() {
+        return String(this).replace(trimBeginRegexp, "").replace(trimEndRegexp, "");
+    };
+}
+
+//
+// Util
+// ======
+//
+
+// http://jsperf.com/to-integer
+var toInteger = function (n) {
+    n = +n;
+    if (n !== n) // isNaN
+        n = -1;
+    else if (n !== 0 && n !== (1/0) && n !== -(1/0))
+        n = (n > 0 || -1) * Math.floor(Math.abs(n));
+    return n;
+};
 
 });/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -15759,264 +15860,49 @@ define("text!ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/c
   "}\n" +
   "");
 
-define("text!node_modules/jsdom/node_modules/cssom/docs/bar.css", [], "body * {\n" +
-  "	color: red !important;\n" +
-  "}");
-
-define("text!node_modules/jsdom/node_modules/cssom/docs/demo.css", [], "");
-
-define("text!node_modules/jsdom/node_modules/cssom/docs/foo.css", [], "@import \"bar.css\" screen;\n" +
-  "body {\n" +
-  "	background: black !important;\n" +
-  "}");
-
-define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
-  "body { max-width: 60em; }\n" +
-  ".title  { text-align: center; }\n" +
-  ".todo   { color: red; }\n" +
-  ".done   { color: green; }\n" +
-  ".tag    { background-color:lightblue; font-weight:normal }\n" +
-  ".target { }\n" +
-  ".timestamp { color: grey }\n" +
-  ".timestamp-kwd { color: CadetBlue }\n" +
-  "p.verse { margin-left: 3% }\n" +
-  "pre {\n" +
-  "  border: 1pt solid #AEBDCC;\n" +
-  "  background-color: #F3F5F7;\n" +
-  "  padding: 5pt;\n" +
-  "  font-family: monospace;\n" +
-  "  font-size: 90%;\n" +
-  "  overflow:auto;\n" +
-  "}\n" +
-  "pre.src {\n" +
-  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
-  "}\n" +
-  "table { border-collapse: collapse; }\n" +
-  "td, th { vertical-align: top; }\n" +
-  "dt { font-weight: bold; }\n" +
-  "div.figure { padding: 0.5em; }\n" +
-  "div.figure p { text-align: center; }\n" +
-  ".linenr { font-size:smaller }\n" +
-  ".code-highlighted {background-color:#ffff00;}\n" +
-  ".org-info-js_info-navigation { border-style:none; }\n" +
-  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
-  "  white-space:nowrap; }\n" +
-  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
-  "  font-weight:bold; }\n" +
-  "\n" +
-  "sup {\n" +
-  "  vertical-align: baseline;\n" +
-  "  position: relative;\n" +
-  "  top: -0.5em;\n" +
-  "  font-size: 80%;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:link, sup a:visited {\n" +
-  "  text-decoration: none;\n" +
-  "  color: #c00;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:before { content: \"[\"; color: #999; }\n" +
-  "sup a:after { content: \"]\"; color: #999; }\n" +
-  "\n" +
-  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
-  "\n" +
-  "#postamble {\n" +
-  "  color: #777;\n" +
-  "  font-size: 90%;\n" +
-  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
-  "  margin-top: 2em;\n" +
-  "  padding-left: 2em;\n" +
-  "  padding-right: 2em;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#postamble p { margin: 0; }\n" +
-  "\n" +
-  "#footnotes { border-top: 1px solid #000; }\n" +
-  "\n" +
-  "h1 { font-size: 200% }\n" +
-  "h2 { font-size: 175% }\n" +
-  "h3 { font-size: 150% }\n" +
-  "h4 { font-size: 125% }\n" +
-  "\n" +
-  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
-  "\n" +
-  "@media print {\n" +
-  "  html { font-size: 11pt; }\n" +
-  "}\n" +
-  "");
-
-define("text!lib/ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
-  "\n" +
-  "\n" +
-  ".ace_editor {\n" +
-  "    position: absolute;\n" +
-  "    overflow: hidden;\n" +
-  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
-  "    font-size: 12px;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_scroller {\n" +
-  "    position: absolute;\n" +
-  "    overflow-x: scroll;\n" +
-  "    overflow-y: hidden;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_content {\n" +
-  "    position: absolute;\n" +
-  "    box-sizing: border-box;\n" +
-  "    -moz-box-sizing: border-box;\n" +
-  "    -webkit-box-sizing: border-box;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_composition {\n" +
-  "    position: absolute;\n" +
-  "    background: #555;\n" +
-  "    color: #DDD;\n" +
-  "    z-index: 4;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_gutter {\n" +
-  "    position: absolute;\n" +
-  "    overflow-x: hidden;\n" +
-  "    overflow-y: hidden;\n" +
+define("text!build/demo/styles.css", [], "html {\n" +
   "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
   "}\n" +
   "\n" +
-  ".ace_gutter-cell.ace_error {\n" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
-  "    background-repeat: no-repeat;\n" +
-  "    background-position: 4px center;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_gutter-cell.ace_warning {\n" +
-  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
-  "    background-repeat: no-repeat;\n" +
-  "    background-position: 4px center;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_editor .ace_sb {\n" +
-  "    position: absolute;\n" +
-  "    overflow-x: hidden;\n" +
-  "    overflow-y: scroll;\n" +
-  "    right: 0;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_editor .ace_sb div {\n" +
-  "    position: absolute;\n" +
-  "    width: 1px;\n" +
-  "    left: 0;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_editor .ace_print_margin_layer {\n" +
-  "    z-index: 0;\n" +
-  "    position: absolute;\n" +
+  "body {\n" +
   "    overflow: hidden;\n" +
   "    margin: 0;\n" +
-  "    left: 0;\n" +
+  "    padding: 0;\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
   "}\n" +
   "\n" +
-  ".ace_editor .ace_print_margin {\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
   "    position: absolute;\n" +
-  "    height: 100%;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
   "}\n" +
   "\n" +
-  ".ace_editor textarea {\n" +
-  "    position: fixed;\n" +
-  "    z-index: -1;\n" +
-  "    width: 10px;\n" +
-  "    height: 30px;\n" +
-  "    opacity: 0;\n" +
-  "    background: transparent;\n" +
-  "    appearance: none;\n" +
-  "    -moz-appearance: none;\n" +
-  "    border: none;\n" +
-  "    resize: none;\n" +
-  "    outline: none;\n" +
-  "    overflow: hidden;\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
   "}\n" +
   "\n" +
-  ".ace_layer {\n" +
-  "    z-index: 1;\n" +
-  "    position: absolute;\n" +
-  "    overflow: hidden;\n" +
-  "    white-space: nowrap;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
   "}\n" +
   "\n" +
-  ".ace_text-layer {\n" +
-  "    color: black;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cjk {\n" +
-  "    display: inline-block;\n" +
-  "    text-align: center;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cursor-layer {\n" +
-  "    z-index: 4;\n" +
-  "    cursor: text;\n" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cursor {\n" +
-  "    z-index: 4;\n" +
-  "    position: absolute;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_cursor.ace_hidden {\n" +
-  "    opacity: 0.2;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_line {\n" +
-  "    white-space: nowrap;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer {\n" +
-  "    cursor: text;\n" +
-  "    pointer-events: none;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_step {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 3;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_selection {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 4;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_bracket {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 5;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_active_line {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 2;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer .ace_selected_word {\n" +
-  "    position: absolute;\n" +
-  "    z-index: 6;\n" +
-  "    box-sizing: border-box;\n" +
-  "    -moz-box-sizing: border-box;\n" +
-  "    -webkit-box-sizing: border-box;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_line .ace_fold {\n" +
-  "    cursor: pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
-  "  cursor: move;\n" +
-  "}\n" +
-  "");
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
 
 define("text!build_support/style.css", [], "body {\n" +
   "    margin:0;\n" +
@@ -16250,82 +16136,99 @@ define("text!build_support/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
-  ".cptRowIn {\n" +
-  "  display: box; display: -moz-box; display: -webkit-box;\n" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
-  "  color: #333;\n" +
-  "  background-color: #EEE;\n" +
-  "  width: 100%;\n" +
-  "  font-family: consolas, courier, monospace;\n" +
-  "}\n" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
-  ".cptRowIn > img { cursor: pointer; }\n" +
-  ".cptHover { display: none; }\n" +
-  ".cptRowIn:hover > .cptHover { display: block; }\n" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
-  ".cptOutTyped {\n" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
-  "  font-weight: bold; color: #000; font-size: 120%;\n" +
-  "}\n" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
-  ".cptRowOutput strong,\n" +
-  ".cptRowOutput b,\n" +
-  ".cptRowOutput th,\n" +
-  ".cptRowOutput h1,\n" +
-  ".cptRowOutput h2,\n" +
-  ".cptRowOutput h3 { color: #000; }\n" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
-  ".cptRowOutput input[type=password],\n" +
-  ".cptRowOutput input[type=text],\n" +
-  ".cptRowOutput textarea {\n" +
-  "  color: #000; font-size: 120%;\n" +
-  "  background: transparent; padding: 3px;\n" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
-  "}\n" +
-  ".cptRowOutput table,\n" +
-  ".cptRowOutput td,\n" +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
-  ".cptRowOutput .right { text-align: right; }\n" +
-  "");
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
 
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
-  "#cockpitInput { padding-left: 16px; }\n" +
-  "\n" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
-  "\n" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
-  ".cptCompletion.VALID { background: #FFF; }\n" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
-  ".cptCompletion.INVALID { background: #DDD; }\n" +
-  ".cptCompletion span { color: #FFF; }\n" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
-  "\n" +
-  "\n" +
-  ".cptHints {\n" +
-  "  color: #000;\n" +
-  "  position: absolute;\n" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
-  "  background: rgba(250, 250, 250, 0.8);\n" +
-  "  -moz-border-radius-topleft: 10px;\n" +
-  "  -moz-border-radius-topright: 10px;\n" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
-  "  z-index: 1000;\n" +
-  "  padding: 8px;\n" +
-  "  display: none;\n" +
+define("text!demo/styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
   "}\n" +
   "\n" +
-  ".cptFocusPopup { display: block; }\n" +
-  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
   "\n" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 65px;\n" +
+  "}\n" +
   "\n" +
-  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
-  "");
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 280px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
+
+define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
+  "\n" +
+  "@import url(\"booya.css\") print,screen;\n" +
+  "@import \"whatup.css\" screen;\n" +
+  "@import \"wicked.css\";\n" +
+  "\n" +
+  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
+  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
+  "\n" +
+  "li.inline #foo {\n" +
+  "  background: url(\"something.png\");\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px;\n" +
+  "  padding-right: 7px;\n" +
+  "  border-right: 1px dotted #066;\n" +
+  "}\n" +
+  "\n" +
+  "li.last.first {\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px !important;\n" +
+  "  padding-right: 3px;\n" +
+  "  border-right: 0px;\n" +
+  "}\n" +
+  "\n" +
+  "@media print {\n" +
+  "    li.inline {\n" +
+  "      color: black;\n" +
+  "    }\n" +
+  "\n" +
+  "\n" +
+  "@charset \"UTF-8\"; \n" +
+  "\n" +
+  "@page {\n" +
+  "  margin: 10%;\n" +
+  "  counter-increment: page;\n" +
+  "\n" +
+  "  @top-center {\n" +
+  "    font-family: sans-serif;\n" +
+  "    font-weight: bold;\n" +
+  "    font-size: 2em;\n" +
+  "    content: counter(page);\n" +
+  "  }\n" +
+  "}");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
   "    position:relative;\n" +
@@ -16586,281 +16489,330 @@ define("text!doc/site/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!build/textarea/style.css", [], "body {\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "    background-color:#e6f5fc;\n" +
-  "    \n" +
-  "}\n" +
-  "\n" +
-  "H2, H3, H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "}\n" +
-  "\n" +
-  "H2 {\n" +
-  "    font-size:28px;\n" +
-  "    color:#263842;\n" +
-  "    padding-bottom:6px;\n" +
-  "}\n" +
-  "\n" +
-  "H3 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:22px;\n" +
-  "    color:#253741;\n" +
-  "    margin-top:43px;\n" +
-  "    margin-bottom:8px;\n" +
-  "}\n" +
-  "\n" +
-  "H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:21px;\n" +
-  "    color:#222222;\n" +
-  "    margin-bottom:4px;\n" +
-  "}\n" +
-  "\n" +
-  "P {\n" +
-  "    padding:13px 0;\n" +
-  "    margin:0;\n" +
-  "    line-height:22px;\n" +
-  "}\n" +
-  "\n" +
-  "UL{\n" +
-  "    line-height : 22px;\n" +
-  "}\n" +
-  "\n" +
-  "PRE{\n" +
-  "    background : #333;\n" +
-  "    color : white;\n" +
-  "    padding : 10px;\n" +
-  "}\n" +
-  "\n" +
-  "#header {\n" +
-  "    height : 227px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background: url(images/background.png) repeat-x 0 0;\n" +
-  "    border-bottom:1px solid #c9e8fa;   \n" +
-  "}\n" +
-  "\n" +
-  "#header .content .signature {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:11px;\n" +
-  "    color:#ebe4d6;\n" +
-  "    position:absolute;\n" +
-  "    bottom:5px;\n" +
-  "    right:42px;\n" +
-  "    letter-spacing : 1px;\n" +
-  "}\n" +
-  "\n" +
-  ".content {\n" +
-  "    width:970px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin:0 auto;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content {\n" +
-  "    height:184px;\n" +
-  "    margin-top:22px;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .logo {\n" +
-  "    width  : 282px;\n" +
-  "    height : 184px;\n" +
-  "    background:url(images/logo.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:0;\n" +
-  "    left:0;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .title {\n" +
-  "    width  : 605px;\n" +
-  "    height : 58px;\n" +
-  "    background:url(images/ace.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:98px;\n" +
-  "    left:329px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper {\n" +
-  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
-  "    min-height:250px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content {\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:14px;\n" +
-  "    color:#222222;\n" +
-  "    width:1000px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column1 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:315px;\n" +
-  "    margin-right:31px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column2 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:600px;\n" +
-  "    padding-top:47px;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github {\n" +
-  "    width:310px;\n" +
-  "    height:80px;\n" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin-top:49px;\n" +
-  "    cursor:pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github:hover {\n" +
-  "    background-position:0 -80px;\n" +
-  "}\n" +
-  "\n" +
-  ".divider {\n" +
-  "    height:3px;\n" +
-  "    background-color:#bedaea;\n" +
-  "    margin-bottom:3px;\n" +
-  "}\n" +
-  "\n" +
-  ".menu {\n" +
-  "    padding:23px 0 0 24px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.content-list {\n" +
-  "    padding:15px;\n" +
-  "    margin:0;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list {\n" +
-  "    padding:0;\n" +
-  "    margin:0 0 20px 0;\n" +
-  "    list-style-type:none;\n" +
-  "    line-height : 16px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI {\n" +
-  "    color:#2557b4;\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:14px;\n" +
-  "    padding:7px 0;\n" +
-  "    border-bottom:1px dotted #d6e2e7;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI:last-child {\n" +
-  "    border-bottom:0;\n" +
-  "}\n" +
-  "\n" +
-  "A {\n" +
-  "    color:#2557b4;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "P#first{\n" +
-  "    background : rgba(255,255,255,0.5);\n" +
-  "    padding : 20px;\n" +
-  "    font-size : 16px;\n" +
-  "    line-height : 24px;\n" +
-  "    margin : 0 0 20px 0;\n" +
-  "}\n" +
-  "\n" +
-  "#footer {\n" +
-  "    height:40px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
-  "    position:relative;\n" +
-  "    margin-top:40px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer {\n" +
-  "    padding:0;\n" +
-  "    margin:8px 11px 0 0;\n" +
-  "    list-style-type:none;\n" +
-  "    float:right;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI {\n" +
-  "    color:white;\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:12px;\n" +
-  "    display:inline-block;\n" +
-  "    margin:0 1px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A {\n" +
-  "    color:#8dd0ff;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
+define("text!lib/ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
-  "\n" +
-  "\n" +
-  "");
-
-define("text!build/demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
+  ".ace_editor {\n" +
+  "    position: absolute;\n" +
   "    overflow: hidden;\n" +
+  "    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "    font-size: 12px;\n" +
   "}\n" +
   "\n" +
-  "body {\n" +
+  ".ace_scroller {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: scroll;\n" +
+  "    overflow-y: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_content {\n" +
+  "    position: absolute;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_composition {\n" +
+  "    position: absolute;\n" +
+  "    background: #555;\n" +
+  "    color: #DDD;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: hidden;\n" +
+  "    height: 100%;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_error {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell.ace_warning {\n" +
+  "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 4px center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb {\n" +
+  "    position: absolute;\n" +
+  "    overflow-x: hidden;\n" +
+  "    overflow-y: scroll;\n" +
+  "    right: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_sb div {\n" +
+  "    position: absolute;\n" +
+  "    width: 1px;\n" +
+  "    left: 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_print_margin_layer {\n" +
+  "    z-index: 0;\n" +
+  "    position: absolute;\n" +
   "    overflow: hidden;\n" +
   "    margin: 0;\n" +
-  "    padding: 0;\n" +
+  "    left: 0;\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
   "}\n" +
   "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
+  ".ace_editor .ace_print_margin {\n" +
   "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 280px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
+  "    height: 100%;\n" +
   "}\n" +
   "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
+  ".ace_editor textarea {\n" +
+  "    position: fixed;\n" +
+  "    z-index: -1;\n" +
+  "    width: 10px;\n" +
+  "    height: 30px;\n" +
+  "    opacity: 0;\n" +
+  "    background: transparent;\n" +
+  "    appearance: none;\n" +
+  "    -moz-appearance: none;\n" +
+  "    border: none;\n" +
+  "    resize: none;\n" +
+  "    outline: none;\n" +
+  "    overflow: hidden;\n" +
   "}\n" +
   "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
+  ".ace_layer {\n" +
+  "    z-index: 1;\n" +
+  "    position: absolute;\n" +
+  "    overflow: hidden;\n" +
+  "    white-space: nowrap;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
   "}\n" +
   "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
-  "}");
+  ".ace_text-layer {\n" +
+  "    color: black;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cjk {\n" +
+  "    display: inline-block;\n" +
+  "    text-align: center;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor-layer {\n" +
+  "    z-index: 4;\n" +
+  "    cursor: text;\n" +
+  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor {\n" +
+  "    z-index: 4;\n" +
+  "    position: absolute;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_cursor.ace_hidden {\n" +
+  "    opacity: 0.2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line {\n" +
+  "    white-space: nowrap;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer {\n" +
+  "    cursor: text;\n" +
+  "    pointer-events: none;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_step {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 3;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selection {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 4;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_bracket {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_active_line {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_selected_word {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 6;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_line .ace_fold {\n" +
+  "    cursor: pointer;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  "  cursor: move;\n" +
+  "}\n" +
+  "");
+
+define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
+  "body { max-width: 60em; }\n" +
+  ".title  { text-align: center; }\n" +
+  ".todo   { color: red; }\n" +
+  ".done   { color: green; }\n" +
+  ".tag    { background-color:lightblue; font-weight:normal }\n" +
+  ".target { }\n" +
+  ".timestamp { color: grey }\n" +
+  ".timestamp-kwd { color: CadetBlue }\n" +
+  "p.verse { margin-left: 3% }\n" +
+  "pre {\n" +
+  "  border: 1pt solid #AEBDCC;\n" +
+  "  background-color: #F3F5F7;\n" +
+  "  padding: 5pt;\n" +
+  "  font-family: monospace;\n" +
+  "  font-size: 90%;\n" +
+  "  overflow:auto;\n" +
+  "}\n" +
+  "pre.src {\n" +
+  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
+  "}\n" +
+  "table { border-collapse: collapse; }\n" +
+  "td, th { vertical-align: top; }\n" +
+  "dt { font-weight: bold; }\n" +
+  "div.figure { padding: 0.5em; }\n" +
+  "div.figure p { text-align: center; }\n" +
+  ".linenr { font-size:smaller }\n" +
+  ".code-highlighted {background-color:#ffff00;}\n" +
+  ".org-info-js_info-navigation { border-style:none; }\n" +
+  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
+  "  white-space:nowrap; }\n" +
+  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
+  "  font-weight:bold; }\n" +
+  "\n" +
+  "sup {\n" +
+  "  vertical-align: baseline;\n" +
+  "  position: relative;\n" +
+  "  top: -0.5em;\n" +
+  "  font-size: 80%;\n" +
+  "}\n" +
+  "\n" +
+  "sup a:link, sup a:visited {\n" +
+  "  text-decoration: none;\n" +
+  "  color: #c00;\n" +
+  "}\n" +
+  "\n" +
+  "sup a:before { content: \"[\"; color: #999; }\n" +
+  "sup a:after { content: \"]\"; color: #999; }\n" +
+  "\n" +
+  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
+  "\n" +
+  "#postamble {\n" +
+  "  color: #777;\n" +
+  "  font-size: 90%;\n" +
+  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
+  "  margin-top: 2em;\n" +
+  "  padding-left: 2em;\n" +
+  "  padding-right: 2em;\n" +
+  "  text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#postamble p { margin: 0; }\n" +
+  "\n" +
+  "#footnotes { border-top: 1px solid #000; }\n" +
+  "\n" +
+  "h1 { font-size: 200% }\n" +
+  "h2 { font-size: 175% }\n" +
+  "h3 { font-size: 150% }\n" +
+  "h4 { font-size: 125% }\n" +
+  "\n" +
+  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
+  "\n" +
+  "@media print {\n" +
+  "  html { font-size: 11pt; }\n" +
+  "}\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
+  "#cockpitInput { padding-left: 16px; }\n" +
+  "\n" +
+  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
+  "\n" +
+  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
+  ".cptCompletion.VALID { background: #FFF; }\n" +
+  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
+  ".cptCompletion.INVALID { background: #DDD; }\n" +
+  ".cptCompletion span { color: #FFF; }\n" +
+  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
+  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
+  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
+  "\n" +
+  "\n" +
+  ".cptHints {\n" +
+  "  color: #000;\n" +
+  "  position: absolute;\n" +
+  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
+  "  background: rgba(250, 250, 250, 0.8);\n" +
+  "  -moz-border-radius-topleft: 10px;\n" +
+  "  -moz-border-radius-topright: 10px;\n" +
+  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
+  "  z-index: 1000;\n" +
+  "  padding: 8px;\n" +
+  "  display: none;\n" +
+  "}\n" +
+  "\n" +
+  ".cptFocusPopup { display: block; }\n" +
+  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
+  "\n" +
+  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "\n" +
+  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
+  ".cptRowIn {\n" +
+  "  display: box; display: -moz-box; display: -webkit-box;\n" +
+  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
+  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
+  "  color: #333;\n" +
+  "  background-color: #EEE;\n" +
+  "  width: 100%;\n" +
+  "  font-family: consolas, courier, monospace;\n" +
+  "}\n" +
+  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
+  ".cptRowIn > img { cursor: pointer; }\n" +
+  ".cptHover { display: none; }\n" +
+  ".cptRowIn:hover > .cptHover { display: block; }\n" +
+  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
+  ".cptOutTyped {\n" +
+  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
+  "  font-weight: bold; color: #000; font-size: 120%;\n" +
+  "}\n" +
+  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
+  ".cptRowOutput strong,\n" +
+  ".cptRowOutput b,\n" +
+  ".cptRowOutput th,\n" +
+  ".cptRowOutput h1,\n" +
+  ".cptRowOutput h2,\n" +
+  ".cptRowOutput h3 { color: #000; }\n" +
+  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
+  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
+  ".cptRowOutput input[type=password],\n" +
+  ".cptRowOutput input[type=text],\n" +
+  ".cptRowOutput textarea {\n" +
+  "  color: #000; font-size: 120%;\n" +
+  "  background: transparent; padding: 3px;\n" +
+  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
+  "}\n" +
+  ".cptRowOutput table,\n" +
+  ".cptRowOutput td,\n" +
+  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
+  ".cptRowOutput .right { text-align: right; }\n" +
+  "");
 
 define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "  border: 2px solid rgb(159, 159, 159);\n" +
@@ -17065,56 +17017,6 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "\n" +
   ".%cssClass% .ace_collab.ace_user1 {\n" +
   "  %collab.user1%   \n" +
-  "}");
-
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
-  "}\n" +
-  "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
-  "}\n" +
-  "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 280px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
   "}");
 
 define("text!docs/css.css", [], ".text-layer {\n" +
