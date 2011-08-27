@@ -200,7 +200,7 @@ console.log('# ace modes ---------');
 
 project.assumeAllFilesLoaded();
 [
-    "css", "html", "javascript", "php", "python", "lua", "xml", "ruby", "java", "c_cpp",
+    "css", "html", "coldfusion", "javascript", "php", "python", "lua", "xml", "ruby", "java", "c_cpp",
     "coffee", "perl", "csharp", "svg", "clojure", "scss", "json", "groovy",
     "ocaml", "scala", "textile", "scad", "markdown"
 ].forEach(function(mode) {
