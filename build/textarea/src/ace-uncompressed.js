@@ -7862,7 +7862,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "gotostart",
-    bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
+    bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up|Option-Shift-,"),
     exec: function(env, args, request) { env.editor.navigateFileStart(); }
 });
 canon.addCommand({
@@ -7892,7 +7892,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "gotoend",
-    bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
+    bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down|Option-Shift-."),
     exec: function(env, args, request) { env.editor.navigateFileEnd(); }
 });
 canon.addCommand({
@@ -7912,7 +7912,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "gotowordleft",
-    bindKey: bindKey("Ctrl-Left", "Option-Left"),
+    bindKey: bindKey("Ctrl-Left", "Option-Left|Option-B"),
     exec: function(env, args, request) { env.editor.navigateWordLeft(); }
 });
 canon.addCommand({
@@ -7942,7 +7942,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "gotowordright",
-    bindKey: bindKey("Ctrl-Right", "Option-Right"),
+    bindKey: bindKey("Ctrl-Right", "Option-Right|Option-F"),
     exec: function(env, args, request) { env.editor.navigateWordRight(); }
 });
 canon.addCommand({
@@ -7992,7 +7992,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "gotopageup",
-    bindKey: bindKey("PageUp", "Option-PageUp"),
+    bindKey: bindKey("PageUp", "Option-PageUp|Option-V"),
     exec: function(env, args, request) { env.editor.gotoPageUp(); }
 });
 canon.addCommand({
@@ -8035,7 +8035,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "removewordright",
-    bindKey: bindKey(null, "Alt-Delete"),
+    bindKey: bindKey(null, "Alt-Delete|Option-d"),
     exec: function(env, args, request) { env.editor.removeWordRight(); }
 });
 canon.addCommand({
@@ -16410,50 +16410,6 @@ __ace_shadowed__.define("text!demo/styles.css", [], "html {\n" +
   "    text-align: left;\n" +
   "}");
 
-__ace_shadowed__.define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
-  "\n" +
-  "@import url(\"booya.css\") print,screen;\n" +
-  "@import \"whatup.css\" screen;\n" +
-  "@import \"wicked.css\";\n" +
-  "\n" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
-  "\n" +
-  "li.inline #foo {\n" +
-  "  background: url(\"something.png\");\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px;\n" +
-  "  padding-right: 7px;\n" +
-  "  border-right: 1px dotted #066;\n" +
-  "}\n" +
-  "\n" +
-  "li.last.first {\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px !important;\n" +
-  "  padding-right: 3px;\n" +
-  "  border-right: 0px;\n" +
-  "}\n" +
-  "\n" +
-  "@media print {\n" +
-  "    li.inline {\n" +
-  "      color: black;\n" +
-  "    }\n" +
-  "\n" +
-  "\n" +
-  "@charset \"UTF-8\"; \n" +
-  "\n" +
-  "@page {\n" +
-  "  margin: 10%;\n" +
-  "  counter-increment: page;\n" +
-  "\n" +
-  "  @top-center {\n" +
-  "    font-family: sans-serif;\n" +
-  "    font-weight: bold;\n" +
-  "    font-size: 2em;\n" +
-  "    content: counter(page);\n" +
-  "  }\n" +
-  "}");
-
 __ace_shadowed__.define("text!doc/site/iphone.css", [], "#wrapper {\n" +
   "    position:relative;\n" +
   "    overflow:hidden;\n" +
@@ -16883,6 +16839,17 @@ __ace_shadowed__.define("text!lib/ace/css/editor.css", [], "@import url(http://f
   "  cursor: move;\n" +
   "}\n" +
   "");
+
+__ace_shadowed__.define("text!node_modules/jsdom/node_modules/cssom/docs/bar.css", [], "body * {\n" +
+  "	color: red !important;\n" +
+  "}");
+
+__ace_shadowed__.define("text!node_modules/jsdom/node_modules/cssom/docs/demo.css", [], "");
+
+__ace_shadowed__.define("text!node_modules/jsdom/node_modules/cssom/docs/foo.css", [], "@import \"bar.css\" screen;\n" +
+  "body {\n" +
+  "	background: black !important;\n" +
+  "}");
 
 __ace_shadowed__.define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
   "body { max-width: 60em; }\n" +

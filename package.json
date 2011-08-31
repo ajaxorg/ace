@@ -25,7 +25,8 @@
         "asyncjs": ">=0.0.2",
         "jsdom": ">=0.1.23",
         "htmlparser": ">=1.7.2",
-        "mime": ">=1.2.1"
+        "mime": ">=1.2.1",
+	"uglify-js": ">=1.0.7"
     },
     "licenses": [{
         "type": "MPL",
