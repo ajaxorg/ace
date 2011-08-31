@@ -1,7 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+
+
 .ace_editor {
     position: absolute;
     overflow: hidden;
-    font-family: Monaco, "Menlo", "Courier New", monospace;
+    font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;
     font-size: 12px;
 }
 

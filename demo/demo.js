@@ -40,43 +40,47 @@
 
 define(function(require, exports, module) {
 
+var net = require("ace/lib/net");
+var canon = require("pilot/canon");
+var event = require("pilot/event");
+var Range = require("ace/range").Range;
+var Editor = require("ace/editor").Editor;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var theme = require("ace/theme/textmate");
+var EditSession = require("ace/edit_session").EditSession;
+
+var JavaScriptMode = require("ace/mode/javascript").Mode;
+var CssMode = require("ace/mode/css").Mode;
+var ScssMode = require("ace/mode/scss").Mode;
+var HtmlMode = require("ace/mode/html").Mode;
+var XmlMode = require("ace/mode/xml").Mode;
+var LuaMode = require("ace/mode/lua").Mode;
+var PythonMode = require("ace/mode/python").Mode;
+var PhpMode = require("ace/mode/php").Mode;
+var JavaMode = require("ace/mode/java").Mode;
+var CSharpMode = require("ace/mode/csharp").Mode;
+var RubyMode = require("ace/mode/ruby").Mode;
+var CCPPMode = require("ace/mode/c_cpp").Mode;
+var CoffeeMode = require("ace/mode/coffee").Mode;
+var JsonMode = require("ace/mode/json").Mode;
+var PerlMode = require("ace/mode/perl").Mode;
+var ClojureMode = require("ace/mode/clojure").Mode;
+var OcamlMode = require("ace/mode/ocaml").Mode;
+var SvgMode = require("ace/mode/svg").Mode;
+var MarkdownMode = require("ace/mode/markdown").Mode;
+var TextileMode = require("ace/mode/textile").Mode;
+var TextMode = require("ace/mode/text").Mode;
+var GroovyMode = require("ace/mode/groovy").Mode;
+var ScalaMode = require("ace/mode/scala").Mode;
+
+var UndoManager = require("ace/undomanager").UndoManager;
+
+var vim = require("ace/keyboard/keybinding/vim").Vim;
+var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+
 exports.launch = function(env) {
-    var canon = require("pilot/canon");
-    var event = require("pilot/event");
-    var Range = require("ace/range").Range;
-    var Editor = require("ace/editor").Editor;
-    var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-    var theme = require("ace/theme/textmate");
-    var EditSession = require("ace/edit_session").EditSession;
-
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    var CssMode = require("ace/mode/css").Mode;
-    var ScssMode = require("ace/mode/scss").Mode;
-    var HtmlMode = require("ace/mode/html").Mode;
-    var XmlMode = require("ace/mode/xml").Mode;
-    var PythonMode = require("ace/mode/python").Mode;
-    var PhpMode = require("ace/mode/php").Mode;
-    var JavaMode = require("ace/mode/java").Mode;
-    var CSharpMode = require("ace/mode/csharp").Mode;
-    var RubyMode = require("ace/mode/ruby").Mode;
-    var CCPPMode = require("ace/mode/c_cpp").Mode;
-    var CoffeeMode = require("ace/mode/coffee").Mode;
-    var JsonMode = require("ace/mode/json").Mode;
-    var PerlMode = require("ace/mode/perl").Mode;
-    var ClojureMode = require("ace/mode/clojure").Mode;
-    var OcamlMode = require("ace/mode/ocaml").Mode;
-    var SvgMode = require("ace/mode/svg").Mode;
-    var TextileMode = require("ace/mode/textile").Mode;
-    var TextMode = require("ace/mode/text").Mode;
-    var GroovyMode = require("ace/mode/groovy").Mode;
-    var ScalaMode = require("ace/mode/scala").Mode;
-
-    var UndoManager = require("ace/undomanager").UndoManager;
-
-    var vim = require("ace/keyboard/keybinding/vim").Vim;
-    var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
-    var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-
+    
     var keybindings = {
       // Null = use "default" keymapping
       ace: null,
@@ -95,7 +99,7 @@ exports.launch = function(env) {
     var docs = {};
 
     // Make the lorem ipsum text a little bit longer.
-    var loreIpsum = document.getElementById("plaintext").innerHTML;
+    var loreIpsum = require("ace/requirejs/text!demo/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -105,88 +109,97 @@ exports.launch = function(env) {
     docs.plain.setMode(new TextMode());
     docs.plain.setUndoManager(new UndoManager());
 
-    docs.js = new EditSession(document.getElementById("jstext").innerHTML);
+    docs.js = new EditSession(require("ace/requirejs/text!demo/docs/javascript.js"));
     docs.js.setMode(new JavaScriptMode());
     docs.js.setUndoManager(new UndoManager());
 
-    docs.css = new EditSession(document.getElementById("csstext").innerHTML);
+    docs.css = new EditSession(require("ace/requirejs/text!demo/docs/css.css"));
     docs.css.setMode(new CssMode());
     docs.css.setUndoManager(new UndoManager());
 
-    docs.scss = new EditSession(document.getElementById("scsstext").innerHTML);
+    docs.scss = new EditSession(require("ace/requirejs/text!demo/docs/scss.scss"));
     docs.scss.setMode(new ScssMode());
     docs.scss.setUndoManager(new UndoManager());
 
-    docs.html = new EditSession(document.getElementById("htmltext").innerHTML);
+    docs.html = new EditSession(require("ace/requirejs/text!demo/docs/html.html"));
     docs.html.setMode(new HtmlMode());
     docs.html.setUndoManager(new UndoManager());
 
-    docs.python = new EditSession(document.getElementById("pythontext").innerHTML);
+    docs.lua = new EditSession(require("ace/requirejs/text!demo/docs/lua.lua"));
+    docs.lua.setMode(new LuaMode());
+    docs.lua.setUndoManager(new UndoManager());
+
+    docs.python = new EditSession(require("ace/requirejs/text!demo/docs/python.py"));
     docs.python.setMode(new PythonMode());
     docs.python.setUndoManager(new UndoManager());
 
-    docs.php = new EditSession(document.getElementById("phptext").innerHTML);
+
+    docs.php = new EditSession(require("ace/requirejs/text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
 
-    docs.java = new EditSession(document.getElementById("javatext").innerHTML);
+    docs.java = new EditSession(require("ace/requirejs/text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
     docs.java.setUndoManager(new UndoManager());
     docs.java.addFold("...", new Range(8, 44, 13, 4));
 
-    docs.ruby = new EditSession(document.getElementById("rubytext").innerHTML);
+    docs.ruby = new EditSession(require("ace/requirejs/text!demo/docs/ruby.rb"));
     docs.ruby.setMode(new RubyMode());
     docs.ruby.setUndoManager(new UndoManager());
 
-    docs.csharp = new EditSession(document.getElementById("csharptext").innerHTML);
+    docs.csharp = new EditSession(require("ace/requirejs/text!demo/docs/csharp.cs"));
     docs.csharp.setMode(new CSharpMode());
     docs.csharp.setUndoManager(new UndoManager());
 
-    docs.c_cpp = new EditSession(document.getElementById("cpptext").innerHTML);
+    docs.c_cpp = new EditSession(require("ace/requirejs/text!demo/docs/cpp.cpp"));
     docs.c_cpp.setMode(new CCPPMode());
     docs.c_cpp.setUndoManager(new UndoManager());
 
-    docs.coffee = new EditSession(document.getElementById("coffeetext").innerHTML);
+    docs.coffee = new EditSession(require("ace/requirejs/text!demo/docs/coffeescript.coffee"));
     docs.coffee.setMode(new CoffeeMode());
     docs.coffee.setUndoManager(new UndoManager());
 
-    docs.json = new EditSession(document.getElementById("jsontext").innerHTML);
+    docs.json = new EditSession(require("ace/requirejs/text!demo/docs/json.json"));
     docs.json.setMode(new JsonMode());
     docs.json.setUndoManager(new UndoManager());
 
-    docs.perl = new EditSession(document.getElementById("perltext").innerHTML);
+    docs.perl = new EditSession(require("ace/requirejs/text!demo/docs/perl.pl"));
     docs.perl.setMode(new PerlMode());
     docs.perl.setUndoManager(new UndoManager());
 
-    docs.clojure = new EditSession(document.getElementById("clojuretext").innerHTML);
+    docs.clojure = new EditSession(require("ace/requirejs/text!demo/docs/clojure.clj"));
     docs.clojure.setMode(new ClojureMode());
     docs.clojure.setUndoManager(new UndoManager());
 
-    docs.ocaml = new EditSession(document.getElementById("ocamltext").innerHTML);
+    docs.ocaml = new EditSession(require("ace/requirejs/text!demo/docs/ocaml.ml"));
     docs.ocaml.setMode(new OcamlMode());
     docs.ocaml.setUndoManager(new UndoManager());
 
-    docs.svg = new EditSession(document.getElementById("svgtext").innerHTML.replace("&lt;", "<"));
+    docs.svg = new EditSession(require("ace/requirejs/text!demo/docs/svg.svg"));
     docs.svg.setMode(new SvgMode());
     docs.svg.setUndoManager(new UndoManager());
 
-    docs.textile = new EditSession(document.getElementById("textiletext").innerHTML);
+    docs.markdown = new EditSession(require("ace/requirejs/text!demo/docs/markdown.md"));
+    docs.markdown.setMode(new MarkdownMode());
+    docs.markdown.setUseWrapMode(true);
+    docs.markdown.setWrapLimitRange(80, 80);
+    docs.markdown.setUndoManager(new UndoManager());
+    
+    docs.textile = new EditSession(require("ace/requirejs/text!demo/docs/textile.textile"));
     docs.textile.setMode(new TextileMode());
     docs.textile.setUndoManager(new UndoManager());
 
-    docs.groovy = new EditSession(document.getElementById("groovy").innerHTML);
+    docs.groovy = new EditSession(require("ace/requirejs/text!demo/docs/groovy.groovy"));
     docs.groovy.setMode(new GroovyMode());
     docs.groovy.setUndoManager(new UndoManager());
 
-    docs.scala = new EditSession(document.getElementById("scala").innerHTML);
+    docs.scala = new EditSession(require("ace/requirejs/text!demo/docs/scala.scala"));
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
-    
-    
 
     // Add a "name" property to all docs
-    for (doc in docs) {
+    for (var doc in docs) {
         docs[doc].name = doc;
     }
 
@@ -208,12 +221,14 @@ exports.launch = function(env) {
     var modes = {
         text: new TextMode(),
         textile: new TextileMode(),
+        markdown: new MarkdownMode(),
         svg: new SvgMode(),
         xml: new XmlMode(),
         html: new HtmlMode(),
         css: new CssMode(),
         scss: new ScssMode(),
         javascript: new JavaScriptMode(),
+        lua: new LuaMode(),
         python: new PythonMode(),
         php: new PhpMode(),
         java: new JavaMode(),
@@ -279,6 +294,9 @@ exports.launch = function(env) {
         else if (mode instanceof XmlMode) {
             modeEl.value = "xml";
         }
+        else if (mode instanceof LuaMode){
+            modeEl.value = "lua";
+        }
         else if (mode instanceof PythonMode) {
             modeEl.value = "python";
         }
@@ -314,6 +332,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof SvgMode) {
             modeEl.value = "svg";
+        }
+        else if (mode instanceof MarkdownMode) {
+            modeEl.value = "markdown";
         }
         else if (mode instanceof TextileMode) {
             modeEl.value = "textile";
@@ -461,7 +482,7 @@ exports.launch = function(env) {
         var onCheck = function() {
             callback(!!el.checked);
         };
-        el.onclick = onCheck;
+        el.onCheckck = onCheck;
         onCheck();
     }
 
@@ -477,17 +498,13 @@ exports.launch = function(env) {
     function onResize() {
         var width = (document.documentElement.clientWidth - 280);
         container.style.width = width + "px";
-        cockpitInput.style.width = width + "px";
-        container.style.height = (document.documentElement.clientHeight - 22) + "px";
+        container.style.height = document.documentElement.clientHeight + "px";
         env.split.resize();
 //        env.editor.resize();
     };
 
     window.onresize = onResize;
     onResize();
-
-    // Call resize on the cli explizit. This is necessary for Firefox.
-    env.cli.cliView.resizer()
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
@@ -517,6 +534,8 @@ exports.launch = function(env) {
                     mode = "css";
                 } else if (/^.*\.scss$/i.test(file.name)) {
                     mode = "scss";
+                } else if (/^.*\.lua$/i.test(file.name)) {
+                    mode = "lua";
                 } else if (/^.*\.py$/i.test(file.name)) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
@@ -560,39 +579,13 @@ exports.launch = function(env) {
      * This demonstrates how you can define commands and bind shortcuts to them.
      */
 
-    // Command to focus the command line from the editor.
-    canon.addCommand({
-        name: "focuscli",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "editor"
-        },
-        exec: function() {
-            env.cli.cliView.element.focus();
-        }
-    });
-
-    // Command to focus the editor line from the command line.
-    canon.addCommand({
-        name: "focuseditor",
-        bindKey: {
-            win: "Ctrl-J",
-            mac: "Command-J",
-            sender: "cli"
-        },
-        exec: function() {
-            env.editor.focus();
-        }
-    });
-
     // Fake-Save, works from the editor and the command line.
     canon.addCommand({
         name: "save",
         bindKey: {
             win: "Ctrl-S",
             mac: "Command-S",
-            sender: "editor|cli"
+            sender: "editor"
         },
         exec: function() {
             alert("Fake Save File");
@@ -717,17 +710,7 @@ function loadTheme(name, callback) {
     themes[name] = 1;
     var base = name.split("/").pop();
     var fileName = "src/theme-" + base + ".js";
-    loadScriptFile(fileName, callback)
-}
-
-function loadScriptFile(path, callback) {
-    var head = document.getElementsByTagName('head')[0];
-    var s = document.createElement('script');
-
-    s.src = path;
-    head.appendChild(s);
-    
-    s.onload = callback;
+    net.loadScript(fileName, callback)
 }
 
 });

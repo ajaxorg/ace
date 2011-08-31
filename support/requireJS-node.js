@@ -69,7 +69,7 @@ global.define = function (id, injects, factory) {
             relativeId = "../" + absolutePath.match(new RegExp(rootPath + "(.*)"))[1];
         }
         
-        if (prefix == "text") {
+        if (prefix == "ace/requirejs/text") {
             return fs.readFileSync(findModulePath(relativeId))
         } else
             return require(relativeId);

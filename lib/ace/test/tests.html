@@ -23,32 +23,26 @@
     
 <div id="log"></div>
 
-<script src="../../../demo/require.js" type="text/javascript" charset="utf-8"></script>
-<script>
-
-require({
-    paths: {
-        ace: "../lib/ace",
-        cockpit: "../support/cockpit/lib/cockpit",
-        pilot: "../support/pilot/lib/pilot"
-    },
-    packages : [{
-        name: "asyncjs",
-        location: "../lib/ace/test",
-        lib: "asyncjs",
-        main: "index"
-    }, {
-        name: "assert",
-        location: "../lib/ace/test",
-        lib: "asyncjs",
-        main: "assert"
-    }]
-});
-
-require(["ace/test/all_browser"], function(tests) {
-});
-
+<script type="text/javascript">
+    var require = {
+        paths: {
+            ace: "../",
+            cockpit: "../../../../support/cockpit/lib/cockpit",
+            pilot: "../../../../support/pilot/lib/pilot"
+        },
+        packages : [{
+            name: "asyncjs",
+            location: "./asyncjs",
+            main: "index"
+        }, {
+            name: "assert",
+            location: "./asyncjs",
+            main: "assert"
+        }]
+    };
 </script>
+<script src="../../../demo/require.js" data-main="all_browser" type="text/javascript" charset="utf-8"></script>
+
 
 </body>
 </html>

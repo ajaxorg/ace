@@ -39,15 +39,13 @@ define(function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 require("pilot/plugin_manager");
-require("pilot/settings");
 require("pilot/environment");
 require("demo/demo");
 
 require("pilot/index");
-require("cockpit/index");
 require("ace/defaults");
 
-var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
+var plugins = [ "pilot/index"];
 var catalog = require("pilot/plugin_manager").catalog;
 catalog.registerPlugins(plugins).then(function() {
     var env = require("pilot/environment").create();

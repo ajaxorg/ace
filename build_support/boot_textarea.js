@@ -250,7 +250,7 @@ window.__ace_shadowed__.transformTextarea = function(element) {
         overflow: "auto",
         fontSize: "14px"
     };
-    if (!UA.isIE) {
+    if (!UA.isOldIE) {
         settingDivStyles.backgroundColor = "rgba(0, 0, 0, 0.6)";
     } else {
         settingDivStyles.backgroundColor = "#333";
