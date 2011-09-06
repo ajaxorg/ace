@@ -88,6 +88,8 @@ var supportedScopes = {
    "meta.tag": "meta.tag",
    "meta.tag.form": "meta.tag.form",
    "entity.other.attribute-name": "entity.other.attribute-name",
+   "entity.name.function": "entity.name.function",
+   "entity.name": "entity.name",
    
    "markup.heading": "markup.heading",
    "markup.heading.1": "markup.heading.1",

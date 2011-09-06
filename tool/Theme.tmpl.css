@@ -163,6 +163,14 @@
   %entity.other.attribute-name%
 }
 
+.%cssClass% .ace_entity.ace_name {
+  %entity.name%
+}
+
+.%cssClass% .ace_entity.ace_name.ace_function {
+  %entity.name.function%
+}
+
 .%cssClass% .ace_markup.ace_underline {
     text-decoration:underline;
 }
