@@ -193,7 +193,7 @@ if (target == "normal") {
         copy.filter.moduleDefines,
         shadow,
         copy.filter.uglifyjs
-    ]
+    ];
 }
 
 console.log('# ace modes ---------');
@@ -202,7 +202,7 @@ project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "lua", "xml", "ruby", "java", "c_cpp",
     "coffee", "perl", "csharp", "svg", "clojure", "scss", "json", "groovy",
-    "ocaml", "scala", "textile", "scad", "markdown"
+    "ocaml", "scala", "textile", "scad", "markdown", "latex"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
@@ -360,12 +360,12 @@ function demo() {
 
     copy({
         source: demo,
-        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink.js'
+        filter: [ filterTextPlugin ],
+        dest: 'build/demo/kitchen-sink-uncompressed.js'
     });
     copy({
         source: demo,
-        filter: [ filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink-uncompressed.js'
+        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
+        dest: 'build/demo/kitchen-sink.js'
     });
 }
