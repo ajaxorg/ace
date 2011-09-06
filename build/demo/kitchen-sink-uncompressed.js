@@ -16797,7 +16797,7 @@ var JavaScriptHighlightRules = function() {
                 regex : "(?:true|false)\\b"
             }, {
                 token : "keyword",
-                regex : kwBeforeRe,
+                regex : "(?:" + kwBeforeRe + ")\\b",
                 next : "regex_allowed"
             }, {
                 token : function(value) {
