@@ -13943,7 +13943,7 @@ var VirtualRenderer = function(container, theme) {
 
         var pos = this.$cursorLayer.getPixelPosition();
 
-        var left = pos.left + this.$padding;
+        var left = pos.left;
         var top = pos.top;
 
         if (this.scrollTop > top) {
@@ -14278,7 +14278,7 @@ var Gutter = function(parentEl) {
 
             var wrappedRowLength = this.session.getRowLength(i) - 1;
             while (wrappedRowLength--) {
-                html.push("</div><div class='ace_gutter-cell' style='height:", config.lineHeight, "px'>&brvbar;</div>");
+                html.push("</div><div class='ace_gutter-cell' style='height:", config.lineHeight, "px'>\xA6");
             }
 
             html.push("</div>");
@@ -14574,10 +14574,10 @@ var Text = function(parentEl) {
 
     oop.implement(this, EventEmitter);
 
-    this.EOF_CHAR = "&para;";
-    this.EOL_CHAR = "&not;";
-    this.TAB_CHAR = "&rarr;";
-    this.SPACE_CHAR = "&middot;";
+    this.EOF_CHAR = "\xB6"; //"&para;";
+    this.EOL_CHAR = "\xAC"; //"&not;";
+    this.TAB_CHAR = "\u2192"; //"&rarr;";
+    this.SPACE_CHAR = "\xB7"; //"&middot;";
     this.$padding = 0;
 
     this.setPadding = function(padding) {
@@ -15576,7 +15576,11 @@ __ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' , 
   color: rgb(104, 104, 91);\
 }\
 \
-.ace-tm .ace_markup.ace_underline {\
+.ace-tm .ace_entity.ace_name.ace_function {\
+  color: #0000A2;\
+}\
+\
+.ace-tm .ace_markup.ace_markupine {\
     text-decoration:underline;\
 }\
 \
@@ -17201,6 +17205,14 @@ __ace_shadowed__.define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor
   "\n" +
   ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
   "  %entity.other.attribute-name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name {\n" +
+  "  %entity.name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
+  "  %entity.name.function%\n" +
   "}\n" +
   "\n" +
   ".%cssClass% .ace_markup.ace_underline {\n" +

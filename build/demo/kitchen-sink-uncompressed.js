@@ -5269,7 +5269,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/lua', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/lua.lua', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/lua', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/mode/latex', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/lua.lua', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'text!demo/docs/latex.tex', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5303,7 +5303,7 @@ var TextileMode = require("ace/mode/textile").Mode;
 var TextMode = require("ace/mode/text").Mode;
 var GroovyMode = require("ace/mode/groovy").Mode;
 var ScalaMode = require("ace/mode/scala").Mode;
-
+var LatexMode = require("ace/mode/latex").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var vim = require("ace/keyboard/keybinding/vim").Vim;
@@ -5428,6 +5428,9 @@ exports.launch = function(env) {
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
+    docs.latex = new EditSession(require("text!demo/docs/latex.tex"));
+    docs.latex.setMode(new LatexMode());
+    docs.latex.setUndoManager(new UndoManager());
 
     // Add a "name" property to all docs
     for (var doc in docs) {
@@ -5472,7 +5475,8 @@ exports.launch = function(env) {
         ocaml: new OcamlMode(),
         csharp: new CSharpMode(),
         groovy: new GroovyMode(),
-        scala: new ScalaMode()
+        scala: new ScalaMode(),
+        latex: new LatexMode()
     };
 
     function getMode() {
@@ -5575,6 +5579,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof ScalaMode) {
             modeEl.value = "scala";
+        }
+        else if (mode instanceof LatexMode) {
+            modeEl.value = "latex";
         }
         else {
             modeEl.value = "text";
@@ -14814,7 +14821,7 @@ var VirtualRenderer = function(container, theme) {
 
         var pos = this.$cursorLayer.getPixelPosition();
 
-        var left = pos.left + this.$padding;
+        var left = pos.left;
         var top = pos.top;
 
         if (this.scrollTop > top) {
@@ -15149,7 +15156,7 @@ var Gutter = function(parentEl) {
 
             var wrappedRowLength = this.session.getRowLength(i) - 1;
             while (wrappedRowLength--) {
-                html.push("</div><div class='ace_gutter-cell' style='height:", config.lineHeight, "px'>&brvbar;</div>");
+                html.push("</div><div class='ace_gutter-cell' style='height:", config.lineHeight, "px'>\xA6");
             }
 
             html.push("</div>");
@@ -15445,10 +15452,10 @@ var Text = function(parentEl) {
 
     oop.implement(this, EventEmitter);
 
-    this.EOF_CHAR = "&para;";
-    this.EOL_CHAR = "&not;";
-    this.TAB_CHAR = "&rarr;";
-    this.SPACE_CHAR = "&middot;";
+    this.EOF_CHAR = "\xB6"; //"&para;";
+    this.EOL_CHAR = "\xAC"; //"&not;";
+    this.TAB_CHAR = "\u2192"; //"&rarr;";
+    this.SPACE_CHAR = "\xB7"; //"&middot;";
     this.$padding = 0;
 
     this.setPadding = function(padding) {
@@ -16447,7 +16454,11 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
   color: rgb(104, 104, 91);\
 }\
 \
-.ace-tm .ace_markup.ace_underline {\
+.ace-tm .ace_entity.ace_name.ace_function {\
+  color: #0000A2;\
+}\
+\
+.ace-tm .ace_markup.ace_markupine {\
     text-decoration:underline;\
 }\
 \
@@ -16776,6 +16787,9 @@ var JavaScriptHighlightRules = function() {
                 token : "constant.numeric", // float
                 regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
             }, {
+                token : ["keyword", "text", "entity.name.function"],
+                regex : "(function)(\\s+)(" + identifierRe + ")"
+            }, {
                 token : "constant.language.boolean",
                 regex : "(?:true|false)\\b"
             }, {
@@ -16821,6 +16835,9 @@ var JavaScriptHighlightRules = function() {
         // makes sure we don't mix up regexps with the divison operator
         "regex_allowed": [
             {
+                token : "comment",
+                regex : "\\/\\/.*$"
+            }, {
                 token: "string.regexp",
                 regex: "\\/(?:(?:\\[(?:\\\\]|[^\\]])+\\])"
                     + "|(?:\\\\/|[^\\]/]))*" 
@@ -22086,7 +22103,13 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pil
             start : [
                 {
                     token : "identifier",
-                    regex : "(?:@|(?:\\.|::)\\s*)" + identifier
+                    regex : "(?:(?:\\.|::)\\s*)" + identifier
+                }, {
+                    token : "variable",
+                    regex : "@" + identifier
+                }, {
+                    token : "entity.name.function",
+                    regex : identifier + "(?=\\s*:\\s*(?:\\(.*?\\)\\s*)?->)"
                 }, {
                     token : "keyword",
                     regex : "(?:t(?:h(?:is|row|en)|ry|ypeof)|s(?:uper|witch)|return|b(?:reak|y)|c(?:ontinue|atch|lass)|i(?:n(?:stanceof)?|s(?:nt)?|f)|e(?:lse|xtends)|f(?:or (?:own)?|inally|unction)|wh(?:ile|en)|n(?:ew|ot?)|d(?:e(?:lete|bugger)|o)|loop|o(?:ff?|[rn])|un(?:less|til)|and|yes)"
@@ -24504,6 +24527,102 @@ oop.inherits(ScalaHighlightRules, TextHighlightRules);
 
 exports.ScalaHighlightRules = ScalaHighlightRules;
 });
+define('ace/mode/latex', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/latex_highlight_rules', 'ace/range'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var TextMode = require("ace/mode/text").Mode;
+var Tokenizer = require("ace/tokenizer").Tokenizer;
+var LatexHighlightRules = require("ace/mode/latex_highlight_rules").LatexHighlightRules;
+var Range = require("ace/range").Range;
+
+var Mode = function()
+{
+    this.$tokenizer = new Tokenizer(new LatexHighlightRules().getRules());
+};
+oop.inherits(Mode, TextMode);
+
+(function()
+{
+    this.toggleCommentLines = function(state, doc, startRow, endRow) {
+        // This code is adapted from ruby.js
+        var outdent = true;
+        var outentedRows = [];
+        
+        // LaTeX comments begin with % and go to the end of the line
+        var commentRegEx = /^(\s*)\%/;
+
+        for (var i = startRow; i <= endRow; i++) {
+            if (!commentRegEx.test(doc.getLine(i))) {
+                outdent = false;
+                break;
+            }
+        }
+
+        if (outdent) {
+            var deleteRange = new Range(0, 0, 0, 0);
+            for (var i = startRow; i <= endRow; i++) {
+                var line = doc.getLine(i);
+                var m = line.match(commentRegEx);
+                deleteRange.start.row = i;
+                deleteRange.end.row = i;
+                deleteRange.end.column = m[0].length;
+                doc.replace(deleteRange, m[1]);
+            }
+        }
+        else {
+            doc.indentRows(startRow, endRow, "%");
+        }
+    };
+    
+    // There is no universally accepted way of indenting a tex document
+    // so just maintain the indentation of the previous line
+    this.getNextLineIndent = function(state, line, tab) {
+        return this.$getIndent(line);
+    };
+    
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+
+});
+define('ace/mode/latex_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+
+var LatexHighlightRules = function()
+{   
+    this.$rules = {
+        "start" : [{
+            // A tex command e.g. \foo
+            token : "keyword",
+            regex : "\\\\(?:[^a-zA-Z]|[a-zA-Z]+)",
+        }, {
+            // Curly and square braces
+            token : "lparen",
+            regex : "[[({]"
+        }, {
+            // Curly and square braces
+            token : "rparen",
+            regex : "[\\])}]"
+        }, {
+            // Inline math between two $ symbols
+            token : "string",
+            regex : "\\$(?:(?:\\\\.)|(?:[^\\$\\\\]))*?\\$"
+        }, {
+            // A comment. Tex comments start with % and go to 
+            // the end of the line
+            token : "comment",
+            regex : "%.*$"
+        }]
+    };
+};
+
+oop.inherits(LatexHighlightRules, TextHighlightRules);
+
+exports.LatexHighlightRules = LatexHighlightRules;
+
+});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -25741,6 +25860,29 @@ define("text!demo/docs/json.json", [], "{\n" +
   " }\n" +
   "}");
 
+define("text!demo/docs/latex.tex", [], "\\usepackage{amsmath}\n" +
+  "\\title{\\LaTeX}\n" +
+  "\\date{}\n" +
+  "\\begin{document}\n" +
+  "  \\maketitle\n" +
+  "  \\LaTeX{} is a document preparation system for the \\TeX{}\n" +
+  "  typesetting program. It offers programmable desktop publishing\n" +
+  "  features and extensive facilities for automating most aspects of\n" +
+  "  typesetting and desktop publishing, including numbering and\n" +
+  "  cross-referencing, tables and figures, page layout, bibliographies,\n" +
+  "  and much more. \\LaTeX{} was originally written in 1984 by Leslie\n" +
+  "  Lamport and has become the dominant method for using \\TeX; few\n" +
+  "  people write in plain \\TeX{} anymore. The current version  is\n" +
+  "  \\LaTeXe.\n" +
+  " \n" +
+  "  % This is a comment; it will not be shown in the final output.\n" +
+  "  % The following shows a little of the typesetting power of LaTeX:\n" +
+  "  \\begin{align}\n" +
+  "    E &= mc^2                              \\\\\n" +
+  "    m &= \\frac{m_0}{\\sqrt{1-\\frac{v^2}{c^2}}}\n" +
+  "  \\end{align}\n" +
+  "\\end{document}");
+
 define("text!demo/docs/lua.lua", [], "--[[--\n" +
   "num_args takes in 5.1 byte code and extracts the number of arguments\n" +
   "from its function header.\n" +
@@ -26016,7 +26158,7 @@ define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "{\n" +
   "    print $primes[$p], \", \";\n" +
   "}\n" +
-  "print \"\n\";\n" +
+  "print \"\\n\";\n" +
   "");
 
 define("text!demo/docs/php.php", [], "<?php\n" +
@@ -26030,11 +26172,11 @@ define("text!demo/docs/php.php", [], "<?php\n" +
   "    }\n" +
   "}\n" +
   "\n" +
-  "echo \"\n\nPlease enter a whole number ... \";\n" +
+  "echo \"\\n\\nPlease enter a whole number ... \";\n" +
   "$num = trim(fgets(STDIN));\n" +
   "\n" +
   "// ===== PROCESS - Determing the factorial of the input number =====\n" +
-  "$output = \"\n\nFactorial \" . $num . \" = \" . nfact($num) . \"\n\n\";\n" +
+  "$output = \"\\n\\nFactorial \" . $num . \" = \" . nfact($num) . \"\\n\\n\";\n" +
   "echo $output;\n" +
   "\n" +
   "?>");
@@ -26069,7 +26211,7 @@ define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
   "        print repr(i), \"not a numeric value\"\n" +
   "    else:\n" +
   "        celsius=(fahrenheit-32)*5.0/9.0\n" +
-  "        print '%i\260F = %i\260C' % (int(fahrenheit), int(celsius+.5))");
+  "        print '%i\\260F = %i\\260C' % (int(fahrenheit), int(celsius+.5))");
 
 define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
   "\n" +
@@ -26447,238 +26589,6 @@ define("text!build/demo/styles.css", [], "html {\n" +
   "    text-align: left;\n" +
   "}");
 
-define("text!build/textarea/style.css", [], "body {\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "    background-color:#e6f5fc;\n" +
-  "    \n" +
-  "}\n" +
-  "\n" +
-  "H2, H3, H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "}\n" +
-  "\n" +
-  "H2 {\n" +
-  "    font-size:28px;\n" +
-  "    color:#263842;\n" +
-  "    padding-bottom:6px;\n" +
-  "}\n" +
-  "\n" +
-  "H3 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:22px;\n" +
-  "    color:#253741;\n" +
-  "    margin-top:43px;\n" +
-  "    margin-bottom:8px;\n" +
-  "}\n" +
-  "\n" +
-  "H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:21px;\n" +
-  "    color:#222222;\n" +
-  "    margin-bottom:4px;\n" +
-  "}\n" +
-  "\n" +
-  "P {\n" +
-  "    padding:13px 0;\n" +
-  "    margin:0;\n" +
-  "    line-height:22px;\n" +
-  "}\n" +
-  "\n" +
-  "UL{\n" +
-  "    line-height : 22px;\n" +
-  "}\n" +
-  "\n" +
-  "PRE{\n" +
-  "    background : #333;\n" +
-  "    color : white;\n" +
-  "    padding : 10px;\n" +
-  "}\n" +
-  "\n" +
-  "#header {\n" +
-  "    height : 227px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background: url(images/background.png) repeat-x 0 0;\n" +
-  "    border-bottom:1px solid #c9e8fa;   \n" +
-  "}\n" +
-  "\n" +
-  "#header .content .signature {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:11px;\n" +
-  "    color:#ebe4d6;\n" +
-  "    position:absolute;\n" +
-  "    bottom:5px;\n" +
-  "    right:42px;\n" +
-  "    letter-spacing : 1px;\n" +
-  "}\n" +
-  "\n" +
-  ".content {\n" +
-  "    width:970px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin:0 auto;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content {\n" +
-  "    height:184px;\n" +
-  "    margin-top:22px;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .logo {\n" +
-  "    width  : 282px;\n" +
-  "    height : 184px;\n" +
-  "    background:url(images/logo.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:0;\n" +
-  "    left:0;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .title {\n" +
-  "    width  : 605px;\n" +
-  "    height : 58px;\n" +
-  "    background:url(images/ace.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:98px;\n" +
-  "    left:329px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper {\n" +
-  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
-  "    min-height:250px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content {\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:14px;\n" +
-  "    color:#222222;\n" +
-  "    width:1000px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column1 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:315px;\n" +
-  "    margin-right:31px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column2 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:600px;\n" +
-  "    padding-top:47px;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github {\n" +
-  "    width:310px;\n" +
-  "    height:80px;\n" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin-top:49px;\n" +
-  "    cursor:pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github:hover {\n" +
-  "    background-position:0 -80px;\n" +
-  "}\n" +
-  "\n" +
-  ".divider {\n" +
-  "    height:3px;\n" +
-  "    background-color:#bedaea;\n" +
-  "    margin-bottom:3px;\n" +
-  "}\n" +
-  "\n" +
-  ".menu {\n" +
-  "    padding:23px 0 0 24px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.content-list {\n" +
-  "    padding:15px;\n" +
-  "    margin:0;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list {\n" +
-  "    padding:0;\n" +
-  "    margin:0 0 20px 0;\n" +
-  "    list-style-type:none;\n" +
-  "    line-height : 16px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI {\n" +
-  "    color:#2557b4;\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:14px;\n" +
-  "    padding:7px 0;\n" +
-  "    border-bottom:1px dotted #d6e2e7;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI:last-child {\n" +
-  "    border-bottom:0;\n" +
-  "}\n" +
-  "\n" +
-  "A {\n" +
-  "    color:#2557b4;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "P#first{\n" +
-  "    background : rgba(255,255,255,0.5);\n" +
-  "    padding : 20px;\n" +
-  "    font-size : 16px;\n" +
-  "    line-height : 24px;\n" +
-  "    margin : 0 0 20px 0;\n" +
-  "}\n" +
-  "\n" +
-  "#footer {\n" +
-  "    height:40px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
-  "    position:relative;\n" +
-  "    margin-top:40px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer {\n" +
-  "    padding:0;\n" +
-  "    margin:8px 11px 0 0;\n" +
-  "    list-style-type:none;\n" +
-  "    float:right;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI {\n" +
-  "    color:white;\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:12px;\n" +
-  "    display:inline-block;\n" +
-  "    margin:0 1px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A {\n" +
-  "    color:#8dd0ff;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "\n" +
-  "\n" +
-  "\n" +
-  "");
-
 define("text!build_support/style.css", [], "body {\n" +
   "    margin:0;\n" +
   "    padding:0;\n" +
@@ -26959,6 +26869,50 @@ define("text!demo/styles.css", [], "html {\n" +
   "\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
+  "}");
+
+define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
+  "\n" +
+  "@import url(\"booya.css\") print,screen;\n" +
+  "@import \"whatup.css\" screen;\n" +
+  "@import \"wicked.css\";\n" +
+  "\n" +
+  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
+  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
+  "\n" +
+  "li.inline #foo {\n" +
+  "  background: url(\"something.png\");\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px;\n" +
+  "  padding-right: 7px;\n" +
+  "  border-right: 1px dotted #066;\n" +
+  "}\n" +
+  "\n" +
+  "li.last.first {\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px !important;\n" +
+  "  padding-right: 3px;\n" +
+  "  border-right: 0px;\n" +
+  "}\n" +
+  "\n" +
+  "@media print {\n" +
+  "    li.inline {\n" +
+  "      color: black;\n" +
+  "    }\n" +
+  "\n" +
+  "\n" +
+  "@charset \"UTF-8\"; \n" +
+  "\n" +
+  "@page {\n" +
+  "  margin: 10%;\n" +
+  "  counter-increment: page;\n" +
+  "\n" +
+  "  @top-center {\n" +
+  "    font-family: sans-serif;\n" +
+  "    font-weight: bold;\n" +
+  "    font-size: 2em;\n" +
+  "    content: counter(page);\n" +
+  "  }\n" +
   "}");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
@@ -27708,6 +27662,14 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "\n" +
   ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
   "  %entity.other.attribute-name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name {\n" +
+  "  %entity.name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
+  "  %entity.name.function%\n" +
   "}\n" +
   "\n" +
   ".%cssClass% .ace_markup.ace_underline {\n" +
