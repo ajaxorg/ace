@@ -489,7 +489,7 @@ exports.launch = function(env) {
         var onCheck = function() {
             callback(!!el.checked);
         };
-        el.onCheckck = onCheck;
+        el.onclick = onCheck;
         onCheck();
     }
 
