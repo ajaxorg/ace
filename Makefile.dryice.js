@@ -37,6 +37,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var fs = require("fs");
+
 var args = process.argv;
 var target = null;
 var targetDir = null;
@@ -46,6 +48,14 @@ if (args.length == 3) {
     if (target != "normal" && target != "bm") {
         target = null;
     }
+}
+
+try {
+    var version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
+    var ref = fs.readFileSync(__dirname + "/.git-ref").toString();
+} catch(e) {
+    ref = "";
+    version = "";
 }
 
 if (!target) {
@@ -317,7 +327,10 @@ function demo() {
                 .replace("DEVEL-->", "")
                 .replace("<!--DEVEL", "")
                 .replace("PACKAGE-->", "")
-                .replace("<!--PACKAGE", ""));
+                .replace("<!--PACKAGE", "")
+                .replace("%version%", version)
+                .replace("%commit%", ref)
+            );
         }]
     });
 

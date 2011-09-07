@@ -1,4 +1,5 @@
 build:
+	git rev-parse HEAD > .git-ref
 	mkdir -p build/src
 	mkdir -p build/demo
 	mkdir -p build/textarea/src
