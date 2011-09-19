@@ -2948,7 +2948,7 @@ NameGuesser.prototype = {
     },
 
     createXMLHTTPObject: function() {
-	    // Try XHR methods in order and store XHR factory
+      // Try XHR methods in order and store XHR factory
         var xmlhttp, XMLHttpFactories = [
             function() {
                 return new XMLHttpRequest();
@@ -6940,7 +6940,7 @@ var TextInput = function(parentNode, host) {
 
     var text = dom.createElement("textarea");
     if (useragent.isTouchPad)
-    	text.setAttribute('x-palm-disable-auto-cap',true);
+      text.setAttribute('x-palm-disable-auto-cap',true);
     text.style.left = "-10000px";
     parentNode.appendChild(text);
 
@@ -15686,7 +15686,7 @@ exports.create = create;
 
 
 });
-__ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
+__ace_shadowed__.define("ace/requirejs/text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
   ".ace_editor {\n" +
