@@ -1292,9 +1292,9 @@ __ace_shadowed__.define('ace/ace', ['require', 'exports', 'module' , 'pilot/inde
 
 __ace_shadowed__.define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
-exports.startup = function(data, reason) {
-    require('pilot/fixoldbrowsers');
+require('pilot/fixoldbrowsers');
 
+exports.startup = function(data, reason) {
     require('pilot/types/basic').startup(data, reason);
     require('pilot/types/command').startup(data, reason);
     require('pilot/types/settings').startup(data, reason);
@@ -3384,6 +3384,7 @@ exports.keyCodeToString = function(keyCode) {
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
+ *      Mike de Boer <mike AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -3406,16 +3407,45 @@ var EventEmitter = {};
 EventEmitter._emit =
 EventEmitter._dispatchEvent = function(eventName, e) {
     this._eventRegistry = this._eventRegistry || {};
+    this._defaultHandlers = this._defaultHandlers || {};
 
-    var listeners = this._eventRegistry[eventName];
-    if (!listeners || !listeners.length) return;
+    var listeners = this._eventRegistry[eventName] || [];
+    var defaultHandler = this._defaultHandlers[eventName];
+    if (!listeners.length && !defaultHandler)
+        return;
 
-    var e = e || {};
+    e = e || {};
     e.type = eventName;
+    
+    if (!e.stopPropagation) {
+        e.stopPropagation = function() {
+            this.propagationStopped = true;
+        };
+    }
+    
+    if (!e.preventDefault) {
+        e.preventDefault = function() {
+            this.defaultPrevented = true;
+        };
+    }
 
     for (var i=0; i<listeners.length; i++) {
         listeners[i](e);
+        if (e.propagationStopped)
+            break;
     }
+    
+    if (defaultHandler && !e.defaultPrevented)
+        defaultHandler(e);
+};
+
+EventEmitter.setDefaultHandler = function(eventName, callback) {
+    this._defaultHandlers = this._defaultHandlers || {};
+    
+    if (this._defaultHandlers[eventName])
+        throw new Error("The default handler for '" + eventName + "' is already set");
+        
+    this._defaultHandlers[eventName] = callback;
 };
 
 EventEmitter.on =
@@ -3423,12 +3453,11 @@ EventEmitter.addEventListener = function(eventName, callback) {
     this._eventRegistry = this._eventRegistry || {};
 
     var listeners = this._eventRegistry[eventName];
-    if (!listeners) {
-      var listeners = this._eventRegistry[eventName] = [];
-    }
-    if (listeners.indexOf(callback) == -1) {
+    if (!listeners)
+        var listeners = this._eventRegistry[eventName] = [];
+
+    if (listeners.indexOf(callback) == -1)
         listeners.push(callback);
-    }
 };
 
 EventEmitter.removeListener =
@@ -3436,18 +3465,17 @@ EventEmitter.removeEventListener = function(eventName, callback) {
     this._eventRegistry = this._eventRegistry || {};
 
     var listeners = this._eventRegistry[eventName];
-    if (!listeners) {
-      return;
-    }
+    if (!listeners)
+        return;
+
     var index = listeners.indexOf(callback);
-    if (index !== -1) {
+    if (index !== -1)
         listeners.splice(index, 1);
-    }
 };
 
 EventEmitter.removeAllListeners = function(eventName) {
     if (this._eventRegistry) this._eventRegistry[eventName] = [];
-}
+};
 
 exports.EventEmitter = EventEmitter;
 
@@ -3722,9 +3750,8 @@ exports.deferredCall = function(fcn) {
     };
 
     var deferred = function(timeout) {
-        if (!timer) {
-            timer = setTimeout(callback, timeout || 0);
-        }
+        deferred.cancel();
+        timer = setTimeout(callback, timeout || 0);
         return deferred;
     }
 
@@ -5620,7 +5647,6 @@ function normalizeCommandKeys(callback, e, keyCode) {
     if (hashId == 0 && !(keyCode in keys.FUNCTION_KEYS)) {
         return false;
     }
-
     return callback(e, hashId, keyCode);
 }
 
@@ -5653,7 +5679,7 @@ exports.addCommandKeyListener = function(el, callback) {
             addListener(el, "keypress", function(e) {
                 var keyId = e.keyIdentifier || e.keyCode;
                 if (lastDown !== keyId) {
-                    return normalizeCommandKeys(callback, e, e.keyCode);
+                    return normalizeCommandKeys(callback, e, lastDown);
                 } else {
                     lastDown = null;
                 }
@@ -5703,7 +5729,7 @@ exports.addCommandKeyListener = function(el, callback) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
+__ace_shadowed__.define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 
@@ -5712,7 +5738,7 @@ var event = require("pilot/event");
 var lang = require("pilot/lang");
 var useragent = require("pilot/useragent");
 var TextInput = require("ace/keyboard/textinput").TextInput;
-var MouseHandler = require("ace/mouse_handler").MouseHandler;
+var MouseHandler = require("ace/mouse/mouse_handler").MouseHandler;
 //var TouchHandler = require("ace/touch_handler").TouchHandler;
 var KeyBinding = require("ace/keyboard/keybinding").KeyBinding;
 var EditSession = require("ace/edit_session").EditSession;
@@ -5964,6 +5990,8 @@ var Editor =function(renderer, session) {
         else
             lastRow = Infinity;
         this.renderer.updateLines(range.start.row, lastRow);
+
+        this._dispatchEvent("change", e);
 
         // update cursor because tab characters can influence the cursor position
         this.renderer.updateCursor();
@@ -6940,7 +6968,8 @@ var TextInput = function(parentNode, host) {
 
     var text = dom.createElement("textarea");
     if (useragent.isTouchPad)
-    	text.setAttribute('x-palm-disable-auto-cap',true);
+    	text.setAttribute("x-palm-disable-auto-cap", true);
+        
     text.style.left = "-10000px";
     parentNode.appendChild(text);
 
@@ -6956,7 +6985,7 @@ var TextInput = function(parentNode, host) {
         try {
             text.select();
         } catch (e) {}
-    };
+    }
 
     function sendText(valueToSend) {
         if (!copied) {
@@ -7052,10 +7081,10 @@ var TextInput = function(parentNode, host) {
                 setTimeout(onCompositionEnd, 0);
             if ((text.value.charCodeAt(0)|0) < 129) {
                 return;
-            };
+            }
             inCompostion ? onCompositionUpdate() : onCompositionStart();
         });
-    };
+    }
     
     if ("onpropertychange" in text && !("oninput" in text))
         event.addListener(text, "propertychange", onPropertyChange);
@@ -7203,23 +7232,16 @@ exports.TextInput = TextInput;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/mouse_handler', ['require', 'exports', 'module' , 'pilot/event', 'pilot/dom', 'pilot/browser_focus'], function(require, exports, module) {
+__ace_shadowed__.define('ace/mouse/mouse_handler', ['require', 'exports', 'module' , 'pilot/event', 'ace/mouse/default_handlers', 'ace/mouse/mouse_event'], function(require, exports, module) {
 
 var event = require("pilot/event");
-var dom = require("pilot/dom");
-var BrowserFocus = require("pilot/browser_focus").BrowserFocus;
-
-var STATE_UNKNOWN = 0;
-var STATE_SELECT = 1;
-var STATE_DRAG = 2;
-
-var DRAG_TIMER = 250; // milliseconds
-var DRAG_OFFSET = 5; // pixels
+var DefaultHandlers = require("ace/mouse/default_handlers").DefaultHandlers;
+var MouseEvent = require("ace/mouse/mouse_event").MouseEvent;
 
 var MouseHandler = function(editor) {
     this.editor = editor;
     
-    this.browserFocus = new BrowserFocus();
+    this.defaultHandlers = new DefaultHandlers(editor);
     event.addListener(editor.container, "mousedown", function(e) {
         editor.focus();
         return event.preventDefault(e);
@@ -7230,6 +7252,7 @@ var MouseHandler = function(editor) {
 
     var mouseTarget = editor.renderer.getMouseEventTarget();
     event.addListener(mouseTarget, "mousedown", this.onMouseDown.bind(this));
+    event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 2, 500, this.onMouseDoubleClick.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 3, 600, this.onMouseTripleClick.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 4, 600, this.onMouseQuadClick.bind(this));
@@ -7247,32 +7270,121 @@ var MouseHandler = function(editor) {
         return this.$scrollSpeed;
     };
 
-    this.$getEventPosition = function(e) {
-        var pageX = event.getDocumentX(e);
-        var pageY = event.getDocumentY(e);
-        var pos = this.editor.renderer.screenToTextCoordinates(pageX, pageY);
-        pos.row = Math.max(0, Math.min(pos.row, this.editor.session.getLength()-1));
-        return pos;
-    };
-
-    this.$distance = function(ax, ay, bx, by) {
-        return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
-    };
-
     this.onMouseDown = function(e) {
-        var pageX = event.getDocumentX(e);
-        var pageY = event.getDocumentY(e);
+        this.editor._dispatchEvent("mousedown", new MouseEvent(e, this.editor));
+    };
+    
+    this.onMouseMove = function(e) {
+        // optimization, because mousemove doesn't have a default handler.
+        var listeners = this.editor._eventRegistry && this.editor._eventRegistry["mousemove"];
+        if (!listeners || !listeners.length)
+            return;
+
+        this.editor._dispatchEvent("mousemove", new MouseEvent(e, this.editor));
+    };
+
+    this.onMouseDoubleClick = function(e) {
+        this.editor._dispatchEvent("dblclick", new MouseEvent(e, this.editor));
+    };
+
+    this.onMouseTripleClick = function(e) {
+        this.editor._dispatchEvent("tripleclick", new MouseEvent(e, this.editor));
+    };
+
+    this.onMouseQuadClick = function(e) {
+        this.editor._dispatchEvent("quadclick", new MouseEvent(e, this.editor));
+    };
+
+    this.onMouseWheel = function(e) {
+        var mouseEvent = new MouseEvent(e, this.editor);
+        mouseEvent.speed = this.$scrollSpeed * 2;
+        mouseEvent.wheelX = e.wheelX;
+        mouseEvent.wheelY = e.wheelY;
         
-        var pos = this.$getEventPosition(e);
-        
+        this.editor._dispatchEvent("mousewheel", mouseEvent);
+    };
+
+}).call(MouseHandler.prototype);
+
+exports.MouseHandler = MouseHandler;
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mike de Boer <mike AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('ace/mouse/default_handlers', ['require', 'exports', 'module' , 'pilot/event', 'pilot/dom', 'pilot/event_emitter', 'pilot/browser_focus'], function(require, exports, module) {
+
+var event = require("pilot/event");
+var dom = require("pilot/dom");
+var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var BrowserFocus = require("pilot/browser_focus").BrowserFocus;
+
+var STATE_UNKNOWN = 0;
+var STATE_SELECT = 1;
+var STATE_DRAG = 2;
+
+var DRAG_TIMER = 250; // milliseconds
+var DRAG_OFFSET = 5; // pixels
+
+function DefaultHandlers(editor) {
+    this.editor = editor;
+    this.$clickSelection = null;
+    this.browserFocus = new BrowserFocus();
+
+    editor.setDefaultHandler("mousedown", this.onMouseDown.bind(this));
+    editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(this));
+    editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(this));
+    editor.setDefaultHandler("quadclick", this.onQuadClick.bind(this));
+    editor.setDefaultHandler("mousewheel", this.onScroll.bind(this));
+}
+
+(function() {
+    
+    this.onMouseDown = function(ev) {
+        var inSelection = ev.inSelection();
+        var pageX = ev.pageX;
+        var pageY = ev.pageY;
+        var pos = ev.getDocumentPosition();
         var editor = this.editor;
-        var self = this;
+        var _self = this;
+        
         var selectionRange = editor.getSelectionRange();
         var selectionEmpty = selectionRange.isEmpty();
-        var inSelection = !editor.getReadOnly()
-            && !selectionEmpty
-            && selectionRange.contains(pos.row, pos.column);
-        
         var state = STATE_UNKNOWN;
         
         // if this click caused the editor to be focused should not clear the
@@ -7281,14 +7393,14 @@ var MouseHandler = function(editor) {
             inSelection && (
                 !this.browserFocus.isFocused()
                 || new Date().getTime() - this.browserFocus.lastFocus < 20
-                || !this.editor.isFocused()
+                || !editor.isFocused()
             )
         ) {
-            this.editor.focus();
+            editor.focus();
             return;
         }
 
-        var button = event.getButton(e);
+        var button = ev.getButton();
         if (button !== 0) {
             if (selectionEmpty) {
                 editor.moveCursorToPosition(pos);
@@ -7298,7 +7410,8 @@ var MouseHandler = function(editor) {
                 event.capture(editor.container, function(){}, editor.textInput.onContextMenuClose);
             }
             return;
-        } else {
+        }
+        else {
             // Select the fold as the user clicks it.
             var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
             if (fold) {
@@ -7330,7 +7443,7 @@ var MouseHandler = function(editor) {
             else if (state == STATE_DRAG)
                 onMouseDragSelectionEnd();
 
-            self.$clickSelection = null;
+            _self.$clickSelection = null;
             state = STATE_UNKNOWN;
         };
 
@@ -7338,7 +7451,7 @@ var MouseHandler = function(editor) {
             dom.removeCssClass(editor.container, "ace_dragging");
             editor.session.removeMarker(dragSelectionMarker);
 
-            if (!self.$clickSelection) {
+            if (!editor.$mouseHandler.$clickSelection) {
                 if (!dragCursor) {
                     editor.moveCursorToPosition(pos);
                     editor.selection.clearSelection(pos.row, pos.column);
@@ -7368,16 +7481,16 @@ var MouseHandler = function(editor) {
                 return;
 
             if (state == STATE_UNKNOWN) {
-                var distance = self.$distance(pageX, pageY, mousePageX, mousePageY);
+                var distance = calcDistance(pageX, pageY, mousePageX, mousePageY);
                 var time = (new Date()).getTime();
-
 
                 if (distance > DRAG_OFFSET) {
                     state = STATE_SELECT;
                     var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
                     cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
                     onStartSelect(cursor);
-                } else if ((time - mousedownTime) > DRAG_TIMER) {
+                }
+                else if ((time - mousedownTime) > DRAG_TIMER) {
                     state = STATE_DRAG;
                     dragRange = editor.getSelectionRange();
                     var style = editor.getSelectionStyle();
@@ -7395,10 +7508,11 @@ var MouseHandler = function(editor) {
         };
 
         function onStartSelect(pos) {
-            if (e.shiftKey)
-                editor.selection.selectToPosition(pos)
+            if (ev.getShiftKey()) {
+                editor.selection.selectToPosition(pos);
+            }
             else {
-                if (!self.$clickSelection) {
+                if (!_self.$clickSelection) {
                     editor.moveCursorToPosition(pos);
                     editor.selection.clearSelection(pos.row, pos.column);
                 }
@@ -7407,17 +7521,20 @@ var MouseHandler = function(editor) {
         }
 
         var onUpdateSelectionInterval = function() {
+            var anchor;
             var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
             cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
 
-            if (self.$clickSelection) {
-                if (self.$clickSelection.contains(cursor.row, cursor.column)) {
-                    editor.selection.setSelectionRange(self.$clickSelection);
-                } else {
-                    if (self.$clickSelection.compare(cursor.row, cursor.column) == -1) {
-                        var anchor = self.$clickSelection.end;
-                    } else {
-                        var anchor = self.$clickSelection.start;
+            if (_self.$clickSelection) {
+                if (_self.$clickSelection.contains(cursor.row, cursor.column)) {
+                    editor.selection.setSelectionRange(_self.$clickSelection);
+                }
+                else {
+                    if (_self.$clickSelection.compare(cursor.row, cursor.column) == -1) {
+                        anchor = _self.$clickSelection.end;
+                    }
+                    else {
+                        anchor = _self.$clickSelection.start;
                     }
                     editor.selection.setSelectionAnchor(anchor.row, anchor.column);
                     editor.selection.selectToPosition(cursor);
@@ -7440,48 +7557,57 @@ var MouseHandler = function(editor) {
         event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
         var timerId = setInterval(onSelectionInterval, 20);
 
-        return event.preventDefault(e);
+        return ev.preventDefault();
     };
-
-    this.onMouseDoubleClick = function(e) {
+    
+    this.onDoubleClick = function(ev) {
+        var pos = ev.getDocumentPosition();
         var editor = this.editor;
-        var pos = this.$getEventPosition(e);
-
+        
         // If the user dclicked on a fold, then expand it.
         var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
         if (fold) {
             editor.session.expandFold(fold);
-        } else {
+        }
+        else {
             editor.moveCursorToPosition(pos);
             editor.selection.selectWord();
             this.$clickSelection = editor.getSelectionRange();
         }
     };
-
-    this.onMouseTripleClick = function(e) {
-        var pos = this.$getEventPosition(e);
-        this.editor.moveCursorToPosition(pos);
-        this.editor.selection.selectLine();
-        this.$clickSelection = this.editor.getSelectionRange();
+    
+    this.onTripleClick = function(ev) {
+        var pos = ev.getDocumentPosition();
+        var editor = this.editor;
+        
+        editor.moveCursorToPosition(pos);
+        editor.selection.selectLine();
+        this.$clickSelection = editor.getSelectionRange();
     };
-
-    this.onMouseQuadClick = function(e) {
-        this.editor.selectAll();
-        this.$clickSelection = this.editor.getSelectionRange();
+    
+    this.onQuadClick = function(ev) {
+        var editor = this.editor;
+        
+        editor.selectAll();
+        this.$clickSelection = editor.getSelectionRange();
     };
-
-    this.onMouseWheel = function(e) {
-        var speed = this.$scrollSpeed * 2;
-
-        this.editor.renderer.scrollBy(e.wheelX * speed, e.wheelY * speed);
-        if (this.editor.renderer.isScrollableBy(e.wheelX, e.wheelY))
-            return event.preventDefault(e);
+    
+    this.onScroll = function(ev) {
+        var editor = this.editor;
+        
+        editor.renderer.scrollBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed);
+        if (editor.renderer.isScrollableBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed))
+            return ev.preventDefault();
     };
+    
+}).call(DefaultHandlers.prototype);
 
+exports.DefaultHandlers = DefaultHandlers;
 
-}).call(MouseHandler.prototype);
+function calcDistance(ax, ay, bx, by) {
+    return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
+}
 
-exports.MouseHandler = MouseHandler;
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -7587,7 +7713,139 @@ var BrowserFocus = function(win) {
 
 exports.BrowserFocus = BrowserFocus;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('ace/mouse/mouse_event', ['require', 'exports', 'module' , 'pilot/event', 'pilot/dom'], function(require, exports, module) {
+
+var event = require("pilot/event");
+var dom = require("pilot/dom");
+
+/**
+ * Custom Ace mouse event
+ */
+var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
+    this.domEvent = domEvent;
+    this.editor = editor;
+    
+    this.pageX = event.getDocumentX(domEvent);
+    this.pageY = event.getDocumentY(domEvent);
+    
+    this.$pos = null;
+    this.$inSelection = null;
+    
+    this.propagationStopped = false;
+    this.defaultPrevented = false;
+};
+
+(function() {  
+    
+    this.stopPropagation = function() {
+        event.stopPropagation(this.domEvent);
+        this.propagationStopped = true;
+    };
+    
+    this.preventDefault = function() {
+        event.preventDefault(this.domEvent);
+        this.defaultPrevented = true;
+    };
+
+    /**
+     * Get the document position below the mouse cursor
+     * 
+     * @return {Object} 'row' and 'column' of the document position
+     */
+    this.getDocumentPosition = function() {
+        if (this.$pos)
+            return this.$pos;
+            
+        var pageX = event.getDocumentX(this.domEvent);
+        var pageY = event.getDocumentY(this.domEvent);
+        this.$pos = this.editor.renderer.screenToTextCoordinates(pageX, pageY);
+        this.$pos.row = Math.max(0, Math.min(this.$pos.row, this.editor.session.getLength()-1));
+        return this.$pos;
+    };
+    
+    /**
+     * Check if the mouse cursor is inside of the text selection
+     * 
+     * @return {Boolean} whether the mouse cursor is inside of the selection
+     */
+    this.inSelection = function() {
+        if (this.$inSelection !== null)
+            return this.$inSelection;
+            
+        var editor = this.editor;
+        
+        if (editor.getReadOnly()) {
+            this.$inSelection = false;
+        }
+        else {
+            var selectionRange = editor.getSelectionRange();
+            if (selectionRange.isEmpty())
+                this.$inSelection = false;
+            else {
+                var pos = this.getDocumentPosition();
+                this.$inSelection = selectionRange.contains(pos.row, pos.column);
+            }
+        }
+        return this.$inSelection;
+    };
+    
+    /**
+     * Get the clicked mouse button
+     * 
+     * @return {Number} 0 for left button, 1 for middle button, 2 for right button
+     */
+    this.getButton = function() {
+        return event.getButton(this.domEvent);
+    };
+    
+    /**
+     * @return {Boolean} whether the shift key was pressed when the event was emitted
+     */
+    this.getShiftKey = function() {
+        return this.domEvent.shiftKey;
+    };
+    
+}).call(MouseEvent.prototype);
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -16415,50 +16673,6 @@ __ace_shadowed__.define("text!demo/styles.css", [], "html {\n" +
   "    text-align: left;\n" +
   "}");
 
-__ace_shadowed__.define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
-  "\n" +
-  "@import url(\"booya.css\") print,screen;\n" +
-  "@import \"whatup.css\" screen;\n" +
-  "@import \"wicked.css\";\n" +
-  "\n" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
-  "\n" +
-  "li.inline #foo {\n" +
-  "  background: url(\"something.png\");\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px;\n" +
-  "  padding-right: 7px;\n" +
-  "  border-right: 1px dotted #066;\n" +
-  "}\n" +
-  "\n" +
-  "li.last.first {\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px !important;\n" +
-  "  padding-right: 3px;\n" +
-  "  border-right: 0px;\n" +
-  "}\n" +
-  "\n" +
-  "@media print {\n" +
-  "    li.inline {\n" +
-  "      color: black;\n" +
-  "    }\n" +
-  "\n" +
-  "\n" +
-  "@charset \"UTF-8\"; \n" +
-  "\n" +
-  "@page {\n" +
-  "  margin: 10%;\n" +
-  "  counter-increment: page;\n" +
-  "\n" +
-  "  @top-center {\n" +
-  "    font-family: sans-serif;\n" +
-  "    font-weight: bold;\n" +
-  "    font-size: 2em;\n" +
-  "    content: counter(page);\n" +
-  "  }\n" +
-  "}");
-
 __ace_shadowed__.define("text!doc/site/iphone.css", [], "#wrapper {\n" +
   "    position:relative;\n" +
   "    overflow:hidden;\n" +
@@ -16888,6 +17102,17 @@ __ace_shadowed__.define("text!lib/ace/css/editor.css", [], "@import url(//fonts.
   "  cursor: move;\n" +
   "}\n" +
   "");
+
+__ace_shadowed__.define("text!node_modules/jsdom/node_modules/cssom/docs/bar.css", [], "body * {\n" +
+  "	color: red !important;\n" +
+  "}");
+
+__ace_shadowed__.define("text!node_modules/jsdom/node_modules/cssom/docs/demo.css", [], "");
+
+__ace_shadowed__.define("text!node_modules/jsdom/node_modules/cssom/docs/foo.css", [], "@import \"bar.css\" screen;\n" +
+  "body {\n" +
+  "	background: black !important;\n" +
+  "}");
 
 __ace_shadowed__.define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
   "body { max-width: 60em; }\n" +
