@@ -1,12 +1,12 @@
 [submodule "support/cockpit"]
 	path = support/cockpit
-	url = https://github.com/ajaxorg/cockpit.git
+	url = git://github.com/ajaxorg/cockpit.git
 [submodule "support/pilot"]
 	path = support/pilot
-	url = https://github.com/ajaxorg/pilot.git
+	url = git://github.com/ajaxorg/pilot.git
 [submodule "support/dryice"]
 	path = support/dryice
-	url = https://github.com/ajaxorg/dryice.git
+	url = git://github.com/ajaxorg/dryice.git
 [submodule "doc/wiki"]
 	path = doc/wiki
-	url = https://github.com/ajaxorg/ace.wiki.git
+	url = git://github.com/ajaxorg/ace.wiki.git
