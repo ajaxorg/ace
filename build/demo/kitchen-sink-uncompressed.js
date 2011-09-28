@@ -10631,7 +10631,7 @@ var EditSession = function(text, mode) {
             } else {
                 lastRow = firstRow;
             }
-            len = e.data.lines.length;
+            len = e.data.lines ? e.data.lines.length : lastRow - firstRow;
         } else {
             len = lastRow - firstRow;
         }
