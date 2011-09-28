@@ -8423,8 +8423,10 @@ var EditSession = function(text, mode) {
         doc.on("change", this.onChange.bind(this));
         this.on("changeFold", this.onChangeFold.bind(this));
         
-        this.bgTokenizer.setDocument(this.getDocument());
-        this.bgTokenizer.start(0);
+        if (this.bgTokenizer) {
+            this.bgTokenizer.setDocument(this.getDocument());
+            this.bgTokenizer.start(0);
+        }
     };
 
     this.getDocument = function() {
