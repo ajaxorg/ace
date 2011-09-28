@@ -17106,6 +17106,11 @@ var JavaScriptHighlightRules = function() {
         // makes sure we don't mix up regexps with the divison operator
         "regex_allowed": [
             {
+                token : "comment", // multi line comment
+                merge : true,
+                regex : "\\/\\*",
+                next : "comment_regex_allowed"
+            }, {
                 token : "comment",
                 regex : "\\/\\/.*$"
             }, {
@@ -17125,10 +17130,23 @@ var JavaScriptHighlightRules = function() {
                 next: "start"
             }
         ],
+        "comment_regex_allowed" : [
+            {
+                token : "comment", // closing comment
+                regex : ".*?\\*\\/",
+                merge : true,
+                next : "regex_allowed"
+            }, {
+                token : "comment", // comment spanning whole line
+                merge : true,
+                regex : ".+"
+            }
+        ],
         "comment" : [
             {
                 token : "comment", // closing comment
                 regex : ".*?\\*\\/",
+                merge : true,
                 next : "start"
             }, {
                 token : "comment", // comment spanning whole line
