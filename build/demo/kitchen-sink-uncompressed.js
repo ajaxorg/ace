@@ -26840,13 +26840,13 @@ define("text!build/demo/styles.css", [], "html {\n" +
   "\n" +
   "#logo {\n" +
   "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
+  "    margin-left: 70px;\n" +
   "}\n" +
   "\n" +
   "#editor {\n" +
   "    position: absolute;\n" +
   "    top:  0px;\n" +
-  "    left: 280px;\n" +
+  "    left: 300px;\n" +
   "    bottom: 0px;\n" +
   "    right: 0px;\n" +
   "    background: white;\n" +
@@ -27122,13 +27122,13 @@ define("text!demo/styles.css", [], "html {\n" +
   "\n" +
   "#logo {\n" +
   "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
+  "    margin-left: 70px;\n" +
   "}\n" +
   "\n" +
   "#editor {\n" +
   "    position: absolute;\n" +
   "    top:  0px;\n" +
-  "    left: 280px;\n" +
+  "    left: 300px;\n" +
   "    bottom: 0px;\n" +
   "    right: 0px;\n" +
   "    background: white;\n" +
@@ -27144,6 +27144,50 @@ define("text!demo/styles.css", [], "html {\n" +
   "\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
+  "}");
+
+define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
+  "\n" +
+  "@import url(\"booya.css\") print,screen;\n" +
+  "@import \"whatup.css\" screen;\n" +
+  "@import \"wicked.css\";\n" +
+  "\n" +
+  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
+  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
+  "\n" +
+  "li.inline #foo {\n" +
+  "  background: url(\"something.png\");\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px;\n" +
+  "  padding-right: 7px;\n" +
+  "  border-right: 1px dotted #066;\n" +
+  "}\n" +
+  "\n" +
+  "li.last.first {\n" +
+  "  display: inline;\n" +
+  "  padding-left: 3px !important;\n" +
+  "  padding-right: 3px;\n" +
+  "  border-right: 0px;\n" +
+  "}\n" +
+  "\n" +
+  "@media print {\n" +
+  "    li.inline {\n" +
+  "      color: black;\n" +
+  "    }\n" +
+  "\n" +
+  "\n" +
+  "@charset \"UTF-8\"; \n" +
+  "\n" +
+  "@page {\n" +
+  "  margin: 10%;\n" +
+  "  counter-increment: page;\n" +
+  "\n" +
+  "  @top-center {\n" +
+  "    font-family: sans-serif;\n" +
+  "    font-weight: bold;\n" +
+  "    font-size: 2em;\n" +
+  "    content: counter(page);\n" +
+  "  }\n" +
   "}");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
@@ -27576,17 +27620,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "}\n" +
   "");
 
-define("text!node_modules/jsdom/node_modules/cssom/docs/bar.css", [], "body * {\n" +
-  "	color: red !important;\n" +
-  "}");
-
-define("text!node_modules/jsdom/node_modules/cssom/docs/demo.css", [], "");
-
-define("text!node_modules/jsdom/node_modules/cssom/docs/foo.css", [], "@import \"bar.css\" screen;\n" +
-  "body {\n" +
-  "	background: black !important;\n" +
-  "}");
-
 define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
   "body { max-width: 60em; }\n" +
   ".title  { text-align: center; }\n" +
@@ -27980,13 +28013,13 @@ define("text!styles.css", [], "html {\n" +
   "\n" +
   "#logo {\n" +
   "    padding: 15px;\n" +
-  "    margin-left: 65px;\n" +
+  "    margin-left: 70px;\n" +
   "}\n" +
   "\n" +
   "#editor {\n" +
   "    position: absolute;\n" +
   "    top:  0px;\n" +
-  "    left: 280px;\n" +
+  "    left: 300px;\n" +
   "    bottom: 0px;\n" +
   "    right: 0px;\n" +
   "    background: white;\n" +
