@@ -6,7 +6,7 @@ function Hello($name) {
 function add($left, $right=4) {
     if ($right -ne 4) {
         return $left
-    } elseif ($left -eq $right) {
+    } elseif ($left -eq $null -and $right -eq 2) {
         return 3
     } else {
         return 2
