@@ -768,8 +768,12 @@ var defineProperty = !!oldDefineProperty;
 if (defineProperty) {
     // detect IE 8's DOM-only implementation of defineProperty;
     var subject = {};
-    Object.defineProperty(subject, "", {});
-    defineProperty = "" in subject;
+    try {
+        Object.defineProperty(subject, "", {});
+        defineProperty = "" in subject;
+    } catch (e) {
+        defineProperty = false;
+    }
 }
 if (!defineProperty) {
     var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
@@ -15949,7 +15953,7 @@ exports.create = create;
 
 
 });
-__ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
+__ace_shadowed__.define("ace/requirejs/text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
   ".ace_editor {\n" +
@@ -16981,7 +16985,7 @@ __ace_shadowed__.define("text!doc/site/style.css", [], "body {\n" +
   "\n" +
   "");
 
-__ace_shadowed__.define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
+__ace_shadowed__.define("ace/requirejs/text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
   ".ace_editor {\n" +
@@ -17708,8 +17712,8 @@ function setupContainer(element, getValue) {
             var oldSumit = parentNode.onsubmit;
             // Override the onsubmit function of the form.
             parentNode.onsubmit = function(evt) {
-                element.value = getValue();
                 element.innerHTML = getValue();
+                element.value = getValue();
                 // If there is a onsubmit function already, then call
                 // it with the current context and pass the event.
                 if (oldSumit) {
