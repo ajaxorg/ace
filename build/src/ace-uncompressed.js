@@ -16172,6 +16172,219 @@ define("text!build/demo/styles.css", [], "html {\n" +
   "    text-align: left;\n" +
   "}");
 
+define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
+  "  border: 2px solid rgb(159, 159, 159);\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_editor.ace_focus {\n" +
+  "  border: 2px solid #327fbd;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter {\n" +
+  "  width: 50px;\n" +
+  "  background: #e8e8e8;\n" +
+  "  color: #333;\n" +
+  "  overflow : hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter-layer {\n" +
+  "  width: 100%;\n" +
+  "  text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {\n" +
+  "  padding-right: 6px;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_print_margin {\n" +
+  "  width: 1px;\n" +
+  "  background: %printMargin%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_scroller {\n" +
+  "  background-color: %background%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_text-layer {\n" +
+  "  cursor: text;\n" +
+  "  color: %foreground%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_cursor {\n" +
+  "  border-left: 2px solid %cursor%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_cursor.ace_overwrite {\n" +
+  "  border-left: 0px;\n" +
+  "  border-bottom: 1px solid %overwrite%;\n" +
+  "}\n" +
+  " \n" +
+  ".%cssClass% .ace_marker-layer .ace_selection {\n" +
+  "  background: %selection%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_step {\n" +
+  "  background: %step%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
+  "  margin: -1px 0 0 -1px;\n" +
+  "  border: 1px solid %bracket%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_active_line {\n" +
+  "  background: %active_line%;\n" +
+  "}\n" +
+  "\n" +
+  "       \n" +
+  ".%cssClass% .ace_invisible {\n" +
+  "  %invisible%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_keyword {\n" +
+  "  %keyword%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_keyword.ace_operator {\n" +
+  "  %keyword.operator%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant {\n" +
+  "  %constant%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_language {\n" +
+  "  %constant.language%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_library {\n" +
+  "  %constant.library%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_numeric {\n" +
+  "  %constant.numeric%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid {\n" +
+  "  %invalid%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid.ace_illegal {\n" +
+  "  %invalid.illegal%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid.ace_deprecated {\n" +
+  "  %invalid.deprecated%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_support {\n" +
+  "  %support%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_support.ace_function {\n" +
+  "  %support.function%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_function.ace_buildin {\n" +
+  "  %function.buildin%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_string {\n" +
+  "  %string%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_string.ace_regexp {\n" +
+  "  %string.regexp%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment {\n" +
+  "  %comment%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment.ace_doc {\n" +
+  "  %comment.doc%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment.ace_doc.ace_tag {\n" +
+  "  %comment.doc.tag%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_variable {\n" +
+  "  %variable%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_variable.ace_language {\n" +
+  "  %variable.language%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_xml_pe {\n" +
+  "  %xml_pe%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta {\n" +
+  "  %meta%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta.ace_tag {\n" +
+  "  %meta.tag%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta.ace_tag.ace_input {\n" +
+  "  %ace.meta.tag.input%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
+  "  %entity.other.attribute-name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name {\n" +
+  "  %entity.name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
+  "  %entity.name.function%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_underline {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading {\n" +
+  "  %markup.heading%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
+  "  %markup.heading.1%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
+  "  %markup.heading.2%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
+  "  %markup.heading.3%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
+  "  %markup.heading.4%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
+  "  %markup.heading.5%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
+  "  %markup.heading.6%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_list {\n" +
+  "  %markup.list%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_collab.ace_user1 {\n" +
+  "  %collab.user1%   \n" +
+  "}");
+
 define("text!build_support/style.css", [], "body {\n" +
   "    margin:0;\n" +
   "    padding:0;\n" +
@@ -16404,99 +16617,159 @@ define("text!build_support/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
+define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
+  "body { max-width: 60em; }\n" +
+  ".title  { text-align: center; }\n" +
+  ".todo   { color: red; }\n" +
+  ".done   { color: green; }\n" +
+  ".tag    { background-color:lightblue; font-weight:normal }\n" +
+  ".target { }\n" +
+  ".timestamp { color: grey }\n" +
+  ".timestamp-kwd { color: CadetBlue }\n" +
+  "p.verse { margin-left: 3% }\n" +
+  "pre {\n" +
+  "  border: 1pt solid #AEBDCC;\n" +
+  "  background-color: #F3F5F7;\n" +
+  "  padding: 5pt;\n" +
+  "  font-family: monospace;\n" +
+  "  font-size: 90%;\n" +
+  "  overflow:auto;\n" +
+  "}\n" +
+  "pre.src {\n" +
+  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
+  "}\n" +
+  "table { border-collapse: collapse; }\n" +
+  "td, th { vertical-align: top; }\n" +
+  "dt { font-weight: bold; }\n" +
+  "div.figure { padding: 0.5em; }\n" +
+  "div.figure p { text-align: center; }\n" +
+  ".linenr { font-size:smaller }\n" +
+  ".code-highlighted {background-color:#ffff00;}\n" +
+  ".org-info-js_info-navigation { border-style:none; }\n" +
+  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
+  "  white-space:nowrap; }\n" +
+  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
+  "  font-weight:bold; }\n" +
+  "\n" +
+  "sup {\n" +
+  "  vertical-align: baseline;\n" +
+  "  position: relative;\n" +
+  "  top: -0.5em;\n" +
+  "  font-size: 80%;\n" +
   "}\n" +
   "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
+  "sup a:link, sup a:visited {\n" +
+  "  text-decoration: none;\n" +
+  "  color: #c00;\n" +
   "}\n" +
   "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
+  "sup a:before { content: \"[\"; color: #999; }\n" +
+  "sup a:after { content: \"]\"; color: #999; }\n" +
+  "\n" +
+  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
+  "\n" +
+  "#postamble {\n" +
+  "  color: #777;\n" +
+  "  font-size: 90%;\n" +
+  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
+  "  margin-top: 2em;\n" +
+  "  padding-left: 2em;\n" +
+  "  padding-right: 2em;\n" +
+  "  text-align: right;\n" +
   "}\n" +
   "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
+  "#postamble p { margin: 0; }\n" +
   "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
+  "#footnotes { border-top: 1px solid #000; }\n" +
   "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
+  "h1 { font-size: 200% }\n" +
+  "h2 { font-size: 175% }\n" +
+  "h3 { font-size: 150% }\n" +
+  "h4 { font-size: 125% }\n" +
   "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
-  "}");
-
-define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
-  "\n" +
-  "@import url(\"booya.css\") print,screen;\n" +
-  "@import \"whatup.css\" screen;\n" +
-  "@import \"wicked.css\";\n" +
-  "\n" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
-  "\n" +
-  "li.inline #foo {\n" +
-  "  background: url(\"something.png\");\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px;\n" +
-  "  padding-right: 7px;\n" +
-  "  border-right: 1px dotted #066;\n" +
-  "}\n" +
-  "\n" +
-  "li.last.first {\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px !important;\n" +
-  "  padding-right: 3px;\n" +
-  "  border-right: 0px;\n" +
-  "}\n" +
+  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
   "\n" +
   "@media print {\n" +
-  "    li.inline {\n" +
-  "      color: black;\n" +
-  "    }\n" +
+  "  html { font-size: 11pt; }\n" +
+  "}\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
+  ".cptRowIn {\n" +
+  "  display: box; display: -moz-box; display: -webkit-box;\n" +
+  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
+  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
+  "  color: #333;\n" +
+  "  background-color: #EEE;\n" +
+  "  width: 100%;\n" +
+  "  font-family: consolas, courier, monospace;\n" +
+  "}\n" +
+  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
+  ".cptRowIn > img { cursor: pointer; }\n" +
+  ".cptHover { display: none; }\n" +
+  ".cptRowIn:hover > .cptHover { display: block; }\n" +
+  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
+  ".cptOutTyped {\n" +
+  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
+  "  font-weight: bold; color: #000; font-size: 120%;\n" +
+  "}\n" +
+  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
+  ".cptRowOutput strong,\n" +
+  ".cptRowOutput b,\n" +
+  ".cptRowOutput th,\n" +
+  ".cptRowOutput h1,\n" +
+  ".cptRowOutput h2,\n" +
+  ".cptRowOutput h3 { color: #000; }\n" +
+  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
+  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
+  ".cptRowOutput input[type=password],\n" +
+  ".cptRowOutput input[type=text],\n" +
+  ".cptRowOutput textarea {\n" +
+  "  color: #000; font-size: 120%;\n" +
+  "  background: transparent; padding: 3px;\n" +
+  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
+  "}\n" +
+  ".cptRowOutput table,\n" +
+  ".cptRowOutput td,\n" +
+  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
+  ".cptRowOutput .right { text-align: right; }\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
+  "#cockpitInput { padding-left: 16px; }\n" +
+  "\n" +
+  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
+  "\n" +
+  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
+  ".cptCompletion.VALID { background: #FFF; }\n" +
+  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
+  ".cptCompletion.INVALID { background: #DDD; }\n" +
+  ".cptCompletion span { color: #FFF; }\n" +
+  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
+  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
+  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
   "\n" +
   "\n" +
-  "@charset \"UTF-8\"; \n" +
+  ".cptHints {\n" +
+  "  color: #000;\n" +
+  "  position: absolute;\n" +
+  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
+  "  background: rgba(250, 250, 250, 0.8);\n" +
+  "  -moz-border-radius-topleft: 10px;\n" +
+  "  -moz-border-radius-topright: 10px;\n" +
+  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
+  "  z-index: 1000;\n" +
+  "  padding: 8px;\n" +
+  "  display: none;\n" +
+  "}\n" +
   "\n" +
-  "@page {\n" +
-  "  margin: 10%;\n" +
-  "  counter-increment: page;\n" +
+  ".cptFocusPopup { display: block; }\n" +
+  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
   "\n" +
-  "  @top-center {\n" +
-  "    font-family: sans-serif;\n" +
-  "    font-weight: bold;\n" +
-  "    font-size: 2em;\n" +
-  "    content: counter(page);\n" +
-  "  }\n" +
-  "}");
+  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "\n" +
+  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
+  "");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
   "    position:relative;\n" +
@@ -16757,6 +17030,56 @@ define("text!doc/site/style.css", [], "body {\n" +
   "\n" +
   "");
 
+define("text!demo/styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
+  "\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 70px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 300px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
+
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
+
 define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
@@ -16928,379 +17251,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "}\n" +
   "");
 
-define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
-  "body { max-width: 60em; }\n" +
-  ".title  { text-align: center; }\n" +
-  ".todo   { color: red; }\n" +
-  ".done   { color: green; }\n" +
-  ".tag    { background-color:lightblue; font-weight:normal }\n" +
-  ".target { }\n" +
-  ".timestamp { color: grey }\n" +
-  ".timestamp-kwd { color: CadetBlue }\n" +
-  "p.verse { margin-left: 3% }\n" +
-  "pre {\n" +
-  "  border: 1pt solid #AEBDCC;\n" +
-  "  background-color: #F3F5F7;\n" +
-  "  padding: 5pt;\n" +
-  "  font-family: monospace;\n" +
-  "  font-size: 90%;\n" +
-  "  overflow:auto;\n" +
-  "}\n" +
-  "pre.src {\n" +
-  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
-  "}\n" +
-  "table { border-collapse: collapse; }\n" +
-  "td, th { vertical-align: top; }\n" +
-  "dt { font-weight: bold; }\n" +
-  "div.figure { padding: 0.5em; }\n" +
-  "div.figure p { text-align: center; }\n" +
-  ".linenr { font-size:smaller }\n" +
-  ".code-highlighted {background-color:#ffff00;}\n" +
-  ".org-info-js_info-navigation { border-style:none; }\n" +
-  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
-  "  white-space:nowrap; }\n" +
-  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
-  "  font-weight:bold; }\n" +
-  "\n" +
-  "sup {\n" +
-  "  vertical-align: baseline;\n" +
-  "  position: relative;\n" +
-  "  top: -0.5em;\n" +
-  "  font-size: 80%;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:link, sup a:visited {\n" +
-  "  text-decoration: none;\n" +
-  "  color: #c00;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:before { content: \"[\"; color: #999; }\n" +
-  "sup a:after { content: \"]\"; color: #999; }\n" +
-  "\n" +
-  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
-  "\n" +
-  "#postamble {\n" +
-  "  color: #777;\n" +
-  "  font-size: 90%;\n" +
-  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
-  "  margin-top: 2em;\n" +
-  "  padding-left: 2em;\n" +
-  "  padding-right: 2em;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#postamble p { margin: 0; }\n" +
-  "\n" +
-  "#footnotes { border-top: 1px solid #000; }\n" +
-  "\n" +
-  "h1 { font-size: 200% }\n" +
-  "h2 { font-size: 175% }\n" +
-  "h3 { font-size: 150% }\n" +
-  "h4 { font-size: 125% }\n" +
-  "\n" +
-  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
-  "\n" +
-  "@media print {\n" +
-  "  html { font-size: 11pt; }\n" +
-  "}\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
-  "#cockpitInput { padding-left: 16px; }\n" +
-  "\n" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
-  "\n" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
-  ".cptCompletion.VALID { background: #FFF; }\n" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
-  ".cptCompletion.INVALID { background: #DDD; }\n" +
-  ".cptCompletion span { color: #FFF; }\n" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
-  "\n" +
-  "\n" +
-  ".cptHints {\n" +
-  "  color: #000;\n" +
-  "  position: absolute;\n" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
-  "  background: rgba(250, 250, 250, 0.8);\n" +
-  "  -moz-border-radius-topleft: 10px;\n" +
-  "  -moz-border-radius-topright: 10px;\n" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
-  "  z-index: 1000;\n" +
-  "  padding: 8px;\n" +
-  "  display: none;\n" +
-  "}\n" +
-  "\n" +
-  ".cptFocusPopup { display: block; }\n" +
-  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
-  "\n" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
-  "\n" +
-  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
-  ".cptRowIn {\n" +
-  "  display: box; display: -moz-box; display: -webkit-box;\n" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
-  "  color: #333;\n" +
-  "  background-color: #EEE;\n" +
-  "  width: 100%;\n" +
-  "  font-family: consolas, courier, monospace;\n" +
-  "}\n" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
-  ".cptRowIn > img { cursor: pointer; }\n" +
-  ".cptHover { display: none; }\n" +
-  ".cptRowIn:hover > .cptHover { display: block; }\n" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
-  ".cptOutTyped {\n" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
-  "  font-weight: bold; color: #000; font-size: 120%;\n" +
-  "}\n" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
-  ".cptRowOutput strong,\n" +
-  ".cptRowOutput b,\n" +
-  ".cptRowOutput th,\n" +
-  ".cptRowOutput h1,\n" +
-  ".cptRowOutput h2,\n" +
-  ".cptRowOutput h3 { color: #000; }\n" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
-  ".cptRowOutput input[type=password],\n" +
-  ".cptRowOutput input[type=text],\n" +
-  ".cptRowOutput textarea {\n" +
-  "  color: #000; font-size: 120%;\n" +
-  "  background: transparent; padding: 3px;\n" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
-  "}\n" +
-  ".cptRowOutput table,\n" +
-  ".cptRowOutput td,\n" +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
-  ".cptRowOutput .right { text-align: right; }\n" +
-  "");
-
-define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
-  "  border: 2px solid rgb(159, 159, 159);\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_editor.ace_focus {\n" +
-  "  border: 2px solid #327fbd;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter {\n" +
-  "  width: 50px;\n" +
-  "  background: #e8e8e8;\n" +
-  "  color: #333;\n" +
-  "  overflow : hidden;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter-layer {\n" +
-  "  width: 100%;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {\n" +
-  "  padding-right: 6px;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_print_margin {\n" +
-  "  width: 1px;\n" +
-  "  background: %printMargin%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_scroller {\n" +
-  "  background-color: %background%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_text-layer {\n" +
-  "  cursor: text;\n" +
-  "  color: %foreground%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_cursor {\n" +
-  "  border-left: 2px solid %cursor%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_cursor.ace_overwrite {\n" +
-  "  border-left: 0px;\n" +
-  "  border-bottom: 1px solid %overwrite%;\n" +
-  "}\n" +
-  " \n" +
-  ".%cssClass% .ace_marker-layer .ace_selection {\n" +
-  "  background: %selection%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_step {\n" +
-  "  background: %step%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
-  "  margin: -1px 0 0 -1px;\n" +
-  "  border: 1px solid %bracket%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_active_line {\n" +
-  "  background: %active_line%;\n" +
-  "}\n" +
-  "\n" +
-  "       \n" +
-  ".%cssClass% .ace_invisible {\n" +
-  "  %invisible%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_keyword {\n" +
-  "  %keyword%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_keyword.ace_operator {\n" +
-  "  %keyword.operator%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant {\n" +
-  "  %constant%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_language {\n" +
-  "  %constant.language%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_library {\n" +
-  "  %constant.library%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_numeric {\n" +
-  "  %constant.numeric%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid {\n" +
-  "  %invalid%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid.ace_illegal {\n" +
-  "  %invalid.illegal%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid.ace_deprecated {\n" +
-  "  %invalid.deprecated%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_support {\n" +
-  "  %support%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_support.ace_function {\n" +
-  "  %support.function%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_function.ace_buildin {\n" +
-  "  %function.buildin%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_string {\n" +
-  "  %string%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_string.ace_regexp {\n" +
-  "  %string.regexp%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment {\n" +
-  "  %comment%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment.ace_doc {\n" +
-  "  %comment.doc%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment.ace_doc.ace_tag {\n" +
-  "  %comment.doc.tag%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_variable {\n" +
-  "  %variable%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_variable.ace_language {\n" +
-  "  %variable.language%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_xml_pe {\n" +
-  "  %xml_pe%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta {\n" +
-  "  %meta%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta.ace_tag {\n" +
-  "  %meta.tag%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta.ace_tag.ace_input {\n" +
-  "  %ace.meta.tag.input%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
-  "  %entity.other.attribute-name%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_name {\n" +
-  "  %entity.name%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
-  "  %entity.name.function%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_underline {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading {\n" +
-  "  %markup.heading%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
-  "  %markup.heading.1%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
-  "  %markup.heading.2%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
-  "  %markup.heading.3%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
-  "  %markup.heading.4%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
-  "  %markup.heading.5%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
-  "  %markup.heading.6%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_list {\n" +
-  "  %markup.list%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_collab.ace_user1 {\n" +
-  "  %collab.user1%   \n" +
-  "}");
-
-define("text!docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
 define("text!styles.css", [], "html {\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
@@ -17343,6 +17293,12 @@ define("text!styles.css", [], "html {\n" +
   "\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
+  "}");
+
+define("text!docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
   "}");
 
 /* ***** BEGIN LICENSE BLOCK *****

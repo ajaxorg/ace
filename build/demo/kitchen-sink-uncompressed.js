@@ -22377,20 +22377,50 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pilot/lang', 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
-    require("pilot/oop").inherits(CoffeeHighlightRules,
-            require("ace/mode/text_highlight_rules").TextHighlightRules);
+    var lang = require("pilot/lang");
+    var oop = require("pilot/oop");
+    var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+    
+    oop.inherits(CoffeeHighlightRules, TextHighlightRules);
 
     function CoffeeHighlightRules() {
         var identifier = "[$A-Za-z_\\x7f-\\uffff][$\\w\\x7f-\\uffff]*";
-        var keywordend = "(?![$\\w]|\\s*:)";
         var stringfill = {
             token : "string",
             merge : true,
             regex : ".+"
         };
+
+        var keywords = lang.arrayToMap((
+            "this|throw|then|try|typeof|super|switch|return|break|by)|continue|" +
+            "catch|class|in|instanceof|is|isnt|if|else|extends|for|forown|" +
+            "finally|function|while|when|new|not|delete|debugger|do|loop|of|off|" +
+            "or|on|unless|until|and|yes").split("|")
+        );
         
+        var langConstant = lang.arrayToMap((
+            "true|false|null|undefined").split("|")
+        );
+        
+        var illegal = lang.arrayToMap((
+            "case|const|default|function|var|void|with|enum|export|implements|" +
+            "interface|let|package|private|protected|public|static|yield|" +
+            "__hasProp|extends|slice|bind|indexOf").split("|")
+        );
+        
+        var supportClass = lang.arrayToMap((
+            "Array|Boolean|Date|Function|Number|Object|RegExp|ReferenceError|" +
+            "RangeError|String|SyntaxError|Error|EvalError|TypeError|URIError").split("|")
+        );
+        
+        var supportFunction = lang.arrayToMap((
+            "Math|JSON|isNaN|isFinite|parseInt|parseFloat|encodeURI|" +
+            "encodeURIComponent|decodeURI|decodeURIComponent|RangeError|String|" +
+            "SyntaxError|Error|EvalError|TypeError|URIError").split("|")
+        );
+
         this.$rules = {
             start : [
                 {
@@ -22400,29 +22430,20 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pil
                     token : "variable",
                     regex : "@" + identifier
                 }, {
-                    token : "entity.name.function",
-                    regex : identifier + "(?=\\s*:\\s*(?:\\(.*?\\)\\s*)?->)"
-                }, {
-                    token : "keyword",
-                    regex : "(?:t(?:h(?:is|row|en)|ry|ypeof)|s(?:uper|witch)|return|b(?:reak|y)|c(?:ontinue|atch|lass)|i(?:n(?:stanceof)?|s(?:nt)?|f)|e(?:lse|xtends)|f(?:or (?:own)?|inally|unction)|wh(?:ile|en)|n(?:ew|ot?)|d(?:e(?:lete|bugger)|o)|loop|o(?:ff?|[rn])|un(?:less|til)|and|yes)"
-                            + keywordend
-                }, {
-                    token : "constant.language",
-                    regex : "(?:true|false|null|undefined)" + keywordend
-                }, {
-                    token : "invalid.illegal",
-                    regex : "(?:c(?:ase|onst)|default|function|v(?:ar|oid)|with|e(?:num|xport)|i(?:mplements|nterface)|let|p(?:ackage|r(?:ivate|otected)|ublic)|static|yield|__(?:hasProp|extends|slice|bind|indexOf))"
-                            + keywordend
-                }, {
-                    token : "language.support.class",
-                    regex : "(?:Array|Boolean|Date|Function|Number|Object|R(?:e(?:gExp|ferenceError)|angeError)|S(?:tring|yntaxError)|E(?:rror|valError)|TypeError|URIError)"
-                            + keywordend
-                }, {
-                    token : "language.support.function",
-                    regex : "(?:Math|JSON|is(?:NaN|Finite)|parse(?:Int|Float)|encodeURI(?:Component)?|decodeURI(?:Component)?)"
-                            + keywordend
-                }, {
-                    token : "identifier",
+                    token: function(value) {
+                        if (keywords.hasOwnProperty(value))
+                            return "keyword";
+                        else if (langConstant.hasOwnProperty(value))
+                            return "constant.language";
+                        else if (illegal.hasOwnProperty(value))
+                            return "invalid.illegal";
+                        else if (supportClass.hasOwnProperty(value))
+                            return "language.support.class";
+                        else if (supportFunction.hasOwnProperty(value))
+                            return "language.support.function";
+                        else
+                            return "identifier";
+                    },
                     regex : identifier
                 }, {
                     token : "constant.numeric",
@@ -25954,6 +25975,18 @@ function UndoManagerProxy(undoManager, session) {
 
 exports.Split = Split;
 });
+define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
+  "\n" +
+  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
+  "\n" +
+  "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n" +
+  "\n" +
+  "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\n" +
+  "\n" +
+  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n" +
+  "\n" +
+  "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
+
 define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
   "  \"returns a String parting in a given language\"\n" +
   "  ([] (parting \"World\"))\n" +
@@ -25973,185 +26006,6 @@ define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
   "(println (parting \"Mark\")) ; -> Goodbye, Mark\n" +
   "(println (parting \"Mark\" \"es\")) ; -> Adios, Mark\n" +
   "(println (parting \"Mark\", \"xy\")) ; -> java.lang.IllegalArgumentException: unsupported language xy");
-
-define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
-  "\n" +
-  "try\n" +
-  "    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)\n" +
-  "catch e\n" +
-  "    console.log 'qstring' + \"qqstring\" + '''\n" +
-  "        qdoc\n" +
-  "    ''' + \"\"\"\n" +
-  "        qqdoc\n" +
-  "    \"\"\"\n" +
-  "\n" +
-  "do ->\n" +
-  "    ###\n" +
-  "    herecomment\n" +
-  "    ###\n" +
-  "    re = /regex/imgy.test ///\n" +
-  "        heregex  # comment\n" +
-  "    ///imgy\n" +
-  "    this isnt: `just JavaScript`\n" +
-  "    undefined");
-
-define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
-  "\n" +
-  "#include <iostream>\n" +
-  "using namespace std;\n" +
-  "\n" +
-  "int main ()\n" +
-  "{\n" +
-  "    int a, b=3; /* foobar */\n" +
-  "    a = b;\n" +
-  "    a+=2; // equivalent to a=a+2\n" +
-  "    cout << a;\n" +
-  "    return 0;\n" +
-  "}");
-
-define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
-  "    //Say Hello!\n" +
-  "    Console.WriteLine(\"Hello World\");\n" +
-  "}");
-
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
-  "import java.util.concurrent.atomic.AtomicInteger\n" +
-  "\n" +
-  "def counter = new AtomicInteger()\n" +
-  "\n" +
-  "synchronized out(message) {\n" +
-  "    println(message)\n" +
-  "}\n" +
-  "\n" +
-  "def th = Thread.start {\n" +
-  "    for( i in 1..8 ) {\n" +
-  "        sleep 30\n" +
-  "        out \"thread loop $i\"\n" +
-  "        counter.incrementAndGet()\n" +
-  "    }\n" +
-  "}\n" +
-  "\n" +
-  "for( j in 1..4 ) {\n" +
-  "    sleep 50\n" +
-  "    out \"main loop $j\"\n" +
-  "    counter.incrementAndGet()\n" +
-  "}\n" +
-  "\n" +
-  "th.join()\n" +
-  "\n" +
-  "assert counter.get() == 12");
-
-define("text!demo/docs/html.html", [], "<html>\n" +
-  "    <head>\n" +
-  "\n" +
-  "    <style type=\"text/css\">\n" +
-  "        .text-layer {\n" +
-  "            font-family: Monaco, \"Courier New\", monospace;\n" +
-  "            font-size: 12px;\n" +
-  "            cursor: text;\n" +
-  "        }\n" +
-  "    </style>\n" +
-  "\n" +
-  "    </head>\n" +
-  "    <body>\n" +
-  "        <h1 style=\"color:red\">Juhu Kinners</h1>\n" +
-  "    </body>\n" +
-  "</html>");
-
-define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
-  "\n" +
-  "    /*\n" +
-  "     * This will cause the program to hang...\n" +
-  "     *\n" +
-  "     * Taken from:\n" +
-  "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/\n" +
-  "     */\n" +
-  "    public static void main(String[] args) {\n" +
-  "        double d = Double.parseDouble(\"2.2250738585072012e-308\");\n" +
-  "\n" +
-  "        // unreachable code\n" +
-  "        System.out.println(\"Value: \" + d);\n" +
-  "    }\n" +
-  "}");
-
-define("text!demo/docs/javascript.js", [], "function foo(items) {\n" +
-  "    for (var i=0; i<items.length; i++) {\n" +
-  "        alert(items[i] + \"juhu\");\n" +
-  "    }	// Real Tab.\n" +
-  "}");
-
-define("text!demo/docs/json.json", [], "{\n" +
-  " \"query\": {\n" +
-  "  \"count\": 10,\n" +
-  "  \"created\": \"2011-06-21T08:10:46Z\",\n" +
-  "  \"lang\": \"en-US\",\n" +
-  "  \"results\": {\n" +
-  "   \"photo\": [\n" +
-  "    {\n" +
-  "     \"farm\": \"6\",\n" +
-  "     \"id\": \"5855620975\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"f1f5e8515d\",\n" +
-  "     \"server\": \"5110\",\n" +
-  "     \"title\": \"7087 bandit cat\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"4\",\n" +
-  "     \"id\": \"5856170534\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"ff1efb2a6f\",\n" +
-  "     \"server\": \"3217\",\n" +
-  "     \"title\": \"6975 rusty cat\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"6\",\n" +
-  "     \"id\": \"5856172972\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"51249875@N03\",\n" +
-  "     \"secret\": \"6c6887347c\",\n" +
-  "     \"server\": \"5192\",\n" +
-  "     \"title\": \"watermarked-cats\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"6\",\n" +
-  "     \"id\": \"5856168328\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"0c1cfdf64c\",\n" +
-  "     \"server\": \"5078\",\n" +
-  "     \"title\": \"7020 mandy cat\"\n" +
-  "    },\n" +
-  "    {\n" +
-  "     \"farm\": \"3\",\n" +
-  "     \"id\": \"5856171774\",\n" +
-  "     \"isfamily\": \"0\",\n" +
-  "     \"isfriend\": \"0\",\n" +
-  "     \"ispublic\": \"1\",\n" +
-  "     \"owner\": \"32021554@N04\",\n" +
-  "     \"secret\": \"7f5a3180ab\",\n" +
-  "     \"server\": \"2696\",\n" +
-  "     \"title\": \"7448 bobby cat\"\n" +
-  "    }\n" +
-  "   ]\n" +
-  "  }\n" +
-  " }\n" +
-  "}");
 
 define("text!demo/docs/latex.tex", [], "\\usepackage{amsmath}\n" +
   "\\title{\\LaTeX}\n" +
@@ -26176,43 +26030,43 @@ define("text!demo/docs/latex.tex", [], "\\usepackage{amsmath}\n" +
   "  \\end{align}\n" +
   "\\end{document}");
 
-define("text!demo/docs/lua.lua", [], "--[[--\n" +
-  "num_args takes in 5.1 byte code and extracts the number of arguments\n" +
-  "from its function header.\n" +
-  "--]]--\n" +
+define("text!demo/docs/html.html", [], "<html>\n" +
+  "    <head>\n" +
   "\n" +
-  "function int(t)\n" +
-  "	return t:byte(1)+t:byte(2)*0x100+t:byte(3)*0x10000+t:byte(4)*0x1000000\n" +
-  "end\n" +
+  "    <style type=\"text/css\">\n" +
+  "        .text-layer {\n" +
+  "            font-family: Monaco, \"Courier New\", monospace;\n" +
+  "            font-size: 12px;\n" +
+  "            cursor: text;\n" +
+  "        }\n" +
+  "    </style>\n" +
   "\n" +
-  "function num_args(func)\n" +
-  "	local dump = string.dump(func)\n" +
-  "	local offset, cursor = int(dump:sub(13)), offset + 26\n" +
-  "	--Get the params and var flag (whether there's a ... in the param)\n" +
-  "	return dump:sub(cursor):byte(), dump:sub(cursor+1):byte()\n" +
-  "end\n" +
+  "    </head>\n" +
+  "    <body>\n" +
+  "        <h1 style=\"color:red\">Juhu Kinners</h1>\n" +
+  "    </body>\n" +
+  "</html>");
+
+define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
   "\n" +
-  "-- Usage:\n" +
-  "num_args(function(a,b,c,d, ...) end) -- return 4, 7\n" +
+  "#navbar {\n" +
+  "    $navbar-width: 800px;\n" +
+  "    $items: 5;\n" +
+  "    $navbar-color: #ce4dd6;\n" +
   "\n" +
-  "-- Python styled string format operator\n" +
-  "local gm = debug.getmetatable(\"\")\n" +
+  "    width: $navbar-width;\n" +
+  "    border-bottom: 2px solid $navbar-color;\n" +
   "\n" +
-  "gm.__mod=function(self, other)\n" +
-  "    if type(other) ~= \"table\" then other = {other} end\n" +
-  "    for i,v in ipairs(other) do other[i] = tostring(v) end\n" +
-  "    return self:format(unpack(other))\n" +
-  "end\n" +
+  "    li {\n" +
+  "        float: left;\n" +
+  "        width: $navbar-width/$items - 10px;\n" +
   "\n" +
-  "print([===[\n" +
-  "    blah blah %s, (%d %d)\n" +
-  "]===]%{\"blah\", num_args(int)})\n" +
-  "\n" +
-  "--[=[--\n" +
-  "table.maxn is deprecated, use # instead.\n" +
-  "--]=]--\n" +
-  "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
-  "");
+  "        background-color: lighten($navbar-color, 20%);\n" +
+  "        &:hover {\n" +
+  "            background-color: lighten($navbar-color, 10%);\n" +
+  "        }\n" +
+  "    }\n" +
+  "}");
 
 define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "============================\n" +
@@ -26401,6 +26255,142 @@ define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "  1016 EA, Amsterdam\n" +
   "  the Netherlands");
 
+define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
+  "\n" +
+  "#include <iostream>\n" +
+  "using namespace std;\n" +
+  "\n" +
+  "int main ()\n" +
+  "{\n" +
+  "    int a, b=3; /* foobar */\n" +
+  "    a = b;\n" +
+  "    a+=2; // equivalent to a=a+2\n" +
+  "    cout << a;\n" +
+  "    return 0;\n" +
+  "}");
+
+define("text!demo/docs/lua.lua", [], "--[[--\n" +
+  "num_args takes in 5.1 byte code and extracts the number of arguments\n" +
+  "from its function header.\n" +
+  "--]]--\n" +
+  "\n" +
+  "function int(t)\n" +
+  "	return t:byte(1)+t:byte(2)*0x100+t:byte(3)*0x10000+t:byte(4)*0x1000000\n" +
+  "end\n" +
+  "\n" +
+  "function num_args(func)\n" +
+  "	local dump = string.dump(func)\n" +
+  "	local offset, cursor = int(dump:sub(13)), offset + 26\n" +
+  "	--Get the params and var flag (whether there's a ... in the param)\n" +
+  "	return dump:sub(cursor):byte(), dump:sub(cursor+1):byte()\n" +
+  "end\n" +
+  "\n" +
+  "-- Usage:\n" +
+  "num_args(function(a,b,c,d, ...) end) -- return 4, 7\n" +
+  "\n" +
+  "-- Python styled string format operator\n" +
+  "local gm = debug.getmetatable(\"\")\n" +
+  "\n" +
+  "gm.__mod=function(self, other)\n" +
+  "    if type(other) ~= \"table\" then other = {other} end\n" +
+  "    for i,v in ipairs(other) do other[i] = tostring(v) end\n" +
+  "    return self:format(unpack(other))\n" +
+  "end\n" +
+  "\n" +
+  "print([===[\n" +
+  "    blah blah %s, (%d %d)\n" +
+  "]===]%{\"blah\", num_args(int)})\n" +
+  "\n" +
+  "--[=[--\n" +
+  "table.maxn is deprecated, use # instead.\n" +
+  "--]=]--\n" +
+  "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
+  "");
+
+define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
+  "\n" +
+  "h2. Heading Two\n" +
+  "\n" +
+  "h3. A two-line\n" +
+  "    header\n" +
+  "\n" +
+  "h2. Another two-line\n" +
+  "header\n" +
+  "\n" +
+  "Paragraph:\n" +
+  "one, two,\n" +
+  "thee lines!\n" +
+  "\n" +
+  "p(classone two three). This is a paragraph with classes\n" +
+  "\n" +
+  "p(#id). (one with an id)\n" +
+  "\n" +
+  "p(one two three#my_id). ..classes + id\n" +
+  "\n" +
+  "* Unordered list\n" +
+  "** sublist\n" +
+  "* back again!\n" +
+  "** sublist again..\n" +
+  "\n" +
+  "# ordered\n" +
+  "\n" +
+  "bg. Blockquote!\n" +
+  "    This is a two-list blockquote..!");
+
+define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
+  "\n" +
+  "try\n" +
+  "    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)\n" +
+  "catch e\n" +
+  "    console.log 'qstring' + \"qqstring\" + '''\n" +
+  "        qdoc\n" +
+  "    ''' + \"\"\"\n" +
+  "        qqdoc\n" +
+  "    \"\"\"\n" +
+  "\n" +
+  "do ->\n" +
+  "    ###\n" +
+  "    herecomment\n" +
+  "    ###\n" +
+  "    re = /regex/imgy.test ///\n" +
+  "        heregex  # comment\n" +
+  "    ///imgy\n" +
+  "    this isnt: `just JavaScript`\n" +
+  "    undefined");
+
+define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
+  "import java.util.concurrent.atomic.AtomicInteger\n" +
+  "\n" +
+  "def counter = new AtomicInteger()\n" +
+  "\n" +
+  "synchronized out(message) {\n" +
+  "    println(message)\n" +
+  "}\n" +
+  "\n" +
+  "def th = Thread.start {\n" +
+  "    for( i in 1..8 ) {\n" +
+  "        sleep 30\n" +
+  "        out \"thread loop $i\"\n" +
+  "        counter.incrementAndGet()\n" +
+  "    }\n" +
+  "}\n" +
+  "\n" +
+  "for( j in 1..4 ) {\n" +
+  "    sleep 50\n" +
+  "    out \"main loop $j\"\n" +
+  "    counter.incrementAndGet()\n" +
+  "}\n" +
+  "\n" +
+  "th.join()\n" +
+  "\n" +
+  "assert counter.get() == 12");
+
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
+
 define("text!demo/docs/ocaml.ml", [], "(*\n" +
   " * Example of early return implementation taken from\n" +
   " * http://ocaml.janestreet.com/?q=node/91\n" +
@@ -26419,6 +26409,26 @@ define("text!demo/docs/ocaml.ml", [], "(*\n" +
   "  with_return (fun r ->\n" +
   "    List.fold list ~init:0 ~f:(fun acc x ->\n" +
   "      if x >= 0 then acc + x else r.return acc))");
+
+define("text!demo/docs/php.php", [], "<?php\n" +
+  "\n" +
+  "function nfact($n) {\n" +
+  "    if ($n == 0) {\n" +
+  "        return 1;\n" +
+  "    }\n" +
+  "    else {\n" +
+  "        return $n * nfact($n - 1);\n" +
+  "    }\n" +
+  "}\n" +
+  "\n" +
+  "echo \"\\n\\nPlease enter a whole number ... \";\n" +
+  "$num = trim(fgets(STDIN));\n" +
+  "\n" +
+  "// ===== PROCESS - Determing the factorial of the input number =====\n" +
+  "$output = \"\\n\\nFactorial \" . $num . \" = \" . nfact($num) . \"\\n\\n\";\n" +
+  "echo $output;\n" +
+  "\n" +
+  "?>");
 
 define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "use strict;\n" +
@@ -26453,105 +26463,6 @@ define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "}\n" +
   "print \"\\n\";\n" +
   "");
-
-define("text!demo/docs/php.php", [], "<?php\n" +
-  "\n" +
-  "function nfact($n) {\n" +
-  "    if ($n == 0) {\n" +
-  "        return 1;\n" +
-  "    }\n" +
-  "    else {\n" +
-  "        return $n * nfact($n - 1);\n" +
-  "    }\n" +
-  "}\n" +
-  "\n" +
-  "echo \"\\n\\nPlease enter a whole number ... \";\n" +
-  "$num = trim(fgets(STDIN));\n" +
-  "\n" +
-  "// ===== PROCESS - Determing the factorial of the input number =====\n" +
-  "$output = \"\\n\\nFactorial \" . $num . \" = \" . nfact($num) . \"\\n\\n\";\n" +
-  "echo $output;\n" +
-  "\n" +
-  "?>");
-
-define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
-  "\n" +
-  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
-  "\n" +
-  "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.\n" +
-  "\n" +
-  "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.\n" +
-  "\n" +
-  "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n" +
-  "\n" +
-  "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
-
-define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
-  "\n" +
-  "import string, sys\n" +
-  "\n" +
-  "# If no arguments were given, print a helpful message\n" +
-  "if len(sys.argv)==1:\n" +
-  "print '''Usage:\n" +
-  "    celsius temp1 temp2 ...'''\n" +
-  "sys.exit(0)\n" +
-  "\n" +
-  "# Loop over the arguments\n" +
-  "for i in sys.argv[1:]:\n" +
-  "    try:\n" +
-  "        fahrenheit=float(string.atoi(i))\n" +
-  "    except string.atoi_error:\n" +
-  "        print repr(i), \"not a numeric value\"\n" +
-  "    else:\n" +
-  "        celsius=(fahrenheit-32)*5.0/9.0\n" +
-  "        print '%i\\260F = %i\\260C' % (int(fahrenheit), int(celsius+.5))");
-
-define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
-  "\n" +
-  "# Program to find the factorial of a number\n" +
-  "def fact(n)\n" +
-  "    if n == 0\n" +
-  "        1\n" +
-  "    else\n" +
-  "        n * fact(n-1)\n" +
-  "    end\n" +
-  "end\n" +
-  "\n" +
-  "puts fact(ARGV[0].to_i)");
-
-define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
-  "/* Defines a new method 'sort' for array objects */\n" +
-  "object implicits extends Application {\n" +
-  "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
-  "    new {\n" +
-  "      def sort(p: (A, A) => Boolean) = {\n" +
-  "        util.Sorting.stableSort(x, p); x\n" +
-  "      }\n" +
-  "    }\n" +
-  "  val x = Array(2, 3, 1, 4)\n" +
-  "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
-  "}");
-
-define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
-  "\n" +
-  "#navbar {\n" +
-  "    $navbar-width: 800px;\n" +
-  "    $items: 5;\n" +
-  "    $navbar-color: #ce4dd6;\n" +
-  "\n" +
-  "    width: $navbar-width;\n" +
-  "    border-bottom: 2px solid $navbar-color;\n" +
-  "\n" +
-  "    li {\n" +
-  "        float: left;\n" +
-  "        width: $navbar-width/$items - 10px;\n" +
-  "\n" +
-  "        background-color: lighten($navbar-color, 20%);\n" +
-  "        &:hover {\n" +
-  "            background-color: lighten($navbar-color, 10%);\n" +
-  "        }\n" +
-  "    }\n" +
-  "}");
 
 define("text!demo/docs/svg.svg", [], "<svg\n" +
   "  width=\"800\" height=\"600\"\n" +
@@ -26637,35 +26548,145 @@ define("text!demo/docs/svg.svg", [], "<svg\n" +
   "        dock!</text>\n" +
   "</svg>");
 
-define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
+define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
   "\n" +
-  "h2. Heading Two\n" +
+  "import string, sys\n" +
   "\n" +
-  "h3. A two-line\n" +
-  "    header\n" +
+  "# If no arguments were given, print a helpful message\n" +
+  "if len(sys.argv)==1:\n" +
+  "print '''Usage:\n" +
+  "    celsius temp1 temp2 ...'''\n" +
+  "sys.exit(0)\n" +
   "\n" +
-  "h2. Another two-line\n" +
-  "header\n" +
+  "# Loop over the arguments\n" +
+  "for i in sys.argv[1:]:\n" +
+  "    try:\n" +
+  "        fahrenheit=float(string.atoi(i))\n" +
+  "    except string.atoi_error:\n" +
+  "        print repr(i), \"not a numeric value\"\n" +
+  "    else:\n" +
+  "        celsius=(fahrenheit-32)*5.0/9.0\n" +
+  "        print '%i\\260F = %i\\260C' % (int(fahrenheit), int(celsius+.5))");
+
+define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
+  "/* Defines a new method 'sort' for array objects */\n" +
+  "object implicits extends Application {\n" +
+  "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
+  "    new {\n" +
+  "      def sort(p: (A, A) => Boolean) = {\n" +
+  "        util.Sorting.stableSort(x, p); x\n" +
+  "      }\n" +
+  "    }\n" +
+  "  val x = Array(2, 3, 1, 4)\n" +
+  "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
+  "}");
+
+define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
+  "    //Say Hello!\n" +
+  "    Console.WriteLine(\"Hello World\");\n" +
+  "}");
+
+define("text!demo/docs/json.json", [], "{\n" +
+  " \"query\": {\n" +
+  "  \"count\": 10,\n" +
+  "  \"created\": \"2011-06-21T08:10:46Z\",\n" +
+  "  \"lang\": \"en-US\",\n" +
+  "  \"results\": {\n" +
+  "   \"photo\": [\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5855620975\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"f1f5e8515d\",\n" +
+  "     \"server\": \"5110\",\n" +
+  "     \"title\": \"7087 bandit cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"4\",\n" +
+  "     \"id\": \"5856170534\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"ff1efb2a6f\",\n" +
+  "     \"server\": \"3217\",\n" +
+  "     \"title\": \"6975 rusty cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5856172972\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"51249875@N03\",\n" +
+  "     \"secret\": \"6c6887347c\",\n" +
+  "     \"server\": \"5192\",\n" +
+  "     \"title\": \"watermarked-cats\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"6\",\n" +
+  "     \"id\": \"5856168328\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"0c1cfdf64c\",\n" +
+  "     \"server\": \"5078\",\n" +
+  "     \"title\": \"7020 mandy cat\"\n" +
+  "    },\n" +
+  "    {\n" +
+  "     \"farm\": \"3\",\n" +
+  "     \"id\": \"5856171774\",\n" +
+  "     \"isfamily\": \"0\",\n" +
+  "     \"isfriend\": \"0\",\n" +
+  "     \"ispublic\": \"1\",\n" +
+  "     \"owner\": \"32021554@N04\",\n" +
+  "     \"secret\": \"7f5a3180ab\",\n" +
+  "     \"server\": \"2696\",\n" +
+  "     \"title\": \"7448 bobby cat\"\n" +
+  "    }\n" +
+  "   ]\n" +
+  "  }\n" +
+  " }\n" +
+  "}");
+
+define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
   "\n" +
-  "Paragraph:\n" +
-  "one, two,\n" +
-  "thee lines!\n" +
+  "    /*\n" +
+  "     * This will cause the program to hang...\n" +
+  "     *\n" +
+  "     * Taken from:\n" +
+  "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/\n" +
+  "     */\n" +
+  "    public static void main(String[] args) {\n" +
+  "        double d = Double.parseDouble(\"2.2250738585072012e-308\");\n" +
   "\n" +
-  "p(classone two three). This is a paragraph with classes\n" +
+  "        // unreachable code\n" +
+  "        System.out.println(\"Value: \" + d);\n" +
+  "    }\n" +
+  "}");
+
+define("text!demo/docs/javascript.js", [], "function foo(items) {\n" +
+  "    for (var i=0; i<items.length; i++) {\n" +
+  "        alert(items[i] + \"juhu\");\n" +
+  "    }	// Real Tab.\n" +
+  "}");
+
+define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
   "\n" +
-  "p(#id). (one with an id)\n" +
+  "# Program to find the factorial of a number\n" +
+  "def fact(n)\n" +
+  "    if n == 0\n" +
+  "        1\n" +
+  "    else\n" +
+  "        n * fact(n-1)\n" +
+  "    end\n" +
+  "end\n" +
   "\n" +
-  "p(one two three#my_id). ..classes + id\n" +
-  "\n" +
-  "* Unordered list\n" +
-  "** sublist\n" +
-  "* back again!\n" +
-  "** sublist again..\n" +
-  "\n" +
-  "# ordered\n" +
-  "\n" +
-  "bg. Blockquote!\n" +
-  "    This is a two-list blockquote..!");
+  "puts fact(ARGV[0].to_i)");
 
 define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
@@ -26880,6 +26901,219 @@ define("text!build/demo/styles.css", [], "html {\n" +
   "\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
+  "}");
+
+define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
+  "  border: 2px solid rgb(159, 159, 159);\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_editor.ace_focus {\n" +
+  "  border: 2px solid #327fbd;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter {\n" +
+  "  width: 50px;\n" +
+  "  background: #e8e8e8;\n" +
+  "  color: #333;\n" +
+  "  overflow : hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter-layer {\n" +
+  "  width: 100%;\n" +
+  "  text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {\n" +
+  "  padding-right: 6px;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_print_margin {\n" +
+  "  width: 1px;\n" +
+  "  background: %printMargin%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_scroller {\n" +
+  "  background-color: %background%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_text-layer {\n" +
+  "  cursor: text;\n" +
+  "  color: %foreground%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_cursor {\n" +
+  "  border-left: 2px solid %cursor%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_cursor.ace_overwrite {\n" +
+  "  border-left: 0px;\n" +
+  "  border-bottom: 1px solid %overwrite%;\n" +
+  "}\n" +
+  " \n" +
+  ".%cssClass% .ace_marker-layer .ace_selection {\n" +
+  "  background: %selection%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_step {\n" +
+  "  background: %step%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
+  "  margin: -1px 0 0 -1px;\n" +
+  "  border: 1px solid %bracket%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_active_line {\n" +
+  "  background: %active_line%;\n" +
+  "}\n" +
+  "\n" +
+  "       \n" +
+  ".%cssClass% .ace_invisible {\n" +
+  "  %invisible%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_keyword {\n" +
+  "  %keyword%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_keyword.ace_operator {\n" +
+  "  %keyword.operator%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant {\n" +
+  "  %constant%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_language {\n" +
+  "  %constant.language%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_library {\n" +
+  "  %constant.library%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_constant.ace_numeric {\n" +
+  "  %constant.numeric%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid {\n" +
+  "  %invalid%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid.ace_illegal {\n" +
+  "  %invalid.illegal%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_invalid.ace_deprecated {\n" +
+  "  %invalid.deprecated%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_support {\n" +
+  "  %support%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_support.ace_function {\n" +
+  "  %support.function%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_function.ace_buildin {\n" +
+  "  %function.buildin%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_string {\n" +
+  "  %string%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_string.ace_regexp {\n" +
+  "  %string.regexp%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment {\n" +
+  "  %comment%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment.ace_doc {\n" +
+  "  %comment.doc%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_comment.ace_doc.ace_tag {\n" +
+  "  %comment.doc.tag%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_variable {\n" +
+  "  %variable%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_variable.ace_language {\n" +
+  "  %variable.language%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_xml_pe {\n" +
+  "  %xml_pe%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta {\n" +
+  "  %meta%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta.ace_tag {\n" +
+  "  %meta.tag%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_meta.ace_tag.ace_input {\n" +
+  "  %ace.meta.tag.input%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
+  "  %entity.other.attribute-name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name {\n" +
+  "  %entity.name%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
+  "  %entity.name.function%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_underline {\n" +
+  "    text-decoration:underline;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading {\n" +
+  "  %markup.heading%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
+  "  %markup.heading.1%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
+  "  %markup.heading.2%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
+  "  %markup.heading.3%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
+  "  %markup.heading.4%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
+  "  %markup.heading.5%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
+  "  %markup.heading.6%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_markup.ace_list {\n" +
+  "  %markup.list%\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_collab.ace_user1 {\n" +
+  "  %collab.user1%   \n" +
   "}");
 
 define("text!build_support/style.css", [], "body {\n" +
@@ -27114,99 +27348,159 @@ define("text!build_support/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
+define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
+  "body { max-width: 60em; }\n" +
+  ".title  { text-align: center; }\n" +
+  ".todo   { color: red; }\n" +
+  ".done   { color: green; }\n" +
+  ".tag    { background-color:lightblue; font-weight:normal }\n" +
+  ".target { }\n" +
+  ".timestamp { color: grey }\n" +
+  ".timestamp-kwd { color: CadetBlue }\n" +
+  "p.verse { margin-left: 3% }\n" +
+  "pre {\n" +
+  "  border: 1pt solid #AEBDCC;\n" +
+  "  background-color: #F3F5F7;\n" +
+  "  padding: 5pt;\n" +
+  "  font-family: monospace;\n" +
+  "  font-size: 90%;\n" +
+  "  overflow:auto;\n" +
+  "}\n" +
+  "pre.src {\n" +
+  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
+  "}\n" +
+  "table { border-collapse: collapse; }\n" +
+  "td, th { vertical-align: top; }\n" +
+  "dt { font-weight: bold; }\n" +
+  "div.figure { padding: 0.5em; }\n" +
+  "div.figure p { text-align: center; }\n" +
+  ".linenr { font-size:smaller }\n" +
+  ".code-highlighted {background-color:#ffff00;}\n" +
+  ".org-info-js_info-navigation { border-style:none; }\n" +
+  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
+  "  white-space:nowrap; }\n" +
+  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
+  "  font-weight:bold; }\n" +
+  "\n" +
+  "sup {\n" +
+  "  vertical-align: baseline;\n" +
+  "  position: relative;\n" +
+  "  top: -0.5em;\n" +
+  "  font-size: 80%;\n" +
   "}\n" +
   "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
+  "sup a:link, sup a:visited {\n" +
+  "  text-decoration: none;\n" +
+  "  color: #c00;\n" +
   "}\n" +
   "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
+  "sup a:before { content: \"[\"; color: #999; }\n" +
+  "sup a:after { content: \"]\"; color: #999; }\n" +
+  "\n" +
+  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
+  "\n" +
+  "#postamble {\n" +
+  "  color: #777;\n" +
+  "  font-size: 90%;\n" +
+  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
+  "  margin-top: 2em;\n" +
+  "  padding-left: 2em;\n" +
+  "  padding-right: 2em;\n" +
+  "  text-align: right;\n" +
   "}\n" +
   "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
+  "#postamble p { margin: 0; }\n" +
   "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
+  "#footnotes { border-top: 1px solid #000; }\n" +
   "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
+  "h1 { font-size: 200% }\n" +
+  "h2 { font-size: 175% }\n" +
+  "h3 { font-size: 150% }\n" +
+  "h4 { font-size: 125% }\n" +
   "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
-  "}");
-
-define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
-  "\n" +
-  "@import url(\"booya.css\") print,screen;\n" +
-  "@import \"whatup.css\" screen;\n" +
-  "@import \"wicked.css\";\n" +
-  "\n" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
-  "\n" +
-  "li.inline #foo {\n" +
-  "  background: url(\"something.png\");\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px;\n" +
-  "  padding-right: 7px;\n" +
-  "  border-right: 1px dotted #066;\n" +
-  "}\n" +
-  "\n" +
-  "li.last.first {\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px !important;\n" +
-  "  padding-right: 3px;\n" +
-  "  border-right: 0px;\n" +
-  "}\n" +
+  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
   "\n" +
   "@media print {\n" +
-  "    li.inline {\n" +
-  "      color: black;\n" +
-  "    }\n" +
+  "  html { font-size: 11pt; }\n" +
+  "}\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
+  ".cptRowIn {\n" +
+  "  display: box; display: -moz-box; display: -webkit-box;\n" +
+  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
+  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
+  "  color: #333;\n" +
+  "  background-color: #EEE;\n" +
+  "  width: 100%;\n" +
+  "  font-family: consolas, courier, monospace;\n" +
+  "}\n" +
+  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
+  ".cptRowIn > img { cursor: pointer; }\n" +
+  ".cptHover { display: none; }\n" +
+  ".cptRowIn:hover > .cptHover { display: block; }\n" +
+  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
+  ".cptOutTyped {\n" +
+  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
+  "  font-weight: bold; color: #000; font-size: 120%;\n" +
+  "}\n" +
+  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
+  ".cptRowOutput strong,\n" +
+  ".cptRowOutput b,\n" +
+  ".cptRowOutput th,\n" +
+  ".cptRowOutput h1,\n" +
+  ".cptRowOutput h2,\n" +
+  ".cptRowOutput h3 { color: #000; }\n" +
+  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
+  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
+  ".cptRowOutput input[type=password],\n" +
+  ".cptRowOutput input[type=text],\n" +
+  ".cptRowOutput textarea {\n" +
+  "  color: #000; font-size: 120%;\n" +
+  "  background: transparent; padding: 3px;\n" +
+  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
+  "}\n" +
+  ".cptRowOutput table,\n" +
+  ".cptRowOutput td,\n" +
+  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
+  ".cptRowOutput .right { text-align: right; }\n" +
+  "");
+
+define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
+  "#cockpitInput { padding-left: 16px; }\n" +
+  "\n" +
+  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
+  "\n" +
+  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
+  ".cptCompletion.VALID { background: #FFF; }\n" +
+  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
+  ".cptCompletion.INVALID { background: #DDD; }\n" +
+  ".cptCompletion span { color: #FFF; }\n" +
+  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
+  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
+  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
   "\n" +
   "\n" +
-  "@charset \"UTF-8\"; \n" +
+  ".cptHints {\n" +
+  "  color: #000;\n" +
+  "  position: absolute;\n" +
+  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
+  "  background: rgba(250, 250, 250, 0.8);\n" +
+  "  -moz-border-radius-topleft: 10px;\n" +
+  "  -moz-border-radius-topright: 10px;\n" +
+  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
+  "  z-index: 1000;\n" +
+  "  padding: 8px;\n" +
+  "  display: none;\n" +
+  "}\n" +
   "\n" +
-  "@page {\n" +
-  "  margin: 10%;\n" +
-  "  counter-increment: page;\n" +
+  ".cptFocusPopup { display: block; }\n" +
+  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
   "\n" +
-  "  @top-center {\n" +
-  "    font-family: sans-serif;\n" +
-  "    font-weight: bold;\n" +
-  "    font-size: 2em;\n" +
-  "    content: counter(page);\n" +
-  "  }\n" +
-  "}");
+  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
+  "\n" +
+  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
+  "");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
   "    position:relative;\n" +
@@ -27467,6 +27761,56 @@ define("text!doc/site/style.css", [], "body {\n" +
   "\n" +
   "");
 
+define("text!demo/styles.css", [], "html {\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  "body {\n" +
+  "    overflow: hidden;\n" +
+  "    margin: 0;\n" +
+  "    padding: 0;\n" +
+  "    height: 100%;\n" +
+  "    width: 100%;\n" +
+  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
+  "    font-size: 12px;\n" +
+  "    background: rgb(14, 98, 165);\n" +
+  "    color: white;\n" +
+  "}\n" +
+  "\n" +
+  "#logo {\n" +
+  "    padding: 15px;\n" +
+  "    margin-left: 70px;\n" +
+  "}\n" +
+  "\n" +
+  "#editor {\n" +
+  "    position: absolute;\n" +
+  "    top:  0px;\n" +
+  "    left: 300px;\n" +
+  "    bottom: 0px;\n" +
+  "    right: 0px;\n" +
+  "    background: white;\n" +
+  "}\n" +
+  "\n" +
+  "#controls {\n" +
+  "    padding: 5px;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td {\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
+  "#controls td + td {\n" +
+  "    text-align: left;\n" +
+  "}");
+
+define("text!demo/docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
+  "}");
+
 define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
@@ -27638,379 +27982,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "}\n" +
   "");
 
-define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
-  "body { max-width: 60em; }\n" +
-  ".title  { text-align: center; }\n" +
-  ".todo   { color: red; }\n" +
-  ".done   { color: green; }\n" +
-  ".tag    { background-color:lightblue; font-weight:normal }\n" +
-  ".target { }\n" +
-  ".timestamp { color: grey }\n" +
-  ".timestamp-kwd { color: CadetBlue }\n" +
-  "p.verse { margin-left: 3% }\n" +
-  "pre {\n" +
-  "  border: 1pt solid #AEBDCC;\n" +
-  "  background-color: #F3F5F7;\n" +
-  "  padding: 5pt;\n" +
-  "  font-family: monospace;\n" +
-  "  font-size: 90%;\n" +
-  "  overflow:auto;\n" +
-  "}\n" +
-  "pre.src {\n" +
-  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
-  "}\n" +
-  "table { border-collapse: collapse; }\n" +
-  "td, th { vertical-align: top; }\n" +
-  "dt { font-weight: bold; }\n" +
-  "div.figure { padding: 0.5em; }\n" +
-  "div.figure p { text-align: center; }\n" +
-  ".linenr { font-size:smaller }\n" +
-  ".code-highlighted {background-color:#ffff00;}\n" +
-  ".org-info-js_info-navigation { border-style:none; }\n" +
-  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
-  "  white-space:nowrap; }\n" +
-  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
-  "  font-weight:bold; }\n" +
-  "\n" +
-  "sup {\n" +
-  "  vertical-align: baseline;\n" +
-  "  position: relative;\n" +
-  "  top: -0.5em;\n" +
-  "  font-size: 80%;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:link, sup a:visited {\n" +
-  "  text-decoration: none;\n" +
-  "  color: #c00;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:before { content: \"[\"; color: #999; }\n" +
-  "sup a:after { content: \"]\"; color: #999; }\n" +
-  "\n" +
-  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
-  "\n" +
-  "#postamble {\n" +
-  "  color: #777;\n" +
-  "  font-size: 90%;\n" +
-  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
-  "  margin-top: 2em;\n" +
-  "  padding-left: 2em;\n" +
-  "  padding-right: 2em;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#postamble p { margin: 0; }\n" +
-  "\n" +
-  "#footnotes { border-top: 1px solid #000; }\n" +
-  "\n" +
-  "h1 { font-size: 200% }\n" +
-  "h2 { font-size: 175% }\n" +
-  "h3 { font-size: 150% }\n" +
-  "h4 { font-size: 125% }\n" +
-  "\n" +
-  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
-  "\n" +
-  "@media print {\n" +
-  "  html { font-size: 11pt; }\n" +
-  "}\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
-  "#cockpitInput { padding-left: 16px; }\n" +
-  "\n" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
-  "\n" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
-  ".cptCompletion.VALID { background: #FFF; }\n" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
-  ".cptCompletion.INVALID { background: #DDD; }\n" +
-  ".cptCompletion span { color: #FFF; }\n" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
-  "\n" +
-  "\n" +
-  ".cptHints {\n" +
-  "  color: #000;\n" +
-  "  position: absolute;\n" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
-  "  background: rgba(250, 250, 250, 0.8);\n" +
-  "  -moz-border-radius-topleft: 10px;\n" +
-  "  -moz-border-radius-topright: 10px;\n" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
-  "  z-index: 1000;\n" +
-  "  padding: 8px;\n" +
-  "  display: none;\n" +
-  "}\n" +
-  "\n" +
-  ".cptFocusPopup { display: block; }\n" +
-  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
-  "\n" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
-  "\n" +
-  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
-  ".cptRowIn {\n" +
-  "  display: box; display: -moz-box; display: -webkit-box;\n" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
-  "  color: #333;\n" +
-  "  background-color: #EEE;\n" +
-  "  width: 100%;\n" +
-  "  font-family: consolas, courier, monospace;\n" +
-  "}\n" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
-  ".cptRowIn > img { cursor: pointer; }\n" +
-  ".cptHover { display: none; }\n" +
-  ".cptRowIn:hover > .cptHover { display: block; }\n" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
-  ".cptOutTyped {\n" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
-  "  font-weight: bold; color: #000; font-size: 120%;\n" +
-  "}\n" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
-  ".cptRowOutput strong,\n" +
-  ".cptRowOutput b,\n" +
-  ".cptRowOutput th,\n" +
-  ".cptRowOutput h1,\n" +
-  ".cptRowOutput h2,\n" +
-  ".cptRowOutput h3 { color: #000; }\n" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
-  ".cptRowOutput input[type=password],\n" +
-  ".cptRowOutput input[type=text],\n" +
-  ".cptRowOutput textarea {\n" +
-  "  color: #000; font-size: 120%;\n" +
-  "  background: transparent; padding: 3px;\n" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
-  "}\n" +
-  ".cptRowOutput table,\n" +
-  ".cptRowOutput td,\n" +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
-  ".cptRowOutput .right { text-align: right; }\n" +
-  "");
-
-define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
-  "  border: 2px solid rgb(159, 159, 159);\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_editor.ace_focus {\n" +
-  "  border: 2px solid #327fbd;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter {\n" +
-  "  width: 50px;\n" +
-  "  background: #e8e8e8;\n" +
-  "  color: #333;\n" +
-  "  overflow : hidden;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter-layer {\n" +
-  "  width: 100%;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {\n" +
-  "  padding-right: 6px;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_print_margin {\n" +
-  "  width: 1px;\n" +
-  "  background: %printMargin%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_scroller {\n" +
-  "  background-color: %background%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_text-layer {\n" +
-  "  cursor: text;\n" +
-  "  color: %foreground%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_cursor {\n" +
-  "  border-left: 2px solid %cursor%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_cursor.ace_overwrite {\n" +
-  "  border-left: 0px;\n" +
-  "  border-bottom: 1px solid %overwrite%;\n" +
-  "}\n" +
-  " \n" +
-  ".%cssClass% .ace_marker-layer .ace_selection {\n" +
-  "  background: %selection%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_step {\n" +
-  "  background: %step%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
-  "  margin: -1px 0 0 -1px;\n" +
-  "  border: 1px solid %bracket%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_active_line {\n" +
-  "  background: %active_line%;\n" +
-  "}\n" +
-  "\n" +
-  "       \n" +
-  ".%cssClass% .ace_invisible {\n" +
-  "  %invisible%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_keyword {\n" +
-  "  %keyword%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_keyword.ace_operator {\n" +
-  "  %keyword.operator%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant {\n" +
-  "  %constant%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_language {\n" +
-  "  %constant.language%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_library {\n" +
-  "  %constant.library%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_numeric {\n" +
-  "  %constant.numeric%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid {\n" +
-  "  %invalid%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid.ace_illegal {\n" +
-  "  %invalid.illegal%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid.ace_deprecated {\n" +
-  "  %invalid.deprecated%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_support {\n" +
-  "  %support%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_support.ace_function {\n" +
-  "  %support.function%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_function.ace_buildin {\n" +
-  "  %function.buildin%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_string {\n" +
-  "  %string%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_string.ace_regexp {\n" +
-  "  %string.regexp%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment {\n" +
-  "  %comment%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment.ace_doc {\n" +
-  "  %comment.doc%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment.ace_doc.ace_tag {\n" +
-  "  %comment.doc.tag%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_variable {\n" +
-  "  %variable%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_variable.ace_language {\n" +
-  "  %variable.language%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_xml_pe {\n" +
-  "  %xml_pe%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta {\n" +
-  "  %meta%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta.ace_tag {\n" +
-  "  %meta.tag%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta.ace_tag.ace_input {\n" +
-  "  %ace.meta.tag.input%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
-  "  %entity.other.attribute-name%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_name {\n" +
-  "  %entity.name%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
-  "  %entity.name.function%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_underline {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading {\n" +
-  "  %markup.heading%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
-  "  %markup.heading.1%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
-  "  %markup.heading.2%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
-  "  %markup.heading.3%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
-  "  %markup.heading.4%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
-  "  %markup.heading.5%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
-  "  %markup.heading.6%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_list {\n" +
-  "  %markup.list%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_collab.ace_user1 {\n" +
-  "  %collab.user1%   \n" +
-  "}");
-
-define("text!docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
 define("text!styles.css", [], "html {\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
@@ -28053,5 +28024,11 @@ define("text!styles.css", [], "html {\n" +
   "\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
+  "}");
+
+define("text!docs/css.css", [], ".text-layer {\n" +
+  "    font-family: Monaco, \"Courier New\", monospace;\n" +
+  "    font-size: 12px;\n" +
+  "    cursor: text;\n" +
   "}");
 
