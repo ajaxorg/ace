@@ -72,7 +72,7 @@ var TextileMode = require("ace/mode/textile").Mode;
 var TextMode = require("ace/mode/text").Mode;
 var GroovyMode = require("ace/mode/groovy").Mode;
 var ScalaMode = require("ace/mode/scala").Mode;
-
+var LatexMode = require("ace/mode/latex").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var vim = require("ace/keyboard/keybinding/vim").Vim;
@@ -197,6 +197,9 @@ exports.launch = function(env) {
     docs.scala.setMode(new ScalaMode());
     docs.scala.setUndoManager(new UndoManager());
 
+    docs.latex = new EditSession(require("ace/requirejs/text!demo/docs/latex.tex"));
+    docs.latex.setMode(new LatexMode());
+    docs.latex.setUndoManager(new UndoManager());
 
     // Add a "name" property to all docs
     for (var doc in docs) {
@@ -241,7 +244,8 @@ exports.launch = function(env) {
         ocaml: new OcamlMode(),
         csharp: new CSharpMode(),
         groovy: new GroovyMode(),
-        scala: new ScalaMode()
+        scala: new ScalaMode(),
+        latex: new LatexMode()
     };
 
     function getMode() {
@@ -344,6 +348,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof ScalaMode) {
             modeEl.value = "scala";
+        }
+        else if (mode instanceof LatexMode) {
+            modeEl.value = "latex";
         }
         else {
             modeEl.value = "text";
@@ -482,7 +489,7 @@ exports.launch = function(env) {
         var onCheck = function() {
             callback(!!el.checked);
         };
-        el.onCheckck = onCheck;
+        el.onclick = onCheck;
         onCheck();
     }
 

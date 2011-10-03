@@ -37,6 +37,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+var fs = require("fs");
+
 var args = process.argv;
 var target = null;
 var targetDir = null;
@@ -46,6 +48,14 @@ if (args.length == 3) {
     if (target != "normal" && target != "bm") {
         target = null;
     }
+}
+
+try {
+    var version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
+    var ref = fs.readFileSync(__dirname + "/.git-ref").toString();
+} catch(e) {
+    ref = "";
+    version = "";
 }
 
 if (!target) {
@@ -193,7 +203,7 @@ if (target == "normal") {
         copy.filter.moduleDefines,
         shadow,
         copy.filter.uglifyjs
-    ]
+    ];
 }
 
 console.log('# ace modes ---------');
@@ -202,7 +212,7 @@ project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "lua", "xml", "ruby", "java", "c_cpp",
     "coffee", "perl", "csharp", "svg", "clojure", "scss", "json", "groovy",
-    "ocaml", "scala", "textile", "scad", "markdown"
+    "ocaml", "scala", "textile", "scad", "markdown", "latex"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
@@ -223,7 +233,9 @@ console.log('# ace themes ---------');
     "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn", "eclipse",
     "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
     "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",
-    "solarized_light", "textmate", "twilight", "vibrant_ink"
+    "solarized_light", "textmate", "tomorrow", "tomorrow_night",
+    "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties",
+    "twilight", "vibrant_ink"
 ].forEach(function(theme) {
     copy({
         source: [{
@@ -317,7 +329,10 @@ function demo() {
                 .replace("DEVEL-->", "")
                 .replace("<!--DEVEL", "")
                 .replace("PACKAGE-->", "")
-                .replace("<!--PACKAGE", ""));
+                .replace("<!--PACKAGE", "")
+                .replace("%version%", version)
+                .replace("%commit%", ref)
+            );
         }]
     });
 
@@ -360,12 +375,12 @@ function demo() {
 
     copy({
         source: demo,
-        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink.js'
+        filter: [ filterTextPlugin ],
+        dest: 'build/demo/kitchen-sink-uncompressed.js'
     });
     copy({
         source: demo,
-        filter: [ filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink-uncompressed.js'
+        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
+        dest: 'build/demo/kitchen-sink.js'
     });
 }

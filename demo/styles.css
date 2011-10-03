@@ -18,13 +18,13 @@ body {
 
 #logo {
     padding: 15px;
-    margin-left: 65px;
+    margin-left: 70px;
 }
 
 #editor {
     position: absolute;
     top:  0px;
-    left: 280px;
+    left: 300px;
     bottom: 0px;
     right: 0px;
     background: white;

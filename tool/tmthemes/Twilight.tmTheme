@@ -345,6 +345,19 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Function name</string>
+			<key>scope</key>
+			<string>entity.name.function, support.function.any-method</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#AC885B</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>§ css:pseudo-class</string>
 			<key>scope</key>
 			<string>meta.selector.css entity.other.attribute-name.tag.pseudo-class</string>

@@ -6,7 +6,7 @@ function plistToJson(el) {
         throw new Error("not a plist!");
 
     return $plistParse(el.selectSingleNode("dict"));
-};
+}
 
 function $plistParse(el) {            
     if (el.tagName == "dict") {
@@ -31,7 +31,7 @@ function $plistParse(el) {
     }
     else if (el.tagName == "array") {
         var arr = [];
-                var childNodes = el.childNodes;
+        var childNodes = el.childNodes;
         for (var i=0, l=childNodes.length; i<l; i++) {
             var child = childNodes[i];
             if (child.nodeType !== 1) 
@@ -51,7 +51,7 @@ function $plistParse(el) {
 function parseTheme(themeXml) {
     try {
         return plistToJson(xml.parseFromString(themeXml).documentElement);
-    } catch(e) { return }
+    } catch(e) { return; }
 }
  
 var supportedScopes = {
@@ -88,6 +88,8 @@ var supportedScopes = {
    "meta.tag": "meta.tag",
    "meta.tag.form": "meta.tag.form",
    "entity.other.attribute-name": "entity.other.attribute-name",
+   "entity.name.function": "entity.name.function",
+   "entity.name": "entity.name",
    
    "markup.heading": "markup.heading",
    "markup.heading.1": "markup.heading.1",
@@ -133,7 +135,7 @@ function extractStyles(theme) {
     }
 
     return colors;
-};
+}
 
 function parseColor(color) {
     if (color.length == 7)
@@ -181,7 +183,7 @@ function createTheme(name, styles, cssTemplate, jsTemplate) {
         css: '"' + css.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"',
         cssClass: "ace-" + hyphenate(name)
     });
-};
+}
 
 function hyphenate(str) {
     return str.replace(/([A-Z])/g, "-$1").replace(/_/g, "-").toLowerCase();
@@ -205,8 +207,13 @@ var themes = {
     "kr_theme": "krTheme",
     "solarized_light": "Solarized-light",
     "solarized_dark": "Solarized-dark",
+    "tomorrow": "Tomorrow",
+    "tomorrow_night": "Tomorrow-Night",
+    "tomorrow_night_blue": "Tomorrow-Night-Blue",
+    "tomorrow_night_bright": "Tomorrow-Night-Bright",
+    "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "vibrant_ink": "Vibrant Ink"
-}
+};
 
 for (var name in themes) {
     console.log("Converting " + name);

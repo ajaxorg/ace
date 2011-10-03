@@ -21,3 +21,4 @@ support/requirejs/
 
 /node_modules
 support/node-o3-xml-v4/
+.git-ref
