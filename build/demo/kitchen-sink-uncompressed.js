@@ -5296,7 +5296,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/lua', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/mode/latex', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/lua.lua', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'text!demo/docs/latex.tex', 'ace/split'], function(require, exports, module) {
+define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/mode/javascript', 'ace/mode/css', 'ace/mode/scss', 'ace/mode/html', 'ace/mode/xml', 'ace/mode/lua', 'ace/mode/python', 'ace/mode/php', 'ace/mode/java', 'ace/mode/csharp', 'ace/mode/ruby', 'ace/mode/c_cpp', 'ace/mode/coffee', 'ace/mode/json', 'ace/mode/perl', 'ace/mode/clojure', 'ace/mode/ocaml', 'ace/mode/svg', 'ace/mode/markdown', 'ace/mode/textile', 'ace/mode/text', 'ace/mode/groovy', 'ace/mode/scala', 'ace/mode/latex', 'ace/mode/powershell', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/lua.lua', 'text!demo/docs/python.py', 'text!demo/docs/php.php', 'text!demo/docs/java.java', 'text!demo/docs/ruby.rb', 'text!demo/docs/csharp.cs', 'text!demo/docs/cpp.cpp', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/perl.pl', 'text!demo/docs/clojure.clj', 'text!demo/docs/ocaml.ml', 'text!demo/docs/svg.svg', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'text!demo/docs/latex.tex', 'text!demo/docs/powershell.ps1', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5331,6 +5331,7 @@ var TextMode = require("ace/mode/text").Mode;
 var GroovyMode = require("ace/mode/groovy").Mode;
 var ScalaMode = require("ace/mode/scala").Mode;
 var LatexMode = require("ace/mode/latex").Mode;
+var PowershellMode = require("ace/mode/powershell").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var vim = require("ace/keyboard/keybinding/vim").Vim;
@@ -5459,6 +5460,10 @@ exports.launch = function(env) {
     docs.latex.setMode(new LatexMode());
     docs.latex.setUndoManager(new UndoManager());
 
+    docs.powershell = new EditSession(require("text!demo/docs/powershell.ps1"));
+    docs.powershell.setMode(new PowershellMode());
+    docs.powershell.setUndoManager(new UndoManager());
+
     // Add a "name" property to all docs
     for (var doc in docs) {
         docs[doc].name = doc;
@@ -5503,7 +5508,8 @@ exports.launch = function(env) {
         csharp: new CSharpMode(),
         groovy: new GroovyMode(),
         scala: new ScalaMode(),
-        latex: new LatexMode()
+        latex: new LatexMode(),
+        powershell: new PowershellMode()
     };
 
     function getMode() {
@@ -5609,6 +5615,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof LatexMode) {
             modeEl.value = "latex";
+        }
+        else if (mode instanceof PowershellMode) {
+            modeEl.value = "powershell";
         }
         else {
             modeEl.value = "text";
@@ -22377,20 +22386,50 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pilot/lang', 'pilot/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
-    require("pilot/oop").inherits(CoffeeHighlightRules,
-            require("ace/mode/text_highlight_rules").TextHighlightRules);
+    var lang = require("pilot/lang");
+    var oop = require("pilot/oop");
+    var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+    
+    oop.inherits(CoffeeHighlightRules, TextHighlightRules);
 
     function CoffeeHighlightRules() {
         var identifier = "[$A-Za-z_\\x7f-\\uffff][$\\w\\x7f-\\uffff]*";
-        var keywordend = "(?![$\\w]|\\s*:)";
         var stringfill = {
             token : "string",
             merge : true,
             regex : ".+"
         };
+
+        var keywords = lang.arrayToMap((
+            "this|throw|then|try|typeof|super|switch|return|break|by)|continue|" +
+            "catch|class|in|instanceof|is|isnt|if|else|extends|for|forown|" +
+            "finally|function|while|when|new|not|delete|debugger|do|loop|of|off|" +
+            "or|on|unless|until|and|yes").split("|")
+        );
         
+        var langConstant = lang.arrayToMap((
+            "true|false|null|undefined").split("|")
+        );
+        
+        var illegal = lang.arrayToMap((
+            "case|const|default|function|var|void|with|enum|export|implements|" +
+            "interface|let|package|private|protected|public|static|yield|" +
+            "__hasProp|extends|slice|bind|indexOf").split("|")
+        );
+        
+        var supportClass = lang.arrayToMap((
+            "Array|Boolean|Date|Function|Number|Object|RegExp|ReferenceError|" +
+            "RangeError|String|SyntaxError|Error|EvalError|TypeError|URIError").split("|")
+        );
+        
+        var supportFunction = lang.arrayToMap((
+            "Math|JSON|isNaN|isFinite|parseInt|parseFloat|encodeURI|" +
+            "encodeURIComponent|decodeURI|decodeURIComponent|RangeError|String|" +
+            "SyntaxError|Error|EvalError|TypeError|URIError").split("|")
+        );
+
         this.$rules = {
             start : [
                 {
@@ -22400,29 +22439,20 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pil
                     token : "variable",
                     regex : "@" + identifier
                 }, {
-                    token : "entity.name.function",
-                    regex : identifier + "(?=\\s*:\\s*(?:\\(.*?\\)\\s*)?->)"
-                }, {
-                    token : "keyword",
-                    regex : "(?:t(?:h(?:is|row|en)|ry|ypeof)|s(?:uper|witch)|return|b(?:reak|y)|c(?:ontinue|atch|lass)|i(?:n(?:stanceof)?|s(?:nt)?|f)|e(?:lse|xtends)|f(?:or (?:own)?|inally|unction)|wh(?:ile|en)|n(?:ew|ot?)|d(?:e(?:lete|bugger)|o)|loop|o(?:ff?|[rn])|un(?:less|til)|and|yes)"
-                            + keywordend
-                }, {
-                    token : "constant.language",
-                    regex : "(?:true|false|null|undefined)" + keywordend
-                }, {
-                    token : "invalid.illegal",
-                    regex : "(?:c(?:ase|onst)|default|function|v(?:ar|oid)|with|e(?:num|xport)|i(?:mplements|nterface)|let|p(?:ackage|r(?:ivate|otected)|ublic)|static|yield|__(?:hasProp|extends|slice|bind|indexOf))"
-                            + keywordend
-                }, {
-                    token : "language.support.class",
-                    regex : "(?:Array|Boolean|Date|Function|Number|Object|R(?:e(?:gExp|ferenceError)|angeError)|S(?:tring|yntaxError)|E(?:rror|valError)|TypeError|URIError)"
-                            + keywordend
-                }, {
-                    token : "language.support.function",
-                    regex : "(?:Math|JSON|is(?:NaN|Finite)|parse(?:Int|Float)|encodeURI(?:Component)?|decodeURI(?:Component)?)"
-                            + keywordend
-                }, {
-                    token : "identifier",
+                    token: function(value) {
+                        if (keywords.hasOwnProperty(value))
+                            return "keyword";
+                        else if (langConstant.hasOwnProperty(value))
+                            return "constant.language";
+                        else if (illegal.hasOwnProperty(value))
+                            return "invalid.illegal";
+                        else if (supportClass.hasOwnProperty(value))
+                            return "language.support.class";
+                        else if (supportFunction.hasOwnProperty(value))
+                            return "language.support.function";
+                        else
+                            return "identifier";
+                    },
                     regex : identifier
                 }, {
                     token : "constant.numeric",
@@ -24915,6 +24945,200 @@ oop.inherits(LatexHighlightRules, TextHighlightRules);
 exports.LatexHighlightRules = LatexHighlightRules;
 
 });
+define('ace/mode/powershell', ['require', 'exports', 'module' , 'pilot/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/powershell_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var TextMode = require("ace/mode/text").Mode;
+var Tokenizer = require("ace/tokenizer").Tokenizer;
+var PowershellHighlightRules = require("ace/mode/powershell_highlight_rules").PowershellHighlightRules;
+var MatchingBraceOutdent = require("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
+var CstyleBehaviour = require("ace/mode/behaviour/cstyle").CstyleBehaviour;
+
+var Mode = function() {
+    this.$tokenizer = new Tokenizer(new PowershellHighlightRules().getRules());
+    this.$outdent = new MatchingBraceOutdent();
+    this.$behaviour = new CstyleBehaviour();
+};
+oop.inherits(Mode, TextMode);
+
+(function() {
+    
+	  this.getNextLineIndent = function(state, line, tab) {
+	      var indent = this.$getIndent(line);
+
+	      var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+	      var tokens = tokenizedLine.tokens;
+	      var endState = tokenizedLine.state;
+
+	      if (tokens.length && tokens[tokens.length-1].type == "comment") {
+	          return indent;
+	      }
+      
+	      if (state == "start") {
+	          var match = line.match(/^.*[\{\(\[]\s*$/);
+	          if (match) {
+	              indent += tab;
+	          }
+	      }
+
+	      return indent;
+	  };
+
+	  this.checkOutdent = function(state, line, input) {
+	      return this.$outdent.checkOutdent(line, input);
+	  };
+
+	  this.autoOutdent = function(state, doc, row) {
+	      this.$outdent.autoOutdent(doc, row);
+	  };
+
+
+    this.createWorker = function(session) {
+        return null;
+    };
+
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
+define('ace/mode/powershell_highlight_rules', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+var lang = require("pilot/lang");
+var DocCommentHighlightRules = require("ace/mode/doc_comment_highlight_rules").DocCommentHighlightRules;
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+
+var PowershellHighlightRules = function() {
+    
+    var keywords = lang.arrayToMap(
+      ("function|if|else|elseif|switch|while|default|for|do|until|break|continue|" + 
+       "foreach|return|filter|in|trap|throw|param|begin|process|end").split("|")
+    );
+
+    var builtinFunctions = lang.arrayToMap(
+      ("Get-Alias|Import-Alias|New-Alias|Set-Alias|Get-AuthenticodeSignature|Set-AuthenticodeSignature|" +
+       "Set-Location|Get-ChildItem|Clear-Item|Get-Command|Measure-Command|Trace-Command|" +
+       "Add-Computer|Checkpoint-Computer|Remove-Computer|Restart-Computer|Restore-Computer|Stop-Computer|" +
+       "Reset-ComputerMachinePassword|Test-ComputerSecureChannel|Add-Content|Get-Content|Set-Content|Clear-Content|" +
+       "Get-Command|Invoke-Command|Enable-ComputerRestore|Disable-ComputerRestore|Get-ComputerRestorePoint|Test-Connection|" +
+       "ConvertFrom-CSV|ConvertTo-CSV|ConvertTo-Html|ConvertTo-Xml|ConvertFrom-SecureString|ConvertTo-SecureString|" +
+       "Copy-Item|Export-Counter|Get-Counter|Import-Counter|Get-Credential|Get-Culture|" +
+       "Get-ChildItem|Get-Date|Set-Date|Remove-Item|Compare-Object|Get-Event|" +
+       "Get-WinEvent|New-Event|Remove-Event|Unregister-Event|Wait-Event|Clear-EventLog|" +
+       "Get-Eventlog|Limit-EventLog|New-Eventlog|Remove-EventLog|Show-EventLog|Write-EventLog|" +
+       "Get-EventSubscriber|Register-EngineEvent|Register-ObjectEvent|Register-WmiEvent|Get-ExecutionPolicy|Set-ExecutionPolicy|" +
+       "Export-Alias|Export-Clixml|Export-Console|Export-Csv|ForEach-Object|Format-Custom|" +
+       "Format-List|Format-Table|Format-Wide|Export-FormatData|Get-FormatData|Get-Item|" +
+       "Get-ChildItem|Get-Help|Add-History|Clear-History|Get-History|Invoke-History|" +
+       "Get-Host|Read-Host|Write-Host|Get-HotFix|Import-Clixml|Import-Csv|" +
+       "Invoke-Command|Invoke-Expression|Get-Item|Invoke-Item|New-Item|Remove-Item|" +
+       "Set-Item|Clear-ItemProperty|Copy-ItemProperty|Get-ItemProperty|Move-ItemProperty|New-ItemProperty|" +
+       "Remove-ItemProperty|Rename-ItemProperty|Set-ItemProperty|Get-Job|Receive-Job|Remove-Job|" +
+       "Start-Job|Stop-Job|Wait-Job|Stop-Process|Update-List|Get-Location|" +
+       "Pop-Location|Push-Location|Set-Location|Send-MailMessage|Add-Member|Get-Member|" +
+       "Move-Item|Compare-Object|Group-Object|Measure-Object|New-Object|Select-Object|" +
+       "Sort-Object|Where-Object|Out-Default|Out-File|Out-GridView|Out-Host|" +
+       "Out-Null|Out-Printer|Out-String|Convert-Path|Join-Path|Resolve-Path|" +
+       "Split-Path|Test-Path|Get-Pfxcertificate|Pop-Location|Push-Location|Get-Process|" +
+       "Start-Process|Stop-Process|Wait-Process|Enable-PSBreakpoint|Disable-PSBreakpoint|Get-PSBreakpoint|" +
+       "Set-PSBreakpoint|Remove-PSBreakpoint|Get-PSDrive|New-PSDrive|Remove-PSDrive|Get-PSProvider|" +
+       "Set-PSdebug|Enter-PSSession|Exit-PSSession|Export-PSSession|Get-PSSession|Import-PSSession|" +
+       "New-PSSession|Remove-PSSession|Disable-PSSessionConfiguration|Enable-PSSessionConfiguration|Get-PSSessionConfiguration|Register-PSSessionConfiguration|" +
+       "Set-PSSessionConfiguration|Unregister-PSSessionConfiguration|New-PSSessionOption|Add-PsSnapIn|Get-PsSnapin|Remove-PSSnapin|" +
+       "Get-Random|Read-Host|Remove-Item|Rename-Item|Rename-ItemProperty|Select-Object|" +
+       "Select-XML|Send-MailMessage|Get-Service|New-Service|Restart-Service|Resume-Service|" +
+       "Set-Service|Start-Service|Stop-Service|Suspend-Service|Sort-Object|Start-Sleep|" +
+       "ConvertFrom-StringData|Select-String|Tee-Object|New-Timespan|Trace-Command|Get-Tracesource|" +
+       "Set-Tracesource|Start-Transaction|Complete-Transaction|Get-Transaction|Use-Transaction|Undo-Transaction|" +
+       "Start-Transcript|Stop-Transcript|Add-Type|Update-TypeData|Get-Uiculture|Get-Unique|" +
+       "Update-Formatdata|Update-Typedata|Clear-Variable|Get-Variable|New-Variable|Remove-Variable|" +
+       "Set-Variable|New-WebServiceProxy|Where-Object|Write-Debug|Write-Error|Write-Host|" +
+       "Write-Output|Write-Progress|Write-Verbose|Write-Warning|Set-WmiInstance|Invoke-WmiMethod|" +
+       "Get-WmiObject|Remove-WmiObject|Connect-WSMan|Disconnect-WSMan|Test-WSMan|Invoke-WSManAction|" +
+       "Disable-WSManCredSSP|Enable-WSManCredSSP|Get-WSManCredSSP|New-WSManInstance|Get-WSManInstance|Set-WSManInstance|" +
+       "Remove-WSManInstance|Set-WSManQuickConfig|New-WSManSessionOption").split("|"));
+
+    var binaryOperatorsRe = "eq|ne|ge|gt|lt|le|like|notlike|match|notmatch|replace|contains|notcontains|" +
+                            "ieq|ine|ige|igt|ile|ilt|ilike|inotlike|imatch|inotmatch|ireplace|icontains|inotcontains|" +
+                            "is|isnot|as|" +
+                            "and|or|band|bor|not"; 
+
+    // regexp must not have capturing parentheses. Use (?:) instead.
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        "start" : [
+            {
+                token : "comment",
+                regex : "#.*$"
+            }, {
+                token : "string", // single line
+                regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+            }, {
+                token : "string", // single line
+                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+            }, {
+                token : "constant.numeric", // hex
+                regex : "0[xX][0-9a-fA-F]+\\b"
+            }, {
+                token : "constant.numeric", // float
+                regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+            }, {
+                token : "constant.language.boolean",
+                regex : "[$](?:[Tt]rue|[Ff]alse)\\b"
+            }, {
+                token : "constant.language",
+                regex : "[$][Nn]ull\\b"
+            }, {
+                token : "variable.instance",
+                regex : "[$][a-zA-Z][a-zA-Z0-9_]*\\b"
+            }, {
+                token : function(value) {
+                    if (keywords.hasOwnProperty(value))
+                        return "keyword";
+                    else if (builtinFunctions.hasOwnProperty(value))
+                        return "support.function";
+                    else
+                        return "identifier";
+                },
+                // TODO: Unicode escape sequences
+                // TODO: Unicode identifiers
+                regex : "[a-zA-Z_$][a-zA-Z0-9_$\\-]*\\b"
+            }, {
+                token : "keyword.operator",
+                regex : "\\-(?:" + binaryOperatorsRe + ")"
+            }, {
+                token : "keyword.operator",
+                regex : "&|\\*|\\+|\\-|\\=|\\+=|\\-="
+            }, {
+                token : "lparen",
+                regex : "[[({]"
+            }, {
+                token : "rparen",
+                regex : "[\\])}]"
+            }, {
+                token : "text",
+                regex : "\\s+"
+            }
+        ],
+        "comment" : [
+            {
+                token : "comment", // closing comment
+                regex : ".*?\\*\\/",
+                next : "start"
+            }, {
+                token : "comment", // comment spanning whole line
+                merge : true,
+                regex : ".+"
+            }
+        ]
+    };
+};
+
+oop.inherits(PowershellHighlightRules, TextHighlightRules);
+
+exports.PowershellHighlightRules = PowershellHighlightRules;
+});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -26485,6 +26709,32 @@ define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetet
   "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.\n" +
   "\n" +
   "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
+
+define("text!demo/docs/powershell.ps1", [], "# This is a simple comment\n" +
+  "function Hello($name) {\n" +
+  "  Write-host \"Hello $name\"\n" +
+  "}\n" +
+  "\n" +
+  "function add($left, $right=4) {\n" +
+  "    if ($right -ne 4) {\n" +
+  "        return $left\n" +
+  "    } elseif ($left -eq $null -and $right -eq 2) {\n" +
+  "        return 3\n" +
+  "    } else {\n" +
+  "        return 2\n" +
+  "    }\n" +
+  "}\n" +
+  "\n" +
+  "$number = 1 + 2;\n" +
+  "$number += 3\n" +
+  "\n" +
+  "Write-Host Hello -name \"World\"\n" +
+  "\n" +
+  "$an_array = @(1, 2, 3)\n" +
+  "$a_hash = @{\"something\" = \"something else\"}\n" +
+  "\n" +
+  "& notepad .\\readme.md\n" +
+  "");
 
 define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
   "\n" +

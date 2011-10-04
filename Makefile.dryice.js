@@ -185,6 +185,7 @@ if (target == "normal") {
     copy({
         source: ace,
         filter: [
+            filterTextPlugin,
             shadow
         ],
         dest:   targetDir + '/src/ace-uncompressed.js'

@@ -13612,7 +13612,7 @@ exports.UndoManager = UndoManager;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'ace/requirejs/text!ace/css/editor.css'], function(require, exports, module) {
+__ace_shadowed__.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'pilot/oop', 'pilot/dom', 'pilot/event', 'pilot/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'pilot/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
 
 var oop = require("pilot/oop");
 var dom = require("pilot/dom");
@@ -13625,7 +13625,7 @@ var CursorLayer = require("ace/layer/cursor").Cursor;
 var ScrollBar = require("ace/scrollbar").ScrollBar;
 var RenderLoop = require("ace/renderloop").RenderLoop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
-var editorCss = require("ace/requirejs/text!ace/css/editor.css");
+var editorCss = require("text!ace/css/editor.css");
 
 // import CSS once
 dom.importCssString(editorCss);
@@ -17708,8 +17708,8 @@ function setupContainer(element, getValue) {
             var oldSumit = parentNode.onsubmit;
             // Override the onsubmit function of the form.
             parentNode.onsubmit = function(evt) {
-                element.value = getValue();
                 element.innerHTML = getValue();
+                element.value = getValue();
                 // If there is a onsubmit function already, then call
                 // it with the current context and pass the event.
                 if (oldSumit) {
