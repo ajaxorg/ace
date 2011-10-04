@@ -512,7 +512,8 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        var width = (document.documentElement.clientWidth - 280);
+        var left = env.split.$container.offsetLeft;
+        var width = document.documentElement.clientWidth - left;
         container.style.width = width + "px";
         container.style.height = document.documentElement.clientHeight + "px";
         env.split.resize();
@@ -520,7 +521,7 @@ exports.launch = function(env) {
     };
 
     window.onresize = onResize;
-    onResize();
+    env.editor.renderer.onResize(true)
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
