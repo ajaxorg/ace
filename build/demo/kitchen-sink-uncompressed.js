@@ -17000,14 +17000,41 @@ var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightR
 
 var JavaScriptHighlightRules = function() {
 
+    // see: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects
+    var globals = lang.arrayToMap(
+      // Constructors
+        ("Array|Boolean|Date|Function|Iterator|Number|Object|RegExp|String|Proxy|" +
+      // E4X
+         "Namespace|QName|XML|XMLList|" +
+         "ArrayBuffer|Float32Array|Float64Array|Int16Array|Int32Array|Int8Array|" +
+         "Uint16Array|Uint32Array|Uint8Array|Uint8ClampedArray|" +
+      // Errors
+        "Error|EvalError|InternalError|RangeError|ReferenceError|StopIteration|" +
+        "SyntaxError|TypeError|URIError|" +
+      //  Non-constructor functions
+        "decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|eval|isFinite|" +
+        "isNaN|parseFloat|parseInt|" +
+      // Other
+        "JSON|Math|" +
+      // Pseudo
+        "this|arguments|prototype|window|document"
+      ).split("|")
+    );
+
     var keywords = lang.arrayToMap(
         ("break|case|catch|continue|default|delete|do|else|finally|for|function|" +
         "if|in|instanceof|new|return|switch|throw|try|typeof|let|var|while|with|" +
         "const|yield|import|get|set").split("|")
     );
-    
+
     // keywords which can be followed by regular expressions
     var kwBeforeRe = "case|do|else|finally|in|instanceof|return|throw|try|typeof|yield";
+
+    var deprecated = lang.arrayToMap(
+        ("__parent__|__count__|escape|unescape|with|__proto__").split("|")
+    );
+
+    var definitions = lang.arrayToMap(("const|let|var|function").split("|"));
 
     var buildinConstants = lang.arrayToMap(
         ("null|Infinity|NaN|undefined").split("|")
@@ -17063,7 +17090,7 @@ var JavaScriptHighlightRules = function() {
                 token : "constant.numeric", // float
                 regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
             }, {
-                token : ["keyword", "text", "entity.name.function"],
+                token : ["keyword.definition", "text", "entity.name.function"],
                 regex : "(function)(\\s+)(" + identifierRe + ")"
             }, {
                 token : "constant.language.boolean",
@@ -17074,8 +17101,12 @@ var JavaScriptHighlightRules = function() {
                 next : "regex_allowed"
             }, {
                 token : function(value) {
-                    if (value == "this")
+                    if (globals.hasOwnProperty(value))
                         return "variable.language";
+                    else if (deprecated.hasOwnProperty(value))
+                        return "invalid.deprecated";
+                    else if (definitions.hasOwnProperty(value))
+                        return "keyword.definition";
                     else if (keywords.hasOwnProperty(value))
                         return "keyword";
                     else if (buildinConstants.hasOwnProperty(value))
@@ -17093,11 +17124,15 @@ var JavaScriptHighlightRules = function() {
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)",
                 next  : "regex_allowed"
             }, {
-                token : "lparen",
+                token : "punctuation.operator",
+                regex : "\\?|\\:|\\,|\\;|\\.",
+                next  : "regex_allowed"
+            }, {
+                token : "paren.lparen",
                 regex : "[[({]",
                 next  : "regex_allowed"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "keyword.operator",
@@ -18094,14 +18129,14 @@ var CssHighlightRules = function() {
 
     var ruleset = lang.copyArray(base_ruleset);
     ruleset.unshift({
-        token : "rparen",
+        token : "paren.rparen",
         regex : "\\}",
         next:   "start"
     });
 
     var media_ruleset = lang.copyArray( base_ruleset );
     media_ruleset.unshift({
-        token : "rparen",
+        token : "paren.rparen",
         regex : "\\}",
         next:   "media"
     });
@@ -18140,7 +18175,7 @@ var CssHighlightRules = function() {
             regex : "\\/\\*",
             next : "comment"
         }, {
-            token: "lparen",
+            token: "paren.lparen",
             regex: "\\{",
             next:  "ruleset"
         }, {
@@ -18167,7 +18202,7 @@ var CssHighlightRules = function() {
             regex : "\\/\\*",
             next : "media_comment"
         }, {
-            token: "lparen",
+            token: "paren.lparen",
             regex: "\\{",
             next:  "media_ruleset"
         },{
@@ -18598,10 +18633,10 @@ var ScssHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "<|>|<=|>=|==|!=|-|%|#|\\+|\\$|\\+|\\*"
             }, {
-                token : "lparen",
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -19626,10 +19661,10 @@ var LuaHighlightRules = function() {
             token : "keyword.operator",
             regex : "\\+|\\-|\\*|\\/|%|\\#|\\^|~|<|>|<=|=>|==|~=|=|\\:|\\.\\.\\.|\\.\\."
         }, {
-            token : "lparen",
+            token : "paren.lparen",
             regex : "[\\[\\(\\{]"
         }, {
-            token : "rparen",
+            token : "paren.rparen",
             regex : "[\\]\\)\\}]"
         }, {
             token : "text",
@@ -20074,10 +20109,10 @@ var PythonHighlightRules = function() {
             token : "keyword.operator",
             regex : "\\+|\\-|\\*|\\*\\*|\\/|\\/\\/|%|<<|>>|&|\\||\\^|~|<|>|<=|=>|==|!=|<>|="
         }, {
-            token : "lparen",
+            token : "lparen.paren",
             regex : "[\\[\\(\\{]"
         }, {
-            token : "rparen",
+            token : "paren.rparen",
             regex : "[\\]\\)\\}]"
         }, {
             token : "text",
@@ -20107,7 +20142,8 @@ var PythonHighlightRules = function() {
 oop.inherits(PythonHighlightRules, TextHighlightRules);
 
 exports.PythonHighlightRules = PythonHighlightRules;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
 * Version: MPL 1.1/GPL 2.0/LGPL 2.1
 *
 * The contents of this file are subject to the Mozilla Public License Version
@@ -21231,10 +21267,10 @@ var PhpHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
             }, {
-                token : "lparen",
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -21578,10 +21614,14 @@ var CSharpHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
             }, {
-                token : "lparen",
+                token : "punctuation.operator",
+                regex : "\\?|\\:|\\,|\\;|\\.",
+                next  : "regex_allowed"
+            }, {
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -21891,10 +21931,10 @@ var RubyHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
             }, {
-                token : "lparen",
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -22172,10 +22212,14 @@ var c_cppHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|==|=|!=|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|new|delete|typeof|void)"
             }, {
-                token : "lparen",
+              token : "punctuation.operator",
+              regex : "\\?|\\:|\\,|\\;|\\.",
+              next  : "regex_allowed"
+            }, {
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -22499,10 +22543,14 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pil
                     token : "comment",
                     regex : "#.*"
                 }, {
-                    token : "lparen",
+                    token : "punctuation.operator",
+                    regex : "\\?|\\:|\\,|\\.",
+                    next  : "regex_allowed"
+                }, {
+                    token : "paren.lparen",
                     regex : "[({[]"
                 }, {
-                    token : "rparen",
+                    token : "paren.rparen",
                     regex : "[\\]})]"
                 }, {
                     token : "keyword.operator",
@@ -22723,10 +22771,10 @@ var JsonHighlightRules = function() {
                 token : "invalid.illegal", // comments are not allowed
                 regex : "\\/\\/.*$"
             }, {
-                token : "lparen",
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -22740,7 +22788,8 @@ var JsonHighlightRules = function() {
 oop.inherits(JsonHighlightRules, TextHighlightRules);
 
 exports.JsonHighlightRules = JsonHighlightRules;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -23858,11 +23907,11 @@ var OcamlHighlightRules = function() {
                 regex : "\\+\\.|\\-\\.|\\*\\.|\\/\\.|#|;;|\\+|\\-|\\*|\\*\\*\\/|\\/\\/|%|<<|>>|&|\\||\\^|~|<|>|<=|=>|==|!=|<>|<-|="
             },
             {
-                token : "lparen",
+                token : "paren.lparen",
                 regex : "[[({]"
             },
             {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             },
             {
@@ -24818,10 +24867,10 @@ var ScalaHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
             }, {
-                token : "lparen",
+                token : "paren.lparen",
                 regex : "[[({]"
             }, {
-                token : "rparen",
+                token : "paren.rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
