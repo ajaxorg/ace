@@ -187,8 +187,8 @@ function setupContainer(element, getValue) {
             var oldSumit = parentNode.onsubmit;
             // Override the onsubmit function of the form.
             parentNode.onsubmit = function(evt) {
-                element.value = getValue();
                 element.innerHTML = getValue();
+                element.value = getValue();
                 // If there is a onsubmit function already, then call
                 // it with the current context and pass the event.
                 if (oldSumit) {

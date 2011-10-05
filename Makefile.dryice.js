@@ -185,6 +185,7 @@ if (target == "normal") {
     copy({
         source: ace,
         filter: [
+            filterTextPlugin,
             shadow
         ],
         dest:   targetDir + '/src/ace-uncompressed.js'
@@ -212,7 +213,7 @@ project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "python", "lua", "xml", "ruby", "java", "c_cpp",
     "coffee", "perl", "csharp", "svg", "clojure", "scss", "json", "groovy",
-    "ocaml", "scala", "textile", "scad", "markdown", "latex"
+    "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({

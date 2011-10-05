@@ -73,6 +73,7 @@ var TextMode = require("ace/mode/text").Mode;
 var GroovyMode = require("ace/mode/groovy").Mode;
 var ScalaMode = require("ace/mode/scala").Mode;
 var LatexMode = require("ace/mode/latex").Mode;
+var PowershellMode = require("ace/mode/powershell").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var vim = require("ace/keyboard/keybinding/vim").Vim;
@@ -201,6 +202,10 @@ exports.launch = function(env) {
     docs.latex.setMode(new LatexMode());
     docs.latex.setUndoManager(new UndoManager());
 
+    docs.powershell = new EditSession(require("ace/requirejs/text!demo/docs/powershell.ps1"));
+    docs.powershell.setMode(new PowershellMode());
+    docs.powershell.setUndoManager(new UndoManager());
+
     // Add a "name" property to all docs
     for (var doc in docs) {
         docs[doc].name = doc;
@@ -245,7 +250,8 @@ exports.launch = function(env) {
         csharp: new CSharpMode(),
         groovy: new GroovyMode(),
         scala: new ScalaMode(),
-        latex: new LatexMode()
+        latex: new LatexMode(),
+        powershell: new PowershellMode()
     };
 
     function getMode() {
@@ -351,6 +357,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof LatexMode) {
             modeEl.value = "latex";
+        }
+        else if (mode instanceof PowershellMode) {
+            modeEl.value = "powershell";
         }
         else {
             modeEl.value = "text";
@@ -503,7 +512,8 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        var width = (document.documentElement.clientWidth - 280);
+        var left = env.split.$container.offsetLeft;
+        var width = document.documentElement.clientWidth - left;
         container.style.width = width + "px";
         container.style.height = document.documentElement.clientHeight + "px";
         env.split.resize();
@@ -511,7 +521,7 @@ exports.launch = function(env) {
     };
 
     window.onresize = onResize;
-    onResize();
+    env.editor.renderer.onResize(true)
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
