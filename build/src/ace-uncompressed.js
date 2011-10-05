@@ -6064,7 +6064,7 @@ var Editor =function(renderer, session) {
     this.unsetStyle = function(style) {
         this.renderer.unsetStyle(style);
     };
-    
+
     this.setFontSize = function(size) {
         this.container.style.fontSize = size;
     };
@@ -6103,7 +6103,7 @@ var Editor =function(renderer, session) {
         });
         this.textInput.focus();
     };
-    
+
     this.isFocused = function() {
         return this.textInput.isFocused();
     };
@@ -6241,7 +6241,7 @@ var Editor =function(renderer, session) {
         var text = "";
         if (!this.selection.isEmpty())
             text = this.session.getTextRange(this.getSelectionRange());
-        
+
         this._emit("copy", text);
         return text;
     };
@@ -6357,7 +6357,7 @@ var Editor =function(renderer, session) {
     this.onTextInput = function(text, notPasted) {
         if (!notPasted)
             this._emit("paste", text);
-            
+
         // In case the text was not pasted and we got only one character, then
         // handel it as a command key stroke.
         if (notPasted && text.length == 1) {
@@ -6490,32 +6490,26 @@ var Editor =function(renderer, session) {
         return this.$modeBehaviours;
     };
 
-    this.removeRight = function() {
+    this.remove = function(dir) {
         if (this.$readOnly)
             return;
 
-        if (this.selection.isEmpty()) {
-            this.selection.selectRight();
+        if (this.selection.isEmpty()){
+            if(dir == "left")
+                this.selection.selectLeft();
+            else
+                this.selection.selectRight();
         }
-        this.session.remove(this.getSelectionRange());
-        this.clearSelection();
-    };
-
-    this.removeLeft = function() {
-        if (this.$readOnly)
-            return;
-
-        if (this.selection.isEmpty())
-            this.selection.selectLeft();
 
         var range = this.getSelectionRange();
         if (this.getBehavioursEnabled()) {
             var session = this.session;
             var state = session.getState(range.start.row);
             var new_range = session.getMode().transformAction(state, 'deletion', this, session, range);
-            if (new_range !== false) {
+            if (new_range === false)
+                return;
+            if (new_range)
                 range = new_range;
-            }
         }
 
         this.session.remove(range);
@@ -7569,7 +7563,7 @@ function DefaultHandlers(editor) {
             onStartSelect(pos);
         }
 
-        var mousePageX, mousePageY;
+        var mousePageX = pageX, mousePageY = pageY;
         var overwrite = editor.getOverwrite();
         var mousedownTime = (new Date()).getTime();
         var dragCursor, dragRange;
@@ -7620,9 +7614,6 @@ function DefaultHandlers(editor) {
         };
 
         var onSelectionInterval = function() {
-            if (mousePageX === undefined || mousePageY === undefined)
-                return;
-
             if (state == STATE_UNKNOWN) {
                 var distance = calcDistance(pageX, pageY, mousePageX, mousePageY);
                 var time = (new Date()).getTime();
@@ -8410,7 +8401,7 @@ canon.addCommand({
 canon.addCommand({
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(env, args, request) { env.editor.removeRight(); }
+    exec: function(env, args, request) { env.editor.remove("right"); }
 });
 canon.addCommand({
     name: "backspace",
@@ -8418,16 +8409,16 @@ canon.addCommand({
         "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(env, args, request) { env.editor.removeLeft(); }
+    exec: function(env, args, request) { env.editor.remove("left"); }
 });
 canon.addCommand({
     name: "removetolinestart",
-    bindKey: bindKey(null, "Option-Backspace"),
+    bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
     exec: function(env, args, request) { env.editor.removeToLineStart(); }
 });
 canon.addCommand({
     name: "removetolineend",
-    bindKey: bindKey(null, "Ctrl-K"),
+    bindKey: bindKey("Alt-Delete", "Ctrl-K"),
     exec: function(env, args, request) { env.editor.removeToLineEnd(); }
 });
 canon.addCommand({
@@ -8437,7 +8428,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "removewordright",
-    bindKey: bindKey(null, "Alt-Delete"),
+    bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
     exec: function(env, args, request) { env.editor.removeWordRight(); }
 });
 canon.addCommand({
@@ -16113,6 +16104,13 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
+  "    cursor: text;\n" +
+  "}\n" +
+  "\n" +
+  "/* setting pointer-events: auto; on node under the mouse, which changes during scroll,\n" +
+  "  will break mouse wheel scrolling in Safari */\n" +
+  ".ace_content * {\n" +
+  "     pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_composition {\n" +
@@ -16204,8 +16202,6 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_cursor-layer {\n" +
   "    z-index: 4;\n" +
-  "    cursor: text;\n" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
   "}\n" +
   "\n" +
   ".ace_cursor {\n" +
@@ -16219,11 +16215,6 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_line {\n" +
   "    white-space: nowrap;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer {\n" +
-  "    cursor: text;\n" +
-  "    pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_step {\n" +
@@ -16256,9 +16247,15 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
+  "     pointer-events: auto;\n" +
+  "     color: darkred;\n" +
   "}\n" +
   "\n" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  ".ace_fold:hover{\n" +
+  "    background: gold!important;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_content {\n" +
   "  cursor: move;\n" +
   "}\n" +
   "");
@@ -16913,6 +16910,13 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
+  "    cursor: text;\n" +
+  "}\n" +
+  "\n" +
+  "/* setting pointer-events: auto; on node under the mouse, which changes during scroll,\n" +
+  "  will break mouse wheel scrolling in Safari */\n" +
+  ".ace_content * {\n" +
+  "     pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_composition {\n" +
@@ -17004,8 +17008,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "\n" +
   ".ace_cursor-layer {\n" +
   "    z-index: 4;\n" +
-  "    cursor: text;\n" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
   "}\n" +
   "\n" +
   ".ace_cursor {\n" +
@@ -17019,11 +17021,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "\n" +
   ".ace_line {\n" +
   "    white-space: nowrap;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer {\n" +
-  "    cursor: text;\n" +
-  "    pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_step {\n" +
@@ -17056,9 +17053,15 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
+  "     pointer-events: auto;\n" +
+  "     color: darkred;\n" +
   "}\n" +
   "\n" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  ".ace_fold:hover{\n" +
+  "    background: gold!important;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_content {\n" +
   "  cursor: move;\n" +
   "}\n" +
   "");

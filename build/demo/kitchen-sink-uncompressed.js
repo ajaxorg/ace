@@ -5905,7 +5905,8 @@ exports.launch = function(env) {
     }
 
     function onResize() {
-        var width = (document.documentElement.clientWidth - 280);
+        var left = env.split.$container.offsetLeft;
+        var width = document.documentElement.clientWidth - left;
         container.style.width = width + "px";
         container.style.height = document.documentElement.clientHeight + "px";
         env.split.resize();
@@ -5913,7 +5914,7 @@ exports.launch = function(env) {
     };
 
     window.onresize = onResize;
-    onResize();
+    env.editor.renderer.onResize(true)
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
@@ -7344,7 +7345,7 @@ var Editor =function(renderer, session) {
     this.unsetStyle = function(style) {
         this.renderer.unsetStyle(style);
     };
-    
+
     this.setFontSize = function(size) {
         this.container.style.fontSize = size;
     };
@@ -7383,7 +7384,7 @@ var Editor =function(renderer, session) {
         });
         this.textInput.focus();
     };
-    
+
     this.isFocused = function() {
         return this.textInput.isFocused();
     };
@@ -7521,7 +7522,7 @@ var Editor =function(renderer, session) {
         var text = "";
         if (!this.selection.isEmpty())
             text = this.session.getTextRange(this.getSelectionRange());
-        
+
         this._emit("copy", text);
         return text;
     };
@@ -7637,7 +7638,7 @@ var Editor =function(renderer, session) {
     this.onTextInput = function(text, notPasted) {
         if (!notPasted)
             this._emit("paste", text);
-            
+
         // In case the text was not pasted and we got only one character, then
         // handel it as a command key stroke.
         if (notPasted && text.length == 1) {
@@ -7770,32 +7771,26 @@ var Editor =function(renderer, session) {
         return this.$modeBehaviours;
     };
 
-    this.removeRight = function() {
+    this.remove = function(dir) {
         if (this.$readOnly)
             return;
 
-        if (this.selection.isEmpty()) {
-            this.selection.selectRight();
+        if (this.selection.isEmpty()){
+            if(dir == "left")
+                this.selection.selectLeft();
+            else
+                this.selection.selectRight();
         }
-        this.session.remove(this.getSelectionRange());
-        this.clearSelection();
-    };
-
-    this.removeLeft = function() {
-        if (this.$readOnly)
-            return;
-
-        if (this.selection.isEmpty())
-            this.selection.selectLeft();
 
         var range = this.getSelectionRange();
         if (this.getBehavioursEnabled()) {
             var session = this.session;
             var state = session.getState(range.start.row);
             var new_range = session.getMode().transformAction(state, 'deletion', this, session, range);
-            if (new_range !== false) {
+            if (new_range === false)
+                return;
+            if (new_range)
                 range = new_range;
-            }
         }
 
         this.session.remove(range);
@@ -8849,7 +8844,7 @@ function DefaultHandlers(editor) {
             onStartSelect(pos);
         }
 
-        var mousePageX, mousePageY;
+        var mousePageX = pageX, mousePageY = pageY;
         var overwrite = editor.getOverwrite();
         var mousedownTime = (new Date()).getTime();
         var dragCursor, dragRange;
@@ -8900,9 +8895,6 @@ function DefaultHandlers(editor) {
         };
 
         var onSelectionInterval = function() {
-            if (mousePageX === undefined || mousePageY === undefined)
-                return;
-
             if (state == STATE_UNKNOWN) {
                 var distance = calcDistance(pageX, pageY, mousePageX, mousePageY);
                 var time = (new Date()).getTime();
@@ -9690,7 +9682,7 @@ canon.addCommand({
 canon.addCommand({
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(env, args, request) { env.editor.removeRight(); }
+    exec: function(env, args, request) { env.editor.remove("right"); }
 });
 canon.addCommand({
     name: "backspace",
@@ -9698,16 +9690,16 @@ canon.addCommand({
         "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(env, args, request) { env.editor.removeLeft(); }
+    exec: function(env, args, request) { env.editor.remove("left"); }
 });
 canon.addCommand({
     name: "removetolinestart",
-    bindKey: bindKey(null, "Option-Backspace"),
+    bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
     exec: function(env, args, request) { env.editor.removeToLineStart(); }
 });
 canon.addCommand({
     name: "removetolineend",
-    bindKey: bindKey(null, "Ctrl-K"),
+    bindKey: bindKey("Alt-Delete", "Ctrl-K"),
     exec: function(env, args, request) { env.editor.removeToLineEnd(); }
 });
 canon.addCommand({
@@ -9717,7 +9709,7 @@ canon.addCommand({
 });
 canon.addCommand({
     name: "removewordright",
-    bindKey: bindKey(null, "Alt-Delete"),
+    bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
     exec: function(env, args, request) { env.editor.removeWordRight(); }
 });
 canon.addCommand({
@@ -17044,17 +17036,8 @@ oop.inherits(Mode, TextMode);
     };
     
     this.createWorker = function(session) {
-        var doc = session.getDocument();
         var worker = new WorkerClient(["ace", "pilot"], "worker-javascript.js", "ace/mode/javascript_worker", "JavaScriptWorker");
-        worker.call("setValue", [doc.getValue()]);
-        
-        doc.on("change", function(e) {
-            e.range = {
-                start: e.data.range.start,
-                end: e.data.range.end
-            };
-            worker.emit("change", e);
-        });
+		worker.attachToDocument(session.getDocument());
             
         worker.on("jslint", function(results) {
             var errors = [];
@@ -17584,7 +17567,7 @@ var EventEmitter = require("pilot/event_emitter").EventEmitter;
 
 var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
 
-    this.callbacks = [];
+    this.changeListener = this.changeListener.bind(this);
 
     if (require.packaged) {
         var base = this.$guessBasePath();
@@ -17646,9 +17629,9 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
 
     this.$normalizePath = function(path) {
         if (!path.match(/^\w+:/)) {
-            path = location.protocol + "//" + location.host 
+            path = location.protocol + "//" + location.host
                 // paths starting with a slash are relative to the root (host)
-                + (path.charAt(0) == "/" ? "" : location.pathname.replace(/\/[^\/]*$/, "")) 
+                + (path.charAt(0) == "/" ? "" : location.pathname.replace(/\/[^\/]*$/, ""))
                 + "/" + path.replace(/^[\/]+/, "");
         }
         return path;
@@ -17657,7 +17640,7 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
     this.$guessBasePath = function() {
         if (require.aceBaseUrl)
             return require.aceBaseUrl;
-        
+
         var scripts = document.getElementsByTagName("script");
         for (var i=0; i<scripts.length; i++) {
             var script = scripts[i];
@@ -17665,7 +17648,7 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
             var base = script.getAttribute("data-ace-base");
             if (base)
                 return base.replace(/\/*$/, "/");
-            
+
             var src = script.src || script.getAttribute("src");
             if (!src) {
                 continue;
@@ -17680,6 +17663,9 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
     this.terminate = function() {
         this._dispatchEvent("terminate", {});
         this.$worker.terminate();
+        this.$worker = null;
+        this.$doc.removeEventListener("change", this.changeListener);
+        this.$doc = null;
     };
 
     this.send = function(cmd, args) {
@@ -17697,9 +17683,28 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
 
     this.emit = function(event, data) {
         try {
-            this.$worker.postMessage({event: event, data: data});
+            // firefox refuses to clone objects which have function properties
+            // TODO: cleanup event
+            this.$worker.postMessage({event: event, data: {data: data.data}});
         }
         catch(ex) {}
+    };
+
+    this.attachToDocument = function(doc) {
+        if(this.$doc)
+            this.terminate();
+
+        this.$doc = doc;
+        this.call("setValue", [doc.getValue()]);
+        doc.on("change", this.changeListener);
+    };
+
+    this.changeListener = function(e) {
+        e.range = {
+            start: e.data.range.start,
+            end: e.data.range.end
+        };
+        this.emit("change", e);
     };
 
 }).call(WorkerClient.prototype);
@@ -17787,7 +17792,7 @@ var CstyleBehaviour = function () {
             if (rightChar == '}') {
                 var openBracePos = session.findMatchingBracket({row: cursor.row, column: cursor.column + 1});
                 if (!openBracePos)
-                     return false;
+                     return null;
 
                 var indent = this.getNextLineIndent(state, line.substring(0, line.length - 1), session.getTabString());
                 var next_indent = this.$getIndent(session.doc.getLine(openBracePos.row));
@@ -17798,7 +17803,6 @@ var CstyleBehaviour = function () {
                 }
             }
         }
-        return false;
     });
 
     this.add("braces", "deletion", function (state, action, editor, session, range) {
@@ -17811,7 +17815,6 @@ var CstyleBehaviour = function () {
                 return range;
             }
         }
-        return false;
     });
 
     this.add("parens", "insertion", function (state, action, editor, session, text) {
@@ -17843,7 +17846,6 @@ var CstyleBehaviour = function () {
                 }
             }
         }
-        return false;
     });
 
     this.add("parens", "deletion", function (state, action, editor, session, range) {
@@ -17856,7 +17858,6 @@ var CstyleBehaviour = function () {
                 return range;
             }
         }
-        return false;
     });
 
     this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
@@ -17875,7 +17876,7 @@ var CstyleBehaviour = function () {
 
                 // We're escaped.
                 if (leftChar == '\\') {
-                    return false;
+                    return null;
                 }
 
                 // Find what token we're inside.
@@ -17914,7 +17915,6 @@ var CstyleBehaviour = function () {
                 }
             }
         }
-        return false;
     });
 
     this.add("string_dquotes", "deletion", function (state, action, editor, session, range) {
@@ -17927,7 +17927,6 @@ var CstyleBehaviour = function () {
                 return range;
             }
         }
-        return false;
     });
 
 }
@@ -18014,17 +18013,8 @@ oop.inherits(Mode, TextMode);
     };
     
     this.createWorker = function(session) {
-        var doc = session.getDocument();
         var worker = new WorkerClient(["ace", "pilot"], "worker-css.js", "ace/mode/css_worker", "Worker");
-        worker.call("setValue", [doc.getValue()]);
-        
-        doc.on("change", function(e) {
-            e.range = {
-                start: e.data.range.start,
-                end: e.data.range.end
-            };
-            worker.emit("change", e);
-        });
+        worker.attachToDocument(session.getDocument());
         
         worker.on("csslint", function(e) {
             var errors = [];
@@ -18985,17 +18975,17 @@ var HtmlHighlightRules = function() {
         }, {
             token : "meta.tag",
             regex : "[-_a-zA-Z0-9:]+",
-            next : name + "-attribute-list" 
+            next : name + "embed-attribute-list" 
         }, {
             token: "empty",
             regex: "",
-            next : name + "-attribute-list"
+            next : name + "embed-attribute-list"
         }];
 
         states[name + "-qstring"] = multiLineString("'", name);
         states[name + "-qqstring"] = multiLineString("\"", name);
         
-        states[name + "-attribute-list"] = [{
+        states[name + "embed-attribute-list"] = [{
             token : "text",
             regex : ">",
             next : nextState
@@ -19178,7 +19168,6 @@ var XmlBehaviour = function () {
                 }
             }
         }
-        return false;
     });
     
 }
@@ -21750,8 +21739,7 @@ var CSharpHighlightRules = function() {
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
             }, {
                 token : "punctuation.operator",
-                regex : "\\?|\\:|\\,|\\;|\\.",
-                next  : "regex_allowed"
+                regex : "\\?|\\:|\\,|\\;|\\."
             }, {
                 token : "paren.lparen",
                 regex : "[[({]"
@@ -22348,8 +22336,7 @@ var c_cppHighlightRules = function() {
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|==|=|!=|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|new|delete|typeof|void)"
             }, {
               token : "punctuation.operator",
-              regex : "\\?|\\:|\\,|\\;|\\.",
-              next  : "regex_allowed"
+              regex : "\\?|\\:|\\,|\\;|\\."
             }, {
                 token : "paren.lparen",
                 regex : "[[({]"
@@ -22503,17 +22490,8 @@ oop.inherits(Mode, TextMode);
     };
     
     this.createWorker = function(session) {
-        var doc = session.getDocument();
         var worker = new WorkerClient(["ace", "pilot"], "worker-coffee.js", "ace/mode/coffee_worker", "Worker");
-        worker.call("setValue", [doc.getValue()]);
-        
-        doc.on("change", function(e) {
-            e.range = {
-                start: e.data.range.start,
-                end: e.data.range.end
-            };
-            worker.emit("change", e);
-        });
+        worker.attachToDocument(session.getDocument());
         
         worker.on("error", function(e) {
             session.setAnnotations([e.data]);
@@ -22679,8 +22657,7 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pil
                     regex : "#.*"
                 }, {
                     token : "punctuation.operator",
-                    regex : "\\?|\\:|\\,|\\.",
-                    next  : "regex_allowed"
+                    regex : "\\?|\\:|\\,|\\."
                 }, {
                     token : "paren.lparen",
                     regex : "[({[]"
@@ -27122,6 +27099,13 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
+  "    cursor: text;\n" +
+  "}\n" +
+  "\n" +
+  "/* setting pointer-events: auto; on node under the mouse, which changes during scroll,\n" +
+  "  will break mouse wheel scrolling in Safari */\n" +
+  ".ace_content * {\n" +
+  "     pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_composition {\n" +
@@ -27213,8 +27197,6 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_cursor-layer {\n" +
   "    z-index: 4;\n" +
-  "    cursor: text;\n" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
   "}\n" +
   "\n" +
   ".ace_cursor {\n" +
@@ -27228,11 +27210,6 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_line {\n" +
   "    white-space: nowrap;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer {\n" +
-  "    cursor: text;\n" +
-  "    pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_step {\n" +
@@ -27265,9 +27242,15 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
+  "     pointer-events: auto;\n" +
+  "     color: darkred;\n" +
   "}\n" +
   "\n" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  ".ace_fold:hover{\n" +
+  "    background: gold!important;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_content {\n" +
   "  cursor: move;\n" +
   "}\n" +
   "");
@@ -27922,6 +27905,13 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
+  "    cursor: text;\n" +
+  "}\n" +
+  "\n" +
+  "/* setting pointer-events: auto; on node under the mouse, which changes during scroll,\n" +
+  "  will break mouse wheel scrolling in Safari */\n" +
+  ".ace_content * {\n" +
+  "     pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_composition {\n" +
@@ -28013,8 +28003,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "\n" +
   ".ace_cursor-layer {\n" +
   "    z-index: 4;\n" +
-  "    cursor: text;\n" +
-  "    /* setting pointer-events: none; here will break mouse wheel scrolling in Safari */\n" +
   "}\n" +
   "\n" +
   ".ace_cursor {\n" +
@@ -28028,11 +28016,6 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "\n" +
   ".ace_line {\n" +
   "    white-space: nowrap;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_marker-layer {\n" +
-  "    cursor: text;\n" +
-  "    pointer-events: none;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_step {\n" +
@@ -28065,9 +28048,15 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
+  "     pointer-events: auto;\n" +
+  "     color: darkred;\n" +
   "}\n" +
   "\n" +
-  ".ace_dragging .ace_marker-layer, .ace_dragging .ace_text-layer {\n" +
+  ".ace_fold:hover{\n" +
+  "    background: gold!important;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dragging .ace_content {\n" +
   "  cursor: move;\n" +
   "}\n" +
   "");
