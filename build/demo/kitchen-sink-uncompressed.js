@@ -7787,8 +7787,6 @@ var Editor =function(renderer, session) {
             var session = this.session;
             var state = session.getState(range.start.row);
             var new_range = session.getMode().transformAction(state, 'deletion', this, session, range);
-            if (new_range === false)
-                return;
             if (new_range)
                 range = new_range;
         }
