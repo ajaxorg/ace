@@ -127,7 +127,7 @@ var lookup = function(moduleName) {
 
     if (typeof module === 'function') {
         var exports = {};
-        module(require, exports, { id: moduleName, uri: '' });
+        module(require, exports, {id: moduleName, uri: ''});
         // cache the resulting module object for next time
         define.modules[moduleName] = exports;
         return exports;
@@ -757,7 +757,7 @@ if (!Object.getOwnPropertyDescriptor) {
 
         // If object has a property then it's for sure both `enumerable` and
         // `configurable`.
-        descriptor =  { enumerable: true, configurable: true };
+        descriptor =  {enumerable: true, configurable: true};
 
         // If JS engine supports accessor properties then property may be a
         // getter or setter.
@@ -807,7 +807,7 @@ if (!Object.create) {
     Object.create = function create(prototype, properties) {
         var object;
         if (prototype === null) {
-            object = { "__proto__": null };
+            object = {"__proto__": null};
         } else {
             if (typeof prototype != "object")
                 throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
@@ -1382,7 +1382,7 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/fixold
         editor.setSession(doc);
 
         var env = require("pilot/environment").create();
-        catalog.startupPlugins({ env: env }).then(function() {
+        catalog.startupPlugins({env: env}).then(function() {
             env.document = doc;
             env.editor = editor;
             editor.resize();
@@ -1844,8 +1844,8 @@ var Status = {
      * for failure is (x !== Status.VALID)
      */
     VALID: {
-        toString: function() { return 'VALID'; },
-        valueOf: function() { return 0; }
+        toString: function() {return 'VALID';},
+        valueOf: function() {return 0;}
     },
 
     /**
@@ -1855,8 +1855,8 @@ var Status = {
      * @see Status.INVALID
      */
     INCOMPLETE: {
-        toString: function() { return 'INCOMPLETE'; },
-        valueOf: function() { return 1; }
+        toString: function() {return 'INCOMPLETE';},
+        valueOf: function() {return 1;}
     },
 
     /**
@@ -1866,8 +1866,8 @@ var Status = {
      * @see Status.INCOMPLETE
      */
     INVALID: {
-        toString: function() { return 'INVALID'; },
-        valueOf: function() { return 2; }
+        toString: function() {return 'INVALID';},
+        valueOf: function() {return 2;}
     },
 
     /**
@@ -1939,7 +1939,7 @@ Type.prototype = {
      * Where possible, there should be round-tripping between values and their
      * string representations.
      */
-    stringify: function(value) { throw new Error("not implemented"); },
+    stringify: function(value) {throw new Error("not implemented");},
 
     /**
      * Convert the given <tt>str</tt> to an instance of this type.
@@ -1947,7 +1947,7 @@ Type.prototype = {
      * string representations.
      * @return Conversion
      */
-    parse: function(str) { throw new Error("not implemented"); },
+    parse: function(str) {throw new Error("not implemented");},
 
     /**
      * The plug-in system, and other things need to know what this type is
@@ -2745,7 +2745,7 @@ Request.prototype._beginOutput = function() {
         requests.shiftObject();
     }
 
-    exports._dispatchEvent('output', { requests: requests, request: this });
+    exports._dispatchEvent('output', {requests: requests, request: this});
 };
 
 /**
@@ -2872,7 +2872,7 @@ if (typeof(window) === 'undefined') {
     NAMES.forEach(function(name) {
         exports[name] = function() {
             var args = Array.prototype.slice.call(arguments);
-            var msg = { op: 'log', method: name, args: args };
+            var msg = {op: 'log', method: name, args: args};
             postMessage(JSON.stringify(msg));
         };
     });
@@ -4177,7 +4177,7 @@ Setting.prototype = {
             this._settings.persister.persistValue(this._settings, this.name, value);
         }
 
-        this._dispatchEvent('change', { setting: this, value: value });
+        this._dispatchEvent('change', {setting: this, value: value});
     },
 
     /**
@@ -6071,7 +6071,10 @@ var Editor =function(renderer, session) {
 
     this.$highlightBrackets = function() {
         if (this.session.$bracketHighlight) {
-            this.session.removeMarker(this.session.$bracketHighlight);
+            for(var i = 0;i < this.session.$bracketHighlight.length;i++)
+	    {
+		 this.session.removeMarker(this.session.$bracketHighlight[i]);
+	    }
             this.session.$bracketHighlight = null;
         }
 
@@ -6084,12 +6087,31 @@ var Editor =function(renderer, session) {
         this.$highlightPending = true;
         setTimeout(function() {
             self.$highlightPending = false;
-
-            var pos = self.session.findMatchingBracket(self.getCursorPosition());
-            if (pos) {
-                var range = new Range(pos.row, pos.column, pos.row, pos.column+1);
-                self.session.$bracketHighlight = self.session.addMarker(range, "ace_bracket", "text");
-            }
+		var cursor = self.getCursorPosition();
+		if (cursor.column == 0) return null;
+		var charBeforeCursor = self.session.getLine(cursor.row).charAt(cursor.column-1);
+		if (charBeforeCursor == "") return null;
+		var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
+		if (!match) {
+		    return null;
+		}
+		var bracket = null;
+		if (match[1]) {
+		    bracket = self.session.$findClosingBracket(match[1], cursor);
+		} else {
+		    bracket = self.session.$findOpeningBracket(match[2], cursor);
+		}
+		cursor = new Range(cursor.row, cursor.column-1, cursor.row, cursor.column);
+		if (bracket) {
+		    bracket = new Range(bracket.row, bracket.column, bracket.row, bracket.column+1);
+		    self.session.$bracketHighlight = [
+			self.session.addMarker(bracket, "ace_bracket", "text"),
+			self.session.addMarker(cursor, "ace_bracket", "text")
+		    ];
+		}
+		else {
+		    self.session.$bracketHighlight = [self.session.addMarker(cursor, "ace_bracket_error", "text")];
+		}
         }, 10);
     };
 
@@ -7210,7 +7232,7 @@ var TextInput = function(parentNode, host) {
 
     event.addCommandKeyListener(text, host.onCommandKey.bind(host));
     if (useragent.isOldIE) {
-        var keytable = { 13:1, 27:1 };
+        var keytable = {13:1, 27:1};
         event.addListener(text, "keyup", function (e) {
             if (inCompostion && (!text.value || keytable[e.keyCode]))
                 setTimeout(onCompositionEnd, 0);
@@ -8155,12 +8177,12 @@ canon.addCommand({
 canon.addCommand({
     name: "selectall",
     bindKey: bindKey("Ctrl-A", "Command-A"),
-    exec: function(env, args, request) { env.editor.selectAll(); }
+    exec: function(env, args, request) {env.editor.selectAll();}
 });
 canon.addCommand({
     name: "removeline",
     bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(env, args, request) { env.editor.removeLines(); }
+    exec: function(env, args, request) {env.editor.removeLines();}
 });
 canon.addCommand({
     name: "gotoline",
@@ -8175,17 +8197,17 @@ canon.addCommand({
 canon.addCommand({
     name: "togglecomment",
     bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(env, args, request) { env.editor.toggleCommentLines(); }
+    exec: function(env, args, request) {env.editor.toggleCommentLines();}
 });
 canon.addCommand({
     name: "findnext",
     bindKey: bindKey("Ctrl-K", "Command-G"),
-    exec: function(env, args, request) { env.editor.findNext(); }
+    exec: function(env, args, request) {env.editor.findNext();}
 });
 canon.addCommand({
     name: "findprevious",
     bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
-    exec: function(env, args, request) { env.editor.findPrevious(); }
+    exec: function(env, args, request) {env.editor.findPrevious();}
 });
 canon.addCommand({
     name: "find",
@@ -8224,182 +8246,182 @@ canon.addCommand({
 canon.addCommand({
     name: "undo",
     bindKey: bindKey("Ctrl-Z", "Command-Z"),
-    exec: function(env, args, request) { env.editor.undo(); }
+    exec: function(env, args, request) {env.editor.undo();}
 });
 canon.addCommand({
     name: "redo",
     bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
-    exec: function(env, args, request) { env.editor.redo(); }
+    exec: function(env, args, request) {env.editor.redo();}
 });
 canon.addCommand({
     name: "overwrite",
     bindKey: bindKey("Insert", "Insert"),
-    exec: function(env, args, request) { env.editor.toggleOverwrite(); }
+    exec: function(env, args, request) {env.editor.toggleOverwrite();}
 });
 canon.addCommand({
     name: "copylinesup",
     bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
-    exec: function(env, args, request) { env.editor.copyLinesUp(); }
+    exec: function(env, args, request) {env.editor.copyLinesUp();}
 });
 canon.addCommand({
     name: "movelinesup",
     bindKey: bindKey("Alt-Up", "Option-Up"),
-    exec: function(env, args, request) { env.editor.moveLinesUp(); }
+    exec: function(env, args, request) {env.editor.moveLinesUp();}
 });
 canon.addCommand({
     name: "selecttostart",
     bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
-    exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectFileStart();}
 });
 canon.addCommand({
     name: "gotostart",
     bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
-    exec: function(env, args, request) { env.editor.navigateFileStart(); }
+    exec: function(env, args, request) {env.editor.navigateFileStart();}
 });
 canon.addCommand({
     name: "selectup",
     bindKey: bindKey("Shift-Up", "Shift-Up"),
-    exec: function(env, args, request) { env.editor.getSelection().selectUp(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectUp();}
 });
 canon.addCommand({
     name: "golineup",
     bindKey: bindKey("Up", "Up|Ctrl-P"),
-    exec: function(env, args, request) { env.editor.navigateUp(args.times); }
+    exec: function(env, args, request) {env.editor.navigateUp(args.times);}
 });
 canon.addCommand({
     name: "copylinesdown",
     bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
-    exec: function(env, args, request) { env.editor.copyLinesDown(); }
+    exec: function(env, args, request) {env.editor.copyLinesDown();}
 });
 canon.addCommand({
     name: "movelinesdown",
     bindKey: bindKey("Alt-Down", "Option-Down"),
-    exec: function(env, args, request) { env.editor.moveLinesDown(); }
+    exec: function(env, args, request) {env.editor.moveLinesDown();}
 });
 canon.addCommand({
     name: "selecttoend",
     bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
-    exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectFileEnd();}
 });
 canon.addCommand({
     name: "gotoend",
     bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
-    exec: function(env, args, request) { env.editor.navigateFileEnd(); }
+    exec: function(env, args, request) {env.editor.navigateFileEnd();}
 });
 canon.addCommand({
     name: "selectdown",
     bindKey: bindKey("Shift-Down", "Shift-Down"),
-    exec: function(env, args, request) { env.editor.getSelection().selectDown(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectDown();}
 });
 canon.addCommand({
     name: "golinedown",
     bindKey: bindKey("Down", "Down|Ctrl-N"),
-    exec: function(env, args, request) { env.editor.navigateDown(args.times); }
+    exec: function(env, args, request) {env.editor.navigateDown(args.times);}
 });
 canon.addCommand({
     name: "selectwordleft",
     bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectWordLeft(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectWordLeft();}
 });
 canon.addCommand({
     name: "gotowordleft",
     bindKey: bindKey("Ctrl-Left", "Option-Left"),
-    exec: function(env, args, request) { env.editor.navigateWordLeft(); }
+    exec: function(env, args, request) {env.editor.navigateWordLeft();}
 });
 canon.addCommand({
     name: "selecttolinestart",
     bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectLineStart();}
 });
 canon.addCommand({
     name: "gotolinestart",
     bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
-    exec: function(env, args, request) { env.editor.navigateLineStart(); }
+    exec: function(env, args, request) {env.editor.navigateLineStart();}
 });
 canon.addCommand({
     name: "selectleft",
     bindKey: bindKey("Shift-Left", "Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLeft(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectLeft();}
 });
 canon.addCommand({
     name: "gotoleft",
     bindKey: bindKey("Left", "Left|Ctrl-B"),
-    exec: function(env, args, request) { env.editor.navigateLeft(args.times); }
+    exec: function(env, args, request) {env.editor.navigateLeft(args.times);}
 });
 canon.addCommand({
     name: "selectwordright",
     bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectWordRight(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectWordRight();}
 });
 canon.addCommand({
     name: "gotowordright",
     bindKey: bindKey("Ctrl-Right", "Option-Right"),
-    exec: function(env, args, request) { env.editor.navigateWordRight(); }
+    exec: function(env, args, request) {env.editor.navigateWordRight();}
 });
 canon.addCommand({
     name: "selecttolineend",
     bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectLineEnd();}
 });
 canon.addCommand({
     name: "gotolineend",
     bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
-    exec: function(env, args, request) { env.editor.navigateLineEnd(); }
+    exec: function(env, args, request) {env.editor.navigateLineEnd();}
 });
 canon.addCommand({
     name: "selectright",
     bindKey: bindKey("Shift-Right", "Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectRight(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectRight();}
 });
 canon.addCommand({
     name: "gotoright",
     bindKey: bindKey("Right", "Right|Ctrl-F"),
-    exec: function(env, args, request) { env.editor.navigateRight(args.times); }
+    exec: function(env, args, request) {env.editor.navigateRight(args.times);}
 });
 canon.addCommand({
     name: "selectpagedown",
     bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
-    exec: function(env, args, request) { env.editor.selectPageDown(); }
+    exec: function(env, args, request) {env.editor.selectPageDown();}
 });
 canon.addCommand({
     name: "pagedown",
     bindKey: bindKey(null, "PageDown"),
-    exec: function(env, args, request) { env.editor.scrollPageDown(); }
+    exec: function(env, args, request) {env.editor.scrollPageDown();}
 });
 canon.addCommand({
     name: "gotopagedown",
     bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
-    exec: function(env, args, request) { env.editor.gotoPageDown(); }
+    exec: function(env, args, request) {env.editor.gotoPageDown();}
 });
 canon.addCommand({
     name: "selectpageup",
     bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
-    exec: function(env, args, request) { env.editor.selectPageUp(); }
+    exec: function(env, args, request) {env.editor.selectPageUp();}
 });
 canon.addCommand({
     name: "pageup",
     bindKey: bindKey(null, "PageUp"),
-    exec: function(env, args, request) { env.editor.scrollPageUp(); }
+    exec: function(env, args, request) {env.editor.scrollPageUp();}
 });
 canon.addCommand({
     name: "gotopageup",
     bindKey: bindKey("PageUp", "Option-PageUp"),
-    exec: function(env, args, request) { env.editor.gotoPageUp(); }
+    exec: function(env, args, request) {env.editor.gotoPageUp();}
 });
 canon.addCommand({
     name: "selectlinestart",
     bindKey: bindKey("Shift-Home", "Shift-Home"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectLineStart();}
 });
 canon.addCommand({
     name: "selectlineend",
     bindKey: bindKey("Shift-End", "Shift-End"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
+    exec: function(env, args, request) {env.editor.getSelection().selectLineEnd();}
 });
 canon.addCommand({
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(env, args, request) { env.editor.remove("right"); }
+    exec: function(env, args, request) {env.editor.remove("right");}
 });
 canon.addCommand({
     name: "backspace",
@@ -8407,37 +8429,37 @@ canon.addCommand({
         "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(env, args, request) { env.editor.remove("left"); }
+    exec: function(env, args, request) {env.editor.remove("left");}
 });
 canon.addCommand({
     name: "removetolinestart",
     bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
-    exec: function(env, args, request) { env.editor.removeToLineStart(); }
+    exec: function(env, args, request) {env.editor.removeToLineStart();}
 });
 canon.addCommand({
     name: "removetolineend",
     bindKey: bindKey("Alt-Delete", "Ctrl-K"),
-    exec: function(env, args, request) { env.editor.removeToLineEnd(); }
+    exec: function(env, args, request) {env.editor.removeToLineEnd();}
 });
 canon.addCommand({
     name: "removewordleft",
     bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-    exec: function(env, args, request) { env.editor.removeWordLeft(); }
+    exec: function(env, args, request) {env.editor.removeWordLeft();}
 });
 canon.addCommand({
     name: "removewordright",
     bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-    exec: function(env, args, request) { env.editor.removeWordRight(); }
+    exec: function(env, args, request) {env.editor.removeWordRight();}
 });
 canon.addCommand({
     name: "outdent",
     bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-    exec: function(env, args, request) { env.editor.blockOutdent(); }
+    exec: function(env, args, request) {env.editor.blockOutdent();}
 });
 canon.addCommand({
     name: "indent",
     bindKey: bindKey("Tab", "Tab"),
-    exec: function(env, args, request) { env.editor.indent(); }
+    exec: function(env, args, request) {env.editor.indent();}
 });
 canon.addCommand({
     name: "inserttext",
@@ -8448,17 +8470,17 @@ canon.addCommand({
 canon.addCommand({
     name: "centerselection",
     bindKey: bindKey(null, "Ctrl-L"),
-    exec: function(env, args, request) { env.editor.centerSelection(); }
+    exec: function(env, args, request) {env.editor.centerSelection();}
 });
 canon.addCommand({
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
-    exec: function(env, args, request) { env.editor.splitLine(); }
+    exec: function(env, args, request) {env.editor.splitLine();}
 });
 canon.addCommand({
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
-    exec: function(env, args, request) { env.editor.transposeLetters(); }
+    exec: function(env, args, request) {env.editor.transposeLetters();}
 });
 
 });/* vim:ts=4:sts=4:sw=4:
@@ -11869,7 +11891,7 @@ var Document = function(text) {
             range: range,
             lines: lines
         };
-        this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("change", {data: delta});
         return range.end;
     },
 
@@ -11890,7 +11912,7 @@ var Document = function(text) {
             range: Range.fromPoints(position, end),
             text: this.getNewLineCharacter()
         };
-        this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("change", {data: delta});
 
         return end;
     };
@@ -11914,7 +11936,7 @@ var Document = function(text) {
             range: Range.fromPoints(position, end),
             text: text
         };
-        this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("change", {data: delta});
 
         return end;
     };
@@ -11966,7 +11988,7 @@ var Document = function(text) {
             range: range,
             text: removed
         };
-        this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("change", {data: delta});
         return range.start;
     };
 
@@ -11987,7 +12009,7 @@ var Document = function(text) {
             nl: this.getNewLineCharacter(),
             lines: removed
         };
-        this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("change", {data: delta});
         return removed;
     };
 
@@ -12005,7 +12027,7 @@ var Document = function(text) {
             range: range,
             text: this.getNewLineCharacter()
         };
-        this._dispatchEvent("change", { data: delta });
+        this._dispatchEvent("change", {data: delta});
     };
 
     this.replace = function(range, text) {
@@ -12308,7 +12330,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     var self = this;
 
     this.$worker = function() {
-        if (!self.running) { return; }
+        if (!self.running) {return;}
 
         var workerStart = new Date();
         var startLine = self.currentLine;
@@ -12570,7 +12592,7 @@ function Folding() {
             return null;
             
         var lastFold = {
-            end: { column: 0 }
+            end: {column: 0}
         };
         // TODO: Refactor to use getNextFoldTo function.
         for (var i = 0; i < foldLine.folds.length; i++) {
@@ -12759,7 +12781,7 @@ function Folding() {
 
         // Notify that fold data has changed.
         this.$modified = true;
-        this._dispatchEvent("changeFold", { data: fold });
+        this._dispatchEvent("changeFold", {data: fold});
 
         return fold;
     };
@@ -12817,7 +12839,7 @@ function Folding() {
 
         // Notify that fold data has changed.
         this.$modified = true;
-        this._dispatchEvent("changeFold", { data: fold });
+        this._dispatchEvent("changeFold", {data: fold});
     }
 
     this.removeFolds = function(folds) {
@@ -14203,7 +14225,7 @@ var VirtualRenderer = function(container, theme) {
 
         // Map lines on the screen to lines in the document.
         var firstRowScreen, firstRowHeight;
-        var lineHeight = { lineHeight: this.lineHeight };
+        var lineHeight = {lineHeight: this.lineHeight};
         firstRow = session.screenToDocumentRow(firstRow, 0);
 
         // Check if firstRow is inside of a foldLine. If true, then use the first
@@ -14267,8 +14289,8 @@ var VirtualRenderer = function(container, theme) {
         if (layerConfig.width != this.$getLongestLine())
             return this.$textLayer.update(layerConfig);
 
-        if (firstRow > layerConfig.lastRow + 1) { return; }
-        if (lastRow < layerConfig.firstRow) { return; }
+        if (firstRow > layerConfig.lastRow + 1) {return;}
+        if (lastRow < layerConfig.firstRow) {return;}
 
         // if the last row is unknown -> redraw everything
         if (lastRow === Infinity) {
@@ -14385,7 +14407,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.scrollToLine = function(line, center) {
-        var lineHeight = { lineHeight: this.lineHeight };
+        var lineHeight = {lineHeight: this.lineHeight};
         var offset = 0;
         for (var l = 1; l < line; l++) {
             offset += this.session.getRowHeight(lineHeight, l-1);
@@ -16005,6 +16027,11 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
   border: 1px solid rgb(192, 192, 192);\
 }\
 \
+.ace-tm .ace_marker-layer .ace_bracket_error {\
+  margin: -1px 0 0 -1px;\
+  border: 1px solid rgb(192, 192, 192);\
+}\
+\
 .ace-tm .ace_marker-layer .ace_active_line {\
   background: rgba(0, 0, 0, 0.07);\
 }\
@@ -16226,6 +16253,11 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_bracket {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_bracket_error {\n" +
   "    position: absolute;\n" +
   "    z-index: 5;\n" +
   "}\n" +
@@ -17036,6 +17068,11 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "    z-index: 5;\n" +
   "}\n" +
   "\n" +
+  ".ace_marker-layer .ace_bracket_error {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
   ".ace_marker-layer .ace_active_line {\n" +
   "    position: absolute;\n" +
   "    z-index: 2;\n" +
@@ -17274,6 +17311,11 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "}\n" +
   "\n" +
   ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
+  "  margin: -1px 0 0 -1px;\n" +
+  "  border: 1px solid %bracket%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_bracket_error {\n" +
   "  margin: -1px 0 0 -1px;\n" +
   "  border: 1px solid %bracket%;\n" +
   "}\n" +
