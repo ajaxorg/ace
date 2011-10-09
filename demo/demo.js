@@ -721,8 +721,10 @@ exports.launch = function(env) {
 
 var themes = {};
 function loadTheme(name, callback) {
-    if (themes[name])
+    if (themes[name]) {
+        callback();
         return;
+    }
         
     themes[name] = 1;
     var base = name.split("/").pop();
