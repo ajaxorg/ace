@@ -57,6 +57,7 @@ var XmlMode = require("ace/mode/xml").Mode;
 var LuaMode = require("ace/mode/lua").Mode;
 var PythonMode = require("ace/mode/python").Mode;
 var PhpMode = require("ace/mode/php").Mode;
+var ColdfusionMode = require("ace/mode/coldfusion").Mode;
 var JavaMode = require("ace/mode/java").Mode;
 var CSharpMode = require("ace/mode/csharp").Mode;
 var RubyMode = require("ace/mode/ruby").Mode;
@@ -138,6 +139,10 @@ exports.launch = function(env) {
     docs.php = new EditSession(require("ace/requirejs/text!demo/docs/php.php"));
     docs.php.setMode(new PhpMode());
     docs.php.setUndoManager(new UndoManager());
+    
+    docs.coldfusion = new EditSession(require("ace/requirejs/text!demo/docs/coldfusion.cfm"));
+    docs.coldfusion.setMode(new ColdfusionMode());
+    docs.coldfusion.setUndoManager(new UndoManager());
 
     docs.java = new EditSession(require("ace/requirejs/text!demo/docs/java.java"));
     docs.java.setMode(new JavaMode());
@@ -239,6 +244,7 @@ exports.launch = function(env) {
         lua: new LuaMode(),
         python: new PythonMode(),
         php: new PhpMode(),
+        coldfusion: new ColdfusionMode(),
         java: new JavaMode(),
         ruby: new RubyMode(),
         c_cpp: new CCPPMode(),
@@ -312,6 +318,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PhpMode) {
             modeEl.value = "php";
+        }
+        else if (mode instanceof ColdfusionMode) {
+            modeEl.value = "coldfusion";
         }
         else if (mode instanceof JavaMode) {
             modeEl.value = "java";
@@ -557,6 +566,8 @@ exports.launch = function(env) {
                     mode = "python";
                 } else if (/^.*\.php$/i.test(file.name)) {
                     mode = "php";
+                } else if (/^.*\.cfm$/i.test(file.name)) {
+                    mode = "coldfusion";
                 } else if (/^.*\.cs$/i.test(file.name)) {
                     mode = "csharp";
                 } else if (/^.*\.java$/i.test(file.name)) {
@@ -721,8 +732,10 @@ exports.launch = function(env) {
 
 var themes = {};
 function loadTheme(name, callback) {
-    if (themes[name])
+    if (themes[name]) {
+        callback();
         return;
+    }
         
     themes[name] = 1;
     var base = name.split("/").pop();
