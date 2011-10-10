@@ -75,6 +75,7 @@ var GroovyMode = require("ace/mode/groovy").Mode;
 var ScalaMode = require("ace/mode/scala").Mode;
 var LatexMode = require("ace/mode/latex").Mode;
 var PowershellMode = require("ace/mode/powershell").Mode;
+var SqlMode = require("ace/mode/sql").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var vim = require("ace/keyboard/keybinding/vim").Vim;
@@ -211,6 +212,10 @@ exports.launch = function(env) {
     docs.powershell.setMode(new PowershellMode());
     docs.powershell.setUndoManager(new UndoManager());
 
+    docs.sql = new EditSession(require("ace/requirejs/text!demo/docs/sql.sql"));
+    docs.sql.setMode(new SqlMode());
+    docs.sql.setUndoManager(new UndoManager());
+
     // Add a "name" property to all docs
     for (var doc in docs) {
         docs[doc].name = doc;
@@ -257,7 +262,8 @@ exports.launch = function(env) {
         groovy: new GroovyMode(),
         scala: new ScalaMode(),
         latex: new LatexMode(),
-        powershell: new PowershellMode()
+        powershell: new PowershellMode(),
+        sql: new SqlMode()
     };
 
     function getMode() {
@@ -369,6 +375,9 @@ exports.launch = function(env) {
         }
         else if (mode instanceof PowershellMode) {
             modeEl.value = "powershell";
+        }
+        else if (mode instanceof SqlMode) {
+            modeEl.value = "sql";
         }
         else {
             modeEl.value = "text";
