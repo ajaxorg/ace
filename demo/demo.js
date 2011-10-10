@@ -262,7 +262,7 @@ exports.launch = function(env) {
         groovy: new GroovyMode(),
         scala: new ScalaMode(),
         latex: new LatexMode(),
-        powershell: new PowershellMode()
+        powershell: new PowershellMode(),
         sql: new SqlMode()
     };
 
