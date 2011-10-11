@@ -48,173 +48,218 @@ var Editor = require("ace/editor").Editor;
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var theme = require("ace/theme/textmate");
 var EditSession = require("ace/edit_session").EditSession;
-
-var JavaScriptMode = require("ace/mode/javascript").Mode;
-var CssMode = require("ace/mode/css").Mode;
-var ScssMode = require("ace/mode/scss").Mode;
-var HtmlMode = require("ace/mode/html").Mode;
-var XmlMode = require("ace/mode/xml").Mode;
-var LuaMode = require("ace/mode/lua").Mode;
-var PythonMode = require("ace/mode/python").Mode;
-var PhpMode = require("ace/mode/php").Mode;
-var ColdfusionMode = require("ace/mode/coldfusion").Mode;
-var JavaMode = require("ace/mode/java").Mode;
-var CSharpMode = require("ace/mode/csharp").Mode;
-var RubyMode = require("ace/mode/ruby").Mode;
-var CCPPMode = require("ace/mode/c_cpp").Mode;
-var CoffeeMode = require("ace/mode/coffee").Mode;
-var JsonMode = require("ace/mode/json").Mode;
-var PerlMode = require("ace/mode/perl").Mode;
-var ClojureMode = require("ace/mode/clojure").Mode;
-var OcamlMode = require("ace/mode/ocaml").Mode;
-var SvgMode = require("ace/mode/svg").Mode;
-var MarkdownMode = require("ace/mode/markdown").Mode;
-var TextileMode = require("ace/mode/textile").Mode;
-var TextMode = require("ace/mode/text").Mode;
-var GroovyMode = require("ace/mode/groovy").Mode;
-var ScalaMode = require("ace/mode/scala").Mode;
-var LatexMode = require("ace/mode/latex").Mode;
-var PowershellMode = require("ace/mode/powershell").Mode;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var vim = require("ace/keyboard/keybinding/vim").Vim;
 var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
+
+var modesByName;
+
+var Doc = function(name, desc, file) {
+    this.name = name;
+    this.desc = desc;
+    this.doc = new EditSession(file);
+    this.doc.setMode(modesByName[name].mode);
+    this.doc.setUndoManager(new UndoManager());
+};
+
+var WrappedDoc = function(name, desc, file) {
+    Doc.apply(this, arguments);
+    
+    this.doc.setUseWrapMode(true);
+    this.doc.setWrapLimitRange(80, 80);
+};
+
+var Mode = function(name, desc, clazz, extensions) {
+    this.name = name;
+    this.desc = desc;
+    this.clazz = clazz;
+    this.mode = new clazz();
+    this.mode.name = name;
+    
+    this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
+};
+
+Mode.prototype.supportsFile = function(filename) {
+    return filename.match(this.extRe);
+};
+
+
+
 exports.launch = function(env) {
     
-    var keybindings = {
-      // Null = use "default" keymapping
-      ace: null,
-      vim: vim,
-      emacs: emacs,
-      // This is a way to define simple keyboard remappings
-      custom: new HashHandler({
-          "gotoright":      "Tab",
-          "indent":         "]",
-          "outdent":        "[",
-          "gotolinestart":  "^",
-          "gotolineend":    "$"
-      })
-    }
-
-    var docs = {};
-
-    // Make the lorem ipsum text a little bit longer.
+    var modes = [
+        new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
+        new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
+        new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
+        new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
+        new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"]),
+        new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
+        new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
+        new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
+        new Mode("coldfusion", "ColdFusion", require("ace/mode/coldfusion").Mode, ["cfm"]),
+        new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
+        new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
+        new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
+        new Mode("c_cpp", "C/C++", require("ace/mode/c_cpp").Mode, ["c", "cpp", "cxx", "h", "hpp"]),
+        new Mode("coffee", "CoffeeScript", require("ace/mode/coffee").Mode, ["coffee"]),
+        new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
+        new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
+        new Mode("clojure", "Clojure", require("ace/mode/clojure").Mode, ["clj"]),
+        new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
+        new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
+        new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
+        new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
+        new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
+        new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
+        new Mode("scala", "Scala", require("ace/mode/scala").Mode, ["scala"]),
+        new Mode("latex", "LaTeX", require("ace/mode/latex").Mode, ["tex"]),
+        new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"])
+    ];
+    
+    modesByName = {};
+    modes.forEach(function(m) {
+        modesByName[m.name] = m;
+    });
+    
     var loreIpsum = require("ace/requirejs/text!demo/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
-    docs.plain = new EditSession(loreIpsum);
-    docs.plain.setUseWrapMode(true);
-    docs.plain.setWrapLimitRange(80, 80)
-    docs.plain.setMode(new TextMode());
-    docs.plain.setUndoManager(new UndoManager());
-
-    docs.js = new EditSession(require("ace/requirejs/text!demo/docs/javascript.js"));
-    docs.js.setMode(new JavaScriptMode());
-    docs.js.setUndoManager(new UndoManager());
-
-    docs.css = new EditSession(require("ace/requirejs/text!demo/docs/css.css"));
-    docs.css.setMode(new CssMode());
-    docs.css.setUndoManager(new UndoManager());
-
-    docs.scss = new EditSession(require("ace/requirejs/text!demo/docs/scss.scss"));
-    docs.scss.setMode(new ScssMode());
-    docs.scss.setUndoManager(new UndoManager());
-
-    docs.html = new EditSession(require("ace/requirejs/text!demo/docs/html.html"));
-    docs.html.setMode(new HtmlMode());
-    docs.html.setUndoManager(new UndoManager());
-
-    docs.lua = new EditSession(require("ace/requirejs/text!demo/docs/lua.lua"));
-    docs.lua.setMode(new LuaMode());
-    docs.lua.setUndoManager(new UndoManager());
-
-    docs.python = new EditSession(require("ace/requirejs/text!demo/docs/python.py"));
-    docs.python.setMode(new PythonMode());
-    docs.python.setUndoManager(new UndoManager());
-
-
-    docs.php = new EditSession(require("ace/requirejs/text!demo/docs/php.php"));
-    docs.php.setMode(new PhpMode());
-    docs.php.setUndoManager(new UndoManager());
     
-    docs.coldfusion = new EditSession(require("ace/requirejs/text!demo/docs/coldfusion.cfm"));
-    docs.coldfusion.setMode(new ColdfusionMode());
-    docs.coldfusion.setUndoManager(new UndoManager());
-
-    docs.java = new EditSession(require("ace/requirejs/text!demo/docs/java.java"));
-    docs.java.setMode(new JavaMode());
-    docs.java.setUndoManager(new UndoManager());
-    docs.java.addFold("...", new Range(8, 44, 13, 4));
-
-    docs.ruby = new EditSession(require("ace/requirejs/text!demo/docs/ruby.rb"));
-    docs.ruby.setMode(new RubyMode());
-    docs.ruby.setUndoManager(new UndoManager());
-
-    docs.csharp = new EditSession(require("ace/requirejs/text!demo/docs/csharp.cs"));
-    docs.csharp.setMode(new CSharpMode());
-    docs.csharp.setUndoManager(new UndoManager());
-
-    docs.c_cpp = new EditSession(require("ace/requirejs/text!demo/docs/cpp.cpp"));
-    docs.c_cpp.setMode(new CCPPMode());
-    docs.c_cpp.setUndoManager(new UndoManager());
-
-    docs.coffee = new EditSession(require("ace/requirejs/text!demo/docs/coffeescript.coffee"));
-    docs.coffee.setMode(new CoffeeMode());
-    docs.coffee.setUndoManager(new UndoManager());
-
-    docs.json = new EditSession(require("ace/requirejs/text!demo/docs/json.json"));
-    docs.json.setMode(new JsonMode());
-    docs.json.setUndoManager(new UndoManager());
-
-    docs.perl = new EditSession(require("ace/requirejs/text!demo/docs/perl.pl"));
-    docs.perl.setMode(new PerlMode());
-    docs.perl.setUndoManager(new UndoManager());
-
-    docs.clojure = new EditSession(require("ace/requirejs/text!demo/docs/clojure.clj"));
-    docs.clojure.setMode(new ClojureMode());
-    docs.clojure.setUndoManager(new UndoManager());
-
-    docs.ocaml = new EditSession(require("ace/requirejs/text!demo/docs/ocaml.ml"));
-    docs.ocaml.setMode(new OcamlMode());
-    docs.ocaml.setUndoManager(new UndoManager());
-
-    docs.svg = new EditSession(require("ace/requirejs/text!demo/docs/svg.svg"));
-    docs.svg.setMode(new SvgMode());
-    docs.svg.setUndoManager(new UndoManager());
-
-    docs.markdown = new EditSession(require("ace/requirejs/text!demo/docs/markdown.md"));
-    docs.markdown.setMode(new MarkdownMode());
-    docs.markdown.setUseWrapMode(true);
-    docs.markdown.setWrapLimitRange(80, 80);
-    docs.markdown.setUndoManager(new UndoManager());
+    var docs = [
+        new Doc(
+            "javascript", "JavaScript",
+            require("ace/requirejs/text!demo/docs/javascript.js")
+        ),
+        new WrappedDoc("text", "Plain Text", loreIpsum),
+        new Doc(
+            "css", "CSS",
+            require("ace/requirejs/text!demo/docs/css.css")
+        ),
+        new Doc(
+            "scss", "SCSS",
+            require("ace/requirejs/text!demo/docs/scss.scss")
+        ),
+        new Doc(
+            "html", "HTML",
+            require("ace/requirejs/text!demo/docs/html.html")
+        ),
+        new Doc(
+            "xml", "XML",
+            require("ace/requirejs/text!demo/docs/xml.xml")
+        ),
+        new Doc(
+            "lua", "Lua",
+            require("ace/requirejs/text!demo/docs/lua.lua")
+        ),
+        new Doc(
+            "python", "Python",
+            require("ace/requirejs/text!demo/docs/python.py")
+        ),
+        new Doc(
+            "php", "PHP",
+            require("ace/requirejs/text!demo/docs/javascript.js")
+        ),
+        new Doc(
+            "coldfusion", "ColdFusion",
+            require("ace/requirejs/text!demo/docs/coldfusion.cfm")
+        ),
+        new Doc(
+            "java", "Java",
+            require("ace/requirejs/text!demo/docs/java.java")
+        ),
+        new Doc(
+            "ruby", "Ruby",
+            require("ace/requirejs/text!demo/docs/ruby.rb")
+        ),
+        new Doc(
+            "csharp", "C#",
+            require("ace/requirejs/text!demo/docs/csharp.cs")
+        ),
+        new Doc(
+            "csharp", "C#",
+            require("ace/requirejs/text!demo/docs/csharp.cs")
+        ),
+        new Doc(
+            "c_cpp", "C/C++",
+            require("ace/requirejs/text!demo/docs/cpp.cpp")
+        ),
+        new Doc(
+            "coffee", "Coffeescript",
+            require("ace/requirejs/text!demo/docs/coffeescript.coffee")
+        ),
+        new Doc(
+            "json", "JSON",
+            require("ace/requirejs/text!demo/docs/json.json")
+        ),
+        new Doc(
+            "perl", "Perl",
+            require("ace/requirejs/text!demo/docs/perl.pl")
+        ),
+        new Doc(
+            "clojure", "Clojure",
+            require("ace/requirejs/text!demo/docs/clojure.clj")
+        ),
+        new Doc(
+            "ocaml", "OCaml",
+            require("ace/requirejs/text!demo/docs/ocaml.ml")
+        ),
+        new Doc(
+            "svg", "SVG",
+            require("ace/requirejs/text!demo/docs/svg.svg")
+        ),
+        new Doc(
+            "markdown", "Markdown",
+            require("ace/requirejs/text!demo/docs/markdown.md")
+        ),
+        new WrappedDoc(
+            "markdown", "Markdown",
+            require("ace/requirejs/text!demo/docs/markdown.md")
+        ),
+        new WrappedDoc(
+            "textile", "Textile",
+            require("ace/requirejs/text!demo/docs/textile.textile")
+        ),
+        new Doc(
+            "groovy", "Groovy",
+            require("ace/requirejs/text!demo/docs/groovy.groovy")
+        ),
+        new Doc(
+            "scala", "Scala",
+            require("ace/requirejs/text!demo/docs/scala.scala")
+        ),
+        new WrappedDoc(
+            "latex", "LaTeX",
+            require("ace/requirejs/text!demo/docs/latex.tex")
+        ),
+        new Doc(
+            "powershell", "Powershell",
+            require("ace/requirejs/text!demo/docs/powershell.ps1")
+        )
+    ];
     
-    docs.textile = new EditSession(require("ace/requirejs/text!demo/docs/textile.textile"));
-    docs.textile.setMode(new TextileMode());
-    docs.textile.setUndoManager(new UndoManager());
-
-    docs.groovy = new EditSession(require("ace/requirejs/text!demo/docs/groovy.groovy"));
-    docs.groovy.setMode(new GroovyMode());
-    docs.groovy.setUndoManager(new UndoManager());
-
-    docs.scala = new EditSession(require("ace/requirejs/text!demo/docs/scala.scala"));
-    docs.scala.setMode(new ScalaMode());
-    docs.scala.setUndoManager(new UndoManager());
-
-    docs.latex = new EditSession(require("ace/requirejs/text!demo/docs/latex.tex"));
-    docs.latex.setMode(new LatexMode());
-    docs.latex.setUndoManager(new UndoManager());
-
-    docs.powershell = new EditSession(require("ace/requirejs/text!demo/docs/powershell.ps1"));
-    docs.powershell.setMode(new PowershellMode());
-    docs.powershell.setUndoManager(new UndoManager());
-
-    // Add a "name" property to all docs
-    for (var doc in docs) {
-        docs[doc].name = doc;
-    }
+    var docsByName = {};
+    docs.forEach(function(d) {
+        docsByName[d.name] = d;
+    });
+    
+    var keybindings = {
+        // Null = use "default" keymapping
+        ace: null,
+        vim: vim,
+        emacs: emacs,
+        // This is a way to define simple keyboard remappings
+        custom: new HashHandler({
+            "gotoright":      "Tab",
+            "indent":         "]",
+            "outdent":        "[",
+            "gotolinestart":  "^",
+            "gotolineend":    "$"
+         })
+    };
 
     var container = document.getElementById("editor");
     var cockpitInput = document.getElementById("cockpitInput");
@@ -231,39 +276,6 @@ exports.launch = function(env) {
     window.env = env;
     window.ace = env.editor;
 
-    var modes = {
-        text: new TextMode(),
-        textile: new TextileMode(),
-        markdown: new MarkdownMode(),
-        svg: new SvgMode(),
-        xml: new XmlMode(),
-        html: new HtmlMode(),
-        css: new CssMode(),
-        scss: new ScssMode(),
-        javascript: new JavaScriptMode(),
-        lua: new LuaMode(),
-        python: new PythonMode(),
-        php: new PhpMode(),
-        coldfusion: new ColdfusionMode(),
-        java: new JavaMode(),
-        ruby: new RubyMode(),
-        c_cpp: new CCPPMode(),
-        coffee: new CoffeeMode(),
-        json: new JsonMode(),
-        perl: new PerlMode(),
-        clojure: new ClojureMode(),
-        ocaml: new OcamlMode(),
-        csharp: new CSharpMode(),
-        groovy: new GroovyMode(),
-        scala: new ScalaMode(),
-        latex: new LatexMode(),
-        powershell: new PowershellMode()
-    };
-
-    function getMode() {
-        return modes[modeEl.value];
-    }
-
     var docEl = document.getElementById("doc");
     var modeEl = document.getElementById("mode");
     var wrapModeEl = document.getElementById("soft_wrap");
@@ -278,8 +290,22 @@ exports.launch = function(env) {
     var softTabEl = document.getElementById("soft_tab");
     var behavioursEl = document.getElementById("enable_behaviours");
 
+    docs.forEach(function(doc) {
+        var option = document.createElement("option");
+        option.setAttribute("value", doc.name);
+        option.innerHTML = doc.desc;
+        docEl.appendChild(option);
+    });
+    
+    modes.forEach(function(mode) {
+        var option = document.createElement("option");
+        option.setAttribute("value", mode.name);
+        option.innerHTML = mode.desc;
+        modeEl.appendChild(option);
+    });
+    
     bindDropdown("doc", function(value) {
-        var doc = docs[value];
+        var doc = docsByName[value].doc;
         var session = env.split.setSession(doc);
         session.name = doc.name;
 
@@ -293,86 +319,7 @@ exports.launch = function(env) {
         var session = editor.session;
 
         docEl.value = session.name;
-
-        var mode = session.getMode();
-        if (mode instanceof JavaScriptMode) {
-            modeEl.value = "javascript";
-        }
-        else if (mode instanceof CssMode) {
-            modeEl.value = "css";
-        }
-        else if (mode instanceof ScssMode) {
-            modeEl.value = "scss";
-        }
-        else if (mode instanceof HtmlMode) {
-            modeEl.value = "html";
-        }
-        else if (mode instanceof XmlMode) {
-            modeEl.value = "xml";
-        }
-        else if (mode instanceof LuaMode){
-            modeEl.value = "lua";
-        }
-        else if (mode instanceof PythonMode) {
-            modeEl.value = "python";
-        }
-        else if (mode instanceof PhpMode) {
-            modeEl.value = "php";
-        }
-        else if (mode instanceof ColdfusionMode) {
-            modeEl.value = "coldfusion";
-        }
-        else if (mode instanceof JavaMode) {
-            modeEl.value = "java";
-        }
-        else if (mode instanceof RubyMode) {
-            modeEl.value = "ruby";
-        }
-        else if (mode instanceof CCPPMode) {
-            modeEl.value = "c_cpp";
-        }
-        else if (mode instanceof CoffeeMode) {
-            modeEl.value = "coffee";
-        }
-        else if (mode instanceof JsonMode) {
-            modeEl.value = "json";
-        }
-        else if (mode instanceof PerlMode) {
-            modeEl.value = "perl";
-        }
-        else if (mode instanceof ClojureMode) {
-            modeEl.value = "clojure";
-        }
-        else if (mode instanceof OcamlMode) {
-            modeEl.value = "ocaml";
-        }
-        else if (mode instanceof CSharpMode) {
-            modeEl.value = "csharp";
-        }
-        else if (mode instanceof SvgMode) {
-            modeEl.value = "svg";
-        }
-        else if (mode instanceof MarkdownMode) {
-            modeEl.value = "markdown";
-        }
-        else if (mode instanceof TextileMode) {
-            modeEl.value = "textile";
-        }
-        else if (mode instanceof GroovyMode) {
-            modeEl.value = "groovy";
-        }
-        else if (mode instanceof ScalaMode) {
-            modeEl.value = "scala";
-        }
-        else if (mode instanceof LatexMode) {
-            modeEl.value = "latex";
-        }
-        else if (mode instanceof PowershellMode) {
-            modeEl.value = "powershell";
-        }
-        else {
-            modeEl.value = "text";
-        }
+        modeEl.value = session.getMode().name || "text";
 
         if (!session.getUseWrapMode()) {
             wrapModeEl.value = "off";
@@ -380,7 +327,7 @@ exports.launch = function(env) {
             wrapModeEl.value = session.getWrapLimitRange().min || "free";
         }
 
-        selectStyleEl.checked = editor.getSelectionStyle() == "line"
+        selectStyleEl.checked = editor.getSelectionStyle() == "line";
         themeEl.value = editor.getTheme();
         highlightActiveEl.checked = editor.getHighlightActiveLine();
         showHiddenEl.checked = editor.getShowInvisibles();
@@ -389,11 +336,11 @@ exports.launch = function(env) {
         highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
         showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
         softTabEl.checked = session.getUseSoftTabs();
-        behavioursEl.checked = editor.getBehavioursEnabled()
+        behavioursEl.checked = editor.getBehavioursEnabled();
     }
 
     bindDropdown("mode", function(value) {
-        env.editor.getSession().setMode(modes[value] || modes.text);
+        env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
     });
 
     bindDropdown("theme", function(value) {
@@ -527,20 +474,20 @@ exports.launch = function(env) {
         container.style.height = document.documentElement.clientHeight + "px";
         env.split.resize();
 //        env.editor.resize();
-    };
+    }
 
     window.onresize = onResize;
-    env.editor.renderer.onResize(true)
+    env.editor.renderer.onResize(true);
 
     event.addListener(container, "dragover", function(e) {
         return event.preventDefault(e);
     });
 
     event.addListener(container, "drop", function(e) {
-        var file
+        var file;
         try {
             file = e.dataTransfer.files[0];
-        } catch(e) {
+        } catch(err) {
             return event.stopEvent();
         }
 
@@ -549,59 +496,24 @@ exports.launch = function(env) {
             reader.onload = function(e) {
                 env.editor.getSelection().selectAll();
 
-                var mode = "text";
-                if (/^.*\.js$/i.test(file.name)) {
-                    mode = "javascript";
-                } else if (/^.*\.xml$/i.test(file.name)) {
-                    mode = "xml";
-                } else if (/^.*\.html$/i.test(file.name)) {
-                    mode = "html";
-                } else if (/^.*\.css$/i.test(file.name)) {
-                    mode = "css";
-                } else if (/^.*\.scss$/i.test(file.name)) {
-                    mode = "scss";
-                } else if (/^.*\.lua$/i.test(file.name)) {
-                    mode = "lua";
-                } else if (/^.*\.py$/i.test(file.name)) {
-                    mode = "python";
-                } else if (/^.*\.php$/i.test(file.name)) {
-                    mode = "php";
-                } else if (/^.*\.cfm$/i.test(file.name)) {
-                    mode = "coldfusion";
-                } else if (/^.*\.cs$/i.test(file.name)) {
-                    mode = "csharp";
-                } else if (/^.*\.java$/i.test(file.name)) {
-                    mode = "java";
-                } else if (/^.*\.rb$/i.test(file.name)) {
-                    mode = "ruby";
-                } else if (/^.*\.(c|cpp|h|hpp|cxx)$/i.test(file.name)) {
-                    mode = "c_cpp";
-                } else if (/^.*\.coffee$/i.test(file.name)) {
-                    mode = "coffee";
-                } else if (/^.*\.json$/i.test(file.name)) {
-                    mode = "json";
-                } else if (/^.*\.(pl|pm)$/i.test(file.name)) {
-                    mode = "perl";
-                } else if (/^.*\.(ml|mli)$/i.test(file.name)) {
-                    mode = "ocaml";
-                } else if (/^.*\.(groovy)$/i.test(file.name)) {
-                    mode = "groovy";
-                } else if (/^.*\.(scala)$/i.test(file.name)) {
-                    mode = "scala";
+                var mode = modesByName.text;
+                for (var i = 0; i < modes.length; i++) {
+                    if (modes[i].supportsFile(file.name)) {
+                        mode = modes[i];
+                        break;
+                    }
                 }
 
                 env.editor.onTextInput(reader.result);
 
-                modeEl.value = mode;
-                env.editor.getSession().setMode(modes[mode]);
+                modeEl.value = mode.name;
+                env.editor.getSession().setMode(mode.mode);
             };
             reader.readAsText(file);
         }
 
         return event.preventDefault(e);
     });
-
-    window.env = env;
 
     /**
      * This demonstrates how you can define commands and bind shortcuts to them.
@@ -647,7 +559,7 @@ exports.launch = function(env) {
             sender: "editor"
         },
         exec: function(env) {
-            toggleFold(env, false)
+            toggleFold(env, false);
         }
     });
 
@@ -659,7 +571,7 @@ exports.launch = function(env) {
             sender: "editor"
         },
         exec: function(env) {
-            toggleFold(env, true)
+            toggleFold(env, true);
         }
     });
 
@@ -678,7 +590,7 @@ exports.launch = function(env) {
             c += token.value.length;
         }
         return false;
-    };
+    }
 
     function toggleFold(env, tryToUnfold) {
         var session = env.editor.session;
@@ -693,7 +605,7 @@ exports.launch = function(env) {
 
             if (fold) {
                 session.expandFold(fold);
-                selection.setSelectionRange(fold.range)
+                selection.setSelectionRange(fold.range);
             } else if (br) {
                 if (range.compare(br.row, br.column) == 1)
                     range.end = br;
@@ -732,15 +644,13 @@ exports.launch = function(env) {
 
 var themes = {};
 function loadTheme(name, callback) {
-    if (themes[name]) {
-        callback();
-        return;
-    }
+    if (themes[name])
+        return callback();
         
     themes[name] = 1;
     var base = name.split("/").pop();
     var fileName = "src/theme-" + base + ".js";
-    net.loadScript(fileName, callback)
+    net.loadScript(fileName, callback);
 }
 
 });
