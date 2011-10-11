@@ -91,32 +91,33 @@ Mode.prototype.supportsFile = function(filename) {
 exports.launch = function(env) {
     
     var modes = [
-        new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
-        new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
-        new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
-        new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
-        new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"]),
-        new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
-        new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
-        new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
-        new Mode("coldfusion", "ColdFusion", require("ace/mode/coldfusion").Mode, ["cfm"]),
-        new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
-        new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
-        new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
         new Mode("c_cpp", "C/C++", require("ace/mode/c_cpp").Mode, ["c", "cpp", "cxx", "h", "hpp"]),
-        new Mode("coffee", "CoffeeScript", require("ace/mode/coffee").Mode, ["coffee"]),
-        new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
-        new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
         new Mode("clojure", "Clojure", require("ace/mode/clojure").Mode, ["clj"]),
-        new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
-        new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
-        new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
-        new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-        new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
+        new Mode("coffee", "CoffeeScript", require("ace/mode/coffee").Mode, ["coffee"]),
+        new Mode("coldfusion", "ColdFusion", require("ace/mode/coldfusion").Mode, ["cfm"]),
+        new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
+        new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
         new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
-        new Mode("scala", "Scala", require("ace/mode/scala").Mode, ["scala"]),
+        new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
+        new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
+        new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
+        new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
         new Mode("latex", "LaTeX", require("ace/mode/latex").Mode, ["tex"]),
-        new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"])
+        new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
+        new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
+        new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
+        new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
+        new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
+        new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"]),
+        new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
+        new Mode("scala", "Scala", require("ace/mode/scala").Mode, ["scala"]),
+        new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
+        new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
+        new Mode("sql", "SQL", require("ace/mode/sql").Mode, ["sql"]),
+        new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
+        new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
+        new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
+        new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
     ];
     
     modesByName = {};
@@ -136,6 +137,14 @@ exports.launch = function(env) {
         ),
         new WrappedDoc("text", "Plain Text", loreIpsum),
         new Doc(
+            "coffee", "Coffeescript",
+            require("ace/requirejs/text!demo/docs/coffeescript.coffee")
+        ),
+        new Doc(
+            "json", "JSON",
+            require("ace/requirejs/text!demo/docs/json.json")
+        ),
+        new Doc(
             "css", "CSS",
             require("ace/requirejs/text!demo/docs/css.css")
         ),
@@ -152,12 +161,8 @@ exports.launch = function(env) {
             require("ace/requirejs/text!demo/docs/xml.xml")
         ),
         new Doc(
-            "lua", "Lua",
-            require("ace/requirejs/text!demo/docs/lua.lua")
-        ),
-        new Doc(
-            "python", "Python",
-            require("ace/requirejs/text!demo/docs/python.py")
+            "svg", "SVG",
+            require("ace/requirejs/text!demo/docs/svg.svg")
         ),
         new Doc(
             "php", "PHP",
@@ -168,48 +173,52 @@ exports.launch = function(env) {
             require("ace/requirejs/text!demo/docs/coldfusion.cfm")
         ),
         new Doc(
-            "java", "Java",
-            require("ace/requirejs/text!demo/docs/java.java")
+            "python", "Python",
+            require("ace/requirejs/text!demo/docs/python.py")
         ),
         new Doc(
             "ruby", "Ruby",
             require("ace/requirejs/text!demo/docs/ruby.rb")
         ),
         new Doc(
-            "csharp", "C#",
-            require("ace/requirejs/text!demo/docs/csharp.cs")
-        ),
-        new Doc(
-            "csharp", "C#",
-            require("ace/requirejs/text!demo/docs/csharp.cs")
-        ),
-        new Doc(
-            "c_cpp", "C/C++",
-            require("ace/requirejs/text!demo/docs/cpp.cpp")
-        ),
-        new Doc(
-            "coffee", "Coffeescript",
-            require("ace/requirejs/text!demo/docs/coffeescript.coffee")
-        ),
-        new Doc(
-            "json", "JSON",
-            require("ace/requirejs/text!demo/docs/json.json")
-        ),
-        new Doc(
             "perl", "Perl",
             require("ace/requirejs/text!demo/docs/perl.pl")
-        ),
-        new Doc(
-            "clojure", "Clojure",
-            require("ace/requirejs/text!demo/docs/clojure.clj")
         ),
         new Doc(
             "ocaml", "OCaml",
             require("ace/requirejs/text!demo/docs/ocaml.ml")
         ),
         new Doc(
-            "svg", "SVG",
-            require("ace/requirejs/text!demo/docs/svg.svg")
+            "lua", "Lua",
+            require("ace/requirejs/text!demo/docs/lua.lua")
+        ),
+        new Doc(
+            "java", "Java",
+            require("ace/requirejs/text!demo/docs/java.java")
+        ),
+        new Doc(
+            "clojure", "Clojure",
+            require("ace/requirejs/text!demo/docs/clojure.clj")
+        ),
+        new Doc(
+            "groovy", "Groovy",
+            require("ace/requirejs/text!demo/docs/groovy.groovy")
+        ),
+        new Doc(
+            "scala", "Scala",
+            require("ace/requirejs/text!demo/docs/scala.scala")
+        ),
+        new Doc(
+            "csharp", "C#",
+            require("ace/requirejs/text!demo/docs/csharp.cs")
+        ),
+        new Doc(
+            "powershell", "Powershell",
+            require("ace/requirejs/text!demo/docs/powershell.ps1")
+        ),
+        new Doc(
+            "c_cpp", "C/C++",
+            require("ace/requirejs/text!demo/docs/cpp.cpp")
         ),
         new Doc(
             "markdown", "Markdown",
@@ -223,21 +232,9 @@ exports.launch = function(env) {
             "textile", "Textile",
             require("ace/requirejs/text!demo/docs/textile.textile")
         ),
-        new Doc(
-            "groovy", "Groovy",
-            require("ace/requirejs/text!demo/docs/groovy.groovy")
-        ),
-        new Doc(
-            "scala", "Scala",
-            require("ace/requirejs/text!demo/docs/scala.scala")
-        ),
         new WrappedDoc(
             "latex", "LaTeX",
             require("ace/requirejs/text!demo/docs/latex.tex")
-        ),
-        new Doc(
-            "powershell", "Powershell",
-            require("ace/requirejs/text!demo/docs/powershell.ps1")
         )
     ];
     
