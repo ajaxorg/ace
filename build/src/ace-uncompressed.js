@@ -8461,7 +8461,8 @@ canon.addCommand({
     exec: function(env, args, request) { env.editor.transposeLetters(); }
 });
 
-});/* vim:ts=4:sts=4:sw=4:
+});
+/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
