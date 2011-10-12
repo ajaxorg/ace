@@ -166,7 +166,7 @@ exports.launch = function(env) {
         ),
         new Doc(
             "php", "PHP",
-            require("ace/requirejs/text!demo/docs/javascript.js")
+            require("ace/requirejs/text!demo/docs/php.php")
         ),
         new Doc(
             "coldfusion", "ColdFusion",
