@@ -3483,7 +3483,7 @@ var Keys = (function() {
     };
 
     // A reverse map of FUNCTION_KEYS
-    for (i in ret.FUNCTION_KEYS) {
+    for (var i in ret.FUNCTION_KEYS) {
         var name = ret.FUNCTION_KEYS[i].toUpperCase();
         ret[name] = parseInt(i, 10);
     }
@@ -4892,7 +4892,7 @@ exports.Plugin.prototype = {
     startup: function(data, reason) {
         reason = reason || exports.REASONS.APP_STARTUP;
         var pr = new Promise();
-        if (this.status != this.REGISTERED) {
+        if (this.status < this.REGISTERED) {
             pr.resolve(this);
             return pr;
         }
@@ -5236,6 +5236,7 @@ exports._recent = _recent;
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mihai Sucan <mihai AT sucan AT gmail ODT com>
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -5346,22 +5347,53 @@ exports.setCssClass = function(node, className, include) {
     }
 };
 
-exports.importCssString = function(cssText, doc){
-    doc = doc || document;
+function hasCssString(id, doc) {
+    var index = 0, sheets;
+    doc = doc || document
 
+    if ((sheets = doc.styleSheets)) {
+        while (index < sheets.length)
+            if (sheets[index++].title === id) return true;
+    } else if ((sheets = doc.getElementsByTagName("style"))) {
+        while (index < sheets.length)
+            if (sheets[index++].id === id) return true;
+    }
+
+    return false;
+}
+exports.hasCssString = hasCssString;
+
+exports.importCssString = function importCssString(cssText, id, doc) {
+    doc = doc || document;
+    // If style is already imported return immediately.
+    if (id && hasCssString(id, doc)) return null;
     if (doc.createStyleSheet) {
         var sheet = doc.createStyleSheet();
         sheet.cssText = cssText;
-    }
-    else {
+        if (id) sheet.title = id;
+    } else {
         var style = doc.createElementNS ?
                     doc.createElementNS(XHTML_NS, "style") :
                     doc.createElement("style");
 
+        if (id) style.id = id;
         style.appendChild(doc.createTextNode(cssText));
 
         var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
         head.appendChild(style);
+    }
+};
+
+exports.importCssStylsheet = function(uri, doc) {
+    if (doc.createStyleSheet) {
+        var sheet = doc.createStyleSheet(uri);
+    } else {
+        var link = exports.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = uri;
+
+        var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
+        head.appendChild(link);
     }
 };
 
@@ -5407,7 +5439,7 @@ else
         return element.currentStyle
     };
 
-exports.scrollbarWidth = function() {
+exports.scrollbarWidth = function(document) {
 
     var inner = exports.createElement("p");
     inner.style.width = "100%";
@@ -5457,6 +5489,7 @@ exports.setInnerHtml = function(el, innerHtml) {
 };
 
 exports.setInnerText = function(el, innerText) {
+    var document = el.ownerDocument;
     if (document.body && "textContent" in document.body)
         el.textContent = innerText;
     else
@@ -5465,6 +5498,7 @@ exports.setInnerText = function(el, innerText) {
 };
 
 exports.getInnerText = function(el) {
+    var document = el.ownerDocument;
     if (document.body && "textContent" in document.body)
         return el.textContent;
     else
@@ -5597,7 +5631,7 @@ exports.preventDefault = function(e) {
 };
 
 exports.getDocumentX = function(e) {
-    if (e.clientX) {        
+    if (e.clientX) {
         return e.clientX + dom.getPageScrollLeft();
     } else {
         return e.pageX;
@@ -5620,7 +5654,7 @@ exports.getButton = function(e) {
         return 0;
     else if (e.type == "contextmenu")
         return 2;
-        
+
     // DOM Event
     if (e.preventDefault) {
         return e.button;
@@ -5641,7 +5675,7 @@ if (document.documentElement.setCapture) {
         var called = false;
         function onReleaseCapture(e) {
             eventHandler(e);
-            
+
             if (!called) {
                 called = true;
                 releaseCaptureHandler();
@@ -5686,7 +5720,7 @@ exports.addMouseWheelListener = function(el, callback) {
     var max = 0;
     var listener = function(e) {
         if (e.wheelDelta !== undefined) {
-            
+
             // some versions of Safari (e.g. 5.0.5) report insanely high
             // scroll values. These browsers require a higher factor
             if (Math.abs(e.wheelDeltaY) > max)
@@ -5696,7 +5730,7 @@ exports.addMouseWheelListener = function(el, callback) {
                 factor = 400;
             else
                 factor = 8;
-                
+
             if (e.wheelDeltaX !== undefined) {
                 e.wheelX = -e.wheelDeltaX / factor;
                 e.wheelY = -e.wheelDeltaY / factor;
@@ -5743,7 +5777,7 @@ exports.addMultiMouseDownListener = function(el, button, count, timeout, callbac
             clicks = 0;
             callback(e);
         }
-        
+
         if (isButton)
             return exports.preventDefault(e);
     };
@@ -5787,7 +5821,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
     // If there is no hashID and the keyCode is not a function key, then
     // we don't call the callback as we don't handle a command key here
     // (it's a normal key/character input).
-    if (hashId == 0 && !(keyCode in keys.FUNCTION_KEYS)) {
+    if (!(keyCode in keys.FUNCTION_KEYS) && !(keyCode in keys.PRINTABLE_KEYS)) {
         return false;
     }
     return callback(e, hashId, keyCode);
@@ -13760,11 +13794,11 @@ var RenderLoop = require("ace/renderloop").RenderLoop;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
 var editorCss = require("text!ace/css/editor.css");
 
-// import CSS once
-dom.importCssString(editorCss);
-
 var VirtualRenderer = function(container, theme) {
     this.container = container;
+
+    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
+    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
     dom.addCssClass(this.container, "ace_editor");
 
     this.setTheme(theme);
@@ -13842,7 +13876,10 @@ var VirtualRenderer = function(container, theme) {
         height : 1
     };
 
-    this.$loop = new RenderLoop(this.$renderChanges.bind(this));
+    this.$loop = new RenderLoop(
+        this.$renderChanges.bind(this),
+        this.container.ownerDocument.defaultView
+    );
     this.$loop.schedule(this.CHANGE_FULL);
 
     this.setPadding(4);
@@ -14507,6 +14544,12 @@ var VirtualRenderer = function(container, theme) {
         }
 
         function afterLoad(theme) {
+            dom.importCssString(
+                theme.cssText,
+                theme.cssClass,
+                _self.container.ownerDocument
+            );
+
             if (_self.$theme)
                 dom.removeCssClass(_self.container, _self.$theme);
 
@@ -14934,6 +14977,7 @@ exports.Marker = Marker;
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *      Mihai Sucan <mihai.sucan@gmail.com>
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -15032,8 +15076,8 @@ var Text = function(parentEl) {
             // Note: characterWidth can be a float!
             measureNode.innerHTML = lang.stringRepeat("Xy", n);
 
-            if (document.body) {
-                document.body.appendChild(measureNode);
+            if (this.element.ownerDocument.body) {
+                this.element.ownerDocument.body.appendChild(measureNode);
             } else {
                 var container = this.element.parentNode;
                 while (!dom.hasCssClass(container, "ace_editor"))
@@ -15168,7 +15212,7 @@ var Text = function(parentEl) {
     };
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
-        var fragment = document.createDocumentFragment(),
+        var fragment = this.element.ownerDocument.createDocumentFragment(),
             row = firstRow,
             fold = this.session.getNextFold(row),
             foldStart = fold ?fold.start.row :Infinity;
@@ -15642,6 +15686,7 @@ exports.Cursor = Cursor;
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -15678,7 +15723,7 @@ var ScrollBar = function(parent) {
     // of 0px
     // in Firefox 6+ scrollbar is hidden if element has the same width as scrollbar
     // make element a little bit wider to retain scrollbar when page is zoomed 
-    this.width = dom.scrollbarWidth();
+    this.width = dom.scrollbarWidth(parent.ownerDocument);
     this.element.style.width = (this.width || 15) + 5 + "px";
 
     event.addListener(this.element, "scroll", this.onScroll.bind(this));
@@ -15733,6 +15778,7 @@ exports.ScrollBar = ScrollBar;
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -15752,10 +15798,11 @@ define('ace/renderloop', ['require', 'exports', 'module' , 'pilot/event'], funct
 
 var event = require("pilot/event");
 
-var RenderLoop = function(onRender) {
+var RenderLoop = function(onRender, window) {
     this.onRender = onRender;
     this.pending = false;
     this.changes = 0;
+    this.setTimeoutZero = this.setTimeoutZero.bind(window);
 };
 
 (function() {
@@ -15783,31 +15830,31 @@ var RenderLoop = function(onRender) {
          window.msRequestAnimationFrame;
 
     if (this.setTimeoutZero) {
-
-        this.setTimeoutZero = this.setTimeoutZero.bind(window)
+        this.setTimeoutZero = this.setTimeoutZero;
     } else if (window.postMessage) {
 
-        this.messageName = "zero-timeout-message";
+        this.setTimeoutZero = (function(messageName, attached, listener) {
+            return function setTimeoutZero(callback) {
+                // Set up listener if not listening already.
+                if (!attached) {
+                    event.addListener(this, "message", function(e) {
+                        if (listener && e.data == messageName) {
+                            event.stopPropagation(e);
+                            listener();
+                        }
+                    });
+                    attached = true;
+                }
 
-        this.setTimeoutZero = function(callback) {
-            if (!this.attached) {
-                var _self = this;
-                event.addListener(window, "message", function(e) {
-                    if (_self.callback && e.data == _self.messageName) {
-                        event.stopPropagation(e);
-                        _self.callback();
-                    }
-                });
-                this.attached = true;
-            }
-            this.callback = callback;
-            window.postMessage(this.messageName, "*");
-        }
+                listener = callback;
+                this.postMessage(messageName, "*");
+            };
+        })("zero-timeout-message", false, null);
 
     } else {
 
         this.setTimeoutZero = function(callback) {
-            setTimeout(callback, 0);
+            this.setTimeout(callback, 0);
         }
     }
 
@@ -15852,11 +15899,11 @@ exports.RenderLoop = RenderLoop;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], function(require, exports, module) {
+define('ace/theme/textmate', ['require', 'exports', 'module' ], function(require, exports, module) {
 
-    var dom = require("pilot/dom");
 
-    var cssText = ".ace-tm .ace_editor {\
+exports.cssClass = "ace-tm";
+exports.cssText = ".ace-tm .ace_editor {\
   border: 2px solid rgb(159, 159, 159);\
 }\
 \
@@ -16023,10 +16070,6 @@ define('ace/theme/textmate', ['require', 'exports', 'module' , 'pilot/dom'], fun
   color: rgb(255, 0, 0)\
 }";
 
-    // import CSS once
-    dom.importCssString(cssText);
-
-    exports.cssClass = "ace-tm";
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
