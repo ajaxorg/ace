@@ -4,12 +4,15 @@
 }
 
 .ace_editor .ace_gutter { 
-    width: 20px; 
-    display: inline-block; 
+    width: 25px !important;
+    display: block;
+    float: left;
     text-align: right; 
     padding: 0 3px 0 0; 
     margin-right: 3px;
 }
+
+.ace-row { clear: both; }
 
 *.ace_gutter-cell {
   -moz-user-select: -moz-none;
