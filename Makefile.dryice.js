@@ -95,7 +95,7 @@ var aceProject = [
 ];
 
 if (target == "normal") {
-    aceProject.push(aceHome + '/demo');
+    //aceProject.push(aceHome + '/demo');
 
     copy({
         source: "build_support/editor.html",
@@ -349,7 +349,7 @@ function demo() {
         source: [
             copy.source.commonjs({
                 project: project,
-                require: [ "pilot/index", "ace/defaults", "demo/boot" ]
+                require: [ "pilot/index", "ace/defaults", "demo/kitchen-sink/boot" ]
             })
         ],
         filter: [ copy.filter.moduleDefines ],
@@ -358,8 +358,7 @@ function demo() {
     copy({
         source: {
             root: project,
-            include: /demo\/docs\/.*$/,
-            exclude: /tests?\//
+            include: /demo\/kitchen-sink\/docs\/.*$/,
         },
         filter: [ copy.filter.addDefines ],
         dest: demo
@@ -367,8 +366,7 @@ function demo() {
     copy({
         source: {
             root: project,
-            include: /.*\.css$/,
-            exclude: /tests?\//
+            include: /ace\/.*\.css$/,
         },
         filter: [ copy.filter.addDefines ],
         dest: demo
@@ -377,11 +375,11 @@ function demo() {
     copy({
         source: demo,
         filter: [ filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink-uncompressed.js'
+        dest: 'build/demo/kitchen-sink/kitchen-sink-uncompressed.js'
     });
     copy({
         source: demo,
         filter: [ copy.filter.uglifyjs, filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink.js'
+        dest: 'build/demo/kitchen-sink/kitchen-sink.js'
     });
 }
