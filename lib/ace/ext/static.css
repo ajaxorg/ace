@@ -1,0 +1,19 @@
+.ace_editor {
+   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;
+   font-size: 12px;
+}
+
+.ace_editor .ace_gutter { 
+    width: 20px; 
+    display: inline-block; 
+    text-align: right; 
+    padding: 0 3px 0 0; 
+    margin-right: 3px;
+}
+
+*.ace_gutter-cell {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

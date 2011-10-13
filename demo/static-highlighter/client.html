@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Static Code highlighter using Ace</title>
+	<meta name="author" content="Fabian Jakobs">
+</head>
+<body>
+
+<h2>Client Side Syntax Highlighting</h2>
+
+<p>Syntax highlighting using Ace language modes and themes.</p>
+    
+<div id="code"></div>
+
+<script type="text/javascript">
+    var require = {
+        paths: {
+            demo: "..",
+            ace: "../../lib/ace",
+            pilot: "../../support/pilot/lib/pilot"
+        }
+    };
+</script>
+<script src="../kitchen-sink/require.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    
+require(["ace/ext/static_highlight", "ace/mode/javascript", "ace/theme/twilight", "pilot/dom"], function() {
+
+    var highlighter = require("ace/ext/static_highlight");
+    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    var theme = require("ace/theme/twilight");
+    var dom = require("pilot/dom");
+
+    var codeEl = document.getElementById("code");
+    var data = document.body.innerHTML;
+
+    var highlighted = highlighter.render(data, new JavaScriptMode(), theme);
+
+    dom.importCssString(highlighted.css, "ace_highlight");
+    codeEl.innerHTML = highlighted.html;
+});
+    
+</script>
+</body>
+</html>
