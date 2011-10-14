@@ -10,3 +10,6 @@
 [submodule "doc/wiki"]
 	path = doc/wiki
 	url = git://github.com/ajaxorg/ace.wiki.git
+[submodule "support/jsdom"]
+	path = support/jsdom
+	url = git://github.com/ajaxorg/jsdom.git
