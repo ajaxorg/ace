@@ -297,7 +297,7 @@ console.log('# ace worker ---------');
             aceHome + "/lib/ace/worker/worker.js",
             worker
         ],
-        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
+        filter: [ filterTextPlugin, copy.filter.uglifyjs ],
         dest: "build/src/worker-" + mode + ".js"
     });
 });
@@ -349,7 +349,7 @@ function demo() {
         source: [
             copy.source.commonjs({
                 project: project,
-                require: [ "pilot/index", "ace/defaults", "demo/kitchen-sink/boot" ]
+                require: [ "demo/kitchen-sink/demo" ]
             })
         ],
         filter: [ copy.filter.moduleDefines ],

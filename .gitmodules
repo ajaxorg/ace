@@ -5,8 +5,5 @@
 	path = node_modules/dryice
 	url = git://github.com/ajaxorg/dryice.git
 [submodule "node_modules/pilot"]
-	path = node_modules/pilot
-	url = git://github.com/ajaxorg/pilot.git
-[submodule "node_modules/cockpit"]
-	path = node_modules/cockpit
-	url = git://github.com/ajaxorg/cockpit.git
+    path = node_modules/pilot
+    url = git://github.com/ajaxorg/pilot.git
