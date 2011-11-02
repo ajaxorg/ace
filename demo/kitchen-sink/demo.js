@@ -125,7 +125,7 @@ exports.launch = function(env) {
         modesByName[m.name] = m;
     });
     
-    var loreIpsum = require("ace/requirejs/text!demo/docs/plaintext.txt");
+    var loreIpsum = require("ace/requirejs/text!demo/kitchen-sink/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -133,108 +133,108 @@ exports.launch = function(env) {
     var docs = [
         new Doc(
             "javascript", "JavaScript",
-            require("ace/requirejs/text!demo/docs/javascript.js")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/javascript.js")
         ),
         new WrappedDoc("text", "Plain Text", loreIpsum),
         new Doc(
             "coffee", "Coffeescript",
-            require("ace/requirejs/text!demo/docs/coffeescript.coffee")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/coffeescript.coffee")
         ),
         new Doc(
             "json", "JSON",
-            require("ace/requirejs/text!demo/docs/json.json")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/json.json")
         ),
         new Doc(
             "css", "CSS",
-            require("ace/requirejs/text!demo/docs/css.css")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/css.css")
         ),
         new Doc(
             "scss", "SCSS",
-            require("ace/requirejs/text!demo/docs/scss.scss")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/scss.scss")
         ),
         new Doc(
             "html", "HTML",
-            require("ace/requirejs/text!demo/docs/html.html")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/html.html")
         ),
         new Doc(
             "xml", "XML",
-            require("ace/requirejs/text!demo/docs/xml.xml")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/xml.xml")
         ),
         new Doc(
             "svg", "SVG",
-            require("ace/requirejs/text!demo/docs/svg.svg")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/svg.svg")
         ),
         new Doc(
             "php", "PHP",
-            require("ace/requirejs/text!demo/docs/javascript.js")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/php.php")
         ),
         new Doc(
             "coldfusion", "ColdFusion",
-            require("ace/requirejs/text!demo/docs/coldfusion.cfm")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/coldfusion.cfm")
         ),
         new Doc(
             "python", "Python",
-            require("ace/requirejs/text!demo/docs/python.py")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/python.py")
         ),
         new Doc(
             "ruby", "Ruby",
-            require("ace/requirejs/text!demo/docs/ruby.rb")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/ruby.rb")
         ),
         new Doc(
             "perl", "Perl",
-            require("ace/requirejs/text!demo/docs/perl.pl")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/perl.pl")
         ),
         new Doc(
             "ocaml", "OCaml",
-            require("ace/requirejs/text!demo/docs/ocaml.ml")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/ocaml.ml")
         ),
         new Doc(
             "lua", "Lua",
-            require("ace/requirejs/text!demo/docs/lua.lua")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/lua.lua")
         ),
         new Doc(
             "java", "Java",
-            require("ace/requirejs/text!demo/docs/java.java")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/java.java")
         ),
         new Doc(
             "clojure", "Clojure",
-            require("ace/requirejs/text!demo/docs/clojure.clj")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/clojure.clj")
         ),
         new Doc(
             "groovy", "Groovy",
-            require("ace/requirejs/text!demo/docs/groovy.groovy")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/groovy.groovy")
         ),
         new Doc(
             "scala", "Scala",
-            require("ace/requirejs/text!demo/docs/scala.scala")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/scala.scala")
         ),
         new Doc(
             "csharp", "C#",
-            require("ace/requirejs/text!demo/docs/csharp.cs")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/csharp.cs")
         ),
         new Doc(
             "powershell", "Powershell",
-            require("ace/requirejs/text!demo/docs/powershell.ps1")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/powershell.ps1")
         ),
         new Doc(
             "c_cpp", "C/C++",
-            require("ace/requirejs/text!demo/docs/cpp.cpp")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/cpp.cpp")
         ),
         new Doc(
             "markdown", "Markdown",
-            require("ace/requirejs/text!demo/docs/markdown.md")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/markdown.md")
         ),
         new WrappedDoc(
             "markdown", "Markdown",
-            require("ace/requirejs/text!demo/docs/markdown.md")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/markdown.md")
         ),
         new WrappedDoc(
             "textile", "Textile",
-            require("ace/requirejs/text!demo/docs/textile.textile")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/textile.textile")
         ),
         new WrappedDoc(
             "latex", "LaTeX",
-            require("ace/requirejs/text!demo/docs/latex.tex")
+            require("ace/requirejs/text!demo/kitchen-sink/docs/latex.tex")
         )
     ];
     
@@ -548,95 +548,6 @@ exports.launch = function(env) {
         }
     });
 
-    canon.addCommand({
-        name: "fold",
-        bindKey: {
-            win: "Alt-L",
-            mac: "Alt-L",
-            sender: "editor"
-        },
-        exec: function(env) {
-            toggleFold(env, false);
-        }
-    });
-
-    canon.addCommand({
-        name: "unfold",
-        bindKey: {
-            win: "Alt-Shift-L",
-            mac: "Alt-Shift-L",
-            sender: "editor"
-        },
-        exec: function(env) {
-            toggleFold(env, true);
-        }
-    });
-
-    function isCommentRow(row) {
-        var session = env.editor.session;
-        var token;
-        var tokens = session.getTokens(row, row)[0].tokens;
-        var c = 0;
-        for (var i = 0; i < tokens.length; i++) {
-            token = tokens[i];
-            if (/^comment/.test(token.type)) {
-                return c;
-            } else if (!/^text/.test(token.type)) {
-                return false;
-            }
-            c += token.value.length;
-        }
-        return false;
-    }
-
-    function toggleFold(env, tryToUnfold) {
-        var session = env.editor.session;
-        var selection = env.editor.selection;
-        var range = selection.getRange();
-        var addFold;
-
-        if(range.isEmpty()) {
-            var br = session.findMatchingBracket(range.start);
-            var fold = session.getFoldAt(range.start.row, range.start.column);
-            var column;
-
-            if (fold) {
-                session.expandFold(fold);
-                selection.setSelectionRange(fold.range);
-            } else if (br) {
-                if (range.compare(br.row, br.column) == 1)
-                    range.end = br;
-                else
-                    range.start = br;
-                addFold = true;
-            } else if ((column = isCommentRow(range.start.row)) !== false) {
-                var firstCommentRow = range.start.row;
-                var lastCommentRow = range.start.row;
-                var t;
-                while ((t = isCommentRow(firstCommentRow - 1)) !== false) {
-                    firstCommentRow --;
-                    column = t;
-                }
-                while (isCommentRow(lastCommentRow + 1) !== false) {
-                    lastCommentRow ++;
-                }
-                range.start.row = firstCommentRow;
-                range.start.column = column + 2;
-                range.end.row = lastCommentRow;
-                range.end.column = session.getLine(lastCommentRow).length - 1;
-                addFold = true;
-            }
-        } else {
-            addFold = true;
-        }
-        if (addFold) {
-            var placeHolder = session.getTextRange(range);
-            if(placeHolder.length < 3)
-                return;
-            placeHolder = placeHolder.trim().substring(0, 3).replace(' ','','g') + "...";
-            session.addFold(placeHolder, range);
-        }
-    }
 };
 
 var themes = {};

@@ -14,7 +14,6 @@
 # A handy place to put stuff that git should ignore:
 /ignore/
 support/async/
-support/jsdom/
 support/node-htmlparser/
 support/node-o3-xml/
 support/requirejs/
