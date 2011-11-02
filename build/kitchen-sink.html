@@ -6,18 +6,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Ace Kitchen Sink</title>
     <meta name="author" content="Fabian Jakobs">
-    <link rel="stylesheet" href="demo/styles.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
     <!-- 
     
     Ace
       version 0.2.0
-      commit  6d4df6c5208b7ed4b10caf48dfd3d8c806406d04
+      commit  baaf719506b4c35c7b278d8631fab7217ab3f346
 
     
     -->
 </head>
 <body>
-  <img id="logo" src="demo/logo.png">
+  <img id="logo" src="demo/kitchen-sink/logo.png">
   <table id="controls">
     <tr>
       <td>
@@ -190,20 +190,20 @@
   <script type="text/javascript">
       var require = {
           paths: {
-              demo: "../demo",
-              ace: "../lib/ace",
-              cockpit: "../support/cockpit/lib/cockpit",
-              pilot: "../support/pilot/lib/pilot"
+              demo: "..",
+              ace: "../../lib/ace",
+              cockpit: "../../node_modules/cockpit/lib/cockpit",
+              pilot: "../../node_modules/pilot/lib/pilot"
           }
       };
   </script>
-  <script src="demo/require.js" data-main="demo/boot" type="text/javascript" charset="utf-8"></script>
+  <script src="demo/kitchen-sink/require.js" data-main="demo/kitchen-sink/boot" type="text/javascript" charset="utf-8"></script>
  -->
   
 
-  <script src="demo/kitchen-sink-uncompressed.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
+  <script src="demo/kitchen-sink/kitchen-sink-uncompressed.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">
-    require("demo/boot");
+    require("demo/kitchen-sink/boot");
   </script>
 <!--
 

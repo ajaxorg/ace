@@ -4895,12 +4895,12 @@ exports.shutdown = function shutdown(data, reason) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('demo/boot', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/environment', 'demo/demo', 'pilot/index', 'ace/defaults'], function(require, exports, module) {
+define('demo/kitchen-sink/boot', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/environment', 'demo/kitchen-sink/demo', 'pilot/index', 'ace/defaults'], function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 require("pilot/plugin_manager");
 require("pilot/environment");
-require("demo/demo");
+require("demo/kitchen-sink/demo");
 
 require("pilot/index");
 require("ace/defaults");
@@ -4910,7 +4910,7 @@ var catalog = require("pilot/plugin_manager").catalog;
 catalog.registerPlugins(plugins).then(function() {
     var env = require("pilot/environment").create();
     catalog.startupPlugins({ env: env }).then(function() {
-        require("demo/demo").launch(env);
+        require("demo/kitchen-sink/demo").launch(env);
     });
 });
 
@@ -5431,7 +5431,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!demo/docs/plaintext.txt', 'text!demo/docs/javascript.js', 'text!demo/docs/coffeescript.coffee', 'text!demo/docs/json.json', 'text!demo/docs/css.css', 'text!demo/docs/scss.scss', 'text!demo/docs/html.html', 'text!demo/docs/xml.xml', 'text!demo/docs/svg.svg', 'text!demo/docs/php.php', 'text!demo/docs/coldfusion.cfm', 'text!demo/docs/python.py', 'text!demo/docs/ruby.rb', 'text!demo/docs/perl.pl', 'text!demo/docs/ocaml.ml', 'text!demo/docs/lua.lua', 'text!demo/docs/java.java', 'text!demo/docs/clojure.clj', 'text!demo/docs/groovy.groovy', 'text!demo/docs/scala.scala', 'text!demo/docs/csharp.cs', 'text!demo/docs/powershell.ps1', 'text!demo/docs/cpp.cpp', 'text!demo/docs/markdown.md', 'text!demo/docs/textile.textile', 'text!demo/docs/latex.tex', 'ace/split'], function(require, exports, module) {
+define('demo/kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!demo/kitchen-sink/docs/plaintext.txt', 'text!demo/kitchen-sink/docs/javascript.js', 'text!demo/kitchen-sink/docs/coffeescript.coffee', 'text!demo/kitchen-sink/docs/json.json', 'text!demo/kitchen-sink/docs/css.css', 'text!demo/kitchen-sink/docs/scss.scss', 'text!demo/kitchen-sink/docs/html.html', 'text!demo/kitchen-sink/docs/xml.xml', 'text!demo/kitchen-sink/docs/svg.svg', 'text!demo/kitchen-sink/docs/php.php', 'text!demo/kitchen-sink/docs/coldfusion.cfm', 'text!demo/kitchen-sink/docs/python.py', 'text!demo/kitchen-sink/docs/ruby.rb', 'text!demo/kitchen-sink/docs/perl.pl', 'text!demo/kitchen-sink/docs/ocaml.ml', 'text!demo/kitchen-sink/docs/lua.lua', 'text!demo/kitchen-sink/docs/java.java', 'text!demo/kitchen-sink/docs/clojure.clj', 'text!demo/kitchen-sink/docs/groovy.groovy', 'text!demo/kitchen-sink/docs/scala.scala', 'text!demo/kitchen-sink/docs/csharp.cs', 'text!demo/kitchen-sink/docs/powershell.ps1', 'text!demo/kitchen-sink/docs/cpp.cpp', 'text!demo/kitchen-sink/docs/markdown.md', 'text!demo/kitchen-sink/docs/textile.textile', 'text!demo/kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5518,7 +5518,7 @@ exports.launch = function(env) {
         modesByName[m.name] = m;
     });
     
-    var loreIpsum = require("text!demo/docs/plaintext.txt");
+    var loreIpsum = require("text!demo/kitchen-sink/docs/plaintext.txt");
     for (var i = 0; i < 5; i++) {
         loreIpsum += loreIpsum;
     }
@@ -5526,108 +5526,108 @@ exports.launch = function(env) {
     var docs = [
         new Doc(
             "javascript", "JavaScript",
-            require("text!demo/docs/javascript.js")
+            require("text!demo/kitchen-sink/docs/javascript.js")
         ),
         new WrappedDoc("text", "Plain Text", loreIpsum),
         new Doc(
             "coffee", "Coffeescript",
-            require("text!demo/docs/coffeescript.coffee")
+            require("text!demo/kitchen-sink/docs/coffeescript.coffee")
         ),
         new Doc(
             "json", "JSON",
-            require("text!demo/docs/json.json")
+            require("text!demo/kitchen-sink/docs/json.json")
         ),
         new Doc(
             "css", "CSS",
-            require("text!demo/docs/css.css")
+            require("text!demo/kitchen-sink/docs/css.css")
         ),
         new Doc(
             "scss", "SCSS",
-            require("text!demo/docs/scss.scss")
+            require("text!demo/kitchen-sink/docs/scss.scss")
         ),
         new Doc(
             "html", "HTML",
-            require("text!demo/docs/html.html")
+            require("text!demo/kitchen-sink/docs/html.html")
         ),
         new Doc(
             "xml", "XML",
-            require("text!demo/docs/xml.xml")
+            require("text!demo/kitchen-sink/docs/xml.xml")
         ),
         new Doc(
             "svg", "SVG",
-            require("text!demo/docs/svg.svg")
+            require("text!demo/kitchen-sink/docs/svg.svg")
         ),
         new Doc(
             "php", "PHP",
-            require("text!demo/docs/php.php")
+            require("text!demo/kitchen-sink/docs/php.php")
         ),
         new Doc(
             "coldfusion", "ColdFusion",
-            require("text!demo/docs/coldfusion.cfm")
+            require("text!demo/kitchen-sink/docs/coldfusion.cfm")
         ),
         new Doc(
             "python", "Python",
-            require("text!demo/docs/python.py")
+            require("text!demo/kitchen-sink/docs/python.py")
         ),
         new Doc(
             "ruby", "Ruby",
-            require("text!demo/docs/ruby.rb")
+            require("text!demo/kitchen-sink/docs/ruby.rb")
         ),
         new Doc(
             "perl", "Perl",
-            require("text!demo/docs/perl.pl")
+            require("text!demo/kitchen-sink/docs/perl.pl")
         ),
         new Doc(
             "ocaml", "OCaml",
-            require("text!demo/docs/ocaml.ml")
+            require("text!demo/kitchen-sink/docs/ocaml.ml")
         ),
         new Doc(
             "lua", "Lua",
-            require("text!demo/docs/lua.lua")
+            require("text!demo/kitchen-sink/docs/lua.lua")
         ),
         new Doc(
             "java", "Java",
-            require("text!demo/docs/java.java")
+            require("text!demo/kitchen-sink/docs/java.java")
         ),
         new Doc(
             "clojure", "Clojure",
-            require("text!demo/docs/clojure.clj")
+            require("text!demo/kitchen-sink/docs/clojure.clj")
         ),
         new Doc(
             "groovy", "Groovy",
-            require("text!demo/docs/groovy.groovy")
+            require("text!demo/kitchen-sink/docs/groovy.groovy")
         ),
         new Doc(
             "scala", "Scala",
-            require("text!demo/docs/scala.scala")
+            require("text!demo/kitchen-sink/docs/scala.scala")
         ),
         new Doc(
             "csharp", "C#",
-            require("text!demo/docs/csharp.cs")
+            require("text!demo/kitchen-sink/docs/csharp.cs")
         ),
         new Doc(
             "powershell", "Powershell",
-            require("text!demo/docs/powershell.ps1")
+            require("text!demo/kitchen-sink/docs/powershell.ps1")
         ),
         new Doc(
             "c_cpp", "C/C++",
-            require("text!demo/docs/cpp.cpp")
+            require("text!demo/kitchen-sink/docs/cpp.cpp")
         ),
         new Doc(
             "markdown", "Markdown",
-            require("text!demo/docs/markdown.md")
+            require("text!demo/kitchen-sink/docs/markdown.md")
         ),
         new WrappedDoc(
             "markdown", "Markdown",
-            require("text!demo/docs/markdown.md")
+            require("text!demo/kitchen-sink/docs/markdown.md")
         ),
         new WrappedDoc(
             "textile", "Textile",
-            require("text!demo/docs/textile.textile")
+            require("text!demo/kitchen-sink/docs/textile.textile")
         ),
         new WrappedDoc(
             "latex", "LaTeX",
-            require("text!demo/docs/latex.tex")
+            require("text!demo/kitchen-sink/docs/latex.tex")
         )
     ];
     
@@ -6241,7 +6241,7 @@ if (document.documentElement.setCapture) {
 
             if (!called) {
                 called = true;
-                releaseCaptureHandler();
+                releaseCaptureHandler(e);
             }
 
             exports.removeListener(el, "mousemove", eventHandler);
@@ -6266,7 +6266,7 @@ else {
 
         function onMouseUp(e) {
             eventHandler && eventHandler(e);
-            releaseCaptureHandler && releaseCaptureHandler();
+            releaseCaptureHandler && releaseCaptureHandler(e);
 
             document.removeEventListener("mousemove", onMouseMove, true);
             document.removeEventListener("mouseup", onMouseUp, true);
@@ -6564,11 +6564,11 @@ exports.setCssClass = function(node, className, include) {
     }
 };
 
-function hasCssString(id, doc) {
+exports.hasCssString = function(id, doc) {
     var index = 0, sheets;
-    doc = doc || document
+    doc = doc || document;
 
-    if ((sheets = doc.styleSheets)) {
+    if (doc.createStyleSheet && (sheets = doc.styleSheets)) {
         while (index < sheets.length)
             if (sheets[index++].title === id) return true;
     } else if ((sheets = doc.getElementsByTagName("style"))) {
@@ -6577,24 +6577,29 @@ function hasCssString(id, doc) {
     }
 
     return false;
-}
-exports.hasCssString = hasCssString;
+};
 
 exports.importCssString = function importCssString(cssText, id, doc) {
     doc = doc || document;
     // If style is already imported return immediately.
-    if (id && hasCssString(id, doc)) return null;
+    if (id && exports.hasCssString(id, doc))
+        return null;
+    
+    var style;
+    
     if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet();
-        sheet.cssText = cssText;
-        if (id) sheet.title = id;
+        style = doc.createStyleSheet();
+        style.cssText = cssText;
+        if (id)
+            style.title = id;
     } else {
-        var style = doc.createElementNS ?
+        style = doc.createElementNS ?
                     doc.createElementNS(XHTML_NS, "style") :
                     doc.createElement("style");
 
-        if (id) style.id = id;
         style.appendChild(doc.createTextNode(cssText));
+        if (id)
+            style.id = id;
 
         var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
         head.appendChild(style);
@@ -16619,20 +16624,11 @@ var RenderLoop = function(onRender, window) {
                 var changes = _self.changes;
                 _self.changes = 0;
                 _self.onRender(changes);
-            })
+            });
         }
     };
 
-    this.setTimeoutZero = window.requestAnimationFrame ||
-         window.webkitRequestAnimationFrame ||
-         window.mozRequestAnimationFrame ||
-         window.oRequestAnimationFrame ||
-         window.msRequestAnimationFrame;
-
-    if (this.setTimeoutZero) {
-        this.setTimeoutZero = this.setTimeoutZero;
-    } else if (window.postMessage) {
-
+    if (window.postMessage) {
         this.setTimeoutZero = (function(messageName, attached, listener) {
             return function setTimeoutZero(callback) {
                 // Set up listener if not listening already.
@@ -16650,12 +16646,11 @@ var RenderLoop = function(onRender, window) {
                 this.postMessage(messageName, "*");
             };
         })("zero-timeout-message", false, null);
-
-    } else {
-
+    }
+    else {
         this.setTimeoutZero = function(callback) {
             this.setTimeout(callback, 0);
-        }
+        };
     }
 
 }).call(RenderLoop.prototype);
@@ -26735,7 +26730,7 @@ function UndoManagerProxy(undoManager, session) {
 
 exports.Split = Split;
 });
-define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
+define("text!demo/kitchen-sink/docs/clojure.clj", [], "(defn parting\n" +
   "  \"returns a String parting in a given language\"\n" +
   "  ([] (parting \"World\"))\n" +
   "  ([name] (parting name \"en\"))\n" +
@@ -26755,7 +26750,7 @@ define("text!demo/docs/clojure.clj", [], "(defn parting\n" +
   "(println (parting \"Mark\" \"es\")) ; -> Adios, Mark\n" +
   "(println (parting \"Mark\", \"xy\")) ; -> java.lang.IllegalArgumentException: unsupported language xy");
 
-define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
+define("text!demo/kitchen-sink/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
   "\n" +
   "try\n" +
   "    throw URIError decodeURI(0xC0ffee * 123456.7e-8 / .9)\n" +
@@ -26776,13 +26771,13 @@ define("text!demo/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\n" +
   "    this isnt: `just JavaScript`\n" +
   "    undefined");
 
-define("text!demo/docs/coldfusion.cfm", [], "<!--- hello world --->\n" +
+define("text!demo/kitchen-sink/docs/coldfusion.cfm", [], "<!--- hello world --->\n" +
   "\n" +
   "<cfset welcome=\"Hello World!\">\n" +
   "\n" +
   "<cfoutput>#welcome#</cfoutput>");
 
-define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
+define("text!demo/kitchen-sink/docs/cpp.cpp", [], "// compound assignment operators\n" +
   "\n" +
   "#include <iostream>\n" +
   "using namespace std;\n" +
@@ -26796,18 +26791,18 @@ define("text!demo/docs/cpp.cpp", [], "// compound assignment operators\n" +
   "    return 0;\n" +
   "}");
 
-define("text!demo/docs/csharp.cs", [], "public void HelloWorld() {\n" +
+define("text!demo/kitchen-sink/docs/csharp.cs", [], "public void HelloWorld() {\n" +
   "    //Say Hello!\n" +
   "    Console.WriteLine(\"Hello World\");\n" +
   "}");
 
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
+define("text!demo/kitchen-sink/docs/css.css", [], ".text-layer {\n" +
   "    font-family: Monaco, \"Courier New\", monospace;\n" +
   "    font-size: 12px;\n" +
   "    cursor: text;\n" +
   "}");
 
-define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
+define("text!demo/kitchen-sink/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
   "import java.util.concurrent.atomic.AtomicInteger\n" +
   "\n" +
   "def counter = new AtomicInteger()\n" +
@@ -26834,7 +26829,7 @@ define("text!demo/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurr
   "\n" +
   "assert counter.get() == 12");
 
-define("text!demo/docs/html.html", [], "<html>\n" +
+define("text!demo/kitchen-sink/docs/html.html", [], "<html>\n" +
   "    <head>\n" +
   "\n" +
   "    <style type=\"text/css\">\n" +
@@ -26851,7 +26846,7 @@ define("text!demo/docs/html.html", [], "<html>\n" +
   "    </body>\n" +
   "</html>");
 
-define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
+define("text!demo/kitchen-sink/docs/java.java", [], "public class InfiniteLoop {\n" +
   "\n" +
   "    /*\n" +
   "     * This will cause the program to hang...\n" +
@@ -26867,13 +26862,13 @@ define("text!demo/docs/java.java", [], "public class InfiniteLoop {\n" +
   "    }\n" +
   "}");
 
-define("text!demo/docs/javascript.js", [], "function foo(items) {\n" +
+define("text!demo/kitchen-sink/docs/javascript.js", [], "function foo(items) {\n" +
   "    for (var i=0; i<items.length; i++) {\n" +
   "        alert(items[i] + \"juhu\");\n" +
   "    }	// Real Tab.\n" +
   "}");
 
-define("text!demo/docs/json.json", [], "{\n" +
+define("text!demo/kitchen-sink/docs/json.json", [], "{\n" +
   " \"query\": {\n" +
   "  \"count\": 10,\n" +
   "  \"created\": \"2011-06-21T08:10:46Z\",\n" +
@@ -26940,7 +26935,7 @@ define("text!demo/docs/json.json", [], "{\n" +
   " }\n" +
   "}");
 
-define("text!demo/docs/latex.tex", [], "\\usepackage{amsmath}\n" +
+define("text!demo/kitchen-sink/docs/latex.tex", [], "\\usepackage{amsmath}\n" +
   "\\title{\\LaTeX}\n" +
   "\\date{}\n" +
   "\\begin{document}\n" +
@@ -26963,7 +26958,7 @@ define("text!demo/docs/latex.tex", [], "\\usepackage{amsmath}\n" +
   "  \\end{align}\n" +
   "\\end{document}");
 
-define("text!demo/docs/lua.lua", [], "--[[--\n" +
+define("text!demo/kitchen-sink/docs/lua.lua", [], "--[[--\n" +
   "num_args takes in 5.1 byte code and extracts the number of arguments\n" +
   "from its function header.\n" +
   "--]]--\n" +
@@ -27001,7 +26996,7 @@ define("text!demo/docs/lua.lua", [], "--[[--\n" +
   "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
   "");
 
-define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
+define("text!demo/kitchen-sink/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "============================\n" +
   "\n" +
   "Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](http://www.cloud9ide.com/) and the successor of the Mozilla Skywriter (Bespin) Project.\n" +
@@ -27188,7 +27183,7 @@ define("text!demo/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "  1016 EA, Amsterdam\n" +
   "  the Netherlands");
 
-define("text!demo/docs/ocaml.ml", [], "(*\n" +
+define("text!demo/kitchen-sink/docs/ocaml.ml", [], "(*\n" +
   " * Example of early return implementation taken from\n" +
   " * http://ocaml.janestreet.com/?q=node/91\n" +
   " *)\n" +
@@ -27207,7 +27202,7 @@ define("text!demo/docs/ocaml.ml", [], "(*\n" +
   "    List.fold list ~init:0 ~f:(fun acc x ->\n" +
   "      if x >= 0 then acc + x else r.return acc))");
 
-define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
+define("text!demo/kitchen-sink/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "use strict;\n" +
   "use warnings;\n" +
   "my $num_primes = 0;\n" +
@@ -27241,7 +27236,7 @@ define("text!demo/docs/perl.pl", [], "#!/usr/bin/perl\n" +
   "print \"\\n\";\n" +
   "");
 
-define("text!demo/docs/php.php", [], "<?php\n" +
+define("text!demo/kitchen-sink/docs/php.php", [], "<?php\n" +
   "\n" +
   "function nfact($n) {\n" +
   "    if ($n == 0) {\n" +
@@ -27261,7 +27256,7 @@ define("text!demo/docs/php.php", [], "<?php\n" +
   "\n" +
   "?>");
 
-define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
+define("text!demo/kitchen-sink/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
   "\n" +
   "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
   "\n" +
@@ -27273,7 +27268,7 @@ define("text!demo/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetet
   "\n" +
   "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur");
 
-define("text!demo/docs/powershell.ps1", [], "# This is a simple comment\n" +
+define("text!demo/kitchen-sink/docs/powershell.ps1", [], "# This is a simple comment\n" +
   "function Hello($name) {\n" +
   "  Write-host \"Hello $name\"\n" +
   "}\n" +
@@ -27299,7 +27294,7 @@ define("text!demo/docs/powershell.ps1", [], "# This is a simple comment\n" +
   "& notepad .\\readme.md\n" +
   "");
 
-define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
+define("text!demo/kitchen-sink/docs/python.py", [], "#!/usr/local/bin/python\n" +
   "\n" +
   "import string, sys\n" +
   "\n" +
@@ -27319,7 +27314,7 @@ define("text!demo/docs/python.py", [], "#!/usr/local/bin/python\n" +
   "        celsius=(fahrenheit-32)*5.0/9.0\n" +
   "        print '%i\\260F = %i\\260C' % (int(fahrenheit), int(celsius+.5))");
 
-define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
+define("text!demo/kitchen-sink/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
   "\n" +
   "# Program to find the factorial of a number\n" +
   "def fact(n)\n" +
@@ -27332,7 +27327,7 @@ define("text!demo/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
   "\n" +
   "puts fact(ARGV[0].to_i)");
 
-define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
+define("text!demo/kitchen-sink/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
   "/* Defines a new method 'sort' for array objects */\n" +
   "object implicits extends Application {\n" +
   "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
@@ -27345,7 +27340,7 @@ define("text!demo/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n
   "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
   "}");
 
-define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
+define("text!demo/kitchen-sink/docs/scss.scss", [], "/* style.scss */\n" +
   "\n" +
   "#navbar {\n" +
   "    $navbar-width: 800px;\n" +
@@ -27366,14 +27361,14 @@ define("text!demo/docs/scss.scss", [], "/* style.scss */\n" +
   "    }\n" +
   "}");
 
-define("text!demo/docs/sql.sql", [], "SELECT city, COUNT(id) AS users_count\n" +
+define("text!demo/kitchen-sink/docs/sql.sql", [], "SELECT city, COUNT(id) AS users_count\n" +
   "FROM users\n" +
   "WHERE group_name = 'salesman'\n" +
   "AND created > '2011-05-21'\n" +
   "GROUP BY 1\n" +
   "ORDER BY 2 DESC");
 
-define("text!demo/docs/svg.svg", [], "<svg\n" +
+define("text!demo/kitchen-sink/docs/svg.svg", [], "<svg\n" +
   "  width=\"800\" height=\"600\"\n" +
   "  xmlns=\"http://www.w3.org/2000/svg\"\n" +
   "  onload=\"StartAnimation(evt)\">\n" +
@@ -27457,7 +27452,7 @@ define("text!demo/docs/svg.svg", [], "<svg\n" +
   "        dock!</text>\n" +
   "</svg>");
 
-define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
+define("text!demo/kitchen-sink/docs/textile.textile", [], "h1. Textile document\n" +
   "\n" +
   "h2. Heading Two\n" +
   "\n" +
@@ -27487,7 +27482,7 @@ define("text!demo/docs/textile.textile", [], "h1. Textile document\n" +
   "bg. Blockquote!\n" +
   "    This is a two-list blockquote..!");
 
-define("text!demo/docs/xml.xml", [], "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+define("text!demo/kitchen-sink/docs/xml.xml", [], "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
   "<query xmlns:yahoo=\"http://www.yahooapis.com/v1/base.rng\"\n" +
   "    yahoo:count=\"7\" yahoo:created=\"2011-10-11T08:40:23Z\" yahoo:lang=\"en-US\">\n" +
   "    <diagnostics>\n" +
@@ -27720,634 +27715,28 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "");
 
-define("text!build/demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
+define("text!ace/ext/static.css", [], ".ace_editor {\n" +
+  "   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "   font-size: 12px;\n" +
   "}\n" +
   "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
+  ".ace_editor .ace_gutter { \n" +
+  "    width: 25px !important;\n" +
+  "    display: block;\n" +
+  "    float: left;\n" +
+  "    text-align: right; \n" +
+  "    padding: 0 3px 0 0; \n" +
+  "    margin-right: 3px;\n" +
   "}\n" +
   "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
-  "}\n" +
+  ".ace-row { clear: both; }\n" +
   "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
+  "*.ace_gutter-cell {\n" +
+  "  -moz-user-select: -moz-none;\n" +
+  "  -khtml-user-select: none;\n" +
+  "  -webkit-user-select: none;\n" +
+  "  user-select: none;\n" +
   "}");
-
-define("text!build_support/style.css", [], "body {\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "    background-color:#e6f5fc;\n" +
-  "    \n" +
-  "}\n" +
-  "\n" +
-  "H2, H3, H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "}\n" +
-  "\n" +
-  "H2 {\n" +
-  "    font-size:28px;\n" +
-  "    color:#263842;\n" +
-  "    padding-bottom:6px;\n" +
-  "}\n" +
-  "\n" +
-  "H3 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:22px;\n" +
-  "    color:#253741;\n" +
-  "    margin-top:43px;\n" +
-  "    margin-bottom:8px;\n" +
-  "}\n" +
-  "\n" +
-  "H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:21px;\n" +
-  "    color:#222222;\n" +
-  "    margin-bottom:4px;\n" +
-  "}\n" +
-  "\n" +
-  "P {\n" +
-  "    padding:13px 0;\n" +
-  "    margin:0;\n" +
-  "    line-height:22px;\n" +
-  "}\n" +
-  "\n" +
-  "UL{\n" +
-  "    line-height : 22px;\n" +
-  "}\n" +
-  "\n" +
-  "PRE{\n" +
-  "    background : #333;\n" +
-  "    color : white;\n" +
-  "    padding : 10px;\n" +
-  "}\n" +
-  "\n" +
-  "#header {\n" +
-  "    height : 227px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background: url(images/background.png) repeat-x 0 0;\n" +
-  "    border-bottom:1px solid #c9e8fa;   \n" +
-  "}\n" +
-  "\n" +
-  "#header .content .signature {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:11px;\n" +
-  "    color:#ebe4d6;\n" +
-  "    position:absolute;\n" +
-  "    bottom:5px;\n" +
-  "    right:42px;\n" +
-  "    letter-spacing : 1px;\n" +
-  "}\n" +
-  "\n" +
-  ".content {\n" +
-  "    width:970px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin:0 auto;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content {\n" +
-  "    height:184px;\n" +
-  "    margin-top:22px;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .logo {\n" +
-  "    width  : 282px;\n" +
-  "    height : 184px;\n" +
-  "    background:url(images/logo.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:0;\n" +
-  "    left:0;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .title {\n" +
-  "    width  : 605px;\n" +
-  "    height : 58px;\n" +
-  "    background:url(images/ace.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:98px;\n" +
-  "    left:329px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper {\n" +
-  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
-  "    min-height:250px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content {\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:14px;\n" +
-  "    color:#222222;\n" +
-  "    width:1000px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column1 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:315px;\n" +
-  "    margin-right:31px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column2 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:600px;\n" +
-  "    padding-top:47px;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github {\n" +
-  "    width:310px;\n" +
-  "    height:80px;\n" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin-top:49px;\n" +
-  "    cursor:pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github:hover {\n" +
-  "    background-position:0 -80px;\n" +
-  "}\n" +
-  "\n" +
-  ".divider {\n" +
-  "    height:3px;\n" +
-  "    background-color:#bedaea;\n" +
-  "    margin-bottom:3px;\n" +
-  "}\n" +
-  "\n" +
-  ".menu {\n" +
-  "    padding:23px 0 0 24px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.content-list {\n" +
-  "    padding:15px;\n" +
-  "    margin:0;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list {\n" +
-  "    padding:0;\n" +
-  "    margin:0 0 20px 0;\n" +
-  "    list-style-type:none;\n" +
-  "    line-height : 16px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI {\n" +
-  "    color:#2557b4;\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:14px;\n" +
-  "    padding:7px 0;\n" +
-  "    border-bottom:1px dotted #d6e2e7;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI:last-child {\n" +
-  "    border-bottom:0;\n" +
-  "}\n" +
-  "\n" +
-  "A {\n" +
-  "    color:#2557b4;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "P#first{\n" +
-  "    background : rgba(255,255,255,0.5);\n" +
-  "    padding : 20px;\n" +
-  "    font-size : 16px;\n" +
-  "    line-height : 24px;\n" +
-  "    margin : 0 0 20px 0;\n" +
-  "}\n" +
-  "\n" +
-  "#footer {\n" +
-  "    height:40px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
-  "    position:relative;\n" +
-  "    margin-top:40px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer {\n" +
-  "    padding:0;\n" +
-  "    margin:8px 11px 0 0;\n" +
-  "    list-style-type:none;\n" +
-  "    float:right;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI {\n" +
-  "    color:white;\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:12px;\n" +
-  "    display:inline-block;\n" +
-  "    margin:0 1px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A {\n" +
-  "    color:#8dd0ff;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "\n" +
-  "\n" +
-  "\n" +
-  "");
-
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!demo/styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
-  "}\n" +
-  "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
-  "}\n" +
-  "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
-  "}");
-
-define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
-  "\n" +
-  "@import url(\"booya.css\") print,screen;\n" +
-  "@import \"whatup.css\" screen;\n" +
-  "@import \"wicked.css\";\n" +
-  "\n" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
-  "\n" +
-  "li.inline #foo {\n" +
-  "  background: url(\"something.png\");\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px;\n" +
-  "  padding-right: 7px;\n" +
-  "  border-right: 1px dotted #066;\n" +
-  "}\n" +
-  "\n" +
-  "li.last.first {\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px !important;\n" +
-  "  padding-right: 3px;\n" +
-  "  border-right: 0px;\n" +
-  "}\n" +
-  "\n" +
-  "@media print {\n" +
-  "    li.inline {\n" +
-  "      color: black;\n" +
-  "    }\n" +
-  "\n" +
-  "\n" +
-  "@charset \"UTF-8\"; \n" +
-  "\n" +
-  "@page {\n" +
-  "  margin: 10%;\n" +
-  "  counter-increment: page;\n" +
-  "\n" +
-  "  @top-center {\n" +
-  "    font-family: sans-serif;\n" +
-  "    font-weight: bold;\n" +
-  "    font-size: 2em;\n" +
-  "    content: counter(page);\n" +
-  "  }\n" +
-  "}");
-
-define("text!doc/site/iphone.css", [], "#wrapper {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column1 {\n" +
-  "    margin:0 16px 0 15px;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .signature {\n" +
-  "    font-size:18px;\n" +
-  "    bottom:0;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI {\n" +
-  "    font-size:22px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI {\n" +
-  "    font-size:22px;\n" +
-  "}\n" +
-  "\n" +
-  "PRE{\n" +
-  "    font-size:22px;\n" +
-  "}\n" +
-  "");
-
-define("text!doc/site/style.css", [], "body {\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "    background-color:#e6f5fc;\n" +
-  "    \n" +
-  "}\n" +
-  "\n" +
-  "H2, H3, H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    margin:0;\n" +
-  "    padding:0;\n" +
-  "}\n" +
-  "\n" +
-  "H2 {\n" +
-  "    font-size:28px;\n" +
-  "    color:#263842;\n" +
-  "    padding-bottom:6px;\n" +
-  "}\n" +
-  "\n" +
-  "H3 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:22px;\n" +
-  "    color:#253741;\n" +
-  "    margin-top:43px;\n" +
-  "    margin-bottom:8px;\n" +
-  "}\n" +
-  "\n" +
-  "H4 {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-weight:bold;\n" +
-  "    font-size:21px;\n" +
-  "    color:#222222;\n" +
-  "    margin-bottom:4px;\n" +
-  "}\n" +
-  "\n" +
-  "P {\n" +
-  "    padding:13px 0;\n" +
-  "    margin:0;\n" +
-  "    line-height:22px;\n" +
-  "}\n" +
-  "\n" +
-  "UL{\n" +
-  "    line-height : 22px;\n" +
-  "}\n" +
-  "\n" +
-  "PRE{\n" +
-  "    background : #333;\n" +
-  "    color : white;\n" +
-  "    padding : 10px;\n" +
-  "}\n" +
-  "\n" +
-  "#header {\n" +
-  "    height : 227px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background: url(images/background.png) repeat-x 0 0;\n" +
-  "    border-bottom:1px solid #c9e8fa;   \n" +
-  "}\n" +
-  "\n" +
-  "#header .content .signature {\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:11px;\n" +
-  "    color:#ebe4d6;\n" +
-  "    position:absolute;\n" +
-  "    bottom:5px;\n" +
-  "    right:42px;\n" +
-  "    letter-spacing : 1px;\n" +
-  "}\n" +
-  "\n" +
-  ".content {\n" +
-  "    width:970px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin:0 auto;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content {\n" +
-  "    height:184px;\n" +
-  "    margin-top:22px;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .logo {\n" +
-  "    width  : 282px;\n" +
-  "    height : 184px;\n" +
-  "    background:url(images/logo.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:0;\n" +
-  "    left:0;\n" +
-  "}\n" +
-  "\n" +
-  "#header .content .title {\n" +
-  "    width  : 605px;\n" +
-  "    height : 58px;\n" +
-  "    background:url(images/ace.png) no-repeat 0 0;\n" +
-  "    position:absolute;\n" +
-  "    top:98px;\n" +
-  "    left:329px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper {\n" +
-  "    background:url(images/body_background.png) repeat-x 0 0;\n" +
-  "    min-height:250px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content {\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:14px;\n" +
-  "    color:#222222;\n" +
-  "    width:1000px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column1 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:315px;\n" +
-  "    margin-right:31px;\n" +
-  "}\n" +
-  "\n" +
-  "#wrapper .content .column2 {\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    float:left;\n" +
-  "    width:600px;\n" +
-  "    padding-top:47px;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github {\n" +
-  "    width:310px;\n" +
-  "    height:80px;\n" +
-  "    background:url(images/fork_on_github.png) no-repeat 0 0;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    margin-top:49px;\n" +
-  "    cursor:pointer;\n" +
-  "}\n" +
-  "\n" +
-  ".fork_on_github:hover {\n" +
-  "    background-position:0 -80px;\n" +
-  "}\n" +
-  "\n" +
-  ".divider {\n" +
-  "    height:3px;\n" +
-  "    background-color:#bedaea;\n" +
-  "    margin-bottom:3px;\n" +
-  "}\n" +
-  "\n" +
-  ".menu {\n" +
-  "    padding:23px 0 0 24px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.content-list {\n" +
-  "    padding:15px;\n" +
-  "    margin:0;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list {\n" +
-  "    padding:0;\n" +
-  "    margin:0 0 20px 0;\n" +
-  "    list-style-type:none;\n" +
-  "    line-height : 16px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI {\n" +
-  "    color:#2557b4;\n" +
-  "    font-family:Trebuchet MS;\n" +
-  "    font-size:14px;\n" +
-  "    padding:7px 0;\n" +
-  "    border-bottom:1px dotted #d6e2e7;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-list LI:last-child {\n" +
-  "    border-bottom:0;\n" +
-  "}\n" +
-  "\n" +
-  "A {\n" +
-  "    color:#2557b4;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "P#first{\n" +
-  "    background : rgba(255,255,255,0.5);\n" +
-  "    padding : 20px;\n" +
-  "    font-size : 16px;\n" +
-  "    line-height : 24px;\n" +
-  "    margin : 0 0 20px 0;\n" +
-  "}\n" +
-  "\n" +
-  "#footer {\n" +
-  "    height:40px;\n" +
-  "    position:relative;\n" +
-  "    overflow:hidden;\n" +
-  "    background:url(images/bottombar.png) repeat-x 0 0;\n" +
-  "    position:relative;\n" +
-  "    margin-top:40px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer {\n" +
-  "    padding:0;\n" +
-  "    margin:8px 11px 0 0;\n" +
-  "    list-style-type:none;\n" +
-  "    float:right;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI {\n" +
-  "    color:white;\n" +
-  "    font-family:Arial;\n" +
-  "    font-size:12px;\n" +
-  "    display:inline-block;\n" +
-  "    margin:0 1px;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A {\n" +
-  "    color:#8dd0ff;\n" +
-  "    text-decoration:none;\n" +
-  "}\n" +
-  "\n" +
-  "UL.menu-footer LI A:hover {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  "\n" +
-  "\n" +
-  "\n" +
-  "");
 
 define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
@@ -28526,420 +27915,26 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "}\n" +
   "");
 
-define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
-  "body { max-width: 60em; }\n" +
-  ".title  { text-align: center; }\n" +
-  ".todo   { color: red; }\n" +
-  ".done   { color: green; }\n" +
-  ".tag    { background-color:lightblue; font-weight:normal }\n" +
-  ".target { }\n" +
-  ".timestamp { color: grey }\n" +
-  ".timestamp-kwd { color: CadetBlue }\n" +
-  "p.verse { margin-left: 3% }\n" +
-  "pre {\n" +
-  "  border: 1pt solid #AEBDCC;\n" +
-  "  background-color: #F3F5F7;\n" +
-  "  padding: 5pt;\n" +
-  "  font-family: monospace;\n" +
-  "  font-size: 90%;\n" +
-  "  overflow:auto;\n" +
-  "}\n" +
-  "pre.src {\n" +
-  "  background-color: #eee; color: #112; border: 1px solid #000;\n" +
-  "}\n" +
-  "table { border-collapse: collapse; }\n" +
-  "td, th { vertical-align: top; }\n" +
-  "dt { font-weight: bold; }\n" +
-  "div.figure { padding: 0.5em; }\n" +
-  "div.figure p { text-align: center; }\n" +
-  ".linenr { font-size:smaller }\n" +
-  ".code-highlighted {background-color:#ffff00;}\n" +
-  ".org-info-js_info-navigation { border-style:none; }\n" +
-  "#org-info-js_console-label { font-size:10px; font-weight:bold;\n" +
-  "  white-space:nowrap; }\n" +
-  ".org-info-js_search-highlight {background-color:#ffff00; color:#000000;\n" +
-  "  font-weight:bold; }\n" +
-  "\n" +
-  "sup {\n" +
-  "  vertical-align: baseline;\n" +
-  "  position: relative;\n" +
-  "  top: -0.5em;\n" +
-  "  font-size: 80%;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:link, sup a:visited {\n" +
-  "  text-decoration: none;\n" +
-  "  color: #c00;\n" +
-  "}\n" +
-  "\n" +
-  "sup a:before { content: \"[\"; color: #999; }\n" +
-  "sup a:after { content: \"]\"; color: #999; }\n" +
-  "\n" +
-  "h1.title { border-bottom: 4px solid #000; padding-bottom: 5px; margin-bottom: 2em; }\n" +
-  "\n" +
-  "#postamble {\n" +
-  "  color: #777;\n" +
-  "  font-size: 90%;\n" +
-  "  padding-top: 1em; padding-bottom: 1em; border-top: 1px solid #999;\n" +
-  "  margin-top: 2em;\n" +
-  "  padding-left: 2em;\n" +
-  "  padding-right: 2em;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#postamble p { margin: 0; }\n" +
-  "\n" +
-  "#footnotes { border-top: 1px solid #000; }\n" +
-  "\n" +
-  "h1 { font-size: 200% }\n" +
-  "h2 { font-size: 175% }\n" +
-  "h3 { font-size: 150% }\n" +
-  "h4 { font-size: 125% }\n" +
-  "\n" +
-  "h1, h2, h3, h4 { font-family: \"Bookman\",Georgia,\"Times New Roman\",serif; font-weight: normal; }\n" +
-  "\n" +
-  "@media print {\n" +
-  "  html { font-size: 11pt; }\n" +
-  "}\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
-  "#cockpitInput { padding-left: 16px; }\n" +
-  "\n" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
-  "\n" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
-  ".cptCompletion.VALID { background: #FFF; }\n" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
-  ".cptCompletion.INVALID { background: #DDD; }\n" +
-  ".cptCompletion span { color: #FFF; }\n" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
-  "\n" +
-  "\n" +
-  ".cptHints {\n" +
-  "  color: #000;\n" +
-  "  position: absolute;\n" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
-  "  background: rgba(250, 250, 250, 0.8);\n" +
-  "  -moz-border-radius-topleft: 10px;\n" +
-  "  -moz-border-radius-topright: 10px;\n" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
-  "  z-index: 1000;\n" +
-  "  padding: 8px;\n" +
-  "  display: none;\n" +
-  "}\n" +
-  "\n" +
-  ".cptFocusPopup { display: block; }\n" +
-  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
-  "\n" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
-  "\n" +
-  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
-  ".cptRowIn {\n" +
-  "  display: box; display: -moz-box; display: -webkit-box;\n" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
-  "  color: #333;\n" +
-  "  background-color: #EEE;\n" +
-  "  width: 100%;\n" +
-  "  font-family: consolas, courier, monospace;\n" +
-  "}\n" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
-  ".cptRowIn > img { cursor: pointer; }\n" +
-  ".cptHover { display: none; }\n" +
-  ".cptRowIn:hover > .cptHover { display: block; }\n" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
-  ".cptOutTyped {\n" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
-  "  font-weight: bold; color: #000; font-size: 120%;\n" +
-  "}\n" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
-  ".cptRowOutput strong,\n" +
-  ".cptRowOutput b,\n" +
-  ".cptRowOutput th,\n" +
-  ".cptRowOutput h1,\n" +
-  ".cptRowOutput h2,\n" +
-  ".cptRowOutput h3 { color: #000; }\n" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
-  ".cptRowOutput input[type=password],\n" +
-  ".cptRowOutput input[type=text],\n" +
-  ".cptRowOutput textarea {\n" +
-  "  color: #000; font-size: 120%;\n" +
-  "  background: transparent; padding: 3px;\n" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
-  "}\n" +
-  ".cptRowOutput table,\n" +
-  ".cptRowOutput td,\n" +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
-  ".cptRowOutput .right { text-align: right; }\n" +
-  "");
-
-define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
-  "  border: 2px solid rgb(159, 159, 159);\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_editor.ace_focus {\n" +
-  "  border: 2px solid #327fbd;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter {\n" +
-  "  width: 50px;\n" +
-  "  background: #e8e8e8;\n" +
-  "  color: #333;\n" +
-  "  overflow : hidden;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter-layer {\n" +
-  "  width: 100%;\n" +
-  "  text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_gutter-layer .ace_gutter-cell {\n" +
-  "  padding-right: 6px;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_print_margin {\n" +
-  "  width: 1px;\n" +
-  "  background: %printMargin%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_scroller {\n" +
-  "  background-color: %background%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_text-layer {\n" +
-  "  cursor: text;\n" +
-  "  color: %foreground%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_cursor {\n" +
-  "  border-left: 2px solid %cursor%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_cursor.ace_overwrite {\n" +
-  "  border-left: 0px;\n" +
-  "  border-bottom: 1px solid %overwrite%;\n" +
-  "}\n" +
-  " \n" +
-  ".%cssClass% .ace_marker-layer .ace_selection {\n" +
-  "  background: %selection%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_step {\n" +
-  "  background: %step%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
-  "  margin: -1px 0 0 -1px;\n" +
-  "  border: 1px solid %bracket%;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_marker-layer .ace_active_line {\n" +
-  "  background: %active_line%;\n" +
-  "}\n" +
-  "\n" +
-  "       \n" +
-  ".%cssClass% .ace_invisible {\n" +
-  "  %invisible%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_keyword {\n" +
-  "  %keyword%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_keyword.ace_operator {\n" +
-  "  %keyword.operator%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant {\n" +
-  "  %constant%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_language {\n" +
-  "  %constant.language%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_library {\n" +
-  "  %constant.library%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_constant.ace_numeric {\n" +
-  "  %constant.numeric%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid {\n" +
-  "  %invalid%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid.ace_illegal {\n" +
-  "  %invalid.illegal%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_invalid.ace_deprecated {\n" +
-  "  %invalid.deprecated%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_support {\n" +
-  "  %support%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_support.ace_function {\n" +
-  "  %support.function%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_function.ace_buildin {\n" +
-  "  %function.buildin%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_string {\n" +
-  "  %string%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_string.ace_regexp {\n" +
-  "  %string.regexp%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment {\n" +
-  "  %comment%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment.ace_doc {\n" +
-  "  %comment.doc%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_comment.ace_doc.ace_tag {\n" +
-  "  %comment.doc.tag%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_variable {\n" +
-  "  %variable%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_variable.ace_language {\n" +
-  "  %variable.language%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_xml_pe {\n" +
-  "  %xml_pe%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta {\n" +
-  "  %meta%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta.ace_tag {\n" +
-  "  %meta.tag%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_meta.ace_tag.ace_input {\n" +
-  "  %ace.meta.tag.input%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_other.ace_attribute-name {\n" +
-  "  %entity.other.attribute-name%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_name {\n" +
-  "  %entity.name%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_entity.ace_name.ace_function {\n" +
-  "  %entity.name.function%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_underline {\n" +
-  "    text-decoration:underline;\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading {\n" +
-  "  %markup.heading%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_1 {\n" +
-  "  %markup.heading.1%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_2 {\n" +
-  "  %markup.heading.2%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_3 {\n" +
-  "  %markup.heading.3%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_4 {\n" +
-  "  %markup.heading.4%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_5 {\n" +
-  "  %markup.heading.5%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_heading.ace_6 {\n" +
-  "  %markup.heading.6%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_markup.ace_list {\n" +
-  "  %markup.list%\n" +
-  "}\n" +
-  "\n" +
-  ".%cssClass% .ace_collab.ace_user1 {\n" +
-  "  %collab.user1%   \n" +
-  "}");
-
-define("text!docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
-  "}\n" +
-  "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
-  "}\n" +
-  "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
+define("text!lib/ace/ext/static.css", [], ".ace_editor {\n" +
+  "   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "   font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_gutter { \n" +
+  "    width: 25px !important;\n" +
+  "    display: block;\n" +
+  "    float: left;\n" +
+  "    text-align: right; \n" +
+  "    padding: 0 3px 0 0; \n" +
+  "    margin-right: 3px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace-row { clear: both; }\n" +
+  "\n" +
+  "*.ace_gutter-cell {\n" +
+  "  -moz-user-select: -moz-none;\n" +
+  "  -khtml-user-select: none;\n" +
+  "  -webkit-user-select: none;\n" +
+  "  user-select: none;\n" +
   "}");
 

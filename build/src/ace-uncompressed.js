@@ -5347,11 +5347,11 @@ exports.setCssClass = function(node, className, include) {
     }
 };
 
-function hasCssString(id, doc) {
+exports.hasCssString = function(id, doc) {
     var index = 0, sheets;
-    doc = doc || document
+    doc = doc || document;
 
-    if ((sheets = doc.styleSheets)) {
+    if (doc.createStyleSheet && (sheets = doc.styleSheets)) {
         while (index < sheets.length)
             if (sheets[index++].title === id) return true;
     } else if ((sheets = doc.getElementsByTagName("style"))) {
@@ -5360,24 +5360,29 @@ function hasCssString(id, doc) {
     }
 
     return false;
-}
-exports.hasCssString = hasCssString;
+};
 
 exports.importCssString = function importCssString(cssText, id, doc) {
     doc = doc || document;
     // If style is already imported return immediately.
-    if (id && hasCssString(id, doc)) return null;
+    if (id && exports.hasCssString(id, doc))
+        return null;
+    
+    var style;
+    
     if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet();
-        sheet.cssText = cssText;
-        if (id) sheet.title = id;
+        style = doc.createStyleSheet();
+        style.cssText = cssText;
+        if (id)
+            style.title = id;
     } else {
-        var style = doc.createElementNS ?
+        style = doc.createElementNS ?
                     doc.createElementNS(XHTML_NS, "style") :
                     doc.createElement("style");
 
-        if (id) style.id = id;
         style.appendChild(doc.createTextNode(cssText));
+        if (id)
+            style.id = id;
 
         var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
         head.appendChild(style);
@@ -5678,7 +5683,7 @@ if (document.documentElement.setCapture) {
 
             if (!called) {
                 called = true;
-                releaseCaptureHandler();
+                releaseCaptureHandler(e);
             }
 
             exports.removeListener(el, "mousemove", eventHandler);
@@ -5703,7 +5708,7 @@ else {
 
         function onMouseUp(e) {
             eventHandler && eventHandler(e);
-            releaseCaptureHandler && releaseCaptureHandler();
+            releaseCaptureHandler && releaseCaptureHandler(e);
 
             document.removeEventListener("mousemove", onMouseMove, true);
             document.removeEventListener("mouseup", onMouseUp, true);
@@ -15819,20 +15824,11 @@ var RenderLoop = function(onRender, window) {
                 var changes = _self.changes;
                 _self.changes = 0;
                 _self.onRender(changes);
-            })
+            });
         }
     };
 
-    this.setTimeoutZero = window.requestAnimationFrame ||
-         window.webkitRequestAnimationFrame ||
-         window.mozRequestAnimationFrame ||
-         window.oRequestAnimationFrame ||
-         window.msRequestAnimationFrame;
-
-    if (this.setTimeoutZero) {
-        this.setTimeoutZero = this.setTimeoutZero;
-    } else if (window.postMessage) {
-
+    if (window.postMessage) {
         this.setTimeoutZero = (function(messageName, attached, listener) {
             return function setTimeoutZero(callback) {
                 // Set up listener if not listening already.
@@ -15850,12 +15846,11 @@ var RenderLoop = function(onRender, window) {
                 this.postMessage(messageName, "*");
             };
         })("zero-timeout-message", false, null);
-
-    } else {
-
+    }
+    else {
         this.setTimeoutZero = function(callback) {
             this.setTimeout(callback, 0);
-        }
+        };
     }
 
 }).call(RenderLoop.prototype);
@@ -16302,7 +16297,30 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "");
 
-define("text!build/demo/styles.css", [], "html {\n" +
+define("text!ace/ext/static.css", [], ".ace_editor {\n" +
+  "   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "   font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_gutter { \n" +
+  "    width: 25px !important;\n" +
+  "    display: block;\n" +
+  "    float: left;\n" +
+  "    text-align: right; \n" +
+  "    padding: 0 3px 0 0; \n" +
+  "    margin-right: 3px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace-row { clear: both; }\n" +
+  "\n" +
+  "*.ace_gutter-cell {\n" +
+  "  -moz-user-select: -moz-none;\n" +
+  "  -khtml-user-select: none;\n" +
+  "  -webkit-user-select: none;\n" +
+  "  user-select: none;\n" +
+  "}");
+
+define("text!build/demo/kitchen-sink/styles.css", [], "html {\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
   "    overflow: hidden;\n" +
@@ -16578,13 +16596,13 @@ define("text!build_support/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
+define("text!demo/kitchen-sink/docs/css.css", [], ".text-layer {\n" +
   "    font-family: Monaco, \"Courier New\", monospace;\n" +
   "    font-size: 12px;\n" +
   "    cursor: text;\n" +
   "}");
 
-define("text!demo/styles.css", [], "html {\n" +
+define("text!demo/kitchen-sink/styles.css", [], "html {\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
   "    overflow: hidden;\n" +
@@ -17108,6 +17126,128 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "}\n" +
   "");
 
+define("text!lib/ace/ext/static.css", [], ".ace_editor {\n" +
+  "   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "   font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_gutter { \n" +
+  "    width: 25px !important;\n" +
+  "    display: block;\n" +
+  "    float: left;\n" +
+  "    text-align: right; \n" +
+  "    padding: 0 3px 0 0; \n" +
+  "    margin-right: 3px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace-row { clear: both; }\n" +
+  "\n" +
+  "*.ace_gutter-cell {\n" +
+  "  -moz-user-select: -moz-none;\n" +
+  "  -khtml-user-select: none;\n" +
+  "  -webkit-user-select: none;\n" +
+  "  user-select: none;\n" +
+  "}");
+
+define("text!node_modules/cockpit/lib/gcli/ui/arg_fetch.css", [], "\n" +
+  ".gcliCmdDesc { font-weight: bold; text-align: center; }\n" +
+  "\n" +
+  ".gcliAssignment.gcliGroupHidden .gcliGroupRow { display: none; }\n" +
+  "\n" +
+  ".gcliParamGroup { font-weight: bold; }\n" +
+  ".gcliParamDescr { font-size: 80%; color: #999; }\n" +
+  ".gcliParamName { text-align: right; }\n" +
+  ".gcliParamError { font-size: 80%; color: #900; }\n" +
+  ".gcliParamSubmit { text-align: center; }\n" +
+  "");
+
+define("text!node_modules/cockpit/lib/gcli/ui/hinter.css", [], "\n" +
+  ".gcliHintParent {\n" +
+  "  color: #000;\n" +
+  "  background: rgba(250, 250, 250, 0.8);\n" +
+  "  border: 1px solid #AAA;\n" +
+  "  border-top-right-radius: 5px;\n" +
+  "  border-top-left-radius: 5px;\n" +
+  "  margin-left: 10px;\n" +
+  "  margin-right: 10px;\n" +
+  "  display: inline-block;\n" +
+  "  overflow: hidden;\n" +
+  "}\n" +
+  "\n" +
+  ".gcliHints {\n" +
+  "  overflow: auto;\n" +
+  "  padding: 10px;\n" +
+  "  display: inline-block;\n" +
+  "}\n" +
+  "\n" +
+  ".gcliHints ul { margin: 0; padding: 0 15px; }\n" +
+  "");
+
+define("text!node_modules/cockpit/lib/gcli/ui/inputter.css", [], "\n" +
+  ".gcliCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
+  ".gcliCompletion.VALID { background-color: #FFF; }\n" +
+  ".gcliCompletion.INCOMPLETE { background-color: #DDD; }\n" +
+  ".gcliCompletion.ERROR { background-color: #DDD; }\n" +
+  ".gcliCompletion span { color: #FFF; }\n" +
+  ".gcliCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #999; }\n" +
+  ".gcliCompletion span.ERROR { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
+  "span.gcliPrompt { color: #66F; font-weight: bold; }\n" +
+  "span.gcliCompl { color: #999; }\n" +
+  "");
+
+define("text!node_modules/cockpit/lib/gcli/ui/menu.css", [], "\n" +
+  "/* The items in a menu. Used primarily for the command menu */\n" +
+  ".gcliOption { overflow: hidden; white-space: nowrap; cursor: pointer; }\n" +
+  ".gcliOption:hover { background-color: rgb(230, 230, 230) }\n" +
+  ".gcliOptName { padding-right: 5px; }\n" +
+  ".gcliOptDesc { font-size: 80%; color: #999; }\n" +
+  "");
+
+define("text!node_modules/cockpit/lib/gcli/ui/request_view.css", [], "\n" +
+  ".gcliReports { overflow: auto; }\n" +
+  "\n" +
+  ".gcliRowIn {\n" +
+  "  display: box; display: -moz-box; display: -webkit-box;\n" +
+  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
+  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
+  "  color: #333;\n" +
+  "  background-color: #EEE;\n" +
+  "  width: 100%;\n" +
+  "  font-family: consolas, courier, monospace;\n" +
+  "}\n" +
+  ".gcliRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
+  ".gcliRowIn > img { cursor: pointer; }\n" +
+  ".gcliHover { display: none; }\n" +
+  ".gcliRowIn:hover > .gcliHover { display: block; }\n" +
+  ".gcliRowIn:hover > .gcliHover.gcliHidden { display: none; }\n" +
+  ".gcliOutTyped {\n" +
+  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
+  "  font-weight: bold; color: #000; font-size: 120%;\n" +
+  "}\n" +
+  ".gcliRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
+  ".gcliRowOutput strong,\n" +
+  ".gcliRowOutput b,\n" +
+  ".gcliRowOutput th,\n" +
+  ".gcliRowOutput h1,\n" +
+  ".gcliRowOutput h2,\n" +
+  ".gcliRowOutput h3 { color: #000; }\n" +
+  ".gcliRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
+  ".gcliRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
+  ".gcliRowOutput input[type=password],\n" +
+  ".gcliRowOutput input[type=text],\n" +
+  ".gcliRowOutput textarea {\n" +
+  "  color: #000; font-size: 120%;\n" +
+  "  background: transparent; padding: 3px;\n" +
+  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
+  "}\n" +
+  ".gcliRowOutput table,\n" +
+  ".gcliRowOutput td,\n" +
+  ".gcliRowOutput th { border: 0; padding: 0 2px; }\n" +
+  ".gcliRowOutput .right { text-align: right; }\n" +
+  "\n" +
+  ".gcliGt { font-weight: bold; font-size: 120%; }\n" +
+  "");
+
 define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
   "body { max-width: 60em; }\n" +
   ".title  { text-align: center; }\n" +
@@ -17183,83 +17323,6 @@ define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lu
   "@media print {\n" +
   "  html { font-size: 11pt; }\n" +
   "}\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/cli_view.css", [], "\n" +
-  "#cockpitInput { padding-left: 16px; }\n" +
-  "\n" +
-  ".cptOutput { overflow: auto; position: absolute; z-index: 999; display: none; }\n" +
-  "\n" +
-  ".cptCompletion { padding: 0; position: absolute; z-index: -1000; }\n" +
-  ".cptCompletion.VALID { background: #FFF; }\n" +
-  ".cptCompletion.INCOMPLETE { background: #DDD; }\n" +
-  ".cptCompletion.INVALID { background: #DDD; }\n" +
-  ".cptCompletion span { color: #FFF; }\n" +
-  ".cptCompletion span.INCOMPLETE { color: #DDD; border-bottom: 2px dotted #F80; }\n" +
-  ".cptCompletion span.INVALID { color: #DDD; border-bottom: 2px dotted #F00; }\n" +
-  "span.cptPrompt { color: #66F; font-weight: bold; }\n" +
-  "\n" +
-  "\n" +
-  ".cptHints {\n" +
-  "  color: #000;\n" +
-  "  position: absolute;\n" +
-  "  border: 1px solid rgba(230, 230, 230, 0.8);\n" +
-  "  background: rgba(250, 250, 250, 0.8);\n" +
-  "  -moz-border-radius-topleft: 10px;\n" +
-  "  -moz-border-radius-topright: 10px;\n" +
-  "  border-top-left-radius: 10px; border-top-right-radius: 10px;\n" +
-  "  z-index: 1000;\n" +
-  "  padding: 8px;\n" +
-  "  display: none;\n" +
-  "}\n" +
-  "\n" +
-  ".cptFocusPopup { display: block; }\n" +
-  ".cptFocusPopup.cptNoPopup { display: none; }\n" +
-  "\n" +
-  ".cptHints ul { margin: 0; padding: 0 15px; }\n" +
-  "\n" +
-  ".cptGt { font-weight: bold; font-size: 120%; }\n" +
-  "");
-
-define("text!support/cockpit/lib/cockpit/ui/request_view.css", [], "\n" +
-  ".cptRowIn {\n" +
-  "  display: box; display: -moz-box; display: -webkit-box;\n" +
-  "  box-orient: horizontal; -moz-box-orient: horizontal; -webkit-box-orient: horizontal;\n" +
-  "  box-align: center; -moz-box-align: center; -webkit-box-align: center;\n" +
-  "  color: #333;\n" +
-  "  background-color: #EEE;\n" +
-  "  width: 100%;\n" +
-  "  font-family: consolas, courier, monospace;\n" +
-  "}\n" +
-  ".cptRowIn > * { padding-left: 2px; padding-right: 2px; }\n" +
-  ".cptRowIn > img { cursor: pointer; }\n" +
-  ".cptHover { display: none; }\n" +
-  ".cptRowIn:hover > .cptHover { display: block; }\n" +
-  ".cptRowIn:hover > .cptHover.cptHidden { display: none; }\n" +
-  ".cptOutTyped {\n" +
-  "  box-flex: 1; -moz-box-flex: 1; -webkit-box-flex: 1;\n" +
-  "  font-weight: bold; color: #000; font-size: 120%;\n" +
-  "}\n" +
-  ".cptRowOutput { padding-left: 10px; line-height: 1.2em; }\n" +
-  ".cptRowOutput strong,\n" +
-  ".cptRowOutput b,\n" +
-  ".cptRowOutput th,\n" +
-  ".cptRowOutput h1,\n" +
-  ".cptRowOutput h2,\n" +
-  ".cptRowOutput h3 { color: #000; }\n" +
-  ".cptRowOutput a { font-weight: bold; color: #666; text-decoration: none; }\n" +
-  ".cptRowOutput a: hover { text-decoration: underline; cursor: pointer; }\n" +
-  ".cptRowOutput input[type=password],\n" +
-  ".cptRowOutput input[type=text],\n" +
-  ".cptRowOutput textarea {\n" +
-  "  color: #000; font-size: 120%;\n" +
-  "  background: transparent; padding: 3px;\n" +
-  "  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;\n" +
-  "}\n" +
-  ".cptRowOutput table,\n" +
-  ".cptRowOutput td,\n" +
-  ".cptRowOutput th { border: 0; padding: 0 2px; }\n" +
-  ".cptRowOutput .right { text-align: right; }\n" +
   "");
 
 define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
@@ -17473,56 +17536,6 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "\n" +
   ".%cssClass% .ace_collab.ace_user1 {\n" +
   "  %collab.user1%   \n" +
-  "}");
-
-define("text!docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
-  "}\n" +
-  "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
-  "}\n" +
-  "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
   "}");
 
 /* ***** BEGIN LICENSE BLOCK *****
