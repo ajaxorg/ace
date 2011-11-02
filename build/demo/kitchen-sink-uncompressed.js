@@ -11855,23 +11855,8 @@ var Selection = function(session) {
             this.selectionLead.row,
             this.selectionLead.column
         );
-        
-        var screenCol = (chars === 0 && this.$desiredColumn) || screenPos.column;
-        
-        // so here is the deal. First checkout what the content of ur current and ur target line is
-        var currentLine = (this.session.getLines(screenPos.row, screenPos.row) || [""])[0],
-            targetLine = (this.session.getLines(screenPos.row + rows, screenPos.row + rows) || [""])[0];
-        
-        // if you are at the EOL of your current line, and your targetline is all whitespace
-        if (currentLine.length === screenPos.column && targetLine.match(/^\s*$/)) {
-            // set the new column to the EOL of the target line
-            screenCol = this.session.getTabString(targetLine).length;
-        }
-                
+        var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-
-        console.log(rows, chars, screenPos, currentLine, targetLine, screenCol, docPos);
-
         this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
     };
 
