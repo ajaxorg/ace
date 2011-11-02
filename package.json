@@ -10,23 +10,19 @@
         "type" : "git",
          "url" : "http://github.com/ajaxorg/ace.git"
     },
-    "overlay": {
-        "teleport": {
-            "directories": {
-                "lib": "lib/ace",
-                "dependencies": {
-                    "cockpit": ">=0.1.1",
-                    "pilot": ">=0.1.1"
-                }
-            }
-        }
-    },
     "dependencies": {
-        "asyncjs": ">=0.0.2",
-        "jsdom": ">=0.1.23",
-        "htmlparser": ">=1.7.2",
         "mime": ">=1.2.1"
     },
+    "devDependencies": {
+        "asyncjs": "0.0.x",
+        "uglify-js": "1.1.x",
+        "jsdom": "0.1.x",
+        "htmlparser": "1.7.x",
+        "mime": "1.2.x",
+        "amd-loader": "0.0.x",
+        "libxml": "0.0.x"
+    },
+    
     "licenses": [{
         "type": "MPL",
         "url": "http://www.mozilla.org/MPL/"

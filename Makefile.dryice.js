@@ -82,14 +82,14 @@ if (!target) {
 
 console.log("using targetDir '", targetDir, "'");
 
-var copy = require('./support/dryice/lib/dryice').copy;
+var copy = require('dryice').copy;
 
 var aceHome = __dirname;
 
 console.log('# ace ---------');
 
 var aceProject = [
-    aceHome + '/support/pilot/lib',
+    aceHome + '/node_modules/pilot/lib',
     aceHome + '/lib',
     aceHome
 ];
@@ -274,7 +274,7 @@ console.log('# ace worker ---------');
     console.log("worker for " + mode + " mode");
     var worker = copy.createDataObject();
     var workerProject = copy.createCommonJsProject([
-        aceHome + '/support/pilot/lib',
+        aceHome + '/node_modules/pilot/lib',
         aceHome + '/lib'
     ]);
     copy({
