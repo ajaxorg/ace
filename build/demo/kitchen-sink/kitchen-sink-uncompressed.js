@@ -157,7 +157,9 @@ var lookup = function(moduleName) {
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Kevin Dangoor (kdangoor@mozilla.com)
+ *      Julian Viereck <julian DOT viereck AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -173,32 +175,526 @@ var lookup = function(moduleName) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('pilot/index', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/types/basic', 'pilot/types/command', 'pilot/types/settings', 'pilot/commands/settings', 'pilot/commands/basic', 'pilot/settings/canon', 'pilot/canon'], function(require, exports, module) {
 
-require('pilot/fixoldbrowsers');
+define('demo/kitchen-sink/demo', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'ace/lib/net', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!demo/kitchen-sink/docs/plaintext.txt', 'text!demo/kitchen-sink/docs/javascript.js', 'text!demo/kitchen-sink/docs/coffeescript.coffee', 'text!demo/kitchen-sink/docs/json.json', 'text!demo/kitchen-sink/docs/css.css', 'text!demo/kitchen-sink/docs/scss.scss', 'text!demo/kitchen-sink/docs/html.html', 'text!demo/kitchen-sink/docs/xml.xml', 'text!demo/kitchen-sink/docs/svg.svg', 'text!demo/kitchen-sink/docs/php.php', 'text!demo/kitchen-sink/docs/coldfusion.cfm', 'text!demo/kitchen-sink/docs/python.py', 'text!demo/kitchen-sink/docs/ruby.rb', 'text!demo/kitchen-sink/docs/perl.pl', 'text!demo/kitchen-sink/docs/ocaml.ml', 'text!demo/kitchen-sink/docs/lua.lua', 'text!demo/kitchen-sink/docs/java.java', 'text!demo/kitchen-sink/docs/clojure.clj', 'text!demo/kitchen-sink/docs/groovy.groovy', 'text!demo/kitchen-sink/docs/scala.scala', 'text!demo/kitchen-sink/docs/csharp.cs', 'text!demo/kitchen-sink/docs/powershell.ps1', 'text!demo/kitchen-sink/docs/cpp.cpp', 'text!demo/kitchen-sink/docs/markdown.md', 'text!demo/kitchen-sink/docs/textile.textile', 'text!demo/kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
 
-exports.startup = function(data, reason) {
-    require('pilot/types/basic').startup(data, reason);
-    require('pilot/types/command').startup(data, reason);
-    require('pilot/types/settings').startup(data, reason);
-    require('pilot/commands/settings').startup(data, reason);
-    require('pilot/commands/basic').startup(data, reason);
-    // require('pilot/commands/history').startup(data, reason);
-    require('pilot/settings/canon').startup(data, reason);
-    require('pilot/canon').startup(data, reason);
+require("pilot/fixoldbrowsers");
+var env = {};
+    
+var net = require("ace/lib/net");
+var event = require("pilot/event");
+var Range = require("ace/range").Range;
+var Editor = require("ace/editor").Editor;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var theme = require("ace/theme/textmate");
+var EditSession = require("ace/edit_session").EditSession;
+var UndoManager = require("ace/undomanager").UndoManager;
+
+var vim = require("ace/keyboard/keybinding/vim").Vim;
+var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
+
+
+var modesByName;
+
+var Doc = function(name, desc, file) {
+    this.name = name;
+    this.desc = desc;
+    this.doc = new EditSession(file);
+    this.doc.setMode(modesByName[name].mode);
+    this.doc.setUndoManager(new UndoManager());
 };
 
-exports.shutdown = function(data, reason) {
-    require('pilot/types/basic').shutdown(data, reason);
-    require('pilot/types/command').shutdown(data, reason);
-    require('pilot/types/settings').shutdown(data, reason);
-    require('pilot/commands/settings').shutdown(data, reason);
-    require('pilot/commands/basic').shutdown(data, reason);
-    // require('pilot/commands/history').shutdown(data, reason);
-    require('pilot/settings/canon').shutdown(data, reason);
-    require('pilot/canon').shutdown(data, reason);
+var WrappedDoc = function(name, desc, file) {
+    Doc.apply(this, arguments);
+    
+    this.doc.setUseWrapMode(true);
+    this.doc.setWrapLimitRange(80, 80);
 };
 
+var Mode = function(name, desc, clazz, extensions) {
+    this.name = name;
+    this.desc = desc;
+    this.clazz = clazz;
+    this.mode = new clazz();
+    this.mode.name = name;
+    
+    this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
+};
+
+Mode.prototype.supportsFile = function(filename) {
+    return filename.match(this.extRe);
+};
+
+var themes = {};
+function loadTheme(name, callback) {
+    if (themes[name])
+        return callback();
+        
+    themes[name] = 1;
+    var base = name.split("/").pop();
+    var fileName = "src/theme-" + base + ".js";
+    net.loadScript(fileName, callback);
+}
+
+var modes = [
+    new Mode("c_cpp", "C/C++", require("ace/mode/c_cpp").Mode, ["c", "cpp", "cxx", "h", "hpp"]),
+    new Mode("clojure", "Clojure", require("ace/mode/clojure").Mode, ["clj"]),
+    new Mode("coffee", "CoffeeScript", require("ace/mode/coffee").Mode, ["coffee"]),
+    new Mode("coldfusion", "ColdFusion", require("ace/mode/coldfusion").Mode, ["cfm"]),
+    new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
+    new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
+    new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
+    new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
+    new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
+    new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
+    new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
+    new Mode("latex", "LaTeX", require("ace/mode/latex").Mode, ["tex"]),
+    new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
+    new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
+    new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
+    new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
+    new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
+    new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"]),
+    new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
+    new Mode("scala", "Scala", require("ace/mode/scala").Mode, ["scala"]),
+    new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
+    new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
+    new Mode("sql", "SQL", require("ace/mode/sql").Mode, ["sql"]),
+    new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
+    new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
+    new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
+    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
+];
+
+modesByName = {};
+modes.forEach(function(m) {
+    modesByName[m.name] = m;
+});
+
+var loreIpsum = require("text!demo/kitchen-sink/docs/plaintext.txt");
+for (var i = 0; i < 5; i++) {
+    loreIpsum += loreIpsum;
+}
+
+var docs = [
+    new Doc(
+        "javascript", "JavaScript",
+        require("text!demo/kitchen-sink/docs/javascript.js")
+    ),
+    new WrappedDoc("text", "Plain Text", loreIpsum),
+    new Doc(
+        "coffee", "Coffeescript",
+        require("text!demo/kitchen-sink/docs/coffeescript.coffee")
+    ),
+    new Doc(
+        "json", "JSON",
+        require("text!demo/kitchen-sink/docs/json.json")
+    ),
+    new Doc(
+        "css", "CSS",
+        require("text!demo/kitchen-sink/docs/css.css")
+    ),
+    new Doc(
+        "scss", "SCSS",
+        require("text!demo/kitchen-sink/docs/scss.scss")
+    ),
+    new Doc(
+        "html", "HTML",
+        require("text!demo/kitchen-sink/docs/html.html")
+    ),
+    new Doc(
+        "xml", "XML",
+        require("text!demo/kitchen-sink/docs/xml.xml")
+    ),
+    new Doc(
+        "svg", "SVG",
+        require("text!demo/kitchen-sink/docs/svg.svg")
+    ),
+    new Doc(
+        "php", "PHP",
+        require("text!demo/kitchen-sink/docs/php.php")
+    ),
+    new Doc(
+        "coldfusion", "ColdFusion",
+        require("text!demo/kitchen-sink/docs/coldfusion.cfm")
+    ),
+    new Doc(
+        "python", "Python",
+        require("text!demo/kitchen-sink/docs/python.py")
+    ),
+    new Doc(
+        "ruby", "Ruby",
+        require("text!demo/kitchen-sink/docs/ruby.rb")
+    ),
+    new Doc(
+        "perl", "Perl",
+        require("text!demo/kitchen-sink/docs/perl.pl")
+    ),
+    new Doc(
+        "ocaml", "OCaml",
+        require("text!demo/kitchen-sink/docs/ocaml.ml")
+    ),
+    new Doc(
+        "lua", "Lua",
+        require("text!demo/kitchen-sink/docs/lua.lua")
+    ),
+    new Doc(
+        "java", "Java",
+        require("text!demo/kitchen-sink/docs/java.java")
+    ),
+    new Doc(
+        "clojure", "Clojure",
+        require("text!demo/kitchen-sink/docs/clojure.clj")
+    ),
+    new Doc(
+        "groovy", "Groovy",
+        require("text!demo/kitchen-sink/docs/groovy.groovy")
+    ),
+    new Doc(
+        "scala", "Scala",
+        require("text!demo/kitchen-sink/docs/scala.scala")
+    ),
+    new Doc(
+        "csharp", "C#",
+        require("text!demo/kitchen-sink/docs/csharp.cs")
+    ),
+    new Doc(
+        "powershell", "Powershell",
+        require("text!demo/kitchen-sink/docs/powershell.ps1")
+    ),
+    new Doc(
+        "c_cpp", "C/C++",
+        require("text!demo/kitchen-sink/docs/cpp.cpp")
+    ),
+    new Doc(
+        "markdown", "Markdown",
+        require("text!demo/kitchen-sink/docs/markdown.md")
+    ),
+    new WrappedDoc(
+        "markdown", "Markdown",
+        require("text!demo/kitchen-sink/docs/markdown.md")
+    ),
+    new WrappedDoc(
+        "textile", "Textile",
+        require("text!demo/kitchen-sink/docs/textile.textile")
+    ),
+    new WrappedDoc(
+        "latex", "LaTeX",
+        require("text!demo/kitchen-sink/docs/latex.tex")
+    )
+];
+
+var docsByName = {};
+docs.forEach(function(d) {
+    docsByName[d.name] = d;
+});
+
+var keybindings = {
+    // Null = use "default" keymapping
+    ace: null,
+    vim: vim,
+    emacs: emacs,
+    // This is a way to define simple keyboard remappings
+    custom: new HashHandler({
+        "gotoright":      "Tab",
+        "indent":         "]",
+        "outdent":        "[",
+        "gotolinestart":  "^",
+        "gotolineend":    "$"
+     })
+};
+
+var container = document.getElementById("editor");
+
+// Splitting.
+var Split = require("ace/split").Split;
+var split = new Split(container, theme, 1);
+env.editor = split.getEditor(0);
+split.on("focus", function(editor) {
+    env.editor = editor;
+    updateUIEditorOptions();
+});
+env.split = split;
+window.env = env;
+window.ace = env.editor;
+
+var docEl = document.getElementById("doc");
+var modeEl = document.getElementById("mode");
+var wrapModeEl = document.getElementById("soft_wrap");
+var themeEl = document.getElementById("theme");
+var selectStyleEl = document.getElementById("select_style");
+var highlightActiveEl = document.getElementById("highlight_active");
+var showHiddenEl = document.getElementById("show_hidden");
+var showGutterEl = document.getElementById("show_gutter");
+var showPrintMarginEl = document.getElementById("show_print_margin");
+var highlightSelectedWordE = document.getElementById("highlight_selected_word");
+var showHScrollEl = document.getElementById("show_hscroll");
+var softTabEl = document.getElementById("soft_tab");
+var behavioursEl = document.getElementById("enable_behaviours");
+
+docs.forEach(function(doc) {
+    var option = document.createElement("option");
+    option.setAttribute("value", doc.name);
+    option.innerHTML = doc.desc;
+    docEl.appendChild(option);
+});
+
+modes.forEach(function(mode) {
+    var option = document.createElement("option");
+    option.setAttribute("value", mode.name);
+    option.innerHTML = mode.desc;
+    modeEl.appendChild(option);
+});
+
+bindDropdown("doc", function(value) {
+    var doc = docsByName[value].doc;
+    var session = env.split.setSession(doc);
+    session.name = doc.name;
+
+    updateUIEditorOptions();
+
+    env.editor.focus();
+});
+
+function updateUIEditorOptions() {
+    var editor = env.editor;
+    var session = editor.session;
+
+    docEl.value = session.name;
+    modeEl.value = session.getMode().name || "text";
+
+    if (!session.getUseWrapMode()) {
+        wrapModeEl.value = "off";
+    } else {
+        wrapModeEl.value = session.getWrapLimitRange().min || "free";
+    }
+
+    selectStyleEl.checked = editor.getSelectionStyle() == "line";
+    themeEl.value = editor.getTheme();
+    highlightActiveEl.checked = editor.getHighlightActiveLine();
+    showHiddenEl.checked = editor.getShowInvisibles();
+    showGutterEl.checked = editor.renderer.getShowGutter();
+    showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
+    highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
+    showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
+    softTabEl.checked = session.getUseSoftTabs();
+    behavioursEl.checked = editor.getBehavioursEnabled();
+}
+
+bindDropdown("mode", function(value) {
+    env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
+});
+
+bindDropdown("theme", function(value) {
+    if (require.packaged) {
+        loadTheme(value, function() {
+            env.editor.setTheme(value);
+        });
+    }
+    else {
+        env.editor.setTheme(value);
+    }
+});
+
+bindDropdown("keybinding", function(value) {
+    env.editor.setKeyboardHandler(keybindings[value]);
+});
+
+bindDropdown("fontsize", function(value) {
+    env.split.setFontSize(value);
+});
+
+bindDropdown("soft_wrap", function(value) {
+    var session = env.editor.getSession();
+    var renderer = env.editor.renderer;
+    switch (value) {
+        case "off":
+            session.setUseWrapMode(false);
+            renderer.setPrintMarginColumn(80);
+            break;
+        case "40":
+            session.setUseWrapMode(true);
+            session.setWrapLimitRange(40, 40);
+            renderer.setPrintMarginColumn(40);
+            break;
+        case "80":
+            session.setUseWrapMode(true);
+            session.setWrapLimitRange(80, 80);
+            renderer.setPrintMarginColumn(80);
+            break;
+        case "free":
+            session.setUseWrapMode(true);
+            session.setWrapLimitRange(null, null);
+            renderer.setPrintMarginColumn(80);
+            break;
+    }
+});
+
+bindCheckbox("select_style", function(checked) {
+    env.editor.setSelectionStyle(checked ? "line" : "text");
+});
+
+bindCheckbox("highlight_active", function(checked) {
+    env.editor.setHighlightActiveLine(checked);
+});
+
+bindCheckbox("show_hidden", function(checked) {
+    env.editor.setShowInvisibles(checked);
+});
+
+bindCheckbox("show_gutter", function(checked) {
+    env.editor.renderer.setShowGutter(checked);
+});
+
+bindCheckbox("show_print_margin", function(checked) {
+    env.editor.renderer.setShowPrintMargin(checked);
+});
+
+bindCheckbox("highlight_selected_word", function(checked) {
+    env.editor.setHighlightSelectedWord(checked);
+});
+
+bindCheckbox("show_hscroll", function(checked) {
+    env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+});
+
+bindCheckbox("soft_tab", function(checked) {
+    env.editor.getSession().setUseSoftTabs(checked);
+});
+
+bindCheckbox("enable_behaviours", function(checked) {
+    env.editor.setBehavioursEnabled(checked);
+});
+
+var secondSession = null;
+bindDropdown("split", function(value) {
+    var sp = env.split;
+    if (value == "none") {
+        if (sp.getSplits() == 2) {
+            secondSession = sp.getEditor(1).session;
+        }
+        sp.setSplits(1);
+    } else {
+        var newEditor = (sp.getSplits() == 1);
+        if (value == "below") {
+            sp.setOriantation(sp.BELOW);
+        } else {
+            sp.setOriantation(sp.BESIDE);
+        }
+        sp.setSplits(2);
+
+        if (newEditor) {
+            var session = secondSession || sp.getEditor(0).session;
+            var newSession = sp.setSession(session, 1);
+            newSession.name = session.name;
+        }
+    }
+});
+
+function bindCheckbox(id, callback) {
+    var el = document.getElementById(id);
+    var onCheck = function() {
+        callback(!!el.checked);
+    };
+    el.onclick = onCheck;
+    onCheck();
+}
+
+function bindDropdown(id, callback) {
+    var el = document.getElementById(id);
+    var onChange = function() {
+        callback(el.value);
+    };
+    el.onchange = onChange;
+    onChange();
+}
+
+function onResize() {
+    var left = env.split.$container.offsetLeft;
+    var width = document.documentElement.clientWidth - left;
+    container.style.width = width + "px";
+    container.style.height = document.documentElement.clientHeight + "px";
+    env.split.resize();
+//        env.editor.resize();
+}
+
+window.onresize = onResize;
+env.editor.renderer.onResize(true);
+
+event.addListener(container, "dragover", function(e) {
+    return event.preventDefault(e);
+});
+
+event.addListener(container, "drop", function(e) {
+    var file;
+    try {
+        file = e.dataTransfer.files[0];
+    } catch(err) {
+        return event.stopEvent();
+    }
+
+    if (window.FileReader) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            env.editor.getSelection().selectAll();
+
+            var mode = modesByName.text;
+            for (var i = 0; i < modes.length; i++) {
+                if (modes[i].supportsFile(file.name)) {
+                    mode = modes[i];
+                    break;
+                }
+            }
+
+            env.editor.onTextInput(reader.result);
+
+            modeEl.value = mode.name;
+            env.editor.getSession().setMode(mode.mode);
+        };
+        reader.readAsText(file);
+    }
+
+    return event.preventDefault(e);
+});
+
+/**
+ * This demonstrates how you can define commands and bind shortcuts to them.
+ */
+
+// Fake-Save, works from the editor and the command line.
+var commands = env.editor.commands;
+
+commands.addCommand({
+    name: "save",
+    bindKey: {
+        win: "Ctrl-S",
+        mac: "Command-S",
+        sender: "editor"
+    },
+    exec: function() {
+        alert("Fake Save File");
+    }
+});
+
+// Fake-Print with custom lookup-sender-match function.
+commands.addCommand({
+    name: "print",
+    bindKey: {
+        win: "Ctrl-P",
+        mac: "Command-P",
+        sender: function(env, sender, hashId, keyString) {
+            if (sender == "editor") {
+                return true;
+            } else {
+                alert("Sorry, can only print from the editor");
+            }
+        }
+    },
+    exec: function() {
+        alert("Fake Print File");
+    }
+});
 
 });
 // vim:set ts=4 sts=4 sw=4 st:
@@ -1382,4669 +1878,7 @@ var prepareString = "a"[0] != "a",
         }
         return Object(o);
     };
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Joe Walker (jwalker@mozilla.com)
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/types/basic', ['require', 'exports', 'module' , 'pilot/types'], function(require, exports, module) {
-
-var types = require("pilot/types");
-var Type = types.Type;
-var Conversion = types.Conversion;
-var Status = types.Status;
-
-/**
- * These are the basic types that we accept. They are vaguely based on the
- * Jetpack settings system (https://wiki.mozilla.org/Labs/Jetpack/JEP/24)
- * although clearly more restricted.
- *
- * <p>In addition to these types, Jetpack also accepts range, member, password
- * that we are thinking of adding.
- *
- * <p>This module probably should not be accessed directly, but instead used
- * through types.js
- */
-
-/**
- * 'text' is the default if no type is given.
- */
-var text = new Type();
-
-text.stringify = function(value) {
-    return value;
-};
-
-text.parse = function(value) {
-    if (typeof value != 'string') {
-        throw new Error('non-string passed to text.parse()');
-    }
-    return new Conversion(value);
-};
-
-text.name = 'text';
-
-/**
- * We don't currently plan to distinguish between integers and floats
- */
-var number = new Type();
-
-number.stringify = function(value) {
-    if (!value) {
-        return null;
-    }
-    return '' + value;
-};
-
-number.parse = function(value) {
-    if (typeof value != 'string') {
-        throw new Error('non-string passed to number.parse()');
-    }
-
-    if (value.replace(/\s/g, '').length === 0) {
-        return new Conversion(null, Status.INCOMPLETE, '');
-    }
-
-    var reply = new Conversion(parseInt(value, 10));
-    if (isNaN(reply.value)) {
-        reply.status = Status.INVALID;
-        reply.message = 'Can\'t convert "' + value + '" to a number.';
-    }
-
-    return reply;
-};
-
-number.decrement = function(value) {
-    return value - 1;
-};
-
-number.increment = function(value) {
-    return value + 1;
-};
-
-number.name = 'number';
-
-/**
- * One of a known set of options
- */
-function SelectionType(typeSpec) {
-    if (!Array.isArray(typeSpec.data) && typeof typeSpec.data !== 'function') {
-        throw new Error('instances of SelectionType need typeSpec.data to be an array or function that returns an array:' + JSON.stringify(typeSpec));
-    }
-    Object.keys(typeSpec).forEach(function(key) {
-        this[key] = typeSpec[key];
-    }, this);
-};
-
-SelectionType.prototype = new Type();
-
-SelectionType.prototype.stringify = function(value) {
-    return value;
-};
-
-SelectionType.prototype.parse = function(str) {
-    if (typeof str != 'string') {
-        throw new Error('non-string passed to parse()');
-    }
-    if (!this.data) {
-        throw new Error('Missing data on selection type extension.');
-    }
-    var data = (typeof(this.data) === 'function') ? this.data() : this.data;
-
-    // The matchedValue could be the boolean value false
-    var hasMatched = false;
-    var matchedValue;
-    var completions = [];
-    data.forEach(function(option) {
-        if (str == option) {
-            matchedValue = this.fromString(option);
-            hasMatched = true;
-        }
-        else if (option.indexOf(str) === 0) {
-            completions.push(this.fromString(option));
-        }
-    }, this);
-
-    if (hasMatched) {
-        return new Conversion(matchedValue);
-    }
-    else {
-        // This is something of a hack it basically allows us to tell the
-        // setting type to forget its last setting hack.
-        if (this.noMatch) {
-            this.noMatch();
-        }
-
-        if (completions.length > 0) {
-            var msg = 'Possibilities' +
-                (str.length === 0 ? '' : ' for \'' + str + '\'');
-            return new Conversion(null, Status.INCOMPLETE, msg, completions);
-        }
-        else {
-            var msg = 'Can\'t use \'' + str + '\'.';
-            return new Conversion(null, Status.INVALID, msg, completions);
-        }
-    }
-};
-
-SelectionType.prototype.fromString = function(str) {
-    return str;
-};
-
-SelectionType.prototype.decrement = function(value) {
-    var data = (typeof this.data === 'function') ? this.data() : this.data;
-    var index;
-    if (value == null) {
-        index = data.length - 1;
-    }
-    else {
-        var name = this.stringify(value);
-        var index = data.indexOf(name);
-        index = (index === 0 ? data.length - 1 : index - 1);
-    }
-    return this.fromString(data[index]);
-};
-
-SelectionType.prototype.increment = function(value) {
-    var data = (typeof this.data === 'function') ? this.data() : this.data;
-    var index;
-    if (value == null) {
-        index = 0;
-    }
-    else {
-        var name = this.stringify(value);
-        var index = data.indexOf(name);
-        index = (index === data.length - 1 ? 0 : index + 1);
-    }
-    return this.fromString(data[index]);
-};
-
-SelectionType.prototype.name = 'selection';
-
-/**
- * SelectionType is a base class for other types
- */
-exports.SelectionType = SelectionType;
-
-/**
- * true/false values
- */
-var bool = new SelectionType({
-    name: 'bool',
-    data: [ 'true', 'false' ],
-    stringify: function(value) {
-        return '' + value;
-    },
-    fromString: function(str) {
-        return str === 'true' ? true : false;
-    }
 });
-
-
-/**
- * A we don't know right now, but hope to soon.
- */
-function DeferredType(typeSpec) {
-    if (typeof typeSpec.defer !== 'function') {
-        throw new Error('Instances of DeferredType need typeSpec.defer to be a function that returns a type');
-    }
-    Object.keys(typeSpec).forEach(function(key) {
-        this[key] = typeSpec[key];
-    }, this);
-};
-
-DeferredType.prototype = new Type();
-
-DeferredType.prototype.stringify = function(value) {
-    return this.defer().stringify(value);
-};
-
-DeferredType.prototype.parse = function(value) {
-    return this.defer().parse(value);
-};
-
-DeferredType.prototype.decrement = function(value) {
-    var deferred = this.defer();
-    return (deferred.decrement ? deferred.decrement(value) : undefined);
-};
-
-DeferredType.prototype.increment = function(value) {
-    var deferred = this.defer();
-    return (deferred.increment ? deferred.increment(value) : undefined);
-};
-
-DeferredType.prototype.name = 'deferred';
-
-/**
- * DeferredType is a base class for other types
- */
-exports.DeferredType = DeferredType;
-
-
-/**
- * A set of objects of the same type
- */
-function ArrayType(typeSpec) {
-    if (typeSpec instanceof Type) {
-        this.subtype = typeSpec;
-    }
-    else if (typeof typeSpec === 'string') {
-        this.subtype = types.getType(typeSpec);
-        if (this.subtype == null) {
-            throw new Error('Unknown array subtype: ' + typeSpec);
-        }
-    }
-    else {
-        throw new Error('Can\' handle array subtype');
-    }
-};
-
-ArrayType.prototype = new Type();
-
-ArrayType.prototype.stringify = function(values) {
-    // TODO: Check for strings with spaces and add quotes
-    return values.join(' ');
-};
-
-ArrayType.prototype.parse = function(value) {
-    return this.defer().parse(value);
-};
-
-ArrayType.prototype.name = 'array';
-
-/**
- * Registration and de-registration.
- */
-var isStarted = false;
-exports.startup = function() {
-    if (isStarted) {
-        return;
-    }
-    isStarted = true;
-    types.registerType(text);
-    types.registerType(number);
-    types.registerType(bool);
-    types.registerType(SelectionType);
-    types.registerType(DeferredType);
-    types.registerType(ArrayType);
-};
-
-exports.shutdown = function() {
-    isStarted = false;
-    types.unregisterType(text);
-    types.unregisterType(number);
-    types.unregisterType(bool);
-    types.unregisterType(SelectionType);
-    types.unregisterType(DeferredType);
-    types.unregisterType(ArrayType);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/types', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-/**
- * Some types can detect validity, that is to say they can distinguish between
- * valid and invalid values.
- * TODO: Change these constants to be numbers for more performance?
- */
-var Status = {
-    /**
-     * The conversion process worked without any problem, and the value is
-     * valid. There are a number of failure states, so the best way to check
-     * for failure is (x !== Status.VALID)
-     */
-    VALID: {
-        toString: function() { return 'VALID'; },
-        valueOf: function() { return 0; }
-    },
-
-    /**
-     * A conversion process failed, however it was noted that the string
-     * provided to 'parse()' could be VALID by the addition of more characters,
-     * so the typing may not be actually incorrect yet, just unfinished.
-     * @see Status.INVALID
-     */
-    INCOMPLETE: {
-        toString: function() { return 'INCOMPLETE'; },
-        valueOf: function() { return 1; }
-    },
-
-    /**
-     * The conversion process did not work, the value should be null and a
-     * reason for failure should have been provided. In addition some completion
-     * values may be available.
-     * @see Status.INCOMPLETE
-     */
-    INVALID: {
-        toString: function() { return 'INVALID'; },
-        valueOf: function() { return 2; }
-    },
-
-    /**
-     * A combined status is the worser of the provided statuses
-     */
-    combine: function(statuses) {
-        var combined = Status.VALID;
-        for (var i = 0; i < statuses.length; i++) {
-            if (statuses[i].valueOf() > combined.valueOf()) {
-                combined = statuses[i];
-            }
-        }
-        return combined;
-    }
-};
-exports.Status = Status;
-
-/**
- * The type.parse() method returns a Conversion to inform the user about not
- * only the result of a Conversion but also about what went wrong.
- * We could use an exception, and throw if the conversion failed, but that
- * seems to violate the idea that exceptions should be exceptional. Typos are
- * not. Also in order to store both a status and a message we'd still need
- * some sort of exception type...
- */
-function Conversion(value, status, message, predictions) {
-    /**
-     * The result of the conversion process. Will be null if status != VALID
-     */
-    this.value = value;
-
-    /**
-     * The status of the conversion.
-     * @see Status
-     */
-    this.status = status || Status.VALID;
-
-    /**
-     * A message to go with the conversion. This could be present for any status
-     * including VALID in the case where we want to note a warning for example.
-     * I18N: On the one hand this nasty and un-internationalized, however with
-     * a command line it is hard to know where to start.
-     */
-    this.message = message;
-
-    /**
-     * A array of strings which are the systems best guess at better inputs than
-     * the one presented.
-     * We generally expect there to be about 7 predictions (to match human list
-     * comprehension ability) however it is valid to provide up to about 20,
-     * or less. It is the job of the predictor to decide a smart cut-off.
-     * For example if there are 4 very good matches and 4 very poor ones,
-     * probably only the 4 very good matches should be presented.
-     */
-    this.predictions = predictions || [];
-}
-exports.Conversion = Conversion;
-
-/**
- * Most of our types are 'static' e.g. there is only one type of 'text', however
- * some types like 'selection' and 'deferred' are customizable. The basic
- * Type type isn't useful, but does provide documentation about what types do.
- */
-function Type() {
-};
-Type.prototype = {
-    /**
-     * Convert the given <tt>value</tt> to a string representation.
-     * Where possible, there should be round-tripping between values and their
-     * string representations.
-     */
-    stringify: function(value) { throw new Error("not implemented"); },
-
-    /**
-     * Convert the given <tt>str</tt> to an instance of this type.
-     * Where possible, there should be round-tripping between values and their
-     * string representations.
-     * @return Conversion
-     */
-    parse: function(str) { throw new Error("not implemented"); },
-
-    /**
-     * The plug-in system, and other things need to know what this type is
-     * called. The name alone is not enough to fully specify a type. Types like
-     * 'selection' and 'deferred' need extra data, however this function returns
-     * only the name, not the extra data.
-     * <p>In old bespin, equality was based on the name. This may turn out to be
-     * important in Ace too.
-     */
-    name: undefined,
-
-    /**
-     * If there is some concept of a higher value, return it,
-     * otherwise return undefined.
-     */
-    increment: function(value) {
-        return undefined;
-    },
-
-    /**
-     * If there is some concept of a lower value, return it,
-     * otherwise return undefined.
-     */
-    decrement: function(value) {
-        return undefined;
-    },
-
-    /**
-     * There is interesting information (like predictions) in a conversion of
-     * nothing, the output of this can sometimes be customized.
-     * @return Conversion
-     */
-    getDefault: function() {
-        return this.parse('');
-    }
-};
-exports.Type = Type;
-
-/**
- * Private registry of types
- * Invariant: types[name] = type.name
- */
-var types = {};
-
-/**
- * Add a new type to the list available to the system.
- * You can pass 2 things to this function - either an instance of Type, in
- * which case we return this instance when #getType() is called with a 'name'
- * that matches type.name.
- * Also you can pass in a constructor (i.e. function) in which case when
- * #getType() is called with a 'name' that matches Type.prototype.name we will
- * pass the typeSpec into this constructor. See #reconstituteType().
- */
-exports.registerType = function(type) {
-    if (typeof type === 'object') {
-        if (type instanceof Type) {
-            if (!type.name) {
-                throw new Error('All registered types must have a name');
-            }
-            types[type.name] = type;
-        }
-        else {
-            throw new Error('Can\'t registerType using: ' + type);
-        }
-    }
-    else if (typeof type === 'function') {
-        if (!type.prototype.name) {
-            throw new Error('All registered types must have a name');
-        }
-        types[type.prototype.name] = type;
-    }
-    else {
-        throw new Error('Unknown type: ' + type);
-    }
-};
-
-exports.registerTypes = function registerTypes(types) {
-    Object.keys(types).forEach(function (name) {
-        var type = types[name];
-        type.name = name;
-        exports.registerType(type);
-    });
-};
-
-/**
- * Remove a type from the list available to the system
- */
-exports.deregisterType = function(type) {
-    delete types[type.name];
-};
-
-/**
- * See description of #exports.registerType()
- */
-function reconstituteType(name, typeSpec) {
-    if (name.substr(-2) === '[]') { // i.e. endsWith('[]')
-        var subtypeName = name.slice(0, -2);
-        return new types['array'](subtypeName);
-    }
-
-    var type = types[name];
-    if (typeof type === 'function') {
-        type = new type(typeSpec);
-    }
-    return type;
-}
-
-/**
- * Find a type, previously registered using #registerType()
- */
-exports.getType = function(typeSpec) {
-    if (typeof typeSpec === 'string') {
-        return reconstituteType(typeSpec);
-    }
-
-    if (typeof typeSpec === 'object') {
-        if (!typeSpec.name) {
-            throw new Error('Missing \'name\' member to typeSpec');
-        }
-        return reconstituteType(typeSpec.name, typeSpec);
-    }
-
-    throw new Error('Can\'t extract type from ' + typeSpec);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Joe Walker (jwalker@mozilla.com)
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/types/command', ['require', 'exports', 'module' , 'pilot/canon', 'pilot/types/basic', 'pilot/types'], function(require, exports, module) {
-
-var canon = require("pilot/canon");
-var SelectionType = require("pilot/types/basic").SelectionType;
-var types = require("pilot/types");
-
-
-/**
- * Select from the available commands
- */
-var command = new SelectionType({
-    name: 'command',
-    data: function() {
-        return canon.getCommandNames();
-    },
-    stringify: function(command) {
-        return command.name;
-    },
-    fromString: function(str) {
-        return canon.getCommand(str);
-    }
-});
-
-
-/**
- * Registration and de-registration.
- */
-exports.startup = function() {
-    types.registerType(command);
-};
-
-exports.shutdown = function() {
-    types.unregisterType(command);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/canon', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace', 'pilot/oop', 'pilot/useragent', 'pilot/keys', 'pilot/event_emitter', 'pilot/typecheck', 'pilot/catalog', 'pilot/types', 'pilot/lang'], function(require, exports, module) {
-
-var console = require('pilot/console');
-var Trace = require('pilot/stacktrace').Trace;
-var oop = require('pilot/oop');
-var useragent = require('pilot/useragent');
-var keyUtil = require('pilot/keys');
-var EventEmitter = require('pilot/event_emitter').EventEmitter;
-var typecheck = require('pilot/typecheck');
-var catalog = require('pilot/catalog');
-var Status = require('pilot/types').Status;
-var types = require('pilot/types');
-var lang = require('pilot/lang');
-
-/*
-// TODO: this doesn't belong here - or maybe anywhere?
-var dimensionsChangedExtensionSpec = {
-    name: 'dimensionsChanged',
-    description: 'A dimensionsChanged is a way to be notified of ' +
-            'changes to the dimension of Skywriter'
-};
-exports.startup = function(data, reason) {
-    catalog.addExtensionSpec(commandExtensionSpec);
-};
-exports.shutdown = function(data, reason) {
-    catalog.removeExtensionSpec(commandExtensionSpec);
-};
-*/
-
-var commandExtensionSpec = {
-    name: 'command',
-    description: 'A command is a bit of functionality with optional ' +
-            'typed arguments which can do something small like moving ' +
-            'the cursor around the screen, or large like cloning a ' +
-            'project from VCS.',
-    indexOn: 'name'
-};
-
-exports.startup = function(data, reason) {
-    // TODO: this is probably all kinds of evil, but we need something working
-    catalog.addExtensionSpec(commandExtensionSpec);
-};
-
-exports.shutdown = function(data, reason) {
-    catalog.removeExtensionSpec(commandExtensionSpec);
-};
-
-/**
- * Manage a list of commands in the current canon
- */
-
-/**
- * A Command is a discrete action optionally with a set of ways to customize
- * how it happens. This is here for documentation purposes.
- * TODO: Document better
- */
-var thingCommand = {
-    name: 'thing',
-    description: 'thing is an example command',
-    params: [{
-        name: 'param1',
-        description: 'an example parameter',
-        type: 'text',
-        defaultValue: null
-    }],
-    exec: function(env, args, request) {
-        thing();
-    }
-};
-
-/**
- * A lookup hash of our registered commands
- */
-var commands = {};
-
-/**
- * A lookup has for command key bindings that use a string as sender.
- */
-var commmandKeyBinding = {};
-
-/**
- * Array with command key bindings that use a function to determ the sender.
- */
-var commandKeyBindingFunc = { };
-
-function splitSafe(s, separator, limit, bLowerCase) {
-    return (bLowerCase && s.toLowerCase() || s)
-        .replace(/(?:^\s+|\n|\s+$)/g, "")
-        .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
-}
-
-function parseKeys(keys, val, ret) {
-    var key,
-        hashId = 0,
-        parts  = splitSafe(keys, "\\-", null, true),
-        i      = 0,
-        l      = parts.length;
-
-    for (; i < l; ++i) {
-        if (keyUtil.KEY_MODS[parts[i]])
-            hashId = hashId | keyUtil.KEY_MODS[parts[i]];
-        else
-            key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
-    }
-
-    if (ret == null) {
-        return {
-            key: key,
-            hashId: hashId
-        }
-    } else {
-        (ret[hashId] || (ret[hashId] = {}))[key] = val;
-    }
-}
-
-var platform = useragent.isMac ? "mac" : "win";
-function buildKeyHash(command) {
-    var binding = command.bindKey,
-        key = binding[platform],
-        ckb = commmandKeyBinding,
-        ckbf = commandKeyBindingFunc
-
-    if (!binding.sender) {
-        throw new Error('All key bindings must have a sender');   
-    }
-    if (!binding.mac && binding.mac !== null) {
-        throw new Error('All key bindings must have a mac key binding');
-    }
-    if (!binding.win && binding.win !== null) {
-        throw new Error('All key bindings must have a windows key binding');
-    }
-    if(!binding[platform]) {
-        // No keymapping for this platform.
-        return;   
-    }
-    if (typeof binding.sender == 'string') {
-        var targets = splitSafe(binding.sender, "\\|", null, true);
-        targets.forEach(function(target) {
-            if (!ckb[target]) {
-                ckb[target] = { };
-            }
-            key.split("|").forEach(function(keyPart) {
-                parseKeys(keyPart, command, ckb[target]);        
-            });
-        });
-    } else if (typecheck.isFunction(binding.sender)) {
-        var val = {
-            command: command,
-            sender:  binding.sender
-        };
-        
-        keyData = parseKeys(key);
-        if (!ckbf[keyData.hashId]) {
-            ckbf[keyData.hashId] = { };
-        }
-        if (!ckbf[keyData.hashId][keyData.key]) {
-            ckbf[keyData.hashId][keyData.key] = [ val ];   
-        } else {
-            ckbf[keyData.hashId][keyData.key].push(val);
-        }
-    } else {
-        throw new Error('Key binding must have a sender that is a string or function');   
-    }
-}
-
-function findKeyCommand(env, sender, hashId, textOrKey) {
-    // Convert keyCode to the string representation.
-    if (typecheck.isNumber(textOrKey)) {
-        textOrKey = keyUtil.keyCodeToString(textOrKey);
-    }
-    
-    // Check bindings with functions as sender first.    
-    var bindFuncs = (commandKeyBindingFunc[hashId]  || {})[textOrKey] || [];
-    for (var i = 0; i < bindFuncs.length; i++) {
-        if (bindFuncs[i].sender(env, sender, hashId, textOrKey)) {
-            return bindFuncs[i].command;
-        }
-    }
-    
-    var ckbr = commmandKeyBinding[sender];
-    return ckbr && ckbr[hashId] && ckbr[hashId][textOrKey];
-}
-
-function execKeyCommand(env, sender, hashId, textOrKey) {
-    var command = findKeyCommand(env, sender, hashId, textOrKey);
-    if (command) {
-        return exec(command, env, sender, { });   
-    } else {
-        return false;
-    }
-}
-
-/**
- * A sorted list of command names, we regularly want them in order, so pre-sort
- */
-var commandNames = [];
-
-/**
- * This registration method isn't like other Ace registration methods because
- * it doesn't return a decorated command because there is no functional
- * decoration to be done.
- * TODO: Are we sure that in the future there will be no such decoration?
- */
-function addCommand(command) {
-    if (!command.name) {
-        throw new Error('All registered commands must have a name');
-    }
-    if (command.params == null) {
-        command.params = [];
-    }
-    if (!Array.isArray(command.params)) {
-        throw new Error('command.params must be an array in ' + command.name);
-    }
-    // Replace the type
-    command.params.forEach(function(param) {
-        if (!param.name) {
-            throw new Error('In ' + command.name + ': all params must have a name');
-        }
-        upgradeType(command.name, param);
-    }, this);
-    commands[command.name] = command;
-
-    if (command.bindKey) {
-        buildKeyHash(command);   
-    }
-
-    commandNames.push(command.name);
-    commandNames.sort();
-};
-
-function upgradeType(name, param) {
-    var lookup = param.type;
-    param.type = types.getType(lookup);
-    if (param.type == null) {
-        throw new Error('In ' + name + '/' + param.name +
-            ': can\'t find type for: ' + JSON.stringify(lookup));
-    }
-}
-
-function removeCommand(command) {
-    var name = (typeof command === 'string' ? command : command.name);
-    command = commands[name];
-    delete commands[name];
-    lang.arrayRemove(commandNames, name);
-
-    // exaustive search is a little bit brute force but since removeCommand is
-    // not a performance critical operation this should be OK
-    var ckb = commmandKeyBinding;
-    for (var k1 in ckb) {
-        for (var k2 in ckb[k1]) {
-            for (var k3 in ckb[k1][k2]) {
-                if (ckb[k1][k2][k3] == command)
-                    delete ckb[k1][k2][k3];
-            }
-        }
-    }
-    
-    var ckbf = commandKeyBindingFunc;
-    for (var k1 in ckbf) {
-        for (var k2 in ckbf[k1]) {
-            ckbf[k1][k2].forEach(function(cmd, i) {
-                if (cmd.command == command) {
-                    ckbf[k1][k2].splice(i, 1);
-                }
-            })
-        }
-    }
-};
-
-function getCommand(name) {
-    return commands[name];
-};
-
-function getCommandNames() {
-    return commandNames;
-};
-
-/**
- * Default ArgumentProvider that is used if no ArgumentProvider is provided
- * by the command's sender.
- */
-function defaultArgsProvider(request, callback) {
-    var args  = request.args,
-        params = request.command.params;
-
-    for (var i = 0; i < params.length; i++) {
-        var param = params[i];
-
-        // If the parameter is already valid, then don't ask for it anymore.
-        if (request.getParamStatus(param) != Status.VALID ||
-            // Ask for optional parameters as well.
-            param.defaultValue === null) 
-        {
-            var paramPrompt = param.description;
-            if (param.defaultValue === null) {
-                paramPrompt += " (optional)";
-            }
-            var value = prompt(paramPrompt, param.defaultValue || "");
-            // No value but required -> nope.
-            if (!value) {
-                callback();
-                return;
-            } else {
-                args[param.name] = value;
-            }           
-        }
-    }
-    callback();
-}
-
-/**
- * Entry point for keyboard accelerators or anything else that wants to execute
- * a command. A new request object is created and a check performed, if the
- * passed in arguments are VALID/INVALID or INCOMPLETE. If they are INCOMPLETE
- * the ArgumentProvider on the sender is called or otherwise the default 
- * ArgumentProvider to get the still required arguments.
- * If they are valid (or valid after the ArgumentProvider is done), the command
- * is executed.
- * 
- * @param command   Either a command, or the name of one
- * @param env       Current environment to execute the command in
- * @param sender    String that should be the same as the senderObject stored on 
- *                  the environment in env[sender]
- * @param args      Arguments for the command
- * @param typed     (Optional)
- */
-function exec(command, env, sender, args, typed) {
-    if (typeof command === 'string') {
-        command = commands[command];
-    }
-    if (!command) {
-        // TODO: Should we complain more than returning false?
-        return false;
-    }
-
-    var request = new Request({
-        sender: sender,
-        command: command,
-        args: args || {},
-        typed: typed
-    });
-    
-    /**
-     * Executes the command and ensures request.done is called on the request in 
-     * case it's not marked to be done already or async.
-     */
-    function execute() {
-        command.exec(env, request.args, request);
-        
-        // If the request isn't asnync and isn't done, then make it done.
-        if (!request.isAsync && !request.isDone) {
-            request.done();
-        }
-    }
-    
-    
-    if (request.getStatus() == Status.INVALID) {
-        console.error("Canon.exec: Invalid parameter(s) passed to " + 
-                            command.name);
-        return false;   
-    } 
-    // If the request isn't complete yet, try to complete it.
-    else if (request.getStatus() == Status.INCOMPLETE) {
-        // Check if the sender has a ArgsProvider, otherwise use the default
-        // build in one.
-        var argsProvider;
-        var senderObj = env[sender];
-        if (!senderObj || !senderObj.getArgsProvider ||
-            !(argsProvider = senderObj.getArgsProvider())) 
-        {
-            argsProvider = defaultArgsProvider;
-        }
-
-        // Ask the paramProvider to complete the request.
-        argsProvider(request, function() {
-            if (request.getStatus() == Status.VALID) {
-                execute();
-            }
-        });
-        return true;
-    } else {
-        execute();
-        return true;
-    }
-};
-
-exports.removeCommand = removeCommand;
-exports.addCommand = addCommand;
-exports.getCommand = getCommand;
-exports.getCommandNames = getCommandNames;
-exports.findKeyCommand = findKeyCommand;
-exports.exec = exec;
-exports.execKeyCommand = execKeyCommand;
-exports.upgradeType = upgradeType;
-
-
-/**
- * We publish a 'output' event whenever new command begins output
- * TODO: make this more obvious
- */
-oop.implement(exports, EventEmitter);
-
-
-/**
- * Current requirements are around displaying the command line, and provision
- * of a 'history' command and cursor up|down navigation of history.
- * <p>Future requirements could include:
- * <ul>
- * <li>Multiple command lines
- * <li>The ability to recall key presses (i.e. requests with no output) which
- * will likely be needed for macro recording or similar
- * <li>The ability to store the command history either on the server or in the
- * browser local storage.
- * </ul>
- * <p>The execute() command doesn't really live here, except as part of that
- * last future requirement, and because it doesn't really have anywhere else to
- * live.
- */
-
-/**
- * The array of requests that wish to announce their presence
- */
-var requests = [];
-
-/**
- * How many requests do we store?
- */
-var maxRequestLength = 100;
-
-/**
- * To create an invocation, you need to do something like this (all the ctor
- * args are optional):
- * <pre>
- * var request = new Request({
- *     command: command,
- *     args: args,
- *     typed: typed
- * });
- * </pre>
- * @constructor
- */
-function Request(options) {
-    options = options || {};
-
-    // Will be used in the keyboard case and the cli case
-    this.command = options.command;
-
-    // Will be used only in the cli case
-    this.args = options.args;
-    this.typed = options.typed;
-
-    // Have we been initialized?
-    this._begunOutput = false;
-
-    this.start = new Date();
-    this.end = null;
-    this.completed = false;
-    this.error = false;
-};
-
-oop.implement(Request.prototype, EventEmitter);
-
-/**
- * Return the status of a parameter on the request object.
- */
-Request.prototype.getParamStatus = function(param) {
-    var args = this.args || {};
-    
-    // Check if there is already a value for this parameter.
-    if (param.name in args) {
-        // If there is no value set and then the value is VALID if it's not
-        // required or INCOMPLETE if not set yet.
-        if (args[param.name] == null) {
-            if (param.defaultValue === null) {
-                return Status.VALID;
-            } else {
-                return Status.INCOMPLETE;   
-            } 
-        }
-        
-        // Check if the parameter value is valid.
-        var reply,
-            // The passed in value when parsing a type is a string.
-            argsValue = args[param.name].toString();
-        
-        // Type.parse can throw errors. 
-        try {
-            reply = param.type.parse(argsValue);
-        } catch (e) {
-            return Status.INVALID;   
-        }
-        
-        if (reply.status != Status.VALID) {
-            return reply.status;   
-        }
-    } 
-    // Check if the param is marked as required.
-    else if (param.defaultValue === undefined) {
-        // The parameter is not set on the args object but it's required,
-        // which means, things are invalid.
-        return Status.INCOMPLETE;
-    }
-    
-    return Status.VALID;
-}
-
-/**
- * Return the status of a parameter name on the request object.
- */
-Request.prototype.getParamNameStatus = function(paramName) {
-    var params = this.command.params || [];
-    
-    for (var i = 0; i < params.length; i++) {
-        if (params[i].name == paramName) {
-            return this.getParamStatus(params[i]);   
-        }
-    }
-    
-    throw "Parameter '" + paramName + 
-                "' not defined on command '" + this.command.name + "'"; 
-}
-
-/**
- * Checks if all required arguments are set on the request such that it can
- * get executed.
- */
-Request.prototype.getStatus = function() {
-    var args = this.args || {},
-        params = this.command.params;
-
-    // If there are not parameters, then it's valid.
-    if (!params || params.length == 0) {
-        return Status.VALID;
-    }
-
-    var status = [];
-    for (var i = 0; i < params.length; i++) {
-        status.push(this.getParamStatus(params[i]));        
-    }
-
-    return Status.combine(status);
-}
-
-/**
- * Lazy init to register with the history should only be done on output.
- * init() is expensive, and won't be used in the majority of cases
- */
-Request.prototype._beginOutput = function() {
-    this._begunOutput = true;
-    this.outputs = [];
-
-    requests.push(this);
-    // This could probably be optimized with some maths, but 99.99% of the
-    // time we will only be off by one, and I'm feeling lazy.
-    while (requests.length > maxRequestLength) {
-        requests.shiftObject();
-    }
-
-    exports._dispatchEvent('output', { requests: requests, request: this });
-};
-
-/**
- * Sugar for:
- * <pre>request.error = true; request.done(output);</pre>
- */
-Request.prototype.doneWithError = function(content) {
-    this.error = true;
-    this.done(content);
-};
-
-/**
- * Declares that this function will not be automatically done when
- * the command exits
- */
-Request.prototype.async = function() {
-    this.isAsync = true;
-    if (!this._begunOutput) {
-        this._beginOutput();
-    }
-};
-
-/**
- * Complete the currently executing command with successful output.
- * @param output Either DOM node, an SproutCore element or something that
- * can be used in the content of a DIV to create a DOM node.
- */
-Request.prototype.output = function(content) {
-    if (!this._begunOutput) {
-        this._beginOutput();
-    }
-
-    if (typeof content !== 'string' && !(content instanceof Node)) {
-        content = content.toString();
-    }
-
-    this.outputs.push(content);
-    this.isDone = true;
-    this._dispatchEvent('output', {});
-
-    return this;
-};
-
-/**
- * All commands that do output must call this to indicate that the command
- * has finished execution.
- */
-Request.prototype.done = function(content) {
-    this.completed = true;
-    this.end = new Date();
-    this.duration = this.end.getTime() - this.start.getTime();
-
-    if (content) {
-        this.output(content);
-    }
-    
-    // Ensure to finish the request only once.
-    if (!this.isDone) {
-        this.isDone = true;
-        this._dispatchEvent('output', {});   
-    }
-};
-exports.Request = Request;
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *   Patrick Walton (pwalton@mozilla.com)
- *   Julian Viereck (jviereck@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-define('pilot/console', ['require', 'exports', 'module' ], function(require, exports, module) {
-    
-/**
- * This object represents a "safe console" object that forwards debugging
- * messages appropriately without creating a dependency on Firebug in Firefox.
- */
-
-var noop = function() {};
-
-// These are the functions that are available in Chrome 4/5, Safari 4
-// and Firefox 3.6. Don't add to this list without checking browser support
-var NAMES = [
-    "assert", "count", "debug", "dir", "dirxml", "error", "group", "groupEnd",
-    "info", "log", "profile", "profileEnd", "time", "timeEnd", "trace", "warn"
-];
-
-if (typeof(window) === 'undefined') {
-    // We're in a web worker. Forward to the main thread so the messages
-    // will show up.
-    NAMES.forEach(function(name) {
-        exports[name] = function() {
-            var args = Array.prototype.slice.call(arguments);
-            var msg = { op: 'log', method: name, args: args };
-            postMessage(JSON.stringify(msg));
-        };
-    });
-} else {
-    // For each of the console functions, copy them if they exist, stub if not
-    NAMES.forEach(function(name) {
-        if (window.console && window.console[name]) {
-            exports[name] = Function.prototype.bind.call(window.console[name], window.console);
-        } else {
-            exports[name] = noop;
-        }
-    });
-}
-
-});
-define('pilot/stacktrace', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/console'], function(require, exports, module) {
-    
-var ua = require("pilot/useragent");
-var console = require('pilot/console');
-
-// Changed to suit the specific needs of running within Skywriter
-
-// Domain Public by Eric Wendelin http://eriwen.com/ (2008)
-//                  Luke Smith http://lucassmith.name/ (2008)
-//                  Loic Dachary <loic@dachary.org> (2008)
-//                  Johan Euphrosine <proppy@aminche.com> (2008)
-//                  Øyvind Sean Kinsey http://kinsey.no/blog
-//
-// Information and discussions
-// http://jspoker.pokersource.info/skin/test-printstacktrace.html
-// http://eriwen.com/javascript/js-stack-trace/
-// http://eriwen.com/javascript/stacktrace-update/
-// http://pastie.org/253058
-// http://browsershots.org/http://jspoker.pokersource.info/skin/test-printstacktrace.html
-//
-
-//
-// guessFunctionNameFromLines comes from firebug
-//
-// Software License Agreement (BSD License)
-//
-// Copyright (c) 2007, Parakey Inc.
-// All rights reserved.
-//
-// Redistribution and use of this software in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
-//
-// * Redistributions of source code must retain the above
-//   copyright notice, this list of conditions and the
-//   following disclaimer.
-//
-// * Redistributions in binary form must reproduce the above
-//   copyright notice, this list of conditions and the
-//   following disclaimer in the documentation and/or other
-//   materials provided with the distribution.
-//
-// * Neither the name of Parakey Inc. nor the names of its
-//   contributors may be used to endorse or promote products
-//   derived from this software without specific prior
-//   written permission of Parakey Inc.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-// OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-/**
- * Different browsers create stack traces in different ways.
- * <strike>Feature</strike> Browser detection baby ;).
- */
-var mode = (function() {
-
-    // We use SC's browser detection here to avoid the "break on error"
-    // functionality provided by Firebug. Firebug tries to do the right
-    // thing here and break, but it happens every time you load the page.
-    // bug 554105
-    if (ua.isGecko) {
-        return 'firefox';
-    } else if (ua.isOpera) {
-        return 'opera';
-    } else {
-        return 'other';
-    }
-
-    // SC doesn't do any detection of Chrome at this time.
-
-    // this is the original feature detection code that is used as a
-    // fallback.
-    try {
-        (0)();
-    } catch (e) {
-        if (e.arguments) {
-            return 'chrome';
-        }
-        if (e.stack) {
-            return 'firefox';
-        }
-        if (window.opera && !('stacktrace' in e)) { //Opera 9-
-            return 'opera';
-        }
-    }
-    return 'other';
-})();
-
-/**
- *
- */
-function stringifyArguments(args) {
-    for (var i = 0; i < args.length; ++i) {
-        var argument = args[i];
-        if (typeof argument == 'object') {
-            args[i] = '#object';
-        } else if (typeof argument == 'function') {
-            args[i] = '#function';
-        } else if (typeof argument == 'string') {
-            args[i] = '"' + argument + '"';
-        }
-    }
-    return args.join(',');
-}
-
-/**
- * Extract a stack trace from the format emitted by each browser.
- */
-var decoders = {
-    chrome: function(e) {
-        var stack = e.stack;
-        if (!stack) {
-            console.log(e);
-            return [];
-        }
-        return stack.replace(/^.*?\n/, '').
-                replace(/^.*?\n/, '').
-                replace(/^.*?\n/, '').
-                replace(/^[^\(]+?[\n$]/gm, '').
-                replace(/^\s+at\s+/gm, '').
-                replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@').
-                split('\n');
-    },
-
-    firefox: function(e) {
-        var stack = e.stack;
-        if (!stack) {
-            console.log(e);
-            return [];
-        }
-        // stack = stack.replace(/^.*?\n/, '');
-        stack = stack.replace(/(?:\n@:0)?\s+$/m, '');
-        stack = stack.replace(/^\(/gm, '{anonymous}(');
-        return stack.split('\n');
-    },
-
-    // Opera 7.x and 8.x only!
-    opera: function(e) {
-        var lines = e.message.split('\n'), ANON = '{anonymous}',
-            lineRE = /Line\s+(\d+).*?script\s+(http\S+)(?:.*?in\s+function\s+(\S+))?/i, i, j, len;
-
-        for (i = 4, j = 0, len = lines.length; i < len; i += 2) {
-            if (lineRE.test(lines[i])) {
-                lines[j++] = (RegExp.$3 ? RegExp.$3 + '()@' + RegExp.$2 + RegExp.$1 : ANON + '()@' + RegExp.$2 + ':' + RegExp.$1) +
-                ' -- ' +
-                lines[i + 1].replace(/^\s+/, '');
-            }
-        }
-
-        lines.splice(j, lines.length - j);
-        return lines;
-    },
-
-    // Safari, Opera 9+, IE, and others
-    other: function(curr) {
-        var ANON = '{anonymous}', fnRE = /function\s*([\w\-$]+)?\s*\(/i, stack = [], j = 0, fn, args;
-
-        var maxStackSize = 10;
-        while (curr && stack.length < maxStackSize) {
-            fn = fnRE.test(curr.toString()) ? RegExp.$1 || ANON : ANON;
-            args = Array.prototype.slice.call(curr['arguments']);
-            stack[j++] = fn + '(' + stringifyArguments(args) + ')';
-
-            //Opera bug: if curr.caller does not exist, Opera returns curr (WTF)
-            if (curr === curr.caller && window.opera) {
-                //TODO: check for same arguments if possible
-                break;
-            }
-            curr = curr.caller;
-        }
-        return stack;
-    }
-};
-
-/**
- *
- */
-function NameGuesser() {
-}
-
-NameGuesser.prototype = {
-
-    sourceCache: {},
-
-    ajax: function(url) {
-        var req = this.createXMLHTTPObject();
-        if (!req) {
-            return;
-        }
-        req.open('GET', url, false);
-        req.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-        req.send('');
-        return req.responseText;
-    },
-
-    createXMLHTTPObject: function() {
-	    // Try XHR methods in order and store XHR factory
-        var xmlhttp, XMLHttpFactories = [
-            function() {
-                return new XMLHttpRequest();
-            }, function() {
-                return new ActiveXObject('Msxml2.XMLHTTP');
-            }, function() {
-                return new ActiveXObject('Msxml3.XMLHTTP');
-            }, function() {
-                return new ActiveXObject('Microsoft.XMLHTTP');
-            }
-        ];
-        for (var i = 0; i < XMLHttpFactories.length; i++) {
-            try {
-                xmlhttp = XMLHttpFactories[i]();
-                // Use memoization to cache the factory
-                this.createXMLHTTPObject = XMLHttpFactories[i];
-                return xmlhttp;
-            } catch (e) {}
-        }
-    },
-
-    getSource: function(url) {
-        if (!(url in this.sourceCache)) {
-            this.sourceCache[url] = this.ajax(url).split('\n');
-        }
-        return this.sourceCache[url];
-    },
-
-    guessFunctions: function(stack) {
-        for (var i = 0; i < stack.length; ++i) {
-            var reStack = /{anonymous}\(.*\)@(\w+:\/\/([-\w\.]+)+(:\d+)?[^:]+):(\d+):?(\d+)?/;
-            var frame = stack[i], m = reStack.exec(frame);
-            if (m) {
-                var file = m[1], lineno = m[4]; //m[7] is character position in Chrome
-                if (file && lineno) {
-                    var functionName = this.guessFunctionName(file, lineno);
-                    stack[i] = frame.replace('{anonymous}', functionName);
-                }
-            }
-        }
-        return stack;
-    },
-
-    guessFunctionName: function(url, lineNo) {
-        try {
-            return this.guessFunctionNameFromLines(lineNo, this.getSource(url));
-        } catch (e) {
-            return 'getSource failed with url: ' + url + ', exception: ' + e.toString();
-        }
-    },
-
-    guessFunctionNameFromLines: function(lineNo, source) {
-        var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
-        var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
-        // Walk backwards from the first line in the function until we find the line which
-        // matches the pattern above, which is the function definition
-        var line = '', maxLines = 10;
-        for (var i = 0; i < maxLines; ++i) {
-            line = source[lineNo - i] + line;
-            if (line !== undefined) {
-                var m = reGuessFunction.exec(line);
-                if (m) {
-                    return m[1];
-                }
-                else {
-                    m = reFunctionArgNames.exec(line);
-                }
-                if (m && m[1]) {
-                    return m[1];
-                }
-            }
-        }
-        return '(?)';
-    }
-};
-
-var guesser = new NameGuesser();
-
-var frameIgnorePatterns = [
-    /http:\/\/localhost:4020\/sproutcore.js:/
-];
-
-exports.ignoreFramesMatching = function(regex) {
-    frameIgnorePatterns.push(regex);
-};
-
-/**
- * Create a stack trace from an exception
- * @param ex {Error} The error to create a stacktrace from (optional)
- * @param guess {Boolean} If we should try to resolve the names of anonymous functions
- */
-exports.Trace = function Trace(ex, guess) {
-    this._ex = ex;
-    this._stack = decoders[mode](ex);
-
-    if (guess) {
-        this._stack = guesser.guessFunctions(this._stack);
-    }
-};
-
-/**
- * Log to the console a number of lines (default all of them)
- * @param lines {number} Maximum number of lines to wrote to console
- */
-exports.Trace.prototype.log = function(lines) {
-    if (lines <= 0) {
-        // You aren't going to have more lines in your stack trace than this
-        // and it still fits in a 32bit integer
-        lines = 999999999;
-    }
-
-    var printed = 0;
-    for (var i = 0; i < this._stack.length && printed < lines; i++) {
-        var frame = this._stack[i];
-        var display = true;
-        frameIgnorePatterns.forEach(function(regex) {
-            if (regex.test(frame)) {
-                display = false;
-            }
-        });
-        if (display) {
-            console.debug(frame);
-            printed++;
-        }
-    }
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
-var ua = navigator.userAgent;
-var av = navigator.appVersion;
-
-/** Is the user using a browser that identifies itself as Windows */
-exports.isWin = (os == "win");
-
-/** Is the user using a browser that identifies itself as Mac OS */
-exports.isMac = (os == "mac");
-
-/** Is the user using a browser that identifies itself as Linux */
-exports.isLinux = (os == "linux");
-
-exports.isIE = 
-    navigator.appName == "Microsoft Internet Explorer"
-    && parseFloat(navigator.userAgent.match(/MSIE ([0-9]+[\.0-9]+)/)[1]);
-    
-exports.isOldIE = exports.isIE && exports.isIE < 9;
-
-/** Is this Firefox or related? */
-exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
-
-/** oldGecko == rev < 2.0 **/
-exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
-
-/** Is this Opera */
-exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
-
-/** Is the user using a browser that identifies itself as WebKit */
-exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
-
-exports.isChrome = parseFloat(ua.split(" Chrome/")[1]) || undefined;
-
-exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
-
-exports.isIPad = ua.indexOf("iPad") >= 0;
-
-exports.isTouchPad = ua.indexOf("TouchPad") >= 0;
-
-/**
- * I hate doing this, but we need some way to determine if the user is on a Mac
- * The reason is that users have different expectations of their key combinations.
- *
- * Take copy as an example, Mac people expect to use CMD or APPLE + C
- * Windows folks expect to use CTRL + C
- */
-exports.OS = {
-    LINUX: 'LINUX',
-    MAC: 'MAC',
-    WINDOWS: 'WINDOWS'
-};
-
-/**
- * Return an exports.OS constant
- */
-exports.getOS = function() {
-    if (exports.isMac) {
-        return exports.OS['MAC'];
-    } else if (exports.isLinux) {
-        return exports.OS['LINUX'];
-    } else {
-        return exports.OS['WINDOWS'];
-    }
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/oop', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-exports.inherits = (function() {
-    var tempCtor = function() {};
-    return function(ctor, superCtor) {
-        tempCtor.prototype = superCtor.prototype;
-        ctor.super_ = superCtor.prototype;
-        ctor.prototype = new tempCtor();
-        ctor.prototype.constructor = ctor;
-    }
-}());
-
-exports.mixin = function(obj, mixin) {
-    for (var key in mixin) {
-        obj[key] = mixin[key];
-    }
-};
-
-exports.implement = function(proto, mixin) {
-    exports.mixin(proto, mixin);
-};
-
-});
-/*! @license
-==========================================================================
-SproutCore -- JavaScript Application Framework
-copyright 2006-2009, Sprout Systems Inc., Apple Inc. and contributors.
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the "Software"),
-to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense,
-and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-
-SproutCore and the SproutCore logo are trademarks of Sprout Systems, Inc.
-
-For more information about SproutCore, visit http://www.sproutcore.com
-
-
-==========================================================================
-@license */
-
-// Most of the following code is taken from SproutCore with a few changes.
-
-define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
-
-var oop = require("pilot/oop");
-
-/**
- * Helper functions and hashes for key handling.
- */
-var Keys = (function() {
-    var ret = {
-        MODIFIER_KEYS: {
-            16: 'Shift', 17: 'Ctrl', 18: 'Alt', 224: 'Meta'
-        },
-
-        KEY_MODS: {
-            "ctrl": 1, "alt": 2, "option" : 2,
-            "shift": 4, "meta": 8, "command": 8
-        },
-
-        FUNCTION_KEYS : {
-            8  : "Backspace",
-            9  : "Tab",
-            13 : "Return",
-            19 : "Pause",
-            27 : "Esc",
-            32 : "Space",
-            33 : "PageUp",
-            34 : "PageDown",
-            35 : "End",
-            36 : "Home",
-            37 : "Left",
-            38 : "Up",
-            39 : "Right",
-            40 : "Down",
-            44 : "Print",
-            45 : "Insert",
-            46 : "Delete",
-            112: "F1",
-            113: "F2",
-            114: "F3",
-            115: "F4",
-            116: "F5",
-            117: "F6",
-            118: "F7",
-            119: "F8",
-            120: "F9",
-            121: "F10",
-            122: "F11",
-            123: "F12",
-            144: "Numlock",
-            145: "Scrolllock"
-        },
-
-        PRINTABLE_KEYS: {
-           32: ' ',  48: '0',  49: '1',  50: '2',  51: '3',  52: '4', 53:  '5',
-           54: '6',  55: '7',  56: '8',  57: '9',  59: ';',  61: '=', 65:  'a',
-           66: 'b',  67: 'c',  68: 'd',  69: 'e',  70: 'f',  71: 'g', 72:  'h',
-           73: 'i',  74: 'j',  75: 'k',  76: 'l',  77: 'm',  78: 'n', 79:  'o',
-           80: 'p',  81: 'q',  82: 'r',  83: 's',  84: 't',  85: 'u', 86:  'v',
-           87: 'w',  88: 'x',  89: 'y',  90: 'z', 107: '+', 109: '-', 110: '.',
-          188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\',
-          221: ']', 222: '\"'
-        }
-    };
-
-    // A reverse map of FUNCTION_KEYS
-    for (var i in ret.FUNCTION_KEYS) {
-        var name = ret.FUNCTION_KEYS[i].toUpperCase();
-        ret[name] = parseInt(i, 10);
-    }
-
-    // Add the MODIFIER_KEYS, FUNCTION_KEYS and PRINTABLE_KEYS to the KEY
-    // variables as well.
-    oop.mixin(ret, ret.MODIFIER_KEYS);
-    oop.mixin(ret, ret.PRINTABLE_KEYS);
-    oop.mixin(ret, ret.FUNCTION_KEYS);
-
-    return ret;
-})();
-oop.mixin(exports, Keys);
-
-exports.keyCodeToString = function(keyCode) {
-    return (Keys[keyCode] || String.fromCharCode(keyCode)).toLowerCase();
-}
-
-});
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
- *      Mike de Boer <mike AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/event_emitter', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var EventEmitter = {};
-
-EventEmitter._emit =
-EventEmitter._dispatchEvent = function(eventName, e) {
-    this._eventRegistry = this._eventRegistry || {};
-    this._defaultHandlers = this._defaultHandlers || {};
-
-    var listeners = this._eventRegistry[eventName] || [];
-    var defaultHandler = this._defaultHandlers[eventName];
-    if (!listeners.length && !defaultHandler)
-        return;
-
-    e = e || {};
-    e.type = eventName;
-    
-    if (!e.stopPropagation) {
-        e.stopPropagation = function() {
-            this.propagationStopped = true;
-        };
-    }
-    
-    if (!e.preventDefault) {
-        e.preventDefault = function() {
-            this.defaultPrevented = true;
-        };
-    }
-
-    for (var i=0; i<listeners.length; i++) {
-        listeners[i](e);
-        if (e.propagationStopped)
-            break;
-    }
-    
-    if (defaultHandler && !e.defaultPrevented)
-        defaultHandler(e);
-};
-
-EventEmitter.setDefaultHandler = function(eventName, callback) {
-    this._defaultHandlers = this._defaultHandlers || {};
-    
-    if (this._defaultHandlers[eventName])
-        throw new Error("The default handler for '" + eventName + "' is already set");
-        
-    this._defaultHandlers[eventName] = callback;
-};
-
-EventEmitter.on =
-EventEmitter.addEventListener = function(eventName, callback) {
-    this._eventRegistry = this._eventRegistry || {};
-
-    var listeners = this._eventRegistry[eventName];
-    if (!listeners)
-        var listeners = this._eventRegistry[eventName] = [];
-
-    if (listeners.indexOf(callback) == -1)
-        listeners.push(callback);
-};
-
-EventEmitter.removeListener =
-EventEmitter.removeEventListener = function(eventName, callback) {
-    this._eventRegistry = this._eventRegistry || {};
-
-    var listeners = this._eventRegistry[eventName];
-    if (!listeners)
-        return;
-
-    var index = listeners.indexOf(callback);
-    if (index !== -1)
-        listeners.splice(index, 1);
-};
-
-EventEmitter.removeAllListeners = function(eventName) {
-    if (this._eventRegistry) this._eventRegistry[eventName] = [];
-};
-
-exports.EventEmitter = EventEmitter;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/typecheck', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var objectToString = Object.prototype.toString;
-
-/**
- * Return true if it is a String
- */
-exports.isString = function(it) {
-    return it && objectToString.call(it) === "[object String]";
-};
-
-/**
- * Returns true if it is a Boolean.
- */
-exports.isBoolean = function(it) {
-    return it && objectToString.call(it) === "[object Boolean]";
-};
-
-/**
- * Returns true if it is a Number.
- */
-exports.isNumber = function(it) {
-    return it && objectToString.call(it) === "[object Number]" && isFinite(it);
-};
-
-/**
- * Hack copied from dojo.
- */
-exports.isObject = function(it) {
-    return it !== undefined &&
-        (it === null || typeof it == "object" ||
-        Array.isArray(it) || exports.isFunction(it));
-};
-
-/**
- * Is the passed object a function?
- * From dojo.isFunction()
- */
-exports.isFunction = function(it) {
-    return it && objectToString.call(it) === "[object Function]";
-};
-
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Julian Viereck (jviereck@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/catalog', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-
-var extensionSpecs = {};
-
-exports.addExtensionSpec = function(extensionSpec) {
-    extensionSpecs[extensionSpec.name] = extensionSpec;
-};
-
-exports.removeExtensionSpec = function(extensionSpec) {
-    if (typeof extensionSpec === "string") {
-        delete extensionSpecs[extensionSpec];
-    }
-    else {
-        delete extensionSpecs[extensionSpec.name];
-    }
-};
-
-exports.getExtensionSpec = function(name) {
-    return extensionSpecs[name];
-};
-
-exports.getExtensionSpecs = function() {
-    return Object.keys(extensionSpecs);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/lang', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-exports.stringReverse = function(string) {
-    return string.split("").reverse().join("");
-};
-
-exports.stringRepeat = function (string, count) {
-     return new Array(count + 1).join(string);
-};
-
-var trimBeginRegexp = /^\s\s*/;
-var trimEndRegexp = /\s\s*$/;
-
-exports.stringTrimLeft = function (string) {
-    return string.replace(trimBeginRegexp, '')
-};
-
-exports.stringTrimRight = function (string) {
-    return string.replace(trimEndRegexp, '');
-};
-
-exports.copyObject = function(obj) {
-    var copy = {};
-    for (var key in obj) {
-        copy[key] = obj[key];
-    }
-    return copy;
-};
-
-exports.copyArray = function(array){
-    var copy = [];
-    for (i=0, l=array.length; i<l; i++) {
-        if (array[i] && typeof array[i] == "object")
-            copy[i] = this.copyObject( array[i] );
-        else 
-            copy[i] = array[i]
-    }
-    return copy;
-};
-
-exports.deepCopy = function (obj) {
-    if (typeof obj != "object") {
-        return obj;
-    }
-    
-    var copy = obj.constructor();
-    for (var key in obj) {
-        if (typeof obj[key] == "object") {
-            copy[key] = this.deepCopy(obj[key]);
-        } else {
-            copy[key] = obj[key];
-        }
-    }
-    return copy;
-}
-
-exports.arrayToMap = function(arr) {
-    var map = {};
-    for (var i=0; i<arr.length; i++) {
-        map[arr[i]] = 1;
-    }
-    return map;
-
-};
-
-/**
- * splice out of 'array' anything that === 'value'
- */
-exports.arrayRemove = function(array, value) {
-  for (var i = 0; i <= array.length; i++) {
-    if (value === array[i]) {
-      array.splice(i, 1);
-    }
-  }
-};
-
-exports.escapeRegExp = function(str) {
-    return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
-};
-
-exports.deferredCall = function(fcn) {
-
-    var timer = null;
-    var callback = function() {
-        timer = null;
-        fcn();
-    };
-
-    var deferred = function(timeout) {
-        deferred.cancel();
-        timer = setTimeout(callback, timeout || 0);
-        return deferred;
-    }
-
-    deferred.schedule = deferred;
-
-    deferred.call = function() {
-        this.cancel();
-        fcn();
-        return deferred;
-    };
-
-    deferred.cancel = function() {
-        clearTimeout(timer);
-        timer = null;
-        return deferred;
-    };
-
-    return deferred;
-};
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Joe Walker (jwalker@mozilla.com)
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/types/settings', ['require', 'exports', 'module' , 'pilot/types/basic', 'pilot/types', 'pilot/settings'], function(require, exports, module) {
-
-var SelectionType = require('pilot/types/basic').SelectionType;
-var DeferredType = require('pilot/types/basic').DeferredType;
-var types = require('pilot/types');
-var settings = require('pilot/settings').settings;
-
-
-/**
- * EVIL: This relies on us using settingValue in the same event as setting
- * The alternative is to have some central place where we store the current
- * command line, but this might be a lesser evil for now.
- */
-var lastSetting;
-
-/**
- * Select from the available settings
- */
-var setting = new SelectionType({
-    name: 'setting',
-    data: function() {
-        return env.settings.getSettingNames();
-    },
-    stringify: function(setting) {
-        lastSetting = setting;
-        return setting.name;
-    },
-    fromString: function(str) {
-        lastSetting = settings.getSetting(str);
-        return lastSetting;
-    },
-    noMatch: function() {
-        lastSetting = null;
-    }
-});
-
-/**
- * Something of a hack to allow the set command to give a clearer definition
- * of the type to the command line.
- */
-var settingValue = new DeferredType({
-    name: 'settingValue',
-    defer: function() {
-        if (lastSetting) {
-            return lastSetting.type;
-        }
-        else {
-            return types.getType('text');
-        }
-    },
-    /**
-     * Promote the current value in any list of predictions, and add it if
-     * there are none.
-     */
-    getDefault: function() {
-        var conversion = this.parse('');
-        if (lastSetting) {
-            var current = lastSetting.get();
-            if (conversion.predictions.length === 0) {
-                conversion.predictions.push(current);
-            }
-            else {
-                // Remove current from predictions
-                var removed = false;
-                while (true) {
-                    var index = conversion.predictions.indexOf(current);
-                    if (index === -1) {
-                        break;
-                    }
-                    conversion.predictions.splice(index, 1);
-                    removed = true;
-                }
-                // If the current value wasn't something we would predict, leave it
-                if (removed) {
-                    conversion.predictions.push(current);
-                }
-            }
-        }
-        return conversion;
-    }
-});
-
-var env;
-
-/**
- * Registration and de-registration.
- */
-exports.startup = function(data, reason) {
-    // TODO: this is probably all kinds of evil, but we need something working
-    env = data.env;
-    types.registerType(setting);
-    types.registerType(settingValue);
-};
-
-exports.shutdown = function(data, reason) {
-    types.unregisterType(setting);
-    types.unregisterType(settingValue);
-};
-
-
-});
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *   Julian Viereck (jviereck@mozilla.com)
- *   Kevin Dangoor (kdangoor@mozilla.com)
- *   Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/settings', ['require', 'exports', 'module' , 'pilot/console', 'pilot/oop', 'pilot/types', 'pilot/event_emitter', 'pilot/catalog'], function(require, exports, module) {
-
-/**
- * This plug-in manages settings.
- */
-
-var console = require('pilot/console');
-var oop = require('pilot/oop');
-var types = require('pilot/types');
-var EventEmitter = require('pilot/event_emitter').EventEmitter;
-var catalog = require('pilot/catalog');
-
-var settingExtensionSpec = {
-    name: 'setting',
-    description: 'A setting is something that the application offers as a ' +
-            'way to customize how it works',
-    register: 'env.settings.addSetting',
-    indexOn: 'name'
-};
-
-exports.startup = function(data, reason) {
-    catalog.addExtensionSpec(settingExtensionSpec);
-};
-
-exports.shutdown = function(data, reason) {
-    catalog.removeExtensionSpec(settingExtensionSpec);
-};
-
-
-/**
- * Create a new setting.
- * @param settingSpec An object literal that looks like this:
- * {
- *   name: 'thing',
- *   description: 'Thing is an example setting',
- *   type: 'string',
- *   defaultValue: 'something'
- * }
- */
-function Setting(settingSpec, settings) {
-    this._settings = settings;
-
-    Object.keys(settingSpec).forEach(function(key) {
-        this[key] = settingSpec[key];
-    }, this);
-
-    this.type = types.getType(this.type);
-    if (this.type == null) {
-        throw new Error('In ' + this.name +
-            ': can\'t find type for: ' + JSON.stringify(settingSpec.type));
-    }
-
-    if (!this.name) {
-        throw new Error('Setting.name == undefined. Ignoring.', this);
-    }
-
-    if (!this.defaultValue === undefined) {
-        throw new Error('Setting.defaultValue == undefined', this);
-    }
-
-    if (this.onChange) {
-        this.on('change', this.onChange.bind(this))
-    }
-
-    this.set(this.defaultValue);
-}
-Setting.prototype = {
-    get: function() {
-        return this.value;
-    },
-
-    set: function(value) {
-        if (this.value === value) {
-            return;
-        }
-
-        this.value = value;
-        if (this._settings.persister) {
-            this._settings.persister.persistValue(this._settings, this.name, value);
-        }
-
-        this._dispatchEvent('change', { setting: this, value: value });
-    },
-
-    /**
-     * Reset the value of the <code>key</code> setting to it's default
-     */
-    resetValue: function() {
-        this.set(this.defaultValue);
-    },
-    toString: function () {
-        return this.name;
-    }
-};
-oop.implement(Setting.prototype, EventEmitter);
-
-
-/**
- * A base class for all the various methods of storing settings.
- * <p>Usage:
- * <pre>
- * // Create manually, or require 'settings' from the container.
- * // This is the manual version:
- * var settings = plugins.catalog.getObject('settings');
- * // Add a new setting
- * settings.addSetting({ name:'foo', ... });
- * // Display the default value
- * alert(settings.get('foo'));
- * // Alter the value, which also publishes the change etc.
- * settings.set('foo', 'bar');
- * // Reset the value to the default
- * settings.resetValue('foo');
- * </pre>
- * @constructor
- */
-function Settings(persister) {
-    // Storage for deactivated values
-    this._deactivated = {};
-
-    // Storage for the active settings
-    this._settings = {};
-    // We often want sorted setting names. Cache
-    this._settingNames = [];
-
-    if (persister) {
-        this.setPersister(persister);
-    }
-};
-
-Settings.prototype = {
-    /**
-     * Function to add to the list of available settings.
-     * <p>Example usage:
-     * <pre>
-     * var settings = plugins.catalog.getObject('settings');
-     * settings.addSetting({
-     *     name: 'tabsize', // For use in settings.get('X')
-     *     type: 'number',  // To allow value checking.
-     *     defaultValue: 4  // Default value for use when none is directly set
-     * });
-     * </pre>
-     * @param {object} settingSpec Object containing name/type/defaultValue members.
-     */
-    addSetting: function(settingSpec) {
-        var setting = new Setting(settingSpec, this);
-        this._settings[setting.name] = setting;
-        this._settingNames.push(setting.name);
-        this._settingNames.sort();
-    },
-
-    addSettings: function addSettings(settings) {
-        Object.keys(settings).forEach(function (name) {
-            var setting = settings[name];
-            if (!('name' in setting)) setting.name = name;
-            this.addSetting(setting);
-        }, this);
-    },
-
-    removeSetting: function(setting) {
-        var name = (typeof setting === 'string' ? setting : setting.name);
-        setting = this._settings[name];
-        delete this._settings[name];
-        util.arrayRemove(this._settingNames, name);
-        settings.removeAllListeners('change');
-    },
-
-    removeSettings: function removeSettings(settings) {
-        Object.keys(settings).forEach(function(name) {
-            var setting = settings[name];
-            if (!('name' in setting)) setting.name = name;
-            this.removeSettings(setting);
-        }, this);
-    },
-
-    getSettingNames: function() {
-        return this._settingNames;
-    },
-
-    getSetting: function(name) {
-        return this._settings[name];
-    },
-
-    /**
-     * A Persister is able to store settings. It is an object that defines
-     * two functions:
-     * loadInitialValues(settings) and persistValue(settings, key, value).
-     */
-    setPersister: function(persister) {
-        this._persister = persister;
-        if (persister) {
-            persister.loadInitialValues(this);
-        }
-    },
-
-    resetAll: function() {
-        this.getSettingNames().forEach(function(key) {
-            this.resetValue(key);
-        }, this);
-    },
-
-    /**
-     * Retrieve a list of the known settings and their values
-     */
-    _list: function() {
-        var reply = [];
-        this.getSettingNames().forEach(function(setting) {
-            reply.push({
-                'key': setting,
-                'value': this.getSetting(setting).get()
-            });
-        }, this);
-        return reply;
-    },
-
-    /**
-     * Prime the local cache with the defaults.
-     */
-    _loadDefaultValues: function() {
-        this._loadFromObject(this._getDefaultValues());
-    },
-
-    /**
-     * Utility to load settings from an object
-     */
-    _loadFromObject: function(data) {
-        // We iterate over data rather than keys so we don't forget values
-        // which don't have a setting yet.
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                var setting = this._settings[key];
-                if (setting) {
-                    var value = setting.type.parse(data[key]);
-                    this.set(key, value);
-                } else {
-                    this.set(key, data[key]);
-                }
-            }
-        }
-    },
-
-    /**
-     * Utility to grab all the settings and export them into an object
-     */
-    _saveToObject: function() {
-        return this.getSettingNames().map(function(key) {
-            return this._settings[key].type.stringify(this.get(key));
-        }.bind(this));
-    },
-
-    /**
-     * The default initial settings
-     */
-    _getDefaultValues: function() {
-        return this.getSettingNames().map(function(key) {
-            return this._settings[key].spec.defaultValue;
-        }.bind(this));
-    }
-};
-exports.settings = new Settings();
-
-/**
- * Save the settings in a cookie
- * This code has not been tested since reboot
- * @constructor
- */
-function CookiePersister() {
-};
-
-CookiePersister.prototype = {
-    loadInitialValues: function(settings) {
-        settings._loadDefaultValues();
-        var data = cookie.get('settings');
-        settings._loadFromObject(JSON.parse(data));
-    },
-
-    persistValue: function(settings, key, value) {
-        try {
-            var stringData = JSON.stringify(settings._saveToObject());
-            cookie.set('settings', stringData);
-        } catch (ex) {
-            console.error('Unable to JSONify the settings! ' + ex);
-            return;
-        }
-    }
-};
-
-exports.CookiePersister = CookiePersister;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Skywriter Team (skywriter@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/commands/settings', ['require', 'exports', 'module' , 'pilot/canon'], function(require, exports, module) {
-
-
-var setCommandSpec = {
-    name: 'set',
-    params: [
-        {
-            name: 'setting',
-            type: 'setting',
-            description: 'The name of the setting to display or alter',
-            defaultValue: null
-        },
-        {
-            name: 'value',
-            type: 'settingValue',
-            description: 'The new value for the chosen setting',
-            defaultValue: null
-        }
-    ],
-    description: 'define and show settings',
-    exec: function(env, args, request) {
-        var html;
-        if (!args.setting) {
-            // 'set' by itself lists all the settings
-            var names = env.settings.getSettingNames();
-            html = '';
-            // first sort the settingsList based on the name
-            names.sort(function(name1, name2) {
-                return name1.localeCompare(name2);
-            });
-
-            names.forEach(function(name) {
-                var setting = env.settings.getSetting(name);
-                var url = 'https://wiki.mozilla.org/Labs/Skywriter/Settings#' +
-                        setting.name;
-                html += '<a class="setting" href="' + url +
-                        '" title="View external documentation on setting: ' +
-                        setting.name +
-                        '" target="_blank">' +
-                        setting.name +
-                        '</a> = ' +
-                        setting.value +
-                        '<br/>';
-            });
-        } else {
-            // set with only a setting, shows the value for that setting
-            if (args.value === undefined) {
-                html = '<strong>' + setting.name + '</strong> = ' +
-                        setting.get();
-            } else {
-                // Actually change the setting
-                args.setting.set(args.value);
-                html = 'Setting: <strong>' + args.setting.name + '</strong> = ' +
-                        args.setting.get();
-            }
-        }
-        request.done(html);
-    }
-};
-
-var unsetCommandSpec = {
-    name: 'unset',
-    params: [
-        {
-            name: 'setting',
-            type: 'setting',
-            description: 'The name of the setting to return to defaults'
-        }
-    ],
-    description: 'unset a setting entirely',
-    exec: function(env, args, request) {
-        var setting = env.settings.get(args.setting);
-        if (!setting) {
-            request.doneWithError('No setting with the name <strong>' +
-                args.setting + '</strong>.');
-            return;
-        }
-
-        setting.reset();
-        request.done('Reset ' + setting.name + ' to default: ' +
-                env.settings.get(args.setting));
-    }
-};
-
-var canon = require('pilot/canon');
-
-exports.startup = function(data, reason) {
-    canon.addCommand(setCommandSpec);
-    canon.addCommand(unsetCommandSpec);
-};
-
-exports.shutdown = function(data, reason) {
-    canon.removeCommand(setCommandSpec);
-    canon.removeCommand(unsetCommandSpec);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Skywriter Team (skywriter@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/commands/basic', ['require', 'exports', 'module' , 'pilot/typecheck', 'pilot/canon'], function(require, exports, module) {
-
-
-var checks = require("pilot/typecheck");
-var canon = require('pilot/canon');
-
-/**
- * 'help' command
- */
-var helpCommandSpec = {
-    name: 'help',
-    params: [
-        {
-            name: 'search',
-            type: 'text',
-            description: 'Search string to narrow the output.',
-            defaultValue: null
-        }
-    ],
-    description: 'Get help on the available commands.',
-    exec: function(env, args, request) {
-        var output = [];
-
-        var command = canon.getCommand(args.search);
-        if (command && command.exec) {
-            // caught a real command
-            output.push(command.description ?
-                    command.description :
-                    'No description for ' + args.search);
-        } else {
-            var showHidden = false;
-
-            if (command) {
-                // We must be looking at sub-commands
-                output.push('<h2>Sub-Commands of ' + command.name + '</h2>');
-                output.push('<p>' + command.description + '</p>');
-            }
-            else if (args.search) {
-                if (args.search == 'hidden') { // sneaky, sneaky.
-                    args.search = '';
-                    showHidden = true;
-                }
-                output.push('<h2>Commands starting with \'' + args.search + '\':</h2>');
-            }
-            else {
-                output.push('<h2>Available Commands:</h2>');
-            }
-
-            var commandNames = canon.getCommandNames();
-            commandNames.sort();
-
-            output.push('<table>');
-            for (var i = 0; i < commandNames.length; i++) {
-                command = canon.getCommand(commandNames[i]);
-                if (!showHidden && command.hidden) {
-                    continue;
-                }
-                if (command.description === undefined) {
-                    // Ignore editor actions
-                    continue;
-                }
-                if (args.search && command.name.indexOf(args.search) !== 0) {
-                    // Filtered out by the user
-                    continue;
-                }
-                if (!args.search && command.name.indexOf(' ') != -1) {
-                    // sub command
-                    continue;
-                }
-                if (command && command.name == args.search) {
-                    // sub command, and we've already given that help
-                    continue;
-                }
-
-                // todo add back a column with parameter information, perhaps?
-
-                output.push('<tr>');
-                output.push('<th class="right">' + command.name + '</th>');
-                output.push('<td>' + command.description + '</td>');
-                output.push('</tr>');
-            }
-            output.push('</table>');
-        }
-
-        request.done(output.join(''));
-    }
-};
-
-/**
- * 'eval' command
- */
-var evalCommandSpec = {
-    name: 'eval',
-    params: [
-        {
-            name: 'javascript',
-            type: 'text',
-            description: 'The JavaScript to evaluate'
-        }
-    ],
-    description: 'evals given js code and show the result',
-    hidden: true,
-    exec: function(env, args, request) {
-        var result;
-        var javascript = args.javascript;
-        try {
-            result = eval(javascript);
-        } catch (e) {
-            result = '<b>Error: ' + e.message + '</b>';
-        }
-
-        var msg = '';
-        var type = '';
-        var x;
-
-        if (checks.isFunction(result)) {
-            // converts the function to a well formated string
-            msg = (result + '').replace(/\n/g, '<br>').replace(/ /g, '&#160');
-            type = 'function';
-        } else if (checks.isObject(result)) {
-            if (Array.isArray(result)) {
-                type = 'array';
-            } else {
-                type = 'object';
-            }
-
-            var items = [];
-            var value;
-
-            for (x in result) {
-                if (result.hasOwnProperty(x)) {
-                    if (checks.isFunction(result[x])) {
-                        value = '[function]';
-                    } else if (checks.isObject(result[x])) {
-                        value = '[object]';
-                    } else {
-                        value = result[x];
-                    }
-
-                    items.push({name: x, value: value});
-                }
-            }
-
-            items.sort(function(a,b) {
-                return (a.name.toLowerCase() < b.name.toLowerCase()) ? -1 : 1;
-            });
-
-            for (x = 0; x < items.length; x++) {
-                msg += '<b>' + items[x].name + '</b>: ' + items[x].value + '<br>';
-            }
-
-        } else {
-            msg = result;
-            type = typeof result;
-        }
-
-        request.done('Result for eval <b>\'' + javascript + '\'</b>' +
-                ' (type: '+ type+'): <br><br>'+ msg);
-    }
-};
-
-var canon = require('pilot/canon');
-
-exports.startup = function(data, reason) {
-    canon.addCommand(helpCommandSpec);
-    canon.addCommand(evalCommandSpec);
-};
-
-exports.shutdown = function(data, reason) {
-    canon.removeCommand(helpCommandSpec);
-    canon.removeCommand(evalCommandSpec);
-};
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/settings/canon', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-
-var historyLengthSetting = {
-    name: "historyLength",
-    description: "How many typed commands do we recall for reference?",
-    type: "number",
-    defaultValue: 50
-};
-
-exports.startup = function(data, reason) {
-    data.env.settings.addSetting(historyLengthSetting);
-};
-
-exports.shutdown = function(data, reason) {
-    data.env.settings.removeSetting(historyLengthSetting);
-};
-
-
-});
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/defaults', ['require', 'exports', 'module' , 'ace/settings/default-settings'], function(require, exports, module) {
-
-var settings = require("ace/settings/default-settings")
-
-exports.startup = function startup(data, reason) {
-    settings.startup(data, reason)
-}
-
-exports.shutdown = function shutdown(data, reason) {
-    settings.shutdown(data, reason)
-}
-
-})
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/settings/default-settings', ['require', 'exports', 'module' , 'pilot/types', 'pilot/types/basic'], function(require, exports, module) {
-
-var types = require('pilot/types')
-var SelectionType = require('pilot/types/basic').SelectionType
-
-var env
-
-var settingTypes = {
-    selectionStyle: new SelectionType({
-        data: [ 'line', 'text' ]
-    })
-}
-
-var settings = {
-    printMargin: {
-        description: 'Position of the print margin column.',
-        type: 'number',
-        defaultValue: 80,
-        onChange: function onChange(event) {
-            if (env.editor) env.editor.setPrintMarginColumn(event.value)
-        }
-    },
-    showIvisibles: {
-        description: 'Whether or not to show invisible characters.',
-        type: 'bool',
-        defaultValue: false,
-        onChange: function onChange(event) {
-            if (env.editor) env.editor.setShowInvisibles(event.value)
-        }
-    },
-    highlightActiveLine: {
-        description: 'Whether or not highlight active line.',
-        type: 'bool',
-        defaultValue: true,
-        onChange: function onChange(event) {
-            if (env.editor) env.editor.setHighlightActiveLine(event.value)
-        }
-    },
-    selectionStyle: {
-        description: 'Type of text selection.',
-        type: 'selectionStyle',
-        defaultValue: 'line',
-        onChange: function onChange(event) {
-            if (env.editor) env.editor.setSelectionStyle(event.value)
-        }
-    }
-}
-
-exports.startup = function startup(data, reason) {
-    env = data.env
-    types.registerTypes(settingTypes)
-    data.env.settings.addSettings(settings)
-}
-
-exports.shutdown = function shutdown(data, reason) {
-    data.env.settings.removeSettings(settings)
-}
-
-})
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('demo/kitchen-sink/boot', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/environment', 'demo/kitchen-sink/demo', 'pilot/index', 'ace/defaults'], function(require, exports, module) {
-
-require("pilot/fixoldbrowsers");
-require("pilot/plugin_manager");
-require("pilot/environment");
-require("demo/kitchen-sink/demo");
-
-require("pilot/index");
-require("ace/defaults");
-
-var plugins = [ "pilot/index"];
-var catalog = require("pilot/plugin_manager").catalog;
-catalog.registerPlugins(plugins).then(function() {
-    var env = require("pilot/environment").create();
-    catalog.startupPlugins({ env: env }).then(function() {
-        require("demo/kitchen-sink/demo").launch(env);
-    });
-});
-
-});/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
-
-var Promise = require("pilot/promise").Promise;
-
-exports.REASONS = {
-    APP_STARTUP: 1,
-    APP_SHUTDOWN: 2,
-    PLUGIN_ENABLE: 3,
-    PLUGIN_DISABLE: 4,
-    PLUGIN_INSTALL: 5,
-    PLUGIN_UNINSTALL: 6,
-    PLUGIN_UPGRADE: 7,
-    PLUGIN_DOWNGRADE: 8
-};
-
-exports.Plugin = function(name) {
-    this.name = name;
-    this.status = this.INSTALLED;
-};
-
-exports.Plugin.prototype = {
-    /**
-     * constants for the state
-     */
-    NEW: 0,
-    INSTALLED: 1,
-    REGISTERED: 2,
-    STARTED: 3,
-    UNREGISTERED: 4,
-    SHUTDOWN: 5,
-
-    install: function(data, reason) {
-        var pr = new Promise();
-        if (this.status > this.NEW) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.install) {
-                pluginModule.install(data, reason);
-            }
-            this.status = this.INSTALLED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    register: function(data, reason) {
-        var pr = new Promise();
-        if (this.status != this.INSTALLED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.register) {
-                pluginModule.register(data, reason);
-            }
-            this.status = this.REGISTERED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    startup: function(data, reason) {
-        reason = reason || exports.REASONS.APP_STARTUP;
-        var pr = new Promise();
-        if (this.status < this.REGISTERED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.startup) {
-                pluginModule.startup(data, reason);
-            }
-            this.status = this.STARTED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    shutdown: function(data, reason) {
-        if (this.status != this.STARTED) {
-            return;
-        }
-        pluginModule = require(this.name);
-        if (pluginModule.shutdown) {
-            pluginModule.shutdown(data, reason);
-        }
-    }
-};
-
-exports.PluginCatalog = function() {
-    this.plugins = {};
-};
-
-exports.PluginCatalog.prototype = {
-    registerPlugins: function(pluginList, data, reason) {
-        var registrationPromises = [];
-        pluginList.forEach(function(pluginName) {
-            var plugin = this.plugins[pluginName];
-            if (plugin === undefined) {
-                plugin = new exports.Plugin(pluginName);
-                this.plugins[pluginName] = plugin;
-                registrationPromises.push(plugin.register(data, reason));
-            }
-        }.bind(this));
-        return Promise.group(registrationPromises);
-    },
-
-    startupPlugins: function(data, reason) {
-        var startupPromises = [];
-        for (var pluginName in this.plugins) {
-            var plugin = this.plugins[pluginName];
-            startupPromises.push(plugin.startup(data, reason));
-        }
-        return Promise.group(startupPromises);
-    }
-};
-
-exports.catalog = new exports.PluginCatalog();
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
-
-var console = require("pilot/console");
-var Trace = require('pilot/stacktrace').Trace;
-
-/**
- * A promise can be in one of 2 states.
- * The ERROR and SUCCESS states are terminal, the PENDING state is the only
- * start state.
- */
-var ERROR = -1;
-var PENDING = 0;
-var SUCCESS = 1;
-
-/**
- * We give promises and ID so we can track which are outstanding
- */
-var _nextId = 0;
-
-/**
- * Debugging help if 2 things try to complete the same promise.
- * This can be slow (especially on chrome due to the stack trace unwinding) so
- * we should leave this turned off in normal use.
- */
-var _traceCompletion = false;
-
-/**
- * Outstanding promises. Handy list for debugging only.
- */
-var _outstanding = [];
-
-/**
- * Recently resolved promises. Also for debugging only.
- */
-var _recent = [];
-
-/**
- * Create an unfulfilled promise
- */
-Promise = function () {
-    this._status = PENDING;
-    this._value = undefined;
-    this._onSuccessHandlers = [];
-    this._onErrorHandlers = [];
-
-    // Debugging help
-    this._id = _nextId++;
-    //this._createTrace = new Trace(new Error());
-    _outstanding[this._id] = this;
-};
-
-/**
- * Yeay for RTTI.
- */
-Promise.prototype.isPromise = true;
-
-/**
- * Have we either been resolve()ed or reject()ed?
- */
-Promise.prototype.isComplete = function() {
-    return this._status != PENDING;
-};
-
-/**
- * Have we resolve()ed?
- */
-Promise.prototype.isResolved = function() {
-    return this._status == SUCCESS;
-};
-
-/**
- * Have we reject()ed?
- */
-Promise.prototype.isRejected = function() {
-    return this._status == ERROR;
-};
-
-/**
- * Take the specified action of fulfillment of a promise, and (optionally)
- * a different action on promise rejection.
- */
-Promise.prototype.then = function(onSuccess, onError) {
-    if (typeof onSuccess === 'function') {
-        if (this._status === SUCCESS) {
-            onSuccess.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onSuccessHandlers.push(onSuccess);
-        }
-    }
-
-    if (typeof onError === 'function') {
-        if (this._status === ERROR) {
-            onError.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onErrorHandlers.push(onError);
-        }
-    }
-
-    return this;
-};
-
-/**
- * Like then() except that rather than returning <tt>this</tt> we return
- * a promise which
- */
-Promise.prototype.chainPromise = function(onSuccess) {
-    var chain = new Promise();
-    chain._chainedFrom = this;
-    this.then(function(data) {
-        try {
-            chain.resolve(onSuccess(data));
-        } catch (ex) {
-            chain.reject(ex);
-        }
-    }, function(ex) {
-        chain.reject(ex);
-    });
-    return chain;
-};
-
-/**
- * Supply the fulfillment of a promise
- */
-Promise.prototype.resolve = function(data) {
-    return this._complete(this._onSuccessHandlers, SUCCESS, data, 'resolve');
-};
-
-/**
- * Renege on a promise
- */
-Promise.prototype.reject = function(data) {
-    return this._complete(this._onErrorHandlers, ERROR, data, 'reject');
-};
-
-/**
- * Internal method to be called on resolve() or reject().
- * @private
- */
-Promise.prototype._complete = function(list, status, data, name) {
-    // Complain if we've already been completed
-    if (this._status != PENDING) {
-        console.group('Promise already closed');
-        console.error('Attempted ' + name + '() with ', data);
-        console.error('Previous status = ', this._status,
-                ', previous value = ', this._value);
-        console.trace();
-
-        if (this._completeTrace) {
-            console.error('Trace of previous completion:');
-            this._completeTrace.log(5);
-        }
-        console.groupEnd();
-        return this;
-    }
-
-    if (_traceCompletion) {
-        this._completeTrace = new Trace(new Error());
-    }
-
-    this._status = status;
-    this._value = data;
-
-    // Call all the handlers, and then delete them
-    list.forEach(function(handler) {
-        handler.call(null, this._value);
-    }, this);
-    this._onSuccessHandlers.length = 0;
-    this._onErrorHandlers.length = 0;
-
-    // Remove the given {promise} from the _outstanding list, and add it to the
-    // _recent list, pruning more than 20 recent promises from that list.
-    delete _outstanding[this._id];
-    _recent.push(this);
-    while (_recent.length > 20) {
-        _recent.shift();
-    }
-
-    return this;
-};
-
-/**
- * Takes an array of promises and returns a promise that that is fulfilled once
- * all the promises in the array are fulfilled
- * @param group The array of promises
- * @return the promise that is fulfilled when all the array is fulfilled
- */
-Promise.group = function(promiseList) {
-    if (!(promiseList instanceof Array)) {
-        promiseList = Array.prototype.slice.call(arguments);
-    }
-
-    // If the original array has nothing in it, return now to avoid waiting
-    if (promiseList.length === 0) {
-        return new Promise().resolve([]);
-    }
-
-    var groupPromise = new Promise();
-    var results = [];
-    var fulfilled = 0;
-
-    var onSuccessFactory = function(index) {
-        return function(data) {
-            results[index] = data;
-            fulfilled++;
-            // If the group has already failed, silently drop extra results
-            if (groupPromise._status !== ERROR) {
-                if (fulfilled === promiseList.length) {
-                    groupPromise.resolve(results);
-                }
-            }
-        };
-    };
-
-    promiseList.forEach(function(promise, index) {
-        var onSuccess = onSuccessFactory(index);
-        var onError = groupPromise.reject.bind(groupPromise);
-        promise.then(onSuccess, onError);
-    });
-
-    return groupPromise;
-};
-
-exports.Promise = Promise;
-exports._outstanding = _outstanding;
-exports._recent = _recent;
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is DomTemplate.
- *
- * The Initial Developer of the Original Code is Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com) (original author)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/environment', ['require', 'exports', 'module' , 'pilot/settings'], function(require, exports, module) {
-
-
-var settings = require("pilot/settings").settings;
-
-/**
- * Create an environment object
- */
-function create() {
-    return {
-        settings: settings
-    };
-};
-
-exports.create = create;
-
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *      Kevin Dangoor (kdangoor@mozilla.com)
- *      Julian Viereck <julian DOT viereck AT gmail DOT com>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-
-define('demo/kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!demo/kitchen-sink/docs/plaintext.txt', 'text!demo/kitchen-sink/docs/javascript.js', 'text!demo/kitchen-sink/docs/coffeescript.coffee', 'text!demo/kitchen-sink/docs/json.json', 'text!demo/kitchen-sink/docs/css.css', 'text!demo/kitchen-sink/docs/scss.scss', 'text!demo/kitchen-sink/docs/html.html', 'text!demo/kitchen-sink/docs/xml.xml', 'text!demo/kitchen-sink/docs/svg.svg', 'text!demo/kitchen-sink/docs/php.php', 'text!demo/kitchen-sink/docs/coldfusion.cfm', 'text!demo/kitchen-sink/docs/python.py', 'text!demo/kitchen-sink/docs/ruby.rb', 'text!demo/kitchen-sink/docs/perl.pl', 'text!demo/kitchen-sink/docs/ocaml.ml', 'text!demo/kitchen-sink/docs/lua.lua', 'text!demo/kitchen-sink/docs/java.java', 'text!demo/kitchen-sink/docs/clojure.clj', 'text!demo/kitchen-sink/docs/groovy.groovy', 'text!demo/kitchen-sink/docs/scala.scala', 'text!demo/kitchen-sink/docs/csharp.cs', 'text!demo/kitchen-sink/docs/powershell.ps1', 'text!demo/kitchen-sink/docs/cpp.cpp', 'text!demo/kitchen-sink/docs/markdown.md', 'text!demo/kitchen-sink/docs/textile.textile', 'text!demo/kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
-
-var net = require("ace/lib/net");
-var canon = require("pilot/canon");
-var event = require("pilot/event");
-var Range = require("ace/range").Range;
-var Editor = require("ace/editor").Editor;
-var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-var theme = require("ace/theme/textmate");
-var EditSession = require("ace/edit_session").EditSession;
-var UndoManager = require("ace/undomanager").UndoManager;
-
-var vim = require("ace/keyboard/keybinding/vim").Vim;
-var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
-var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-
-
-var modesByName;
-
-var Doc = function(name, desc, file) {
-    this.name = name;
-    this.desc = desc;
-    this.doc = new EditSession(file);
-    this.doc.setMode(modesByName[name].mode);
-    this.doc.setUndoManager(new UndoManager());
-};
-
-var WrappedDoc = function(name, desc, file) {
-    Doc.apply(this, arguments);
-    
-    this.doc.setUseWrapMode(true);
-    this.doc.setWrapLimitRange(80, 80);
-};
-
-var Mode = function(name, desc, clazz, extensions) {
-    this.name = name;
-    this.desc = desc;
-    this.clazz = clazz;
-    this.mode = new clazz();
-    this.mode.name = name;
-    
-    this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
-};
-
-Mode.prototype.supportsFile = function(filename) {
-    return filename.match(this.extRe);
-};
-
-
-
-exports.launch = function(env) {
-    
-    var modes = [
-        new Mode("c_cpp", "C/C++", require("ace/mode/c_cpp").Mode, ["c", "cpp", "cxx", "h", "hpp"]),
-        new Mode("clojure", "Clojure", require("ace/mode/clojure").Mode, ["clj"]),
-        new Mode("coffee", "CoffeeScript", require("ace/mode/coffee").Mode, ["coffee"]),
-        new Mode("coldfusion", "ColdFusion", require("ace/mode/coldfusion").Mode, ["cfm"]),
-        new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
-        new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
-        new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
-        new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
-        new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
-        new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
-        new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
-        new Mode("latex", "LaTeX", require("ace/mode/latex").Mode, ["tex"]),
-        new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
-        new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
-        new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
-        new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
-        new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
-        new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"]),
-        new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
-        new Mode("scala", "Scala", require("ace/mode/scala").Mode, ["scala"]),
-        new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
-        new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
-        new Mode("sql", "SQL", require("ace/mode/sql").Mode, ["sql"]),
-        new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
-        new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
-        new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-        new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
-    ];
-    
-    modesByName = {};
-    modes.forEach(function(m) {
-        modesByName[m.name] = m;
-    });
-    
-    var loreIpsum = require("text!demo/kitchen-sink/docs/plaintext.txt");
-    for (var i = 0; i < 5; i++) {
-        loreIpsum += loreIpsum;
-    }
-    
-    var docs = [
-        new Doc(
-            "javascript", "JavaScript",
-            require("text!demo/kitchen-sink/docs/javascript.js")
-        ),
-        new WrappedDoc("text", "Plain Text", loreIpsum),
-        new Doc(
-            "coffee", "Coffeescript",
-            require("text!demo/kitchen-sink/docs/coffeescript.coffee")
-        ),
-        new Doc(
-            "json", "JSON",
-            require("text!demo/kitchen-sink/docs/json.json")
-        ),
-        new Doc(
-            "css", "CSS",
-            require("text!demo/kitchen-sink/docs/css.css")
-        ),
-        new Doc(
-            "scss", "SCSS",
-            require("text!demo/kitchen-sink/docs/scss.scss")
-        ),
-        new Doc(
-            "html", "HTML",
-            require("text!demo/kitchen-sink/docs/html.html")
-        ),
-        new Doc(
-            "xml", "XML",
-            require("text!demo/kitchen-sink/docs/xml.xml")
-        ),
-        new Doc(
-            "svg", "SVG",
-            require("text!demo/kitchen-sink/docs/svg.svg")
-        ),
-        new Doc(
-            "php", "PHP",
-            require("text!demo/kitchen-sink/docs/php.php")
-        ),
-        new Doc(
-            "coldfusion", "ColdFusion",
-            require("text!demo/kitchen-sink/docs/coldfusion.cfm")
-        ),
-        new Doc(
-            "python", "Python",
-            require("text!demo/kitchen-sink/docs/python.py")
-        ),
-        new Doc(
-            "ruby", "Ruby",
-            require("text!demo/kitchen-sink/docs/ruby.rb")
-        ),
-        new Doc(
-            "perl", "Perl",
-            require("text!demo/kitchen-sink/docs/perl.pl")
-        ),
-        new Doc(
-            "ocaml", "OCaml",
-            require("text!demo/kitchen-sink/docs/ocaml.ml")
-        ),
-        new Doc(
-            "lua", "Lua",
-            require("text!demo/kitchen-sink/docs/lua.lua")
-        ),
-        new Doc(
-            "java", "Java",
-            require("text!demo/kitchen-sink/docs/java.java")
-        ),
-        new Doc(
-            "clojure", "Clojure",
-            require("text!demo/kitchen-sink/docs/clojure.clj")
-        ),
-        new Doc(
-            "groovy", "Groovy",
-            require("text!demo/kitchen-sink/docs/groovy.groovy")
-        ),
-        new Doc(
-            "scala", "Scala",
-            require("text!demo/kitchen-sink/docs/scala.scala")
-        ),
-        new Doc(
-            "csharp", "C#",
-            require("text!demo/kitchen-sink/docs/csharp.cs")
-        ),
-        new Doc(
-            "powershell", "Powershell",
-            require("text!demo/kitchen-sink/docs/powershell.ps1")
-        ),
-        new Doc(
-            "c_cpp", "C/C++",
-            require("text!demo/kitchen-sink/docs/cpp.cpp")
-        ),
-        new Doc(
-            "markdown", "Markdown",
-            require("text!demo/kitchen-sink/docs/markdown.md")
-        ),
-        new WrappedDoc(
-            "markdown", "Markdown",
-            require("text!demo/kitchen-sink/docs/markdown.md")
-        ),
-        new WrappedDoc(
-            "textile", "Textile",
-            require("text!demo/kitchen-sink/docs/textile.textile")
-        ),
-        new WrappedDoc(
-            "latex", "LaTeX",
-            require("text!demo/kitchen-sink/docs/latex.tex")
-        )
-    ];
-    
-    var docsByName = {};
-    docs.forEach(function(d) {
-        docsByName[d.name] = d;
-    });
-    
-    var keybindings = {
-        // Null = use "default" keymapping
-        ace: null,
-        vim: vim,
-        emacs: emacs,
-        // This is a way to define simple keyboard remappings
-        custom: new HashHandler({
-            "gotoright":      "Tab",
-            "indent":         "]",
-            "outdent":        "[",
-            "gotolinestart":  "^",
-            "gotolineend":    "$"
-         })
-    };
-
-    var container = document.getElementById("editor");
-    var cockpitInput = document.getElementById("cockpitInput");
-
-    // Splitting.
-    var Split = require("ace/split").Split;
-    var split = new Split(container, theme, 1);
-    env.editor = split.getEditor(0);
-    split.on("focus", function(editor) {
-        env.editor = editor;
-        updateUIEditorOptions();
-    });
-    env.split = split;
-    window.env = env;
-    window.ace = env.editor;
-
-    var docEl = document.getElementById("doc");
-    var modeEl = document.getElementById("mode");
-    var wrapModeEl = document.getElementById("soft_wrap");
-    var themeEl = document.getElementById("theme");
-    var selectStyleEl = document.getElementById("select_style");
-    var highlightActiveEl = document.getElementById("highlight_active");
-    var showHiddenEl = document.getElementById("show_hidden");
-    var showGutterEl = document.getElementById("show_gutter");
-    var showPrintMarginEl = document.getElementById("show_print_margin");
-    var highlightSelectedWordE = document.getElementById("highlight_selected_word");
-    var showHScrollEl = document.getElementById("show_hscroll");
-    var softTabEl = document.getElementById("soft_tab");
-    var behavioursEl = document.getElementById("enable_behaviours");
-
-    docs.forEach(function(doc) {
-        var option = document.createElement("option");
-        option.setAttribute("value", doc.name);
-        option.innerHTML = doc.desc;
-        docEl.appendChild(option);
-    });
-    
-    modes.forEach(function(mode) {
-        var option = document.createElement("option");
-        option.setAttribute("value", mode.name);
-        option.innerHTML = mode.desc;
-        modeEl.appendChild(option);
-    });
-    
-    bindDropdown("doc", function(value) {
-        var doc = docsByName[value].doc;
-        var session = env.split.setSession(doc);
-        session.name = doc.name;
-
-        updateUIEditorOptions();
-
-        env.editor.focus();
-    });
-
-    function updateUIEditorOptions() {
-        var editor = env.editor;
-        var session = editor.session;
-
-        docEl.value = session.name;
-        modeEl.value = session.getMode().name || "text";
-
-        if (!session.getUseWrapMode()) {
-            wrapModeEl.value = "off";
-        } else {
-            wrapModeEl.value = session.getWrapLimitRange().min || "free";
-        }
-
-        selectStyleEl.checked = editor.getSelectionStyle() == "line";
-        themeEl.value = editor.getTheme();
-        highlightActiveEl.checked = editor.getHighlightActiveLine();
-        showHiddenEl.checked = editor.getShowInvisibles();
-        showGutterEl.checked = editor.renderer.getShowGutter();
-        showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
-        highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
-        showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
-        softTabEl.checked = session.getUseSoftTabs();
-        behavioursEl.checked = editor.getBehavioursEnabled();
-    }
-
-    bindDropdown("mode", function(value) {
-        env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
-    });
-
-    bindDropdown("theme", function(value) {
-        if (require.packaged) {
-            loadTheme(value, function() {
-                env.editor.setTheme(value);
-            });
-        }
-        else {
-            env.editor.setTheme(value);
-        }
-    });
-
-    bindDropdown("keybinding", function(value) {
-        env.editor.setKeyboardHandler(keybindings[value]);
-    });
-
-    bindDropdown("fontsize", function(value) {
-        env.split.setFontSize(value);
-    });
-
-    bindDropdown("soft_wrap", function(value) {
-        var session = env.editor.getSession();
-        var renderer = env.editor.renderer;
-        switch (value) {
-            case "off":
-                session.setUseWrapMode(false);
-                renderer.setPrintMarginColumn(80);
-                break;
-            case "40":
-                session.setUseWrapMode(true);
-                session.setWrapLimitRange(40, 40);
-                renderer.setPrintMarginColumn(40);
-                break;
-            case "80":
-                session.setUseWrapMode(true);
-                session.setWrapLimitRange(80, 80);
-                renderer.setPrintMarginColumn(80);
-                break;
-            case "free":
-                session.setUseWrapMode(true);
-                session.setWrapLimitRange(null, null);
-                renderer.setPrintMarginColumn(80);
-                break;
-        }
-    });
-
-    bindCheckbox("select_style", function(checked) {
-        env.editor.setSelectionStyle(checked ? "line" : "text");
-    });
-
-    bindCheckbox("highlight_active", function(checked) {
-        env.editor.setHighlightActiveLine(checked);
-    });
-
-    bindCheckbox("show_hidden", function(checked) {
-        env.editor.setShowInvisibles(checked);
-    });
-
-    bindCheckbox("show_gutter", function(checked) {
-        env.editor.renderer.setShowGutter(checked);
-    });
-
-    bindCheckbox("show_print_margin", function(checked) {
-        env.editor.renderer.setShowPrintMargin(checked);
-    });
-
-    bindCheckbox("highlight_selected_word", function(checked) {
-        env.editor.setHighlightSelectedWord(checked);
-    });
-
-    bindCheckbox("show_hscroll", function(checked) {
-        env.editor.renderer.setHScrollBarAlwaysVisible(checked);
-    });
-
-    bindCheckbox("soft_tab", function(checked) {
-        env.editor.getSession().setUseSoftTabs(checked);
-    });
-
-    bindCheckbox("enable_behaviours", function(checked) {
-        env.editor.setBehavioursEnabled(checked);
-    });
-
-    var secondSession = null;
-    bindDropdown("split", function(value) {
-        var sp = env.split;
-        if (value == "none") {
-            if (sp.getSplits() == 2) {
-                secondSession = sp.getEditor(1).session;
-            }
-            sp.setSplits(1);
-        } else {
-            var newEditor = (sp.getSplits() == 1);
-            if (value == "below") {
-                sp.setOriantation(sp.BELOW);
-            } else {
-                sp.setOriantation(sp.BESIDE);
-            }
-            sp.setSplits(2);
-
-            if (newEditor) {
-                var session = secondSession || sp.getEditor(0).session;
-                var newSession = sp.setSession(session, 1);
-                newSession.name = session.name;
-            }
-        }
-    });
-
-    function bindCheckbox(id, callback) {
-        var el = document.getElementById(id);
-        var onCheck = function() {
-            callback(!!el.checked);
-        };
-        el.onclick = onCheck;
-        onCheck();
-    }
-
-    function bindDropdown(id, callback) {
-        var el = document.getElementById(id);
-        var onChange = function() {
-            callback(el.value);
-        };
-        el.onchange = onChange;
-        onChange();
-    }
-
-    function onResize() {
-        var left = env.split.$container.offsetLeft;
-        var width = document.documentElement.clientWidth - left;
-        container.style.width = width + "px";
-        container.style.height = document.documentElement.clientHeight + "px";
-        env.split.resize();
-//        env.editor.resize();
-    }
-
-    window.onresize = onResize;
-    env.editor.renderer.onResize(true);
-
-    event.addListener(container, "dragover", function(e) {
-        return event.preventDefault(e);
-    });
-
-    event.addListener(container, "drop", function(e) {
-        var file;
-        try {
-            file = e.dataTransfer.files[0];
-        } catch(err) {
-            return event.stopEvent();
-        }
-
-        if (window.FileReader) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                env.editor.getSelection().selectAll();
-
-                var mode = modesByName.text;
-                for (var i = 0; i < modes.length; i++) {
-                    if (modes[i].supportsFile(file.name)) {
-                        mode = modes[i];
-                        break;
-                    }
-                }
-
-                env.editor.onTextInput(reader.result);
-
-                modeEl.value = mode.name;
-                env.editor.getSession().setMode(mode.mode);
-            };
-            reader.readAsText(file);
-        }
-
-        return event.preventDefault(e);
-    });
-
-    /**
-     * This demonstrates how you can define commands and bind shortcuts to them.
-     */
-
-    // Fake-Save, works from the editor and the command line.
-    canon.addCommand({
-        name: "save",
-        bindKey: {
-            win: "Ctrl-S",
-            mac: "Command-S",
-            sender: "editor"
-        },
-        exec: function() {
-            alert("Fake Save File");
-        }
-    });
-
-    // Fake-Print with custom lookup-sender-match function.
-    canon.addCommand({
-        name: "print",
-        bindKey: {
-            win: "Ctrl-P",
-            mac: "Command-P",
-            sender: function(env, sender, hashId, keyString) {
-                if (sender == "editor") {
-                    return true;
-                } else {
-                    alert("Sorry, can only print from the editor");
-                }
-            }
-        },
-        exec: function() {
-            alert("Fake Print File");
-        }
-    });
-
-    canon.addCommand({
-        name: "fold",
-        bindKey: {
-            win: "Alt-L",
-            mac: "Alt-L",
-            sender: "editor"
-        },
-        exec: function(env) {
-            toggleFold(env, false);
-        }
-    });
-
-    canon.addCommand({
-        name: "unfold",
-        bindKey: {
-            win: "Alt-Shift-L",
-            mac: "Alt-Shift-L",
-            sender: "editor"
-        },
-        exec: function(env) {
-            toggleFold(env, true);
-        }
-    });
-
-    function isCommentRow(row) {
-        var session = env.editor.session;
-        var token;
-        var tokens = session.getTokens(row, row)[0].tokens;
-        var c = 0;
-        for (var i = 0; i < tokens.length; i++) {
-            token = tokens[i];
-            if (/^comment/.test(token.type)) {
-                return c;
-            } else if (!/^text/.test(token.type)) {
-                return false;
-            }
-            c += token.value.length;
-        }
-        return false;
-    }
-
-    function toggleFold(env, tryToUnfold) {
-        var session = env.editor.session;
-        var selection = env.editor.selection;
-        var range = selection.getRange();
-        var addFold;
-
-        if(range.isEmpty()) {
-            var br = session.findMatchingBracket(range.start);
-            var fold = session.getFoldAt(range.start.row, range.start.column);
-            var column;
-
-            if (fold) {
-                session.expandFold(fold);
-                selection.setSelectionRange(fold.range);
-            } else if (br) {
-                if (range.compare(br.row, br.column) == 1)
-                    range.end = br;
-                else
-                    range.start = br;
-                addFold = true;
-            } else if ((column = isCommentRow(range.start.row)) !== false) {
-                var firstCommentRow = range.start.row;
-                var lastCommentRow = range.start.row;
-                var t;
-                while ((t = isCommentRow(firstCommentRow - 1)) !== false) {
-                    firstCommentRow --;
-                    column = t;
-                }
-                while (isCommentRow(lastCommentRow + 1) !== false) {
-                    lastCommentRow ++;
-                }
-                range.start.row = firstCommentRow;
-                range.start.column = column + 2;
-                range.end.row = lastCommentRow;
-                range.end.column = session.getLine(lastCommentRow).length - 1;
-                addFold = true;
-            }
-        } else {
-            addFold = true;
-        }
-        if (addFold) {
-            var placeHolder = session.getTextRange(range);
-            if(placeHolder.length < 3)
-                return;
-            placeHolder = placeHolder.trim().substring(0, 3).replace(' ','','g') + "...";
-            session.addFold(placeHolder, range);
-        }
-    }
-};
-
-var themes = {};
-function loadTheme(name, callback) {
-    if (themes[name])
-        return callback();
-        
-    themes[name] = 1;
-    var base = name.split("/").pop();
-    var fileName = "src/theme-" + base + ".js";
-    net.loadScript(fileName, callback);
-}
-
-});
-
 /**
  * based on code from:
  * 
@@ -6425,6 +2259,289 @@ exports.addCommandKeyListener = function(el, callback) {
                 }
             });
         }
+    }
+};
+
+});
+/*! @license
+==========================================================================
+SproutCore -- JavaScript Application Framework
+copyright 2006-2009, Sprout Systems Inc., Apple Inc. and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+SproutCore and the SproutCore logo are trademarks of Sprout Systems, Inc.
+
+For more information about SproutCore, visit http://www.sproutcore.com
+
+
+==========================================================================
+@license */
+
+// Most of the following code is taken from SproutCore with a few changes.
+
+define('pilot/keys', ['require', 'exports', 'module' , 'pilot/oop'], function(require, exports, module) {
+
+var oop = require("pilot/oop");
+
+/**
+ * Helper functions and hashes for key handling.
+ */
+var Keys = (function() {
+    var ret = {
+        MODIFIER_KEYS: {
+            16: 'Shift', 17: 'Ctrl', 18: 'Alt', 224: 'Meta'
+        },
+
+        KEY_MODS: {
+            "ctrl": 1, "alt": 2, "option" : 2,
+            "shift": 4, "meta": 8, "command": 8
+        },
+
+        FUNCTION_KEYS : {
+            8  : "Backspace",
+            9  : "Tab",
+            13 : "Return",
+            19 : "Pause",
+            27 : "Esc",
+            32 : "Space",
+            33 : "PageUp",
+            34 : "PageDown",
+            35 : "End",
+            36 : "Home",
+            37 : "Left",
+            38 : "Up",
+            39 : "Right",
+            40 : "Down",
+            44 : "Print",
+            45 : "Insert",
+            46 : "Delete",
+            112: "F1",
+            113: "F2",
+            114: "F3",
+            115: "F4",
+            116: "F5",
+            117: "F6",
+            118: "F7",
+            119: "F8",
+            120: "F9",
+            121: "F10",
+            122: "F11",
+            123: "F12",
+            144: "Numlock",
+            145: "Scrolllock"
+        },
+
+        PRINTABLE_KEYS: {
+           32: ' ',  48: '0',  49: '1',  50: '2',  51: '3',  52: '4', 53:  '5',
+           54: '6',  55: '7',  56: '8',  57: '9',  59: ';',  61: '=', 65:  'a',
+           66: 'b',  67: 'c',  68: 'd',  69: 'e',  70: 'f',  71: 'g', 72:  'h',
+           73: 'i',  74: 'j',  75: 'k',  76: 'l',  77: 'm',  78: 'n', 79:  'o',
+           80: 'p',  81: 'q',  82: 'r',  83: 's',  84: 't',  85: 'u', 86:  'v',
+           87: 'w',  88: 'x',  89: 'y',  90: 'z', 107: '+', 109: '-', 110: '.',
+          188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\',
+          221: ']', 222: '\"'
+        }
+    };
+
+    // A reverse map of FUNCTION_KEYS
+    for (var i in ret.FUNCTION_KEYS) {
+        var name = ret.FUNCTION_KEYS[i].toUpperCase();
+        ret[name] = parseInt(i, 10);
+    }
+
+    // Add the MODIFIER_KEYS, FUNCTION_KEYS and PRINTABLE_KEYS to the KEY
+    // variables as well.
+    oop.mixin(ret, ret.MODIFIER_KEYS);
+    oop.mixin(ret, ret.PRINTABLE_KEYS);
+    oop.mixin(ret, ret.FUNCTION_KEYS);
+
+    return ret;
+})();
+oop.mixin(exports, Keys);
+
+exports.keyCodeToString = function(keyCode) {
+    return (Keys[keyCode] || String.fromCharCode(keyCode)).toLowerCase();
+}
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/oop', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+exports.inherits = (function() {
+    var tempCtor = function() {};
+    return function(ctor, superCtor) {
+        tempCtor.prototype = superCtor.prototype;
+        ctor.super_ = superCtor.prototype;
+        ctor.prototype = new tempCtor();
+        ctor.prototype.constructor = ctor;
+    }
+}());
+
+exports.mixin = function(obj, mixin) {
+    for (var key in mixin) {
+        obj[key] = mixin[key];
+    }
+};
+
+exports.implement = function(proto, mixin) {
+    exports.mixin(proto, mixin);
+};
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/useragent', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var os = (navigator.platform.match(/mac|win|linux/i) || ["other"])[0].toLowerCase();
+var ua = navigator.userAgent;
+var av = navigator.appVersion;
+
+/** Is the user using a browser that identifies itself as Windows */
+exports.isWin = (os == "win");
+
+/** Is the user using a browser that identifies itself as Mac OS */
+exports.isMac = (os == "mac");
+
+/** Is the user using a browser that identifies itself as Linux */
+exports.isLinux = (os == "linux");
+
+exports.isIE = 
+    navigator.appName == "Microsoft Internet Explorer"
+    && parseFloat(navigator.userAgent.match(/MSIE ([0-9]+[\.0-9]+)/)[1]);
+    
+exports.isOldIE = exports.isIE && exports.isIE < 9;
+
+/** Is this Firefox or related? */
+exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
+
+/** oldGecko == rev < 2.0 **/
+exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
+
+/** Is this Opera */
+exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
+
+/** Is the user using a browser that identifies itself as WebKit */
+exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
+
+exports.isChrome = parseFloat(ua.split(" Chrome/")[1]) || undefined;
+
+exports.isAIR = ua.indexOf("AdobeAIR") >= 0;
+
+exports.isIPad = ua.indexOf("iPad") >= 0;
+
+exports.isTouchPad = ua.indexOf("TouchPad") >= 0;
+
+/**
+ * I hate doing this, but we need some way to determine if the user is on a Mac
+ * The reason is that users have different expectations of their key combinations.
+ *
+ * Take copy as an example, Mac people expect to use CMD or APPLE + C
+ * Windows folks expect to use CTRL + C
+ */
+exports.OS = {
+    LINUX: 'LINUX',
+    MAC: 'MAC',
+    WINDOWS: 'WINDOWS'
+};
+
+/**
+ * Return an exports.OS constant
+ */
+exports.getOS = function() {
+    if (exports.isMac) {
+        return exports.OS['MAC'];
+    } else if (exports.isLinux) {
+        return exports.OS['LINUX'];
+    } else {
+        return exports.OS['WINDOWS'];
     }
 };
 
@@ -6868,9 +2985,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+    this.comparePoint = function(p) {
+        return this.compare(p.row, p.column);
+    }
+
     this.containsRange = function(range) {
-        var cmp = this.compareRange(range);
-        return (cmp == -1 || cmp == 0 || cmp == 1);
+        return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
     this.isEnd = function(row, column) {
@@ -7112,7 +3232,7 @@ exports.Range = Range;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
+define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter', 'ace/commands/command_manager', 'ace/commands/default_commands'], function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 
@@ -7128,8 +3248,10 @@ var EditSession = require("ace/edit_session").EditSession;
 var Search = require("ace/search").Search;
 var Range = require("ace/range").Range;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var CommandManager = require("ace/commands/command_manager").CommandManager;
+var defaultCommands = require("ace/commands/default_commands").commands;
 
-var Editor =function(renderer, session) {
+var Editor = function(renderer, session) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
@@ -7149,6 +3271,7 @@ var Editor =function(renderer, session) {
         wrap: true
     });
 
+    this.commands = new CommandManager(defaultCommands);
     this.setSession(session || new EditSession(""));
 };
 
@@ -7866,7 +3989,7 @@ var Editor =function(renderer, session) {
                 indentString = lang.stringRepeat(" ", count);
             } else
                 indentString = "\t";
-            return this.onTextInput(indentString);
+            return this.onTextInput(indentString, true);
         }
     };
 
@@ -8293,6 +4416,155 @@ var Editor =function(renderer, session) {
 
 
 exports.Editor = Editor;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/lang', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+exports.stringReverse = function(string) {
+    return string.split("").reverse().join("");
+};
+
+exports.stringRepeat = function (string, count) {
+     return new Array(count + 1).join(string);
+};
+
+var trimBeginRegexp = /^\s\s*/;
+var trimEndRegexp = /\s\s*$/;
+
+exports.stringTrimLeft = function (string) {
+    return string.replace(trimBeginRegexp, '')
+};
+
+exports.stringTrimRight = function (string) {
+    return string.replace(trimEndRegexp, '');
+};
+
+exports.copyObject = function(obj) {
+    var copy = {};
+    for (var key in obj) {
+        copy[key] = obj[key];
+    }
+    return copy;
+};
+
+exports.copyArray = function(array){
+    var copy = [];
+    for (i=0, l=array.length; i<l; i++) {
+        if (array[i] && typeof array[i] == "object")
+            copy[i] = this.copyObject( array[i] );
+        else 
+            copy[i] = array[i]
+    }
+    return copy;
+};
+
+exports.deepCopy = function (obj) {
+    if (typeof obj != "object") {
+        return obj;
+    }
+    
+    var copy = obj.constructor();
+    for (var key in obj) {
+        if (typeof obj[key] == "object") {
+            copy[key] = this.deepCopy(obj[key]);
+        } else {
+            copy[key] = obj[key];
+        }
+    }
+    return copy;
+}
+
+exports.arrayToMap = function(arr) {
+    var map = {};
+    for (var i=0; i<arr.length; i++) {
+        map[arr[i]] = 1;
+    }
+    return map;
+
+};
+
+/**
+ * splice out of 'array' anything that === 'value'
+ */
+exports.arrayRemove = function(array, value) {
+  for (var i = 0; i <= array.length; i++) {
+    if (value === array[i]) {
+      array.splice(i, 1);
+    }
+  }
+};
+
+exports.escapeRegExp = function(str) {
+    return str.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
+};
+
+exports.deferredCall = function(fcn) {
+
+    var timer = null;
+    var callback = function() {
+        timer = null;
+        fcn();
+    };
+
+    var deferred = function(timeout) {
+        deferred.cancel();
+        timer = setTimeout(callback, timeout || 0);
+        return deferred;
+    }
+
+    deferred.schedule = deferred;
+
+    deferred.call = function() {
+        this.cancel();
+        fcn();
+        return deferred;
+    };
+
+    deferred.cancel = function() {
+        clearTimeout(timer);
+        timer = null;
+        return deferred;
+    };
+
+    return deferred;
+};
+
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -8811,18 +5083,18 @@ function DefaultHandlers(editor) {
             mousePageY = event.getDocumentY(e);
         };
 
-        var onMouseSelectionEnd = function() {
+        var onMouseSelectionEnd = function(e) {
             clearInterval(timerId);
             if (state == STATE_UNKNOWN)
                 onStartSelect(pos);
             else if (state == STATE_DRAG)
-                onMouseDragSelectionEnd();
+                onMouseDragSelectionEnd(e);
 
             _self.$clickSelection = null;
             state = STATE_UNKNOWN;
         };
 
-        var onMouseDragSelectionEnd = function() {
+        var onMouseDragSelectionEnd = function(e) {
             dom.removeCssClass(editor.container, "ace_dragging");
             editor.session.removeMarker(dragSelectionMarker);
 
@@ -8842,7 +5114,12 @@ function DefaultHandlers(editor) {
             }
 
             editor.clearSelection();
-            var newRange = editor.moveText(dragRange, dragCursor);
+            if (e && (e.ctrlKey || e.altKey)) {
+                var session = editor.session;
+                var newRange = session.insert(dragCursor, session.getTextRange(dragRange));
+            } else {
+                var newRange = editor.moveText(dragRange, dragCursor);
+            }
             if (!newRange) {
                 dragCursor = null;
                 return;
@@ -8979,6 +5256,126 @@ exports.DefaultHandlers = DefaultHandlers;
 function calcDistance(ax, ay, bx, by) {
     return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
 }
+
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)
+ *      Mike de Boer <mike AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('pilot/event_emitter', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var EventEmitter = {};
+
+EventEmitter._emit =
+EventEmitter._dispatchEvent = function(eventName, e) {
+    this._eventRegistry = this._eventRegistry || {};
+    this._defaultHandlers = this._defaultHandlers || {};
+
+    var listeners = this._eventRegistry[eventName] || [];
+    var defaultHandler = this._defaultHandlers[eventName];
+    if (!listeners.length && !defaultHandler)
+        return;
+
+    e = e || {};
+    e.type = eventName;
+    
+    if (!e.stopPropagation) {
+        e.stopPropagation = function() {
+            this.propagationStopped = true;
+        };
+    }
+    
+    if (!e.preventDefault) {
+        e.preventDefault = function() {
+            this.defaultPrevented = true;
+        };
+    }
+
+    for (var i=0; i<listeners.length; i++) {
+        listeners[i](e);
+        if (e.propagationStopped)
+            break;
+    }
+    
+    if (defaultHandler && !e.defaultPrevented)
+        defaultHandler(e);
+};
+
+EventEmitter.setDefaultHandler = function(eventName, callback) {
+    this._defaultHandlers = this._defaultHandlers || {};
+    
+    if (this._defaultHandlers[eventName])
+        throw new Error("The default handler for '" + eventName + "' is already set");
+        
+    this._defaultHandlers[eventName] = callback;
+};
+
+EventEmitter.on =
+EventEmitter.addEventListener = function(eventName, callback) {
+    this._eventRegistry = this._eventRegistry || {};
+
+    var listeners = this._eventRegistry[eventName];
+    if (!listeners)
+        var listeners = this._eventRegistry[eventName] = [];
+
+    if (listeners.indexOf(callback) == -1)
+        listeners.push(callback);
+};
+
+EventEmitter.removeListener =
+EventEmitter.removeEventListener = function(eventName, callback) {
+    this._eventRegistry = this._eventRegistry || {};
+
+    var listeners = this._eventRegistry[eventName];
+    if (!listeners)
+        return;
+
+    var index = listeners.indexOf(callback);
+    if (index !== -1)
+        listeners.splice(index, 1);
+};
+
+EventEmitter.removeAllListeners = function(eventName) {
+    if (this._eventRegistry) this._eventRegistry[eventName] = [];
+};
+
+exports.EventEmitter = EventEmitter;
 
 });
 /* vim:ts=4:sts=4:sw=4:
@@ -9255,13 +5652,11 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
+define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'ace/commands/default_commands'], function(require, exports, module) {
 
 var useragent = require("pilot/useragent");
 var keyUtil  = require("pilot/keys");
 var event = require("pilot/event");
-var settings  = require("pilot/settings").settings;
-var canon = require("pilot/canon");
 require("ace/commands/default_commands");
 
 var KeyBinding = function(editor) {
@@ -9283,19 +5678,21 @@ var KeyBinding = function(editor) {
     };
 
     this.$callKeyboardHandler = function (e, hashId, keyOrText, keyCode) {
-        var env = {editor: this.$editor},
-            toExecute;
+        var env = {editor: this.$editor};
+        var toExecute;
+        var commands = this.$editor.commands;
 
         if (this.$keyboardHandler) {
             toExecute =
                 this.$keyboardHandler.handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
         }
 
+        
         // If there is nothing to execute yet, then use the default keymapping.
         if (!toExecute || !toExecute.command) {
             if (hashId != 0 || keyCode != 0) {
                 toExecute = {
-                    command: canon.findKeyCommand(env, "editor", hashId, keyOrText)
+                    command: commands.findKeyCommand(env, hashId, keyOrText)
                 }
             } else {
                 toExecute = {
@@ -9308,9 +5705,11 @@ var KeyBinding = function(editor) {
         }
 
         var success = false;
-        if (toExecute) {
-            success = canon.exec(toExecute.command,
-                                        env, "editor", toExecute.args);
+        if (toExecute && toExecute.command) {
+            success = commands.exec(
+                toExecute.command,
+                env, toExecute.args
+            );
             if (success) {
                 event.stopEvent(e);
             }
@@ -9374,10 +5773,9 @@ exports.KeyBinding = KeyBinding;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot/lang', 'pilot/canon'], function(require, exports, module) {
+define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot/lang'], function(require, exports, module) {
 
 var lang = require("pilot/lang");
-var canon = require("pilot/canon");
 
 function bindKey(win, mac) {
     return {
@@ -9387,58 +5785,46 @@ function bindKey(win, mac) {
     };
 }
 
-canon.addCommand({
-    name: "null",
-    exec: function(env, args, request) {  }
-});
-
-canon.addCommand({
+exports.commands = [{
     name: "selectall",
     bindKey: bindKey("Ctrl-A", "Command-A"),
-    exec: function(env, args, request) { env.editor.selectAll(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.selectAll(); }
+}, {
     name: "removeline",
     bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(env, args, request) { env.editor.removeLines(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeLines(); }
+}, {
     name: "gotoline",
     bindKey: bindKey("Ctrl-L", "Command-L"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var line = parseInt(prompt("Enter line number:"));
         if (!isNaN(line)) {
             env.editor.gotoLine(line);
         }
     }
-});
-canon.addCommand({
+}, {
     name: "togglecomment",
     bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(env, args, request) { env.editor.toggleCommentLines(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.toggleCommentLines(); }
+}, {
     name: "findnext",
     bindKey: bindKey("Ctrl-K", "Command-G"),
-    exec: function(env, args, request) { env.editor.findNext(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.findNext(); }
+}, {
     name: "findprevious",
     bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
-    exec: function(env, args, request) { env.editor.findPrevious(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.findPrevious(); }
+}, {
     name: "find",
     bindKey: bindKey("Ctrl-F", "Command-F"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var needle = prompt("Find:", env.editor.getCopyText());
         env.editor.find(needle);
     }
-});
-canon.addCommand({
+}, {
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var needle = prompt("Find:", env.editor.getCopyText());
         if (!needle)
             return;
@@ -9447,11 +5833,10 @@ canon.addCommand({
             return;
         env.editor.replace(replacement, {needle: needle});
     }
-});
-canon.addCommand({
+}, {
     name: "replaceall",
     bindKey: bindKey("Ctrl-Shift-R", "Command-Shift-Option-F"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var needle = prompt("Find:");
         if (!needle)
             return;
@@ -9460,246 +5845,223 @@ canon.addCommand({
             return;
         env.editor.replaceAll(replacement, {needle: needle});
     }
-});
-canon.addCommand({
+}, {
     name: "undo",
     bindKey: bindKey("Ctrl-Z", "Command-Z"),
-    exec: function(env, args, request) { env.editor.undo(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.undo(); }
+}, {
     name: "redo",
     bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
-    exec: function(env, args, request) { env.editor.redo(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.redo(); }
+}, {
     name: "overwrite",
     bindKey: bindKey("Insert", "Insert"),
-    exec: function(env, args, request) { env.editor.toggleOverwrite(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.toggleOverwrite(); }
+}, {
     name: "copylinesup",
     bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
-    exec: function(env, args, request) { env.editor.copyLinesUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.copyLinesUp(); }
+}, {
     name: "movelinesup",
     bindKey: bindKey("Alt-Up", "Option-Up"),
-    exec: function(env, args, request) { env.editor.moveLinesUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.moveLinesUp(); }
+}, {
     name: "selecttostart",
     bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
-    exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectFileStart(); }
+}, {
     name: "gotostart",
     bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
-    exec: function(env, args, request) { env.editor.navigateFileStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateFileStart(); }
+}, {
     name: "selectup",
     bindKey: bindKey("Shift-Up", "Shift-Up"),
-    exec: function(env, args, request) { env.editor.getSelection().selectUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectUp(); }
+}, {
     name: "golineup",
     bindKey: bindKey("Up", "Up|Ctrl-P"),
-    exec: function(env, args, request) { env.editor.navigateUp(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateUp(args.times); }
+}, {
     name: "copylinesdown",
     bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
-    exec: function(env, args, request) { env.editor.copyLinesDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.copyLinesDown(); }
+}, {
     name: "movelinesdown",
     bindKey: bindKey("Alt-Down", "Option-Down"),
-    exec: function(env, args, request) { env.editor.moveLinesDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.moveLinesDown(); }
+}, {
     name: "selecttoend",
     bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
-    exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectFileEnd(); }
+}, {
     name: "gotoend",
     bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
-    exec: function(env, args, request) { env.editor.navigateFileEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateFileEnd(); }
+}, {
     name: "selectdown",
     bindKey: bindKey("Shift-Down", "Shift-Down"),
-    exec: function(env, args, request) { env.editor.getSelection().selectDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectDown(); }
+}, {
     name: "golinedown",
     bindKey: bindKey("Down", "Down|Ctrl-N"),
-    exec: function(env, args, request) { env.editor.navigateDown(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateDown(args.times); }
+}, {
     name: "selectwordleft",
     bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectWordLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectWordLeft(); }
+}, {
     name: "gotowordleft",
     bindKey: bindKey("Ctrl-Left", "Option-Left"),
-    exec: function(env, args, request) { env.editor.navigateWordLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateWordLeft(); }
+}, {
     name: "selecttolinestart",
     bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineStart(); }
+}, {
     name: "gotolinestart",
     bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
-    exec: function(env, args, request) { env.editor.navigateLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateLineStart(); }
+}, {
     name: "selectleft",
     bindKey: bindKey("Shift-Left", "Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLeft(); }
+}, {
     name: "gotoleft",
     bindKey: bindKey("Left", "Left|Ctrl-B"),
-    exec: function(env, args, request) { env.editor.navigateLeft(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateLeft(args.times); }
+}, {
     name: "selectwordright",
     bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectWordRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectWordRight(); }
+}, {
     name: "gotowordright",
     bindKey: bindKey("Ctrl-Right", "Option-Right"),
-    exec: function(env, args, request) { env.editor.navigateWordRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateWordRight(); }
+}, {
     name: "selecttolineend",
     bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineEnd(); }
+}, {
     name: "gotolineend",
     bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
-    exec: function(env, args, request) { env.editor.navigateLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateLineEnd(); }
+}, {
     name: "selectright",
     bindKey: bindKey("Shift-Right", "Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectRight(); }
+}, {
     name: "gotoright",
     bindKey: bindKey("Right", "Right|Ctrl-F"),
-    exec: function(env, args, request) { env.editor.navigateRight(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateRight(args.times); }
+}, {
     name: "selectpagedown",
     bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
-    exec: function(env, args, request) { env.editor.selectPageDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.selectPageDown(); }
+}, {
     name: "pagedown",
     bindKey: bindKey(null, "PageDown"),
-    exec: function(env, args, request) { env.editor.scrollPageDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.scrollPageDown(); }
+}, {
     name: "gotopagedown",
     bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
-    exec: function(env, args, request) { env.editor.gotoPageDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.gotoPageDown(); }
+}, {
     name: "selectpageup",
     bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
-    exec: function(env, args, request) { env.editor.selectPageUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.selectPageUp(); }
+}, {
     name: "pageup",
     bindKey: bindKey(null, "PageUp"),
-    exec: function(env, args, request) { env.editor.scrollPageUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.scrollPageUp(); }
+}, {
     name: "gotopageup",
     bindKey: bindKey("PageUp", "Option-PageUp"),
-    exec: function(env, args, request) { env.editor.gotoPageUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.gotoPageUp(); }
+}, {
     name: "selectlinestart",
     bindKey: bindKey("Shift-Home", "Shift-Home"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineStart(); }
+}, {
     name: "selectlineend",
     bindKey: bindKey("Shift-End", "Shift-End"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineEnd(); }
+}, {
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(env, args, request) { env.editor.remove("right"); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.remove("right"); }
+}, {
     name: "backspace",
     bindKey: bindKey(
         "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(env, args, request) { env.editor.remove("left"); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeLeft(); }
+}, {
     name: "removetolinestart",
     bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
-    exec: function(env, args, request) { env.editor.removeToLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeToLineStart(); }
+}, {
     name: "removetolineend",
     bindKey: bindKey("Alt-Delete", "Ctrl-K"),
-    exec: function(env, args, request) { env.editor.removeToLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeToLineEnd(); }
+}, {
     name: "removewordleft",
     bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-    exec: function(env, args, request) { env.editor.removeWordLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeWordLeft(); }
+}, {
     name: "removewordright",
     bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-    exec: function(env, args, request) { env.editor.removeWordRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeWordRight(); }
+}, {
     name: "outdent",
     bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-    exec: function(env, args, request) { env.editor.blockOutdent(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.blockOutdent(); }
+}, {
     name: "indent",
     bindKey: bindKey("Tab", "Tab"),
-    exec: function(env, args, request) { env.editor.indent(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.indent(); }
+}, {
     name: "inserttext",
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
-});
-canon.addCommand({
+}, {
     name: "centerselection",
     bindKey: bindKey(null, "Ctrl-L"),
-    exec: function(env, args, request) { env.editor.centerSelection(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.centerSelection(); }
+}, {
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
-    exec: function(env, args, request) { env.editor.splitLine(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.splitLine(); }
+}, {
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
-    exec: function(env, args, request) { env.editor.transposeLetters(); }
-});
+    exec: function(env, args) { env.editor.transposeLetters(); }
+}, {
+    name: "fold",
+    bindKey: bindKey("Alt-L", "Alt-L"),
+    exec: function(env) {
+        env.editor.session.toggleFold(false);
+    }
+}, {
+    name: "unfold",
+    bindKey: bindKey("Alt-Shift-L", "Alt-Shift-L"),
+    exec: function(env) {
+        env.editor.session.toggleFold(true);
+    }
+}, {
+    name: "foldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(env) {
+        env.editor.session.foldAll();
+    }
+}, {
+    name: "unfoldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(env) {
+        env.editor.session.unFoldAll();
+    }
+}];
 
 });
 /* vim:ts=4:sts=4:sw=4:
@@ -9795,7 +6157,7 @@ var EditSession = function(text, mode) {
         this.doc = doc;
         doc.on("change", this.onChange.bind(this));
         this.on("changeFold", this.onChangeFold.bind(this));
-        
+
         if (this.bgTokenizer) {
             this.bgTokenizer.setDocument(this.getDocument());
             this.bgTokenizer.start(0);
@@ -9840,7 +6202,7 @@ var EditSession = function(text, mode) {
                     folds:  removedFolds
                 });
             }
-            
+
             this.$informUndoManager.schedule();
         }
 
@@ -9852,7 +6214,7 @@ var EditSession = function(text, mode) {
         this.doc.setValue(text);
         this.selection.moveCursorTo(0, 0);
         this.selection.clearSelection();
-        
+
         this.$resetRowCache(0);
         this.$deltas = [];
         this.$deltasDoc = [];
@@ -9877,6 +6239,27 @@ var EditSession = function(text, mode) {
         return this.bgTokenizer.getTokens(firstRow, lastRow);
     };
 
+    this.getTokenAt = function(row, column) {
+        var tokens = this.bgTokenizer.getTokens(row, row)[0].tokens;
+        var token, c = 0;
+        if (column == null) {
+            i = tokens.length - 1;
+            c = this.getLine(row).length;
+        } else {
+            for (var i = 0; i < tokens.length; i++) {
+                c += tokens[i].value.length;
+                if (c >= column)
+                    break;
+            }
+        }
+        token = tokens[i];
+        if (!token)
+            return null;
+        token.index = i;
+        token.start = c - token.value.length;
+        return token;
+    };
+
     this.setUndoManager = function(undoManager) {
         this.$undoManager = undoManager;
         this.$resetRowCache(0);
@@ -9891,7 +6274,7 @@ var EditSession = function(text, mode) {
             var self = this;
             this.$syncInformUndoManager = function() {
                 self.$informUndoManager.cancel();
-                
+
                 if (self.$deltasFold.length) {
                     self.$deltas.push({
                         group: "fold",
@@ -9899,7 +6282,7 @@ var EditSession = function(text, mode) {
                     });
                     self.$deltasFold = [];
                 }
-                
+
                 if (self.$deltasDoc.length) {
                     self.$deltas.push({
                         group: "doc",
@@ -9907,14 +6290,14 @@ var EditSession = function(text, mode) {
                     });
                     self.$deltasDoc = [];
                 }
-                
+
                 if (self.$deltas.length > 0) {
                     undoManager.execute({
                         action: "aceupdate",
                         args: [self.$deltas, self]
                     });
                 }
-                
+
                 self.$deltas = [];
             }
             this.$informUndoManager =
@@ -10183,7 +6566,7 @@ var EditSession = function(text, mode) {
 
         this.bgTokenizer.setDocument(this.getDocument());
         this.bgTokenizer.start(0);
-        
+
         this.tokenRe = mode.tokenRe;
         this.nonTokenRe = mode.nonTokenRe;
 
@@ -10598,7 +6981,7 @@ var EditSession = function(text, mode) {
     this.$clipRowToDocument = function(row) {
         return Math.max(0, Math.min(row, this.doc.getLength()-1));
     };
-    
+
     this.$clipPositionToDocument = function(row, column) {
         column = Math.max(0, column);
 
@@ -10614,7 +6997,7 @@ var EditSession = function(text, mode) {
                 column = Math.min(this.doc.getLine(row).length, column);
             }
         }
-        
+
         return {
             row: row,
             column: column
@@ -10880,6 +7263,7 @@ var EditSession = function(text, mode) {
         CHAR_EXT = 2,
         PLACEHOLDER_START = 3,
         PLACEHOLDER_BODY =  4,
+        PUNCTUATION = 9,
         SPACE = 10,
         TAB = 11,
         TAB_SPACE = 12;
@@ -10923,7 +7307,7 @@ var EditSession = function(text, mode) {
             // a split is simple.
             if (tokens[split] >= SPACE) {
                 // Include all following spaces + tabs in this split as well.
-                while (tokens[split] >= SPACE)  {
+                while (tokens[split] >= SPACE) {
                     split ++;
                 }
                 addSplit(split);
@@ -10978,16 +7362,17 @@ var EditSession = function(text, mode) {
             }
 
             // === ELSE ===
-            // Search for the first non space/tab/placeholder token backwards.
-            for (split; split != lastSplit - 1; split--) {
-                if (tokens[split] >= PLACEHOLDER_START) {
-                    split++;
-                    break;
-                }
+            // Search for the first non space/tab/placeholder/punctuation token backwards.
+            var minSplit = Math.max(split - 10, lastSplit - 1);
+            while (split > minSplit && tokens[split] < PLACEHOLDER_START) {
+                split --;
+            }
+            while (split > minSplit && tokens[split] == PUNCTUATION) {
+                split --;
             }
             // If we found one, then add the split.
-            if (split > lastSplit) {
-                addSplit(split);
+            if (split > minSplit) {
+                addSplit(++split);
                 continue;
             }
 
@@ -10995,7 +7380,7 @@ var EditSession = function(text, mode) {
             split = lastSplit + wrapLimit;
             // The split is inside of a CHAR or CHAR_EXT token and no space
             // around -> force a split.
-            addSplit(lastSplit + wrapLimit);
+            addSplit(split);
         }
         return splits;
     }
@@ -11021,11 +7406,13 @@ var EditSession = function(text, mode) {
                 }
             }
             // Space
-            else if(c == 32) {
+            else if (c == 32) {
                 arr.push(SPACE);
+            } else if((c > 39 && c < 48) || (c > 57 && c < 64)) {
+                arr.push(PUNCTUATION);
             }
             // full width characters
-            else if (isFullWidth(c)) {
+            else if (c >= 0x1100 && isFullWidth(c)) {
                 arr.push(CHAR, CHAR_EXT);
             } else {
                 arr.push(CHAR);
@@ -11061,7 +7448,7 @@ var EditSession = function(text, mode) {
                 screenColumn += this.getScreenTabSize(screenColumn);
             }
             // full width characters
-            else if (isFullWidth(c)) {
+            else if (c >= 0x1100 && isFullWidth(c)) {
                 screenColumn += 2;
             } else {
                 screenColumn += 1;
@@ -11137,7 +7524,7 @@ var EditSession = function(text, mode) {
                 column: 0
             }
         }
-        
+
         var line;
         var docRow = 0;
         var docColumn = 0;
@@ -11157,11 +7544,11 @@ var EditSession = function(text, mode) {
             }
         }
         var doCache = !rowCache.length || i == rowCache.length;
-        
+
         // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
 
-        var foldLine = this.getNextFold(docRow);
+        var foldLine = this.getNextFoldLine(docRow);
         var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (row <= screenRow) {
@@ -11173,7 +7560,7 @@ var EditSession = function(text, mode) {
                 docRow++;
                 if (docRow > foldStart) {
                     docRow = foldLine.end.row+1;
-                    foldLine = this.getNextFold(docRow);
+                    foldLine = this.getNextFoldLine(docRow, foldLine);
                     foldStart = foldLine ? foldLine.start.row : Infinity;
                 }
             }
@@ -11225,7 +7612,7 @@ var EditSession = function(text, mode) {
         if (foldLine) {
             return foldLine.idxToPosition(docColumn);
         }
-        
+
         return {
             row: docRow,
             column: docColumn
@@ -11236,12 +7623,12 @@ var EditSession = function(text, mode) {
         // Normalize the passed in arguments.
         if (typeof docColumn === "undefined")
             var pos = this.$clipPositionToDocument(docRow.row, docRow.column);
-        else 
+        else
             pos = this.$clipPositionToDocument(docRow, docColumn);
 
         docRow = pos.row;
         docColumn = pos.column;
-        
+
         var LL = this.$rowCache.length;
 
         var wrapData;
@@ -11283,7 +7670,7 @@ var EditSession = function(text, mode) {
         }
         var doCache = !rowCache.length || i == rowCache.length;
 
-        var foldLine = this.getNextFold(row);
+        var foldLine = this.getNextFoldLine(row);
         var foldStart = foldLine ?foldLine.start.row :Infinity;
 
         while (row < docRow) {
@@ -11291,7 +7678,7 @@ var EditSession = function(text, mode) {
                 rowEnd = foldLine.end.row + 1;
                 if (rowEnd > docRow)
                     break;
-                foldLine = this.getNextFold(rowEnd);
+                foldLine = this.getNextFoldLine(rowEnd, foldLine);
                 foldStart = foldLine ?foldLine.start.row :Infinity;
             }
             else {
@@ -11300,7 +7687,7 @@ var EditSession = function(text, mode) {
 
             screenRow += this.getRowLength(row);
             row = rowEnd;
-                        
+
             if (doCache) {
                 rowCache.push({
                     docRow: row,
@@ -11417,8 +7804,7 @@ var EditSession = function(text, mode) {
 require("ace/edit_session/folding").Folding.call(EditSession.prototype);
 
 exports.EditSession = EditSession;
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -11543,7 +7929,7 @@ var Selection = function(session) {
         };
 
         var anchor = this.getSelectionAnchor();
-        var lead = this.getSelectionLead();
+        var lead = this.getSelectionLead(); 
 
         var isBackwards = this.isBackwards();
 
@@ -12121,13 +8507,12 @@ var Mode = function() {
             for (var key in behaviours) {
                 if (behaviours[key][action]) {
                     var ret = behaviours[key][action].apply(this, arguments);
-                    if (ret !== false) {
+                    if (ret) {
                         return ret;
                     }
                 }
             }
         }
-        return false;
     }
     
 }).call(Mode.prototype);
@@ -13436,7 +9821,7 @@ function Folding() {
         var foldLine = this.getFoldLine(row);
         if (!foldLine)
             return null;
-            
+
         var folds = foldLine.folds;
         for (var i = 0; i < folds.length; i++) {
             var fold = folds[i];
@@ -13518,7 +9903,7 @@ function Folding() {
         var foldLine = foldLine || this.getFoldLine(row);
         if (!foldLine)
             return null;
-            
+
         var lastFold = {
             end: { column: 0 }
         };
@@ -13567,7 +9952,7 @@ function Folding() {
     }
 
     // returns the fold which starts after or contains docRow
-    this.getNextFold = function(docRow, startFoldLine) {
+    this.getNextFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData, ans;
         var i = 0;
         if (startFoldLine)
@@ -13635,7 +10020,7 @@ function Folding() {
         var startColumn = fold.start.column;
         var endRow = fold.end.row;
         var endColumn = fold.end.column;
-        
+
         // --- Some checking ---
         if (fold.placeholder.length < 2)
             throw "Placeholder has to be at least 2 characters";
@@ -13873,8 +10258,85 @@ function Folding() {
 
         return fd;
     };
-}
 
+    this.toggleFold = function(tryToUnfold) {
+        var selection = this.selection;
+        var range = selection.getRange();
+
+        if (range.isEmpty()) {
+            var cursor = range.start
+            var fold = this.getFoldAt(cursor.row, cursor.column);
+            var bracketPos, column;
+
+            if (fold) {
+                this.expandFold(fold);
+                return;
+            } else if (bracketPos = this.findMatchingBracket(cursor)) {
+                if (range.comparePoint(bracketPos) == 1) {
+                    range.end = bracketPos;
+                } else {
+                    range.start = bracketPos;
+                    range.start.column++;
+                    range.end.column--;
+                }
+            } else if (bracketPos = this.findMatchingBracket({row: cursor.row, column: cursor.column + 1})) {
+                if (range.comparePoint(bracketPos) == 1)
+                    range.end = bracketPos;
+                else
+                    range.start = bracketPos;
+
+                range.start.column++;
+            } else {
+                var token = this.getTokenAt(cursor.row, cursor.column);
+                if (token && /^comment|string/.test(token.type)) {
+                    var startRow = cursor.row;
+                    var endRow = cursor.row;
+                    var t = token;
+                    while ((t = this.getTokenAt(startRow - 1)) && t.type == token.type) {
+                        startRow --;
+                        token = t;
+                    }
+                    range.start.row = startRow;
+                    range.start.column = token.start + 2;
+
+                    while ((t = this.getTokenAt(endRow + 1, 0)) && t.type == token.type) {
+                        endRow ++;
+                        token = t;
+                    }
+                    range.end.row = endRow;
+                    range.end.column = token.start + token.value.length - 1;
+                }
+            }
+        } else {
+            var folds = this.getFoldsInRange(range);
+            if (tryToUnfold && folds.length) {
+                this.expandFolds(folds);
+                return;
+            } else if (folds.length == 1 ) {
+                fold = folds[0];
+            }
+        }
+
+        if (!fold)
+            fold = this.getFoldAt(range.start.row, range.start.column);
+
+        if (fold && fold.range.toString() == range.toString()){
+            this.expandFold(fold);
+            return
+        }
+
+
+        var placeholder = "...";
+        if (!range.isMultiLine()) {
+            placeholder = this.getTextRange(range);
+            if(placeholder.length < 4)
+                return;
+            placeholder = placeholder.trim().substring(0, 2) + ".."
+        }
+
+        this.addFold(placeholder, range);
+    };
+}
 exports.Folding = Folding;
 
 });/* vim:ts=4:sts=4:sw=4:
@@ -14318,19 +10780,27 @@ Search.SELECTION = 2;
     };
 
     this.findAll = function(session) {
-        if (!this.$options.needle)
+        var options = this.$options;
+        if (!options.needle)
             return [];
 
-        if (this.$options.backwards) {
+        if (options.backwards) {
             var iterator = this.$backwardMatchIterator(session);
         } else {
             iterator = this.$forwardMatchIterator(session);
         }
 
+        var ignoreCursor = !options.start && options.wrap && options.scope == Search.ALL;
+        if (ignoreCursor)
+            options.start = {row: 0, column: 0};
+
         var ranges = [];
         iterator.forEach(function(range) {
             ranges.push(range);
         });
+
+        if (ignoreCursor)
+            options.start = null;
 
         return ranges;
     };
@@ -14442,8 +10912,8 @@ Search.SELECTION = 2;
     this.$forwardLineIterator = function(session) {
         var searchSelection = this.$options.scope == Search.SELECTION;
 
-        var range = session.getSelection().getRange();
-        var start = session.getSelection().getCursor();
+        var range = this.$options.range || session.getSelection().getRange();
+        var start = this.$options.start || session.getSelection().getCursor();
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -14504,8 +10974,8 @@ Search.SELECTION = 2;
     this.$backwardLineIterator = function(session) {
         var searchSelection = this.$options.scope == Search.SELECTION;
 
-        var range = session.getSelection().getRange();
-        var start = searchSelection ? range.end : range.start;
+        var range = this.$options.range || session.getSelection().getRange();
+        var start = this.$options.start || session.getSelection().getCursor();
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -14560,6 +11030,93 @@ Search.SELECTION = 2;
 }).call(Search.prototype);
 
 exports.Search = Search;
+});
+define('ace/commands/command_manager', ['require', 'exports', 'module' , 'pilot/keys', 'pilot/useragent'], function(require, exports, module) {
+
+var keyUtil = require('pilot/keys');
+var useragent = require('pilot/useragent');
+
+var CommandManager = function(commands) {
+    this.commands = {};
+    this.commmandKeyBinding = {};
+    
+    if (commands)
+        commands.forEach(this.addCommand, this);
+};
+
+(function() {
+
+    this.addCommand = function(command) {
+        this.commands[command.name] = command;
+
+        if (command.bindKey) {
+            this._buildKeyHash(command);   
+        }
+    };
+
+    var platform = useragent.isMac ? "mac" : "win";
+    
+    this._buildKeyHash = function(command) {
+        var binding = command.bindKey;
+        var key = binding[platform];
+        var ckb = this.commmandKeyBinding;
+
+        if(!binding[platform]) {
+            return;   
+        }
+    
+        key.split("|").forEach(function(keyPart) {
+            var binding = parseKeys(keyPart, command);
+            var hashId = binding.hashId;
+            (ckb[hashId] || (ckb[hashId] = {}))[binding.key] = command;
+        });
+    }
+
+    function parseKeys(keys, val, ret) {
+        var key;
+        var hashId = 0;
+        var parts = splitSafe(keys, "\\-", null, true);
+
+        for (var i=0, l = parts.length; i < l; i++) {
+            if (keyUtil.KEY_MODS[parts[i]])
+                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
+            else
+                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
+        }
+    
+        return {
+            key: key,
+            hashId: hashId
+        }   
+    }
+
+    function splitSafe(s, separator, limit, bLowerCase) {
+        return (bLowerCase && s.toLowerCase() || s)
+            .replace(/(?:^\s+|\n|\s+$)/g, "")
+            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
+    }
+
+    this.findKeyCommand = function findKeyCommand(env, hashId, textOrKey) {
+        // Convert keyCode to the string representation.
+        if (typeof textOrKey == "number") {
+            textOrKey = keyUtil.keyCodeToString(textOrKey);
+        }
+    
+        var ckbr = this.commmandKeyBinding;
+        return ckbr[hashId] && ckbr[hashId][textOrKey];
+    }
+
+    this.exec = function(command, env, args) {
+        if (typeof command === 'string')
+            command = this.commands[command];
+        
+        command.exec(env, args || {});
+    };
+
+}).call(CommandManager.prototype);
+
+exports.CommandManager = CommandManager;
+
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -15518,13 +12075,13 @@ var Gutter = function(parentEl) {
         var html = [];
         var i = config.firstRow;
         var lastRow = config.lastRow;
-        var fold = this.session.getNextFold(i);
+        var fold = this.session.getNextFoldLine(i);
         var foldStart = fold ? fold.start.row : Infinity;
 
         while (true) {
             if(i > foldStart) {
                 i = fold.end.row + 1;
-                fold = this.session.getNextFold(i);
+                fold = this.session.getNextFoldLine(i, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(i > lastRow)
@@ -16036,13 +12593,13 @@ var Text = function(parentEl) {
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
         var fragment = this.element.ownerDocument.createDocumentFragment(),
             row = firstRow,
-            fold = this.session.getNextFold(row),
+            fold = this.session.getNextFoldLine(row),
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
             if(row > foldStart) {
                 row = fold.end.row+1;
-                fold = this.session.getNextFold(row);
+                fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(row > lastRow)
@@ -16083,13 +12640,13 @@ var Text = function(parentEl) {
         var firstRow = config.firstRow, lastRow = config.lastRow;
 
         var row = firstRow,
-            fold = this.session.getNextFold(row),
+            fold = this.session.getNextFoldLine(row),
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
             if(row > foldStart) {
                 row = fold.end.row+1;
-                fold = this.session.getNextFold(row);
+                fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(row > lastRow)
@@ -17071,8 +13628,8 @@ var vimStates = {
         },
         vimcommand("(k|up)", "golineup"),
         vimcommand("(j|down)", "golinedown"),
-        vimcommand("(l|right)", "golineright"),
-        vimcommand("(h|left)", "golineleft"),
+        vimcommand("(l|right)", "gotoright"),
+        vimcommand("(h|left)", "gotoleft"),
         {
             key:    "shift-g",
             exec:   "gotoend"
@@ -18923,7 +15480,7 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'pil
         var keywords = lang.arrayToMap((
             "this|throw|then|try|typeof|super|switch|return|break|by)|continue|" +
             "catch|class|in|instanceof|is|isnt|if|else|extends|for|forown|" +
-            "finally|function|while|when|new|not|delete|debugger|do|loop|of|off|" +
+            "finally|function|while|when|new|no|not|delete|debugger|do|loop|of|off|" +
             "or|on|unless|until|and|yes").split("|")
         );
         

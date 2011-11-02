@@ -1354,12 +1354,10 @@ var prepareString = "a"[0] != "a",
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/fixoldbrowsers', 'pilot/plugin_manager', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate', 'pilot/environment'], function(require, exports, module) {
+define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/fixoldbrowsers', 'pilot/dom', 'pilot/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate'], function(require, exports, module) {
 
     require("pilot/index");
     require("pilot/fixoldbrowsers");
-    var catalog = require("pilot/plugin_manager").catalog;
-    catalog.registerPlugins([ "pilot/index" ]);
 
     var Dom = require("pilot/dom");
     var Event = require("pilot/event");
@@ -1381,16 +1379,14 @@ define('ace/ace', ['require', 'exports', 'module' , 'pilot/index', 'pilot/fixold
         var editor = new Editor(new Renderer(el, require("ace/theme/textmate")));
         editor.setSession(doc);
 
-        var env = require("pilot/environment").create();
-        catalog.startupPlugins({ env: env }).then(function() {
-            env.document = doc;
-            env.editor = editor;
+        var env = {};
+        env.document = doc;
+        env.editor = editor;
+        editor.resize();
+        Event.addListener(window, "resize", function() {
             editor.resize();
-            Event.addListener(window, "resize", function() {
-                editor.resize();
-            });
-            el.env = env;
         });
+        el.env = env;
         // Store env on editor such that it can be accessed later on from
         // the returned object.
         editor.env = env;
@@ -4789,429 +4785,6 @@ exports.shutdown = function(data, reason) {
 
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Kevin Dangoor (kdangoor@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/plugin_manager', ['require', 'exports', 'module' , 'pilot/promise'], function(require, exports, module) {
-
-var Promise = require("pilot/promise").Promise;
-
-exports.REASONS = {
-    APP_STARTUP: 1,
-    APP_SHUTDOWN: 2,
-    PLUGIN_ENABLE: 3,
-    PLUGIN_DISABLE: 4,
-    PLUGIN_INSTALL: 5,
-    PLUGIN_UNINSTALL: 6,
-    PLUGIN_UPGRADE: 7,
-    PLUGIN_DOWNGRADE: 8
-};
-
-exports.Plugin = function(name) {
-    this.name = name;
-    this.status = this.INSTALLED;
-};
-
-exports.Plugin.prototype = {
-    /**
-     * constants for the state
-     */
-    NEW: 0,
-    INSTALLED: 1,
-    REGISTERED: 2,
-    STARTED: 3,
-    UNREGISTERED: 4,
-    SHUTDOWN: 5,
-
-    install: function(data, reason) {
-        var pr = new Promise();
-        if (this.status > this.NEW) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.install) {
-                pluginModule.install(data, reason);
-            }
-            this.status = this.INSTALLED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    register: function(data, reason) {
-        var pr = new Promise();
-        if (this.status != this.INSTALLED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.register) {
-                pluginModule.register(data, reason);
-            }
-            this.status = this.REGISTERED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    startup: function(data, reason) {
-        reason = reason || exports.REASONS.APP_STARTUP;
-        var pr = new Promise();
-        if (this.status < this.REGISTERED) {
-            pr.resolve(this);
-            return pr;
-        }
-        require([this.name], function(pluginModule) {
-            if (pluginModule.startup) {
-                pluginModule.startup(data, reason);
-            }
-            this.status = this.STARTED;
-            pr.resolve(this);
-        }.bind(this));
-        return pr;
-    },
-
-    shutdown: function(data, reason) {
-        if (this.status != this.STARTED) {
-            return;
-        }
-        pluginModule = require(this.name);
-        if (pluginModule.shutdown) {
-            pluginModule.shutdown(data, reason);
-        }
-    }
-};
-
-exports.PluginCatalog = function() {
-    this.plugins = {};
-};
-
-exports.PluginCatalog.prototype = {
-    registerPlugins: function(pluginList, data, reason) {
-        var registrationPromises = [];
-        pluginList.forEach(function(pluginName) {
-            var plugin = this.plugins[pluginName];
-            if (plugin === undefined) {
-                plugin = new exports.Plugin(pluginName);
-                this.plugins[pluginName] = plugin;
-                registrationPromises.push(plugin.register(data, reason));
-            }
-        }.bind(this));
-        return Promise.group(registrationPromises);
-    },
-
-    startupPlugins: function(data, reason) {
-        var startupPromises = [];
-        for (var pluginName in this.plugins) {
-            var plugin = this.plugins[pluginName];
-            startupPromises.push(plugin.startup(data, reason));
-        }
-        return Promise.group(startupPromises);
-    }
-};
-
-exports.catalog = new exports.PluginCatalog();
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/promise', ['require', 'exports', 'module' , 'pilot/console', 'pilot/stacktrace'], function(require, exports, module) {
-
-var console = require("pilot/console");
-var Trace = require('pilot/stacktrace').Trace;
-
-/**
- * A promise can be in one of 2 states.
- * The ERROR and SUCCESS states are terminal, the PENDING state is the only
- * start state.
- */
-var ERROR = -1;
-var PENDING = 0;
-var SUCCESS = 1;
-
-/**
- * We give promises and ID so we can track which are outstanding
- */
-var _nextId = 0;
-
-/**
- * Debugging help if 2 things try to complete the same promise.
- * This can be slow (especially on chrome due to the stack trace unwinding) so
- * we should leave this turned off in normal use.
- */
-var _traceCompletion = false;
-
-/**
- * Outstanding promises. Handy list for debugging only.
- */
-var _outstanding = [];
-
-/**
- * Recently resolved promises. Also for debugging only.
- */
-var _recent = [];
-
-/**
- * Create an unfulfilled promise
- */
-Promise = function () {
-    this._status = PENDING;
-    this._value = undefined;
-    this._onSuccessHandlers = [];
-    this._onErrorHandlers = [];
-
-    // Debugging help
-    this._id = _nextId++;
-    //this._createTrace = new Trace(new Error());
-    _outstanding[this._id] = this;
-};
-
-/**
- * Yeay for RTTI.
- */
-Promise.prototype.isPromise = true;
-
-/**
- * Have we either been resolve()ed or reject()ed?
- */
-Promise.prototype.isComplete = function() {
-    return this._status != PENDING;
-};
-
-/**
- * Have we resolve()ed?
- */
-Promise.prototype.isResolved = function() {
-    return this._status == SUCCESS;
-};
-
-/**
- * Have we reject()ed?
- */
-Promise.prototype.isRejected = function() {
-    return this._status == ERROR;
-};
-
-/**
- * Take the specified action of fulfillment of a promise, and (optionally)
- * a different action on promise rejection.
- */
-Promise.prototype.then = function(onSuccess, onError) {
-    if (typeof onSuccess === 'function') {
-        if (this._status === SUCCESS) {
-            onSuccess.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onSuccessHandlers.push(onSuccess);
-        }
-    }
-
-    if (typeof onError === 'function') {
-        if (this._status === ERROR) {
-            onError.call(null, this._value);
-        } else if (this._status === PENDING) {
-            this._onErrorHandlers.push(onError);
-        }
-    }
-
-    return this;
-};
-
-/**
- * Like then() except that rather than returning <tt>this</tt> we return
- * a promise which
- */
-Promise.prototype.chainPromise = function(onSuccess) {
-    var chain = new Promise();
-    chain._chainedFrom = this;
-    this.then(function(data) {
-        try {
-            chain.resolve(onSuccess(data));
-        } catch (ex) {
-            chain.reject(ex);
-        }
-    }, function(ex) {
-        chain.reject(ex);
-    });
-    return chain;
-};
-
-/**
- * Supply the fulfillment of a promise
- */
-Promise.prototype.resolve = function(data) {
-    return this._complete(this._onSuccessHandlers, SUCCESS, data, 'resolve');
-};
-
-/**
- * Renege on a promise
- */
-Promise.prototype.reject = function(data) {
-    return this._complete(this._onErrorHandlers, ERROR, data, 'reject');
-};
-
-/**
- * Internal method to be called on resolve() or reject().
- * @private
- */
-Promise.prototype._complete = function(list, status, data, name) {
-    // Complain if we've already been completed
-    if (this._status != PENDING) {
-        console.group('Promise already closed');
-        console.error('Attempted ' + name + '() with ', data);
-        console.error('Previous status = ', this._status,
-                ', previous value = ', this._value);
-        console.trace();
-
-        if (this._completeTrace) {
-            console.error('Trace of previous completion:');
-            this._completeTrace.log(5);
-        }
-        console.groupEnd();
-        return this;
-    }
-
-    if (_traceCompletion) {
-        this._completeTrace = new Trace(new Error());
-    }
-
-    this._status = status;
-    this._value = data;
-
-    // Call all the handlers, and then delete them
-    list.forEach(function(handler) {
-        handler.call(null, this._value);
-    }, this);
-    this._onSuccessHandlers.length = 0;
-    this._onErrorHandlers.length = 0;
-
-    // Remove the given {promise} from the _outstanding list, and add it to the
-    // _recent list, pruning more than 20 recent promises from that list.
-    delete _outstanding[this._id];
-    _recent.push(this);
-    while (_recent.length > 20) {
-        _recent.shift();
-    }
-
-    return this;
-};
-
-/**
- * Takes an array of promises and returns a promise that that is fulfilled once
- * all the promises in the array are fulfilled
- * @param group The array of promises
- * @return the promise that is fulfilled when all the array is fulfilled
- */
-Promise.group = function(promiseList) {
-    if (!(promiseList instanceof Array)) {
-        promiseList = Array.prototype.slice.call(arguments);
-    }
-
-    // If the original array has nothing in it, return now to avoid waiting
-    if (promiseList.length === 0) {
-        return new Promise().resolve([]);
-    }
-
-    var groupPromise = new Promise();
-    var results = [];
-    var fulfilled = 0;
-
-    var onSuccessFactory = function(index) {
-        return function(data) {
-            results[index] = data;
-            fulfilled++;
-            // If the group has already failed, silently drop extra results
-            if (groupPromise._status !== ERROR) {
-                if (fulfilled === promiseList.length) {
-                    groupPromise.resolve(results);
-                }
-            }
-        };
-    };
-
-    promiseList.forEach(function(promise, index) {
-        var onSuccess = onSuccessFactory(index);
-        var onError = groupPromise.reject.bind(groupPromise);
-        promise.then(onSuccess, onError);
-    });
-
-    return groupPromise;
-};
-
-exports.Promise = Promise;
-exports._outstanding = _outstanding;
-exports._recent = _recent;
-
-});
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -5911,7 +5484,7 @@ exports.addCommandKeyListener = function(el, callback) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter'], function(require, exports, module) {
+define('ace/editor', ['require', 'exports', 'module' , 'pilot/fixoldbrowsers', 'pilot/oop', 'pilot/event', 'pilot/lang', 'pilot/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'pilot/event_emitter', 'ace/commands/command_manager', 'ace/commands/default_commands'], function(require, exports, module) {
 
 require("pilot/fixoldbrowsers");
 
@@ -5927,8 +5500,10 @@ var EditSession = require("ace/edit_session").EditSession;
 var Search = require("ace/search").Search;
 var Range = require("ace/range").Range;
 var EventEmitter = require("pilot/event_emitter").EventEmitter;
+var CommandManager = require("ace/commands/command_manager").CommandManager;
+var defaultCommands = require("ace/commands/default_commands").commands;
 
-var Editor =function(renderer, session) {
+var Editor = function(renderer, session) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
@@ -5948,6 +5523,7 @@ var Editor =function(renderer, session) {
         wrap: true
     });
 
+    this.commands = new CommandManager(defaultCommands);
     this.setSession(session || new EditSession(""));
 };
 
@@ -6665,7 +6241,7 @@ var Editor =function(renderer, session) {
                 indentString = lang.stringRepeat(" ", count);
             } else
                 indentString = "\t";
-            return this.onTextInput(indentString);
+            return this.onTextInput(indentString, true);
         }
     };
 
@@ -7610,18 +7186,18 @@ function DefaultHandlers(editor) {
             mousePageY = event.getDocumentY(e);
         };
 
-        var onMouseSelectionEnd = function() {
+        var onMouseSelectionEnd = function(e) {
             clearInterval(timerId);
             if (state == STATE_UNKNOWN)
                 onStartSelect(pos);
             else if (state == STATE_DRAG)
-                onMouseDragSelectionEnd();
+                onMouseDragSelectionEnd(e);
 
             _self.$clickSelection = null;
             state = STATE_UNKNOWN;
         };
 
-        var onMouseDragSelectionEnd = function() {
+        var onMouseDragSelectionEnd = function(e) {
             dom.removeCssClass(editor.container, "ace_dragging");
             editor.session.removeMarker(dragSelectionMarker);
 
@@ -7641,7 +7217,12 @@ function DefaultHandlers(editor) {
             }
 
             editor.clearSelection();
-            var newRange = editor.moveText(dragRange, dragCursor);
+            if (e && (e.ctrlKey || e.altKey)) {
+                var session = editor.session;
+                var newRange = session.insert(dragCursor, session.getTextRange(dragRange));
+            } else {
+                var newRange = editor.moveText(dragRange, dragCursor);
+            }
             if (!newRange) {
                 dragCursor = null;
                 return;
@@ -8054,13 +7635,11 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'pilot/settings', 'pilot/canon', 'ace/commands/default_commands'], function(require, exports, module) {
+define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'pilot/useragent', 'pilot/keys', 'pilot/event', 'ace/commands/default_commands'], function(require, exports, module) {
 
 var useragent = require("pilot/useragent");
 var keyUtil  = require("pilot/keys");
 var event = require("pilot/event");
-var settings  = require("pilot/settings").settings;
-var canon = require("pilot/canon");
 require("ace/commands/default_commands");
 
 var KeyBinding = function(editor) {
@@ -8082,19 +7661,21 @@ var KeyBinding = function(editor) {
     };
 
     this.$callKeyboardHandler = function (e, hashId, keyOrText, keyCode) {
-        var env = {editor: this.$editor},
-            toExecute;
+        var env = {editor: this.$editor};
+        var toExecute;
+        var commands = this.$editor.commands;
 
         if (this.$keyboardHandler) {
             toExecute =
                 this.$keyboardHandler.handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
         }
 
+        
         // If there is nothing to execute yet, then use the default keymapping.
         if (!toExecute || !toExecute.command) {
             if (hashId != 0 || keyCode != 0) {
                 toExecute = {
-                    command: canon.findKeyCommand(env, "editor", hashId, keyOrText)
+                    command: commands.findKeyCommand(env, hashId, keyOrText)
                 }
             } else {
                 toExecute = {
@@ -8107,9 +7688,11 @@ var KeyBinding = function(editor) {
         }
 
         var success = false;
-        if (toExecute) {
-            success = canon.exec(toExecute.command,
-                                        env, "editor", toExecute.args);
+        if (toExecute && toExecute.command) {
+            success = commands.exec(
+                toExecute.command,
+                env, toExecute.args
+            );
             if (success) {
                 event.stopEvent(e);
             }
@@ -8173,10 +7756,9 @@ exports.KeyBinding = KeyBinding;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot/lang', 'pilot/canon'], function(require, exports, module) {
+define('ace/commands/default_commands', ['require', 'exports', 'module' , 'pilot/lang'], function(require, exports, module) {
 
 var lang = require("pilot/lang");
-var canon = require("pilot/canon");
 
 function bindKey(win, mac) {
     return {
@@ -8186,58 +7768,46 @@ function bindKey(win, mac) {
     };
 }
 
-canon.addCommand({
-    name: "null",
-    exec: function(env, args, request) {  }
-});
-
-canon.addCommand({
+exports.commands = [{
     name: "selectall",
     bindKey: bindKey("Ctrl-A", "Command-A"),
-    exec: function(env, args, request) { env.editor.selectAll(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.selectAll(); }
+}, {
     name: "removeline",
     bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(env, args, request) { env.editor.removeLines(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeLines(); }
+}, {
     name: "gotoline",
     bindKey: bindKey("Ctrl-L", "Command-L"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var line = parseInt(prompt("Enter line number:"));
         if (!isNaN(line)) {
             env.editor.gotoLine(line);
         }
     }
-});
-canon.addCommand({
+}, {
     name: "togglecomment",
     bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(env, args, request) { env.editor.toggleCommentLines(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.toggleCommentLines(); }
+}, {
     name: "findnext",
     bindKey: bindKey("Ctrl-K", "Command-G"),
-    exec: function(env, args, request) { env.editor.findNext(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.findNext(); }
+}, {
     name: "findprevious",
     bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
-    exec: function(env, args, request) { env.editor.findPrevious(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.findPrevious(); }
+}, {
     name: "find",
     bindKey: bindKey("Ctrl-F", "Command-F"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var needle = prompt("Find:", env.editor.getCopyText());
         env.editor.find(needle);
     }
-});
-canon.addCommand({
+}, {
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var needle = prompt("Find:", env.editor.getCopyText());
         if (!needle)
             return;
@@ -8246,11 +7816,10 @@ canon.addCommand({
             return;
         env.editor.replace(replacement, {needle: needle});
     }
-});
-canon.addCommand({
+}, {
     name: "replaceall",
     bindKey: bindKey("Ctrl-Shift-R", "Command-Shift-Option-F"),
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         var needle = prompt("Find:");
         if (!needle)
             return;
@@ -8259,246 +7828,223 @@ canon.addCommand({
             return;
         env.editor.replaceAll(replacement, {needle: needle});
     }
-});
-canon.addCommand({
+}, {
     name: "undo",
     bindKey: bindKey("Ctrl-Z", "Command-Z"),
-    exec: function(env, args, request) { env.editor.undo(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.undo(); }
+}, {
     name: "redo",
     bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
-    exec: function(env, args, request) { env.editor.redo(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.redo(); }
+}, {
     name: "overwrite",
     bindKey: bindKey("Insert", "Insert"),
-    exec: function(env, args, request) { env.editor.toggleOverwrite(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.toggleOverwrite(); }
+}, {
     name: "copylinesup",
     bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
-    exec: function(env, args, request) { env.editor.copyLinesUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.copyLinesUp(); }
+}, {
     name: "movelinesup",
     bindKey: bindKey("Alt-Up", "Option-Up"),
-    exec: function(env, args, request) { env.editor.moveLinesUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.moveLinesUp(); }
+}, {
     name: "selecttostart",
     bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
-    exec: function(env, args, request) { env.editor.getSelection().selectFileStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectFileStart(); }
+}, {
     name: "gotostart",
     bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
-    exec: function(env, args, request) { env.editor.navigateFileStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateFileStart(); }
+}, {
     name: "selectup",
     bindKey: bindKey("Shift-Up", "Shift-Up"),
-    exec: function(env, args, request) { env.editor.getSelection().selectUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectUp(); }
+}, {
     name: "golineup",
     bindKey: bindKey("Up", "Up|Ctrl-P"),
-    exec: function(env, args, request) { env.editor.navigateUp(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateUp(args.times); }
+}, {
     name: "copylinesdown",
     bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
-    exec: function(env, args, request) { env.editor.copyLinesDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.copyLinesDown(); }
+}, {
     name: "movelinesdown",
     bindKey: bindKey("Alt-Down", "Option-Down"),
-    exec: function(env, args, request) { env.editor.moveLinesDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.moveLinesDown(); }
+}, {
     name: "selecttoend",
     bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
-    exec: function(env, args, request) { env.editor.getSelection().selectFileEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectFileEnd(); }
+}, {
     name: "gotoend",
     bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
-    exec: function(env, args, request) { env.editor.navigateFileEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateFileEnd(); }
+}, {
     name: "selectdown",
     bindKey: bindKey("Shift-Down", "Shift-Down"),
-    exec: function(env, args, request) { env.editor.getSelection().selectDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectDown(); }
+}, {
     name: "golinedown",
     bindKey: bindKey("Down", "Down|Ctrl-N"),
-    exec: function(env, args, request) { env.editor.navigateDown(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateDown(args.times); }
+}, {
     name: "selectwordleft",
     bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectWordLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectWordLeft(); }
+}, {
     name: "gotowordleft",
     bindKey: bindKey("Ctrl-Left", "Option-Left"),
-    exec: function(env, args, request) { env.editor.navigateWordLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateWordLeft(); }
+}, {
     name: "selecttolinestart",
     bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineStart(); }
+}, {
     name: "gotolinestart",
     bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
-    exec: function(env, args, request) { env.editor.navigateLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateLineStart(); }
+}, {
     name: "selectleft",
     bindKey: bindKey("Shift-Left", "Shift-Left"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLeft(); }
+}, {
     name: "gotoleft",
     bindKey: bindKey("Left", "Left|Ctrl-B"),
-    exec: function(env, args, request) { env.editor.navigateLeft(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateLeft(args.times); }
+}, {
     name: "selectwordright",
     bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectWordRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectWordRight(); }
+}, {
     name: "gotowordright",
     bindKey: bindKey("Ctrl-Right", "Option-Right"),
-    exec: function(env, args, request) { env.editor.navigateWordRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateWordRight(); }
+}, {
     name: "selecttolineend",
     bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineEnd(); }
+}, {
     name: "gotolineend",
     bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
-    exec: function(env, args, request) { env.editor.navigateLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateLineEnd(); }
+}, {
     name: "selectright",
     bindKey: bindKey("Shift-Right", "Shift-Right"),
-    exec: function(env, args, request) { env.editor.getSelection().selectRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectRight(); }
+}, {
     name: "gotoright",
     bindKey: bindKey("Right", "Right|Ctrl-F"),
-    exec: function(env, args, request) { env.editor.navigateRight(args.times); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.navigateRight(args.times); }
+}, {
     name: "selectpagedown",
     bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
-    exec: function(env, args, request) { env.editor.selectPageDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.selectPageDown(); }
+}, {
     name: "pagedown",
     bindKey: bindKey(null, "PageDown"),
-    exec: function(env, args, request) { env.editor.scrollPageDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.scrollPageDown(); }
+}, {
     name: "gotopagedown",
     bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
-    exec: function(env, args, request) { env.editor.gotoPageDown(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.gotoPageDown(); }
+}, {
     name: "selectpageup",
     bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
-    exec: function(env, args, request) { env.editor.selectPageUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.selectPageUp(); }
+}, {
     name: "pageup",
     bindKey: bindKey(null, "PageUp"),
-    exec: function(env, args, request) { env.editor.scrollPageUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.scrollPageUp(); }
+}, {
     name: "gotopageup",
     bindKey: bindKey("PageUp", "Option-PageUp"),
-    exec: function(env, args, request) { env.editor.gotoPageUp(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.gotoPageUp(); }
+}, {
     name: "selectlinestart",
     bindKey: bindKey("Shift-Home", "Shift-Home"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineStart(); }
+}, {
     name: "selectlineend",
     bindKey: bindKey("Shift-End", "Shift-End"),
-    exec: function(env, args, request) { env.editor.getSelection().selectLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.getSelection().selectLineEnd(); }
+}, {
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(env, args, request) { env.editor.remove("right"); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.remove("right"); }
+}, {
     name: "backspace",
     bindKey: bindKey(
         "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(env, args, request) { env.editor.remove("left"); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeLeft(); }
+}, {
     name: "removetolinestart",
     bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
-    exec: function(env, args, request) { env.editor.removeToLineStart(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeToLineStart(); }
+}, {
     name: "removetolineend",
     bindKey: bindKey("Alt-Delete", "Ctrl-K"),
-    exec: function(env, args, request) { env.editor.removeToLineEnd(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeToLineEnd(); }
+}, {
     name: "removewordleft",
     bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-    exec: function(env, args, request) { env.editor.removeWordLeft(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeWordLeft(); }
+}, {
     name: "removewordright",
     bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-    exec: function(env, args, request) { env.editor.removeWordRight(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.removeWordRight(); }
+}, {
     name: "outdent",
     bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-    exec: function(env, args, request) { env.editor.blockOutdent(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.blockOutdent(); }
+}, {
     name: "indent",
     bindKey: bindKey("Tab", "Tab"),
-    exec: function(env, args, request) { env.editor.indent(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.indent(); }
+}, {
     name: "inserttext",
-    exec: function(env, args, request) {
+    exec: function(env, args) {
         env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
-});
-canon.addCommand({
+}, {
     name: "centerselection",
     bindKey: bindKey(null, "Ctrl-L"),
-    exec: function(env, args, request) { env.editor.centerSelection(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.centerSelection(); }
+}, {
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
-    exec: function(env, args, request) { env.editor.splitLine(); }
-});
-canon.addCommand({
+    exec: function(env, args) { env.editor.splitLine(); }
+}, {
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
-    exec: function(env, args, request) { env.editor.transposeLetters(); }
-});
+    exec: function(env, args) { env.editor.transposeLetters(); }
+}, {
+    name: "fold",
+    bindKey: bindKey("Alt-L", "Alt-L"),
+    exec: function(env) {
+        env.editor.session.toggleFold(false);
+    }
+}, {
+    name: "unfold",
+    bindKey: bindKey("Alt-Shift-L", "Alt-Shift-L"),
+    exec: function(env) {
+        env.editor.session.toggleFold(true);
+    }
+}, {
+    name: "foldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(env) {
+        env.editor.session.foldAll();
+    }
+}, {
+    name: "unfoldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(env) {
+        env.editor.session.unFoldAll();
+    }
+}];
 
 });
 /* vim:ts=4:sts=4:sw=4:
@@ -8594,7 +8140,7 @@ var EditSession = function(text, mode) {
         this.doc = doc;
         doc.on("change", this.onChange.bind(this));
         this.on("changeFold", this.onChangeFold.bind(this));
-        
+
         if (this.bgTokenizer) {
             this.bgTokenizer.setDocument(this.getDocument());
             this.bgTokenizer.start(0);
@@ -8639,7 +8185,7 @@ var EditSession = function(text, mode) {
                     folds:  removedFolds
                 });
             }
-            
+
             this.$informUndoManager.schedule();
         }
 
@@ -8651,7 +8197,7 @@ var EditSession = function(text, mode) {
         this.doc.setValue(text);
         this.selection.moveCursorTo(0, 0);
         this.selection.clearSelection();
-        
+
         this.$resetRowCache(0);
         this.$deltas = [];
         this.$deltasDoc = [];
@@ -8676,6 +8222,27 @@ var EditSession = function(text, mode) {
         return this.bgTokenizer.getTokens(firstRow, lastRow);
     };
 
+    this.getTokenAt = function(row, column) {
+        var tokens = this.bgTokenizer.getTokens(row, row)[0].tokens;
+        var token, c = 0;
+        if (column == null) {
+            i = tokens.length - 1;
+            c = this.getLine(row).length;
+        } else {
+            for (var i = 0; i < tokens.length; i++) {
+                c += tokens[i].value.length;
+                if (c >= column)
+                    break;
+            }
+        }
+        token = tokens[i];
+        if (!token)
+            return null;
+        token.index = i;
+        token.start = c - token.value.length;
+        return token;
+    };
+
     this.setUndoManager = function(undoManager) {
         this.$undoManager = undoManager;
         this.$resetRowCache(0);
@@ -8690,7 +8257,7 @@ var EditSession = function(text, mode) {
             var self = this;
             this.$syncInformUndoManager = function() {
                 self.$informUndoManager.cancel();
-                
+
                 if (self.$deltasFold.length) {
                     self.$deltas.push({
                         group: "fold",
@@ -8698,7 +8265,7 @@ var EditSession = function(text, mode) {
                     });
                     self.$deltasFold = [];
                 }
-                
+
                 if (self.$deltasDoc.length) {
                     self.$deltas.push({
                         group: "doc",
@@ -8706,14 +8273,14 @@ var EditSession = function(text, mode) {
                     });
                     self.$deltasDoc = [];
                 }
-                
+
                 if (self.$deltas.length > 0) {
                     undoManager.execute({
                         action: "aceupdate",
                         args: [self.$deltas, self]
                     });
                 }
-                
+
                 self.$deltas = [];
             }
             this.$informUndoManager =
@@ -8982,7 +8549,7 @@ var EditSession = function(text, mode) {
 
         this.bgTokenizer.setDocument(this.getDocument());
         this.bgTokenizer.start(0);
-        
+
         this.tokenRe = mode.tokenRe;
         this.nonTokenRe = mode.nonTokenRe;
 
@@ -9397,7 +8964,7 @@ var EditSession = function(text, mode) {
     this.$clipRowToDocument = function(row) {
         return Math.max(0, Math.min(row, this.doc.getLength()-1));
     };
-    
+
     this.$clipPositionToDocument = function(row, column) {
         column = Math.max(0, column);
 
@@ -9413,7 +8980,7 @@ var EditSession = function(text, mode) {
                 column = Math.min(this.doc.getLine(row).length, column);
             }
         }
-        
+
         return {
             row: row,
             column: column
@@ -9679,6 +9246,7 @@ var EditSession = function(text, mode) {
         CHAR_EXT = 2,
         PLACEHOLDER_START = 3,
         PLACEHOLDER_BODY =  4,
+        PUNCTUATION = 9,
         SPACE = 10,
         TAB = 11,
         TAB_SPACE = 12;
@@ -9722,7 +9290,7 @@ var EditSession = function(text, mode) {
             // a split is simple.
             if (tokens[split] >= SPACE) {
                 // Include all following spaces + tabs in this split as well.
-                while (tokens[split] >= SPACE)  {
+                while (tokens[split] >= SPACE) {
                     split ++;
                 }
                 addSplit(split);
@@ -9777,16 +9345,17 @@ var EditSession = function(text, mode) {
             }
 
             // === ELSE ===
-            // Search for the first non space/tab/placeholder token backwards.
-            for (split; split != lastSplit - 1; split--) {
-                if (tokens[split] >= PLACEHOLDER_START) {
-                    split++;
-                    break;
-                }
+            // Search for the first non space/tab/placeholder/punctuation token backwards.
+            var minSplit = Math.max(split - 10, lastSplit - 1);
+            while (split > minSplit && tokens[split] < PLACEHOLDER_START) {
+                split --;
+            }
+            while (split > minSplit && tokens[split] == PUNCTUATION) {
+                split --;
             }
             // If we found one, then add the split.
-            if (split > lastSplit) {
-                addSplit(split);
+            if (split > minSplit) {
+                addSplit(++split);
                 continue;
             }
 
@@ -9794,7 +9363,7 @@ var EditSession = function(text, mode) {
             split = lastSplit + wrapLimit;
             // The split is inside of a CHAR or CHAR_EXT token and no space
             // around -> force a split.
-            addSplit(lastSplit + wrapLimit);
+            addSplit(split);
         }
         return splits;
     }
@@ -9820,11 +9389,13 @@ var EditSession = function(text, mode) {
                 }
             }
             // Space
-            else if(c == 32) {
+            else if (c == 32) {
                 arr.push(SPACE);
+            } else if((c > 39 && c < 48) || (c > 57 && c < 64)) {
+                arr.push(PUNCTUATION);
             }
             // full width characters
-            else if (isFullWidth(c)) {
+            else if (c >= 0x1100 && isFullWidth(c)) {
                 arr.push(CHAR, CHAR_EXT);
             } else {
                 arr.push(CHAR);
@@ -9860,7 +9431,7 @@ var EditSession = function(text, mode) {
                 screenColumn += this.getScreenTabSize(screenColumn);
             }
             // full width characters
-            else if (isFullWidth(c)) {
+            else if (c >= 0x1100 && isFullWidth(c)) {
                 screenColumn += 2;
             } else {
                 screenColumn += 1;
@@ -9936,7 +9507,7 @@ var EditSession = function(text, mode) {
                 column: 0
             }
         }
-        
+
         var line;
         var docRow = 0;
         var docColumn = 0;
@@ -9956,11 +9527,11 @@ var EditSession = function(text, mode) {
             }
         }
         var doCache = !rowCache.length || i == rowCache.length;
-        
+
         // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
 
-        var foldLine = this.getNextFold(docRow);
+        var foldLine = this.getNextFoldLine(docRow);
         var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (row <= screenRow) {
@@ -9972,7 +9543,7 @@ var EditSession = function(text, mode) {
                 docRow++;
                 if (docRow > foldStart) {
                     docRow = foldLine.end.row+1;
-                    foldLine = this.getNextFold(docRow);
+                    foldLine = this.getNextFoldLine(docRow, foldLine);
                     foldStart = foldLine ? foldLine.start.row : Infinity;
                 }
             }
@@ -10024,7 +9595,7 @@ var EditSession = function(text, mode) {
         if (foldLine) {
             return foldLine.idxToPosition(docColumn);
         }
-        
+
         return {
             row: docRow,
             column: docColumn
@@ -10035,12 +9606,12 @@ var EditSession = function(text, mode) {
         // Normalize the passed in arguments.
         if (typeof docColumn === "undefined")
             var pos = this.$clipPositionToDocument(docRow.row, docRow.column);
-        else 
+        else
             pos = this.$clipPositionToDocument(docRow, docColumn);
 
         docRow = pos.row;
         docColumn = pos.column;
-        
+
         var LL = this.$rowCache.length;
 
         var wrapData;
@@ -10082,7 +9653,7 @@ var EditSession = function(text, mode) {
         }
         var doCache = !rowCache.length || i == rowCache.length;
 
-        var foldLine = this.getNextFold(row);
+        var foldLine = this.getNextFoldLine(row);
         var foldStart = foldLine ?foldLine.start.row :Infinity;
 
         while (row < docRow) {
@@ -10090,7 +9661,7 @@ var EditSession = function(text, mode) {
                 rowEnd = foldLine.end.row + 1;
                 if (rowEnd > docRow)
                     break;
-                foldLine = this.getNextFold(rowEnd);
+                foldLine = this.getNextFoldLine(rowEnd, foldLine);
                 foldStart = foldLine ?foldLine.start.row :Infinity;
             }
             else {
@@ -10099,7 +9670,7 @@ var EditSession = function(text, mode) {
 
             screenRow += this.getRowLength(row);
             row = rowEnd;
-                        
+
             if (doCache) {
                 rowCache.push({
                     docRow: row,
@@ -10216,8 +9787,7 @@ var EditSession = function(text, mode) {
 require("ace/edit_session/folding").Folding.call(EditSession.prototype);
 
 exports.EditSession = EditSession;
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -10342,7 +9912,7 @@ var Selection = function(session) {
         };
 
         var anchor = this.getSelectionAnchor();
-        var lead = this.getSelectionLead();
+        var lead = this.getSelectionLead(); 
 
         var isBackwards = this.isBackwards();
 
@@ -10659,9 +10229,26 @@ var Selection = function(session) {
             this.selectionLead.row,
             this.selectionLead.column
         );
-        var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
+        
+        var screenCol = (chars === 0 && this.$desiredColumn) || screenPos.column;
+        
+        // so here is the deal. First checkout what the content of ur current and ur target line is
+        var currentLine = (this.session.getLines(screenPos.row, screenPos.row) || [""])[0],
+            targetLine = (this.session.getLines(screenPos.row + rows, screenPos.row + rows) || [""])[0];
+        
+        // if you are at the EOL of your current line, and your targetline is all whitespace
+        if (currentLine && targetLine && 
+                currentLine.length === screenPos.column && targetLine.match(/^\s*$/)) {
+            // set the new column to the EOL of the target line
+            screenCol = this.session.getTabString(targetLine).length;
+            // update the chars so we are sure that the desired column will be updated
+            chars = 1;
+        };
+                
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-        this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
+        
+        // move the cursor and update the desired column
+        this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
     };
 
     this.moveCursorToPosition = function(position) {
@@ -10799,9 +10386,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+    this.comparePoint = function(p) {
+        return this.compare(p.row, p.column);
+    }
+
     this.containsRange = function(range) {
-        var cmp = this.compareRange(range);
-        return (cmp == -1 || cmp == 0 || cmp == 1);
+        return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
     this.isEnd = function(row, column) {
@@ -11211,13 +10801,12 @@ var Mode = function() {
             for (var key in behaviours) {
                 if (behaviours[key][action]) {
                     var ret = behaviours[key][action].apply(this, arguments);
-                    if (ret !== false) {
+                    if (ret) {
                         return ret;
                     }
                 }
             }
         }
-        return false;
     }
     
 }).call(Mode.prototype);
@@ -12526,7 +12115,7 @@ function Folding() {
         var foldLine = this.getFoldLine(row);
         if (!foldLine)
             return null;
-            
+
         var folds = foldLine.folds;
         for (var i = 0; i < folds.length; i++) {
             var fold = folds[i];
@@ -12608,7 +12197,7 @@ function Folding() {
         var foldLine = foldLine || this.getFoldLine(row);
         if (!foldLine)
             return null;
-            
+
         var lastFold = {
             end: { column: 0 }
         };
@@ -12657,7 +12246,7 @@ function Folding() {
     }
 
     // returns the fold which starts after or contains docRow
-    this.getNextFold = function(docRow, startFoldLine) {
+    this.getNextFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData, ans;
         var i = 0;
         if (startFoldLine)
@@ -12725,7 +12314,7 @@ function Folding() {
         var startColumn = fold.start.column;
         var endRow = fold.end.row;
         var endColumn = fold.end.column;
-        
+
         // --- Some checking ---
         if (fold.placeholder.length < 2)
             throw "Placeholder has to be at least 2 characters";
@@ -12963,8 +12552,85 @@ function Folding() {
 
         return fd;
     };
-}
 
+    this.toggleFold = function(tryToUnfold) {
+        var selection = this.selection;
+        var range = selection.getRange();
+
+        if (range.isEmpty()) {
+            var cursor = range.start
+            var fold = this.getFoldAt(cursor.row, cursor.column);
+            var bracketPos, column;
+
+            if (fold) {
+                this.expandFold(fold);
+                return;
+            } else if (bracketPos = this.findMatchingBracket(cursor)) {
+                if (range.comparePoint(bracketPos) == 1) {
+                    range.end = bracketPos;
+                } else {
+                    range.start = bracketPos;
+                    range.start.column++;
+                    range.end.column--;
+                }
+            } else if (bracketPos = this.findMatchingBracket({row: cursor.row, column: cursor.column + 1})) {
+                if (range.comparePoint(bracketPos) == 1)
+                    range.end = bracketPos;
+                else
+                    range.start = bracketPos;
+
+                range.start.column++;
+            } else {
+                var token = this.getTokenAt(cursor.row, cursor.column);
+                if (token && /^comment|string/.test(token.type)) {
+                    var startRow = cursor.row;
+                    var endRow = cursor.row;
+                    var t = token;
+                    while ((t = this.getTokenAt(startRow - 1)) && t.type == token.type) {
+                        startRow --;
+                        token = t;
+                    }
+                    range.start.row = startRow;
+                    range.start.column = token.start + 2;
+
+                    while ((t = this.getTokenAt(endRow + 1, 0)) && t.type == token.type) {
+                        endRow ++;
+                        token = t;
+                    }
+                    range.end.row = endRow;
+                    range.end.column = token.start + token.value.length - 1;
+                }
+            }
+        } else {
+            var folds = this.getFoldsInRange(range);
+            if (tryToUnfold && folds.length) {
+                this.expandFolds(folds);
+                return;
+            } else if (folds.length == 1 ) {
+                fold = folds[0];
+            }
+        }
+
+        if (!fold)
+            fold = this.getFoldAt(range.start.row, range.start.column);
+
+        if (fold && fold.range.toString() == range.toString()){
+            this.expandFold(fold);
+            return
+        }
+
+
+        var placeholder = "...";
+        if (!range.isMultiLine()) {
+            placeholder = this.getTextRange(range);
+            if(placeholder.length < 4)
+                return;
+            placeholder = placeholder.trim().substring(0, 2) + ".."
+        }
+
+        this.addFold(placeholder, range);
+    };
+}
 exports.Folding = Folding;
 
 });/* vim:ts=4:sts=4:sw=4:
@@ -13408,19 +13074,27 @@ Search.SELECTION = 2;
     };
 
     this.findAll = function(session) {
-        if (!this.$options.needle)
+        var options = this.$options;
+        if (!options.needle)
             return [];
 
-        if (this.$options.backwards) {
+        if (options.backwards) {
             var iterator = this.$backwardMatchIterator(session);
         } else {
             iterator = this.$forwardMatchIterator(session);
         }
 
+        var ignoreCursor = !options.start && options.wrap && options.scope == Search.ALL;
+        if (ignoreCursor)
+            options.start = {row: 0, column: 0};
+
         var ranges = [];
         iterator.forEach(function(range) {
             ranges.push(range);
         });
+
+        if (ignoreCursor)
+            options.start = null;
 
         return ranges;
     };
@@ -13532,8 +13206,8 @@ Search.SELECTION = 2;
     this.$forwardLineIterator = function(session) {
         var searchSelection = this.$options.scope == Search.SELECTION;
 
-        var range = session.getSelection().getRange();
-        var start = session.getSelection().getCursor();
+        var range = this.$options.range || session.getSelection().getRange();
+        var start = this.$options.start || session.getSelection().getCursor();
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -13594,8 +13268,8 @@ Search.SELECTION = 2;
     this.$backwardLineIterator = function(session) {
         var searchSelection = this.$options.scope == Search.SELECTION;
 
-        var range = session.getSelection().getRange();
-        var start = searchSelection ? range.end : range.start;
+        var range = this.$options.range || session.getSelection().getRange();
+        var start = this.$options.start || session.getSelection().getCursor();
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -13650,6 +13324,93 @@ Search.SELECTION = 2;
 }).call(Search.prototype);
 
 exports.Search = Search;
+});
+define('ace/commands/command_manager', ['require', 'exports', 'module' , 'pilot/keys', 'pilot/useragent'], function(require, exports, module) {
+
+var keyUtil = require('pilot/keys');
+var useragent = require('pilot/useragent');
+
+var CommandManager = function(commands) {
+    this.commands = {};
+    this.commmandKeyBinding = {};
+    
+    if (commands)
+        commands.forEach(this.addCommand, this);
+};
+
+(function() {
+
+    this.addCommand = function(command) {
+        this.commands[command.name] = command;
+
+        if (command.bindKey) {
+            this._buildKeyHash(command);   
+        }
+    };
+
+    var platform = useragent.isMac ? "mac" : "win";
+    
+    this._buildKeyHash = function(command) {
+        var binding = command.bindKey;
+        var key = binding[platform];
+        var ckb = this.commmandKeyBinding;
+
+        if(!binding[platform]) {
+            return;   
+        }
+    
+        key.split("|").forEach(function(keyPart) {
+            var binding = parseKeys(keyPart, command);
+            var hashId = binding.hashId;
+            (ckb[hashId] || (ckb[hashId] = {}))[binding.key] = command;
+        });
+    }
+
+    function parseKeys(keys, val, ret) {
+        var key;
+        var hashId = 0;
+        var parts = splitSafe(keys, "\\-", null, true);
+
+        for (var i=0, l = parts.length; i < l; i++) {
+            if (keyUtil.KEY_MODS[parts[i]])
+                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
+            else
+                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
+        }
+    
+        return {
+            key: key,
+            hashId: hashId
+        }   
+    }
+
+    function splitSafe(s, separator, limit, bLowerCase) {
+        return (bLowerCase && s.toLowerCase() || s)
+            .replace(/(?:^\s+|\n|\s+$)/g, "")
+            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
+    }
+
+    this.findKeyCommand = function findKeyCommand(env, hashId, textOrKey) {
+        // Convert keyCode to the string representation.
+        if (typeof textOrKey == "number") {
+            textOrKey = keyUtil.keyCodeToString(textOrKey);
+        }
+    
+        var ckbr = this.commmandKeyBinding;
+        return ckbr[hashId] && ckbr[hashId][textOrKey];
+    }
+
+    this.exec = function(command, env, args) {
+        if (typeof command === 'string')
+            command = this.commands[command];
+        
+        command.exec(env, args || {});
+    };
+
+}).call(CommandManager.prototype);
+
+exports.CommandManager = CommandManager;
+
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -14701,13 +14462,13 @@ var Gutter = function(parentEl) {
         var html = [];
         var i = config.firstRow;
         var lastRow = config.lastRow;
-        var fold = this.session.getNextFold(i);
+        var fold = this.session.getNextFoldLine(i);
         var foldStart = fold ? fold.start.row : Infinity;
 
         while (true) {
             if(i > foldStart) {
                 i = fold.end.row + 1;
-                fold = this.session.getNextFold(i);
+                fold = this.session.getNextFoldLine(i, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(i > lastRow)
@@ -15219,13 +14980,13 @@ var Text = function(parentEl) {
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
         var fragment = this.element.ownerDocument.createDocumentFragment(),
             row = firstRow,
-            fold = this.session.getNextFold(row),
+            fold = this.session.getNextFoldLine(row),
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
             if(row > foldStart) {
                 row = fold.end.row+1;
-                fold = this.session.getNextFold(row);
+                fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(row > lastRow)
@@ -15266,13 +15027,13 @@ var Text = function(parentEl) {
         var firstRow = config.firstRow, lastRow = config.lastRow;
 
         var row = firstRow,
-            fold = this.session.getNextFold(row),
+            fold = this.session.getNextFoldLine(row),
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
             if(row > foldStart) {
                 row = fold.end.row+1;
-                fold = this.session.getNextFold(row);
+                fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(row > lastRow)
@@ -16064,60 +15825,6 @@ exports.cssText = ".ace-tm .ace_editor {\
 .ace-tm .ace_string.ace_regex {\
   color: rgb(255, 0, 0)\
 }";
-
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is DomTemplate.
- *
- * The Initial Developer of the Original Code is Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Joe Walker (jwalker@mozilla.com) (original author)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('pilot/environment', ['require', 'exports', 'module' , 'pilot/settings'], function(require, exports, module) {
-
-
-var settings = require("pilot/settings").settings;
-
-/**
- * Create an environment object
- */
-function create() {
-    return {
-        settings: settings
-    };
-};
-
-exports.create = create;
-
 
 });
 define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
