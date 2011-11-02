@@ -11863,16 +11863,18 @@ var Selection = function(session) {
             targetLine = (this.session.getLines(screenPos.row + rows, screenPos.row + rows) || [""])[0];
         
         // if you are at the EOL of your current line, and your targetline is all whitespace
-        if (currentLine.length === screenPos.column && targetLine.match(/^\s*$/)) {
+        if (currentLine && targetLine && 
+                currentLine.length === screenPos.column && targetLine.match(/^\s*$/)) {
             // set the new column to the EOL of the target line
             screenCol = this.session.getTabString(targetLine).length;
-        }
+            // update the chars so we are sure that the desired column will be updated
+            chars = 1;
+        };
                 
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-
-        console.log(rows, chars, screenPos, currentLine, targetLine, screenCol, docPos);
-
-        this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
+        
+        // move the cursor and update the desired column
+        this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
     };
 
     this.moveCursorToPosition = function(position) {
