@@ -6103,9 +6103,12 @@ var Editor =function(renderer, session) {
         this.container.style.fontSize = size;
     };
 
-    this.$highlightBrackets = function() {
+     this.$highlightBrackets = function() {
         if (this.session.$bracketHighlight) {
-            this.session.removeMarker(this.session.$bracketHighlight);
+            for(var i = 0;i < this.session.$bracketHighlight.length;i++)
+	    {
+		 this.session.removeMarker(this.session.$bracketHighlight[i]);
+	    }
             this.session.$bracketHighlight = null;
         }
 
@@ -6118,12 +6121,31 @@ var Editor =function(renderer, session) {
         this.$highlightPending = true;
         setTimeout(function() {
             self.$highlightPending = false;
-
-            var pos = self.session.findMatchingBracket(self.getCursorPosition());
-            if (pos) {
-                var range = new Range(pos.row, pos.column, pos.row, pos.column+1);
-                self.session.$bracketHighlight = self.session.addMarker(range, "ace_bracket", "text");
-            }
+		var cursor = self.getCursorPosition();
+		if (cursor.column == 0) return null;
+		var charBeforeCursor = self.session.getLine(cursor.row).charAt(cursor.column-1);
+		if (charBeforeCursor == "") return null;
+		var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
+		if (!match) {
+		    return null;
+		}
+		var bracket = null;
+		if (match[1]) {
+		    bracket = self.session.$findClosingBracket(match[1], cursor);
+		} else {
+		    bracket = self.session.$findOpeningBracket(match[2], cursor);
+		}
+		cursor = new Range(cursor.row, cursor.column-1, cursor.row, cursor.column);
+		if (bracket) {
+		    bracket = new Range(bracket.row, bracket.column, bracket.row, bracket.column+1);
+		    self.session.$bracketHighlight = [
+			self.session.addMarker(bracket, "ace_bracket", "text"),
+			self.session.addMarker(cursor, "ace_bracket", "text")
+		    ];
+		}
+		else {
+		    self.session.$bracketHighlight = [self.session.addMarker(cursor, "ace_bracket_error", "text")];
+		}
         }, 10);
     };
 
@@ -16053,6 +16075,11 @@ exports.cssText = ".ace-tm .ace_editor {\
   border: 1px solid rgb(192, 192, 192);\
 }\
 \
+.ace-tm .ace_marker-layer .ace_bracket_error {\
+  margin: -1px 0 0 -1px;\
+  border: 1px solid rgb(192, 192, 192);\
+}\
+\
 .ace-tm .ace_marker-layer .ace_active_line {\
   background: rgba(0, 0, 0, 0.07);\
 }\
@@ -16270,6 +16297,11 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_bracket {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_marker-layer .ace_bracket_error {\n" +
   "    position: absolute;\n" +
   "    z-index: 5;\n" +
   "}\n" +
@@ -17080,6 +17112,11 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "    z-index: 5;\n" +
   "}\n" +
   "\n" +
+  ".ace_marker-layer .ace_bracket_error {\n" +
+  "    position: absolute;\n" +
+  "    z-index: 5;\n" +
+  "}\n" +
+  "\n" +
   ".ace_marker-layer .ace_active_line {\n" +
   "    position: absolute;\n" +
   "    z-index: 2;\n" +
@@ -17318,6 +17355,11 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "}\n" +
   "\n" +
   ".%cssClass% .ace_marker-layer .ace_bracket {\n" +
+  "  margin: -1px 0 0 -1px;\n" +
+  "  border: 1px solid %bracket%;\n" +
+  "}\n" +
+  "\n" +
+  ".%cssClass% .ace_marker-layer .ace_bracket_error {\n" +
   "  margin: -1px 0 0 -1px;\n" +
   "  border: 1px solid %bracket%;\n" +
   "}\n" +
