@@ -1,0 +1,43 @@
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    background: rgb(14, 98, 165);
+    color: white;
+}
+
+#logo {
+    padding: 15px;
+    margin-left: 70px;
+}
+
+#editor {
+    position: absolute;
+    top:  0px;
+    left: 300px;
+    bottom: 0px;
+    right: 0px;
+    background: white;
+}
+
+#controls {
+    padding: 5px;
+}
+
+#controls td {
+    text-align: right;
+}
+
+#controls td + td {
+    text-align: left;
+}
