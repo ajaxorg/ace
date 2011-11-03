@@ -98,6 +98,7 @@ exports.launch = function(env) {
         new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
         new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
         new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
+        new Mode("haxe", "haXe", require("ace/mode/haxe").Mode, ["hx"]),
         new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
         new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
         new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
@@ -114,7 +115,7 @@ exports.launch = function(env) {
         new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
         new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
         new Mode("sql", "SQL", require("ace/mode/sql").Mode, ["sql"]),
-        new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
+        new Mode("svg", "SVG", require("ace/mode/svg").Mode, ["svg"]),
         new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
         new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
         new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
@@ -153,9 +154,13 @@ exports.launch = function(env) {
             require("ace/requirejs/text!demo/kitchen-sink/docs/scss.scss")
         ),
         new Doc(
-            "html", "HTML",
-            require("ace/requirejs/text!demo/kitchen-sink/docs/html.html")
+           "html", "HTML",
+           require("ace/requirejs/text!demo/kitchen-sink/docs/html.html")
         ),
+        new Doc(
+           "haxe", "haXe",
+           require("ace/requirejs/text!demo/kitchen-sink/docs/haxe.hx")
+           ),
         new Doc(
             "xml", "XML",
             require("ace/requirejs/text!demo/kitchen-sink/docs/xml.xml")
