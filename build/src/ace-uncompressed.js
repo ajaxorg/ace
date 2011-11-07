@@ -5347,11 +5347,11 @@ exports.setCssClass = function(node, className, include) {
     }
 };
 
-function hasCssString(id, doc) {
+exports.hasCssString = function(id, doc) {
     var index = 0, sheets;
     doc = doc || document
 
-    if ((sheets = doc.styleSheets)) {
+    if (doc.createStyleSheet && (sheets = doc.styleSheets)) {
         while (index < sheets.length)
             if (sheets[index++].title === id) return true;
     } else if ((sheets = doc.getElementsByTagName("style"))) {
@@ -5361,23 +5361,28 @@ function hasCssString(id, doc) {
 
     return false;
 }
-exports.hasCssString = hasCssString;
 
 exports.importCssString = function importCssString(cssText, id, doc) {
     doc = doc || document;
     // If style is already imported return immediately.
-    if (id && hasCssString(id, doc)) return null;
+    if (id && exports.hasCssString(id, doc))
+        return null;
+    
+    var style;
+    
     if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet();
-        sheet.cssText = cssText;
-        if (id) sheet.title = id;
+        style = doc.createStyleSheet();
+        style.cssText = cssText;
+        if (id)
+            style.title = id;
     } else {
-        var style = doc.createElementNS ?
+        style = doc.createElementNS ?
                     doc.createElementNS(XHTML_NS, "style") :
                     doc.createElement("style");
 
-        if (id) style.id = id;
         style.appendChild(doc.createTextNode(cssText));
+        if (id)
+            style.id = id;
 
         var head = doc.getElementsByTagName("head")[0] || doc.documentElement;
         head.appendChild(style);
@@ -6660,7 +6665,7 @@ var Editor =function(renderer, session) {
                 indentString = lang.stringRepeat(" ", count);
             } else
                 indentString = "\t";
-            return this.onTextInput(indentString);
+            return this.onTextInput(indentString, true);
         }
     };
 
@@ -7421,6 +7426,7 @@ var MouseHandler = function(editor) {
 
     var mouseTarget = editor.renderer.getMouseEventTarget();
     event.addListener(mouseTarget, "mousedown", this.onMouseDown.bind(this));
+    event.addListener(mouseTarget, "click", this.onMouseClick.bind(this));
     event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 2, 500, this.onMouseDoubleClick.bind(this));
     event.addMultiMouseDownListener(mouseTarget, 0, 3, 600, this.onMouseTripleClick.bind(this));
@@ -7441,6 +7447,10 @@ var MouseHandler = function(editor) {
 
     this.onMouseDown = function(e) {
         this.editor._dispatchEvent("mousedown", new MouseEvent(e, this.editor));
+    };
+
+    this.onMouseClick = function(e) {
+        this.editor._dispatchEvent("click", new MouseEvent(e, this.editor));
     };
     
     this.onMouseMove = function(e) {
@@ -7605,18 +7615,18 @@ function DefaultHandlers(editor) {
             mousePageY = event.getDocumentY(e);
         };
 
-        var onMouseSelectionEnd = function() {
+        var onMouseSelectionEnd = function(e) {
             clearInterval(timerId);
             if (state == STATE_UNKNOWN)
                 onStartSelect(pos);
             else if (state == STATE_DRAG)
-                onMouseDragSelectionEnd();
+                onMouseDragSelectionEnd(e);
 
             _self.$clickSelection = null;
             state = STATE_UNKNOWN;
         };
 
-        var onMouseDragSelectionEnd = function() {
+        var onMouseDragSelectionEnd = function(e) {
             dom.removeCssClass(editor.container, "ace_dragging");
             editor.session.removeMarker(dragSelectionMarker);
 
@@ -7636,7 +7646,12 @@ function DefaultHandlers(editor) {
             }
 
             editor.clearSelection();
-            var newRange = editor.moveText(dragRange, dragCursor);
+            if (e && (e.ctrlKey || e.altKey)) {
+                var session = editor.session;
+                var newRange = session.insert(dragCursor, session.getTextRange(dragRange));
+            } else {
+                var newRange = editor.moveText(dragRange, dragCursor);
+            }
             if (!newRange) {
                 dragCursor = null;
                 return;
@@ -8495,6 +8510,35 @@ canon.addCommand({
     exec: function(env, args, request) { env.editor.transposeLetters(); }
 });
 
+canon.addCommand({
+    name: "fold",
+    bindKey: bindKey("Alt-L", "Alt-L"),
+    exec: function(env) {
+        env.editor.session.toggleFold(false);
+    }
+});
+canon.addCommand({
+    name: "unfold",
+    bindKey: bindKey("Alt-Shift-L", "Alt-Shift-L"),
+    exec: function(env) {
+        env.editor.session.toggleFold(true);
+    }
+});
+canon.addCommand({
+    name: "foldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(env) {
+        env.editor.session.foldAll();
+    }
+});
+canon.addCommand({
+    name: "unfoldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(env) {
+        env.editor.session.unFoldAll();
+    }
+});
+
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -8589,7 +8633,7 @@ var EditSession = function(text, mode) {
         this.doc = doc;
         doc.on("change", this.onChange.bind(this));
         this.on("changeFold", this.onChangeFold.bind(this));
-        
+
         if (this.bgTokenizer) {
             this.bgTokenizer.setDocument(this.getDocument());
             this.bgTokenizer.start(0);
@@ -8634,7 +8678,7 @@ var EditSession = function(text, mode) {
                     folds:  removedFolds
                 });
             }
-            
+
             this.$informUndoManager.schedule();
         }
 
@@ -8646,7 +8690,7 @@ var EditSession = function(text, mode) {
         this.doc.setValue(text);
         this.selection.moveCursorTo(0, 0);
         this.selection.clearSelection();
-        
+
         this.$resetRowCache(0);
         this.$deltas = [];
         this.$deltasDoc = [];
@@ -8671,6 +8715,27 @@ var EditSession = function(text, mode) {
         return this.bgTokenizer.getTokens(firstRow, lastRow);
     };
 
+    this.getTokenAt = function(row, column) {
+        var tokens = this.bgTokenizer.getTokens(row, row)[0].tokens;
+        var token, c = 0;
+        if (column == null) {
+            i = tokens.length - 1;
+            c = this.getLine(row).length;
+        } else {
+            for (var i = 0; i < tokens.length; i++) {
+                c += tokens[i].value.length;
+                if (c >= column)
+                    break;
+            }
+        }
+        token = tokens[i];
+        if (!token)
+            return null;
+        token.index = i;
+        token.start = c - token.value.length;
+        return token;
+    };
+
     this.setUndoManager = function(undoManager) {
         this.$undoManager = undoManager;
         this.$resetRowCache(0);
@@ -8685,7 +8750,7 @@ var EditSession = function(text, mode) {
             var self = this;
             this.$syncInformUndoManager = function() {
                 self.$informUndoManager.cancel();
-                
+
                 if (self.$deltasFold.length) {
                     self.$deltas.push({
                         group: "fold",
@@ -8693,7 +8758,7 @@ var EditSession = function(text, mode) {
                     });
                     self.$deltasFold = [];
                 }
-                
+
                 if (self.$deltasDoc.length) {
                     self.$deltas.push({
                         group: "doc",
@@ -8701,14 +8766,14 @@ var EditSession = function(text, mode) {
                     });
                     self.$deltasDoc = [];
                 }
-                
+
                 if (self.$deltas.length > 0) {
                     undoManager.execute({
                         action: "aceupdate",
                         args: [self.$deltas, self]
                     });
                 }
-                
+
                 self.$deltas = [];
             }
             this.$informUndoManager =
@@ -8977,7 +9042,7 @@ var EditSession = function(text, mode) {
 
         this.bgTokenizer.setDocument(this.getDocument());
         this.bgTokenizer.start(0);
-        
+
         this.tokenRe = mode.tokenRe;
         this.nonTokenRe = mode.nonTokenRe;
 
@@ -9392,7 +9457,7 @@ var EditSession = function(text, mode) {
     this.$clipRowToDocument = function(row) {
         return Math.max(0, Math.min(row, this.doc.getLength()-1));
     };
-    
+
     this.$clipPositionToDocument = function(row, column) {
         column = Math.max(0, column);
 
@@ -9408,7 +9473,7 @@ var EditSession = function(text, mode) {
                 column = Math.min(this.doc.getLine(row).length, column);
             }
         }
-        
+
         return {
             row: row,
             column: column
@@ -9674,6 +9739,7 @@ var EditSession = function(text, mode) {
         CHAR_EXT = 2,
         PLACEHOLDER_START = 3,
         PLACEHOLDER_BODY =  4,
+        PUNCTUATION = 9,
         SPACE = 10,
         TAB = 11,
         TAB_SPACE = 12;
@@ -9717,7 +9783,7 @@ var EditSession = function(text, mode) {
             // a split is simple.
             if (tokens[split] >= SPACE) {
                 // Include all following spaces + tabs in this split as well.
-                while (tokens[split] >= SPACE)  {
+                while (tokens[split] >= SPACE) {
                     split ++;
                 }
                 addSplit(split);
@@ -9772,16 +9838,17 @@ var EditSession = function(text, mode) {
             }
 
             // === ELSE ===
-            // Search for the first non space/tab/placeholder token backwards.
-            for (split; split != lastSplit - 1; split--) {
-                if (tokens[split] >= PLACEHOLDER_START) {
-                    split++;
-                    break;
-                }
+            // Search for the first non space/tab/placeholder/punctuation token backwards.
+            var minSplit = Math.max(split - 10, lastSplit - 1);
+            while (split > minSplit && tokens[split] < PLACEHOLDER_START) {
+                split --;
+            }
+            while (split > minSplit && tokens[split] == PUNCTUATION) {
+                split --;
             }
             // If we found one, then add the split.
-            if (split > lastSplit) {
-                addSplit(split);
+            if (split > minSplit) {
+                addSplit(++split);
                 continue;
             }
 
@@ -9789,7 +9856,7 @@ var EditSession = function(text, mode) {
             split = lastSplit + wrapLimit;
             // The split is inside of a CHAR or CHAR_EXT token and no space
             // around -> force a split.
-            addSplit(lastSplit + wrapLimit);
+            addSplit(split);
         }
         return splits;
     }
@@ -9815,11 +9882,13 @@ var EditSession = function(text, mode) {
                 }
             }
             // Space
-            else if(c == 32) {
+            else if (c == 32) {
                 arr.push(SPACE);
+            } else if((c > 39 && c < 48) || (c > 57 && c < 64)) {
+                arr.push(PUNCTUATION);
             }
             // full width characters
-            else if (isFullWidth(c)) {
+            else if (c >= 0x1100 && isFullWidth(c)) {
                 arr.push(CHAR, CHAR_EXT);
             } else {
                 arr.push(CHAR);
@@ -9855,7 +9924,7 @@ var EditSession = function(text, mode) {
                 screenColumn += this.getScreenTabSize(screenColumn);
             }
             // full width characters
-            else if (isFullWidth(c)) {
+            else if (c >= 0x1100 && isFullWidth(c)) {
                 screenColumn += 2;
             } else {
                 screenColumn += 1;
@@ -9931,7 +10000,7 @@ var EditSession = function(text, mode) {
                 column: 0
             }
         }
-        
+
         var line;
         var docRow = 0;
         var docColumn = 0;
@@ -9951,11 +10020,11 @@ var EditSession = function(text, mode) {
             }
         }
         var doCache = !rowCache.length || i == rowCache.length;
-        
+
         // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
 
-        var foldLine = this.getNextFold(docRow);
+        var foldLine = this.getNextFoldLine(docRow);
         var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (row <= screenRow) {
@@ -9967,7 +10036,7 @@ var EditSession = function(text, mode) {
                 docRow++;
                 if (docRow > foldStart) {
                     docRow = foldLine.end.row+1;
-                    foldLine = this.getNextFold(docRow);
+                    foldLine = this.getNextFoldLine(docRow, foldLine);
                     foldStart = foldLine ? foldLine.start.row : Infinity;
                 }
             }
@@ -10019,7 +10088,7 @@ var EditSession = function(text, mode) {
         if (foldLine) {
             return foldLine.idxToPosition(docColumn);
         }
-        
+
         return {
             row: docRow,
             column: docColumn
@@ -10030,12 +10099,12 @@ var EditSession = function(text, mode) {
         // Normalize the passed in arguments.
         if (typeof docColumn === "undefined")
             var pos = this.$clipPositionToDocument(docRow.row, docRow.column);
-        else 
+        else
             pos = this.$clipPositionToDocument(docRow, docColumn);
 
         docRow = pos.row;
         docColumn = pos.column;
-        
+
         var LL = this.$rowCache.length;
 
         var wrapData;
@@ -10077,7 +10146,7 @@ var EditSession = function(text, mode) {
         }
         var doCache = !rowCache.length || i == rowCache.length;
 
-        var foldLine = this.getNextFold(row);
+        var foldLine = this.getNextFoldLine(row);
         var foldStart = foldLine ?foldLine.start.row :Infinity;
 
         while (row < docRow) {
@@ -10085,7 +10154,7 @@ var EditSession = function(text, mode) {
                 rowEnd = foldLine.end.row + 1;
                 if (rowEnd > docRow)
                     break;
-                foldLine = this.getNextFold(rowEnd);
+                foldLine = this.getNextFoldLine(rowEnd, foldLine);
                 foldStart = foldLine ?foldLine.start.row :Infinity;
             }
             else {
@@ -10094,7 +10163,7 @@ var EditSession = function(text, mode) {
 
             screenRow += this.getRowLength(row);
             row = rowEnd;
-                        
+
             if (doCache) {
                 rowCache.push({
                     docRow: row,
@@ -10211,8 +10280,7 @@ var EditSession = function(text, mode) {
 require("ace/edit_session/folding").Folding.call(EditSession.prototype);
 
 exports.EditSession = EditSession;
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -10337,7 +10405,7 @@ var Selection = function(session) {
         };
 
         var anchor = this.getSelectionAnchor();
-        var lead = this.getSelectionLead();
+        var lead = this.getSelectionLead(); 
 
         var isBackwards = this.isBackwards();
 
@@ -10654,9 +10722,26 @@ var Selection = function(session) {
             this.selectionLead.row,
             this.selectionLead.column
         );
-        var screenCol = (chars == 0 && this.$desiredColumn) || screenPos.column;
+        
+        var screenCol = (chars === 0 && this.$desiredColumn) || screenPos.column;
+        
+        // so here is the deal. First checkout what the content of ur current and ur target line is
+        var currentLine = (this.session.getLines(screenPos.row, screenPos.row) || [""])[0],
+            targetLine = (this.session.getLines(screenPos.row + rows, screenPos.row + rows) || [""])[0];
+        
+        // if you are at the EOL of your current line, and your targetline is all whitespace
+        if (currentLine && targetLine && 
+                currentLine.length === screenPos.column && targetLine.match(/^\s*$/)) {
+            // set the new column to the EOL of the target line
+            screenCol = this.session.getTabString(targetLine).length;
+            // update the chars so we are sure that the desired column will be updated
+            chars = 1;
+        };
+                
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-        this.moveCursorTo(docPos.row, docPos.column + chars, chars == 0);
+        
+        // move the cursor and update the desired column
+        this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
     };
 
     this.moveCursorToPosition = function(position) {
@@ -10794,9 +10879,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+    this.comparePoint = function(p) {
+        return this.compare(p.row, p.column);
+    }
+
     this.containsRange = function(range) {
-        var cmp = this.compareRange(range);
-        return (cmp == -1 || cmp == 0 || cmp == 1);
+        return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
     this.isEnd = function(row, column) {
@@ -11206,13 +11294,12 @@ var Mode = function() {
             for (var key in behaviours) {
                 if (behaviours[key][action]) {
                     var ret = behaviours[key][action].apply(this, arguments);
-                    if (ret !== false) {
+                    if (ret) {
                         return ret;
                     }
                 }
             }
         }
-        return false;
     }
     
 }).call(Mode.prototype);
@@ -12521,7 +12608,7 @@ function Folding() {
         var foldLine = this.getFoldLine(row);
         if (!foldLine)
             return null;
-            
+
         var folds = foldLine.folds;
         for (var i = 0; i < folds.length; i++) {
             var fold = folds[i];
@@ -12603,7 +12690,7 @@ function Folding() {
         var foldLine = foldLine || this.getFoldLine(row);
         if (!foldLine)
             return null;
-            
+
         var lastFold = {
             end: { column: 0 }
         };
@@ -12652,7 +12739,7 @@ function Folding() {
     }
 
     // returns the fold which starts after or contains docRow
-    this.getNextFold = function(docRow, startFoldLine) {
+    this.getNextFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData, ans;
         var i = 0;
         if (startFoldLine)
@@ -12720,7 +12807,7 @@ function Folding() {
         var startColumn = fold.start.column;
         var endRow = fold.end.row;
         var endColumn = fold.end.column;
-        
+
         // --- Some checking ---
         if (fold.placeholder.length < 2)
             throw "Placeholder has to be at least 2 characters";
@@ -12958,8 +13045,85 @@ function Folding() {
 
         return fd;
     };
-}
 
+    this.toggleFold = function(tryToUnfold) {
+        var selection = this.selection;
+        var range = selection.getRange();
+
+        if (range.isEmpty()) {
+            var cursor = range.start
+            var fold = this.getFoldAt(cursor.row, cursor.column);
+            var bracketPos, column;
+
+            if (fold) {
+                this.expandFold(fold);
+                return;
+            } else if (bracketPos = this.findMatchingBracket(cursor)) {
+                if (range.comparePoint(bracketPos) == 1) {
+                    range.end = bracketPos;
+                } else {
+                    range.start = bracketPos;
+                    range.start.column++;
+                    range.end.column--;
+                }
+            } else if (bracketPos = this.findMatchingBracket({row: cursor.row, column: cursor.column + 1})) {
+                if (range.comparePoint(bracketPos) == 1)
+                    range.end = bracketPos;
+                else
+                    range.start = bracketPos;
+
+                range.start.column++;
+            } else {
+                var token = this.getTokenAt(cursor.row, cursor.column);
+                if (token && /^comment|string/.test(token.type)) {
+                    var startRow = cursor.row;
+                    var endRow = cursor.row;
+                    var t = token;
+                    while ((t = this.getTokenAt(startRow - 1)) && t.type == token.type) {
+                        startRow --;
+                        token = t;
+                    }
+                    range.start.row = startRow;
+                    range.start.column = token.start + 2;
+
+                    while ((t = this.getTokenAt(endRow + 1, 0)) && t.type == token.type) {
+                        endRow ++;
+                        token = t;
+                    }
+                    range.end.row = endRow;
+                    range.end.column = token.start + token.value.length - 1;
+                }
+            }
+        } else {
+            var folds = this.getFoldsInRange(range);
+            if (tryToUnfold && folds.length) {
+                this.expandFolds(folds);
+                return;
+            } else if (folds.length == 1 ) {
+                fold = folds[0];
+            }
+        }
+
+        if (!fold)
+            fold = this.getFoldAt(range.start.row, range.start.column);
+
+        if (fold && fold.range.toString() == range.toString()){
+            this.expandFold(fold);
+            return
+        }
+
+
+        var placeholder = "...";
+        if (!range.isMultiLine()) {
+            placeholder = this.getTextRange(range);
+            if(placeholder.length < 4)
+                return;
+            placeholder = placeholder.trim().substring(0, 2) + ".."
+        }
+
+        this.addFold(placeholder, range);
+    };
+}
 exports.Folding = Folding;
 
 });/* vim:ts=4:sts=4:sw=4:
@@ -13403,19 +13567,27 @@ Search.SELECTION = 2;
     };
 
     this.findAll = function(session) {
-        if (!this.$options.needle)
+        var options = this.$options;
+        if (!options.needle)
             return [];
 
-        if (this.$options.backwards) {
+        if (options.backwards) {
             var iterator = this.$backwardMatchIterator(session);
         } else {
             iterator = this.$forwardMatchIterator(session);
         }
 
+        var ignoreCursor = !options.start && options.wrap && options.scope == Search.ALL;
+        if (ignoreCursor)
+            options.start = {row: 0, column: 0};
+
         var ranges = [];
         iterator.forEach(function(range) {
             ranges.push(range);
         });
+
+        if (ignoreCursor)
+            options.start = null;
 
         return ranges;
     };
@@ -13527,8 +13699,8 @@ Search.SELECTION = 2;
     this.$forwardLineIterator = function(session) {
         var searchSelection = this.$options.scope == Search.SELECTION;
 
-        var range = session.getSelection().getRange();
-        var start = session.getSelection().getCursor();
+        var range = this.$options.range || session.getSelection().getRange();
+        var start = this.$options.start || session.getSelection().getCursor();
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -13589,8 +13761,8 @@ Search.SELECTION = 2;
     this.$backwardLineIterator = function(session) {
         var searchSelection = this.$options.scope == Search.SELECTION;
 
-        var range = session.getSelection().getRange();
-        var start = searchSelection ? range.end : range.start;
+        var range = this.$options.range || session.getSelection().getRange();
+        var start = this.$options.start || session.getSelection().getCursor();
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -14696,13 +14868,13 @@ var Gutter = function(parentEl) {
         var html = [];
         var i = config.firstRow;
         var lastRow = config.lastRow;
-        var fold = this.session.getNextFold(i);
+        var fold = this.session.getNextFoldLine(i);
         var foldStart = fold ? fold.start.row : Infinity;
 
         while (true) {
             if(i > foldStart) {
                 i = fold.end.row + 1;
-                fold = this.session.getNextFold(i);
+                fold = this.session.getNextFoldLine(i, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(i > lastRow)
@@ -15214,13 +15386,13 @@ var Text = function(parentEl) {
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
         var fragment = this.element.ownerDocument.createDocumentFragment(),
             row = firstRow,
-            fold = this.session.getNextFold(row),
+            fold = this.session.getNextFoldLine(row),
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
             if(row > foldStart) {
                 row = fold.end.row+1;
-                fold = this.session.getNextFold(row);
+                fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(row > lastRow)
@@ -15261,13 +15433,13 @@ var Text = function(parentEl) {
         var firstRow = config.firstRow, lastRow = config.lastRow;
 
         var row = firstRow,
-            fold = this.session.getNextFold(row),
+            fold = this.session.getNextFoldLine(row),
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
             if(row > foldStart) {
                 row = fold.end.row+1;
-                fold = this.session.getNextFold(row);
+                fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
             if(row > lastRow)
@@ -16302,7 +16474,30 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "");
 
-define("text!build/demo/styles.css", [], "html {\n" +
+define("text!ace/ext/static.css", [], ".ace_editor {\n" +
+  "   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "   font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_gutter { \n" +
+  "    width: 25px !important;\n" +
+  "    display: block;\n" +
+  "    float: left;\n" +
+  "    text-align: right; \n" +
+  "    padding: 0 3px 0 0; \n" +
+  "    margin-right: 3px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace-row { clear: both; }\n" +
+  "\n" +
+  "*.ace_gutter-cell {\n" +
+  "  -moz-user-select: -moz-none;\n" +
+  "  -khtml-user-select: none;\n" +
+  "  -webkit-user-select: none;\n" +
+  "  user-select: none;\n" +
+  "}");
+
+define("text!build/demo/kitchen-sink/styles.css", [], "html {\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
   "    overflow: hidden;\n" +
@@ -16578,13 +16773,13 @@ define("text!build_support/style.css", [], "body {\n" +
   "\n" +
   "");
 
-define("text!demo/docs/css.css", [], ".text-layer {\n" +
+define("text!demo/kitchen-sink/docs/css.css", [], ".text-layer {\n" +
   "    font-family: Monaco, \"Courier New\", monospace;\n" +
   "    font-size: 12px;\n" +
   "    cursor: text;\n" +
   "}");
 
-define("text!demo/styles.css", [], "html {\n" +
+define("text!demo/kitchen-sink/styles.css", [], "html {\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
   "    overflow: hidden;\n" +
@@ -16626,50 +16821,6 @@ define("text!demo/styles.css", [], "html {\n" +
   "\n" +
   "#controls td + td {\n" +
   "    text-align: left;\n" +
-  "}");
-
-define("text!deps/csslint/demos/demo.css", [], "@charset \"UTF-8\";\n" +
-  "\n" +
-  "@import url(\"booya.css\") print,screen;\n" +
-  "@import \"whatup.css\" screen;\n" +
-  "@import \"wicked.css\";\n" +
-  "\n" +
-  "@namespace \"http://www.w3.org/1999/xhtml\";\n" +
-  "@namespace svg \"http://www.w3.org/2000/svg\";\n" +
-  "\n" +
-  "li.inline #foo {\n" +
-  "  background: url(\"something.png\");\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px;\n" +
-  "  padding-right: 7px;\n" +
-  "  border-right: 1px dotted #066;\n" +
-  "}\n" +
-  "\n" +
-  "li.last.first {\n" +
-  "  display: inline;\n" +
-  "  padding-left: 3px !important;\n" +
-  "  padding-right: 3px;\n" +
-  "  border-right: 0px;\n" +
-  "}\n" +
-  "\n" +
-  "@media print {\n" +
-  "    li.inline {\n" +
-  "      color: black;\n" +
-  "    }\n" +
-  "\n" +
-  "\n" +
-  "@charset \"UTF-8\"; \n" +
-  "\n" +
-  "@page {\n" +
-  "  margin: 10%;\n" +
-  "  counter-increment: page;\n" +
-  "\n" +
-  "  @top-center {\n" +
-  "    font-family: sans-serif;\n" +
-  "    font-weight: bold;\n" +
-  "    font-size: 2em;\n" +
-  "    content: counter(page);\n" +
-  "  }\n" +
   "}");
 
 define("text!doc/site/iphone.css", [], "#wrapper {\n" +
@@ -17108,6 +17259,40 @@ define("text!lib/ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "}\n" +
   "");
 
+define("text!lib/ace/ext/static.css", [], ".ace_editor {\n" +
+  "   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;\n" +
+  "   font-size: 12px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_editor .ace_gutter { \n" +
+  "    width: 25px !important;\n" +
+  "    display: block;\n" +
+  "    float: left;\n" +
+  "    text-align: right; \n" +
+  "    padding: 0 3px 0 0; \n" +
+  "    margin-right: 3px;\n" +
+  "}\n" +
+  "\n" +
+  ".ace-row { clear: both; }\n" +
+  "\n" +
+  "*.ace_gutter-cell {\n" +
+  "  -moz-user-select: -moz-none;\n" +
+  "  -khtml-user-select: none;\n" +
+  "  -webkit-user-select: none;\n" +
+  "  user-select: none;\n" +
+  "}");
+
+define("text!node_modules/jsdom/node_modules/cssom/docs/bar.css", [], "body * {\n" +
+  "	color: red !important;\n" +
+  "}");
+
+define("text!node_modules/jsdom/node_modules/cssom/docs/demo.css", [], "");
+
+define("text!node_modules/jsdom/node_modules/cssom/docs/foo.css", [], "@import \"bar.css\" screen;\n" +
+  "body {\n" +
+  "	background: black !important;\n" +
+  "}");
+
 define("text!node_modules/uglify-js/docstyle.css", [], "html { font-family: \"Lucida Grande\",\"Trebuchet MS\",sans-serif; font-size: 12pt; }\n" +
   "body { max-width: 60em; }\n" +
   ".title  { text-align: center; }\n" +
@@ -17473,56 +17658,6 @@ define("text!tool/Theme.tmpl.css", [], ".%cssClass% .ace_editor {\n" +
   "\n" +
   ".%cssClass% .ace_collab.ace_user1 {\n" +
   "  %collab.user1%   \n" +
-  "}");
-
-define("text!docs/css.css", [], ".text-layer {\n" +
-  "    font-family: Monaco, \"Courier New\", monospace;\n" +
-  "    font-size: 12px;\n" +
-  "    cursor: text;\n" +
-  "}");
-
-define("text!styles.css", [], "html {\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    overflow: hidden;\n" +
-  "}\n" +
-  "\n" +
-  "body {\n" +
-  "    overflow: hidden;\n" +
-  "    margin: 0;\n" +
-  "    padding: 0;\n" +
-  "    height: 100%;\n" +
-  "    width: 100%;\n" +
-  "    font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;\n" +
-  "    font-size: 12px;\n" +
-  "    background: rgb(14, 98, 165);\n" +
-  "    color: white;\n" +
-  "}\n" +
-  "\n" +
-  "#logo {\n" +
-  "    padding: 15px;\n" +
-  "    margin-left: 70px;\n" +
-  "}\n" +
-  "\n" +
-  "#editor {\n" +
-  "    position: absolute;\n" +
-  "    top:  0px;\n" +
-  "    left: 300px;\n" +
-  "    bottom: 0px;\n" +
-  "    right: 0px;\n" +
-  "    background: white;\n" +
-  "}\n" +
-  "\n" +
-  "#controls {\n" +
-  "    padding: 5px;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td {\n" +
-  "    text-align: right;\n" +
-  "}\n" +
-  "\n" +
-  "#controls td + td {\n" +
-  "    text-align: left;\n" +
   "}");
 
 /* ***** BEGIN LICENSE BLOCK *****
