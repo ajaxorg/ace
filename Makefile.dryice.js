@@ -86,8 +86,6 @@ var copy = require('dryice').copy;
 
 var aceHome = __dirname;
 
-console.log('# ace ---------');
-
 var aceProject = {
     roots: [
         aceHome + '/lib',
@@ -165,6 +163,8 @@ copy({
 });
 
 if (target == "normal") {
+    console.log('# ace ---------');
+    
     // Create the compressed and uncompressed output files
     copy({
         source: ace,

@@ -134,7 +134,7 @@ modes.forEach(function(m) {
     modesByName[m.name] = m;
 });
 
-var loreIpsum = require("ace/requirejs/text!demo/kitchen-sink/docs/plaintext.txt");
+var loreIpsum = require("ace/requirejs/text!./docs/plaintext.txt");
 for (var i = 0; i < 5; i++) {
     loreIpsum += loreIpsum;
 }
@@ -142,108 +142,104 @@ for (var i = 0; i < 5; i++) {
 var docs = [
     new Doc(
         "javascript", "JavaScript",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/javascript.js")
+        require("ace/requirejs/text!./docs/javascript.js")
     ),
     new WrappedDoc("text", "Plain Text", loreIpsum),
     new Doc(
         "coffee", "Coffeescript",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/coffeescript.coffee")
+        require("ace/requirejs/text!./docs/coffeescript.coffee")
     ),
     new Doc(
         "json", "JSON",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/json.json")
+        require("ace/requirejs/text!./docs/json.json")
     ),
     new Doc(
         "css", "CSS",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/css.css")
+        require("ace/requirejs/text!./docs/css.css")
     ),
     new Doc(
         "scss", "SCSS",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/scss.scss")
+        require("ace/requirejs/text!./docs/scss.scss")
     ),
     new Doc(
         "html", "HTML",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/html.html")
+        require("ace/requirejs/text!./docs/html.html")
     ),
     new Doc(
         "xml", "XML",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/xml.xml")
+        require("ace/requirejs/text!./docs/xml.xml")
     ),
     new Doc(
         "svg", "SVG",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/svg.svg")
+        require("ace/requirejs/text!./docs/svg.svg")
     ),
     new Doc(
         "php", "PHP",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/php.php")
+        require("ace/requirejs/text!./docs/php.php")
     ),
     new Doc(
         "coldfusion", "ColdFusion",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/coldfusion.cfm")
+        require("ace/requirejs/text!./docs/coldfusion.cfm")
     ),
     new Doc(
         "python", "Python",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/python.py")
+        require("ace/requirejs/text!./docs/python.py")
     ),
     new Doc(
         "ruby", "Ruby",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/ruby.rb")
+        require("ace/requirejs/text!./docs/ruby.rb")
     ),
     new Doc(
         "perl", "Perl",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/perl.pl")
+        require("ace/requirejs/text!./docs/perl.pl")
     ),
     new Doc(
         "ocaml", "OCaml",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/ocaml.ml")
+        require("ace/requirejs/text!./docs/ocaml.ml")
     ),
     new Doc(
         "lua", "Lua",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/lua.lua")
+        require("ace/requirejs/text!./docs/lua.lua")
     ),
     new Doc(
         "java", "Java",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/java.java")
+        require("ace/requirejs/text!./docs/java.java")
     ),
     new Doc(
         "clojure", "Clojure",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/clojure.clj")
+        require("ace/requirejs/text!./docs/clojure.clj")
     ),
     new Doc(
         "groovy", "Groovy",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/groovy.groovy")
+        require("ace/requirejs/text!./docs/groovy.groovy")
     ),
     new Doc(
         "scala", "Scala",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/scala.scala")
+        require("ace/requirejs/text!./docs/scala.scala")
     ),
     new Doc(
         "csharp", "C#",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/csharp.cs")
+        require("ace/requirejs/text!./docs/csharp.cs")
     ),
     new Doc(
         "powershell", "Powershell",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/powershell.ps1")
+        require("ace/requirejs/text!./docs/powershell.ps1")
     ),
     new Doc(
         "c_cpp", "C/C++",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/cpp.cpp")
-    ),
-    new Doc(
-        "markdown", "Markdown",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/markdown.md")
+        require("ace/requirejs/text!./docs/cpp.cpp")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/markdown.md")
+        require("ace/requirejs/text!./docs/markdown.md")
     ),
     new WrappedDoc(
         "textile", "Textile",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/textile.textile")
+        require("ace/requirejs/text!./docs/textile.textile")
     ),
     new WrappedDoc(
         "latex", "LaTeX",
-        require("ace/requirejs/text!demo/kitchen-sink/docs/latex.tex")
+        require("ace/requirejs/text!./docs/latex.tex")
     )
 ];
 
@@ -349,7 +345,7 @@ bindDropdown("mode", function(value) {
 });
 
 bindDropdown("theme", function(value) {
-    if (require.packaged) {
+    if (window.require.packaged) {
         loadTheme(value, function() {
             env.editor.setTheme(value);
         });
