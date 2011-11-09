@@ -91,7 +91,7 @@ console.log('# ace ---------');
 var aceProject = {
     roots: [
         aceHome + '/lib',
-        aceHome
+        aceHome + '/demo'
     ],
     textPluginPattern: /^ace\/requirejs\/text!/
 }
@@ -354,29 +354,12 @@ function demo() {
         source: [
             copy.source.commonjs({
                 project: project,
-                require: [ "demo/kitchen-sink/demo" ]
+                require: [ "kitchen-sink/demo" ]
             })
         ],
         filter: [ copy.filter.moduleDefines ],
         dest: demo
     });
-    copy({
-        source: {
-            root: project,
-            include: /demo\/kitchen-sink\/docs\/.*$/,
-        },
-        filter: [ copy.filter.addDefines ],
-        dest: demo
-    });
-    copy({
-        source: {
-            root: project,
-            include: /ace\/.*\.css$/,
-        },
-        filter: [ copy.filter.addDefines ],
-        dest: demo
-    });
-
     copy({
         source: demo,
         filter: [ filterTextPlugin ],
