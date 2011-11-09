@@ -35,5 +35,8 @@
     }],
     "directories": {
         "lib": "lib/ace"
+    },
+    "scripts": {
+        "test": "node lib/ace/test/all.js"
     }
 }
