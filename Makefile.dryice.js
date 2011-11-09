@@ -302,7 +302,7 @@ console.log('# ace worker ---------');
             aceHome + "/lib/ace/worker/worker.js",
             worker
         ],
-        filter: [ filterTextPlugin, copy.filter.uglifyjs ],
+        filter: [ filterTextPlugin/*, copy.filter.uglifyjs*/ ],
         dest: "build/src/worker-" + mode + ".js"
     });
 });
