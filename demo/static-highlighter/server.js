@@ -4,18 +4,18 @@
  */
 
 // include ace search path and modules
-require("../../support/paths");
+require("amd-loader");
 
 // load jsdom, which is required by Ace
-require("ace/test/mockdom");
+require("../../lib/ace/test/mockdom");
 
 var http = require("http");
 var fs = require("fs");
 
 // load the highlighter and the desired mode and theme
-var highlighter = require("ace/ext/static_highlight");
-var JavaScriptMode = require("ace/mode/javascript").Mode;
-var theme = require("ace/theme/twilight");
+var highlighter = require("../../lib/ace/ext/static_highlight");
+var JavaScriptMode = require("../../lib/ace/mode/javascript").Mode;
+var theme = require("../../lib/ace/theme/twilight");
 
 var port = process.env.PORT || 2222;
 
