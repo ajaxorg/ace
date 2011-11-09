@@ -1,6 +1,3 @@
 [submodule "doc/wiki"]
 	path = doc/wiki
 	url = git://github.com/ajaxorg/ace.wiki.git
-[submodule "node_modules/dryice"]
-	path = node_modules/dryice
-	url = git://github.com/ajaxorg/dryice.git

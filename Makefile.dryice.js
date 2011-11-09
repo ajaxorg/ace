@@ -88,10 +88,13 @@ var aceHome = __dirname;
 
 console.log('# ace ---------');
 
-var aceProject = [
-    aceHome + '/lib',
-    aceHome
-];
+var aceProject = {
+    roots: [
+        aceHome + '/lib',
+        aceHome
+    ],
+    textPluginPattern: /^ace\/requirejs\/text!/
+}
 
 if (target == "normal") {
     //aceProject.push(aceHome + '/demo');
@@ -135,7 +138,8 @@ copy({
             project: project,
             require: [
                 "ace/lib/fixoldbrowsers",
-                "ace/ace"
+                "ace/ace",
+                "pilot/index" // MIGRATION API
             ]
         })
     ],
@@ -218,7 +222,7 @@ project.assumeAllFilesLoaded();
     copy({
         source: [
             copy.source.commonjs({
-                project: project.clone(),
+                project: cloneProject(project),
                 require: [ 'ace/mode/' + mode ]
             })
         ],
@@ -272,9 +276,12 @@ console.log('# ace worker ---------');
 ["javascript", "coffee", "css"].forEach(function(mode) {
     console.log("worker for " + mode + " mode");
     var worker = copy.createDataObject();
-    var workerProject = copy.createCommonJsProject([
-        aceHome + '/lib'
-    ]);
+    var workerProject = copy.createCommonJsProject({
+        roots: [
+            aceHome + '/lib'
+        ],
+        textPluginPattern: /^ace\/requirejs\/text!/
+    });
     copy({
         source: [
             copy.source.commonjs({
@@ -308,7 +315,7 @@ project.assumeAllFilesLoaded();
     copy({
         source: [
             copy.source.commonjs({
-                project: project.clone(),
+                project: cloneProject(project),
                 require: [ 'ace/keyboard/keybinding/' + keybinding ]
             })
         ],
@@ -381,3 +388,23 @@ function demo() {
         dest: 'build/demo/kitchen-sink/kitchen-sink.js'
     });
 }
+
+
+// TODO: replace with project.clone once it is fixed in dryice
+function cloneProject(project) {
+    var clone = copy.createCommonJsProject({
+        roots: project.roots,
+        ignores: project.ignoreRequires
+    });
+
+    Object.keys(project.currentFiles).forEach(function(module) {
+        clone.currentFiles[module] = project.currentFiles[module];
+    });
+
+    Object.keys(project.ignoredFiles).forEach(function(module) {
+        clone.ignoredFiles[module] = project.ignoredFiles[module];
+    });
+
+    return clone;
+};
+

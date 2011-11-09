@@ -11,16 +11,14 @@
          "url" : "http://github.com/ajaxorg/ace.git"
     },
     "dependencies": {
-        "mime": ">=1.2.1"
+        "mime": "1.2.x"
     },
     "devDependencies": {
         "asyncjs": "0.0.x",
-        "uglify-js": "1.1.x",
         "jsdom": "0.1.x",
-        "htmlparser": "1.7.x",
-        "mime": "1.2.x",
         "amd-loader": "0.0.x",
-        "libxml": "0.0.x"
+        "libxml": "0.0.x",
+        "dryice": ">=0.3.0"
     },
     
     "licenses": [{
