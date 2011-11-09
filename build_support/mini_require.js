@@ -78,11 +78,11 @@ global.define = _define;
 /**
  * Get at functionality define()ed using the function above
  */
-var _require = function(module, callback) {
+var _require = function(parentId, module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
-            var dep = lookup(module[i]);
+            var dep = lookup(parentId, module[i]);
             if (!dep && _require.original)
                 return _require.original.apply(window, arguments);
             params.push(dep);
@@ -92,7 +92,7 @@ var _require = function(module, callback) {
         }
     }
     else if (typeof module === 'string') {
-        var payload = lookup(module);
+        var payload = lookup(parentId, module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
         
@@ -107,19 +107,42 @@ var _require = function(module, callback) {
             return _require.original.apply(window, arguments);
     }
 };
-_require.packaged = true;
 
 if (global.require)
     _require.original = global.require;
     
-global.require = _require;
+global.require = _require.bind(null, "");
+global.require.packaged = true;
+
+var normalizeModule = function(parentId, moduleName) {
+    // normalize plugin requires
+    if (moduleName.indexOf("!") !== -1) {
+        var chunks = moduleName.split("!");
+        return normalizeModule(parentId, chunks[0]) + "!" + normalizeModule(parentId, chunks[1]);
+    }
+    // normalize relative requires
+    if (moduleName.charAt(0) == ".") {
+        var base = parentId.split("/").slice(0, -1).join("/");
+        var moduleName = base + "/" + moduleName;
+        
+        while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
+            var previous = moduleName;
+            var moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
+        }
+    }
+    
+    return moduleName;
+}
 
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
  * definition function if needed.
  */
-var lookup = function(moduleName) {
+var lookup = function(parentId, moduleName) {
+
+    moduleName = normalizeModule(parentId, moduleName);
+
     var module = define.modules[moduleName];
     if (module == null) {
         return null;
@@ -127,7 +150,7 @@ var lookup = function(moduleName) {
 
     if (typeof module === 'function') {
         var exports = {};
-        module(require, exports, { id: moduleName, uri: '' });
+        module(_require.bind(this, moduleName), exports, { id: moduleName, uri: '' });
         // cache the resulting module object for next time
         define.modules[moduleName] = exports;
         return exports;
