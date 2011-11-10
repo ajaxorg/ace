@@ -150,7 +150,14 @@ var lookup = function(parentId, moduleName) {
 
     if (typeof module === 'function') {
         var exports = {};
-        module(_require.bind(this, moduleName), exports, { id: moduleName, uri: '' });
+        var mod = {
+            id: moduleName, 
+            uri: '',
+            exports: exports
+        }
+        var returnValue = module(_require.bind(this, moduleName), exports, mod);
+        exports = returnValue || mod.exports;
+            
         // cache the resulting module object for next time
         define.modules[moduleName] = exports;
         return exports;
