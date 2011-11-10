@@ -159,7 +159,7 @@ exports.launch = function(env) {
         ),
         new Doc(
            "haxe", "haXe",
-           require("ace/requirejs/text!demo/kitchen-sink/docs/haxe.hx")
+           require("ace/requirejs/text!demo/kitchen-sink/docs/Haxe.hx")
            ),
         new Doc(
             "xml", "XML",
