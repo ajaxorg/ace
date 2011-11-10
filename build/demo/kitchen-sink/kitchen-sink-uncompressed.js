@@ -5431,7 +5431,7 @@ exports.create = create;
  * ***** END LICENSE BLOCK ***** */
 
 
-define('demo/kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/svg', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!demo/kitchen-sink/docs/plaintext.txt', 'text!demo/kitchen-sink/docs/javascript.js', 'text!demo/kitchen-sink/docs/coffeescript.coffee', 'text!demo/kitchen-sink/docs/json.json', 'text!demo/kitchen-sink/docs/css.css', 'text!demo/kitchen-sink/docs/scss.scss', 'text!demo/kitchen-sink/docs/html.html', 'text!demo/kitchen-sink/docs/haxe.hx', 'text!demo/kitchen-sink/docs/xml.xml', 'text!demo/kitchen-sink/docs/svg.svg', 'text!demo/kitchen-sink/docs/php.php', 'text!demo/kitchen-sink/docs/coldfusion.cfm', 'text!demo/kitchen-sink/docs/python.py', 'text!demo/kitchen-sink/docs/ruby.rb', 'text!demo/kitchen-sink/docs/perl.pl', 'text!demo/kitchen-sink/docs/ocaml.ml', 'text!demo/kitchen-sink/docs/lua.lua', 'text!demo/kitchen-sink/docs/java.java', 'text!demo/kitchen-sink/docs/clojure.clj', 'text!demo/kitchen-sink/docs/groovy.groovy', 'text!demo/kitchen-sink/docs/scala.scala', 'text!demo/kitchen-sink/docs/csharp.cs', 'text!demo/kitchen-sink/docs/powershell.ps1', 'text!demo/kitchen-sink/docs/cpp.cpp', 'text!demo/kitchen-sink/docs/markdown.md', 'text!demo/kitchen-sink/docs/textile.textile', 'text!demo/kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
+define('demo/kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/net', 'pilot/canon', 'pilot/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/svg', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!demo/kitchen-sink/docs/plaintext.txt', 'text!demo/kitchen-sink/docs/javascript.js', 'text!demo/kitchen-sink/docs/coffeescript.coffee', 'text!demo/kitchen-sink/docs/json.json', 'text!demo/kitchen-sink/docs/css.css', 'text!demo/kitchen-sink/docs/scss.scss', 'text!demo/kitchen-sink/docs/html.html', 'text!demo/kitchen-sink/docs/Haxe.hx', 'text!demo/kitchen-sink/docs/xml.xml', 'text!demo/kitchen-sink/docs/svg.svg', 'text!demo/kitchen-sink/docs/php.php', 'text!demo/kitchen-sink/docs/coldfusion.cfm', 'text!demo/kitchen-sink/docs/python.py', 'text!demo/kitchen-sink/docs/ruby.rb', 'text!demo/kitchen-sink/docs/perl.pl', 'text!demo/kitchen-sink/docs/ocaml.ml', 'text!demo/kitchen-sink/docs/lua.lua', 'text!demo/kitchen-sink/docs/java.java', 'text!demo/kitchen-sink/docs/clojure.clj', 'text!demo/kitchen-sink/docs/groovy.groovy', 'text!demo/kitchen-sink/docs/scala.scala', 'text!demo/kitchen-sink/docs/csharp.cs', 'text!demo/kitchen-sink/docs/powershell.ps1', 'text!demo/kitchen-sink/docs/cpp.cpp', 'text!demo/kitchen-sink/docs/markdown.md', 'text!demo/kitchen-sink/docs/textile.textile', 'text!demo/kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
 
 var net = require("ace/lib/net");
 var canon = require("pilot/canon");
@@ -5552,7 +5552,7 @@ exports.launch = function(env) {
         ),
         new Doc(
            "haxe", "haXe",
-           require("text!demo/kitchen-sink/docs/haxe.hx")
+           require("text!demo/kitchen-sink/docs/Haxe.hx")
            ),
         new Doc(
             "xml", "XML",
@@ -26959,15 +26959,6 @@ function UndoManagerProxy(undoManager, session) {
 
 exports.Split = Split;
 });
-define("text!demo/kitchen-sink/docs/haxe.hx", [], "class MyHaxeClass {\n" +
-  "	public HelloWorld:Void() \n" +
-  "	{\n" +
-  "		// Say Hello!\n" +
-  "		var greeting = \"Hello\";\n" +
-  "		trace(greeting + \" World\");\n" +
-  "	}\n" +
-  "}");
-
 define("text!demo/kitchen-sink/docs/css.css", [], ".text-layer {\n" +
   "    font-family: Monaco, \"Courier New\", monospace;\n" +
   "    font-size: 12px;\n" +
@@ -27440,6 +27431,8 @@ define("text!demo/kitchen-sink/docs/ruby.rb", [], "#!/usr/bin/ruby\n" +
   "\n" +
   "puts fact(ARGV[0].to_i)");
 
+define("text!demo/kitchen-sink/docs/.Haxe.hx~", [], "");
+
 define("text!demo/kitchen-sink/docs/javascript.js", [], "function foo(items) {\n" +
   "    for (var i=0; i<items.length; i++) {\n" +
   "        alert(items[i] + \"juhu\");\n" +
@@ -27697,12 +27690,39 @@ define("text!demo/kitchen-sink/docs/coffeescript.coffee", [], "#!/usr/bin/env co
   "    this isnt: `just JavaScript`\n" +
   "    undefined");
 
-define("text!demo/kitchen-sink/docs/.haxe.hx~", [], "class MyHaxeClass {\n" +
-  "	public void HelloWorld() \n" +
+define("text!demo/kitchen-sink/docs/Haxe.hx", [], "class Haxe \n" +
+  "{\n" +
+  "	public static function main() \n" +
   "	{\n" +
   "		// Say Hello!\n" +
-  "		var greeting = \"Hello\";\n" +
-  "		trace(greeting + \" World\");\n" +
+  "		var greeting:String = \"Hello World\";\n" +
+  "		trace(greeting);\n" +
+  "		\n" +
+  "		var targets:Array<String> = [\"Flash\",\"Javascript\",\"PHP\",\"Neko\",\"C++\",\"iOS\",\"Android\",\"webOS\"];\n" +
+  "		trace(\"Haxe is a great language that can target:\");\n" +
+  "		for (target in targets)\n" +
+  "		{\n" +
+  "			trace (\" - \" + target);\n" +
+  "		}\n" +
+  "		trace(\"And many more!\");\n" +
+  "	}\n" +
+  "}");
+
+define("text!demo/kitchen-sink/docs/.haxe.hx~", [], "class haxe \n" +
+  "{\n" +
+  "	public static function main() \n" +
+  "	{\n" +
+  "		// Say Hello!\n" +
+  "		var greeting:String = \"Hello World\";\n" +
+  "		trace(greeting);\n" +
+  "		\n" +
+  "		var targets:Array<String> = [\"Flash\",\"Javascript\",\"PHP\",\"Neko\",\"C++\",\"iOS\",\"Android\",\"webOS\"];\n" +
+  "		trace(\"Haxe is a great language that can target:\");\n" +
+  "		for (target in targets)\n" +
+  "		{\n" +
+  "			trace (\" - \" + target);\n" +
+  "		}\n" +
+  "		trace(\"And many more!\");\n" +
   "	}\n" +
   "}");
 
