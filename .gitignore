@@ -19,6 +19,7 @@ node_modules/asyncjs/
 node_modules/jsdom/
 node_modules/libxml/
 node_modules/mime/
+node_modules/dryice/
 node_modules/uglify-js/
 node_modules/.bin/
 
