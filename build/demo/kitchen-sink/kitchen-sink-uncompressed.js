@@ -150,7 +150,14 @@ var lookup = function(parentId, moduleName) {
 
     if (typeof module === 'function') {
         var exports = {};
-        module(_require.bind(this, moduleName), exports, { id: moduleName, uri: '' });
+        var mod = {
+            id: moduleName, 
+            uri: '',
+            exports: exports
+        }
+        var returnValue = module(_require.bind(this, moduleName), exports, mod);
+        exports = returnValue || mod.exports;
+            
         // cache the resulting module object for next time
         define.modules[moduleName] = exports;
         return exports;
@@ -11064,6 +11071,22 @@ var CommandManager = function(commands) {
             this._buildKeyHash(command);   
         }
     };
+    
+    function removeCommand(command) {
+        var name = (typeof command === 'string' ? command : command.name);
+        command = this.commands[name];
+        delete commands[name];
+
+        // exaustive search is a little bit brute force but since removeCommand is
+        // not a performance critical operation this should be OK
+        var ckb = this.commmandKeyBinding;
+        for (var hashId in ckb) {
+            for (var key in ckb[hashId]) {
+                if (ckb[hashId][key] == command)
+                    delete ckb[hashId][key];
+            }
+        }
+    };
 
     var platform = useragent.isMac ? "mac" : "win";
     
@@ -11182,7 +11205,7 @@ var CursorLayer = require("./layer/cursor").Cursor;
 var ScrollBar = require("./scrollbar").ScrollBar;
 var RenderLoop = require("./renderloop").RenderLoop;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-var editorCss = require("text!./css/editor.css");
+var editorCss = require("text!ace/css/editor.css");
 
 var VirtualRenderer = function(container, theme) {
     this.container = container;
@@ -11190,6 +11213,11 @@ var VirtualRenderer = function(container, theme) {
     // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
     dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
     dom.addCssClass(this.container, "ace_editor");
+    
+    // Chrome has some strange rendering issues if this is not done async
+    setTimeout(function() {
+        dom.addCssClass(this.container, "ace_editor");
+    }.bind(this), 0)
 
     this.setTheme(theme);
 
