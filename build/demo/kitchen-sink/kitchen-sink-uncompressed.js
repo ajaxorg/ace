@@ -3296,7 +3296,7 @@ var Editor = function(renderer, session) {
         wrap: true
     });
 
-    this.commands = new CommandManager(defaultCommands);
+    this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
     this.setSession(session || new EditSession(""));
 };
 
@@ -5709,7 +5709,6 @@ var KeyBinding = function(editor) {
     };
 
     this.$callKeyboardHandler = function (e, hashId, keyOrText, keyCode) {
-        var env = {editor: this.$editor};
         var toExecute;
         var commands = this.$editor.commands;
 
@@ -5723,7 +5722,7 @@ var KeyBinding = function(editor) {
         if (!toExecute || !toExecute.command) {
             if (hashId != 0 || keyCode != 0) {
                 toExecute = {
-                    command: commands.findKeyCommand(env, hashId, keyOrText)
+                    command: commands.findKeyCommand(hashId, keyOrText)
                 }
             } else {
                 toExecute = {
@@ -5739,7 +5738,7 @@ var KeyBinding = function(editor) {
         if (toExecute && toExecute.command) {
             success = commands.exec(
                 toExecute.command,
-                env, toExecute.args
+                this.$editor, toExecute.args
             );
             if (success) {
                 event.stopEvent(e);
@@ -5811,286 +5810,285 @@ var lang = require("../lib/lang");
 function bindKey(win, mac) {
     return {
         win: win,
-        mac: mac,
-        sender: "editor"
+        mac: mac
     };
 }
 
 exports.commands = [{
     name: "selectall",
     bindKey: bindKey("Ctrl-A", "Command-A"),
-    exec: function(env, args) { env.editor.selectAll(); }
+    exec: function(editor) { editor.selectAll(); }
 }, {
     name: "removeline",
     bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(env, args) { env.editor.removeLines(); }
+    exec: function(editor) { editor.removeLines(); }
 }, {
     name: "gotoline",
     bindKey: bindKey("Ctrl-L", "Command-L"),
-    exec: function(env, args) {
+    exec: function(editor) {
         var line = parseInt(prompt("Enter line number:"));
         if (!isNaN(line)) {
-            env.editor.gotoLine(line);
+            editor.gotoLine(line);
         }
     }
 }, {
     name: "togglecomment",
     bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(env, args) { env.editor.toggleCommentLines(); }
+    exec: function(editor) { editor.toggleCommentLines(); }
 }, {
     name: "findnext",
     bindKey: bindKey("Ctrl-K", "Command-G"),
-    exec: function(env, args) { env.editor.findNext(); }
+    exec: function(editor) { editor.findNext(); }
 }, {
     name: "findprevious",
     bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
-    exec: function(env, args) { env.editor.findPrevious(); }
+    exec: function(editor) { editor.findPrevious(); }
 }, {
     name: "find",
     bindKey: bindKey("Ctrl-F", "Command-F"),
-    exec: function(env, args) {
-        var needle = prompt("Find:", env.editor.getCopyText());
-        env.editor.find(needle);
+    exec: function(editor) {
+        var needle = prompt("Find:", editor.getCopyText());
+        editor.find(needle);
     }
 }, {
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
-    exec: function(env, args) {
-        var needle = prompt("Find:", env.editor.getCopyText());
+    exec: function(editor) {
+        var needle = prompt("Find:", editor.getCopyText());
         if (!needle)
             return;
         var replacement = prompt("Replacement:");
         if (!replacement)
             return;
-        env.editor.replace(replacement, {needle: needle});
+        editor.replace(replacement, {needle: needle});
     }
 }, {
     name: "replaceall",
     bindKey: bindKey("Ctrl-Shift-R", "Command-Shift-Option-F"),
-    exec: function(env, args) {
+    exec: function(editor) {
         var needle = prompt("Find:");
         if (!needle)
             return;
         var replacement = prompt("Replacement:");
         if (!replacement)
             return;
-        env.editor.replaceAll(replacement, {needle: needle});
+        editor.replaceAll(replacement, {needle: needle});
     }
 }, {
     name: "undo",
     bindKey: bindKey("Ctrl-Z", "Command-Z"),
-    exec: function(env, args) { env.editor.undo(); }
+    exec: function(editor) { editor.undo(); }
 }, {
     name: "redo",
     bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
-    exec: function(env, args) { env.editor.redo(); }
+    exec: function(editor) { editor.redo(); }
 }, {
     name: "overwrite",
     bindKey: bindKey("Insert", "Insert"),
-    exec: function(env, args) { env.editor.toggleOverwrite(); }
+    exec: function(editor) { editor.toggleOverwrite(); }
 }, {
     name: "copylinesup",
     bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
-    exec: function(env, args) { env.editor.copyLinesUp(); }
+    exec: function(editor) { editor.copyLinesUp(); }
 }, {
     name: "movelinesup",
     bindKey: bindKey("Alt-Up", "Option-Up"),
-    exec: function(env, args) { env.editor.moveLinesUp(); }
+    exec: function(editor) { editor.moveLinesUp(); }
 }, {
     name: "selecttostart",
     bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
-    exec: function(env, args) { env.editor.getSelection().selectFileStart(); }
+    exec: function(editor) { editor.getSelection().selectFileStart(); }
 }, {
     name: "gotostart",
     bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
-    exec: function(env, args) { env.editor.navigateFileStart(); }
+    exec: function(editor) { editor.navigateFileStart(); }
 }, {
     name: "selectup",
     bindKey: bindKey("Shift-Up", "Shift-Up"),
-    exec: function(env, args) { env.editor.getSelection().selectUp(); }
+    exec: function(editor) { editor.getSelection().selectUp(); }
 }, {
     name: "golineup",
     bindKey: bindKey("Up", "Up|Ctrl-P"),
-    exec: function(env, args) { env.editor.navigateUp(args.times); }
+    exec: function(editor, args) { editor.navigateUp(args.times); }
 }, {
     name: "copylinesdown",
     bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
-    exec: function(env, args) { env.editor.copyLinesDown(); }
+    exec: function(editor) { editor.copyLinesDown(); }
 }, {
     name: "movelinesdown",
     bindKey: bindKey("Alt-Down", "Option-Down"),
-    exec: function(env, args) { env.editor.moveLinesDown(); }
+    exec: function(editor) { editor.moveLinesDown(); }
 }, {
     name: "selecttoend",
     bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
-    exec: function(env, args) { env.editor.getSelection().selectFileEnd(); }
+    exec: function(editor) { editor.getSelection().selectFileEnd(); }
 }, {
     name: "gotoend",
     bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
-    exec: function(env, args) { env.editor.navigateFileEnd(); }
+    exec: function(editor) { editor.navigateFileEnd(); }
 }, {
     name: "selectdown",
     bindKey: bindKey("Shift-Down", "Shift-Down"),
-    exec: function(env, args) { env.editor.getSelection().selectDown(); }
+    exec: function(editor) { editor.getSelection().selectDown(); }
 }, {
     name: "golinedown",
     bindKey: bindKey("Down", "Down|Ctrl-N"),
-    exec: function(env, args) { env.editor.navigateDown(args.times); }
+    exec: function(editor, args) { editor.navigateDown(args.times); }
 }, {
     name: "selectwordleft",
     bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
-    exec: function(env, args) { env.editor.getSelection().selectWordLeft(); }
+    exec: function(editor) { editor.getSelection().selectWordLeft(); }
 }, {
     name: "gotowordleft",
     bindKey: bindKey("Ctrl-Left", "Option-Left"),
-    exec: function(env, args) { env.editor.navigateWordLeft(); }
+    exec: function(editor) { editor.navigateWordLeft(); }
 }, {
     name: "selecttolinestart",
     bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
-    exec: function(env, args) { env.editor.getSelection().selectLineStart(); }
+    exec: function(editor) { editor.getSelection().selectLineStart(); }
 }, {
     name: "gotolinestart",
     bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
-    exec: function(env, args) { env.editor.navigateLineStart(); }
+    exec: function(editor) { editor.navigateLineStart(); }
 }, {
     name: "selectleft",
     bindKey: bindKey("Shift-Left", "Shift-Left"),
-    exec: function(env, args) { env.editor.getSelection().selectLeft(); }
+    exec: function(editor) { editor.getSelection().selectLeft(); }
 }, {
     name: "gotoleft",
     bindKey: bindKey("Left", "Left|Ctrl-B"),
-    exec: function(env, args) { env.editor.navigateLeft(args.times); }
+    exec: function(editor, args) { editor.navigateLeft(args.times); }
 }, {
     name: "selectwordright",
     bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
-    exec: function(env, args) { env.editor.getSelection().selectWordRight(); }
+    exec: function(editor) { editor.getSelection().selectWordRight(); }
 }, {
     name: "gotowordright",
     bindKey: bindKey("Ctrl-Right", "Option-Right"),
-    exec: function(env, args) { env.editor.navigateWordRight(); }
+    exec: function(editor) { editor.navigateWordRight(); }
 }, {
     name: "selecttolineend",
     bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
-    exec: function(env, args) { env.editor.getSelection().selectLineEnd(); }
+    exec: function(editor) { editor.getSelection().selectLineEnd(); }
 }, {
     name: "gotolineend",
     bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
-    exec: function(env, args) { env.editor.navigateLineEnd(); }
+    exec: function(editor) { editor.navigateLineEnd(); }
 }, {
     name: "selectright",
     bindKey: bindKey("Shift-Right", "Shift-Right"),
-    exec: function(env, args) { env.editor.getSelection().selectRight(); }
+    exec: function(editor) { editor.getSelection().selectRight(); }
 }, {
     name: "gotoright",
     bindKey: bindKey("Right", "Right|Ctrl-F"),
-    exec: function(env, args) { env.editor.navigateRight(args.times); }
+    exec: function(editor, args) { editor.navigateRight(args.times); }
 }, {
     name: "selectpagedown",
     bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
-    exec: function(env, args) { env.editor.selectPageDown(); }
+    exec: function(editor) { editor.selectPageDown(); }
 }, {
     name: "pagedown",
     bindKey: bindKey(null, "PageDown"),
-    exec: function(env, args) { env.editor.scrollPageDown(); }
+    exec: function(editor) { editor.scrollPageDown(); }
 }, {
     name: "gotopagedown",
     bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
-    exec: function(env, args) { env.editor.gotoPageDown(); }
+    exec: function(editor) { editor.gotoPageDown(); }
 }, {
     name: "selectpageup",
     bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
-    exec: function(env, args) { env.editor.selectPageUp(); }
+    exec: function(editor) { editor.selectPageUp(); }
 }, {
     name: "pageup",
     bindKey: bindKey(null, "PageUp"),
-    exec: function(env, args) { env.editor.scrollPageUp(); }
+    exec: function(editor) { editor.scrollPageUp(); }
 }, {
     name: "gotopageup",
     bindKey: bindKey("PageUp", "Option-PageUp"),
-    exec: function(env, args) { env.editor.gotoPageUp(); }
+    exec: function(editor) { editor.gotoPageUp(); }
 }, {
     name: "selectlinestart",
     bindKey: bindKey("Shift-Home", "Shift-Home"),
-    exec: function(env, args) { env.editor.getSelection().selectLineStart(); }
+    exec: function(editor) { editor.getSelection().selectLineStart(); }
 }, {
     name: "selectlineend",
     bindKey: bindKey("Shift-End", "Shift-End"),
-    exec: function(env, args) { env.editor.getSelection().selectLineEnd(); }
+    exec: function(editor) { editor.getSelection().selectLineEnd(); }
 }, {
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(env, args) { env.editor.remove("right"); }
+    exec: function(editor) { editor.remove("right"); }
 }, {
     name: "backspace",
     bindKey: bindKey(
         "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(env, args) { env.editor.remove("left"); }
+    exec: function(editor) { editor.remove("left"); }
 }, {
     name: "removetolinestart",
     bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
-    exec: function(env, args) { env.editor.removeToLineStart(); }
+    exec: function(editor) { editor.removeToLineStart(); }
 }, {
     name: "removetolineend",
     bindKey: bindKey("Alt-Delete", "Ctrl-K"),
-    exec: function(env, args) { env.editor.removeToLineEnd(); }
+    exec: function(editor) { editor.removeToLineEnd(); }
 }, {
     name: "removewordleft",
     bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-    exec: function(env, args) { env.editor.removeWordLeft(); }
+    exec: function(editor) { editor.removeWordLeft(); }
 }, {
     name: "removewordright",
     bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-    exec: function(env, args) { env.editor.removeWordRight(); }
+    exec: function(editor) { editor.removeWordRight(); }
 }, {
     name: "outdent",
     bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-    exec: function(env, args) { env.editor.blockOutdent(); }
+    exec: function(editor) { editor.blockOutdent(); }
 }, {
     name: "indent",
     bindKey: bindKey("Tab", "Tab"),
-    exec: function(env, args) { env.editor.indent(); }
+    exec: function(editor) { editor.indent(); }
 }, {
     name: "inserttext",
-    exec: function(env, args) {
-        env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
+    exec: function(editor, args) {
+        editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
 }, {
     name: "centerselection",
     bindKey: bindKey(null, "Ctrl-L"),
-    exec: function(env, args) { env.editor.centerSelection(); }
+    exec: function(editor) { editor.centerSelection(); }
 }, {
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
-    exec: function(env, args) { env.editor.splitLine(); }
+    exec: function(editor) { editor.splitLine(); }
 }, {
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
-    exec: function(env, args) { env.editor.transposeLetters(); }
+    exec: function(editor) { editor.transposeLetters(); }
 }, {
     name: "fold",
     bindKey: bindKey("Alt-L", "Alt-L"),
-    exec: function(env) {
-        env.editor.session.toggleFold(false);
+    exec: function(editor) {
+        editor.session.toggleFold(false);
     }
 }, {
     name: "unfold",
     bindKey: bindKey("Alt-Shift-L", "Alt-Shift-L"),
-    exec: function(env) {
-        env.editor.session.toggleFold(true);
+    exec: function(editor) {
+        editor.session.toggleFold(true);
     }
 }, {
     name: "foldall",
     bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
-    exec: function(env) {
-        env.editor.session.foldAll();
+    exec: function(editor) {
+        editor.session.foldAll();
     }
 }, {
     name: "unfoldall",
     bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
-    exec: function(env) {
-        env.editor.session.unFoldAll();
+    exec: function(editor) {
+        editor.session.unFoldAll();
     }
 }];
 
@@ -11049,12 +11047,15 @@ Search.SELECTION = 2;
 
 exports.Search = Search;
 });
-define('ace/commands/command_manager', ['require', 'exports', 'module' , 'ace/lib/keys', 'ace/lib/useragent'], function(require, exports, module) {
+define('ace/commands/command_manager', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
 
 var keyUtil = require("../lib/keys");
-var useragent = require("../lib/useragent");
 
-var CommandManager = function(commands) {
+var CommandManager = function(platform, commands) {
+    if (typeof platform !== "string")
+        throw new TypeError("'platform' argument must be either 'mac' or 'win'");
+
+    this.platform = platform;
     this.commands = {};
     this.commmandKeyBinding = {};
     
@@ -11065,6 +11066,9 @@ var CommandManager = function(commands) {
 (function() {
 
     this.addCommand = function(command) {
+        if (this.commands[command.name])
+            this.removeCommand(command);
+
         this.commands[command.name] = command;
 
         if (command.bindKey) {
@@ -11072,12 +11076,12 @@ var CommandManager = function(commands) {
         }
     };
     
-    function removeCommand(command) {
+    this.removeCommand = function(command) {
         var name = (typeof command === 'string' ? command : command.name);
         command = this.commands[name];
-        delete commands[name];
+        delete this.commands[name];
 
-        // exaustive search is a little bit brute force but since removeCommand is
+        // exaustive search is brute force but since removeCommand is
         // not a performance critical operation this should be OK
         var ckb = this.commmandKeyBinding;
         for (var hashId in ckb) {
@@ -11088,15 +11092,13 @@ var CommandManager = function(commands) {
         }
     };
 
-    var platform = useragent.isMac ? "mac" : "win";
-    
     this._buildKeyHash = function(command) {
         var binding = command.bindKey;
-        var key = binding[platform];
+        var key = binding[this.platform];
         var ckb = this.commmandKeyBinding;
 
-        if(!binding[platform]) {
-            return;   
+        if(!binding[this.platform]) {
+            return;
         }
     
         key.split("|").forEach(function(keyPart) {
@@ -11109,7 +11111,7 @@ var CommandManager = function(commands) {
     function parseKeys(keys, val, ret) {
         var key;
         var hashId = 0;
-        var parts = splitSafe(keys, "\\-", null, true);
+        var parts = splitSafe(keys);
 
         for (var i=0, l = parts.length; i < l; i++) {
             if (keyUtil.KEY_MODS[parts[i]])
@@ -11124,27 +11126,31 @@ var CommandManager = function(commands) {
         }   
     }
 
-    function splitSafe(s, separator, limit, bLowerCase) {
-        return (bLowerCase && s.toLowerCase() || s)
-            .replace(/(?:^\s+|\n|\s+$)/g, "")
-            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
+    function splitSafe(s, separator) {
+        return (s.toLowerCase()
+            .trim()
+            .split(new RegExp("[\\s ]*\\-[\\s ]*", "g"), 999));
     }
 
-    this.findKeyCommand = function findKeyCommand(env, hashId, textOrKey) {
+    this.findKeyCommand = function findKeyCommand(hashId, textOrKey) {
         // Convert keyCode to the string representation.
         if (typeof textOrKey == "number") {
             textOrKey = keyUtil.keyCodeToString(textOrKey);
         }
-    
+
         var ckbr = this.commmandKeyBinding;
-        return ckbr[hashId] && ckbr[hashId][textOrKey];
+        return ckbr[hashId] && ckbr[hashId][textOrKey.toLowerCase()];
     }
 
-    this.exec = function(command, env, args) {
+    this.exec = function(command, editor, args) {
         if (typeof command === 'string')
             command = this.commands[command];
         
-        command.exec(env, args || {});
+        if (!command)
+            return false;
+            
+        command.exec(editor, args || {});
+        return true;
     };
 
 }).call(CommandManager.prototype);
@@ -11212,12 +11218,11 @@ var VirtualRenderer = function(container, theme) {
 
     // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
     dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-    dom.addCssClass(this.container, "ace_editor");
     
     // Chrome has some strange rendering issues if this is not done async
     setTimeout(function() {
-        dom.addCssClass(this.container, "ace_editor");
-    }.bind(this), 0)
+        dom.addCssClass(container, "ace_editor");
+    }, 0)
 
     this.setTheme(theme);
 
