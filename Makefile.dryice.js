@@ -95,8 +95,6 @@ var aceProject = {
 }
 
 if (target == "normal") {
-    //aceProject.push(aceHome + '/demo');
-
     copy({
         source: "build_support/editor.html",
         dest:   targetDir + '/editor.html'
@@ -136,8 +134,7 @@ copy({
             project: project,
             require: [
                 "ace/lib/fixoldbrowsers",
-                "ace/ace",
-                "pilot/index" // MIGRATION API
+                "ace/ace"
             ]
         })
     ],
@@ -176,6 +173,19 @@ if (target == "normal") {
         filter: [filterTextPlugin],
         dest:   targetDir + '/src/ace-uncompressed.js'
     });
+    
+    project.assumeAllFilesLoaded();
+    copy({
+        source: [
+            copy.source.commonjs({
+                project: cloneProject(project),
+                require: [ "pilot/index" ]
+            })
+        ],
+        filter: [copy.filter.uglifyjs, filterTextPlugin],
+        dest:   targetDir + "/src/ace-compat.js"
+    });
+    
 } else if (target == "bm") {
     copy({
         source: ace,
