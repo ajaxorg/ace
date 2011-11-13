@@ -242,6 +242,10 @@ var docs = [
     new WrappedDoc(
         "latex", "LaTeX",
         require("ace/requirejs/text!./docs/latex.tex")
+    ),
+    new Doc(
+        "markdown", "International Text",
+        require("ace/requirejs/text!./docs/international.md")
     )
 ];
 
