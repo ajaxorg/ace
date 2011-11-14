@@ -340,6 +340,8 @@ function updateUIEditorOptions() {
     selectStyleEl.checked = editor.getSelectionStyle() == "line";
     themeEl.value = editor.getTheme();
     highlightActiveEl.checked = editor.getHighlightActiveLine();
+    
+    editor.setShowInvisibles(true);
     showHiddenEl.checked = editor.getShowInvisibles();
     showGutterEl.checked = editor.renderer.getShowGutter();
     showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
