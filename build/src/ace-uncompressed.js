@@ -111,7 +111,10 @@ var _require = function(parentId, module, callback) {
 if (global.require)
     _require.original = global.require;
     
-global.require = _require.bind(null, "");
+global.require = function(module, callback) {
+    return _require("", module, callback);
+};
+
 global.require.packaged = true;
 
 var normalizeModule = function(parentId, moduleName) {
@@ -155,7 +158,12 @@ var lookup = function(parentId, moduleName) {
             uri: '',
             exports: exports
         }
-        var returnValue = module(_require.bind(this, moduleName), exports, mod);
+        
+        var req = function(module, callback) {
+            return _require(moduleName, module, callback);
+        };
+        
+        var returnValue = module(req, exports, mod);
         exports = returnValue || mod.exports;
             
         // cache the resulting module object for next time
