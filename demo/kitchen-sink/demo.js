@@ -107,6 +107,7 @@ var modes = [
     new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
     new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
     new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
+    new Mode("haxe", "haXe", require("ace/mode/haxe").Mode, ["hx"]),
     new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
     new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
     new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
@@ -228,6 +229,10 @@ var docs = [
     new Doc(
         "c_cpp", "C/C++",
         require("ace/requirejs/text!./docs/cpp.cpp")
+    ),
+    new Doc(
+        "haxe", "haXe",
+        require("ace/requirejs/text!./docs/Haxe.hx")
     ),
     new WrappedDoc(
         "markdown", "Markdown",

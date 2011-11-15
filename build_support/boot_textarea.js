@@ -416,6 +416,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             clojure:    "Clojure",
             ocaml:      "OCaml",
             csharp:     "C#",
+            haxe:       "haXe",
             svg:        "SVG",
             textile:    "Textile",
             groovy:     "Groovy",
