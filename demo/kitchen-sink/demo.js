@@ -154,13 +154,13 @@ exports.launch = function(env) {
             require("ace/requirejs/text!demo/kitchen-sink/docs/scss.scss")
         ),
         new Doc(
-           "html", "HTML",
-           require("ace/requirejs/text!demo/kitchen-sink/docs/html.html")
+            "html", "HTML",
+            require("ace/requirejs/text!demo/kitchen-sink/docs/html.html")
         ),
         new Doc(
-           "haxe", "haXe",
-           require("ace/requirejs/text!demo/kitchen-sink/docs/Haxe.hx")
-           ),
+            "haxe", "haXe",
+            require("ace/requirejs/text!demo/kitchen-sink/docs/Haxe.hx")
+        ),
         new Doc(
             "xml", "XML",
             require("ace/requirejs/text!demo/kitchen-sink/docs/xml.xml")
