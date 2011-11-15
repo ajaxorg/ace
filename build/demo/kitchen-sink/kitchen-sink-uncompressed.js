@@ -6502,7 +6502,7 @@ var EditSession = function(text, mode) {
     };
 
     this.getAnnotations = function() {
-        return this.$annotations;
+        return this.$annotations || {};
     };
 
     this.clearAnnotations = function() {
@@ -15853,7 +15853,9 @@ oop.inherits(Mode, TextMode);
         
         worker.on("ok", function(e) {
             session.clearAnnotations();
-        });    
+        });
+        
+        return worker;
     };
 
 }).call(Mode.prototype);
@@ -16887,6 +16889,7 @@ oop.inherits(Mode, TextMode);
             
             session.setAnnotations(errors);
         });
+        return worker;
     };
 
 }).call(Mode.prototype);
