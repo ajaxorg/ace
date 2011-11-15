@@ -214,7 +214,7 @@ var lookup = function(parentId, moduleName) {
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 var env = {};
@@ -283,6 +283,7 @@ var modes = [
     new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
     new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
     new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
+    new Mode("haxe", "haXe", require("ace/mode/haxe").Mode, ["hx"]),
     new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
     new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
     new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
@@ -404,6 +405,10 @@ var docs = [
     new Doc(
         "c_cpp", "C/C++",
         require("text!./docs/cpp.cpp")
+    ),
+    new Doc(
+        "haxe", "haXe",
+        require("text!./docs/Haxe.hx")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
@@ -17830,6 +17835,165 @@ oop.inherits(GroovyHighlightRules, TextHighlightRules);
 
 exports.GroovyHighlightRules = GroovyHighlightRules;
 });
+define('ace/mode/haxe', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/haxe_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
+
+var oop = require("../lib/oop");
+var TextMode = require("./text").Mode;
+var Tokenizer = require("../tokenizer").Tokenizer;
+var HaxeHighlightRules = require("./haxe_highlight_rules").HaxeHighlightRules;
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
+var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
+
+var Mode = function() {
+    this.$tokenizer = new Tokenizer(new HaxeHighlightRules().getRules());
+    this.$outdent = new MatchingBraceOutdent();
+    this.$behaviour = new CstyleBehaviour();
+};
+oop.inherits(Mode, TextMode);
+
+(function() {
+
+      this.getNextLineIndent = function(state, line, tab) {
+          var indent = this.$getIndent(line);
+
+          var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+          var tokens = tokenizedLine.tokens;
+          var endState = tokenizedLine.state;
+
+          if (tokens.length && tokens[tokens.length-1].type == "comment") {
+              return indent;
+          }
+
+          if (state == "start") {
+              var match = line.match(/^.*[\{\(\[]\s*$/);
+              if (match) {
+                  indent += tab;
+              }
+          }
+
+          return indent;
+      };
+
+      this.checkOutdent = function(state, line, input) {
+          return this.$outdent.checkOutdent(line, input);
+      };
+
+      this.autoOutdent = function(state, doc, row) {
+          this.$outdent.autoOutdent(doc, row);
+      };
+
+
+    this.createWorker = function(session) {
+        return null;
+    };
+
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
+define('ace/mode/haxe_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+
+var oop = require("../lib/oop");
+var lang = require("../lib/lang");
+var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+var HaxeHighlightRules = function() {
+
+    var keywords = lang.arrayToMap(
+        ("break|case|cast|catch|class|continue|default|else|enum|extends|for|function|if|implements|import|in|inline|interface|new|override|package|private|public|return|static|super|switch|this|throw|trace|try|typedef|untyped|var|while|Array|Void|Bool|Int|UInt|Float|Dynamic|String|List|Hash|IntHash|Error|Unknown|Type|Std").split("|")
+    );
+
+    var buildinConstants = lang.arrayToMap(
+        ("null|true|false").split("|")
+    );
+
+
+    // regexp must not have capturing parentheses. Use (?:) instead.
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        "start" : [
+            {
+                token : "comment",
+                regex : "\\/\\/.*$"
+            },
+            new DocCommentHighlightRules().getStartRule("doc-start"),
+            {
+                token : "comment", // multi line comment
+                regex : "\\/\\*",
+                merge : true,
+                next : "comment"
+            }, {
+                token : "string.regexp",
+                regex : "[/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\/|[^\\]/]))*[/]\\w*\\s*(?=[).,;]|$)"
+            }, {
+                token : "string", // single line
+                regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+            }, {
+                token : "string", // single line
+                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+            }, {
+                token : "constant.numeric", // hex
+                regex : "0[xX][0-9a-fA-F]+\\b"
+            }, {
+                token : "constant.numeric", // float
+                regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+            }, {
+                token : "constant.language.boolean",
+                regex : "(?:true|false)\\b"
+            }, {
+                token : function(value) {
+                    if (value == "this")
+                        return "variable.language";
+                    else if (keywords.hasOwnProperty(value))
+                        return "keyword";
+                    else if (buildinConstants.hasOwnProperty(value))
+                        return "constant.language";
+                    else
+                        return "identifier";
+                },
+                // TODO: Unicode escape sequences
+                // TODO: Unicode identifiers
+                regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+            }, {
+                token : "keyword.operator",
+                regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
+            }, {
+                token : "punctuation.operator",
+                regex : "\\?|\\:|\\,|\\;|\\."
+            }, {
+                token : "paren.lparen",
+                regex : "[[({<]"
+            }, {
+                token : "paren.rparen",
+                regex : "[\\])}>]"
+            }, {
+                token : "text",
+                regex : "\\s+"
+            }
+        ],
+        "comment" : [
+            {
+                token : "comment", // closing comment
+                regex : ".*?\\*\\/",
+                next : "start"
+            }, {
+                token : "comment", // comment spanning whole line
+                merge : true,
+                regex : ".+"
+            }
+        ]
+    };
+
+    this.embedRules(DocCommentHighlightRules, "doc-",
+        [ new DocCommentHighlightRules().getEndRule("start") ]);
+};
+
+oop.inherits(HaxeHighlightRules, TextHighlightRules);
+
+exports.HaxeHighlightRules = HaxeHighlightRules;
+});
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -23999,6 +24163,24 @@ define("text!kitchen-sink/docs/cpp.cpp", [], "// compound assignment operators\n
   "    a+=2; // equivalent to a=a+2\n" +
   "    cout << a;\n" +
   "    return 0;\n" +
+  "}");
+
+define("text!kitchen-sink/docs/Haxe.hx", [], "class Haxe \n" +
+  "{\n" +
+  "    public static function main() \n" +
+  "    {\n" +
+  "        // Say Hello!\n" +
+  "        var greeting:String = \"Hello World\";\n" +
+  "        trace(greeting);\n" +
+  "        \n" +
+  "        var targets:Array<String> = [\"Flash\",\"Javascript\",\"PHP\",\"Neko\",\"C++\",\"iOS\",\"Android\",\"webOS\"];\n" +
+  "        trace(\"Haxe is a great language that can target:\");\n" +
+  "        for (target in targets)\n" +
+  "        {\n" +
+  "            trace (\" - \" + target);\n" +
+  "        }\n" +
+  "        trace(\"And many more!\");\n" +
+  "    }\n" +
   "}");
 
 define("text!kitchen-sink/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
