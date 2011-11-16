@@ -2632,7 +2632,7 @@ var Editor = function(renderer, session) {
         this._dispatchEvent("change", e);
 
         // update cursor because tab characters can influence the cursor position
-        this.renderer.updateCursor();
+        this.onCursorChange();
     };
 
     this.onTokenizerUpdate = function(e) {
@@ -3249,6 +3249,10 @@ var Editor = function(renderer, session) {
         return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
     };
 
+    this.isRowFullyVisible = function(row) {
+        return (row >= this.renderer.getFirstFullyVisibleRow() && row <= this.renderer.getLastFullyVisibleRow());
+    };
+
     this.$getVisibleRowCount = function() {
         return this.renderer.getScrollBottomRow() - this.renderer.getScrollTopRow() + 1;
     };
@@ -3363,10 +3367,8 @@ var Editor = function(renderer, session) {
         this.$blockScrolling += 1;
         this.moveCursorTo(lineNumber-1, column || 0);
         this.$blockScrolling -= 1;
-
-        if (!this.isRowVisible(this.getCursorPosition().row)) {
+        if (!this.isRowFullyVisible(this.getCursorPosition().row))
             this.scrollToLine(lineNumber, true);
-        }
     };
 
     this.navigateTo = function(row, column) {
@@ -3518,9 +3520,8 @@ var Editor = function(renderer, session) {
     };
 
     this.$find = function(backwards) {
-        if (!this.selection.isEmpty()) {
+        if (!this.selection.isEmpty())
             this.$search.set({needle: this.session.getTextRange(this.getSelectionRange())});
-        }
 
         if (typeof backwards != "undefined")
             this.$search.set({backwards: backwards});
@@ -5240,7 +5241,7 @@ exports.commands = [{
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding'], function(require, exports, module) {
+__ace_shadowed__.define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
 
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
@@ -5595,7 +5596,7 @@ var EditSession = function(text, mode) {
     };
 
     this.getAnnotations = function() {
-        return this.$annotations;
+        return this.$annotations || {};
     };
 
     this.clearAnnotations = function() {
@@ -5812,98 +5813,6 @@ var EditSession = function(text, mode) {
 
     this.getTextRange = function(range) {
         return this.doc.getTextRange(range);
-    };
-
-    this.findMatchingBracket = function(position) {
-        if (position.column == 0) return null;
-
-        var charBeforeCursor = this.getLine(position.row).charAt(position.column-1);
-        if (charBeforeCursor == "") return null;
-
-        var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
-        if (!match) {
-            return null;
-        }
-
-        if (match[1]) {
-            return this.$findClosingBracket(match[1], position);
-        } else {
-            return this.$findOpeningBracket(match[2], position);
-        }
-    };
-
-    this.$brackets = {
-        ")": "(",
-        "(": ")",
-        "]": "[",
-        "[": "]",
-        "{": "}",
-        "}": "{"
-    };
-
-    this.$findOpeningBracket = function(bracket, position) {
-        var openBracket = this.$brackets[bracket];
-
-        var column = position.column - 2;
-        var row = position.row;
-        var depth = 1;
-
-        var line = this.getLine(row);
-
-        while (true) {
-            while(column >= 0) {
-                var ch = line.charAt(column);
-                if (ch == openBracket) {
-                    depth -= 1;
-                    if (depth == 0) {
-                        return {row: row, column: column};
-                    }
-                }
-                else if (ch == bracket) {
-                    depth +=1;
-                }
-                column -= 1;
-            }
-            row -=1;
-            if (row < 0) break;
-
-            var line = this.getLine(row);
-            var column = line.length-1;
-        }
-        return null;
-    };
-
-    this.$findClosingBracket = function(bracket, position) {
-        var closingBracket = this.$brackets[bracket];
-
-        var column = position.column;
-        var row = position.row;
-        var depth = 1;
-
-        var line = this.getLine(row);
-        var lineCount = this.getLength();
-
-        while (true) {
-            while(column < line.length) {
-                var ch = line.charAt(column);
-                if (ch == closingBracket) {
-                    depth -= 1;
-                    if (depth == 0) {
-                        return {row: row, column: column};
-                    }
-                }
-                else if (ch == bracket) {
-                    depth +=1;
-                }
-                column += 1;
-            }
-            row +=1;
-            if (row >= lineCount) break;
-
-            var line = this.getLine(row);
-            var column = 0;
-        }
-        return null;
     };
 
     this.insert = function(position, text) {
@@ -6938,6 +6847,7 @@ var EditSession = function(text, mode) {
 }).call(EditSession.prototype);
 
 require("./edit_session/folding").Folding.call(EditSession.prototype);
+require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype);
 
 exports.EditSession = EditSession;
 });
@@ -10146,6 +10056,298 @@ var Fold = exports.Fold = function(range, placeholder) {
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('ace/edit_session/bracket_match', ['require', 'exports', 'module' , 'ace/token_iterator'], function(require, exports, module) {
+
+var TokenIterator = require("../token_iterator").TokenIterator;
+
+function BracketMatch() {
+
+    this.findMatchingBracket = function(position) {
+        if (position.column == 0) return null;
+
+        var charBeforeCursor = this.getLine(position.row).charAt(position.column-1);
+        if (charBeforeCursor == "") return null;
+
+        var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
+        if (!match) {
+            return null;
+        }
+
+        if (match[1]) {
+            return this.$findClosingBracket(match[1], position);
+        } else {
+            return this.$findOpeningBracket(match[2], position);
+        }
+    };
+
+    this.$brackets = {
+        ")": "(",
+        "(": ")",
+        "]": "[",
+        "[": "]",
+        "{": "}",
+        "}": "{"
+    };
+
+    this.$findOpeningBracket = function(bracket, position) {
+        var openBracket = this.$brackets[bracket];
+        var depth = 1;
+
+        var iterator = new TokenIterator(this, position.row, position.column);
+        var token = iterator.getCurrentToken();
+        if (!token) return null;
+        
+        // token.type contains a period-delimited list of token identifiers
+        // (e.g.: "constant.numeric" or "paren.lparen").  Create a pattern that
+        // matches any token containing the same identifiers or a subset.  In
+        // addition, if token.type includes "rparen", then also match "lparen".
+        // So if type.token is "paren.rparen", then typeRe will match "lparen.paren".
+        var typeRe = new RegExp("(\\.?" +
+            token.type.replace(".", "|").replace("rparen", "lparen|rparen") + ")+");
+        
+        // Start searching in token, just before the character at position.column
+        var valueIndex = position.column - iterator.getCurrentTokenColumn() - 2;
+        var value = token.value;
+        
+        while (true) {
+        
+            while (valueIndex >= 0) {
+                var char = value.charAt(valueIndex);
+                if (char == openBracket) {
+                    depth -= 1;
+                    if (depth == 0) {
+                        return {row: iterator.getCurrentTokenRow(),
+                            column: valueIndex + iterator.getCurrentTokenColumn()};
+                    }
+                }
+                else if (char == bracket) {
+                    depth += 1;
+                }
+                valueIndex -= 1;
+            }
+
+            // Scan backward through the document, looking for the next token
+            // whose type matches typeRe
+            do {
+                token = iterator.stepBackward();
+            } while (token && !typeRe.test(token.type));
+
+            if (token == null)
+                break;
+                
+            value = token.value;
+            valueIndex = value.length - 1;
+        }
+        
+        return null;
+    };
+
+    this.$findClosingBracket = function(bracket, position) {
+        var closingBracket = this.$brackets[bracket];
+        var depth = 1;
+
+        var iterator = new TokenIterator(this, position.row, position.column);
+        var token = iterator.getCurrentToken();
+        if (!token) return null;
+
+        // token.type contains a period-delimited list of token identifiers
+        // (e.g.: "constant.numeric" or "paren.lparen").  Create a pattern that
+        // matches any token containing the same identifiers or a subset.  In
+        // addition, if token.type includes "lparen", then also match "rparen".
+        // So if type.token is "lparen.paren", then typeRe will match "paren.rparen".
+        var typeRe = new RegExp("(\\.?" +
+            token.type.replace(".", "|").replace("lparen", "lparen|rparen") + ")+");
+
+        // Start searching in token, after the character at position.column
+        var valueIndex = position.column - iterator.getCurrentTokenColumn();
+
+        while (true) {
+
+            var value = token.value;
+            var valueLength = value.length;
+            while (valueIndex < valueLength) {
+                var char = value.charAt(valueIndex);
+                if (char == closingBracket) {
+                    depth -= 1;
+                    if (depth == 0) {
+                        return {row: iterator.getCurrentTokenRow(),
+                            column: valueIndex + iterator.getCurrentTokenColumn()};
+                    }
+                }
+                else if (char == bracket) {
+                    depth += 1;
+                }
+                valueIndex += 1;
+            }
+
+            // Scan forward through the document, looking for the next token
+            // whose type matches typeRe
+            do {
+                token = iterator.stepForward();
+            } while (token && !typeRe.test(token.type));
+
+            if (token == null)
+                break;
+
+            valueIndex = 0;
+        }
+        
+        return null;
+    };
+}
+exports.BracketMatch = BracketMatch;
+
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('ace/token_iterator', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var TokenIterator = function(session, initialRow, initialColumn) {
+    this.$session = session;
+    this.$row = initialRow;
+    this.$rowTokens = session.getTokens(initialRow, initialRow)[0].tokens;
+
+    var token = session.getTokenAt(initialRow, initialColumn);
+    this.$tokenIndex = token ? token.index : -1;
+};
+
+(function() {
+    
+    this.stepBackward = function() {
+        this.$tokenIndex -= 1;
+        
+        while (this.$tokenIndex < 0) {
+            this.$row -= 1;
+            if (this.$row < 0)
+                return null;
+                
+            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
+            this.$tokenIndex = this.$rowTokens.length - 1;
+        }
+            
+        return this.$rowTokens[this.$tokenIndex];
+    }
+    
+    this.stepForward = function() {
+        var rowCount = this.$session.getLength();
+        this.$tokenIndex += 1;
+        
+        while (this.$tokenIndex >= this.$rowTokens.length) {
+            this.$row += 1;
+            if (this.$row >= rowCount)
+                return null;
+
+            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
+            this.$tokenIndex = 0;
+        }
+            
+        return this.$rowTokens[this.$tokenIndex];
+    }
+    
+    this.getCurrentToken = function () {
+        return this.$rowTokens[this.$tokenIndex];
+    }
+    
+    this.getCurrentTokenRow = function () {
+        return this.$row;
+    }
+    
+    this.getCurrentTokenColumn = function() {
+        var rowTokens = this.$rowTokens;
+        var tokenIndex = this.$tokenIndex;
+        
+        // If a column was cached by EditSession.getTokenAt, then use it
+        var column = rowTokens[tokenIndex].start;
+        if (column !== undefined)
+            return column;
+            
+        column = 0;
+        while (tokenIndex > 0) {
+            tokenIndex -= 1;
+            column += rowTokens[tokenIndex].value.length;
+        }
+        
+        return column;  
+    }
+            
+}).call(TokenIterator.prototype);
+
+exports.TokenIterator = TokenIterator;
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -10722,7 +10924,7 @@ var CursorLayer = require("./layer/cursor").Cursor;
 var ScrollBar = require("./scrollbar").ScrollBar;
 var RenderLoop = require("./renderloop").RenderLoop;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-var editorCss = require("text!ace/css/editor.css");
+var editorCss = require("text!./css/editor.css");
 
 var VirtualRenderer = function(container, theme) {
     this.container = container;
@@ -13840,6 +14042,7 @@ function setupSettingPanel(settingDiv, settingOpener, api, options) {
             clojure:    "Clojure",
             ocaml:      "OCaml",
             csharp:     "C#",
+            haxe:       "haXe",
             svg:        "SVG",
             textile:    "Textile",
             groovy:     "Groovy",

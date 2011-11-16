@@ -62,12 +62,16 @@ var define = function(id, deps, factory) {
     if (id.indexOf("text!") === 0) 
         return;
     
+    var req = function(deps, factory) {
+        return require(id, deps, factory);
+    }
+
     require.modules[id] = {
         factory: function() {
             var module = {
                 exports: {}
             };
-            var returnExports = factory(require.bind(null, id), module.exports, module);
+            var returnExports = factory(req, module.exports, module);
             if (returnExports)
                 module.exports = returnExports;
             return module;

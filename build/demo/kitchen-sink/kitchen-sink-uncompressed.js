@@ -111,7 +111,10 @@ var _require = function(parentId, module, callback) {
 if (global.require)
     _require.original = global.require;
     
-global.require = _require.bind(null, "");
+global.require = function(module, callback) {
+    return _require("", module, callback);
+};
+
 global.require.packaged = true;
 
 var normalizeModule = function(parentId, moduleName) {
@@ -155,7 +158,12 @@ var lookup = function(parentId, moduleName) {
             uri: '',
             exports: exports
         }
-        var returnValue = module(_require.bind(this, moduleName), exports, mod);
+        
+        var req = function(module, callback) {
+            return _require(moduleName, module, callback);
+        };
+        
+        var returnValue = module(req, exports, mod);
         exports = returnValue || mod.exports;
             
         // cache the resulting module object for next time
@@ -206,7 +214,7 @@ var lookup = function(parentId, moduleName) {
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/range', 'ace/editor', 'ace/virtual_renderer', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 var env = {};
@@ -275,6 +283,7 @@ var modes = [
     new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
     new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
     new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
+    new Mode("haxe", "haXe", require("ace/mode/haxe").Mode, ["hx"]),
     new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
     new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
     new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
@@ -396,6 +405,10 @@ var docs = [
     new Doc(
         "c_cpp", "C/C++",
         require("text!./docs/cpp.cpp")
+    ),
+    new Doc(
+        "haxe", "haXe",
+        require("text!./docs/Haxe.hx")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
@@ -3525,7 +3538,7 @@ var Editor = function(renderer, session) {
         this._dispatchEvent("change", e);
 
         // update cursor because tab characters can influence the cursor position
-        this.renderer.updateCursor();
+        this.onCursorChange();
     };
 
     this.onTokenizerUpdate = function(e) {
@@ -4142,6 +4155,10 @@ var Editor = function(renderer, session) {
         return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
     };
 
+    this.isRowFullyVisible = function(row) {
+        return (row >= this.renderer.getFirstFullyVisibleRow() && row <= this.renderer.getLastFullyVisibleRow());
+    };
+
     this.$getVisibleRowCount = function() {
         return this.renderer.getScrollBottomRow() - this.renderer.getScrollTopRow() + 1;
     };
@@ -4256,10 +4273,8 @@ var Editor = function(renderer, session) {
         this.$blockScrolling += 1;
         this.moveCursorTo(lineNumber-1, column || 0);
         this.$blockScrolling -= 1;
-
-        if (!this.isRowVisible(this.getCursorPosition().row)) {
+        if (!this.isRowFullyVisible(this.getCursorPosition().row))
             this.scrollToLine(lineNumber, true);
-        }
     };
 
     this.navigateTo = function(row, column) {
@@ -4411,9 +4426,8 @@ var Editor = function(renderer, session) {
     };
 
     this.$find = function(backwards) {
-        if (!this.selection.isEmpty()) {
+        if (!this.selection.isEmpty())
             this.$search.set({needle: this.session.getTextRange(this.getSelectionRange())});
-        }
 
         if (typeof backwards != "undefined")
             this.$search.set({backwards: backwards});
@@ -6133,7 +6147,7 @@ exports.commands = [{
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding'], function(require, exports, module) {
+define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
 
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
@@ -6488,7 +6502,7 @@ var EditSession = function(text, mode) {
     };
 
     this.getAnnotations = function() {
-        return this.$annotations;
+        return this.$annotations || {};
     };
 
     this.clearAnnotations = function() {
@@ -6705,98 +6719,6 @@ var EditSession = function(text, mode) {
 
     this.getTextRange = function(range) {
         return this.doc.getTextRange(range);
-    };
-
-    this.findMatchingBracket = function(position) {
-        if (position.column == 0) return null;
-
-        var charBeforeCursor = this.getLine(position.row).charAt(position.column-1);
-        if (charBeforeCursor == "") return null;
-
-        var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
-        if (!match) {
-            return null;
-        }
-
-        if (match[1]) {
-            return this.$findClosingBracket(match[1], position);
-        } else {
-            return this.$findOpeningBracket(match[2], position);
-        }
-    };
-
-    this.$brackets = {
-        ")": "(",
-        "(": ")",
-        "]": "[",
-        "[": "]",
-        "{": "}",
-        "}": "{"
-    };
-
-    this.$findOpeningBracket = function(bracket, position) {
-        var openBracket = this.$brackets[bracket];
-
-        var column = position.column - 2;
-        var row = position.row;
-        var depth = 1;
-
-        var line = this.getLine(row);
-
-        while (true) {
-            while(column >= 0) {
-                var ch = line.charAt(column);
-                if (ch == openBracket) {
-                    depth -= 1;
-                    if (depth == 0) {
-                        return {row: row, column: column};
-                    }
-                }
-                else if (ch == bracket) {
-                    depth +=1;
-                }
-                column -= 1;
-            }
-            row -=1;
-            if (row < 0) break;
-
-            var line = this.getLine(row);
-            var column = line.length-1;
-        }
-        return null;
-    };
-
-    this.$findClosingBracket = function(bracket, position) {
-        var closingBracket = this.$brackets[bracket];
-
-        var column = position.column;
-        var row = position.row;
-        var depth = 1;
-
-        var line = this.getLine(row);
-        var lineCount = this.getLength();
-
-        while (true) {
-            while(column < line.length) {
-                var ch = line.charAt(column);
-                if (ch == closingBracket) {
-                    depth -= 1;
-                    if (depth == 0) {
-                        return {row: row, column: column};
-                    }
-                }
-                else if (ch == bracket) {
-                    depth +=1;
-                }
-                column += 1;
-            }
-            row +=1;
-            if (row >= lineCount) break;
-
-            var line = this.getLine(row);
-            var column = 0;
-        }
-        return null;
     };
 
     this.insert = function(position, text) {
@@ -7831,6 +7753,7 @@ var EditSession = function(text, mode) {
 }).call(EditSession.prototype);
 
 require("./edit_session/folding").Folding.call(EditSession.prototype);
+require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype);
 
 exports.EditSession = EditSession;
 });
@@ -10728,6 +10651,298 @@ var Fold = exports.Fold = function(range, placeholder) {
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/edit_session/bracket_match', ['require', 'exports', 'module' , 'ace/token_iterator'], function(require, exports, module) {
+
+var TokenIterator = require("../token_iterator").TokenIterator;
+
+function BracketMatch() {
+
+    this.findMatchingBracket = function(position) {
+        if (position.column == 0) return null;
+
+        var charBeforeCursor = this.getLine(position.row).charAt(position.column-1);
+        if (charBeforeCursor == "") return null;
+
+        var match = charBeforeCursor.match(/([\(\[\{])|([\)\]\}])/);
+        if (!match) {
+            return null;
+        }
+
+        if (match[1]) {
+            return this.$findClosingBracket(match[1], position);
+        } else {
+            return this.$findOpeningBracket(match[2], position);
+        }
+    };
+
+    this.$brackets = {
+        ")": "(",
+        "(": ")",
+        "]": "[",
+        "[": "]",
+        "{": "}",
+        "}": "{"
+    };
+
+    this.$findOpeningBracket = function(bracket, position) {
+        var openBracket = this.$brackets[bracket];
+        var depth = 1;
+
+        var iterator = new TokenIterator(this, position.row, position.column);
+        var token = iterator.getCurrentToken();
+        if (!token) return null;
+        
+        // token.type contains a period-delimited list of token identifiers
+        // (e.g.: "constant.numeric" or "paren.lparen").  Create a pattern that
+        // matches any token containing the same identifiers or a subset.  In
+        // addition, if token.type includes "rparen", then also match "lparen".
+        // So if type.token is "paren.rparen", then typeRe will match "lparen.paren".
+        var typeRe = new RegExp("(\\.?" +
+            token.type.replace(".", "|").replace("rparen", "lparen|rparen") + ")+");
+        
+        // Start searching in token, just before the character at position.column
+        var valueIndex = position.column - iterator.getCurrentTokenColumn() - 2;
+        var value = token.value;
+        
+        while (true) {
+        
+            while (valueIndex >= 0) {
+                var char = value.charAt(valueIndex);
+                if (char == openBracket) {
+                    depth -= 1;
+                    if (depth == 0) {
+                        return {row: iterator.getCurrentTokenRow(),
+                            column: valueIndex + iterator.getCurrentTokenColumn()};
+                    }
+                }
+                else if (char == bracket) {
+                    depth += 1;
+                }
+                valueIndex -= 1;
+            }
+
+            // Scan backward through the document, looking for the next token
+            // whose type matches typeRe
+            do {
+                token = iterator.stepBackward();
+            } while (token && !typeRe.test(token.type));
+
+            if (token == null)
+                break;
+                
+            value = token.value;
+            valueIndex = value.length - 1;
+        }
+        
+        return null;
+    };
+
+    this.$findClosingBracket = function(bracket, position) {
+        var closingBracket = this.$brackets[bracket];
+        var depth = 1;
+
+        var iterator = new TokenIterator(this, position.row, position.column);
+        var token = iterator.getCurrentToken();
+        if (!token) return null;
+
+        // token.type contains a period-delimited list of token identifiers
+        // (e.g.: "constant.numeric" or "paren.lparen").  Create a pattern that
+        // matches any token containing the same identifiers or a subset.  In
+        // addition, if token.type includes "lparen", then also match "rparen".
+        // So if type.token is "lparen.paren", then typeRe will match "paren.rparen".
+        var typeRe = new RegExp("(\\.?" +
+            token.type.replace(".", "|").replace("lparen", "lparen|rparen") + ")+");
+
+        // Start searching in token, after the character at position.column
+        var valueIndex = position.column - iterator.getCurrentTokenColumn();
+
+        while (true) {
+
+            var value = token.value;
+            var valueLength = value.length;
+            while (valueIndex < valueLength) {
+                var char = value.charAt(valueIndex);
+                if (char == closingBracket) {
+                    depth -= 1;
+                    if (depth == 0) {
+                        return {row: iterator.getCurrentTokenRow(),
+                            column: valueIndex + iterator.getCurrentTokenColumn()};
+                    }
+                }
+                else if (char == bracket) {
+                    depth += 1;
+                }
+                valueIndex += 1;
+            }
+
+            // Scan forward through the document, looking for the next token
+            // whose type matches typeRe
+            do {
+                token = iterator.stepForward();
+            } while (token && !typeRe.test(token.type));
+
+            if (token == null)
+                break;
+
+            valueIndex = 0;
+        }
+        
+        return null;
+    };
+}
+exports.BracketMatch = BracketMatch;
+
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/token_iterator', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var TokenIterator = function(session, initialRow, initialColumn) {
+    this.$session = session;
+    this.$row = initialRow;
+    this.$rowTokens = session.getTokens(initialRow, initialRow)[0].tokens;
+
+    var token = session.getTokenAt(initialRow, initialColumn);
+    this.$tokenIndex = token ? token.index : -1;
+};
+
+(function() {
+    
+    this.stepBackward = function() {
+        this.$tokenIndex -= 1;
+        
+        while (this.$tokenIndex < 0) {
+            this.$row -= 1;
+            if (this.$row < 0)
+                return null;
+                
+            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
+            this.$tokenIndex = this.$rowTokens.length - 1;
+        }
+            
+        return this.$rowTokens[this.$tokenIndex];
+    }
+    
+    this.stepForward = function() {
+        var rowCount = this.$session.getLength();
+        this.$tokenIndex += 1;
+        
+        while (this.$tokenIndex >= this.$rowTokens.length) {
+            this.$row += 1;
+            if (this.$row >= rowCount)
+                return null;
+
+            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
+            this.$tokenIndex = 0;
+        }
+            
+        return this.$rowTokens[this.$tokenIndex];
+    }
+    
+    this.getCurrentToken = function () {
+        return this.$rowTokens[this.$tokenIndex];
+    }
+    
+    this.getCurrentTokenRow = function () {
+        return this.$row;
+    }
+    
+    this.getCurrentTokenColumn = function() {
+        var rowTokens = this.$rowTokens;
+        var tokenIndex = this.$tokenIndex;
+        
+        // If a column was cached by EditSession.getTokenAt, then use it
+        var column = rowTokens[tokenIndex].start;
+        if (column !== undefined)
+            return column;
+            
+        column = 0;
+        while (tokenIndex > 0) {
+            tokenIndex -= 1;
+            column += rowTokens[tokenIndex].value.length;
+        }
+        
+        return column;  
+    }
+            
+}).call(TokenIterator.prototype);
+
+exports.TokenIterator = TokenIterator;
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mihai Sucan <mihai DOT sucan AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -11211,7 +11426,7 @@ var CursorLayer = require("./layer/cursor").Cursor;
 var ScrollBar = require("./scrollbar").ScrollBar;
 var RenderLoop = require("./renderloop").RenderLoop;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-var editorCss = require("text!ace/css/editor.css");
+var editorCss = require("text!./css/editor.css");
 
 var VirtualRenderer = function(container, theme) {
     this.container = container;
@@ -15638,7 +15853,9 @@ oop.inherits(Mode, TextMode);
         
         worker.on("ok", function(e) {
             session.clearAnnotations();
-        });    
+        });
+        
+        return worker;
     };
 
 }).call(Mode.prototype);
@@ -16672,6 +16889,7 @@ oop.inherits(Mode, TextMode);
             
             session.setAnnotations(errors);
         });
+        return worker;
     };
 
 }).call(Mode.prototype);
@@ -17619,6 +17837,165 @@ var GroovyHighlightRules = function() {
 oop.inherits(GroovyHighlightRules, TextHighlightRules);
 
 exports.GroovyHighlightRules = GroovyHighlightRules;
+});
+define('ace/mode/haxe', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/haxe_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
+
+var oop = require("../lib/oop");
+var TextMode = require("./text").Mode;
+var Tokenizer = require("../tokenizer").Tokenizer;
+var HaxeHighlightRules = require("./haxe_highlight_rules").HaxeHighlightRules;
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
+var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
+
+var Mode = function() {
+    this.$tokenizer = new Tokenizer(new HaxeHighlightRules().getRules());
+    this.$outdent = new MatchingBraceOutdent();
+    this.$behaviour = new CstyleBehaviour();
+};
+oop.inherits(Mode, TextMode);
+
+(function() {
+
+      this.getNextLineIndent = function(state, line, tab) {
+          var indent = this.$getIndent(line);
+
+          var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+          var tokens = tokenizedLine.tokens;
+          var endState = tokenizedLine.state;
+
+          if (tokens.length && tokens[tokens.length-1].type == "comment") {
+              return indent;
+          }
+
+          if (state == "start") {
+              var match = line.match(/^.*[\{\(\[]\s*$/);
+              if (match) {
+                  indent += tab;
+              }
+          }
+
+          return indent;
+      };
+
+      this.checkOutdent = function(state, line, input) {
+          return this.$outdent.checkOutdent(line, input);
+      };
+
+      this.autoOutdent = function(state, doc, row) {
+          this.$outdent.autoOutdent(doc, row);
+      };
+
+
+    this.createWorker = function(session) {
+        return null;
+    };
+
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
+define('ace/mode/haxe_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+
+var oop = require("../lib/oop");
+var lang = require("../lib/lang");
+var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+var HaxeHighlightRules = function() {
+
+    var keywords = lang.arrayToMap(
+        ("break|case|cast|catch|class|continue|default|else|enum|extends|for|function|if|implements|import|in|inline|interface|new|override|package|private|public|return|static|super|switch|this|throw|trace|try|typedef|untyped|var|while|Array|Void|Bool|Int|UInt|Float|Dynamic|String|List|Hash|IntHash|Error|Unknown|Type|Std").split("|")
+    );
+
+    var buildinConstants = lang.arrayToMap(
+        ("null|true|false").split("|")
+    );
+
+
+    // regexp must not have capturing parentheses. Use (?:) instead.
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        "start" : [
+            {
+                token : "comment",
+                regex : "\\/\\/.*$"
+            },
+            new DocCommentHighlightRules().getStartRule("doc-start"),
+            {
+                token : "comment", // multi line comment
+                regex : "\\/\\*",
+                merge : true,
+                next : "comment"
+            }, {
+                token : "string.regexp",
+                regex : "[/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\/|[^\\]/]))*[/]\\w*\\s*(?=[).,;]|$)"
+            }, {
+                token : "string", // single line
+                regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+            }, {
+                token : "string", // single line
+                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+            }, {
+                token : "constant.numeric", // hex
+                regex : "0[xX][0-9a-fA-F]+\\b"
+            }, {
+                token : "constant.numeric", // float
+                regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+            }, {
+                token : "constant.language.boolean",
+                regex : "(?:true|false)\\b"
+            }, {
+                token : function(value) {
+                    if (value == "this")
+                        return "variable.language";
+                    else if (keywords.hasOwnProperty(value))
+                        return "keyword";
+                    else if (buildinConstants.hasOwnProperty(value))
+                        return "constant.language";
+                    else
+                        return "identifier";
+                },
+                // TODO: Unicode escape sequences
+                // TODO: Unicode identifiers
+                regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+            }, {
+                token : "keyword.operator",
+                regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
+            }, {
+                token : "punctuation.operator",
+                regex : "\\?|\\:|\\,|\\;|\\."
+            }, {
+                token : "paren.lparen",
+                regex : "[[({<]"
+            }, {
+                token : "paren.rparen",
+                regex : "[\\])}>]"
+            }, {
+                token : "text",
+                regex : "\\s+"
+            }
+        ],
+        "comment" : [
+            {
+                token : "comment", // closing comment
+                regex : ".*?\\*\\/",
+                next : "start"
+            }, {
+                token : "comment", // comment spanning whole line
+                merge : true,
+                regex : ".+"
+            }
+        ]
+    };
+
+    this.embedRules(DocCommentHighlightRules, "doc-",
+        [ new DocCommentHighlightRules().getEndRule("start") ]);
+};
+
+oop.inherits(HaxeHighlightRules, TextHighlightRules);
+
+exports.HaxeHighlightRules = HaxeHighlightRules;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -23789,6 +24166,24 @@ define("text!kitchen-sink/docs/cpp.cpp", [], "// compound assignment operators\n
   "    a+=2; // equivalent to a=a+2\n" +
   "    cout << a;\n" +
   "    return 0;\n" +
+  "}");
+
+define("text!kitchen-sink/docs/Haxe.hx", [], "class Haxe \n" +
+  "{\n" +
+  "    public static function main() \n" +
+  "    {\n" +
+  "        // Say Hello!\n" +
+  "        var greeting:String = \"Hello World\";\n" +
+  "        trace(greeting);\n" +
+  "        \n" +
+  "        var targets:Array<String> = [\"Flash\",\"Javascript\",\"PHP\",\"Neko\",\"C++\",\"iOS\",\"Android\",\"webOS\"];\n" +
+  "        trace(\"Haxe is a great language that can target:\");\n" +
+  "        for (target in targets)\n" +
+  "        {\n" +
+  "            trace (\" - \" + target);\n" +
+  "        }\n" +
+  "        trace(\"And many more!\");\n" +
+  "    }\n" +
   "}");
 
 define("text!kitchen-sink/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
