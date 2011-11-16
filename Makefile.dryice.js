@@ -244,7 +244,7 @@ project.assumeAllFilesLoaded();
 console.log('# ace themes ---------');
 
 [
-    "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn", "eclipse",
+    "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn", "eclipse",
     "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
     "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",
     "solarized_light", "textmate", "tomorrow", "tomorrow_night",
