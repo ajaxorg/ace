@@ -3099,6 +3099,36 @@ var Editor = function(renderer, session) {
         this.session.replace(range, swap);
     };
 
+    this.toLowerCase = function() {
+        if (this.$readOnly)
+            return;
+
+        var originalRange = this.getSelectionRange();
+        if (this.selection.isEmpty()) {
+            this.selection.selectWord();
+        }
+
+        var range = this.getSelectionRange();
+        var text = this.session.getTextRange(range);
+        this.session.replace(range, text.toLowerCase());
+        this.selection.setSelectionRange(originalRange);
+    };
+
+    this.toUpperCase = function() {
+        if (this.$readOnly)
+            return;
+
+        var originalRange = this.getSelectionRange();
+        if (this.selection.isEmpty()) {
+            this.selection.selectWord();
+        }
+
+        var range = this.getSelectionRange();
+        var text = this.session.getTextRange(range);
+        this.session.replace(range, text.toUpperCase());
+        this.selection.setSelectionRange(originalRange);
+    };
+
     this.indent = function() {
         if (this.$readOnly)
             return;
@@ -5174,6 +5204,14 @@ exports.commands = [{
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
     exec: function(editor) { editor.transposeLetters(); }
+}, {
+    name: "touppercase",
+    bindKey: bindKey("Ctrl-U", "Ctrl-U"),
+    exec: function(editor) { editor.toUpperCase(); }
+}, {
+    name: "tolowercase",
+    bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
+    exec: function(editor) { editor.toLowerCase(); }
 }, {
     name: "fold",
     bindKey: bindKey("Alt-L", "Alt-L"),
@@ -13202,8 +13240,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' ], function(require, exports, module) {
-
+__ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.cssClass = "ace-tm";
 exports.cssText = ".ace-tm .ace_editor {\
@@ -13373,6 +13410,8 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(255, 0, 0)\
 }";
 
+    var dom = require("ace/lib/dom");
+    dom.importCssString(exports.cssText);
 });
 __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
