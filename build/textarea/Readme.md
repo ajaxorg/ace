@@ -166,6 +166,12 @@ You can also run the tests in your browser by serving:
 
 This makes debugging failing tests way more easier.
 
+Continuous Integration status
+-----------------------------
+
+This project is tested with [Travis CI](http://travis-ci.org)
+[![Build Status](https://secure.travis-ci.org/ajaxorg/ace.png)](http://travis-ci.org/ajaxorg/ace)
+
 Contributing
 ------------
 
