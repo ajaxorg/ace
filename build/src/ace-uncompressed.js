@@ -13456,7 +13456,7 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(255, 0, 0)\
 }";
 
-    var dom = require("ace/lib/dom");
+    var dom = require("../lib/dom");
     dom.importCssString(exports.cssText);
 });
 define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
