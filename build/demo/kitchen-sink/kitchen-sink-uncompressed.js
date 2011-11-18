@@ -13912,7 +13912,7 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(255, 0, 0)\
 }";
 
-    var dom = require("ace/lib/dom");
+    var dom = require("../lib/dom");
     dom.importCssString(exports.cssText);
 });
 /* vim:ts=4:sts=4:sw=4:
