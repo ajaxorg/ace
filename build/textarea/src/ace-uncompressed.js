@@ -1997,7 +1997,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
     // If there is no hashID and the keyCode is not a function key, then
     // we don't call the callback as we don't handle a command key here
     // (it's a normal key/character input).
-    if (!(keyCode in keys.FUNCTION_KEYS) && !(keyCode in keys.PRINTABLE_KEYS)) {
+    if (!hashId && !(keyCode in keys.FUNCTION_KEYS) && !(keyCode in keys.PRINTABLE_KEYS)) {
         return false;
     }
     return callback(e, hashId, keyCode);
@@ -2111,6 +2111,16 @@ var Keys = (function() {
             44 : "Print",
             45 : "Insert",
             46 : "Delete",
+            96 : "Numpad0",
+            97 : "Numpad1",
+            98 : "Numpad2",
+            99 : "Numpad3",
+            100: "Numpad4",
+            101: "Numpad5",
+            102: "Numpad6",
+            103: "Numpad7",
+            104: "Numpad8",
+            105: "Numpad9",
             112: "F1",
             113: "F2",
             114: "F3",
@@ -2281,7 +2291,7 @@ exports.isOldIE = exports.isIE && exports.isIE < 9;
 exports.isGecko = exports.isMozilla = window.controllers && window.navigator.product === "Gecko";
 
 /** oldGecko == rev < 2.0 **/
-exports.isOldGecko = exports.isGecko && /rv\:1/.test(navigator.userAgent);
+exports.isOldGecko = exports.isGecko && parseInt((navigator.userAgent.match(/rv\:(\d+)/)||[])[1]) < 4;
 
 /** Is this Opera */
 exports.isOpera = window.opera && Object.prototype.toString.call(window.opera) == "[object Opera]";
@@ -3178,7 +3188,7 @@ var Editor = function(renderer, session) {
 
         var rows = this.$getSelectedRows();
         var range;
-        if (rows.last == 0 || rows.last+1 < this.session.getLength())
+        if (rows.first == 0 || rows.last+1 < this.session.getLength())
             range = new Range(rows.first, 0, rows.last+1, 0);
         else
             range = new Range(
@@ -3236,14 +3246,24 @@ var Editor = function(renderer, session) {
 
     this.$moveLines = function(mover) {
         var rows = this.$getSelectedRows();
+        var selection = this.selection;
+        if (!selection.isMultiLine()) {
+            var range = selection.getRange();
+            var reverse = selection.isBackwards();
+        }
 
         var linesMoved = mover.call(this, rows.first, rows.last);
 
-        var selection = this.selection;
-        selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
-        selection.$moveSelection(function() {
-            selection.moveCursorTo(rows.first+linesMoved, 0);
-        });
+        if (range) {
+            range.start.row += linesMoved;
+            range.end.row += linesMoved;
+            selection.setSelectionRange(range, reverse);
+        } else {
+            selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
+            selection.$moveSelection(function() {
+                selection.moveCursorTo(rows.first+linesMoved, 0);
+            });
+        }
     };
 
     this.$getSelectedRows = function() {
@@ -6302,9 +6322,11 @@ var EditSession = function(text, mode) {
         var row = firstRow;
         lastRow = Math.min(lastRow, lines.length - 1);
         while (row <= lastRow) {
-            foldLine = this.getFoldLine(row);
+            foldLine = this.getFoldLine(row, foldLine);
             if (!foldLine) {
                 tokens = this.$getDisplayTokens(lang.stringTrimRight(lines[row]));
+                wrapData[row] = this.$computeWrapSplits(tokens, wrapLimit, tabSize);
+                row ++;
             } else {
                 tokens = [];
                 foldLine.walk(
@@ -6328,16 +6350,13 @@ var EditSession = function(text, mode) {
                     lines[foldLine.end.row].length + 1
                 );
                 // Remove spaces/tabs from the back of the token array.
-                while (tokens.length != 0
-                    && tokens[tokens.length - 1] >= SPACE)
-                {
+                while (tokens.length != 0 && tokens[tokens.length - 1] >= SPACE)
                     tokens.pop();
-                }
-            }
-            wrapData[row] =
-                this.$computeWrapSplits(tokens, wrapLimit, tabSize);
 
-            row = this.getRowFoldEnd(row) + 1;
+                wrapData[foldLine.start.row]
+                    = this.$computeWrapSplits(tokens, wrapLimit, tabSize);
+                row = foldLine.end.row + 1;
+            }
         }
     };
 
@@ -6628,9 +6647,7 @@ var EditSession = function(text, mode) {
         }
         var doCache = !rowCache.length || i == rowCache.length;
 
-        // clamp row before clamping column, for selection on last line
         var maxRow = this.getLength() - 1;
-
         var foldLine = this.getNextFoldLine(docRow);
         var foldStart = foldLine ? foldLine.start.row : Infinity;
 
@@ -6655,18 +6672,24 @@ var EditSession = function(text, mode) {
             }
         }
 
-        if (foldLine && foldLine.start.row <= docRow)
+        if (foldLine && foldLine.start.row <= docRow) {
             line = this.getFoldDisplayLine(foldLine);
-        else {
+            docRow = foldLine.start.row;
+        } else if (row + rowLength <= screenRow || docRow > maxRow) {
+            // clip at the end of the document
+            return {
+                row: maxRow,
+                column: this.getLine(maxRow).length
+            }
+        } else {
             line = this.getLine(docRow);
             foldLine = null;
         }
 
-        var splits = [];
         if (this.$useWrapMode) {
-            splits = this.$wrapData[docRow];
+            var splits = this.$wrapData[docRow];
             if (splits) {
-                column = splits[screenRow - row]
+                column = splits[screenRow - row];
                 if(screenRow > row && splits.length) {
                     docColumn = splits[screenRow - row - 1] || splits[splits.length - 1];
                     line = line.substring(docColumn);
@@ -6675,10 +6698,6 @@ var EditSession = function(text, mode) {
         }
 
         docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
-
-        // clip row at the end of the document
-        if (row + splits.length < screenRow)
-            docColumn = Number.MAX_VALUE;
 
         // Need to do some clamping action here.
         if (this.$useWrapMode) {
@@ -6818,24 +6837,29 @@ var EditSession = function(text, mode) {
 
     this.getScreenLength = function() {
         var screenRows = 0;
-        var lastFoldLine = null;
-        var foldLine = null;
+        var fold = null;
         if (!this.$useWrapMode) {
             screenRows = this.getLength();
 
             // Remove the folded lines again.
             var foldData = this.$foldData;
             for (var i = 0; i < foldData.length; i++) {
-                foldLine = foldData[i];
-                screenRows -= foldLine.end.row - foldLine.start.row;
+                fold = foldData[i];
+                screenRows -= fold.end.row - fold.start.row;
             }
         } else {
-            for (var row = 0; row < this.$wrapData.length; row++) {
-                if (foldLine = this.getFoldLine(row, lastFoldLine)) {
-                    row = foldLine.end.row;
-                    screenRows += 1;
-                } else {
-                    screenRows += this.$wrapData[row].length + 1;
+            var lastRow = this.$wrapData.length;
+            var row = 0, i = 0;
+            var fold = this.$foldData[i++];
+            var foldStart = fold ? fold.start.row :Infinity;
+
+            while (row < lastRow) {
+                screenRows += this.$wrapData[row].length + 1;
+                row ++;
+                if (row > foldStart) {
+                    row = fold.end.row+1;
+                    fold = this.$foldData[i++];
+                    foldStart = fold ?fold.start.row :Infinity;
                 }
             }
         }
@@ -10587,7 +10611,7 @@ Search.SELECTION = 2;
         var searchSelection = this.$options.scope == Search.SELECTION;
 
         var range = this.$options.range || session.getSelection().getRange();
-        var start = this.$options.start || session.getSelection().getCursor();
+        var start = this.$options.start || range[searchSelection ? "start" : "end"];
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -10649,7 +10673,7 @@ Search.SELECTION = 2;
         var searchSelection = this.$options.scope == Search.SELECTION;
 
         var range = this.$options.range || session.getSelection().getRange();
-        var start = this.$options.start || session.getSelection().getCursor();
+        var start = this.$options.start || range[searchSelection ? "end" : "start"];
 
         var firstRow = searchSelection ? range.start.row : 0;
         var firstColumn = searchSelection ? range.start.column : 0;
@@ -10964,11 +10988,14 @@ var RenderLoop = require("./renderloop").RenderLoop;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var editorCss = require("text!./css/editor.css");
 
+dom.importCssString(editorCss, "ace_editor");
+
 var VirtualRenderer = function(container, theme) {
     this.container = container;
 
-    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
-    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
+    // TODO: this breaks rendering in Cloud9 with multiple ace instances
+//    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
+//    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
     
     // Chrome has some strange rendering issues if this is not done async
     setTimeout(function() {
@@ -11732,6 +11759,11 @@ var VirtualRenderer = function(container, theme) {
             if (_self.$theme)
                 dom.addCssClass(_self.container, _self.$theme);
 
+            if (theme && theme.isDark)
+                dom.addCssClass(_self.container, "ace_dark");
+            else
+                dom.removeCssClass(_self.container, "ace_dark");
+
             // force re-measure of the gutter width
             if (_self.$size) {
                 _self.$size.width = 0;
@@ -12329,6 +12361,7 @@ var Text = function(parentEl) {
             var foldLine = this.session.getFoldLine(row);
             if (foldLine) {
                 if (foldLine.containsRow(first)) {
+                    first = foldLine.start.row;
                     break;
                 } else {
                     row = foldLine.end.row;
@@ -12392,12 +12425,12 @@ var Text = function(parentEl) {
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
-            if(row > foldStart) {
+            if (row > foldStart) {
                 row = fold.end.row+1;
                 fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
-            if(row > lastRow)
+            if (row > lastRow)
                 break;
 
             var container = dom.createElement("div");
@@ -12439,12 +12472,12 @@ var Text = function(parentEl) {
             foldStart = fold ?fold.start.row :Infinity;
 
         while (true) {
-            if(row > foldStart) {
+            if (row > foldStart) {
                 row = fold.end.row+1;
                 fold = this.session.getNextFoldLine(row, fold);
                 foldStart = fold ?fold.start.row :Infinity;
             }
-            if(row > lastRow)
+            if (row > lastRow)
                 break;
 
             if (this.$useLineGroups())
@@ -13068,6 +13101,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    overflow-x: hidden;\n" +
   "    overflow-y: hidden;\n" +
   "    height: 100%;\n" +
+  "    cursor: default;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell.ace_error {\n" +
@@ -13190,8 +13224,18 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
-  "     pointer-events: auto;\n" +
-  "     color: darkred;\n" +
+  "    color: darkred;\n" +
+  "    -moz-outline-radius: 4px;\n" +
+  "    outline-radius: 4px;\n" +
+  "    border-radius: 4px;\n" +
+  "    outline: 1px solid #1C00FF;\n" +
+  "    outline-offset: -2px;\n" +
+  "    pointer-events: auto;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dark .ace_fold {\n" +
+  "    color: #E6E1DC;\n" +
+  "    outline-color: #FC6F09;\n" +
   "}\n" +
   "\n" +
   ".ace_fold:hover{\n" +
@@ -13241,7 +13285,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
  * ***** END LICENSE BLOCK ***** */
 
 __ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
-
+exports.isDark = false;
 exports.cssClass = "ace-tm";
 exports.cssText = ".ace-tm .ace_editor {\
   border: 2px solid rgb(159, 159, 159);\
@@ -13311,8 +13355,7 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_line .ace_fold {\
-    background-color: #E4E4E4;\
-    border-radius: 3px;\
+    outline-color: #1C00FF;\
 }\
 \
 .ace-tm .ace_line .ace_support.ace_function {\
@@ -13455,6 +13498,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    overflow-x: hidden;\n" +
   "    overflow-y: hidden;\n" +
   "    height: 100%;\n" +
+  "    cursor: default;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell.ace_error {\n" +
@@ -13577,8 +13621,18 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
-  "     pointer-events: auto;\n" +
-  "     color: darkred;\n" +
+  "    color: darkred;\n" +
+  "    -moz-outline-radius: 4px;\n" +
+  "    outline-radius: 4px;\n" +
+  "    border-radius: 4px;\n" +
+  "    outline: 1px solid #1C00FF;\n" +
+  "    outline-offset: -2px;\n" +
+  "    pointer-events: auto;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dark .ace_fold {\n" +
+  "    color: #E6E1DC;\n" +
+  "    outline-color: #FC6F09;\n" +
   "}\n" +
   "\n" +
   ".ace_fold:hover{\n" +

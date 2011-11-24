@@ -1,3 +1,4 @@
+
 .%cssClass% .ace_editor {
   border: 2px solid rgb(159, 159, 159);
 }
@@ -62,6 +63,9 @@
   background: %active_line%;
 }
 
+.%cssClass% .ace_marker-layer .ace_selected_word {
+  %selected_word_highlight%
+}
        
 .%cssClass% .ace_invisible {
   %invisible%
@@ -105,6 +109,10 @@
 
 .%cssClass% .ace_support {
   %support%
+}
+
+.%cssClass% .ace_fold {
+    outline-color: %foldOutline%
 }
 
 .%cssClass% .ace_support.ace_function {
