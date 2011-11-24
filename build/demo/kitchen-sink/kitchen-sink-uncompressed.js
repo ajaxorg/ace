@@ -3671,9 +3671,6 @@ var Editor = function(renderer, session) {
     };
 
     this.insert = function(text) {
-        if (this.$readOnly)
-            return;
-
         var session = this.session;
         var mode = session.getMode();
 
@@ -3765,30 +3762,11 @@ var Editor = function(renderer, session) {
             mode.autoOutdent(lineState, session, cursor.row);
     };
 
-    this.onTextInput = function(text, notPasted) {
-        if (!notPasted)
+    this.onTextInput = function(text, pasted) {
+        if (pasted)
             this._emit("paste", text);
 
-        // In case the text was not pasted and we got only one character, then
-        // handel it as a command key stroke.
-        if (notPasted && text.length == 1) {
-            // Note: The `null` as `keyCode` is important here, as there are
-            // some checks in the code for `keyCode == 0` meaning the text comes
-            // from the keyBinding.onTextInput code path.
-            var handled = this.keyBinding.onCommandKey({}, 0, null, text);
-
-            // Check if the text was handled. If not, then handled it as "normal"
-            // text and insert it to the editor directly. This shouldn't be done
-            // using the this.keyBinding.onTextInput(text) function, as it would
-            // make the `text` get sent to the keyboardHandler twice, which might
-            // turn out to be a bad thing in case there is a custome keyboard
-            // handler like the StateHandler.
-            if (!handled) {
-                this.insert(text);
-            }
-        } else {
-            this.keyBinding.onTextInput(text);
-        }
+        this.keyBinding.onTextInput(text, pasted);
     };
 
     this.onCommandKey = function(e, hashId, keyCode) {
@@ -3902,9 +3880,6 @@ var Editor = function(renderer, session) {
     };
 
     this.remove = function(dir) {
-        if (this.$readOnly)
-            return;
-
         if (this.selection.isEmpty()){
             if(dir == "left")
                 this.selection.selectLeft();
@@ -3926,9 +3901,6 @@ var Editor = function(renderer, session) {
     };
 
     this.removeWordRight = function() {
-        if (this.$readOnly)
-            return;
-
         if (this.selection.isEmpty())
             this.selection.selectWordRight();
 
@@ -3937,9 +3909,6 @@ var Editor = function(renderer, session) {
     };
 
     this.removeWordLeft = function() {
-        if (this.$readOnly)
-            return;
-
         if (this.selection.isEmpty())
             this.selection.selectWordLeft();
 
@@ -3948,9 +3917,6 @@ var Editor = function(renderer, session) {
     };
 
     this.removeToLineStart = function() {
-        if (this.$readOnly)
-            return;
-
         if (this.selection.isEmpty())
             this.selection.selectLineStart();
 
@@ -3959,9 +3925,6 @@ var Editor = function(renderer, session) {
     };
 
     this.removeToLineEnd = function() {
-        if (this.$readOnly)
-            return;
-
         if (this.selection.isEmpty())
             this.selection.selectLineEnd();
 
@@ -3976,9 +3939,6 @@ var Editor = function(renderer, session) {
     };
 
     this.splitLine = function() {
-        if (this.$readOnly)
-            return;
-
         if (!this.selection.isEmpty()) {
             this.session.remove(this.getSelectionRange());
             this.clearSelection();
@@ -3990,9 +3950,6 @@ var Editor = function(renderer, session) {
     };
 
     this.transposeLetters = function() {
-        if (this.$readOnly)
-            return;
-
         if (!this.selection.isEmpty()) {
             return;
         }
@@ -4016,9 +3973,6 @@ var Editor = function(renderer, session) {
     };
 
     this.toLowerCase = function() {
-        if (this.$readOnly)
-            return;
-
         var originalRange = this.getSelectionRange();
         if (this.selection.isEmpty()) {
             this.selection.selectWord();
@@ -4031,9 +3985,6 @@ var Editor = function(renderer, session) {
     };
 
     this.toUpperCase = function() {
-        if (this.$readOnly)
-            return;
-
         var originalRange = this.getSelectionRange();
         if (this.selection.isEmpty()) {
             this.selection.selectWord();
@@ -4046,9 +3997,6 @@ var Editor = function(renderer, session) {
     };
 
     this.indent = function() {
-        if (this.$readOnly)
-            return;
-
         var session = this.session;
         var range = this.getSelectionRange();
 
@@ -4067,31 +4015,22 @@ var Editor = function(renderer, session) {
                 indentString = lang.stringRepeat(" ", count);
             } else
                 indentString = "\t";
-            return this.onTextInput(indentString, true);
+            return this.insert(indentString);
         }
     };
 
     this.blockOutdent = function() {
-        if (this.$readOnly)
-            return;
-
         var selection = this.session.getSelection();
         this.session.outdentRows(selection.getRange());
     };
 
     this.toggleCommentLines = function() {
-        if (this.$readOnly)
-            return;
-
         var state = this.session.getState(this.getCursorPosition().row);
         var rows = this.$getSelectedRows();
         this.session.getMode().toggleCommentLines(state, this.session, rows.first, rows.last);
     };
 
     this.removeLines = function() {
-        if (this.$readOnly)
-            return;
-
         var rows = this.$getSelectedRows();
         var range;
         if (rows.first == 0 || rows.last+1 < this.session.getLength())
@@ -4106,18 +4045,12 @@ var Editor = function(renderer, session) {
     };
 
     this.moveLinesDown = function() {
-        if (this.$readOnly)
-            return;
-
         this.$moveLines(function(firstRow, lastRow) {
             return this.session.moveLinesDown(firstRow, lastRow);
         });
     };
 
     this.moveLinesUp = function() {
-        if (this.$readOnly)
-            return;
-
         this.$moveLines(function(firstRow, lastRow) {
             return this.session.moveLinesUp(firstRow, lastRow);
         });
@@ -4131,9 +4064,6 @@ var Editor = function(renderer, session) {
     };
 
     this.copyLinesUp = function() {
-        if (this.$readOnly)
-            return;
-
         this.$moveLines(function(firstRow, lastRow) {
             this.session.duplicateLines(firstRow, lastRow);
             return 0;
@@ -4141,9 +4071,6 @@ var Editor = function(renderer, session) {
     };
 
     this.copyLinesDown = function() {
-        if (this.$readOnly)
-            return;
-
         this.$moveLines(function(firstRow, lastRow) {
             return this.session.duplicateLines(firstRow, lastRow);
         });
@@ -4319,6 +4246,7 @@ var Editor = function(renderer, session) {
 
     this.gotoLine = function(lineNumber, column) {
         this.selection.clearSelection();
+        this.session.unfold({row: lineNumber - 1, column: column || 0})
 
         this.$blockScrolling += 1;
         this.moveCursorTo(lineNumber-1, column || 0);
@@ -4484,6 +4412,7 @@ var Editor = function(renderer, session) {
 
         var range = this.$search.find(this.session);
         if (range) {
+            this.session.unfold(range);
             this.gotoLine(range.end.row+1, range.end.column);
             this.selection.setSelectionRange(range);
         }
@@ -4730,10 +4659,10 @@ var TextInput = function(parentNode, host) {
                 if (value.charCodeAt(value.length-1) == PLACEHOLDER.charCodeAt(0)) {
                     value = value.slice(0, -1);
                     if (value)
-                        host.onTextInput(value, !pasted);
+                        host.onTextInput(value, pasted);
                 }
                 else {
-                    host.onTextInput(value, !pasted);
+                    host.onTextInput(value, pasted);
                 }
 
                 // If editor is no longer focused we quit immediately, since
@@ -5732,6 +5661,7 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Julian Viereck <julian.viereck@gmail.com>
+ *      Harutyun Amirjanyan <amirjanyan@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -5757,71 +5687,77 @@ require("../commands/default_commands");
 var KeyBinding = function(editor) {
     this.$editor = editor;
     this.$data = { };
-    this.$keyboardHandler = null;
+    this.$handlers = [this];
 };
 
 (function() {
     this.setKeyboardHandler = function(keyboardHandler) {
-        if (this.$keyboardHandler != keyboardHandler) {
-            this.$data = { };
-            this.$keyboardHandler = keyboardHandler;
-        }
+        if (this.$handlers[this.$handlers.length - 1] == keyboardHandler)
+            return;
+        this.$data = { };
+        this.$handlers = keyboardHandler ? [this, keyboardHandler] : [this];
+    };
+
+    this.addKeyboardHandler = function(keyboardHandler) {
+        this.removeKeyboardHandler(keyboardHandler);
+        this.$handlers.push(keyboardHandler);
+    };
+
+    this.removeKeyboardHandler = function(keyboardHandler) {
+        var i = this.$handlers.indexOf(keyboardHandler);
+        if (i == -1)
+            return false;
+        this.$handlers.splice(i, 1);
+        return true;
     };
 
     this.getKeyboardHandler = function() {
-        return this.$keyboardHandler;
+        return this.$handlers[this.$handlers - 1];
     };
 
-    this.$callKeyboardHandler = function (e, hashId, keyOrText, keyCode) {
-        var toExecute;
-        var commands = this.$editor.commands;
-
-        if (this.$keyboardHandler) {
-            toExecute =
-                this.$keyboardHandler.handleKeyboard(this.$data, hashId, keyOrText, keyCode, e);
-        }
-
-        
-        // If there is nothing to execute yet, then use the default keymapping.
-        if (!toExecute || !toExecute.command) {
-            if (hashId != 0 || keyCode != 0) {
-                toExecute = {
-                    command: commands.findKeyCommand(hashId, keyOrText)
-                }
-            } else {
-                toExecute = {
-                    command: "inserttext",
-                    args: {
-                        text: keyOrText
-                    }
-                }
-            }
-        }
-
-        var success = false;
-        if (toExecute && toExecute.command) {
-            success = commands.exec(
-                toExecute.command,
-                this.$editor, toExecute.args
+    this.$callKeyboardHandlers = function (hashId, keyString, keyCode, e) {
+        for (var i = this.$handlers.length; i--;) {
+            var toExecute = this.$handlers[i].handleKeyboard(
+                this.$data, hashId, keyString, keyCode, e
             );
-            if (success) {
-                event.stopEvent(e);
-            }
+            if (toExecute && toExecute.command)
+                break;
         }
-        return success;
+
+        if (!toExecute || !toExecute.command)
+            return false;
+        var success = false, commands = this.$editor.commands;
+
+        // allow keyboardHandler to consume keys
+        if (toExecute.command != "null")
+            success = commands.exec(toExecute.command, this.$editor, toExecute.args);
+        else
+            success = true;
+
+        if (success && e)
+            event.stopEvent(e);
+
+        return success
     };
 
-    this.onCommandKey = function(e, hashId, keyCode, keyString) {
-        // In case there is no keyString, try to interprete the keyCode.
-        if (!keyString) {
-            keyString = keyUtil.keyCodeToString(keyCode);
+    this.handleKeyboard = function(data, hashId, keyString) {
+        return {
+            command: this.$editor.commands.findKeyCommand(hashId, keyString)
         }
-        return this.$callKeyboardHandler(e, hashId, keyString, keyCode);
     };
 
-    this.onTextInput = function(text) {
-        return this.$callKeyboardHandler({}, 0, text, 0);
-    }
+    this.onCommandKey = function(e, hashId, keyCode) {
+        var keyString = keyUtil.keyCodeToString(keyCode);
+        this.$callKeyboardHandlers(hashId, keyString, keyCode, e);
+    };
+
+    this.onTextInput = function(text, pasted) {
+        var success = false;
+        if (!pasted && text.length == 1)
+            success = this.$callKeyboardHandlers(0, text);
+        if (!success)
+            this.$editor.commands.exec("insertstring", this.$editor, text);
+    };
 
 }).call(KeyBinding.prototype);
 
@@ -5881,11 +5817,13 @@ function bindKey(win, mac) {
 exports.commands = [{
     name: "selectall",
     bindKey: bindKey("Ctrl-A", "Command-A"),
-    exec: function(editor) { editor.selectAll(); }
+    exec: function(editor) { editor.selectAll(); },
+    readOnly: true
 }, {
-    name: "removeline",
-    bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(editor) { editor.removeLines(); }
+    name: "centerselection",
+    bindKey: bindKey(null, "Ctrl-L"),
+    exec: function(editor) { editor.centerSelection(); },
+    readOnly: true
 }, {
     name: "gotoline",
     bindKey: bindKey("Ctrl-L", "Command-L"),
@@ -5894,26 +5832,212 @@ exports.commands = [{
         if (!isNaN(line)) {
             editor.gotoLine(line);
         }
-    }
+    },
+    readOnly: true
 }, {
-    name: "togglecomment",
-    bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(editor) { editor.toggleCommentLines(); }
+    name: "fold",
+    bindKey: bindKey("Alt-L", "Alt-L"),
+    exec: function(editor) { editor.session.toggleFold(false); },
+    readOnly: true
+}, {
+    name: "unfold",
+    bindKey: bindKey("Alt-Shift-L", "Alt-Shift-L"),
+    exec: function(editor) { editor.session.toggleFold(true); },
+    readOnly: true
+}, {
+    name: "foldall",
+    bindKey: bindKey("Alt-0", "Alt-0"),
+    exec: function(editor) { editor.session.foldAll(); },
+    readOnly: true
+}, {
+    name: "unfoldall",
+    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
+    exec: function(editor) { editor.session.unfold(); },
+    readOnly: true
 }, {
     name: "findnext",
     bindKey: bindKey("Ctrl-K", "Command-G"),
-    exec: function(editor) { editor.findNext(); }
+    exec: function(editor) { editor.findNext(); },
+    readOnly: true
 }, {
     name: "findprevious",
     bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
-    exec: function(editor) { editor.findPrevious(); }
+    exec: function(editor) { editor.findPrevious(); },
+    readOnly: true
 }, {
     name: "find",
     bindKey: bindKey("Ctrl-F", "Command-F"),
     exec: function(editor) {
         var needle = prompt("Find:", editor.getCopyText());
         editor.find(needle);
-    }
+    },
+    readOnly: true
+}, {
+    name: "overwrite",
+    bindKey: bindKey("Insert", "Insert"),
+    exec: function(editor) { editor.toggleOverwrite(); },
+    readOnly: true
+}, {
+    name: "selecttostart",
+    bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
+    exec: function(editor) { editor.getSelection().selectFileStart(); },
+    readOnly: true
+}, {
+    name: "gotostart",
+    bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
+    exec: function(editor) { editor.navigateFileStart(); },
+    readOnly: true
+}, {
+    name: "selectup",
+    bindKey: bindKey("Shift-Up", "Shift-Up"),
+    exec: function(editor) { editor.getSelection().selectUp(); },
+    readOnly: true
+}, {
+    name: "golineup",
+    bindKey: bindKey("Up", "Up|Ctrl-P"),
+    exec: function(editor, args) { editor.navigateUp(args.times); },
+    readOnly: true
+}, {
+    name: "selecttoend",
+    bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
+    exec: function(editor) { editor.getSelection().selectFileEnd(); },
+    readOnly: true
+}, {
+    name: "gotoend",
+    bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
+    exec: function(editor) { editor.navigateFileEnd(); },
+    readOnly: true
+}, {
+    name: "selectdown",
+    bindKey: bindKey("Shift-Down", "Shift-Down"),
+    exec: function(editor) { editor.getSelection().selectDown(); },
+    readOnly: true
+}, {
+    name: "golinedown",
+    bindKey: bindKey("Down", "Down|Ctrl-N"),
+    exec: function(editor, args) { editor.navigateDown(args.times); },
+    readOnly: true
+}, {
+    name: "selectwordleft",
+    bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
+    exec: function(editor) { editor.getSelection().selectWordLeft(); },
+    readOnly: true
+}, {
+    name: "gotowordleft",
+    bindKey: bindKey("Ctrl-Left", "Option-Left"),
+    exec: function(editor) { editor.navigateWordLeft(); },
+    readOnly: true
+}, {
+    name: "selecttolinestart",
+    bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
+    exec: function(editor) { editor.getSelection().selectLineStart(); },
+    readOnly: true
+}, {
+    name: "gotolinestart",
+    bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
+    exec: function(editor) { editor.navigateLineStart(); },
+    readOnly: true
+}, {
+    name: "selectleft",
+    bindKey: bindKey("Shift-Left", "Shift-Left"),
+    exec: function(editor) { editor.getSelection().selectLeft(); },
+    readOnly: true
+}, {
+    name: "gotoleft",
+    bindKey: bindKey("Left", "Left|Ctrl-B"),
+    exec: function(editor, args) { editor.navigateLeft(args.times); },
+    readOnly: true
+}, {
+    name: "selectwordright",
+    bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
+    exec: function(editor) { editor.getSelection().selectWordRight(); },
+    readOnly: true
+}, {
+    name: "gotowordright",
+    bindKey: bindKey("Ctrl-Right", "Option-Right"),
+    exec: function(editor) { editor.navigateWordRight(); },
+    readOnly: true
+}, {
+    name: "selecttolineend",
+    bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
+    exec: function(editor) { editor.getSelection().selectLineEnd(); },
+    readOnly: true
+}, {
+    name: "gotolineend",
+    bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
+    exec: function(editor) { editor.navigateLineEnd(); },
+    readOnly: true
+}, {
+    name: "selectright",
+    bindKey: bindKey("Shift-Right", "Shift-Right"),
+    exec: function(editor) { editor.getSelection().selectRight(); },
+    readOnly: true
+}, {
+    name: "gotoright",
+    bindKey: bindKey("Right", "Right|Ctrl-F"),
+    exec: function(editor, args) { editor.navigateRight(args.times); },
+    readOnly: true
+}, {
+    name: "selectpagedown",
+    bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
+    exec: function(editor) { editor.selectPageDown(); },
+    readOnly: true
+}, {
+    name: "pagedown",
+    bindKey: bindKey(null, "PageDown"),
+    exec: function(editor) { editor.scrollPageDown(); },
+    readOnly: true
+}, {
+    name: "gotopagedown",
+    bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
+    exec: function(editor) { editor.gotoPageDown(); },
+    readOnly: true
+}, {
+    name: "selectpageup",
+    bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
+    exec: function(editor) { editor.selectPageUp(); },
+    readOnly: true
+}, {
+    name: "pageup",
+    bindKey: bindKey(null, "PageUp"),
+    exec: function(editor) { editor.scrollPageUp(); },
+    readOnly: true
+}, {
+    name: "gotopageup",
+    bindKey: bindKey("PageUp", "Option-PageUp"),
+    exec: function(editor) { editor.gotoPageUp(); },
+    readOnly: true
+}, {
+    name: "selectlinestart",
+    bindKey: bindKey("Shift-Home", "Shift-Home"),
+    exec: function(editor) { editor.getSelection().selectLineStart(); },
+    readOnly: true
+}, {
+    name: "selectlineend",
+    bindKey: bindKey("Shift-End", "Shift-End"),
+    exec: function(editor) { editor.getSelection().selectLineEnd(); },
+    readOnly: true
+}, {
+    name: "togglerecording",
+    bindKey: bindKey("Ctrl-Shift-E", "Ctrl-Shift-E"),
+    exec: function(editor) { editor.commands.toggleRecording(); },
+    readOnly: true
+}, {
+    name: "replaymacro",
+    bindKey: bindKey("Ctrl-E", "Ctrl-E"),
+    exec: function(editor) { editor.commands.replay(editor); },
+    readOnly: true
+}, 
+
+// commands disabled in readOnly mode
+{
+    name: "removeline",
+    bindKey: bindKey("Ctrl-D", "Command-D"),
+    exec: function(editor) { editor.removeLines(); }
+}, {
+    name: "togglecomment",
+    bindKey: bindKey("Ctrl-7", "Command-7"),
+    exec: function(editor) { editor.toggleCommentLines(); }
 }, {
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
@@ -5947,10 +6071,6 @@ exports.commands = [{
     bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
     exec: function(editor) { editor.redo(); }
 }, {
-    name: "overwrite",
-    bindKey: bindKey("Insert", "Insert"),
-    exec: function(editor) { editor.toggleOverwrite(); }
-}, {
     name: "copylinesup",
     bindKey: bindKey("Ctrl-Alt-Up", "Command-Option-Up"),
     exec: function(editor) { editor.copyLinesUp(); }
@@ -5959,22 +6079,6 @@ exports.commands = [{
     bindKey: bindKey("Alt-Up", "Option-Up"),
     exec: function(editor) { editor.moveLinesUp(); }
 }, {
-    name: "selecttostart",
-    bindKey: bindKey("Ctrl-Shift-Home|Alt-Shift-Up", "Command-Shift-Up"),
-    exec: function(editor) { editor.getSelection().selectFileStart(); }
-}, {
-    name: "gotostart",
-    bindKey: bindKey("Ctrl-Home|Ctrl-Up", "Command-Home|Command-Up"),
-    exec: function(editor) { editor.navigateFileStart(); }
-}, {
-    name: "selectup",
-    bindKey: bindKey("Shift-Up", "Shift-Up"),
-    exec: function(editor) { editor.getSelection().selectUp(); }
-}, {
-    name: "golineup",
-    bindKey: bindKey("Up", "Up|Ctrl-P"),
-    exec: function(editor, args) { editor.navigateUp(args.times); }
-}, {
     name: "copylinesdown",
     bindKey: bindKey("Ctrl-Alt-Down", "Command-Option-Down"),
     exec: function(editor) { editor.copyLinesDown(); }
@@ -5982,102 +6086,6 @@ exports.commands = [{
     name: "movelinesdown",
     bindKey: bindKey("Alt-Down", "Option-Down"),
     exec: function(editor) { editor.moveLinesDown(); }
-}, {
-    name: "selecttoend",
-    bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
-    exec: function(editor) { editor.getSelection().selectFileEnd(); }
-}, {
-    name: "gotoend",
-    bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
-    exec: function(editor) { editor.navigateFileEnd(); }
-}, {
-    name: "selectdown",
-    bindKey: bindKey("Shift-Down", "Shift-Down"),
-    exec: function(editor) { editor.getSelection().selectDown(); }
-}, {
-    name: "golinedown",
-    bindKey: bindKey("Down", "Down|Ctrl-N"),
-    exec: function(editor, args) { editor.navigateDown(args.times); }
-}, {
-    name: "selectwordleft",
-    bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
-    exec: function(editor) { editor.getSelection().selectWordLeft(); }
-}, {
-    name: "gotowordleft",
-    bindKey: bindKey("Ctrl-Left", "Option-Left"),
-    exec: function(editor) { editor.navigateWordLeft(); }
-}, {
-    name: "selecttolinestart",
-    bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
-    exec: function(editor) { editor.getSelection().selectLineStart(); }
-}, {
-    name: "gotolinestart",
-    bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
-    exec: function(editor) { editor.navigateLineStart(); }
-}, {
-    name: "selectleft",
-    bindKey: bindKey("Shift-Left", "Shift-Left"),
-    exec: function(editor) { editor.getSelection().selectLeft(); }
-}, {
-    name: "gotoleft",
-    bindKey: bindKey("Left", "Left|Ctrl-B"),
-    exec: function(editor, args) { editor.navigateLeft(args.times); }
-}, {
-    name: "selectwordright",
-    bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
-    exec: function(editor) { editor.getSelection().selectWordRight(); }
-}, {
-    name: "gotowordright",
-    bindKey: bindKey("Ctrl-Right", "Option-Right"),
-    exec: function(editor) { editor.navigateWordRight(); }
-}, {
-    name: "selecttolineend",
-    bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
-    exec: function(editor) { editor.getSelection().selectLineEnd(); }
-}, {
-    name: "gotolineend",
-    bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
-    exec: function(editor) { editor.navigateLineEnd(); }
-}, {
-    name: "selectright",
-    bindKey: bindKey("Shift-Right", "Shift-Right"),
-    exec: function(editor) { editor.getSelection().selectRight(); }
-}, {
-    name: "gotoright",
-    bindKey: bindKey("Right", "Right|Ctrl-F"),
-    exec: function(editor, args) { editor.navigateRight(args.times); }
-}, {
-    name: "selectpagedown",
-    bindKey: bindKey("Shift-PageDown", "Shift-PageDown"),
-    exec: function(editor) { editor.selectPageDown(); }
-}, {
-    name: "pagedown",
-    bindKey: bindKey(null, "PageDown"),
-    exec: function(editor) { editor.scrollPageDown(); }
-}, {
-    name: "gotopagedown",
-    bindKey: bindKey("PageDown", "Option-PageDown|Ctrl-V"),
-    exec: function(editor) { editor.gotoPageDown(); }
-}, {
-    name: "selectpageup",
-    bindKey: bindKey("Shift-PageUp", "Shift-PageUp"),
-    exec: function(editor) { editor.selectPageUp(); }
-}, {
-    name: "pageup",
-    bindKey: bindKey(null, "PageUp"),
-    exec: function(editor) { editor.scrollPageUp(); }
-}, {
-    name: "gotopageup",
-    bindKey: bindKey("PageUp", "Option-PageUp"),
-    exec: function(editor) { editor.gotoPageUp(); }
-}, {
-    name: "selectlinestart",
-    bindKey: bindKey("Shift-Home", "Shift-Home"),
-    exec: function(editor) { editor.getSelection().selectLineStart(); }
-}, {
-    name: "selectlineend",
-    bindKey: bindKey("Shift-End", "Shift-End"),
-    exec: function(editor) { editor.getSelection().selectLineEnd(); }
 }, {
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
@@ -6114,14 +6122,13 @@ exports.commands = [{
     bindKey: bindKey("Tab", "Tab"),
     exec: function(editor) { editor.indent(); }
 }, {
+    name: "insertstring",
+    exec: function(editor, str) { editor.insert(str); }
+}, {
     name: "inserttext",
     exec: function(editor, args) {
         editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
-}, {
-    name: "centerselection",
-    bindKey: bindKey(null, "Ctrl-L"),
-    exec: function(editor) { editor.centerSelection(); }
 }, {
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
@@ -6138,30 +6145,6 @@ exports.commands = [{
     name: "tolowercase",
     bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
     exec: function(editor) { editor.toLowerCase(); }
-}, {
-    name: "fold",
-    bindKey: bindKey("Alt-L", "Alt-L"),
-    exec: function(editor) {
-        editor.session.toggleFold(false);
-    }
-}, {
-    name: "unfold",
-    bindKey: bindKey("Alt-Shift-L", "Alt-Shift-L"),
-    exec: function(editor) {
-        editor.session.toggleFold(true);
-    }
-}, {
-    name: "foldall",
-    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
-    exec: function(editor) {
-        editor.session.foldAll();
-    }
-}, {
-    name: "unfoldall",
-    bindKey: bindKey("Alt-Shift-0", "Alt-Shift-0"),
-    exec: function(editor) {
-        editor.session.unFoldAll();
-    }
 }];
 
 });
@@ -10138,13 +10121,13 @@ function Folding() {
             folds.splice(folds.indexOf(fold), 1);
         } else
         // The fold goes over more then one row. This means remvoing this fold
-        // will cause the fold line to get splitted up.
+        // will cause the fold line to get splitted up. newFoldLine is the second part
         {
             var newFoldLine = foldLine.split(fold.start.row, fold.start.column);
-            newFoldLine.folds.shift();
-            foldLine.start.row = folds[0].start.row;
-            foldLine.start.column = folds[0].start.column;
-            this.$addFoldLine(newFoldLine);
+            folds = newFoldLine.folds;
+            folds.shift();
+            newFoldLine.start.row = folds[0].start.row;
+            newFoldLine.start.column = folds[0].start.column;
         }
 
         if (this.$useWrapMode) {
@@ -10183,6 +10166,30 @@ function Folding() {
         folds.forEach(function(fold) {
             this.expandFold(fold);
         }, this);
+    }
+
+    this.unfold = function(location, expandInner) {
+        var range, folds;
+        if (location == null)
+            range = new Range(0, 0, this.getLength(), 0);
+        else if (typeof location == "number")
+            range = new Range(location, 0, location, this.getLine(location).length);
+        else if ("row" in location)
+            range = Range.fromPoints(location, location);
+        else
+            range = location;
+
+        var folds = this.getFoldsInRange(range);
+        if (expandInner) {
+            this.removeFolds(folds);
+        } else {
+            // TODO: might need to remove and add folds in one go instead of using
+            // expandFolds several times.
+            while (folds.length) {
+                this.expandFolds(folds);
+                folds = this.getFoldsInRange(range);
+            }
+        }
     }
 
     /**
@@ -11335,7 +11342,7 @@ var CommandManager = function(platform, commands) {
     this.platform = platform;
     this.commands = {};
     this.commmandKeyBinding = {};
-    
+
     if (commands)
         commands.forEach(this.addCommand, this);
 };
@@ -11349,10 +11356,10 @@ var CommandManager = function(platform, commands) {
         this.commands[command.name] = command;
 
         if (command.bindKey) {
-            this._buildKeyHash(command);   
+            this._buildKeyHash(command);
         }
     };
-    
+
     this.removeCommand = function(command) {
         var name = (typeof command === 'string' ? command : command.name);
         command = this.commands[name];
@@ -11369,20 +11376,53 @@ var CommandManager = function(platform, commands) {
         }
     };
 
-    this._buildKeyHash = function(command) {
-        var binding = command.bindKey;
-        var key = binding[this.platform];
-        var ckb = this.commmandKeyBinding;
+    this.addCommands = function(commands) {
+        Object.keys(commands).forEach(function(name) {
+            var command = commands[name];
+            if (typeof command === "string")
+                return this.bindKey(command, name);
 
-        if(!binding[this.platform]) {
+            if (typeof command === "function")
+                command = { exec: command };
+
+            if (!command.name)
+                command.name = name;
+
+            this.addCommand(command);
+        }, this);
+    };
+
+    this.removeCommands = function(commands) {
+        Object.keys(commands).forEach(function(name) {
+            this.removeCommand(commands[name]);
+        }, this);
+    };
+
+    this.bindKey = function(key, command) {
+        if(!key)
             return;
-        }
-    
+
+        var ckb = this.commmandKeyBinding;
         key.split("|").forEach(function(keyPart) {
             var binding = parseKeys(keyPart, command);
             var hashId = binding.hashId;
             (ckb[hashId] || (ckb[hashId] = {}))[binding.key] = command;
         });
+    };
+
+    this.bindKeys = function(keyList) {
+        Object.keys(keyList).forEach(function(key) {
+            this.bindKey(key, keyList[key]);
+        }, this);
+    };
+
+    this._buildKeyHash = function(command) {
+        var binding = command.bindKey;
+        if (!binding)
+            return;
+
+        var key = typeof binding == "string" ? binding: binding[this.platform];
+        this.bindKey(key, command);
     }
 
     function parseKeys(keys, val, ret) {
@@ -11396,11 +11436,11 @@ var CommandManager = function(platform, commands) {
             else
                 key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
         }
-    
+
         return {
             key: key,
             hashId: hashId
-        }   
+        }
     }
 
     function splitSafe(s, separator) {
@@ -11422,13 +11462,63 @@ var CommandManager = function(platform, commands) {
     this.exec = function(command, editor, args) {
         if (typeof command === 'string')
             command = this.commands[command];
-        
+
         if (!command)
             return false;
-            
+
+        if (editor && editor.$readOnly && !command.readOnly)
+            return false;
+
         command.exec(editor, args || {});
         return true;
     };
+
+    this.toggleRecording = function() {
+        if (this.$inReplay)
+            return;
+        if (this.recording) {
+            this.macro.pop();
+            this.exec = this.normal_exec;
+            return this.recording = false;
+        }
+        this.macro = [];
+        this.normal_exec = this.exec;
+        this.exec = function(command, editor, args) {
+            this.macro.push([command, args]);
+            return this.normal_exec(command, editor, args);
+        };
+        return this.recording = true;
+    };
+
+    this.replay = function(editor) {
+        if (this.$inReplay)
+            return;
+
+        if (!this.macro || this.recording)
+            return this.toggleRecording();
+
+        try {
+            this.$inReplay = true;
+            this.macro.forEach(function(x) {
+                if (typeof x == "string")
+                    this.exec(x, editor);
+                else
+                    this.exec(x[0], editor, x[1]);
+            }, this)
+        } finally {
+            this.$inReplay = false;
+        }
+    };
+
+    this.trimMacro = function(m) {
+        return m.map(function(x){
+            if (typeof x[0] != "string")
+                x[0] = x[0].name;
+            if (!x[1])
+                x = x[0];
+            return x
+        })
+    }
 
 }).call(CommandManager.prototype);
 
