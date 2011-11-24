@@ -37,8 +37,10 @@
 
 define(function(require, exports, module) {
 
-    var dom = require("ace/lib/dom");
+exports.isDark = %isDark%;
+exports.cssClass = "%cssClass%";
+exports.cssText = %css%;
 
-    exports.cssText = %css%;
-    exports.cssClass = "%cssClass%";
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText);
 });
