@@ -2043,7 +2043,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
     // If there is no hashID and the keyCode is not a function key, then
     // we don't call the callback as we don't handle a command key here
     // (it's a normal key/character input).
-    if (!(keyCode in keys.FUNCTION_KEYS) && !(keyCode in keys.PRINTABLE_KEYS)) {
+    if (!hashId && !(keyCode in keys.FUNCTION_KEYS) && !(keyCode in keys.PRINTABLE_KEYS)) {
         return false;
     }
     return callback(e, hashId, keyCode);
@@ -11034,11 +11034,14 @@ var RenderLoop = require("./renderloop").RenderLoop;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var editorCss = require("text!./css/editor.css");
 
+dom.importCssString(editorCss, "ace_editor");
+
 var VirtualRenderer = function(container, theme) {
     this.container = container;
 
-    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
-    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
+    // TODO: this breaks rendering in Cloud9 with multiple ace instances
+//    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
+//    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
     
     // Chrome has some strange rendering issues if this is not done async
     setTimeout(function() {
@@ -13144,6 +13147,7 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    overflow-x: hidden;\n" +
   "    overflow-y: hidden;\n" +
   "    height: 100%;\n" +
+  "    cursor: default;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell.ace_error {\n" +
@@ -13266,8 +13270,18 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
-  "     pointer-events: auto;\n" +
-  "     color: darkred;\n" +
+  "    color: darkred;\n" +
+  "    -moz-outline-radius: 4px;\n" +
+  "    outline-radius: 4px;\n" +
+  "    border-radius: 4px;\n" +
+  "    outline: 1px solid #1C00FF;\n" +
+  "    outline-offset: -2px;\n" +
+  "    pointer-events: auto;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dark .ace_fold {\n" +
+  "    color: #E6E1DC;\n" +
+  "    outline-color: #FC6F09;\n" +
   "}\n" +
   "\n" +
   ".ace_fold:hover{\n" +
@@ -13387,8 +13401,7 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_line .ace_fold {\
-    background-color: #E4E4E4;\
-    border-radius: 3px;\
+    outline-color: #1C00FF;\
 }\
 \
 .ace-tm .ace_line .ace_support.ace_function {\
@@ -13531,6 +13544,7 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    overflow-x: hidden;\n" +
   "    overflow-y: hidden;\n" +
   "    height: 100%;\n" +
+  "    cursor: default;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell.ace_error {\n" +
@@ -13653,8 +13667,18 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_line .ace_fold {\n" +
   "    cursor: pointer;\n" +
-  "     pointer-events: auto;\n" +
-  "     color: darkred;\n" +
+  "    color: darkred;\n" +
+  "    -moz-outline-radius: 4px;\n" +
+  "    outline-radius: 4px;\n" +
+  "    border-radius: 4px;\n" +
+  "    outline: 1px solid #1C00FF;\n" +
+  "    outline-offset: -2px;\n" +
+  "    pointer-events: auto;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_dark .ace_fold {\n" +
+  "    color: #E6E1DC;\n" +
+  "    outline-color: #FC6F09;\n" +
   "}\n" +
   "\n" +
   ".ace_fold:hover{\n" +
