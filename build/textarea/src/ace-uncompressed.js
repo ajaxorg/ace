@@ -5685,6 +5685,17 @@ var EditSession = function(text, mode) {
         return new Range(row, start, row, end);
     };
 
+    // Gets the range of a word including its right whitespace
+    this.getAWordRange = function(row, column) {
+        var wordRange = this.getWordRange(row, column);
+        var line = this.getLine(wordRange.end.row);
+
+        while (line.charAt(wordRange.end.column).match(/[ \t]/)) {
+            wordRange.end.column += 1;
+        }
+        return wordRange;
+    };
+
     this.setNewLineMode = function(newLineMode) {
         this.doc.setNewLineMode(newLineMode);
     };
@@ -6943,11 +6954,11 @@ var Range = require("./range").Range;
 
 /**
  * Keeps cursor position and the text selection of an edit session.
- * 
+ *
  * The row/columns used in the selection are in document coordinates
  * representing ths coordinates as thez appear in the document
  * before applying soft wrap and folding.
- */ 
+ */
 var Selection = function(session) {
     this.session = session;
     this.doc = session.getDocument();
@@ -7021,7 +7032,7 @@ var Selection = function(session) {
         };
 
         var anchor = this.getSelectionAnchor();
-        var lead = this.getSelectionLead(); 
+        var lead = this.getSelectionLead();
 
         var isBackwards = this.isBackwards();
 
@@ -7148,6 +7159,13 @@ var Selection = function(session) {
     this.selectWord = function() {
         var cursor = this.getCursor();
         var range  = this.session.getWordRange(cursor.row, cursor.column);
+        this.setSelectionRange(range);
+    };
+
+    // Selects a word including its right whitespace
+    this.selectAWord = function() {
+        var cursor = this.getCursor();
+        var range = this.session.getAWordRange(cursor.row, cursor.column);
         this.setSelectionRange(range);
     };
 
@@ -7338,10 +7356,10 @@ var Selection = function(session) {
             this.selectionLead.row,
             this.selectionLead.column
         );
-        
+
         var screenCol = (chars === 0 && this.$desiredColumn) || screenPos.column;
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
-        
+
         // move the cursor and update the desired column
         this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
     };
@@ -7357,11 +7375,11 @@ var Selection = function(session) {
             row = fold.start.row;
             column = fold.start.column;
         }
-        
+
         this.$preventUpdateDesiredColumnOnChange = true;
         this.selectionLead.setPosition(row, column);
         this.$preventUpdateDesiredColumnOnChange = false;
-        
+
         if (!preventUpdateDesiredColumn)
             this.$updateDesiredColumn(this.selectionLead.column);
     };
