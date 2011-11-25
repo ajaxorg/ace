@@ -6232,7 +6232,7 @@ var Tokenizer = function(rules) {
                     }
                     break;
                 }
-            };
+            }
 
             if (value[0]) {
                 if (typeof type == "string") {
@@ -6250,7 +6250,7 @@ var Tokenizer = function(rules) {
                         token = {
                             type: type[i],
                             value: value[i]
-                        }
+                        };
                     }
                 }
             }
@@ -6259,7 +6259,7 @@ var Tokenizer = function(rules) {
                 break;
             
             lastIndex = re.lastIndex;
-        };
+        }
 
         if (token.type)
             tokens.push(token);
@@ -14213,7 +14213,7 @@ var XmlHighlightRules = function() {
         }, {
             token : "string", // multi line string start
             merge : true,
-            regex : '["].*$',
+            regex : '["].*',
             next : "qqstring"
         }, {
             token : "string",
@@ -14221,13 +14221,13 @@ var XmlHighlightRules = function() {
         }, {
             token : "string", // multi line string start
             merge : true,
-            regex : "['].*$",
+            regex : "['].*",
             next : "qstring"
         }],
 
         qstring: [{
             token : "string",
-            regex : ".*'",
+            regex : ".*?'",
             next : "tag"
         }, {
             token : "string",
@@ -14237,7 +14237,7 @@ var XmlHighlightRules = function() {
         
         qqstring: [{
             token : "string",
-            regex : ".*\"",
+            regex : ".*?\"",
             next : "tag"
         }, {
             token : "string",
