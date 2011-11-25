@@ -1949,9 +1949,9 @@ exports.addMouseWheelListener = function(el, callback) {
                 max = Math.abs(e.wheelDeltaY)
 
             if (max > 5000)
-                factor = 400;
+                var factor = 400;
             else
-                factor = 8;
+                var factor = 8;
 
             if (e.wheelDeltaX !== undefined) {
                 e.wheelX = -e.wheelDeltaX / factor;
@@ -2025,7 +2025,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
                 break;
             case "Shift":
                 hashId = 4;
-                break
+                break;
             case "Ctrl":
                 hashId = 1;
                 break;
@@ -2086,6 +2086,28 @@ exports.addCommandKeyListener = function(el, callback) {
         }
     }
 };
+
+if (window.postMessage) {
+    var postMessageId = 1;
+    this.nextTick = function(callback, win) {
+        win = win || window;
+        var messageName = "zero-timeout-message-" + postMessageId;            
+        exports.addListener(win, "message", function listener(e) {
+            if (e.data == messageName) {
+                exports.stopPropagation(e);
+                exports.removeListener(win, "message", listener);
+                callback();
+            }
+        });
+        win.postMessage(messageName, "*");
+    };
+}
+else {
+    this.nextTick = function(callback, win) {
+        win = win || window;
+        window.setTimeout(callback, 0);
+    };
+}
 
 });
 /*! @license
@@ -13159,11 +13181,11 @@ define('ace/renderloop', ['require', 'exports', 'module' , 'ace/lib/event'], fun
 
 var event = require("./lib/event");
 
-var RenderLoop = function(onRender, window) {
+var RenderLoop = function(onRender, win) {
     this.onRender = onRender;
     this.pending = false;
     this.changes = 0;
-    this.setTimeoutZero = this.setTimeoutZero.bind(window);
+    this.window = win || window;
 };
 
 (function() {
@@ -13175,39 +13197,14 @@ var RenderLoop = function(onRender, window) {
         if (!this.pending) {
             this.pending = true;
             var _self = this;
-            this.setTimeoutZero(function() {
+            event.nextTick(function() {
                 _self.pending = false;
                 var changes = _self.changes;
                 _self.changes = 0;
                 _self.onRender(changes);
-            });
+            }, this.window);
         }
     };
-
-    if (window.postMessage) {
-        this.setTimeoutZero = (function(messageName, attached, listener) {
-            return function setTimeoutZero(callback) {
-                // Set up listener if not listening already.
-                if (!attached) {
-                    event.addListener(this, "message", function(e) {
-                        if (listener && e.data == messageName) {
-                            event.stopPropagation(e);
-                            listener();
-                        }
-                    });
-                    attached = true;
-                }
-
-                listener = callback;
-                this.postMessage(messageName, "*");
-            };
-        })("zero-timeout-message", false, null);
-    }
-    else {
-        this.setTimeoutZero = function(callback) {
-            this.setTimeout(callback, 0);
-        };
-    }
 
 }).call(RenderLoop.prototype);
 
