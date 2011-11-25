@@ -45,9 +45,6 @@ var env = {};
     
 var net = require("ace/lib/net");
 var event = require("ace/lib/event");
-var Range = require("ace/range").Range;
-var Editor = require("ace/editor").Editor;
-var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var theme = require("ace/theme/textmate");
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
