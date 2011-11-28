@@ -18,3 +18,5 @@ do ->
     ///imgy
     this isnt: `just JavaScript`
     undefined
+    
+sentence = "#{ 22 / 7 } is a decent approximation of π"
