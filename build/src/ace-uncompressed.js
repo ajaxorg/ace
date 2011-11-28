@@ -1946,7 +1946,7 @@ exports.addMouseWheelListener = function(el, callback) {
             // some versions of Safari (e.g. 5.0.5) report insanely high
             // scroll values. These browsers require a higher factor
             if (Math.abs(e.wheelDeltaY) > max)
-                max = Math.abs(e.wheelDeltaY)
+                max = Math.abs(e.wheelDeltaY);
 
             if (max > 5000)
                 var factor = 400;
@@ -2089,7 +2089,7 @@ exports.addCommandKeyListener = function(el, callback) {
 
 if (window.postMessage) {
     var postMessageId = 1;
-    this.nextTick = function(callback, win) {
+    exports.nextTick = function(callback, win) {
         win = win || window;
         var messageName = "zero-timeout-message-" + postMessageId;            
         exports.addListener(win, "message", function listener(e) {
@@ -2103,7 +2103,7 @@ if (window.postMessage) {
     };
 }
 else {
-    this.nextTick = function(callback, win) {
+    exports.nextTick = function(callback, win) {
         win = win || window;
         window.setTimeout(callback, 0);
     };
@@ -3795,7 +3795,7 @@ var TextInput = function(parentNode, host) {
 
     var text = dom.createElement("textarea");
     if (useragent.isTouchPad)
-    	text.setAttribute("x-palm-disable-auto-cap", true);
+        text.setAttribute("x-palm-disable-auto-cap", true);
         
     text.style.left = "-10000px";
     parentNode.appendChild(text);
@@ -3949,7 +3949,7 @@ var TextInput = function(parentNode, host) {
                     clipboardData.setData("Text", copyText);
                     host.onCut();
                 }
-                event.preventDefault(e)
+                event.preventDefault(e);
             }
         });
     }
@@ -3961,10 +3961,10 @@ var TextInput = function(parentNode, host) {
     event.addListener(text, "compositionstart", onCompositionStart);
     if (useragent.isGecko) {
         event.addListener(text, "text", onCompositionUpdate);
-    };
+    }
     if (useragent.isWebKit) {
         event.addListener(text, "keyup", onCompositionUpdate);
-    };
+    }
     event.addListener(text, "compositionend", onCompositionEnd);
 
     event.addListener(text, "blur", function() {
@@ -3988,7 +3988,7 @@ var TextInput = function(parentNode, host) {
 
     function isFocused() {
         return document.activeElement === text;
-    };
+    }
     this.isFocused = isFocused;
 
     this.getElement = function() {
@@ -4002,12 +4002,12 @@ var TextInput = function(parentNode, host) {
                 
             text.style.cssText = 
                 'position:fixed; z-index:1000;' +
-                'left:' + (mousePos.x - 2) + 'px; top:' + (mousePos.y - 2) + 'px;'
+                'left:' + (mousePos.x - 2) + 'px; top:' + (mousePos.y - 2) + 'px;';
 
         }
         if (isEmpty)
             text.value='';
-    }
+    };
 
     this.onContextMenuClose = function(){
         setTimeout(function () {
@@ -4017,7 +4017,7 @@ var TextInput = function(parentNode, host) {
             }
             sendText();
         }, 0);
-    }
+    };
 };
 
 exports.TextInput = TextInput;
@@ -4839,9 +4839,8 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'ace/lib/useragent', 'ace/lib/keys', 'ace/lib/event', 'ace/commands/default_commands'], function(require, exports, module) {
+define('ace/keyboard/keybinding', ['require', 'exports', 'module' , 'ace/lib/keys', 'ace/lib/event', 'ace/commands/default_commands'], function(require, exports, module) {
 
-var useragent = require("../lib/useragent");
 var keyUtil  = require("../lib/keys");
 var event = require("../lib/event");
 require("../commands/default_commands");
@@ -4878,8 +4877,9 @@ var KeyBinding = function(editor) {
     };
 
     this.$callKeyboardHandlers = function (hashId, keyString, keyCode, e) {
+        var toExecute;
         for (var i = this.$handlers.length; i--;) {
-            var toExecute = this.$handlers[i].handleKeyboard(
+            toExecute = this.$handlers[i].handleKeyboard(
                 this.$data, hashId, keyString, keyCode, e
             );
             if (toExecute && toExecute.command)
@@ -4899,13 +4899,13 @@ var KeyBinding = function(editor) {
         if (success && e)
             event.stopEvent(e);
 
-        return success
+        return success;
     };
 
     this.handleKeyboard = function(data, hashId, keyString) {
         return {
             command: this.$editor.commands.findKeyCommand(hashId, keyString)
-        }
+        };
     };
 
     this.onCommandKey = function(e, hashId, keyCode) {
@@ -5181,12 +5181,12 @@ exports.commands = [{
     readOnly: true
 }, {
     name: "togglerecording",
-    bindKey: bindKey("Ctrl-Shift-E", "Ctrl-Shift-E"),
+    bindKey: bindKey("Ctrl-Alt-E", "Command-Option-E"),
     exec: function(editor) { editor.commands.toggleRecording(); },
     readOnly: true
 }, {
     name: "replaymacro",
-    bindKey: bindKey("Ctrl-E", "Ctrl-E"),
+    bindKey: bindKey("Ctrl-Shift-E", "Command-Shift-E"),
     exec: function(editor) { editor.commands.replay(editor); },
     readOnly: true
 }, 
