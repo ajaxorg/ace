@@ -242,6 +242,10 @@ var docs = [
     new WrappedDoc(
         "latex", "LaTeX",
         require("ace/requirejs/text!./docs/latex.tex")
+    ),
+    new WrappedDoc(
+        "sql", "SQL",
+        require("ace/requirejs/text!./docs/sql.sql")
     )
 ];
 
