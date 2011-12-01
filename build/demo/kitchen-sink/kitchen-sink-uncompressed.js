@@ -2792,7 +2792,7 @@ exports.importCssString = function importCssString(cssText, id, doc) {
 
 exports.importCssStylsheet = function(uri, doc) {
     if (doc.createStyleSheet) {
-        var sheet = doc.createStyleSheet(uri);
+        doc.createStyleSheet(uri);
     } else {
         var link = exports.createElement('link');
         link.rel = 'stylesheet';
@@ -2804,13 +2804,19 @@ exports.importCssStylsheet = function(uri, doc) {
 };
 
 exports.getInnerWidth = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingLeft"))
-            + parseInt(exports.computedStyle(element, "paddingRight")) + element.clientWidth);
+    return (
+        parseInt(exports.computedStyle(element, "paddingLeft"), 10) +
+        parseInt(exports.computedStyle(element, "paddingRight"), 10) + 
+        element.clientWidth
+    );
 };
 
 exports.getInnerHeight = function(element) {
-    return (parseInt(exports.computedStyle(element, "paddingTop"))
-            + parseInt(exports.computedStyle(element, "paddingBottom")) + element.clientHeight);
+    return (
+        parseInt(exports.computedStyle(element, "paddingTop"), 10) +
+        parseInt(exports.computedStyle(element, "paddingBottom"), 10) +
+        element.clientHeight
+    );
 };
 
 if (window.pageYOffset !== undefined) {
@@ -2836,13 +2842,13 @@ if (window.getComputedStyle)
     exports.computedStyle = function(element, style) {
         if (style)
             return (window.getComputedStyle(element, "") || {})[style] || "";
-        return window.getComputedStyle(element, "") || {}
+        return window.getComputedStyle(element, "") || {};
     };
 else
     exports.computedStyle = function(element, style) {
         if (style)
             return element.currentStyle[style];
-        return element.currentStyle
+        return element.currentStyle;
     };
 
 exports.scrollbarWidth = function(document) {
@@ -2913,38 +2919,6 @@ exports.getInnerText = function(el) {
 
 exports.getParentWindow = function(document) {
     return document.defaultView || document.parentWindow;
-};
-
-exports.getSelectionStart = function(textarea) {
-    // TODO IE
-    var start;
-    try {
-        start = textarea.selectionStart || 0;
-    } catch (e) {
-        start = 0;
-    }
-    return start;
-};
-
-exports.setSelectionStart = function(textarea, start) {
-    // TODO IE
-    return textarea.selectionStart = start;
-};
-
-exports.getSelectionEnd = function(textarea) {
-    // TODO IE
-    var end;
-    try {
-        end = textarea.selectionEnd || 0;
-    } catch (e) {
-        end = 0;
-    }
-    return end;
-};
-
-exports.setSelectionEnd = function(textarea, end) {
-    // TODO IE
-    return textarea.selectionEnd = end;
 };
 
 });
@@ -3674,6 +3648,8 @@ var EditSession = function(text, mode) {
         this.tokenRe = mode.tokenRe;
         this.nonTokenRe = mode.nonTokenRe;
 
+        this.$setFolding(mode);
+
         this._dispatchEvent("changeMode");
     };
 
@@ -3994,6 +3970,12 @@ var EditSession = function(text, mode) {
         return Math.max(0, Math.min(row, this.doc.getLength()-1));
     };
 
+    this.$clipColumnToRow = function(row, column) {
+        if (column < 0)
+            return 0;
+        return Math.min(this.doc.getLine(row).length, column);
+    };
+
     this.$clipPositionToDocument = function(row, column) {
         column = Math.max(0, column);
 
@@ -4014,6 +3996,30 @@ var EditSession = function(text, mode) {
             row: row,
             column: column
         };
+    };
+
+    this.$clipRangeToDocument = function(range) {
+        if (range.start.row < 0) {
+            range.start.row = 0;
+            range.start.column = 0
+        } else {
+            range.start.column = this.$clipColumnToRow(
+                range.start.row,
+                range.start.column
+            );
+        }
+        
+        var len = this.doc.getLength() - 1;
+        if (range.end.row > len) {
+            range.end.row = len;
+            range.end.column = this.doc.getLine(len).length;
+        } else {
+            range.end.column = this.$clipColumnToRow(
+                range.end.row,
+                range.end.column
+            );
+        }
+        return range;
     };
 
     // WRAPMODE
@@ -4873,7 +4879,7 @@ var trimBeginRegexp = /^\s\s*/;
 var trimEndRegexp = /\s\s*$/;
 
 exports.stringTrimLeft = function (string) {
-    return string.replace(trimBeginRegexp, '')
+    return string.replace(trimBeginRegexp, '');
 };
 
 exports.stringTrimRight = function (string) {
@@ -4890,11 +4896,11 @@ exports.copyObject = function(obj) {
 
 exports.copyArray = function(array){
     var copy = [];
-    for (i=0, l=array.length; i<l; i++) {
+    for (var i=0, l=array.length; i<l; i++) {
         if (array[i] && typeof array[i] == "object")
             copy[i] = this.copyObject( array[i] );
         else 
-            copy[i] = array[i]
+            copy[i] = array[i];
     }
     return copy;
 };
@@ -4913,7 +4919,7 @@ exports.deepCopy = function (obj) {
         }
     }
     return copy;
-}
+};
 
 exports.arrayToMap = function(arr) {
     var map = {};
@@ -4951,7 +4957,7 @@ exports.deferredCall = function(fcn) {
         deferred.cancel();
         timer = setTimeout(callback, timeout || 0);
         return deferred;
-    }
+    };
 
     deferred.schedule = deferred;
 
@@ -5630,6 +5636,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 };
 
 (function() {
+    this.isEequal = function(range) {
+        return this.start.row == range.start.row &&
+            this.end.row == range.end.row &&
+            this.start.column == range.start.column &&
+            this.end.column == range.end.column
+    };
 
     this.toString = function() {
         return ("Range: [" + this.start.row + "/" + this.start.column +
@@ -7395,11 +7407,12 @@ exports.BackgroundTokenizer = BackgroundTokenizer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/edit_session/folding', ['require', 'exports', 'module' , 'ace/range', 'ace/edit_session/fold_line', 'ace/edit_session/fold'], function(require, exports, module) {
+define('ace/edit_session/folding', ['require', 'exports', 'module' , 'ace/range', 'ace/edit_session/fold_line', 'ace/edit_session/fold', 'ace/token_iterator'], function(require, exports, module) {
 
 var Range = require("../range").Range;
 var FoldLine = require("./fold_line").FoldLine;
 var Fold = require("./fold").Fold;
+var TokenIterator = require("../token_iterator").TokenIterator;
 
 function Folding() {
     /**
@@ -7606,6 +7619,8 @@ function Folding() {
         else
             fold = new Fold(range, placeholder);
 
+        this.$clipRangeToDocument(fold.range);
+
         var startRow = fold.start.row;
         var startColumn = fold.start.column;
         var endRow = fold.end.row;
@@ -7618,28 +7633,17 @@ function Folding() {
         if (startRow == endRow && endColumn - startColumn < 2)
             throw "The range has to be at least 2 characters width";
 
-        var existingFold = this.getFoldAt(startRow, startColumn, 1);
+        var startFold = this.getFoldAt(startRow, startColumn, 1);
+        var endFold = this.getFoldAt(endRow, endColumn, -1);
+        if (startFold && endFold == startFold)
+            return startFold.addSubFold(fold);
+
         if (
-            existingFold
-            && existingFold.range.isEnd(endRow, endColumn)
-            && existingFold.range.isStart(startRow, startColumn)
+            (startFold && !startFold.range.isStart(startRow, startColumn))
+            || (endFold && !endFold.range.isEnd(endRow, endColumn))
         ) {
-            return fold;
+            throw "A fold can't intersect already existing fold" + fold.range + startFold.range;
         }
-
-        existingFold = this.getFoldAt(startRow, startColumn, 1);
-        if (existingFold && !existingFold.range.isStart(startRow, startColumn))
-            throw "A fold can't start inside of an already existing fold";
-
-        existingFold = this.getFoldAt(endRow, endColumn, -1);
-        if (existingFold && !existingFold.range.isEnd(endRow, endColumn))
-            throw "A fold can't end inside of an already existing fold";
-
-        if (endRow >= this.doc.getLength())
-            throw "End of fold is outside of the document.";
-
-        if (endColumn > this.getLine(endRow).length || startColumn > this.getLine(startRow).length)
-            throw "End of fold is outside of the document.";
 
         // Check if there are folds in the range we create the new fold for.
         var folds = this.getFoldsInRange(fold.range);
@@ -7758,7 +7762,7 @@ function Folding() {
             this.removeFold(fold);
         }, this);
         this.$modified = true;
-    }
+    };
 
     this.expandFold = function(fold) {
         this.removeFold(fold);
@@ -7766,13 +7770,13 @@ function Folding() {
             this.addFold(fold);
         }, this);
         fold.subFolds = [];
-    }
+    };
 
     this.expandFolds = function(folds) {
         folds.forEach(function(fold) {
             this.expandFold(fold);
         }, this);
-    }
+    };
 
     this.unfold = function(location, expandInner) {
         var range, folds;
@@ -7785,7 +7789,7 @@ function Folding() {
         else
             range = location;
 
-        var folds = this.getFoldsInRange(range);
+        folds = this.getFoldsInRange(range);
         if (expandInner) {
             this.removeFolds(folds);
         } else {
@@ -7796,7 +7800,7 @@ function Folding() {
                 folds = this.getFoldsInRange(range);
             }
         }
-    }
+    };
 
     /**
      * Checks if a given documentRow is folded. This is true if there are some
@@ -7825,7 +7829,6 @@ function Folding() {
         }
 
         // Build the textline using the FoldLine walker.
-        var line = "";
         var doc = this.doc;
         var textLine = "";
 
@@ -7861,7 +7864,6 @@ function Folding() {
     };
 
     this.$cloneFoldData = function() {
-        var foldData = this.$foldData;
         var fd = [];
         fd = this.$foldData.map(function(foldLine) {
             var folds = foldLine.folds.map(function(fold) {
@@ -7878,9 +7880,9 @@ function Folding() {
         var range = selection.getRange();
 
         if (range.isEmpty()) {
-            var cursor = range.start
+            var cursor = range.start;
             var fold = this.getFoldAt(cursor.row, cursor.column);
-            var bracketPos, column;
+            var bracketPos;
 
             if (fold) {
                 this.expandFold(fold);
@@ -7901,25 +7903,7 @@ function Folding() {
 
                 range.start.column++;
             } else {
-                var token = this.getTokenAt(cursor.row, cursor.column);
-                if (token && /^comment|string/.test(token.type)) {
-                    var startRow = cursor.row;
-                    var endRow = cursor.row;
-                    var t = token;
-                    while ((t = this.getTokenAt(startRow - 1)) && t.type == token.type) {
-                        startRow --;
-                        token = t;
-                    }
-                    range.start.row = startRow;
-                    range.start.column = token.start + 2;
-
-                    while ((t = this.getTokenAt(endRow + 1, 0)) && t.type == token.type) {
-                        endRow ++;
-                        token = t;
-                    }
-                    range.end.row = endRow;
-                    range.end.column = token.start + token.value.length - 1;
-                }
+                range = this.getCommentFoldRange(cursor.row, cursor.column) || range;
             }
         } else {
             var folds = this.getFoldsInRange(range);
@@ -7939,7 +7923,6 @@ function Folding() {
             return
         }
 
-
         var placeholder = "...";
         if (!range.isMultiLine()) {
             placeholder = this.getTextRange(range);
@@ -7950,7 +7933,306 @@ function Folding() {
 
         this.addFold(placeholder, range);
     };
+
+    this.getCommentFoldRange = function(row, column) {
+        var iterator = new TokenIterator(this, row, column);
+        var token = iterator.getCurrentToken();
+        if (token && /^comment|string/.test(token.type)) {
+            var range = new Range();
+            var t;
+            do {
+                t = iterator.stepBackward();
+            } while(t && t.type == token.type)
+
+            iterator.stepForward();
+            range.start.row = iterator.getCurrentTokenRow();
+            range.start.column = iterator.getCurrentTokenColumn() + 2;
+
+            var iterator = new TokenIterator(this, row, column);
+
+            do {
+                t = iterator.stepForward();
+            } while(t && t.type == token.type)
+            t = iterator.stepBackward();
+
+            range.end.row = iterator.getCurrentTokenRow();
+            range.end.column = iterator.getCurrentTokenColumn() + t.value.length - 1;
+            return range
+        }
+    };
+
+    this.foldAll = function() {
+        var foldWidgets = this.foldWidgets
+        for (var row = foldWidgets.length; row--; ) {
+            if (foldWidgets[row] == null)
+                foldWidgets[row] = this.getFoldWidget(row)
+            if (foldWidgets[row] != "start")
+                continue
+
+            var range = this.getFoldWidgetRange(row);
+            if (range)
+                this.addFold("...", range)
+        }
+    }
+
+    // structured folding
+    this.$setFolding = function(mode) {
+        mode = mode && mode.foldingRules;
+        var foldRules = Folding.commonFoldingRules
+        if (typeof mode == "string")
+            mode = foldRules[mode];
+
+        if (mode) {
+            this.foldWidgets = [];
+            this.removeListener('change', this.$updateFoldWidgets);
+
+            if (mode.getFoldWidget)
+                this.getFoldWidget = mode.getFoldWidget;
+            else if (mode.foldingStopMarker)
+                this.getFoldWidget = foldRules.$testBoth;
+            else
+                this.getFoldWidget = foldRules.$testStart;
+
+            this.foldingStopMarker = mode.foldingStopMarker;
+            this.foldingStartMarker = mode.foldingStartMarker;
+
+            if (typeof mode.getFoldWidgetRange == "string")
+                this.getFoldWidgetRange = foldRules[mode.getFoldWidgetRange];
+            else
+                this.getFoldWidgetRange = mode.getFoldWidgetRange;
+
+
+            this.$updateFoldWidgets = (mode.onChange || foldRules.onChange).bind(this);
+
+            this.on('change', this.$updateFoldWidgets);
+        } else {
+            this.foldWidgets = null;
+            this.removeListener('change', this.$updateFoldWidgets);
+        }
+    };
+
+    this.onFoldWidgetClick = function(row, htmlEvent) {
+        var type = this.getFoldWidget(row);
+        var line = this.getLine(row);
+
+        if (type == "end")
+            var fold = this.getFoldAt(row, 0, -1);
+        else
+            var fold = this.getFoldAt(row, line.length, 1);
+
+        if (fold) {
+            this.expandFold(fold);
+            return;
+        }
+
+        var range = this.getFoldWidgetRange(row);
+        if (range)
+            this.addFold("...", range);
+    }
 }
+
+Folding.commonFoldingRules = {
+    $testStart: function(row) {
+        if(this.foldingStartMarker.test(this.getLine(row)))
+            return "start";
+        return "";
+    },
+    $testBoth: function(row) {
+        var line = this.getLine(row);
+        if(this.foldingStartMarker.test(line))
+            return "start";
+        if(this.foldingStopMarker.test(line))
+            return "end";
+        return "";
+    },
+    onChange: function(e) {
+        var delta = e.data;
+        var range = delta.range;
+        var firstRow = range.start.row;
+        var len = range.end.row - firstRow;
+
+        if (len == 0) {
+            this.foldWidgets[firstRow] = null;
+        } else if (delta.action == "removeText" || delta.action == "removeLines") {
+            this.foldWidgets.splice(firstRow, len + 1, null);
+        } else {
+            var args = Array(len + 1);
+            args.unshift(firstRow, 1)
+            this.foldWidgets.splice.apply(this.foldWidgets, args);
+        }
+    },
+
+    indentationBlock: function(row) {
+        var re = /^\s*/;
+        var startRow = row, endRow = row;
+        var line = this.getLine(row);
+        var startColumn = line.length - 1;
+        var startLevel = line.match(re)[0].length;
+
+        while (line = this.getLine(++row)) {
+            var level = line.match(re)[0].length;
+
+            if (level == line.length)
+                continue;
+
+            if (level <= startLevel)
+                break;
+
+            endRow = row;
+        }
+
+        if (endRow > startRow) {
+            var endColumn = this.getLine(endRow).length;
+            return new Range(startRow, startColumn, endRow, endColumn);
+        }
+    },
+
+    "cStyle": {
+        foldingStartMarker : /(\{|\[)[^\}\]]*$|^\s*(\/\*)/,
+        foldingStopMarker : /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/,
+        getFoldWidgetRange: function(row) {
+            var line = this.getLine(row);
+            var match = line.match(this.foldingStartMarker);
+            if (match) {
+                var i = match.index;
+
+                if (match[2])
+                    return this.getCommentFoldRange(row, i + match[0].length);
+
+                var start = {row: row, column: i+1};
+                var end = this.$findClosingBracket(match[1], start);
+                if (end) {
+                    var fw = this.foldWidgets[end.row];
+                    if (fw == null)
+                        fw = this.getFoldWidget(end.row);
+
+                    if (fw == "start"){
+                        end.row --;
+                        end.column = this.getLine(end.row).length;
+                    }
+
+                } else {
+                    end = {row: this.getLength(), column: 0};
+                }
+
+                return Range.fromPoints(start, end);
+            }
+
+            var match = line.match(this.foldingStopMarker);
+            if (match) {
+                var i = match.index + match[0].length;
+
+                if (match[2])
+                    return this.getCommentFoldRange(row, i);
+
+                var end = {row: row, column: i};
+                var start = this.$findOpeningBracket(match[1], end)
+                if (start){
+                    start.column++;
+                    end.column--;
+                } else {
+                    start = {row: 0, column: this.getLine(0).length}
+                }
+
+                return  Range.fromPoints(start, end);
+            }
+        }
+    },
+    // TODO: folding based only on indentation
+    "indentation": null,
+
+    "xml": {
+        getFoldWidget: function(row) {
+            var tags = this.getTokens(row, row)[0].tokens
+                .filter(function(token) {
+                    return token.type === "meta.tag"
+                })
+                .map(function(token) {
+                    return token.value;
+                }).
+                join("")
+                .trim()
+                .replace(/^<|>$|\s+/g, "")
+                .split("><")
+            
+            var fold = tags[0];
+            
+            if (!fold)
+                return;
+            if (fold.charAt(0) == "/")
+                return "end";
+                
+            if (tags.indexOf("/" + fold) !== -1)
+                return;
+                
+            return "start";
+        },
+        
+        getFoldWidgetRange: function(row) {
+            var start, end;
+            var stack = [];
+            
+            var iterator = new TokenIterator(this, row, 0);
+            var step = "stepForward";
+            var isBack = false;
+            
+            do {
+                var token = iterator.getCurrentToken();
+                
+                var value = token.value.trim();
+                if (token && token.type == "meta.tag" && token.value !== ">") {
+                    var tagName = value.replace(/^[<\s]*|[\s*>]$/g, "");
+                    if (!start) {
+                        if (tagName.charAt(0) == "/") {
+                            tagName = tagName.slice(1);
+                            step = "stepBackward";
+                            isBack = true;
+                        }
+                        
+                        start = {
+                            row: row,
+                            column: iterator.getCurrentTokenColumn() + (isBack ? 0 : value.length + 1)
+                        };
+
+                        stack.push(tagName);
+                    }
+                    else {
+                        if (tagName.charAt(0) == "/") {
+                            tagName = tagName.slice(1);
+                            var close = !isBack;
+                        }
+                        else
+                            close = isBack;
+                        
+                        if (close) {
+                            if (stack[stack.length-1] == tagName) {
+                                stack.pop();
+                                if (stack.length == 0) {
+                                    end = {
+                                        row: iterator.getCurrentTokenRow(),
+                                        column: iterator.getCurrentTokenColumn() + (isBack ? value.length : 0)
+                                    };
+                                    if (isBack)
+                                        return Range.fromPoints(end, start);
+                                    else
+                                        return Range.fromPoints(start, end);
+                                }
+                            }
+                            else {
+                                console.error("unmatched tags!", tagName, stack)
+                            }
+                        }
+                        else {
+                            stack.push(tagName);
+                        }
+                    }
+                }
+                
+            } while(token = iterator[step]());
+        }
+    }
+}
+
 exports.Folding = Folding;
 
 });/* vim:ts=4:sts=4:sw=4:
@@ -7996,7 +8278,7 @@ define('ace/edit_session/fold_line', ['require', 'exports', 'module' , 'ace/rang
 var Range = require("../range").Range;
 
 /**
- * If the an array is passed in, the folds are expected to be sorted already.
+ * If an array is passed in, the folds are expected to be sorted already.
  */
 function FoldLine(foldData, folds) {
     this.foldData = foldData;
@@ -8301,9 +8583,157 @@ var Fold = exports.Fold = function(range, placeholder) {
         return fold;
     };
 
+    this.addSubFold = function(fold) {
+        if (this.range.isEequal(fold))
+            return this;
+
+        if (!this.range.containsRange(fold))
+            throw "A fold can't intersect already existing fold" + fold.range + this.range;
+
+        var row = fold.range.start.row, column = fold.range.start.column;
+        for (var i = 0, cmp = -1; i < this.subFolds.length; i++) {
+            cmp = this.subFolds[i].range.compare(row, column);
+            if (cmp != 1)
+                break;
+        }
+        var afterStart = this.subFolds[i];
+
+        if (cmp == 0)
+            return afterStart.addSubFold(fold)
+
+        // cmp == -1
+        var row = fold.range.end.row, column = fold.range.end.column;
+        for (var j = i, cmp = -1; j < this.subFolds.length; j++) {
+            cmp = this.subFolds[j].range.compare(row, column);
+            if (cmp != 1)
+                break;
+        }
+        var afterEnd = this.subFolds[j];
+
+        if (cmp == 0)
+            throw "A fold can't intersect already existing fold" + fold.range + this.range;
+
+        var consumedFolds = this.subFolds.splice(i, j - i, fold)
+        fold.setFoldLine(this.foldLine);
+
+        return fold;
+    }
+
 }).call(Fold.prototype);
 
 });/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/token_iterator', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+var TokenIterator = function(session, initialRow, initialColumn) {
+    this.$session = session;
+    this.$row = initialRow;
+    this.$rowTokens = session.getTokens(initialRow, initialRow)[0].tokens;
+
+    var token = session.getTokenAt(initialRow, initialColumn);
+    this.$tokenIndex = token ? token.index : -1;
+};
+
+(function() {
+    
+    this.stepBackward = function() {
+        this.$tokenIndex -= 1;
+        
+        while (this.$tokenIndex < 0) {
+            this.$row -= 1;
+            if (this.$row < 0)
+                return null;
+                
+            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
+            this.$tokenIndex = this.$rowTokens.length - 1;
+        }
+            
+        return this.$rowTokens[this.$tokenIndex];
+    };
+    
+    this.stepForward = function() {
+        var rowCount = this.$session.getLength();
+        this.$tokenIndex += 1;
+        
+        while (this.$tokenIndex >= this.$rowTokens.length) {
+            this.$row += 1;
+            if (this.$row >= rowCount)
+                return null;
+
+            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
+            this.$tokenIndex = 0;
+        }
+            
+        return this.$rowTokens[this.$tokenIndex];
+    };
+    
+    this.getCurrentToken = function () {
+        return this.$rowTokens[this.$tokenIndex];
+    };
+    
+    this.getCurrentTokenRow = function () {
+        return this.$row;
+    };
+    
+    this.getCurrentTokenColumn = function() {
+        var rowTokens = this.$rowTokens;
+        var tokenIndex = this.$tokenIndex;
+        
+        // If a column was cached by EditSession.getTokenAt, then use it
+        var column = rowTokens[tokenIndex].start;
+        if (column !== undefined)
+            return column;
+            
+        column = 0;
+        while (tokenIndex > 0) {
+            tokenIndex -= 1;
+            column += rowTokens[tokenIndex].value.length;
+        }
+        
+        return column;  
+    };
+            
+}).call(TokenIterator.prototype);
+
+exports.TokenIterator = TokenIterator;
+});
+/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -8482,118 +8912,6 @@ function BracketMatch() {
 }
 exports.BracketMatch = BracketMatch;
 
-});
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Ajax.org Code Editor (ACE).
- *
- * The Initial Developer of the Original Code is
- * Ajax.org B.V.
- * Portions created by the Initial Developer are Copyright (C) 2010
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *      Fabian Jakobs <fabian AT ajax DOT org>
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/token_iterator', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-var TokenIterator = function(session, initialRow, initialColumn) {
-    this.$session = session;
-    this.$row = initialRow;
-    this.$rowTokens = session.getTokens(initialRow, initialRow)[0].tokens;
-
-    var token = session.getTokenAt(initialRow, initialColumn);
-    this.$tokenIndex = token ? token.index : -1;
-};
-
-(function() {
-    
-    this.stepBackward = function() {
-        this.$tokenIndex -= 1;
-        
-        while (this.$tokenIndex < 0) {
-            this.$row -= 1;
-            if (this.$row < 0)
-                return null;
-                
-            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
-            this.$tokenIndex = this.$rowTokens.length - 1;
-        }
-            
-        return this.$rowTokens[this.$tokenIndex];
-    }
-    
-    this.stepForward = function() {
-        var rowCount = this.$session.getLength();
-        this.$tokenIndex += 1;
-        
-        while (this.$tokenIndex >= this.$rowTokens.length) {
-            this.$row += 1;
-            if (this.$row >= rowCount)
-                return null;
-
-            this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
-            this.$tokenIndex = 0;
-        }
-            
-        return this.$rowTokens[this.$tokenIndex];
-    }
-    
-    this.getCurrentToken = function () {
-        return this.$rowTokens[this.$tokenIndex];
-    }
-    
-    this.getCurrentTokenRow = function () {
-        return this.$row;
-    }
-    
-    this.getCurrentTokenColumn = function() {
-        var rowTokens = this.$rowTokens;
-        var tokenIndex = this.$tokenIndex;
-        
-        // If a column was cached by EditSession.getTokenAt, then use it
-        var column = rowTokens[tokenIndex].start;
-        if (column !== undefined)
-            return column;
-            
-        column = 0;
-        while (tokenIndex > 0) {
-            tokenIndex -= 1;
-            column += rowTokens[tokenIndex].value.length;
-        }
-        
-        return column;  
-    }
-            
-}).call(TokenIterator.prototype);
-
-exports.TokenIterator = TokenIterator;
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -8900,7 +9218,7 @@ StateHandler.prototype = {
         });
     },
 
-    $composeBuffer: function(data, hashId, key) {
+    $composeBuffer: function(data, hashId, key, e) {
         // Initialize the data object.
         if (data.state == null || data.buffer == null) {
             data.state = "start";
@@ -8929,17 +9247,23 @@ StateHandler.prototype = {
             data.buffer = bufferToUse;
         }
 
-        return {
-            bufferToUse:    bufferToUse,
-            symbolicName:   symbolicName
+        var bufferObj = {
+            bufferToUse: bufferToUse,
+            symbolicName: symbolicName,
         };
+
+        if (e) {
+            bufferObj.keyIdentifier = e.keyIdentifier
+        }
+
+        return bufferObj;
     },
 
-    $find: function(data, buffer, symbolicName, hashId, key) {
+    $find: function(data, buffer, symbolicName, hashId, key, keyIdentifier) {
         // Holds the command to execute and the args if a command matched.
         var result = {};
 
-        // Loop over all the bindings of the keymapp until a match is found.
+        // Loop over all the bindings of the keymap until a match is found.
         this.keymapping[data.state].some(function(binding) {
             var match;
 
@@ -8954,7 +9278,7 @@ StateHandler.prototype = {
             }
 
             // Check if the match function matches.
-            if (binding.match && !binding.match(buffer, hashId, key, symbolicName)) {
+            if (binding.match && !binding.match(buffer, hashId, key, symbolicName, keyIdentifier)) {
                 return false;
             }
 
@@ -9021,20 +9345,21 @@ StateHandler.prototype = {
     /**
      * This function is called by keyBinding.
      */
-    handleKeyboard: function(data, hashId, key) {
+    handleKeyboard: function(data, hashId, key, keyCode, e) {
         // If we pressed any command key but no other key, then ignore the input.
         // Otherwise "shift-" is added to the buffer, and later on "shift-g"
-        // which results in "shift-shift-g" which doesn't make senese.
+        // which results in "shift-shift-g" which doesn't make sense.
         if (hashId != 0 && (key == "" || key == String.fromCharCode(0))) {
             return null;
         }
 
         // Compute the current value of the keyboard input buffer.
-        var r = this.$composeBuffer(data, hashId, key);
+        var r = this.$composeBuffer(data, hashId, key, e);
         var buffer = r.bufferToUse;
         var symbolicName = r.symbolicName;
+        var keyId = r.keyIdentifier;
 
-        r = this.$find(data, buffer, symbolicName, hashId, key);
+        r = this.$find(data, buffer, symbolicName, hashId, key, keyId);
         if (DEBUG) {
             console.log("KeyboardStateMapper#match", buffer, symbolicName, r);
         }
@@ -9393,6 +9718,8 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
+
+    this.foldingRules = "cStyle";
 
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         var outdent = true;
@@ -10762,12 +11089,14 @@ define('ace/mode/coffee_highlight_rules', ['require', 'exports', 'module' , 'ace
             qstring : [{
                 token : "string",
                 regex : "[^\\\\']*(?:\\\\.[^\\\\']*)*'",
+                merge : true,
                 next : "start"
             }, stringfill],
             
             qqstring : [{
                 token : "string",
                 regex : '[^\\\\"]*(?:\\\\.[^\\\\"]*)*"',
+                merge : true,
                 next : "start"
             }, stringfill],
             
@@ -11056,6 +11385,8 @@ oop.inherits(Mode, TextMode);
 
 (function() {
 
+    this.foldingRules = "xml";
+
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         return 0;
     };
@@ -11128,6 +11459,8 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
+
+    this.foldingRules = "cStyle";
 
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         var outdent = true;
@@ -11563,6 +11896,8 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
+
+    this.foldingRules = "cStyle";
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
@@ -12247,34 +12582,36 @@ oop.inherits(Mode, TextMode);
 
 (function() {
     
-	  this.getNextLineIndent = function(state, line, tab) {
-	      var indent = this.$getIndent(line);
+    this.foldingRules = "cStyle";
 
-	      var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
-	      var tokens = tokenizedLine.tokens;
-	      var endState = tokenizedLine.state;
+    this.getNextLineIndent = function(state, line, tab) {
+        var indent = this.$getIndent(line);
+  
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+        var tokens = tokenizedLine.tokens;
+        var endState = tokenizedLine.state;
+  
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {
+            return indent;
+        }
+    
+        if (state == "start") {
+            var match = line.match(/^.*[\{\(\[]\s*$/);
+            if (match) {
+                indent += tab;
+            }
+        }
+  
+        return indent;
+    };
 
-	      if (tokens.length && tokens[tokens.length-1].type == "comment") {
-	          return indent;
-	      }
-      
-	      if (state == "start") {
-	          var match = line.match(/^.*[\{\(\[]\s*$/);
-	          if (match) {
-	              indent += tab;
-	          }
-	      }
-
-	      return indent;
-	  };
-
-	  this.checkOutdent = function(state, line, input) {
-	      return this.$outdent.checkOutdent(line, input);
-	  };
-
-	  this.autoOutdent = function(state, doc, row) {
-	      this.$outdent.autoOutdent(doc, row);
-	  };
+    this.checkOutdent = function(state, line, input) {
+        return this.$outdent.checkOutdent(line, input);
+    };
+  
+    this.autoOutdent = function(state, doc, row) {
+        this.$outdent.autoOutdent(doc, row);
+    };
 
 
     this.createWorker = function(session) {
@@ -12405,7 +12742,9 @@ var Mode = function() {
 oop.inherits(Mode, JavaScriptMode);
 
 (function() {
-    
+
+    this.foldingRules = "cStyle";
+
     this.createWorker = function(session) {
         return null;
     };
@@ -12574,12 +12913,13 @@ oop.inherits(Mode, TextMode);
 
 (function() {
 
+    this.foldingRules = "cStyle";
+
       this.getNextLineIndent = function(state, line, tab) {
           var indent = this.$getIndent(line);
 
           var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
           var tokens = tokenizedLine.tokens;
-          var endState = tokenizedLine.state;
 
           if (tokens.length && tokens[tokens.length-1].type == "comment") {
               return indent;
@@ -12777,6 +13117,8 @@ oop.inherits(Mode, TextMode);
 
 (function() {
 
+    this.foldingRules = "xml";
+    
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         return 0;
     };
@@ -12830,86 +13172,21 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/html_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/css_highlight_rules', 'ace/mode/javascript_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/html_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/css_highlight_rules', 'ace/mode/javascript_highlight_rules', 'ace/mode/xml_util', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 var oop = require("../lib/oop");
 var CssHighlightRules = require("./css_highlight_rules").CssHighlightRules;
 var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScriptHighlightRules;
+var xmlUtil = require("./xml_util");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var HtmlHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
-    function string(state) {
-        return [{
-            token : "string",
-            regex : '".*?"'
-        }, {
-            token : "string", // multi line string start
-            merge : true,
-            regex : '["].*$',
-            next : state + "-qqstring"
-        }, {
-            token : "string",
-            regex : "'.*?'"
-        }, {
-            token : "string", // multi line string start
-            merge : true,
-            regex : "['].*$",
-            next : state + "-qstring"
-        }]
-    }
-    
-    function multiLineString(quote, state) {
-        return [{
-            token : "string",
-            merge : true,
-            regex : ".*" + quote,
-            next : state
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        }]
-    }
-    
-    function tag(states, name, nextState) {
-        states[name] = [{
-            token : "text",
-            regex : "\\s+"
-        }, {
-            token : "meta.tag",
-            regex : "[-_a-zA-Z0-9:]+",
-            next : name + "embed-attribute-list" 
-        }, {
-            token: "empty",
-            regex: "",
-            next : name + "embed-attribute-list"
-        }];
-
-        states[name + "-qstring"] = multiLineString("'", name);
-        states[name + "-qqstring"] = multiLineString("\"", name);
-        
-        states[name + "embed-attribute-list"] = [{
-            token : "text",
-            regex : ">",
-            next : nextState
-        }, {
-            token : "entity.other.attribute-name",
-            regex : "[-_a-zA-Z0-9:]+"
-        }, {
-            token : "constant.numeric", // float
-            regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }].concat(string(name));
-    };
-
     this.$rules = {
         start : [ {
-            token : "text",
+            token : "meta.tag",
             merge : true,
             regex : "<\\!\\[CDATA\\[",
             next : "cdata"
@@ -12922,15 +13199,15 @@ var HtmlHighlightRules = function() {
             regex : "<\\!--",
             next : "comment"
         }, {
-            token : "text",
+            token : "meta.tag",
             regex : "<(?=\s*script)",
             next : "script"
         }, {
-            token : "text",
+            token : "meta.tag",
             regex : "<(?=\s*style)",
             next : "css"
         }, {
-            token : "text", // opening tag
+            token : "meta.tag", // opening tag
             regex : "<\\/?",
             next : "tag"
         }, {
@@ -12966,22 +13243,22 @@ var HtmlHighlightRules = function() {
         } ]
     };
     
-    tag(this.$rules, "tag", "start");
-    tag(this.$rules, "css", "css-start");
-    tag(this.$rules, "script", "js-start");
+    xmlUtil.tag(this.$rules, "tag", "start");
+    xmlUtil.tag(this.$rules, "css", "css-start");
+    xmlUtil.tag(this.$rules, "script", "js-start");
     
     this.embedRules(JavaScriptHighlightRules, "js-", [{
         token: "comment",
         regex: "\\/\\/.*(?=<\\/script>)",
         next: "tag"
     }, {
-        token: "text",
+        token: "meta.tag",
         regex: "<\\/(?=script)",
         next: "tag"
     }]);
     
     this.embedRules(CssHighlightRules, "css-", [{
-        token: "text",
+        token: "meta.tag",
         regex: "<\\/(?=style)",
         next: "tag"
     }]);
@@ -12990,6 +13267,116 @@ var HtmlHighlightRules = function() {
 oop.inherits(HtmlHighlightRules, TextHighlightRules);
 
 exports.HtmlHighlightRules = HtmlHighlightRules;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/xml_util', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+function string(state) {
+    return [{
+        token : "string",
+        regex : '".*?"'
+    }, {
+        token : "string", // multi line string start
+        merge : true,
+        regex : '["].*$',
+        next : state + "-qqstring"
+    }, {
+        token : "string",
+        regex : "'.*?'"
+    }, {
+        token : "string", // multi line string start
+        merge : true,
+        regex : "['].*$",
+        next : state + "-qstring"
+    }];
+}
+
+function multiLineString(quote, state) {
+    return [{
+        token : "string",
+        merge : true,
+        regex : ".*" + quote,
+        next : state
+    }, {
+        token : "string",
+        merge : true,
+        regex : '.+'
+    }];
+}
+
+exports.tag = function(states, name, nextState) {
+    states[name] = [{
+        token : "text",
+        regex : "\\s+"
+    }, {
+        token : "meta.tag",
+        merge : true,
+        regex : "[-_a-zA-Z0-9:]+",
+        next : name + "embed-attribute-list" 
+    }, {
+        token: "empty",
+        regex: "",
+        next : name + "embed-attribute-list"
+    }];
+
+    states[name + "-qstring"] = multiLineString("'", name);
+    states[name + "-qqstring"] = multiLineString("\"", name);
+    
+    states[name + "embed-attribute-list"] = [{
+        token : "meta.tag",
+        regex : "\/?>",
+        next : nextState
+    }, {
+        token : "keyword.operator",
+        regex : "="
+    }, {
+        token : "entity.other.attribute-name",
+        regex : "[-_a-zA-Z0-9:]+"
+    }, {
+        token : "constant.numeric", // float
+        regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+    }, {
+        token : "text",
+        regex : "\\s+"
+    }].concat(string(name));
+};
+
 });
 define('ace/mode/java', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/javascript', 'ace/tokenizer', 'ace/mode/java_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
 
@@ -13009,6 +13396,8 @@ oop.inherits(Mode, JavaScriptMode);
 
 (function() {
     
+    this.foldingRules = "cStyle";
+
     this.createWorker = function(session) {
         return null;
     };
@@ -13197,14 +13586,13 @@ exports.JavaHighlightRules = JavaHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/json', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/json_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
+define('ace/mode/json', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/json_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
 var HighlightRules = require("./json_highlight_rules").JsonHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-var Range = require("../range").Range;
 var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
@@ -13216,12 +13604,10 @@ oop.inherits(Mode, TextMode);
 
 (function() {
 
+    this.foldingRules = "cStyle";
+
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
-
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
-        var tokens = tokenizedLine.tokens;
-        var endState = tokenizedLine.state;
 
         if (state == "start") {
             var match = line.match(/^.*[\{\(\[]\s*$/);
@@ -14115,7 +14501,9 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
-
+    
+    this.foldingRules = "xml";
+    
     this.getNextLineIndent = function(state, line, tab) {
         return this.$getIndent(line);
     };
@@ -14161,16 +14549,16 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/xml_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/xml_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/xml_util', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 var oop = require("../lib/oop");
+var xmlUtil = require("./xml_util");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var XmlHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
-
     this.$rules = {
         start : [{
             token : "text",
@@ -14185,7 +14573,7 @@ var XmlHighlightRules = function() {
             regex : "<\\!--",
             next : "comment"
         }, {
-            token : "text", // opening tag
+            token : "meta.tag", // opening tag
             regex : "<\\/?",
             next : "tag"
         }, {
@@ -14194,54 +14582,6 @@ var XmlHighlightRules = function() {
         }, {
             token : "text",
             regex : "[^<]+"
-        }],
-
-        tag : [{
-            token : "text",
-            regex : ">",
-            next : "start"
-        }, {
-            token : "keyword",
-            regex : "[-_a-zA-Z0-9:]+"
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }, {
-            token : "string",
-            regex : '".*?"'
-        }, {
-            token : "string", // multi line string start
-            merge : true,
-            regex : '["].*',
-            next : "qqstring"
-        }, {
-            token : "string",
-            regex : "'.*?'"
-        }, {
-            token : "string", // multi line string start
-            merge : true,
-            regex : "['].*",
-            next : "qstring"
-        }],
-
-        qstring: [{
-            token : "string",
-            regex : ".*?'",
-            next : "tag"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
-        }],
-        
-        qqstring: [{
-            token : "string",
-            regex : ".*?\"",
-            next : "tag"
-        }, {
-            token : "string",
-            merge : true,
-            regex : '.+'
         }],
         
         cdata : [{
@@ -14266,6 +14606,8 @@ var XmlHighlightRules = function() {
             regex : ".+"
         }]
     };
+    
+    xmlUtil.tag(this.$rules, "tag", "start");
 };
 
 oop.inherits(XmlHighlightRules, TextHighlightRules);
@@ -14975,9 +15317,10 @@ oop.inherits(Mode, TextMode);
 
 (function() {
 
+    this.foldingRules = "cStyle";
+    
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         var outdent = true;
-        var outentedRows = [];
         var re = /^(\s*)#/;
 
         for (var i=startRow; i<= endRow; i++) {
@@ -15009,7 +15352,6 @@ oop.inherits(Mode, TextMode);
 
         var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
         var tokens = tokenizedLine.tokens;
-        var endState = tokenizedLine.state;
 
         if (tokens.length && tokens[tokens.length-1].type == "comment") {
             return indent;
@@ -15260,9 +15602,10 @@ oop.inherits(Mode, TextMode);
 
 (function() {
 
+    this.foldingRules = "cStyle";
+
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         var outdent = true;
-        var outentedRows = [];
         var re = /^(\s*)#/;
 
         for (var i=startRow; i<= endRow; i++) {
@@ -15294,7 +15637,6 @@ oop.inherits(Mode, TextMode);
 
         var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
         var tokens = tokenizedLine.tokens;
-        var endState = tokenizedLine.state;
 
         if (tokens.length && tokens[tokens.length-1].type == "comment") {
             return indent;
@@ -16398,35 +16740,36 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
+
+    this.foldingRules = "cStyle";
     
-      this.getNextLineIndent = function(state, line, tab) {
-          var indent = this.$getIndent(line);
+    this.getNextLineIndent = function(state, line, tab) {
+        var indent = this.$getIndent(line);
 
-          var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
-          var tokens = tokenizedLine.tokens;
-          var endState = tokenizedLine.state;
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+        var tokens = tokenizedLine.tokens;
 
-          if (tokens.length && tokens[tokens.length-1].type == "comment") {
-              return indent;
-          }
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {
+            return indent;
+        }
       
-          if (state == "start") {
-              var match = line.match(/^.*[\{\(\[]\s*$/);
-              if (match) {
-                  indent += tab;
-              }
-          }
+        if (state == "start") {
+            var match = line.match(/^.*[\{\(\[]\s*$/);
+            if (match) {
+                indent += tab;
+            }
+        }
 
-          return indent;
-      };
+        return indent;
+    };
 
-      this.checkOutdent = function(state, line, input) {
-          return this.$outdent.checkOutdent(line, input);
-      };
+    this.checkOutdent = function(state, line, input) {
+        return this.$outdent.checkOutdent(line, input);
+    };
 
-      this.autoOutdent = function(state, doc, row) {
-          this.$outdent.autoOutdent(doc, row);
-      };
+    this.autoOutdent = function(state, doc, row) {
+        this.$outdent.autoOutdent(doc, row);
+    };
 
 
     this.createWorker = function(session) {
@@ -16628,6 +16971,11 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
+
+    this.foldingRules = {
+        foldingStartMarker: /\:(:?\s*)?(:?#.*)?$/,
+        getFoldWidgetRange: "indentationBlock"
+    };
 
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         var outdent = true;
@@ -16920,7 +17268,9 @@ var Mode = function() {
 oop.inherits(Mode, JavaScriptMode);
 
 (function() {
-    
+
+    this.foldingRules = "cStyle";
+
     this.createWorker = function(session) {
         return null;
     };
@@ -17124,6 +17474,8 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
+    
+    this.foldingRules = "cStyle";
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
@@ -18048,6 +18400,8 @@ oop.inherits(Mode, XmlMode);
 
 (function() {
     
+    this.foldingRules = "xml";
+
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         return 0;
     };
@@ -18101,48 +18455,33 @@ exports.Mode = Mode;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/svg_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/javascript_highlight_rules', 'ace/mode/xml_highlight_rules'], function(require, exports, module) {
+define('ace/mode/svg_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/javascript_highlight_rules', 'ace/mode/xml_highlight_rules', 'ace/mode/xml_util'], function(require, exports, module) {
 
 var oop = require("../lib/oop");
 var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScriptHighlightRules;
 var XmlHighlightRules = require("./xml_highlight_rules").XmlHighlightRules;
+var xmlUtil = require("./xml_util");
 
 var SvgHighlightRules = function() {
     XmlHighlightRules.call(this);
 
     this.$rules.start.splice(3, 0, {
-        token : "text",
+        token : "meta.tag",
         regex : "<(?=\s*script)",
         next : "script"
     });
-    this.$rules.script = [{
-        token : "text",
-        regex : ">",
-        next : "js-start"
-    }, {
-        token : "keyword",
-        regex : "[-_a-zA-Z0-9:]+"
-    }, {
-        token : "text",
-        regex : "\\s+"
-    }, {
-        token : "string",
-        regex : '".*?"'
-    }, {
-        token : "string",
-        regex : "'.*?'"
-    }];
+    
+    xmlUtil.tag(this.$rules, "script", "js-start");
     
     this.embedRules(JavaScriptHighlightRules, "js-", [{
         token: "comment",
         regex: "\\/\\/.*(?=<\\/script>)",
         next: "tag"
     }, {
-        token: "text",
+        token: "meta.tag",
         regex: "<\\/(?=script)",
         next: "tag"
     }]);
-
 };
 
 oop.inherits(SvgHighlightRules, XmlHighlightRules);
@@ -18362,7 +18701,9 @@ define("text!kitchen-sink/docs/coffeescript.coffee", [], "#!/usr/bin/env coffee\
   "        heregex  # comment\n" +
   "    ///imgy\n" +
   "    this isnt: `just JavaScript`\n" +
-  "    undefined");
+  "    undefined\n" +
+  "    \n" +
+  "sentence = \"#{ 22 / 7 } is a decent approximation of π\"");
 
 define("text!kitchen-sink/docs/json.json", [], "{\n" +
   " \"query\": {\n" +
@@ -20080,6 +20421,19 @@ var Editor = function(renderer, session) {
         return this.$modeBehaviours;
     };
 
+    this.setShowFoldWidgets = function(show) {
+        var gutter = this.renderer.$gutterLayer;
+        if (gutter.getShowFoldWidgets() == show)
+            return;
+
+        this.renderer.$gutterLayer.setShowFoldWidgets(show);
+        this.$showFoldWidgets = show;
+        this.renderer.updateFull();
+    };
+    this.getShowFoldWidgets = function() {
+        return this.renderer.$gutterLayer.getShowFoldWidgets();
+    };
+
     this.remove = function(dir) {
         if (this.selection.isEmpty()){
             if(dir == "left")
@@ -21293,7 +21647,10 @@ function DefaultHandlers(editor) {
         // If the user dclicked on a fold, then expand it.
         var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
         if (fold) {
-            editor.session.expandFold(fold);
+            if (ev.getAccelKey())
+                editor.session.removeFold(fold);
+            else
+                editor.session.expandFold(fold);
         }
         else {
             editor.moveCursorToPosition(pos);
@@ -21569,6 +21926,10 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
         return this.domEvent.shiftKey;
     };
     
+    this.getAccelKey = function() {
+        return this.domEvent.ctrlKey || this.domEvent.metaKey ;
+    };
+    
 }).call(MouseEvent.prototype);
 
 });/* ***** BEGIN LICENSE BLOCK *****
@@ -21659,7 +22020,9 @@ var KeyBinding = function(editor) {
 
         if (!toExecute || !toExecute.command)
             return false;
-        var success = false, commands = this.$editor.commands;
+
+        var success = false;
+        var commands = this.$editor.commands;
 
         // allow keyboardHandler to consume keys
         if (toExecute.command != "null")
@@ -22883,11 +23246,14 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$onGutterClick = function(e) {
-        var pageX = event.getDocumentX(e);
         var pageY = event.getDocumentY(e);
+        var row = this.screenToTextCoordinates(0, pageY).row;
+
+        if (e.target.className.indexOf('ace_fold-widget') != -1)
+            return this.session.onFoldWidgetClick(row, e);
 
         this._dispatchEvent("gutter" + e.type, {
-            row: this.screenToTextCoordinates(pageX, pageY).row,
+            row: row,
             htmlEvent: e
         });
     };
@@ -23528,6 +23894,7 @@ var Gutter = function(parentEl) {
     this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_gutter-layer";
     parentEl.appendChild(this.element);
+    this.setShowFoldWidgets(this.$showFoldWidgets);
 
     this.$breakpoints = [];
     this.$annotations = [];
@@ -23567,7 +23934,9 @@ var Gutter = function(parentEl) {
             };
             for (var i=0; i<rowAnnotations.length; i++) {
                 var annotation = rowAnnotations[i];
-                rowInfo.text.push(annotation.text.replace(/"/g, "&quot;").replace(/'/g, "&#8217;").replace(/</, "&lt;"));
+                var annoText = annotation.text.replace(/"/g, "&quot;").replace(/'/g, "&#8217;").replace(/</, "&lt;");
+                if (rowInfo.text.indexOf(annoText) === -1)
+                    rowInfo.text.push(annoText);
                 var type = annotation.type;
                 if (type == "error")
                     rowInfo.className = "ace_error";
@@ -23588,6 +23957,7 @@ var Gutter = function(parentEl) {
         var lastRow = config.lastRow;
         var fold = this.session.getNextFoldLine(i);
         var foldStart = fold ? fold.start.row : Infinity;
+        var foldWidgets = this.$showFoldWidgets && this.session.foldWidgets;
 
         while (true) {
             if(i > foldStart) {
@@ -23606,6 +23976,18 @@ var Gutter = function(parentEl) {
                 "' title='", annotation.text.join("\n"),
                 "' style='height:", config.lineHeight, "px;'>", (i+1));
 
+            if (foldWidgets) {
+                var c = foldWidgets[i];
+                if (!c)
+                    c = foldWidgets[i] = this.session.getFoldWidget(i);
+                if (c)
+                    html.push(
+                        "<span class='ace_fold-widget ", c,
+                        c == "start" && i == foldStart && i < fold.end.row ? " closed" : " open",
+                        "'></span>"
+                    );
+            }
+
             var wrappedRowLength = this.session.getRowLength(i) - 1;
             while (wrappedRowLength--) {
                 html.push("</div><div class='ace_gutter-cell' style='height:", config.lineHeight, "px'>\xA6");
@@ -23617,6 +23999,19 @@ var Gutter = function(parentEl) {
         }
         this.element = dom.setInnerHtml(this.element, html.join(""));
         this.element.style.height = config.minHeight + "px";
+    };
+
+    this.$showFoldWidgets = true;
+    this.setShowFoldWidgets = function(show) {
+        if (show)
+            dom.addCssClass(this.element, "ace_folding-enabled");
+        else
+            dom.removeCssClass(this.element, "ace_folding-enabled");
+
+        this.$showFoldWidgets = show;
+    };
+    this.getShowFoldWidgets = function() {
+        return this.$showFoldWidgets;
     };
 
 }).call(Gutter.prototype);
@@ -23894,7 +24289,6 @@ var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var Text = function(parentEl) {
     this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_text-layer";
-    this.element.style.width = "auto";
     parentEl.appendChild(this.element);
 
     this.$characterSize = this.$measureSizes() || {width: 0, height: 0};
@@ -24825,6 +25219,9 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    white-space: nowrap;\n" +
   "    height: 100%;\n" +
   "    width: 100%;\n" +
+  "    box-sizing: border-box;\n" +
+  "    -moz-box-sizing: border-box;\n" +
+  "    -webkit-box-sizing: border-box;\n" +
   "}\n" +
   "\n" +
   ".ace_text-layer {\n" +
@@ -24902,7 +25299,43 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "\n" +
   ".ace_dragging .ace_content {\n" +
-  "  cursor: move;\n" +
+  "    cursor: move;\n" +
   "}\n" +
+  "\n" +
+  ".ace_folding-enabled .ace_gutter-cell {\n" +
+  "    padding-right: 9px!important;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget {\n" +
+  "    margin-right: -9px;\n" +
+  "    display: inline-block;\n" +
+  "    height: 9px;\n" +
+  "    width: 9px;\n" +
+  "    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41Ljg3O4BdAAAAbUlEQVQoU2NgoBqIiIibCcRn0tPzbufmlt4uKam+XVXVdLuhoeN2UVHlGSCeCbYsMTHjdlxcSjOyzSB+a2vvbbhYXV2rGsgkoIQvSBBEg0wCiaM4GSQAsg5kAsg6DAUw1SAJkJtwKkBWSFaoAADKrzXSD2pEpgAAAABJRU5ErkJggg==\") no-repeat;\n" +
+  "    background-origin: content-box;\n" +
+  "    padding: 1px 0;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget.end{\n" +
+  "    transform: scaleY(-1);\n" +
+  "    -moz-transform: scaleY(-1);\n" +
+  "    -webkit-transform: scaleY(-1);\n" +
+  "    opacity:0.8;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget.closed{\n" +
+  "    -moz-transform: none;\n" +
+  "    -webkit-transform: none;\n" +
+  "    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJBAMAAAASvxsjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAC1QTFRF////fn6FXl5kXl5kWFhecnJ5WFhecnJ5YWFoZ2dubW11dHR7enqCgICIhYWNjO3uwQAAAA90Uk5TACZNg5mZzMzb29vb29vbP7t0EwAAACtJREFUCFtjYAhgAIE6ARB5+SKIPKAD4mxg3ggkF2iB2JMngsQzwGocgBgA2zEHmb0961QAAAAASUVORK5CYII=\");\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget:hover {\n" +
+  "    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41Ljg3O4BdAAAASklEQVQoU2NgoBqQWHFlJhD/lzny/TY6BomD5MGWgSQPvPj5H4bXP4GwQeJw1wA5augKoaaqoTgZWSFWBTDVMIUgGq+nCSrApRsAuCZYT+KbmI0AAAAASUVORK5CYII=\");\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget.closed:hover {\n" +
+  "    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJBAMAAAASvxsjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABVQTFRF////HMT3GKjUHMT3GKjUr+T5wOj5rFcpYAAAAAR0Uk5TACaZ2z7RZscAAAAkSURBVAhbY2BQYAABZwEQaWYIIk2TQRyzNBDHDMI2RKgBqQcAaNgD0/oixWYAAAAASUVORK5CYII=\");\n" +
+  "}\n" +
+  "\n" +
   "");
 
