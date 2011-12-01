@@ -8142,6 +8142,26 @@ Folding.commonFoldingRules = {
     "indentation": null,
 
     "xml": {
+        
+        voidElements: {
+            "area": 1,
+            "base": 1,
+            "br": 1,
+            "col": 1,
+            "command": 1,
+            "embed": 1,
+            "hr": 1,
+            "img": 1,
+            "input": 1,
+            "keygen": 1,
+            "link": 1,
+            "meta": 1,
+            "param": 1,
+            "source": 1,
+            "track": 1,
+            "wbr": 1
+        },
+        
         getFoldWidget: function(row) {
             var tags = this.getTokens(row, row)[0].tokens
                 .filter(function(token) {
@@ -8157,8 +8177,9 @@ Folding.commonFoldingRules = {
             
             var fold = tags[0];
             
-            if (!fold)
+            if (!fold || Folding.commonFoldingRules.xml.voidElements[fold])
                 return;
+                
             if (fold.charAt(0) == "/")
                 return "end";
                 
@@ -8176,12 +8197,39 @@ Folding.commonFoldingRules = {
             var step = "stepForward";
             var isBack = false;
             
+            // http://dev.w3.org/html5/spec/syntax.html#optional-tags
+            // TODO
+//            var optionalTags = {
+//                "html": 1,
+//                "head": 1,
+//                "body": 1,
+//                "li": 1,
+//                "dt": 1,
+//                "dd": 1,
+//                "p": 1,
+//                "rt": 1,
+//                "rp": 1,
+//                "optgroup": 1,
+//                "option": 1,
+//                "colgroup": 1,
+//                "thead": 1,
+//                "tbody": 1,
+//                "tfoot": 1,
+//                "tr": 1,
+//                "td": 1,
+//                "th": 1
+//            };
+            
+            // limited XML parsing to find matching tag
             do {
                 var token = iterator.getCurrentToken();
                 
                 var value = token.value.trim();
                 if (token && token.type == "meta.tag" && token.value !== ">") {
                     var tagName = value.replace(/^[<\s]*|[\s*>]$/g, "");
+                    if (Folding.commonFoldingRules.xml.voidElements[tagName])
+                        continue;
+                        
                     if (!start) {
                         if (tagName.charAt(0) == "/") {
                             tagName = tagName.slice(1);
@@ -8194,6 +8242,7 @@ Folding.commonFoldingRules = {
                             column: iterator.getCurrentTokenColumn() + (isBack ? 0 : value.length + 1)
                         };
 
+                        // console.log("push", tagName)
                         stack.push(tagName);
                     }
                     else {
@@ -8206,6 +8255,7 @@ Folding.commonFoldingRules = {
                         
                         if (close) {
                             if (stack[stack.length-1] == tagName) {
+                                // console.log("pop", tagName)
                                 stack.pop();
                                 if (stack.length == 0) {
                                     end = {
@@ -8219,10 +8269,11 @@ Folding.commonFoldingRules = {
                                 }
                             }
                             else {
-                                console.error("unmatched tags!", tagName, stack)
+                                // console.error("unmatched tags!", tagName, stack)
                             }
                         }
                         else {
+                            // console.log("push", tagName)
                             stack.push(tagName);
                         }
                     }
