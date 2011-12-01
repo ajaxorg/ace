@@ -25,3 +25,5 @@ node_modules/.bin/
 
 
 .git-ref
+npm-debug.log
+deps/
