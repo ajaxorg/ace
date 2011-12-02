@@ -4,9 +4,9 @@ import string, sys
 
 # If no arguments were given, print a helpful message
 if len(sys.argv)==1:
-print '''Usage:
-    celsius temp1 temp2 ...'''
-sys.exit(0)
+    print '''Usage:
+celsius temp1 temp2 ...'''
+    sys.exit(0)
 
 # Loop over the arguments
 for i in sys.argv[1:]:
