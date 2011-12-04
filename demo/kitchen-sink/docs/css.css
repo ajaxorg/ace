@@ -3,3 +3,28 @@
     font-size: 12px;
     cursor: text;
 }
+
+
+
+.blinker {
+    animation-duration: 1s;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    nimation-direction: alternate;
+    animation-timing-function: linear;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    40% {
+	    opacity: 0;
+    }
+    40.5% {
+		opacity: 1
+    }
+    100% {
+        opacity: 1
+    }
+}
