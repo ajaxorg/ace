@@ -11999,7 +11999,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                         }
                         else {
                             if (!(isBack && voidElements[tagName]))
-                                console.error("unmatched tags!", tagName, stack);
+                                typeof console !== undefined && console.error("unmatched tags!", tagName, stack);
                         }
                     }
                     else {
