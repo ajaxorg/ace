@@ -283,6 +283,7 @@ var docEl = document.getElementById("doc");
 var modeEl = document.getElementById("mode");
 var wrapModeEl = document.getElementById("soft_wrap");
 var themeEl = document.getElementById("theme");
+var foldingEl = document.getElementById("folding");
 var selectStyleEl = document.getElementById("select_style");
 var highlightActiveEl = document.getElementById("highlight_active");
 var showHiddenEl = document.getElementById("show_hidden");
@@ -324,6 +325,8 @@ function updateUIEditorOptions() {
     docEl.value = session.name;
     modeEl.value = session.getMode().name || "text";
 
+    session.setFoldStyle(foldingEl.value);
+
     if (!session.getUseWrapMode()) {
         wrapModeEl.value = "off";
     } else {
@@ -363,6 +366,10 @@ bindDropdown("keybinding", function(value) {
 
 bindDropdown("fontsize", function(value) {
     env.split.setFontSize(value);
+});
+
+bindDropdown("folding", function(value) {
+    env.editor.getSession().setFoldStyle(value);
 });
 
 bindDropdown("soft_wrap", function(value) {
@@ -496,7 +503,7 @@ event.addListener(container, "drop", function(e) {
 
     if (window.FileReader) {
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function() {
             env.editor.getSelection().selectAll();
 
             var mode = modesByName.text;
