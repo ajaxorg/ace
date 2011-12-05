@@ -131,6 +131,12 @@ To package Ace we use the dryice build tool developed by the Mozilla Skywriter t
     git submodule update --init --recursive
 ```
 
+Make sure you at least version 0.3.0 of dryice
+
+```bash
+    npm install dryice
+```
+
 Afterwards Ace can be built by calling
 
 ```bash
