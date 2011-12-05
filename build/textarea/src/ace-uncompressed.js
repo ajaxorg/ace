@@ -8025,6 +8025,7 @@ var Tokenizer = function(rules) {
 
     this.regExps = {};
     this.matchMappings = {};
+    var flag = flag ? "g" + flag : "g";
     for ( var key in this.rules) {
         var rule = this.rules[key];
         var state = rule;
@@ -8051,7 +8052,7 @@ var Tokenizer = function(rules) {
             ruleRegExps.push(adjustedregex);
         }
 
-        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
+        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", flag);
     }
 };
 
@@ -14092,6 +14093,29 @@ __ace_shadowed__.define("text!kitchen-sink/docs/css.css", [], ".text-layer {\n" 
   "    font-family: Monaco, \"Courier New\", monospace;\n" +
   "    font-size: 12px;\n" +
   "    cursor: text;\n" +
+  "}\n" +
+  "\n" +
+  ".blinker {\n" +
+  "    animation-duration: 1s;\n" +
+  "    animation-name: blink;\n" +
+  "    animation-iteration-count: infinite;\n" +
+  "    animation-direction: alternate;\n" +
+  "    animation-timing-function: linear;\n" +
+  "}\n" +
+  "\n" +
+  "@keyframes blink {\n" +
+  "    0% {\n" +
+  "        opacity: 0;\n" +
+  "    }\n" +
+  "    40% {\n" +
+  "        opacity: 0;\n" +
+  "    }\n" +
+  "    40.5% {\n" +
+  "        opacity: 1\n" +
+  "    }\n" +
+  "    100% {\n" +
+  "        opacity: 1\n" +
+  "    }\n" +
   "}");
 
 __ace_shadowed__.define("text!kitchen-sink/styles.css", [], "html {\n" +

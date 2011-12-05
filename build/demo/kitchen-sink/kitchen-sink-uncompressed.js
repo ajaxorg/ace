@@ -6166,6 +6166,7 @@ var Tokenizer = function(rules) {
 
     this.regExps = {};
     this.matchMappings = {};
+    var flag = flag ? "g" + flag : "g";
     for ( var key in this.rules) {
         var rule = this.rules[key];
         var state = rule;
@@ -6192,7 +6193,7 @@ var Tokenizer = function(rules) {
             ruleRegExps.push(adjustedregex);
         }
 
-        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", "g");
+        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", flag);
     }
 };
 
@@ -10298,20 +10299,23 @@ oop.inherits(FoldMode, BaseFoldMode);
 
             var start = {row: row, column: i+1};
             var end = session.$findClosingBracket(match[1], start);
-            if (end) {
-                var fw = session.foldWidgets[end.row];
-                if (fw == null)
-                    fw = this.getFoldWidget(session, end.row);
+            if (!end)
+                return;
 
-                if (fw == "start"){
-                    end.row--;
-                    end.column = session.getLine(end.row).length;
-                }
+            var fw = session.foldWidgets[end.row];
+            if (fw == null)
+                fw = this.getFoldWidget(session, end.row);
+
+            if (fw == "start") {
+                end.row --;
+                end.column = session.getLine(end.row).length;
             }
-
             return Range.fromPoints(start, end);
         }
 
+        if (foldStyle !== "markbeginend")
+            return;
+            
         var match = line.match(this.foldingStopMarker);
         if (match) {
             var i = match.index + match[0].length;
@@ -10322,10 +10326,11 @@ oop.inherits(FoldMode, BaseFoldMode);
             var end = {row: row, column: i};
             var start = session.$findOpeningBracket(match[1], end);
             
-            if (start) {
-                start.column++;
-                end.column--;
-            }
+            if (!start)
+                return;
+
+            start.column++;
+            end.column--;
 
             return  Range.fromPoints(start, end);
         }
@@ -12378,10 +12383,9 @@ var JavaScriptHighlightRules = function() {
                 regex : "\\/\\/.*$"
             }, {
                 token: "string.regexp",
-                regex: "\\/(?:(?:\\[(?:\\\\]|[^\\]])+\\])"
-                    + "|(?:\\\\/|[^\\]/]))*" 
-                    + "[/]\\w*",
-                next: "start"
+                regex: "\\/",
+                next: "regex",
+                merge: true
             }, {
                 token : "text",
                 regex : "\\s+"
@@ -12391,6 +12395,54 @@ var JavaScriptHighlightRules = function() {
                 token: "empty", 
                 regex: "",
                 next: "start"
+            }
+        ],
+        "regex": [
+            {
+                token: "regexp.keyword.operator",
+                regex: "\\\\(?:u[\\da-fA-F]{4}|x[\\da-fA-F]{2}|.)",
+                next: "regex"
+            }, {
+				// flag
+                token: "string.regexp", 
+                regex: "/\\w*",
+                next: "start",
+                merge: true 
+            }, {
+                token: "string.regexp",
+                regex: "[^\\\\/\\[]+",
+                next: "regex",
+                merge: true
+            }, {
+                token: "string.regexp.charachterclass",
+                regex: "\\[",
+                next: "regex_character_class",
+                merge: true
+            }, {
+                token: "empty", 
+                regex: "",
+                next: "start" 
+            }
+        ],
+        "regex_character_class": [
+            {
+                token: "regexp.keyword.operator",
+                regex: "\\\\(?:u[\\da-fA-F]{4}|x[\\da-fA-F]{2}|.)",
+                next: "regex_character_class"
+            }, {
+                token: "string.regexp.charachterclass",
+                regex: "]",
+                next: "regex",
+                merge: true
+            }, {
+                token: "string.regexp.charachterclass",
+                regex: "[^\\\\\\]]+",
+                next: "regex_character_class",
+                merge: true
+            }, {
+                token: "empty", 
+                regex: "",
+                next: "start" 
             }
         ],
         "comment_regex_allowed" : [
@@ -12497,7 +12549,7 @@ var WorkerClient = require("../worker/worker_client").WorkerClient;
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
-    this.$tokenizer = new Tokenizer(new CssHighlightRules().getRules());
+    this.$tokenizer = new Tokenizer(new CssHighlightRules().getRules(), "i");
     this.$outdent = new MatchingBraceOutdent();
     this.foldingRules = new CStyleFoldMode();
 };
@@ -12668,20 +12720,6 @@ var CssHighlightRules = function() {
 
     var numRe = "\\-?(?:(?:[0-9]+)|(?:[0-9]*\\.[0-9]+))";
 
-    function ic(str) {
-        var re = [];
-        var chars = str.split("");
-        for (var i=0; i<chars.length; i++) {
-            re.push(
-                "[",
-                chars[i].toLowerCase(),
-                chars[i].toUpperCase(),
-                "]"
-            );
-        }
-        return re.join("");
-    }
-
     var base_ruleset = [
         {
             token : "comment", // multi line comment
@@ -12696,61 +12734,13 @@ var CssHighlightRules = function() {
             regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
         }, {
             token : "constant.numeric",
-            regex : numRe + ic("em")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("ex")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("px")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("cm")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("mm")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("in")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("pt")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("pc")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("deg")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("rad")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("grad")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("ms")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("s")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("hz")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + ic("khz")
-        }, {
-            token : "constant.numeric",
-            regex : numRe + "%"
-        }, {
-            token : "constant.numeric",
-            regex : numRe
+            regex : numRe + "(?:em|ex|px|cm|mm|in|pt|pc|deg|rad|grad|ms|s|hz|khz|%)"
         }, {
             token : "constant.numeric",  // hex6 color
-            regex : "#[a-fA-F0-9]{6}"
+            regex : "#[a-f0-9]{6}"
         }, {
             token : "constant.numeric", // hex3 color
-            regex : "#[a-fA-F0-9]{3}"
+            regex : "#[a-f0-9]{3}"
         }, {
             token : function(value) {
                 if (properties.hasOwnProperty(value.toLowerCase())) {
@@ -12826,20 +12816,20 @@ var CssHighlightRules = function() {
             next:  "ruleset"
         }, {
             token: "string",
-            regex: "@media.*?{",
+            regex: "@.*?{",
             next:  "media"
         },{
             token: "keyword",
-            regex: "#[a-zA-Z0-9-_]+"
+            regex: "#[a-z0-9-_]+"
         },{
             token: "variable",
-            regex: "\\.[a-zA-Z0-9-_]+"
+            regex: "\\.[a-z0-9-_]+"
         },{
             token: "string",
-            regex: ":[a-zA-Z0-9-_]+"
+            regex: ":[a-z0-9-_]+"
         },{
             token: "constant",
-            regex: "[a-zA-Z0-9-_]+"
+            regex: "[a-z0-9-_]+"
         }],
 
         "media" : [ {
@@ -12857,16 +12847,16 @@ var CssHighlightRules = function() {
             next:  "start"
         },{
             token: "keyword",
-            regex: "#[a-zA-Z0-9-_]+"
+            regex: "#[a-z0-9-_]+"
         },{
             token: "variable",
-            regex: "\\.[a-zA-Z0-9-_]+"
+            regex: "\\.[a-z0-9-_]+"
         },{
             token: "string",
-            regex: ":[a-zA-Z0-9-_]+"
+            regex: ":[a-z0-9-_]+"
         },{
             token: "constant",
-            regex: "[a-zA-Z0-9-_]+"
+            regex: "[a-z0-9-_]+"
         }],
 
         "comment" : comment,
@@ -17851,7 +17841,7 @@ var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutd
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
-    this.$tokenizer = new Tokenizer(new ScssHighlightRules().getRules());
+    this.$tokenizer = new Tokenizer(new ScssHighlightRules().getRules(), "i");
     this.$outdent = new MatchingBraceOutdent();
     this.foldingRules = new CStyleFoldMode();
 };
@@ -18062,21 +18052,6 @@ var ScssHighlightRules = function() {
 
     var numRe = "\\-?(?:(?:[0-9]+)|(?:[0-9]*\\.[0-9]+))";
 
-    function ic(str) {
-        var re = [];
-        var chars = str.split("");
-        for (var i=0; i<chars.length; i++) {
-            re.push(
-                "[",
-                chars[i].toLowerCase(),
-                chars[i].toUpperCase(),
-                "]"
-            );
-        }
-        return re.join("");
-    }
-
-
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
 
@@ -18109,58 +18084,13 @@ var ScssHighlightRules = function() {
                 next : "qstring"
             }, {
                 token : "constant.numeric",
-                regex : numRe + ic("em")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("ex")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("px")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("cm")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("mm")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("in")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("pt")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("pc")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("deg")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("rad")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("grad")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("ms")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("s")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("hz")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + ic("khz")
-            }, {
-                token : "constant.numeric",
-                regex : numRe + "%"
+                regex : numRe + "(?:em|ex|px|cm|mm|in|pt|pc|deg|rad|grad|ms|s|hz|khz|%)"
             }, {
                 token : "constant.numeric", // hex6 color
-                regex : "#[a-fA-F0-9]{6}"
+                regex : "#[a-f0-9]{6}"
             }, {
                 token : "constant.numeric", // hex3 color
-                regex : "#[a-fA-F0-9]{3}"
+                regex : "#[a-f0-9]{3}"
             }, {
                 token : "constant.numeric",
                 regex : numRe
@@ -18181,22 +18111,22 @@ var ScssHighlightRules = function() {
                     else
                         return "text";
                 },
-                regex : "\\-?[@a-zA-Z_][@a-zA-Z0-9_\\-]*"
+                regex : "\\-?[@a-z_][@a-z0-9_\\-]*"
             }, {
                 token : "variable",
-                regex : "[a-zA-Z_\\-$][a-zA-Z0-9_\\-$]*\\b"
+                regex : "[a-z_\\-$][a-z0-9_\\-$]*\\b"
             }, {
                 token: "variable.language",
-                regex: "#[a-zA-Z0-9-_]+"
+                regex: "#[a-z0-9-_]+"
             }, {
                 token: "variable.language",
-                regex: "\\.[a-zA-Z0-9-_]+"
+                regex: "\\.[a-z0-9-_]+"
             }, {
                 token: "variable.language",
-                regex: ":[a-zA-Z0-9-_]+"
+                regex: ":[a-z0-9-_]+"
             }, {
                 token: "constant",
-                regex: "[a-zA-Z0-9-_]+"
+                regex: "[a-z0-9-_]+"
             }, {
                 token : "keyword.operator",
                 regex : "<|>|<=|>=|==|!=|-|%|#|\\+|\\$|\\+|\\*"
@@ -19156,6 +19086,29 @@ define("text!kitchen-sink/docs/css.css", [], ".text-layer {\n" +
   "    font-family: Monaco, \"Courier New\", monospace;\n" +
   "    font-size: 12px;\n" +
   "    cursor: text;\n" +
+  "}\n" +
+  "\n" +
+  ".blinker {\n" +
+  "    animation-duration: 1s;\n" +
+  "    animation-name: blink;\n" +
+  "    animation-iteration-count: infinite;\n" +
+  "    animation-direction: alternate;\n" +
+  "    animation-timing-function: linear;\n" +
+  "}\n" +
+  "\n" +
+  "@keyframes blink {\n" +
+  "    0% {\n" +
+  "        opacity: 0;\n" +
+  "    }\n" +
+  "    40% {\n" +
+  "        opacity: 0;\n" +
+  "    }\n" +
+  "    40.5% {\n" +
+  "        opacity: 1\n" +
+  "    }\n" +
+  "    100% {\n" +
+  "        opacity: 1\n" +
+  "    }\n" +
   "}");
 
 define("text!kitchen-sink/docs/scss.scss", [], "/* style.scss */\n" +
