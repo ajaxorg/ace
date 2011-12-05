@@ -5325,6 +5325,7 @@ var EditSession = function(text, mode) {
     this.$rowCache = [];
     this.$wrapData = [];
     this.$foldData = [];
+    this.$undoSelect = true;
     this.$foldData.toString = function() {
         var str = "";
         this.forEach(function(foldLine) {
@@ -5920,10 +5921,11 @@ var EditSession = function(text, mode) {
         }
         this.$fromUndo = false;
         lastUndoRange &&
+            this.$undoSelect &&
             !dontSelect &&
             this.selection.setSelectionRange(lastUndoRange);
         return lastUndoRange;
-    },
+    };
 
     this.redoChanges = function(deltas, dontSelect) {
         if (!deltas.length)
@@ -5941,10 +5943,15 @@ var EditSession = function(text, mode) {
         }
         this.$fromUndo = false;
         lastUndoRange &&
+            this.$undoSelect &&
             !dontSelect &&
             this.selection.setSelectionRange(lastUndoRange);
         return lastUndoRange;
-    },
+    };
+    
+    this.setUndoSelect = function(enable) {
+        this.$undoSelect = enable;
+    };
 
     this.$getUndoSelection = function(deltas, isUndo, lastUndoRange) {
         function isInsert(delta) {
