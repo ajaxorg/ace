@@ -60,57 +60,94 @@ var _define = function(module, deps, payload) {
 
     if (!_define.modules)
         _define.modules = {};
-
+        
     _define.modules[module] = payload;
 };
 
 /**
  * Get at functionality define()ed using the function above
  */
-var _require = function(module, callback) {
+var _require = function(parentId, module, callback) {
     if (Object.prototype.toString.call(module) === "[object Array]") {
         var params = [];
         for (var i = 0, l = module.length; i < l; ++i) {
-            var dep = lookup(module[i]);
+            var dep = lookup(parentId, module[i]);
             if (!dep && _require.original)
                 return _require.original.apply(window, arguments);
             params.push(dep);
-        };
+        }
         if (callback) {
             callback.apply(null, params);
         }
     }
-
-    if (typeof module === 'string') {
-        var payload = lookup(module);
+    else if (typeof module === 'string') {
+        var payload = lookup(parentId, module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
-
+        
         if (callback) {
             callback();
         }
-
+    
         return payload;
-    };
-}
+    }
+    else {
+        if (_require.original)
+            return _require.original.apply(window, arguments);
+    }
+};
 
 _require.packaged = true;
 _require.noWorker = true;
+
+var normalizeModule = function(parentId, moduleName) {
+    // normalize plugin requires
+    if (moduleName.indexOf("!") !== -1) {
+        var chunks = moduleName.split("!");
+        return normalizeModule(parentId, chunks[0]) + "!" + normalizeModule(parentId, chunks[1]);
+    }
+    // normalize relative requires
+    if (moduleName.charAt(0) == ".") {
+        var base = parentId.split("/").slice(0, -1).join("/");
+        moduleName = base + "/" + moduleName;
+        
+        while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
+            var previous = moduleName;
+            moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
+        }
+    }
+    
+    return moduleName;
+};
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
  * definition function if needed.
  */
-var lookup = function(moduleName) {
+var lookup = function(parentId, moduleName) {
+
+    moduleName = normalizeModule(parentId, moduleName);
+
     var module = _define.modules[moduleName];
-    if (module == null) {
-        console.error('Missing module: ' + moduleName);
+    if (!module) {
         return null;
     }
 
     if (typeof module === 'function') {
         var exports = {};
-        module(_require, exports, { id: moduleName, uri: '' });
+        var mod = {
+            id: moduleName, 
+            uri: '',
+            exports: exports
+        };
+        
+        var req = function(module, callback) {
+            return _require(moduleName, module, callback);
+        };
+        
+        var returnValue = module(req, exports, mod);
+        exports = returnValue || mod.exports;
+            
         // cache the resulting module object for next time
         _define.modules[moduleName] = exports;
         return exports;
@@ -119,13 +156,16 @@ var lookup = function(moduleName) {
     return module;
 };
 
+
 /**
  * Expose as "shadowed" object to the outside world.
  */
 
 window.__ace_shadowed__ = {
-    require: _require,
-    define:  _define
+    require: function(module, callback) {
+        return _require("", module, callback);
+    },
+    define: _define
 };
 
 })();

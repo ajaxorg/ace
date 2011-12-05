@@ -64,10 +64,10 @@ var _define = function(module, deps, payload) {
     if (arguments.length == 2)
         payload = deps;
 
-    if (!define.modules)
-        define.modules = {};
+    if (!_define.modules)
+        _define.modules = {};
         
-    define.modules[module] = payload;
+    _define.modules[module] = payload;
 };
 if (global.define)
     _define.original = global.define;
@@ -126,16 +126,16 @@ var normalizeModule = function(parentId, moduleName) {
     // normalize relative requires
     if (moduleName.charAt(0) == ".") {
         var base = parentId.split("/").slice(0, -1).join("/");
-        var moduleName = base + "/" + moduleName;
+        moduleName = base + "/" + moduleName;
         
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
             var previous = moduleName;
-            var moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
+            moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
         }
     }
     
     return moduleName;
-}
+};
 
 
 /**
@@ -146,8 +146,8 @@ var lookup = function(parentId, moduleName) {
 
     moduleName = normalizeModule(parentId, moduleName);
 
-    var module = define.modules[moduleName];
-    if (module == null) {
+    var module = _define.modules[moduleName];
+    if (!module) {
         return null;
     }
 
@@ -157,7 +157,7 @@ var lookup = function(parentId, moduleName) {
             id: moduleName, 
             uri: '',
             exports: exports
-        }
+        };
         
         var req = function(module, callback) {
             return _require(moduleName, module, callback);
@@ -167,7 +167,7 @@ var lookup = function(parentId, moduleName) {
         exports = returnValue || mod.exports;
             
         // cache the resulting module object for next time
-        define.modules[moduleName] = exports;
+        _define.modules[moduleName] = exports;
         return exports;
     }
 
