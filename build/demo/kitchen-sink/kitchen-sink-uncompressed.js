@@ -459,6 +459,7 @@ var docEl = document.getElementById("doc");
 var modeEl = document.getElementById("mode");
 var wrapModeEl = document.getElementById("soft_wrap");
 var themeEl = document.getElementById("theme");
+var foldingEl = document.getElementById("folding");
 var selectStyleEl = document.getElementById("select_style");
 var highlightActiveEl = document.getElementById("highlight_active");
 var showHiddenEl = document.getElementById("show_hidden");
@@ -500,6 +501,8 @@ function updateUIEditorOptions() {
     docEl.value = session.name;
     modeEl.value = session.getMode().name || "text";
 
+    session.setFoldStyle(foldingEl.value);
+
     if (!session.getUseWrapMode()) {
         wrapModeEl.value = "off";
     } else {
@@ -539,6 +542,10 @@ bindDropdown("keybinding", function(value) {
 
 bindDropdown("fontsize", function(value) {
     env.split.setFontSize(value);
+});
+
+bindDropdown("folding", function(value) {
+    env.editor.getSession().setFoldStyle(value);
 });
 
 bindDropdown("soft_wrap", function(value) {
@@ -672,7 +679,7 @@ event.addListener(container, "drop", function(e) {
 
     if (window.FileReader) {
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function() {
             env.editor.getSelection().selectAll();
 
             var mode = modesByName.text;
@@ -7961,22 +7968,23 @@ function Folding() {
             var re = new RegExp(token.type.replace(/\..*/, "\\."));
             do {
                 token = iterator.stepBackward();
-            } while(token && re.test(token.type))
+            } while(token && re.test(token.type));
 
             iterator.stepForward();
             range.start.row = iterator.getCurrentTokenRow();
             range.start.column = iterator.getCurrentTokenColumn() + 2;
 
-            var iterator = new TokenIterator(this, row, column);
+            iterator = new TokenIterator(this, row, column);
 
             do {
                 token = iterator.stepForward();
-            } while(token && re.test(token.type))
+            } while(token && re.test(token.type));
+            
             token = iterator.stepBackward();
 
             range.end.row = iterator.getCurrentTokenRow();
             range.end.column = iterator.getCurrentTokenColumn() + token.value.length - 1;
-            return range
+            return range;
         }
     };
 
@@ -7996,28 +8004,51 @@ function Folding() {
                 this.addFold("...", range);
             } catch(e) {}
         }
-    }
+    };
+    
+    this.$foldStyles = {
+        "manual": 1,
+        "markbegin": 1,
+        "markbeginend": 1
+    };
+    this.$foldStyle = "markbegin";
+    this.setFoldStyle = function(style) {
+        if (!this.$foldStyles[style])
+            throw new Error("invalid fold style: " + style + "[" + Object.keys(this.$foldStyles).join(", ") + "]");
+        
+        if (this.$foldStyle == style)
+            return;
+
+        this.$foldStyle = style;
+        
+        // reset folding
+        var mode = this.$foldMode;
+        this.$setFolding(null);
+        this.$setFolding(mode);
+    };
 
     // structured folding
     this.$setFolding = function(foldMode) {
-        
         if (this.$foldMode == foldMode)
             return;
+            
         this.$foldMode = foldMode;
         
         this.removeListener('change', this.$updateFoldWidgets);
+        this._emit("changeAnnotation");
         
-        if (!foldMode) {
+        if (!foldMode || this.$foldStyle == "manual") {
             this.foldWidgets = null;
             return;
         }
         
         this.foldWidgets = [];
-        this.getFoldWidget = foldMode.getFoldWidget.bind(foldMode, this);
-        this.getFoldWidgetRange = foldMode.getFoldWidgetRange.bind(foldMode, this);
+        this.getFoldWidget = foldMode.getFoldWidget.bind(foldMode, this, this.$foldStyle);
+        this.getFoldWidgetRange = foldMode.getFoldWidgetRange.bind(foldMode, this, this.$foldStyle);
         
         this.$updateFoldWidgets = this.updateFoldWidgets.bind(this);
         this.on('change', this.$updateFoldWidgets);
+        
     };
 
     this.onFoldWidgetClick = function(row, e) {
@@ -10256,7 +10287,7 @@ oop.inherits(FoldMode, BaseFoldMode);
     this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
     this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
     
-    this.getFoldWidgetRange = function(session, row) {
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
         var line = session.getLine(row);
         var match = line.match(this.foldingStartMarker);
         if (match) {
@@ -10273,7 +10304,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                     fw = this.getFoldWidget(session, end.row);
 
                 if (fw == "start"){
-                    end.row --;
+                    end.row--;
                     end.column = session.getLine(end.row).length;
                 }
             }
@@ -10353,28 +10384,28 @@ var FoldMode = exports.FoldMode = function() {};
     this.foldingStopMarker = null;
 
     // must return "" if there's no fold, to enable caching
-    this.getFoldWidget = function(session, row) {
+    this.getFoldWidget = function(session, foldStyle, row) {
         if (this.foldingStartMarker) {
             if (this.foldingStopMarker) {
                 // rewrite getFoldWidget so the check is only performed once
                 FoldMode.prototype.getFoldWidget = this.$testBoth;
-                return this.$testBoth(session, row);
+                return this.$testBoth(session, foldStyle, row);
             }
             else {
                 // rewrite getFoldWidget so the check is only performed once
                 FoldMode.prototype.getFoldWidget = this.$testStart;
-                return this.$testStart(session, row);
+                return this.$testStart(session, foldStyle, row);
             }
         }
         else
             return "";
     };
     
-    this.getFoldWidgetRange = function(session, row) {
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
         return null;
     };
 
-    this.indentationBlock = function(session, row) {
+    this.indentationBlock = function(session, foldStyle, row) {
         var re = /^\s*/;
         var startRow = row;
         var endRow = row;
@@ -10400,17 +10431,17 @@ var FoldMode = exports.FoldMode = function() {};
         }
     };
 
-    this.$testStart = function(session, row) {
-        if(this.foldingStartMarker.test(session.getLine(row)))
+    this.$testStart = function(session, foldStyle, row) {
+        if (this.foldingStartMarker.test(session.getLine(row)))
             return "start";
         return "";
     };
     
-    this.$testBoth = function(session, row) {
+    this.$testBoth = function(session, foldStyle, row) {
         var line = session.getLine(row);
-        if(this.foldingStartMarker.test(line))
+        if (this.foldingStartMarker.test(line))
             return "start";
-        if(this.foldingStopMarker.test(line))
+        if (foldStyle == "markbeginend" && this.foldingStopMarker.test(line))
             return "end";
         return "";
     };
@@ -11859,7 +11890,7 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 (function() {
 
-    this.getFoldWidget = function(session, row) {
+    this.getFoldWidget = function(session, foldStyle, row) {
         var tags = session.getTokens(row, row)[0].tokens
             .filter(function(token) {
                 return token.type === "meta.tag";
@@ -11871,14 +11902,16 @@ oop.inherits(FoldMode, BaseFoldMode);
             .trim()
             .replace(/^<|>$|\s+/g, "")
             .split("><");
-        
         var fold = tags[0];
         
         if (!fold || this.voidElements[fold])
             return "";
             
         if (fold.charAt(0) == "/")
-            return "end";
+            return foldStyle == "markbeginend" ? "end" : "";
+            
+        if (fold.charAt(fold.length-1) == "/")
+            return "";
             
         if (tags.indexOf("/" + fold) !== -1)
             return "";
@@ -11886,47 +11919,39 @@ oop.inherits(FoldMode, BaseFoldMode);
         return "start";
     };
         
-    this.getFoldWidgetRange = function(session, row) {
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
         var start, end;
         var stack = [];
+        var voidElements = this.voidElements;
         
         var iterator = new TokenIterator(session, row, 0);
         var step = "stepForward";
         var isBack = false;
             
-        // http://dev.w3.org/html5/spec/syntax.html#optional-tags
-        // TODO
-//            var optionalTags = {
-//                "html": 1,
-//                "head": 1,
-//                "body": 1,
-//                "li": 1,
-//                "dt": 1,
-//                "dd": 1,
-//                "p": 1,
-//                "rt": 1,
-//                "rp": 1,
-//                "optgroup": 1,
-//                "option": 1,
-//                "colgroup": 1,
-//                "thead": 1,
-//                "tbody": 1,
-//                "tfoot": 1,
-//                "tr": 1,
-//                "td": 1,
-//                "th": 1
-//            };
+        function pop(stack, tagName) {
+            while (stack.length) {
+                var top = stack[stack.length-1];
+                if (!tagName || top === "" || top == tagName) {
+                    stack.pop();
+                    return true;
+                }
+                if (voidElements[top]) {
+                    stack.pop();
+                    continue;
+                }
+                else
+                    return false;
+            }
+            return false;
+        }
             
         // limited XML parsing to find matching tag
         do {
             var token = iterator.getCurrentToken();
-            
+
             var value = token.value.trim();
             if (token && token.type == "meta.tag" && token.value !== ">") {
                 var tagName = value.replace(/^[<\s]*|[\s*>]$/g, "");
-                if (this.voidElements[tagName])
-                    continue;
-                    
                 if (!start) {
                     if (tagName.charAt(0) == "/") {
                         tagName = tagName.slice(1);
@@ -11939,7 +11964,6 @@ oop.inherits(FoldMode, BaseFoldMode);
                         column: iterator.getCurrentTokenColumn() + (isBack ? 0 : value.length + 1)
                     };
 
-//                    console.log("push", tagName)
                     stack.push(tagName);
                 }
                 else {
@@ -11948,13 +11972,15 @@ oop.inherits(FoldMode, BaseFoldMode);
                         tagName = tagName.slice(1);
                         close = !isBack;
                     }
+                    else if (tagName.charAt(tagName.length-1) == "/") {
+                        tagName = "";
+                        close = !isBack;
+                    }
                     else
                         close = isBack;
-                    
+                        
                     if (close) {
-                        if (stack[stack.length-1] == tagName) {
-//                            console.log("pop", tagName)
-                            stack.pop();
+                        if (pop(stack, tagName)) {
                             if (stack.length === 0) {
                                 end = {
                                     row: iterator.getCurrentTokenRow(),
@@ -11967,11 +11993,11 @@ oop.inherits(FoldMode, BaseFoldMode);
                             }
                         }
                         else {
-                            console.error("unmatched tags!", tagName, stack);
+                            if (!(isBack && voidElements[tagName]))
+                                console.error("unmatched tags!", tagName, stack);
                         }
                     }
                     else {
-//                        console.log("push", tagName)
                         stack.push(tagName);
                     }
                 }
@@ -13514,7 +13540,7 @@ exports.HaxeHighlightRules = HaxeHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/html', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/mode/javascript', 'ace/mode/css', 'ace/tokenizer', 'ace/mode/html_highlight_rules', 'ace/mode/behaviour/xml', 'ace/mode/folding/mixed', 'ace/mode/folding/xml', 'ace/mode/folding/cstyle'], function(require, exports, module) {
+define('ace/mode/html', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/mode/javascript', 'ace/mode/css', 'ace/tokenizer', 'ace/mode/html_highlight_rules', 'ace/mode/behaviour/xml', 'ace/mode/folding/html'], function(require, exports, module) {
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
@@ -13523,9 +13549,7 @@ var CssMode = require("./css").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
 var HtmlHighlightRules = require("./html_highlight_rules").HtmlHighlightRules;
 var XmlBehaviour = require("./behaviour/xml").XmlBehaviour;
-var MixedFoldMode = require("./folding/mixed").FoldMode;
-var XmlFoldMode = require("./folding/xml").FoldMode;
-var CStyleFoldMode = require("./folding/cstyle").FoldMode;
+var HtmlFoldMode = require("./folding/html").FoldMode;
 
 var Mode = function() {
     var highlighter = new HtmlHighlightRules();
@@ -13538,27 +13562,7 @@ var Mode = function() {
         "css-": CssMode
     });
     
-    this.foldingRules = new MixedFoldMode(new XmlFoldMode({
-        "area": 1,
-        "base": 1,
-        "br": 1,
-        "col": 1,
-        "command": 1,
-        "embed": 1,
-        "hr": 1,
-        "img": 1,
-        "input": 1,
-        "keygen": 1,
-        "link": 1,
-        "meta": 1,
-        "param": 1,
-        "source": 1,
-        "track": 1,
-        "wbr": 1
-    }), {
-        "js-": new CStyleFoldMode(),
-        "css-": new CStyleFoldMode()
-    });
+    this.foldingRules = new HtmlFoldMode();
 };
 oop.inherits(Mode, TextMode);
 
@@ -13751,6 +13755,90 @@ exports.HtmlHighlightRules = HtmlHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
+define('ace/mode/folding/html', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/folding/mixed', 'ace/mode/folding/xml', 'ace/mode/folding/cstyle'], function(require, exports, module) {
+
+var oop = require("../../lib/oop");
+var MixedFoldMode = require("./mixed").FoldMode;
+var XmlFoldMode = require("./xml").FoldMode;
+var CStyleFoldMode = require("./cstyle").FoldMode;
+
+var FoldMode = exports.FoldMode = function() {
+    MixedFoldMode.call(this, new XmlFoldMode({
+        // void elements
+        "area": 1,
+        "base": 1,
+        "br": 1,
+        "col": 1,
+        "command": 1,
+        "embed": 1,
+        "hr": 1,
+        "img": 1,
+        "input": 1,
+        "keygen": 1,
+        "link": 1,
+        "meta": 1,
+        "param": 1,
+        "source": 1,
+        "track": 1,
+        "wbr": 1,
+        
+        // optional tags 
+        "li": 1,
+        "dt": 1,
+        "dd": 1,
+        "p": 1,
+        "rt": 1,
+        "rp": 1,
+        "optgroup": 1,
+        "option": 1,
+        "colgroup": 1,
+        "td": 1,
+        "th": 1
+    }), {
+        "js-": new CStyleFoldMode(),
+        "css-": new CStyleFoldMode()
+    });
+};
+
+oop.inherits(FoldMode, MixedFoldMode);
+
+});/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 define('ace/mode/folding/mixed', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
 
 var oop = require("../../lib/oop");
@@ -13773,29 +13861,29 @@ oop.inherits(FoldMode, BaseFoldMode);
         return null;
     };
     
-    this.$tryMode = function(state, session, row) {
+    this.$tryMode = function(state, session, foldStyle, row) {
         var mode = this.$getMode(state);
-        return (mode ? mode.getFoldWidget(session, row) : "");
+        return (mode ? mode.getFoldWidget(session, foldStyle, row) : "");
     };
 
-    this.getFoldWidget = function(session, row) {
+    this.getFoldWidget = function(session, foldStyle, row) {
         return (
-            this.$tryMode(session.getState(row-1), session, row) ||
-            this.$tryMode(session.getState(row), session, row) ||
-            this.defaultMode.getFoldWidget(session, row)
+            this.$tryMode(session.getState(row-1), session, foldStyle, row) ||
+            this.$tryMode(session.getState(row), session, foldStyle, row) ||
+            this.defaultMode.getFoldWidget(session, foldStyle, row)
         );
     };
 
-    this.getFoldWidgetRange = function(session, row) {
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
         var mode = this.$getMode(session.getState(row-1));
         
-        if (!mode || !mode.getFoldWidget(session, row))
+        if (!mode || !mode.getFoldWidget(session, foldStyle, row))
             mode = this.$getMode(session.getState(row));
         
-        if (!mode || !mode.getFoldWidget(session, row))
+        if (!mode || !mode.getFoldWidget(session, foldStyle, row))
             mode = this.defaultMode;
         
-        return mode.getFoldWidgetRange(session, row);
+        return mode.getFoldWidgetRange(session, foldStyle, row);
     };
 
 }).call(FoldMode.prototype);
@@ -20390,7 +20478,7 @@ var Editor = function(renderer, session) {
         this.renderer.updateLines(rows.first, rows.last);
     };
 
-    this.onCursorChange = function(e) {
+    this.onCursorChange = function() {
         this.renderer.updateCursor();
 
         if (!this.$blockScrolling) {
