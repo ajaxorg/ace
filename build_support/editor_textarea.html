@@ -84,7 +84,7 @@ function inject() {
     load('ace.js', 'text!ace/css/editor.css', function() {
         var ace = window.__ace_shadowed__;
         ace.options.mode = "javascript";
-        var Event = ace.require("lib/ace/event");
+        var Event = ace.require("ace/lib/event");
         var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
             Event.addListener(areas[i], "click", function(e) {

@@ -70,7 +70,7 @@ window.__ace_shadowed__.edit = function(el) {
     });
     el.env = env;
     return editor;
-}
+};
 
 
 /**
@@ -266,13 +266,13 @@ window.__ace_shadowed__.transformTextarea = function(element) {
     editorDiv.appendChild(settingOpener);
 
     // Create the API.
-    var api = setupApi(editor, editorDiv, settingDiv, ace, options)
+    var api = setupApi(editor, editorDiv, settingDiv, ace, options);
 
     // Create the setting's panel.
     setupSettingPanel(settingDiv, settingOpener, api, options);
 
     return api;
-}
+};
 
 function setupApi(editor, editorDiv, settingDiv, ace, options) {
     var session = editor.getSession();
