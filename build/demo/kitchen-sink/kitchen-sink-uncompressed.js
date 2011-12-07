@@ -64,10 +64,10 @@ var _define = function(module, deps, payload) {
     if (arguments.length == 2)
         payload = deps;
 
-    if (!define.modules)
-        define.modules = {};
+    if (!_define.modules)
+        _define.modules = {};
         
-    define.modules[module] = payload;
+    _define.modules[module] = payload;
 };
 if (global.define)
     _define.original = global.define;
@@ -146,7 +146,7 @@ var lookup = function(parentId, moduleName) {
 
     moduleName = normalizeModule(parentId, moduleName);
 
-    var module = define.modules[moduleName];
+    var module = _define.modules[moduleName];
     if (!module) {
         return null;
     }
@@ -167,7 +167,7 @@ var lookup = function(parentId, moduleName) {
         exports = returnValue || mod.exports;
             
         // cache the resulting module object for next time
-        define.modules[moduleName] = exports;
+        _define.modules[moduleName] = exports;
         return exports;
     }
 
@@ -4128,10 +4128,10 @@ var EditSession = function(text, mode) {
         var useWrapMode = this.$useWrapMode;
         var len;
         var action = e.data.action;
-        var firstRow = e.data.range.start.row,
-            lastRow = e.data.range.end.row,
-            start = e.data.range.start,
-            end = e.data.range.end;
+        var firstRow = e.data.range.start.row;
+        var lastRow = e.data.range.end.row;
+        var start = e.data.range.start;
+        var end = e.data.range.end;
         var removedFolds = null;
 
         if (action.indexOf("Lines") != -1) {
@@ -4298,7 +4298,7 @@ var EditSession = function(text, mode) {
         TAB = 11,
         TAB_SPACE = 12;
 
-    this.$computeWrapSplits = function(tokens, wrapLimit, tabSize) {
+    this.$computeWrapSplits = function(tokens, wrapLimit) {
         if (tokens.length == 0) {
             return [];
         }
@@ -4315,11 +4315,11 @@ var EditSession = function(text, mode) {
             var len = displayed.length;
             displayed.join("").
                 // Get all the TAB_SPACEs.
-                replace(/12/g, function(m) {
+                replace(/12/g, function() {
                     len -= 1;
                 }).
                 // Get all the CHAR_EXT/multipleWidth characters.
-                replace(/2/g, function(m) {
+                replace(/2/g, function() {
                     len -= 1;
                 });
 
@@ -6714,7 +6714,7 @@ var Document = function(text) {
           case "auto":
               return this.$autoNewLine;
       }
-    },
+    };
 
     this.$autoNewLine = "\n";
     this.$newLineMode = "auto";
@@ -6777,7 +6777,7 @@ var Document = function(text) {
             position.column = this.getLine(length-1).length;
         }
         return position;
-    }
+    };
 
     this.insert = function(position, text) {
         if (text.length == 0)
@@ -6817,7 +6817,7 @@ var Document = function(text) {
         };
         this._dispatchEvent("change", { data: delta });
         return range.end;
-    },
+    };
 
     this.insertNewLine = function(position) {
         position = this.$clipPosition(position);
@@ -6980,13 +6980,13 @@ var Document = function(text) {
             var range = Range.fromPoints(delta.range.start, delta.range.end);
 
             if (delta.action == "insertLines")
-                this.insertLines(range.start.row, delta.lines)
+                this.insertLines(range.start.row, delta.lines);
             else if (delta.action == "insertText")
-                this.insert(range.start, delta.text)
+                this.insert(range.start, delta.text);
             else if (delta.action == "removeLines")
-                this.removeLines(range.start.row, range.end.row - 1)
+                this.removeLines(range.start.row, range.end.row - 1);
             else if (delta.action == "removeText")
-                this.remove(range)
+                this.remove(range);
         }
     };
 
@@ -6997,13 +6997,13 @@ var Document = function(text) {
             var range = Range.fromPoints(delta.range.start, delta.range.end);
 
             if (delta.action == "insertLines")
-                this.removeLines(range.start.row, range.end.row - 1)
+                this.removeLines(range.start.row, range.end.row - 1);
             else if (delta.action == "insertText")
-                this.remove(range)
+                this.remove(range);
             else if (delta.action == "removeLines")
-                this.insertLines(range.start.row, delta.lines)
+                this.insertLines(range.start.row, delta.lines);
             else if (delta.action == "removeText")
-                this.insert(range.start, delta.text)
+                this.insert(range.start, delta.text);
         }
     };
 
@@ -12663,8 +12663,9 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var CssHighlightRules = function() {
 
     var properties = lang.arrayToMap(
-        ("-moz-box-sizing|-webkit-box-sizing|appearance|azimuth|background-attachment|background-color|background-image|" +
-        "background-position|background-repeat|background|border-bottom-color|" +
+        ("-moz-appearance|-moz-box-sizing|-webkit-box-sizing|-moz-outline-radius|-moz-transform|-webkit-transform|" +
+        "appearance|azimuth|background-attachment|background-color|background-image|" +
+        "background-origin|background-position|background-repeat|background|border-bottom-color|" +
         "border-bottom-style|border-bottom-width|border-bottom|border-collapse|" +
         "border-color|border-left-color|border-left-style|border-left-width|" +
         "border-left|border-right-color|border-right-style|border-right-width|" +
@@ -12677,14 +12678,14 @@ var CssHighlightRules = function() {
         "letter-spacing|line-height|list-style-image|list-style-position|" +
         "list-style-type|list-style|margin-bottom|margin-left|margin-right|" +
         "margin-top|marker-offset|margin|marks|max-height|max-width|min-height|" +
-        "min-width|-moz-border-radius|opacity|orphans|outline-color|" +
+        "min-width|-moz-border-radius|opacity|orphans|outline-color|outline-offset|outline-radius|" +
         "outline-style|outline-width|outline|overflow|overflow-x|overflow-y|padding-bottom|" +
         "padding-left|padding-right|padding-top|padding|page-break-after|" +
         "page-break-before|page-break-inside|page|pause-after|pause-before|" +
-        "pause|pitch-range|pitch|play-during|position|quotes|richness|right|" +
+        "pause|pitch-range|pitch|play-during|pointer-events|position|quotes|resize|richness|right|" +
         "size|speak-header|speak-numeral|speak-punctuation|speech-rate|speak|" +
         "stress|table-layout|text-align|text-decoration|text-indent|" +
-        "text-shadow|text-transform|top|unicode-bidi|vertical-align|" +
+        "text-shadow|text-transform|top|transform|unicode-bidi|vertical-align|" +
         "visibility|voice-family|volume|white-space|widows|width|word-spacing|" +
         "z-index").split("|")
     );
@@ -13632,7 +13633,7 @@ var HtmlHighlightRules = function() {
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
     this.$rules = {
-        start : [ {
+        start : [{
             token : "meta.tag",
             merge : true,
             regex : "<\\!\\[CDATA\\[",
@@ -22350,7 +22351,7 @@ var KeyBinding = function(editor) {
     };
 
     this.getKeyboardHandler = function() {
-        return this.$handlers[this.$handlers - 1];
+        return this.$handlers[this.$handlers.length - 1];
     };
 
     this.$callKeyboardHandlers = function (hashId, keyString, keyCode, e) {
@@ -25545,7 +25546,7 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_editor textarea {\n" +
   "    position: fixed;\n" +
-  "    z-index: -1;\n" +
+  "    z-index: 2000;\n" +
   "    width: 10px;\n" +
   "    height: 30px;\n" +
   "    opacity: 0;\n" +
