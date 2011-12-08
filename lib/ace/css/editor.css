@@ -85,7 +85,7 @@
 
 .ace_editor textarea {
     position: fixed;
-    z-index: 2000;
+    z-index: 0;
     width: 10px;
     height: 30px;
     opacity: 0;
