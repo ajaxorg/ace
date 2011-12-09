@@ -111,7 +111,7 @@ var modes = [
     new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
     new Mode("latex", "LaTeX", require("ace/mode/latex").Mode, ["tex"]),
     new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
-    new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
+    new Mode("markdown", "Markdown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
     new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
     new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
     new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
