@@ -165,6 +165,10 @@
 }
 
 .ace_line .ace_fold {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    
     display: inline-block;
     height: 11px;
     margin-top: -2px;
@@ -179,9 +183,9 @@
     color: transparent;
 
     border: 1px solid black;
-    -moz-border-radius: 1px;
-    -webkit-border-radius: 1px;
-    border-radius: 1px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
     
     cursor: pointer;
     pointer-events: auto;
@@ -213,9 +217,9 @@
 
     margin: 0 -12px 1px 1px;
     display: inline-block;
-    height: 15px;
+    height: 14px;
     width: 11px;
-    vertical-align: middle;
+    vertical-align: text-bottom;
     
     background-image: url("data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08%06%00%00%00%8Do%26%E5%00%00%004IDATx%DAe%8A%B1%0D%000%0C%C2%F2%2CK%96%BC%D0%8F9%81%88H%E9%D0%0E%96%C0%10%92%3E%02%80%5E%82%E4%A9*-%EEsw%C8%CC%11%EE%96w%D8%DC%E9*Eh%0C%151(%00%00%00%00IEND%AEB%60%82");
     background-repeat: no-repeat;
