@@ -13369,16 +13369,15 @@ var ScrollBar = function(parent) {
     this.inner = dom.createElement("div");
     this.element.appendChild(this.inner);
 
+    parent.appendChild(this.element);
+
     // in OSX lion the scrollbars appear to have no width. In this case resize
     // the to show the scrollbar but still pretend that the scrollbar has a width
     // of 0px
     // in Firefox 6+ scrollbar is hidden if element has the same width as scrollbar
     // make element a little bit wider to retain scrollbar when page is zoomed 
-    // and insert it before other siblings to not cover them
     this.width = dom.scrollbarWidth(parent.ownerDocument);
     this.element.style.width = (this.width || 15) + 5 + "px";
-
-    parent.insertBefore(this.element, parent.firstChild);
 
     event.addListener(this.element, "scroll", this.onScroll.bind(this));
 };
