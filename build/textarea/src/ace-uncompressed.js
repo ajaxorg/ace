@@ -3780,7 +3780,7 @@ var TextInput = function(parentNode, host) {
         text.setAttribute("x-palm-disable-auto-cap", true);
         
     text.style.left = "-10000px";
-    parentNode.appendChild(text);
+    parentNode.insertBefore(text, parentNode.firstChild);
 
     var PLACEHOLDER = String.fromCharCode(0);
     sendText();
@@ -11199,8 +11199,13 @@ var CommandManager = function(platform, commands) {
         if (this.recording) {
             this.macro.pop();
             this.exec = this.normal_exec;
+
+            if (!this.macro.length)
+                this.macro = this.oldMacro;
+
             return this.recording = false;
         }
+        this.oldMacro = this.macro;
         this.macro = [];
         this.normal_exec = this.exec;
         this.exec = function(command, editor, args) {
@@ -11211,10 +11216,10 @@ var CommandManager = function(platform, commands) {
     };
 
     this.replay = function(editor) {
-        if (this.$inReplay)
+        if (this.$inReplay || !this.macro)
             return;
 
-        if (!this.macro || this.recording)
+        if (this.recording)
             return this.toggleRecording();
 
         try {
@@ -11597,9 +11602,9 @@ var VirtualRenderer = function(container, theme) {
         this.$loop.schedule(changes);
     };
 
-    this.adjustWrapLimit = function(){
+    this.adjustWrapLimit = function() {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
-        var limit = Math.floor(availableWidth / this.characterWidth) - 1;
+        var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit);
     };
 
@@ -11673,7 +11678,7 @@ var VirtualRenderer = function(container, theme) {
         }
 
         var style = this.$printMarginEl.style;
-        style.left = ((this.characterWidth * this.$printMarginColumn) + this.$padding * 2) + "px";
+        style.left = ((this.characterWidth * this.$printMarginColumn) + this.$padding) + "px";
         style.visibility = this.$showPrintMargin ? "visible" : "hidden";
     };
 
@@ -11702,7 +11707,7 @@ var VirtualRenderer = function(container, theme) {
         var bounds = this.content.getBoundingClientRect();
         var offset = this.layerConfig.offset;
 
-        textarea.style.left = (bounds.left + pos.left + this.$padding) + "px";
+        textarea.style.left = (bounds.left + pos.left) + "px";
         textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
     };
 
@@ -11888,7 +11893,7 @@ var VirtualRenderer = function(container, theme) {
 
         this.$gutterLayer.element.style.marginTop = (-offset) + "px";
         this.content.style.marginTop = (-offset) + "px";
-        this.content.style.width = longestLine + "px";
+        this.content.style.width = longestLine + 2 * this.$padding + "px";
         this.content.style.height = minHeight + "px";
 
         // scroller.scrollWidth was smaller than scrollLeft we needed
@@ -11930,11 +11935,11 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$getLongestLine = function() {
-        var charCount = this.session.getScreenWidth() + 1;
+        var charCount = this.session.getScreenWidth();
         if (this.$textLayer.showInvisibles)
             charCount += 1;
 
-        return Math.max(this.$size.scrollerWidth, Math.round(charCount * this.characterWidth));
+        return Math.max(this.$size.scrollerWidth - 2 * this.$padding, Math.round(charCount * this.characterWidth));
     };
 
     this.updateFrontMarkers = function() {
@@ -12055,7 +12060,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.scrollToX = function(scrollLeft) {
-        if (scrollLeft <= this.$padding)
+        if (scrollLeft <= this.$padding + 2 * this.layerConfig.characterWidth)
             scrollLeft = 0;
 
         this.scroller.scrollLeft = scrollLeft;
@@ -13360,15 +13365,16 @@ var ScrollBar = function(parent) {
     this.inner = dom.createElement("div");
     this.element.appendChild(this.inner);
 
-    parent.appendChild(this.element);
-
     // in OSX lion the scrollbars appear to have no width. In this case resize
     // the to show the scrollbar but still pretend that the scrollbar has a width
     // of 0px
     // in Firefox 6+ scrollbar is hidden if element has the same width as scrollbar
     // make element a little bit wider to retain scrollbar when page is zoomed 
+    // and insert it before other siblings to not cover them
     this.width = dom.scrollbarWidth(parent.ownerDocument);
     this.element.style.width = (this.width || 15) + 5 + "px";
+
+    parent.insertBefore(this.element, parent.firstChild);
 
     event.addListener(this.element, "scroll", this.onScroll.bind(this));
 };
@@ -13558,7 +13564,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "\n" +
   ".ace_editor textarea {\n" +
   "    position: fixed;\n" +
-  "    z-index: 2000;\n" +
+  "    z-index: 0;\n" +
   "    width: 10px;\n" +
   "    height: 30px;\n" +
   "    opacity: 0;\n" +
@@ -13994,7 +14000,7 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "\n" +
   ".ace_editor textarea {\n" +
   "    position: fixed;\n" +
-  "    z-index: 2000;\n" +
+  "    z-index: 0;\n" +
   "    width: 10px;\n" +
   "    height: 30px;\n" +
   "    opacity: 0;\n" +
