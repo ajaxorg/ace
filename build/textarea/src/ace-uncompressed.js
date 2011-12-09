@@ -9911,7 +9911,7 @@ function Folding() {
             token = iterator.stepBackward();
 
             range.end.row = iterator.getCurrentTokenRow();
-            range.end.column = iterator.getCurrentTokenColumn() + token.value.length - 1;
+            range.end.column = iterator.getCurrentTokenColumn() + token.value.length;
             return range;
         }
     };
@@ -10473,8 +10473,10 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         
         while (this.$tokenIndex < 0) {
             this.$row -= 1;
-            if (this.$row < 0)
+            if (this.$row < 0) {
+                this.$row = 0;
                 return null;
+            }
                 
             this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
             this.$tokenIndex = this.$rowTokens.length - 1;
@@ -10489,8 +10491,10 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         
         while (this.$tokenIndex >= this.$rowTokens.length) {
             this.$row += 1;
-            if (this.$row >= rowCount)
+            if (this.$row >= rowCount) {
+                this.$row = rowCount - 1;
                 return null;
+            }
 
             this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
             this.$tokenIndex = 0;

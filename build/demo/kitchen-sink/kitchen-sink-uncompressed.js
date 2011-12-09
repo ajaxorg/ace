@@ -8012,7 +8012,7 @@ function Folding() {
             token = iterator.stepBackward();
 
             range.end.row = iterator.getCurrentTokenRow();
-            range.end.column = iterator.getCurrentTokenColumn() + token.value.length - 1;
+            range.end.column = iterator.getCurrentTokenColumn() + token.value.length;
             return range;
         }
     };
@@ -8574,8 +8574,10 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         
         while (this.$tokenIndex < 0) {
             this.$row -= 1;
-            if (this.$row < 0)
+            if (this.$row < 0) {
+                this.$row = 0;
                 return null;
+            }
                 
             this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
             this.$tokenIndex = this.$rowTokens.length - 1;
@@ -8590,8 +8592,10 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         
         while (this.$tokenIndex >= this.$rowTokens.length) {
             this.$row += 1;
-            if (this.$row >= rowCount)
+            if (this.$row >= rowCount) {
+                this.$row = rowCount - 1;
                 return null;
+            }
 
             this.$rowTokens = this.$session.getTokens(this.$row, this.$row)[0].tokens;
             this.$tokenIndex = 0;
@@ -10322,8 +10326,11 @@ oop.inherits(FoldMode, BaseFoldMode);
         if (match) {
             var i = match.index;
 
-            if (match[2])
-                return session.getCommentFoldRange(row, i + match[0].length);
+            if (match[2]) {
+                var range = session.getCommentFoldRange(row, i + match[0].length);
+                range.end.column -= 2;
+                return range;
+            }
 
             var start = {row: row, column: i+1};
             var end = session.$findClosingBracket(match[1], start);
@@ -10348,8 +10355,11 @@ oop.inherits(FoldMode, BaseFoldMode);
         if (match) {
             var i = match.index + match[0].length;
 
-            if (match[2])
-                return session.getCommentFoldRange(row, i);
+            if (match[2]) {
+                var range = session.getCommentFoldRange(row, i);
+                range.end.column -= 2;
+                return range;
+            }
 
             var end = {row: row, column: i};
             var start = session.$findOpeningBracket(match[1], end);
