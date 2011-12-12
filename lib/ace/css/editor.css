@@ -224,6 +224,8 @@
     background-image: url("data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08%06%00%00%00%8Do%26%E5%00%00%004IDATx%DAe%8A%B1%0D%000%0C%C2%F2%2CK%96%BC%D0%8F9%81%88H%E9%D0%0E%96%C0%10%92%3E%02%80%5E%82%E4%A9*-%EEsw%C8%CC%11%EE%96w%D8%DC%E9*Eh%0C%151(%00%00%00%00IEND%AEB%60%82");
     background-repeat: no-repeat;
     background-position: center 5px;
+
+    border-radius: 3px;
 }
 
 .ace_fold-widget.end {
@@ -237,7 +239,6 @@
 .ace_fold-widget:hover {
     border: 1px solid rgba(0, 0, 0, 0.3);
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
     -moz-box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.7);
     -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
     -webkit-box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.7);
@@ -256,4 +257,9 @@
     -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
     box-shadow:inset 0 1px 1px rgba(255, 255, 255);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.ace_fold-widget.invalid {
+    background-color: #FFB4B4;
+    border-color: #DE5555;
 }
