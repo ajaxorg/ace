@@ -143,7 +143,7 @@ function extractStyles(theme) {
     colors.isDark = (luma(colors.background) < 0.5) + "";
 
     return colors;
-}
+};
 
 function luma(color) {
     if (color[0]=="#")
