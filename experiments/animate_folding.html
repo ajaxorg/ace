@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!--
+
+Animate Code Folding Experiment
+
+Animates closing of folds in Chrome and WebKit. Requires 3D CSS and CSS 
+transitions.
+
+TODO
+
+* animate opening
+* fix closing at the bottom of the file
+* support folding with closed folds on the screen (rows are off)
+* support more browsers
+* speed
+
+-->
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    pre {
+        margin: 0;
+    }
+    
+    #editor { 
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    
+    #container {
+        -webkit-transform: scaleZ(0.0000001);
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .ace_slide {
+        position: absolute;
+        width: 100%;
+        overflow: hidden;
+        
+        background-image: url(zenbg.png);
+    
+        /* ease in sine */ 
+        -webkit-transition: height 500ms cubic-bezier(0.470, 0.000, 0.745, 0.715);
+        
+        -webkit-perspective: 2000;
+        -webkit-perspective-origin: 50% 50%;
+    }
+    
+    .ace_anim_slide_top {
+        z-index: -1;
+        background-color: white;
+        background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%,rgba(0, 0, 0, 0.05) 50%);
+        top: 0;
+        
+        -webkit-transition: -webkit-transform 500ms linear;
+        
+        -webkit-transform-style: preserve-3d;
+        -webkit-transform-origin: top;
+        -webkit-transform: rotateX(0deg);
+    }
+    
+    .ace_anim_slide_bottom {
+        background-color: white;
+        background-image: -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0) 0%,rgba(0, 0, 0, 0.05) 100%);
+        bottom: 0;
+        
+        -webkit-transition: -webkit-transform 500ms linear;
+        
+        -webkit-transform-style: preserve-3d;
+        -webkit-transform-origin: bottom;
+        -webkit-transform: rotateX(0deg);
+    }
+    
+    .ace_anim_hidden .ace_anim_slide_top {
+        -webkit-transform: rotateX(-90deg);
+    }
+    
+    .ace_anim_hidden .ace_anim_slide_bottom {
+        -webkit-transform: rotateX(90deg);
+    }
+    
+    .ace_anim_bottom {
+        /* ease in sine */ 
+        -webkit-transition: top 500ms cubic-bezier(0.470, 0.000, 0.745, 0.715);
+        -webkit-transform: scaleZ(0.0000001);
+    }
+    
+  </style>
+</head>
+<body>
+
+<div id="container">
+<div id="editor"></div>
+</div>
+
+<script src="../build/src/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+<script src="../build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+<script id="main">
+
+window.onload = function() {
+    var editor = ace.edit("editor");
+    
+    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    var EditSession = require("ace/edit_session").EditSession;
+    var lang = require("ace/lib/lang");
+    var Range = require("ace/range").Range;
+    editor.getSession().setMode(new JavaScriptMode());
+    editor.getSession().setValue(document.getElementById("main").innerHTML);
+    
+    
+    function cloneSession(session) {
+        var s = new EditSession(session.getDocument(), session.getMode());
+
+        // Copy over 'settings' from the session.
+        s.setTabSize(session.getTabSize());
+        s.setUseSoftTabs(session.getUseSoftTabs());
+        s.setOverwrite(session.getOverwrite());
+        s.setBreakpoints(session.getBreakpoints());
+        s.setUseWrapMode(session.getUseWrapMode());
+        s.setUseWorker(false);
+        s.setWrapLimitRange(session.$wrapLimitRange.min, session.$wrapLimitRange.max);
+        s.$foldData = session.$cloneFoldData();
+    
+        return s;
+    }
+    
+    function animateFold(editor, placeholder, range) {
+        var session = editor.getSession();
+        var ed = document.getElementById("editor");
+        var parent = ed.parentNode;
+        
+        var clone = ed.cloneNode();
+        var cloneEd = ace.edit(clone);
+        var renderer = cloneEd.renderer;
+        
+        cloneEd.setSession(cloneSession(session));
+        cloneEd.setTheme(editor.getTheme());
+        renderer.scrollToY(editor.renderer.getScrollTop());
+        
+        parent.appendChild(clone);
+
+        cloneEd.resize();
+        renderer.$size = lang.copyObject(cloneEd.renderer.$size);
+        renderer.layerConfig = lang.copyObject(cloneEd.renderer.layerConfig);
+        renderer.$textLayer.$characterSize = lang.copyObject(editor.renderer.$textLayer.$characterSize);
+        renderer.$textLayer._emit("changeCharaterSize", {data: renderer.$textLayer.$characterSize});
+        
+        renderer.$loop.onRender(renderer.$loop.changes);
+
+        // top area
+        var clone2 = clone.cloneNode(true);
+        var topHeight = range.start.row * renderer.lineHeight - renderer.scrollTop
+        clone2.style.height = topHeight + "px";
+        
+        parent.appendChild(clone2);
+
+        // middle
+        cloneEd.scrollToRow(range.start.row);
+        renderer.$loop.onRender(renderer.$loop.changes);
+        var middleHeight = (range.end.row - range.start.row) * renderer.lineHeight;        
+        
+        var slide = document.createElement("div");
+        slide.className = "ace_slide";
+        slide.style.top = topHeight + "px";
+        slide.style.height = middleHeight + "px";
+        
+        var clone3 = clone.cloneNode(true);
+        clone3.className += " ace_anim_slide_top";
+        clone3.style.height = middleHeight + "px";
+        slide.appendChild(clone3);
+        
+        renderer.scrollToY(renderer.scrollTop + Math.floor(middleHeight / 2));
+        renderer.$loop.onRender(renderer.$loop.changes);
+        
+        var clone3 = clone.cloneNode(true);
+        clone3.className += " ace_anim_slide_bottom";
+        clone3.style.top = null;
+        clone3.style.height = (middleHeight / 2) + "px";
+        slide.appendChild(clone3);
+        
+        parent.appendChild(slide);
+
+        // bottom
+        cloneEd.scrollToRow(range.start.row)
+        cloneEd.getSession().addFold(placeholder, range);
+        renderer.$loop.onRender(renderer.$loop.changes);
+        
+        var clone4 = clone.cloneNode(true);
+        clone4.className += " ace_anim_bottom";
+        clone4.style.top = (topHeight + middleHeight) + "px";
+        parent.appendChild(clone4);
+        
+        cloneEd.destroy();
+        parent.removeChild(clone);
+        ed.style.left = "-10000px";
+    
+        setTimeout(function() {
+            clone4.style.top = topHeight + "px";
+            slide.style.height = 0;
+            slide.className += " ace_anim_hidden";
+            
+            setTimeout(function() {
+                ed.style.left = 0;
+                
+                setTimeout(function() {
+                    parent.removeChild(clone2);
+                    parent.removeChild(slide);
+                    parent.removeChild(clone4);
+                }, 0);
+            }, 500);
+        }, 0);
+    } 
+
+    var origOnFoldWidgetClick = EditSession.prototype.onFoldWidgetClick;
+    EditSession.prototype.onFoldWidgetClick = function() {
+        
+        var orig = EditSession.prototype.addFold;
+        
+        EditSession.prototype.addFold = function(placeholder, range) {
+            EditSession.prototype.addFold = orig;
+            animateFold(editor, placeholder, range);
+            this.addFold(placeholder, range);
+        }
+        
+        var ret = origOnFoldWidgetClick.apply(this, arguments);
+        
+        return ret;
+    }
+};
+</script>
+
+</body>
+</html>
