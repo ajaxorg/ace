@@ -10,7 +10,7 @@
 			<key>settings</key>
 			<dict>
 				<key>background</key>
-				<string>#000000</string>
+				<string>#0F0F0F</string>
 				<key>caret</key>
 				<string>#FFFFFF</string>
 				<key>foreground</key>
@@ -18,9 +18,9 @@
 				<key>invisibles</key>
 				<string>#404040</string>
 				<key>lineHighlight</key>
-				<string>#333300</string>
+				<string>#333333</string>
 				<key>selection</key>
-				<string>#35493CE0</string>
+				<string>#6699CC</string>
 			</dict>
 		</dict>
 		<dict>
@@ -62,13 +62,26 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Ruby Number</string>
+			<string>Invalid </string>
 			<key>scope</key>
-			<string>constant.numeric.ruby</string>
+			<string>invalid, invalid.deprecated</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#000000</string>
+				<key>foreground</key>
+				<string>#CCFF33</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Number</string>
+			<key>scope</key>
+			<string>constant.numeric</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#CCFF33</string>
+				<string>#99CC99</string>
 			</dict>
 		</dict>
 		<dict>
@@ -205,13 +218,13 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>ActiveRecord Function</string>
+			<string>Support Function</string>
 			<key>scope</key>
-			<string>support.function.activerecord.rails</string>
+			<string>support.function</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#999966</string>
+				<string>#FFCC00</string>
 			</dict>
 		</dict>
 		<dict>

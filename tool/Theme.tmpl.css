@@ -101,7 +101,8 @@
 }
 
 .%cssClass% .ace_fold {
-    outline-color: %foldOutline%
+    background-color: %fold%;
+    border-color: %foreground%;
 }
 
 .%cssClass% .ace_support.ace_function {
