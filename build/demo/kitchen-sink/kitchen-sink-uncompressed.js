@@ -7846,8 +7846,8 @@ function Folding() {
     this.getRowFoldEnd = function(docRow, startFoldRow) {
         var foldLine = this.getFoldLine(docRow, startFoldRow);
         return (foldLine
-                    ? foldLine.end.row
-                    : docRow)
+            ? foldLine.end.row
+            : docRow);
     };
 
     this.getFoldDisplayLine = function(foldLine, endRow, endColumn, startRow, startColumn) {
@@ -7865,7 +7865,7 @@ function Folding() {
         var doc = this.doc;
         var textLine = "";
 
-        foldLine.walk(function(placeholder, row, column, lastColumn, isNewRow) {
+        foldLine.walk(function(placeholder, row, column, lastColumn) {
             if (row < startRow) {
                 return;
             } else if (row == startRow) {
@@ -7911,31 +7911,36 @@ function Folding() {
     this.toggleFold = function(tryToUnfold) {
         var selection = this.selection;
         var range = selection.getRange();
+        var fold;
+        var bracketPos;
 
         if (range.isEmpty()) {
             var cursor = range.start;
-            var fold = this.getFoldAt(cursor.row, cursor.column);
-            var bracketPos;
+            fold = this.getFoldAt(cursor.row, cursor.column);
 
             if (fold) {
                 this.expandFold(fold);
                 return;
-            } else if (bracketPos = this.findMatchingBracket(cursor)) {
+            }
+            else if (bracketPos = this.findMatchingBracket(cursor)) {
                 if (range.comparePoint(bracketPos) == 1) {
                     range.end = bracketPos;
-                } else {
+                } 
+                else {
                     range.start = bracketPos;
                     range.start.column++;
                     range.end.column--;
                 }
-            } else if (bracketPos = this.findMatchingBracket({row: cursor.row, column: cursor.column + 1})) {
+            }
+            else if (bracketPos = this.findMatchingBracket({row: cursor.row, column: cursor.column + 1})) {
                 if (range.comparePoint(bracketPos) == 1)
                     range.end = bracketPos;
                 else
                     range.start = bracketPos;
 
                 range.start.column++;
-            } else {
+            }
+            else {
                 range = this.getCommentFoldRange(cursor.row, cursor.column) || range;
             }
         } else {
@@ -7943,7 +7948,8 @@ function Folding() {
             if (tryToUnfold && folds.length) {
                 this.expandFolds(folds);
                 return;
-            } else if (folds.length == 1 ) {
+            } 
+            else if (folds.length == 1 ) {
                 fold = folds[0];
             }
         }
@@ -7951,7 +7957,7 @@ function Folding() {
         if (!fold)
             fold = this.getFoldAt(range.start.row, range.start.column);
 
-        if (fold && fold.range.toString() == range.toString()){
+        if (fold && fold.range.toString() == range.toString()) {
             this.expandFold(fold);
             return;
         }
@@ -8027,6 +8033,9 @@ function Folding() {
             return;
 
         this.$foldStyle = style;
+        
+        if (style == "manual")
+            this.unfold();
         
         // reset folding
         var mode = this.$foldMode;
@@ -20170,7 +20179,7 @@ exports.Split = Split;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/editor', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'ace/lib/event_emitter', 'ace/commands/command_manager', 'ace/commands/default_commands'], function(require, exports, module) {
+define('ace/editor', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/useragent', 'ace/keyboard/textinput', 'ace/mouse/mouse_handler', 'ace/mouse/fold_handler', 'ace/keyboard/keybinding', 'ace/edit_session', 'ace/search', 'ace/range', 'ace/lib/event_emitter', 'ace/commands/command_manager', 'ace/commands/default_commands'], function(require, exports, module) {
 
 require("./lib/fixoldbrowsers");
 
@@ -20179,6 +20188,7 @@ var lang = require("./lib/lang");
 var useragent = require("./lib/useragent");
 var TextInput = require("./keyboard/textinput").TextInput;
 var MouseHandler = require("./mouse/mouse_handler").MouseHandler;
+var FoldHandler = require("./mouse/fold_handler").FoldHandler;
 //var TouchHandler = require("./touch_handler").TouchHandler;
 var KeyBinding = require("./keyboard/keybinding").KeyBinding;
 var EditSession = require("./edit_session").EditSession;
@@ -20201,6 +20211,7 @@ var Editor = function(renderer, session) {
         //this.$mouseHandler = new TouchHandler(this);
     } else {
         this.$mouseHandler = new MouseHandler(this);
+        new FoldHandler(this);
     }
 
     this.$blockScrolling = 0;
@@ -21703,7 +21714,7 @@ var MouseHandler = function(editor) {
     
     this.onMouseMove = function(e) {
         // optimization, because mousemove doesn't have a default handler.
-        var listeners = this.editor._eventRegistry && this.editor._eventRegistry["mousemove"];
+        var listeners = this.editor._eventRegistry && this.editor._eventRegistry.mousemove;
         if (!listeners || !listeners.length)
             return;
 
@@ -21774,11 +21785,10 @@ exports.MouseHandler = MouseHandler;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mouse/default_handlers', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/lib/dom', 'ace/lib/event_emitter', 'ace/lib/browser_focus'], function(require, exports, module) {
+define('ace/mouse/default_handlers', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/lib/dom', 'ace/lib/browser_focus'], function(require, exports, module) {
 
 var event = require("../lib/event");
 var dom = require("../lib/dom");
-var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var BrowserFocus = require("../lib/browser_focus").BrowserFocus;
 
 var STATE_UNKNOWN = 0;
@@ -21854,7 +21864,6 @@ function DefaultHandlers(editor) {
         }
 
         var mousePageX = pageX, mousePageY = pageY;
-        var overwrite = editor.getOverwrite();
         var mousedownTime = (new Date()).getTime();
         var dragCursor, dragRange;
 
@@ -21923,7 +21932,7 @@ function DefaultHandlers(editor) {
                     state = STATE_DRAG;
                     dragRange = editor.getSelectionRange();
                     var style = editor.getSelectionStyle();
-                    dragSelectionMarker = editor.session.addMarker(dragRange, "ace_selection", style);
+                    editor.session.addMarker(dragRange, "ace_selection", style);
                     editor.clearSelection();
                     dom.addCssClass(editor.container, "ace_dragging");
                 }
@@ -21993,19 +22002,9 @@ function DefaultHandlers(editor) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
         
-        // If the user dclicked on a fold, then expand it.
-        var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
-        if (fold) {
-            if (ev.getAccelKey())
-                editor.session.removeFold(fold);
-            else
-                editor.session.expandFold(fold);
-        }
-        else {
-            editor.moveCursorToPosition(pos);
-            editor.selection.selectWord();
-            this.$clickSelection = editor.getSelectionRange();
-        }
+        editor.moveCursorToPosition(pos);
+        editor.selection.selectWord();
+        this.$clickSelection = editor.getSelectionRange();
     };
     
     this.onTripleClick = function(ev) {
@@ -22183,10 +22182,9 @@ exports.BrowserFocus = BrowserFocus;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mouse/mouse_event', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/lib/dom'], function(require, exports, module) {
+define('ace/mouse/mouse_event', ['require', 'exports', 'module' , 'ace/lib/event'], function(require, exports, module) {
 
 var event = require("../lib/event");
-var dom = require("../lib/dom");
 
 /**
  * Custom Ace mouse event
@@ -22285,7 +22283,67 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
 }).call(MouseEvent.prototype);
 
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Mike de Boer <mike AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mouse/fold_handler', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+function FoldHandler(editor) {
+    editor.on("click", function(ev) {
+        var pos = ev.getDocumentPosition();
+        
+        // If the user dclicked on a fold, then expand it.
+        var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
+        if (fold) {
+            if (ev.getAccelKey())
+                editor.session.removeFold(fold);
+            else
+                editor.session.expandFold(fold);
+                
+            ev.preventDefault();
+        }
+    });
+}
+
+exports.FoldHandler = FoldHandler;
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
