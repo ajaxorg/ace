@@ -373,7 +373,7 @@ function buildAce(aceProject, options) {
             source: [
                 {
                     project: cloneProject(project),
-                    require: [ 'ace/keyboard/keybinding/' + keybinding ]
+                    require: [ 'ace/keyboard/' + keybinding ]
                 }
             ],
             filter: filters,
