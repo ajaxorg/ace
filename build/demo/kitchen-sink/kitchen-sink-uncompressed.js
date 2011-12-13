@@ -546,6 +546,7 @@ bindDropdown("fontsize", function(value) {
 
 bindDropdown("folding", function(value) {
     env.editor.getSession().setFoldStyle(value);
+    env.editor.setShowFoldWidgets(value !== "manual");
 });
 
 bindDropdown("soft_wrap", function(value) {
@@ -2960,24 +2961,17 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_gutter {\
-  width: 50px;\
   background: #e8e8e8;\
   color: #333;\
-  overflow : hidden;\
-}\
-\
-.ace-tm .ace_gutter-layer {\
-  width: 100%;\
-  text-align: right;\
-}\
-\
-.ace-tm .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 6px;\
 }\
 \
 .ace-tm .ace_print_margin {\
   width: 1px;\
   background: #e8e8e8;\
+}\
+\
+.ace-tm .ace_fold {\
+    background-color: #0000A2;\
 }\
 \
 .ace-tm .ace_text-layer {\
@@ -20789,6 +20783,7 @@ var Editor = function(renderer, session) {
         this.$showFoldWidgets = show;
         this.renderer.updateFull();
     };
+    
     this.getShowFoldWidgets = function() {
         return this.renderer.$gutterLayer.getShowFoldWidgets();
     };
@@ -23480,6 +23475,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+    
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -24301,15 +24298,19 @@ exports.VirtualRenderer = VirtualRenderer;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/layer/gutter', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
+define('ace/layer/gutter', ['require', 'exports', 'module' , 'ace/lib/dom', 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
 
 var dom = require("../lib/dom");
+var oop = require("../lib/oop");
+var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
 var Gutter = function(parentEl) {
     this.element = dom.createElement("div");
     this.element.className = "ace_layer ace_gutter-layer";
     parentEl.appendChild(this.element);
     this.setShowFoldWidgets(this.$showFoldWidgets);
+    
+    this.gutterWidth = 0;
 
     this.$breakpoints = [];
     this.$annotations = [];
@@ -24318,6 +24319,8 @@ var Gutter = function(parentEl) {
 
 (function() {
 
+    oop.implement(this, EventEmitter);
+    
     this.setSession = function(session) {
         this.session = session;
     };
@@ -24415,6 +24418,12 @@ var Gutter = function(parentEl) {
         }
         this.element = dom.setInnerHtml(this.element, html.join(""));
         this.element.style.height = config.minHeight + "px";
+        
+        var gutterWidth = this.element.offsetWidth;
+        if (gutterWidth !== this.gutterWidth) {
+            this.gutterWidth = gutterWidth;
+            this._emit("changeGutterWidth", gutterWidth);
+        }
     };
 
     this.$showFoldWidgets = true;
@@ -24426,6 +24435,7 @@ var Gutter = function(parentEl) {
 
         this.$showFoldWidgets = show;
     };
+    
     this.getShowFoldWidgets = function() {
         return this.$showFoldWidgets;
     };
@@ -25567,24 +25577,35 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    z-index: 4;\n" +
   "}\n" +
   "\n" +
+  ".ace_gutter .ace_layer {\n" +
+  "    position: relative;\n" +
+  "    min-width: 54px;\n" +
+  "    text-align: right;\n" +
+  "}\n" +
+  "\n" +
   ".ace_gutter {\n" +
   "    position: absolute;\n" +
-  "    overflow-x: hidden;\n" +
-  "    overflow-y: hidden;\n" +
+  "    overflow : hidden;\n" +
   "    height: 100%;\n" +
+  "    width: auto;\n" +
   "    cursor: default;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter-cell {\n" +
+  "    padding-left: 19px;\n" +
+  "    padding-right: 6px;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell.ace_error {\n" +
   "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%F5or%F5%87%88%F5nr%F4ns%EBmq%F5z%7F%DDJT%DEKS%DFOW%F1Yc%F2ah%CE(7%CE)8%D18E%DD%40M%F2KZ%EBU%60%F4%60m%DCir%C8%16(%C8%19*%CE%255%F1%3FR%F1%3FS%E6%AB%B5%CA%5DI%CEn%5E%F7%A2%9A%C9G%3E%E0a%5B%F7%89%85%F5yy%F6%82%80%ED%82%80%FF%BF%BF%E3%C4%C4%FF%FF%FF%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%25%00%2C%00%00%00%00%10%00%10%00%00%06p%C0%92pH%2C%1A%8F%C8%D2H%93%E1d4%23%E4%88%D3%09mB%1DN%B48%F5%90%40%60%92G%5B%94%20%3E%22%D2%87%24%FA%20%24%C5%06A%00%20%B1%07%02B%A38%89X.v%17%82%11%13q%10%0Fi%24%0F%8B%10%7BD%12%0Ei%09%92%09%0EpD%18%15%24%0A%9Ci%05%0C%18F%18%0B%07%04%01%04%06%A0H%18%12%0D%14%0D%12%A1I%B3%B4%B5IA%00%3B\");\n" +
   "    background-repeat: no-repeat;\n" +
-  "    background-position: 4px center;\n" +
+  "    background-position: 2px center;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell.ace_warning {\n" +
   "    background-image: url(\"data:image/gif,GIF89a%10%00%10%00%D5%00%00%FF%DBr%FF%DE%81%FF%E2%8D%FF%E2%8F%FF%E4%96%FF%E3%97%FF%E5%9D%FF%E6%9E%FF%EE%C1%FF%C8Z%FF%CDk%FF%D0s%FF%D4%81%FF%D5%82%FF%D5%83%FF%DC%97%FF%DE%9D%FF%E7%B8%FF%CCl%7BQ%13%80U%15%82W%16%81U%16%89%5B%18%87%5B%18%8C%5E%1A%94d%1D%C5%83-%C9%87%2F%C6%84.%C6%85.%CD%8B2%C9%871%CB%8A3%CD%8B5%DC%98%3F%DF%9BB%E0%9CC%E1%A5U%CB%871%CF%8B5%D1%8D6%DB%97%40%DF%9AB%DD%99B%E3%B0p%E7%CC%AE%FF%FF%FF%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00!%F9%04%01%00%00%2F%00%2C%00%00%00%00%10%00%10%00%00%06a%C0%97pH%2C%1A%8FH%A1%ABTr%25%87%2B%04%82%F4%7C%B9X%91%08%CB%99%1C!%26%13%84*iJ9(%15G%CA%84%14%01%1A%97%0C%03%80%3A%9A%3E%81%84%3E%11%08%B1%8B%20%02%12%0F%18%1A%0F%0A%03'F%1C%04%0B%10%16%18%10%0B%05%1CF%1D-%06%07%9A%9A-%1EG%1B%A0%A1%A0U%A4%A5%A6BA%00%3B\");\n" +
   "    background-repeat: no-repeat;\n" +
-  "    background-position: 4px center;\n" +
+  "    background-position: 2px center;\n" +
   "}\n" +
   "\n" +
   ".ace_editor .ace_sb {\n" +
@@ -25711,7 +25732,6 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "        url(\"data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%007%08%06%00%00%00%C4%DD%80C%00%00%03%1EiCCPICC%20Profile%00%00x%01%85T%DFk%D3P%14%FE%DAe%9D%B0%E1%8B%3Ag%11%09%3Eh%91ndStC%9C%B6kW%BA%CDZ%EA6%B7!H%9B%A6m%5C%9A%C6%24%ED~%B0%07%D9%8Bo%3A%C5w%F1%07%3E%F9%07%0C%D9%83o%7B%92%0D%C6%14a%F8%AC%88%22L%F6%22%B3%9E%9B4M'S%03%B9%F7%BB%DF%F9%EE9'%E7%E4%5E%A0%F9qZ%D3%14%2F%0F%14USO%C5%C2%FC%C4%E4%14%DF%F2%01%5E%1CC%2B%FChM%8B%86%16J%26G%40%0F%D3%B2y%EF%B3%F3%0E%1E%C6lt%EEo%DF%AB%FEc%D5%9A%95%0C%11%F0%1C%20%BE%945%C4%22%E1Y%A0i%5C%D4t%13%E0%D6%89%EF%9D15%C2%CDLsX%A7%04%09%1Fg8oc%81%E1%8C%8D%23%96f45%40%9A%09%C2%07%C5B%3AK%B8%408%98i%E0%F3%0D%D8%CE%81%14%E4'%26%A9%92.%8B%3C%ABER%2F%E5dE%B2%0C%F6%F0%1Fs%83%F2_%B0%A8%94%E9%9B%AD%E7%10%8Dm%9A%19N%D1%7C%8A%DE%1F9%7Dp%8C%E6%00%D5%C1%3F_%18%BDA%B8%9DpX6%E3%A35~B%CD%24%AE%11%26%BD%E7%EEti%98%EDe%9A%97Y)%12%25%1C%24%BCbT%AE3li%E6%0B%03%89%9A%E6%D3%ED%F4P%92%B0%9F4%BF43Y%F3%E3%EDP%95%04%EB1%C5%F5%F6KF%F4%BA%BD%D7%DB%91%93%07%E35%3E%A7)%D6%7F%40%FE%BD%F7%F5r%8A%E5y%92%F0%EB%B4%1E%8D%D5%F4%5B%92%3AV%DB%DB%E4%CD%A6%23%C3%C4wQ%3F%03HB%82%8E%1Cd(%E0%91B%0Ca%9Ac%C4%AA%F8L%16%19%22J%A4%D2itTy%B28%D6%3B(%93%96%ED%1CGx%C9_%0E%B8%5E%16%F5%5B%B2%B8%F6%E0%FB%9E%DD%25%D7%8E%BC%15%85%C5%B7%A3%D8Q%ED%B5%81%E9%BA%B2%13%9A%1B%7Fua%A5%A3n%E17%B9%E5%9B%1Bm%AB%0B%08Q%FE%8A%E5%B1H%5Ee%CAO%82Q%D7u6%E6%90S%97%FCu%0B%CF2%94%EE%25v%12X%0C%BA%AC%F0%5E%F8*l%0AO%85%17%C2%97%BF%D4%C8%CE%DE%AD%11%CB%80q%2C%3E%AB%9ES%CD%C6%EC%25%D2L%D2%EBd%B8%BF%8A%F5B%C6%18%F9%901CZ%9D%BE%24M%9C%8A9%F2%DAP%0B'%06w%82%EB%E6%E2%5C%2F%D7%07%9E%BB%CC%5D%E1%FA%B9%08%AD.r%23%8E%C2%17%F5E%7C!%F0%BE3%BE%3E_%B7o%88a%A7%DB%BE%D3d%EB%A31Z%EB%BB%D3%91%BA%A2%B1z%94%8F%DB'%F6%3D%8E%AA%13%19%B2%B1%BE%B1~V%08%2B%B4%A2cjJ%B3tO%00%03%25mN%97%F3%05%93%EF%11%84%0B%7C%88%AE-%89%8F%ABbW%90O%2B%0Ao%99%0C%5E%97%0CI%AFH%D9.%B0%3B%8F%ED%03%B6S%D6%5D%E6i_s9%F3*p%E9%1B%FD%C3%EB.7U%06%5E%19%C0%D1s.%17%A03u%E4%09%B0%7C%5E%2C%EB%15%DB%1F%3C%9E%B7%80%91%3B%DBc%AD%3Dma%BA%8B%3EV%AB%DBt.%5B%1E%01%BB%0F%AB%D5%9F%CF%AA%D5%DD%E7%E4%7F%0Bx%A3%FC%06%A9%23%0A%D6%C2%A1_2%00%00%00%09pHYs%00%00%0B%13%00%00%0B%13%01%00%9A%9C%18%00%00%00%3AIDAT8%11c%FC%FF%FF%7F%18%03%1A%60%01%F2%3F%A0%891%80%04%FF%11-%F8%17%9BJ%E2%05%B1ZD%81v%26t%E7%80%F8%A3%82h%A12%1A%20%A3%01%02%0F%01%BA%25%06%00%19%C0%0D%AEF%D5%3ES%00%00%00%00IEND%AEB%60%82\");\n" +
   "    background-repeat: no-repeat, repeat-x;\n" +
   "    background-position: center center, top left;\n" +
-  "    background-color: #4b50c3;\n" +
   "    color: transparent;\n" +
   "\n" +
   "    border: 1px solid black;\n" +
@@ -25739,7 +25759,7 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "\n" +
   ".ace_folding-enabled .ace_gutter-cell {\n" +
-  "    padding-right: 13px!important;\n" +
+  "    padding-right: 13px;\n" +
   "}\n" +
   "\n" +
   ".ace_fold-widget {\n" +
