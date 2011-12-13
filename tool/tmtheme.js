@@ -119,7 +119,7 @@ function extractStyles(theme) {
         "cursor": parseColor(globalSettings.caret),
 
         "invisible": "color: " + parseColor(globalSettings.invisibles) + ";"
-    }
+    };
 
     for (var i=1; i<theme.settings.length; i++) {
         var element = theme.settings[i];
@@ -133,14 +133,14 @@ function extractStyles(theme) {
             }
         }
     }
-    
-    if (!colors.foldOutline)
-        colors.foldOutline = (colors.keyword.match(/\:([^;]+)/)||[])[1];
+
+    if (!colors.fold)
+        colors.fold = ((colors["entity.name.function"] || colors.keyword).match(/\:([^;]+)/)||[])[1];
     
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
 
-    colors.isDark = (luma(colors.background) < 0.5) + ""
+    colors.isDark = (luma(colors.background) < 0.5) + "";
 
     return colors;
 };
@@ -155,7 +155,7 @@ function luma(color) {
             return parseInt(c, 10);
         });
 
-    return (0.21 * rgb[0] + 0.72 * rgb[1] + 0.07 * rgb[2]) / 255
+    return (0.21 * rgb[0] + 0.72 * rgb[1] + 0.07 * rgb[2]) / 255;
 }
 
 function parseColor(color) {
@@ -206,8 +206,8 @@ function createTheme(name, styles, cssTemplate, jsTemplate) {
         css: '"' + css.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"',
         cssClass: "ace-" + hyphenate(name),
         isDark: styles.isDark
-    })
-};
+    });
+}
 
 function hyphenate(str) {
     return str.replace(/([A-Z])/g, "-$1").replace(/_/g, "-").toLowerCase();

@@ -20,7 +20,7 @@
 				<key>lineHighlight</key>
 				<string>#333435</string>
 				<key>selection</key>
-				<string>#392243E0</string>
+				<string>#494949</string>
 			</dict>
 		</dict>
 		<dict>
@@ -42,6 +42,19 @@
 				<string>italic</string>
 				<key>foreground</key>
 				<string>#AC4BB8</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Deprecated</string>
+			<key>scope</key>
+			<string>invalid.deprecated</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#FFFFFF</string>
+				<key>background</key>
+				<string>#FE3838</string>
 			</dict>
 		</dict>
 		<dict>
@@ -171,6 +184,17 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Library constant</string>
+			<key>scope</key>
+			<string>constant.library</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8EC65F</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Library type</string>
 			<key>scope</key>
 			<string>support.type</string>
@@ -202,6 +226,19 @@
 				<string></string>
 				<key>foreground</key>
 				<string>#FC803A</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Markup tag</string>
+			<key>scope</key>
+			<string>meta</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#AC4BB8</string>
 			</dict>
 		</dict>
 		<dict>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://www.w3.org/2005/10/profile">
+        <title> </title>
+        
+          <style type="text/css" media="screen">
+          
+#container {
+    position: absolute;
+    width: 400px;
+    height: 500px;
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+#top {
+    position: absolute;
+    width: 100%;
+    height: 150px;
+    background: green;
+}
+
+#slide {
+    position: absolute;
+    width: 100%;
+    top: 150px;
+    height: 0;
+    background: orange;
+    overflow: hidden;
+    
+    -webkit-transition: height 5000ms cubic-bezier(0.390, 0.575, 0.565, 1.000);
+    
+    -webkit-perspective: 360;
+    -webkit-perspective-origin: 50% 50%;
+}
+
+#slide-top {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    height: 100px;
+    
+    background-color: yellow;
+    /* easeOutSine */
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%,rgba(0, 0, 0, 0.20) 100%);
+    
+    -webkit-transition: -webkit-transform 5000ms linear;
+    
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform-origin: top;
+    -webkit-transform: rotateX(-90deg);
+}
+
+.visible #slide-top {
+    -webkit-transform: rotateX(0deg);
+}
+
+.visible #slide-bottom {
+    -webkit-transform: rotateX(0deg);
+}
+
+#slide-bottom {
+    position: absolute;
+    width: 100%;
+    top: auto;
+    bottom: 0;
+    height: 200px;
+    z-index: -1;
+    
+    background-color: blue;
+    background-image: -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0) 0%,rgba(0, 0, 0, 0.20) 50%);
+    
+    -webkit-transition: -webkit-transform 5000ms linear;
+    
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform-origin: bottom;
+    -webkit-transform: rotateX(90deg);
+}
+
+#bottom {
+    position: absolute;
+    width: 100%;
+    top: 150px;
+    height: 500px;
+    background: red;
+    /* easeOutSine */
+    -webkit-transition: top 5000ms cubic-bezier(0.390, 0.575, 0.565, 1.000);
+}
+          
+          </style>
+    </head>
+    <body>
+
+    <div id="container">
+        <div id="top">Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+        sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+        magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+        quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+        ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
+        dolor in hendrerit in vulputate velit esse molestie consequat,
+        vel illum dolore eu feugiat nulla facilisis at vero eros et
+        accumsan et iusto odio dignissim qui blandit praesent luptatum
+        zzril delenit augue duis dolore te feugait nulla facilisi.
+        Nam liber tempor cum soluta nobis eleifend option congue
+        nihil imperdiet doming id quod mazim placerat facer possim
+        assum. Typi non habent claritatem insitam; est usus legentis
+        in iis qui facit eorum claritatem. Investigationes
+        demonstraverunt lectores legere me lius quod ii legunt saepius.
+        Claritas est etiam processus dynamicus, qui sequitur mutationem
+        consuetudium lectorum. Mirum est notare quam littera gothica,
+        quam nunc putamus parum claram, anteposuerit litterarum formas
+        humanitatis per seacula quarta decima et quinta decima. Eodem
+        modo typi, qui nunc nobis videntur parum clari, fiant sollemnes
+        in futurum.</div>
+        <div id="slide">
+            <div id="slide-top">Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+            sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+            magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+            quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
+            dolor in hendrerit in vulputate velit esse molestie consequat,
+            vel illum dolore eu feugiat nulla facilisis at vero eros et
+            accumsan et iusto odio dignissim qui blandit praesent luptatum
+            zzril delenit augue duis dolore te feugait nulla facilisi.
+            Nam liber tempor cum soluta nobis eleifend option congue
+            nihil imperdiet doming id quod mazim placerat facer possim
+            assum. Typi non habent claritatem insitam; est usus legentis
+            in iis qui facit eorum claritatem. Investigationes
+            demonstraverunt lectores legere me lius quod ii legunt saepius.
+            Claritas est etiam processus dynamicus, qui sequitur mutationem
+            consuetudium lectorum. Mirum est notare quam littera gothica,
+            quam nunc putamus parum claram, anteposuerit litterarum formas
+            humanitatis per seacula quarta decima et quinta decima. Eodem
+            modo typi, qui nunc nobis videntur parum clari, fiant sollemnes
+            in futurum.</div>
+            <div id="slide-bottom">Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+            sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+            magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+            quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+            ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
+            dolor in hendrerit in vulputate velit esse molestie consequat,
+            vel illum dolore eu feugiat nulla facilisis at vero eros et
+            accumsan et iusto odio dignissim qui blandit praesent luptatum
+            zzril delenit augue duis dolore te feugait nulla facilisi.
+            Nam liber tempor cum soluta nobis eleifend option congue
+            nihil imperdiet doming id quod mazim placerat facer possim
+            assum. Typi non habent claritatem insitam; est usus legentis
+            in iis qui facit eorum claritatem. Investigationes
+            demonstraverunt lectores legere me lius quod ii legunt saepius.
+            Claritas est etiam processus dynamicus, qui sequitur mutationem
+            consuetudium lectorum. Mirum est notare quam littera gothica,
+            quam nunc putamus parum claram, anteposuerit litterarum formas
+            humanitatis per seacula quarta decima et quinta decima. Eodem
+            modo typi, qui nunc nobis videntur parum clari, fiant sollemnes
+            in futurum.</div>
+        </div>
+        <div id="bottom">Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+        sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+        magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+        quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+        ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
+        dolor in hendrerit in vulputate velit esse molestie consequat,
+        vel illum dolore eu feugiat nulla facilisis at vero eros et
+        accumsan et iusto odio dignissim qui blandit praesent luptatum
+        zzril delenit augue duis dolore te feugait nulla facilisi.
+        Nam liber tempor cum soluta nobis eleifend option congue
+        nihil imperdiet doming id quod mazim placerat facer possim
+        assum. Typi non habent claritatem insitam; est usus legentis
+        in iis qui facit eorum claritatem. Investigationes
+        demonstraverunt lectores legere me lius quod ii legunt saepius.
+        Claritas est etiam processus dynamicus, qui sequitur mutationem
+        consuetudium lectorum. Mirum est notare quam littera gothica,
+        quam nunc putamus parum claram, anteposuerit litterarum formas
+        humanitatis per seacula quarta decima et quinta decima. Eodem
+        modo typi, qui nunc nobis videntur parum clari, fiant sollemnes
+        in futurum.</div>
+    </div>
+
+    <script>
+
+setTimeout(function() {
+    document.getElementById("bottom").style.top = "350px";
+    document.getElementById("slide").style.height = "200px";
+    document.getElementById("slide").className += " visible";
+    
+}, 1000);
+
+    </script>
+
+    </body>
+</html>

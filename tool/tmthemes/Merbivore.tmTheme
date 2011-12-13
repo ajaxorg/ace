@@ -20,7 +20,7 @@
 				<key>lineHighlight</key>
 				<string>#333435</string>
 				<key>selection</key>
-				<string>#5A647EE0</string>
+				<string>#454545</string>
 			</dict>
 		</dict>
 		<dict>
@@ -134,6 +134,28 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>Constant lib</string>
+			<key>scope</key>
+			<string>constant.library</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#8DFF0A</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>support function</string>
+			<key>scope</key>
+			<string>support.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#FC6F09</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>Constant (built-in)</string>
 			<key>scope</key>
 			<string>constant.language</string>
@@ -156,17 +178,6 @@
 				<string></string>
 				<key>foreground</key>
 				<string>#8DFF0A</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Library function</string>
-			<key>scope</key>
-			<string>support.function</string>
-			<key>settings</key>
-			<dict>
-				<key>fontStyle</key>
-				<string></string>
 			</dict>
 		</dict>
 		<dict>

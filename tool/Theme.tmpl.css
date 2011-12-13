@@ -8,19 +8,8 @@
 }
 
 .%cssClass% .ace_gutter {
-  width: 50px;
   background: #e8e8e8;
   color: #333;
-  overflow : hidden;
-}
-
-.%cssClass% .ace_gutter-layer {
-  width: 100%;
-  text-align: right;
-}
-
-.%cssClass% .ace_gutter-layer .ace_gutter-cell {
-  padding-right: 6px;
 }
 
 .%cssClass% .ace_print_margin {
@@ -112,7 +101,8 @@
 }
 
 .%cssClass% .ace_fold {
-    outline-color: %foldOutline%
+    background-color: %fold%;
+    border-color: %foreground%;
 }
 
 .%cssClass% .ace_support.ace_function {
