@@ -10074,6 +10074,8 @@ function Folding() {
 
             if (addSubfolds)
                 this.foldAll(range.start.row + 1, range.end.row);
+        } else {
+            e.target.className += " invalid"
         }
     };
     
@@ -13785,6 +13787,8 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    background-image: url(\"data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08%06%00%00%00%8Do%26%E5%00%00%004IDATx%DAe%8A%B1%0D%000%0C%C2%F2%2CK%96%BC%D0%8F9%81%88H%E9%D0%0E%96%C0%10%92%3E%02%80%5E%82%E4%A9*-%EEsw%C8%CC%11%EE%96w%D8%DC%E9*Eh%0C%151(%00%00%00%00IEND%AEB%60%82\");\n" +
   "    background-repeat: no-repeat;\n" +
   "    background-position: center 5px;\n" +
+  "\n" +
+  "    border-radius: 3px;\n" +
   "}\n" +
   "\n" +
   ".ace_fold-widget.end {\n" +
@@ -13798,7 +13802,6 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   ".ace_fold-widget:hover {\n" +
   "    border: 1px solid rgba(0, 0, 0, 0.3);\n" +
   "    background-color: rgba(255, 255, 255, 0.2);\n" +
-  "    border-radius: 3px;\n" +
   "    -moz-box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.7);\n" +
   "    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);\n" +
   "    -webkit-box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.7);\n" +
@@ -13817,6 +13820,11 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);\n" +
   "    box-shadow:inset 0 1px 1px rgba(255, 255, 255);\n" +
   "    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget.invalid {\n" +
+  "    background-color: #FFB4B4;\n" +
+  "    border-color: #DE5555;\n" +
   "}\n" +
   "");
 
@@ -14254,6 +14262,8 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    background-image: url(\"data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08%06%00%00%00%8Do%26%E5%00%00%004IDATx%DAe%8A%B1%0D%000%0C%C2%F2%2CK%96%BC%D0%8F9%81%88H%E9%D0%0E%96%C0%10%92%3E%02%80%5E%82%E4%A9*-%EEsw%C8%CC%11%EE%96w%D8%DC%E9*Eh%0C%151(%00%00%00%00IEND%AEB%60%82\");\n" +
   "    background-repeat: no-repeat;\n" +
   "    background-position: center 5px;\n" +
+  "\n" +
+  "    border-radius: 3px;\n" +
   "}\n" +
   "\n" +
   ".ace_fold-widget.end {\n" +
@@ -14267,7 +14277,6 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   ".ace_fold-widget:hover {\n" +
   "    border: 1px solid rgba(0, 0, 0, 0.3);\n" +
   "    background-color: rgba(255, 255, 255, 0.2);\n" +
-  "    border-radius: 3px;\n" +
   "    -moz-box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.7);\n" +
   "    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);\n" +
   "    -webkit-box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.7);\n" +
@@ -14286,6 +14295,11 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);\n" +
   "    box-shadow:inset 0 1px 1px rgba(255, 255, 255);\n" +
   "    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);\n" +
+  "}\n" +
+  "\n" +
+  ".ace_fold-widget.invalid {\n" +
+  "    background-color: #FFB4B4;\n" +
+  "    border-color: #DE5555;\n" +
   "}\n" +
   "");
 
