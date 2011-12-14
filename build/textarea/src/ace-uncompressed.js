@@ -2440,30 +2440,6 @@ var Editor = function(renderer, session) {
 
     oop.implement(this, EventEmitter);
 
-    this.$forwardEvents = {
-        gutterclick: 1,
-        gutterdblclick: 1
-    };
-
-    this.$originalAddEventListener = this.addEventListener;
-    this.$originalRemoveEventListener = this.removeEventListener;
-
-    this.addEventListener = function(eventName, callback) {
-        if (this.$forwardEvents[eventName]) {
-            return this.renderer.addEventListener(eventName, callback);
-        } else {
-            return this.$originalAddEventListener(eventName, callback);
-        }
-    };
-
-    this.removeEventListener = function(eventName, callback) {
-        if (this.$forwardEvents[eventName]) {
-            return this.renderer.removeEventListener(eventName, callback);
-        } else {
-            return this.$originalRemoveEventListener(eventName, callback);
-        }
-    };
-
     this.setKeyboardHandler = function(keyboardHandler) {
         this.keyBinding.setKeyboardHandler(keyboardHandler);
     };
@@ -4028,16 +4004,19 @@ exports.TextInput = TextInput;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/mouse/mouse_handler', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/mouse/default_handlers', 'ace/mouse/mouse_event'], function(require, exports, module) {
+__ace_shadowed__.define('ace/mouse/mouse_handler', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/mouse/default_handlers', 'ace/mouse/default_gutter_handler', 'ace/mouse/mouse_event'], function(require, exports, module) {
 
 var event = require("../lib/event");
 var DefaultHandlers = require("./default_handlers").DefaultHandlers;
+var DefaultGutterHandler = require("./default_gutter_handler").GutterHandler;
 var MouseEvent = require("./mouse_event").MouseEvent;
 
 var MouseHandler = function(editor) {
     this.editor = editor;
     
-    this.defaultHandlers = new DefaultHandlers(editor);
+    new DefaultHandlers(editor);
+    new DefaultGutterHandler(editor);
+    
     event.addListener(editor.container, "mousedown", function(e) {
         editor.focus();
         return event.preventDefault(e);
@@ -4047,13 +4026,19 @@ var MouseHandler = function(editor) {
     });
 
     var mouseTarget = editor.renderer.getMouseEventTarget();
-    event.addListener(mouseTarget, "mousedown", this.onMouseDown.bind(this));
-    event.addListener(mouseTarget, "click", this.onMouseClick.bind(this));
-    event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this));
-    event.addMultiMouseDownListener(mouseTarget, 0, 2, 500, this.onMouseDoubleClick.bind(this));
-    event.addMultiMouseDownListener(mouseTarget, 0, 3, 600, this.onMouseTripleClick.bind(this));
-    event.addMultiMouseDownListener(mouseTarget, 0, 4, 600, this.onMouseQuadClick.bind(this));
-    event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this));
+    event.addListener(mouseTarget, "mousedown", this.onMouseEvent.bind(this, "mousedown"));
+    event.addListener(mouseTarget, "click", this.onMouseEvent.bind(this, "click"));
+    event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this, "mousemove"));
+    event.addMultiMouseDownListener(mouseTarget, 0, 2, 500, this.onMouseEvent.bind(this, "dblclick"));
+    event.addMultiMouseDownListener(mouseTarget, 0, 3, 600, this.onMouseEvent.bind(this, "tripleclick"));
+    event.addMultiMouseDownListener(mouseTarget, 0, 4, 600, this.onMouseEvent.bind(this, "quadclick"));
+    event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this, "mousewheel"));
+    
+    var gutterEl = editor.renderer.$gutter;
+    event.addListener(gutterEl, "mousedown", this.onMouseEvent.bind(this, "guttermousedown"));
+    event.addListener(gutterEl, "click", this.onMouseEvent.bind(this, "gutterclick"));
+    event.addListener(gutterEl, "dblclick", this.onMouseEvent.bind(this, "gutterdblclick"));
+    event.addListener(gutterEl, "mousemove", this.onMouseMove.bind(this, "gutter"));
 };
 
 (function() {
@@ -4067,42 +4052,26 @@ var MouseHandler = function(editor) {
         return this.$scrollSpeed;
     };
 
-    this.onMouseDown = function(e) {
-        this.editor._dispatchEvent("mousedown", new MouseEvent(e, this.editor));
+    this.onMouseEvent = function(name, e) {
+        this.editor._dispatchEvent(name, new MouseEvent(e, this.editor));
     };
 
-    this.onMouseClick = function(e) {
-        this.editor._dispatchEvent("click", new MouseEvent(e, this.editor));
-    };
-    
-    this.onMouseMove = function(e) {
+    this.onMouseMove = function(name, e) {
         // optimization, because mousemove doesn't have a default handler.
         var listeners = this.editor._eventRegistry && this.editor._eventRegistry.mousemove;
         if (!listeners || !listeners.length)
             return;
 
-        this.editor._dispatchEvent("mousemove", new MouseEvent(e, this.editor));
+        this.editor._dispatchEvent(name, new MouseEvent(e, this.editor));
     };
 
-    this.onMouseDoubleClick = function(e) {
-        this.editor._dispatchEvent("dblclick", new MouseEvent(e, this.editor));
-    };
-
-    this.onMouseTripleClick = function(e) {
-        this.editor._dispatchEvent("tripleclick", new MouseEvent(e, this.editor));
-    };
-
-    this.onMouseQuadClick = function(e) {
-        this.editor._dispatchEvent("quadclick", new MouseEvent(e, this.editor));
-    };
-
-    this.onMouseWheel = function(e) {
+    this.onMouseWheel = function(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
         mouseEvent.speed = this.$scrollSpeed * 2;
         mouseEvent.wheelX = e.wheelX;
         mouseEvent.wheelY = e.wheelY;
         
-        this.editor._dispatchEvent("mousewheel", mouseEvent);
+        this.editor._dispatchEvent(name, mouseEvent);
     };
 
 }).call(MouseHandler.prototype);
@@ -4205,19 +4174,11 @@ function DefaultHandlers(editor) {
             if (selectionEmpty) {
                 editor.moveCursorToPosition(pos);
             }
-            if(button == 2) {
+            if (button == 2) {
                 editor.textInput.onContextMenu({x: ev.clientX, y: ev.clientY}, selectionEmpty);
                 event.capture(editor.container, function(){}, editor.textInput.onContextMenuClose);
             }
             return;
-        }
-        else {
-            // Select the fold as the user clicks it.
-            var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
-            if (fold) {
-                editor.selection.setSelectionRange(fold.range);
-                return;
-            }
         }
 
         if (!inSelection) {
@@ -4664,6 +4625,58 @@ exports.EventEmitter = EventEmitter;
  *
  * ***** END LICENSE BLOCK ***** */
 
+__ace_shadowed__.define('ace/mouse/default_gutter_handler', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+function GutterHandler(editor) {
+    editor.setDefaultHandler("gutterclick", function(e) {
+        var row = e.getDocumentPosition().row;
+        var selection = editor.session.selection;
+        
+        selection.moveCursorTo(row, 0);
+        selection.selectLine();
+    });
+}
+
+exports.GutterHandler = GutterHandler;
+
+});/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 __ace_shadowed__.define('ace/mouse/mouse_event', ['require', 'exports', 'module' , 'ace/lib/event'], function(require, exports, module) {
 
 var event = require("../lib/event");
@@ -4698,6 +4711,11 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
     this.preventDefault = function() {
         event.preventDefault(this.domEvent);
         this.defaultPrevented = true;
+    };
+    
+    this.stop = function() {
+        this.stopPropagation();
+        this.preventDefault();
     };
 
     /**
@@ -4788,7 +4806,6 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
- *      Mike de Boer <mike AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -4807,18 +4824,28 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
 __ace_shadowed__.define('ace/mouse/fold_handler', ['require', 'exports', 'module' ], function(require, exports, module) {
 
 function FoldHandler(editor) {
-    editor.on("click", function(ev) {
-        var pos = ev.getDocumentPosition();
+    
+    editor.on("click", function(e) {
+        var position = e.getDocumentPosition();
+        var session = editor.session;
         
         // If the user dclicked on a fold, then expand it.
-        var fold = editor.session.getFoldAt(pos.row, pos.column, 1);
+        var fold = session.getFoldAt(position.row, position.column, 1);
         if (fold) {
-            if (ev.getAccelKey())
-                editor.session.removeFold(fold);
+            if (e.getAccelKey())
+                session.removeFold(fold);
             else
-                editor.session.expandFold(fold);
+                session.expandFold(fold);
                 
-            ev.preventDefault();
+            e.stop();
+        }
+    });
+    
+    editor.on("gutterclick", function(e) {
+        if (e.domEvent.target.className.indexOf("ace_fold-widget") != -1) {
+            var row = e.getDocumentPosition().row;
+            editor.session.onFoldWidgetClick(row, e.domEvent);
+            e.stop();
         }
     });
 }
@@ -9690,8 +9717,8 @@ function Folding() {
         var startRow = foldLine.start.row;
         var endRow = foldLine.end.row;
 
-        var foldLines = this.$foldData,
-            folds = foldLine.folds;
+        var foldLines = this.$foldData;
+        var folds = foldLine.folds;
         // Simple case where there is only one fold in the FoldLine such that
         // the entire fold line can get removed directly.
         if (folds.length == 1) {
@@ -11472,7 +11499,7 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
     
     this.$markerBack = new MarkerLayer(this.content);
 
@@ -11510,8 +11537,6 @@ var VirtualRenderer = function(container, theme) {
 
         _self.$loop.schedule(_self.CHANGE_FULL);
     });
-    event.addListener(this.$gutter, "click", this.$onGutterClick.bind(this));
-    event.addListener(this.$gutter, "dblclick", this.$onGutterClick.bind(this));
 
     this.$size = {
         width: 0,
@@ -11639,7 +11664,7 @@ var VirtualRenderer = function(container, theme) {
 
             var gutterWidth = this.showGutter ? this.$gutter.offsetWidth : 0;
             this.scroller.style.left = gutterWidth + "px";
-            size.scrollerWidth = Math.max(0, width - gutterWidth - this.scrollBar.getWidth())
+            size.scrollerWidth = Math.max(0, width - gutterWidth - this.scrollBar.getWidth());
             this.scroller.style.width = size.scrollerWidth + "px";
 
             if (this.session.getUseWrapMode() && this.adjustWrapLimit() || force)
@@ -11653,19 +11678,6 @@ var VirtualRenderer = function(container, theme) {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
         var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit);
-    };
-
-    this.$onGutterClick = function(e) {
-        var pageY = event.getDocumentY(e);
-        var row = this.screenToTextCoordinates(0, pageY).row;
-
-        if (e.target.className.indexOf('ace_fold-widget') != -1)
-            return this.session.onFoldWidgetClick(row, e);
-
-        this._dispatchEvent("gutter" + e.type, {
-            row: row,
-            htmlEvent: e
-        });
     };
 
     this.setShowInvisibles = function(showInvisibles) {
