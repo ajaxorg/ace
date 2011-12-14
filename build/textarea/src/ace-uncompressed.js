@@ -2883,6 +2883,14 @@ var Editor = function(renderer, session) {
         return this.$mouseHandler.getScrollSpeed();
     };
 
+    this.setDragDelay = function(dragDelay) {
+        this.$mouseHandler.setDragDelay(dragDelay);
+    };
+
+    this.getDragDelay = function() {
+        return this.$mouseHandler.getDragDelay();
+    };
+
     this.$selectionStyle = "line";
     this.setSelectionStyle = function(style) {
         if (this.$selectionStyle == style) return;
@@ -4055,6 +4063,15 @@ var MouseHandler = function(editor) {
     this.onMouseEvent = function(name, e) {
         this.editor._dispatchEvent(name, new MouseEvent(e, this.editor));
     };
+    
+    this.$dragDelay = 250;
+    this.setDragDelay = function(dragDelay) {
+        this.$dragDelay = dragDelay;
+    };
+
+    this.getDragDelay = function() {
+        return this.$dragDelay;
+    };
 
     this.onMouseMove = function(name, e) {
         // optimization, because mousemove doesn't have a default handler.
@@ -4127,7 +4144,6 @@ var STATE_UNKNOWN = 0;
 var STATE_SELECT = 1;
 var STATE_DRAG = 2;
 
-var DRAG_TIMER = 250; // milliseconds
 var DRAG_OFFSET = 5; // pixels
 
 function DefaultHandlers(editor) {
@@ -4252,7 +4268,7 @@ function DefaultHandlers(editor) {
                     cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
                     onStartSelect(cursor);
                 }
-                else if ((time - mousedownTime) > DRAG_TIMER) {
+                else if ((time - mousedownTime) > editor.getDragDelay()) {
                     state = STATE_DRAG;
                     dragRange = editor.getSelectionRange();
                     var style = editor.getSelectionStyle();

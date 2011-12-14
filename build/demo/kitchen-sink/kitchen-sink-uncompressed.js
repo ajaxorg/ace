@@ -11767,7 +11767,16 @@ exports.XmlHighlightRules = XmlHighlightRules;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/xml_util', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/mode/xml_util', ['require', 'exports', 'module' , 'ace/lib/lang'], function(require, exports, module) {
+    var lang = require("../lib/lang");
+    
+    var formTags = lang.arrayToMap(
+        ("button|form|input|label|select|textarea").split("|")
+    );
+    
+    var tableTags = lang.arrayToMap(
+        ("table|tbody|td|tfoot|th|tr").split("|")
+    );
 
 function string(state) {
     return [{
@@ -11807,9 +11816,33 @@ exports.tag = function(states, name, nextState) {
         token : "text",
         regex : "\\s+"
     }, {
-        token : "meta.tag",
+        //token : "meta.tag",
+        
+    token : function(value) {
+            if ( value==='a' ) {
+                return "meta.tag.anchor";
+            }
+            else if ( value==='img' ) {
+                return "meta.tag.image";
+            }
+            else if ( value==='script' ) {
+                return "meta.tag.script";
+            }
+            else if ( value==='style' ) {
+                return "meta.tag.style";
+            }
+            else if (formTags.hasOwnProperty(value.toLowerCase())) {
+                return "meta.tag.form";
+            }
+            else if (tableTags.hasOwnProperty(value.toLowerCase())) {
+                return "meta.tag.table";
+            }
+            else {
+                return "meta.tag";
+            }
+        },        
         merge : true,
-        regex : "[-_a-zA-Z0-9:]+",
+        regex : "[-_a-zA-Z0-9:!]+",
         next : name + "embed-attribute-list" 
     }, {
         token: "empty",
@@ -16129,6 +16162,7 @@ var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocComme
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var PhpHighlightRules = function() {
+    var docComment = new DocCommentHighlightRules();
     // http://php.net/quickref.php
     var builtinFunctions = lang.arrayToMap(
         ('abs|acos|acosh|addcslashes|addslashes|aggregate|aggregate_info|aggregate_methods|aggregate_methods_by_list|aggregate_methods_by_regexp|' +
@@ -16988,12 +17022,31 @@ var PhpHighlightRules = function() {
     this.$rules = {
         "start" : [
             {
-                token : "support", // php open tag
+                token : "support.php_tag", // php open tag
                 regex : "<\\?(?:php|\\=)"
             },
             {
-                token : "support", // php close tag
+                token : "support.php_tag", // php close tag
                 regex : "\\?>"
+            },
+            {
+                token : "comment",
+                regex : "<\\!--",
+                next : "htmlcomment"
+            }, 
+            {
+                token : "meta.tag",
+                regex : "<style",
+                next : "css"
+            },
+            {
+                token : "meta.tag", // opening tag
+                regex : "<\\/?[-_a-zA-Z0-9:]+",
+                next : "htmltag"
+            },
+            {
+                token : 'meta.tag',
+                regex : '<\!DOCTYPE.*?>'
             },
             {
                 token : "comment",
@@ -17003,10 +17056,9 @@ var PhpHighlightRules = function() {
                token : "comment",
                regex : "#.*$"
             },
-            new DocCommentHighlightRules().getStartRule("doc-start"),
+            docComment.getStartRule("doc-start"),
             {
                 token : "comment", // multi line comment
-                merge : true,
                 regex : "\\/\\*",
                 next : "comment"
             }, {
@@ -17017,7 +17069,6 @@ var PhpHighlightRules = function() {
                 regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
             }, {
                 token : "string", // multi line string start
-                merge : true,
                 regex : '["].*\\\\$',
                 next : "qqstring"
             }, {
@@ -17025,7 +17076,6 @@ var PhpHighlightRules = function() {
                 regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
             }, {
                 token : "string", // multi line string start
-                merge : true,
                 regex : "['].*\\\\$",
                 next : "qstring"
             }, {
@@ -17061,11 +17111,7 @@ var PhpHighlightRules = function() {
                         "T(?:HOUS(?:ANDS_SEP|EP)|_FMT(?:_AMPM|))|YES(?:EXPR|STR)|STD(?:IN|OUT|ERR))\\b"
             }, {
                 token : function(value) {
-                    if (keywordsDeprecated.hasOwnProperty(value))
-                        return "invalid.deprecated";
-                    else if (keywords.hasOwnProperty(value))
-                        return "keyword";
-                    else if (languageConstructs.hasOwnProperty(value))
+                    if (keywords.hasOwnProperty(value))
                         return "keyword";
                     else if (builtinConstants.hasOwnProperty(value))
                         return "constant.language";
@@ -17073,12 +17119,12 @@ var PhpHighlightRules = function() {
                         return "variable.language";
                     else if (futureReserved.hasOwnProperty(value))
                         return "invalid.illegal";
-                    else if (builtinFunctionsDeprecated.hasOwnProperty(value))
-                        return "invalid.deprecated";
                     else if (builtinFunctions.hasOwnProperty(value))
                         return "support.function";
+                    else if (value == "debugger")
+                        return "invalid.deprecated";
                     else
-                        if(value.match(/^(\$[a-zA-Z_][a-zA-Z0-9_]*|self|parent)$/))
+                        if(value.match(/^(\$[a-zA-Z][a-zA-Z0-9_]*|self|parent)$/))
                             return "variable";
                         return "identifier";
                 },
@@ -17089,10 +17135,10 @@ var PhpHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
             }, {
-                token : "paren.lparen",
+                token : "lparen",
                 regex : "[[({]"
             }, {
-                token : "paren.rparen",
+                token : "rparen",
                 regex : "[\\])}]"
             }, {
                 token : "text",
@@ -17106,7 +17152,6 @@ var PhpHighlightRules = function() {
                 next : "start"
             }, {
                 token : "comment", // comment spanning whole line
-                merge : true,
                 regex : ".+"
             }
         ],
@@ -17117,7 +17162,6 @@ var PhpHighlightRules = function() {
                 next : "start"
             }, {
                 token : "string",
-                merge : true,
                 regex : '.+'
             }
         ],
@@ -17128,10 +17172,98 @@ var PhpHighlightRules = function() {
                 next : "start"
             }, {
                 token : "string",
-                merge : true,
                 regex : '.+'
             }
-        ]
+        ],
+        "htmlcomment" : [
+             {
+                 token : "comment",
+                 regex : ".*?-->",
+                 next : "start"
+             }, {
+                 token : "comment",
+                 regex : ".+"
+             } 
+         ],
+         "htmltag" : [ 
+             {
+                 token : "meta.tag",
+                 regex : ">",
+                 next : "start"
+             }, {
+                 token : "text",
+                 regex : "[-_a-zA-Z0-9:]+"
+             }, {
+                 token : "text",
+                 regex : "\\s+"
+             }, {
+                 token : "string",
+                 regex : '".*?"'
+             }, {
+                 token : "string",
+                 regex : "'.*?'"
+             } 
+         ],
+        "css" : [ 
+             {
+                 token : "meta.tag",
+                 regex : "<\/style>",
+                 next : "htmltag"
+             }, {
+                 token : "meta.tag",
+                 regex : ">",
+             }, {
+                 token : 'text',
+                 regex : "(?:media|type|href)"
+             }, {
+                 token : 'string',
+                 regex : '=".*?"'
+             }, {
+                 token : "paren.lparen",
+                 regex : "\{",
+                 next : "cssdeclaration",
+             }, {
+                 token : "keyword",
+                 regex : "#[A-Za-z0-9\-\_\.]+"
+             }, {
+                 token : "variable",
+                 regex : "\\.[A-Za-z0-9\-\_\.]+"
+             }, {
+                 token : "constant",
+                 regex : "[A-Za-z0-9]+"
+             }
+         ],
+         "cssdeclaration" : [
+             {
+                 token : "support.type",
+                 regex : "[\-a-zA-Z]+",
+                 next  : "cssvalue"
+             }, 
+             {
+                 token : "paren.rparen",
+                 regex : '\}',
+                 next : "css"
+             }
+         ],
+         "cssvalue" : [
+               {
+                   token : "text",
+                   regex : "\:"
+               }, 
+               {
+                   token : "constant",
+                   regex : "#[0-9a-zA-Z]+"
+               },
+               {
+                   token : "text",
+                   regex : "[\-\_0-9a-zA-Z\"' ,%]+"
+               },
+               {
+                   token : "text",
+                   regex : ";",
+                   next : "cssdeclaration"
+               }
+         ],
     };
 
     this.embedRules(DocCommentHighlightRules, "doc-",
@@ -20681,6 +20813,14 @@ var Editor = function(renderer, session) {
         return this.$mouseHandler.getScrollSpeed();
     };
 
+    this.setDragDelay = function(dragDelay) {
+        this.$mouseHandler.setDragDelay(dragDelay);
+    };
+
+    this.getDragDelay = function() {
+        return this.$mouseHandler.getDragDelay();
+    };
+
     this.$selectionStyle = "line";
     this.setSelectionStyle = function(style) {
         if (this.$selectionStyle == style) return;
@@ -21704,6 +21844,15 @@ var MouseHandler = function(editor) {
     this.onMouseEvent = function(name, e) {
         this.editor._dispatchEvent(name, new MouseEvent(e, this.editor));
     };
+    
+    this.$dragDelay = 250;
+    this.setDragDelay = function(dragDelay) {
+        this.$dragDelay = dragDelay;
+    };
+
+    this.getDragDelay = function() {
+        return this.$dragDelay;
+    };
 
     this.onMouseMove = function(name, e) {
         // optimization, because mousemove doesn't have a default handler.
@@ -21776,7 +21925,6 @@ var STATE_UNKNOWN = 0;
 var STATE_SELECT = 1;
 var STATE_DRAG = 2;
 
-var DRAG_TIMER = 250; // milliseconds
 var DRAG_OFFSET = 5; // pixels
 
 function DefaultHandlers(editor) {
@@ -21901,7 +22049,7 @@ function DefaultHandlers(editor) {
                     cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
                     onStartSelect(cursor);
                 }
-                else if ((time - mousedownTime) > DRAG_TIMER) {
+                else if ((time - mousedownTime) > editor.getDragDelay()) {
                     state = STATE_DRAG;
                     dragRange = editor.getSelectionRange();
                     var style = editor.getSelectionStyle();
