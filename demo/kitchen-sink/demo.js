@@ -49,8 +49,8 @@ var theme = require("ace/theme/textmate");
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
-var vim = require("ace/keyboard/keybinding/vim").Vim;
-var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
+var vim = require("ace/keyboard/vim").handler;
+var emacs = require("ace/keyboard/emacs").handler;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 

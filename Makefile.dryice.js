@@ -327,7 +327,7 @@ project.assumeAllFilesLoaded();
         source: [
             copy.source.commonjs({
                 project: cloneProject(project),
-                require: [ 'ace/keyboard/keybinding/' + keybinding ]
+                require: [ 'ace/keyboard/' + keybinding ]
             })
         ],
         filter: [ copy.filter.moduleDefines, copy.filter.uglifyjs, filterTextPlugin ],
