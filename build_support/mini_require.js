@@ -42,7 +42,9 @@
  */
  
 (function() {
-    
+
+var ACE_NAMESPACE = "";
+
 var global = (function() {
     return this;
 })();
@@ -69,11 +71,6 @@ var _define = function(module, deps, payload) {
         
     _define.modules[module] = payload;
 };
-if (global.define)
-    _define.original = global.define;
-    
-global.define = _define;
-
 
 /**
  * Get at functionality define()ed using the function above
@@ -108,15 +105,6 @@ var _require = function(parentId, module, callback) {
     }
 };
 
-if (global.require)
-    _require.original = global.require;
-    
-global.require = function(module, callback) {
-    return _require("", module, callback);
-};
-
-global.require.packaged = true;
-
 var normalizeModule = function(parentId, moduleName) {
     // normalize plugin requires
     if (moduleName.indexOf("!") !== -1) {
@@ -136,7 +124,6 @@ var normalizeModule = function(parentId, moduleName) {
     
     return moduleName;
 };
-
 
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
@@ -173,5 +160,31 @@ var lookup = function(parentId, moduleName) {
 
     return module;
 };
+
+function exportAce(ns) {
+    var require = function(module, callback) {
+        return _require("", module, callback);
+    };
+    require.packaged = true;
+    
+    var root = global;
+    if (ns) {
+        if (!global[ns])
+            global[ns] = {};
+        root = global[ns];
+    }
+        
+    if (root.define)
+        _define.original = root.define;
+    
+    root.define = _define;
+
+    if (root.require)
+        _require.original = root.require;
+    
+    root.require = require;
+}
+
+exportAce(ACE_NAMESPACE);
 
 })();
