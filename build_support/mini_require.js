@@ -143,7 +143,8 @@ var lookup = function(parentId, moduleName) {
         var mod = {
             id: moduleName, 
             uri: '',
-            exports: exports
+            exports: exports,
+            packaged: true
         };
         
         var req = function(module, callback) {
