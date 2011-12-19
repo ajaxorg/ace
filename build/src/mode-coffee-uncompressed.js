@@ -49,7 +49,7 @@ var oop = require("../lib/oop");
 function Mode() {
     this.$tokenizer = new Tokenizer(new Rules().getRules());
     this.$outdent   = new Outdent();
-    this.foldingRules = new PythonFoldMode("\\[|=|(=>)|(->)");
+    this.foldingRules = new PythonFoldMode("=|=>|->|\\s*class [^#]*");
 }
 
 oop.inherits(Mode, TextMode);
@@ -466,7 +466,7 @@ var oop = require("../../lib/oop");
 var BaseFoldMode = require("./fold_mode").FoldMode;
 
 var FoldMode = exports.FoldMode = function(markers) {
-    this.foldingStartMarker = new RegExp("(?:(\\[)|" + markers + ")(?:\\s*)(?:#.*)?$");
+    this.foldingStartMarker = new RegExp("(?:([\\[{])|(" + markers + "))(?:\\s*)(?:#.*)?$");
 };
 oop.inherits(FoldMode, BaseFoldMode);
 
@@ -478,8 +478,9 @@ oop.inherits(FoldMode, BaseFoldMode);
         if (match) {
             if (match[1])
                 return this.openingBracketBlock(session, match[1], row, match.index);
-
-            return this.indentationBlock(session, row, match.index + 1);
+            if (match[2])
+                return this.indentationBlock(session, row, match.index + match[2].length);
+            return this.indentationBlock(session, row);
         }
     }
 

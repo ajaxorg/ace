@@ -12136,12 +12136,14 @@ var VirtualRenderer = function(container, theme) {
         var scrollLeft = this.scroller.scrollLeft;
 
         if (scrollLeft > left) {
+            if (left < this.$padding + 2 * this.layerConfig.characterWidth)
+                left = 0;
             this.scrollToX(left);
         }
 
         if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
-            if (left > this.layerConfig.width)
-                this.$desiredScrollLeft = left + 2 * this.characterWidth;
+            if (left > this.layerConfig.width + 2 * this.$padding)
+                this.$desiredScrollLeft = left;
             else
                 this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
         }
@@ -12192,7 +12194,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.scrollToX = function(scrollLeft) {
-        if (scrollLeft <= this.$padding + 2 * this.layerConfig.characterWidth)
+        if (scrollLeft <= this.$padding)
             scrollLeft = 0;
 
         this.scroller.scrollLeft = scrollLeft;
@@ -12671,10 +12673,11 @@ var Marker = function(parentEl) {
      * Draws a multi line marker, where lines span the full width
      */
      this.drawMultiLineMarker = function(stringBuilder, range, clazz, layerConfig, type) {
-        // from selection start to the end of the line
         var padding = type === "background" ? 0 : this.$padding;
+        var layerWidth = layerConfig.width + 2 * this.$padding - padding;
+        // from selection start to the end of the line
         var height = layerConfig.lineHeight;
-        var width = Math.round(layerConfig.width - (range.start.column * layerConfig.characterWidth));
+        var width = Math.round(layerWidth - (range.start.column * layerConfig.characterWidth));
         var top = this.$getTop(range.start.row, layerConfig);
         var left = Math.round(
             padding + range.start.column * layerConfig.characterWidth
@@ -12705,12 +12708,11 @@ var Marker = function(parentEl) {
         if (height < 0)
             return;
         top = this.$getTop(range.start.row + 1, layerConfig);
-        width = layerConfig.width;
 
         stringBuilder.push(
             "<div class='", clazz, "' style='",
             "height:", height, "px;",
-            "width:", width, "px;",
+            "width:", layerWidth, "px;",
             "top:", top, "px;",
             "left:", padding, "px;'></div>"
         );
