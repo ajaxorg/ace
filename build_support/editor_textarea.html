@@ -60,7 +60,7 @@ function inject(callback) {
         };
     };
 
-    load('ace-uncompressed-noconflict.js', "ace/ext/textarea", function() {
+    load('ace-bookmarklet.js', "ace/ext/textarea", function() {
         var ace = window.__ace_shadowed__;
         
         ace.options.mode = "javascript";
