@@ -42,7 +42,9 @@
  */
  
 (function() {
-    
+
+var ACE_NAMESPACE = "";
+
 var global = (function() {
     return this;
 })();
@@ -69,11 +71,6 @@ var _define = function(module, deps, payload) {
         
     _define.modules[module] = payload;
 };
-if (global.define)
-    _define.original = global.define;
-    
-global.define = _define;
-
 
 /**
  * Get at functionality define()ed using the function above
@@ -108,15 +105,6 @@ var _require = function(parentId, module, callback) {
     }
 };
 
-if (global.require)
-    _require.original = global.require;
-    
-global.require = function(module, callback) {
-    return _require("", module, callback);
-};
-
-global.require.packaged = true;
-
 var normalizeModule = function(parentId, moduleName) {
     // normalize plugin requires
     if (moduleName.indexOf("!") !== -1) {
@@ -137,7 +125,6 @@ var normalizeModule = function(parentId, moduleName) {
     return moduleName;
 };
 
-
 /**
  * Internal function to lookup moduleNames and resolve them by calling the
  * definition function if needed.
@@ -156,7 +143,8 @@ var lookup = function(parentId, moduleName) {
         var mod = {
             id: moduleName, 
             uri: '',
-            exports: exports
+            exports: exports,
+            packaged: true
         };
         
         var req = function(module, callback) {
@@ -173,6 +161,32 @@ var lookup = function(parentId, moduleName) {
 
     return module;
 };
+
+function exportAce(ns) {
+    var require = function(module, callback) {
+        return _require("", module, callback);
+    };
+    require.packaged = true;
+    
+    var root = global;
+    if (ns) {
+        if (!global[ns])
+            global[ns] = {};
+        root = global[ns];
+    }
+        
+    if (root.define)
+        _define.original = root.define;
+    
+    root.define = _define;
+
+    if (root.require)
+        _require.original = root.require;
+    
+    root.require = require;
+}
+
+exportAce(ACE_NAMESPACE);
 
 })();/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -3254,7 +3268,7 @@ var EditSession = function(text, mode) {
         }
 
         this.bgTokenizer.start(delta.range.start.row);
-        this._dispatchEvent("change", e);
+        this._emit("change", e);
     };
 
     this.setValue = function(text) {
@@ -3387,7 +3401,7 @@ var EditSession = function(text, mode) {
 
         this.$modified = true;
         this.$tabSize = tabSize;
-        this._dispatchEvent("changeTabSize");
+        this._emit("changeTabSize");
     };
 
     this.getTabSize = function() {
@@ -3403,7 +3417,7 @@ var EditSession = function(text, mode) {
         if (this.$overwrite == overwrite) return;
 
         this.$overwrite = overwrite;
-        this._dispatchEvent("changeOverwrite");
+        this._emit("changeOverwrite");
     };
 
     this.getOverwrite = function() {
@@ -3423,22 +3437,22 @@ var EditSession = function(text, mode) {
         for (var i=0; i<rows.length; i++) {
             this.$breakpoints[rows[i]] = true;
         }
-        this._dispatchEvent("changeBreakpoint", {});
+        this._emit("changeBreakpoint", {});
     };
 
     this.clearBreakpoints = function() {
         this.$breakpoints = [];
-        this._dispatchEvent("changeBreakpoint", {});
+        this._emit("changeBreakpoint", {});
     };
 
     this.setBreakpoint = function(row) {
         this.$breakpoints[row] = true;
-        this._dispatchEvent("changeBreakpoint", {});
+        this._emit("changeBreakpoint", {});
     };
 
     this.clearBreakpoint = function(row) {
         delete this.$breakpoints[row];
-        this._dispatchEvent("changeBreakpoint", {});
+        this._emit("changeBreakpoint", {});
     };
 
     this.getBreakpoints = function() {
@@ -3458,10 +3472,10 @@ var EditSession = function(text, mode) {
 
         if (inFront) {
             this.$frontMarkers[id] = marker;
-            this._dispatchEvent("changeFrontMarker")
+            this._emit("changeFrontMarker")
         } else {
             this.$backMarkers[id] = marker;
-            this._dispatchEvent("changeBackMarker")
+            this._emit("changeBackMarker")
         }
 
         return id;
@@ -3475,7 +3489,7 @@ var EditSession = function(text, mode) {
         var markers = marker.inFront ? this.$frontMarkers : this.$backMarkers;
         if (marker) {
             delete (markers[markerId]);
-            this._dispatchEvent(marker.inFront ? "changeFrontMarker" : "changeBackMarker");
+            this._emit(marker.inFront ? "changeFrontMarker" : "changeBackMarker");
         }
     };
 
@@ -3502,7 +3516,7 @@ var EditSession = function(text, mode) {
             else
                 this.$annotations[row] = [annotation];
         }
-        this._dispatchEvent("changeAnnotation", {});
+        this._emit("changeAnnotation", {});
     };
 
     this.getAnnotations = function() {
@@ -3511,7 +3525,7 @@ var EditSession = function(text, mode) {
 
     this.clearAnnotations = function() {
         this.$annotations = {};
-        this._dispatchEvent("changeAnnotation", {});
+        this._emit("changeAnnotation", {});
     };
 
     this.$detectNewLine = function(text) {
@@ -3592,7 +3606,7 @@ var EditSession = function(text, mode) {
     this.onReloadTokenizer = function(e) {
         var rows = e.data;
         this.bgTokenizer.start(rows.first);
-        this._dispatchEvent("tokenizerUpdate", e);
+        this._emit("tokenizerUpdate", e);
     };
 
     this.$mode = null;
@@ -3616,7 +3630,7 @@ var EditSession = function(text, mode) {
             this.bgTokenizer = new BackgroundTokenizer(tokenizer);
             var _self = this;
             this.bgTokenizer.addEventListener("update", function(e) {
-                _self._dispatchEvent("tokenizerUpdate", e);
+                _self._emit("tokenizerUpdate", e);
             });
         } else {
             this.bgTokenizer.setTokenizer(tokenizer);
@@ -3630,7 +3644,7 @@ var EditSession = function(text, mode) {
 
         this.$setFolding(mode.foldingRules);
 
-        this._dispatchEvent("changeMode");
+        this._emit("changeMode");
     };
 
     this.$stopWorker = function() {
@@ -3663,7 +3677,7 @@ var EditSession = function(text, mode) {
         if (this.$scrollTop === scrollTopRow) return;
 
         this.$scrollTop = scrollTopRow;
-        this._dispatchEvent("changeScrollTop");
+        this._emit("changeScrollTop");
     };
 
     this.getScrollTopRow = function() {
@@ -4032,7 +4046,7 @@ var EditSession = function(text, mode) {
                 this.$updateWrapData(0, len - 1);
             }
 
-            this._dispatchEvent("changeWrapMode");
+            this._emit("changeWrapMode");
         }
     };
 
@@ -4050,7 +4064,7 @@ var EditSession = function(text, mode) {
             this.$wrapLimitRange.max = max;
             this.$modified = true;
             // This will force a recalculation of the wrap limit
-            this._dispatchEvent("changeWrapMode");
+            this._emit("changeWrapMode");
         }
     };
 
@@ -4064,7 +4078,7 @@ var EditSession = function(text, mode) {
             if (this.$useWrapMode) {
                 this.$updateWrapData(0, this.getLength() - 1);
                 this.$resetRowCache(0)
-                this._dispatchEvent("changeWrapLimit");
+                this._emit("changeWrapLimit");
             }
             return true;
         }
@@ -5138,16 +5152,16 @@ var Selection = function(session) {
 
     var _self = this;
     this.selectionLead.on("change", function(e) {
-        _self._dispatchEvent("changeCursor");
+        _self._emit("changeCursor");
         if (!_self.$isEmpty)
-            _self._dispatchEvent("changeSelection");
+            _self._emit("changeSelection");
         if (!_self.$preventUpdateDesiredColumnOnChange && e.old.column != e.value.column)
             _self.$updateDesiredColumn();
     });
 
     this.selectionAnchor.on("change", function() {
         if (!_self.$isEmpty)
-            _self._dispatchEvent("changeSelection");
+            _self._emit("changeSelection");
     });
 };
 
@@ -5179,7 +5193,7 @@ var Selection = function(session) {
 
         if (this.$isEmpty) {
             this.$isEmpty = false;
-            this._dispatchEvent("changeSelection");
+            this._emit("changeSelection");
         }
     };
 
@@ -5239,7 +5253,7 @@ var Selection = function(session) {
     this.clearSelection = function() {
         if (!this.$isEmpty) {
             this.$isEmpty = true;
-            this._dispatchEvent("changeSelection");
+            this._emit("changeSelection");
         }
     };
 
@@ -6808,7 +6822,7 @@ var Document = function(text) {
             range: range,
             lines: lines
         };
-        this._dispatchEvent("change", { data: delta });
+        this._emit("change", { data: delta });
         return range.end;
     };
 
@@ -6829,7 +6843,7 @@ var Document = function(text) {
             range: Range.fromPoints(position, end),
             text: this.getNewLineCharacter()
         };
-        this._dispatchEvent("change", { data: delta });
+        this._emit("change", { data: delta });
 
         return end;
     };
@@ -6853,7 +6867,7 @@ var Document = function(text) {
             range: Range.fromPoints(position, end),
             text: text
         };
-        this._dispatchEvent("change", { data: delta });
+        this._emit("change", { data: delta });
 
         return end;
     };
@@ -6905,7 +6919,7 @@ var Document = function(text) {
             range: range,
             text: removed
         };
-        this._dispatchEvent("change", { data: delta });
+        this._emit("change", { data: delta });
         return range.start;
     };
 
@@ -6926,7 +6940,7 @@ var Document = function(text) {
             nl: this.getNewLineCharacter(),
             lines: removed
         };
-        this._dispatchEvent("change", { data: delta });
+        this._emit("change", { data: delta });
         return removed;
     };
 
@@ -6944,7 +6958,7 @@ var Document = function(text) {
             range: range,
             text: this.getNewLineCharacter()
         };
-        this._dispatchEvent("change", { data: delta });
+        this._emit("change", { data: delta });
     };
 
     this.replace = function(range, text) {
@@ -7161,7 +7175,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
         
         this.row = pos.row;
         this.column = pos.column;
-        this._dispatchEvent("change", {
+        this._emit("change", {
             old: old,
             value: pos
         });
@@ -7298,7 +7312,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
             first: firstRow,
             last: lastRow
         };
-        this._dispatchEvent("update", {data: data});
+        this._emit("update", {data: data});
     };
 
     this.start = function(startRow) {
@@ -7328,8 +7342,8 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     };
 
     this.$tokenizeRows = function(firstRow, lastRow) {
-        if (!this.doc)
-            return [];
+        if (!this.doc || isNaN(firstRow) || isNaN(lastRow))
+            return [{'state':'start','tokens':[]}];
             
         var rows = [];
 
@@ -7715,7 +7729,7 @@ function Folding() {
 
         // Notify that fold data has changed.
         this.$modified = true;
-        this._dispatchEvent("changeFold", { data: fold });
+        this._emit("changeFold", { data: fold });
 
         return fold;
     };
@@ -7773,7 +7787,7 @@ function Folding() {
 
         // Notify that fold data has changed.
         this.$modified = true;
-        this._dispatchEvent("changeFold", { data: fold });
+        this._emit("changeFold", { data: fold });
     };
 
     this.removeFolds = function(folds) {
@@ -8083,12 +8097,23 @@ function Folding() {
 
         var range = this.getFoldWidgetRange(row);
         if (range) {
+            // sometimes singleline folds can be missed by the code above
+            if (!range.isMultiLine()) {
+                fold = this.getFoldAt(range.start.row, range.start.column, 1);
+                if (fold && range.isEequal(fold.range)) {
+                    this.removeFold(fold);
+                    return;
+                }
+            }
+            
             if (!onlySubfolds)
                 this.addFold("...", range);
 
             if (addSubfolds)
                 this.foldAll(range.start.row + 1, range.end.row);
         } else {
+            if (addSubfolds)
+                this.foldAll(row + 1, this.getLength());
             e.target.className += " invalid"
         }
     };
@@ -8711,15 +8736,15 @@ function BracketMatch() {
         while (true) {
         
             while (valueIndex >= 0) {
-                var char = value.charAt(valueIndex);
-                if (char == openBracket) {
+                var chr = value.charAt(valueIndex);
+                if (chr == openBracket) {
                     depth -= 1;
                     if (depth == 0) {
                         return {row: iterator.getCurrentTokenRow(),
                             column: valueIndex + iterator.getCurrentTokenColumn()};
                     }
                 }
-                else if (char == bracket) {
+                else if (chr == bracket) {
                     depth += 1;
                 }
                 valueIndex -= 1;
@@ -8765,15 +8790,15 @@ function BracketMatch() {
             var value = token.value;
             var valueLength = value.length;
             while (valueIndex < valueLength) {
-                var char = value.charAt(valueIndex);
-                if (char == closingBracket) {
+                var chr = value.charAt(valueIndex);
+                if (chr == closingBracket) {
                     depth -= 1;
                     if (depth == 0) {
                         return {row: iterator.getCurrentTokenRow(),
                             column: valueIndex + iterator.getCurrentTokenColumn()};
                     }
                 }
-                else if (char == bracket) {
+                else if (chr == bracket) {
                     depth += 1;
                 }
                 valueIndex += 1;
@@ -10395,32 +10420,26 @@ var FoldMode = exports.FoldMode = function() {};
 
     // must return "" if there's no fold, to enable caching
     this.getFoldWidget = function(session, foldStyle, row) {
-        if (this.foldingStartMarker) {
-            if (this.foldingStopMarker) {
-                // rewrite getFoldWidget so the check is only performed once
-                FoldMode.prototype.getFoldWidget = this.$testBoth;
-                return this.$testBoth(session, foldStyle, row);
-            }
-            else {
-                // rewrite getFoldWidget so the check is only performed once
-                FoldMode.prototype.getFoldWidget = this.$testStart;
-                return this.$testStart(session, foldStyle, row);
-            }
-        }
-        else
-            return "";
+        var line = session.getLine(row);
+        if (this.foldingStartMarker.test(line))
+            return "start";
+        if (foldStyle == "markbeginend"
+                && this.foldingStopMarker
+                && this.foldingStopMarker.test(line))
+            return "end";
+        return "";
     };
     
     this.getFoldWidgetRange = function(session, foldStyle, row) {
         return null;
     };
 
-    this.indentationBlock = function(session, row) {
+    this.indentationBlock = function(session, row, column) {
         var re = /^\s*/;
         var startRow = row;
         var endRow = row;
         var line = session.getLine(row);
-        var startColumn = line.length - 1;
+        var startColumn = column || line.length;
         var startLevel = line.match(re)[0].length;
         var maxRow = session.getLength()
         
@@ -10458,21 +10477,6 @@ var FoldMode = exports.FoldMode = function() {};
             end.column = session.getLine(end.row).length;
         }
         return Range.fromPoints(start, end);
-    };
-
-    this.$testStart = function(session, foldStyle, row) {
-        if (this.foldingStartMarker.test(session.getLine(row)))
-            return "start";
-        return "";
-    };
-    
-    this.$testBoth = function(session, foldStyle, row) {
-        var line = session.getLine(row);
-        if (this.foldingStartMarker.test(line))
-            return "start";
-        if (foldStyle == "markbeginend" && this.foldingStopMarker.test(line))
-            return "end";
-        return "";
     };
 
 }).call(FoldMode.prototype);
@@ -11298,7 +11302,7 @@ oop.inherits(FoldMode, BaseFoldMode);
             if (match[1])
                 return this.openingBracketBlock(session, match[1], row, match.index);
 
-            return this.indentationBlock(session, row)
+            return this.indentationBlock(session, row, match.index + 1);
         }
     }
 
@@ -11346,17 +11350,17 @@ define('ace/worker/worker_client', ['require', 'exports', 'module' , 'ace/lib/oo
 var oop = require("../lib/oop");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
-var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
+var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
 
     this.changeListener = this.changeListener.bind(this);
 
-    if (window.require.packaged) {
+    if (module.packaged) {
         var base = this.$guessBasePath();
-        var worker = this.$worker = new Worker(base + packagedJs);
+        this.$worker = new Worker(base + packagedJs);
     }
     else {
         var workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
-        var worker = this.$worker = new Worker(workerUrl);
+        this.$worker = new Worker(workerUrl);
 
         var tlns = {};
         for (var i=0; i<topLevelNamespaces.length; i++) {
@@ -11370,7 +11374,7 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
     this.$worker.postMessage({
         init : true,
         tlns: tlns,
-        module: module,
+        module: mod,
         classname: classname
     });
 
@@ -11390,7 +11394,7 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
                 break;
 
             case "event":
-                _self._dispatchEvent(msg.name, {data: msg.data});
+                _self._emit(msg.name, {data: msg.data});
                 break;
 
             case "call":
@@ -11434,7 +11438,7 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
             if (!src) {
                 continue;
             }
-            var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace-uncompressed\.js)(?:\?|$)/);
+            var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace(-uncompressed)?(-noconflict)?\.js)(?:\?|$)/);
             if (m)
                 return m[1] || m[2];
         }
@@ -11442,7 +11446,7 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, module, classname) {
     };
 
     this.terminate = function() {
-        this._dispatchEvent("terminate", {});
+        this._emit("terminate", {});
         this.$worker.terminate();
         this.$worker = null;
         this.$doc.removeEventListener("change", this.changeListener);
@@ -12001,9 +12005,10 @@ exports.XmlBehaviour = XmlBehaviour;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/folding/xml', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/range', 'ace/mode/folding/fold_mode', 'ace/token_iterator'], function(require, exports, module) {
+define('ace/mode/folding/xml', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/range', 'ace/mode/folding/fold_mode', 'ace/token_iterator'], function(require, exports, module) {
 
 var oop = require("../../lib/oop");
+var lang = require("../../lib/lang");
 var Range = require("../../range").Range;
 var BaseFoldMode = require("./fold_mode").FoldMode;
 var TokenIterator = require("../../token_iterator").TokenIterator;
@@ -12017,121 +12022,210 @@ oop.inherits(FoldMode, BaseFoldMode);
 (function() {
 
     this.getFoldWidget = function(session, foldStyle, row) {
-        var tags = session.getTokens(row, row)[0].tokens
-            .filter(function(token) {
-                return token.type === "meta.tag";
-            })
-            .map(function(token) {
-                return token.value;
-            }).
-            join("")
-            .trim()
-            .replace(/^<|>$|\s+/g, "")
-            .split("><");
-        var fold = tags[0];
-        
-        if (!fold || this.voidElements[fold])
-            return "";
-            
-        if (fold.charAt(0) == "/")
+        var tag = this._getFirstTagInLine(session, row);
+
+        if (tag.closing)
             return foldStyle == "markbeginend" ? "end" : "";
-            
-        if (fold.charAt(fold.length-1) == "/")
+
+        if (!tag.tagName || this.voidElements[tag.tagName.toLowerCase()])
             return "";
-            
-        if (tags.indexOf("/" + fold) !== -1)
+
+        if (tag.selfClosing)
             return "";
-            
+
+        if (tag.value.indexOf("/" + tag.tagName) !== -1)
+            return "";
+
         return "start";
     };
-        
-    this.getFoldWidgetRange = function(session, foldStyle, row) {
-        var start, end;
-        var stack = [];
-        var voidElements = this.voidElements;
-        
-        var iterator = new TokenIterator(session, row, 0);
-        var step = "stepForward";
-        var isBack = false;
-            
-        function pop(stack, tagName) {
-            while (stack.length) {
-                var top = stack[stack.length-1];
-                if (!tagName || top === "" || top == tagName) {
-                    stack.pop();
-                    return true;
-                }
-                if (voidElements[top]) {
-                    stack.pop();
-                    continue;
-                }
-                else
-                    return false;
-            }
-            return false;
+    
+    this._getFirstTagInLine = function(session, row) {
+        var tokens = session.getTokens(row, row)[0].tokens;
+        var value = "";
+        for (var i = 0; i < tokens.length; i++) {
+            var token = tokens[i];
+            if (token.type.indexOf("meta.tag") === 0)
+                value += token.value;
+            else
+                value += lang.stringRepeat(" ", token.value.length);
         }
-            
-        // limited XML parsing to find matching tag
-        do {
-            var token = iterator.getCurrentToken();
+        
+        return this._parseTag(value);
+    };
 
-            var value = token.value.trim();
-            if (token && token.type == "meta.tag" && token.value !== ">") {
-                var tagName = value.replace(/^[<\s]*|[\s*>]$/g, "");
-                if (!start) {
-                    if (tagName.charAt(0) == "/") {
-                        tagName = tagName.slice(1);
-                        step = "stepBackward";
-                        isBack = true;
-                    }
-                    
-                    start = {
-                        row: row,
-                        column: iterator.getCurrentTokenColumn() + (isBack ? 0 : value.length + 1)
-                    };
+    this.tagRe = /^(\s*)(<?(\/?)([-_a-zA-Z0-9:!]*)\s*(\/?)>?)/;
+    this._parseTag = function(tag) {
+        
+        var match = this.tagRe.exec(tag);
+        var column = this.tagRe.lastIndex || 0;
+        this.tagRe.lastIndex = 0;
 
-                    stack.push(tagName);
-                }
-                else {
-                    var close;
-                    if (tagName.charAt(0) == "/") {
-                        tagName = tagName.slice(1);
-                        close = !isBack;
-                    }
-                    else if (tagName.charAt(tagName.length-1) == "/") {
-                        tagName = "";
-                        close = !isBack;
-                    }
-                    else
-                        close = isBack;
-                        
-                    if (close) {
-                        if (pop(stack, tagName)) {
-                            if (stack.length === 0) {
-                                end = {
-                                    row: iterator.getCurrentTokenRow(),
-                                    column: iterator.getCurrentTokenColumn() + (isBack ? value.length + 1 : 0)
-                                };
-                                if (isBack)
-                                    return Range.fromPoints(end, start);
-                                else
-                                    return Range.fromPoints(start, end);
-                            }
-                        }
-                        else {
-                            if (!(isBack && voidElements[tagName]))
-                                typeof console !== undefined && console.error("unmatched tags!", tagName, stack);
-                        }
-                    }
-                    else {
-                        stack.push(tagName);
-                    }
-                }
-            }
-            
-        } while(token = iterator[step]());
+        return {
+            value: tag,
+            match: match ? match[2] : "",
+            closing: match ? !!match[3] : false,
+            selfClosing: match ? !!match[5] || match[2] == "/>" : false,
+            tagName: match ? match[4] : "",
+            column: match[1] ? column + match[1].length : column
+        };
     };
     
+    /**
+     * reads a full tag and places the iterator after the tag
+     */
+    this._readTagForward = function(iterator) {
+        var token = iterator.getCurrentToken();
+        if (!token)
+            return null;
+            
+        var value = "";
+        var start;
+        
+        do {
+            if (token.type.indexOf("meta.tag") === 0) {
+                if (!start) {
+                    var start = {
+                        row: iterator.getCurrentTokenRow(),
+                        column: iterator.getCurrentTokenColumn()
+                    };
+                }
+                value += token.value;
+                if (value.indexOf(">") !== -1) {
+                    var tag = this._parseTag(value);
+                    tag.start = start;
+                    tag.end = {
+                        row: iterator.getCurrentTokenRow(),
+                        column: iterator.getCurrentTokenColumn() + token.value.length
+                    };
+                    iterator.stepForward();
+                    return tag;
+                }
+            }
+        } while(token = iterator.stepForward());
+        
+        return null;
+    };
+    
+    this._readTagBackward = function(iterator) {
+        var token = iterator.getCurrentToken();
+        if (!token)
+            return null;
+            
+        var value = "";
+        var end;
+
+        do {
+            if (token.type.indexOf("meta.tag") === 0) {
+                if (!end) {
+                    end = {
+                        row: iterator.getCurrentTokenRow(),
+                        column: iterator.getCurrentTokenColumn() + token.value.length
+                    };
+                }
+                value = token.value + value;
+                if (value.indexOf("<") !== -1) {
+                    var tag = this._parseTag(value);
+                    tag.end = end;
+                    tag.start = {
+                        row: iterator.getCurrentTokenRow(),
+                        column: iterator.getCurrentTokenColumn()
+                    };
+                    iterator.stepBackward();
+                    return tag;
+                }
+            }
+        } while(token = iterator.stepBackward());
+        
+        return null;
+    };
+    
+    this._pop = function(stack, tag) {
+        while (stack.length) {
+            
+            var top = stack[stack.length-1];
+            if (!tag || top.tagName == tag.tagName) {
+                return stack.pop();
+            }
+            else if (this.voidElements[tag.tagName]) {
+                return;
+            }
+            else if (this.voidElements[top.tagName]) {
+                stack.pop();
+                continue;
+            } else {
+                return null;
+            }
+        }
+    };
+    
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
+        var firstTag = this._getFirstTagInLine(session, row);
+        
+        if (!firstTag.match)
+            return null;
+        
+        var isBackward = firstTag.closing || firstTag.selfClosing;
+        var stack = [];
+        var tag;
+        
+        if (!isBackward) {
+            var iterator = new TokenIterator(session, row, firstTag.column);
+            var start = {
+                row: row,
+                column: firstTag.column + firstTag.tagName.length + 2
+            };
+            while (tag = this._readTagForward(iterator)) {
+                if (tag.selfClosing) {
+                    if (!stack.length) {
+                        tag.start.column += tag.tagName.length + 2;
+                        tag.end.column -= 2;
+                        return Range.fromPoints(tag.start, tag.end);
+                    } else
+                        continue;
+                }
+                
+                if (tag.closing) {
+                    this._pop(stack, tag);
+                    if (stack.length == 0)
+                        return Range.fromPoints(start, tag.start);
+                }
+                else {
+                    stack.push(tag)
+                }
+            }
+        }
+        else {
+            var iterator = new TokenIterator(session, row, firstTag.column + firstTag.match.length);
+            var end = {
+                row: row,
+                column: firstTag.column
+            };
+            
+            while (tag = this._readTagBackward(iterator)) {
+                if (tag.selfClosing) {
+                    if (!stack.length) {
+                        tag.start.column += tag.tagName.length + 2;
+                        tag.end.column -= 2;
+                        return Range.fromPoints(tag.start, tag.end);
+                    } else
+                        continue;
+                }
+                
+                if (!tag.closing) {
+                    this._pop(stack, tag);
+                    if (stack.length == 0) {
+                        tag.start.column += tag.tagName.length + 2;
+                        return Range.fromPoints(tag.start, end);
+                    }
+                }
+                else {
+                    stack.push(tag)
+                }
+            }
+        }
+        
+    };
+
 }).call(FoldMode.prototype);
 
 });/* ***** BEGIN LICENSE BLOCK *****
@@ -13748,7 +13842,7 @@ var HtmlHighlightRules = function() {
     // regexps are ordered -> the first match is used
     this.$rules = {
         start : [{
-            token : "meta.tag",
+            token : "text",
             merge : true,
             regex : "<\\!\\[CDATA\\[",
             next : "cdata"
@@ -13762,11 +13856,11 @@ var HtmlHighlightRules = function() {
             next : "comment"
         }, {
             token : "meta.tag",
-            regex : "<(?=\s*script)",
+            regex : "<(?=\s*script\\b)",
             next : "script"
         }, {
             token : "meta.tag",
-            regex : "<(?=\s*style)",
+            regex : "<(?=\s*style\\b)",
             next : "css"
         }, {
             token : "meta.tag", // opening tag
@@ -20345,6 +20439,9 @@ var Editor = function(renderer, session) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
+    
+    renderer.on("scrollX", this._emit.bind(this, "scrollX"));
+    renderer.on("scrollY", this._emit.bind(this, "scrollY"));
 
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
@@ -20461,7 +20558,7 @@ var Editor = function(renderer, session) {
         this.renderer.scrollToRow(session.getScrollTopRow());
         this.renderer.updateFull();
 
-        this._dispatchEvent("changeSession", {
+        this._emit("changeSession", {
             session: session,
             oldSession: oldSession
         });
@@ -20545,13 +20642,13 @@ var Editor = function(renderer, session) {
     this.onFocus = function() {
         this.renderer.showCursor();
         this.renderer.visualizeFocus();
-        this._dispatchEvent("focus");
+        this._emit("focus");
     };
 
     this.onBlur = function() {
         this.renderer.hideCursor();
         this.renderer.visualizeBlur();
-        this._dispatchEvent("blur");
+        this._emit("blur");
     };
 
     this.onDocumentChange = function(e) {
@@ -20565,7 +20662,7 @@ var Editor = function(renderer, session) {
             lastRow = Infinity;
         this.renderer.updateLines(range.start.row, lastRow);
 
-        this._dispatchEvent("change", e);
+        this._emit("change", e);
 
         // update cursor because tab characters can influence the cursor position
         this.onCursorChange();
@@ -20827,7 +20924,7 @@ var Editor = function(renderer, session) {
 
         this.$selectionStyle = style;
         this.onSelectionChange();
-        this._dispatchEvent("changeSelectionStyle", {data: style});
+        this._emit("changeSelectionStyle", {data: style});
     };
 
     this.getSelectionStyle = function() {
@@ -21286,7 +21383,24 @@ var Editor = function(renderer, session) {
         this.selection.moveCursorToPosition(pos);
     };
 
-
+    this.jumpToMatching = function() {
+        var cursor = this.getCursorPosition();
+        var pos = this.session.findMatchingBracket(cursor);
+        if (!pos) {
+            cursor.column += 1;
+            pos = this.session.findMatchingBracket(cursor);
+        }
+        if (!pos) {
+            cursor.column -= 2;
+            pos = this.session.findMatchingBracket(cursor);
+        }
+        
+        if (pos) {
+            this.clearSelection();
+            this.moveCursorTo(pos.row, pos.column);
+        }
+    };
+    
     this.gotoLine = function(lineNumber, column) {
         this.selection.clearSelection();
         this.session.unfold({row: lineNumber - 1, column: column || 0});
@@ -21842,7 +21956,7 @@ var MouseHandler = function(editor) {
     };
 
     this.onMouseEvent = function(name, e) {
-        this.editor._dispatchEvent(name, new MouseEvent(e, this.editor));
+        this.editor._emit(name, new MouseEvent(e, this.editor));
     };
     
     this.$dragDelay = 250;
@@ -21860,7 +21974,7 @@ var MouseHandler = function(editor) {
         if (!listeners || !listeners.length)
             return;
 
-        this.editor._dispatchEvent(name, new MouseEvent(e, this.editor));
+        this.editor._emit(name, new MouseEvent(e, this.editor));
     };
 
     this.onMouseWheel = function(name, e) {
@@ -21869,7 +21983,7 @@ var MouseHandler = function(editor) {
         mouseEvent.wheelX = e.wheelX;
         mouseEvent.wheelY = e.wheelY;
         
-        this.editor._dispatchEvent(name, mouseEvent);
+        this.editor._emit(name, mouseEvent);
     };
 
 }).call(MouseHandler.prototype);
@@ -21986,7 +22100,7 @@ function DefaultHandlers(editor) {
 
         var mousePageX = pageX, mousePageY = pageY;
         var mousedownTime = (new Date()).getTime();
-        var dragCursor, dragRange;
+        var dragCursor, dragRange, dragSelectionMarker;
 
         var onMouseSelection = function(e) {
             mousePageX = event.getDocumentX(e);
@@ -22053,7 +22167,7 @@ function DefaultHandlers(editor) {
                     state = STATE_DRAG;
                     dragRange = editor.getSelectionRange();
                     var style = editor.getSelectionStyle();
-                    editor.session.addMarker(dragRange, "ace_selection", style);
+                    dragSelectionMarker = editor.session.addMarker(dragRange, "ace_selection", style);
                     editor.clearSelection();
                     dom.addCssClass(editor.container, "ace_dragging");
                 }
@@ -23039,6 +23153,10 @@ exports.commands = [{
     name: "tolowercase",
     bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
     exec: function(editor) { editor.toLowerCase(); }
+}, {
+    name: "jumptomatching",
+    bindKey: bindKey("Ctrl-Shift-P", "Ctrl-Shift-P"),
+    exec: function(editor) { editor.jumpToMatching(); }
 }];
 
 });
@@ -24282,6 +24400,7 @@ var VirtualRenderer = function(container, theme) {
         if (this.scrollTop !== scrollTop) {
             this.$loop.schedule(this.CHANGE_SCROLL);
             this.scrollTop = scrollTop;
+            this._emit("scrollY", scrollTop);
         }
     };
 
@@ -24290,6 +24409,7 @@ var VirtualRenderer = function(container, theme) {
             scrollLeft = 0;
 
         this.scroller.scrollLeft = scrollLeft;
+        this._emit("scrollX", this.scroller.scrollLeft);
     };
 
     this.scrollBy = function(deltaX, deltaY) {
@@ -24925,7 +25045,7 @@ var Text = function(parentEl) {
         var size = this.$measureSizes();
         if (size && (this.$characterSize.width !== size.width || this.$characterSize.height !== size.height)) {
             this.$characterSize = size;
-            this._dispatchEvent("changeCharaterSize", {data: size});
+            this._emit("changeCharaterSize", {data: size});
         }
     };
 
@@ -25623,7 +25743,7 @@ var ScrollBar = function(parent) {
     oop.implement(this, EventEmitter);
 
     this.onScroll = function() {
-        this._dispatchEvent("scroll", {data: this.element.scrollTop});
+        this._emit("scroll", {data: this.element.scrollTop});
     };
 
     this.getWidth = function() {
@@ -25994,3 +26114,13 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "");
 
+;
+            (function() {
+                window.require(["ace/ace"], function(a) {
+                    if (!window.ace)
+                        window.ace = {};
+                    for (var key in a) if (a.hasOwnProperty(key))
+                        ace[key] = a[key];
+                });
+            })();
+        

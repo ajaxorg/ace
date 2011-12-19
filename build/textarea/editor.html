@@ -44,76 +44,49 @@ function foo() {
 </div>
 
 <script>
-function inject() {
+
+function inject(callback) {
     var baseUrl = "src/";
-    function load(path, module, callback) {
-        path = baseUrl + path;
-        if (!load.scripts[path]) {
-            load.scripts[path] = {
-                loaded: false,
-                callbacks: [ callback ]
-            };
-
-            var head = document.getElementsByTagName('head')[0];
-            var s = document.createElement('script');
-
-            function c() {
-                if (window.__ace_shadowed__ && window.__ace_shadowed__.define.modules[module]) {
-                    load.scripts[path].loaded = true;
-                    load.scripts[path].callbacks.forEach(function(callback) {
-                        callback();
-                    });
-                } else {
-                    setTimeout(c, 50);
-                }
-            };
-            s.src = path;
-            head.appendChild(s);
-
-            c();
-        } else if (load.scripts[path].loaded) {
-            callback();
-        } else {
-            load.scripts[path].callbacks.push(callback);
-        }
+    
+    var load = window.__ace_loader__ = function(path, module, callback) {
+        var head = document.getElementsByTagName('head')[0];
+        var s = document.createElement('script');
+    
+        s.src = baseUrl + path;
+        head.appendChild(s);
+        
+        s.onload = function() {
+            window.__ace_shadowed__.require([module], callback);
+        };
     };
 
-    load.scripts = {};
-    window.__ace_shadowed_load__ = load;
-
-    load('ace.js', 'text!ace/css/editor.css', function() {
+    load('ace-bookmarklet.js', "ace/ext/textarea", function() {
         var ace = window.__ace_shadowed__;
+        
         ace.options.mode = "javascript";
         var Event = ace.require("ace/lib/event");
         var areas = document.getElementsByTagName("textarea");
         for (var i = 0; i < areas.length; i++) {
             Event.addListener(areas[i], "click", function(e) {
                 if (e.detail == 3) {
-                    ace.transformTextarea(e.target);
+                    ace.transformTextarea(e.target, load);
                 }
             });
         }
+        callback();
     });
 }
 
 // Call the inject function to load the ace files.
-inject();
-
 var textAce;
-function initAce() {
+inject(function () {
+    // Transform the textarea on the page into an ace editor.
     var ace = window.__ace_shadowed__;
-    // Check if the ace.js file was loaded already, otherwise check back later.
-    if (ace && ace.transformTextarea) {
-        var t = document.querySelector("textarea");
-        textAce = ace.transformTextarea(t);
-        textAce.setDisplaySettings(true);
-    } else {
-        setTimeout(initAce, 100);
-    }
-}
+    var t = document.querySelector("textarea");
+    textAce = ace.transformTextarea(t, window.__ace_loader__);
+    textAce.setDisplaySettings(true);
+});
 
-// Transform the textarea on the page into an ace editor.
-initAce();
 
 document.getElementById("buBuild").onclick = function() {
     var injectSrc = inject.toString().split("\n").join("");

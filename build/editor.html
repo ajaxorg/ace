@@ -28,15 +28,15 @@
     }
 }</pre>
     
-<script src="src/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
-<script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
-<script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/ace-noconflict.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/theme-twilight-noconflict.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/mode-javascript-noconflict.js" type="text/javascript" charset="utf-8"></script>
 <script>
 window.onload = function() {
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
     
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
 };
 </script>
