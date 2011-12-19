@@ -47,7 +47,7 @@ function main(args) {
     if (args.length == 3) {
         target = args[2];
         // Check if 'target' contains some allowed value.
-        if (target != "normal" && target != "bm") {
+        if (target != "normal" && target != "bm" && target != "demo") {
             target = null;
         }
     }
@@ -57,6 +57,7 @@ function main(args) {
         console.log("");
         console.log("Options:");
         console.log("  normal      Runs embedded build of Ace");
+        console.log("  demo      Runs demo build of Ace");
         console.log("  bm          Runs bookmarklet build of Ace");
         process.exit(0);
     }
@@ -71,6 +72,8 @@ function main(args) {
     
     if (target == "normal") {
         ace(aceProject);
+    }
+    else if (target == "demo") {
         demo(aceProject);
     }
     else if (target == "bm") {
@@ -89,7 +92,7 @@ function bookmarklet(aceProject) {
         source: "build_support/style.css",
         dest:   targetDir + '/style.css'
     });
-    //buildAce(aceProject, targetDir + "/src", "__ace_shadowed__", "ace/ext/textarea", true, true);
+    
     buildAce(aceProject, {
         targetDir: targetDir + "/src",
         ns: "__ace_shadowed__",
@@ -159,6 +162,48 @@ function ace(aceProject) {
     copy({
         source: ACE_HOME + "/ChangeLog.txt",
         dest:   "build/ChangeLog.txt"
+    });
+}
+
+function demo(aceProject) {
+    console.log('# kitchen sink ---------');
+
+    var version, ref;
+    try {
+        version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
+        ref = fs.readFileSync(__dirname + "/.git-ref").toString();
+    } catch(e) {
+        ref = "";
+        version = "";
+    }
+    
+    copy({
+        source: "kitchen-sink.html",
+        dest:   "build/kitchen-sink.html",
+        filter: [ function(data) {
+            return (data
+                .replace("DEVEL-->", "")
+                .replace("<!--DEVEL", "")
+                .replace("PACKAGE-->", "")
+                .replace("<!--PACKAGE", "")
+                .replace("%version%", version)
+                .replace("%commit%", ref)
+            );
+        }]
+    });
+    
+    buildAce(aceProject, {
+        targetDir: "build/demo/kitchen-sink",
+        ns: "ace",
+        requires: "kitchen-sink/demo",
+        compress: false,
+        noconflict: false,
+        compat: false,
+        name: "kitchen-sink",
+        suffix: "-uncompressed.js",
+        themes: [],
+        modes: [],
+        keybindings: []
     });
 }
 
@@ -232,15 +277,6 @@ function buildAce(aceProject, options) {
         filter: [ copy.filter.moduleDefines ],
         dest: ace
     });
-    /*copy({
-        source: {
-            root: project,
-            include: /.*\.css$/,
-            exclude: /tests?\//
-        },
-        filter: [ copy.filter.addDefines ],
-        dest: ace
-    });*/
     
     copy({
         source: ace,
@@ -346,64 +382,6 @@ function buildAce(aceProject, options) {
         });
     });
 }
-
-function demo(aceProject) {
-    console.log('# kitchen sink ---------');
-
-    var version, ref;
-    try {
-        version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
-        ref = fs.readFileSync(__dirname + "/.git-ref").toString();
-    } catch(e) {
-        ref = "";
-        version = "";
-    }
-    
-    copy({
-        source: "kitchen-sink.html",
-        dest:   "build/kitchen-sink.html",
-        filter: [ function(data) {
-            return (data
-                .replace("DEVEL-->", "")
-                .replace("<!--DEVEL", "")
-                .replace("PACKAGE-->", "")
-                .replace("<!--PACKAGE", "")
-                .replace("%version%", version)
-                .replace("%commit%", ref)
-            );
-        }]
-    });
-
-    var project = copy.createCommonJsProject(aceProject);
-    var demo = copy.createDataObject();
-    copy({
-        source: [
-            'build_support/mini_require.js'
-        ],
-        dest: demo
-    });
-    copy({
-        source: [
-            copy.source.commonjs({
-                project: project,
-                require: [ "kitchen-sink/demo" ]
-            })
-        ],
-        filter: [ copy.filter.moduleDefines ],
-        dest: demo
-    });
-    copy({
-        source: demo,
-        filter: [ filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink/kitchen-sink-uncompressed.js'
-    });
-    copy({
-        source: demo,
-        filter: [ copy.filter.uglifyjs, filterTextPlugin ],
-        dest: 'build/demo/kitchen-sink/kitchen-sink.js'
-    });
-}
-
 
 // TODO: replace with project.clone once it is fixed in dryice
 function cloneProject(project) {

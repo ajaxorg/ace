@@ -9,6 +9,7 @@ build:
 	cp -r doc/site/images build/textarea
 	
 	./Makefile.dryice.js normal
+	./Makefile.dryice.js demo
 	./Makefile.dryice.js bm
 
 clean:
