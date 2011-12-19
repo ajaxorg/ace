@@ -35,26 +35,23 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/mode/textile', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/textile_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range'], function(require, exports, module) {
+__ace_shadowed__.define('ace/mode/textile', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/textile_highlight_rules', 'ace/mode/matching_brace_outdent'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
 var TextileHighlightRules = require("./textile_highlight_rules").TextileHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-var Range = require("../range").Range;
 
-var Mode = function()
-{
+var Mode = function() {
     this.$tokenizer = new Tokenizer(new TextileHighlightRules().getRules());
     this.$outdent = new MatchingBraceOutdent();
 };
 oop.inherits(Mode, TextMode);
 
-(function()
-{
-    this.getNextLineIndent = function(state, line, tab)
-    {
+(function() {
+    this.getNextLineIndent = function(state, line, tab) {
         if (state == "intag")
             return tab;
         
@@ -112,6 +109,7 @@ exports.Mode = Mode;
  * ***** END LICENSE BLOCK ***** */
 
 __ace_shadowed__.define('ace/mode/textile_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
@@ -120,7 +118,6 @@ var TextileHighlightRules = function() {
     this.$rules = {
         "start" : [
             {
-                token : "keyword", // start of block
                 token : function(value) {
                     if (value.match(/^h\d$/))
                         return "markup.heading." + value.charAt(1);
@@ -212,6 +209,7 @@ exports.TextileHighlightRules = TextileHighlightRules;
  * ***** END LICENSE BLOCK ***** */
 
 __ace_shadowed__.define('ace/mode/matching_brace_outdent', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+"use strict";
 
 var Range = require("../range").Range;
 

@@ -1,4 +1,5 @@
 define('ace/mode/latex', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/latex_highlight_rules', 'ace/range'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
@@ -12,12 +13,10 @@ var Mode = function()
 };
 oop.inherits(Mode, TextMode);
 
-(function()
-{
+(function() {
     this.toggleCommentLines = function(state, doc, startRow, endRow) {
         // This code is adapted from ruby.js
         var outdent = true;
-        var outentedRows = [];
         
         // LaTeX comments begin with % and go to the end of the line
         var commentRegEx = /^(\s*)\%/;
@@ -57,12 +56,12 @@ exports.Mode = Mode;
 
 });
 define('ace/mode/latex_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-var LatexHighlightRules = function()
-{   
+var LatexHighlightRules = function() {   
     this.$rules = {
         "start" : [{
             // A tex command e.g. \foo

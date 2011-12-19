@@ -37,12 +37,13 @@
 *
 * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mode/lua', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/lua_highlight_rules', 'ace/range'], function(require, exports, module) {
+ace.define('ace/mode/lua', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/lua_highlight_rules'], function(require, exports, module) {
+"use strict";
+
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
 var LuaHighlightRules = require("./lua_highlight_rules").LuaHighlightRules;
-var Range = require("../range").Range;
 
 var Mode = function() {
     this.$tokenizer = new Tokenizer(new LuaHighlightRules().getRules());
@@ -55,7 +56,6 @@ oop.inherits(Mode, TextMode);
 
         var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
         var tokens = tokenizedLine.tokens;
-        var endState = tokenizedLine.state;
 	
         var chunks = ["function", "then", "do", "repeat"];
         
@@ -78,39 +78,6 @@ oop.inherits(Mode, TextMode);
 
         return indent;
     };
-    
-    /*this.checkOutdent = function(state, line, input) {
-        if (input !== "\r\n" && input !== "\r" && input !== "\n")
-            return false;
-
-        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;
-        
-        if (!tokens)
-            return false;
-        
-        // ignore trailing comments
-        do {
-            var last = tokens.pop();
-        } while (last && (last.type == "comment" || (last.type == "text" && last.value.match(/^\s+$/))));
-        
-        if (!last)
-            return false;
-        var outdents = {
-            "end" : 1,
-            "until" : 1,
-            "else" : 1
-        }
-        return (last.type == "keyword" && outdents[last.value]);
-    };
-    
-    this.autoOutdent = function(state, doc, row) {
-        console.log(doc, row);
-        var indent = this.$getIndent(doc.getLine(row));
-        var tab = doc.getTabString();
-        if (indent.slice(-tab.length) == tab)
-            doc.remove(new Range(row, indent.length-tab.length, row, indent.length));
-
-    };*/
     
 }).call(Mode.prototype);
 
@@ -158,6 +125,7 @@ exports.Mode = Mode;
 * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/lua_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");

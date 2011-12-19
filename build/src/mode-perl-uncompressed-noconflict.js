@@ -36,6 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/perl', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/perl_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range', 'ace/mode/folding/cstyle'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
@@ -152,6 +153,7 @@ exports.Mode = Mode;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/perl_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -319,6 +321,7 @@ exports.PerlHighlightRules = PerlHighlightRules;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/matching_brace_outdent', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+"use strict";
 
 var Range = require("../range").Range;
 
@@ -399,6 +402,7 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/range', 'ace/mode/folding/fold_mode'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../../lib/oop");
 var Range = require("../../range").Range;
@@ -492,6 +496,7 @@ oop.inherits(FoldMode, BaseFoldMode);
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/folding/fold_mode', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+"use strict";
 
 var Range = require("../../range").Range;
 

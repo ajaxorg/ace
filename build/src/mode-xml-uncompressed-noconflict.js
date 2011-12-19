@@ -36,6 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/xml', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/xml_highlight_rules', 'ace/mode/behaviour/xml', 'ace/mode/folding/xml'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
@@ -53,7 +54,6 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
-    
     
     this.getNextLineIndent = function(state, line, tab) {
         return this.$getIndent(line);
@@ -101,6 +101,7 @@ exports.Mode = Mode;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/xml_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/xml_util', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../lib/oop");
 var xmlUtil = require("./xml_util");
@@ -203,15 +204,17 @@ exports.XmlHighlightRules = XmlHighlightRules;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/xml_util', ['require', 'exports', 'module' , 'ace/lib/lang'], function(require, exports, module) {
-    var lang = require("../lib/lang");
-    
-    var formTags = lang.arrayToMap(
-        ("button|form|input|label|select|textarea").split("|")
-    );
-    
-    var tableTags = lang.arrayToMap(
-        ("table|tbody|td|tfoot|th|tr").split("|")
-    );
+"use strict";
+
+var lang = require("../lib/lang");
+
+var formTags = lang.arrayToMap(
+    ("button|form|input|label|select|textarea").split("|")
+);
+
+var tableTags = lang.arrayToMap(
+    ("table|tbody|td|tfoot|th|tr").split("|")
+);
 
 function string(state) {
     return [{
@@ -348,6 +351,7 @@ exports.tag = function(states, name, nextState) {
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/behaviour/xml', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/behaviour', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../../lib/oop");
 var Behaviour = require("../behaviour").Behaviour;
@@ -438,6 +442,7 @@ exports.XmlBehaviour = XmlBehaviour;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/behaviour/cstyle', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/behaviour'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../../lib/oop");
 var Behaviour = require('../behaviour').Behaviour;
@@ -658,6 +663,7 @@ exports.CstyleBehaviour = CstyleBehaviour;
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/folding/xml', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/range', 'ace/mode/folding/fold_mode', 'ace/token_iterator'], function(require, exports, module) {
+"use strict";
 
 var oop = require("../../lib/oop");
 var lang = require("../../lib/lang");
@@ -918,6 +924,7 @@ oop.inherits(FoldMode, BaseFoldMode);
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/mode/folding/fold_mode', ['require', 'exports', 'module' , 'ace/range'], function(require, exports, module) {
+"use strict";
 
 var Range = require("../../range").Range;
 

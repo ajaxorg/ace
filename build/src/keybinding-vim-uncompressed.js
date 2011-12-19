@@ -36,6 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/keyboard/keybinding/vim', ['require', 'exports', 'module' , 'ace/keyboard/state_handler'], function(require, exports, module) {
+"use strict";
 
 var StateHandler = require("../state_handler").StateHandler;
 var matchCharacterOnly =  require("../state_handler").matchCharacterOnly;
@@ -173,6 +174,7 @@ exports.Vim = new StateHandler(vimStates);
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/keyboard/state_handler', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
 
 // If you're developing a new keymapping and want to get an idea what's going
 // on, then enable debugging.

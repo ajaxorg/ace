@@ -37,7 +37,6 @@
 
 __ace_shadowed__.define('ace/theme/chrome', ['require', 'exports', 'module' ], function(require, exports, module) {
 
-
 exports.cssClass = "ace-chrome";
 exports.cssText = ".ace-chrome .ace_editor {\
   border: 2px solid rgb(159, 159, 159);\

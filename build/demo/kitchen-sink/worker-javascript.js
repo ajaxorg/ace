@@ -1,3 +1,5 @@
+"no use strict";
+
 var console = {
     log: function(msg) {
         postMessage({type: "log", data: msg});
@@ -147,20 +149,24 @@ var onmessage = function(e) {
 */
 
 define('ace/lib/fixoldbrowsers', ['require', 'exports', 'module' , 'ace/lib/regexp', 'ace/lib/es5-shim'], function(require, exports, module) {
+"use strict";
 
 require("./regexp");
 require("./es5-shim");
 
-});define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
-
-// Based on code from:
-//
-// XRegExp 1.5.0
-// (c) 2007-2010 Steven Levithan
-// MIT License
-// <http://xregexp.com>
-// Provides an augmented, extensible, cross-browser implementation of regular expressions,
-// including support for additional syntax, flags, and methods
+});/**
+ *  Based on code from:
+ *
+ * XRegExp 1.5.0
+ * (c) 2007-2010 Steven Levithan
+ * MIT License
+ * <http://xregexp.com>
+ * Provides an augmented, extensible, cross-browser implementation of regular expressions,
+ * including support for additional syntax, flags, and methods
+ */
+ 
+define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
 
     //---------------------------------
     //  Private variables
@@ -1356,6 +1362,7 @@ var prepareString = "a"[0] != "a",
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/lib/event_emitter', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
 
 var EventEmitter = {};
 
@@ -1472,6 +1479,7 @@ exports.EventEmitter = EventEmitter;
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/lib/oop', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
 
 exports.inherits = (function() {
     var tempCtor = function() {};
@@ -1480,7 +1488,7 @@ exports.inherits = (function() {
         ctor.super_ = superCtor.prototype;
         ctor.prototype = new tempCtor();
         ctor.prototype.constructor = ctor;
-    }
+    };
 }());
 
 exports.mixin = function(obj, mixin) {
@@ -1532,6 +1540,7 @@ exports.implement = function(proto, mixin) {
  * ***** END LICENSE BLOCK ***** */
  
 define('ace/mode/javascript_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/worker/jshint', 'ace/narcissus/jsparse'], function(require, exports, module) {
+"use strict";
     
 var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
@@ -1580,9 +1589,9 @@ oop.inherits(JavaScriptWorker, Mirror);
     
 }).call(JavaScriptWorker.prototype);
 
-});
-define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
-    
+});define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
+"use strict";
+
 var Document = require("../document").Document;
 var lang = require("../lib/lang");
     
@@ -1660,6 +1669,7 @@ var Mirror = exports.Mirror = function(sender) {
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/document', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter', 'ace/range', 'ace/anchor'], function(require, exports, module) {
+"use strict";
 
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -2065,6 +2075,7 @@ exports.Document = Document;
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/range', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
 
 var Range = function(startRow, startColumn, endRow, endColumn) {
     this.start = {
@@ -2382,6 +2393,7 @@ exports.Range = Range;
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/anchor', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
+"use strict";
 
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -2574,6 +2586,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
  * ***** END LICENSE BLOCK ***** */
 
 define('ace/lib/lang', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
 
 exports.stringReverse = function(string) {
     return string.split("").reverse().join("");

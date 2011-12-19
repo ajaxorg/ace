@@ -36,6 +36,8 @@
  * ***** END LICENSE BLOCK ***** */
 
 ace.define('ace/theme/textmate', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
+
 exports.isDark = false;
 exports.cssClass = "ace-tm";
 exports.cssText = ".ace-tm .ace_editor {\
