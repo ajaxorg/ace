@@ -81,7 +81,6 @@ function main(args) {
     }
 }
 
-
 function bookmarklet(aceProject) {
     var targetDir = "build/textarea";
     copy({
