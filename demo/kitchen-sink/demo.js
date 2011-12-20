@@ -92,7 +92,7 @@ function loadTheme(name, callback) {
         
     themes[name] = 1;
     var base = name.split("/").pop();
-    var fileName = "src/theme-" + base + ".js";
+    var fileName = "demo/kitchen-sink/theme-" + base + "-uncompressed.js";
     net.loadScript(fileName, callback);
 }
 
@@ -350,7 +350,7 @@ bindDropdown("mode", function(value) {
 });
 
 bindDropdown("theme", function(value) {
-    if (window.require.packaged) {
+    if (module.packaged) {
         loadTheme(value, function() {
             env.editor.setTheme(value);
         });
