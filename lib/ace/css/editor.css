@@ -66,6 +66,12 @@
     background-position: 2px center;
 }
 
+.ace_gutter-cell.ace_info {
+    background-image: url("data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAEFBQVJSUl5eXmRkZGtra39/f4WFhYmJiZGRkaampry8vMPDw8zMzNXV1dzc3OTk5Orq6vDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABQALAAAAAAQABAAAAUuICWOZGmeaBml5XGwFCQSBGyXRSAwtqQIiRuiwIM5BoYVbEFIyGCQoeJGrVptIQA7");
+    background-repeat: no-repeat;
+    background-position: 2px center;
+}
+
 .ace_editor .ace_sb {
     position: absolute;
     overflow-x: hidden;
