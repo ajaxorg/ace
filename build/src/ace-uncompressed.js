@@ -12229,7 +12229,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getScrollLeft = function() {
-        return this.session.getScrollLop();
+        return this.session.getScrollTop();
     };
 
     this.getScrollTopRow = function() {
