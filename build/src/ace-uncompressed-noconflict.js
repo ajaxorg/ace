@@ -13779,6 +13779,12 @@ ace.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "    background-position: 2px center;\n" +
   "}\n" +
   "\n" +
+  ".ace_gutter-cell.ace_info {\n" +
+  "    background-image: url(\"data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAEFBQVJSUl5eXmRkZGtra39/f4WFhYmJiZGRkaampry8vMPDw8zMzNXV1dzc3OTk5Orq6vDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABQALAAAAAAQABAAAAUuICWOZGmeaBml5XGwFCQSBGyXRSAwtqQIiRuiwIM5BoYVbEFIyGCQoeJGrVptIQA7\");\n" +
+  "    background-repeat: no-repeat;\n" +
+  "    background-position: 2px center;\n" +
+  "}\n" +
+  "\n" +
   ".ace_editor .ace_sb {\n" +
   "    position: absolute;\n" +
   "    overflow-x: hidden;\n" +
