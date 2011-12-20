@@ -2447,9 +2447,6 @@ var Editor = function(renderer, session) {
     this.container = container;
     this.renderer = renderer;
     
-    renderer.on("scrollX", this._emit.bind(this, "scrollX"));
-    renderer.on("scrollY", this._emit.bind(this, "scrollY"));
-
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
 
@@ -12266,7 +12263,6 @@ var VirtualRenderer = function(container, theme) {
         if (this.scrollTop !== scrollTop) {
             this.$loop.schedule(this.CHANGE_SCROLL);
             this.scrollTop = scrollTop;
-            this._emit("scrollY", scrollTop);
         }
     };
 
@@ -12276,7 +12272,6 @@ var VirtualRenderer = function(container, theme) {
 
         this.scroller.scrollLeft = scrollLeft;
         scrollLeft = this.scroller.scrollLeft;
-        this._emit("scrollX", scrollLeft);
     };
 
     this.scrollBy = function(deltaX, deltaY) {
