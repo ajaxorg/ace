@@ -42,5 +42,5 @@ exports.cssClass = "%cssClass%";
 exports.cssText = %css%;
 
     var dom = require("../lib/dom");
-    dom.importCssString(exports.cssText);
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
