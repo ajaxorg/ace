@@ -153,8 +153,8 @@ color:#BC9458;\
 background-color:#FFF980;   \
 }";
 
-    var dom = require("../lib/dom");
-    dom.importCssString(exports.cssText);
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
 });
 ;
             (function() {

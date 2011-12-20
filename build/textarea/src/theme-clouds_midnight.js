@@ -147,8 +147,9 @@ background-color:#E92E2E;\
     text-decoration:underline;\
 }";
 
-    var dom = require("../lib/dom");
-    dom.importCssString(exports.cssText);
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
+
 });
 ;
             (function() {

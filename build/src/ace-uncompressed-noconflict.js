@@ -1596,9 +1596,9 @@ exports.importCssString = function importCssString(cssText, id, doc) {
         if (id)
             style.title = id;
     } else {
-        style = doc.createElementNS ?
-                    doc.createElementNS(XHTML_NS, "style") :
-                    doc.createElement("style");
+        style = doc.createElementNS
+            ? doc.createElementNS(XHTML_NS, "style")
+            : doc.createElement("style");
 
         style.appendChild(doc.createTextNode(cssText));
         if (id)
@@ -3802,6 +3802,7 @@ var TextInput = function(parentNode, host) {
         text.setAttribute("x-palm-disable-auto-cap", true);
         
     text.style.left = "-10000px";
+    text.style.position = "fixed";
     parentNode.insertBefore(text, parentNode.firstChild);
 
     var PLACEHOLDER = String.fromCharCode(0);
@@ -3941,7 +3942,7 @@ var TextInput = function(parentNode, host) {
     if ("onbeforecopy" in text && typeof clipboardData !== "undefined") {
         event.addListener(text, "beforecopy", function(e) {
             var copyText = host.getCopyText();
-            if(copyText)
+            if (copyText)
                 clipboardData.setData("Text", copyText);
             else
                 e.preventDefault();
@@ -11593,10 +11594,7 @@ var VirtualRenderer = function(container, theme) {
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
     
-    // Chrome has some strange rendering issues if this is not done async
-    setTimeout(function() {
-        dom.addCssClass(container, "ace_editor");
-    }, 0);
+    dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
 
@@ -11871,6 +11869,9 @@ var VirtualRenderer = function(container, theme) {
         // in IE the native cursor always shines through
         // this persists in IE9
         if (useragent.isIE)
+            return;
+        
+        if (this.layerConfig.lastRow === 0)
             return;
 
         var pos = this.$cursorLayer.getPixelPosition();
@@ -13662,9 +13663,11 @@ var RenderLoop = function(onRender, win) {
             var _self = this;
             event.nextTick(function() {
                 _self.pending = false;
-                var changes = _self.changes;
-                _self.changes = 0;
-                _self.onRender(changes);
+                var changes;
+                while (changes = _self.changes) {
+                    _self.changes = 0;
+                    _self.onRender(changes);
+                }
             }, this.window);
         }
     };
@@ -14147,8 +14150,8 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(255, 0, 0)\
 }";
 
-    var dom = require("../lib/dom");
-    dom.importCssString(exports.cssText);
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
 });
 ;
             (function() {

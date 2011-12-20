@@ -193,9 +193,8 @@ exports.cssText = ".ace-crimson-editor .ace_editor {\
 
 exports.cssClass = "ace-crimson-editor";
 
-    var dom = require("../lib/dom");
-    dom.importCssString(exports.cssText);
-
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
 });
 ;
             (function() {

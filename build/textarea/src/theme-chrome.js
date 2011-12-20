@@ -207,6 +207,9 @@ exports.cssText = ".ace-chrome .ace_editor {\
   color: #994409;\
 }";
 
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
+
 });
 ;
             (function() {

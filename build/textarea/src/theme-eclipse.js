@@ -140,9 +140,8 @@ exports.cssText = ".ace-eclipse .ace_editor {\
 
 exports.cssClass = "ace-eclipse";
 
-    var dom = require("../lib/dom");
-    dom.importCssString(exports.cssText);
-
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
 });
 ;
             (function() {
