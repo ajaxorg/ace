@@ -11802,7 +11802,7 @@ var VirtualRenderer = function(container, theme) {
             this.scrollBar.setHeight(size.scrollerHeight);
 
             if (this.session) {
-                this.scrollToY(this.getScrollTop());
+                this.session.setScrollTop(this.getScrollTop());
                 changes = changes | this.CHANGE_FULL;
             }
         }
@@ -12201,11 +12201,11 @@ var VirtualRenderer = function(container, theme) {
         var top = pos.top;
 
         if (this.scrollTop > top) {
-            this.scrollToY(top);
+            this.session.setScrollTop(top);
         }
 
         if (this.scrollTop + this.$size.scrollerHeight < top + this.lineHeight) {
-            this.scrollToY(top + this.lineHeight - this.$size.scrollerHeight);
+            this.session.setScrollTop(top + this.lineHeight - this.$size.scrollerHeight);
         }
 
         var scrollLeft = this.scrollLeft;
@@ -12241,7 +12241,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.scrollToRow = function(row) {
-        this.scrollToY(row * this.lineHeight);
+        this.session.setScrollTop(row * this.lineHeight);
     };
 
     this.scrollToLine = function(line, center) {
@@ -12254,7 +12254,7 @@ var VirtualRenderer = function(container, theme) {
         if (center) {
             offset -= this.$size.scrollerHeight / 2;
         }
-        this.scrollToY(offset);
+        this.session.setScrollTop(offset);
     };
 
     this.scrollToY = function(scrollTop) {

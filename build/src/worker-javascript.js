@@ -120,7 +120,7 @@ function initSender() {
 var main;
 var sender;
 
-var onmessage = function(e) {
+onmessage = function(e) {
     var msg = e.data;
     if (msg.command) {
         main[msg.command].apply(main, msg.args);
