@@ -771,12 +771,11 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
     oop.implement(this, EventEmitter);
 
     this.$normalizePath = function(path) {
-        if (!path.match(/^\w+:/)) {
-            path = location.protocol + "//" + location.host
-                // paths starting with a slash are relative to the root (host)
-                + (path.charAt(0) == "/" ? "" : location.pathname.replace(/\/[^\/]*$/, ""))
-                + "/" + path.replace(/^[\/]+/, "");
-        }
+        path = path.replace(/^[a-z]+:\/\/[^\/]+\//, ""); // Remove domain name and rebuild it
+        path = location.protocol + "//" + location.host
+            // paths starting with a slash are relative to the root (host)
+            + (path.charAt(0) == "/" ? "" : location.pathname.replace(/\/[^\/]*$/, ""))
+            + "/" + path.replace(/^[\/]+/, "");
         return path;
     };
 
