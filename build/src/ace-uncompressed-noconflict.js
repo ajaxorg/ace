@@ -13711,7 +13711,7 @@ var RenderLoop = function(onRender, win) {
 
 exports.RenderLoop = RenderLoop;
 });
-ace.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
+ace.define("text!ace/css/editor.css", [], "@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
   "\n" +
   ".ace_editor {\n" +
