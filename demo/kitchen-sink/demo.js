@@ -124,7 +124,8 @@ var modes = [
     new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
     new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
     new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
+    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"]),
+    new Mode("scheme", "Scheme", require("ace/mode/scheme").Mode, ["scm"])
 ];
 
 modesByName = {};
@@ -242,6 +243,10 @@ var docs = [
     new WrappedDoc(
         "latex", "LaTeX",
         require("ace/requirejs/text!./docs/latex.tex")
+    ),
+    new Doc(
+      "scheme", "Scheme",
+      require("ace/requirejs/text!./docs/scheme.scm")
     )
 ];
 
