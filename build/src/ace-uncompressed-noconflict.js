@@ -2029,7 +2029,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
 
 exports.addCommandKeyListener = function(el, callback) {
     var addListener = exports.addListener;
-    if (useragent.isOldGecko) {
+    if (useragent.isOldGecko || useragent.isOpera) {
         // Old versions of Gecko aka. Firefox < 4.0 didn't repeat the keydown
         // event if the user pressed the key for a longer time. Instead, the
         // keydown event was fired once and later on only the keypress event.
@@ -2050,18 +2050,6 @@ exports.addCommandKeyListener = function(el, callback) {
             lastDown = e.keyIdentifier || e.keyCode;
             return normalizeCommandKeys(callback, e, e.keyCode);
         });
-
-        // repeated keys are fired as keypress and not keydown events
-        if (useragent.isMac && useragent.isOpera) {
-            addListener(el, "keypress", function(e) {
-                var keyId = e.keyIdentifier || e.keyCode;
-                if (lastDown !== keyId) {
-                    return normalizeCommandKeys(callback, e, lastDown);
-                } else {
-                    lastDown = null;
-                }
-            });
-        }
     }
 };
 
@@ -2605,6 +2593,7 @@ var Editor = function(renderer, session) {
 
     this.setFontSize = function(size) {
         this.container.style.fontSize = size;
+        this.renderer.updateFontSize();
     };
 
     this.$highlightBrackets = function() {
@@ -3589,8 +3578,7 @@ var Editor = function(renderer, session) {
         var range = this.$search.find(this.session);
         if (range) {
             this.session.unfold(range);
-            this.gotoLine(range.end.row+1, range.end.column);
-            this.selection.setSelectionRange(range);
+            this.selection.setSelectionRange(range); // this scrolls selection into view
         }
     };
 
@@ -5334,6 +5322,11 @@ exports.commands = [{
     bindKey: bindKey("Ctrl-Shift-E", "Command-Shift-E"),
     exec: function(editor) { editor.commands.replay(editor); },
     readOnly: true
+}, {
+    name: "jumptomatching",
+    bindKey: bindKey("Ctrl-Shift-P", "Ctrl-Shift-P"),
+    exec: function(editor) { editor.jumpToMatching(); },
+    readOnly: true
 }, 
 
 // commands disabled in readOnly mode
@@ -5452,10 +5445,6 @@ exports.commands = [{
     name: "tolowercase",
     bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
     exec: function(editor) { editor.toLowerCase(); }
-}, {
-    name: "jumptomatching",
-    bindKey: bindKey("Ctrl-Shift-P", "Ctrl-Shift-P"),
-    exec: function(editor) { editor.jumpToMatching(); }
 }];
 
 });
@@ -10106,7 +10095,7 @@ function Folding() {
 
     this.foldAll = function(startRow, endRow) {
         var foldWidgets = this.foldWidgets;
-        endRow = endRow || foldWidgets.length;
+        endRow = endRow || this.getLength();
         for (var row = startRow || 0; row < endRow; row++) {
             if (foldWidgets[row] == null)
                 foldWidgets[row] = this.getFoldWidget(row);
@@ -11678,7 +11667,7 @@ var VirtualRenderer = function(container, theme) {
         column : 0
     };
 
-    this.$textLayer.addEventListener("changeCharaterSize", function() {
+    this.$textLayer.addEventListener("changeCharacterSize", function() {
         _self.characterWidth = textLayer.getCharacterWidth();
         _self.lineHeight = textLayer.getLineHeight();
         _self.$updatePrintMargin();
@@ -11731,6 +11720,7 @@ var VirtualRenderer = function(container, theme) {
     this.CHANGE_MARKER_BACK = 128;
     this.CHANGE_MARKER_FRONT = 256;
     this.CHANGE_FULL = 512;
+    this.CHANGE_H_SCROLL = 1024;
 
     oop.implement(this, EventEmitter);
 
@@ -12036,6 +12026,11 @@ var VirtualRenderer = function(container, theme) {
 
         if (changes & this.CHANGE_SIZE)
             this.$updateScrollBar();
+
+        if (changes & this.CHANGE_H_SCROLL) {
+            //this.content.style.left = -this.scrollLeft + "px";
+            this.scroller.scrollLeft = this.scrollLeft
+        }
     };
 
     this.$computeLayerConfig = function() {
@@ -12101,12 +12096,6 @@ var VirtualRenderer = function(container, theme) {
         this.content.style.marginTop = (-offset) + "px";
         this.content.style.width = longestLine + 2 * this.$padding + "px";
         this.content.style.height = minHeight + "px";
-
-        // scroller.scrollWidth was smaller than scrollLeft we needed
-        if (this.$desiredScrollLeft) {
-            this.scrollToX(this.$desiredScrollLeft);
-            this.$desiredScrollLeft = 0;
-        }
 
         // Horizontal scrollbar visibility may have changed, which changes
         // the client height of the scroller
@@ -12213,14 +12202,11 @@ var VirtualRenderer = function(container, theme) {
         if (scrollLeft > left) {
             if (left < this.$padding + 2 * this.layerConfig.characterWidth)
                 left = 0;
-            this.scrollToX(left);
+            this.session.setScrollLeft(left);
         }
 
         if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
-            if (left > this.layerConfig.width + 2 * this.$padding)
-                this.$desiredScrollLeft = left;
-            else
-                this.scrollToX(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
+            this.session.setScrollLeft(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
         }
     };
 
@@ -12245,15 +12231,11 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.scrollToLine = function(line, center) {
-        var lineHeight = { lineHeight: this.lineHeight };
-        var offset = 0;
-        for (var l = 1; l < line; l++) {
-            offset += this.session.getRowHeight(lineHeight, l-1);
-        }
-
-        if (center) {
+        var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
+        var offset = pos.top;
+        if (center)
             offset -= this.$size.scrollerHeight / 2;
-        }
+
         this.session.setScrollTop(offset);
     };
 
@@ -12270,8 +12252,10 @@ var VirtualRenderer = function(container, theme) {
         if (scrollLeft <= this.$padding)
             scrollLeft = 0;
 
-        this.scroller.scrollLeft = scrollLeft;
-        scrollLeft = this.scroller.scrollLeft;
+        if (this.scrollLeft !== scrollLeft) {
+            this.$loop.schedule(this.CHANGE_H_SCROLL);
+            this.scrollLeft = scrollLeft;
+        }
     };
 
     this.scrollBy = function(deltaX, deltaY) {
@@ -12914,7 +12898,7 @@ var Text = function(parentEl) {
         var size = this.$measureSizes();
         if (size && (this.$characterSize.width !== size.width || this.$characterSize.height !== size.height)) {
             this.$characterSize = size;
-            this._emit("changeCharaterSize", {data: size});
+            this._emit("changeCharacterSize", {data: size});
         }
     };
 
@@ -13492,7 +13476,7 @@ var Cursor = function(parentEl) {
         }, 1000);
     };
 
-    this.getPixelPosition = function(onScreen) {
+    this.getPixelPosition = function(position, onScreen) {
         if (!this.config || !this.session) {
             return {
                 left : 0,
@@ -13500,7 +13484,8 @@ var Cursor = function(parentEl) {
             };
         }
 
-        var position = this.session.selection.getCursor();
+        if (!position)
+            position = this.session.selection.getCursor();
         var pos = this.session.documentToScreenPosition(position);
         var cursorLeft = Math.round(this.$padding +
                                     pos.column * this.config.characterWidth);
@@ -13516,7 +13501,7 @@ var Cursor = function(parentEl) {
     this.update = function(config) {
         this.config = config;
 
-        this.pixelPos = this.getPixelPosition(true);
+        this.pixelPos = this.getPixelPosition(null, true);
 
         this.cursor.style.left = this.pixelPos.left + "px";
         this.cursor.style.top =  this.pixelPos.top + "px";
