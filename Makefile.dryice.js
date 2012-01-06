@@ -220,7 +220,7 @@ function buildAce(aceProject, options) {
         modes: [
             "css", "html", "javascript", "php", "coldfusion", "python", "lua", "xml", "ruby", "java", "c_cpp",
             "coffee", "perl", "csharp", "haxe", "svg", "clojure", "scss", "json", "groovy",
-            "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql"
+            "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql", "pgsql"
         ],
         themes: [
             "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn", 
