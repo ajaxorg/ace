@@ -114,6 +114,7 @@ var modes = [
     new Mode("markdown", "MarkDown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
     new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
     new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
+    new Mode("pgsql", "pgSQL",require("ace/mode/pgsql").Mode, ["pgsql", "sql"]),
     new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
     new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"]),
     new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
@@ -246,6 +247,10 @@ var docs = [
     new WrappedDoc(
         "sql", "SQL",
         require("ace/requirejs/text!./docs/sql.sql")
+    ),
+    new WrappedDoc(
+        "pgsql", "pgSQL",
+        require("ace/requirejs/text!./docs/pgsql.pgsql")
     )
 ];
 

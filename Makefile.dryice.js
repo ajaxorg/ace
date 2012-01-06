@@ -226,7 +226,7 @@ project.assumeAllFilesLoaded();
 [
     "css", "html", "javascript", "php", "coldfusion", "python", "lua", "xml", "ruby", "java", "c_cpp",
     "coffee", "perl", "csharp", "haxe", "svg", "clojure", "scss", "json", "groovy",
-    "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql"
+    "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql", "pgsql"
 ].forEach(function(mode) {
     console.log("mode " + mode);
     copy({
