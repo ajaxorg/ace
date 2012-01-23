@@ -3124,7 +3124,10 @@ var Editor = function(renderer, session) {
 
         this.onChangeMode();
 
+        this.$blockScrolling += 1;
         this.onCursorChange();
+        this.$blockScrolling -= 1;
+
         this.onScrollTopChange();
         this.onScrollLeftChange();
         this.onSelectionChange();
