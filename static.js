@@ -5,7 +5,7 @@ var http = require("http"),
     path = require("path"),
     fs = require("fs"),
     mime = require("mime"),
-    port = process.env.C9_PORT || 8888;
+    port = process.env.PORT || 8888;
 
 http.createServer(function(request, response) {
 
