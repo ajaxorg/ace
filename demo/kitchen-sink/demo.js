@@ -455,9 +455,9 @@ bindDropdown("split", function(value) {
     } else {
         var newEditor = (sp.getSplits() == 1);
         if (value == "below") {
-            sp.setOriantation(sp.BELOW);
+            sp.setOrientation(sp.BELOW);
         } else {
-            sp.setOriantation(sp.BESIDE);
+            sp.setOrientation(sp.BESIDE);
         }
         sp.setSplits(2);
 

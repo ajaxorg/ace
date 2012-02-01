@@ -645,9 +645,9 @@ bindDropdown("split", function(value) {
     } else {
         var newEditor = (sp.getSplits() == 1);
         if (value == "below") {
-            sp.setOriantation(sp.BELOW);
+            sp.setOrientation(sp.BELOW);
         } else {
-            sp.setOriantation(sp.BESIDE);
+            sp.setOrientation(sp.BESIDE);
         }
         sp.setSplits(2);
 
@@ -20973,7 +20973,7 @@ var Split = function(container, theme, splits) {
     this.$splits = 0;
     this.$editorCSS = "";
     this.$editors = [];
-    this.$oriantation = this.BESIDE;
+    this.$orientation = this.BESIDE;
 
     this.setSplits(splits || 1);
     this.$cEditor = this.$editors[0];
@@ -21130,15 +21130,15 @@ var Split = function(container, theme, splits) {
         return session;
     };
 
-    this.getOriantation = function() {
-        return this.$oriantation;
+    this.getOrientation = function() {
+        return this.$orientation;
     };
 
-    this.setOriantation = function(oriantation) {
-        if (this.$oriantation == oriantation) {
+    this.setOrientation = function(orientation) {
+        if (this.$orientation == orientation) {
             return;
         }
-        this.$oriantation = oriantation;
+        this.$orientation = orientation;
         this.resize();
     };
 
@@ -21147,7 +21147,7 @@ var Split = function(container, theme, splits) {
         var height = this.$container.clientHeight;
         var editor;
 
-        if (this.$oriantation == this.BESIDE) {
+        if (this.$orientation == this.BESIDE) {
             var editorWidth = width / this.$splits;
             for (var i = 0; i < this.$splits; i++) {
                 editor = this.$editors[i];
