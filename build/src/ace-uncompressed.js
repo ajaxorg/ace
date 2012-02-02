@@ -11975,6 +11975,7 @@ var VirtualRenderer = function(container, theme) {
 
         // full
         if (changes & this.CHANGE_FULL) {
+            this.$textLayer.checkForSizeChanges();
             this.$textLayer.update(this.layerConfig);
             if (this.showGutter)
                 this.$gutterLayer.update(this.layerConfig);
@@ -12950,6 +12951,11 @@ var Text = function(parentEl) {
 
         }
 
+        // Size and width can be null if the editor is not visible or
+        // detached from the document
+        if (!this.element.offsetWidth)
+            return null;
+
         var style = this.$measureNode.style;
         var computedStyle = dom.computedStyle(this.element);
         for (var prop in this.$fontStyles)
@@ -12964,7 +12970,6 @@ var Text = function(parentEl) {
         // detached from the document
         if (size.width == 0 && size.height == 0)
             return null;
-
         return size;
     };
 

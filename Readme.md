@@ -117,6 +117,7 @@ After the checkout Ace works out of the box. No build step is required. Open 'ed
 Or using Node.JS
 
 ```bash
+    npm install mime
     ./static.js
 ```
 
