@@ -22,23 +22,11 @@
     cursor: text;
 }
 
-/* setting pointer-events: auto; on node under the mouse, which changes during scroll,
-  will break mouse wheel scrolling in Safari */
-.ace_content * {
-     pointer-events: none;
-}
-
 .ace_composition {
     position: absolute;
     background: #555;
     color: #DDD;
     z-index: 4;
-}
-
-.ace_gutter .ace_layer {
-    position: relative;
-    min-width: 54px;
-    text-align: right;
 }
 
 .ace_gutter {
@@ -125,6 +113,16 @@
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    /* setting pointer-events: auto; on node under the mouse, which changes
+        during scroll, will break mouse wheel scrolling in Safari */
+    pointer-events: none;
+}
+
+.ace_gutter .ace_layer {
+    position: relative;
+    min-width: 40px;
+    text-align: right;
+    pointer-events: auto;
 }
 
 .ace_text-layer {
@@ -222,7 +220,7 @@
     cursor: move;
 }
 
-.ace_folding-enabled .ace_gutter-cell {
+.ace_folding-enabled > .ace_gutter-cell {
     padding-right: 13px;
 }
 
