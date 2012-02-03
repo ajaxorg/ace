@@ -11662,7 +11662,9 @@ var VirtualRenderer = function(container, theme) {
     this.scrollLeft = 0;
     
     event.addListener(this.scroller, "scroll", function() {
-        _self.session.setScrollLeft(_self.scroller.scrollLeft);
+        var scrollLeft = _self.scroller.scrollLeft;
+        _self.scrollLeft = scrollLeft;
+        _self.session.setScrollLeft(scrollLeft);
     });
 
     this.cursorPos = {
@@ -11974,9 +11976,15 @@ var VirtualRenderer = function(container, theme) {
             this.$computeLayerConfig();
 
         // horizontal scrolling
-        if (changes & this.CHANGE_H_SCROLL)
-            this.scroller.scrollLeft = this.scrollLeft
-
+        if (changes & this.CHANGE_H_SCROLL) {
+            this.scroller.scrollLeft = this.scrollLeft;
+            
+            // read the value after writing it since the value might get clipped
+            var scrollLeft = this.scroller.scrollLeft;
+            this.scrollLeft = scrollLeft;
+            this.session.setScrollLeft(scrollLeft);
+        }
+        
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();

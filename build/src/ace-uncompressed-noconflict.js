@@ -11662,7 +11662,9 @@ var VirtualRenderer = function(container, theme) {
     this.scrollLeft = 0;
     
     event.addListener(this.scroller, "scroll", function() {
-        _self.session.setScrollLeft(_self.scroller.scrollLeft);
+        var scrollLeft = _self.scroller.scrollLeft;
+        _self.scrollLeft = scrollLeft;
+        _self.session.setScrollLeft(scrollLeft);
     });
 
     this.cursorPos = {
@@ -11961,7 +11963,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$renderChanges = function(changes) {
-        if (!changes || !this.session)
+        if (!changes || !this.session || !this.container.offsetWidth)
             return;
 
         // text, scrolling and resize changes can cause the view port size to change
@@ -11974,13 +11976,19 @@ var VirtualRenderer = function(container, theme) {
             this.$computeLayerConfig();
 
         // horizontal scrolling
-        if (changes & this.CHANGE_H_SCROLL)
-            this.scroller.scrollLeft = this.scrollLeft
-
+        if (changes & this.CHANGE_H_SCROLL) {
+            this.scroller.scrollLeft = this.scrollLeft;
+            
+            // read the value after writing it since the value might get clipped
+            var scrollLeft = this.scroller.scrollLeft;
+            this.scrollLeft = scrollLeft;
+            this.session.setScrollLeft(scrollLeft);
+        }
+        
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
-            // update scrollbar first to not loose scroll position when gutter calls resize
+            // update scrollbar first to not lose scroll position when gutter calls resize
             this.$updateScrollBar();
             this.$textLayer.update(this.layerConfig);
             if (this.showGutter)
@@ -12262,10 +12270,9 @@ var VirtualRenderer = function(container, theme) {
         if (scrollLeft <= this.$padding)
             scrollLeft = 0;
 
-        if (this.scrollLeft !== scrollLeft) {
-            this.$loop.schedule(this.CHANGE_H_SCROLL);
+        if (this.scrollLeft !== scrollLeft)
             this.scrollLeft = scrollLeft;
-        }
+        this.$loop.schedule(this.CHANGE_H_SCROLL);
     };
 
     this.scrollBy = function(deltaX, deltaY) {
