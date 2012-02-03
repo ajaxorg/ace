@@ -1,0 +1,21 @@
+{
+  "name": "ace_docs",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ajaxorg/ace.git"
+  },
+  "engines": {
+    "node": "~0.6.0"
+  },
+  "dependencies": {
+    "colors": "~0.6.0",
+    "optimist": "~0.3.1",
+    "nomnom": "~1.5.1",
+    "jade": "~0.20.0",
+    "marked": "~0.1.5",
+    "fs-tools": "~0.1.0",
+    "markdown_conrefs": "1.0.2"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,34 @@
+include ../common_layout
+
+mixin identifyBuild('','')
+
+mixin doctype
+
+mixin head('Ace API Reference')
+
+body(onload="styleCode()")
+
+  mixin topBar(whoAmI)
+
+  mixin header
+
+  .container
+    .content
+      .row.container
+        .span5.offset4.sidebarContainer
+          #sidebar
+           
+        .span11
+          div.title
+            h1.pageTitle #{title}
+
+          .dev_guide#content
+            mixin markdown(data)
+
+          div#disqus_thread
+
+    mixin footer
+
+  mixin endingScripts
+
+</html>
