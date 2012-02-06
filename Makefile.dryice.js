@@ -388,12 +388,12 @@ function cloneProject(project) {
         ignores: project.ignoreRequires
     });
 
-    Object.keys(project.currentFiles).forEach(function(module) {
-        clone.currentFiles[module] = project.currentFiles[module];
+    Object.keys(project.currentModules).forEach(function(module) {
+        clone.currentModules[module] = project.currentModules[module];
     });
 
-    Object.keys(project.ignoredFiles).forEach(function(module) {
-        clone.ignoredFiles[module] = project.ignoredFiles[module];
+    Object.keys(project.ignoredModules).forEach(function(module) {
+        clone.ignoredModules[module] = project.ignoredModules[module];
     });
 
     return clone;
