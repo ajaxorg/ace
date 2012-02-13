@@ -11662,7 +11662,9 @@ var VirtualRenderer = function(container, theme) {
     this.scrollLeft = 0;
     
     event.addListener(this.scroller, "scroll", function() {
-        _self.session.setScrollLeft(_self.scroller.scrollLeft);
+        var scrollLeft = _self.scroller.scrollLeft;
+        _self.scrollLeft = scrollLeft;
+        _self.session.setScrollLeft(scrollLeft);
     });
 
     this.cursorPos = {
@@ -11961,7 +11963,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.$renderChanges = function(changes) {
-        if (!changes || !this.session)
+        if (!changes || !this.session || !this.container.offsetWidth)
             return;
 
         // text, scrolling and resize changes can cause the view port size to change
@@ -11973,20 +11975,33 @@ var VirtualRenderer = function(container, theme) {
         )
             this.$computeLayerConfig();
 
+        // horizontal scrolling
+        if (changes & this.CHANGE_H_SCROLL) {
+            this.scroller.scrollLeft = this.scrollLeft;
+            
+            // read the value after writing it since the value might get clipped
+            var scrollLeft = this.scroller.scrollLeft;
+            this.scrollLeft = scrollLeft;
+            this.session.setScrollLeft(scrollLeft);
+        }
+        
         // full
         if (changes & this.CHANGE_FULL) {
+            this.$textLayer.checkForSizeChanges();
+            // update scrollbar first to not lose scroll position when gutter calls resize
+            this.$updateScrollBar();
             this.$textLayer.update(this.layerConfig);
             if (this.showGutter)
                 this.$gutterLayer.update(this.layerConfig);
             this.$markerBack.update(this.layerConfig);
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
-            this.$updateScrollBar();
             return;
         }
 
         // scrolling
         if (changes & this.CHANGE_SCROLL) {
+            this.$updateScrollBar();
             if (changes & this.CHANGE_TEXT || changes & this.CHANGE_LINES)
                 this.$textLayer.update(this.layerConfig);
             else
@@ -11997,7 +12012,6 @@ var VirtualRenderer = function(container, theme) {
             this.$markerBack.update(this.layerConfig);
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
-            this.$updateScrollBar();
             return;
         }
 
@@ -12007,10 +12021,11 @@ var VirtualRenderer = function(container, theme) {
                 this.$gutterLayer.update(this.layerConfig);
         }
         else if (changes & this.CHANGE_LINES) {
-            this.$updateLines();
-            this.$updateScrollBar();
-            if (this.showGutter)
-                this.$gutterLayer.update(this.layerConfig);
+            if (this.$updateLines()) {
+                this.$updateScrollBar();
+                if (this.showGutter)
+                    this.$gutterLayer.update(this.layerConfig);
+            }
         } else if (changes & this.CHANGE_GUTTER) {
             if (this.showGutter)
                 this.$gutterLayer.update(this.layerConfig);
@@ -12029,11 +12044,6 @@ var VirtualRenderer = function(container, theme) {
 
         if (changes & this.CHANGE_SIZE)
             this.$updateScrollBar();
-
-        if (changes & this.CHANGE_H_SCROLL) {
-            //this.content.style.left = -this.scrollLeft + "px";
-            this.scroller.scrollLeft = this.scrollLeft
-        }
     };
 
     this.$computeLayerConfig = function() {
@@ -12047,9 +12057,13 @@ var VirtualRenderer = function(container, theme) {
         var horizScroll = this.$horizScrollAlwaysVisible || this.$size.scrollerWidth - longestLine < 0;
         var horizScrollChanged = this.$horizScroll !== horizScroll;
         this.$horizScroll = horizScroll;
-        if (horizScrollChanged)
+        if (horizScrollChanged) {
             this.scroller.style.overflowX = horizScroll ? "scroll" : "hidden";
-
+            // when we hide scrollbar scroll event isn't emited
+            // leaving session with wrong scrollLeft value
+            if (!horizScroll)
+                this.session.setScrollLeft(0);
+        }
         var maxHeight = this.session.getScreenLength() * this.lineHeight;
         this.session.setScrollTop(Math.max(0, Math.min(this.scrollTop, maxHeight - this.$size.scrollerHeight)));
 
@@ -12130,6 +12144,7 @@ var VirtualRenderer = function(container, theme) {
 
         // else update only the changed rows
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
+        return true;
     };
 
     this.$getLongestLine = function() {
@@ -12218,7 +12233,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.getScrollLeft = function() {
-        return this.session.getScrollTop();
+        return this.session.getScrollLeft();
     };
 
     this.getScrollTopRow = function() {
@@ -12255,10 +12270,9 @@ var VirtualRenderer = function(container, theme) {
         if (scrollLeft <= this.$padding)
             scrollLeft = 0;
 
-        if (this.scrollLeft !== scrollLeft) {
-            this.$loop.schedule(this.CHANGE_H_SCROLL);
+        if (this.scrollLeft !== scrollLeft)
             this.scrollLeft = scrollLeft;
-        }
+        this.$loop.schedule(this.CHANGE_H_SCROLL);
     };
 
     this.scrollBy = function(deltaX, deltaY) {
@@ -12278,12 +12292,10 @@ var VirtualRenderer = function(container, theme) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
         var col = Math.round(
-            (pageX + this.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft())
-            / this.characterWidth
+            (pageX + this.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft()) / this.characterWidth
         );
         var row = Math.floor(
-            (pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop())
-            / this.lineHeight
+            (pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop()) / this.lineHeight
         );
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0));
@@ -12949,6 +12961,11 @@ var Text = function(parentEl) {
             }
 
         }
+        
+        // Size and width can be null if the editor is not visible or
+        // detached from the document
+        if (!this.element.offsetWidth)
+            return null;
 
         var style = this.$measureNode.style;
         var computedStyle = dom.computedStyle(this.element);
@@ -13723,23 +13740,11 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    cursor: text;\n" +
   "}\n" +
   "\n" +
-  "/* setting pointer-events: auto; on node under the mouse, which changes during scroll,\n" +
-  "  will break mouse wheel scrolling in Safari */\n" +
-  ".ace_content * {\n" +
-  "     pointer-events: none;\n" +
-  "}\n" +
-  "\n" +
   ".ace_composition {\n" +
   "    position: absolute;\n" +
   "    background: #555;\n" +
   "    color: #DDD;\n" +
   "    z-index: 4;\n" +
-  "}\n" +
-  "\n" +
-  ".ace_gutter .ace_layer {\n" +
-  "    position: relative;\n" +
-  "    min-width: 54px;\n" +
-  "    text-align: right;\n" +
   "}\n" +
   "\n" +
   ".ace_gutter {\n" +
@@ -13826,6 +13831,16 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
+  "    /* setting pointer-events: auto; on node under the mouse, which changes\n" +
+  "        during scroll, will break mouse wheel scrolling in Safari */\n" +
+  "    pointer-events: none;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter .ace_layer {\n" +
+  "    position: relative;\n" +
+  "    min-width: 40px;\n" +
+  "    text-align: right;\n" +
+  "    pointer-events: auto;\n" +
   "}\n" +
   "\n" +
   ".ace_text-layer {\n" +
@@ -13923,7 +13938,7 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    cursor: move;\n" +
   "}\n" +
   "\n" +
-  ".ace_folding-enabled .ace_gutter-cell {\n" +
+  ".ace_folding-enabled > .ace_gutter-cell {\n" +
   "    padding-right: 13px;\n" +
   "}\n" +
   "\n" +
@@ -14043,7 +14058,7 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_fold {\
-    background-color: #0000A2;\
+    background-color: #6B72E6;\
 }\
 \
 .ace-tm .ace_text-layer {\

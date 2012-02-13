@@ -224,7 +224,7 @@ function string(state) {
         token : "string", // multi line string start
         merge : true,
         regex : '["].*',
-        next : state + "-qqstring"
+        next : state + "_qqstring"
     }, {
         token : "string",
         regex : "'.*?'"
@@ -232,7 +232,7 @@ function string(state) {
         token : "string", // multi line string start
         merge : true,
         regex : "['].*",
-        next : state + "-qstring"
+        next : state + "_qstring"
     }];
 }
 
@@ -281,17 +281,17 @@ exports.tag = function(states, name, nextState) {
         },        
         merge : true,
         regex : "[-_a-zA-Z0-9:!]+",
-        next : name + "embed-attribute-list" 
+        next : name + "_embed_attribute_list" 
     }, {
         token: "empty",
         regex: "",
-        next : name + "embed-attribute-list"
+        next : name + "_embed_attribute_list"
     }];
 
-    states[name + "-qstring"] = multiLineString("'", name + "embed-attribute-list");
-    states[name + "-qqstring"] = multiLineString("\"", name + "embed-attribute-list");
+    states[name + "_qstring"] = multiLineString("'", name + "_embed_attribute_list");
+    states[name + "_qqstring"] = multiLineString("\"", name + "_embed_attribute_list");
     
-    states[name + "embed-attribute-list"] = [{
+    states[name + "_embed_attribute_list"] = [{
         token : "meta.tag",
         merge : true,
         regex : "\/?>",
