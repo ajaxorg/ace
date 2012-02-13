@@ -269,9 +269,11 @@ var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightR
 var XQueryHighlightRules = function() {
 
   var keywords = lang.arrayToMap(
-    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|" +
+    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|" +
      "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
-     "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in").split("|")
+     "using|stemming|" +
+     "while|" + 
+     "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
     );
 
     // regexp must not have capturing parentheses
@@ -316,6 +318,14 @@ var XQueryHighlightRules = function() {
             token: "support.function",
             regex: "\\w[\\w+_\\-:]+(?=\\()"
         }, {
+      token : function(value) {
+            if (keywords[value])
+                return "keyword";
+            else
+                return "identifier";
+      },
+      regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+    }, {
             token: "keyword.operator",
             regex: "\\*|=|<|>|\\-|\\+|and|or|eq|ne|lt|gt"
         }, {
@@ -324,15 +334,7 @@ var XQueryHighlightRules = function() {
         }, {
             token: "rparen",
             regex: "[\\])}]"
-        }, {
-      token : function(value) {
-            if (keywords[value])
-                return "keyword";
-            else
-                return "identifier";
-      },
-      regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
-    } ],
+        } ],
 
         tag : [ {
             token : "text",
