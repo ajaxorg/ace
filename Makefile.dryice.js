@@ -267,10 +267,10 @@ function buildAce(aceProject, options) {
     });
     copy({
         source: [
-            copy.source.commonjs({
+            {
                 project: project,
                 require: options.requires
-            })
+            }
         ],
         filter: [ copy.filter.moduleDefines ],
         dest: ace
@@ -286,10 +286,10 @@ function buildAce(aceProject, options) {
         project.assumeAllFilesLoaded();
         copy({
             source: [
-            copy.source.commonjs({
+                {
                     project: cloneProject(project),
                     require: [ "pilot/index" ]
-                })
+                }
             ],
             filter: filters,
             dest:   targetDir + "/" + name + "-compat" + suffix
@@ -303,10 +303,10 @@ function buildAce(aceProject, options) {
         console.log("mode " + mode);
         copy({
             source: [
-            copy.source.commonjs({
+                {
                     project: cloneProject(project),
                     require: [ 'ace/mode/' + mode ]
-                })
+                }
             ],
             filter: filters,
             dest:   targetDir + "/mode-" + mode + suffix
@@ -340,7 +340,7 @@ function buildAce(aceProject, options) {
         });
         copy({
             source: [
-                copy.source.commonjs({
+                {
                     project: workerProject,
                     require: [
                         'ace/lib/fixoldbrowsers',
@@ -348,7 +348,7 @@ function buildAce(aceProject, options) {
                         'ace/lib/oop',
                         'ace/mode/' + mode + '_worker'
                     ]
-                })
+                }
             ],
             filter: [ copy.filter.moduleDefines, filterTextPlugin ],
             dest: worker
@@ -370,10 +370,10 @@ function buildAce(aceProject, options) {
     options.keybindings.forEach(function(keybinding) {
         copy({
             source: [
-            copy.source.commonjs({
+                {
                     project: cloneProject(project),
                     require: [ 'ace/keyboard/keybinding/' + keybinding ]
-                })
+                }
             ],
             filter: filters,
             dest: "build/src/keybinding-" + keybinding + suffix
@@ -388,12 +388,12 @@ function cloneProject(project) {
         ignores: project.ignoreRequires
     });
 
-    Object.keys(project.currentFiles).forEach(function(module) {
-        clone.currentFiles[module] = project.currentFiles[module];
+    Object.keys(project.currentModules).forEach(function(module) {
+        clone.currentModules[module] = project.currentModules[module];
     });
 
-    Object.keys(project.ignoredFiles).forEach(function(module) {
-        clone.ignoredFiles[module] = project.ignoredFiles[module];
+    Object.keys(project.ignoredModules).forEach(function(module) {
+        clone.ignoredModules[module] = project.ignoredModules[module];
     });
 
     return clone;
