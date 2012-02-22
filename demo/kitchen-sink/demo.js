@@ -42,7 +42,7 @@ define(function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 var env = {};
-    
+
 var net = require("ace/lib/net");
 var event = require("ace/lib/event");
 var theme = require("ace/theme/textmate");
@@ -66,7 +66,7 @@ var Doc = function(name, desc, file) {
 
 var WrappedDoc = function(name, desc, file) {
     Doc.apply(this, arguments);
-    
+
     this.doc.setUseWrapMode(true);
     this.doc.setWrapLimitRange(80, 80);
 };
@@ -77,7 +77,7 @@ var Mode = function(name, desc, clazz, extensions) {
     this.clazz = clazz;
     this.mode = new clazz();
     this.mode.name = name;
-    
+
     this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
 };
 
@@ -89,7 +89,7 @@ var themes = {};
 function loadTheme(name, callback) {
     if (themes[name])
         return callback();
-        
+
     themes[name] = 1;
     var base = name.split("/").pop();
     var fileName = "demo/kitchen-sink/theme-" + base + "-uncompressed.js";
@@ -359,6 +359,9 @@ bindDropdown("mode", function(value) {
 });
 
 bindDropdown("theme", function(value) {
+    if (!value)
+        return;
+
     if (module.packaged) {
         loadTheme(value, function() {
             env.editor.setTheme(value);
