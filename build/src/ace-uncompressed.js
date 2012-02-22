@@ -174,6 +174,7 @@ function exportAce(ns) {
                 return callback.apply(this, arguments);
             });
         };
+        global.define.packaged = true;
 
         return;
     }

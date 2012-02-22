@@ -174,6 +174,7 @@ function exportAce(ns) {
                 return callback.apply(this, arguments);
             });
         };
+        global.define.packaged = true;
 
         return;
     }
@@ -569,7 +570,6 @@ bindDropdown("theme", function(value) {
 
     if (module.packaged) {
         loadTheme(value, function() {
-            console.log(value)
             env.editor.setTheme(value);
         });
     }
