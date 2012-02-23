@@ -51,7 +51,7 @@ function main(args) {
             target = null;
         }
     }
-    
+
     if (!target) {
         console.log("--- Ace Dryice Build Tool ---");
         console.log("");
@@ -61,7 +61,7 @@ function main(args) {
         console.log("  bm          Runs bookmarklet build of Ace");
         process.exit(0);
     }
-    
+
     var aceProject = {
         roots: [
             ACE_HOME + '/lib',
@@ -69,7 +69,7 @@ function main(args) {
         ],
         textPluginPattern: /^ace\/requirejs\/text!/
     };
-    
+
     if (target == "normal") {
         ace(aceProject);
     }
@@ -91,7 +91,7 @@ function bookmarklet(aceProject) {
         source: "build_support/style.css",
         dest:   targetDir + '/style.css'
     });
-    
+
     buildAce(aceProject, {
         targetDir: targetDir + "/src",
         ns: "__ace_shadowed__",
@@ -125,7 +125,7 @@ function ace(aceProject) {
         name: "ace",
         workers: []
     });
-    
+
     // compressed
     buildAce(aceProject, {
         compress: true,
@@ -145,7 +145,7 @@ function ace(aceProject) {
     });
 
     console.log('# ace License | Readme | Changelog ---------');
-    
+
     copy({
         source: "build_support/editor.html",
         dest:   "build/editor.html"
@@ -175,7 +175,7 @@ function demo(aceProject) {
         ref = "";
         version = "";
     }
-    
+
     copy({
         source: "kitchen-sink.html",
         dest:   "build/kitchen-sink.html",
@@ -190,7 +190,7 @@ function demo(aceProject) {
             );
         }]
     });
-    
+
     buildAce(aceProject, {
         targetDir: "build/demo/kitchen-sink",
         ns: "ace",
@@ -206,7 +206,7 @@ function demo(aceProject) {
 }
 
 function buildAce(aceProject, options) {
-    
+
     var defaults = {
         targetDir: __dirname + "/build/src",
         ns: "ace",
@@ -220,10 +220,11 @@ function buildAce(aceProject, options) {
         modes: [
             "css", "html", "javascript", "php", "coldfusion", "python", "lua", "xml", "ruby", "java", "c_cpp",
             "coffee", "perl", "csharp", "haxe", "svg", "clojure", "scss", "json", "groovy",
-            "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql", "pgsql"
+            "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql",
+            "text", "pgsql"
         ],
         themes: [
-            "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn", 
+            "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn",
             "dreamweaver", "eclipse",
             "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
             "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",
@@ -234,11 +235,11 @@ function buildAce(aceProject, options) {
         workers: ["javascript", "coffee", "css"],
         keybindings: ["vim", "emacs"]
     };
-    
+
     for(var key in defaults)
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
-    
+
     if (!options.requires)
         options.requires = [options.exportModule];
 
@@ -247,18 +248,18 @@ function buildAce(aceProject, options) {
     if (options.noconflict) {
         filters.push(namespace(options.ns));
         if (options.exportModule)
-            filters.push(exportAce(options.ns, options.exportModule, options.ns));
+            var exportFilter = exportAce(options.ns, options.exportModule, options.ns);
     } else if (options.exportModule) {
-        filters.push(exportAce(options.ns, options.exportModule));
+        var exportFilter = exportAce(options.ns, options.exportModule);
     }
-    
+
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
-        
+
     var suffix = options.suffix;
     var targetDir = options.targetDir;
     var name = options.name;
-    
+
     var project = copy.createCommonJsProject(aceProject);
     var ace = copy.createDataObject();
     copy({
@@ -267,29 +268,29 @@ function buildAce(aceProject, options) {
     });
     copy({
         source: [
-            copy.source.commonjs({
+            {
                 project: project,
                 require: options.requires
-            })
+            }
         ],
         filter: [ copy.filter.moduleDefines ],
         dest: ace
     });
-    
+
     copy({
         source: ace,
-        filter: filters,
+        filter: exportFilter ? filters.concat(exportFilter) : filters,
         dest:   targetDir + '/' + name + suffix
     });
-    
+
     if (options.compat) {
         project.assumeAllFilesLoaded();
         copy({
             source: [
-            copy.source.commonjs({
+                {
                     project: cloneProject(project),
                     require: [ "pilot/index" ]
-                })
+                }
             ],
             filter: filters,
             dest:   targetDir + "/" + name + "-compat" + suffix
@@ -297,38 +298,39 @@ function buildAce(aceProject, options) {
     }
 
     console.log('# ace modes ---------');
-    
+
     project.assumeAllFilesLoaded();
     options.modes.forEach(function(mode) {
         console.log("mode " + mode);
         copy({
             source: [
-            copy.source.commonjs({
+                {
                     project: cloneProject(project),
                     require: [ 'ace/mode/' + mode ]
-                })
+                }
             ],
             filter: filters,
             dest:   targetDir + "/mode-" + mode + suffix
         });
     });
-    
+
     console.log('# ace themes ---------');
-    
+
+    project.assumeAllFilesLoaded();
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
         copy({
             source: [{
-                root: ACE_HOME + '/lib',
-                include: "ace/theme/" + theme + ".js"
+                project: cloneProject(project),
+                require: ["ace/theme/" + theme]
             }],
             filter: filters,
             dest:   targetDir + "/theme-" + theme + suffix
         });
     });
-    
+
     console.log('# ace worker ---------');
-    
+
     options.workers.forEach(function(mode) {
         console.log("worker for " + mode + " mode");
         var worker = copy.createDataObject();
@@ -340,7 +342,7 @@ function buildAce(aceProject, options) {
         });
         copy({
             source: [
-                copy.source.commonjs({
+                {
                     project: workerProject,
                     require: [
                         'ace/lib/fixoldbrowsers',
@@ -348,7 +350,7 @@ function buildAce(aceProject, options) {
                         'ace/lib/oop',
                         'ace/mode/' + mode + '_worker'
                     ]
-                })
+                }
             ],
             filter: [ copy.filter.moduleDefines, filterTextPlugin ],
             dest: worker
@@ -362,18 +364,18 @@ function buildAce(aceProject, options) {
             dest: targetDir + "/worker-" + mode + ".js"
         });
     });
-    
+
     console.log('# ace key bindings ---------');
-    
+
     // copy key bindings
     project.assumeAllFilesLoaded();
     options.keybindings.forEach(function(keybinding) {
         copy({
             source: [
-            copy.source.commonjs({
+                {
                     project: cloneProject(project),
                     require: [ 'ace/keyboard/keybinding/' + keybinding ]
-                })
+                }
             ],
             filter: filters,
             dest: "build/src/keybinding-" + keybinding + suffix
@@ -388,12 +390,12 @@ function cloneProject(project) {
         ignores: project.ignoreRequires
     });
 
-    Object.keys(project.currentFiles).forEach(function(module) {
-        clone.currentFiles[module] = project.currentFiles[module];
+    Object.keys(project.currentModules).forEach(function(module) {
+        clone.currentModules[module] = project.currentModules[module];
     });
 
-    Object.keys(project.ignoredFiles).forEach(function(module) {
-        clone.ignoredFiles[module] = project.ignoredFiles[module];
+    Object.keys(project.ignoredModules).forEach(function(module) {
+        clone.ignoredModules[module] = project.ignoredModules[module];
     });
 
     return clone;
@@ -409,7 +411,7 @@ function namespace(ns) {
             .toString()
             .replace('var ACE_NAMESPACE = "";', 'var ACE_NAMESPACE = "' + ns +'";')
             .replace(/\bdefine\(/g, ns + ".define(");
-        
+
         return text;
     };
 }
@@ -418,7 +420,7 @@ function exportAce(ns, module, requireBase) {
     requireBase = requireBase || "window";
     module = module || "ace/ace";
     return function(text) {
-        
+
         var template = function() {
             (function() {
                 REQUIRE_NS.require(["MODULE"], function(a) {
@@ -429,7 +431,7 @@ function exportAce(ns, module, requireBase) {
                 });
             })();
         };
-        
+
         return (text + ";" + template
             .toString()
             .replace(/MODULE/g, module)

@@ -18,7 +18,7 @@
         "jsdom": "0.2.x",
         "amd-loader": ">=0.0.3",
         "libxml": "0.0.x",
-        "dryice": ">=0.3.1 <0.4"
+        "dryice": ">=0.4.1"
     },
 
     "licenses": [{

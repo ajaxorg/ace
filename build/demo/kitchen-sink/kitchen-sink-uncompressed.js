@@ -40,7 +40,7 @@
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
- 
+
 (function() {
 
 var ACE_NAMESPACE = "";
@@ -48,9 +48,6 @@ var ACE_NAMESPACE = "";
 var global = (function() {
     return this;
 })();
-
-if (typeof requirejs !== "undefined")
-    return;
 
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
@@ -68,7 +65,7 @@ var _define = function(module, deps, payload) {
 
     if (!_define.modules)
         _define.modules = {};
-        
+
     _define.modules[module] = payload;
 };
 
@@ -92,11 +89,11 @@ var _require = function(parentId, module, callback) {
         var payload = lookup(parentId, module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
-        
+
         if (callback) {
             callback();
         }
-    
+
         return payload;
     }
     else {
@@ -115,13 +112,13 @@ var normalizeModule = function(parentId, moduleName) {
     if (moduleName.charAt(0) == ".") {
         var base = parentId.split("/").slice(0, -1).join("/");
         moduleName = base + "/" + moduleName;
-        
+
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
             var previous = moduleName;
             moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
         }
     }
-    
+
     return moduleName;
 };
 
@@ -141,19 +138,19 @@ var lookup = function(parentId, moduleName) {
     if (typeof module === 'function') {
         var exports = {};
         var mod = {
-            id: moduleName, 
+            id: moduleName,
             uri: '',
             exports: exports,
             packaged: true
         };
-        
+
         var req = function(module, callback) {
             return _require(moduleName, module, callback);
         };
-        
+
         var returnValue = module(req, exports, mod);
         exports = returnValue || mod.exports;
-            
+
         // cache the resulting module object for next time
         _define.modules[moduleName] = exports;
         return exports;
@@ -163,26 +160,45 @@ var lookup = function(parentId, moduleName) {
 };
 
 function exportAce(ns) {
+
+    if (typeof requirejs !== "undefined") {
+
+        var define = global.define;
+        global.define = function(id, deps, callback) {
+            if (typeof callback !== "function")
+                return define.apply(this, arguments);
+
+            return define(id, deps, function(require, exports, module) {
+                if (deps[2] == "module")
+                    module.packaged = true;
+                return callback.apply(this, arguments);
+            });
+        };
+        global.define.packaged = true;
+
+        return;
+    }
+
     var require = function(module, callback) {
         return _require("", module, callback);
     };
     require.packaged = true;
-    
+
     var root = global;
     if (ns) {
         if (!global[ns])
             global[ns] = {};
         root = global[ns];
     }
-        
+
     if (root.define)
         _define.original = root.define;
-    
+
     root.define = _define;
 
     if (root.require)
         _require.original = root.require;
-    
+
     root.require = require;
 }
 
@@ -232,7 +248,7 @@ define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbro
 
 require("ace/lib/fixoldbrowsers");
 var env = {};
-    
+
 var net = require("ace/lib/net");
 var event = require("ace/lib/event");
 var theme = require("ace/theme/textmate");
@@ -256,7 +272,7 @@ var Doc = function(name, desc, file) {
 
 var WrappedDoc = function(name, desc, file) {
     Doc.apply(this, arguments);
-    
+
     this.doc.setUseWrapMode(true);
     this.doc.setWrapLimitRange(80, 80);
 };
@@ -267,7 +283,7 @@ var Mode = function(name, desc, clazz, extensions) {
     this.clazz = clazz;
     this.mode = new clazz();
     this.mode.name = name;
-    
+
     this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
 };
 
@@ -279,7 +295,7 @@ var themes = {};
 function loadTheme(name, callback) {
     if (themes[name])
         return callback();
-        
+
     themes[name] = 1;
     var base = name.split("/").pop();
     var fileName = "demo/kitchen-sink/theme-" + base + "-uncompressed.js";
@@ -549,6 +565,9 @@ bindDropdown("mode", function(value) {
 });
 
 bindDropdown("theme", function(value) {
+    if (!value)
+        return;
+
     if (module.packaged) {
         loadTheme(value, function() {
             env.editor.setTheme(value);
@@ -2186,20 +2205,9 @@ else {
 }
 
 exports.addMouseWheelListener = function(el, callback) {
-    var max = 0;
+    var factor = 8;
     var listener = function(e) {
         if (e.wheelDelta !== undefined) {
-
-            // some versions of Safari (e.g. 5.0.5) report insanely high
-            // scroll values. These browsers require a higher factor
-            if (Math.abs(e.wheelDeltaY) > max)
-                max = Math.abs(e.wheelDeltaY);
-
-            if (max > 5000)
-                var factor = 400;
-            else
-                var factor = 8;
-
             if (e.wheelDeltaX !== undefined) {
                 e.wheelX = -e.wheelDeltaX / factor;
                 e.wheelY = -e.wheelDeltaY / factor;

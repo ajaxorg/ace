@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/chrome', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/chrome', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.cssClass = "ace-chrome";
 exports.cssText = ".ace-chrome .ace_editor {\
@@ -211,13 +211,3 @@ var dom = require("../lib/dom");
 dom.importCssString(exports.cssText, exports.cssClass);
 
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

@@ -1105,13 +1105,3 @@ oop.inherits(PythonHighlightRules, TextHighlightRules);
 
 exports.PythonHighlightRules = PythonHighlightRules;
 });
-;
-            (function() {
-                ace.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

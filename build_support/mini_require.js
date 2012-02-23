@@ -40,7 +40,7 @@
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
- 
+
 (function() {
 
 var ACE_NAMESPACE = "";
@@ -48,9 +48,6 @@ var ACE_NAMESPACE = "";
 var global = (function() {
     return this;
 })();
-
-if (typeof requirejs !== "undefined")
-    return;
 
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
@@ -68,7 +65,7 @@ var _define = function(module, deps, payload) {
 
     if (!_define.modules)
         _define.modules = {};
-        
+
     _define.modules[module] = payload;
 };
 
@@ -92,11 +89,11 @@ var _require = function(parentId, module, callback) {
         var payload = lookup(parentId, module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
-        
+
         if (callback) {
             callback();
         }
-    
+
         return payload;
     }
     else {
@@ -115,13 +112,13 @@ var normalizeModule = function(parentId, moduleName) {
     if (moduleName.charAt(0) == ".") {
         var base = parentId.split("/").slice(0, -1).join("/");
         moduleName = base + "/" + moduleName;
-        
+
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
             var previous = moduleName;
             moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
         }
     }
-    
+
     return moduleName;
 };
 
@@ -141,19 +138,19 @@ var lookup = function(parentId, moduleName) {
     if (typeof module === 'function') {
         var exports = {};
         var mod = {
-            id: moduleName, 
+            id: moduleName,
             uri: '',
             exports: exports,
             packaged: true
         };
-        
+
         var req = function(module, callback) {
             return _require(moduleName, module, callback);
         };
-        
+
         var returnValue = module(req, exports, mod);
         exports = returnValue || mod.exports;
-            
+
         // cache the resulting module object for next time
         _define.modules[moduleName] = exports;
         return exports;
@@ -163,26 +160,45 @@ var lookup = function(parentId, moduleName) {
 };
 
 function exportAce(ns) {
+
+    if (typeof requirejs !== "undefined") {
+
+        var define = global.define;
+        global.define = function(id, deps, callback) {
+            if (typeof callback !== "function")
+                return define.apply(this, arguments);
+
+            return define(id, deps, function(require, exports, module) {
+                if (deps[2] == "module")
+                    module.packaged = true;
+                return callback.apply(this, arguments);
+            });
+        };
+        global.define.packaged = true;
+
+        return;
+    }
+
     var require = function(module, callback) {
         return _require("", module, callback);
     };
     require.packaged = true;
-    
+
     var root = global;
     if (ns) {
         if (!global[ns])
             global[ns] = {};
         root = global[ns];
     }
-        
+
     if (root.define)
         _define.original = root.define;
-    
+
     root.define = _define;
 
     if (root.require)
         _require.original = root.require;
-    
+
     root.require = require;
 }
 
