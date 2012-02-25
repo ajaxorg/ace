@@ -1,9 +1,7 @@
-require("colors");
-
 var argv = require("optimist").argv,
     ndoc = require(argv._[0] || "./build/ndoc/bin/ndoc");
 
-console.log("GENERATING DOCUMENTATION".green);
+console.log("GENERATING DOCUMENTATION");
 
 var srcPath = process.cwd() + "/../lib/ace";
 
