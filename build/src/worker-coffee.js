@@ -198,7 +198,7 @@ define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, ex
     RegExp.prototype.exec = function (str) {
         var match = real.exec.apply(this, arguments),
             name, r2;
-        if (match) {
+        if ( typeof(str) == 'string' && match) {
             // Fix browsers whose `exec` methods don't consistently return `undefined` for
             // nonparticipating capturing groups
             if (!compliantExecNpcg && match.length > 1 && indexOf(match, "") > -1) {
@@ -263,7 +263,8 @@ define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, ex
         return -1;
     };
 
-});// vim: ts=4 sts=4 sw=4 expandtab
+});
+// vim: ts=4 sts=4 sw=4 expandtab
 // -- kriskowal Kris Kowal Copyright (C) 2009-2011 MIT License
 // -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
 // -- dantman Daniel Friesen Copyright (C) 2010 XXX TODO License or CLA
