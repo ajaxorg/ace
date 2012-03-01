@@ -31,7 +31,7 @@ Development
     node dev
 
 **NOTE:** Modified source files are automatically reloaded on browser refresh so there is no
-need to restart the server during development.
+need to restart the server during development. (**NOT YET IMPLEMENTED**)
 
 
 Production
@@ -57,7 +57,7 @@ used in a production application by serving these static files via a web server.
         });
     </script>
 
-See `` for an example of how to write an ACE bootstrap package.
+See `../demo/kitchen-sink` for an example of how to write an ACE bootstrap package.
 
 See [Embedding Ace](https://github.com/ajaxorg/ace) and [Embedding API](https://github.com/ajaxorg/ace/wiki/Embedding---API)
 for more information on how to embed and interact with ACE.
