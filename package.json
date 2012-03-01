@@ -20,7 +20,9 @@
         "libxml": "0.0.x",
         "dryice": ">=0.4.1"
     },
-
+    "mappings": {
+        "ace": "."
+    },
     "licenses": [{
         "type": "MPL",
         "url": "http://www.mozilla.org/MPL/"
@@ -38,5 +40,28 @@
     },
     "scripts": {
         "test": "node lib/ace/test/all.js"
+    },
+    "config": {
+        "github.com/sourcemint/bundler-js/0/-meta/config/0": {
+            "adapter": "github.com/sourcemint/sdk-requirejs/0",
+            "modules": {
+                "/lib/ace/virtual_renderer.js": {
+                    "dynamicLinks": [
+                        "/lib/ace/theme/*.js"
+                    ]
+                },
+                "/lib/ace/worker/worker_client.js": {
+                    "dynamicLinks": [
+                        "/lib/ace/worker/worker_sourcemint.js"
+                    ]
+                },
+                "/lib/ace/worker/worker_sourcemint.js": {
+                    "bundleLoader": true,
+                    "dynamicLinks": [
+                        "/lib/ace/mode/*_worker.js"
+                    ]
+                }
+            }
+        }
     }
 }
