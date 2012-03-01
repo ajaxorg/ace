@@ -20,7 +20,10 @@ Development
 **Install:**
 
     git clone git://github.com/ajaxorg/ace.git
-    cd ace/sourcemint
+    cd ace
+    # TMP: Switch to sourcemint branch
+    git checkout sourcemint
+    cd sourcemint
     npm install
 
 **Start development server:**
