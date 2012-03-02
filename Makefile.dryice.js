@@ -232,7 +232,7 @@ function buildAce(aceProject, options) {
             "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties",
             "twilight", "vibrant_ink"
         ],
-        workers: ["javascript", "coffee", "css"],
+        workers: ["javascript", "coffee", "css", "json"],
         keybindings: ["vim", "emacs"]
     };
 
