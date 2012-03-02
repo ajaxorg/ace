@@ -198,7 +198,7 @@ define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, ex
     RegExp.prototype.exec = function (str) {
         var match = real.exec.apply(this, arguments),
             name, r2;
-        if (match) {
+        if ( typeof(str) == 'string' && match) {
             // Fix browsers whose `exec` methods don't consistently return `undefined` for
             // nonparticipating capturing groups
             if (!compliantExecNpcg && match.length > 1 && indexOf(match, "") > -1) {
@@ -263,7 +263,8 @@ define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, ex
         return -1;
     };
 
-});// vim: ts=4 sts=4 sw=4 expandtab
+});
+// vim: ts=4 sts=4 sw=4 expandtab
 // -- kriskowal Kris Kowal Copyright (C) 2009-2011 MIT License
 // -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
 // -- dantman Daniel Friesen Copyright (C) 2010 XXX TODO License or CLA
@@ -1538,10 +1539,10 @@ exports.implement = function(proto, mixin) {
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
+
 define('ace/mode/coffee_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/coffee/coffee-script'], function(require, exports, module) {
 "use strict";
-    
+
 var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
 var coffee = require("../mode/coffee/coffee-script");
@@ -1557,29 +1558,29 @@ var Worker = exports.Worker = function(sender) {
 oop.inherits(Worker, Mirror);
 
 (function() {
-    
+
     this.onUpdate = function() {
         var value = this.doc.getValue();
-        
+
         try {
             coffee.parse(value);
         } catch(e) {
             var m = e.message.match(/Parse error on line (\d+): (.*)/);
             if (m) {
                 this.sender.emit("error", {
-                    row: parseInt(m[1]) - 1,
+                    row: parseInt(m[1], 10) - 1,
                     column: null,
                     text: m[2],
                     type: "error"
                 });
                 return;
             }
-            
+
             if (e instanceof SyntaxError) {
                 var m = e.message.match(/ on line (\d+)/);
-                if (m) {                    
+                if (m) {
                     this.sender.emit("error", {
-                        row: parseInt(m[1]) - 1,
+                        row: parseInt(m[1], 10) - 1,
                         column: null,
                         text: e.message.replace(m[0], ""),
                         type: "error"
@@ -1590,7 +1591,7 @@ oop.inherits(Worker, Mirror);
         }
         this.sender.emit("ok");
     };
-    
+
 }).call(Worker.prototype);
 
 });define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
