@@ -7,56 +7,36 @@ var PATH = require("path"),
 
 exports.main = function(options) {
 
-    // Rebuild bundles to get a clean start.
+    var server = CONNECT();
 
-    console.log("Building fresh bundles from source ...");
-    
-    if (!PATH.existsSync(__dirname + "/dist")) {
-        FS.mkdir(__dirname + "/dist", 0755);
-    }
+    server.use(CONNECT.router(function(app) {
 
-    BUNDLER.bundle(PATH.dirname(__dirname) + "/demo/kitchen-sink", __dirname + "/dist", {
-        packageIdHashSeed: "__ACE__",
-        forceCompleteBuild: true,
-        writeManifest: true
-    }).then(function() {
+        app.get(/^\/loader.js/, CONNECT.static(PATH.dirname(require.resolve("sourcemint-loader-js/loader.js"))));
 
-        console.log("... Done. Bundles will be updated as changes are detected in source files.");
-
-        var server = CONNECT();
-
-        server.use(CONNECT.router(function(app) {
-
-            app.get(/^\/loader.js/, CONNECT.static(PATH.dirname(require.resolve("sourcemint-loader-js/loader.js"))));
-
-            app.get(/^(\/demo\/kitchen-sink)(\.js)?(\/(.*))?$/, function (req, res) {
-
-                req.url = req.params[2] || "";
-
-                BUNDLER.Middleware(PATH.dirname(__dirname) + "/demo/kitchen-sink", __dirname + "/dist", {
-                    packageIdHashSeed: "__ACE__",
-                    // TODO: https://github.com/sourcemint/bundler-js/issues/3
-                    rebuildChanges: false
-                }).handle(req, res);
-            });
-
-            app.get(/^\//, function(req, res)
-            {
-                CONNECT.static(__dirname)(req, res, function()
-                {
-                    res.writeHead(404);
-                    res.end("Not found!");
-                });                
-            });
+        app.get(/^(?:\/demo\/kitchen-sink)(?:\.js)?(\/.*)?$/, BUNDLER.hoist(PATH.dirname(__dirname) + "/demo/kitchen-sink", {
+            distributionBasePath: __dirname + "/dist",
+            packageIdHashSeed: "__ACE__",
+            bundleLoader: false,
+            logger: {
+                log: function() {
+                    console.log.apply(null, arguments);
+                }
+            }
         }));
 
-        server.listen(options.port, "127.0.0.1");
+        app.get(/^\//, function(req, res)
+        {
+            CONNECT.static(__dirname)(req, res, function()
+            {
+                res.writeHead(404);
+                res.end("Not found!");
+            });                
+        });
+    }));
 
-        console.log("ACE development server running at http://127.0.0.1:" + options.port + "/");
+    server.listen(options.port, "127.0.0.1");
 
-    }, function(err) {
-        console.error(err.stack);
-    });
+    console.log("ACE development server running at http://127.0.0.1:" + options.port + "/");
 }
 
 if (require.main === module) {
