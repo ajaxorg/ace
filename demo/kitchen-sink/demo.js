@@ -122,10 +122,11 @@ var modes = [
     new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
     new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
     new Mode("sql", "SQL", require("ace/mode/sql").Mode, ["sql"]),
-    new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
+    new Mode("svg", "SVG", require("ace/mode/svg").Mode, ["svg"]),
     new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
     new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
+    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"]),
+    new Mode("sh", "SH", require("ace/mode/sh").Mode, ["sh"])
 ];
 
 modesByName = {};
@@ -231,6 +232,10 @@ var docs = [
     new Doc(
         "haxe", "haXe",
         require("ace/requirejs/text!./docs/Haxe.hx")
+    ),
+    new Doc(
+        "sh", "SH",
+        require("ace/requirejs/text!./docs/sh.sh")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
