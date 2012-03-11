@@ -31,7 +31,7 @@ Development
     node dev
 
 **NOTE:** Modified source files are automatically reloaded on browser refresh so there is no
-need to restart the server during development. (**NOT YET IMPLEMENTED**)
+need to restart the server during development.
 
 
 Production
