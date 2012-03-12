@@ -24,7 +24,7 @@ ace.define('ace/mode/yaml', ['require', 'exports', 'module' , 'ace/lib/oop', 'ac
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
-var YamlHighlightRules = require("./yaml_highlight_rules").SqlHighlightRules;
+var YamlHighlightRules = require("./yaml_highlight_rules").YamlHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
 var Mode = function() {
@@ -176,7 +176,7 @@ var YamlHighlightRules = function() {
 
 oop.inherits(YamlHighlightRules, TextHighlightRules);
 
-exports.YamlHighlightRules = JsonHighlightRules;
+exports.YamlHighlightRules = YamlHighlightRules;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
