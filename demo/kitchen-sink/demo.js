@@ -125,7 +125,8 @@ var modes = [
     new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
     new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
     new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
+    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"]),
+    new Mode("yaml", "YAML", require("ace/mode/yaml").Mode, ["yaml"])
 ];
 
 modesByName = {};
@@ -167,6 +168,10 @@ var docs = [
     new Doc(
         "xml", "XML",
         require("ace/requirejs/text!./docs/xml.xml")
+    ),
+    new Doc(
+        "yaml", "YAML",
+        require("ace/requirejs/text!./docs/yaml.yaml")
     ),
     new Doc(
         "svg", "SVG",

@@ -135,8 +135,11 @@ var YamlHighlightRules = function() {
             }, {
                 token : "string", // multi line string start
                 merge : true,
-                regex : '[\\|]\\w*',
+                regex : '[\\|>]\\w*',
                 next : "qqstring"
+            }, {
+                token : "string", // single quoted string
+                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
             }, {
                 token : "constant.numeric", // float
                 regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
@@ -144,9 +147,6 @@ var YamlHighlightRules = function() {
                 token : "constant.language.boolean",
                 regex : "(?:true|false|yes|no)\\b"
             }, {
-                token : "string", // single quoted string
-                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
-            },  {
                 token : "invalid.illegal", // comments are not allowed
                 regex : "\\/\\/.*$"
             }, {
