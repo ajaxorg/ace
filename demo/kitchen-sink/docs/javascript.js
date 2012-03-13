@@ -3,3 +3,24 @@ function foo(items) {
         alert(items[i] + "juhu");
     }	// Real Tab.
 }
+
+object = {
+    abra = kadabra;
+    bar = baz;
+    boo = moo;
+    foo = opera;
+}
+
+
+
+
+object.say = function(items) {
+    var self = this;
+    setTimeout(function() {
+        console.log(this.abra)
+        console.log me(this.bar)
+        console.warn(this.boo)
+
+        console.error(this.foo)
+    }, 100)
+}
