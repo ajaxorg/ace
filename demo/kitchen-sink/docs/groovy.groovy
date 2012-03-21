@@ -1,26 +1,41 @@
-//http://groovy.codehaus.org/Concurrency+with+Groovy
-import java.util.concurrent.atomic.AtomicInteger
+//http://groovy.codehaus.org/Martin+Fowler%27s+closure+examples+in+Groovy
 
-def counter = new AtomicInteger()
-
-synchronized out(message) {
-    println(message)
+class Employee {
+    def name, salary
+    boolean manager
+    String toString() { return name }
 }
 
-def th = Thread.start {
-    for( i in 1..8 ) {
-        sleep 30
-        out "thread loop $i"
-        counter.incrementAndGet()
-    }
+def emps = [new Employee(name:'Guillaume', manager:true, salary:200),
+    new Employee(name:'Graeme', manager:true, salary:200),
+    new Employee(name:'Dierk', manager:false, salary:151),
+    new Employee(name:'Bernd', manager:false, salary:50)]
+
+def managers(emps) {
+    emps.findAll { e -> e.isManager() }
 }
 
-for( j in 1..4 ) {
-    sleep 50
-    out "main loop $j"
-    counter.incrementAndGet()
+assert emps[0..1] == managers(emps) // [Guillaume, Graeme]
+
+def highPaid(emps) {
+    threshold = 150
+    emps.findAll { e -> e.salary > threshold }
 }
 
-th.join()
+assert emps[0..2] == highPaid(emps) // [Guillaume, Graeme, Dierk]
 
-assert counter.get() == 12
+def paidMore(amount) {
+    { e -> e.salary > amount}
+}
+def highPaid = paidMore(150)
+
+assert highPaid(emps[0]) // true
+assert emps[0..2] == emps.findAll(highPaid)
+
+def filename = 'test.txt'
+new File(filename).withReader{ reader -> doSomethingWith(reader) }
+
+def readersText
+def doSomethingWith(reader) { readersText = reader.text }
+
+assert new File(filename).text == readersText
