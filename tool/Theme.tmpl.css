@@ -109,6 +109,14 @@
   %support.function%
 }
 
+.%cssClass% .ace_storage {
+  %storage%
+}
+
+.%cssClass% .ace_storage.ace_type {
+  %storage.type%
+}
+
 .%cssClass% .ace_function.ace_buildin {
   %function.buildin%
 }

@@ -69,6 +69,9 @@ var supportedScopes = {
    "function": "function",
    "function.buildin": "function.buildin",
    
+   "storage": "storage",
+   "storage.type": "storage.type",
+   
    "invalid": "invalid",
    "invalid.illegal": "invalid.illegal",
    "invalid.deprecated": "invalid.deprecated",
