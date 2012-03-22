@@ -576,4 +576,7 @@ commands.addCommand({
     }
 });
 
+// add multiple cursor support to editor 
+require("ace/multi_cursor").MultiCursor(env.editor)
+
 });
