@@ -128,10 +128,11 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var XQueryHighlightRules = function() {
 
   var keywords = lang.arrayToMap(
-    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|" +
+    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
      "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
      "using|stemming|" +
      "while|" + 
+     "external|" +
      "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
     );
 
