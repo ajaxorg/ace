@@ -56,6 +56,10 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var modesByName;
 
+// workers do not work for file:
+if (location.protocol == "file:")
+    EditSession.prototype.$useWorker = false;
+
 var Doc = function(name, desc, file) {
     this.name = name;
     this.desc = desc;
@@ -96,6 +100,7 @@ function loadTheme(name, callback) {
     net.loadScript(fileName, callback);
 }
 
+//{
 var modes = [
     new Mode("c_cpp", "C/C++", require("ace/mode/c_cpp").Mode, ["c", "cpp", "cxx", "h", "hpp"]),
     new Mode("clojure", "Clojure", require("ace/mode/clojure").Mode, ["clj"]),
@@ -254,6 +259,9 @@ var docs = [
     )
 ];
 
+//}
+
+
 var docsByName = {};
 docs.forEach(function(d) {
     docsByName[d.name] = d;
@@ -327,36 +335,47 @@ bindDropdown("doc", function(value) {
     env.editor.focus();
 });
 
+bindDropdown("mode", function(value) {
+    env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
+});
+
+
 function updateUIEditorOptions() {
     var editor = env.editor;
     var session = editor.session;
 
-    docEl.value = session.name;
-    modeEl.value = session.getMode().name || "text";
-
     session.setFoldStyle(foldingEl.value);
 
-    if (!session.getUseWrapMode()) {
-        wrapModeEl.value = "off";
-    } else {
-        wrapModeEl.value = session.getWrapLimitRange().min || "free";
-    }
+    saveOption(docEl, session.name);
+    saveOption(modeEl, session.getMode().name || "text");
+    saveOption(wrapModeEl, session.getUseWrapMode() ? session.getWrapLimitRange().min || "free" : "off");
 
-    selectStyleEl.checked = editor.getSelectionStyle() == "line";
-    themeEl.value = editor.getTheme();
-    highlightActiveEl.checked = editor.getHighlightActiveLine();
-    showHiddenEl.checked = editor.getShowInvisibles();
-    showGutterEl.checked = editor.renderer.getShowGutter();
-    showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
-    highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
-    showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
-    softTabEl.checked = session.getUseSoftTabs();
-    behavioursEl.checked = editor.getBehavioursEnabled();
+    saveOption(selectStyleEl, editor.getSelectionStyle() == "line");
+    saveOption(themeEl, editor.getTheme());
+    saveOption(highlightActiveEl, editor.getHighlightActiveLine());
+    saveOption(showHiddenEl, editor.getShowInvisibles());
+    saveOption(showGutterEl, editor.renderer.getShowGutter());
+    saveOption(showPrintMarginEl, editor.renderer.getShowPrintMargin());
+    saveOption(highlightSelectedWordE, editor.getHighlightSelectedWord());
+    saveOption(showHScrollEl, editor.renderer.getHScrollBarAlwaysVisible());
+    saveOption(softTabEl, session.getUseSoftTabs());
+    saveOption(behavioursEl, editor.getBehavioursEnabled());
 }
 
-bindDropdown("mode", function(value) {
-    env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
-});
+function saveOption(el, val) {
+    if (!el.onchange || el.onclick)
+        return;
+    if ("checked" in el) {
+        if (val !== undefined)
+            el.checked = val;
+        localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
+    } else    {
+        if (val !== undefined)
+            el.value = val;
+        localStorage && localStorage.setItem(el.id, el.value);
+    };
+}
+
 
 bindDropdown("theme", function(value) {
     if (!value)
@@ -447,6 +466,7 @@ bindCheckbox("enable_behaviours", function(checked) {
     env.editor.setBehavioursEnabled(checked);
 });
 
+
 var secondSession = null;
 bindDropdown("split", function(value) {
     var sp = env.split;
@@ -474,8 +494,12 @@ bindDropdown("split", function(value) {
 
 function bindCheckbox(id, callback) {
     var el = document.getElementById(id);
+    if (localStorage && localStorage.getItem(id))
+        el.checked = localStorage.getItem(id) == "1";
+
     var onCheck = function() {
         callback(!!el.checked);
+        saveOption(el);
     };
     el.onclick = onCheck;
     onCheck();
@@ -483,9 +507,14 @@ function bindCheckbox(id, callback) {
 
 function bindDropdown(id, callback) {
     var el = document.getElementById(id);
+    if (localStorage && localStorage.getItem(id))
+        el.value = localStorage.getItem(id);
+
     var onChange = function() {
         callback(el.value);
+        saveOption(el);
     };
+
     el.onchange = onChange;
     onChange();
 }
@@ -576,7 +605,7 @@ commands.addCommand({
     }
 });
 
-// add multiple cursor support to editor 
+// add multiple cursor support to editor
 require("ace/multi_cursor").MultiCursor(env.editor)
 
 });
