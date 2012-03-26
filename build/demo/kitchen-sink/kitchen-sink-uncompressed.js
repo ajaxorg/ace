@@ -244,7 +244,7 @@ exportAce(ACE_NAMESPACE);
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/pgsql', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/svg', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/pgsql', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/svg', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'ace/mode/sh', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 var env = {};
@@ -331,7 +331,8 @@ var modes = [
     new Mode("svg", "SVG", require("ace/mode/svg").Mode, ["svg"]),
     new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
     new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
+    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"]),
+    new Mode("sh", "SH", require("ace/mode/sh").Mode, ["sh"])
 ];
 
 modesByName = {};
@@ -437,6 +438,10 @@ var docs = [
     new Doc(
         "haxe", "haXe",
         require("text!./docs/Haxe.hx")
+    ),
+    new Doc(
+        "sh", "SH",
+        require("text!./docs/sh.sh")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
@@ -19987,6 +19992,274 @@ oop.inherits(TextileHighlightRules, TextHighlightRules);
 exports.TextileHighlightRules = TextileHighlightRules;
 
 });
+/* ***** BEGIN LICENSE BLOCK *****
+* Version: MPL 1.1/GPL 2.0/LGPL 2.1
+*
+* The contents of this file are subject to the Mozilla Public License Version
+* 1.1 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+* http://www.mozilla.org/MPL/
+*
+* Software distributed under the License is distributed on an "AS IS" basis,
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+* for the specific language governing rights and limitations under the
+* License.
+*
+* The Original Code is Ajax.org Code Editor (ACE).
+*
+* The Initial Developer of the Original Code is
+* Ajax.org B.V.
+* Portions created by the Initial Developer are Copyright (C) 2010
+* the Initial Developer. All Rights Reserved.
+*
+* Contributor(s):
+*      Rich Healey <richo AT psych0tik DOT net>
+*
+* Alternatively, the contents of this file may be used under the terms of
+* either the GNU General Public License Version 2 or later (the "GPL"), or
+* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+* in which case the provisions of the GPL or the LGPL are applicable instead
+* of those above. If you wish to allow use of your version of this file only
+* under the terms of either the GPL or the LGPL, and not to allow others to
+* use your version of this file under the terms of the MPL, indicate your
+* decision by deleting the provisions above and replace them with the notice
+* and other provisions required by the GPL or the LGPL. If you do not delete
+* the provisions above, a recipient may use your version of this file under
+* the terms of any one of the MPL, the GPL or the LGPL.
+*
+* ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/sh', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/sh_highlight_rules', 'ace/range'], function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var TextMode = require("./text").Mode;
+var Tokenizer = require("../tokenizer").Tokenizer;
+var ShHighlightRules = require("./sh_highlight_rules").ShHighlightRules;
+var Range = require("../range").Range;
+
+var Mode = function() {
+    this.$tokenizer = new Tokenizer(new ShHighlightRules().getRules());
+};
+oop.inherits(Mode, TextMode);
+
+(function() {
+
+    this.toggleCommentLines = function(state, doc, startRow, endRow) {
+        var outdent = true;
+        var re = /^(\s*)#/;
+
+        for (var i=startRow; i<= endRow; i++) {
+            if (!re.test(doc.getLine(i))) {
+                outdent = false;
+                break;
+            }
+        }
+
+        if (outdent) {
+            var deleteRange = new Range(0, 0, 0, 0);
+            for (var i=startRow; i<= endRow; i++)
+            {
+                var line = doc.getLine(i);
+                var m = line.match(re);
+                deleteRange.start.row = i;
+                deleteRange.end.row = i;
+                deleteRange.end.column = m[0].length;
+                doc.replace(deleteRange, m[1]);
+            }
+        }
+        else {
+            doc.indentRows(startRow, endRow, "#");
+        }
+    };
+
+    this.getNextLineIndent = function(state, line, tab) {
+        var indent = this.$getIndent(line);
+
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
+        var tokens = tokenizedLine.tokens;
+
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {
+            return indent;
+        }
+
+        if (state == "start") {
+            var match = line.match(/^.*[\{\(\[\:]\s*$/);
+            if (match) {
+                indent += tab;
+            }
+        }
+
+        return indent;
+    };
+
+    var outdents = {
+        "pass": 1,
+        "return": 1,
+        "raise": 1,
+        "break": 1,
+        "continue": 1
+    };
+
+    this.checkOutdent = function(state, line, input) {
+        if (input !== "\r\n" && input !== "\r" && input !== "\n")
+            return false;
+
+        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;
+
+        if (!tokens)
+            return false;
+
+        // ignore trailing comments
+        do {
+            var last = tokens.pop();
+        } while (last && (last.type == "comment" || (last.type == "text" && last.value.match(/^\s+$/))));
+
+        if (!last)
+            return false;
+
+        return (last.type == "keyword" && outdents[last.value]);
+    };
+
+    this.autoOutdent = function(state, doc, row) {
+        // outdenting in sh is slightly different because it always applies
+        // to the next line and only of a new line is inserted
+
+        row += 1;
+        var indent = this.$getIndent(doc.getLine(row));
+        var tab = doc.getTabString();
+        if (indent.slice(-tab.length) == tab)
+            doc.remove(new Range(row, indent.length-tab.length, row, indent.length));
+    };
+
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Rich Healey <richo AT psych0tik DOT net>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK *****
+ */
+define('ace/mode/sh_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var lang = require("../lib/lang");
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+var ShHighlightRules = function() {
+
+    var reservedKeywords = lang.arrayToMap(
+        ('!|{|}|case|do|done|elif|else|'+
+        'esac|fi|for|if|in|then|until|while|'+
+        '&|;'
+        ).split('|')
+    );
+
+    var languageConstructs = lang.arrayToMap(
+            // TODO
+        ('echo|exit|eval|source|[|]|test|'+
+         'true|false|read'
+         ).split('|')
+    );
+
+    var builtinVariables = lang.arrayToMap(
+            // TODO
+        ('$?|$$|$!|$SHLVL').split('|')
+    );
+
+    var integer = "(?:(?:[1-9]\\d*)|(?:0))";
+    // var integer = "(?:" + decimalInteger + ")";
+
+    var fraction = "(?:\\.\\d+)";
+    var intPart = "(?:\\d+)";
+    var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\.))";
+    var exponentFloat = "(?:(?:" + pointFloat + "|" +  intPart + ")" + ")";
+    var floatNumber = "(?:" + exponentFloat + "|" + pointFloat + ")";
+
+    this.$rules = {
+        "start" : [ {
+            token : "comment",
+            regex : "#.*$"
+        }, {
+            token : "string",           // " string
+            regex : '"(?:[^\\\\]|\\\\.)*?"'
+        }, {
+            token : "string",           // ' string
+            regex : "'(?:[^\\\\]|\\\\.)*?'"
+        }, {
+            token : "constant.numeric", // float
+            regex : floatNumber
+        }, {
+            token : "constant.numeric", // integer
+            regex : integer + "\\b"
+        }, {
+            token : function(value) {
+                if (reservedKeywords.hasOwnProperty(value))
+                    return "keyword";
+                else if (languageConstructs.hasOwnProperty(value))
+                    return "constant.language";
+                else if (builtinVariables.hasOwnProperty(value))
+                    return "support.function";
+                else if (value == "debugger")
+                    return "invalid.deprecated";
+                else
+                    return "identifier";
+            },
+            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+        }, {
+            token : "keyword.operator",
+            regex : "\\+|\\-|\\*|\\*\\*|\\/|\\/\\/|~|<|>|<=|=>|=|!="
+        }, {
+            token : "lparen.paren",
+            regex : "[\\[\\(\\{]"
+        }, {
+            token : "paren.rparen",
+            regex : "[\\]\\)\\}]"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        } ]
+    };
+};
+
+oop.inherits(ShHighlightRules, TextHighlightRules);
+
+exports.ShHighlightRules = ShHighlightRules;
+});
 define("text!kitchen-sink/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
   "\n" +
   "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
@@ -20488,44 +20761,116 @@ define("text!kitchen-sink/docs/clojure.clj", [], "(defn parting\n" +
   "(println (parting \"Mark\" \"es\")) ; -> Adios, Mark\n" +
   "(println (parting \"Mark\", \"xy\")) ; -> java.lang.IllegalArgumentException: unsupported language xy");
 
-define("text!kitchen-sink/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Concurrency+with+Groovy\n" +
-  "import java.util.concurrent.atomic.AtomicInteger\n" +
+define("text!kitchen-sink/docs/groovy.groovy", [], "//http://groovy.codehaus.org/Martin+Fowler%27s+closure+examples+in+Groovy\n" +
   "\n" +
-  "def counter = new AtomicInteger()\n" +
-  "\n" +
-  "synchronized out(message) {\n" +
-  "    println(message)\n" +
+  "class Employee {\n" +
+  "    def name, salary\n" +
+  "    boolean manager\n" +
+  "    String toString() { return name }\n" +
   "}\n" +
   "\n" +
-  "def th = Thread.start {\n" +
-  "    for( i in 1..8 ) {\n" +
-  "        sleep 30\n" +
-  "        out \"thread loop $i\"\n" +
-  "        counter.incrementAndGet()\n" +
-  "    }\n" +
+  "def emps = [new Employee(name:'Guillaume', manager:true, salary:200),\n" +
+  "    new Employee(name:'Graeme', manager:true, salary:200),\n" +
+  "    new Employee(name:'Dierk', manager:false, salary:151),\n" +
+  "    new Employee(name:'Bernd', manager:false, salary:50)]\n" +
+  "\n" +
+  "def managers(emps) {\n" +
+  "    emps.findAll { e -> e.isManager() }\n" +
   "}\n" +
   "\n" +
-  "for( j in 1..4 ) {\n" +
-  "    sleep 50\n" +
-  "    out \"main loop $j\"\n" +
-  "    counter.incrementAndGet()\n" +
+  "assert emps[0..1] == managers(emps) // [Guillaume, Graeme]\n" +
+  "\n" +
+  "def highPaid(emps) {\n" +
+  "    threshold = 150\n" +
+  "    emps.findAll { e -> e.salary > threshold }\n" +
   "}\n" +
   "\n" +
-  "th.join()\n" +
+  "assert emps[0..2] == highPaid(emps) // [Guillaume, Graeme, Dierk]\n" +
   "\n" +
-  "assert counter.get() == 12");
+  "def paidMore(amount) {\n" +
+  "    { e -> e.salary > amount}\n" +
+  "}\n" +
+  "def highPaid = paidMore(150)\n" +
+  "\n" +
+  "assert highPaid(emps[0]) // true\n" +
+  "assert emps[0..2] == emps.findAll(highPaid)\n" +
+  "\n" +
+  "def filename = 'test.txt'\n" +
+  "new File(filename).withReader{ reader -> doSomethingWith(reader) }\n" +
+  "\n" +
+  "def readersText\n" +
+  "def doSomethingWith(reader) { readersText = reader.text }\n" +
+  "\n" +
+  "assert new File(filename).text == readersText");
 
-define("text!kitchen-sink/docs/scala.scala", [], "//http://www.scala-lang.org/node/227\n" +
-  "/* Defines a new method 'sort' for array objects */\n" +
-  "object implicits extends Application {\n" +
-  "  implicit def arrayWrapper[A : ClassManifest](x: Array[A]) =\n" +
-  "    new {\n" +
-  "      def sort(p: (A, A) => Boolean) = {\n" +
-  "        util.Sorting.stableSort(x, p); x\n" +
+define("text!kitchen-sink/docs/scala.scala", [], "// http://www.scala-lang.org/node/54\n" +
+  "\n" +
+  "package examples.actors\n" +
+  "\n" +
+  "import scala.actors.Actor\n" +
+  "import scala.actors.Actor._\n" +
+  "\n" +
+  "abstract class PingMessage\n" +
+  "case object Start extends PingMessage\n" +
+  "case object SendPing extends PingMessage\n" +
+  "case object Pong extends PingMessage\n" +
+  "\n" +
+  "abstract class PongMessage\n" +
+  "case object Ping extends PongMessage\n" +
+  "case object Stop extends PongMessage\n" +
+  "\n" +
+  "object pingpong extends Application {\n" +
+  "  val pong = new Pong\n" +
+  "  val ping = new Ping(100000, pong)\n" +
+  "  ping.start\n" +
+  "  pong.start\n" +
+  "  ping ! Start\n" +
+  "}\n" +
+  "\n" +
+  "class Ping(count: Int, pong: Actor) extends Actor {\n" +
+  "  def act() {\n" +
+  "    println(\"Ping: Initializing with count \"+count+\": \"+pong)\n" +
+  "    var pingsLeft = count\n" +
+  "    loop {\n" +
+  "      react {\n" +
+  "        case Start =>\n" +
+  "          println(\"Ping: starting.\")\n" +
+  "          pong ! Ping\n" +
+  "          pingsLeft = pingsLeft - 1\n" +
+  "        case SendPing =>\n" +
+  "          pong ! Ping\n" +
+  "          pingsLeft = pingsLeft - 1\n" +
+  "        case Pong =>\n" +
+  "          if (pingsLeft % 1000 == 0)\n" +
+  "            println(\"Ping: pong from: \"+sender)\n" +
+  "          if (pingsLeft > 0)\n" +
+  "            self ! SendPing\n" +
+  "          else {\n" +
+  "            println(\"Ping: Stop.\")\n" +
+  "            pong ! Stop\n" +
+  "            exit('stop)\n" +
+  "          }\n" +
   "      }\n" +
   "    }\n" +
-  "  val x = Array(2, 3, 1, 4)\n" +
-  "  println(\"x = \"+ x.sort((x: Int, y: Int) => x < y))\n" +
+  "  }\n" +
+  "}\n" +
+  "\n" +
+  "class Pong extends Actor {\n" +
+  "  def act() {\n" +
+  "    var pongCount = 0\n" +
+  "    loop {\n" +
+  "      react {\n" +
+  "        case Ping =>\n" +
+  "          if (pongCount % 1000 == 0)\n" +
+  "            println(\"Pong: ping \"+pongCount+\" from \"+sender)\n" +
+  "          sender ! Pong\n" +
+  "          pongCount = pongCount + 1\n" +
+  "        case Stop =>\n" +
+  "          println(\"Pong: Stop.\")\n" +
+  "          exit('stop)\n" +
+  "      }\n" +
+  "    }\n" +
+  "  }\n" +
   "}");
 
 define("text!kitchen-sink/docs/csharp.cs", [], "public void HelloWorld() {\n" +
@@ -20590,6 +20935,46 @@ define("text!kitchen-sink/docs/Haxe.hx", [], "class Haxe \n" +
   "        trace(\"And many more!\");\n" +
   "    }\n" +
   "}");
+
+define("text!kitchen-sink/docs/sh.sh", [], "#!/bin/sh\n" +
+  "\n" +
+  "# Script to open a browser to current branch\n" +
+  "# Repo formats:\n" +
+  "# ssh   git@github.com:richoH/gh_pr.git\n" +
+  "# http  https://richoH@github.com/richoH/gh_pr.git\n" +
+  "# git   git://github.com/richoH/gh_pr.git\n" +
+  "\n" +
+  "username=`git config --get github.user`\n" +
+  "\n" +
+  "get_repo() {\n" +
+  "    git remote -v | grep ${@:-$username} | while read remote; do\n" +
+  "      if repo=`echo $remote | grep -E -o \"git@github.com:[^ ]*\"`; then\n" +
+  "          echo $repo | sed -e \"s/^git@github\\.com://\" -e \"s/\\.git$//\"\n" +
+  "          exit 1\n" +
+  "      fi\n" +
+  "      if repo=`echo $remote | grep -E -o \"https?://([^@]*@)?github.com/[^ ]*\\.git\"`; then\n" +
+  "          echo $repo | sed -e \"s|^https?://||\" -e \"s/^.*github\\.com\\///\" -e \"s/\\.git$//\"\n" +
+  "          exit 1\n" +
+  "      fi\n" +
+  "      if repo=`echo $remote | grep -E -o \"git://github.com/[^ ]*\\.git\"`; then\n" +
+  "          echo $repo | sed -e \"s|^git://github.com/||\" -e \"s/\\.git$//\"\n" +
+  "          exit 1\n" +
+  "      fi\n" +
+  "    done\n" +
+  "\n" +
+  "    if [ $? -eq 0 ]; then\n" +
+  "        echo \"Couldn't find a valid remote\" >&2\n" +
+  "        exit 1\n" +
+  "    fi\n" +
+  "}\n" +
+  "\n" +
+  "if repo=`get_repo $@`; then\n" +
+  "    branch=`git symbolic-ref HEAD 2>/dev/null`\n" +
+  "    echo \"http://github.com/$repo/pull/new/${branch##refs/heads/}\"\n" +
+  "else\n" +
+  "    exit 1\n" +
+  "fi\n" +
+  "");
 
 define("text!kitchen-sink/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "============================\n" +
