@@ -24,3 +24,6 @@ ace.tgz: build
 	tar cvfz ace-`./version.js`.tgz ace-`./version.js`/
 
 dist: clean build ace.tgz
+
+update: 
+	node ./tool/update_deps.js
