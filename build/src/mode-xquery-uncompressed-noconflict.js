@@ -201,7 +201,7 @@ var XQueryHighlightRules = function() {
             regex : ">",
             next : "start"
         }, {
-            token : "keyword",
+            token : "meta.tag",
             regex : "[-_a-zA-Z0-9:]+"
         }, {
             token : "text",
