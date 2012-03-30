@@ -228,7 +228,7 @@ exportAce(ACE_NAMESPACE);
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/pgsql', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/net', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'ace/mode/c_cpp', 'ace/mode/clojure', 'ace/mode/coffee', 'ace/mode/coldfusion', 'ace/mode/csharp', 'ace/mode/css', 'ace/mode/groovy', 'ace/mode/haxe', 'ace/mode/html', 'ace/mode/java', 'ace/mode/javascript', 'ace/mode/json', 'ace/mode/latex', 'ace/mode/lua', 'ace/mode/markdown', 'ace/mode/ocaml', 'ace/mode/perl', 'ace/mode/pgsql', 'ace/mode/php', 'ace/mode/powershell', 'ace/mode/python', 'ace/mode/scala', 'ace/mode/scss', 'ace/mode/ruby', 'ace/mode/sql', 'ace/mode/SVG', 'ace/mode/text', 'ace/mode/textile', 'ace/mode/xquery', 'ace/mode/xml', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 var env = {};
@@ -315,6 +315,7 @@ var modes = [
     new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
     new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
     new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
+    new Mode("xquery", "XQuery", require("ace/mode/xquery").Mode, ["xq"]),
     new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
 ];
 
@@ -421,6 +422,10 @@ var docs = [
     new Doc(
         "haxe", "haXe",
         require("text!./docs/Haxe.hx")
+    ),
+    new Doc(
+        "xquery", "XQuery",
+        require("text!./docs/xquery.xq")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
@@ -19962,6 +19967,321 @@ oop.inherits(TextileHighlightRules, TextHighlightRules);
 exports.TextileHighlightRules = TextileHighlightRules;
 
 });
+/*
+ *  eXide - web-based XQuery IDE
+ *  
+ *  Copyright (C) 2011 Wolfgang Meier
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+define('ace/mode/xquery', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/xquery_highlight_rules', 'ace/mode/behaviour/xquery', 'ace/range'], function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var TextMode = require("./text").Mode;
+var Tokenizer = require("../tokenizer").Tokenizer;
+var XQueryHighlightRules = require("./xquery_highlight_rules").XQueryHighlightRules;
+var XQueryBehaviour = require("./behaviour/xquery").XQueryBehaviour;
+var Range = require("../range").Range;
+
+var Mode = function(parent) {
+    this.$tokenizer = new Tokenizer(new XQueryHighlightRules().getRules());
+    this.$behaviour = new XQueryBehaviour(parent);
+};
+
+oop.inherits(Mode, TextMode);
+
+(function() {
+
+    this.getNextLineIndent = function(state, line, tab) {
+      var indent = this.$getIndent(line);
+      var match = line.match(/\s*(?:then|else|return|[{\(]|<\w+>)\s*$/);
+      if (match)
+        indent += tab;
+        return indent;
+    };
+    
+    this.checkOutdent = function(state, line, input) {
+      if (! /^\s+$/.test(line))
+            return false;
+
+        return /^\s*[\}\)]/.test(input);
+    };
+    
+    this.autoOutdent = function(state, doc, row) {
+      var line = doc.getLine(row);
+        var match = line.match(/^(\s*[\}\)])/);
+
+        if (!match) return 0;
+
+        var column = match[1].length;
+        var openBracePos = doc.findMatchingBracket({row: row, column: column});
+
+        if (!openBracePos || openBracePos.row == row) return 0;
+
+        var indent = this.$getIndent(doc.getLine(openBracePos.row));
+        doc.replace(new Range(row, 0, row, column-1), indent);
+    };
+
+    this.$getIndent = function(line) {
+        var match = line.match(/^(\s+)/);
+        if (match) {
+            return match[1];
+        }
+
+        return "";
+    };
+    
+    this.toggleCommentLines = function(state, doc, startRow, endRow) {
+        var i, line;
+        var outdent = true;
+        var re = /^\s*\(:(.*):\)/;
+
+        for (i=startRow; i<= endRow; i++) {
+            if (!re.test(doc.getLine(i))) {
+                outdent = false;
+                break;
+            }
+        }
+
+        var range = new Range(0, 0, 0, 0);
+        for (i=startRow; i<= endRow; i++) {
+            line = doc.getLine(i);
+            range.start.row  = i;
+            range.end.row    = i;
+            range.end.column = line.length;
+
+            doc.replace(range, outdent ? line.match(re)[1] : "(:" + line + ":)");
+        }
+    };
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
+/*
+ *  eXide - web-based XQuery IDE
+ *  
+ *  Copyright (C) 2011 Wolfgang Meier
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+define('ace/mode/xquery_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var lang = require("../lib/lang");
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+var XQueryHighlightRules = function() {
+
+  var keywords = lang.arrayToMap(
+    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
+     "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
+     "using|stemming|" +
+     "while|" + 
+     "external|" +
+     "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
+    );
+
+    // regexp must not have capturing parentheses
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        start : [ {
+            token : "text",
+            regex : "<\\!\\[CDATA\\[",
+            next : "cdata"
+        }, {
+            token : "xml_pe",
+            regex : "<\\?.*?\\?>"
+        }, {
+            token : "comment",
+            regex : "<\\!--",
+            next : "comment"
+    }, {
+      token : "comment",
+      regex : "\\(:",
+      next : "comment"
+        }, {
+            token : "text", // opening tag
+            regex : "<\\/?",
+            next : "tag"
+        }, {
+            token : "constant", // number
+            regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+    }, {
+            token : "variable", // variable
+            regex : "\\$[a-zA-Z_][a-zA-Z0-9_\\-:]*\\b"
+    }, {
+      token: "string",
+      regex : '".*?"'
+    }, {
+      token: "string",
+      regex : "'.*?'"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token: "support.function",
+            regex: "\\w[\\w+_\\-:]+(?=\\()"
+        }, {
+      token : function(value) {
+            if (keywords[value])
+                return "keyword";
+            else
+                return "identifier";
+      },
+      regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+    }, {
+            token: "keyword.operator",
+            regex: "\\*|=|<|>|\\-|\\+|and|or|eq|ne|lt|gt"
+        }, {
+            token: "lparen",
+            regex: "[[({]"
+        }, {
+            token: "rparen",
+            regex: "[\\])}]"
+        } ],
+
+        tag : [ {
+            token : "text",
+            regex : ">",
+            next : "start"
+        }, {
+            token : "meta.tag",
+            regex : "[-_a-zA-Z0-9:]+"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token : "string",
+            regex : '".*?"'
+        }, {
+            token : "string",
+            regex : "'.*?'"
+        } ],
+
+        cdata : [ {
+            token : "text",
+            regex : "\\]\\]>",
+            next : "start"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token : "text",
+            regex : "(?:[^\\]]|\\](?!\\]>))+"
+        } ],
+
+        comment : [ {
+            token : "comment",
+            regex : ".*?-->",
+            next : "start"
+        }, {
+      token: "comment",
+      regex : ".*:\\)",
+      next : "start"
+        }, {
+            token : "comment",
+            regex : ".+"
+    } ]
+    };
+};
+
+oop.inherits(XQueryHighlightRules, TextHighlightRules);
+
+exports.XQueryHighlightRules = XQueryHighlightRules;
+});
+/*
+*  eXide - web-based XQuery IDE
+*  
+*  Copyright (C) 2011 Wolfgang Meier
+*
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+define('ace/mode/behaviour/xquery', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/behaviour', 'ace/mode/behaviour/cstyle'], function(require, exports, module) {
+"use strict";
+
+  var oop = require("../../lib/oop");
+  var Behaviour = require('../behaviour').Behaviour;
+  var CstyleBehaviour = require('./cstyle').CstyleBehaviour;
+
+  var XQueryBehaviour = function (parent) {
+      
+      this.inherit(CstyleBehaviour, ["braces", "parens", "string_dquotes"]); // Get string behaviour
+      this.parent = parent;
+      
+      this.add("brackets", "insertion", function (state, action, editor, session, text) {
+          if (text == "\n") {
+              var cursor = editor.getCursorPosition();
+              var line = session.doc.getLine(cursor.row);
+              var rightChars = line.substring(cursor.column, cursor.column + 2);
+              if (rightChars == '</') {
+                  var indent = this.$getIndent(session.doc.getLine(cursor.row)) + session.getTabString();
+                  var next_indent = this.$getIndent(session.doc.getLine(cursor.row));
+
+                  return {
+                      text: '\n' + indent + '\n' + next_indent,
+                      selection: [1, indent.length, 1, indent.length]
+                  }
+              }
+          }
+          return false;
+      });
+
+      // Check for open tag if user enters / and auto-close it.
+      this.add("slash", "insertion", function (state, action, editor, session, text) {
+        if (text == "/") {
+          var cursor = editor.getCursorPosition();
+        var line = session.doc.getLine(cursor.row);
+        if (cursor.column > 0 && line.charAt(cursor.column - 1) == "<") {
+          line = line.substring(0, cursor.column) + "/" + line.substring(cursor.column);
+          var lines = session.doc.getAllLines();
+          lines[cursor.row] = line;
+          // call mode helper to close the tag if possible
+          parent.exec("closeTag", lines.join(session.doc.getNewLineCharacter()), cursor.row);
+        }
+        }
+      return false;
+      });
+  }
+  oop.inherits(XQueryBehaviour, Behaviour);
+
+  exports.XQueryBehaviour = XQueryBehaviour;
+});
 define("text!kitchen-sink/docs/plaintext.txt", [], "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n" +
   "\n" +
   "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n" +
@@ -20565,6 +20885,13 @@ define("text!kitchen-sink/docs/Haxe.hx", [], "class Haxe \n" +
   "        trace(\"And many more!\");\n" +
   "    }\n" +
   "}");
+
+define("text!kitchen-sink/docs/xquery.xq", [], "xquery version \"1.0\";\n" +
+  "let $message := \"Hello World!\"\n" +
+  "return <results>\n" +
+  "  <message>{$message}</message>\n" +
+  "</results>\n" +
+  "");
 
 define("text!kitchen-sink/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
   "============================\n" +

@@ -125,6 +125,7 @@ var modes = [
     new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
     new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
     new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
+    new Mode("xquery", "XQuery", require("ace/mode/xquery").Mode, ["xq"]),
     new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
 ];
 
@@ -231,6 +232,10 @@ var docs = [
     new Doc(
         "haxe", "haXe",
         require("ace/requirejs/text!./docs/Haxe.hx")
+    ),
+    new Doc(
+        "xquery", "XQuery",
+        require("ace/requirejs/text!./docs/xquery.xq")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
