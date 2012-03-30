@@ -127,6 +127,10 @@ background-color:#800F00;\
   color:#FFB054;\
 }\
 \
+.ace-cobalt .ace_storage {\
+  color:#FFEE80;\
+}\
+\
 .ace-cobalt .ace_string.ace_regexp {\
   color:#80FFC2;\
 }\
@@ -161,6 +165,6 @@ background-color:#001221;\
   background-color:#130D26;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

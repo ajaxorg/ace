@@ -241,7 +241,7 @@ exportAce(ACE_NAMESPACE);
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/worker/worker_client', 'ace/theme/textmate'], function(require, exports, module) {
+ace.define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/worker/worker_client', 'ace/config', 'ace/theme/textmate'], function(require, exports, module) {
 "use strict";
 
 require("./lib/fixoldbrowsers");
@@ -255,6 +255,7 @@ var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
 
 require("./worker/worker_client");
+require("./config").init();
 
 exports.edit = function(el) {
     if (typeof(el) == "string") {
@@ -1592,7 +1593,7 @@ exports.hasCssString = function(id, doc) {
 
     if (doc.createStyleSheet && (sheets = doc.styleSheets)) {
         while (index < sheets.length)
-            if (sheets[index++].title === id) return true;
+            if (sheets[index++].owningElement.id === id) return true;
     } else if ((sheets = doc.getElementsByTagName("style"))) {
         while (index < sheets.length)
             if (sheets[index++].id === id) return true;
@@ -1613,7 +1614,7 @@ exports.importCssString = function importCssString(cssText, id, doc) {
         style = doc.createStyleSheet();
         style.cssText = cssText;
         if (id)
-            style.title = id;
+            style.owningElement.id = id;
     } else {
         style = doc.createElementNS
             ? doc.createElementNS(XHTML_NS, "style")
@@ -1759,8 +1760,7 @@ exports.getParentWindow = function(document) {
     return document.defaultView || document.parentWindow;
 };
 
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -5499,11 +5499,13 @@ exports.commands = [{
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
+ace.define('ace/edit_session', ['require', 'exports', 'module' , 'ace/config', 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/net', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
 "use strict";
 
+var config = require("./config");
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
+var net = require("./lib/net");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Selection = require("./selection").Selection;
 var TextMode = require("./mode/text").Mode;
@@ -5945,10 +5947,61 @@ var EditSession = function(text, mode) {
         this._emit("tokenizerUpdate", e);
     };
 
+    this.$modes = {};
+    this._loadMode = function(mode, callback) {
+        if (this.$modes[mode])
+            return callback(this.$modes[mode]);
+        
+        var _self = this;
+        var module;
+        try {
+            module = require(mode);
+        } catch (e) {};
+        if (module)
+            return done(module);
+            
+        fetch(function() {
+            require([mode], done);
+        });
+        
+        function done(module) {
+            if (_self.$modes[mode])
+                return callback(_self.$modes[mode]);
+            
+            _self.$modes[mode] = new module.Mode();
+            callback(_self.$modes[mode]);
+        }
+
+        function fetch(callback) {
+            if (!config.get("packaged"))
+                return callback();
+                
+            var base = mode.split("/").pop();
+            var filename = config.get("modePath") + "/mode-" + base + config.get("suffix");
+            net.loadScript(filename, callback);
+        }
+    };
+
     this.$mode = null;
+    this.$origMode = null;
     this.setMode = function(mode) {
+        this.$origMode = mode;
+        
+        // load on demand
+        if (typeof mode === "string") {
+            var _self = this;
+            this._loadMode(mode, function(module) {
+                if (_self.$origMode !== mode)
+                    return;
+            
+                _self.setMode(module);
+            });
+            return;
+        }
+        
         if (this.$mode === mode) return;
         this.$mode = mode;
+        
 
         this.$stopWorker();
 
@@ -7174,7 +7227,195 @@ require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype)
 
 exports.EditSession = EditSession;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+ace.define('ace/config', ['require', 'exports', 'module' , 'ace/lib/lang'], function(require, exports, module) {
+"no use strict";
+
+var lang = require("./lib/lang");
+
+var global = (function() {
+    return this;
+})();
+
+var options = {
+    packaged: false,
+    workerPath: "",
+    modePath: "",
+    themePath: "",
+    suffix: ".js"
+};
+
+exports.get = function(key) {
+    if (!options.hasOwnProperty(key))
+        throw new Error("Unknown confik key: " + key);
+        
+    return options[key];
+};
+
+exports.set = function(key, value) {
+    if (!options.hasOwnProperty(key))
+        throw new Error("Unknown confik key: " + key);
+        
+    options[key] = value;
+};
+
+exports.all = function() {
+    return lang.copyObject(options);
+};
+
+exports.init = function() {
+    options.packaged = require.packaged || module.packaged || (global.define && define.packaged);
+
+    if (!global.document)
+        return "";
+
+    var scriptOptions = {};
+    var scriptUrl = "";
+    var suffix;
+    
+    var scripts = document.getElementsByTagName("script");
+    for (var i=0; i<scripts.length; i++) {
+        var script = scripts[i];
+
+        var src = script.src || script.getAttribute("src");
+        if (!src) {
+            continue;
+        }
+        
+        var attributes = script.attributes;
+        for (var j=0, l=attributes.length; j < l; j++) {
+            var attr = attributes[j];
+            if (attr.name.indexOf("data-ace-") === 0) {
+                scriptOptions[deHyphenate(attr.name.replace(/^data-ace-/, ""))] = attr.value;
+            }
+        }
+
+        var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace((-uncompressed)?(-noconflict)?\.js))(?:\?|$)/);
+        if (m) {
+            scriptUrl = m[1] || m[2];
+            suffix = m[3];
+        }
+    }
+    
+    if (scriptUrl) {
+        scriptOptions.base = scriptOptions.base || scriptUrl;
+        scriptOptions.packaged = true;
+    }
+    
+    scriptOptions.suffix = scriptOptions.suffix || suffix;
+    scriptOptions.workerPath = scriptOptions.workerPath || scriptOptions.base;
+    scriptOptions.modePath = scriptOptions.modePath || scriptOptions.base;
+    scriptOptions.themePath = scriptOptions.themePath || scriptOptions.base;
+    delete scriptOptions.base;
+    
+    for (var key in scriptOptions)
+        if (typeof scriptOptions[key] !== "undefined")
+            exports.set(key, scriptOptions[key]);
+};
+
+function deHyphenate(str) {
+    return str.replace(/-(.)/g, function(m, m1) { return m1.toUpperCase(); });
+}
+
+});/**
+ * based on code from:
+ * 
+ * @license RequireJS text 0.25.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/requirejs for details
+ */
+ace.define('ace/lib/net', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
+
+exports.get = function (url, callback) {
+    var xhr = exports.createXhr();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function (evt) {
+        //Do not explicitly handle errors, those should be
+        //visible via console output in the browser.
+        if (xhr.readyState === 4) {
+            callback(xhr.responseText);
+        }
+    };
+    xhr.send(null);
+};
+
+var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
+
+exports.createXhr = function() {
+    //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
+    var xhr, i, progId;
+    if (typeof XMLHttpRequest !== "undefined") {
+        return new XMLHttpRequest();
+    } else {
+        for (i = 0; i < 3; i++) {
+            progId = progIds[i];
+            try {
+                xhr = new ActiveXObject(progId);
+            } catch (e) {}
+
+            if (xhr) {
+                progIds = [progId];  // so faster next time
+                break;
+            }
+        }
+    }
+
+    if (!xhr) {
+        throw new Error("createXhr(): XMLHttpRequest not available");
+    }
+
+    return xhr;
+};
+
+exports.loadScript = function(path, callback) {
+    var head = document.getElementsByTagName('head')[0];
+    var s = document.createElement('script');
+
+    s.src = path;
+    head.appendChild(s);
+    
+    s.onload = callback;
+};
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -8879,7 +9120,7 @@ var Document = function(text) {
     };
 
     this.insert = function(position, text) {
-        if (text.length == 0)
+        if (!text || text.length === 0)
             return position;
 
         position = this.$clipPosition(position);
@@ -11598,13 +11839,15 @@ exports.UndoManager = UndoManager;
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/dom', 'ace/lib/event', 'ace/lib/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'ace/lib/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
+ace.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/dom', 'ace/lib/event', 'ace/lib/useragent', 'ace/config', 'ace/lib/net', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'ace/lib/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
 "use strict";
 
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
 var event = require("./lib/event");
 var useragent = require("./lib/useragent");
+var config = require("./config");
+var net = require("./lib/net");
 var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
 var TextLayer = require("./layer/text").Text;
@@ -12363,14 +12606,36 @@ var VirtualRenderer = function(container, theme) {
         style.left = "-10000px";
     };
 
+    this._loadTheme = function(name, callback) {
+        if (!config.get("packaged"))
+            return callback();
+            
+        var base = name.split("/").pop();
+        var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
+        net.loadScript(filename, callback);
+    };
+
     this.setTheme = function(theme) {
         var _self = this;
 
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
-            theme = theme || "ace/theme/textmate";
-            require([theme], function(theme) {
-                afterLoad(theme);
+            var moduleName = theme || "ace/theme/textmate";
+            
+            var module;
+            try {
+                module = require(moduleName);
+            } catch (e) {};
+            if (module)
+                return afterLoad(module);
+            
+            _self._loadTheme(moduleName, function() {
+                require([theme], function(module) {
+                    if (_self.$themeValue !== theme)
+                        return;
+
+                    afterLoad(module);
+                });
             });
         } else {
             afterLoad(theme);
@@ -14042,19 +14307,19 @@ ace.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/worker/worker_client', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
+ace.define('ace/worker/worker_client', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter', 'ace/config'], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
+var config = require("../config");
 
 var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
 
     this.changeListener = this.changeListener.bind(this);
 
-    if (module.packaged) {
-        var base = this.$guessBasePath();
-        this.$worker = new Worker(base + packagedJs);
+    if (config.get("packaged")) {
+        this.$worker = new Worker(config.get("workerPath") + "/" + packagedJs);
     }
     else {
         var workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
@@ -14117,29 +14382,6 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
             + (path.charAt(0) == "/" ? "" : location.pathname.replace(/\/[^\/]*$/, ""))
             + "/" + path.replace(/^[\/]+/, "");
         return path;
-    };
-
-    this.$guessBasePath = function() {
-        if (require.aceBaseUrl)
-            return require.aceBaseUrl;
-
-        var scripts = document.getElementsByTagName("script");
-        for (var i=0; i<scripts.length; i++) {
-            var script = scripts[i];
-
-            var base = script.getAttribute("data-ace-base");
-            if (base)
-                return base.replace(/\/*$/, "/");
-
-            var src = script.src || script.getAttribute("src");
-            if (!src) {
-                continue;
-            }
-            var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace(-uncompressed)?(-noconflict)?\.js)(?:\?|$)/);
-            if (m)
-                return m[1] || m[2];
-        }
-        return "";
     };
 
     this.terminate = function() {
@@ -14275,6 +14517,7 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(191, 191, 191);\
 }\
 \
+.ace-tm .ace_line .ace_storage,\
 .ace-tm .ace_line .ace_keyword {\
   color: blue;\
 }\

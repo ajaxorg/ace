@@ -200,7 +200,6 @@ function demo(aceProject) {
         compat: false,
         name: "kitchen-sink",
         suffix: "-uncompressed.js",
-        modes: [],
         keybindings: []
     });
 }
@@ -221,7 +220,7 @@ function buildAce(aceProject, options) {
             "css", "html", "javascript", "php", "coldfusion", "python", "lua", "xml", "ruby", "java", "c_cpp",
             "coffee", "perl", "csharp", "haxe", "svg", "clojure", "scss", "json", "groovy",
             "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql",
-            "text", "pgsql"
+            "text", "pgsql", "sh"
         ],
         themes: [
             "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn",

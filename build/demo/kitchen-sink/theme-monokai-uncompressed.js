@@ -132,6 +132,20 @@ background-color:#AE81FF;\
   color:#66D9EF;\
 }\
 \
+.ace-monokai .ace_storage {\
+  color:#F92672;\
+}\
+\
+.ace-monokai .ace_storage.ace_type {\
+  font-style:italic;\
+color:#66D9EF;\
+}\
+\
+.ace-monokai .ace_variable.ace_parameter {\
+  font-style:italic;\
+color:#FD971F;\
+}\
+\
 .ace-monokai .ace_string {\
   color:#E6DB74;\
 }\
@@ -152,6 +166,6 @@ background-color:#AE81FF;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
