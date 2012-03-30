@@ -200,7 +200,6 @@ function demo(aceProject) {
         compat: false,
         name: "kitchen-sink",
         suffix: "-uncompressed.js",
-        modes: [],
         keybindings: []
     });
 }
