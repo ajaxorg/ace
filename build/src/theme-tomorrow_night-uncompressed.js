@@ -136,6 +136,18 @@ background-color:#B798BF;\
   color:#81A2BE;\
 }\
 \
+.ace-tomorrow-night .ace_storage {\
+  color:#B294BB;\
+}\
+\
+.ace-tomorrow-night .ace_storage.ace_type {\
+  color:#B294BB;\
+}\
+\
+.ace-tomorrow-night .ace_variable.ace_parameter {\
+  color:#DE935F;\
+}\
+\
 .ace-tomorrow-night .ace_string {\
   color:#B5BD68;\
 }\
@@ -172,6 +184,6 @@ background-color:#B798BF;\
   color:#B5BD68;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

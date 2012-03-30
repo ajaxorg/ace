@@ -19,7 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Michael Schwartz <mr.pants AT gmail DOT com>
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -136,6 +136,10 @@ background-color:#FE3838;\
     border-color: #E6E1DC;\
 }\
 \
+.ace-merbivore-soft .ace_storage {\
+  color:#FC803A;\
+}\
+\
 .ace-merbivore-soft .ace_string {\
   color:#8EC65F;\
 }\
@@ -162,6 +166,6 @@ color:#AC4BB8;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

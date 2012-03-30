@@ -135,6 +135,11 @@ color:#B52A1D;\
   color:#693A17;\
 }\
 \
+.ace-dawn .ace_storage {\
+  font-style:italic;\
+color:#A71D5D;\
+}\
+\
 .ace-dawn .ace_string {\
   color:#0B6125;\
 }\
@@ -164,6 +169,6 @@ color:#5A525F;\
   color:#693A17;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

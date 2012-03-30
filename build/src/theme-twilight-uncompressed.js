@@ -133,6 +133,10 @@ color:#D2A8A1;\
   color:#DAD085;\
 }\
 \
+.ace-twilight .ace_storage {\
+  color:#F9EE98;\
+}\
+\
 .ace-twilight .ace_string {\
   color:#8F9D6A;\
 }\
@@ -174,6 +178,6 @@ color:#5F5A60;\
   color:#F9EE98;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
