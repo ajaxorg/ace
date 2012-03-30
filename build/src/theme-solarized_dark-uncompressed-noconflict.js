@@ -122,6 +122,10 @@ exports.cssText = "\
   color:#268BD2;\
 }\
 \
+.ace-solarized-dark .ace_storage {\
+  color:#93A1A1;\
+}\
+\
 .ace-solarized-dark .ace_string {\
   color:#2AA198;\
 }\
@@ -151,6 +155,6 @@ color:#657B83;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

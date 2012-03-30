@@ -131,6 +131,14 @@ background-color:rgba(153, 0, 0, 0.68);\
   color:#588E60;\
 }\
 \
+.ace-mono-industrial .ace_storage {\
+  color:#C23B00;\
+}\
+\
+.ace-mono-industrial .ace_variable.ace_parameter {\
+  color:#648BD2;\
+}\
+\
 .ace-mono-industrial .ace_comment {\
   color:#666C68;\
 background-color:#151C19;\
@@ -156,6 +164,6 @@ background-color:#151C19;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

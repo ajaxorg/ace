@@ -123,6 +123,10 @@ background-color:#FF0000;\
   color:#B83426;\
 }\
 \
+.ace-idle-fingers .ace_variable.ace_parameter {\
+  font-style:italic;\
+}\
+\
 .ace-idle-fingers .ace_string {\
   color:#A5C261;\
 }\
@@ -153,6 +157,6 @@ color:#BC9458;\
 background-color:#FFF980;   \
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
