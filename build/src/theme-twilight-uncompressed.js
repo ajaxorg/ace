@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/twilight', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/twilight', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-twilight";
@@ -133,6 +133,10 @@ color:#D2A8A1;\
   color:#DAD085;\
 }\
 \
+.ace-twilight .ace_storage {\
+  color:#F9EE98;\
+}\
+\
 .ace-twilight .ace_string {\
   color:#8F9D6A;\
 }\
@@ -174,16 +178,6 @@ color:#5F5A60;\
   color:#F9EE98;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

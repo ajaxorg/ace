@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/tomorrow_night_eighties', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/theme/tomorrow_night_eighties', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-tomorrow-night-eighties";
@@ -136,6 +136,18 @@ background-color:#CC99CC;\
   color:#6699CC;\
 }\
 \
+.ace-tomorrow-night-eighties .ace_storage {\
+  color:#CC99CC;\
+}\
+\
+.ace-tomorrow-night-eighties .ace_storage.ace_type {\
+  color:#CC99CC;\
+}\
+\
+.ace-tomorrow-night-eighties .ace_variable.ace_parameter {\
+  color:#F99157;\
+}\
+\
 .ace-tomorrow-night-eighties .ace_string {\
   color:#99CC99;\
 }\
@@ -168,16 +180,6 @@ background-color:#CC99CC;\
   color:#99CC99;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                ace.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

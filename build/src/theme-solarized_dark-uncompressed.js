@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/solarized_dark', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/solarized_dark', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-solarized-dark";
@@ -122,6 +122,10 @@ exports.cssText = "\
   color:#268BD2;\
 }\
 \
+.ace-solarized-dark .ace_storage {\
+  color:#93A1A1;\
+}\
+\
 .ace-solarized-dark .ace_string {\
   color:#2AA198;\
 }\
@@ -151,16 +155,6 @@ color:#657B83;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

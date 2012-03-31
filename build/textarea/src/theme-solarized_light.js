@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/theme/solarized_light', ['require', 'exports', 'module' ], function(require, exports, module) {
+__ace_shadowed__.define('ace/theme/solarized_light', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-solarized-light";
@@ -122,6 +122,10 @@ exports.cssText = "\
   color:#268BD2;\
 }\
 \
+.ace-solarized-light .ace_storage {\
+  color:#073642;\
+}\
+\
 .ace-solarized-light .ace_string {\
   color:#2AA198;\
 }\
@@ -150,16 +154,6 @@ exports.cssText = "\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                __ace_shadowed__.require(["ace/ext/textarea"], function(a) {
-                    if (!window.__ace_shadowed__)
-                        window.__ace_shadowed__ = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        __ace_shadowed__[key] = a[key];
-                });
-            })();
-        

@@ -40,7 +40,7 @@
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
- 
+
 (function() {
 
 var ACE_NAMESPACE = "__ace_shadowed__";
@@ -48,9 +48,6 @@ var ACE_NAMESPACE = "__ace_shadowed__";
 var global = (function() {
     return this;
 })();
-
-if (typeof requirejs !== "undefined")
-    return;
 
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
@@ -68,7 +65,7 @@ var _define = function(module, deps, payload) {
 
     if (!_define.modules)
         _define.modules = {};
-        
+
     _define.modules[module] = payload;
 };
 
@@ -92,11 +89,11 @@ var _require = function(parentId, module, callback) {
         var payload = lookup(parentId, module);
         if (!payload && _require.original)
             return _require.original.apply(window, arguments);
-        
+
         if (callback) {
             callback();
         }
-    
+
         return payload;
     }
     else {
@@ -115,13 +112,13 @@ var normalizeModule = function(parentId, moduleName) {
     if (moduleName.charAt(0) == ".") {
         var base = parentId.split("/").slice(0, -1).join("/");
         moduleName = base + "/" + moduleName;
-        
+
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {
             var previous = moduleName;
             moduleName = moduleName.replace(/\/\.\//, "/").replace(/[^\/]+\/\.\.\//, "");
         }
     }
-    
+
     return moduleName;
 };
 
@@ -141,19 +138,19 @@ var lookup = function(parentId, moduleName) {
     if (typeof module === 'function') {
         var exports = {};
         var mod = {
-            id: moduleName, 
+            id: moduleName,
             uri: '',
             exports: exports,
             packaged: true
         };
-        
+
         var req = function(module, callback) {
             return _require(moduleName, module, callback);
         };
-        
+
         var returnValue = module(req, exports, mod);
         exports = returnValue || mod.exports;
-            
+
         // cache the resulting module object for next time
         _define.modules[moduleName] = exports;
         return exports;
@@ -163,26 +160,45 @@ var lookup = function(parentId, moduleName) {
 };
 
 function exportAce(ns) {
+
+    if (typeof requirejs !== "undefined") {
+
+        var define = global.define;
+        global.define = function(id, deps, callback) {
+            if (typeof callback !== "function")
+                return define.apply(this, arguments);
+
+            return __ace_shadowed__.define(id, deps, function(require, exports, module) {
+                if (deps[2] == "module")
+                    module.packaged = true;
+                return callback.apply(this, arguments);
+            });
+        };
+        global.define.packaged = true;
+
+        return;
+    }
+
     var require = function(module, callback) {
         return _require("", module, callback);
     };
     require.packaged = true;
-    
+
     var root = global;
     if (ns) {
         if (!global[ns])
             global[ns] = {};
         root = global[ns];
     }
-        
+
     if (root.define)
         _define.original = root.define;
-    
+
     root.define = _define;
 
     if (root.require)
         _require.original = root.require;
-    
+
     root.require = require;
 }
 
@@ -869,20 +885,9 @@ else {
 }
 
 exports.addMouseWheelListener = function(el, callback) {
-    var max = 0;
+    var factor = 8;
     var listener = function(e) {
         if (e.wheelDelta !== undefined) {
-
-            // some versions of Safari (e.g. 5.0.5) report insanely high
-            // scroll values. These browsers require a higher factor
-            if (Math.abs(e.wheelDeltaY) > max)
-                max = Math.abs(e.wheelDeltaY);
-
-            if (max > 5000)
-                var factor = 400;
-            else
-                var factor = 8;
-
             if (e.wheelDeltaX !== undefined) {
                 e.wheelX = -e.wheelDeltaX / factor;
                 e.wheelY = -e.wheelDeltaY / factor;
@@ -1446,7 +1451,7 @@ exports.hasCssString = function(id, doc) {
 
     if (doc.createStyleSheet && (sheets = doc.styleSheets)) {
         while (index < sheets.length)
-            if (sheets[index++].title === id) return true;
+            if (sheets[index++].owningElement.id === id) return true;
     } else if ((sheets = doc.getElementsByTagName("style"))) {
         while (index < sheets.length)
             if (sheets[index++].id === id) return true;
@@ -1467,7 +1472,7 @@ exports.importCssString = function importCssString(cssText, id, doc) {
         style = doc.createStyleSheet();
         style.cssText = cssText;
         if (id)
-            style.title = id;
+            style.owningElement.id = id;
     } else {
         style = doc.createElementNS
             ? doc.createElementNS(XHTML_NS, "style")
@@ -1613,8 +1618,7 @@ exports.getParentWindow = function(document) {
     return document.defaultView || document.parentWindow;
 };
 
-});
-/**
+});/**
  * based on code from:
  * 
  * @license RequireJS text 0.25.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
@@ -1712,7 +1716,7 @@ exports.loadScript = function(path, callback) {
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/theme/textmate'], function(require, exports, module) {
+__ace_shadowed__.define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/worker/worker_client', 'ace/config', 'ace/theme/textmate'], function(require, exports, module) {
 "use strict";
 
 require("./lib/fixoldbrowsers");
@@ -1724,6 +1728,9 @@ var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
+
+require("./worker/worker_client");
+require("./config").init();
 
 exports.edit = function(el) {
     if (typeof(el) == "string") {
@@ -1813,7 +1820,7 @@ __ace_shadowed__.define('ace/lib/regexp', ['require', 'exports', 'module' ], fun
     RegExp.prototype.exec = function (str) {
         var match = real.exec.apply(this, arguments),
             name, r2;
-        if (match) {
+        if ( typeof(str) == 'string' && match) {
             // Fix browsers whose `exec` methods don't consistently return `undefined` for
             // nonparticipating capturing groups
             if (!compliantExecNpcg && match.length > 1 && indexOf(match, "") > -1) {
@@ -1878,7 +1885,8 @@ __ace_shadowed__.define('ace/lib/regexp', ['require', 'exports', 'module' ], fun
         return -1;
     };
 
-});// vim: ts=4 sts=4 sw=4 expandtab
+});
+// vim: ts=4 sts=4 sw=4 expandtab
 // -- kriskowal Kris Kowal Copyright (C) 2009-2011 MIT License
 // -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
 // -- dantman Daniel Friesen Copyright (C) 2010 XXX TODO License or CLA
@@ -6057,11 +6065,13 @@ exports.commands = [{
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
+__ace_shadowed__.define('ace/edit_session', ['require', 'exports', 'module' , 'ace/config', 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/net', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
 "use strict";
 
+var config = require("./config");
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
+var net = require("./lib/net");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Selection = require("./selection").Selection;
 var TextMode = require("./mode/text").Mode;
@@ -6503,10 +6513,61 @@ var EditSession = function(text, mode) {
         this._emit("tokenizerUpdate", e);
     };
 
+    this.$modes = {};
+    this._loadMode = function(mode, callback) {
+        if (this.$modes[mode])
+            return callback(this.$modes[mode]);
+        
+        var _self = this;
+        var module;
+        try {
+            module = require(mode);
+        } catch (e) {};
+        if (module)
+            return done(module);
+            
+        fetch(function() {
+            require([mode], done);
+        });
+        
+        function done(module) {
+            if (_self.$modes[mode])
+                return callback(_self.$modes[mode]);
+            
+            _self.$modes[mode] = new module.Mode();
+            callback(_self.$modes[mode]);
+        }
+
+        function fetch(callback) {
+            if (!config.get("packaged"))
+                return callback();
+                
+            var base = mode.split("/").pop();
+            var filename = config.get("modePath") + "/mode-" + base + config.get("suffix");
+            net.loadScript(filename, callback);
+        }
+    };
+
     this.$mode = null;
+    this.$origMode = null;
     this.setMode = function(mode) {
+        this.$origMode = mode;
+        
+        // load on demand
+        if (typeof mode === "string") {
+            var _self = this;
+            this._loadMode(mode, function(module) {
+                if (_self.$origMode !== mode)
+                    return;
+            
+                _self.setMode(module);
+            });
+            return;
+        }
+        
         if (this.$mode === mode) return;
         this.$mode = mode;
+        
 
         this.$stopWorker();
 
@@ -7732,7 +7793,134 @@ require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype)
 
 exports.EditSession = EditSession;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+__ace_shadowed__.define('ace/config', ['require', 'exports', 'module' , 'ace/lib/lang'], function(require, exports, module) {
+"no use strict";
+
+var lang = require("./lib/lang");
+
+var global = (function() {
+    return this;
+})();
+
+var options = {
+    packaged: false,
+    workerPath: "",
+    modePath: "",
+    themePath: "",
+    suffix: ".js"
+};
+
+exports.get = function(key) {
+    if (!options.hasOwnProperty(key))
+        throw new Error("Unknown confik key: " + key);
+        
+    return options[key];
+};
+
+exports.set = function(key, value) {
+    if (!options.hasOwnProperty(key))
+        throw new Error("Unknown confik key: " + key);
+        
+    options[key] = value;
+};
+
+exports.all = function() {
+    return lang.copyObject(options);
+};
+
+exports.init = function() {
+    options.packaged = require.packaged || module.packaged || (global.define && define.packaged);
+
+    if (!global.document)
+        return "";
+
+    var scriptOptions = {};
+    var scriptUrl = "";
+    var suffix;
+    
+    var scripts = document.getElementsByTagName("script");
+    for (var i=0; i<scripts.length; i++) {
+        var script = scripts[i];
+
+        var src = script.src || script.getAttribute("src");
+        if (!src) {
+            continue;
+        }
+        
+        var attributes = script.attributes;
+        for (var j=0, l=attributes.length; j < l; j++) {
+            var attr = attributes[j];
+            if (attr.name.indexOf("data-ace-") === 0) {
+                scriptOptions[deHyphenate(attr.name.replace(/^data-ace-/, ""))] = attr.value;
+            }
+        }
+
+        var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace((-uncompressed)?(-noconflict)?\.js))(?:\?|$)/);
+        if (m) {
+            scriptUrl = m[1] || m[2];
+            suffix = m[3];
+        }
+    }
+    
+    if (scriptUrl) {
+        scriptOptions.base = scriptOptions.base || scriptUrl;
+        scriptOptions.packaged = true;
+    }
+    
+    scriptOptions.suffix = scriptOptions.suffix || suffix;
+    scriptOptions.workerPath = scriptOptions.workerPath || scriptOptions.base;
+    scriptOptions.modePath = scriptOptions.modePath || scriptOptions.base;
+    scriptOptions.themePath = scriptOptions.themePath || scriptOptions.base;
+    delete scriptOptions.base;
+    
+    for (var key in scriptOptions)
+        if (typeof scriptOptions[key] !== "undefined")
+            exports.set(key, scriptOptions[key]);
+};
+
+function deHyphenate(str) {
+    return str.replace(/-(.)/g, function(m, m1) { return m1.toUpperCase(); });
+}
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -9437,7 +9625,7 @@ var Document = function(text) {
     };
 
     this.insert = function(position, text) {
-        if (text.length == 0)
+        if (!text || text.length === 0)
             return position;
 
         position = this.$clipPosition(position);
@@ -12156,13 +12344,15 @@ exports.UndoManager = UndoManager;
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/dom', 'ace/lib/event', 'ace/lib/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'ace/lib/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
+__ace_shadowed__.define('ace/virtual_renderer', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/dom', 'ace/lib/event', 'ace/lib/useragent', 'ace/config', 'ace/lib/net', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'ace/lib/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
 "use strict";
 
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
 var event = require("./lib/event");
 var useragent = require("./lib/useragent");
+var config = require("./config");
+var net = require("./lib/net");
 var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
 var TextLayer = require("./layer/text").Text;
@@ -12921,14 +13111,36 @@ var VirtualRenderer = function(container, theme) {
         style.left = "-10000px";
     };
 
+    this._loadTheme = function(name, callback) {
+        if (!config.get("packaged"))
+            return callback();
+            
+        var base = name.split("/").pop();
+        var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
+        net.loadScript(filename, callback);
+    };
+
     this.setTheme = function(theme) {
         var _self = this;
 
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
-            theme = theme || "ace/theme/textmate";
-            require([theme], function(theme) {
-                afterLoad(theme);
+            var moduleName = theme || "ace/theme/textmate";
+            
+            var module;
+            try {
+                module = require(moduleName);
+            } catch (e) {};
+            if (module)
+                return afterLoad(module);
+            
+            _self._loadTheme(moduleName, function() {
+                require([theme], function(module) {
+                    if (_self.$themeValue !== theme)
+                        return;
+
+                    afterLoad(module);
+                });
             });
         } else {
             afterLoad(theme);
@@ -14600,6 +14812,172 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
  *
  * ***** END LICENSE BLOCK ***** */
 
+__ace_shadowed__.define('ace/worker/worker_client', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter', 'ace/config'], function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var EventEmitter = require("../lib/event_emitter").EventEmitter;
+var config = require("../config");
+
+var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
+
+    this.changeListener = this.changeListener.bind(this);
+
+    if (config.get("packaged")) {
+        this.$worker = new Worker(config.get("workerPath") + "/" + packagedJs);
+    }
+    else {
+        var workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
+        this.$worker = new Worker(workerUrl);
+
+        var tlns = {};
+        for (var i=0; i<topLevelNamespaces.length; i++) {
+            var ns = topLevelNamespaces[i];
+            var path = this.$normalizePath(require.nameToUrl(ns, null, "_").replace(/.js$/, ""));
+
+            tlns[ns] = path;
+        }
+    }
+
+    this.$worker.postMessage({
+        init : true,
+        tlns: tlns,
+        module: mod,
+        classname: classname
+    });
+
+    this.callbackId = 1;
+    this.callbacks = {};
+
+    var _self = this;
+    this.$worker.onerror = function(e) {
+        window.console && console.log && console.log(e);
+        throw e;
+    };
+    this.$worker.onmessage = function(e) {
+        var msg = e.data;
+        switch(msg.type) {
+            case "log":
+                window.console && console.log && console.log(msg.data);
+                break;
+
+            case "event":
+                _self._emit(msg.name, {data: msg.data});
+                break;
+
+            case "call":
+                var callback = _self.callbacks[msg.id];
+                if (callback) {
+                    callback(msg.data);
+                    delete _self.callbacks[msg.id];
+                }
+                break;
+        }
+    };
+};
+
+(function(){
+
+    oop.implement(this, EventEmitter);
+
+    this.$normalizePath = function(path) {
+        path = path.replace(/^[a-z]+:\/\/[^\/]+/, ""); // Remove domain name and rebuild it
+        path = location.protocol + "//" + location.host
+            // paths starting with a slash are relative to the root (host)
+            + (path.charAt(0) == "/" ? "" : location.pathname.replace(/\/[^\/]*$/, ""))
+            + "/" + path.replace(/^[\/]+/, "");
+        return path;
+    };
+
+    this.terminate = function() {
+        this._emit("terminate", {});
+        this.$worker.terminate();
+        this.$worker = null;
+        this.$doc.removeEventListener("change", this.changeListener);
+        this.$doc = null;
+    };
+
+    this.send = function(cmd, args) {
+        this.$worker.postMessage({command: cmd, args: args});
+    };
+
+    this.call = function(cmd, args, callback) {
+        if (callback) {
+            var id = this.callbackId++;
+            this.callbacks[id] = callback;
+            args.push(id);
+        }
+        this.send(cmd, args);
+    };
+
+    this.emit = function(event, data) {
+        try {
+            // firefox refuses to clone objects which have function properties
+            // TODO: cleanup event
+            this.$worker.postMessage({event: event, data: {data: data.data}});
+        }
+        catch(ex) {}
+    };
+
+    this.attachToDocument = function(doc) {
+        if(this.$doc)
+            this.terminate();
+
+        this.$doc = doc;
+        this.call("setValue", [doc.getValue()]);
+        doc.on("change", this.changeListener);
+    };
+
+    this.changeListener = function(e) {
+        e.range = {
+            start: e.data.range.start,
+            end: e.data.range.end
+        };
+        this.emit("change", e);
+    };
+
+}).call(WorkerClient.prototype);
+
+exports.WorkerClient = WorkerClient;
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
 __ace_shadowed__.define('ace/theme/textmate', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 "use strict";
 
@@ -14644,6 +15022,7 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(191, 191, 191);\
 }\
 \
+.ace-tm .ace_line .ace_storage,\
 .ace-tm .ace_line .ace_keyword {\
   color: blue;\
 }\

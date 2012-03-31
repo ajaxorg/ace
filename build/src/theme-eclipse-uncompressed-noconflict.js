@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/eclipse', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/theme/eclipse', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 "use strict";
 
 exports.isDark = false;
@@ -70,7 +70,9 @@ exports.cssText = ".ace-eclipse .ace_editor {\
   border-left: 1px solid black;\
 }\
 \
-.ace-eclipse .ace_line .ace_keyword, .ace-eclipse .ace_line .ace_variable {\
+.ace-eclipse .ace_line .ace_storage,\
+.ace-eclipse .ace_line .ace_keyword,\
+.ace-eclipse .ace_line .ace_variable {\
   color: rgb(127, 0, 85);\
 }\
 \
@@ -143,13 +145,3 @@ exports.cssClass = "ace-eclipse";
 var dom = require("../lib/dom");
 dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                ace.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

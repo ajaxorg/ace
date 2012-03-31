@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/theme/tomorrow_night', ['require', 'exports', 'module' ], function(require, exports, module) {
+__ace_shadowed__.define('ace/theme/tomorrow_night', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-tomorrow-night";
@@ -136,6 +136,18 @@ background-color:#B798BF;\
   color:#81A2BE;\
 }\
 \
+.ace-tomorrow-night .ace_storage {\
+  color:#B294BB;\
+}\
+\
+.ace-tomorrow-night .ace_storage.ace_type {\
+  color:#B294BB;\
+}\
+\
+.ace-tomorrow-night .ace_variable.ace_parameter {\
+  color:#DE935F;\
+}\
+\
 .ace-tomorrow-night .ace_string {\
   color:#B5BD68;\
 }\
@@ -172,16 +184,6 @@ background-color:#B798BF;\
   color:#B5BD68;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                __ace_shadowed__.require(["ace/ext/textarea"], function(a) {
-                    if (!window.__ace_shadowed__)
-                        window.__ace_shadowed__ = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        __ace_shadowed__[key] = a[key];
-                });
-            })();
-        

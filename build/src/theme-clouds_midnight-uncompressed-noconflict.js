@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/clouds_midnight', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/theme/clouds_midnight', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-clouds-midnight";
@@ -131,6 +131,10 @@ background-color:#E92E2E;\
   color:#E92E2E;\
 }\
 \
+.ace-clouds-midnight .ace_storage {\
+  color:#E92E2E;\
+}\
+\
 .ace-clouds-midnight .ace_string {\
   color:#5D90CD;\
 }\
@@ -147,17 +151,6 @@ background-color:#E92E2E;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
-
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                ace.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

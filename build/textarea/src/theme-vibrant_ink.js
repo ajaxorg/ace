@@ -19,7 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Michael Schwartz <mr.pants AT gmail DOT com>
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-__ace_shadowed__.define('ace/theme/vibrant_ink', ['require', 'exports', 'module' ], function(require, exports, module) {
+__ace_shadowed__.define('ace/theme/vibrant_ink', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-vibrant-ink";
@@ -132,6 +132,10 @@ background-color:#000000;\
   color:#FFCC00;\
 }\
 \
+.ace-vibrant-ink .ace_variable.ace_parameter {\
+  font-style:italic;\
+}\
+\
 .ace-vibrant-ink .ace_string {\
   color:#66FF00;\
 }\
@@ -157,16 +161,6 @@ color:#99CC99;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                __ace_shadowed__.require(["ace/ext/textarea"], function(a) {
-                    if (!window.__ace_shadowed__)
-                        window.__ace_shadowed__ = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        __ace_shadowed__[key] = a[key];
-                });
-            })();
-        

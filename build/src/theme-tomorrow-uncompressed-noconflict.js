@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/tomorrow', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/theme/tomorrow', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-tomorrow";
@@ -136,6 +136,18 @@ background-color:#8959A8;\
   color:#4271AE;\
 }\
 \
+.ace-tomorrow .ace_storage {\
+  color:#8959A8;\
+}\
+\
+.ace-tomorrow .ace_storage.ace_type {\
+  color:#8959A8;\
+}\
+\
+.ace-tomorrow .ace_variable.ace_parameter {\
+  color:#F5871F;\
+}\
+\
 .ace-tomorrow .ace_string {\
   color:#718C00;\
 }\
@@ -172,16 +184,6 @@ background-color:#8959A8;\
   color:#718C00;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                ace.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

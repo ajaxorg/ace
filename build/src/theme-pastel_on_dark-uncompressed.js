@@ -19,7 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      André Fiedler <fiedler dot andre a t gmail dot com>
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/pastel_on_dark', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/pastel_on_dark', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-pastel-on-dark";
@@ -174,16 +174,6 @@ color:#D2A8A1;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

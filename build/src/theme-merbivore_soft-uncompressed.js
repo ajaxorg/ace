@@ -19,7 +19,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
- *      Michael Schwartz <mr.pants AT gmail DOT com>
+ *      Fabian Jakobs <fabian AT ajax DOT org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/merbivore_soft', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/merbivore_soft', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-merbivore-soft";
@@ -136,6 +136,10 @@ background-color:#FE3838;\
     border-color: #E6E1DC;\
 }\
 \
+.ace-merbivore-soft .ace_storage {\
+  color:#FC803A;\
+}\
+\
 .ace-merbivore-soft .ace_string {\
   color:#8EC65F;\
 }\
@@ -162,16 +166,6 @@ color:#AC4BB8;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

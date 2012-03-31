@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/clouds', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/clouds', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-clouds";
@@ -130,6 +130,10 @@ exports.cssText = "\
   color:#C52727;\
 }\
 \
+.ace-clouds .ace_storage {\
+  color:#C52727;\
+}\
+\
 .ace-clouds .ace_string {\
   color:#5D90CD;\
 }\
@@ -146,17 +150,6 @@ exports.cssText = "\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
-
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

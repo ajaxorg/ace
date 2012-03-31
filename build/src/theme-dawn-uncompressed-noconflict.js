@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/theme/dawn', ['require', 'exports', 'module' ], function(require, exports, module) {
+ace.define('ace/theme/dawn', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = false;
 exports.cssClass = "ace-dawn";
@@ -135,6 +135,11 @@ color:#B52A1D;\
   color:#693A17;\
 }\
 \
+.ace-dawn .ace_storage {\
+  font-style:italic;\
+color:#A71D5D;\
+}\
+\
 .ace-dawn .ace_string {\
   color:#0B6125;\
 }\
@@ -164,16 +169,6 @@ color:#5A525F;\
   color:#693A17;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                ace.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        

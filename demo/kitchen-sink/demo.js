@@ -41,9 +41,9 @@
 define(function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
+require("ace/config").init(); 
 var env = {};
-    
-var net = require("ace/lib/net");
+
 var event = require("ace/lib/event");
 var theme = require("ace/theme/textmate");
 var EditSession = require("ace/edit_session").EditSession;
@@ -61,23 +61,21 @@ var Doc = function(name, desc, file) {
     this.desc = desc;
     this.doc = new EditSession(file);
     this.doc.setMode(modesByName[name].mode);
+    this.doc.modeName = name;
     this.doc.setUndoManager(new UndoManager());
 };
 
 var WrappedDoc = function(name, desc, file) {
     Doc.apply(this, arguments);
-    
+
     this.doc.setUseWrapMode(true);
     this.doc.setWrapLimitRange(80, 80);
 };
 
-var Mode = function(name, desc, clazz, extensions) {
+var Mode = function(name, desc, extensions) {
     this.name = name;
     this.desc = desc;
-    this.clazz = clazz;
-    this.mode = new clazz();
-    this.mode.name = name;
-    
+    this.mode = "ace/mode/" + name;
     this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
 };
 
@@ -85,48 +83,38 @@ Mode.prototype.supportsFile = function(filename) {
     return filename.match(this.extRe);
 };
 
-var themes = {};
-function loadTheme(name, callback) {
-    if (themes[name])
-        return callback();
-        
-    themes[name] = 1;
-    var base = name.split("/").pop();
-    var fileName = "demo/kitchen-sink/theme-" + base + "-uncompressed.js";
-    net.loadScript(fileName, callback);
-}
-
 var modes = [
-    new Mode("c_cpp", "C/C++", require("ace/mode/c_cpp").Mode, ["c", "cpp", "cxx", "h", "hpp"]),
-    new Mode("clojure", "Clojure", require("ace/mode/clojure").Mode, ["clj"]),
-    new Mode("coffee", "CoffeeScript", require("ace/mode/coffee").Mode, ["coffee"]),
-    new Mode("coldfusion", "ColdFusion", require("ace/mode/coldfusion").Mode, ["cfm"]),
-    new Mode("csharp", "C#", require("ace/mode/csharp").Mode, ["cs"]),
-    new Mode("css", "CSS", require("ace/mode/css").Mode, ["css"]),
-    new Mode("groovy", "Groovy", require("ace/mode/groovy").Mode, ["groovy"]),
-    new Mode("haxe", "haXe", require("ace/mode/haxe").Mode, ["hx"]),
-    new Mode("html", "HTML", require("ace/mode/html").Mode, ["html", "htm"]),
-    new Mode("java", "Java", require("ace/mode/java").Mode, ["java"]),
-    new Mode("javascript", "JavaScript", require("ace/mode/javascript").Mode, ["js"]),
-    new Mode("json", "JSON", require("ace/mode/json").Mode, ["json"]),
-    new Mode("latex", "LaTeX", require("ace/mode/latex").Mode, ["tex"]),
-    new Mode("lua", "Lua", require("ace/mode/lua").Mode, ["lua"]),
-    new Mode("markdown", "Markdown", require("ace/mode/markdown").Mode, ["md", "markdown"]),
-    new Mode("ocaml", "OCaml", require("ace/mode/ocaml").Mode, ["ml", "mli"]),
-    new Mode("perl", "Perl", require("ace/mode/perl").Mode, ["pl", "pm"]),
-    new Mode("pgsql", "pgSQL",require("ace/mode/pgsql").Mode, ["pgsql", "sql"]),
-    new Mode("php", "PHP",require("ace/mode/php").Mode, ["php"]),
-    new Mode("powershell", "Powershell", require("ace/mode/powershell").Mode, ["ps1"]),
-    new Mode("python", "Python", require("ace/mode/python").Mode, ["py"]),
-    new Mode("scala", "Scala", require("ace/mode/scala").Mode, ["scala"]),
-    new Mode("scss", "SCSS", require("ace/mode/scss").Mode, ["scss"]),
-    new Mode("ruby", "Ruby", require("ace/mode/ruby").Mode, ["rb"]),
-    new Mode("sql", "SQL", require("ace/mode/sql").Mode, ["sql"]),
-    new Mode("svg", "SVG", require("ace/mode/SVG").Mode, ["svg"]),
-    new Mode("text", "Text", require("ace/mode/text").Mode, ["txt"]),
-    new Mode("textile", "Textile", require("ace/mode/textile").Mode, ["textile"]),
-    new Mode("xquery", "XQuery", require("ace/mode/xquery").Mode, ["xq"]),
-    new Mode("xml", "XML", require("ace/mode/xml").Mode, ["xml"])
+    new Mode("c_cpp", "C/C++", ["c", "cpp", "cxx", "h", "hpp"]),
+    new Mode("clojure", "Clojure", ["clj"]),
+    new Mode("coffee", "CoffeeScript", ["coffee"]),
+    new Mode("coldfusion", "ColdFusion", ["cfm"]),
+    new Mode("csharp", "C#", ["cs"]),
+    new Mode("css", "CSS", ["css"]),
+    new Mode("groovy", "Groovy", ["groovy"]),
+    new Mode("haxe", "haXe", ["hx"]),
+    new Mode("html", "HTML", ["html", "htm"]),
+    new Mode("java", "Java", ["java"]),
+    new Mode("javascript", "JavaScript", ["js"]),
+    new Mode("json", "JSON", ["json"]),
+    new Mode("latex", "LaTeX", ["tex"]),
+    new Mode("lua", "Lua", ["lua"]),
+    new Mode("markdown", "Markdown", ["md", "markdown"]),
+    new Mode("ocaml", "OCaml", ["ml", "mli"]),
+    new Mode("perl", "Perl", ["pl", "pm"]),
+    new Mode("pgsql", "pgSQL", ["pgsql", "sql"]),
+    new Mode("php", "PHP", ["php"]),
+    new Mode("powershell", "Powershell", ["ps1"]),
+    new Mode("python", "Python", ["py"]),
+    new Mode("scala", "Scala", ["scala"]),
+    new Mode("scss", "SCSS", ["scss"]),
+    new Mode("ruby", "Ruby", ["rb"]),
+    new Mode("sql", "SQL", ["sql"]),
+    new Mode("svg", "SVG", ["svg"]),
+    new Mode("text", "Text", ["txt"]),
+    new Mode("textile", "Textile", ["textile"]),
+    new Mode("xml", "XML", ["xml"]),
+    new Mode("sh", "SH", ["sh"]),
+    new Mode("xquery", "XQuery", ["xq"])
 ];
 
 modesByName = {};
@@ -234,6 +222,10 @@ var docs = [
         require("ace/requirejs/text!./docs/Haxe.hx")
     ),
     new Doc(
+        "sh", "SH",
+        require("ace/requirejs/text!./docs/sh.sh")
+    ),
+    new Doc(
         "xquery", "XQuery",
         require("ace/requirejs/text!./docs/xquery.xq")
     ),
@@ -337,7 +329,7 @@ function updateUIEditorOptions() {
     var session = editor.session;
 
     docEl.value = session.name;
-    modeEl.value = session.getMode().name || "text";
+    modeEl.value = session.modeName || "text";
 
     session.setFoldStyle(foldingEl.value);
 
@@ -361,17 +353,14 @@ function updateUIEditorOptions() {
 
 bindDropdown("mode", function(value) {
     env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
+    env.editor.getSession().modeName = value;
 });
 
 bindDropdown("theme", function(value) {
-    if (module.packaged) {
-        loadTheme(value, function() {
-            env.editor.setTheme(value);
-        });
-    }
-    else {
-        env.editor.setTheme(value);
-    }
+    if (!value)
+        return;
+
+    env.editor.setTheme(value);
 });
 
 bindDropdown("keybinding", function(value) {
@@ -533,6 +522,7 @@ event.addListener(container, "drop", function(e) {
 
             modeEl.value = mode.name;
             env.editor.getSession().setMode(mode.mode);
+            env.editor.getSession().modeName = mode.name;
         };
         reader.readAsText(file);
     }

@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/theme/kr_theme', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/theme/kr_theme', ['require', 'exports', 'module' , 'ace/lib/dom'], function(require, exports, module) {
 
 exports.isDark = true;
 exports.cssClass = "ace-kr-theme";
@@ -127,6 +127,10 @@ background-color:#A41300;\
   color:#85873A;\
 }\
 \
+.ace-kr-theme .ace_storage {\
+  color:#FFEE80;\
+}\
+\
 .ace-kr-theme .ace_string.ace_regexp {\
   color:rgba(125, 255, 192, 0.65);\
 }\
@@ -156,16 +160,6 @@ color:#706D5B;\
   background-color:#0F0040;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
-;
-            (function() {
-                window.require(["ace/ace"], function(a) {
-                    if (!window.ace)
-                        window.ace = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        ace[key] = a[key];
-                });
-            })();
-        
