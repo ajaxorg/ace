@@ -94,8 +94,8 @@
 .ace_editor textarea {
     position: fixed;
     z-index: 0;
-    width: 10px;
-    height: 30px;
+    width: 0.5em;
+    height: 1em;
     opacity: 0;
     background: transparent;
     appearance: none;
