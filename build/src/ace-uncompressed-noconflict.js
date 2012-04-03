@@ -12516,11 +12516,11 @@ var VirtualRenderer = function(container, theme) {
 
     //@todo I would like to make this animation a setting. How?
 
-    var STEPS = 10;
+    var STEPS = 15;
     function calcSteps(fromValue, toValue){
         var i     = 0,
-            l     = STEPS - 1,
-            steps = [fromValue],
+            l     = STEPS,
+            steps = [],
             func  = function(t, x_min, dx) {
                 if ((t /= .5) < 1)
                     return dx / 2 * Math.pow(t, 3) + x_min;
@@ -12541,12 +12541,12 @@ var VirtualRenderer = function(container, theme) {
             offset -= this.$size.scrollerHeight / 2;
 
         var i = 0, _self = this, 
-            steps = calcSteps(this.scrollTop, offset);
+            steps = calcSteps(this.scrollTop, offset);// console.dir(steps);
         clearInterval(_self.$timer);
         this.$timer = setInterval(function(){
             _self.session.setScrollTop(steps[i]);
             
-            if (++i == STEPS)
+            if (++i == STEPS + 1)
                 clearInterval(_self.$timer);
         }, 10);
     };
