@@ -113,7 +113,8 @@ var modes = [
     new Mode("text", "Text", ["txt"]),
     new Mode("textile", "Textile", ["textile"]),
     new Mode("xml", "XML", ["xml"]),
-    new Mode("sh", "SH", ["sh"])
+    new Mode("sh", "SH", ["sh"]),
+    new Mode("xquery", "XQuery", ["xq"])
 ];
 
 modesByName = {};
@@ -223,6 +224,10 @@ var docs = [
     new Doc(
         "sh", "SH",
         require("ace/requirejs/text!./docs/sh.sh")
+    ),
+    new Doc(
+        "xquery", "XQuery",
+        require("ace/requirejs/text!./docs/xquery.xq")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
