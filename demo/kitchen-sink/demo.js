@@ -98,6 +98,7 @@ var modes = [
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
     new Mode("lua", "Lua", ["lua"]),
+    new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
@@ -188,6 +189,10 @@ var docs = [
     new Doc(
         "lua", "Lua",
         require("ace/requirejs/text!./docs/lua.lua")
+    ),
+    new Doc(
+        "liquid", "Liquid",
+        require("ace/requirejs/text!./docs/liquid.liquid")
     ),
     new Doc(
         "java", "Java",
