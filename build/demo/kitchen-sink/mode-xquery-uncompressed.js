@@ -106,7 +106,7 @@ oop.inherits(Mode, TextMode);
 <<<<<<< HEAD
 =======
     
-     this.createWorker = function(session) {
+    this.createWorker = function(session) {
         var worker = new WorkerClient(["ace"], "worker-xquery.js", "ace/mode/xquery_worker", "XQueryWorker");
         worker.attachToDocument(session.getDocument());
         
