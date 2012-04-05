@@ -325,9 +325,27 @@ var JavaScriptHighlightRules = function() {
             }, {
                 token : "constant.numeric", // float
                 regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
-            }, {
+            }, { // match stuff like: Sound.prototype.play = function() { }
+                token : ["storage.type", "punctuation.operator", "support.function", "punctuation.operator", "entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+            }, { // match stuff like: Sound.prototype.play = myfunc
+                token : ["storage.type", "punctuation.operator", "support.function", "punctuation.operator", "entity.name.function", "text", "keyword.operator", "text"],
+                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)"
+            }, { // match stuff like: Sound.play = function() {  }
+                token : ["storage.type", "punctuation.operator", "entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                regex : "(" + identifierRe + ")(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+            }, { // match stuff like: play = function() {  }
+                token : ["entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                regex : "(" + identifierRe +")(\\s*)(=)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+            }, { // match regular function like: function myFunc(arg) { }
                 token : ["storage.type", "text", "entity.name.function", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
                 regex : "(function)(\\s+)(" + identifierRe + ")(\\s*)(\\()(.*?)(\\))"
+            }, { // match stuff like: foobar: function() { }
+                token : ["entity.name.function", "text", "punctuation.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                regex : "(" + identifierRe + ")(\\s*)(:)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+            }, { // Attempt to match : function() { } (this is for issues with 'foo': function() { })
+                token : ["text", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                regex : "(:)(\\s*)(function)?(\\s*)(\\()([^)]*)(\\))"
             }, {
                 token : "constant.language.boolean",
                 regex : "(?:true|false)\\b"

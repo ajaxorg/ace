@@ -1071,14 +1071,14 @@ var PhpHighlightRules = function() {
                 regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
             }, {
                 token : "string", // multi line string start
-                regex : '["].*\\\\$',
+                regex : '["][\\s\\S]*',
                 next : "qqstring"
             }, {
                 token : "string", // single line
                 regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
             }, {
                 token : "string", // multi line string start
-                regex : "['].*\\\\$",
+                regex : "['][\\s\\S]+",
                 next : "qstring"
             }, {
                 token : "constant.numeric", // hex
@@ -1160,21 +1160,21 @@ var PhpHighlightRules = function() {
         "qqstring" : [
             {
                 token : "string",
-                regex : '(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
+                regex : '"',
                 next : "start"
             }, {
                 token : "string",
-                regex : '.+'
-            }
+                regex : '[^"]+'
+            }, 
         ],
         "qstring" : [
             {
                 token : "string",
-                regex : "(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
+                regex : "'",
                 next : "start"
             }, {
                 token : "string",
-                regex : '.+'
+                regex : "[^']+"
             }
         ],
         "htmlcomment" : [
