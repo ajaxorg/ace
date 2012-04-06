@@ -101,7 +101,7 @@ exports.cssText = "\
   color: #D1D1D1;\
 }\
 \
-.ace-tomorrow .ace_keyword {\
+.ace-tomorrow .ace_keyword, .ace-tomorrow .ace_meta {\
   color:#8959A8;\
 }\
 \
@@ -117,6 +117,10 @@ exports.cssText = "\
   color:#F5871F;\
 }\
 \
+.ace-tomorrow .ace_constant.ace_other {\
+  color:#666969;\
+}\
+\
 .ace-tomorrow .ace_invalid {\
   color:#FFFFFF;\
 background-color:#C82829;\
@@ -125,6 +129,10 @@ background-color:#C82829;\
 .ace-tomorrow .ace_invalid.ace_deprecated {\
   color:#FFFFFF;\
 background-color:#8959A8;\
+}\
+\
+.ace-tomorrow .ace_support.ace_constant {\
+  color:#F5871F;\
 }\
 \
 .ace-tomorrow .ace_fold {\
@@ -140,8 +148,12 @@ background-color:#8959A8;\
   color:#8959A8;\
 }\
 \
-.ace-tomorrow .ace_storage.ace_type {\
+.ace-tomorrow .ace_storage.ace_type,  .ace-tomorrow .ace_support.ace_type{\
   color:#8959A8;\
+}\
+\
+.ace-tomorrow .ace_variable {\
+  color:#4271AE;\
 }\
 \
 .ace-tomorrow .ace_variable.ace_parameter {\

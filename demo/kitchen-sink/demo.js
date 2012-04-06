@@ -64,7 +64,6 @@ var Doc = function(name, desc, file) {
     this.name = name;
     this.desc = desc;
     this.doc = new EditSession(file);
-    this.doc.setMode(modesByName[name].mode);
     this.doc.modeName = name;
     this.doc.setUndoManager(new UndoManager());
 };
@@ -103,6 +102,7 @@ var modes = [
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
     new Mode("lua", "Lua", ["lua"]),
+    new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
@@ -118,7 +118,8 @@ var modes = [
     new Mode("text", "Text", ["txt"]),
     new Mode("textile", "Textile", ["textile"]),
     new Mode("xml", "XML", ["xml"]),
-    new Mode("sh", "SH", ["sh"])
+    new Mode("sh", "SH", ["sh"]),
+    new Mode("xquery", "XQuery", ["xq"])
 ];
 
 modesByName = {};
@@ -194,6 +195,10 @@ var docs = [
         require("ace/requirejs/text!./docs/lua.lua")
     ),
     new Doc(
+        "liquid", "Liquid",
+        require("ace/requirejs/text!./docs/liquid.liquid")
+    ),
+    new Doc(
         "java", "Java",
         require("ace/requirejs/text!./docs/java.java")
     ),
@@ -228,6 +233,10 @@ var docs = [
     new Doc(
         "sh", "SH",
         require("ace/requirejs/text!./docs/sh.sh")
+    ),
+    new Doc(
+        "xquery", "XQuery",
+        require("ace/requirejs/text!./docs/xquery.xq")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
@@ -324,6 +333,12 @@ bindDropdown("mode", function(value) {
 
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
+    
+    if (!docsByName[value].initialized) {
+        docsByName[value].initialized = true;
+        doc.setMode(modesByName[docsByName[value].name].mode);
+    }
+    
     var session = env.split.setSession(doc);
     session.name = doc.name;
 

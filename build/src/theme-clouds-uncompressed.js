@@ -101,7 +101,7 @@ exports.cssText = "\
   color: #BFBFBF;\
 }\
 \
-.ace-clouds .ace_keyword {\
+.ace-clouds .ace_keyword, .ace-clouds .ace_meta {\
   color:#AF956F;\
 }\
 \

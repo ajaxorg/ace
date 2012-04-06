@@ -101,11 +101,11 @@ exports.cssText = "\
   color: #404040;\
 }\
 \
-.ace-merbivore-soft .ace_keyword {\
+.ace-merbivore-soft .ace_keyword, .ace-merbivore-soft .ace_meta {\
   color:#FC803A;\
 }\
 \
-.ace-merbivore-soft .ace_constant {\
+.ace-merbivore-soft .ace_constant, .ace-merbivore-soft .ace_constant.ace_other {\
   color:#68C1D8;\
 }\
 \
@@ -129,6 +129,10 @@ background-color:#FE3838;\
 .ace-merbivore-soft .ace_invalid.ace_deprecated {\
   color:#FFFFFF;\
 background-color:#FE3838;\
+}\
+\
+.ace-merbivore-soft .ace_support.ace_constant {\
+  color:#8EC65F;\
 }\
 \
 .ace-merbivore-soft .ace_fold {\
