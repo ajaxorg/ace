@@ -5408,13 +5408,13 @@ exports.commands = [{
 }, {
     name: "backspace",
     bindKey: bindKey(
-        "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+        "Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
     exec: function(editor) { editor.remove("left"); }
 }, {
     name: "removetolinestart",
-    bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
+    bindKey: bindKey("Alt-Backspace", "Command-Backspace"),
     exec: function(editor) { editor.removeToLineStart(); }
 }, {
     name: "removetolineend",
@@ -8536,7 +8536,7 @@ var Tokenizer = function(rules, flag) {
             });
             
             if (matchcount > 1 && state[i].token.length !== matchcount-1)
-                throw new Error("Matching groups and length of the token array don't match");
+                throw new Error("Matching groups and length of the token array don't match in rule #" + i + " of state " + key);
             
             mapping[matchTotal] = {
                 rule: i,
@@ -11611,7 +11611,7 @@ var CommandManager = function(platform, commands) {
 
         var key = typeof binding == "string" ? binding: binding[this.platform];
         this.bindKey(key, command);
-    }
+    };
 
     function parseKeys(keys, val, ret) {
         var key;
@@ -11628,10 +11628,10 @@ var CommandManager = function(platform, commands) {
         return {
             key: key,
             hashId: hashId
-        }
+        };
     }
 
-    function splitSafe(s, separator) {
+    function splitSafe(s) {
         return (s.toLowerCase()
             .trim()
             .split(new RegExp("[\\s ]*\\-[\\s ]*", "g"), 999));
@@ -11645,7 +11645,7 @@ var CommandManager = function(platform, commands) {
 
         var ckbr = this.commmandKeyBinding;
         return ckbr[hashId] && ckbr[hashId][textOrKey.toLowerCase()];
-    }
+    };
 
     this.exec = function(command, editor, args) {
         if (typeof command === 'string')
@@ -11697,7 +11697,7 @@ var CommandManager = function(platform, commands) {
                     this.exec(x, editor);
                 else
                     this.exec(x[0], editor, x[1]);
-            }, this)
+            }, this);
         } finally {
             this.$inReplay = false;
         }
@@ -11709,9 +11709,9 @@ var CommandManager = function(platform, commands) {
                 x[0] = x[0].name;
             if (!x[1])
                 x = x[0];
-            return x
-        })
-    }
+            return x;
+        });
+    };
 
 }).call(CommandManager.prototype);
 
