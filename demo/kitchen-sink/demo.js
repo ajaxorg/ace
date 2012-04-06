@@ -60,7 +60,6 @@ var Doc = function(name, desc, file) {
     this.name = name;
     this.desc = desc;
     this.doc = new EditSession(file);
-    this.doc.setMode(modesByName[name].mode);
     this.doc.modeName = name;
     this.doc.setUndoManager(new UndoManager());
 };
@@ -321,6 +320,12 @@ modes.forEach(function(mode) {
 
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
+    
+    if (!docsByName[value].initialized) {
+        docsByName[value].initialized = true;
+        doc.setMode(modesByName[docsByName[value].name].mode);
+    }
+    
     var session = env.split.setSession(doc);
     session.name = doc.name;
 
