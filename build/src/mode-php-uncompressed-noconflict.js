@@ -1165,7 +1165,7 @@ var PhpHighlightRules = function() {
             }, {
                 token : "string",
                 regex : '[^"]+'
-            }, 
+            }
         ],
         "qstring" : [
             {
@@ -1213,7 +1213,7 @@ var PhpHighlightRules = function() {
                  next : "htmltag"
              }, {
                  token : "meta.tag",
-                 regex : ">",
+                 regex : ">"
              }, {
                  token : 'text',
                  regex : "(?:media|type|href)"
@@ -1223,7 +1223,7 @@ var PhpHighlightRules = function() {
              }, {
                  token : "paren.lparen",
                  regex : "\{",
-                 next : "cssdeclaration",
+                 next : "cssdeclaration"
              }, {
                  token : "keyword",
                  regex : "#[A-Za-z0-9\-\_\.]+"
@@ -1265,7 +1265,7 @@ var PhpHighlightRules = function() {
                    regex : ";",
                    next : "cssdeclaration"
                }
-         ],
+         ]
     };
 
     this.embedRules(DocCommentHighlightRules, "doc-",
