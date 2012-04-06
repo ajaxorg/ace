@@ -47,7 +47,6 @@ exports.cssText = ".ace-chrome .ace_editor {\
 }\
 \
 .ace-chrome .ace_gutter {\
-  width: 50px;\
   background: #e8e8e8;\
   color: #333;\
   overflow : hidden;\
@@ -56,10 +55,6 @@ exports.cssText = ".ace-chrome .ace_editor {\
 .ace-chrome .ace_gutter-layer {\
   width: 100%;\
   text-align: right;\
-}\
-\
-.ace-chrome .ace_gutter-layer .ace_gutter-cell {\
-  padding-right: 6px;\
 }\
 \
 .ace-chrome .ace_print_margin {\

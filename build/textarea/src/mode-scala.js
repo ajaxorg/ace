@@ -326,25 +326,96 @@ var JavaScriptHighlightRules = function() {
                 token : "constant.numeric", // float
                 regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
             }, { // match stuff like: Sound.prototype.play = function() { }
-                token : ["storage.type", "punctuation.operator", "support.function", "punctuation.operator", "entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
-                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+                token : [
+                    "storage.type",
+                    "punctuation.operator", 
+                    "support.function", 
+                    "punctuation.operator", 
+                    "entity.name.function", 
+                    "text", 
+                    "keyword.operator", 
+                    "text", 
+                    "storage.type", 
+                    "text", 
+                    "paren.lparen", 
+                    "variable.parameter", 
+                    "paren.rparen"
+                ],
+                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // match stuff like: Sound.prototype.play = myfunc
-                token : ["storage.type", "punctuation.operator", "support.function", "punctuation.operator", "entity.name.function", "text", "keyword.operator", "text"],
+                token : [
+                    "storage.type", 
+                    "punctuation.operator", 
+                    "support.function", 
+                    "punctuation.operator", 
+                    "entity.name.function", 
+                    "text", 
+                    "keyword.operator", 
+                    "text"
+                ],
                 regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)"
             }, { // match stuff like: Sound.play = function() {  }
-                token : ["storage.type", "punctuation.operator", "entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
-                regex : "(" + identifierRe + ")(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+                token : [
+                    "storage.type", 
+                    "punctuation.operator", 
+                    "entity.name.function", 
+                    "text", 
+                    "keyword.operator", 
+                    "text", 
+                    "storage.type",
+                    "text", 
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
+                ],
+                regex : "(" + identifierRe + ")(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // match stuff like: play = function() {  }
-                token : ["entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
-                regex : "(" + identifierRe +")(\\s*)(=)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+                token : [
+                    "entity.name.function", 
+                    "text", 
+                    "keyword.operator", 
+                    "text", 
+                    "storage.type", 
+                    "text", 
+                    "paren.lparen", 
+                    "variable.parameter", 
+                    "paren.rparen"
+                ],
+                regex : "(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // match regular function like: function myFunc(arg) { }
-                token : ["storage.type", "text", "entity.name.function", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                token : [
+                    "storage.type", 
+                    "text",
+                    "entity.name.function",
+                    "text", 
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
+                ],
                 regex : "(function)(\\s+)(" + identifierRe + ")(\\s*)(\\()(.*?)(\\))"
             }, { // match stuff like: foobar: function() { }
-                token : ["entity.name.function", "text", "punctuation.operator", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
-                regex : "(" + identifierRe + ")(\\s*)(:)(\\s*)(function)?(\\s*)(\\()(.*?)(\\))"
+                token : [
+                    "entity.name.function", 
+                    "text", 
+                    "punctuation.operator", 
+                    "text", 
+                    "storage.type", 
+                    "text", 
+                    "paren.lparen", 
+                    "variable.parameter", 
+                    "paren.rparen"
+                ],
+                regex : "(" + identifierRe + ")(\\s*)(:)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // Attempt to match : function() { } (this is for issues with 'foo': function() { })
-                token : ["text", "text", "storage.type", "text", "paren.lparen", "variable.parameter", "paren.rparen"],
+                token : [
+                    "text", 
+                    "text", 
+                    "storage.type", 
+                    "text", 
+                    "paren.lparen", 
+                    "variable.parameter", 
+                    "paren.rparen"
+                ],
                 regex : "(:)(\\s*)(function)?(\\s*)(\\()([^)]*)(\\))"
             }, {
                 token : "constant.language.boolean",
@@ -360,7 +431,7 @@ var JavaScriptHighlightRules = function() {
                 token : "support.function.dom",
                 regex : "\\b(?:s(?:ub(?:stringData|mit)|plitText|e(?:t(?:NamedItem|Attribute(?:Node)?)|lect))|has(?:ChildNodes|Feature)|namedItem|c(?:l(?:ick|o(?:se|neNode))|reate(?:C(?:omment|DATASection|aption)|T(?:Head|extNode|Foot)|DocumentFragment|ProcessingInstruction|E(?:ntityReference|lement)|Attribute))|tabIndex|i(?:nsert(?:Row|Before|Cell|Data)|tem)|open|delete(?:Row|C(?:ell|aption)|T(?:Head|Foot)|Data)|focus|write(?:ln)?|a(?:dd|ppend(?:Child|Data))|re(?:set|place(?:Child|Data)|move(?:NamedItem|Child|Attribute(?:Node)?)?)|get(?:NamedItem|Element(?:sBy(?:Name|TagName)|ById)|Attribute(?:Node)?)|blur)\\b(?=\\()"                
             }, {
-                token : "support.function.constant",
+                token : "support.constant",
                 regex : "\\b(?:s(?:ystemLanguage|cr(?:ipts|ollbars|een(?:X|Y|Top|Left))|t(?:yle(?:Sheets)?|atus(?:Text|bar)?)|ibling(?:Below|Above)|ource|uffixes|e(?:curity(?:Policy)?|l(?:ection|f)))|h(?:istory|ost(?:name)?|as(?:h|Focus))|y|X(?:MLDocument|SLDocument)|n(?:ext|ame(?:space(?:s|URI)|Prop))|M(?:IN_VALUE|AX_VALUE)|c(?:haracterSet|o(?:n(?:structor|trollers)|okieEnabled|lorDepth|mp(?:onents|lete))|urrent|puClass|l(?:i(?:p(?:boardData)?|entInformation)|osed|asses)|alle(?:e|r)|rypto)|t(?:o(?:olbar|p)|ext(?:Transform|Indent|Decoration|Align)|ags)|SQRT(?:1_2|2)|i(?:n(?:ner(?:Height|Width)|put)|ds|gnoreCase)|zIndex|o(?:scpu|n(?:readystatechange|Line)|uter(?:Height|Width)|p(?:sProfile|ener)|ffscreenBuffering)|NEGATIVE_INFINITY|d(?:i(?:splay|alog(?:Height|Top|Width|Left|Arguments)|rectories)|e(?:scription|fault(?:Status|Ch(?:ecked|arset)|View)))|u(?:ser(?:Profile|Language|Agent)|n(?:iqueID|defined)|pdateInterval)|_content|p(?:ixelDepth|ort|ersonalbar|kcs11|l(?:ugins|atform)|a(?:thname|dding(?:Right|Bottom|Top|Left)|rent(?:Window|Layer)?|ge(?:X(?:Offset)?|Y(?:Offset)?))|r(?:o(?:to(?:col|type)|duct(?:Sub)?|mpter)|e(?:vious|fix)))|e(?:n(?:coding|abledPlugin)|x(?:ternal|pando)|mbeds)|v(?:isibility|endor(?:Sub)?|Linkcolor)|URLUnencoded|P(?:I|OSITIVE_INFINITY)|f(?:ilename|o(?:nt(?:Size|Family|Weight)|rmName)|rame(?:s|Element)|gColor)|E|whiteSpace|l(?:i(?:stStyleType|n(?:eHeight|kColor))|o(?:ca(?:tion(?:bar)?|lName)|wsrc)|e(?:ngth|ft(?:Context)?)|a(?:st(?:M(?:odified|atch)|Index|Paren)|yer(?:s|X)|nguage))|a(?:pp(?:MinorVersion|Name|Co(?:deName|re)|Version)|vail(?:Height|Top|Width|Left)|ll|r(?:ity|guments)|Linkcolor|bove)|r(?:ight(?:Context)?|e(?:sponse(?:XML|Text)|adyState))|global|x|m(?:imeTypes|ultiline|enubar|argin(?:Right|Bottom|Top|Left))|L(?:N(?:10|2)|OG(?:10E|2E))|b(?:o(?:ttom|rder(?:Width|RightWidth|BottomWidth|Style|Color|TopWidth|LeftWidth))|ufferDepth|elow|ackground(?:Color|Image)))\\b"                
             }, {
                 token : ["punctuation.operator", "support.function.firebug"],

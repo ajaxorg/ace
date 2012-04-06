@@ -244,7 +244,7 @@ exportAce(ACE_NAMESPACE);
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init(); 
@@ -266,7 +266,6 @@ var Doc = function(name, desc, file) {
     this.name = name;
     this.desc = desc;
     this.doc = new EditSession(file);
-    this.doc.setMode(modesByName[name].mode);
     this.doc.modeName = name;
     this.doc.setUndoManager(new UndoManager());
 };
@@ -304,6 +303,7 @@ var modes = [
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
     new Mode("lua", "Lua", ["lua"]),
+    new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
@@ -394,6 +394,10 @@ var docs = [
     new Doc(
         "lua", "Lua",
         require("text!./docs/lua.lua")
+    ),
+    new Doc(
+        "liquid", "Liquid",
+        require("text!./docs/liquid.liquid")
     ),
     new Doc(
         "java", "Java",
@@ -522,6 +526,12 @@ modes.forEach(function(mode) {
 
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
+    
+    if (!docsByName[value].initialized) {
+        docsByName[value].initialized = true;
+        doc.setMode(modesByName[docsByName[value].name].mode);
+    }
+    
     var session = env.split.setSession(doc);
     session.name = doc.name;
 
@@ -3858,6 +3868,10 @@ var EditSession = function(text, mode) {
                 return callback(_self.$modes[mode]);
             
             _self.$modes[mode] = new module.Mode();
+            _self._emit("loadmode", {
+                name: mode,
+                mode: _self.$modes[mode]
+            });
             callback(_self.$modes[mode]);
         }
 
@@ -6403,11 +6417,14 @@ var Tokenizer = function(rules, flag) {
             // Count number of matching groups. 2 extra groups from the full match
             // And the catch-all on the end (used to force a match);
             var matchcount = new RegExp("(?:(" + state[i].regex + ")|(.))").exec("a").length - 2;
-        
+            
             // Replace any backreferences and offset appropriately.
             var adjustedregex = state[i].regex.replace(/\\([0-9]+)/g, function (match, digit) {
                 return "\\" + (parseInt(digit, 10) + matchTotal + 1);
             });
+            
+            if (matchcount > 1 && state[i].token.length !== matchcount-1)
+                throw new Error("Matching groups and length of the token array don't match");
             
             mapping[matchTotal] = {
                 rule: i,
@@ -6446,45 +6463,47 @@ var Tokenizer = function(rules, flag) {
             var value = [match[0]];
 
             for (var i = 0; i < match.length-2; i++) {
-                if (match[i + 1] !== undefined) {
-                    rule = state[mapping[i].rule];
+                if (match[i + 1] === undefined)
+                    continue;
                     
-                    if (mapping[i].len > 1) {
-                        value = match.slice(i+2, i+1+mapping[i].len);
-                    }
-                    
-                    // compute token type
-                    if (typeof rule.token == "function")
-                        type = rule.token.apply(this, value);
-                    else
-                        type = rule.token;
+                rule = state[mapping[i].rule];
+                
+                if (mapping[i].len > 1)
+                    value = match.slice(i+2, i+1+mapping[i].len);
+                                
+                // compute token type
+                if (typeof rule.token == "function")
+                    type = rule.token.apply(this, value);
+                else
+                    type = rule.token;
 
-                    var next = rule.next;                    
-                    if (next && next !== currentState) {
-                        currentState = next;
-                        state = this.rules[currentState];
-                        mapping = this.matchMappings[currentState];
-                        lastIndex = re.lastIndex;
+                var next = rule.next;                    
+                if (next && next !== currentState) {
+                    currentState = next;
+                    state = this.rules[currentState];
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = re.lastIndex;
 
-                        re = this.regExps[currentState];
-                        re.lastIndex = lastIndex;
-                    }
-                    break;
+                    re = this.regExps[currentState];
+                    re.lastIndex = lastIndex;
                 }
+                break;
             }
-
+            
             if (value[0]) {
                 if (typeof type == "string") {
                     value = [value.join("")];
                     type = [type];
                 }
                 for (var i = 0; i < value.length; i++) {
+                    if (!value[i])
+                        continue;
+                        
                     if ((!rule || rule.merge || type[i] === "text") && token.type === type[i]) {
                         token.value += value[i];
                     } else {
-                        if (token.type) {
+                        if (token.type)
                             tokens.push(token);
-                        }
                     
                         token = {
                             type: type[i],
@@ -10263,6 +10282,84 @@ define("text!kitchen-sink/docs/lua.lua", [], "--[[--\n" +
   "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
   "");
 
+define("text!kitchen-sink/docs/liquid.liquid", [], "The following examples can be found in full at http://liquidmarkup.org/\n" +
+  "\n" +
+  "Liquid is an extraction from the e-commerce system Shopify.\n" +
+  "Shopify powers many thousands of e-commerce stores which all call for unique designs.\n" +
+  "For this we developed Liquid which allows our customers complete design freedom while\n" +
+  "maintaining the integrity of our servers.\n" +
+  "\n" +
+  "Liquid has been in production use since June 2006 and is now used by many other\n" +
+  "hosted web applications.\n" +
+  "\n" +
+  "It was developed for usage in Ruby on Rails web applications and integrates seamlessly\n" +
+  "as a plugin but it also works excellently as a stand alone library.\n" +
+  "\n" +
+  "Here's what it looks like:\n" +
+  "\n" +
+  "  <ul id=\"products\">\n" +
+  "    {% for product in products %}\n" +
+  "      <li>\n" +
+  "        <h2>{{ product.title }}</h2>\n" +
+  "        Only {{ product.price | format_as_money }}\n" +
+  "\n" +
+  "        <p>{{ product.description | prettyprint | truncate: 200  }}</p>\n" +
+  "\n" +
+  "      </li>\n" +
+  "    {% endfor %}\n" +
+  "  </ul>\n" +
+  "\n" +
+  "\n" +
+  "Some more features include:\n" +
+  "\n" +
+  "<h2>Filters</h2>\n" +
+  "<p> The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} </p>\n" +
+  "<p>The word \"tobi\" has {{ 'tobi' | size }} letters! </p>\n" +
+  "<p>Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} </p>\n" +
+  "<p>The date today is {{ 'now' | date: \"%Y %b %d\" }} </p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>If</h2>\n" +
+  "<p>\n" +
+  "  {% if user.name == 'tobi' or user.name == 'marc' %} \n" +
+  "    hi marc or tobi\n" +
+  "  {% endif %}\n" +
+  "</p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>Case</h2>\n" +
+  "<p>\n" +
+  "  {% case template %}\n" +
+  "    {% when 'index' %}\n" +
+  "       Welcome\n" +
+  "    {% when 'product' %}\n" +
+  "       {{ product.vendor | link_to_vendor }} / {{ product.title }}\n" +
+  "    {% else %}\n" +
+  "       {{ page_title }}\n" +
+  "  {% endcase %}\n" +
+  "</p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>For Loops</h2>\n" +
+  "<p>\n" +
+  "  {% for item in array %} \n" +
+  "    {{ item }}\n" +
+  "  {% endfor %}\n" +
+  "</p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>Tables</h2>\n" +
+  "<p>\n" +
+  "  {% tablerow item in items cols: 3 %}\n" +
+  "    {% if tablerowloop.col_first %}\n" +
+  "      First column: {{ item.variable }}\n" +
+  "    {% else %}\n" +
+  "      Different column: {{ item.variable }}\n" +
+  "    {% endif %}\n" +
+  "  {% endtablerow %}\n" +
+  "</p>\n" +
+  "");
+
 define("text!kitchen-sink/docs/java.java", [], "public class InfiniteLoop {\n" +
   "\n" +
   "    /*\n" +
@@ -11480,7 +11577,7 @@ var Editor = function(renderer, session) {
     this.onScrollLeftChange = function() {
         this.renderer.scrollToX(this.session.getScrollLeft());
     };
-
+    
     this.onCursorChange = function() {
         this.renderer.updateCursor();
 
@@ -12398,8 +12495,7 @@ var Editor = function(renderer, session) {
 
 
 exports.Editor = Editor;
-});
-/* vim:ts=4:sts=4:sw=4:
+});/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
