@@ -3548,6 +3548,14 @@ var Editor = function(renderer, session) {
     this.getHighlightSelectedWord = function() {
         return this.$highlightSelectedWord;
     };
+    
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.renderer.setAnimatedScroll(shouldAnimate);
+    }
+    
+    this.getAnimatedScroll = function(){
+        this.rendered.getAnimatedScroll();
+    }
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.getShowInvisibles() == showInvisibles)
@@ -12423,6 +12431,8 @@ var VirtualRenderer = function(container, theme) {
     // Indicates whether the horizontal scrollbar is visible
     this.$horizScroll = true;
     this.$horizScrollAlwaysVisible = true;
+    
+    this.$animatedScroll = false;
 
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", function(e) {
@@ -12594,6 +12604,14 @@ var VirtualRenderer = function(container, theme) {
         var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit);
     };
+    
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.$animatedScroll = shouldAnimate;
+    }
+    
+    this.getAnimatedscroll = function(){
+        return this.$animatedScroll
+    }
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.$textLayer.setShowInvisibles(showInvisibles))
@@ -13021,7 +13039,7 @@ var VirtualRenderer = function(container, theme) {
 
     //@todo I would like to make this animation a setting. How?
 
-    var STEPS = 15;
+    var STEPS = 10;
     function calcSteps(fromValue, toValue){
         var i     = 0,
             l     = STEPS,
@@ -13044,16 +13062,21 @@ var VirtualRenderer = function(container, theme) {
         var offset = pos.top;
         if (center)
             offset -= this.$size.scrollerHeight / 2;
-
-        var i = 0, _self = this, 
-            steps = calcSteps(this.scrollTop, offset);// console.dir(steps);
-        clearInterval(_self.$timer);
-        this.$timer = setInterval(function(){
-            _self.session.setScrollTop(steps[i]);
             
-            if (++i == STEPS + 1)
-                clearInterval(_self.$timer);
-        }, 10);
+        if (this.$animatedScroll) {
+            var i = 0, _self = this, 
+                steps = calcSteps(this.scrollTop, offset);
+            clearInterval(_self.$timer);
+            this.$timer = setInterval(function(){
+                _self.session.setScrollTop(steps[i]);
+                
+                if (++i == STEPS + 1)
+                    clearInterval(_self.$timer);
+            }, 10);
+        }
+        else {
+            this.session.setScrollTop(offset);
+        }
     };
 
     this.scrollToY = function(scrollTop) {
