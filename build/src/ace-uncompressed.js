@@ -12558,7 +12558,7 @@ var VirtualRenderer = function(container, theme) {
         if (center)
             offset -= this.$size.scrollerHeight / 2;
             
-        if (this.$animatedScroll) {
+        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
             var i = 0, _self = this, 
                 steps = calcSteps(this.scrollTop, offset);
             clearInterval(_self.$timer);
