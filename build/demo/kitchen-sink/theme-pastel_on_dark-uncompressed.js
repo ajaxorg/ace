@@ -101,7 +101,7 @@ exports.cssText = "\
   color: rgba(255, 255, 255, 0.25);\
 }\
 \
-.ace-pastel-on-dark .ace_keyword {\
+.ace-pastel-on-dark .ace_keyword, .ace-pastel-on-dark .ace_meta {\
   color:#757aD8;\
 }\
 \
@@ -109,7 +109,7 @@ exports.cssText = "\
   color:#797878;\
 }\
 \
-.ace-pastel-on-dark .ace_constant {\
+.ace-pastel-on-dark .ace_constant, .ace-pastel-on-dark .ace_constant.ace_other {\
   color:#4FB7C5;\
 }\
 \

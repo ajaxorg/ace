@@ -244,7 +244,7 @@ exportAce(ACE_NAMESPACE);
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init(); 
@@ -266,7 +266,6 @@ var Doc = function(name, desc, file) {
     this.name = name;
     this.desc = desc;
     this.doc = new EditSession(file);
-    this.doc.setMode(modesByName[name].mode);
     this.doc.modeName = name;
     this.doc.setUndoManager(new UndoManager());
 };
@@ -304,6 +303,7 @@ var modes = [
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
     new Mode("lua", "Lua", ["lua"]),
+    new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
@@ -319,7 +319,8 @@ var modes = [
     new Mode("text", "Text", ["txt"]),
     new Mode("textile", "Textile", ["textile"]),
     new Mode("xml", "XML", ["xml"]),
-    new Mode("sh", "SH", ["sh"])
+    new Mode("sh", "SH", ["sh"]),
+    new Mode("xquery", "XQuery", ["xq"])
 ];
 
 modesByName = {};
@@ -395,6 +396,10 @@ var docs = [
         require("text!./docs/lua.lua")
     ),
     new Doc(
+        "liquid", "Liquid",
+        require("text!./docs/liquid.liquid")
+    ),
+    new Doc(
         "java", "Java",
         require("text!./docs/java.java")
     ),
@@ -429,6 +434,10 @@ var docs = [
     new Doc(
         "sh", "SH",
         require("text!./docs/sh.sh")
+    ),
+    new Doc(
+        "xquery", "XQuery",
+        require("text!./docs/xquery.xq")
     ),
     new WrappedDoc(
         "markdown", "Markdown",
@@ -517,6 +526,12 @@ modes.forEach(function(mode) {
 
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
+    
+    if (!docsByName[value].initialized) {
+        docsByName[value].initialized = true;
+        doc.setMode(modesByName[docsByName[value].name].mode);
+    }
+    
     var session = env.split.setSession(doc);
     session.name = doc.name;
 
@@ -3853,6 +3868,10 @@ var EditSession = function(text, mode) {
                 return callback(_self.$modes[mode]);
             
             _self.$modes[mode] = new module.Mode();
+            _self._emit("loadmode", {
+                name: mode,
+                mode: _self.$modes[mode]
+            });
             callback(_self.$modes[mode]);
         }
 
@@ -6393,23 +6412,30 @@ var Tokenizer = function(rules, flag) {
         var ruleRegExps = [];
         var matchTotal = 0;
         var mapping = this.matchMappings[key] = {};
-        
+
         for ( var i = 0; i < state.length; i++) {
+
+            if (state[i].regex instanceof RegExp)
+                state[i].regex = state[i].regex.toString().slice(1, -1);
+
             // Count number of matching groups. 2 extra groups from the full match
             // And the catch-all on the end (used to force a match);
             var matchcount = new RegExp("(?:(" + state[i].regex + ")|(.))").exec("a").length - 2;
-        
+
             // Replace any backreferences and offset appropriately.
             var adjustedregex = state[i].regex.replace(/\\([0-9]+)/g, function (match, digit) {
                 return "\\" + (parseInt(digit, 10) + matchTotal + 1);
             });
-            
+
+            if (matchcount > 1 && state[i].token.length !== matchcount-1)
+                throw new Error("Matching groups and length of the token array don't match in rule #" + i + " of state " + key);
+
             mapping[matchTotal] = {
                 rule: i,
                 len: matchcount
             };
             matchTotal += matchcount;
-            
+
             ruleRegExps.push(adjustedregex);
         }
 
@@ -6425,47 +6451,47 @@ var Tokenizer = function(rules, flag) {
         var mapping = this.matchMappings[currentState];
         var re = this.regExps[currentState];
         re.lastIndex = 0;
-        
+
         var match, tokens = [];
-        
+
         var lastIndex = 0;
-        
+
         var token = {
             type: null,
             value: ""
         };
-        
+
         while (match = re.exec(line)) {
             var type = "text";
             var rule = null;
             var value = [match[0]];
 
             for (var i = 0; i < match.length-2; i++) {
-                if (match[i + 1] !== undefined) {
-                    rule = state[mapping[i].rule];
-                    
-                    if (mapping[i].len > 1) {
-                        value = match.slice(i+2, i+1+mapping[i].len);
-                    }
-                    
-                    // compute token type
-                    if (typeof rule.token == "function")
-                        type = rule.token.apply(this, value);
-                    else
-                        type = rule.token;
+                if (match[i + 1] === undefined)
+                    continue;
 
-                    var next = rule.next;                    
-                    if (next && next !== currentState) {
-                        currentState = next;
-                        state = this.rules[currentState];
-                        mapping = this.matchMappings[currentState];
-                        lastIndex = re.lastIndex;
+                rule = state[mapping[i].rule];
 
-                        re = this.regExps[currentState];
-                        re.lastIndex = lastIndex;
-                    }
-                    break;
+                if (mapping[i].len > 1)
+                    value = match.slice(i+2, i+1+mapping[i].len);
+
+                // compute token type
+                if (typeof rule.token == "function")
+                    type = rule.token.apply(this, value);
+                else
+                    type = rule.token;
+
+                var next = rule.next;
+                if (next && next !== currentState) {
+                    currentState = next;
+                    state = this.rules[currentState];
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = re.lastIndex;
+
+                    re = this.regExps[currentState];
+                    re.lastIndex = lastIndex;
                 }
+                break;
             }
 
             if (value[0]) {
@@ -6474,13 +6500,15 @@ var Tokenizer = function(rules, flag) {
                     type = [type];
                 }
                 for (var i = 0; i < value.length; i++) {
+                    if (!value[i])
+                        continue;
+
                     if ((!rule || rule.merge || type[i] === "text") && token.type === type[i]) {
                         token.value += value[i];
                     } else {
-                        if (token.type) {
+                        if (token.type)
                             tokens.push(token);
-                        }
-                    
+
                         token = {
                             type: type[i],
                             value: value[i]
@@ -6488,10 +6516,10 @@ var Tokenizer = function(rules, flag) {
                     }
                 }
             }
-            
+
             if (lastIndex == line.length)
                 break;
-            
+
             lastIndex = re.lastIndex;
         }
 
@@ -7002,6 +7030,7 @@ var Document = function(text) {
 
         position = this.$clipPosition(position);
 
+        // only detect new lines if the document has no line break yet
         if (this.getLength() <= 1)
             this.$detectNewLine(text);
 
@@ -10258,6 +10287,84 @@ define("text!kitchen-sink/docs/lua.lua", [], "--[[--\n" +
   "print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2\n" +
   "");
 
+define("text!kitchen-sink/docs/liquid.liquid", [], "The following examples can be found in full at http://liquidmarkup.org/\n" +
+  "\n" +
+  "Liquid is an extraction from the e-commerce system Shopify.\n" +
+  "Shopify powers many thousands of e-commerce stores which all call for unique designs.\n" +
+  "For this we developed Liquid which allows our customers complete design freedom while\n" +
+  "maintaining the integrity of our servers.\n" +
+  "\n" +
+  "Liquid has been in production use since June 2006 and is now used by many other\n" +
+  "hosted web applications.\n" +
+  "\n" +
+  "It was developed for usage in Ruby on Rails web applications and integrates seamlessly\n" +
+  "as a plugin but it also works excellently as a stand alone library.\n" +
+  "\n" +
+  "Here's what it looks like:\n" +
+  "\n" +
+  "  <ul id=\"products\">\n" +
+  "    {% for product in products %}\n" +
+  "      <li>\n" +
+  "        <h2>{{ product.title }}</h2>\n" +
+  "        Only {{ product.price | format_as_money }}\n" +
+  "\n" +
+  "        <p>{{ product.description | prettyprint | truncate: 200  }}</p>\n" +
+  "\n" +
+  "      </li>\n" +
+  "    {% endfor %}\n" +
+  "  </ul>\n" +
+  "\n" +
+  "\n" +
+  "Some more features include:\n" +
+  "\n" +
+  "<h2>Filters</h2>\n" +
+  "<p> The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} </p>\n" +
+  "<p>The word \"tobi\" has {{ 'tobi' | size }} letters! </p>\n" +
+  "<p>Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} </p>\n" +
+  "<p>The date today is {{ 'now' | date: \"%Y %b %d\" }} </p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>If</h2>\n" +
+  "<p>\n" +
+  "  {% if user.name == 'tobi' or user.name == 'marc' %} \n" +
+  "    hi marc or tobi\n" +
+  "  {% endif %}\n" +
+  "</p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>Case</h2>\n" +
+  "<p>\n" +
+  "  {% case template %}\n" +
+  "    {% when 'index' %}\n" +
+  "       Welcome\n" +
+  "    {% when 'product' %}\n" +
+  "       {{ product.vendor | link_to_vendor }} / {{ product.title }}\n" +
+  "    {% else %}\n" +
+  "       {{ page_title }}\n" +
+  "  {% endcase %}\n" +
+  "</p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>For Loops</h2>\n" +
+  "<p>\n" +
+  "  {% for item in array %} \n" +
+  "    {{ item }}\n" +
+  "  {% endfor %}\n" +
+  "</p>\n" +
+  "\n" +
+  "\n" +
+  "<h2>Tables</h2>\n" +
+  "<p>\n" +
+  "  {% tablerow item in items cols: 3 %}\n" +
+  "    {% if tablerowloop.col_first %}\n" +
+  "      First column: {{ item.variable }}\n" +
+  "    {% else %}\n" +
+  "      Different column: {{ item.variable }}\n" +
+  "    {% endif %}\n" +
+  "  {% endtablerow %}\n" +
+  "</p>\n" +
+  "");
+
 define("text!kitchen-sink/docs/java.java", [], "public class InfiniteLoop {\n" +
   "\n" +
   "    /*\n" +
@@ -10507,6 +10614,14 @@ define("text!kitchen-sink/docs/sh.sh", [], "#!/bin/sh\n" +
   "else\n" +
   "    exit 1\n" +
   "fi\n" +
+  "");
+
+define("text!kitchen-sink/docs/xquery.xq", [], "xquery version \"1.0\";\n" +
+  "\n" +
+  "let $message := \"Hello World!\"\n" +
+  "return <results>\n" +
+  "  <message>{$message}</message>\n" +
+  "</results>\n" +
   "");
 
 define("text!kitchen-sink/docs/markdown.md", [], "Ace (Ajax.org Cloud9 Editor)\n" +
@@ -11218,7 +11333,7 @@ var Editor = function(renderer, session) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
-    
+
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
 
@@ -11472,7 +11587,11 @@ var Editor = function(renderer, session) {
         this.renderer.updateCursor();
 
         if (!this.$blockScrolling) {
-            this.renderer.scrollCursorIntoView();
+            var selection = this.getSelection();
+            if (selection.isEmpty())
+                this.renderer.scrollCursorIntoView(selection.getCursor());
+            else
+                this.renderer.scrollSelectionIntoView(selection.getSelectionLead(), selection.getSelectionAnchor());
         }
 
         // move text input over the cursor
@@ -11816,7 +11935,7 @@ var Editor = function(renderer, session) {
         this.$showFoldWidgets = show;
         this.renderer.updateFull();
     };
-    
+
     this.getShowFoldWidgets = function() {
         return this.renderer.$gutterLayer.getShowFoldWidgets();
     };
@@ -12033,7 +12152,7 @@ var Editor = function(renderer, session) {
             range.start.row += linesMoved;
             range.end.row += linesMoved;
             selection.setSelectionRange(range, reverse);
-        } 
+        }
         else {
             selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
             selection.$moveSelection(function() {
@@ -12197,13 +12316,13 @@ var Editor = function(renderer, session) {
             cursor.column -= 2;
             pos = this.session.findMatchingBracket(cursor);
         }
-        
+
         if (pos) {
             this.clearSelection();
             this.moveCursorTo(pos.row, pos.column);
         }
     };
-    
+
     this.gotoLine = function(lineNumber, column) {
         this.selection.clearSelection();
         this.session.unfold({row: lineNumber - 1, column: column || 0});
@@ -13928,13 +14047,13 @@ exports.commands = [{
 }, {
     name: "backspace",
     bindKey: bindKey(
-        "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+        "Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
     exec: function(editor) { editor.remove("left"); }
 }, {
     name: "removetolinestart",
-    bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
+    bindKey: bindKey("Alt-Backspace", "Command-Backspace"),
     exec: function(editor) { editor.removeToLineStart(); }
 }, {
     name: "removetolineend",
@@ -14419,7 +14538,7 @@ var CommandManager = function(platform, commands) {
 
         var key = typeof binding == "string" ? binding: binding[this.platform];
         this.bindKey(key, command);
-    }
+    };
 
     function parseKeys(keys, val, ret) {
         var key;
@@ -14436,10 +14555,10 @@ var CommandManager = function(platform, commands) {
         return {
             key: key,
             hashId: hashId
-        }
+        };
     }
 
-    function splitSafe(s, separator) {
+    function splitSafe(s) {
         return (s.toLowerCase()
             .trim()
             .split(new RegExp("[\\s ]*\\-[\\s ]*", "g"), 999));
@@ -14453,7 +14572,7 @@ var CommandManager = function(platform, commands) {
 
         var ckbr = this.commmandKeyBinding;
         return ckbr[hashId] && ckbr[hashId][textOrKey.toLowerCase()];
-    }
+    };
 
     this.exec = function(command, editor, args) {
         if (typeof command === 'string')
@@ -14505,7 +14624,7 @@ var CommandManager = function(platform, commands) {
                     this.exec(x, editor);
                 else
                     this.exec(x[0], editor, x[1]);
-            }, this)
+            }, this);
         } finally {
             this.$inReplay = false;
         }
@@ -14517,9 +14636,9 @@ var CommandManager = function(platform, commands) {
                 x[0] = x[0].name;
             if (!x[1])
                 x = x[0];
-            return x
-        })
-    }
+            return x;
+        });
+    };
 
 }).call(CommandManager.prototype);
 
@@ -14588,13 +14707,13 @@ dom.importCssString(editorCss, "ace_editor");
 
 var VirtualRenderer = function(container, theme) {
     var _self = this;
-    
+
     this.container = container;
 
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-    
+
     dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
@@ -14612,8 +14731,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
-    
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -14640,7 +14759,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    
+
     event.addListener(this.scroller, "scroll", function() {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
@@ -14890,7 +15009,7 @@ var VirtualRenderer = function(container, theme) {
         // this persists in IE9
         if (useragent.isIE)
             return;
-        
+
         if (this.layerConfig.lastRow === 0)
             return;
 
@@ -14966,13 +15085,13 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             this.scroller.scrollLeft = this.scrollLeft;
-            
+
             // read the value after writing it since the value might get clipped
             var scrollLeft = this.scroller.scrollLeft;
             this.scrollLeft = scrollLeft;
             this.session.setScrollLeft(scrollLeft);
         }
-        
+
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
@@ -15185,12 +15304,18 @@ var VirtualRenderer = function(container, theme) {
         this.$cursorLayer.showCursor();
     };
 
-    this.scrollCursorIntoView = function() {
+    this.scrollSelectionIntoView = function(anchor, lead) {
+        // first scroll anchor into view then scroll lead into view
+        this.scrollCursorIntoView(anchor);
+        this.scrollCursorIntoView(lead);
+    };
+
+    this.scrollCursorIntoView = function(cursor) {
         // the editor is not visible
         if (this.$size.scrollerHeight === 0)
             return;
 
-        var pos = this.$cursorLayer.getPixelPosition();
+        var pos = this.$cursorLayer.getPixelPosition(cursor);
 
         var left = pos.left;
         var top = pos.top;
@@ -15379,7 +15504,7 @@ var VirtualRenderer = function(container, theme) {
     this._loadTheme = function(name, callback) {
         if (!config.get("packaged"))
             return callback();
-            
+
         var base = name.split("/").pop();
         var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
         net.loadScript(filename, callback);
@@ -15391,14 +15516,14 @@ var VirtualRenderer = function(container, theme) {
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             var moduleName = theme || "ace/theme/textmate";
-            
+
             var module;
             try {
                 module = require(moduleName);
             } catch (e) {};
             if (module)
                 return afterLoad(module);
-            
+
             _self._loadTheme(moduleName, function() {
                 require([theme], function(module) {
                     if (_self.$themeValue !== theme)

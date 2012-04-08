@@ -202,11 +202,6 @@ var ShHighlightRules = function() {
          ).split('|')
     );
 
-    var builtinVariables = lang.arrayToMap(
-            // TODO
-        ('$?|$$|$!|$SHLVL').split('|')
-    );
-
     var integer = "(?:(?:[1-9]\\d*)|(?:0))";
     // var integer = "(?:" + decimalInteger + ")";
 
@@ -215,6 +210,14 @@ var ShHighlightRules = function() {
     var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\.))";
     var exponentFloat = "(?:(?:" + pointFloat + "|" +  intPart + ")" + ")";
     var floatNumber = "(?:" + exponentFloat + "|" + pointFloat + ")";
+    var fileDescriptor = "(?:&" + intPart + ")";
+
+    var variableName = "[a-zA-Z][a-zA-Z0-9_]*";
+    var variable = "(?:(?:\\$" + variableName + ")|(?:" + variableName + "=))";
+
+    var builtinVariable = "(?:\\$(?:SHLVL|\\$|\\!|\\?))";
+
+    var func = "(?:" + variableName + "\\s*\\(\\))";
 
     this.$rules = {
         "start" : [ {
@@ -223,6 +226,18 @@ var ShHighlightRules = function() {
         }, {
             token : "string",           // " string
             regex : '"(?:[^\\\\]|\\\\.)*?"'
+        }, {
+            token : "variable.language",
+            regex : builtinVariable
+        }, {
+            token : "variable",
+            regex : variable
+        }, {
+            token : "support.function",
+            regex : func,
+        }, {
+            token : "support.function",
+            regex : fileDescriptor
         }, {
             token : "string",           // ' string
             regex : "'(?:[^\\\\]|\\\\.)*?'"
@@ -238,8 +253,6 @@ var ShHighlightRules = function() {
                     return "keyword";
                 else if (languageConstructs.hasOwnProperty(value))
                     return "constant.language";
-                else if (builtinVariables.hasOwnProperty(value))
-                    return "support.function";
                 else if (value == "debugger")
                     return "invalid.deprecated";
                 else

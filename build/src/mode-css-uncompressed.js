@@ -215,11 +215,17 @@ var CssHighlightRules = function() {
         "purple|red|silver|teal|white|yellow").split("|")
     );
 
+    var fonts = lang.arrayToMap(
+        ("arial|century|comic|courier|garamond|georgia|helvetica|impact|lucida|" +
+        "symbol|system|tahoma|times|trebuchet|utopia|verdana|webdings|sans-serif|" +
+        "serif|monospace").split("|")
+    );
+    
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
 
     var numRe = "\\-?(?:(?:[0-9]+)|(?:[0-9]*\\.[0-9]+))";
-
+    
     var base_ruleset = [
         {
             token : "comment", // multi line comment
@@ -233,8 +239,11 @@ var CssHighlightRules = function() {
             token : "string", // single line
             regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
         }, {
-            token : "constant.numeric",
-            regex : numRe + "(?:em|ex|px|cm|mm|in|pt|pc|deg|rad|grad|ms|s|hz|khz|%)"
+            token : ["constant.numeric", "keyword"],
+            regex : "(" + numRe + ")(em|ex|px|ch|cm|mm|in|pt|pc|deg|rad|dpi|grad|ms|s|hz|khz|%)"
+        }, {
+            token : ["constant.numeric"],
+            regex : "([0-9]+)"
         }, {
             token : "constant.numeric",  // hex6 color
             regex : "#[a-f0-9]{6}"
@@ -255,12 +264,15 @@ var CssHighlightRules = function() {
                 else if (colors.hasOwnProperty(value.toLowerCase())) {
                     return "support.constant.color";
                 }
+                else if (fonts.hasOwnProperty(value.toLowerCase())) {
+                    return "support.constant.fonts";
+                }
                 else {
                     return "text";
                 }
             },
             regex : "\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"
-        }
+        } 
       ];
 
     var ruleset = lang.copyArray(base_ruleset);
