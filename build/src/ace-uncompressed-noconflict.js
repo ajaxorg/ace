@@ -2677,7 +2677,7 @@ var Editor = function(renderer, session) {
         else
             lastRow = Infinity;
         this.renderer.updateLines(range.start.row, lastRow);
-
+        
         this._emit("change", e);
 
         // update cursor because tab characters can influence the cursor position
@@ -2719,21 +2719,29 @@ var Editor = function(renderer, session) {
     this.$updateHighlightActiveLine = function() {
         var session = this.getSession();
 
-        if (session.$highlightLineMarker) {
+        if (session.$highlightLineMarker)
             session.removeMarker(session.$highlightLineMarker);
-        }
-        session.$highlightLineMarker = null;
+        if (typeof this.$lastrow == "number")
+            this.renderer.removeGutterDecoration(this.$lastrow, "ace_gutter_active_line");
 
-        if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
+        session.$highlightLineMarker = null;
+        this.$lastrow = null;
+
+        if (this.getHighlightActiveLine()) {
             var cursor = this.getCursorPosition(),
                 foldLine = this.session.getFoldLine(cursor.row);
-            var range;
-            if (foldLine) {
-                range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
-            } else {
-                range = new Range(cursor.row, 0, cursor.row+1, 0);
+                
+            if ((this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
+                var range;
+                if (foldLine) {
+                    range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
+                } else {
+                    range = new Range(cursor.row, 0, cursor.row+1, 0);
+                }
+                session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
             }
-            session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
+
+            this.renderer.addGutterDecoration(this.$lastrow = cursor.row, "ace_gutter_active_line");
         }
     };
 
@@ -3618,7 +3626,8 @@ var Editor = function(renderer, session) {
 
 
 exports.Editor = Editor;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -12792,11 +12801,11 @@ var Gutter = function(parentEl) {
     this.addGutterDecoration = function(row, className){
         if (!this.$decorations[row])
             this.$decorations[row] = "";
-        this.$decorations[row] += " ace_" + className;
+        this.$decorations[row] += " " + className;
     };
 
     this.removeGutterDecoration = function(row, className){
-        this.$decorations[row] = this.$decorations[row].replace(" ace_" + className, "");
+        this.$decorations[row] = this.$decorations[row].replace(" " + className, "");
     };
 
     this.setBreakpoints = function(rows) {
@@ -14188,6 +14197,10 @@ ace.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   ".ace_marker-layer .ace_active_line {\n" +
   "    position: absolute;\n" +
   "    z-index: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter .ace_gutter_active_line{\n" +
+  "    background-color : #dcdcdc;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_selected_word {\n" +
