@@ -14602,6 +14602,10 @@ var VirtualRenderer = function(container, theme) {
     this.$gutter = dom.createElement("div");
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
+    
+    this.$corner = dom.createElement("div");
+    this.$corner.className = "ace_corner";
+    this.container.appendChild(this.$corner);
 
     this.scroller = dom.createElement("div");
     this.scroller.className = "ace_scroller";
@@ -14645,6 +14649,13 @@ var VirtualRenderer = function(container, theme) {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
         _self.session.setScrollLeft(scrollLeft);
+        
+        if (scrollLeft == 0) {
+            _self.$gutter.className = "ace_gutter";
+        }
+        else {
+            _self.$gutter.className = "ace_gutter horscroll";
+        }
     });
 
     this.cursorPos = {
@@ -16761,7 +16772,6 @@ exports.RenderLoop = RenderLoop;
 });
 define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
-  "\n" +
   ".ace_editor {\n" +
   "    position: absolute;\n" +
   "    overflow: hidden;\n" +
@@ -16790,12 +16800,31 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    z-index: 4;\n" +
   "}\n" +
   "\n" +
+  ".ace_corner{\n" +
+  "    position : absolute;\n" +
+  "    left : 41px;\n" +
+  "    top : -5px;\n" +
+  "    border-radius : 6px 0 0 0;\n" +
+  "    border-color : #e8e8e8;\n" +
+  "    border-width : 1px 0 0 1px;\n" +
+  "    border-style : solid;\n" +
+  "    box-shadow : 4px 4px 0px #e8e8e8 inset;\n" +
+  "    width : 10px;\n" +
+  "    height : 10px;\n" +
+  "    z-index : 10000;\n" +
+  "}\n" +
+  "\n" +
   ".ace_gutter {\n" +
   "    position: absolute;\n" +
   "    overflow : hidden;\n" +
   "    height: 100%;\n" +
   "    width: auto;\n" +
   "    cursor: default;\n" +
+  "    z-index: 1000;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter.horscroll {\n" +
+  "    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell {\n" +
