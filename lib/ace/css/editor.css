@@ -189,6 +189,10 @@
     z-index: 2;
 }
 
+.ace_gutter .ace_gutter_active_line{
+    background-color : #dcdcdc;
+}
+
 .ace_marker-layer .ace_selected_word {
     position: absolute;
     z-index: 6;
