@@ -1,6 +1,5 @@
 @import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);
 
-
 .ace_editor {
     position: absolute;
     overflow: hidden;
@@ -29,12 +28,31 @@
     z-index: 4;
 }
 
+.ace_corner{
+    position : absolute;
+    left : 41px;
+    top : -5px;
+    border-radius : 6px 0 0 0;
+    border-color : #e8e8e8;
+    border-width : 1px 0 0 1px;
+    border-style : solid;
+    box-shadow : 4px 4px 0px #e8e8e8 inset;
+    width : 10px;
+    height : 10px;
+    z-index : 10000;
+}
+
 .ace_gutter {
     position: absolute;
     overflow : hidden;
     height: 100%;
     width: auto;
     cursor: default;
+    z-index: 1000;
+}
+
+.ace_gutter.horscroll {
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
 }
 
 .ace_gutter-cell {
