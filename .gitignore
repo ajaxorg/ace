@@ -22,7 +22,7 @@ node_modules/mime/
 node_modules/dryice/
 node_modules/uglify-js/
 node_modules/.bin/
-
+tool/node_modules/
 
 .git-ref
 npm-debug.log

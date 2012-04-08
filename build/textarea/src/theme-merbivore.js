@@ -101,11 +101,11 @@ exports.cssText = "\
   color: #404040;\
 }\
 \
-.ace-merbivore .ace_keyword {\
+.ace-merbivore .ace_keyword, .ace-merbivore .ace_meta {\
   color:#FC6F09;\
 }\
 \
-.ace-merbivore .ace_constant {\
+.ace-merbivore .ace_constant, .ace-merbivore .ace_constant.ace_other {\
   color:#1EDAFB;\
 }\
 \
@@ -124,6 +124,10 @@ exports.cssText = "\
 .ace-merbivore .ace_invalid {\
   color:#FFFFFF;\
 background-color:#990000;\
+}\
+\
+.ace-merbivore .ace_support.ace_constant {\
+  color:#8DFF0A;\
 }\
 \
 .ace-merbivore .ace_fold {\
