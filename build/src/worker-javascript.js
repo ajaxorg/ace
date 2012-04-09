@@ -1540,12 +1540,13 @@ exports.implement = function(proto, mixin) {
  *
  * ***** END LICENSE BLOCK ***** */
  
-define('ace/mode/javascript_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/worker/jshint', 'ace/narcissus/jsparse'], function(require, exports, module) {
+define('ace/mode/javascript_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/worker/jshint', 'ace/narcissus/parser'], function(require, exports, module) {
 "use strict";
     
 var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
 var lint = require("../worker/jshint").JSHINT;
+var parser = require("../narcissus/parser");
     
 var JavaScriptWorker = exports.JavaScriptWorker = function(sender) {
     Mirror.call(this, sender);
@@ -1561,7 +1562,6 @@ oop.inherits(JavaScriptWorker, Mirror);
         value = value.replace(/^#!.*\n/, "\n");
         
 //        var start = new Date();
-        var parser = require("../narcissus/jsparse");
         try {
             parser.parse(value);
         } catch(e) {
@@ -1812,7 +1812,8 @@ var Document = function(text) {
 
         position = this.$clipPosition(position);
 
-        if (this.getLength() >= 1)
+        // only detect new lines if the document has no line break yet
+        if (this.getLength() <= 1)
             this.$detectNewLine(text);
 
         var lines = this.$split(text);
@@ -7218,598 +7219,648 @@ if (typeof exports === 'object' && exports)
  * Parser.
  */
 
-define('ace/narcissus/jsparse', ['require', 'exports', 'module' , 'ace/narcissus/jslex', 'ace/narcissus/jsdefs'], function(require, exports, module) {
+define('ace/narcissus/parser', ['require', 'exports', 'module' , 'ace/narcissus/lexer', 'ace/narcissus/definitions', 'ace/narcissus/options'], function(require, exports, module) {
 
-    var lexer = require("./jslex");
-    var definitions = require("./jsdefs");
+var lexer = require('./lexer');
+var definitions = require('./definitions');
+var options = require('./options');
+var Tokenizer = lexer.Tokenizer;
 
-    const StringMap = definitions.StringMap;
-    const Stack = definitions.Stack;
+var Dict = definitions.Dict;
+var Stack = definitions.Stack;
 
-    // Set constants in the local scope.
-    eval(definitions.consts);
+// Set constants in the local scope.
+eval(definitions.consts);
 
-    // Banned statement types by language version.
-    const blackLists = { 160: {}, 185: {}, harmony: {} };
-    blackLists[160][IMPORT] = true;
-    blackLists[160][EXPORT] = true;
-    blackLists[160][LET] = true;
-    blackLists[160][MODULE] = true;
-    blackLists[160][YIELD] = true;
-    blackLists[185][IMPORT] = true;
-    blackLists[185][EXPORT] = true;
-    blackLists[185][MODULE] = true;
-    blackLists.harmony[WITH] = true;
-
-    /*
-     * pushDestructuringVarDecls :: (node, hoisting node) -> void
-     *
-     * Recursively add all destructured declarations to varDecls.
-     */
-    function pushDestructuringVarDecls(n, s) {
-        for (var i in n) {
-            var sub = n[i];
-            if (sub.type === IDENTIFIER) {
-                s.varDecls.push(sub);
-            } else {
-                pushDestructuringVarDecls(sub, s);
-            }
-        }
-    }
-
-    function StaticContext(parentScript, parentBlock, inModule, inFunction) {
-        this.parentScript = parentScript;
-        this.parentBlock = parentBlock || parentScript;
-        this.inModule = inModule || false;
-        this.inFunction = inFunction || false;
-        this.inForLoopInit = false;
-        this.topLevel = true;
-        this.allLabels = new Stack();
-        this.currentLabels = new Stack();
-        this.labeledTargets = new Stack();
-        this.defaultLoopTarget = null;
-        this.defaultTarget = null;
-        this.blackList = blackLists[Narcissus.options.version];
-        Narcissus.options.ecma3OnlyMode && (this.ecma3OnlyMode = true);
-        Narcissus.options.parenFreeMode && (this.parenFreeMode = true);
-    }
-
-    StaticContext.prototype = {
-        ecma3OnlyMode: false,
-        parenFreeMode: false,
-        // non-destructive update via prototype extension
-        update: function(ext) {
-            var desc = {};
-            for (var key in ext) {
-                desc[key] = {
-                    value: ext[key],
-                    writable: true,
-                    enumerable: true,
-                    configurable: true
-                }
-            }
-            return Object.create(this, desc);
-        },
-        pushLabel: function(label) {
-            return this.update({ currentLabels: this.currentLabels.push(label),
-                                 allLabels: this.allLabels.push(label) });
-        },
-        pushTarget: function(target) {
-            var isDefaultLoopTarget = target.isLoop;
-            var isDefaultTarget = isDefaultLoopTarget || target.type === SWITCH;
-
-            if (this.currentLabels.isEmpty()) {
-                if (isDefaultLoopTarget) this.update({ defaultLoopTarget: target });
-                if (isDefaultTarget) this.update({ defaultTarget: target });
-                return this;
-            }
-
-            target.labels = new StringMap();
-            this.currentLabels.forEach(function(label) {
-                target.labels.set(label, true);
-            });
-            return this.update({ currentLabels: new Stack(),
-                                 labeledTargets: this.labeledTargets.push(target),
-                                 defaultLoopTarget: isDefaultLoopTarget
-                                                    ? target
-                                                    : this.defaultLoopTarget,
-                                 defaultTarget: isDefaultTarget
-                                                ? target
-                                                : this.defaultTarget });
-        },
-        nest: function() {
-            return this.topLevel ? this.update({ topLevel: false }) : this;
-        },
-        allow: function(type) {
-            switch (type) {
-              case EXPORT:
-                if (!this.inModule || this.inFunction || !this.topLevel)
-                    return false;
-                // FALL THROUGH
-
-              case IMPORT:
-                return !this.inFunction && this.topLevel;
-
-              case MODULE:
-                return !this.inFunction && this.topLevel;
-
-              default:
-                return true;
-            }
-        }
-    };
-
-    /*
-     * Script :: (tokenizer, boolean, boolean) -> node
-     *
-     * Parses the toplevel and module/function bodies.
-     */
-    function Script(t, inModule, inFunction) {
-        var n = new Node(t, scriptInit());
-        Statements(t, new StaticContext(n, n, inModule, inFunction), n);
-        return n;
-    }
-
-    // We extend Array slightly with a top-of-stack method.
-    definitions.defineProperty(Array.prototype, "top",
-                               function() {
-                                   return this.length && this[this.length-1];
-                               }, false, false, true);
-
-    /*
-     * Node :: (tokenizer, optional init object) -> node
-     */
-    function Node(t, init) {
-        var token = t.token;
-        if (token) {
-            // If init.type exists it will override token.type.
-            this.type = token.type;
-            this.value = token.value;
-            this.lineno = token.lineno;
-
-            // Start and end are file positions for error handling.
-            this.start = token.start;
-            this.end = token.end;
+/*
+ * pushDestructuringVarDecls :: (node, hoisting node) -> void
+ *
+ * Recursively add all destructured declarations to varDecls.
+ */
+function pushDestructuringVarDecls(n, s) {
+    for (var i in n) {
+        var sub = n[i];
+        if (sub.type === IDENTIFIER) {
+            s.varDecls.push(sub);
         } else {
-            this.lineno = t.lineno;
-        }
-
-        // Node uses a tokenizer for debugging (getSource, filename getter).
-        this.tokenizer = t;
-        this.children = [];
-
-        for (var prop in init)
-            this[prop] = init[prop];
-    }
-
-    /*
-     * SyntheticNode :: (tokenizer, optional init object) -> node
-     */
-    function SyntheticNode(t, init) {
-        // print("SYNTHETIC NODE");
-        // if (init.type === COMMA) {
-        //     print("SYNTHETIC COMMA");
-        //     print(init);
-        // }
-        this.tokenizer = t;
-        this.children = [];
-        for (var prop in init)
-            this[prop] = init[prop];
-        this.synthetic = true;
-    }
-
-    var Np = Node.prototype = SyntheticNode.prototype = {};
-    Np.constructor = Node;
-
-    const TO_SOURCE_SKIP = {
-        type: true,
-        value: true,
-        lineno: true,
-        start: true,
-        end: true,
-        tokenizer: true,
-        assignOp: true
-    };
-    function unevalableConst(code) {
-        var token = definitions.tokens[code];
-        var constName = definitions.opTypeNames.hasOwnProperty(token)
-                      ? definitions.opTypeNames[token]
-                      : token in definitions.keywords
-                      ? token.toUpperCase()
-                      : token;
-        return { toSource: function() { return constName } };
-    }
-    Np.toSource = function toSource() {
-        var mock = {};
-        var self = this;
-        mock.type = unevalableConst(this.type);
-        if ("value" in this)
-            mock.value = this.value;
-        if ("lineno" in this)
-            mock.lineno = this.lineno;
-        if ("start" in this)
-            mock.start = this.start;
-        if ("end" in this)
-            mock.end = this.end;
-        if (this.assignOp)
-            mock.assignOp = unevalableConst(this.assignOp);
-        for (var key in this) {
-            if (this.hasOwnProperty(key) && !(key in TO_SOURCE_SKIP))
-                mock[key] = this[key];
-        }
-        return mock.toSource();
-    };
-
-    // Always use push to add operands to an expression, to update start and end.
-    Np.push = function (kid) {
-        // kid can be null e.g. [1, , 2].
-        if (kid !== null) {
-            if (kid.start < this.start)
-                this.start = kid.start;
-            if (this.end < kid.end)
-                this.end = kid.end;
-        }
-        return this.children.push(kid);
-    }
-
-    Node.indentLevel = 0;
-
-    function tokenString(tt) {
-        var t = definitions.tokens[tt];
-        return /^\W/.test(t) ? definitions.opTypeNames[t] : t.toUpperCase();
-    }
-
-    Np.toString = function () {
-        var a = [];
-        for (var i in this) {
-            if (this.hasOwnProperty(i) && i !== 'type' && i !== 'target')
-                a.push({id: i, value: this[i]});
-        }
-        a.sort(function (a,b) { return (a.id < b.id) ? -1 : 1; });
-        const INDENTATION = "    ";
-        var n = ++Node.indentLevel;
-        var s = "{\n" + INDENTATION.repeat(n) + "type: " + tokenString(this.type);
-        for (i = 0; i < a.length; i++)
-            s += ",\n" + INDENTATION.repeat(n) + a[i].id + ": " + a[i].value;
-        n = --Node.indentLevel;
-        s += "\n" + INDENTATION.repeat(n) + "}";
-        return s;
-    }
-
-    Np.getSource = function () {
-        return this.tokenizer.source.slice(this.start, this.end);
-    };
-
-    /*
-     * Helper init objects for common nodes.
-     */
-
-    const LOOP_INIT = { isLoop: true };
-
-    function blockInit() {
-        return { type: BLOCK, varDecls: [] };
-    }
-
-    function scriptInit() {
-        return { type: SCRIPT,
-                 funDecls: [],
-                 varDecls: [],
-                 modDefns: new StringMap(),
-                 modAssns: new StringMap(),
-                 modDecls: new StringMap(),
-                 modLoads: new StringMap(),
-                 impDecls: [],
-                 expDecls: [],
-                 exports: new StringMap(),
-                 hasEmptyReturn: false,
-                 hasReturnWithValue: false,
-                 isGenerator: false };
-    }
-
-    definitions.defineGetter(Np, "filename",
-                             function() {
-                                 return this.tokenizer.filename;
-                             });
-
-    definitions.defineGetter(Np, "length",
-                             function() {
-                                 throw new Error("Node.prototype.length is gone; " +
-                                                 "use n.children.length instead");
-                             });
-
-    definitions.defineProperty(String.prototype, "repeat",
-                               function(n) {
-                                   var s = "", t = this + s;
-                                   while (--n >= 0)
-                                       s += t;
-                                   return s;
-                               }, false, false, true);
-
-    function MaybeLeftParen(t, x) {
-        if (x.parenFreeMode)
-            return t.match(LEFT_PAREN) ? LEFT_PAREN : END;
-        return t.mustMatch(LEFT_PAREN).type;
-    }
-
-    function MaybeRightParen(t, p) {
-        if (p === LEFT_PAREN)
-            t.mustMatch(RIGHT_PAREN);
-    }
-
-    /*
-     * Statements :: (tokenizer, compiler context, node) -> void
-     *
-     * Parses a sequence of Statements.
-     */
-    function Statements(t, x, n) {
-        try {
-            while (!t.done && t.peek(true) !== RIGHT_CURLY)
-                n.push(Statement(t, x));
-        } catch (e) {
-            if (t.done)
-                t.unexpectedEOF = true;
-            throw e;
+            pushDestructuringVarDecls(sub, s);
         }
     }
+}
 
-    function Block(t, x) {
-        t.mustMatch(LEFT_CURLY);
-        var n = new Node(t, blockInit());
-        Statements(t, x.update({ parentBlock: n }).pushTarget(n), n);
-        t.mustMatch(RIGHT_CURLY);
-        return n;
-    }
+function Parser(tokenizer) {
+    tokenizer.parser = this;
+    this.t = tokenizer;
+    this.x = null;
+    this.unexpectedEOF = false;
+    options.mozillaMode && (this.mozillaMode = true);
+    options.parenFreeMode && (this.parenFreeMode = true);
+}
 
-    const DECLARED_FORM = 0, EXPRESSED_FORM = 1, STATEMENT_FORM = 2;
+function StaticContext(parentScript, parentBlock, inModule, inFunction, strictMode) {
+    this.parentScript = parentScript;
+    this.parentBlock = parentBlock || parentScript;
+    this.inModule = inModule || false;
+    this.inFunction = inFunction || false;
+    this.inForLoopInit = false;
+    this.topLevel = true;
+    this.allLabels = new Stack();
+    this.currentLabels = new Stack();
+    this.labeledTargets = new Stack();
+    this.defaultLoopTarget = null;
+    this.defaultTarget = null;
+    this.strictMode = strictMode;
+}
 
-    /*
-     * Export :: (binding node, boolean) -> Export
-     *
-     * Static semantic representation of a module export.
-     */
-    function Export(node, isDefinition) {
-        this.node = node;                 // the AST node declaring this individual export
-        this.isDefinition = isDefinition; // is the node an 'export'-annotated definition?
-        this.resolved = null;             // resolved pointer to the target of this export
-    }
-
-    /*
-     * registerExport :: (StringMap, EXPORT node) -> void
-     */
-    function registerExport(exports, decl) {
-        function register(name, exp) {
-            if (exports.has(name))
-                throw new SyntaxError("multiple exports of " + name);
-            exports.set(name, exp);
-        }
-
-        switch (decl.type) {
-          case MODULE:
-          case FUNCTION:
-            register(decl.name, new Export(decl, true));
-            break;
-
-          case VAR:
-            for (var i = 0; i < decl.children.length; i++)
-                register(decl.children[i].name, new Export(decl.children[i], true));
-            break;
-
-          case LET:
-          case CONST:
-            throw new Error("NYI: " + definitions.tokens[decl.type]);
-
-          case EXPORT:
-            for (var i = 0; i < decl.pathList.length; i++) {
-                var path = decl.pathList[i];
-                switch (path.type) {
-                  case OBJECT_INIT:
-                    for (var j = 0; j < path.children.length; j++) {
-                        // init :: IDENTIFIER | PROPERTY_INIT
-                        var init = path.children[j];
-                        if (init.type === IDENTIFIER)
-                            register(init.value, new Export(init, false));
-                        else
-                            register(init.children[0].value, new Export(init.children[1], false));
-                    }
-                    break;
-
-                  case DOT:
-                    register(path.children[1].value, new Export(path, false));
-                    break;
-
-                  case IDENTIFIER:
-                    register(path.value, new Export(path, false));
-                    break;
-
-                  default:
-                    throw new Error("unexpected export path: " + definitions.tokens[path.type]);
-                }
+StaticContext.prototype = {
+    // non-destructive update via prototype extension
+    update: function(ext) {
+        var desc = {};
+        for (var key in ext) {
+            desc[key] = {
+                value: ext[key],
+                writable: true,
+                enumerable: true,
+                configurable: true
             }
-            break;
-
-          default:
-            throw new Error("unexpected export decl: " + definitions.tokens[exp.type]);
         }
-    }
+        return Object.create(this, desc);
+    },
+    pushLabel: function(label) {
+        return this.update({ currentLabels: this.currentLabels.push(label),
+                             allLabels: this.allLabels.push(label) });
+    },
+    pushTarget: function(target) {
+        var isDefaultLoopTarget = target.isLoop;
+        var isDefaultTarget = isDefaultLoopTarget || target.type === SWITCH;
 
-    /*
-     * Module :: (node) -> Module
-     *
-     * Static semantic representation of a module.
-     */
-    function Module(node) {
-        var exports = node.body.exports;
-        var modDefns = node.body.modDefns;
+        if (this.currentLabels.isEmpty()) {
+            if (isDefaultLoopTarget) this.update({ defaultLoopTarget: target });
+            if (isDefaultTarget) this.update({ defaultTarget: target });
+            return this;
+        }
 
-        var exportedModules = new StringMap();
-
-        exports.forEach(function(name, exp) {
-            var node = exp.node;
-            if (node.type === MODULE) {
-                exportedModules.set(name, node);
-            } else if (!exp.isDefinition && node.type === IDENTIFIER && modDefns.has(node.value)) {
-                var mod = modDefns.get(node.value);
-                exportedModules.set(name, mod);
-            }
+        target.labels = new Dict();
+        this.currentLabels.forEach(function(label) {
+            target.labels.set(label, true);
         });
+        return this.update({ currentLabels: new Stack(),
+                             labeledTargets: this.labeledTargets.push(target),
+                             defaultLoopTarget: isDefaultLoopTarget
+                             ? target
+                             : this.defaultLoopTarget,
+                             defaultTarget: isDefaultTarget
+                             ? target
+                             : this.defaultTarget });
+    },
+    nest: function() {
+        return this.topLevel ? this.update({ topLevel: false }) : this;
+    },
+    canImport: function() {
+        return this.topLevel && !this.inFunction;
+    },
+    canExport: function() {
+        return this.inModule && this.topLevel && !this.inFunction;
+    },
+    banWith: function() {
+        return this.strictMode || this.inModule;
+    },
+    modulesAllowed: function() {
+        return this.topLevel && !this.inFunction;
+    }
+};
 
-        this.node = node;
-        this.exports = exports;
-        this.exportedModules = exportedModules;
+var Pp = Parser.prototype;
+
+Pp.mozillaMode = false;
+
+Pp.parenFreeMode = false;
+
+Pp.withContext = function(x, f) {
+    var x0 = this.x;
+    this.x = x;
+    var result = f.call(this);
+    // NB: we don't bother with finally, since exceptions trash the parser
+    this.x = x0;
+    return result;
+};
+
+Pp.newNode = function newNode(opts) {
+    return new Node(this.t, opts);
+};
+
+Pp.fail = function fail(msg) {
+    throw this.t.newSyntaxError(msg);
+};
+
+Pp.match = function match(tt, scanOperand, keywordIsName) {
+    return this.t.match(tt, scanOperand, keywordIsName);
+};
+
+Pp.mustMatch = function mustMatch(tt, keywordIsName) {
+    return this.t.mustMatch(tt, keywordIsName);
+};
+
+Pp.peek = function peek(scanOperand) {
+    return this.t.peek(scanOperand);
+};
+
+Pp.peekOnSameLine = function peekOnSameLine(scanOperand) {
+    return this.t.peekOnSameLine(scanOperand);
+};
+
+Pp.done = function done() {
+    return this.t.done;
+};
+
+/*
+ * Script :: (boolean, boolean, boolean) -> node
+ *
+ * Parses the toplevel and module/function bodies.
+ */
+Pp.Script = function Script(inModule, inFunction, expectEnd) {
+    var node = this.newNode(scriptInit());
+    var x2 = new StaticContext(node, node, inModule, inFunction);
+    this.withContext(x2, function() {
+        this.Statements(node, true);
+    });
+    if (expectEnd && !this.done())
+        this.fail("expected end of input");
+    return node;
+};
+
+/*
+ * Pragma :: (expression statement node) -> boolean
+ *
+ * Checks whether a node is a pragma and annotates it.
+ */
+function Pragma(n) {
+    if (n.type === SEMICOLON) {
+        var e = n.expression;
+        if (e.type === STRING && e.value === "use strict") {
+            n.pragma = "strict";
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+ * Node :: (tokenizer, optional init object) -> node
+ */
+function Node(t, init) {
+    var token = t.token;
+    if (token) {
+        // If init.type exists it will override token.type.
+        this.type = token.type;
+        this.value = token.value;
+        this.lineno = token.lineno;
+
+        // Start and end are file positions for error handling.
+        this.start = token.start;
+        this.end = token.end;
+    } else {
+        this.lineno = t.lineno;
     }
 
-    /*
-     * Statement :: (tokenizer, compiler context) -> node
-     *
-     * Parses a Statement.
-     */
-    function Statement(t, x) {
-        var i, label, n, n2, p, c, ss, tt = t.get(true), tt2, x2, x3;
+    this.filename = t.filename;
+    this.children = [];
 
-        var comments = t.blockComments;
+    for (var prop in init)
+        this[prop] = init[prop];
+}
 
-        if (x.blackList[tt])
-            throw t.newSyntaxError(definitions.tokens[tt] + " statements only allowed in Harmony");
-        if (!x.allow(tt))
-            throw t.newSyntaxError(definitions.tokens[tt] + " statement in illegal context");
+/*
+ * SyntheticNode :: (optional init object) -> node
+ */
+function SyntheticNode(init) {
+    this.children = [];
+    for (var prop in init)
+        this[prop] = init[prop];
+    this.synthetic = true;
+}
 
-        // Cases for statements ending in a right curly return early, avoiding the
-        // common semicolon insertion magic after this switch.
-        switch (tt) {
-          case IMPORT:
-            n = new Node(t);
-            n.pathList = ImportPathList(t, x);
-            x.parentScript.impDecls.push(n);
-            break;
+var Np = Node.prototype = SyntheticNode.prototype = {};
+Np.constructor = Node;
 
-          case EXPORT:
-            switch (t.peek()) {
-              case MODULE:
-              case FUNCTION:
-              case LET:
-              case VAR:
-              case CONST:
-                n = Statement(t, x);
-                n.blockComments = comments;
-                n.exported = true;
-                x.parentScript.expDecls.push(n);
-                registerExport(x.parentScript.exports, n);
-                return n;
+var TO_SOURCE_SKIP = {
+    type: true,
+    value: true,
+    lineno: true,
+    start: true,
+    end: true,
+    tokenizer: true,
+    assignOp: true
+};
+function unevalableConst(code) {
+    var token = definitions.tokens[code];
+    var constName = definitions.opTypeNames.hasOwnProperty(token)
+        ? definitions.opTypeNames[token]
+        : token in definitions.keywords
+        ? token.toUpperCase()
+        : token;
+    return { toSource: function() { return constName } };
+}
+Np.toSource = function toSource() {
+    var mock = {};
+    var self = this;
+    mock.type = unevalableConst(this.type);
+    // avoid infinite recursion in case of back-links
+    if (this.generatingSource)
+        return mock.toSource();
+    this.generatingSource = true;
+    if ("value" in this)
+        mock.value = this.value;
+    if ("lineno" in this)
+        mock.lineno = this.lineno;
+    if ("start" in this)
+        mock.start = this.start;
+    if ("end" in this)
+        mock.end = this.end;
+    if (this.assignOp)
+        mock.assignOp = unevalableConst(this.assignOp);
+    for (var key in this) {
+        if (this.hasOwnProperty(key) && !(key in TO_SOURCE_SKIP))
+            mock[key] = this[key];
+    }
+    try {
+        return mock.toSource();
+    } finally {
+        delete this.generatingSource;
+    }
+};
+
+// Always use push to add operands to an expression, to update start and end.
+Np.push = function (kid) {
+    // kid can be null e.g. [1, , 2].
+    if (kid !== null) {
+        if (kid.start < this.start)
+            this.start = kid.start;
+        if (this.end < kid.end)
+            this.end = kid.end;
+    }
+    return this.children.push(kid);
+}
+
+Node.indentLevel = 0;
+
+function tokenString(tt) {
+    var t = definitions.tokens[tt];
+    return /^\W/.test(t) ? definitions.opTypeNames[t] : t.toUpperCase();
+}
+
+Np.toString = function () {
+    var a = [];
+    for (var i in this) {
+        if (this.hasOwnProperty(i) && i !== 'type' && i !== 'target')
+            a.push({id: i, value: this[i]});
+    }
+    a.sort(function (a,b) { return (a.id < b.id) ? -1 : 1; });
+    var INDENTATION = "    ";
+    var n = ++Node.indentLevel;
+    var s = "{\n" + INDENTATION.repeat(n) + "type: " + tokenString(this.type);
+    for (i = 0; i < a.length; i++)
+        s += ",\n" + INDENTATION.repeat(n) + a[i].id + ": " + a[i].value;
+    n = --Node.indentLevel;
+    s += "\n" + INDENTATION.repeat(n) + "}";
+    return s;
+}
+
+Np.synth = function(init) {
+    var node = new SyntheticNode(init);
+    node.filename = this.filename;
+    node.lineno = this.lineno;
+    node.start = this.start;
+    node.end = this.end;
+    return node;
+};
+
+/*
+ * Helper init objects for common nodes.
+ */
+
+var LOOP_INIT = { isLoop: true };
+
+function blockInit() {
+    return { type: BLOCK, varDecls: [] };
+}
+
+function scriptInit() {
+    return { type: SCRIPT,
+             funDecls: [],
+             varDecls: [],
+             modDefns: new Dict(),
+             modAssns: new Dict(),
+             modDecls: new Dict(),
+             modLoads: new Dict(),
+             impDecls: [],
+             expDecls: [],
+             exports: new Dict(),
+             hasEmptyReturn: false,
+             hasReturnWithValue: false,
+             hasYield: false };
+}
+
+definitions.defineGetter(Np, "length",
+                         function() {
+                             throw new Error("Node.prototype.length is gone; " +
+                                             "use n.children.length instead");
+                         });
+
+definitions.defineProperty(String.prototype, "repeat",
+                           function(n) {
+                               var s = "", t = this + s;
+                               while (--n >= 0)
+                                   s += t;
+                               return s;
+                           }, false, false, true);
+
+Pp.MaybeLeftParen = function MaybeLeftParen() {
+    if (this.parenFreeMode)
+        return this.match(LEFT_PAREN) ? LEFT_PAREN : END;
+    return this.mustMatch(LEFT_PAREN).type;
+};
+
+Pp.MaybeRightParen = function MaybeRightParen(p) {
+    if (p === LEFT_PAREN)
+        this.mustMatch(RIGHT_PAREN);
+}
+
+/*
+ * Statements :: (node[, boolean]) -> void
+ *
+ * Parses a sequence of Statements.
+ */
+Pp.Statements = function Statements(n, topLevel) {
+    var prologue = !!topLevel;
+    try {
+        while (!this.done() && this.peek(true) !== RIGHT_CURLY) {
+            var n2 = this.Statement();
+            n.push(n2);
+            if (prologue && Pragma(n2)) {
+                this.x.strictMode = true;
+                n.strict = true;
+            } else {
+                prologue = false;
+            }
+        }
+    } catch (e) {
+        try {
+            if (this.done())
+                this.unexpectedEOF = true;
+        } catch(e) {}
+        throw e;
+    }
+}
+
+Pp.Block = function Block() {
+    this.mustMatch(LEFT_CURLY);
+    var n = this.newNode(blockInit());
+    var x2 = this.x.update({ parentBlock: n }).pushTarget(n);
+    this.withContext(x2, function() {
+        this.Statements(n);
+    });
+    this.mustMatch(RIGHT_CURLY);
+    return n;
+}
+
+var DECLARED_FORM = 0, EXPRESSED_FORM = 1, STATEMENT_FORM = 2;
+
+/*
+ * Export :: (binding node, boolean) -> Export
+ *
+ * Static semantic representation of a module export.
+ */
+function Export(node, isDefinition) {
+    this.node = node;                 // the AST node declaring this individual export
+    this.isDefinition = isDefinition; // is the node an 'export'-annotated definition?
+    this.resolved = null;             // resolved pointer to the target of this export
+}
+
+/*
+ * registerExport :: (Dict, EXPORT node) -> void
+ */
+function registerExport(exports, decl) {
+    function register(name, exp) {
+        if (exports.has(name))
+            throw new SyntaxError("multiple exports of " + name);
+        exports.set(name, exp);
+    }
+
+    switch (decl.type) {
+      case MODULE:
+      case FUNCTION:
+        register(decl.name, new Export(decl, true));
+        break;
+
+      case VAR:
+        for (var i = 0; i < decl.children.length; i++)
+            register(decl.children[i].name, new Export(decl.children[i], true));
+        break;
+
+      case LET:
+      case CONST:
+        throw new Error("NYI: " + definitions.tokens[decl.type]);
+
+      case EXPORT:
+        for (var i = 0; i < decl.pathList.length; i++) {
+            var path = decl.pathList[i];
+            switch (path.type) {
+              case OBJECT_INIT:
+                for (var j = 0; j < path.children.length; j++) {
+                    // init :: IDENTIFIER | PROPERTY_INIT
+                    var init = path.children[j];
+                    if (init.type === IDENTIFIER)
+                        register(init.value, new Export(init, false));
+                    else
+                        register(init.children[0].value, new Export(init.children[1], false));
+                }
+                break;
+
+              case DOT:
+                register(path.children[1].value, new Export(path, false));
+                break;
+
+              case IDENTIFIER:
+                register(path.value, new Export(path, false));
+                break;
 
               default:
-                n = new Node(t);
-                n.pathList = ExportPathList(t, x);
-                break;
+                throw new Error("unexpected export path: " + definitions.tokens[path.type]);
             }
-            x.parentScript.expDecls.push(n);
-            registerExport(x.parentScript.exports, n);
-            break;
+        }
+        break;
 
+      default:
+        throw new Error("unexpected export decl: " + definitions.tokens[exp.type]);
+    }
+}
+
+/*
+ * Module :: (node) -> Module
+ *
+ * Static semantic representation of a module.
+ */
+function Module(node) {
+    var exports = node.body.exports;
+    var modDefns = node.body.modDefns;
+
+    var exportedModules = new Dict();
+
+    exports.forEach(function(name, exp) {
+        var node = exp.node;
+        if (node.type === MODULE) {
+            exportedModules.set(name, node);
+        } else if (!exp.isDefinition && node.type === IDENTIFIER && modDefns.has(node.value)) {
+            var mod = modDefns.get(node.value);
+            exportedModules.set(name, mod);
+        }
+    });
+
+    this.node = node;
+    this.exports = exports;
+    this.exportedModules = exportedModules;
+}
+
+/*
+ * Statement :: () -> node
+ *
+ * Parses a Statement.
+ */
+Pp.Statement = function Statement() {
+    var i, label, n, n2, p, c, ss, tt = this.t.get(true), tt2, x0, x2, x3;
+
+    var comments = this.t.blockComments;
+
+    // Cases for statements ending in a right curly return early, avoiding the
+    // common semicolon insertion magic after this switch.
+    switch (tt) {
+      case IMPORT:
+        if (!this.x.canImport())
+            this.fail("illegal context for import statement");
+        n = this.newNode();
+        n.pathList = this.ImportPathList();
+        this.x.parentScript.impDecls.push(n);
+        break;
+
+      case EXPORT:
+        if (!this.x.canExport())
+            this.fail("export statement not in module top level");
+        switch (this.peek()) {
           case MODULE:
-            n = new Node(t);
-            n.blockComments = comments;
-            t.mustMatch(IDENTIFIER);
-            label = t.token.value;
-
-            if (t.match(LEFT_CURLY)) {
-                n.name = label;
-                n.body = Script(t, true, false);
-                n.module = new Module(n);
-                t.mustMatch(RIGHT_CURLY);
-                x.parentScript.modDefns.set(n.name, n);
-                return n;
-            }
-
-            t.unget();
-            ModuleVariables(t, x, n);
-            return n;
-
           case FUNCTION:
-            // DECLARED_FORM extends funDecls of x, STATEMENT_FORM doesn't.
-            return FunctionDefinition(t, x, true, x.topLevel ? DECLARED_FORM : STATEMENT_FORM, comments);
-
-          case LEFT_CURLY:
-            n = new Node(t, blockInit());
-            Statements(t, x.update({ parentBlock: n }).pushTarget(n).nest(), n);
-            t.mustMatch(RIGHT_CURLY);
+          case LET:
+          case VAR:
+          case CONST:
+            n = this.Statement();
+            n.blockComments = comments;
+            n.exported = true;
+            this.x.parentScript.expDecls.push(n);
+            registerExport(this.x.parentScript.exports, n);
             return n;
+        }
+        n = this.newNode();
+        n.pathList = this.ExportPathList();
+        this.x.parentScript.expDecls.push(n);
+        registerExport(this.x.parentScript.exports, n);
+        break;
 
-          case IF:
-            n = new Node(t);
-            n.condition = HeadExpression(t, x);
-            x2 = x.pushTarget(n).nest();
-            n.thenPart = Statement(t, x2);
-            n.elsePart = t.match(ELSE, true) ? Statement(t, x2) : null;
-            return n;
+      case FUNCTION:
+        // DECLARED_FORM extends funDecls of x, STATEMENT_FORM doesn't.
+        return this.FunctionDefinition(true, this.x.topLevel ? DECLARED_FORM : STATEMENT_FORM, comments);
 
-          case SWITCH:
-            // This allows CASEs after a DEFAULT, which is in the standard.
-            n = new Node(t, { cases: [], defaultIndex: -1 });
-            n.discriminant = HeadExpression(t, x);
-            x2 = x.pushTarget(n).nest();
-            t.mustMatch(LEFT_CURLY);
-            while ((tt = t.get()) !== RIGHT_CURLY) {
+      case LEFT_CURLY:
+        n = this.newNode(blockInit());
+        x2 = this.x.update({ parentBlock: n }).pushTarget(n).nest();
+        this.withContext(x2, function() {
+            this.Statements(n);
+        });
+        this.mustMatch(RIGHT_CURLY);
+        return n;
+
+      case IF:
+        n = this.newNode();
+        n.condition = this.HeadExpression();
+        x2 = this.x.pushTarget(n).nest();
+        this.withContext(x2, function() {
+            n.thenPart = this.Statement();
+            n.elsePart = this.match(ELSE, true) ? this.Statement() : null;
+        });
+        return n;
+
+      case SWITCH:
+        // This allows CASEs after a DEFAULT, which is in the standard.
+        n = this.newNode({ cases: [], defaultIndex: -1 });
+        n.discriminant = this.HeadExpression();
+        x2 = this.x.pushTarget(n).nest();
+        this.withContext(x2, function() {
+            this.mustMatch(LEFT_CURLY);
+            while ((tt = this.t.get()) !== RIGHT_CURLY) {
                 switch (tt) {
                   case DEFAULT:
                     if (n.defaultIndex >= 0)
-                        throw t.newSyntaxError("More than one switch default");
+                        this.fail("More than one switch default");
                     // FALL THROUGH
                   case CASE:
-                    n2 = new Node(t);
+                    n2 = this.newNode();
                     if (tt === DEFAULT)
                         n.defaultIndex = n.cases.length;
                     else
-                        n2.caseLabel = Expression(t, x2, COLON);
+                        n2.caseLabel = this.Expression(COLON);
                     break;
 
                   default:
-                    throw t.newSyntaxError("Invalid switch case");
+                    this.fail("Invalid switch case");
                 }
-                t.mustMatch(COLON);
-                n2.statements = new Node(t, blockInit());
-                while ((tt=t.peek(true)) !== CASE && tt !== DEFAULT &&
-                        tt !== RIGHT_CURLY)
-                    n2.statements.push(Statement(t, x2));
+                this.mustMatch(COLON);
+                n2.statements = this.newNode(blockInit());
+                while ((tt=this.peek(true)) !== CASE && tt !== DEFAULT &&
+                       tt !== RIGHT_CURLY)
+                    n2.statements.push(this.Statement());
                 n.cases.push(n2);
             }
-            return n;
+        });
+        return n;
 
-          case FOR:
-            n = new Node(t, LOOP_INIT);
-            n.blockComments = comments;
-            if (t.match(IDENTIFIER)) {
-                if (t.token.value === "each")
-                    n.isEach = true;
-                else
-                    t.unget();
-            }
-            if (!x.parenFreeMode)
-                t.mustMatch(LEFT_PAREN);
-            x2 = x.pushTarget(n).nest();
-            x3 = x.update({ inForLoopInit: true });
-            n2 = null;
-            if ((tt = t.peek(true)) !== SEMICOLON) {
+      case FOR:
+        n = this.newNode(LOOP_INIT);
+        n.blockComments = comments;
+        if (this.match(IDENTIFIER)) {
+            if (this.t.token.value === "each")
+                n.isEach = true;
+            else
+                this.t.unget();
+        }
+        if (!this.parenFreeMode)
+            this.mustMatch(LEFT_PAREN);
+        x2 = this.x.pushTarget(n).nest();
+        x3 = this.x.update({ inForLoopInit: true });
+        n2 = null;
+        if ((tt = this.peek(true)) !== SEMICOLON) {
+            this.withContext(x3, function() {
                 if (tt === VAR || tt === CONST) {
-                    t.get();
-                    n2 = Variables(t, x3);
+                    this.t.get();
+                    n2 = this.Variables();
                 } else if (tt === LET) {
-                    t.get();
-                    if (t.peek() === LEFT_PAREN) {
-                        n2 = LetBlock(t, x3, false);
+                    this.t.get();
+                    if (this.peek() === LEFT_PAREN) {
+                        n2 = this.LetBlock(false);
                     } else {
                         // Let in for head, we need to add an implicit block
                         // around the rest of the for.
-                        x3.parentBlock = n;
+                        this.x.parentBlock = n;
                         n.varDecls = [];
-                        n2 = Variables(t, x3);
+                        n2 = this.Variables();
                     }
                 } else {
-                    n2 = Expression(t, x3);
+                    n2 = this.Expression();
                 }
-            }
-            if (n2 && t.match(IN)) {
-                n.type = FOR_IN;
-                n.object = Expression(t, x3);
+            });
+        }
+        if (n2 && this.match(IN)) {
+            n.type = FOR_IN;
+            this.withContext(x3, function() {
+                n.object = this.Expression();
                 if (n2.type === VAR || n2.type === LET) {
                     c = n2.children;
 
@@ -7817,8 +7868,9 @@ define('ace/narcissus/jsparse', ['require', 'exports', 'module' , 'ace/narcissus
                     // there must be only one destructuring or only one
                     // decl.
                     if (c.length !== 1 && n2.destructurings.length !== 1) {
+                        // FIXME: this.fail ?
                         throw new SyntaxError("Invalid for..in left-hand side",
-                                              t.filename, n2.lineno);
+                                              this.filename, n2.lineno);
                     }
                     if (n2.destructurings.length > 0) {
                         n.iterator = n2.destructurings[0];
@@ -7828,1252 +7880,1364 @@ define('ace/narcissus/jsparse', ['require', 'exports', 'module' , 'ace/narcissus
                     n.varDecl = n2;
                 } else {
                     if (n2.type === ARRAY_INIT || n2.type === OBJECT_INIT) {
-                        n2.destructuredNames = checkDestructuring(t, x3, n2);
+                        n2.destructuredNames = this.checkDestructuring(n2);
                     }
                     n.iterator = n2;
                 }
-            } else {
-                x3.inForLoopInit = false;
-                n.setup = n2;
-                t.mustMatch(SEMICOLON);
-                if (n.isEach)
-                    throw t.newSyntaxError("Invalid for each..in loop");
-                n.condition = (t.peek(true) === SEMICOLON)
-                              ? null
-                              : Expression(t, x3);
-                t.mustMatch(SEMICOLON);
-                tt2 = t.peek(true);
-                n.update = (x.parenFreeMode
+            });
+        } else {
+            x3.inForLoopInit = false;
+            n.setup = n2;
+            this.mustMatch(SEMICOLON);
+            if (n.isEach)
+                this.fail("Invalid for each..in loop");
+            this.withContext(x3, function() {
+                n.condition = (this.peek(true) === SEMICOLON)
+                    ? null
+                    : this.Expression();
+                this.mustMatch(SEMICOLON);
+                tt2 = this.peek(true);
+                n.update = (this.parenFreeMode
                             ? tt2 === LEFT_CURLY || definitions.isStatementStartCode[tt2]
                             : tt2 === RIGHT_PAREN)
-                           ? null
-                           : Expression(t, x3);
+                    ? null
+                    : this.Expression();
+            });
+        }
+        if (!this.parenFreeMode)
+            this.mustMatch(RIGHT_PAREN);
+        this.withContext(x2, function() {
+            n.body = this.Statement();
+        });
+        return n;
+
+      case WHILE:
+        n = this.newNode({ isLoop: true });
+        n.blockComments = comments;
+        n.condition = this.HeadExpression();
+        x2 = this.x.pushTarget(n).nest();
+        this.withContext(x2, function() {
+            n.body = this.Statement();
+        });
+        return n;
+
+      case DO:
+        n = this.newNode({ isLoop: true });
+        n.blockComments = comments;
+        x2 = this.x.pushTarget(n).next();
+        this.withContext(x2, function() {
+            n.body = this.Statement();
+        });
+        this.mustMatch(WHILE);
+        n.condition = this.HeadExpression();
+        // <script language="JavaScript"> (without version hints) may need
+        // automatic semicolon insertion without a newline after do-while.
+        // See http://bugzilla.mozilla.org/show_bug.cgi?id=238945.
+        this.match(SEMICOLON);
+        return n;
+
+      case BREAK:
+      case CONTINUE:
+        n = this.newNode();
+        n.blockComments = comments;
+
+        // handle the |foo: break foo;| corner case
+        x2 = this.x.pushTarget(n);
+
+        if (this.peekOnSameLine() === IDENTIFIER) {
+            this.t.get();
+            n.label = this.t.token.value;
+        }
+
+        if (n.label) {
+            n.target = x2.labeledTargets.find(function(target) {
+                return target.labels.has(n.label)
+            });
+        } else if (tt === CONTINUE) {
+            n.target = x2.defaultLoopTarget;
+        } else {
+            n.target = x2.defaultTarget;
+        }
+
+        if (!n.target)
+            this.fail("Invalid " + ((tt === BREAK) ? "break" : "continue"));
+        if (!n.target.isLoop && tt === CONTINUE)
+            this.fail("Invalid continue");
+
+        break;
+
+      case TRY:
+        n = this.newNode({ catchClauses: [] });
+        n.blockComments = comments;
+        n.tryBlock = this.Block();
+        while (this.match(CATCH)) {
+            n2 = this.newNode();
+            p = this.MaybeLeftParen();
+            switch (this.t.get()) {
+              case LEFT_BRACKET:
+              case LEFT_CURLY:
+                // Destructured catch identifiers.
+                this.t.unget();
+                n2.varName = this.DestructuringExpression(true);
+                break;
+              case IDENTIFIER:
+                n2.varName = this.t.token.value;
+                break;
+              default:
+                this.fail("missing identifier in catch");
+                break;
             }
-            if (!x.parenFreeMode)
-                t.mustMatch(RIGHT_PAREN);
-            n.body = Statement(t, x2);
-            return n;
+            if (this.match(IF)) {
+                if (!this.mozillaMode)
+                    this.fail("Illegal catch guard");
+                if (n.catchClauses.length && !n.catchClauses.top().guard)
+                    this.fail("Guarded catch after unguarded");
+                n2.guard = this.Expression();
+            }
+            this.MaybeRightParen(p);
+            n2.block = this.Block();
+            n.catchClauses.push(n2);
+        }
+        if (this.match(FINALLY))
+            n.finallyBlock = this.Block();
+        if (!n.catchClauses.length && !n.finallyBlock)
+            this.fail("Invalid try statement");
+        return n;
 
-          case WHILE:
-            n = new Node(t, { isLoop: true });
-            n.blockComments = comments;
-            n.condition = HeadExpression(t, x);
-            n.body = Statement(t, x.pushTarget(n).nest());
-            return n;
+      case CATCH:
+      case FINALLY:
+        this.fail(definitions.tokens[tt] + " without preceding try");
 
-          case DO:
-            n = new Node(t, { isLoop: true });
+      case THROW:
+        n = this.newNode();
+        n.exception = this.Expression();
+        break;
+
+      case RETURN:
+        n = this.ReturnOrYield();
+        break;
+
+      case WITH:
+        if (this.x.banWith())
+            this.fail("with statements not allowed in strict code or modules");
+        n = this.newNode();
+        n.blockComments = comments;
+        n.object = this.HeadExpression();
+        x2 = this.x.pushTarget(n).next();
+        this.withContext(x2, function() {
+            n.body = this.Statement();
+        });
+        return n;
+
+      case VAR:
+      case CONST:
+        n = this.Variables();
+        break;
+
+      case LET:
+        if (this.peek() === LEFT_PAREN) {
+            n = this.LetBlock(true);
+            return n;
+        }
+        n = this.Variables();
+        break;
+
+      case DEBUGGER:
+        n = this.newNode();
+        break;
+
+      case NEWLINE:
+      case SEMICOLON:
+        n = this.newNode({ type: SEMICOLON });
+        n.blockComments = comments;
+        n.expression = null;
+        return n;
+
+      case IDENTIFIER:
+      case USE:
+      case MODULE:
+        switch (this.t.token.value) {
+          case "use":
+            if (!isPragmaToken(this.peekOnSameLine())) {
+                this.t.unget();
+                break;
+            }
+            return this.newNode({ type: USE, params: this.Pragmas() });
+
+          case "module":
+            if (!this.x.modulesAllowed())
+                this.fail("module declaration not at top level");
+            this.x.parentScript.hasModules = true;
+            tt = this.peekOnSameLine();
+            if (tt !== IDENTIFIER && tt !== LEFT_CURLY) {
+                this.t.unget();
+                break;
+            }
+            n = this.newNode({ type: MODULE });
             n.blockComments = comments;
-            n.body = Statement(t, x.pushTarget(n).nest());
-            t.mustMatch(WHILE);
-            n.condition = HeadExpression(t, x);
-            if (!x.ecmaStrictMode) {
-                // <script language="JavaScript"> (without version hints) may need
-                // automatic semicolon insertion without a newline after do-while.
-                // See http://bugzilla.mozilla.org/show_bug.cgi?id=238945.
-                t.match(SEMICOLON);
+            this.mustMatch(IDENTIFIER);
+            label = this.t.token.value;
+
+            if (this.match(LEFT_CURLY)) {
+                n.name = label;
+                n.body = this.Script(true, false);
+                n.module = new Module(n);
+                this.mustMatch(RIGHT_CURLY);
+                this.x.parentScript.modDefns.set(n.name, n);
                 return n;
             }
-            break;
 
-          case BREAK:
-          case CONTINUE:
-            n = new Node(t);
-            n.blockComments = comments;
-
-            // handle the |foo: break foo;| corner case
-            x2 = x.pushTarget(n);
-
-            if (t.peekOnSameLine() === IDENTIFIER) {
-                t.get();
-                n.label = t.token.value;
-            }
-
-            if (n.label) {
-                n.target = x2.labeledTargets.find(function(target) { return target.labels.has(n.label) });
-            } else if (tt === CONTINUE) {
-                n.target = x2.defaultLoopTarget;
-            } else {
-                n.target = x2.defaultTarget;
-            }
-
-            if (!n.target)
-                throw t.newSyntaxError("Invalid " + ((tt === BREAK) ? "break" : "continue"));
-            if (!n.target.isLoop && tt === CONTINUE)
-                throw t.newSyntaxError("Invalid continue");
-
-            break;
-
-          case TRY:
-            n = new Node(t, { catchClauses: [] });
-            n.blockComments = comments;
-            n.tryBlock = Block(t, x);
-            while (t.match(CATCH)) {
-                n2 = new Node(t);
-                p = MaybeLeftParen(t, x);
-                switch (t.get()) {
-                  case LEFT_BRACKET:
-                  case LEFT_CURLY:
-                    // Destructured catch identifiers.
-                    t.unget();
-                    n2.varName = DestructuringExpression(t, x, true);
-                    break;
-                  case IDENTIFIER:
-                    n2.varName = t.token.value;
-                    break;
-                  default:
-                    throw t.newSyntaxError("missing identifier in catch");
-                    break;
-                }
-                if (t.match(IF)) {
-                    if (x.ecma3OnlyMode)
-                        throw t.newSyntaxError("Illegal catch guard");
-                    if (n.catchClauses.length && !n.catchClauses.top().guard)
-                        throw t.newSyntaxError("Guarded catch after unguarded");
-                    n2.guard = Expression(t, x);
-                }
-                MaybeRightParen(t, p);
-                n2.block = Block(t, x);
-                n.catchClauses.push(n2);
-            }
-            if (t.match(FINALLY))
-                n.finallyBlock = Block(t, x);
-            if (!n.catchClauses.length && !n.finallyBlock)
-                throw t.newSyntaxError("Invalid try statement");
-            return n;
-
-          case CATCH:
-          case FINALLY:
-            throw t.newSyntaxError(definitions.tokens[tt] + " without preceding try");
-
-          case THROW:
-            n = new Node(t);
-            n.exception = Expression(t, x);
-            break;
-
-          case RETURN:
-            n = ReturnOrYield(t, x);
-            break;
-
-          case WITH:
-            n = new Node(t);
-            n.blockComments = comments;
-            n.object = HeadExpression(t, x);
-            n.body = Statement(t, x.pushTarget(n).nest());
-            return n;
-
-          case VAR:
-          case CONST:
-            n = Variables(t, x);
-            break;
-
-          case LET:
-            if (t.peek() === LEFT_PAREN)
-                n = LetBlock(t, x, true);
-            else
-                n = Variables(t, x);
-            break;
-
-          case DEBUGGER:
-            n = new Node(t);
-            break;
-
-          case NEWLINE:
-          case SEMICOLON:
-            n = new Node(t, { type: SEMICOLON });
-            n.blockComments = comments;
-            n.expression = null;
+            this.t.unget();
+            this.ModuleVariables(n);
             return n;
 
           default:
-            if (tt === IDENTIFIER) {
-                tt = t.peek();
-                // Labeled statement.
-                if (tt === COLON) {
-                    label = t.token.value;
-                    if (x.allLabels.has(label))
-                        throw t.newSyntaxError("Duplicate label");
-                    t.get();
-                    n = new Node(t, { type: LABEL, label: label });
-                    n.blockComments = comments;
-                    n.statement = Statement(t, x.pushLabel(label).nest());
-                    n.target = (n.statement.type === LABEL) ? n.statement.target : n.statement;
-                    return n;
-                }
+            tt = this.peek();
+            // Labeled statement.
+            if (tt === COLON) {
+                label = this.t.token.value;
+                if (this.x.allLabels.has(label))
+                    this.fail("Duplicate label: " + label);
+                this.t.get();
+                n = this.newNode({ type: LABEL, label: label });
+                n.blockComments = comments;
+                x2 = this.x.pushLabel(label).nest();
+                this.withContext(x2, function() {
+                    n.statement = this.Statement();
+                });
+                n.target = (n.statement.type === LABEL) ? n.statement.target : n.statement;
+                return n;
             }
+            // FALL THROUGH
+        }
+        // FALL THROUGH
 
-            // Expression statement.
-            // We unget the current token to parse the expression as a whole.
-            n = new Node(t, { type: SEMICOLON });
-            t.unget();
-            n.blockComments = comments;
-            n.expression = Expression(t, x);
-            n.end = n.expression.end;
+      default:
+        // Expression statement.
+        // We unget the current token to parse the expression as a whole.
+        n = this.newNode({ type: SEMICOLON });
+        this.t.unget();
+        n.blockComments = comments;
+        n.expression = this.Expression();
+        n.end = n.expression.end;
+        break;
+    }
+
+    n.blockComments = comments;
+    this.MagicalSemicolon();
+    return n;
+}
+
+/*
+ * isPragmaToken :: (number) -> boolean
+ */
+function isPragmaToken(tt) {
+    switch (tt) {
+      case IDENTIFIER:
+      case STRING:
+      case NUMBER:
+      case NULL:
+      case TRUE:
+      case FALSE:
+        return true;
+    }
+    return false;
+}
+
+/*
+ * Pragmas :: () -> Array[Array[token]]
+ */
+Pp.Pragmas = function Pragmas() {
+    var pragmas = [];
+    do {
+        pragmas.push(this.Pragma());
+    } while (this.match(COMMA));
+    this.MagicalSemicolon();
+    return pragmas;
+}
+
+/*
+ * Pragmas :: () -> Array[token]
+ */
+Pp.Pragma = function Pragma() {
+    var items = [];
+    var tt;
+    do {
+        tt = this.t.get(true);
+        items.push(this.t.token);
+    } while (isPragmaToken(this.peek()));
+    return items;
+}
+
+/*
+ * MagicalSemicolon :: () -> void
+ */
+Pp.MagicalSemicolon = function MagicalSemicolon() {
+    var tt;
+    if (this.t.lineno === this.t.token.lineno) {
+        tt = this.peekOnSameLine();
+        if (tt !== END && tt !== NEWLINE && tt !== SEMICOLON && tt !== RIGHT_CURLY)
+            this.fail("missing ; before statement");
+    }
+    this.match(SEMICOLON);
+}
+
+/*
+ * ReturnOrYield :: () -> (RETURN | YIELD) node
+ */
+Pp.ReturnOrYield = function ReturnOrYield() {
+    var n, b, tt = this.t.token.type, tt2;
+
+    var parentScript = this.x.parentScript;
+
+    if (tt === RETURN) {
+        if (!this.x.inFunction)
+            this.fail("Return not in function");
+    } else /* if (tt === YIELD) */ {
+        if (!this.x.inFunction)
+            this.fail("Yield not in function");
+        parentScript.hasYield = true;
+    }
+    n = this.newNode({ value: undefined });
+
+    tt2 = (tt === RETURN) ? this.peekOnSameLine(true) : this.peek(true);
+    if (tt2 !== END && tt2 !== NEWLINE &&
+        tt2 !== SEMICOLON && tt2 !== RIGHT_CURLY
+        && (tt !== YIELD ||
+            (tt2 !== tt && tt2 !== RIGHT_BRACKET && tt2 !== RIGHT_PAREN &&
+             tt2 !== COLON && tt2 !== COMMA))) {
+        if (tt === RETURN) {
+            n.value = this.Expression();
+            parentScript.hasReturnWithValue = true;
+        } else {
+            n.value = this.AssignExpression();
+        }
+    } else if (tt === RETURN) {
+        parentScript.hasEmptyReturn = true;
+    }
+
+    return n;
+}
+
+/*
+ * ModuleExpression :: () -> (STRING | IDENTIFIER | DOT) node
+ */
+Pp.ModuleExpression = function ModuleExpression() {
+    return this.match(STRING) ? this.newNode() : this.QualifiedPath();
+}
+
+/*
+ * ImportPathList :: () -> Array[DOT node]
+ */
+Pp.ImportPathList = function ImportPathList() {
+    var a = [];
+    do {
+        a.push(this.ImportPath());
+    } while (this.match(COMMA));
+    return a;
+}
+
+/*
+ * ImportPath :: () -> DOT node
+ */
+Pp.ImportPath = function ImportPath() {
+    var n = this.QualifiedPath();
+    if (!this.match(DOT)) {
+        if (n.type === IDENTIFIER)
+            this.fail("cannot import local variable");
+        return n;
+    }
+
+    var n2 = this.newNode();
+    n2.push(n);
+    n2.push(this.ImportSpecifierSet());
+    return n2;
+}
+
+/*
+ * ExplicitSpecifierSet :: (() -> node) -> OBJECT_INIT node
+ */
+Pp.ExplicitSpecifierSet = function ExplicitSpecifierSet(SpecifierRHS) {
+    var n, n2, id, tt;
+
+    n = this.newNode({ type: OBJECT_INIT });
+    this.mustMatch(LEFT_CURLY);
+
+    if (!this.match(RIGHT_CURLY)) {
+        do {
+            id = this.Identifier();
+            if (this.match(COLON)) {
+                n2 = this.newNode({ type: PROPERTY_INIT });
+                n2.push(id);
+                n2.push(SpecifierRHS());
+                n.push(n2);
+            } else {
+                n.push(id);
+            }
+        } while (!this.match(RIGHT_CURLY) && this.mustMatch(COMMA));
+    }
+
+    return n;
+}
+
+/*
+ * ImportSpecifierSet :: () -> (IDENTIFIER | OBJECT_INIT) node
+ */
+Pp.ImportSpecifierSet = function ImportSpecifierSet() {
+    var self = this;
+    return this.match(MUL)
+        ? this.newNode({ type: IDENTIFIER, name: "*" })
+    : ExplicitSpecifierSet(function() { return self.Identifier() });
+}
+
+/*
+ * Identifier :: () -> IDENTIFIER node
+ */
+Pp.Identifier = function Identifier() {
+    this.mustMatch(IDENTIFIER);
+    return this.newNode({ type: IDENTIFIER });
+}
+
+/*
+ * IdentifierName :: () -> IDENTIFIER node
+ */
+Pp.IdentifierName = function IdentifierName() {
+    this.mustMatch(IDENTIFIER, true);
+    return this.newNode({ type: IDENTIFIER });
+}
+
+/*
+ * QualifiedPath :: () -> (IDENTIFIER | DOT) node
+ */
+Pp.QualifiedPath = function QualifiedPath() {
+    var n, n2;
+
+    n = this.Identifier();
+
+    while (this.match(DOT)) {
+        if (this.peek() !== IDENTIFIER) {
+            // Unget the '.' token, which isn't part of the QualifiedPath.
+            this.t.unget();
             break;
         }
-
-        n.blockComments = comments;
-        MagicalSemicolon(t);
-        return n;
-    }
-
-    /*
-     * MagicalSemicolon :: (tokenizer) -> void
-     */
-    function MagicalSemicolon(t) {
-        var tt;
-        if (t.lineno === t.token.lineno) {
-            tt = t.peekOnSameLine();
-            if (tt !== END && tt !== NEWLINE && tt !== SEMICOLON && tt !== RIGHT_CURLY)
-                throw t.newSyntaxError("missing ; before statement");
-        }
-        t.match(SEMICOLON);
-    }
-
-    /*
-     * ReturnOrYield :: (tokenizer, compiler context) -> (RETURN | YIELD) node
-     */
-    function ReturnOrYield(t, x) {
-        var n, b, tt = t.token.type, tt2;
-
-        var parentScript = x.parentScript;
-
-        if (tt === RETURN) {
-            if (!x.inFunction)
-                throw t.newSyntaxError("Return not in function");
-        } else /* if (tt === YIELD) */ {
-            if (!x.inFunction)
-                throw t.newSyntaxError("Yield not in function");
-            parentScript.isGenerator = true;
-        }
-        n = new Node(t, { value: undefined });
-
-        tt2 = (tt === RETURN) ? t.peekOnSameLine(true) : t.peek(true);
-        if (tt2 !== END && tt2 !== NEWLINE &&
-            tt2 !== SEMICOLON && tt2 !== RIGHT_CURLY
-            && (tt !== YIELD ||
-                (tt2 !== tt && tt2 !== RIGHT_BRACKET && tt2 !== RIGHT_PAREN &&
-                 tt2 !== COLON && tt2 !== COMMA))) {
-            if (tt === RETURN) {
-                n.value = Expression(t, x);
-                parentScript.hasReturnWithValue = true;
-            } else {
-                n.value = AssignExpression(t, x);
-            }
-        } else if (tt === RETURN) {
-            parentScript.hasEmptyReturn = true;
-        }
-
-        // Disallow return v; in generator.
-        if (parentScript.hasReturnWithValue && parentScript.isGenerator)
-            throw t.newSyntaxError("Generator returns a value");
-
-        return n;
-    }
-
-    /*
-     * ModuleExpression :: (tokenizer, compiler context) -> (STRING | IDENTIFIER | DOT) node
-     */
-    function ModuleExpression(t, x) {
-        return t.match(STRING) ? new Node(t) : QualifiedPath(t, x);
-    }
-
-    /*
-     * ImportPathList :: (tokenizer, compiler context) -> Array[DOT node]
-     */
-    function ImportPathList(t, x) {
-        var a = [];
-        do {
-            a.push(ImportPath(t, x));
-        } while (t.match(COMMA));
-        return a;
-    }
-
-    /*
-     * ImportPath :: (tokenizer, compiler context) -> DOT node
-     */
-    function ImportPath(t, x) {
-        var n = QualifiedPath(t, x);
-        if (!t.match(DOT)) {
-            if (n.type === IDENTIFIER)
-                throw t.newSyntaxError("cannot import local variable");
-            return n;
-        }
-
-        var n2 = new Node(t);
+        n2 = this.newNode();
         n2.push(n);
-        n2.push(ImportSpecifierSet(t, x));
-        return n2;
+        n2.push(this.Identifier());
+        n = n2;
     }
 
-    /*
-     * ExplicitSpecifierSet :: (tokenizer, compiler context, (tokenizer, compiler context) -> node)
-     *                      -> OBJECT_INIT node
-     */
-    function ExplicitSpecifierSet(t, x, SpecifierRHS) {
-        var n, n2, id, tt;
+    return n;
+}
 
-        n = new Node(t, { type: OBJECT_INIT });
-        t.mustMatch(LEFT_CURLY);
+/*
+ * ExportPath :: () -> (IDENTIFIER | DOT | OBJECT_INIT) node
+ */
+Pp.ExportPath = function ExportPath() {
+    var self = this;
+    if (this.peek() === LEFT_CURLY)
+        return this.ExplicitSpecifierSet(function() { return self.QualifiedPath() });
+    return this.QualifiedPath();
+}
 
-        if (!t.match(RIGHT_CURLY)) {
+/*
+ * ExportPathList :: () -> Array[(IDENTIFIER | DOT | OBJECT_INIT) node]
+ */
+Pp.ExportPathList = function ExportPathList() {
+    var a = [];
+    do {
+        a.push(this.ExportPath());
+    } while (this.match(COMMA));
+    return a;
+}
+
+/*
+ * FunctionDefinition :: (boolean,
+ *                        DECLARED_FORM or EXPRESSED_FORM or STATEMENT_FORM,
+ *                        [string] or null or undefined)
+ *                    -> node
+ */
+Pp.FunctionDefinition = function FunctionDefinition(requireName, functionForm, comments) {
+    var tt;
+    var f = this.newNode({ params: [], paramComments: [] });
+    if (typeof comments === "undefined")
+        comments = null;
+    f.blockComments = comments;
+    if (f.type !== FUNCTION)
+        f.type = (f.value === "get") ? GETTER : SETTER;
+    if (this.match(MUL))
+        f.isExplicitGenerator = true;
+    if (this.match(IDENTIFIER, false, true))
+        f.name = this.t.token.value;
+    else if (requireName)
+        this.fail("missing function identifier");
+
+    var inModule = this.x.inModule;
+    x2 = new StaticContext(null, null, inModule, true, this.x.strictMode);
+    this.withContext(x2, function() {
+        this.mustMatch(LEFT_PAREN);
+        if (!this.match(RIGHT_PAREN)) {
             do {
-                id = Identifier(t, x);
-                if (t.match(COLON)) {
-                    n2 = new Node(t, { type: PROPERTY_INIT });
-                    n2.push(id);
-                    n2.push(SpecifierRHS(t, x));
-                    n.push(n2);
-                } else {
-                    n.push(id);
-                }
-            } while (!t.match(RIGHT_CURLY) && t.mustMatch(COMMA));
-        }
-
-        return n;
-    }
-
-    /*
-     * ImportSpecifierSet :: (tokenizer, compiler context) -> (IDENTIFIER | OBJECT_INIT) node
-     */
-    function ImportSpecifierSet(t, x) {
-        return t.match(MUL)
-             ? new Node(t, { type: IDENTIFIER, name: "*" })
-             : ExplicitSpecifierSet(t, x, Identifier);
-    }
-
-    /*
-     * Identifier :: (tokenizer, compiler context) -> IDENTIFIER node
-     */
-    function Identifier(t, x) {
-        t.mustMatch(IDENTIFIER);
-        return new Node(t, { type: IDENTIFIER });
-    }
-
-    /*
-     * IdentifierName :: (tokenizer) -> IDENTIFIER node
-     */
-    function IdentifierName(t) {
-        if (t.match(IDENTIFIER))
-            return new Node(t, { type: IDENTIFIER });
-        t.get();
-        if (t.token.value in definitions.keywords)
-            return new Node(t, { type: IDENTIFIER });
-        throw t.newSyntaxError("missing IdentifierName");
-    }
-
-    /*
-     * QualifiedPath :: (tokenizer, compiler context) -> (IDENTIFIER | DOT) node
-     */
-    function QualifiedPath(t, x) {
-        var n, n2;
-
-        n = Identifier(t, x);
-
-        while (t.match(DOT)) {
-            if (t.peek() !== IDENTIFIER) {
-                // Unget the '.' token, which isn't part of the QualifiedPath.
-                t.unget();
-                break;
-            }
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(Identifier(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    /*
-     * ExportPath :: (tokenizer, compiler context) -> (IDENTIFIER | DOT | OBJECT_INIT) node
-     */
-    function ExportPath(t, x) {
-        if (t.peek() === LEFT_CURLY)
-            return ExplicitSpecifierSet(t, x, QualifiedPath);
-        return QualifiedPath(t, x);
-    }
-
-    /*
-     * ExportPathList :: (tokenizer, compiler context)
-     *                -> Array[(IDENTIFIER | DOT | OBJECT_INIT) node]
-     */
-    function ExportPathList(t, x) {
-        var a = [];
-        do {
-            a.push(ExportPath(t, x));
-        } while (t.match(COMMA));
-        return a;
-    }
-
-    /*
-     * FunctionDefinition :: (tokenizer, compiler context, boolean,
-     *                        DECLARED_FORM or EXPRESSED_FORM or STATEMENT_FORM,
-     *                        [string] or null or undefined)
-     *                    -> node
-     */
-    function FunctionDefinition(t, x, requireName, functionForm, comments) {
-        var tt;
-        var f = new Node(t, { params: [], paramComments: [] });
-        if (typeof comment === "undefined")
-            comment = null;
-        f.blockComments = comments;
-        if (f.type !== FUNCTION)
-            f.type = (f.value === "get") ? GETTER : SETTER;
-        if (t.match(IDENTIFIER))
-            f.name = t.token.value;
-        else if (requireName)
-            throw t.newSyntaxError("missing function identifier");
-
-        var inModule = x ? x.inModule : false;
-        var x2 = new StaticContext(null, null, inModule, true);
-
-        t.mustMatch(LEFT_PAREN);
-        if (!t.match(RIGHT_PAREN)) {
-            do {
-                tt = t.get();
-                f.paramComments.push(t.lastBlockComment());
+                tt = this.t.get();
+                f.paramComments.push(this.t.lastBlockComment());
                 switch (tt) {
                   case LEFT_BRACKET:
                   case LEFT_CURLY:
                     // Destructured formal parameters.
-                    t.unget();
-                    f.params.push(DestructuringExpression(t, x2));
+                    this.t.unget();
+                    f.params.push(this.DestructuringExpression());
                     break;
                   case IDENTIFIER:
-                    f.params.push(t.token.value);
+                    f.params.push(this.t.token.value);
                     break;
                   default:
-                    throw t.newSyntaxError("missing formal parameter");
-                    break;
+                    this.fail("missing formal parameter");
                 }
-            } while (t.match(COMMA));
-            t.mustMatch(RIGHT_PAREN);
+            } while (this.match(COMMA));
+            this.mustMatch(RIGHT_PAREN);
         }
 
         // Do we have an expression closure or a normal body?
-        tt = t.get();
+        tt = this.t.get(true);
         if (tt !== LEFT_CURLY)
-            t.unget();
+            this.t.unget();
 
         if (tt !== LEFT_CURLY) {
-            f.body = AssignExpression(t, x2);
-            if (f.body.isGenerator)
-                throw t.newSyntaxError("Generator returns a value");
+            f.body = this.AssignExpression();
         } else {
-            f.body = Script(t, inModule, true);
+            f.body = this.Script(inModule, true);
         }
-
-        if (tt === LEFT_CURLY)
-            t.mustMatch(RIGHT_CURLY);
-
-        f.end = t.token.end;
-        f.functionForm = functionForm;
-        if (functionForm === DECLARED_FORM)
-            x.parentScript.funDecls.push(f);
-        return f;
-    }
-
-    /*
-     * ModuleVariables :: (tokenizer, compiler context, MODULE node) -> void
-     *
-     * Parses a comma-separated list of module declarations (and maybe
-     * initializations).
-     */
-    function ModuleVariables(t, x, n) {
-        var n1, n2;
-        do {
-            n1 = Identifier(t, x);
-            if (t.match(ASSIGN)) {
-                n2 = ModuleExpression(t, x);
-                n1.initializer = n2;
-                if (n2.type === STRING)
-                    x.parentScript.modLoads.set(n1.value, n2.value);
-                else
-                    x.parentScript.modAssns.set(n1.value, n1);
-            }
-            n.push(n1);
-        } while (t.match(COMMA));
-    }
-
-    /*
-     * Variables :: (tokenizer, compiler context) -> node
-     *
-     * Parses a comma-separated list of var declarations (and maybe
-     * initializations).
-     */
-    function Variables(t, x, letBlock) {
-        var n, n2, ss, i, s, tt;
-
-        tt = t.token.type;
-        switch (tt) {
-          case VAR:
-          case CONST:
-            s = x.parentScript;
-            break;
-          case LET:
-            s = x.parentBlock;
-            break;
-          case LEFT_PAREN:
-            tt = LET;
-            s = letBlock;
-            break;
-        }
-
-        n = new Node(t, { type: tt, destructurings: [] });
-
-        do {
-            tt = t.get();
-            if (tt === LEFT_BRACKET || tt === LEFT_CURLY) {
-                // Need to unget to parse the full destructured expression.
-                t.unget();
-
-                var dexp = DestructuringExpression(t, x, true);
-
-                n2 = new Node(t, { type: IDENTIFIER,
-                                   name: dexp,
-                                   readOnly: n.type === CONST });
-                n.push(n2);
-                pushDestructuringVarDecls(n2.name.destructuredNames, s);
-                n.destructurings.push({ exp: dexp, decl: n2 });
-
-                if (x.inForLoopInit && t.peek() === IN) {
-                    continue;
-                }
-
-                t.mustMatch(ASSIGN);
-                if (t.token.assignOp)
-                    throw t.newSyntaxError("Invalid variable initialization");
-
-                n2.blockComment = t.lastBlockComment();
-                n2.initializer = AssignExpression(t, x);
-
-                continue;
-            }
-
-            if (tt !== IDENTIFIER)
-                throw t.newSyntaxError("missing variable name");
-
-            n2 = new Node(t, { type: IDENTIFIER,
-                               name: t.token.value,
-                               readOnly: n.type === CONST });
-            n.push(n2);
-            s.varDecls.push(n2);
-
-            if (t.match(ASSIGN)) {
-                var comment = t.lastBlockComment();
-                if (t.token.assignOp)
-                    throw t.newSyntaxError("Invalid variable initialization");
-
-                n2.initializer = AssignExpression(t, x);
-            } else {
-                var comment = t.lastBlockComment();
-            }
-            n2.blockComment = comment;
-        } while (t.match(COMMA));
-
-        return n;
-    }
-
-    /*
-     * LetBlock :: (tokenizer, compiler context, boolean) -> node
-     *
-     * Does not handle let inside of for loop init.
-     */
-    function LetBlock(t, x, isStatement) {
-        var n, n2;
-
-        // t.token.type must be LET
-        n = new Node(t, { type: LET_BLOCK, varDecls: [] });
-        t.mustMatch(LEFT_PAREN);
-        n.variables = Variables(t, x, n);
-        t.mustMatch(RIGHT_PAREN);
-
-        if (isStatement && t.peek() !== LEFT_CURLY) {
-            /*
-             * If this is really an expression in let statement guise, then we
-             * need to wrap the LET_BLOCK node in a SEMICOLON node so that we pop
-             * the return value of the expression.
-             */
-            n2 = new Node(t, { type: SEMICOLON,
-                               expression: n });
-            isStatement = false;
-        }
-
-        if (isStatement)
-            n.block = Block(t, x);
-        else
-            n.expression = AssignExpression(t, x);
-
-        return n;
-    }
-
-    function checkDestructuring(t, x, n, simpleNamesOnly) {
-        if (n.type === ARRAY_COMP)
-            throw t.newSyntaxError("Invalid array comprehension left-hand side");
-        if (n.type !== ARRAY_INIT && n.type !== OBJECT_INIT)
-            return;
-
-        var lhss = {};
-        var nn, n2, idx, sub, cc, c = n.children;
-        for (var i = 0, j = c.length; i < j; i++) {
-            if (!(nn = c[i]))
-                continue;
-            if (nn.type === PROPERTY_INIT) {
-                cc = nn.children;
-                sub = cc[1];
-                idx = cc[0].value;
-            } else if (n.type === OBJECT_INIT) {
-                // Do we have destructuring shorthand {foo, bar}?
-                sub = nn;
-                idx = nn.value;
-            } else {
-                sub = nn;
-                idx = i;
-            }
-
-            if (sub.type === ARRAY_INIT || sub.type === OBJECT_INIT) {
-                lhss[idx] = checkDestructuring(t, x, sub, simpleNamesOnly);
-            } else {
-                if (simpleNamesOnly && sub.type !== IDENTIFIER) {
-                    // In declarations, lhs must be simple names
-                    throw t.newSyntaxError("missing name in pattern");
-                }
-
-                lhss[idx] = sub;
-            }
-        }
-
-        return lhss;
-    }
-
-    function DestructuringExpression(t, x, simpleNamesOnly) {
-        var n = PrimaryExpression(t, x);
-        // Keep the list of lefthand sides for varDecls
-        n.destructuredNames = checkDestructuring(t, x, n, simpleNamesOnly);
-        return n;
-    }
-
-    function GeneratorExpression(t, x, e) {
-        return new Node(t, { type: GENERATOR,
-                             expression: e,
-                             tail: ComprehensionTail(t, x) });
-    }
-
-    function ComprehensionTail(t, x) {
-        var body, n, n2, n3, p;
-
-        // t.token.type must be FOR
-        body = new Node(t, { type: COMP_TAIL });
-
-        do {
-            // Comprehension tails are always for..in loops.
-            n = new Node(t, { type: FOR_IN, isLoop: true });
-            if (t.match(IDENTIFIER)) {
-                // But sometimes they're for each..in.
-                if (t.token.value === "each")
-                    n.isEach = true;
-                else
-                    t.unget();
-            }
-            p = MaybeLeftParen(t, x);
-            switch(t.get()) {
-              case LEFT_BRACKET:
-              case LEFT_CURLY:
-                t.unget();
-                // Destructured left side of for in comprehension tails.
-                n.iterator = DestructuringExpression(t, x);
-                break;
-
-              case IDENTIFIER:
-                n.iterator = n3 = new Node(t, { type: IDENTIFIER });
-                n3.name = n3.value;
-                n.varDecl = n2 = new Node(t, { type: VAR });
-                n2.push(n3);
-                x.parentScript.varDecls.push(n3);
-                // Don't add to varDecls since the semantics of comprehensions is
-                // such that the variables are in their own function when
-                // desugared.
-                break;
-
-              default:
-                throw t.newSyntaxError("missing identifier");
-            }
-            t.mustMatch(IN);
-            n.object = Expression(t, x);
-            MaybeRightParen(t, p);
-            body.push(n);
-        } while (t.match(FOR));
-
-        // Optional guard.
-        if (t.match(IF))
-            body.guard = HeadExpression(t, x);
-
-        return body;
-    }
-
-    function HeadExpression(t, x) {
-        var p = MaybeLeftParen(t, x);
-        var n = ParenExpression(t, x);
-        MaybeRightParen(t, p);
-        if (p === END && !n.parenthesized) {
-            var tt = t.peek();
-            if (tt !== LEFT_CURLY && !definitions.isStatementStartCode[tt])
-                throw t.newSyntaxError("Unparenthesized head followed by unbraced body");
-        }
-        return n;
-    }
-
-    function ParenExpression(t, x) {
-        // Always accept the 'in' operator in a parenthesized expression,
-        // where it's unambiguous, even if we might be parsing the init of a
-        // for statement.
-        var n = Expression(t, x.update({ inForLoopInit: x.inForLoopInit &&
-                                                        (t.token.type === LEFT_PAREN) }));
-
-        if (t.match(FOR)) {
-            if (n.type === YIELD && !n.parenthesized)
-                throw t.newSyntaxError("Yield expression must be parenthesized");
-            if (n.type === COMMA && !n.parenthesized)
-                throw t.newSyntaxError("Generator expression must be parenthesized");
-            n = GeneratorExpression(t, x, n);
-        }
-
-        return n;
-    }
-
-    /*
-     * Expression :: (tokenizer, compiler context) -> node
-     *
-     * Top-down expression parser matched against SpiderMonkey.
-     */
-    function Expression(t, x) {
-        var n, n2;
-
-        n = AssignExpression(t, x);
-        if (t.match(COMMA)) {
-            n2 = new Node(t, { type: COMMA });
-            n2.push(n);
-            n = n2;
-            do {
-                n2 = n.children[n.children.length-1];
-                if (n2.type === YIELD && !n2.parenthesized)
-                    throw t.newSyntaxError("Yield expression must be parenthesized");
-                n.push(AssignExpression(t, x));
-            } while (t.match(COMMA));
-        }
-
-        return n;
-    }
-
-    function AssignExpression(t, x) {
-        var n, lhs;
-
-        // Have to treat yield like an operand because it could be the leftmost
-        // operand of the expression.
-        if (t.match(YIELD, true))
-            return ReturnOrYield(t, x);
-
-        n = new Node(t, { type: ASSIGN });
-        lhs = ConditionalExpression(t, x);
-
-        if (!t.match(ASSIGN)) {
-            return lhs;
-        }
-
-        n.blockComment = t.lastBlockComment();
-
-        switch (lhs.type) {
-          case OBJECT_INIT:
-          case ARRAY_INIT:
-            lhs.destructuredNames = checkDestructuring(t, x, lhs);
-            // FALL THROUGH
-          case IDENTIFIER: case DOT: case INDEX: case CALL:
-            break;
-          default:
-            throw t.newSyntaxError("Bad left-hand side of assignment");
-            break;
-        }
-
-        n.assignOp = lhs.assignOp = t.token.assignOp;
-        n.push(lhs);
-        n.push(AssignExpression(t, x));
-
-        return n;
-    }
-
-    function ConditionalExpression(t, x) {
-        var n, n2;
-
-        n = OrExpression(t, x);
-        if (t.match(HOOK)) {
-            n2 = n;
-            n = new Node(t, { type: HOOK });
-            n.push(n2);
-            /*
-             * Always accept the 'in' operator in the middle clause of a ternary,
-             * where it's unambiguous, even if we might be parsing the init of a
-             * for statement.
-             */
-            n.push(AssignExpression(t, x.update({ inForLoopInit: false })));
-            if (!t.match(COLON))
-                throw t.newSyntaxError("missing : after ?");
-            n.push(AssignExpression(t, x));
-        }
-
-        return n;
-    }
-
-    function OrExpression(t, x) {
-        var n, n2;
-
-        n = AndExpression(t, x);
-        while (t.match(OR)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(AndExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function AndExpression(t, x) {
-        var n, n2;
-
-        n = BitwiseOrExpression(t, x);
-        while (t.match(AND)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(BitwiseOrExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function BitwiseOrExpression(t, x) {
-        var n, n2;
-
-        n = BitwiseXorExpression(t, x);
-        while (t.match(BITWISE_OR)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(BitwiseXorExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function BitwiseXorExpression(t, x) {
-        var n, n2;
-
-        n = BitwiseAndExpression(t, x);
-        while (t.match(BITWISE_XOR)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(BitwiseAndExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function BitwiseAndExpression(t, x) {
-        var n, n2;
-
-        n = EqualityExpression(t, x);
-        while (t.match(BITWISE_AND)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(EqualityExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function EqualityExpression(t, x) {
-        var n, n2;
-
-        n = RelationalExpression(t, x);
-        while (t.match(EQ) || t.match(NE) ||
-               t.match(STRICT_EQ) || t.match(STRICT_NE)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(RelationalExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function RelationalExpression(t, x) {
-        var n, n2;
-
-        /*
-         * Uses of the in operator in shiftExprs are always unambiguous,
-         * so unset the flag that prohibits recognizing it.
-         */
-        var x2 = x.update({ inForLoopInit: false });
-        n = ShiftExpression(t, x2);
-        while ((t.match(LT) || t.match(LE) || t.match(GE) || t.match(GT) ||
-               (!x.inForLoopInit && t.match(IN)) ||
-               t.match(INSTANCEOF))) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(ShiftExpression(t, x2));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function ShiftExpression(t, x) {
-        var n, n2;
-
-        n = AddExpression(t, x);
-        while (t.match(LSH) || t.match(RSH) || t.match(URSH)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(AddExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function AddExpression(t, x) {
-        var n, n2;
-
-        n = MultiplyExpression(t, x);
-        while (t.match(PLUS) || t.match(MINUS)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(MultiplyExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function MultiplyExpression(t, x) {
-        var n, n2;
-
-        n = UnaryExpression(t, x);
-        while (t.match(MUL) || t.match(DIV) || t.match(MOD)) {
-            n2 = new Node(t);
-            n2.push(n);
-            n2.push(UnaryExpression(t, x));
-            n = n2;
-        }
-
-        return n;
-    }
-
-    function UnaryExpression(t, x) {
-        var n, n2, tt;
-
-        switch (tt = t.get(true)) {
-          case DELETE: case VOID: case TYPEOF:
-          case NOT: case BITWISE_NOT: case PLUS: case MINUS:
-            if (tt === PLUS)
-                n = new Node(t, { type: UNARY_PLUS });
-            else if (tt === MINUS)
-                n = new Node(t, { type: UNARY_MINUS });
+    });
+
+    if (tt === LEFT_CURLY)
+        this.mustMatch(RIGHT_CURLY);
+
+    f.end = this.t.token.end;
+    f.functionForm = functionForm;
+    if (functionForm === DECLARED_FORM)
+        this.x.parentScript.funDecls.push(f);
+
+    if (this.x.inModule && !f.isExplicitGenerator && f.body.hasYield)
+        this.fail("yield in non-generator function");
+
+    if (f.isExplicitGenerator || f.body.hasYield)
+        f.body = this.newNode({ type: GENERATOR, body: f.body });
+
+    return f;
+}
+
+/*
+ * ModuleVariables :: (MODULE node) -> void
+ *
+ * Parses a comma-separated list of module declarations (and maybe
+ * initializations).
+ */
+Pp.ModuleVariables = function ModuleVariables(n) {
+    var n1, n2;
+    do {
+        n1 = this.Identifier();
+        if (this.match(ASSIGN)) {
+            n2 = this.ModuleExpression();
+            n1.initializer = n2;
+            if (n2.type === STRING)
+                this.x.parentScript.modLoads.set(n1.value, n2.value);
             else
-                n = new Node(t);
-            n.push(UnaryExpression(t, x));
+                this.x.parentScript.modAssns.set(n1.value, n1);
+        }
+        n.push(n1);
+    } while (this.match(COMMA));
+}
+
+/*
+ * Variables :: () -> node
+ *
+ * Parses a comma-separated list of var declarations (and maybe
+ * initializations).
+ */
+Pp.Variables = function Variables(letBlock) {
+    var n, n2, ss, i, s, tt;
+
+    tt = this.t.token.type;
+    switch (tt) {
+      case VAR:
+      case CONST:
+        s = this.x.parentScript;
+        break;
+      case LET:
+        s = this.x.parentBlock;
+        break;
+      case LEFT_PAREN:
+        tt = LET;
+        s = letBlock;
+        break;
+    }
+
+    n = this.newNode({ type: tt, destructurings: [] });
+
+    do {
+        tt = this.t.get();
+        if (tt === LEFT_BRACKET || tt === LEFT_CURLY) {
+            // Need to unget to parse the full destructured expression.
+            this.t.unget();
+
+            var dexp = this.DestructuringExpression(true);
+
+            n2 = this.newNode({ type: IDENTIFIER,
+                                name: dexp,
+                                readOnly: n.type === CONST });
+            n.push(n2);
+            pushDestructuringVarDecls(n2.name.destructuredNames, s);
+            n.destructurings.push({ exp: dexp, decl: n2 });
+
+            if (this.x.inForLoopInit && this.peek() === IN) {
+                continue;
+            }
+
+            this.mustMatch(ASSIGN);
+            if (this.t.token.assignOp)
+                this.fail("Invalid variable initialization");
+
+            n2.blockComment = this.t.lastBlockComment();
+            n2.initializer = this.AssignExpression();
+
+            continue;
+        }
+
+        if (tt !== IDENTIFIER)
+            this.fail("missing variable name");
+
+        n2 = this.newNode({ type: IDENTIFIER,
+                            name: this.t.token.value,
+                            readOnly: n.type === CONST });
+        n.push(n2);
+        s.varDecls.push(n2);
+
+        if (this.match(ASSIGN)) {
+            var comment = this.t.lastBlockComment();
+            if (this.t.token.assignOp)
+                this.fail("Invalid variable initialization");
+
+            n2.initializer = this.AssignExpression();
+        } else {
+            var comment = this.t.lastBlockComment();
+        }
+        n2.blockComment = comment;
+    } while (this.match(COMMA));
+
+    return n;
+}
+
+/*
+ * LetBlock :: (boolean) -> node
+ *
+ * Does not handle let inside of for loop init.
+ */
+Pp.LetBlock = function LetBlock(isStatement) {
+    var n, n2;
+
+    // t.token.type must be LET
+    n = this.newNode({ type: LET_BLOCK, varDecls: [] });
+    this.mustMatch(LEFT_PAREN);
+    n.variables = this.Variables(n);
+    this.mustMatch(RIGHT_PAREN);
+
+    if (isStatement && this.peek() !== LEFT_CURLY) {
+        /*
+         * If this is really an expression in let statement guise, then we
+         * need to wrap the LET_BLOCK node in a SEMICOLON node so that we pop
+         * the return value of the expression.
+         */
+        n2 = this.newNode({ type: SEMICOLON, expression: n });
+        isStatement = false;
+    }
+
+    if (isStatement)
+        n.block = this.Block();
+    else
+        n.expression = this.AssignExpression();
+
+    return n;
+}
+
+Pp.checkDestructuring = function checkDestructuring(n, simpleNamesOnly) {
+    if (n.type === ARRAY_COMP)
+        this.fail("Invalid array comprehension left-hand side");
+    if (n.type !== ARRAY_INIT && n.type !== OBJECT_INIT)
+        return;
+
+    var lhss = {};
+    var nn, n2, idx, sub, cc, c = n.children;
+    for (var i = 0, j = c.length; i < j; i++) {
+        if (!(nn = c[i]))
+            continue;
+        if (nn.type === PROPERTY_INIT) {
+            cc = nn.children;
+            sub = cc[1];
+            idx = cc[0].value;
+        } else if (n.type === OBJECT_INIT) {
+            // Do we have destructuring shorthand {foo, bar}?
+            sub = nn;
+            idx = nn.value;
+        } else {
+            sub = nn;
+            idx = i;
+        }
+
+        if (sub.type === ARRAY_INIT || sub.type === OBJECT_INIT) {
+            lhss[idx] = this.checkDestructuring(sub, simpleNamesOnly);
+        } else {
+            if (simpleNamesOnly && sub.type !== IDENTIFIER) {
+                // In declarations, lhs must be simple names
+                this.fail("missing name in pattern");
+            }
+
+            lhss[idx] = sub;
+        }
+    }
+
+    return lhss;
+}
+
+Pp.DestructuringExpression = function DestructuringExpression(simpleNamesOnly) {
+    var n = this.PrimaryExpression();
+    // Keep the list of lefthand sides for varDecls
+    n.destructuredNames = this.checkDestructuring(n, simpleNamesOnly);
+    return n;
+}
+
+Pp.GeneratorExpression = function GeneratorExpression(e) {
+    return this.newNode({ type: GENERATOR,
+                          expression: e,
+                          tail: this.ComprehensionTail() });
+}
+
+Pp.ComprehensionTail = function ComprehensionTail() {
+    var body, n, n2, n3, p;
+
+    // t.token.type must be FOR
+    body = this.newNode({ type: COMP_TAIL });
+
+    do {
+        // Comprehension tails are always for..in loops.
+        n = this.newNode({ type: FOR_IN, isLoop: true });
+        if (this.match(IDENTIFIER)) {
+            // But sometimes they're for each..in.
+            if (this.mozillaMode && this.t.token.value === "each")
+                n.isEach = true;
+            else
+                this.t.unget();
+        }
+        p = this.MaybeLeftParen();
+        switch(this.t.get()) {
+          case LEFT_BRACKET:
+          case LEFT_CURLY:
+            this.t.unget();
+            // Destructured left side of for in comprehension tails.
+            n.iterator = this.DestructuringExpression();
             break;
 
-          case INCREMENT:
-          case DECREMENT:
-            // Prefix increment/decrement.
-            n = new Node(t);
-            n.push(MemberExpression(t, x, true));
+          case IDENTIFIER:
+            n.iterator = n3 = this.newNode({ type: IDENTIFIER });
+            n3.name = n3.value;
+            n.varDecl = n2 = this.newNode({ type: VAR });
+            n2.push(n3);
+            this.x.parentScript.varDecls.push(n3);
+            // Don't add to varDecls since the semantics of comprehensions is
+            // such that the variables are in their own function when
+            // desugared.
             break;
 
           default:
-            t.unget();
-            n = MemberExpression(t, x, true);
-
-            // Don't look across a newline boundary for a postfix {in,de}crement.
-            if (t.tokens[(t.tokenIndex + t.lookahead - 1) & 3].lineno ===
-                t.lineno) {
-                if (t.match(INCREMENT) || t.match(DECREMENT)) {
-                    n2 = new Node(t, { postfix: true });
-                    n2.push(n);
-                    n = n2;
-                }
-            }
-            break;
+            this.fail("missing identifier");
         }
+        this.mustMatch(IN);
+        n.object = this.Expression();
+        this.MaybeRightParen(p);
+        body.push(n);
+    } while (this.match(FOR));
 
-        return n;
+    // Optional guard.
+    if (this.match(IF))
+        body.guard = this.HeadExpression();
+
+    return body;
+}
+
+Pp.HeadExpression = function HeadExpression() {
+    var p = this.MaybeLeftParen();
+    var n = this.ParenExpression();
+    this.MaybeRightParen(p);
+    if (p === END && !n.parenthesized) {
+        var tt = this.peek();
+        if (tt !== LEFT_CURLY && !definitions.isStatementStartCode[tt])
+            this.fail("Unparenthesized head followed by unbraced body");
+    }
+    return n;
+}
+
+Pp.ParenExpression = function ParenExpression() {
+    // Always accept the 'in' operator in a parenthesized expression,
+    // where it's unambiguous, even if we might be parsing the init of a
+    // for statement.
+    var x2 = this.x.update({
+        inForLoopInit: this.x.inForLoopInit && (this.t.token.type === LEFT_PAREN)
+    });
+    var n = this.withContext(x2, function() {
+        return this.Expression();
+    });
+    if (this.match(FOR)) {
+        if (n.type === YIELD && !n.parenthesized)
+            this.fail("Yield expression must be parenthesized");
+        if (n.type === COMMA && !n.parenthesized)
+            this.fail("Generator expression must be parenthesized");
+        n = this.GeneratorExpression(n);
     }
 
-    function MemberExpression(t, x, allowCallSyntax) {
-        var n, n2, name, tt;
+    return n;
+}
 
-        if (t.match(NEW)) {
-            n = new Node(t);
-            n.push(MemberExpression(t, x, false));
-            if (t.match(LEFT_PAREN)) {
-                n.type = NEW_WITH_ARGS;
-                n.push(ArgumentList(t, x));
-            }
-        } else {
-            n = PrimaryExpression(t, x);
-        }
+/*
+ * Expression :: () -> node
+ *
+ * Top-down expression parser matched against SpiderMonkey.
+ */
+Pp.Expression = function Expression() {
+    var n, n2;
 
-        while ((tt = t.get()) !== END) {
-            switch (tt) {
-              case DOT:
-                n2 = new Node(t);
-                n2.push(n);
-                n2.push(IdentifierName(t));
-                break;
+    n = this.AssignExpression();
+    if (this.match(COMMA)) {
+        n2 = this.newNode({ type: COMMA });
+        n2.push(n);
+        n = n2;
+        do {
+            n2 = n.children[n.children.length-1];
+            if (n2.type === YIELD && !n2.parenthesized)
+                this.fail("Yield expression must be parenthesized");
+            n.push(this.AssignExpression());
+        } while (this.match(COMMA));
+    }
 
-              case LEFT_BRACKET:
-                n2 = new Node(t, { type: INDEX });
-                n2.push(n);
-                n2.push(Expression(t, x));
-                t.mustMatch(RIGHT_BRACKET);
-                break;
+    return n;
+}
 
-              case LEFT_PAREN:
-                if (allowCallSyntax) {
-                    n2 = new Node(t, { type: CALL });
-                    n2.push(n);
-                    n2.push(ArgumentList(t, x));
-                    break;
-                }
+Pp.AssignExpression = function AssignExpression() {
+    var n, lhs;
 
-                // FALL THROUGH
-              default:
-                t.unget();
-                return n;
-            }
+    // Have to treat yield like an operand because it could be the leftmost
+    // operand of the expression.
+    if (this.match(YIELD, true))
+        return this.ReturnOrYield();
 
+    n = this.newNode({ type: ASSIGN });
+    lhs = this.ConditionalExpression();
+
+    if (!this.match(ASSIGN)) {
+        return lhs;
+    }
+
+    n.blockComment = this.t.lastBlockComment();
+
+    switch (lhs.type) {
+      case OBJECT_INIT:
+      case ARRAY_INIT:
+        lhs.destructuredNames = this.checkDestructuring(lhs);
+        // FALL THROUGH
+      case IDENTIFIER: case DOT: case INDEX: case CALL:
+        break;
+      default:
+        this.fail("Bad left-hand side of assignment");
+        break;
+    }
+
+    n.assignOp = lhs.assignOp = this.t.token.assignOp;
+    n.push(lhs);
+    n.push(this.AssignExpression());
+
+    return n;
+}
+
+Pp.ConditionalExpression = function ConditionalExpression() {
+    var n, n2;
+
+    n = this.OrExpression();
+    if (this.match(HOOK)) {
+        n2 = n;
+        n = this.newNode({ type: HOOK });
+        n.push(n2);
+        /*
+         * Always accept the 'in' operator in the middle clause of a ternary,
+         * where it's unambiguous, even if we might be parsing the init of a
+         * for statement.
+         */
+        var x2 = this.x.update({ inForLoopInit: false });
+        this.withContext(x2, function() {
+            n.push(this.AssignExpression());
+        });
+        if (!this.match(COLON))
+            this.fail("missing : after ?");
+        n.push(this.AssignExpression());
+    }
+
+    return n;
+}
+
+Pp.OrExpression = function OrExpression() {
+    var n, n2;
+
+    n = this.AndExpression();
+    while (this.match(OR)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.AndExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.AndExpression = function AndExpression() {
+    var n, n2;
+
+    n = this.BitwiseOrExpression();
+    while (this.match(AND)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.BitwiseOrExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.BitwiseOrExpression = function BitwiseOrExpression() {
+    var n, n2;
+
+    n = this.BitwiseXorExpression();
+    while (this.match(BITWISE_OR)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.BitwiseXorExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.BitwiseXorExpression = function BitwiseXorExpression() {
+    var n, n2;
+
+    n = this.BitwiseAndExpression();
+    while (this.match(BITWISE_XOR)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.BitwiseAndExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.BitwiseAndExpression = function BitwiseAndExpression() {
+    var n, n2;
+
+    n = this.EqualityExpression();
+    while (this.match(BITWISE_AND)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.EqualityExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.EqualityExpression = function EqualityExpression() {
+    var n, n2;
+
+    n = this.RelationalExpression();
+    while (this.match(EQ) || this.match(NE) ||
+           this.match(STRICT_EQ) || this.match(STRICT_NE)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.RelationalExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.RelationalExpression = function RelationalExpression() {
+    var n, n2;
+
+    /*
+     * Uses of the in operator in shiftExprs are always unambiguous,
+     * so unset the flag that prohibits recognizing it.
+     */
+    var x2 = this.x.update({ inForLoopInit: false });
+    this.withContext(x2, function() {
+        n = this.ShiftExpression();
+        while ((this.match(LT) || this.match(LE) || this.match(GE) || this.match(GT) ||
+                (!this.x.inForLoopInit && this.match(IN)) ||
+                this.match(INSTANCEOF))) {
+            n2 = this.newNode();
+            n2.push(n);
+            n2.push(this.ShiftExpression());
             n = n2;
         }
+    });
 
-        return n;
+    return n;
+}
+
+Pp.ShiftExpression = function ShiftExpression() {
+    var n, n2;
+
+    n = this.AddExpression();
+    while (this.match(LSH) || this.match(RSH) || this.match(URSH)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.AddExpression());
+        n = n2;
     }
 
-    function ArgumentList(t, x) {
-        var n, n2;
+    return n;
+}
 
-        n = new Node(t, { type: LIST });
-        if (t.match(RIGHT_PAREN, true))
-            return n;
-        do {
-            n2 = AssignExpression(t, x);
-            if (n2.type === YIELD && !n2.parenthesized && t.peek() === COMMA)
-                throw t.newSyntaxError("Yield expression must be parenthesized");
-            if (t.match(FOR)) {
-                n2 = GeneratorExpression(t, x, n2);
-                if (n.children.length > 1 || t.peek(true) === COMMA)
-                    throw t.newSyntaxError("Generator expression must be parenthesized");
+Pp.AddExpression = function AddExpression() {
+    var n, n2;
+
+    n = this.MultiplyExpression();
+    while (this.match(PLUS) || this.match(MINUS)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.MultiplyExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.MultiplyExpression = function MultiplyExpression() {
+    var n, n2;
+
+    n = this.UnaryExpression();
+    while (this.match(MUL) || this.match(DIV) || this.match(MOD)) {
+        n2 = this.newNode();
+        n2.push(n);
+        n2.push(this.UnaryExpression());
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.UnaryExpression = function UnaryExpression() {
+    var n, n2, tt;
+
+    switch (tt = this.t.get(true)) {
+      case DELETE: case VOID: case TYPEOF:
+      case NOT: case BITWISE_NOT: case PLUS: case MINUS:
+        if (tt === PLUS)
+            n = this.newNode({ type: UNARY_PLUS });
+        else if (tt === MINUS)
+            n = this.newNode({ type: UNARY_MINUS });
+        else
+            n = this.newNode();
+        n.push(this.UnaryExpression());
+        break;
+
+      case INCREMENT:
+      case DECREMENT:
+        // Prefix increment/decrement.
+        n = this.newNode();
+        n.push(this.MemberExpression(true));
+        break;
+
+      default:
+        this.t.unget();
+        n = this.MemberExpression(true);
+
+        // Don't look across a newline boundary for a postfix {in,de}crement.
+        if (this.t.tokens[(this.t.tokenIndex + this.t.lookahead - 1) & 3].lineno ===
+            this.t.lineno) {
+            if (this.match(INCREMENT) || this.match(DECREMENT)) {
+                n2 = this.newNode({ postfix: true });
+                n2.push(n);
+                n = n2;
             }
-            n.push(n2);
-        } while (t.match(COMMA));
-        t.mustMatch(RIGHT_PAREN);
-
-        return n;
+        }
+        break;
     }
 
-    function PrimaryExpression(t, x) {
-        var n, n2, tt = t.get(true);
+    return n;
+}
 
+Pp.MemberExpression = function MemberExpression(allowCallSyntax) {
+    var n, n2, name, tt;
+
+    if (this.match(NEW)) {
+        n = this.newNode();
+        n.push(this.MemberExpression(false));
+        if (this.match(LEFT_PAREN)) {
+            n.type = NEW_WITH_ARGS;
+            n.push(this.ArgumentList());
+        }
+    } else {
+        n = this.PrimaryExpression();
+    }
+
+    while ((tt = this.t.get()) !== END) {
         switch (tt) {
-          case FUNCTION:
-            n = FunctionDefinition(t, x, false, EXPRESSED_FORM);
+          case DOT:
+            n2 = this.newNode();
+            n2.push(n);
+            n2.push(this.IdentifierName());
             break;
 
           case LEFT_BRACKET:
-            n = new Node(t, { type: ARRAY_INIT });
-            while ((tt = t.peek(true)) !== RIGHT_BRACKET) {
-                if (tt === COMMA) {
-                    t.get();
-                    n.push(null);
-                    continue;
-                }
-                n.push(AssignExpression(t, x));
-                if (tt !== COMMA && !t.match(COMMA))
-                    break;
-            }
-
-            // If we matched exactly one element and got a FOR, we have an
-            // array comprehension.
-            if (n.children.length === 1 && t.match(FOR)) {
-                n2 = new Node(t, { type: ARRAY_COMP,
-                                   expression: n.children[0],
-                                   tail: ComprehensionTail(t, x) });
-                n = n2;
-            }
-            t.mustMatch(RIGHT_BRACKET);
-            break;
-
-          case LEFT_CURLY:
-            var id, fd;
-            n = new Node(t, { type: OBJECT_INIT });
-
-          object_init:
-            if (!t.match(RIGHT_CURLY)) {
-                do {
-                    tt = t.get();
-                    if ((t.token.value === "get" || t.token.value === "set") &&
-                        t.peek() === IDENTIFIER) {
-                        if (x.ecma3OnlyMode)
-                            throw t.newSyntaxError("Illegal property accessor");
-                        n.push(FunctionDefinition(t, x, true, EXPRESSED_FORM));
-                    } else {
-                        var comments = t.blockComments;
-                        switch (tt) {
-                          case IDENTIFIER: case NUMBER: case STRING:
-                            id = new Node(t, { type: IDENTIFIER });
-                            break;
-                          case RIGHT_CURLY:
-                            if (x.ecma3OnlyMode)
-                                throw t.newSyntaxError("Illegal trailing ,");
-                            break object_init;
-                          default:
-                            if (t.token.value in definitions.keywords) {
-                                id = new Node(t, { type: IDENTIFIER });
-                                break;
-                            }
-                            throw t.newSyntaxError("Invalid property name");
-                        }
-                        if (t.match(COLON)) {
-                            n2 = new Node(t, { type: PROPERTY_INIT });
-                            n2.push(id);
-                            n2.push(AssignExpression(t, x));
-                            n2.blockComments = comments;
-                            n.push(n2);
-                        } else {
-                            // Support, e.g., |var {x, y} = o| as destructuring shorthand
-                            // for |var {x: x, y: y} = o|, per proposed JS2/ES4 for JS1.8.
-                            if (t.peek() !== COMMA && t.peek() !== RIGHT_CURLY)
-                                throw t.newSyntaxError("missing : after property");
-                            n.push(id);
-                        }
-                    }
-                } while (t.match(COMMA));
-                t.mustMatch(RIGHT_CURLY);
-            }
+            n2 = this.newNode({ type: INDEX });
+            n2.push(n);
+            n2.push(this.Expression());
+            this.mustMatch(RIGHT_BRACKET);
             break;
 
           case LEFT_PAREN:
-            n = ParenExpression(t, x);
-            t.mustMatch(RIGHT_PAREN);
-            n.parenthesized = true;
-            break;
-
-          case LET:
-            n = LetBlock(t, x, false);
-            break;
-
-          case NULL: case THIS: case TRUE: case FALSE:
-          case IDENTIFIER: case NUMBER: case STRING: case REGEXP:
-            n = new Node(t);
-            break;
-
-          default:
-            throw t.newSyntaxError("missing operand");
-            break;
-        }
-
-        return n;
-    }
-
-    /*
-     * parse :: (source, filename, line number) -> node
-     */
-    function parse(s, f, l) {
-        var t = new lexer.Tokenizer(s, f, l);
-        var n = Script(t, false, false);
-        if (!t.done)
-            throw t.newSyntaxError("Syntax error");
-
-        return n;
-    }
-
-    /*
-     * parseStdin :: (source, {line number}, string, (string) -> boolean) -> program node
-     */
-    function parseStdin(s, ln, prefix, isCommand) {
-        // the special .begin command is only recognized at the beginning
-        if (s.match(/^[\s]*\.begin[\s]*$/)) {
-            ++ln.value;
-            return parseMultiline(ln, prefix);
-        }
-
-        // commands at the beginning are treated as the entire input
-        if (isCommand(s.trim()))
-            s = "";
-
-        for (;;) {
-            try {
-                var t = new lexer.Tokenizer(s, "stdin", ln.value);
-                var n = Script(t, false, false);
-                ln.value = t.lineno;
-                return n;
-            } catch (e) {
-                if (!t.unexpectedEOF)
-                    throw e;
-
-                // commands in the middle are not treated as part of the input
-                var more;
-                do {
-                    if (prefix)
-                        putstr(prefix);
-                    more = readline();
-                    if (!more)
-                        throw e;
-                } while (isCommand(more.trim()));
-
-                s += "\n" + more;
-            }
-        }
-    }
-
-    /*
-     * parseMultiline :: ({line number}, string | null) -> program node
-     */
-    function parseMultiline(ln, prefix) {
-        var s = "";
-        for (;;) {
-            if (prefix)
-                putstr(prefix);
-            var more = readline();
-            if (more === null)
-                return null;
-            // the only command recognized in multiline mode is .end
-            if (more.match(/^[\s]*\.end[\s]*$/))
+            if (allowCallSyntax) {
+                n2 = this.newNode({ type: CALL });
+                n2.push(n);
+                n2.push(this.ArgumentList());
                 break;
+            }
+
+            // FALL THROUGH
+          default:
+            this.t.unget();
+            return n;
+        }
+
+        n = n2;
+    }
+
+    return n;
+}
+
+Pp.ArgumentList = function ArgumentList() {
+    var n, n2;
+
+    n = this.newNode({ type: LIST });
+    if (this.match(RIGHT_PAREN, true))
+        return n;
+    do {
+        n2 = this.AssignExpression();
+        if (n2.type === YIELD && !n2.parenthesized && this.peek() === COMMA)
+            this.fail("Yield expression must be parenthesized");
+        if (this.match(FOR)) {
+            n2 = this.GeneratorExpression(n2);
+            if (n.children.length > 1 || this.peek(true) === COMMA)
+                this.fail("Generator expression must be parenthesized");
+        }
+        n.push(n2);
+    } while (this.match(COMMA));
+    this.mustMatch(RIGHT_PAREN);
+
+    return n;
+}
+
+Pp.PrimaryExpression = function PrimaryExpression() {
+    var n, n2, tt = this.t.get(true);
+
+    switch (tt) {
+      case FUNCTION:
+        n = this.FunctionDefinition(false, EXPRESSED_FORM);
+        break;
+
+      case LEFT_BRACKET:
+        n = this.newNode({ type: ARRAY_INIT });
+        while ((tt = this.peek(true)) !== RIGHT_BRACKET) {
+            if (tt === COMMA) {
+                this.t.get();
+                n.push(null);
+                continue;
+            }
+            n.push(this.AssignExpression());
+            if (tt !== COMMA && !this.match(COMMA))
+                break;
+        }
+
+        // If we matched exactly one element and got a FOR, we have an
+        // array comprehension.
+        if (n.children.length === 1 && this.match(FOR)) {
+            n2 = this.newNode({ type: ARRAY_COMP,
+                                expression: n.children[0],
+                                tail: this.ComprehensionTail() });
+            n = n2;
+        }
+        this.mustMatch(RIGHT_BRACKET);
+        break;
+
+      case LEFT_CURLY:
+        var id, fd;
+        n = this.newNode({ type: OBJECT_INIT });
+
+        object_init:
+        if (!this.match(RIGHT_CURLY)) {
+            do {
+                tt = this.t.get();
+                if ((this.t.token.value === "get" || this.t.token.value === "set") &&
+                    this.peek() === IDENTIFIER) {
+                    n.push(this.FunctionDefinition(true, EXPRESSED_FORM));
+                } else {
+                    var comments = this.t.blockComments;
+                    switch (tt) {
+                      case IDENTIFIER: case NUMBER: case STRING:
+                        id = this.newNode({ type: IDENTIFIER });
+                        break;
+                      case RIGHT_CURLY:
+                        break object_init;
+                      default:
+                        if (this.t.token.value in definitions.keywords) {
+                            id = this.newNode({ type: IDENTIFIER });
+                            break;
+                        }
+                        this.fail("Invalid property name");
+                    }
+                    if (this.match(COLON)) {
+                        n2 = this.newNode({ type: PROPERTY_INIT });
+                        n2.push(id);
+                        n2.push(this.AssignExpression());
+                        n2.blockComments = comments;
+                        n.push(n2);
+                    } else {
+                        // Support, e.g., |var {x, y} = o| as destructuring shorthand
+                        // for |var {x: x, y: y} = o|, per proposed JS2/ES4 for JS1.8.
+                        if (this.peek() !== COMMA && this.peek() !== RIGHT_CURLY)
+                            this.fail("missing : after property");
+                        n.push(id);
+                    }
+                }
+            } while (this.match(COMMA));
+            this.mustMatch(RIGHT_CURLY);
+        }
+        break;
+
+      case LEFT_PAREN:
+        n = this.ParenExpression();
+        this.mustMatch(RIGHT_PAREN);
+        n.parenthesized = true;
+        break;
+
+      case LET:
+        n = this.LetBlock(false);
+        break;
+
+      case NULL: case THIS: case TRUE: case FALSE:
+      case IDENTIFIER: case NUMBER: case STRING: case REGEXP:
+        n = this.newNode();
+        break;
+
+      default:
+        this.fail("missing operand; found " + definitions.tokens[tt]);
+        break;
+    }
+
+    return n;
+}
+
+/*
+ * parse :: (source, filename, line number) -> node
+ */
+function parse(s, f, l) {
+    var t = new Tokenizer(s, f, l, options.allowHTMLComments);
+    var p = new Parser(t);
+    return p.Script(false, false, true);
+}
+
+/*
+ * parseFunction :: (source, boolean,
+ *                   DECLARED_FORM or EXPRESSED_FORM or STATEMENT_FORM,
+ *                   filename, line number)
+ *               -> node
+ */
+function parseFunction(s, requireName, form, f, l) {
+    var t = new Tokenizer(s, f, l);
+    var p = new Parser(t);
+    p.x = new StaticContext(null, null, false, false, false);
+    return p.FunctionDefinition(requireName, form);
+}
+
+/*
+ * parseStdin :: (source, {line number}, string, (string) -> boolean) -> program node
+ */
+function parseStdin(s, ln, prefix, isCommand) {
+    // the special .begin command is only recognized at the beginning
+    if (s.match(/^[\s]*\.begin[\s]*$/)) {
+        ++ln.value;
+        return parseMultiline(ln, prefix);
+    }
+
+    // commands at the beginning are treated as the entire input
+    if (isCommand(s.trim()))
+        s = "";
+
+    for (;;) {
+        try {
+            var t = new Tokenizer(s, "stdin", ln.value, false);
+            var p = new Parser(t);
+            var n = p.Script(false, false);
+            ln.value = t.lineno;
+            return n;
+        } catch (e) {
+            if (!p.unexpectedEOF)
+                throw e;
+
+            // commands in the middle are not treated as part of the input
+            var more;
+            do {
+                if (prefix)
+                    putstr(prefix);
+                more = readline();
+                if (!more)
+                    throw e;
+            } while (isCommand(more.trim()));
+
             s += "\n" + more;
         }
-        var t = new lexer.Tokenizer(s, "stdin", ln.value);
-        var n = Script(t, false, false);
-        ln.value = t.lineno;
-        return n;
     }
+}
 
-    module.exports = {
-        parse: parse,
-        parseStdin: parseStdin,
-        Node: Node,
-        SyntheticNode: SyntheticNode,
-        DECLARED_FORM: DECLARED_FORM,
-        EXPRESSED_FORM: EXPRESSED_FORM,
-        STATEMENT_FORM: STATEMENT_FORM,
-        Tokenizer: lexer.Tokenizer,
-        FunctionDefinition: FunctionDefinition,
-        Module: Module,
-        Export: Export
-    };
+/*
+ * parseMultiline :: ({line number}, string | null) -> program node
+ */
+function parseMultiline(ln, prefix) {
+    var s = "";
+    for (;;) {
+        if (prefix)
+            putstr(prefix);
+        var more = readline();
+        if (more === null)
+            return null;
+        // the only command recognized in multiline mode is .end
+        if (more.match(/^[\s]*\.end[\s]*$/))
+            break;
+        s += "\n" + more;
+    }
+    var t = new Tokenizer(s, "stdin", ln.value, false);
+    var p = new Parser(t);
+    var n = p.Script(false, false);
+    ln.value = t.lineno;
+    return n;
+}
+
+exports.parse = parse;
+exports.parseStdin = parseStdin;
+exports.parseFunction = parseFunction;
+exports.Node = Node;
+exports.DECLARED_FORM = DECLARED_FORM;
+exports.EXPRESSED_FORM = EXPRESSED_FORM;
+exports.STATEMENT_FORM = STATEMENT_FORM;
+exports.Tokenizer = Tokenizer;
+exports.Parser = Parser;
+exports.Module = Module;
+exports.Export = Export;
 
 });/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
@@ -9100,6 +9264,7 @@ define('ace/narcissus/jsparse', ['require', 'exports', 'module' , 'ace/narcissus
  *   Tom Austin <taustin@ucsc.edu>
  *   Brendan Eich <brendan@mozilla.org>
  *   Shu-Yu Guo <shu@rfrn.org>
+ *   Stephan Herhut <stephan.a.herhut@intel.com>
  *   Dave Herman <dherman@mozilla.com>
  *   Dimitris Vardoulakis <dimvar@ccs.neu.edu>
  *   Patrick Walton <pcwalton@mozilla.com>
@@ -9124,507 +9289,554 @@ define('ace/narcissus/jsparse', ['require', 'exports', 'module' , 'ace/narcissus
  * Lexical scanner.
  */
 
- define('ace/narcissus/jslex', ['require', 'exports', 'module' , 'ace/narcissus/jsdefs'], function(require, exports, module) {
+ define('ace/narcissus/lexer', ['require', 'exports', 'module' , 'ace/narcissus/definitions'], function(require, exports, module) {
 
-    var definitions = require("./jsdefs");
+var definitions = require('./definitions');
 
-    // Set constants in the local scope.
-    eval(definitions.consts);
+// Set constants in the local scope.
+eval(definitions.consts);
 
-    // Banned keywords by language version
-    const blackLists = { 160: {}, 185: {}, harmony: {} };
-    blackLists[160][LET] = true;
-    blackLists[160][MODULE] = true;
-    blackLists[160][YIELD] = true;
-    blackLists[185][MODULE] = true;
+// Build up a trie of operator tokens.
+var opTokens = {};
+for (var op in definitions.opTypeNames) {
+    if (op === '\n' || op === '.')
+        continue;
 
-    // Build up a trie of operator tokens.
-    var opTokens = {};
-    for (var op in definitions.opTypeNames) {
-        if (op === '\n' || op === '.')
-            continue;
+    var node = opTokens;
+    for (var i = 0; i < op.length; i++) {
+        var ch = op[i];
+        if (!(ch in node))
+            node[ch] = {};
+        node = node[ch];
+        node.op = op;
+    }
+}
 
-        var node = opTokens;
-        for (var i = 0; i < op.length; i++) {
-            var ch = op[i];
-            if (!(ch in node))
-                node[ch] = {};
-            node = node[ch];
-            node.op = op;
+/*
+ * Since JavaScript provides no convenient way to determine if a
+ * character is in a particular Unicode category, we use
+ * metacircularity to accomplish this (oh yeaaaah!)
+ */
+function isValidIdentifierChar(ch, first) {
+    // check directly for ASCII
+    if (ch <= "\u007F") {
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === '$' || ch === '_' ||
+            (!first && (ch >= '0' && ch <= '9'))) {
+            return true;
         }
+        return false;
     }
 
-    /*
-     * Tokenizer :: (source, filename, line number) -> Tokenizer
-     */
-    function Tokenizer(s, f, l) {
-        this.cursor = 0;
-        this.source = String(s);
-        this.tokens = [];
-        this.tokenIndex = 0;
-        this.lookahead = 0;
+    // create an object to test this in
+    var x = {};
+    x["x"+ch] = true;
+    x[ch] = true;
+
+    // then use eval to determine if it's a valid character
+    var valid = false;
+    try {
+        valid = (Function("x", "return (x." + (first?"":"x") + ch + ");")(x) === true);
+    } catch (ex) {}
+
+    return valid;
+}
+
+function isIdentifier(str) {
+    if (typeof str !== "string")
+        return false;
+
+    if (str.length === 0)
+        return false;
+
+    if (!isValidIdentifierChar(str[0], true))
+        return false;
+
+    for (var i = 1; i < str.length; i++) {
+        if (!isValidIdentifierChar(str[i], false))
+            return false;
+    }
+
+    return true;
+}
+
+/*
+ * Tokenizer :: (source, filename, line number, boolean) -> Tokenizer
+ */
+function Tokenizer(s, f, l, allowHTMLComments) {
+    this.cursor = 0;
+    this.source = String(s);
+    this.tokens = [];
+    this.tokenIndex = 0;
+    this.lookahead = 0;
+    this.scanNewlines = false;
+    this.filename = f || "";
+    this.lineno = l || 1;
+    this.allowHTMLComments = allowHTMLComments;
+    this.blockComments = null;
+}
+
+Tokenizer.prototype = {
+    get done() {
+        // We need to set scanOperand to true here because the first thing
+        // might be a regexp.
+        return this.peek(true) === END;
+    },
+
+    get token() {
+        return this.tokens[this.tokenIndex];
+    },
+
+    match: function (tt, scanOperand, keywordIsName) {
+        return this.get(scanOperand, keywordIsName) === tt || this.unget();
+    },
+
+    mustMatch: function (tt, keywordIsName) {
+        if (!this.match(tt, false, keywordIsName)) {
+            throw this.newSyntaxError("Missing " +
+                                      definitions.tokens[tt].toLowerCase());
+        }
+        return this.token;
+    },
+
+    peek: function (scanOperand) {
+        var tt, next;
+        if (this.lookahead) {
+            next = this.tokens[(this.tokenIndex + this.lookahead) & 3];
+            tt = (this.scanNewlines && next.lineno !== this.lineno)
+                ? NEWLINE
+                : next.type;
+        } else {
+            tt = this.get(scanOperand);
+            this.unget();
+        }
+        return tt;
+    },
+
+    peekOnSameLine: function (scanOperand) {
+        this.scanNewlines = true;
+        var tt = this.peek(scanOperand);
         this.scanNewlines = false;
-        this.unexpectedEOF = false;
-        this.filename = f || "";
-        this.lineno = l || 1;
-        this.blackList = blackLists[Narcissus.options.version];
-        this.blockComments = null;
-    }
+        return tt;
+    },
 
-    Tokenizer.prototype = {
-        get done() {
-            // We need to set scanOperand to true here because the first thing
-            // might be a regexp.
-            return this.peek(true) === END;
-        },
+    lastBlockComment: function() {
+        var length = this.blockComments.length;
+        return length ? this.blockComments[length - 1] : null;
+    },
 
-        get token() {
-            return this.tokens[this.tokenIndex];
-        },
+    // Eat comments and whitespace.
+    skip: function () {
+        var input = this.source;
+        this.blockComments = [];
+        for (;;) {
+            var ch = input[this.cursor++];
+            var next = input[this.cursor];
+            // handle \r, \r\n and (always preferable) \n
+            if (ch === '\r') {
+                // if the next character is \n, we don't care about this at all
+                if (next === '\n') continue;
 
-        match: function (tt, scanOperand) {
-            return this.get(scanOperand) === tt || this.unget();
-        },
-
-        mustMatch: function (tt) {
-            if (!this.match(tt)) {
-                throw this.newSyntaxError("Missing " +
-                                          definitions.tokens[tt].toLowerCase());
+                // otherwise, we want to consider this as a newline
+                ch = '\n';
             }
-            return this.token;
-        },
 
-        peek: function (scanOperand) {
-            var tt, next;
-            if (this.lookahead) {
-                next = this.tokens[(this.tokenIndex + this.lookahead) & 3];
-                tt = (this.scanNewlines && next.lineno !== this.lineno)
-                     ? NEWLINE
-                     : next.type;
-            } else {
-                tt = this.get(scanOperand);
-                this.unget();
-            }
-            return tt;
-        },
+            if (ch === '\n' && !this.scanNewlines) {
+                this.lineno++;
+            } else if (ch === '/' && next === '*') {
+                var commentStart = ++this.cursor;
+                for (;;) {
+                    ch = input[this.cursor++];
+                    if (ch === undefined)
+                        throw this.newSyntaxError("Unterminated comment");
 
-        peekOnSameLine: function (scanOperand) {
-            this.scanNewlines = true;
-            var tt = this.peek(scanOperand);
-            this.scanNewlines = false;
-            return tt;
-        },
-
-        lastBlockComment: function() {
-            var length = this.blockComments.length;
-            return length ? this.blockComments[length - 1] : null;
-        },
-
-        // Eat comments and whitespace.
-        skip: function () {
-            var input = this.source;
-            this.blockComments = [];
-            for (;;) {
-                var ch = input[this.cursor++];
-                var next = input[this.cursor];
-                // handle \r, \r\n and (always preferable) \n
-                if (ch === '\r') {
-                    // if the next character is \n, we don't care about this at all
-                    if (next === '\n') continue;
-
-                    // otherwise, we want to consider this as a newline
-                    ch = '\n';
-                }
-
-                if (ch === '\n' && !this.scanNewlines) {
-                    this.lineno++;
-                } else if (ch === '/' && next === '*') {
-                    var commentStart = ++this.cursor;
-                    for (;;) {
-                        ch = input[this.cursor++];
-                        if (ch === undefined)
-                            throw this.newSyntaxError("Unterminated comment");
-
-                        if (ch === '*') {
-                            next = input[this.cursor];
-                            if (next === '/') {
-                                var commentEnd = this.cursor - 1;
-                                this.cursor++;
-                                break;
-                            }
-                        } else if (ch === '\n') {
-                            this.lineno++;
-                        }
-                    }
-                    this.blockComments.push(input.substring(commentStart, commentEnd));
-                } else if (ch === '/' && next === '/') {
-                    this.cursor++;
-                    for (;;) {
-                        ch = input[this.cursor++];
+                    if (ch === '*') {
                         next = input[this.cursor];
-                        if (ch === undefined)
-                            return;
-
-                        if (ch === '\r') {
-                            // check for \r\n
-                            if (next !== '\n') ch = '\n';
-                        }
-
-                        if (ch === '\n') {
-                            if (this.scanNewlines) {
-                                this.cursor--;
-                            } else {
-                                this.lineno++;
-                            }
+                        if (next === '/') {
+                            var commentEnd = this.cursor - 1;
+                            this.cursor++;
                             break;
                         }
+                    } else if (ch === '\n') {
+                        this.lineno++;
                     }
-                } else if (!(ch in definitions.whitespace)) {
-                    this.cursor--;
-                    return;
                 }
-            }
-        },
-
-        // Lex the exponential part of a number, if present. Return true iff an
-        // exponential part was found.
-        lexExponent: function() {
-            var input = this.source;
-            var next = input[this.cursor];
-            if (next === 'e' || next === 'E') {
+                this.blockComments.push(input.substring(commentStart, commentEnd));
+            } else if ((ch === '/' && next === '/') ||
+                       (this.allowHTMLComments && ch === '<' && next === '!' &&
+                        input[this.cursor + 1] === '-' && input[this.cursor + 2] === '-' &&
+                        (this.cursor += 2))) {
                 this.cursor++;
-                ch = input[this.cursor++];
-                if (ch === '+' || ch === '-')
+                for (;;) {
                     ch = input[this.cursor++];
+                    next = input[this.cursor];
+                    if (ch === undefined)
+                        return;
 
-                if (ch < '0' || ch > '9')
-                    throw this.newSyntaxError("Missing exponent");
+                    if (ch === '\r') {
+                        // check for \r\n
+                        if (next !== '\n') ch = '\n';
+                    }
 
-                do {
-                    ch = input[this.cursor++];
-                } while (ch >= '0' && ch <= '9');
+                    if (ch === '\n') {
+                        if (this.scanNewlines) {
+                            this.cursor--;
+                        } else {
+                            this.lineno++;
+                        }
+                        break;
+                    }
+                }
+            } else if (!(ch in definitions.whitespace)) {
                 this.cursor--;
-
-                return true;
+                return;
             }
+        }
+    },
 
-            return false;
-        },
-
-        lexZeroNumber: function (ch) {
-            var token = this.token, input = this.source;
-            token.type = NUMBER;
-
+    // Lex the exponential part of a number, if present. Return true iff an
+    // exponential part was found.
+    lexExponent: function() {
+        var input = this.source;
+        var next = input[this.cursor];
+        if (next === 'e' || next === 'E') {
+            this.cursor++;
             ch = input[this.cursor++];
-            if (ch === '.') {
-                do {
-                    ch = input[this.cursor++];
-                } while (ch >= '0' && ch <= '9');
-                this.cursor--;
+            if (ch === '+' || ch === '-')
+                ch = input[this.cursor++];
 
-                this.lexExponent();
-                token.value = parseFloat(token.start, this.cursor);
-            } else if (ch === 'x' || ch === 'X') {
-                do {
-                    ch = input[this.cursor++];
-                } while ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') ||
-                         (ch >= 'A' && ch <= 'F'));
-                this.cursor--;
+            if (ch < '0' || ch > '9')
+                throw this.newSyntaxError("Missing exponent");
 
-                token.value = parseInt(input.substring(token.start, this.cursor));
-            } else if (ch >= '0' && ch <= '7') {
-                do {
-                    ch = input[this.cursor++];
-                } while (ch >= '0' && ch <= '7');
-                this.cursor--;
-
-                token.value = parseInt(input.substring(token.start, this.cursor));
-            } else {
-                this.cursor--;
-                this.lexExponent();     // 0E1, &c.
-                token.value = 0;
-            }
-        },
-
-        lexNumber: function (ch) {
-            var token = this.token, input = this.source;
-            token.type = NUMBER;
-
-            var floating = false;
             do {
                 ch = input[this.cursor++];
-                if (ch === '.' && !floating) {
-                    floating = true;
-                    ch = input[this.cursor++];
-                }
             } while (ch >= '0' && ch <= '9');
-
             this.cursor--;
 
-            var exponent = this.lexExponent();
-            floating = floating || exponent;
+            return true;
+        }
 
-            var str = input.substring(token.start, this.cursor);
-            token.value = floating ? parseFloat(str) : parseInt(str);
-        },
+        return false;
+    },
 
-        lexDot: function (ch) {
-            var token = this.token, input = this.source;
-            var next = input[this.cursor];
-            if (next >= '0' && next <= '9') {
-                do {
-                    ch = input[this.cursor++];
-                } while (ch >= '0' && ch <= '9');
-                this.cursor--;
+    lexZeroNumber: function (ch) {
+        var token = this.token, input = this.source;
+        token.type = NUMBER;
 
-                this.lexExponent();
+        ch = input[this.cursor++];
+        if (ch === '.') {
+            do {
+                ch = input[this.cursor++];
+            } while (ch >= '0' && ch <= '9');
+            this.cursor--;
 
-                token.type = NUMBER;
-                token.value = parseFloat(token.start, this.cursor);
-            } else {
-                token.type = DOT;
-                token.assignOp = null;
-                token.value = '.';
+            this.lexExponent();
+            token.value = parseFloat(
+                input.substring(token.start, this.cursor));
+        } else if (ch === 'x' || ch === 'X') {
+            do {
+                ch = input[this.cursor++];
+            } while ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') ||
+                     (ch >= 'A' && ch <= 'F'));
+            this.cursor--;
+
+            token.value = parseInt(input.substring(token.start, this.cursor));
+        } else if (ch >= '0' && ch <= '7') {
+            do {
+                ch = input[this.cursor++];
+            } while (ch >= '0' && ch <= '7');
+            this.cursor--;
+
+            token.value = parseInt(input.substring(token.start, this.cursor));
+        } else {
+            this.cursor--;
+            this.lexExponent();     // 0E1, &c.
+            token.value = 0;
+        }
+    },
+
+    lexNumber: function (ch) {
+        var token = this.token, input = this.source;
+        token.type = NUMBER;
+
+        var floating = false;
+        do {
+            ch = input[this.cursor++];
+            if (ch === '.' && !floating) {
+                floating = true;
+                ch = input[this.cursor++];
             }
-        },
+        } while (ch >= '0' && ch <= '9');
 
-        lexString: function (ch) {
-            var token = this.token, input = this.source;
-            token.type = STRING;
+        this.cursor--;
 
-            var hasEscapes = false;
-            var delim = ch;
-            if (input.length <= this.cursor)
+        var exponent = this.lexExponent();
+        floating = floating || exponent;
+
+        var str = input.substring(token.start, this.cursor);
+        token.value = floating ? parseFloat(str) : parseInt(str);
+    },
+
+    lexDot: function (ch) {
+        var token = this.token, input = this.source;
+        var next = input[this.cursor];
+        if (next >= '0' && next <= '9') {
+            do {
+                ch = input[this.cursor++];
+            } while (ch >= '0' && ch <= '9');
+            this.cursor--;
+
+            this.lexExponent();
+
+            token.type = NUMBER;
+            token.value = parseFloat(
+                input.substring(token.start, this.cursor));
+        } else {
+            token.type = DOT;
+            token.assignOp = null;
+            token.value = '.';
+        }
+    },
+
+    lexString: function (ch) {
+        var token = this.token, input = this.source;
+        token.type = STRING;
+
+        var hasEscapes = false;
+        var delim = ch;
+        if (input.length <= this.cursor)
+            throw this.newSyntaxError("Unterminated string literal");
+        while ((ch = input[this.cursor++]) !== delim) {
+            if (ch == '\n' || ch == '\r')
                 throw this.newSyntaxError("Unterminated string literal");
-            while ((ch = input[this.cursor++]) !== delim) {
-                if (this.cursor == input.length)
+            if (this.cursor == input.length)
+                throw this.newSyntaxError("Unterminated string literal");
+            if (ch === '\\') {
+                hasEscapes = true;
+                if (++this.cursor == input.length)
                     throw this.newSyntaxError("Unterminated string literal");
-                if (ch === '\\') {
-                    hasEscapes = true;
-                    if (++this.cursor == input.length)
-                        throw this.newSyntaxError("Unterminated string literal");
-                }
             }
+        }
 
-            token.value = hasEscapes
-                          ? eval(input.substring(token.start, this.cursor))
-                          : input.substring(token.start + 1, this.cursor - 1);
-        },
+        token.value = hasEscapes
+            ? eval(input.substring(token.start, this.cursor))
+            : input.substring(token.start + 1, this.cursor - 1);
+    },
 
-        lexRegExp: function (ch) {
-            var token = this.token, input = this.source;
-            token.type = REGEXP;
+    lexRegExp: function (ch) {
+        var token = this.token, input = this.source;
+        token.type = REGEXP;
 
-            do {
-                ch = input[this.cursor++];
-                if (ch === '\\') {
-                    this.cursor++;
-                } else if (ch === '[') {
-                    do {
-                        if (ch === undefined)
-                            throw this.newSyntaxError("Unterminated character class");
+        do {
+            ch = input[this.cursor++];
+            if (ch === '\\') {
+                this.cursor++;
+            } else if (ch === '[') {
+                do {
+                    if (ch === undefined)
+                        throw this.newSyntaxError("Unterminated character class");
 
-                        if (ch === '\\')
-                            this.cursor++;
+                    if (ch === '\\')
+                        this.cursor++;
 
-                        ch = input[this.cursor++];
-                    } while (ch !== ']');
-                } else if (ch === undefined) {
-                    throw this.newSyntaxError("Unterminated regex");
-                }
-            } while (ch !== '/');
+                    ch = input[this.cursor++];
+                } while (ch !== ']');
+            } else if (ch === undefined) {
+                throw this.newSyntaxError("Unterminated regex");
+            }
+        } while (ch !== '/');
 
-            do {
-                ch = input[this.cursor++];
-            } while (ch >= 'a' && ch <= 'z');
+        do {
+            ch = input[this.cursor++];
+        } while (ch >= 'a' && ch <= 'z');
 
-            this.cursor--;
+        this.cursor--;
 
-            token.value = eval(input.substring(token.start, this.cursor));
-        },
+        token.value = eval(input.substring(token.start, this.cursor));
+    },
 
-        lexOp: function (ch) {
-            var token = this.token, input = this.source;
+    lexOp: function (ch) {
+        var token = this.token, input = this.source;
 
-            // A bit ugly, but it seems wasteful to write a trie lookup routine
-            // for only 3 characters...
-            var node = opTokens[ch];
-            var next = input[this.cursor];
+        // A bit ugly, but it seems wasteful to write a trie lookup routine
+        // for only 3 characters...
+        var node = opTokens[ch];
+        var next = input[this.cursor];
+        if (next in node) {
+            node = node[next];
+            this.cursor++;
+            next = input[this.cursor];
             if (next in node) {
                 node = node[next];
                 this.cursor++;
                 next = input[this.cursor];
-                if (next in node) {
-                    node = node[next];
-                    this.cursor++;
-                    next = input[this.cursor];
-                }
             }
+        }
 
-            var op = node.op;
-            if (definitions.assignOps[op] && input[this.cursor] === '=') {
-                this.cursor++;
-                token.type = ASSIGN;
-                token.assignOp = definitions.tokenIds[definitions.opTypeNames[op]];
-                op += '=';
-            } else {
-                token.type = definitions.tokenIds[definitions.opTypeNames[op]];
-                token.assignOp = null;
+        var op = node.op;
+        if (definitions.assignOps[op] && input[this.cursor] === '=') {
+            this.cursor++;
+            token.type = ASSIGN;
+            token.assignOp = definitions.tokenIds[definitions.opTypeNames[op]];
+            op += '=';
+        } else {
+            token.type = definitions.tokenIds[definitions.opTypeNames[op]];
+            token.assignOp = null;
+        }
+
+        token.value = op;
+    },
+
+    // FIXME: Unicode escape sequences
+    lexIdent: function (ch, keywordIsName) {
+        var token = this.token;
+        var id = ch;
+
+        while ((ch = this.getValidIdentifierChar(false)) !== null) {
+            id += ch;
+        }
+
+        token.type = IDENTIFIER;
+        token.value = id;
+
+        if (keywordIsName)
+            return;
+
+        var kw;
+
+        if (this.parser.mozillaMode) {
+            kw = definitions.mozillaKeywords[id];
+            if (kw) {
+                token.type = kw;
+                return;
             }
+        }
 
-            token.value = op;
-        },
-
-        // FIXME: Unicode escape sequences
-        lexIdent: function (ch) {
-            var token = this.token;
-            var id = ch;
-
-            while ((ch = this.getValidIdentifierChar(false)) !== null) {
-                id += ch;
+        if (this.parser.x.strictMode) {
+            kw = definitions.strictKeywords[id];
+            if (kw) {
+                token.type = kw;
+                return;
             }
+        }
 
-            token.type = definitions.keywords[id] || IDENTIFIER;
-            if (token.type in this.blackList) {
-                // banned keyword, this is an identifier
-                token.type = IDENTIFIER;
-            }
-            token.value = id;
-        },
+        kw = definitions.keywords[id];
+        if (kw)
+            token.type = kw;
+    },
 
-        /*
-         * Tokenizer.get :: void -> token type
-         *
-         * Consume input *only* if there is no lookahead.
-         * Dispatch to the appropriate lexing function depending on the input.
-         */
-        get: function (scanOperand) {
-            var token;
-            while (this.lookahead) {
-                --this.lookahead;
-                this.tokenIndex = (this.tokenIndex + 1) & 3;
-                token = this.tokens[this.tokenIndex];
-                if (token.type !== NEWLINE || this.scanNewlines)
-                    return token.type;
-            }
-
-            this.skip();
-
+    /*
+     * Tokenizer.get :: ([boolean[, boolean]]) -> token type
+     *
+     * Consume input *only* if there is no lookahead.
+     * Dispatch to the appropriate lexing function depending on the input.
+     */
+    get: function (scanOperand, keywordIsName) {
+        var token;
+        while (this.lookahead) {
+            --this.lookahead;
             this.tokenIndex = (this.tokenIndex + 1) & 3;
             token = this.tokens[this.tokenIndex];
-            if (!token)
-                this.tokens[this.tokenIndex] = token = {};
+            if (token.type !== NEWLINE || this.scanNewlines)
+                return token.type;
+        }
 
-            var input = this.source;
-            if (this.cursor >= input.length)
-                return token.type = END;
+        this.skip();
 
-            token.start = this.cursor;
-            token.lineno = this.lineno;
+        this.tokenIndex = (this.tokenIndex + 1) & 3;
+        token = this.tokens[this.tokenIndex];
+        if (!token)
+            this.tokens[this.tokenIndex] = token = {};
 
-            var ich = this.getValidIdentifierChar(true);
-            var ch = (ich === null) ? input[this.cursor++] : null;
-            if (ich !== null) {
-                this.lexIdent(ich);
-            } else if (scanOperand && ch === '/') {
-                this.lexRegExp(ch);
-            } else if (ch in opTokens) {
-                this.lexOp(ch);
-            } else if (ch === '.') {
-                this.lexDot(ch);
-            } else if (ch >= '1' && ch <= '9') {
-                this.lexNumber(ch);
-            } else if (ch === '0') {
-                this.lexZeroNumber(ch);
-            } else if (ch === '"' || ch === "'") {
-                this.lexString(ch);
-            } else if (this.scanNewlines && (ch === '\n' || ch === '\r')) {
-                // if this was a \r, look for \r\n
-                if (ch === '\r' && input[this.cursor] === '\n') this.cursor++;
-                token.type = NEWLINE;
-                token.value = '\n';
-                this.lineno++;
-            } else {
-                throw this.newSyntaxError("Illegal token");
-            }
+        var input = this.source;
+        if (this.cursor >= input.length)
+            return token.type = END;
 
-            token.end = this.cursor;
-            return token.type;
-        },
+        token.start = this.cursor;
+        token.lineno = this.lineno;
 
-        /*
-         * Tokenizer.unget :: void -> undefined
-         *
-         * Match depends on unget returning undefined.
-         */
-        unget: function () {
-            if (++this.lookahead === 4) throw "PANIC: too much lookahead!";
-            this.tokenIndex = (this.tokenIndex - 1) & 3;
-        },
+        var ich = this.getValidIdentifierChar(true);
+        var ch = (ich === null) ? input[this.cursor++] : null;
+        if (ich !== null) {
+            this.lexIdent(ich, keywordIsName);
+        } else if (scanOperand && ch === '/') {
+            this.lexRegExp(ch);
+        } else if (ch in opTokens) {
+            this.lexOp(ch);
+        } else if (ch === '.') {
+            this.lexDot(ch);
+        } else if (ch >= '1' && ch <= '9') {
+            this.lexNumber(ch);
+        } else if (ch === '0') {
+            this.lexZeroNumber(ch);
+        } else if (ch === '"' || ch === "'") {
+            this.lexString(ch);
+        } else if (this.scanNewlines && (ch === '\n' || ch === '\r')) {
+            // if this was a \r, look for \r\n
+            if (ch === '\r' && input[this.cursor] === '\n') this.cursor++;
+            token.type = NEWLINE;
+            token.value = '\n';
+            this.lineno++;
+        } else {
+            throw this.newSyntaxError("Illegal token");
+        }
 
-        newSyntaxError: function (m) {
-            m = (this.filename ? this.filename + ":" : "") + this.lineno + ": " + m;
-            var e = new SyntaxError(m, this.filename, this.lineno);
-            e.source = this.source;
-            e.cursor = this.lookahead
-                       ? this.tokens[(this.tokenIndex + this.lookahead) & 3].start
-                       : this.cursor;
-            return e;
-        },
+        token.end = this.cursor;
+        return token.type;
+    },
 
-        /* Gets a single valid identifier char from the input stream, or null
-         * if there is none.
-         * Since JavaScript provides no convenient way to determine if a
-         * character is in a particular Unicode category, we use
-         * metacircularity to accomplish this (oh yeaaaah!) */
-        getValidIdentifierChar: function(first) {
-            var input = this.source;
-            if (this.cursor >= input.length) return null;
-            var ch = input[this.cursor];
+    /*
+     * Tokenizer.unget :: void -> undefined
+     *
+     * Match depends on unget returning undefined.
+     */
+    unget: function () {
+        if (++this.lookahead === 4) throw "PANIC: too much lookahead!";
+        this.tokenIndex = (this.tokenIndex - 1) & 3;
+    },
 
-            // first check for \u escapes
-            if (ch === '\\' && input[this.cursor+1] === 'u') {
-                // get the character value
-                try {
-                    ch = String.fromCharCode(parseInt(
-                        input.substring(this.cursor + 2, this.cursor + 6),
-                        16));
-                } catch (ex) {
-                    return null;
-                }
-                this.cursor += 5;
-            }
+    newSyntaxError: function (m) {
+        m = (this.filename ? this.filename + ":" : "") + this.lineno + ": " + m;
+        var e = new SyntaxError(m, this.filename, this.lineno);
+        e.source = this.source;
+        e.cursor = this.lookahead
+            ? this.tokens[(this.tokenIndex + this.lookahead) & 3].start
+            : this.cursor;
+        return e;
+    },
 
-            // check directly for ASCII
-            if (ch <= "\u007F") {
-                if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === '$' || ch === '_' ||
-                    (!first && (ch >= '0' && ch <= '9'))) {
-                    this.cursor++;
-                    return ch;
-                }
+
+    /* Gets a single valid identifier char from the input stream, or null
+     * if there is none.
+     */
+    getValidIdentifierChar: function(first) {
+        var input = this.source;
+        if (this.cursor >= input.length) return null;
+        var ch = input[this.cursor];
+
+        // first check for \u escapes
+        if (ch === '\\' && input[this.cursor+1] === 'u') {
+            // get the character value
+            try {
+                ch = String.fromCharCode(parseInt(
+                    input.substring(this.cursor + 2, this.cursor + 6),
+                    16));
+            } catch (ex) {
                 return null;
             }
-    
-            // create an object to test this in
-            var x = {};
-            x["x"+ch] = true;
-            x[ch] = true;
-    
-            // then use eval to determine if it's a valid character
-            var valid = false;
-            try {
-                valid = (Function("x", "return (x." + (first?"":"x") + ch + ");")(x) === true);
-            } catch (ex) {}
-            if (valid) this.cursor++;
-            return (valid ? ch : null);
-        },
-    };
+            this.cursor += 5;
+        }
+
+        var valid = isValidIdentifierChar(ch, first);
+        if (valid) this.cursor++;
+        return (valid ? ch : null);
+    },
+};
 
 
-    module.exports = { Tokenizer: Tokenizer };
+exports.isIdentifier = isIdentifier;
+exports.Tokenizer = Tokenizer;
 
-});
-/* vim: set sw=4 ts=4 et tw=78: */
+});/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -9676,507 +9888,533 @@ define('ace/narcissus/jsparse', ['require', 'exports', 'module' , 'ace/narcissus
  * done by SpiderMonkey.
  */
 
-define('ace/narcissus/jsdefs', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/narcissus/definitions', ['require', 'exports', 'module' ], function(require, exports, module) {
 
-    var narcissus = {
-        options: {
-            version: 185,
-            // Global variables to hide from the interpreter
-            hiddenHostGlobals: { Narcissus: true },
-            // Desugar SpiderMonkey language extensions?
-            desugarExtensions: false
+var tokens = [
+    // End of source.
+    "END",
+
+    // Operators and punctuators.  Some pair-wise order matters, e.g. (+, -)
+    // and (UNARY_PLUS, UNARY_MINUS).
+    "\n", ";",
+    ",",
+    "=",
+    "?", ":", "CONDITIONAL",
+    "||",
+    "&&",
+    "|",
+    "^",
+    "&",
+    "==", "!=", "===", "!==",
+    "<", "<=", ">=", ">",
+    "<<", ">>", ">>>",
+    "+", "-",
+    "*", "/", "%",
+    "!", "~", "UNARY_PLUS", "UNARY_MINUS",
+    "++", "--",
+    ".",
+    "[", "]",
+    "{", "}",
+    "(", ")",
+
+    // Nonterminal tree node type codes.
+    "SCRIPT", "BLOCK", "LABEL", "FOR_IN", "CALL", "NEW_WITH_ARGS", "INDEX",
+    "ARRAY_INIT", "OBJECT_INIT", "PROPERTY_INIT", "GETTER", "SETTER",
+    "GROUP", "LIST", "LET_BLOCK", "ARRAY_COMP", "GENERATOR", "COMP_TAIL",
+
+    // Contextual keywords.
+    "IMPLEMENTS", "INTERFACE", "LET", "MODULE", "PACKAGE", "PRIVATE",
+    "PROTECTED", "PUBLIC", "STATIC", "USE", "YIELD",
+
+    // Terminals.
+    "IDENTIFIER", "NUMBER", "STRING", "REGEXP",
+
+    // Keywords.
+    "break",
+    "case", "catch", "const", "continue",
+    "debugger", "default", "delete", "do",
+    "else", "export",
+    "false", "finally", "for", "function",
+    "if", "import", "in", "instanceof",
+    "new", "null",
+    "return",
+    "switch",
+    "this", "throw", "true", "try", "typeof",
+    "var", "void",
+    "while", "with",
+];
+
+var strictKeywords = {
+    __proto__: null,
+    "implements": true,
+    "interface": true,
+    "let": true,
+    "module": true,
+    "package": true,
+    "private": true,
+    "protected": true,
+    "public": true,
+    "static": true,
+    "use": true,
+    "yield": true
+};
+
+var statementStartTokens = [
+    "break",
+    "const", "continue",
+    "debugger", "do",
+    "for",
+    "if",
+    "let",
+    "return",
+    "switch",
+    "throw", "try",
+    "var",
+    "yield",
+    "while", "with",
+];
+
+// Whitespace characters (see ECMA-262 7.2)
+var whitespaceChars = [
+    // normal whitespace:
+    "\u0009", "\u000B", "\u000C", "\u0020", "\u00A0", "\uFEFF",
+
+    // high-Unicode whitespace:
+    "\u1680", "\u180E",
+    "\u2000", "\u2001", "\u2002", "\u2003", "\u2004", "\u2005", "\u2006",
+    "\u2007", "\u2008", "\u2009", "\u200A",
+    "\u202F", "\u205F", "\u3000"
+];
+
+var whitespace = {};
+for (var i = 0; i < whitespaceChars.length; i++) {
+    whitespace[whitespaceChars[i]] = true;
+}
+
+// Operator and punctuator mapping from token to tree node type name.
+// NB: because the lexer doesn't backtrack, all token prefixes must themselves
+// be valid tokens (e.g. !== is acceptable because its prefixes are the valid
+// tokens != and !).
+var opTypeNames = {
+    '\n':   "NEWLINE",
+    ';':    "SEMICOLON",
+    ',':    "COMMA",
+    '?':    "HOOK",
+    ':':    "COLON",
+    '||':   "OR",
+    '&&':   "AND",
+    '|':    "BITWISE_OR",
+    '^':    "BITWISE_XOR",
+    '&':    "BITWISE_AND",
+    '===':  "STRICT_EQ",
+    '==':   "EQ",
+    '=':    "ASSIGN",
+    '!==':  "STRICT_NE",
+    '!=':   "NE",
+    '<<':   "LSH",
+    '<=':   "LE",
+    '<':    "LT",
+    '>>>':  "URSH",
+    '>>':   "RSH",
+    '>=':   "GE",
+    '>':    "GT",
+    '++':   "INCREMENT",
+    '--':   "DECREMENT",
+    '+':    "PLUS",
+    '-':    "MINUS",
+    '*':    "MUL",
+    '/':    "DIV",
+    '%':    "MOD",
+    '!':    "NOT",
+    '~':    "BITWISE_NOT",
+    '.':    "DOT",
+    '[':    "LEFT_BRACKET",
+    ']':    "RIGHT_BRACKET",
+    '{':    "LEFT_CURLY",
+    '}':    "RIGHT_CURLY",
+    '(':    "LEFT_PAREN",
+    ')':    "RIGHT_PAREN"
+};
+
+// Hash of keyword identifier to tokens index.  NB: we must null __proto__ to
+// avoid toString, etc. namespace pollution.
+var keywords = {__proto__: null};
+var mozillaKeywords = {__proto__: null};
+
+// Define const END, etc., based on the token names.  Also map name to index.
+var tokenIds = {};
+
+var hostSupportsEvalConst = (function() {
+    try {
+        return eval("(function(s) { eval(s); return x })('const x = true;')");
+    } catch (e) {
+        return false;
+    }
+})();
+
+// Building up a string to be eval'd in different contexts.
+var consts = hostSupportsEvalConst ? "const " : "var ";
+for (var i = 0, j = tokens.length; i < j; i++) {
+    if (i > 0)
+        consts += ", ";
+    var t = tokens[i];
+    var name;
+    if (/^[a-z]/.test(t)) {
+        name = t.toUpperCase();
+        if (name === "LET" || name === "YIELD")
+            mozillaKeywords[name] = i;
+        if (strictKeywords[name])
+            strictKeywords[name] = i;
+        keywords[t] = i;
+    } else {
+        name = (/^\W/.test(t) ? opTypeNames[t] : t);
+    }
+    consts += name + " = " + i;
+    tokenIds[name] = i;
+    tokens[t] = i;
+}
+consts += ";";
+
+var isStatementStartCode = {__proto__: null};
+for (i = 0, j = statementStartTokens.length; i < j; i++)
+    isStatementStartCode[keywords[statementStartTokens[i]]] = true;
+
+// Map assignment operators to their indexes in the tokens array.
+var assignOps = ['|', '^', '&', '<<', '>>', '>>>', '+', '-', '*', '/', '%'];
+
+for (i = 0, j = assignOps.length; i < j; i++) {
+    t = assignOps[i];
+    assignOps[t] = tokens[t];
+}
+
+function defineGetter(obj, prop, fn, dontDelete, dontEnum) {
+    Object.defineProperty(obj, prop,
+                          { get: fn, configurable: !dontDelete, enumerable: !dontEnum });
+}
+
+function defineGetterSetter(obj, prop, getter, setter, dontDelete, dontEnum) {
+    Object.defineProperty(obj, prop, {
+        get: getter,
+        set: setter,
+        configurable: !dontDelete,
+        enumerable: !dontEnum
+    });
+}
+
+function defineMemoGetter(obj, prop, fn, dontDelete, dontEnum) {
+    Object.defineProperty(obj, prop, {
+        get: function() {
+            var val = fn();
+            defineProperty(obj, prop, val, dontDelete, true, dontEnum);
+            return val;
         },
-        hostSupportsEvalConst: (function() {
-            try {
-                return eval("(function(s) { eval(s); return x })('const x = true;')");
-            } catch (e) {
-                return false;
-            }
-        })(),
-        hostGlobal: this
+        configurable: true,
+        enumerable: !dontEnum
+    });
+}
+
+function defineProperty(obj, prop, val, dontDelete, readOnly, dontEnum) {
+    Object.defineProperty(obj, prop,
+                          { value: val, writable: !readOnly, configurable: !dontDelete,
+                            enumerable: !dontEnum });
+}
+
+// Returns true if fn is a native function.  (Note: SpiderMonkey specific.)
+function isNativeCode(fn) {
+    // Relies on the toString method to identify native code.
+    return ((typeof fn) === "function") && fn.toString().match(/\[native code\]/);
+}
+
+var Fpapply = Function.prototype.apply;
+
+function apply(f, o, a) {
+    return Fpapply.call(f, [o].concat(a));
+}
+
+var applyNew;
+
+// ES5's bind is a simpler way to implement applyNew
+if (Function.prototype.bind) {
+    applyNew = function applyNew(f, a) {
+        return new (f.bind.apply(f, [,].concat(Array.prototype.slice.call(a))))();
     };
-    Narcissus = narcissus;
-
-    var tokens = [
-        // End of source.
-        "END",
-
-        // Operators and punctuators.  Some pair-wise order matters, e.g. (+, -)
-        // and (UNARY_PLUS, UNARY_MINUS).
-        "\n", ";",
-        ",",
-        "=",
-        "?", ":", "CONDITIONAL",
-        "||",
-        "&&",
-        "|",
-        "^",
-        "&",
-        "==", "!=", "===", "!==",
-        "<", "<=", ">=", ">",
-        "<<", ">>", ">>>",
-        "+", "-",
-        "*", "/", "%",
-        "!", "~", "UNARY_PLUS", "UNARY_MINUS",
-        "++", "--",
-        ".",
-        "[", "]",
-        "{", "}",
-        "(", ")",
-
-        // Nonterminal tree node type codes.
-        "SCRIPT", "BLOCK", "LABEL", "FOR_IN", "CALL", "NEW_WITH_ARGS", "INDEX",
-        "ARRAY_INIT", "OBJECT_INIT", "PROPERTY_INIT", "GETTER", "SETTER",
-        "GROUP", "LIST", "LET_BLOCK", "ARRAY_COMP", "GENERATOR", "COMP_TAIL",
-
-        // Terminals.
-        "IDENTIFIER", "NUMBER", "STRING", "REGEXP",
-
-        // Keywords.
-        "break",
-        "case", "catch", "const", "continue",
-        "debugger", "default", "delete", "do",
-        "else", "export",
-        "false", "finally", "for", "function",
-        "if", "import", "in", "instanceof",
-        "let", "module",
-        "new", "null",
-        "return",
-        "switch",
-        "this", "throw", "true", "try", "typeof",
-        "var", "void",
-        "yield",
-        "while", "with",
-    ];
-
-    var statementStartTokens = [
-        "break",
-        "const", "continue",
-        "debugger", "do",
-        "for",
-        "if",
-        "return",
-        "switch",
-        "throw", "try",
-        "var",
-        "yield",
-        "while", "with",
-    ];
-
-    // Whitespace characters (see ECMA-262 7.2)
-    var whitespaceChars = [
-        // normal whitespace:
-        "\u0009", "\u000B", "\u000C", "\u0020", "\u00A0", "\uFEFF", 
-
-        // high-Unicode whitespace:
-        "\u1680", "\u180E",
-        "\u2000", "\u2001", "\u2002", "\u2003", "\u2004", "\u2005", "\u2006",
-        "\u2007", "\u2008", "\u2009", "\u200A",
-        "\u202F", "\u205F", "\u3000"
-    ];
-
-    var whitespace = {};
-    for (var i = 0; i < whitespaceChars.length; i++) {
-        whitespace[whitespaceChars[i]] = true;
-    }
-
-    // Operator and punctuator mapping from token to tree node type name.
-    // NB: because the lexer doesn't backtrack, all token prefixes must themselves
-    // be valid tokens (e.g. !== is acceptable because its prefixes are the valid
-    // tokens != and !).
-    var opTypeNames = {
-        '\n':   "NEWLINE",
-        ';':    "SEMICOLON",
-        ',':    "COMMA",
-        '?':    "HOOK",
-        ':':    "COLON",
-        '||':   "OR",
-        '&&':   "AND",
-        '|':    "BITWISE_OR",
-        '^':    "BITWISE_XOR",
-        '&':    "BITWISE_AND",
-        '===':  "STRICT_EQ",
-        '==':   "EQ",
-        '=':    "ASSIGN",
-        '!==':  "STRICT_NE",
-        '!=':   "NE",
-        '<<':   "LSH",
-        '<=':   "LE",
-        '<':    "LT",
-        '>>>':  "URSH",
-        '>>':   "RSH",
-        '>=':   "GE",
-        '>':    "GT",
-        '++':   "INCREMENT",
-        '--':   "DECREMENT",
-        '+':    "PLUS",
-        '-':    "MINUS",
-        '*':    "MUL",
-        '/':    "DIV",
-        '%':    "MOD",
-        '!':    "NOT",
-        '~':    "BITWISE_NOT",
-        '.':    "DOT",
-        '[':    "LEFT_BRACKET",
-        ']':    "RIGHT_BRACKET",
-        '{':    "LEFT_CURLY",
-        '}':    "RIGHT_CURLY",
-        '(':    "LEFT_PAREN",
-        ')':    "RIGHT_PAREN"
+} else {
+    applyNew = function applyNew(f, a) {
+        switch (a.length) {
+          case 0:
+            return new f();
+          case 1:
+            return new f(a[0]);
+          case 2:
+            return new f(a[0], a[1]);
+          case 3:
+            return new f(a[0], a[1], a[2]);
+          default:
+            var argStr = "a[0]";
+            for (var i = 1, n = a.length; i < n; i++)
+                argStr += ",a[" + i + "]";
+            return eval("new f(" + argStr + ")");
+        }
     };
+}
 
-    // Hash of keyword identifier to tokens index.  NB: we must null __proto__ to
-    // avoid toString, etc. namespace pollution.
-    var keywords = {__proto__: null};
-
-    // Define const END, etc., based on the token names.  Also map name to index.
-    var tokenIds = {};
-
-    // Building up a string to be eval'd in different contexts.
-    var consts = Narcissus.hostSupportsEvalConst ? "const " : "var ";
-    for (var i = 0, j = tokens.length; i < j; i++) {
-        if (i > 0)
-            consts += ", ";
-        var t = tokens[i];
-        var name;
-        if (/^[a-z]/.test(t)) {
-            name = t.toUpperCase();
-            keywords[t] = i;
-        } else {
-            name = (/^\W/.test(t) ? opTypeNames[t] : t);
-        }
-        consts += name + " = " + i;
-        tokenIds[name] = i;
-        tokens[t] = i;
+function getPropertyDescriptor(obj, name) {
+    while (obj) {
+        if (({}).hasOwnProperty.call(obj, name))
+            return Object.getOwnPropertyDescriptor(obj, name);
+        obj = Object.getPrototypeOf(obj);
     }
-    consts += ";";
+}
 
-    var isStatementStartCode = {__proto__: null};
-    for (i = 0, j = statementStartTokens.length; i < j; i++)
-        isStatementStartCode[keywords[statementStartTokens[i]]] = true;
+function getPropertyNames(obj) {
+    var table = Object.create(null, {});
+    while (obj) {
+        var names = Object.getOwnPropertyNames(obj);
+        for (var i = 0, n = names.length; i < n; i++)
+            table[names[i]] = true;
+        obj = Object.getPrototypeOf(obj);
+    }
+    return Object.keys(table);
+}
 
-    // Map assignment operators to their indexes in the tokens array.
-    var assignOps = ['|', '^', '&', '<<', '>>', '>>>', '+', '-', '*', '/', '%'];
+function getOwnProperties(obj) {
+    var map = {};
+    for (var name in Object.getOwnPropertyNames(obj))
+        map[name] = Object.getOwnPropertyDescriptor(obj, name);
+    return map;
+}
 
-    for (i = 0, j = assignOps.length; i < j; i++) {
-        t = assignOps[i];
-        assignOps[t] = tokens[t];
+function blacklistHandler(target, blacklist) {
+    var mask = Object.create(null, {});
+    var redirect = Dict.create(blacklist).mapObject(function(name) { return mask; });
+    return mixinHandler(redirect, target);
+}
+
+function whitelistHandler(target, whitelist) {
+    var catchall = Object.create(null, {});
+    var redirect = Dict.create(whitelist).mapObject(function(name) { return target; });
+    return mixinHandler(redirect, catchall);
+}
+
+/*
+ * Mixin proxies break the single-inheritance model of prototypes, so
+ * the handler treats all properties as own-properties:
+ *
+ *                  X
+ *                  |
+ *     +------------+------------+
+ *     |                 O       |
+ *     |                 |       |
+ *     |  O         O    O       |
+ *     |  |         |    |       |
+ *     |  O    O    O    O       |
+ *     |  |    |    |    |       |
+ *     |  O    O    O    O    O  |
+ *     |  |    |    |    |    |  |
+ *     +-(*)--(w)--(x)--(y)--(z)-+
+ */
+
+function mixinHandler(redirect, catchall) {
+    function targetFor(name) {
+        return hasOwn(redirect, name) ? redirect[name] : catchall;
     }
 
-    function defineGetter(obj, prop, fn, dontDelete, dontEnum) {
-        Object.defineProperty(obj, prop,
-                              { get: fn, configurable: !dontDelete, enumerable: !dontEnum });
+    function getMuxPropertyDescriptor(name) {
+        var desc = getPropertyDescriptor(targetFor(name), name);
+        if (desc)
+            desc.configurable = true;
+        return desc;
     }
 
-    function defineGetterSetter(obj, prop, getter, setter, dontDelete, dontEnum) {
-        Object.defineProperty(obj, prop, {
-            get: getter,
-            set: setter,
-            configurable: !dontDelete,
-            enumerable: !dontEnum
+    function getMuxPropertyNames() {
+        var names1 = Object.getOwnPropertyNames(redirect).filter(function(name) {
+            return name in redirect[name];
         });
-    }
-
-    function defineMemoGetter(obj, prop, fn, dontDelete, dontEnum) {
-        Object.defineProperty(obj, prop, {
-            get: function() {
-                var val = fn();
-                defineProperty(obj, prop, val, dontDelete, true, dontEnum);
-                return val;
-            },
-            configurable: true,
-            enumerable: !dontEnum
+        var names2 = getPropertyNames(catchall).filter(function(name) {
+            return !hasOwn(redirect, name);
         });
+        return names1.concat(names2);
     }
 
-    function defineProperty(obj, prop, val, dontDelete, readOnly, dontEnum) {
-        Object.defineProperty(obj, prop,
-                              { value: val, writable: !readOnly, configurable: !dontDelete,
-                                enumerable: !dontEnum });
-    }
-
-    // Returns true if fn is a native function.  (Note: SpiderMonkey specific.)
-    function isNativeCode(fn) {
-        // Relies on the toString method to identify native code.
-        return ((typeof fn) === "function") && fn.toString().match(/\[native code\]/);
-    }
-
-    function getPropertyDescriptor(obj, name) {
-        while (obj) {
-            if (({}).hasOwnProperty.call(obj, name))
-                return Object.getOwnPropertyDescriptor(obj, name);
-            obj = Object.getPrototypeOf(obj);
-        }
-    }
-
-    function getPropertyNames(obj) {
-        var table = Object.create(null, {});
-        while (obj) {
-            var names = Object.getOwnPropertyNames(obj);
-            for (var i = 0, n = names.length; i < n; i++)
-                table[names[i]] = true;
-            obj = Object.getPrototypeOf(obj);
-        }
-        return Object.keys(table);
-    }
-
-    function getOwnProperties(obj) {
-        var map = {};
-        for (var name in Object.getOwnPropertyNames(obj))
-            map[name] = Object.getOwnPropertyDescriptor(obj, name);
-        return map;
-    }
-
-    function blacklistHandler(target, blacklist) {
-        var mask = Object.create(null, {});
-        var redirect = StringMap.create(blacklist).mapObject(function(name) { return mask; });
-        return mixinHandler(redirect, target);
-    }
-
-    function whitelistHandler(target, whitelist) {
-        var catchall = Object.create(null, {});
-        var redirect = StringMap.create(whitelist).mapObject(function(name) { return target; });
-        return mixinHandler(redirect, catchall);
-    }
-
-    function mirrorHandler(target, writable) {
-        var handler = makePassthruHandler(target);
-
-        var defineProperty = handler.defineProperty;
-        handler.defineProperty = function(name, desc) {
-            if (!desc.enumerable)
-                throw new Error("mirror property must be enumerable");
-            if (!desc.configurable)
-                throw new Error("mirror property must be configurable");
-            if (desc.writable !== writable)
-                throw new Error("mirror property must " + (writable ? "" : "not ") + "be writable");
-            defineProperty(name, desc);
+    function enumerateMux() {
+        var result = Object.getOwnPropertyNames(redirect).filter(function(name) {
+            return name in redirect[name];
+        });
+        for (name in catchall) {
+            if (!hasOwn(redirect, name))
+                result.push(name);
         };
-
-        handler.fix = function() { };
-        handler.getOwnPropertyDescriptor = handler.getPropertyDescriptor;
-        handler.getOwnPropertyNames = getPropertyNames.bind(handler, target);
-        handler.keys = handler.enumerate;
-        handler["delete"] = function() { return false; };
-        handler.hasOwn = handler.has;
-        return handler;
+        return result;
     }
 
-    /*
-     * Mixin proxies break the single-inheritance model of prototypes, so
-     * the handler treats all properties as own-properties:
-     *
-     *                  X
-     *                  |
-     *     +------------+------------+
-     *     |                 O       |
-     *     |                 |       |
-     *     |  O         O    O       |
-     *     |  |         |    |       |
-     *     |  O    O    O    O       |
-     *     |  |    |    |    |       |
-     *     |  O    O    O    O    O  |
-     *     |  |    |    |    |    |  |
-     *     +-(*)--(w)--(x)--(y)--(z)-+
-     */
+    function hasMux(name) {
+        return name in targetFor(name);
+    }
 
-    function mixinHandler(redirect, catchall) {
-        function targetFor(name) {
-            return hasOwn(redirect, name) ? redirect[name] : catchall;
-        }
+    return {
+        getOwnPropertyDescriptor: getMuxPropertyDescriptor,
+        getPropertyDescriptor: getMuxPropertyDescriptor,
+        getOwnPropertyNames: getMuxPropertyNames,
+        defineProperty: function(name, desc) {
+            Object.defineProperty(targetFor(name), name, desc);
+        },
+        "delete": function(name) {
+            var target = targetFor(name);
+            return delete target[name];
+        },
+        // FIXME: ha ha ha
+        fix: function() { },
+        has: hasMux,
+        hasOwn: hasMux,
+        get: function(receiver, name) {
+            var target = targetFor(name);
+            return target[name];
+        },
+        set: function(receiver, name, val) {
+            var target = targetFor(name);
+            target[name] = val;
+            return true;
+        },
+        enumerate: enumerateMux,
+        keys: enumerateMux
+    };
+}
 
-        function getMuxPropertyDescriptor(name) {
-            var desc = getPropertyDescriptor(targetFor(name), name);
-            if (desc)
-                desc.configurable = true;
+function makePassthruHandler(obj) {
+    // Handler copied from
+    // http://wiki.ecmascript.org/doku.php?id=harmony:proxies&s=proxy%20object#examplea_no-op_forwarding_proxy
+    return {
+        getOwnPropertyDescriptor: function(name) {
+            var desc = Object.getOwnPropertyDescriptor(obj, name);
+
+            // a trapping proxy's properties must always be configurable
+            desc.configurable = true;
             return desc;
-        }
+        },
+        getPropertyDescriptor: function(name) {
+            var desc = getPropertyDescriptor(obj, name);
 
-        function getMuxPropertyNames() {
-            var names1 = Object.getOwnPropertyNames(redirect).filter(function(name) {
-                return name in redirect[name];
-            });
-            var names2 = getPropertyNames(catchall).filter(function(name) {
-                return !hasOwn(redirect, name);
-            });
-            return names1.concat(names2);
-        }
+            // a trapping proxy's properties must always be configurable
+            desc.configurable = true;
+            return desc;
+        },
+        getOwnPropertyNames: function() {
+            return Object.getOwnPropertyNames(obj);
+        },
+        defineProperty: function(name, desc) {
+            Object.defineProperty(obj, name, desc);
+        },
+        "delete": function(name) { return delete obj[name]; },
+        fix: function() {
+            if (Object.isFrozen(obj)) {
+                return getOwnProperties(obj);
+            }
 
-        function enumerateMux() {
-            var result = Object.getOwnPropertyNames(redirect).filter(function(name) {
-                return name in redirect[name];
-            });
-            for (name in catchall) {
-                if (!hasOwn(redirect, name))
-                    result.push(name);
-            };
+            // As long as obj is not frozen, the proxy won't allow itself to be fixed.
+            return undefined; // will cause a TypeError to be thrown
+        },
+
+        has: function(name) { return name in obj; },
+        hasOwn: function(name) { return ({}).hasOwnProperty.call(obj, name); },
+        get: function(receiver, name) { return obj[name]; },
+
+        // bad behavior when set fails in non-strict mode
+        set: function(receiver, name, val) { obj[name] = val; return true; },
+        enumerate: function() {
+            var result = [];
+            for (name in obj) { result.push(name); };
             return result;
-        }
-
-        function hasMux(name) {
-            return name in targetFor(name);
-        }
-
-        return {
-            getOwnPropertyDescriptor: getMuxPropertyDescriptor,
-            getPropertyDescriptor: getMuxPropertyDescriptor,
-            getOwnPropertyNames: getMuxPropertyNames,
-            defineProperty: function(name, desc) {
-                Object.defineProperty(targetFor(name), name, desc);
-            },
-            "delete": function(name) {
-                var target = targetFor(name);
-                return delete target[name];
-            },
-            // FIXME: ha ha ha
-            fix: function() { },
-            has: hasMux,
-            hasOwn: hasMux,
-            get: function(receiver, name) {
-                var target = targetFor(name);
-                return target[name];
-            },
-            set: function(receiver, name, val) {
-                var target = targetFor(name);
-                target[name] = val;
-                return true;
-            },
-            enumerate: enumerateMux,
-            keys: enumerateMux
-        };
-    }
-
-    function makePassthruHandler(obj) {
-        // Handler copied from
-        // http://wiki.ecmascript.org/doku.php?id=harmony:proxies&s=proxy%20object#examplea_no-op_forwarding_proxy
-        return {
-            getOwnPropertyDescriptor: function(name) {
-                var desc = Object.getOwnPropertyDescriptor(obj, name);
-
-                // a trapping proxy's properties must always be configurable
-                desc.configurable = true;
-                return desc;
-            },
-            getPropertyDescriptor: function(name) {
-                var desc = getPropertyDescriptor(obj, name);
-
-                // a trapping proxy's properties must always be configurable
-                desc.configurable = true;
-                return desc;
-            },
-            getOwnPropertyNames: function() {
-                return Object.getOwnPropertyNames(obj);
-            },
-            defineProperty: function(name, desc) {
-                Object.defineProperty(obj, name, desc);
-            },
-            "delete": function(name) { return delete obj[name]; },
-            fix: function() {
-                if (Object.isFrozen(obj)) {
-                    return getOwnProperties(obj);
-                }
-
-                // As long as obj is not frozen, the proxy won't allow itself to be fixed.
-                return undefined; // will cause a TypeError to be thrown
-            },
-
-            has: function(name) { return name in obj; },
-            hasOwn: function(name) { return ({}).hasOwnProperty.call(obj, name); },
-            get: function(receiver, name) { return obj[name]; },
-
-            // bad behavior when set fails in non-strict mode
-            set: function(receiver, name, val) { obj[name] = val; return true; },
-            enumerate: function() {
-                var result = [];
-                for (name in obj) { result.push(name); };
-                return result;
-            },
-            keys: function() { return Object.keys(obj); }
-        };
-    }
-
-    var hasOwnProperty = ({}).hasOwnProperty;
-
-    function hasOwn(obj, name) {
-        return hasOwnProperty.call(obj, name);
-    }
-
-    function StringMap(table, size) {
-        this.table = table || Object.create(null, {});
-        this.size = size || 0;
-    }
-
-    StringMap.create = function(table) {
-        var init = Object.create(null, {});
-        var size = 0;
-        var names = Object.getOwnPropertyNames(table);
-        for (var i = 0, n = names.length; i < n; i++) {
-            var name = names[i];
-            init[name] = table[name];
-            size++;
-        }
-        return new StringMap(init, size);
+        },
+        keys: function() { return Object.keys(obj); }
     };
+}
 
-    StringMap.prototype = {
-        has: function(x) { return hasOwnProperty.call(this.table, x); },
-        set: function(x, v) {
-            if (!hasOwnProperty.call(this.table, x))
-                this.size++;
-            this.table[x] = v;
-        },
-        get: function(x) { return this.table[x]; },
-        getDef: function(x, thunk) {
-            if (!hasOwnProperty.call(this.table, x)) {
-                this.size++;
-                this.table[x] = thunk();
-            }
-            return this.table[x];
-        },
-        forEach: function(f) {
-            var table = this.table;
-            for (var key in table)
-                f.call(this, key, table[key]);
-        },
-        map: function(f) {
-            var table1 = this.table;
-            var table2 = Object.create(null, {});
-            this.forEach(function(key, val) {
-                table2[key] = f.call(this, val, key);
-            });
-            return new StringMap(table2, this.size);
-        },
-        mapObject: function(f) {
-            var table1 = this.table;
-            var table2 = Object.create(null, {});
-            this.forEach(function(key, val) {
-                table2[key] = f.call(this, val, key);
-            });
-            return table2;
-        },
-        toObject: function() {
-            return this.mapObject(function(val) { return val; });
-        },
-        choose: function() {
-            return Object.getOwnPropertyNames(this.table)[0];
-        },
-        remove: function(x) {
-            if (hasOwnProperty.call(this.table, x)) {
-                this.size--;
-                delete this.table[x];
-            }
-        },
-        copy: function() {
-            var table = Object.create(null, {});
-            for (var key in this.table)
-                table[key] = this.table[key];
-            return new StringMap(table, this.size);
-        },
-        toString: function() { return "[object StringMap]" }
-    };
+var hasOwnProperty = ({}).hasOwnProperty;
 
-    // an object-key table with poor asymptotics (replace with WeakMap when possible)
-    function ObjectMap(array) {
+function hasOwn(obj, name) {
+    return hasOwnProperty.call(obj, name);
+}
+
+function Dict(table, size) {
+    this.table = table || Object.create(null, {});
+    this.size = size || 0;
+}
+
+Dict.create = function(table) {
+    var init = Object.create(null, {});
+    var size = 0;
+    var names = Object.getOwnPropertyNames(table);
+    for (var i = 0, n = names.length; i < n; i++) {
+        var name = names[i];
+        init[name] = table[name];
+        size++;
+    }
+    return new Dict(init, size);
+};
+
+Dict.prototype = {
+    has: function(x) { return hasOwnProperty.call(this.table, x); },
+    set: function(x, v) {
+        if (!hasOwnProperty.call(this.table, x))
+            this.size++;
+        this.table[x] = v;
+    },
+    get: function(x) { return this.table[x]; },
+    getDef: function(x, thunk) {
+        if (!hasOwnProperty.call(this.table, x)) {
+            this.size++;
+            this.table[x] = thunk();
+        }
+        return this.table[x];
+    },
+    forEach: function(f) {
+        var table = this.table;
+        for (var key in table)
+            f.call(this, key, table[key]);
+    },
+    map: function(f) {
+        var table1 = this.table;
+        var table2 = Object.create(null, {});
+        this.forEach(function(key, val) {
+            table2[key] = f.call(this, val, key);
+        });
+        return new Dict(table2, this.size);
+    },
+    mapObject: function(f) {
+        var table1 = this.table;
+        var table2 = Object.create(null, {});
+        this.forEach(function(key, val) {
+            table2[key] = f.call(this, val, key);
+        });
+        return table2;
+    },
+    toObject: function() {
+        return this.mapObject(function(val) { return val; });
+    },
+    choose: function() {
+        return Object.getOwnPropertyNames(this.table)[0];
+    },
+    remove: function(x) {
+        if (hasOwnProperty.call(this.table, x)) {
+            this.size--;
+            delete this.table[x];
+        }
+    },
+    copy: function() {
+        var table = Object.create(null, {});
+        for (var key in this.table)
+            table[key] = this.table[key];
+        return new Dict(table, this.size);
+    },
+    keys: function() {
+        return Object.keys(this.table);
+    },
+    toString: function() { return "[object Dict]" }
+};
+
+var _WeakMap = typeof WeakMap === "function" ? WeakMap : (function() {
+    // shim for ES6 WeakMap with poor asymptotics
+    function WeakMap(array) {
         this.array = array || [];
     }
 
@@ -10190,7 +10428,7 @@ define('ace/narcissus/jsdefs', ['require', 'exports', 'module' ], function(requi
         return notFound();
     }
 
-    ObjectMap.prototype = {
+    WeakMap.prototype = {
         has: function(x) {
             return searchMap(this, x, function() { return true }, function() { return false });
         },
@@ -10205,101 +10443,152 @@ define('ace/narcissus/jsdefs', ['require', 'exports', 'module' ], function(requi
                              function(pair) { return pair.value },
                              function() { return null });
         },
-        getDef: function(x, thunk) {
-            var a = this.array;
-            return searchMap(this, x,
-                             function(pair) { return pair.value },
-                             function() {
-                                 var v = thunk();
-                                 a.push({ key: x, value: v });
-                                 return v;
-                             });
-        },
-        forEach: function(f) {
-            var a = this.array;
-            for (var i = 0, n = a.length; i < n; i++) {
-                var pair = a[i];
-                f.call(this, pair.key, pair.value);
-            }
-        },
-        choose: function() {
-            return this.array[0].key;
-        },
-        get size() {
-            return this.array.length;
-        },
-        remove: function(x) {
+        "delete": function(x) {
             var a = this.array;
             searchMap(this, x,
                       function(pair, i) { a.splice(i, 1) },
                       function() { });
         },
-        copy: function() {
-            return new ObjectMap(this.array.map(function(pair) {
-                return { key: pair.key, value: pair.value }
-            }));
-        },
-        clear: function() {
-            this.array = [];
-        },
-        toString: function() { return "[object ObjectMap]" }
+        toString: function() { return "[object WeakMap]" }
     };
 
-    // non-destructive stack
-    function Stack(elts) {
-        this.elts = elts || null;
-    }
+    return WeakMap;
+})();
 
-    Stack.prototype = {
-        push: function(x) {
-            return new Stack({ top: x, rest: this.elts });
-        },
-        top: function() {
-            if (!this.elts)
-                throw new Error("empty stack");
-            return this.elts.top;
-        },
-        isEmpty: function() {
-            return this.top === null;
-        },
-        find: function(test) {
-            for (var elts = this.elts; elts; elts = elts.rest) {
-                if (test(elts.top))
-                    return elts.top;
-            }
-            return null;
-        },
-        has: function(x) {
-            return Boolean(this.find(function(elt) { return elt === x }));
-        },
-        forEach: function(f) {
-            for (var elts = this.elts; elts; elts = elts.rest) {
-                f(elts.top);
-            }
+// non-destructive stack
+function Stack(elts) {
+    this.elts = elts || null;
+}
+
+Stack.prototype = {
+    push: function(x) {
+        return new Stack({ top: x, rest: this.elts });
+    },
+    top: function() {
+        if (!this.elts)
+            throw new Error("empty stack");
+        return this.elts.top;
+    },
+    isEmpty: function() {
+        return this.top === null;
+    },
+    find: function(test) {
+        for (var elts = this.elts; elts; elts = elts.rest) {
+            if (test(elts.top))
+                return elts.top;
         }
-    };
+        return null;
+    },
+    has: function(x) {
+        return Boolean(this.find(function(elt) { return elt === x }));
+    },
+    forEach: function(f) {
+        for (var elts = this.elts; elts; elts = elts.rest) {
+            f(elts.top);
+        }
+    }
+};
 
-    module.exports = {
-        tokens: tokens,
-        whitespace: whitespace,
-        opTypeNames: opTypeNames,
-        keywords: keywords,
-        isStatementStartCode: isStatementStartCode,
-        tokenIds: tokenIds,
-        consts: consts,
-        assignOps: assignOps,
-        defineGetter: defineGetter,
-        defineGetterSetter: defineGetterSetter,
-        defineMemoGetter: defineMemoGetter,
-        defineProperty: defineProperty,
-        isNativeCode: isNativeCode,
-        mirrorHandler: mirrorHandler,
-        mixinHandler: mixinHandler,
-        whitelistHandler: whitelistHandler,
-        blacklistHandler: blacklistHandler,
-        makePassthruHandler: makePassthruHandler,
-        StringMap: StringMap,
-        ObjectMap: ObjectMap,
-        Stack: Stack
-    };
+if (!Array.prototype.copy) {
+    defineProperty(Array.prototype, "copy",
+                   function() {
+                       var result = [];
+                       for (var i = 0, n = this.length; i < n; i++)
+                           result[i] = this[i];
+                       return result;
+                   }, false, false, true);
+}
+
+if (!Array.prototype.top) {
+    defineProperty(Array.prototype, "top",
+                   function() {
+                       return this.length && this[this.length-1];
+                   }, false, false, true);
+}
+
+exports.tokens = tokens;
+exports.whitespace = whitespace;
+exports.opTypeNames = opTypeNames;
+exports.keywords = keywords;
+exports.mozillaKeywords = mozillaKeywords;
+exports.strictKeywords = strictKeywords;
+exports.isStatementStartCode = isStatementStartCode;
+exports.tokenIds = tokenIds;
+exports.consts = consts;
+exports.assignOps = assignOps;
+exports.defineGetter = defineGetter;
+exports.defineGetterSetter = defineGetterSetter;
+exports.defineMemoGetter = defineMemoGetter;
+exports.defineProperty = defineProperty;
+exports.isNativeCode = isNativeCode;
+exports.apply = apply;
+exports.applyNew = applyNew;
+exports.mixinHandler = mixinHandler;
+exports.whitelistHandler = whitelistHandler;
+exports.blacklistHandler = blacklistHandler;
+exports.makePassthruHandler = makePassthruHandler;
+exports.Dict = Dict;
+exports.WeakMap = _WeakMap;
+exports.Stack = Stack;
+
+});/* vim: set sw=4 ts=4 et tw=78: */
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is the Narcissus JavaScript engine.
+ *
+ * The Initial Developer of the Original Code is
+ * Brendan Eich <brendan@mozilla.org>.
+ * Portions created by the Initial Developer are Copyright (C) 2004
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Tom Austin <taustin@ucsc.edu>
+ *   Brendan Eich <brendan@mozilla.org>
+ *   Shu-Yu Guo <shu@rfrn.org>
+ *   Dave Herman <dherman@mozilla.com>
+ *   Dimitris Vardoulakis <dimvar@ccs.neu.edu>
+ *   Patrick Walton <pcwalton@mozilla.com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/narcissus/options', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+// Global variables to hide from the interpreter
+exports.hiddenHostGlobals = { Narcissus: true };
+
+// Desugar SpiderMonkey language extensions?
+exports.desugarExtensions = false;
+
+// Allow HTML comments?
+exports.allowHTMLComments = false;
+
+// Allow non-standard Mozilla extensions?
+exports.mozillaMode = true;
+
+// Allow experimental paren-free mode?
+exports.parenFreeMode = false;
+
 });
