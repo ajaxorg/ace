@@ -3553,6 +3553,14 @@ var Editor = function(renderer, session) {
     this.getHighlightSelectedWord = function() {
         return this.$highlightSelectedWord;
     };
+    
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.renderer.setAnimatedScroll(shouldAnimate);
+    }
+    
+    this.getAnimatedScroll = function(){
+        this.rendered.getAnimatedScroll();
+    }
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.getShowInvisibles() == showInvisibles)
@@ -4165,7 +4173,17 @@ var Editor = function(renderer, session) {
         var range = this.$search.find(this.session);
         if (range) {
             this.session.unfold(range);
-            this.selection.setSelectionRange(range); // this scrolls selection into view
+            this.$blockScrolling += 1;
+            this.selection.setSelectionRange(range);
+            this.$blockScrolling -= 1;
+            
+            var cursor = this.getCursorPosition();
+            if (!this.isRowFullyVisible(cursor.row))
+                this.scrollToLine(cursor.row, true);
+                
+            //@todo scroll X
+            //if (!this.isRowFullyVisible(cursor.row))
+                //this.scrollToLine(cursor.row, true);
         }
     };
 
@@ -4185,7 +4203,8 @@ var Editor = function(renderer, session) {
 
 
 exports.Editor = Editor;
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -12431,6 +12450,8 @@ var VirtualRenderer = function(container, theme) {
     // Indicates whether the horizontal scrollbar is visible
     this.$horizScroll = true;
     this.$horizScrollAlwaysVisible = true;
+    
+    this.$animatedScroll = false;
 
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", function(e) {
@@ -12602,6 +12623,14 @@ var VirtualRenderer = function(container, theme) {
         var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit);
     };
+    
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.$animatedScroll = shouldAnimate;
+    }
+    
+    this.getAnimatedscroll = function(){
+        return this.$animatedScroll
+    }
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.$textLayer.setShowInvisibles(showInvisibles))
@@ -13033,13 +13062,46 @@ var VirtualRenderer = function(container, theme) {
         this.session.setScrollTop(row * this.lineHeight);
     };
 
+    //@todo I would like to make this animation a setting. How?
+
+    var STEPS = 10;
+    function calcSteps(fromValue, toValue){
+        var i     = 0,
+            l     = STEPS,
+            steps = [],
+            func  = function(t, x_min, dx) {
+                if ((t /= .5) < 1)
+                    return dx / 2 * Math.pow(t, 3) + x_min;
+                return dx / 2 * (Math.pow(t - 2, 3) + 2) + x_min;
+            };
+
+        for (i = 0; i < l; ++i)
+            steps.push(func(i / STEPS, fromValue, toValue - fromValue));
+        steps.push(toValue);
+        
+        return steps;
+    }
+
     this.scrollToLine = function(line, center) {
         var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
         var offset = pos.top;
         if (center)
             offset -= this.$size.scrollerHeight / 2;
-
-        this.session.setScrollTop(offset);
+            
+        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
+            var i = 0, _self = this, 
+                steps = calcSteps(this.scrollTop, offset);
+            clearInterval(_self.$timer);
+            this.$timer = setInterval(function(){
+                _self.session.setScrollTop(steps[i]);
+                
+                if (++i == STEPS + 1)
+                    clearInterval(_self.$timer);
+            }, 10);
+        }
+        else {
+            this.session.setScrollTop(offset);
+        }
     };
 
     this.scrollToY = function(scrollTop) {
