@@ -101,7 +101,7 @@ exports.cssText = "\
   color: rgba(147, 161, 161, 0.50);\
 }\
 \
-.ace-solarized-dark .ace_keyword {\
+.ace-solarized-dark .ace_keyword, .ace-solarized-dark .ace_meta {\
   color:#859900;\
 }\
 \
@@ -111,6 +111,10 @@ exports.cssText = "\
 \
 .ace-solarized-dark .ace_constant.ace_numeric {\
   color:#D33682;\
+}\
+\
+.ace-solarized-dark .ace_constant.ace_other {\
+  color:#CB4B16;\
 }\
 \
 .ace-solarized-dark .ace_fold {\
@@ -124,6 +128,10 @@ exports.cssText = "\
 \
 .ace-solarized-dark .ace_storage {\
   color:#93A1A1;\
+}\
+\
+.ace-solarized-dark .ace_variable {\
+  color:#268BD2;\
 }\
 \
 .ace-solarized-dark .ace_string {\
