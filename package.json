@@ -16,9 +16,9 @@
     "devDependencies": {
         "asyncjs": "0.0.x",
         "jsdom": "0.2.x",
-        "amd-loader": ">=0.0.3",
+        "amd-loader": "~0.0.4",
         "libxml": "0.0.x",
-        "dryice": ">=0.4.1"
+        "dryice": "0.4.2"
     },
 
     "licenses": [{

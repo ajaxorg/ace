@@ -241,7 +241,7 @@ exportAce(ACE_NAMESPACE);
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/worker/worker_client', 'ace/theme/textmate'], function(require, exports, module) {
+define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/worker/worker_client', 'ace/keyboard/hash_handler', 'ace/keyboard/state_handler', 'ace/lib/net', 'ace/placeholder', 'ace/config', 'ace/theme/textmate'], function(require, exports, module) {
 "use strict";
 
 require("./lib/fixoldbrowsers");
@@ -254,7 +254,13 @@ var EditSession = require("./edit_session").EditSession;
 var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
 
+// The following require()s are for inclusion in the built ace file
 require("./worker/worker_client");
+require("./keyboard/hash_handler");
+require("./keyboard/state_handler");
+require("./lib/net");
+require("./placeholder");
+require("./config").init();
 
 exports.edit = function(el) {
     if (typeof(el) == "string") {
@@ -2441,7 +2447,7 @@ var Editor = function(renderer, session) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
-    
+
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
 
@@ -2695,7 +2701,11 @@ var Editor = function(renderer, session) {
         this.renderer.updateCursor();
 
         if (!this.$blockScrolling) {
-            this.renderer.scrollCursorIntoView();
+            var selection = this.getSelection();
+            if (selection.isEmpty())
+                this.renderer.scrollCursorIntoView(selection.getCursor());
+            else
+                this.renderer.scrollSelectionIntoView(selection.getSelectionLead(), selection.getSelectionAnchor());
         }
 
         // move text input over the cursor
@@ -3031,7 +3041,7 @@ var Editor = function(renderer, session) {
         this.$showFoldWidgets = show;
         this.renderer.updateFull();
     };
-    
+
     this.getShowFoldWidgets = function() {
         return this.renderer.$gutterLayer.getShowFoldWidgets();
     };
@@ -3248,7 +3258,7 @@ var Editor = function(renderer, session) {
             range.start.row += linesMoved;
             range.end.row += linesMoved;
             selection.setSelectionRange(range, reverse);
-        } 
+        }
         else {
             selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
             selection.$moveSelection(function() {
@@ -3412,13 +3422,13 @@ var Editor = function(renderer, session) {
             cursor.column -= 2;
             pos = this.session.findMatchingBracket(cursor);
         }
-        
+
         if (pos) {
             this.clearSelection();
             this.moveCursorTo(pos.row, pos.column);
         }
     };
-    
+
     this.gotoLine = function(lineNumber, column) {
         this.selection.clearSelection();
         this.session.unfold({row: lineNumber - 1, column: column || 0});
@@ -3608,8 +3618,7 @@ var Editor = function(renderer, session) {
 
 
 exports.Editor = Editor;
-});
-/* ***** BEGIN LICENSE BLOCK *****
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -5403,13 +5412,13 @@ exports.commands = [{
 }, {
     name: "backspace",
     bindKey: bindKey(
-        "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+        "Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
     exec: function(editor) { editor.remove("left"); }
 }, {
     name: "removetolinestart",
-    bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
+    bindKey: bindKey("Alt-Backspace", "Command-Backspace"),
     exec: function(editor) { editor.removeToLineStart(); }
 }, {
     name: "removetolineend",
@@ -5498,11 +5507,13 @@ exports.commands = [{
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/edit_session', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
+define('ace/edit_session', ['require', 'exports', 'module' , 'ace/config', 'ace/lib/oop', 'ace/lib/lang', 'ace/lib/net', 'ace/lib/event_emitter', 'ace/selection', 'ace/mode/text', 'ace/range', 'ace/document', 'ace/background_tokenizer', 'ace/edit_session/folding', 'ace/edit_session/bracket_match'], function(require, exports, module) {
 "use strict";
 
+var config = require("./config");
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
+var net = require("./lib/net");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Selection = require("./selection").Selection;
 var TextMode = require("./mode/text").Mode;
@@ -5944,10 +5955,65 @@ var EditSession = function(text, mode) {
         this._emit("tokenizerUpdate", e);
     };
 
+    this.$modes = {};
+    this._loadMode = function(mode, callback) {
+        if (this.$modes[mode])
+            return callback(this.$modes[mode]);
+        
+        var _self = this;
+        var module;
+        try {
+            module = require(mode);
+        } catch (e) {};
+        if (module)
+            return done(module);
+            
+        fetch(function() {
+            require([mode], done);
+        });
+        
+        function done(module) {
+            if (_self.$modes[mode])
+                return callback(_self.$modes[mode]);
+            
+            _self.$modes[mode] = new module.Mode();
+            _self._emit("loadmode", {
+                name: mode,
+                mode: _self.$modes[mode]
+            });
+            callback(_self.$modes[mode]);
+        }
+
+        function fetch(callback) {
+            if (!config.get("packaged"))
+                return callback();
+                
+            var base = mode.split("/").pop();
+            var filename = config.get("modePath") + "/mode-" + base + config.get("suffix");
+            net.loadScript(filename, callback);
+        }
+    };
+
     this.$mode = null;
+    this.$origMode = null;
     this.setMode = function(mode) {
+        this.$origMode = mode;
+        
+        // load on demand
+        if (typeof mode === "string") {
+            var _self = this;
+            this._loadMode(mode, function(module) {
+                if (_self.$origMode !== mode)
+                    return;
+            
+                _self.setMode(module);
+            });
+            return;
+        }
+        
         if (this.$mode === mode) return;
         this.$mode = mode;
+        
 
         this.$stopWorker();
 
@@ -7173,7 +7239,195 @@ require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype)
 
 exports.EditSession = EditSession;
 });
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/config', ['require', 'exports', 'module' , 'ace/lib/lang'], function(require, exports, module) {
+"no use strict";
+
+var lang = require("./lib/lang");
+
+var global = (function() {
+    return this;
+})();
+
+var options = {
+    packaged: false,
+    workerPath: "",
+    modePath: "",
+    themePath: "",
+    suffix: ".js"
+};
+
+exports.get = function(key) {
+    if (!options.hasOwnProperty(key))
+        throw new Error("Unknown confik key: " + key);
+        
+    return options[key];
+};
+
+exports.set = function(key, value) {
+    if (!options.hasOwnProperty(key))
+        throw new Error("Unknown confik key: " + key);
+        
+    options[key] = value;
+};
+
+exports.all = function() {
+    return lang.copyObject(options);
+};
+
+exports.init = function() {
+    options.packaged = require.packaged || module.packaged || (global.define && define.packaged);
+
+    if (!global.document)
+        return "";
+
+    var scriptOptions = {};
+    var scriptUrl = "";
+    var suffix;
+    
+    var scripts = document.getElementsByTagName("script");
+    for (var i=0; i<scripts.length; i++) {
+        var script = scripts[i];
+
+        var src = script.src || script.getAttribute("src");
+        if (!src) {
+            continue;
+        }
+        
+        var attributes = script.attributes;
+        for (var j=0, l=attributes.length; j < l; j++) {
+            var attr = attributes[j];
+            if (attr.name.indexOf("data-ace-") === 0) {
+                scriptOptions[deHyphenate(attr.name.replace(/^data-ace-/, ""))] = attr.value;
+            }
+        }
+
+        var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace((-uncompressed)?(-noconflict)?\.js))(?:\?|$)/);
+        if (m) {
+            scriptUrl = m[1] || m[2];
+            suffix = m[3];
+        }
+    }
+    
+    if (scriptUrl) {
+        scriptOptions.base = scriptOptions.base || scriptUrl;
+        scriptOptions.packaged = true;
+    }
+    
+    scriptOptions.suffix = scriptOptions.suffix || suffix;
+    scriptOptions.workerPath = scriptOptions.workerPath || scriptOptions.base;
+    scriptOptions.modePath = scriptOptions.modePath || scriptOptions.base;
+    scriptOptions.themePath = scriptOptions.themePath || scriptOptions.base;
+    delete scriptOptions.base;
+    
+    for (var key in scriptOptions)
+        if (typeof scriptOptions[key] !== "undefined")
+            exports.set(key, scriptOptions[key]);
+};
+
+function deHyphenate(str) {
+    return str.replace(/-(.)/g, function(m, m1) { return m1.toUpperCase(); });
+}
+
+});/**
+ * based on code from:
+ * 
+ * @license RequireJS text 0.25.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/requirejs for details
+ */
+define('ace/lib/net', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
+
+exports.get = function (url, callback) {
+    var xhr = exports.createXhr();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function (evt) {
+        //Do not explicitly handle errors, those should be
+        //visible via console output in the browser.
+        if (xhr.readyState === 4) {
+            callback(xhr.responseText);
+        }
+    };
+    xhr.send(null);
+};
+
+var progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
+
+exports.createXhr = function() {
+    //Would love to dump the ActiveX crap in here. Need IE 6 to die first.
+    var xhr, i, progId;
+    if (typeof XMLHttpRequest !== "undefined") {
+        return new XMLHttpRequest();
+    } else {
+        for (i = 0; i < 3; i++) {
+            progId = progIds[i];
+            try {
+                xhr = new ActiveXObject(progId);
+            } catch (e) {}
+
+            if (xhr) {
+                progIds = [progId];  // so faster next time
+                break;
+            }
+        }
+    }
+
+    if (!xhr) {
+        throw new Error("createXhr(): XMLHttpRequest not available");
+    }
+
+    return xhr;
+};
+
+exports.loadScript = function(path, callback) {
+    var head = document.getElementsByTagName('head')[0];
+    var s = document.createElement('script');
+
+    s.src = path;
+    head.appendChild(s);
+    
+    s.onload = callback;
+};
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -8274,23 +8528,30 @@ var Tokenizer = function(rules, flag) {
         var ruleRegExps = [];
         var matchTotal = 0;
         var mapping = this.matchMappings[key] = {};
-        
+
         for ( var i = 0; i < state.length; i++) {
+
+            if (state[i].regex instanceof RegExp)
+                state[i].regex = state[i].regex.toString().slice(1, -1);
+
             // Count number of matching groups. 2 extra groups from the full match
             // And the catch-all on the end (used to force a match);
             var matchcount = new RegExp("(?:(" + state[i].regex + ")|(.))").exec("a").length - 2;
-        
+
             // Replace any backreferences and offset appropriately.
             var adjustedregex = state[i].regex.replace(/\\([0-9]+)/g, function (match, digit) {
                 return "\\" + (parseInt(digit, 10) + matchTotal + 1);
             });
-            
+
+            if (matchcount > 1 && state[i].token.length !== matchcount-1)
+                throw new Error("Matching groups and length of the token array don't match in rule #" + i + " of state " + key);
+
             mapping[matchTotal] = {
                 rule: i,
                 len: matchcount
             };
             matchTotal += matchcount;
-            
+
             ruleRegExps.push(adjustedregex);
         }
 
@@ -8306,47 +8567,47 @@ var Tokenizer = function(rules, flag) {
         var mapping = this.matchMappings[currentState];
         var re = this.regExps[currentState];
         re.lastIndex = 0;
-        
+
         var match, tokens = [];
-        
+
         var lastIndex = 0;
-        
+
         var token = {
             type: null,
             value: ""
         };
-        
+
         while (match = re.exec(line)) {
             var type = "text";
             var rule = null;
             var value = [match[0]];
 
             for (var i = 0; i < match.length-2; i++) {
-                if (match[i + 1] !== undefined) {
-                    rule = state[mapping[i].rule];
-                    
-                    if (mapping[i].len > 1) {
-                        value = match.slice(i+2, i+1+mapping[i].len);
-                    }
-                    
-                    // compute token type
-                    if (typeof rule.token == "function")
-                        type = rule.token.apply(this, value);
-                    else
-                        type = rule.token;
+                if (match[i + 1] === undefined)
+                    continue;
 
-                    var next = rule.next;                    
-                    if (next && next !== currentState) {
-                        currentState = next;
-                        state = this.rules[currentState];
-                        mapping = this.matchMappings[currentState];
-                        lastIndex = re.lastIndex;
+                rule = state[mapping[i].rule];
 
-                        re = this.regExps[currentState];
-                        re.lastIndex = lastIndex;
-                    }
-                    break;
+                if (mapping[i].len > 1)
+                    value = match.slice(i+2, i+1+mapping[i].len);
+
+                // compute token type
+                if (typeof rule.token == "function")
+                    type = rule.token.apply(this, value);
+                else
+                    type = rule.token;
+
+                var next = rule.next;
+                if (next && next !== currentState) {
+                    currentState = next;
+                    state = this.rules[currentState];
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = re.lastIndex;
+
+                    re = this.regExps[currentState];
+                    re.lastIndex = lastIndex;
                 }
+                break;
             }
 
             if (value[0]) {
@@ -8355,13 +8616,15 @@ var Tokenizer = function(rules, flag) {
                     type = [type];
                 }
                 for (var i = 0; i < value.length; i++) {
+                    if (!value[i])
+                        continue;
+
                     if ((!rule || rule.merge || type[i] === "text") && token.type === type[i]) {
                         token.value += value[i];
                     } else {
-                        if (token.type) {
+                        if (token.type)
                             tokens.push(token);
-                        }
-                    
+
                         token = {
                             type: type[i],
                             value: value[i]
@@ -8369,10 +8632,10 @@ var Tokenizer = function(rules, flag) {
                     }
                 }
             }
-            
+
             if (lastIndex == line.length)
                 break;
-            
+
             lastIndex = re.lastIndex;
         }
 
@@ -8878,11 +9141,12 @@ var Document = function(text) {
     };
 
     this.insert = function(position, text) {
-        if (text.length == 0)
+        if (!text || text.length === 0)
             return position;
 
         position = this.$clipPosition(position);
 
+        // only detect new lines if the document has no line break yet
         if (this.getLength() <= 1)
             this.$detectNewLine(text);
 
@@ -11356,7 +11620,7 @@ var CommandManager = function(platform, commands) {
 
         var key = typeof binding == "string" ? binding: binding[this.platform];
         this.bindKey(key, command);
-    }
+    };
 
     function parseKeys(keys, val, ret) {
         var key;
@@ -11373,10 +11637,10 @@ var CommandManager = function(platform, commands) {
         return {
             key: key,
             hashId: hashId
-        }
+        };
     }
 
-    function splitSafe(s, separator) {
+    function splitSafe(s) {
         return (s.toLowerCase()
             .trim()
             .split(new RegExp("[\\s ]*\\-[\\s ]*", "g"), 999));
@@ -11390,7 +11654,7 @@ var CommandManager = function(platform, commands) {
 
         var ckbr = this.commmandKeyBinding;
         return ckbr[hashId] && ckbr[hashId][textOrKey.toLowerCase()];
-    }
+    };
 
     this.exec = function(command, editor, args) {
         if (typeof command === 'string')
@@ -11442,7 +11706,7 @@ var CommandManager = function(platform, commands) {
                     this.exec(x, editor);
                 else
                     this.exec(x[0], editor, x[1]);
-            }, this)
+            }, this);
         } finally {
             this.$inReplay = false;
         }
@@ -11454,9 +11718,9 @@ var CommandManager = function(platform, commands) {
                 x[0] = x[0].name;
             if (!x[1])
                 x = x[0];
-            return x
-        })
-    }
+            return x;
+        });
+    };
 
 }).call(CommandManager.prototype);
 
@@ -11597,13 +11861,15 @@ exports.UndoManager = UndoManager;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/virtual_renderer', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/dom', 'ace/lib/event', 'ace/lib/useragent', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'ace/lib/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
+define('ace/virtual_renderer', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/dom', 'ace/lib/event', 'ace/lib/useragent', 'ace/config', 'ace/lib/net', 'ace/layer/gutter', 'ace/layer/marker', 'ace/layer/text', 'ace/layer/cursor', 'ace/scrollbar', 'ace/renderloop', 'ace/lib/event_emitter', 'text!ace/css/editor.css'], function(require, exports, module) {
 "use strict";
 
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
 var event = require("./lib/event");
 var useragent = require("./lib/useragent");
+var config = require("./config");
+var net = require("./lib/net");
 var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
 var TextLayer = require("./layer/text").Text;
@@ -11617,13 +11883,13 @@ dom.importCssString(editorCss, "ace_editor");
 
 var VirtualRenderer = function(container, theme) {
     var _self = this;
-    
+
     this.container = container;
 
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-    
+
     dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
@@ -11641,8 +11907,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
-    
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -11667,7 +11933,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    
+
     event.addListener(this.scroller, "scroll", function() {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
@@ -11909,7 +12175,7 @@ var VirtualRenderer = function(container, theme) {
         // this persists in IE9
         if (useragent.isIE)
             return;
-        
+
         if (this.layerConfig.lastRow === 0)
             return;
 
@@ -11985,13 +12251,13 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             this.scroller.scrollLeft = this.scrollLeft;
-            
+
             // read the value after writing it since the value might get clipped
             var scrollLeft = this.scroller.scrollLeft;
             this.scrollLeft = scrollLeft;
             this.session.setScrollLeft(scrollLeft);
         }
-        
+
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
@@ -12204,12 +12470,18 @@ var VirtualRenderer = function(container, theme) {
         this.$cursorLayer.showCursor();
     };
 
-    this.scrollCursorIntoView = function() {
+    this.scrollSelectionIntoView = function(anchor, lead) {
+        // first scroll anchor into view then scroll lead into view
+        this.scrollCursorIntoView(anchor);
+        this.scrollCursorIntoView(lead);
+    };
+
+    this.scrollCursorIntoView = function(cursor) {
         // the editor is not visible
         if (this.$size.scrollerHeight === 0)
             return;
 
-        var pos = this.$cursorLayer.getPixelPosition();
+        var pos = this.$cursorLayer.getPixelPosition(cursor);
 
         var left = pos.left;
         var top = pos.top;
@@ -12362,14 +12634,36 @@ var VirtualRenderer = function(container, theme) {
         style.left = "-10000px";
     };
 
+    this._loadTheme = function(name, callback) {
+        if (!config.get("packaged"))
+            return callback();
+
+        var base = name.split("/").pop();
+        var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
+        net.loadScript(filename, callback);
+    };
+
     this.setTheme = function(theme) {
         var _self = this;
 
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
-            theme = theme || "ace/theme/textmate";
-            require([theme], function(theme) {
-                afterLoad(theme);
+            var moduleName = theme || "ace/theme/textmate";
+
+            var module;
+            try {
+                module = require(moduleName);
+            } catch (e) {};
+            if (module)
+                return afterLoad(module);
+
+            _self._loadTheme(moduleName, function() {
+                require([theme], function(module) {
+                    if (_self.$themeValue !== theme)
+                        return;
+
+                    afterLoad(module);
+                });
             });
         } else {
             afterLoad(theme);
@@ -14041,19 +14335,19 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/worker/worker_client', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
+define('ace/worker/worker_client', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter', 'ace/config'], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
+var config = require("../config");
 
 var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
 
     this.changeListener = this.changeListener.bind(this);
 
-    if (module.packaged) {
-        var base = this.$guessBasePath();
-        this.$worker = new Worker(base + packagedJs);
+    if (config.get("packaged")) {
+        this.$worker = new Worker(config.get("workerPath") + "/" + packagedJs);
     }
     else {
         var workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
@@ -14118,29 +14412,6 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
         return path;
     };
 
-    this.$guessBasePath = function() {
-        if (require.aceBaseUrl)
-            return require.aceBaseUrl;
-
-        var scripts = document.getElementsByTagName("script");
-        for (var i=0; i<scripts.length; i++) {
-            var script = scripts[i];
-
-            var base = script.getAttribute("data-ace-base");
-            if (base)
-                return base.replace(/\/*$/, "/");
-
-            var src = script.src || script.getAttribute("src");
-            if (!src) {
-                continue;
-            }
-            var m = src.match(/^(?:(.*\/)ace\.js|(.*\/)ace(-uncompressed)?(-noconflict)?\.js)(?:\?|$)/);
-            if (m)
-                return m[1] || m[2];
-        }
-        return "";
-    };
-
     this.terminate = function() {
         this._emit("terminate", {});
         this.$worker.terminate();
@@ -14192,6 +14463,593 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
 
 exports.WorkerClient = WorkerClient;
 
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Fabian Jakobs <fabian AT ajax DOT org>
+ *   Julian Viereck (julian.viereck@gmail.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
+"use strict";
+
+var keyUtil  = require("../lib/keys");
+
+function HashHandler(config) {
+    this.setConfig(config);
+}
+
+(function() {
+    function splitSafe(s, separator, limit, bLowerCase) {
+        return (bLowerCase && s.toLowerCase() || s)
+            .replace(/(?:^\s+|\n|\s+$)/g, "")
+            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
+    }
+
+    function parseKeys(keys, val, ret) {
+        var key,
+            hashId = 0,
+            parts  = splitSafe(keys, "\\-", null, true),
+            i      = 0,
+            l      = parts.length;
+
+        for (; i < l; ++i) {
+            if (keyUtil.KEY_MODS[parts[i]])
+                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
+            else
+                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
+        }
+
+        (ret[hashId] || (ret[hashId] = {}))[key] = val;
+        return ret;
+    }
+
+    function objectReverse(obj, keySplit) {
+        var i, j, l, key,
+            ret = {};
+        for (i in obj) {
+            key = obj[i];
+            if (keySplit && typeof key == "string") {
+                key = key.split(keySplit);
+                for (j = 0, l = key.length; j < l; ++j)
+                    parseKeys.call(this, key[j], i, ret);
+            }
+            else {
+                parseKeys.call(this, key, i, ret);
+            }
+        }
+        return ret;
+    }
+
+    this.setConfig = function(config) {
+        this.$config = config;
+        if (typeof this.$config.reverse == "undefined")
+            this.$config.reverse = objectReverse.call(this, this.$config, "|");
+    };
+
+    /**
+     * This function is called by keyBinding.
+     */
+    this.handleKeyboard = function(data, hashId, textOrKey, keyCode) {
+        // Figure out if a commandKey was pressed or just some text was insert.
+        if (hashId != 0 || keyCode != 0) {
+            return {
+                command: (this.$config.reverse[hashId] || {})[textOrKey]
+            }
+        } else {
+            return {
+                command: "inserttext",
+                args: {
+                    text: textOrKey
+                }
+            }
+        }
+    }
+}).call(HashHandler.prototype)
+
+exports.HashHandler = HashHandler;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Julian Viereck (julian.viereck@gmail.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/keyboard/state_handler', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
+
+// If you're developing a new keymapping and want to get an idea what's going
+// on, then enable debugging.
+var DEBUG = false;
+
+function StateHandler(keymapping) {
+    this.keymapping = this.$buildKeymappingRegex(keymapping);
+}
+
+StateHandler.prototype = {
+    /**
+     * Build the RegExp from the keymapping as RegExp can't stored directly
+     * in the metadata JSON and as the RegExp used to match the keys/buffer
+     * need to be adapted.
+     */
+    $buildKeymappingRegex: function(keymapping) {
+        for (var state in keymapping) {
+            this.$buildBindingsRegex(keymapping[state]);
+        }
+        return keymapping;
+    },
+
+    $buildBindingsRegex: function(bindings) {
+        // Escape a given Regex string.
+        bindings.forEach(function(binding) {
+            if (binding.key) {
+                binding.key = new RegExp('^' + binding.key + '$');
+            } else if (Array.isArray(binding.regex)) {
+                if (!('key' in binding))
+                  binding.key = new RegExp('^' + binding.regex[1] + '$');
+                binding.regex = new RegExp(binding.regex.join('') + '$');
+            } else if (binding.regex) {
+                binding.regex = new RegExp(binding.regex + '$');
+            }
+        });
+    },
+
+    $composeBuffer: function(data, hashId, key, e) {
+        // Initialize the data object.
+        if (data.state == null || data.buffer == null) {
+            data.state = "start";
+            data.buffer = "";
+        }
+
+        var keyArray = [];
+        if (hashId & 1) keyArray.push("ctrl");
+        if (hashId & 8) keyArray.push("command");
+        if (hashId & 2) keyArray.push("option");
+        if (hashId & 4) keyArray.push("shift");
+        if (key)        keyArray.push(key);
+
+        var symbolicName = keyArray.join("-");
+        var bufferToUse = data.buffer + symbolicName;
+
+        // Don't add the symbolic name to the key buffer if the alt_ key is
+        // part of the symbolic name. If it starts with alt_, this means
+        // that the user hit an alt keycombo and there will be a single,
+        // new character detected after this event, which then will be
+        // added to the buffer (e.g. alt_j will result in ∆).
+        //
+        // We test for 2 and not for & 2 as we only want to exclude the case where
+        // the option key is pressed alone.
+        if (hashId != 2) {
+            data.buffer = bufferToUse;
+        }
+
+        var bufferObj = {
+            bufferToUse: bufferToUse,
+            symbolicName: symbolicName,
+        };
+
+        if (e) {
+            bufferObj.keyIdentifier = e.keyIdentifier
+        }
+
+        return bufferObj;
+    },
+
+    $find: function(data, buffer, symbolicName, hashId, key, keyIdentifier) {
+        // Holds the command to execute and the args if a command matched.
+        var result = {};
+
+        // Loop over all the bindings of the keymap until a match is found.
+        this.keymapping[data.state].some(function(binding) {
+            var match;
+
+            // Check if the key matches.
+            if (binding.key && !binding.key.test(symbolicName)) {
+                return false;
+            }
+
+            // Check if the regex matches.
+            if (binding.regex && !(match = binding.regex.exec(buffer))) {
+                return false;
+            }
+
+            // Check if the match function matches.
+            if (binding.match && !binding.match(buffer, hashId, key, symbolicName, keyIdentifier)) {
+                return false;
+            }
+
+            // Check for disallowed matches.
+            if (binding.disallowMatches) {
+                for (var i = 0; i < binding.disallowMatches.length; i++) {
+                    if (!!match[binding.disallowMatches[i]]) {
+                        return false;
+                    }
+                }
+            }
+
+            // If there is a command to execute, then figure out the
+            // command and the arguments.
+            if (binding.exec) {
+                result.command = binding.exec;
+
+                // Build the arguments.
+                if (binding.params) {
+                    var value;
+                    result.args = {};
+                    binding.params.forEach(function(param) {
+                        if (param.match != null && match != null) {
+                            value = match[param.match] || param.defaultValue;
+                        } else {
+                            value = param.defaultValue;
+                        }
+
+                        if (param.type === 'number') {
+                            value = parseInt(value);
+                        }
+
+                        result.args[param.name] = value;
+                    });
+                }
+                data.buffer = "";
+            }
+
+            // Handle the 'then' property.
+            if (binding.then) {
+                data.state = binding.then;
+                data.buffer = "";
+            }
+
+            // If no command is set, then execute the "null" fake command.
+            if (result.command == null) {
+                result.command = "null";
+            }
+
+            if (DEBUG) {
+                console.log("KeyboardStateMapper#find", binding);
+            }
+            return true;
+        });
+
+        if (result.command) {
+            return result;
+        } else {
+            data.buffer = "";
+            return false;
+        }
+    },
+
+    /**
+     * This function is called by keyBinding.
+     */
+    handleKeyboard: function(data, hashId, key, keyCode, e) {
+        // If we pressed any command key but no other key, then ignore the input.
+        // Otherwise "shift-" is added to the buffer, and later on "shift-g"
+        // which results in "shift-shift-g" which doesn't make sense.
+        if (hashId != 0 && (key == "" || key == String.fromCharCode(0))) {
+            return null;
+        }
+
+        // Compute the current value of the keyboard input buffer.
+        var r = this.$composeBuffer(data, hashId, key, e);
+        var buffer = r.bufferToUse;
+        var symbolicName = r.symbolicName;
+        var keyId = r.keyIdentifier;
+
+        r = this.$find(data, buffer, symbolicName, hashId, key, keyId);
+        if (DEBUG) {
+            console.log("KeyboardStateMapper#match", buffer, symbolicName, r);
+        }
+
+        return r;
+    }
+}
+
+/**
+ * This is a useful matching function and therefore is defined here so that
+ * users of KeyboardStateMapper can use it.
+ *
+ * @return boolean
+ *          If no command key (Command|Option|Shift|Ctrl) is pressed, it
+ *          returns true. If the only the Shift key is pressed + a character
+ *          true is returned as well. Otherwise, false is returned.
+ *          Summing up, the function returns true whenever the user typed
+ *          a normal character on the keyboard and no shortcut.
+ */
+exports.matchCharacterOnly = function(buffer, hashId, key, symbolicName) {
+    // If no command keys are pressed, then catch the input.
+    if (hashId == 0) {
+        return true;
+    }
+    // If only the shift key is pressed and a character key, then
+    // catch that input as well.
+    else if ((hashId == 4) && key.length == 1) {
+        return true;
+    }
+    // Otherwise, we let the input got through.
+    else {
+        return false;
+    }
+};
+
+exports.StateHandler = StateHandler;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Zef Hemel <zef@c9.io>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+define('ace/placeholder', ['require', 'exports', 'module' , 'ace/range', 'ace/lib/event_emitter', 'ace/lib/oop'], function(require, exports, module) {
+"use strict";
+
+var Range = require('./range').Range;
+var EventEmitter = require("./lib/event_emitter").EventEmitter;
+var oop = require("./lib/oop");
+
+var PlaceHolder = function(session, length, pos, others, mainClass, othersClass) {
+    var _self = this;
+    this.length = length;
+    this.session = session;
+    this.doc = session.getDocument();
+    this.mainClass = mainClass;
+    this.othersClass = othersClass;
+    this.$onUpdate = this.onUpdate.bind(this);
+    this.doc.on("change", this.$onUpdate);
+    this.$others = others;
+    
+    this.$onCursorChange = function() {
+        setTimeout(function() {
+            _self.onCursorChange();
+        });
+    };
+    
+    this.$pos = pos;
+    // Used for reset
+    var undoStack = session.getUndoManager().$undoStack || session.getUndoManager().$undostack || {length: -1};
+    this.$undoStackDepth =  undoStack.length;
+    this.setup();
+
+    session.selection.on("changeCursor", this.$onCursorChange);
+};
+
+(function() {
+
+    oop.implement(this, EventEmitter);
+
+    this.setup = function() {
+        var _self = this;
+        var doc = this.doc;
+        var session = this.session;
+        var pos = this.$pos;
+
+        this.pos = doc.createAnchor(pos.row, pos.column);
+        this.markerId = session.addMarker(new Range(pos.row, pos.column, pos.row, pos.column + this.length), this.mainClass, null, false);
+        this.pos.on("change", function(event) {
+            session.removeMarker(_self.markerId);
+            _self.markerId = session.addMarker(new Range(event.value.row, event.value.column, event.value.row, event.value.column+_self.length), _self.mainClass, null, false);
+        });
+        this.others = [];
+        this.$others.forEach(function(other) {
+            var anchor = doc.createAnchor(other.row, other.column);
+            _self.others.push(anchor);
+        });
+        session.setUndoSelect(false);
+    };
+    
+    this.showOtherMarkers = function() {
+        if(this.othersActive) return;
+        var session = this.session;
+        var _self = this;
+        this.othersActive = true;
+        this.others.forEach(function(anchor) {
+            anchor.markerId = session.addMarker(new Range(anchor.row, anchor.column, anchor.row, anchor.column+_self.length), _self.othersClass, null, false);
+            anchor.on("change", function(event) {
+                session.removeMarker(anchor.markerId);
+                anchor.markerId = session.addMarker(new Range(event.value.row, event.value.column, event.value.row, event.value.column+_self.length), _self.othersClass, null, false);
+            });
+        });
+    };
+    
+    this.hideOtherMarkers = function() {
+        if(!this.othersActive) return;
+        this.othersActive = false;
+        for (var i = 0; i < this.others.length; i++) {
+            this.session.removeMarker(this.others[i].markerId);
+        }
+    };
+
+    this.onUpdate = function(event) {
+        var delta = event.data;
+        var range = delta.range;
+        if(range.start.row !== range.end.row) return;
+        if(range.start.row !== this.pos.row) return;
+        if (this.$updating) return;
+        this.$updating = true;
+        var lengthDiff = delta.action === "insertText" ? range.end.column - range.start.column : range.start.column - range.end.column;
+        
+        if(range.start.column >= this.pos.column && range.start.column <= this.pos.column + this.length + 1) {
+            var distanceFromStart = range.start.column - this.pos.column;
+            this.length += lengthDiff;
+            if(!this.session.$fromUndo) {
+                if(delta.action === "insertText") {
+                    for (var i = this.others.length - 1; i >= 0; i--) {
+                        var otherPos = this.others[i];
+                        var newPos = {row: otherPos.row, column: otherPos.column + distanceFromStart};
+                        if(otherPos.row === range.start.row && range.start.column < otherPos.column)
+                            newPos.column += lengthDiff;
+                        this.doc.insert(newPos, delta.text);
+                    }
+                } else if(delta.action === "removeText") {
+                    for (var i = this.others.length - 1; i >= 0; i--) {
+                        var otherPos = this.others[i];
+                        var newPos = {row: otherPos.row, column: otherPos.column + distanceFromStart};
+                        if(otherPos.row === range.start.row && range.start.column < otherPos.column)
+                            newPos.column += lengthDiff;
+                        this.doc.remove(new Range(newPos.row, newPos.column, newPos.row, newPos.column - lengthDiff));
+                    }
+                }
+                // Special case: insert in beginning
+                if(range.start.column === this.pos.column && delta.action === "insertText") {
+                    setTimeout(function() {
+                        this.pos.setPosition(this.pos.row, this.pos.column - lengthDiff);
+                        for (var i = 0; i < this.others.length; i++) {
+                            var other = this.others[i];
+                            var newPos = {row: other.row, column: other.column - lengthDiff};
+                            if(other.row === range.start.row && range.start.column < other.column)
+                                newPos.column += lengthDiff;
+                            other.setPosition(newPos.row, newPos.column);
+                        }
+                    }.bind(this), 0);
+                }
+                else if(range.start.column === this.pos.column && delta.action === "removeText") {
+                    setTimeout(function() {
+                        for (var i = 0; i < this.others.length; i++) {
+                            var other = this.others[i];
+                            if(other.row === range.start.row && range.start.column < other.column) {
+                                other.setPosition(other.row, other.column - lengthDiff);
+                            }
+                        }
+                    }.bind(this), 0);
+                }
+            }
+            this.pos._emit("change", {value: this.pos});
+            for (var i = 0; i < this.others.length; i++) {
+                this.others[i]._emit("change", {value: this.others[i]});
+            }
+        }
+        this.$updating = false;
+    };
+    
+    this.onCursorChange = function(event) {
+        if (this.$updating) return;
+        var pos = this.session.selection.getCursor();
+        if(pos.row === this.pos.row && pos.column >= this.pos.column && pos.column <= this.pos.column + this.length) {
+            this.showOtherMarkers();
+            this._emit("cursorEnter", event);
+        } else {
+            this.hideOtherMarkers();
+            this._emit("cursorLeave", event);
+        }
+    };
+    
+    this.detach = function() {
+        this.session.removeMarker(this.markerId);
+        this.hideOtherMarkers();
+        this.doc.removeEventListener("change", this.$onUpdate);
+        this.session.selection.removeEventListener("changeCursor", this.$onCursorChange);
+        this.pos.detach();
+        for (var i = 0; i < this.others.length; i++) {
+            this.others[i].detach();
+        }
+        this.session.setUndoSelect(true);
+    };
+    
+    this.cancel = function() {
+        if(this.$undoStackDepth === -1)
+            throw Error("Canceling placeholders only supported with undo manager attached to session.");
+        var undoManager = this.session.getUndoManager();
+        var undosRequired = (undoManager.$undoStack || undoManager.$undostack).length - this.$undoStackDepth;
+        for (var i = 0; i < undosRequired; i++) {
+            undoManager.undo(true);
+        }
+    };
+}).call(PlaceHolder.prototype);
+
+
+exports.PlaceHolder = PlaceHolder;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -14274,6 +15132,7 @@ exports.cssText = ".ace-tm .ace_editor {\
   color: rgb(191, 191, 191);\
 }\
 \
+.ace-tm .ace_line .ace_storage,\
 .ace-tm .ace_line .ace_keyword {\
   color: blue;\
 }\

@@ -60,7 +60,7 @@
   %invisible%
 }
 
-.%cssClass% .ace_keyword {
+.%cssClass% .ace_keyword, .%cssClass% .ace_meta {
   %keyword%
 }
 
@@ -68,7 +68,7 @@
   %keyword.operator%
 }
 
-.%cssClass% .ace_constant {
+.%cssClass% .ace_constant, .%cssClass% .ace_constant.ace_other {
   %constant%
 }
 
@@ -82,6 +82,10 @@
 
 .%cssClass% .ace_constant.ace_numeric {
   %constant.numeric%
+}
+
+.%cssClass% .ace_constant.ace_other {
+  %constant.other%
 }
 
 .%cssClass% .ace_invalid {
@@ -100,6 +104,10 @@
   %support%
 }
 
+.%cssClass% .ace_support.ace_constant {
+  %support.constant%
+}
+
 .%cssClass% .ace_fold {
     background-color: %fold%;
     border-color: %foreground%;
@@ -107,6 +115,22 @@
 
 .%cssClass% .ace_support.ace_function {
   %support.function%
+}
+
+.%cssClass% .ace_storage {
+  %storage%
+}
+
+.%cssClass% .ace_storage.ace_type,  .%cssClass% .ace_support.ace_type{
+  %storage.type%
+}
+
+.%cssClass% .ace_variable {
+  %entity.name.function%
+}
+
+.%cssClass% .ace_variable.ace_parameter {
+  %variable.parameter%
 }
 
 .%cssClass% .ace_function.ace_buildin {

@@ -101,7 +101,7 @@ exports.cssText = "\
   color: #6A6A6A;\
 }\
 \
-.ace-tomorrow-night-eighties .ace_keyword {\
+.ace-tomorrow-night-eighties .ace_keyword, .ace-tomorrow-night-eighties .ace_meta {\
   color:#CC99CC;\
 }\
 \
@@ -117,6 +117,10 @@ exports.cssText = "\
   color:#F99157;\
 }\
 \
+.ace-tomorrow-night-eighties .ace_constant.ace_other {\
+  color:#CCCCCC;\
+}\
+\
 .ace-tomorrow-night-eighties .ace_invalid {\
   color:#CDCDCD;\
 background-color:#F2777A;\
@@ -127,6 +131,10 @@ background-color:#F2777A;\
 background-color:#CC99CC;\
 }\
 \
+.ace-tomorrow-night-eighties .ace_support.ace_constant {\
+  color:#F99157;\
+}\
+\
 .ace-tomorrow-night-eighties .ace_fold {\
     background-color: #6699CC;\
     border-color: #CCCCCC;\
@@ -134,6 +142,22 @@ background-color:#CC99CC;\
 \
 .ace-tomorrow-night-eighties .ace_support.ace_function {\
   color:#6699CC;\
+}\
+\
+.ace-tomorrow-night-eighties .ace_storage {\
+  color:#CC99CC;\
+}\
+\
+.ace-tomorrow-night-eighties .ace_storage.ace_type,  .ace-tomorrow-night-eighties .ace_support.ace_type{\
+  color:#CC99CC;\
+}\
+\
+.ace-tomorrow-night-eighties .ace_variable {\
+  color:#6699CC;\
+}\
+\
+.ace-tomorrow-night-eighties .ace_variable.ace_parameter {\
+  color:#F99157;\
 }\
 \
 .ace-tomorrow-night-eighties .ace_string {\
@@ -168,6 +192,6 @@ background-color:#CC99CC;\
   color:#99CC99;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

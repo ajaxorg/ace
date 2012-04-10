@@ -101,7 +101,7 @@ exports.cssText = "\
   color: rgba(102, 108, 104, 0.50);\
 }\
 \
-.ace-mono-industrial .ace_keyword {\
+.ace-mono-industrial .ace_keyword, .ace-mono-industrial .ace_meta {\
   color:#A39E64;\
 }\
 \
@@ -109,7 +109,7 @@ exports.cssText = "\
   color:#A8B3AB;\
 }\
 \
-.ace-mono-industrial .ace_constant {\
+.ace-mono-industrial .ace_constant, .ace-mono-industrial .ace_constant.ace_other {\
   color:#E98800;\
 }\
 \
@@ -122,6 +122,10 @@ exports.cssText = "\
 background-color:rgba(153, 0, 0, 0.68);\
 }\
 \
+.ace-mono-industrial .ace_support.ace_constant {\
+  color:#C87500;\
+}\
+\
 .ace-mono-industrial .ace_fold {\
     background-color: #A8B3AB;\
     border-color: #FFFFFF;\
@@ -129,6 +133,18 @@ background-color:rgba(153, 0, 0, 0.68);\
 \
 .ace-mono-industrial .ace_support.ace_function {\
   color:#588E60;\
+}\
+\
+.ace-mono-industrial .ace_storage {\
+  color:#C23B00;\
+}\
+\
+.ace-mono-industrial .ace_variable {\
+  color:#A8B3AB;\
+}\
+\
+.ace-mono-industrial .ace_variable.ace_parameter {\
+  color:#648BD2;\
 }\
 \
 .ace-mono-industrial .ace_comment {\
@@ -156,6 +172,6 @@ background-color:#151C19;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });

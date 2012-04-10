@@ -62,12 +62,21 @@ var supportedScopes = {
    "constant.language": "constant.language",
    "constant.library": "constant.library",
    "constant.numeric": "constant.numeric",
+   "constant.character.escape" : "constant.character.escape",
+   "constant.other" : "constant.other",
    
    "support": "support",
    "support.function": "support.function",
-
+   "support.function.dom": "support.function.dom",
+   "support.function.firebug": "support.firebug",
+   "support.function.constant": "support.function.constant",
+   "support.constant": "support.constant",
+   
    "function": "function",
    "function.buildin": "function.buildin",
+   
+   "storage": "storage",
+   "storage.type": "storage.type",
    
    "invalid": "invalid",
    "invalid.illegal": "invalid.illegal",
@@ -82,6 +91,7 @@ var supportedScopes = {
 
    "variable": "variable",
    "variable.language": "variable.language",
+   "variable.parameter": "variable.parameter",
    
    "meta": "meta",   
    "meta.tag.sgml.doctype": "xml_pe",
@@ -130,6 +140,8 @@ function extractStyles(theme) {
             var scope = scopes[j];
             if (supportedScopes[scope]) {
                 colors[supportedScopes[scope]] = parseStyles(element.settings);
+            } else {
+                //console.log(scope + " is not supported!");
             }
         }
     }
@@ -199,7 +211,7 @@ function fillTemplate(template, replacements) {
 function createTheme(name, styles, cssTemplate, jsTemplate) {
     styles.cssClass = "ace-" + hyphenate(name);
     var css = fillTemplate(cssTemplate, styles);
-    
+ 
     css = css.replace(/[^\{\}]+{\s*}/g, "");
     return fillTemplate(jsTemplate, {
         name: name,
@@ -217,25 +229,25 @@ var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
 var themes = {
-    "dawn": "Dawn",
-    "idle_fingers": "idleFingers",
-    "twilight": "Twilight",
-    "monokai": "Monokai",
-    "merbivore": "Merbivore",
-    "merbivore_soft": "Merbivore Soft",
-    "pastel_on_dark": "Pastels on Dark",
-    "cobalt": "Cobalt",
-    "mono_industrial": "monoindustrial",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
+    "cobalt": "Cobalt",
+    "dawn": "Dawn",
+    "idle_fingers": "idleFingers",
     "kr_theme": "krTheme",
-    "solarized_light": "Solarized-light",
+    "merbivore": "Merbivore",
+    "merbivore_soft": "Merbivore Soft",
+    "mono_industrial": "monoindustrial",
+    "monokai": "Monokai",
+    "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
+    "solarized_light": "Solarized-light",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
     "tomorrow_night_blue": "Tomorrow-Night-Blue",
     "tomorrow_night_bright": "Tomorrow-Night-Bright",
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
+    "twilight": "Twilight",
     "vibrant_ink": "Vibrant Ink"
 };
 

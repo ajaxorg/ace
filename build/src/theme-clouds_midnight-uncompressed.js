@@ -101,7 +101,7 @@ exports.cssText = "\
   color: #BFBFBF;\
 }\
 \
-.ace-clouds-midnight .ace_keyword {\
+.ace-clouds-midnight .ace_keyword, .ace-clouds-midnight .ace_meta {\
   color:#927C5D;\
 }\
 \
@@ -131,6 +131,10 @@ background-color:#E92E2E;\
   color:#E92E2E;\
 }\
 \
+.ace-clouds-midnight .ace_storage {\
+  color:#E92E2E;\
+}\
+\
 .ace-clouds-midnight .ace_string {\
   color:#5D90CD;\
 }\
@@ -147,7 +151,6 @@ background-color:#E92E2E;\
     text-decoration:underline;\
 }";
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
-
+    var dom = require("../lib/dom");
+    dom.importCssString(exports.cssText, exports.cssClass);
 });
