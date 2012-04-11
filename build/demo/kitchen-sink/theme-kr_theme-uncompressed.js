@@ -75,7 +75,7 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #FF9900;\
 }\
- \
+\
 .ace-kr-theme .ace_marker-layer .ace_selection {\
   background: rgba(170, 0, 255, 0.45);\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-kr-theme .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(170, 0, 255, 0.45);\
 }\
-       \
+\
 .ace-kr-theme .ace_invisible {\
   color: rgba(255, 177, 111, 0.32);\
 }\
@@ -106,6 +106,14 @@ exports.cssText = "\
 }\
 \
 .ace-kr-theme .ace_constant, .ace-kr-theme .ace_constant.ace_other {\
+  color:rgba(210, 117, 24, 0.76);\
+}\
+\
+.ace-kr-theme .ace_constant.ace_character,  {\
+  color:rgba(210, 117, 24, 0.76);\
+}\
+\
+.ace-kr-theme .ace_constant.ace_character.ace_escape,  {\
   color:rgba(210, 117, 24, 0.76);\
 }\
 \

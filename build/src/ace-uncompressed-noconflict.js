@@ -11902,13 +11902,13 @@ dom.importCssString(editorCss, "ace_editor");
 
 var VirtualRenderer = function(container, theme) {
     var _self = this;
-
+    
     this.container = container;
 
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-
+    
     dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
@@ -11916,6 +11916,10 @@ var VirtualRenderer = function(container, theme) {
     this.$gutter = dom.createElement("div");
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
+    
+    this.$corner = dom.createElement("div");
+    this.$corner.className = "ace_corner";
+    this.container.appendChild(this.$corner);
 
     this.scroller = dom.createElement("div");
     this.scroller.className = "ace_scroller";
@@ -11926,8 +11930,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
-
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
+    
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -11944,7 +11948,7 @@ var VirtualRenderer = function(container, theme) {
     // Indicates whether the horizontal scrollbar is visible
     this.$horizScroll = true;
     this.$horizScrollAlwaysVisible = true;
-    
+
     this.$animatedScroll = false;
 
     this.scrollBar = new ScrollBar(container);
@@ -11954,11 +11958,18 @@ var VirtualRenderer = function(container, theme) {
 
     this.scrollTop = 0;
     this.scrollLeft = 0;
-
+    
     event.addListener(this.scroller, "scroll", function() {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
         _self.session.setScrollLeft(scrollLeft);
+        
+        if (scrollLeft == 0) {
+            _self.$gutter.className = "ace_gutter";
+        }
+        else {
+            _self.$gutter.className = "ace_gutter horscroll";
+        }
     });
 
     this.cursorPos = {
@@ -12117,7 +12128,7 @@ var VirtualRenderer = function(container, theme) {
         var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit);
     };
-    
+
     this.setAnimatedScroll = function(shouldAnimate){
         this.$animatedScroll = shouldAnimate;
     }
@@ -12204,7 +12215,7 @@ var VirtualRenderer = function(container, theme) {
         // this persists in IE9
         if (useragent.isIE)
             return;
-
+        
         if (this.layerConfig.lastRow === 0)
             return;
 
@@ -12280,13 +12291,13 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             this.scroller.scrollLeft = this.scrollLeft;
-
+            
             // read the value after writing it since the value might get clipped
             var scrollLeft = this.scroller.scrollLeft;
             this.scrollLeft = scrollLeft;
             this.session.setScrollLeft(scrollLeft);
         }
-
+        
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
@@ -12556,37 +12567,38 @@ var VirtualRenderer = function(container, theme) {
         this.session.setScrollTop(row * this.lineHeight);
     };
 
-    //@todo I would like to make this animation a setting. How?
-
-    var STEPS = 10;
-    function calcSteps(fromValue, toValue){
-        var i     = 0,
-            l     = STEPS,
-            steps = [],
-            func  = function(t, x_min, dx) {
-                if ((t /= .5) < 1)
-                    return dx / 2 * Math.pow(t, 3) + x_min;
-                return dx / 2 * (Math.pow(t - 2, 3) + 2) + x_min;
-            };
+    this.STEPS = 10;
+    this.$calcSteps = function(fromValue, toValue){
+        var i = 0;
+        var l = STEPS;
+        var steps = [];
+        
+        var func  = function(t, x_min, dx) {
+            if ((t /= .5) < 1)
+                return dx / 2 * Math.pow(t, 3) + x_min;
+            return dx / 2 * (Math.pow(t - 2, 3) + 2) + x_min;
+        };
 
         for (i = 0; i < l; ++i)
-            steps.push(func(i / STEPS, fromValue, toValue - fromValue));
+            steps.push(func(i / this.STEPS, fromValue, toValue - fromValue));
         steps.push(toValue);
         
         return steps;
-    }
+    };
 
     this.scrollToLine = function(line, center) {
         var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
         var offset = pos.top;
         if (center)
             offset -= this.$size.scrollerHeight / 2;
-            
+
         if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
-            var i = 0, _self = this, 
-                steps = calcSteps(this.scrollTop, offset);
+            var i = 0;
+            var _self = this;
+            var steps = _self.$calcSteps(this.scrollTop, offset);
+            
             clearInterval(_self.$timer);
-            this.$timer = setInterval(function(){
+            this.$timer = setInterval(function() {
                 _self.session.setScrollTop(steps[i]);
                 
                 if (++i == STEPS + 1)
@@ -12699,7 +12711,7 @@ var VirtualRenderer = function(container, theme) {
     this._loadTheme = function(name, callback) {
         if (!config.get("packaged"))
             return callback();
-
+            
         var base = name.split("/").pop();
         var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
         net.loadScript(filename, callback);
@@ -12711,14 +12723,14 @@ var VirtualRenderer = function(container, theme) {
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             var moduleName = theme || "ace/theme/textmate";
-
+            
             var module;
             try {
                 module = require(moduleName);
             } catch (e) {};
             if (module)
                 return afterLoad(module);
-
+            
             _self._loadTheme(moduleName, function() {
                 require([theme], function(module) {
                     if (_self.$themeValue !== theme)
@@ -14081,7 +14093,6 @@ exports.RenderLoop = RenderLoop;
 });
 ace.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
-  "\n" +
   ".ace_editor {\n" +
   "    position: absolute;\n" +
   "    overflow: hidden;\n" +
@@ -14110,12 +14121,31 @@ ace.define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/cs
   "    z-index: 4;\n" +
   "}\n" +
   "\n" +
+  ".ace_corner{\n" +
+  "    position : absolute;\n" +
+  "    left : 41px;\n" +
+  "    top : -5px;\n" +
+  "    border-radius : 6px 0 0 0;\n" +
+  "    border-color : #e8e8e8;\n" +
+  "    border-width : 1px 0 0 1px;\n" +
+  "    border-style : solid;\n" +
+  "    box-shadow : 4px 4px 0px #e8e8e8 inset;\n" +
+  "    width : 10px;\n" +
+  "    height : 10px;\n" +
+  "    z-index : 10000;\n" +
+  "}\n" +
+  "\n" +
   ".ace_gutter {\n" +
   "    position: absolute;\n" +
   "    overflow : hidden;\n" +
   "    height: 100%;\n" +
   "    width: auto;\n" +
   "    cursor: default;\n" +
+  "    z-index: 1000;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter.horscroll {\n" +
+  "    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell {\n" +
@@ -15197,6 +15227,10 @@ exports.cssText = ".ace-tm .ace_editor {\
 .ace-tm .ace_line .ace_storage,\
 .ace-tm .ace_line .ace_keyword {\
   color: blue;\
+}\
+\
+.ace-tm .ace_line .ace_constant {\
+  color: rgb(197, 6, 11);\
 }\
 \
 .ace-tm .ace_line .ace_constant.ace_buildin {\

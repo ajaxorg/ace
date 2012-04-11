@@ -75,7 +75,7 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #000000;\
 }\
- \
+\
 .ace-clouds .ace_marker-layer .ace_selection {\
   background: #BDD5FC;\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-clouds .ace_marker-layer .ace_selected_word {\
   border: 1px solid #BDD5FC;\
 }\
-       \
+\
 .ace-clouds .ace_invisible {\
   color: #BFBFBF;\
 }\

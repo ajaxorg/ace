@@ -75,7 +75,7 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #A7A7A7;\
 }\
- \
+\
 .ace-pastel-on-dark .ace_marker-layer .ace_selection {\
   background: rgba(221, 240, 255, 0.20);\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-pastel-on-dark .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(221, 240, 255, 0.20);\
 }\
-       \
+\
 .ace-pastel-on-dark .ace_invisible {\
   color: rgba(255, 255, 255, 0.25);\
 }\
@@ -110,6 +110,14 @@ exports.cssText = "\
 }\
 \
 .ace-pastel-on-dark .ace_constant, .ace-pastel-on-dark .ace_constant.ace_other {\
+  color:#4FB7C5;\
+}\
+\
+.ace-pastel-on-dark .ace_constant.ace_character,  {\
+  color:#4FB7C5;\
+}\
+\
+.ace-pastel-on-dark .ace_constant.ace_character.ace_escape,  {\
   color:#4FB7C5;\
 }\
 \

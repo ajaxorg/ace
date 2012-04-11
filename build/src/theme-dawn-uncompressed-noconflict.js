@@ -75,7 +75,7 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #000000;\
 }\
- \
+\
 .ace-dawn .ace_marker-layer .ace_selection {\
   background: rgba(39, 95, 255, 0.30);\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-dawn .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(39, 95, 255, 0.30);\
 }\
-       \
+\
 .ace-dawn .ace_invisible {\
   color: rgba(75, 75, 126, 0.50);\
 }\
@@ -106,6 +106,14 @@ exports.cssText = "\
 }\
 \
 .ace-dawn .ace_constant, .ace-dawn .ace_constant.ace_other {\
+  color:#811F24;\
+}\
+\
+.ace-dawn .ace_constant.ace_character,  {\
+  color:#811F24;\
+}\
+\
+.ace-dawn .ace_constant.ace_character.ace_escape,  {\
   color:#811F24;\
 }\
 \

@@ -75,7 +75,7 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #AEAFAD;\
 }\
- \
+\
 .ace-tomorrow-night .ace_marker-layer .ace_selection {\
   background: #373B41;\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-tomorrow-night .ace_marker-layer .ace_selected_word {\
   border: 1px solid #373B41;\
 }\
-       \
+\
 .ace-tomorrow-night .ace_invisible {\
   color: #4B4E55;\
 }\
