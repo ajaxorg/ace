@@ -3244,7 +3244,7 @@ var Editor = function(renderer, session) {
         else
             lastRow = Infinity;
         this.renderer.updateLines(range.start.row, lastRow);
-
+        
         this._emit("change", e);
 
         // update cursor because tab characters can influence the cursor position
@@ -3286,21 +3286,29 @@ var Editor = function(renderer, session) {
     this.$updateHighlightActiveLine = function() {
         var session = this.getSession();
 
-        if (session.$highlightLineMarker) {
+        if (session.$highlightLineMarker)
             session.removeMarker(session.$highlightLineMarker);
-        }
-        session.$highlightLineMarker = null;
+        if (typeof this.$lastrow == "number")
+            this.renderer.removeGutterDecoration(this.$lastrow, "ace_gutter_active_line");
 
-        if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
+        session.$highlightLineMarker = null;
+        this.$lastrow = null;
+
+        if (this.getHighlightActiveLine()) {
             var cursor = this.getCursorPosition(),
                 foldLine = this.session.getFoldLine(cursor.row);
-            var range;
-            if (foldLine) {
-                range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
-            } else {
-                range = new Range(cursor.row, 0, cursor.row+1, 0);
+                
+            if ((this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
+                var range;
+                if (foldLine) {
+                    range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
+                } else {
+                    range = new Range(cursor.row, 0, cursor.row+1, 0);
+                }
+                session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
             }
-            session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
+
+            this.renderer.addGutterDecoration(this.$lastrow = cursor.row, "ace_gutter_active_line");
         }
     };
 
@@ -12423,10 +12431,6 @@ var VirtualRenderer = function(container, theme) {
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
     
-    this.$corner = dom.createElement("div");
-    this.$corner.className = "ace_corner";
-    this.container.appendChild(this.$corner);
-
     this.scroller = dom.createElement("div");
     this.scroller.className = "ace_scroller";
     this.container.appendChild(this.scroller);
@@ -13372,11 +13376,11 @@ var Gutter = function(parentEl) {
     this.addGutterDecoration = function(row, className){
         if (!this.$decorations[row])
             this.$decorations[row] = "";
-        this.$decorations[row] += " ace_" + className;
+        this.$decorations[row] += " " + className;
     };
 
     this.removeGutterDecoration = function(row, className){
-        this.$decorations[row] = this.$decorations[row].replace(" ace_" + className, "");
+        this.$decorations[row] = this.$decorations[row].replace(" " + className, "");
     };
 
     this.setBreakpoints = function(rows) {
@@ -14627,20 +14631,6 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   "    z-index: 4;\n" +
   "}\n" +
   "\n" +
-  ".ace_corner{\n" +
-  "    position : absolute;\n" +
-  "    left : 41px;\n" +
-  "    top : -5px;\n" +
-  "    border-radius : 6px 0 0 0;\n" +
-  "    border-color : #e8e8e8;\n" +
-  "    border-width : 1px 0 0 1px;\n" +
-  "    border-style : solid;\n" +
-  "    box-shadow : 4px 4px 0px #e8e8e8 inset;\n" +
-  "    width : 10px;\n" +
-  "    height : 10px;\n" +
-  "    z-index : 10000;\n" +
-  "}\n" +
-  "\n" +
   ".ace_gutter {\n" +
   "    position: absolute;\n" +
   "    overflow : hidden;\n" +
@@ -14786,6 +14776,10 @@ __ace_shadowed__.define("text!ace/css/editor.css", [], "@import url(//fonts.goog
   ".ace_marker-layer .ace_active_line {\n" +
   "    position: absolute;\n" +
   "    z-index: 2;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter .ace_gutter_active_line{\n" +
+  "    background-color : #dcdcdc;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_selected_word {\n" +
