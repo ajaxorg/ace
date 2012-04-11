@@ -8,16 +8,16 @@ function plistToJson(el) {
     return $plistParse(el.selectSingleNode("dict"));
 }
 
-function $plistParse(el) {            
+function $plistParse(el) {
     if (el.tagName == "dict") {
         var dict = {};
         var key;
         var childNodes = el.childNodes;
         for (var i=0, l=childNodes.length; i<l; i++) {
             var child = childNodes[i];
-            if (child.nodeType !== 1) 
+            if (child.nodeType !== 1)
                 continue;
-                
+
             if (child.tagName == "key") {
                 key = child.nodeValue;
             } else {
@@ -34,9 +34,9 @@ function $plistParse(el) {
         var childNodes = el.childNodes;
         for (var i=0, l=childNodes.length; i<l; i++) {
             var child = childNodes[i];
-            if (child.nodeType !== 1) 
+            if (child.nodeType !== 1)
                 continue;
-                
+
             arr.push($plistParse(child));
         }
         return arr;
@@ -53,38 +53,39 @@ function parseTheme(themeXml) {
         return plistToJson(xml.parseFromString(themeXml).documentElement);
     } catch(e) { return; }
 }
- 
+
 var supportedScopes = {
    "keyword": "keyword",
    "keyword.operator": "keyword.operator",
-   
+
    "constant": "constant",
    "constant.language": "constant.language",
    "constant.library": "constant.library",
    "constant.numeric": "constant.numeric",
+   "constant.character" : "constant.character",
    "constant.character.escape" : "constant.character.escape",
    "constant.other" : "constant.other",
-   
+
    "support": "support",
    "support.function": "support.function",
    "support.function.dom": "support.function.dom",
    "support.function.firebug": "support.firebug",
    "support.function.constant": "support.function.constant",
    "support.constant": "support.constant",
-   
+
    "function": "function",
    "function.buildin": "function.buildin",
-   
+
    "storage": "storage",
    "storage.type": "storage.type",
-   
+
    "invalid": "invalid",
    "invalid.illegal": "invalid.illegal",
    "invalid.deprecated": "invalid.deprecated",
-   
+
    "string": "string",
    "string.regexp": "string.regexp",
-   
+
    "comment": "comment",
    "comment.documentation": "comment.doc",
    "comment.documentation.tag": "comment.doc.tag",
@@ -92,15 +93,15 @@ var supportedScopes = {
    "variable": "variable",
    "variable.language": "variable.language",
    "variable.parameter": "variable.parameter",
-   
-   "meta": "meta",   
+
+   "meta": "meta",
    "meta.tag.sgml.doctype": "xml_pe",
    "meta.tag": "meta.tag",
    "meta.tag.form": "meta.tag.form",
    "entity.other.attribute-name": "entity.other.attribute-name",
    "entity.name.function": "entity.name.function",
    "entity.name": "entity.name",
-   
+
    "markup.heading": "markup.heading",
    "markup.heading.1": "markup.heading.1",
    "markup.heading.2": "markup.heading.2",
@@ -109,7 +110,7 @@ var supportedScopes = {
    "markup.heading.5": "markup.heading.5",
    "markup.heading.6": "markup.heading.6",
    "markup.list": "markup.list",
-   
+
    "collab.user1": "collab.user1"
 };
 
@@ -148,7 +149,7 @@ function extractStyles(theme) {
 
     if (!colors.fold)
         colors.fold = ((colors["entity.name.function"] || colors.keyword).match(/\:([^;]+)/)||[])[1];
-    
+
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
 
@@ -211,7 +212,7 @@ function fillTemplate(template, replacements) {
 function createTheme(name, styles, cssTemplate, jsTemplate) {
     styles.cssClass = "ace-" + hyphenate(name);
     var css = fillTemplate(cssTemplate, styles);
- 
+
     css = css.replace(/[^\{\}]+{\s*}/g, "");
     return fillTemplate(jsTemplate, {
         name: name,
