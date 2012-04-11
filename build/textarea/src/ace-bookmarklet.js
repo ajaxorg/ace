@@ -3268,11 +3268,7 @@ var Editor = function(renderer, session) {
         this.renderer.updateCursor();
 
         if (!this.$blockScrolling) {
-            var selection = this.getSelection();
-            if (selection.isEmpty())
-                this.renderer.scrollCursorIntoView(selection.getCursor());
-            else
-                this.renderer.scrollSelectionIntoView(selection.getSelectionLead(), selection.getSelectionAnchor());
+            this.renderer.scrollCursorIntoView();
         }
 
         // move text input over the cursor
@@ -4107,8 +4103,10 @@ var Editor = function(renderer, session) {
             return;
 
         this.$tryReplace(range, replacement);
-        if (range !== null)
+        if (range !== null) {
             this.selection.setSelectionRange(range);
+            this.renderer.scrollSelectionIntoView(range.start, range.end);
+        }
     };
 
     this.replaceAll = function(replacement, options) {
@@ -4181,6 +4179,7 @@ var Editor = function(renderer, session) {
         var range = this.$search.find(this.session);
         if (range) {
             this.session.unfold(range);
+
             this.$blockScrolling += 1;
             this.selection.setSelectionRange(range);
             this.$blockScrolling -= 1;
@@ -4192,6 +4191,8 @@ var Editor = function(renderer, session) {
             //@todo scroll X
             //if (!this.isRowFullyVisible(cursor.row))
                 //this.scrollToLine(cursor.row, true);
+
+            this.renderer.scrollSelectionIntoView(range.start, range.end);
         }
     };
 
