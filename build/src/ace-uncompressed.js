@@ -2996,7 +2996,7 @@ var Editor = function(renderer, session) {
     };
 
     this.getAnimatedScroll = function(){
-        this.renderer.getAnimatedScroll();
+        return this.renderer.getAnimatedScroll();
     };
 
     this.setShowInvisibles = function(showInvisibles) {
@@ -3628,15 +3628,18 @@ var Editor = function(renderer, session) {
             this.selection.setSelectionRange(range);
             this.$blockScrolling -= 1;
 
-            var cursor = this.getCursorPosition();
-            if (!this.isRowFullyVisible(cursor.row))
-                this.scrollToLine(cursor.row, true);
-
-            //@todo scroll X
-            //if (!this.isRowFullyVisible(cursor.row))
-                //this.scrollToLine(cursor.row, true);
-
-            this.renderer.scrollSelectionIntoView(range.start, range.end);
+            if (this.getAnimatedScroll()) {
+                var cursor = this.getCursorPosition();
+                if (!this.isRowFullyVisible(cursor.row))
+                    this.scrollToLine(cursor.row, true);
+    
+                //@todo scroll X
+                //if (!this.isColumnFullyVisible(cursor.column))
+                    //this.scrollToRow(cursor.column);
+            }
+            else {
+                this.renderer.scrollSelectionIntoView(range.start, range.end);
+            }
         }
     };
 
@@ -4344,7 +4347,7 @@ function DefaultHandlers(editor) {
             if (!editor.$mouseHandler.$clickSelection) {
                 if (!dragCursor) {
                     editor.moveCursorToPosition(pos);
-                    editor.selection.clearSelection(pos.row, pos.column);
+                    editor.selection.clearSelection();
                 }
             }
 
@@ -4379,7 +4382,6 @@ function DefaultHandlers(editor) {
                 if (distance > DRAG_OFFSET) {
                     state = STATE_SELECT;
                     var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-                    cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
                     onStartSelect(cursor);
                 }
                 else if ((time - mousedownTime) > editor.getDragDelay()) {
@@ -4406,7 +4408,7 @@ function DefaultHandlers(editor) {
             else {
                 if (!_self.$clickSelection) {
                     editor.moveCursorToPosition(pos);
-                    editor.selection.clearSelection(pos.row, pos.column);
+                    editor.selection.clearSelection();
                 }
             }
             state = STATE_SELECT;
@@ -4415,7 +4417,6 @@ function DefaultHandlers(editor) {
         var onUpdateSelectionInterval = function() {
             var anchor;
             var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
 
             if (_self.$clickSelection) {
                 if (_self.$clickSelection.contains(cursor.row, cursor.column)) {
@@ -4441,8 +4442,6 @@ function DefaultHandlers(editor) {
 
         var onDragSelectionInterval = function() {
             dragCursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            dragCursor.row = Math.max(0, Math.min(dragCursor.row, editor.session.getLength() - 1));
-
             editor.moveCursorToPosition(dragCursor);
         };
 
@@ -4864,7 +4863,6 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
         var pageX = event.getDocumentX(this.domEvent);
         var pageY = event.getDocumentY(this.domEvent);
         this.$pos = this.editor.renderer.screenToTextCoordinates(pageX, pageY);
-        this.$pos.row = Math.max(0, Math.min(this.$pos.row, this.editor.session.getLength()-1));
         return this.$pos;
     };
     
@@ -4964,7 +4962,7 @@ function FoldHandler(editor) {
         var position = e.getDocumentPosition();
         var session = editor.session;
         
-        // If the user dclicked on a fold, then expand it.
+        // If the user clicked on a fold, then expand it.
         var fold = session.getFoldAt(position.row, position.column, 1);
         if (fold) {
             if (e.getAccelKey())
@@ -6951,8 +6949,8 @@ var EditSession = function(text, mode) {
     }
 
     this.getScreenLastRowColumn = function(screenRow) {
-        //return this.screenToDocumentColumn(screenRow, Number.MAX_VALUE / 10)
-        return this.documentToScreenColumn(screenRow, this.doc.getLine(screenRow).length);
+        var pos = this.screenToDocumentPosition(screenRow, Number.MAX_VALUE)
+        return this.documentToScreenColumn(pos.row, pos.column);
     };
 
     this.getDocumentLastRowColumn = function(docRow, docColumn) {
@@ -7067,16 +7065,10 @@ var EditSession = function(text, mode) {
 
         docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
 
-        // Need to do some clamping action here.
-        if (this.$useWrapMode) {
-            if (docColumn >= column) {
-                // We remove one character at the end such that the docColumn
-                // position returned is not associated to the next row on the
-                // screen.
-                docColumn = column - 1;
-            }
-        } else {
-            docColumn = Math.min(docColumn, line.length);
+        // We remove one character at the end so that the docColumn
+        // position returned is not associated to the next row on the screen.
+        if (this.$useWrapMode && docColumn >= column) {
+            docColumn = column - 1;
         }
 
         if (foldLine) {
@@ -7527,18 +7519,18 @@ var Selection = function(session) {
     this.selectionLead = this.doc.createAnchor(0, 0);
     this.selectionAnchor = this.doc.createAnchor(0, 0);
 
-    var _self = this;
+    var self = this;
     this.selectionLead.on("change", function(e) {
-        _self._emit("changeCursor");
-        if (!_self.$isEmpty)
-            _self._emit("changeSelection");
-        if (!_self.$preventUpdateDesiredColumnOnChange && e.old.column != e.value.column)
-            _self.$updateDesiredColumn();
+        self._emit("changeCursor");
+        if (!self.$isEmpty)
+            self._emit("changeSelection");
+        if (!self.$keepDesiredColumnOnChange && e.old.column != e.value.column)
+            self.$desiredColumn = null;
     });
 
     this.selectionAnchor.on("change", function() {
-        if (!_self.$isEmpty)
-            _self._emit("changeSelection");
+        if (!self.$isEmpty)
+            self._emit("changeSelection");
     });
 };
 
@@ -7648,12 +7640,7 @@ var Selection = function(session) {
             this.setSelectionAnchor(range.start.row, range.start.column);
             this.selectTo(range.end.row, range.end.column);
         }
-        this.$updateDesiredColumn();
-    };
-
-    this.$updateDesiredColumn = function() {
-        var cursor = this.getCursor();
-        this.$desiredColumn = this.session.documentToScreenColumn(cursor.row, cursor.column);
+        this.$desiredColumn = null;
     };
 
     this.$moveSelection = function(mover) {
@@ -7860,14 +7847,14 @@ var Selection = function(session) {
             this.moveCursorTo(fold.end.row, fold.end.column);
             return;
         }
-        
+
         // first skip space
         if (match = this.session.nonTokenRe.exec(rightOfCursor)) {
             column += this.session.nonTokenRe.lastIndex;
             this.session.nonTokenRe.lastIndex = 0;
             rightOfCursor = line.substring(column);
         }
-        
+
         // if at line end proceed with next line
         if (column >= line.length) {
             this.moveCursorTo(row, line.length);
@@ -7876,7 +7863,7 @@ var Selection = function(session) {
                 this.moveCursorWordRight();
             return;
         }
-        
+
         // advance to the end of the next token
         if (match = this.session.tokenRe.exec(rightOfCursor)) {
             column += this.session.tokenRe.lastIndex;
@@ -7901,19 +7888,19 @@ var Selection = function(session) {
         if (str == null) {
             str = this.doc.getLine(row).substring(0, column)
         }
-        
+
         var leftOfCursor = lang.stringReverse(str);
         var match;
         this.session.nonTokenRe.lastIndex = 0;
         this.session.tokenRe.lastIndex = 0;
-        
+
         // skip whitespace
         if (match = this.session.nonTokenRe.exec(leftOfCursor)) {
             column -= this.session.nonTokenRe.lastIndex;
             leftOfCursor = leftOfCursor.slice(this.session.nonTokenRe.lastIndex);
             this.session.nonTokenRe.lastIndex = 0;
         }
-        
+
         // if at begin of the line proceed in line above
         if (column <= 0) {
             this.moveCursorTo(row, 0);
@@ -7938,8 +7925,14 @@ var Selection = function(session) {
             this.selectionLead.column
         );
 
-        var screenCol = (chars === 0 && this.$desiredColumn) || screenPos.column;
-        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
+        if (chars === 0) {
+            if (this.$desiredColumn)
+                screenPos.column = this.$desiredColumn;
+            else
+                this.$desiredColumn = screenPos.column;
+        }
+
+        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column);
 
         // move the cursor and update the desired column
         this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
@@ -7949,7 +7942,7 @@ var Selection = function(session) {
         this.moveCursorTo(position.row, position.column);
     };
 
-    this.moveCursorTo = function(row, column, preventUpdateDesiredColumn) {
+    this.moveCursorTo = function(row, column, keepDesiredColumn) {
         // Ensure the row/column is not inside of a fold.
         var fold = this.session.getFoldAt(row, column, 1);
         if (fold) {
@@ -7957,20 +7950,46 @@ var Selection = function(session) {
             column = fold.start.column;
         }
 
-        this.$preventUpdateDesiredColumnOnChange = true;
+        this.$keepDesiredColumnOnChange = true;
         this.selectionLead.setPosition(row, column);
-        this.$preventUpdateDesiredColumnOnChange = false;
+        this.$keepDesiredColumnOnChange = false;
 
-        if (!preventUpdateDesiredColumn)
-            this.$updateDesiredColumn(this.selectionLead.column);
+        if (!keepDesiredColumn)
+            this.$desiredColumn = null;
     };
 
-    this.moveCursorToScreen = function(row, column, preventUpdateDesiredColumn) {
+    this.moveCursorToScreen = function(row, column, keepDesiredColumn) {
         var pos = this.session.screenToDocumentPosition(row, column);
-        row = pos.row;
-        column = pos.column;
-        this.moveCursorTo(row, column, preventUpdateDesiredColumn);
+        this.moveCursorTo(pos.row, pos.column, keepDesiredColumn);
     };
+
+    // remove listeners from document
+    this.detach = function() {
+        this.selectionLead.detach();
+        this.selectionAnchor.detach();
+        this.session = this.doc = null;
+    }
+
+    this.fromOrientedRange = function(range) {
+        this.setSelectionRange(range, range.cursor == range.start);
+        this.$desiredColumn = range.desiredColumn || this.$desiredColumn;
+    }
+
+    this.toOrientedRange = function(range) {
+        var r = this.getRange();
+        if (range) {
+            range.start.column = r.start.column;
+            range.start.row = r.start.row;
+            range.end.column = r.end.column;
+            range.end.row = r.end.row;
+        } else {
+            range = r;
+        }
+
+        range.cursor = this.isBackwards() ? range.start : range.end;
+        range.desiredColumn = this.$desiredColumn;
+        return range;
+    }
 
 }).call(Selection.prototype);
 
@@ -8029,7 +8048,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 };
 
 (function() {
-    this.isEequal = function(range) {
+    this.isEqual = function(range) {
         return this.start.row == range.start.row &&
             this.end.row == range.end.row &&
             this.start.column == range.start.column &&
@@ -8093,6 +8112,11 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
     this.containsRange = function(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
+    }
+
+    this.intersectsRange = function(range) {
+        var cmp = this.compareRange(range);
+        return (cmp == -1 || cmp == 0 || cmp == 1);
     }
 
     this.isEnd = function(row, column) {
@@ -8253,6 +8277,21 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
         return Range.fromPoints(start || this.start, end || this.end);
     };
+
+    this.fixOrientation = function() {
+        if (
+            this.start.row < this.end.row 
+            || (this.start.row == this.end.row && this.start.column < this.end.column)
+        ) {
+            return false;
+        }
+        
+        var temp = this.start;
+        this.end = this.start;
+        this.start = temp;
+        return true;
+    };
+
 
     this.isEmpty = function() {
         return (this.start.row == this.end.row && this.start.column == this.end.column);
@@ -10497,7 +10536,7 @@ function Folding() {
             // sometimes singleline folds can be missed by the code above
             if (!range.isMultiLine()) {
                 fold = this.getFoldAt(range.start.row, range.start.column, 1);
-                if (fold && range.isEequal(fold.range)) {
+                if (fold && range.isEqual(fold.range)) {
                     this.removeFold(fold);
                     return;
                 }
@@ -10888,7 +10927,7 @@ var Fold = exports.Fold = function(range, placeholder) {
     };
 
     this.addSubFold = function(fold) {
-        if (this.range.isEequal(fold))
+        if (this.range.isEqual(fold))
             return this;
 
         if (!this.range.containsRange(fold))
@@ -11566,21 +11605,153 @@ Search.SELECTION = 2;
 
 exports.Search = Search;
 });
-define('ace/commands/command_manager', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
+define('ace/commands/command_manager', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/keyboard/hash_handler', 'ace/lib/event_emitter'], function(require, exports, module) {
 "use strict";
 
-var keyUtil = require("../lib/keys");
+var oop = require("../lib/oop");
+var HashHandler = require("../keyboard/hash_handler").HashHandler;
+var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
 var CommandManager = function(platform, commands) {
-    if (typeof platform !== "string")
-        throw new TypeError("'platform' argument must be either 'mac' or 'win'");
-
     this.platform = platform;
     this.commands = {};
     this.commmandKeyBinding = {};
 
-    if (commands)
-        commands.forEach(this.addCommand, this);
+    this.addCommands(commands);
+    
+    this.setDefaultHandler("exec", function(e) {
+        e.command.exec(e.editor, e.args || {});
+    });
+};
+
+oop.inherits(CommandManager, HashHandler);
+
+(function() {
+
+    oop.implement(this, EventEmitter);
+
+    this.exec = function(command, editor, args) {
+        if (typeof command === 'string')
+            command = this.commands[command];
+
+        if (!command)
+            return false;
+
+        if (editor && editor.$readOnly && !command.readOnly)
+            return false;
+
+        this._emit("exec", {editor: editor, command: command, args: args});
+        return true;
+    };
+
+    this.toggleRecording = function() {
+        if (this.$inReplay)
+            return;
+        if (this.recording) {
+            this.macro.pop();
+            this.removeEventListener("exec", this.$addCommandToMacro);
+
+            if (!this.macro.length)
+                this.macro = this.oldMacro;
+
+            return this.recording = false;
+        }
+        if (!this.$addCommandToMacro) {
+            this.$addCommandToMacro = function(e) {
+                    this.macro.push([e.command, e.args]);
+                }.bind(this);
+        }
+
+        this.oldMacro = this.macro;
+        this.macro = [];
+        this.on("exec", this.$addCommandToMacro);
+        return this.recording = true;
+    };
+
+    this.replay = function(editor) {
+        if (this.$inReplay || !this.macro)
+            return;
+
+        if (this.recording)
+            return this.toggleRecording();
+
+        try {
+            this.$inReplay = true;
+            this.macro.forEach(function(x) {
+                if (typeof x == "string")
+                    this.exec(x, editor);
+                else
+                    this.exec(x[0], editor, x[1]);
+            }, this);
+        } finally {
+            this.$inReplay = false;
+        }
+    };
+
+    this.trimMacro = function(m) {
+        return m.map(function(x){
+            if (typeof x[0] != "string")
+                x[0] = x[0].name;
+            if (!x[1])
+                x = x[0];
+            return x;
+        });
+    };
+
+}).call(CommandManager.prototype);
+
+exports.CommandManager = CommandManager;
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Fabian Jakobs <fabian AT ajax DOT org>
+ *   Julian Viereck (julian.viereck@gmail.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
+"use strict";
+
+var keyUtil  = require("../lib/keys");
+
+function HashHandler(config, platform) {
+    this.platform = platform;
+    this.commands = {};
+    this.commmandKeyBinding = {};
+
+    this.addCommands(config);
 };
 
 (function() {
@@ -11601,7 +11772,7 @@ var CommandManager = function(platform, commands) {
         command = this.commands[name];
         delete this.commands[name];
 
-        // exaustive search is brute force but since removeCommand is
+        // exhaustive search is brute force but since removeCommand is
         // not a performance critical operation this should be OK
         var ckb = this.commmandKeyBinding;
         for (var hashId in ckb) {
@@ -11613,7 +11784,7 @@ var CommandManager = function(platform, commands) {
     };
 
     this.addCommands = function(commands) {
-        Object.keys(commands).forEach(function(name) {
+        commands && Object.keys(commands).forEach(function(name) {
             var command = commands[name];
             if (typeof command === "string")
                 return this.bindKey(command, name);
@@ -11664,9 +11835,9 @@ var CommandManager = function(platform, commands) {
     function parseKeys(keys, val, ret) {
         var key;
         var hashId = 0;
-        var parts = splitSafe(keys);
+        var parts = splitSafe(keys.toLowerCase());
 
-        for (var i=0, l = parts.length; i < l; i++) {
+        for (var i = 0, l = parts.length; i < l; i++) {
             if (keyUtil.KEY_MODS[parts[i]])
                 hashId = hashId | keyUtil.KEY_MODS[parts[i]];
             else
@@ -11680,91 +11851,24 @@ var CommandManager = function(platform, commands) {
     }
 
     function splitSafe(s) {
-        return (s.toLowerCase()
-            .trim()
+        return (s.trim()
             .split(new RegExp("[\\s ]*\\-[\\s ]*", "g"), 999));
     }
 
-    this.findKeyCommand = function findKeyCommand(hashId, textOrKey) {
-        // Convert keyCode to the string representation.
-        if (typeof textOrKey == "number") {
-            textOrKey = keyUtil.keyCodeToString(textOrKey);
-        }
-
+    this.findKeyCommand = function findKeyCommand(hashId, keyString) {
         var ckbr = this.commmandKeyBinding;
-        return ckbr[hashId] && ckbr[hashId][textOrKey.toLowerCase()];
-    };
+        return ckbr[hashId] && ckbr[hashId][keyString.toLowerCase()];
+    }
 
-    this.exec = function(command, editor, args) {
-        if (typeof command === 'string')
-            command = this.commands[command];
-
-        if (!command)
-            return false;
-
-        if (editor && editor.$readOnly && !command.readOnly)
-            return false;
-
-        command.exec(editor, args || {});
-        return true;
-    };
-
-    this.toggleRecording = function() {
-        if (this.$inReplay)
-            return;
-        if (this.recording) {
-            this.macro.pop();
-            this.exec = this.normal_exec;
-
-            if (!this.macro.length)
-                this.macro = this.oldMacro;
-
-            return this.recording = false;
-        }
-        this.oldMacro = this.macro;
-        this.macro = [];
-        this.normal_exec = this.exec;
-        this.exec = function(command, editor, args) {
-            this.macro.push([command, args]);
-            return this.normal_exec(command, editor, args);
+    this.handleKeyboard = function(data, hashId, keyString, keyCode) {
+        return {
+            command: this.findKeyCommand(hashId, keyString)
         };
-        return this.recording = true;
     };
 
-    this.replay = function(editor) {
-        if (this.$inReplay || !this.macro)
-            return;
+}).call(HashHandler.prototype)
 
-        if (this.recording)
-            return this.toggleRecording();
-
-        try {
-            this.$inReplay = true;
-            this.macro.forEach(function(x) {
-                if (typeof x == "string")
-                    this.exec(x, editor);
-                else
-                    this.exec(x[0], editor, x[1]);
-            }, this);
-        } finally {
-            this.$inReplay = false;
-        }
-    };
-
-    this.trimMacro = function(m) {
-        return m.map(function(x){
-            if (typeof x[0] != "string")
-                x[0] = x[0].name;
-            if (!x[1])
-                x = x[0];
-            return x;
-        });
-    };
-
-}).call(CommandManager.prototype);
-
-exports.CommandManager = CommandManager;
-
+exports.HashHandler = HashHandler;
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -12149,7 +12253,7 @@ var VirtualRenderer = function(container, theme) {
         this.$animatedScroll = shouldAnimate;
     };
 
-    this.getAnimatedScroll = function(){
+    this.getAnimatedScroll = function() {
         return this.$animatedScroll;
     };
 
@@ -12656,6 +12760,19 @@ var VirtualRenderer = function(container, theme) {
         // todo: handle horizontal scrolling
     };
 
+    this.pixelToScreenCoordinates = function(pageX, pageY) {
+        var canvasPos = this.scroller.getBoundingClientRect();
+
+        var col = Math.round(
+            (pageX + this.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft()) / this.characterWidth
+        );
+        var row = Math.floor(
+            (pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop()) / this.lineHeight
+        );
+
+        return {row: row, column: col};
+    };
+
     this.screenToTextCoordinates = function(pageX, pageY) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
@@ -12747,7 +12864,7 @@ var VirtualRenderer = function(container, theme) {
                 return afterLoad(module);
 
             _self._loadTheme(moduleName, function() {
-                require([theme], function(module) {
+                require([moduleName], function(module) {
                     if (_self.$themeValue !== theme)
                         return;
 
@@ -13112,7 +13229,7 @@ var Marker = function(parentEl) {
     };
 
     /**
-     * Draws a marker, which spans a range of text in a single line
+     * Draws a marker, which spans a range of text on multiple lines
      */ 
     this.drawTextMarker = function(stringBuilder, range, clazz, layerConfig) {
         // selection start
@@ -13187,7 +13304,7 @@ var Marker = function(parentEl) {
     };
 
     /**
-     * Draws a marker which covers one single full line
+     * Draws a marker which covers part or whole width of a single screen line
      */
     this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig, extraLength, type) {
         var padding = type === "background" ? 0 : this.$padding;
@@ -13521,16 +13638,16 @@ var Text = function(parentEl) {
     };
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
-        var fragment = this.element.ownerDocument.createDocumentFragment(),
-            row = firstRow,
-            fold = this.session.getNextFoldLine(row),
-            foldStart = fold ?fold.start.row :Infinity;
+        var fragment = this.element.ownerDocument.createDocumentFragment();
+        var row = firstRow;
+        var foldLine = this.session.getNextFoldLine(row);
+        var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (true) {
             if (row > foldStart) {
-                row = fold.end.row+1;
-                fold = this.session.getNextFoldLine(row, fold);
-                foldStart = fold ?fold.start.row :Infinity;
+                row = foldLine.end.row+1;
+                foldLine = this.session.getNextFoldLine(row, foldLine);
+                foldStart = foldLine ? foldLine.start.row : Infinity;
             }
             if (row > lastRow)
                 break;
@@ -13569,15 +13686,15 @@ var Text = function(parentEl) {
         var html = [];
         var firstRow = config.firstRow, lastRow = config.lastRow;
 
-        var row = firstRow,
-            fold = this.session.getNextFoldLine(row),
-            foldStart = fold ?fold.start.row :Infinity;
+        var row = firstRow;
+        var foldLine = this.session.getNextFoldLine(row);
+        var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (true) {
             if (row > foldStart) {
-                row = fold.end.row+1;
-                fold = this.session.getNextFoldLine(row, fold);
-                foldStart = fold ?fold.start.row :Infinity;
+                row = foldLine.end.row+1;
+                foldLine = this.session.getNextFoldLine(row, foldLine);
+                foldStart = foldLine ? foldLine.start.row :Infinity;
             }
             if (row > lastRow)
                 break;
@@ -13878,11 +13995,10 @@ var Cursor = function(parentEl) {
     this.element.className = "ace_layer ace_cursor-layer";
     parentEl.appendChild(this.element);
 
-    this.cursor = dom.createElement("div");
-    this.cursor.className = "ace_cursor ace_hidden";
-    this.element.appendChild(this.cursor);
-
     this.isVisible = false;
+
+    this.cursors = [];
+    this.cursor = this.addCursor();
 };
 
 (function() {
@@ -13896,30 +14012,54 @@ var Cursor = function(parentEl) {
         this.session = session;
     };
 
+    this.addCursor = function() {
+        var el = dom.createElement("div");
+        var className = "ace_cursor";
+        if (!this.isVisible)
+            className += " ace_hidden";
+        if (this.overwrite)
+            className += " ace_overwrite";
+
+        el.className = className;
+        this.element.appendChild(el);
+        this.cursors.push(el);
+        return el;
+    };
+
+    this.removeCursor = function() {
+        if (this.cursors.length > 1) {
+            var el = this.cursors.pop();
+            el.parentNode.removeChild(el);
+            return el;
+        }
+    };
+
     this.hideCursor = function() {
         this.isVisible = false;
-        dom.addCssClass(this.cursor, "ace_hidden");
+        for (var i = this.cursors.length; i--; )
+            dom.addCssClass(this.cursors[i], "ace_hidden");
         clearInterval(this.blinkId);
     };
 
     this.showCursor = function() {
         this.isVisible = true;
-        dom.removeCssClass(this.cursor, "ace_hidden");
-        this.cursor.style.visibility = "visible";
+        for (var i = this.cursors.length; i--; )
+            dom.removeCssClass(this.cursors[i], "ace_hidden");
+
+        this.element.style.visibility = "";
         this.restartTimer();
     };
 
     this.restartTimer = function() {
         clearInterval(this.blinkId);
-        if (!this.isVisible) {
+        if (!this.isVisible)
             return;
-        }
 
-        var cursor = this.cursor;
+        var element = this.element;
         this.blinkId = setInterval(function() {
-            cursor.style.visibility = "hidden";
+            element.style.visibility = "hidden";
             setTimeout(function() {
-                cursor.style.visibility = "visible";
+                element.style.visibility = "visible";
             }, 400);
         }, 1000);
     };
@@ -13949,23 +14089,51 @@ var Cursor = function(parentEl) {
     this.update = function(config) {
         this.config = config;
 
-        this.pixelPos = this.getPixelPosition(null, true);
+        if (this.session.selectionMarkerCount > 1) {
+            var selections = this.session.$selectionMarkers;
+            var i = 0, sel, cursorIndex = 0;
 
-        this.cursor.style.left = this.pixelPos.left + "px";
-        this.cursor.style.top =  this.pixelPos.top + "px";
-        this.cursor.style.width = config.characterWidth + "px";
-        this.cursor.style.height = config.lineHeight + "px";
+            for (var i = selections.length; i--; ) {
+                sel = selections[i];
+                var pixelPos = this.getPixelPosition(sel.cursor, true);
 
-        var overwrite = this.session.getOverwrite()
-        if (overwrite != this.overwrite) {
-            this.overwrite = overwrite;
-            if (overwrite)
-                dom.addCssClass(this.cursor, "ace_overwrite");
-            else
-                dom.removeCssClass(this.cursor, "ace_overwrite");
+                var style = (this.cursors[cursorIndex++] || this.addCursor()).style;
+
+                style.left = pixelPos.left + "px";
+                style.top = pixelPos.top + "px";
+                style.width = config.characterWidth + "px";
+                style.height = config.lineHeight + "px";
+            }
+            if (cursorIndex > 1)
+                while (this.cursors.length > cursorIndex)
+                    this.removeCursor();
+        } else {
+            var pixelPos = this.getPixelPosition(null, true);
+            var style = this.cursor.style;
+            style.left = pixelPos.left + "px";
+            style.top = pixelPos.top + "px";
+            style.width = config.characterWidth + "px";
+            style.height = config.lineHeight + "px";
+
+            while (this.cursors.length > 1)
+                this.removeCursor();
         }
 
+        var overwrite = this.session.getOverwrite();
+        if (overwrite != this.overwrite)
+            this.$setOverite(overwrite);
+
         this.restartTimer();
+    };
+
+    this.$setOverite = function(overwrite) {
+        this.overwrite = overwrite;
+        for (var i = this.cursors.length; i--; ) {
+            if (overwrite)
+                dom.addCssClass(this.cursors[i], "ace_overwrite");
+            else
+                dom.removeCssClass(this.cursors[i], "ace_overwrite");
+        }
     };
 
     this.destroy = function() {
@@ -14310,12 +14478,12 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_marker-layer .ace_selection {\n" +
   "    position: absolute;\n" +
-  "    z-index: 4;\n" +
+  "    z-index: 5;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_bracket {\n" +
   "    position: absolute;\n" +
-  "    z-index: 5;\n" +
+  "    z-index: 6;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_active_line {\n" +
@@ -14329,7 +14497,7 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_marker-layer .ace_selected_word {\n" +
   "    position: absolute;\n" +
-  "    z-index: 6;\n" +
+  "    z-index: 4;\n" +
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
@@ -14600,123 +14768,6 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
 
 exports.WorkerClient = WorkerClient;
 
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Fabian Jakobs <fabian AT ajax DOT org>
- *   Julian Viereck (julian.viereck@gmail.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
-"use strict";
-
-var keyUtil  = require("../lib/keys");
-
-function HashHandler(config) {
-    this.setConfig(config);
-}
-
-(function() {
-    function splitSafe(s, separator, limit, bLowerCase) {
-        return (bLowerCase && s.toLowerCase() || s)
-            .replace(/(?:^\s+|\n|\s+$)/g, "")
-            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
-    }
-
-    function parseKeys(keys, val, ret) {
-        var key,
-            hashId = 0,
-            parts  = splitSafe(keys, "\\-", null, true),
-            i      = 0,
-            l      = parts.length;
-
-        for (; i < l; ++i) {
-            if (keyUtil.KEY_MODS[parts[i]])
-                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
-            else
-                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
-        }
-
-        (ret[hashId] || (ret[hashId] = {}))[key] = val;
-        return ret;
-    }
-
-    function objectReverse(obj, keySplit) {
-        var i, j, l, key,
-            ret = {};
-        for (i in obj) {
-            key = obj[i];
-            if (keySplit && typeof key == "string") {
-                key = key.split(keySplit);
-                for (j = 0, l = key.length; j < l; ++j)
-                    parseKeys.call(this, key[j], i, ret);
-            }
-            else {
-                parseKeys.call(this, key, i, ret);
-            }
-        }
-        return ret;
-    }
-
-    this.setConfig = function(config) {
-        this.$config = config;
-        if (typeof this.$config.reverse == "undefined")
-            this.$config.reverse = objectReverse.call(this, this.$config, "|");
-    };
-
-    /**
-     * This function is called by keyBinding.
-     */
-    this.handleKeyboard = function(data, hashId, textOrKey, keyCode) {
-        // Figure out if a commandKey was pressed or just some text was insert.
-        if (hashId != 0 || keyCode != 0) {
-            return {
-                command: (this.$config.reverse[hashId] || {})[textOrKey]
-            }
-        } else {
-            return {
-                command: "inserttext",
-                args: {
-                    text: textOrKey
-                }
-            }
-        }
-    }
-}).call(HashHandler.prototype)
-
-exports.HashHandler = HashHandler;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
