@@ -86,7 +86,6 @@ Mode.prototype.supportsFile = function(filename) {
     return filename.match(this.extRe);
 };
 
-//{
 var modes = [
     new Mode("c_cpp", "C/C++", ["c", "cpp", "cxx", "h", "hpp"]),
     new Mode("clojure", "Clojure", ["clj"]),
@@ -265,9 +264,6 @@ var docs = [
     )
 ];
 
-//}
-
-
 var docsByName = {};
 docs.forEach(function(d) {
     docsByName[d.name] = d;
@@ -371,7 +367,7 @@ function updateUIEditorOptions() {
     saveOption(showPrintMarginEl, editor.renderer.getShowPrintMargin());
     saveOption(highlightSelectedWordE, editor.getHighlightSelectedWord());
     saveOption(showHScrollEl, editor.renderer.getHScrollBarAlwaysVisible());
-    saveOption(showHScrollEl, editor.getAnimatedScroll());
+    saveOption(animateScrollEl, editor.getAnimatedScroll());
     saveOption(softTabEl, session.getUseSoftTabs());
     saveOption(behavioursEl, editor.getBehavioursEnabled());
 }
@@ -379,13 +375,17 @@ function updateUIEditorOptions() {
 function saveOption(el, val) {
     if (!el.onchange || el.onclick)
         return;
+        
     if ("checked" in el) {
         if (val !== undefined)
             el.checked = val;
+            
         localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
-    } else    {
+    } 
+    else {
         if (val !== undefined)
             el.value = val;
+            
         localStorage && localStorage.setItem(el.id, el.value);
     }
 }
