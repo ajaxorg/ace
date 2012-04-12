@@ -2677,7 +2677,7 @@ var Editor = function(renderer, session) {
         else
             lastRow = Infinity;
         this.renderer.updateLines(range.start.row, lastRow);
-        
+
         this._emit("change", e);
 
         // update cursor because tab characters can influence the cursor position
@@ -2726,7 +2726,7 @@ var Editor = function(renderer, session) {
         if (this.getHighlightActiveLine()) {
             var cursor = this.getCursorPosition(),
                 foldLine = this.session.getFoldLine(cursor.row);
-                
+
             if ((this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
                 var range;
                 if (foldLine) {
@@ -2990,14 +2990,14 @@ var Editor = function(renderer, session) {
     this.getHighlightSelectedWord = function() {
         return this.$highlightSelectedWord;
     };
-    
+
     this.setAnimatedScroll = function(shouldAnimate){
         this.renderer.setAnimatedScroll(shouldAnimate);
-    }
-    
+    };
+
     this.getAnimatedScroll = function(){
-        this.rendered.getAnimatedScroll();
-    }
+        this.renderer.getAnimatedScroll();
+    };
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.getShowInvisibles() == showInvisibles)
@@ -3543,7 +3543,7 @@ var Editor = function(renderer, session) {
             this.selection.setSelectionRange(range);
             this.renderer.scrollSelectionIntoView(range.start, range.end);
         }
-            
+
         return replaced;
     };
 
@@ -3570,7 +3570,7 @@ var Editor = function(renderer, session) {
 
         this.selection.setSelectionRange(selection);
         this.$blockScrolling -= 1;
-        
+
         return replaced;
     };
 
@@ -3627,11 +3627,11 @@ var Editor = function(renderer, session) {
             this.$blockScrolling += 1;
             this.selection.setSelectionRange(range);
             this.$blockScrolling -= 1;
-            
+
             var cursor = this.getCursorPosition();
             if (!this.isRowFullyVisible(cursor.row))
                 this.scrollToLine(cursor.row, true);
-                
+
             //@todo scroll X
             //if (!this.isRowFullyVisible(cursor.row))
                 //this.scrollToLine(cursor.row, true);
@@ -11922,13 +11922,13 @@ dom.importCssString(editorCss, "ace_editor");
 
 var VirtualRenderer = function(container, theme) {
     var _self = this;
-    
+
     this.container = container;
 
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-    
+
     dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
@@ -11936,7 +11936,7 @@ var VirtualRenderer = function(container, theme) {
     this.$gutter = dom.createElement("div");
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
-    
+
     this.scroller = dom.createElement("div");
     this.scroller.className = "ace_scroller";
     this.container.appendChild(this.scroller);
@@ -11946,8 +11946,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
-    
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -11974,12 +11974,12 @@ var VirtualRenderer = function(container, theme) {
 
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    
+
     event.addListener(this.scroller, "scroll", function() {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
         _self.session.setScrollLeft(scrollLeft);
-        
+
         if (scrollLeft == 0) {
             _self.$gutter.className = "ace_gutter";
         }
@@ -12147,11 +12147,11 @@ var VirtualRenderer = function(container, theme) {
 
     this.setAnimatedScroll = function(shouldAnimate){
         this.$animatedScroll = shouldAnimate;
-    }
-    
-    this.getAnimatedscroll = function(){
-        return this.$animatedScroll
-    }
+    };
+
+    this.getAnimatedScroll = function(){
+        return this.$animatedScroll;
+    };
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.$textLayer.setShowInvisibles(showInvisibles))
@@ -12231,7 +12231,7 @@ var VirtualRenderer = function(container, theme) {
         // this persists in IE9
         if (useragent.isIE)
             return;
-        
+
         if (this.layerConfig.lastRow === 0)
             return;
 
@@ -12307,13 +12307,13 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             this.scroller.scrollLeft = this.scrollLeft;
-            
+
             // read the value after writing it since the value might get clipped
             var scrollLeft = this.scroller.scrollLeft;
             this.scrollLeft = scrollLeft;
             this.session.setScrollLeft(scrollLeft);
         }
-        
+
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
@@ -12588,7 +12588,7 @@ var VirtualRenderer = function(container, theme) {
         var i = 0;
         var l = this.STEPS;
         var steps = [];
-        
+
         var func  = function(t, x_min, dx) {
             if ((t /= .5) < 1)
                 return dx / 2 * Math.pow(t, 3) + x_min;
@@ -12598,7 +12598,7 @@ var VirtualRenderer = function(container, theme) {
         for (i = 0; i < l; ++i)
             steps.push(func(i / this.STEPS, fromValue, toValue - fromValue));
         steps.push(toValue);
-        
+
         return steps;
     };
 
@@ -12609,15 +12609,14 @@ var VirtualRenderer = function(container, theme) {
             offset -= this.$size.scrollerHeight / 2;
 
         if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
-            var i = 0;
             var _self = this;
             var steps = _self.$calcSteps(this.scrollTop, offset);
-            
-            clearInterval(_self.$timer);
+
+            clearInterval(this.$timer);
             this.$timer = setInterval(function() {
-                _self.session.setScrollTop(steps[i]);
+                _self.session.setScrollTop(steps.shift());
                 
-                if (++i == this.STEPS + 1)
+                if (!steps.length)
                     clearInterval(_self.$timer);
             }, 10);
         }
@@ -12727,7 +12726,7 @@ var VirtualRenderer = function(container, theme) {
     this._loadTheme = function(name, callback) {
         if (!config.get("packaged"))
             return callback();
-            
+
         var base = name.split("/").pop();
         var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
         net.loadScript(filename, callback);
@@ -12739,14 +12738,14 @@ var VirtualRenderer = function(container, theme) {
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             var moduleName = theme || "ace/theme/textmate";
-            
+
             var module;
             try {
                 module = require(moduleName);
             } catch (e) {};
             if (module)
                 return afterLoad(module);
-            
+
             _self._loadTheme(moduleName, function() {
                 require([theme], function(module) {
                     if (_self.$themeValue !== theme)

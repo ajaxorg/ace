@@ -247,7 +247,7 @@ exportAce(ACE_NAMESPACE);
 define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
-require("ace/config").init(); 
+require("ace/config").init();
 var env = {};
 
 var event = require("ace/lib/event");
@@ -507,6 +507,7 @@ var showGutterEl = document.getElementById("show_gutter");
 var showPrintMarginEl = document.getElementById("show_print_margin");
 var highlightSelectedWordE = document.getElementById("highlight_selected_word");
 var showHScrollEl = document.getElementById("show_hscroll");
+var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
 
@@ -526,12 +527,12 @@ modes.forEach(function(mode) {
 
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
-    
+
     if (!docsByName[value].initialized) {
         docsByName[value].initialized = true;
         doc.setMode(modesByName[docsByName[value].name].mode);
     }
-    
+
     var session = env.split.setSession(doc);
     session.name = doc.name;
 
@@ -563,6 +564,7 @@ function updateUIEditorOptions() {
     showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
     highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
     showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
+    animateScrollEl.checked = editor.getAnimatedScroll();
     softTabEl.checked = session.getUseSoftTabs();
     behavioursEl.checked = editor.getBehavioursEnabled();
 }
@@ -644,6 +646,10 @@ bindCheckbox("highlight_selected_word", function(checked) {
 
 bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+});
+
+bindCheckbox("animate_scroll", function(checked) {
+    env.editor.setAnimatedScroll(checked);
 });
 
 bindCheckbox("soft_tab", function(checked) {
@@ -11567,7 +11573,7 @@ var Editor = function(renderer, session) {
         else
             lastRow = Infinity;
         this.renderer.updateLines(range.start.row, lastRow);
-        
+
         this._emit("change", e);
 
         // update cursor because tab characters can influence the cursor position
@@ -11616,7 +11622,7 @@ var Editor = function(renderer, session) {
         if (this.getHighlightActiveLine()) {
             var cursor = this.getCursorPosition(),
                 foldLine = this.session.getFoldLine(cursor.row);
-                
+
             if ((this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
                 var range;
                 if (foldLine) {
@@ -11880,14 +11886,14 @@ var Editor = function(renderer, session) {
     this.getHighlightSelectedWord = function() {
         return this.$highlightSelectedWord;
     };
-    
+
     this.setAnimatedScroll = function(shouldAnimate){
         this.renderer.setAnimatedScroll(shouldAnimate);
-    }
-    
+    };
+
     this.getAnimatedScroll = function(){
-        this.rendered.getAnimatedScroll();
-    }
+        this.renderer.getAnimatedScroll();
+    };
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.getShowInvisibles() == showInvisibles)
@@ -12433,7 +12439,7 @@ var Editor = function(renderer, session) {
             this.selection.setSelectionRange(range);
             this.renderer.scrollSelectionIntoView(range.start, range.end);
         }
-            
+
         return replaced;
     };
 
@@ -12460,7 +12466,7 @@ var Editor = function(renderer, session) {
 
         this.selection.setSelectionRange(selection);
         this.$blockScrolling -= 1;
-        
+
         return replaced;
     };
 
@@ -12517,11 +12523,11 @@ var Editor = function(renderer, session) {
             this.$blockScrolling += 1;
             this.selection.setSelectionRange(range);
             this.$blockScrolling -= 1;
-            
+
             var cursor = this.getCursorPosition();
             if (!this.isRowFullyVisible(cursor.row))
                 this.scrollToLine(cursor.row, true);
-                
+
             //@todo scroll X
             //if (!this.isRowFullyVisible(cursor.row))
                 //this.scrollToLine(cursor.row, true);
@@ -14731,13 +14737,13 @@ dom.importCssString(editorCss, "ace_editor");
 
 var VirtualRenderer = function(container, theme) {
     var _self = this;
-    
+
     this.container = container;
 
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-    
+
     dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
@@ -14745,7 +14751,7 @@ var VirtualRenderer = function(container, theme) {
     this.$gutter = dom.createElement("div");
     this.$gutter.className = "ace_gutter";
     this.container.appendChild(this.$gutter);
-    
+
     this.scroller = dom.createElement("div");
     this.scroller.className = "ace_scroller";
     this.container.appendChild(this.scroller);
@@ -14755,8 +14761,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
-    
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -14783,12 +14789,12 @@ var VirtualRenderer = function(container, theme) {
 
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    
+
     event.addListener(this.scroller, "scroll", function() {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
         _self.session.setScrollLeft(scrollLeft);
-        
+
         if (scrollLeft == 0) {
             _self.$gutter.className = "ace_gutter";
         }
@@ -14956,11 +14962,11 @@ var VirtualRenderer = function(container, theme) {
 
     this.setAnimatedScroll = function(shouldAnimate){
         this.$animatedScroll = shouldAnimate;
-    }
-    
-    this.getAnimatedscroll = function(){
-        return this.$animatedScroll
-    }
+    };
+
+    this.getAnimatedScroll = function(){
+        return this.$animatedScroll;
+    };
 
     this.setShowInvisibles = function(showInvisibles) {
         if (this.$textLayer.setShowInvisibles(showInvisibles))
@@ -15040,7 +15046,7 @@ var VirtualRenderer = function(container, theme) {
         // this persists in IE9
         if (useragent.isIE)
             return;
-        
+
         if (this.layerConfig.lastRow === 0)
             return;
 
@@ -15116,13 +15122,13 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             this.scroller.scrollLeft = this.scrollLeft;
-            
+
             // read the value after writing it since the value might get clipped
             var scrollLeft = this.scroller.scrollLeft;
             this.scrollLeft = scrollLeft;
             this.session.setScrollLeft(scrollLeft);
         }
-        
+
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
@@ -15397,7 +15403,7 @@ var VirtualRenderer = function(container, theme) {
         var i = 0;
         var l = this.STEPS;
         var steps = [];
-        
+
         var func  = function(t, x_min, dx) {
             if ((t /= .5) < 1)
                 return dx / 2 * Math.pow(t, 3) + x_min;
@@ -15407,7 +15413,7 @@ var VirtualRenderer = function(container, theme) {
         for (i = 0; i < l; ++i)
             steps.push(func(i / this.STEPS, fromValue, toValue - fromValue));
         steps.push(toValue);
-        
+
         return steps;
     };
 
@@ -15418,15 +15424,14 @@ var VirtualRenderer = function(container, theme) {
             offset -= this.$size.scrollerHeight / 2;
 
         if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
-            var i = 0;
             var _self = this;
             var steps = _self.$calcSteps(this.scrollTop, offset);
-            
-            clearInterval(_self.$timer);
+
+            clearInterval(this.$timer);
             this.$timer = setInterval(function() {
-                _self.session.setScrollTop(steps[i]);
+                _self.session.setScrollTop(steps.shift());
                 
-                if (++i == this.STEPS + 1)
+                if (!steps.length)
                     clearInterval(_self.$timer);
             }, 10);
         }
@@ -15536,7 +15541,7 @@ var VirtualRenderer = function(container, theme) {
     this._loadTheme = function(name, callback) {
         if (!config.get("packaged"))
             return callback();
-            
+
         var base = name.split("/").pop();
         var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
         net.loadScript(filename, callback);
@@ -15548,14 +15553,14 @@ var VirtualRenderer = function(container, theme) {
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             var moduleName = theme || "ace/theme/textmate";
-            
+
             var module;
             try {
                 module = require(moduleName);
             } catch (e) {};
             if (module)
                 return afterLoad(module);
-            
+
             _self._loadTheme(moduleName, function() {
                 require([theme], function(module) {
                     if (_self.$themeValue !== theme)
