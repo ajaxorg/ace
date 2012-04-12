@@ -96,6 +96,7 @@ var modes = [
     new Mode("javascript", "JavaScript", ["js"]),
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
+    new Mode("less", "LESS", ["less"]),
     new Mode("lua", "Lua", ["lua"]),
     new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
@@ -148,6 +149,10 @@ var docs = [
     new Doc(
         "scss", "SCSS",
         require("ace/requirejs/text!./docs/scss.scss")
+    ),
+    new Doc(
+        "less", "LESS",
+        require("ace/requirejs/text!./docs/less.less")
     ),
     new Doc(
         "html", "HTML",
