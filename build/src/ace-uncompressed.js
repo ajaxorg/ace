@@ -3532,14 +3532,19 @@ var Editor = function(renderer, session) {
             this.$search.set(options);
 
         var range = this.$search.find(this.session);
+        var replaced = 0;
         if (!range)
-            return;
+            return replaced;
 
-        this.$tryReplace(range, replacement);
+        if (this.$tryReplace(range, replacement)) {
+            replaced = 1;
+        }
         if (range !== null) {
             this.selection.setSelectionRange(range);
             this.renderer.scrollSelectionIntoView(range.start, range.end);
         }
+            
+        return replaced;
     };
 
     this.replaceAll = function(replacement, options) {
@@ -3548,19 +3553,25 @@ var Editor = function(renderer, session) {
         }
 
         var ranges = this.$search.findAll(this.session);
+        var replaced = 0;
         if (!ranges.length)
-            return;
+            return replaced;
 
         var selection = this.getSelectionRange();
         this.clearSelection();
         this.selection.moveCursorTo(0, 0);
 
         this.$blockScrolling += 1;
-        for (var i = ranges.length - 1; i >= 0; --i)
-            this.$tryReplace(ranges[i], replacement);
+        for (var i = ranges.length - 1; i >= 0; --i) {
+            if(this.$tryReplace(ranges[i], replacement)) {
+                replaced++;
+            }
+        }
 
         this.selection.setSelectionRange(selection);
         this.$blockScrolling -= 1;
+        
+        return replaced;
     };
 
     this.$tryReplace = function(range, replacement) {
@@ -12575,7 +12586,7 @@ var VirtualRenderer = function(container, theme) {
     this.STEPS = 10;
     this.$calcSteps = function(fromValue, toValue){
         var i = 0;
-        var l = STEPS;
+        var l = this.STEPS;
         var steps = [];
         
         var func  = function(t, x_min, dx) {
@@ -12606,7 +12617,7 @@ var VirtualRenderer = function(container, theme) {
             this.$timer = setInterval(function() {
                 _self.session.setScrollTop(steps[i]);
                 
-                if (++i == STEPS + 1)
+                if (++i == this.STEPS + 1)
                     clearInterval(_self.$timer);
             }, 10);
         }
@@ -13312,7 +13323,7 @@ var Text = function(parentEl) {
         lineHeight : 1
     };
 
-    this.$measureSizes = function() {
+    this.$measureSizes = useragent.isIE || useragent.isOldGecko ? function() {
         var n = 1000;
         if (!this.$measureNode) {
             var measureNode = this.$measureNode = dom.createElement("div");
@@ -13322,7 +13333,7 @@ var Text = function(parentEl) {
             style.left = style.top = (-n * 40)  + "px";
 
             style.visibility = "hidden";
-            style.position = "absolute";
+            style.position = "fixed";
             style.overflow = "visible";
             style.whiteSpace = "nowrap";
 
@@ -13339,7 +13350,6 @@ var Text = function(parentEl) {
                     container = container.parentNode;
                 container.appendChild(measureNode);
             }
-
         }
         
         // Size and width can be null if the editor is not visible or
@@ -13359,7 +13369,46 @@ var Text = function(parentEl) {
 
         // Size and width can be null if the editor is not visible or
         // detached from the document
-        if (size.width == 0 && size.height == 0)
+        if (size.width == 0 || size.height == 0)
+            return null;
+
+        return size;
+    } 
+    : function() {
+        if (!this.$measureNode) {
+            var measureNode = this.$measureNode = dom.createElement("div");
+            var style = measureNode.style;
+
+            style.width = style.height = "auto";
+            style.left = style.top = -100 + "px";
+
+            style.visibility = "hidden";
+            style.position = "fixed";
+            style.overflow = "visible";
+            style.whiteSpace = "nowrap";
+
+            measureNode.innerHTML = "X";
+
+            var container = this.element.parentNode;
+            while (container && !dom.hasCssClass(container, "ace_editor"))
+                container = container.parentNode;
+
+            if (!container)
+                return this.$measureNode = null;
+
+            container.appendChild(measureNode);
+        }
+        
+        var rect = this.$measureNode.getBoundingClientRect();
+
+        var size = {
+            height: rect.height,
+            width: rect.width
+        };
+
+        // Size and width can be null if the editor is not visible or
+        // detached from the document
+        if (size.width == 0 || size.height == 0)
             return null;
 
         return size;
@@ -14014,6 +14063,8 @@ var ScrollBar = function(parent) {
         this.inner.style.height = height + "px";
     };
 
+    // TODO: on chrome 17+ after for small zoom levels after this function
+    // this.element.scrollTop != scrollTop which makes page to scroll up.
     this.setScrollTop = function(scrollTop) {
         this.element.scrollTop = scrollTop;
     };
