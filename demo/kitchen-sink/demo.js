@@ -41,7 +41,7 @@
 define(function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
-require("ace/config").init(); 
+require("ace/config").init();
 var env = {};
 
 var event = require("ace/lib/event");
@@ -301,6 +301,7 @@ var showGutterEl = document.getElementById("show_gutter");
 var showPrintMarginEl = document.getElementById("show_print_margin");
 var highlightSelectedWordE = document.getElementById("highlight_selected_word");
 var showHScrollEl = document.getElementById("show_hscroll");
+var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
 
@@ -320,12 +321,12 @@ modes.forEach(function(mode) {
 
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
-    
+
     if (!docsByName[value].initialized) {
         docsByName[value].initialized = true;
         doc.setMode(modesByName[docsByName[value].name].mode);
     }
-    
+
     var session = env.split.setSession(doc);
     session.name = doc.name;
 
@@ -357,6 +358,7 @@ function updateUIEditorOptions() {
     showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
     highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
     showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
+    animateScrollEl.checked = editor.getAnimatedScroll();
     softTabEl.checked = session.getUseSoftTabs();
     behavioursEl.checked = editor.getBehavioursEnabled();
 }
@@ -438,6 +440,10 @@ bindCheckbox("highlight_selected_word", function(checked) {
 
 bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+});
+
+bindCheckbox("animate_scroll", function(checked) {
+    env.editor.setAnimatedScroll(checked);
 });
 
 bindCheckbox("soft_tab", function(checked) {
