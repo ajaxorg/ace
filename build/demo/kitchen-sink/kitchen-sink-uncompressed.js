@@ -244,7 +244,7 @@ exportAce(ACE_NAMESPACE);
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/less.less', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split'], function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init();
@@ -302,6 +302,7 @@ var modes = [
     new Mode("javascript", "JavaScript", ["js"]),
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
+    new Mode("less", "LESS", ["less"]),
     new Mode("lua", "Lua", ["lua"]),
     new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
@@ -354,6 +355,10 @@ var docs = [
     new Doc(
         "scss", "SCSS",
         require("text!./docs/scss.scss")
+    ),
+    new Doc(
+        "less", "LESS",
+        require("text!./docs/less.less")
     ),
     new Doc(
         "html", "HTML",
@@ -9989,6 +9994,36 @@ define("text!kitchen-sink/docs/scss.scss", [], "/* style.scss */\n" +
   "        }\n" +
   "    }\n" +
   "}");
+
+define("text!kitchen-sink/docs/less.less", [], "/* styles.less */\n" +
+  "\n" +
+  "@base: #f938ab;\n" +
+  "\n" +
+  ".box-shadow(@style, @c) when (iscolor(@c)) {\n" +
+  "    box-shadow:         @style @c;\n" +
+  "    -webkit-box-shadow: @style @c;\n" +
+  "    -moz-box-shadow:    @style @c;\n" +
+  "}\n" +
+  ".box-shadow(@style, @alpha: 50%) when (isnumber(@alpha)) {\n" +
+  "    .box-shadow(@style, rgba(0, 0, 0, @alpha));\n" +
+  "}\n" +
+  "\n" +
+  "// Box styles\n" +
+  ".box { \n" +
+  "    color: saturate(@base, 5%);\n" +
+  "    border-color: lighten(@base, 30%);\n" +
+  "    \n" +
+  "    div { .box-shadow(0 0 5px, 30%) }\n" +
+  "  \n" +
+  "    a {\n" +
+  "        color: @base;\n" +
+  "        \n" +
+  "        &:hover {\n" +
+  "            color: lighten(@base, 50%);\n" +
+  "        }\n" +
+  "    }\n" +
+  "}\n" +
+  "");
 
 define("text!kitchen-sink/docs/html.html", [], "<html>\n" +
   "    <head>\n" +
