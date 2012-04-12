@@ -162,12 +162,12 @@
 
 .ace_marker-layer .ace_selection {
     position: absolute;
-    z-index: 4;
+    z-index: 5;
 }
 
 .ace_marker-layer .ace_bracket {
     position: absolute;
-    z-index: 5;
+    z-index: 6;
 }
 
 .ace_marker-layer .ace_active_line {
@@ -181,7 +181,7 @@
 
 .ace_marker-layer .ace_selected_word {
     position: absolute;
-    z-index: 6;
+    z-index: 4;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
