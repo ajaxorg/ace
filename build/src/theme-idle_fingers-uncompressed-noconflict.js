@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-idle-fingers .ace_cursor {\
-  border-left: 2px solid #91FF00;\
+  border-left: 1px solid #91FF00;\
 }\
 \
 .ace-idle-fingers .ace_cursor.ace_overwrite {\

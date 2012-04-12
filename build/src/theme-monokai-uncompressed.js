@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-monokai .ace_cursor {\
-  border-left: 2px solid #F8F8F0;\
+  border-left: 1px solid #F8F8F0;\
 }\
 \
 .ace-monokai .ace_cursor.ace_overwrite {\

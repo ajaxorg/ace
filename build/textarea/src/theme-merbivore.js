@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-merbivore .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-merbivore .ace_cursor.ace_overwrite {\

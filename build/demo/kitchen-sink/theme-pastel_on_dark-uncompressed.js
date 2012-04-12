@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-pastel-on-dark .ace_cursor {\
-  border-left: 2px solid #A7A7A7;\
+  border-left: 1px solid #A7A7A7;\
 }\
 \
 .ace-pastel-on-dark .ace_cursor.ace_overwrite {\

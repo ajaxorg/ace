@@ -3266,7 +3266,7 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_cursor {\
-  border-left: 2px solid black;\
+  border-left: 1px solid black;\
 }\
 \
 .ace-tm .ace_cursor.ace_overwrite {\

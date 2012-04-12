@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow-night-bright .ace_cursor {\
-  border-left: 2px solid #9F9F9F;\
+  border-left: 1px solid #9F9F9F;\
 }\
 \
 .ace-tomorrow-night-bright .ace_cursor.ace_overwrite {\

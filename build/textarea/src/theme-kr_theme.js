@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-kr-theme .ace_cursor {\
-  border-left: 2px solid #FF9900;\
+  border-left: 1px solid #FF9900;\
 }\
 \
 .ace-kr-theme .ace_cursor.ace_overwrite {\
