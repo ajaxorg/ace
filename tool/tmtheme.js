@@ -98,6 +98,7 @@ var supportedScopes = {
    "meta.tag.sgml.doctype": "xml_pe",
    "meta.tag": "meta.tag",
    "meta.tag.form": "meta.tag.form",
+   
    "entity.other.attribute-name": "entity.other.attribute-name",
    "entity.name.function": "entity.name.function",
    "entity.name": "entity.name",
