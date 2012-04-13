@@ -245,6 +245,7 @@ exportAce(ACE_NAMESPACE);
 
 
 define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/less.less', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split', 'ace/multi_select'], function(require, exports, module) {
+"use strict";
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init();
@@ -258,7 +259,6 @@ var UndoManager = require("ace/undomanager").UndoManager;
 var vim = require("ace/keyboard/keybinding/vim").Vim;
 var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-
 
 var modesByName;
 
@@ -740,7 +740,6 @@ function onResize() {
     container.style.width = width + "px";
     container.style.height = document.documentElement.clientHeight + "px";
     env.split.resize();
-//        env.editor.resize();
 }
 
 window.onresize = onResize;
@@ -11858,16 +11857,7 @@ var Editor = function(renderer, session) {
     };
 
     this.onCut = function() {
-        if (this.$readOnly)
-            return;
-
-        var range = this.getSelectionRange();
-        this._emit("cut", range);
-
-        if (!this.selection.isEmpty()) {
-            this.session.remove(range);
-            this.clearSelection();
-        }
+        this.commands.exec("cut", this);
     };
 
     this.insert = function(text) {
@@ -14023,91 +14013,109 @@ exports.commands = [{
     name: "selectup",
     bindKey: bindKey("Shift-Up", "Shift-Up"),
     exec: function(editor) { editor.getSelection().selectUp(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "golineup",
     bindKey: bindKey("Up", "Up|Ctrl-P"),
     exec: function(editor, args) { editor.navigateUp(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selecttoend",
     bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
     exec: function(editor) { editor.getSelection().selectFileEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotoend",
     bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
     exec: function(editor) { editor.navigateFileEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectdown",
     bindKey: bindKey("Shift-Down", "Shift-Down"),
     exec: function(editor) { editor.getSelection().selectDown(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "golinedown",
     bindKey: bindKey("Down", "Down|Ctrl-N"),
     exec: function(editor, args) { editor.navigateDown(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectwordleft",
     bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
     exec: function(editor) { editor.getSelection().selectWordLeft(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotowordleft",
     bindKey: bindKey("Ctrl-Left", "Option-Left"),
     exec: function(editor) { editor.navigateWordLeft(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selecttolinestart",
     bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
     exec: function(editor) { editor.getSelection().selectLineStart(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotolinestart",
     bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
     exec: function(editor) { editor.navigateLineStart(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectleft",
     bindKey: bindKey("Shift-Left", "Shift-Left"),
     exec: function(editor) { editor.getSelection().selectLeft(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotoleft",
     bindKey: bindKey("Left", "Left|Ctrl-B"),
     exec: function(editor, args) { editor.navigateLeft(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectwordright",
     bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
     exec: function(editor) { editor.getSelection().selectWordRight(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotowordright",
     bindKey: bindKey("Ctrl-Right", "Option-Right"),
     exec: function(editor) { editor.navigateWordRight(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selecttolineend",
     bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
     exec: function(editor) { editor.getSelection().selectLineEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotolineend",
     bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
     exec: function(editor) { editor.navigateLineEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectright",
     bindKey: bindKey("Shift-Right", "Shift-Right"),
     exec: function(editor) { editor.getSelection().selectRight(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotoright",
     bindKey: bindKey("Right", "Right|Ctrl-F"),
     exec: function(editor, args) { editor.navigateRight(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectpagedown",
@@ -14143,11 +14151,13 @@ exports.commands = [{
     name: "selectlinestart",
     bindKey: bindKey("Shift-Home", "Shift-Home"),
     exec: function(editor) { editor.getSelection().selectLineStart(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectlineend",
     bindKey: bindKey("Shift-End", "Shift-End"),
     exec: function(editor) { editor.getSelection().selectLineEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "togglerecording",
@@ -14163,18 +14173,33 @@ exports.commands = [{
     name: "jumptomatching",
     bindKey: bindKey("Ctrl-Shift-P", "Ctrl-Shift-P"),
     exec: function(editor) { editor.jumpToMatching(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, 
 
 // commands disabled in readOnly mode
 {
+    name: "cut",
+    exec: function(editor) {
+        var range = editor.getSelectionRange();
+        editor._emit("cut", range);
+
+        if (!editor.selection.isEmpty()) {
+            editor.session.remove(range);
+            editor.clearSelection();
+        }
+    },
+    multiSelectAction: "forEach"
+}, {
     name: "removeline",
     bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(editor) { editor.removeLines(); }
+    exec: function(editor) { editor.removeLines(); },
+    multiSelectAction: "forEach"
 }, {
     name: "togglecomment",
     bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(editor) { editor.toggleCommentLines(); }
+    exec: function(editor) { editor.toggleCommentLines(); },
+    multiSelectAction: "forEach"
 }, {
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
@@ -14226,62 +14251,76 @@ exports.commands = [{
 }, {
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(editor) { editor.remove("right"); }
+    exec: function(editor) { editor.remove("right"); },
+    multiSelectAction: "forEach"
 }, {
     name: "backspace",
     bindKey: bindKey(
         "Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(editor) { editor.remove("left"); }
+    exec: function(editor) { editor.remove("left"); },
+    multiSelectAction: "forEach"
 }, {
     name: "removetolinestart",
     bindKey: bindKey("Alt-Backspace", "Command-Backspace"),
-    exec: function(editor) { editor.removeToLineStart(); }
+    exec: function(editor) { editor.removeToLineStart(); },
+    multiSelectAction: "forEach"
 }, {
     name: "removetolineend",
     bindKey: bindKey("Alt-Delete", "Ctrl-K"),
-    exec: function(editor) { editor.removeToLineEnd(); }
+    exec: function(editor) { editor.removeToLineEnd(); },
+    multiSelectAction: "forEach"
 }, {
     name: "removewordleft",
     bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-    exec: function(editor) { editor.removeWordLeft(); }
+    exec: function(editor) { editor.removeWordLeft(); },
+    multiSelectAction: "forEach"
 }, {
     name: "removewordright",
     bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-    exec: function(editor) { editor.removeWordRight(); }
+    exec: function(editor) { editor.removeWordRight(); },
+    multiSelectAction: "forEach"
 }, {
     name: "outdent",
     bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-    exec: function(editor) { editor.blockOutdent(); }
+    exec: function(editor) { editor.blockOutdent(); },
+    multiSelectAction: "forEach"
 }, {
     name: "indent",
     bindKey: bindKey("Tab", "Tab"),
-    exec: function(editor) { editor.indent(); }
+    exec: function(editor) { editor.indent(); },
+    multiSelectAction: "forEach"
 }, {
     name: "insertstring",
-    exec: function(editor, str) { editor.insert(str); }
+    exec: function(editor, str) { editor.insert(str); },
+    multiSelectAction: "forEach"
 }, {
     name: "inserttext",
     exec: function(editor, args) {
         editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
-    }
+    },
+    multiSelectAction: "forEach"
 }, {
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
-    exec: function(editor) { editor.splitLine(); }
+    exec: function(editor) { editor.splitLine(); },
+    multiSelectAction: "forEach"
 }, {
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
-    exec: function(editor) { editor.transposeLetters(); }
+    exec: function(editor) { editor.transposeLetters(); },
+    multiSelectAction: function(editor) {editor.transposeSelections(1); }
 }, {
     name: "touppercase",
     bindKey: bindKey("Ctrl-U", "Ctrl-U"),
-    exec: function(editor) { editor.toUpperCase(); }
+    exec: function(editor) { editor.toUpperCase(); },
+    multiSelectAction: "forEach"
 }, {
     name: "tolowercase",
     bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
-    exec: function(editor) { editor.toLowerCase(); }
+    exec: function(editor) { editor.toLowerCase(); },
+    multiSelectAction: "forEach"
 }];
 
 });
@@ -17424,14 +17463,14 @@ function find(session, needle, dir) {
 
 // extend EditSession
 var EditSession = require("./edit_session").EditSession;
-;(function() {
+(function() {
     this.getSelectionMarkers = function() {
         return this.$selectionMarkers;
     };
 }).call(EditSession.prototype);
 
 // extend Selection
-;(function() {
+(function() {
     // list of ranges in reverse addition order
     this.ranges = null;
 
@@ -17439,8 +17478,10 @@ var EditSession = require("./edit_session").EditSession;
     this.rangeList = null;
 
     /**
-     * add a range to selection entering multiselect mode if necessary
-     */
+     * Selection.addRange(Range) -> Void
+     *
+     * adds a range to selection entering multiselect mode if necessary
+     **/
     this.addRange = function(range) {
         if (!this.inMultiSelectMode && this.rangeCount == 0) {
             var oldRange = this.toOrientedRange();
@@ -17479,15 +17520,26 @@ var EditSession = require("./edit_session").EditSession;
 
         range && this.fromOrientedRange(range);
     };
-
+    
+    /**
+     * Selection.addRange(pos) -> Range
+     * pos: {row, column}
+     *
+     * removes range containing pos (if exists)
+     **/
     this.substractPoint = function(pos) {
         var removed = this.rangeList.substractPoint(pos);
         if (removed) {
             this.$onRemoveRange(removed);
-            return removed[0]
+            return removed[0];
         }
     };
 
+    /**
+     * Selection.mergeOverlappingRanges() -> Void
+     *
+     * merges overlapping ranges ensuring consistency after changes
+     **/
     this.mergeOverlappingRanges = function() {
         var removed = this.rangeList.merge();
         if (removed.length)
@@ -17506,7 +17558,7 @@ var EditSession = require("./edit_session").EditSession;
     this.$onRemoveRange = function(removed) {
         this.rangeCount = this.rangeList.ranges.length;
         if (this.rangeCount == 1 && this.inMultiSelectMode) {
-            var lastRange = this.rangeList.ranges.pop()
+            var lastRange = this.rangeList.ranges.pop();
             removed.push(lastRange);
             this.rangeCount = 0;
         }
@@ -17562,6 +17614,7 @@ var EditSession = require("./edit_session").EditSession;
     };
 
     /**
+     *   Selection.rectangularRangeBlock(screenCursor, screenAnchor, includeEmptyLines) -> [Range]
      *   gets list of ranges composing rectangular block on the screen
      *   @includeEmptyLines if true includes ranges inside the block which
      *         are empty becuase of the clipping
@@ -17608,6 +17661,7 @@ var EditSession = require("./edit_session").EditSession;
             range.cursor = xBackwards ? range.start : range.end;
             rectSel.push(range);
         }
+
         if (yBackwards)
             rectSel.reverse();
 
@@ -17632,12 +17686,23 @@ var EditSession = require("./edit_session").EditSession;
 
 // extend Editor
 var Editor = require("./editor").Editor;
-;(function() {
+(function() {
+    /**
+     * Editor.updateSelectionMarkers() -> Void
+     *
+     * updates cursor and marker layers
+     **/
     this.updateSelectionMarkers = function() {
         this.renderer.updateCursor();
         this.renderer.updateBackMarkers();
     };
 
+    /**
+     * Editor.addSelectionMarker(orientedRange) -> Range
+     * - orientedRange: range with cursor
+     *
+     * adds selection and cursor
+     **/
     this.addSelectionMarker = function(orientedRange) {
         if (!orientedRange.cursor)
             orientedRange.cursor = orientedRange.end;
@@ -17658,7 +17723,7 @@ var Editor = require("./editor").Editor;
             this.session.removeMarker(range.marker);
             var index = this.session.$selectionMarkers.indexOf(range);
             if (index != -1)
-                this.session.$selectionMarkers.splice(index, 1)
+                this.session.$selectionMarkers.splice(index, 1);
         }
         this.session.selectionMarkerCount = this.session.$selectionMarkers.length;
     };
@@ -17668,11 +17733,13 @@ var Editor = require("./editor").Editor;
         this.renderer.updateCursor();
         this.renderer.updateBackMarkers();
     };
+    
     this.$onRemoveRange = function(e) {
         this.removeSelectionMarkers(e.ranges);
         this.renderer.updateCursor();
         this.renderer.updateBackMarkers();
     };
+    
     this.$onMultiSelect = function(e) {
         if (this.inMultiSelectMode)
             return;
@@ -17685,6 +17752,7 @@ var Editor = require("./editor").Editor;
         this.renderer.updateCursor();
         this.renderer.updateBackMarkers();
     };
+    
     this.$onSingleSelect = function(e) {
         if (this.session.multiSelect.inVirtualMode)
             return;
@@ -17716,11 +17784,17 @@ var Editor = require("./editor").Editor;
         e.preventDefault();
     };
 
-
+    /**
+     * Editor.forEachSelection(cmd, args) -> Void
+     * - cmd: command to execute
+     * - args: arguments to the command
+     *
+     * executes command for each selection range
+     **/
     this.forEachSelection = function(cmd, args) {
         if (this.inVirtualSelectionMode)
             return;
-            
+
         var session = this.session;
         var selection = this.selection;
         var rangeList = selection.rangeList;
@@ -17746,14 +17820,18 @@ var Editor = require("./editor").Editor;
         this.onCursorChange();
         this.onSelectionChange();
     };
-
+    
+    /**
+    * Editor.exitMultiSelectMode() -> Void
+    *
+    * removes all selections except the last added one.
+    **/
     this.exitMultiSelectMode = function() {
         if (this.inVirtualSelectionMode)
             return;
         this.multiSelect.toSingleRange();
     };
 
-    // todo route copy/cut/paste through commandmanager
     this.getCopyText = function() {
         var text = "";
         if (this.inMultiSelectMode) {
@@ -17770,26 +17848,15 @@ var Editor = require("./editor").Editor;
         return text;
     };
 
-    this.onCut = function() {
-        var cmd = {
-            name: "cut",
-            exec: function(editor) {
-                var range = editor.getSelectionRange();
-                editor._emit("cut", range);
-
-                if (!editor.selection.isEmpty()) {
-                    editor.session.remove(range);
-                    editor.clearSelection();
-                }
-            },
-            readonly: true,
-            multiSelectAction: "forEach"
-        };
-        this.commands.exec(cmd, this);
-    };
 
     // commands
-
+    /**
+     * Editor.selectMoreLines(dir, skip) -> Void
+     * - dir: -1 up, 1 down
+     * - skip: remove active selection range if true
+     *
+     * adds cursor above or bellow active cursor
+     **/
     this.selectMoreLines = function(dir, skip) {
         var range = this.selection.toOrientedRange();
         var isBackwards = range.cursor == range.end;
@@ -17819,9 +17886,6 @@ var Editor = require("./editor").Editor;
         if (!this.selection.inMultiSelectMode) {
             this.selection.addRange(range);
         } else {
-            var allRanges = this.selection.rangeList.ranges;
-            // remove range if at end
-            // var atEdge = range.isEqual(allRanges[dir == 1 ? 0 : allRanges.length - 1]);
             if (skip)
                 var toRemove = range.cursor;
         }
@@ -17829,14 +17893,20 @@ var Editor = require("./editor").Editor;
         this.selection.addRange(newRange);
         if (toRemove)
             this.selection.substractPoint(toRemove);
-    }
+    };
 
+    /**
+     * Editor.transposeSelections(dir) -> Void
+     * - dir: direction to rotate selections
+     *
+     * contents 
+     * empty ranges are expanded to word
+     **/
     this.transposeSelections = function(dir) {
         var session = this.session;
         var sel = session.multiSelect;
         var all = sel.ranges;
 
-        var words = [];
         for (var i = all.length; i--; ) {
             var range = all[i];
             if (range.isEmpty()) {
@@ -17846,8 +17916,13 @@ var Editor = require("./editor").Editor;
                 range.end.row = tmp.end.row;
                 range.end.column = tmp.end.column;
             }
-
-            words.unshift(this.session.getTextRange(range));
+        }
+        sel.mergeOverlappingRanges();
+        
+        var words = [];
+        for (var i = all.length; i--; ) {
+            var range = all[i];
+            words.unshift(session.getTextRange(range));
         }
 
         if (dir < 0)
@@ -17864,6 +17939,14 @@ var Editor = require("./editor").Editor;
         }
     }
 
+    /**
+     * Editor.selectMore(dir, skip) -> Void
+     * - dir: 1 next, -1 previous
+     * - skip: remove active selection range if true
+     *
+     * finds next occurence of text in active selection
+     * and adds it to the selections
+     **/
     this.selectMore = function (dir, skip) {
         var session = this.session;
         var sel = session.multiSelect;
@@ -17883,12 +17966,12 @@ var Editor = require("./editor").Editor;
         }
         if (skip)
             this.multiSelect.substractPoint(range.cursor);
-    }
+    };
 }).call(Editor.prototype);
 
 
 function isSamePoint(p1, p2) {
-    return p1.row == p2.row && p1.column == p2.column
+    return p1.row == p2.row && p1.column == p2.column;
 }
 
 // patch
@@ -17929,7 +18012,12 @@ exports.onSessionChange = function(e) {
     }
 };
 
-// adds multicursor support to editor instance
+/**
+ * MultiSelect(editor) -> Void
+ *
+ * adds multiple selection support to the editor
+ * (note: should be called only once for each editor instance)
+ **/
 function MultiSelect(editor) {
     editor.$onAddRange = editor.$onAddRange.bind(editor);
     editor.$onRemoveRange = editor.$onRemoveRange.bind(editor);
@@ -17982,19 +18070,17 @@ exports.MultiSelect = MultiSelect;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/range_list', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/event_emitter'], function(require, exports, module) {
+define('ace/range_list', ['require', 'exports', 'module' ], function(require, exports, module) {
 "use strict";
 
-var oop = require("./lib/oop");
-var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
-var RangeList = function(startRow, startColumn, endRow, endColumn) {
+var RangeList = function() {
     this.ranges = [];
 };
 
 (function() {
     this.comparePoints = function(p1, p2) {
-        return p1.row - p2.row || p1.column - p2.column
+        return p1.row - p2.row || p1.column - p2.column;
     };
 
     this.pointIndex = function(pos, startIndex) {
@@ -18014,7 +18100,7 @@ var RangeList = function(startRow, startColumn, endRow, endColumn) {
 
             return -i-1;
         }
-        return -i - 1
+        return -i - 1;
     };
 
     this.add = function(range) {
@@ -18035,7 +18121,7 @@ var RangeList = function(startRow, startColumn, endRow, endColumn) {
     this.addList = function(list) {
         var removed = [];
         for (var i = list.length; i--; ) {
-            removed.push.call(removed, this.add(list[i]))
+            removed.push.call(removed, this.add(list[i]));
         }
         return removed;
     };
@@ -18055,7 +18141,7 @@ var RangeList = function(startRow, startColumn, endRow, endColumn) {
         for (var i = 1; i < list.length; i++) {
             range = next;
             next = list[i];
-            var cmp = this.comparePoints(range.end, next.start)
+            var cmp = this.comparePoints(range.end, next.start);
             if (cmp < 0)
                 continue;
 
@@ -18127,8 +18213,8 @@ var RangeList = function(startRow, startColumn, endRow, endColumn) {
     this.detach = function() {
         if (!this.session)
             return;
-        this.session.removeListener('change', this.onChange)
-        this.session = null
+        this.session.removeListener('change', this.onChange);
+        this.session = null;
     };
 
     this.$onChange = function(e) {
@@ -18223,7 +18309,7 @@ var event = require("../lib/event");
 
 // mouse
 function isSamePoint(p1, p2) {
-    return p1.row == p2.row && p1.column == p2.column
+    return p1.row == p2.row && p1.column == p2.column;
 }
 
 function onMouseDown(e) {
@@ -18252,12 +18338,11 @@ function onMouseDown(e) {
     var selection = editor.selection;
     var isMultiSelect = editor.inMultiSelectMode;
     var pos = e.getDocumentPosition();
-    var cursor = selection.getCursor()
+    var cursor = selection.getCursor();
     var inSelection = e.inSelection() || (selection.isEmpty() && isSamePoint(pos, cursor));
 
 
     var mouseX = e.pageX, mouseY = e.pageY;
-    var clickX = mouseX, clickY = mouseY;
     var onMouseSelection = function(e) {
         mouseX = event.getDocumentX(e);
         mouseY = event.getDocumentY(e);
@@ -18279,20 +18364,18 @@ function onMouseDown(e) {
         editor.removeSelectionMarkers(rectSel);
         rectSel = selection.rectangularRangeBlock(screenCursor, screenAnchor);
         rectSel.forEach(editor.addSelectionMarker, editor);
-        editor.updateSelectionMarkers()
+        editor.updateSelectionMarkers();
     };
     
     var session = editor.session;
-    var anchor = selection.getCursor();
     var screenAnchor = editor.renderer.pixelToScreenCoordinates(mouseX, mouseY);
-    var clippedAnchor = session.documentToScreenPosition(anchor);
     var screenCursor = screenAnchor;
 
     
 
     if (ctrl && !shift && !alt && button == 0) {
         if (!isMultiSelect && inSelection)
-            return // dragging
+            return; // dragging
 
         if (!isMultiSelect)
             selection.addRange(selection.toOrientedRange());
@@ -18310,7 +18393,7 @@ function onMouseDown(e) {
         });
 
     } else if (!shift && alt && button == 0) {
-        e.stop()
+        e.stop();
 
         if (isMultiSelect && !ctrl)
             selection.toSingleRange();
@@ -18326,13 +18409,13 @@ function onMouseDown(e) {
             clearInterval(timerId);
             editor.removeSelectionMarkers(rectSel);
             for (var i = 0; i < rectSel.length; i++)
-                selection.addRange(rectSel[i])
+                selection.addRange(rectSel[i]);
         };
 
-        onSelectionInterval = blockSelect;
+        var onSelectionInterval = blockSelect;
 
         event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
-        var timerId = setInterval(function() {onSelectionInterval()}, 20);
+        var timerId = setInterval(function() {onSelectionInterval();}, 20);
 
         return e.preventDefault();
     }
@@ -18379,28 +18462,7 @@ exports.onMouseDown = onMouseDown;
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/commands/multi_select_commands', ['require', 'exports', 'module' , 'ace/commands/default_commands', 'ace/keyboard/hash_handler'], function(require, exports, module) {
-
-// add multiSelectAction annotations to default commands
-require("./default_commands").commands.forEach(function(command) {
-    var single = RegExp(["selectall"].join("|"), "");
-    var mapOver = RegExp(["backspace", "del",
-        "golinedown", "golineup", "gotoend", "gotoleft", "gotolineend", "gotolinestart",
-        "gotoright", "gotostart", "gotowordleft", "gotowordright",
-        "indent", "insertstring", "inserttext", "jumptomatching", "outdent",
-        "removetolineend", "removetolinestart", "removewordleft", "removewordright", "removeline",
-        "selectdown", "selectleft", "selectlineend", "selectlinestart", "selectright",
-        "selecttoend", "selecttolineend", "selecttolinestart", "selecttostart",
-        "selectup", "selectwordleft", "selectwordright",
-        "splitline", "tolowercase", "touppercase"].join("|"), "");
-
-    if (single.test(command.name))
-        command.multiSelectAction = "single";
-    else if (mapOver.test(command.name))
-        command.multiSelectAction = "forEach";
-    else if (command.name == "transposeletters")
-        command.multiSelectAction = function(editor) {editor.transposeSelections(1); };
-});
+define('ace/commands/multi_select_commands', ['require', 'exports', 'module' , 'ace/keyboard/hash_handler'], function(require, exports, module) {
 
 // commands to enter multiselect mode
 exports.defaultCommands = [{
