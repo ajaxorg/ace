@@ -39,6 +39,7 @@
 
 
 define(function(require, exports, module) {
+"use strict";
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init();
@@ -52,7 +53,6 @@ var UndoManager = require("ace/undomanager").UndoManager;
 var vim = require("ace/keyboard/keybinding/vim").Vim;
 var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
-
 
 var modesByName;
 
@@ -534,7 +534,6 @@ function onResize() {
     container.style.width = width + "px";
     container.style.height = document.documentElement.clientHeight + "px";
     env.split.resize();
-//        env.editor.resize();
 }
 
 window.onresize = onResize;
