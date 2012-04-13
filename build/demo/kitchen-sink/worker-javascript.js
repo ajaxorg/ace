@@ -9969,7 +9969,7 @@ var strictKeywords = {
     "implements": true,
     "interface": true,
     "let": true,
-    "module": true,
+    //"module": true,
     "package": true,
     "private": true,
     "protected": true,
