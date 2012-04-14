@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow-night-blue .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-tomorrow-night-blue .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #FFFFFF;\
 }\
- \
+\
 .ace-tomorrow-night-blue .ace_marker-layer .ace_selection {\
   background: #003F8E;\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-tomorrow-night-blue .ace_marker-layer .ace_selected_word {\
   border: 1px solid #003F8E;\
 }\
-       \
+\
 .ace-tomorrow-night-blue .ace_invisible {\
   color: #404F7D;\
 }\

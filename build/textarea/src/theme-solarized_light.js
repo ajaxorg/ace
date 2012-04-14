@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-solarized-light .ace_cursor {\
-  border-left: 2px solid #000000;\
+  border-left: 1px solid #000000;\
 }\
 \
 .ace-solarized-light .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #000000;\
 }\
- \
+\
 .ace-solarized-light .ace_marker-layer .ace_selection {\
   background: #073642;\
 }\
@@ -96,12 +96,12 @@ exports.cssText = "\
 .ace-solarized-light .ace_marker-layer .ace_selected_word {\
   border: 1px solid #073642;\
 }\
-       \
+\
 .ace-solarized-light .ace_invisible {\
   color: rgba(147, 161, 161, 0.50);\
 }\
 \
-.ace-solarized-light .ace_keyword {\
+.ace-solarized-light .ace_keyword, .ace-solarized-light .ace_meta {\
   color:#859900;\
 }\
 \
@@ -111,6 +111,10 @@ exports.cssText = "\
 \
 .ace-solarized-light .ace_constant.ace_numeric {\
   color:#D33682;\
+}\
+\
+.ace-solarized-light .ace_constant.ace_other {\
+  color:#CB4B16;\
 }\
 \
 .ace-solarized-light .ace_fold {\
@@ -124,6 +128,10 @@ exports.cssText = "\
 \
 .ace-solarized-light .ace_storage {\
   color:#073642;\
+}\
+\
+.ace-solarized-light .ace_variable {\
+  color:#268BD2;\
 }\
 \
 .ace-solarized-light .ace_string {\

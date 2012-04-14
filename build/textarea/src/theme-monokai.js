@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-monokai .ace_cursor {\
-  border-left: 2px solid #F8F8F0;\
+  border-left: 1px solid #F8F8F0;\
 }\
 \
 .ace-monokai .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #F8F8F0;\
 }\
- \
+\
 .ace-monokai .ace_marker-layer .ace_selection {\
   background: #49483E;\
 }\
@@ -96,12 +96,12 @@ exports.cssText = "\
 .ace-monokai .ace_marker-layer .ace_selected_word {\
   border: 1px solid #49483E;\
 }\
-       \
+\
 .ace-monokai .ace_invisible {\
   color: #49483E;\
 }\
 \
-.ace-monokai .ace_keyword {\
+.ace-monokai .ace_keyword, .ace-monokai .ace_meta {\
   color:#F92672;\
 }\
 \
@@ -113,6 +113,10 @@ exports.cssText = "\
   color:#AE81FF;\
 }\
 \
+.ace-monokai .ace_constant.ace_other {\
+  color:#AE81FF;\
+}\
+\
 .ace-monokai .ace_invalid {\
   color:#F8F8F0;\
 background-color:#F92672;\
@@ -121,6 +125,10 @@ background-color:#F92672;\
 .ace-monokai .ace_invalid.ace_deprecated {\
   color:#F8F8F0;\
 background-color:#AE81FF;\
+}\
+\
+.ace-monokai .ace_support.ace_constant {\
+  color:#66D9EF;\
 }\
 \
 .ace-monokai .ace_fold {\
@@ -136,9 +144,13 @@ background-color:#AE81FF;\
   color:#F92672;\
 }\
 \
-.ace-monokai .ace_storage.ace_type {\
+.ace-monokai .ace_storage.ace_type,  .ace-monokai .ace_support.ace_type{\
   font-style:italic;\
 color:#66D9EF;\
+}\
+\
+.ace-monokai .ace_variable {\
+  color:#A6E22E;\
 }\
 \
 .ace-monokai .ace_variable.ace_parameter {\

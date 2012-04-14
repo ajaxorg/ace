@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-merbivore .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-merbivore .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #FFFFFF;\
 }\
- \
+\
 .ace-merbivore .ace_marker-layer .ace_selection {\
   background: #454545;\
 }\
@@ -96,16 +96,24 @@ exports.cssText = "\
 .ace-merbivore .ace_marker-layer .ace_selected_word {\
   border: 1px solid #454545;\
 }\
-       \
+\
 .ace-merbivore .ace_invisible {\
   color: #404040;\
 }\
 \
-.ace-merbivore .ace_keyword {\
+.ace-merbivore .ace_keyword, .ace-merbivore .ace_meta {\
   color:#FC6F09;\
 }\
 \
-.ace-merbivore .ace_constant {\
+.ace-merbivore .ace_constant, .ace-merbivore .ace_constant.ace_other {\
+  color:#1EDAFB;\
+}\
+\
+.ace-merbivore .ace_constant.ace_character,  {\
+  color:#1EDAFB;\
+}\
+\
+.ace-merbivore .ace_constant.ace_character.ace_escape,  {\
   color:#1EDAFB;\
 }\
 \
@@ -124,6 +132,10 @@ exports.cssText = "\
 .ace-merbivore .ace_invalid {\
   color:#FFFFFF;\
 background-color:#990000;\
+}\
+\
+.ace-merbivore .ace_support.ace_constant {\
+  color:#8DFF0A;\
 }\
 \
 .ace-merbivore .ace_fold {\

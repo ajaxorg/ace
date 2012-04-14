@@ -39,9 +39,10 @@
 
 
 define(function(require, exports, module) {
+"use strict";
 
 require("ace/lib/fixoldbrowsers");
-require("ace/config").init(); 
+require("ace/config").init();
 var env = {};
 
 var event = require("ace/lib/event");
@@ -53,14 +54,16 @@ var vim = require("ace/keyboard/keybinding/vim").Vim;
 var emacs = require("ace/keyboard/keybinding/emacs").Emacs;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
-
 var modesByName;
+
+// workers do not work for file:
+if (location.protocol == "file:")
+    EditSession.prototype.$useWorker = false;
 
 var Doc = function(name, desc, file) {
     this.name = name;
     this.desc = desc;
     this.doc = new EditSession(file);
-    this.doc.setMode(modesByName[name].mode);
     this.doc.modeName = name;
     this.doc.setUndoManager(new UndoManager());
 };
@@ -97,7 +100,9 @@ var modes = [
     new Mode("javascript", "JavaScript", ["js"]),
     new Mode("json", "JSON", ["json"]),
     new Mode("latex", "LaTeX", ["tex"]),
+    new Mode("less", "LESS", ["less"]),
     new Mode("lua", "Lua", ["lua"]),
+    new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
@@ -150,6 +155,10 @@ var docs = [
         require("ace/requirejs/text!./docs/scss.scss")
     ),
     new Doc(
+        "less", "LESS",
+        require("ace/requirejs/text!./docs/less.less")
+    ),
+    new Doc(
         "html", "HTML",
         require("ace/requirejs/text!./docs/html.html")
     ),
@@ -188,6 +197,10 @@ var docs = [
     new Doc(
         "lua", "Lua",
         require("ace/requirejs/text!./docs/lua.lua")
+    ),
+    new Doc(
+        "liquid", "Liquid",
+        require("ace/requirejs/text!./docs/liquid.liquid")
     ),
     new Doc(
         "java", "Java",
@@ -297,6 +310,7 @@ var showGutterEl = document.getElementById("show_gutter");
 var showPrintMarginEl = document.getElementById("show_print_margin");
 var highlightSelectedWordE = document.getElementById("highlight_selected_word");
 var showHScrollEl = document.getElementById("show_hscroll");
+var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
 
@@ -314,8 +328,19 @@ modes.forEach(function(mode) {
     modeEl.appendChild(option);
 });
 
+bindDropdown("mode", function(value) {
+    env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
+    env.editor.getSession().modeName = value;
+});
+
 bindDropdown("doc", function(value) {
     var doc = docsByName[value].doc;
+
+    if (!docsByName[value].initialized) {
+        docsByName[value].initialized = true;
+        doc.setMode(modesByName[docsByName[value].name].mode);
+    }
+
     var session = env.split.setSession(doc);
     session.name = doc.name;
 
@@ -328,39 +353,47 @@ function updateUIEditorOptions() {
     var editor = env.editor;
     var session = editor.session;
 
-    docEl.value = session.name;
-    modeEl.value = session.modeName || "text";
-
     session.setFoldStyle(foldingEl.value);
 
-    if (!session.getUseWrapMode()) {
-        wrapModeEl.value = "off";
-    } else {
-        wrapModeEl.value = session.getWrapLimitRange().min || "free";
-    }
+    saveOption(docEl, session.name);
+    saveOption(modeEl, session.modeName || "text");
+    saveOption(wrapModeEl, session.getUseWrapMode() ? session.getWrapLimitRange().min || "free" : "off");
 
-    selectStyleEl.checked = editor.getSelectionStyle() == "line";
-    themeEl.value = editor.getTheme();
-    highlightActiveEl.checked = editor.getHighlightActiveLine();
-    showHiddenEl.checked = editor.getShowInvisibles();
-    showGutterEl.checked = editor.renderer.getShowGutter();
-    showPrintMarginEl.checked = editor.renderer.getShowPrintMargin();
-    highlightSelectedWordE.checked = editor.getHighlightSelectedWord();
-    showHScrollEl.checked = editor.renderer.getHScrollBarAlwaysVisible();
-    softTabEl.checked = session.getUseSoftTabs();
-    behavioursEl.checked = editor.getBehavioursEnabled();
+    saveOption(selectStyleEl, editor.getSelectionStyle() == "line");
+    saveOption(themeEl, editor.getTheme());
+    saveOption(highlightActiveEl, editor.getHighlightActiveLine());
+    saveOption(showHiddenEl, editor.getShowInvisibles());
+    saveOption(showGutterEl, editor.renderer.getShowGutter());
+    saveOption(showPrintMarginEl, editor.renderer.getShowPrintMargin());
+    saveOption(highlightSelectedWordE, editor.getHighlightSelectedWord());
+    saveOption(showHScrollEl, editor.renderer.getHScrollBarAlwaysVisible());
+    saveOption(animateScrollEl, editor.getAnimatedScroll());
+    saveOption(softTabEl, session.getUseSoftTabs());
+    saveOption(behavioursEl, editor.getBehavioursEnabled());
 }
 
-bindDropdown("mode", function(value) {
-    env.editor.getSession().setMode(modesByName[value].mode || modesByName.text.mode);
-    env.editor.getSession().modeName = value;
-});
+function saveOption(el, val) {
+    if (!el.onchange || el.onclick)
+        return;
+        
+    if ("checked" in el) {
+        if (val !== undefined)
+            el.checked = val;
+            
+        localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
+    } 
+    else {
+        if (val !== undefined)
+            el.value = val;
+            
+        localStorage && localStorage.setItem(el.id, el.value);
+    }
+}
 
 bindDropdown("theme", function(value) {
     if (!value)
         return;
-
-    env.editor.setTheme(value);
+	env.editor.setTheme(value);
 });
 
 bindDropdown("keybinding", function(value) {
@@ -430,6 +463,10 @@ bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
 });
 
+bindCheckbox("animate_scroll", function(checked) {
+    env.editor.setAnimatedScroll(checked);
+});
+
 bindCheckbox("soft_tab", function(checked) {
     env.editor.getSession().setUseSoftTabs(checked);
 });
@@ -437,6 +474,7 @@ bindCheckbox("soft_tab", function(checked) {
 bindCheckbox("enable_behaviours", function(checked) {
     env.editor.setBehavioursEnabled(checked);
 });
+
 
 var secondSession = null;
 bindDropdown("split", function(value) {
@@ -465,8 +503,12 @@ bindDropdown("split", function(value) {
 
 function bindCheckbox(id, callback) {
     var el = document.getElementById(id);
+    if (localStorage && localStorage.getItem(id))
+        el.checked = localStorage.getItem(id) == "1";
+
     var onCheck = function() {
         callback(!!el.checked);
+        saveOption(el);
     };
     el.onclick = onCheck;
     onCheck();
@@ -474,9 +516,14 @@ function bindCheckbox(id, callback) {
 
 function bindDropdown(id, callback) {
     var el = document.getElementById(id);
+    if (localStorage && localStorage.getItem(id))
+        el.value = localStorage.getItem(id);
+
     var onChange = function() {
         callback(el.value);
+        saveOption(el);
     };
+
     el.onchange = onChange;
     onChange();
 }
@@ -487,7 +534,6 @@ function onResize() {
     container.style.width = width + "px";
     container.style.height = document.documentElement.clientHeight + "px";
     env.split.resize();
-//        env.editor.resize();
 }
 
 window.onresize = onResize;
@@ -567,5 +613,8 @@ commands.addCommand({
         alert("Fake Print File");
     }
 });
+
+// add multiple cursor support to editor
+require("ace/multi_select").MultiSelect(env.editor);
 
 });

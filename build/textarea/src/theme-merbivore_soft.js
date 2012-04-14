@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-merbivore-soft .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-merbivore-soft .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #FFFFFF;\
 }\
- \
+\
 .ace-merbivore-soft .ace_marker-layer .ace_selection {\
   background: #494949;\
 }\
@@ -96,16 +96,24 @@ exports.cssText = "\
 .ace-merbivore-soft .ace_marker-layer .ace_selected_word {\
   border: 1px solid #494949;\
 }\
-       \
+\
 .ace-merbivore-soft .ace_invisible {\
   color: #404040;\
 }\
 \
-.ace-merbivore-soft .ace_keyword {\
+.ace-merbivore-soft .ace_keyword, .ace-merbivore-soft .ace_meta {\
   color:#FC803A;\
 }\
 \
-.ace-merbivore-soft .ace_constant {\
+.ace-merbivore-soft .ace_constant, .ace-merbivore-soft .ace_constant.ace_other {\
+  color:#68C1D8;\
+}\
+\
+.ace-merbivore-soft .ace_constant.ace_character,  {\
+  color:#68C1D8;\
+}\
+\
+.ace-merbivore-soft .ace_constant.ace_character.ace_escape,  {\
   color:#68C1D8;\
 }\
 \
@@ -129,6 +137,10 @@ background-color:#FE3838;\
 .ace-merbivore-soft .ace_invalid.ace_deprecated {\
   color:#FFFFFF;\
 background-color:#FE3838;\
+}\
+\
+.ace-merbivore-soft .ace_support.ace_constant {\
+  color:#8EC65F;\
 }\
 \
 .ace-merbivore-soft .ace_fold {\

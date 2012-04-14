@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-solarized-light .ace_cursor {\
-  border-left: 2px solid #000000;\
+  border-left: 1px solid #000000;\
 }\
 \
 .ace-solarized-light .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #000000;\
 }\
- \
+\
 .ace-solarized-light .ace_marker-layer .ace_selection {\
   background: #073642;\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-solarized-light .ace_marker-layer .ace_selected_word {\
   border: 1px solid #073642;\
 }\
-       \
+\
 .ace-solarized-light .ace_invisible {\
   color: rgba(147, 161, 161, 0.50);\
 }\

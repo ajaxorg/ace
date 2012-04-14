@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow-night-blue .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-tomorrow-night-blue .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #FFFFFF;\
 }\
- \
+\
 .ace-tomorrow-night-blue .ace_marker-layer .ace_selection {\
   background: #003F8E;\
 }\
@@ -96,12 +96,12 @@ exports.cssText = "\
 .ace-tomorrow-night-blue .ace_marker-layer .ace_selected_word {\
   border: 1px solid #003F8E;\
 }\
-       \
+\
 .ace-tomorrow-night-blue .ace_invisible {\
   color: #404F7D;\
 }\
 \
-.ace-tomorrow-night-blue .ace_keyword {\
+.ace-tomorrow-night-blue .ace_keyword, .ace-tomorrow-night-blue .ace_meta {\
   color:#EBBBFF;\
 }\
 \
@@ -117,6 +117,10 @@ exports.cssText = "\
   color:#FFC58F;\
 }\
 \
+.ace-tomorrow-night-blue .ace_constant.ace_other {\
+  color:#FFFFFF;\
+}\
+\
 .ace-tomorrow-night-blue .ace_invalid {\
   color:#FFFFFF;\
 background-color:#F99DA5;\
@@ -125,6 +129,10 @@ background-color:#F99DA5;\
 .ace-tomorrow-night-blue .ace_invalid.ace_deprecated {\
   color:#FFFFFF;\
 background-color:#EBBBFF;\
+}\
+\
+.ace-tomorrow-night-blue .ace_support.ace_constant {\
+  color:#FFC58F;\
 }\
 \
 .ace-tomorrow-night-blue .ace_fold {\
@@ -140,8 +148,12 @@ background-color:#EBBBFF;\
   color:#EBBBFF;\
 }\
 \
-.ace-tomorrow-night-blue .ace_storage.ace_type {\
+.ace-tomorrow-night-blue .ace_storage.ace_type,  .ace-tomorrow-night-blue .ace_support.ace_type{\
   color:#EBBBFF;\
+}\
+\
+.ace-tomorrow-night-blue .ace_variable {\
+  color:#BBDAFF;\
 }\
 \
 .ace-tomorrow-night-blue .ace_variable.ace_parameter {\

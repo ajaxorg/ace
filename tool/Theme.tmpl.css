@@ -27,14 +27,14 @@
 }
 
 .%cssClass% .ace_cursor {
-  border-left: 2px solid %cursor%;
+  border-left: 1px solid %cursor%;
 }
 
 .%cssClass% .ace_cursor.ace_overwrite {
   border-left: 0px;
   border-bottom: 1px solid %overwrite%;
 }
- 
+
 .%cssClass% .ace_marker-layer .ace_selection {
   background: %selection%;
 }
@@ -55,7 +55,7 @@
 .%cssClass% .ace_marker-layer .ace_selected_word {
   %selected_word_highlight%
 }
-       
+
 .%cssClass% .ace_invisible {
   %invisible%
 }
@@ -69,6 +69,14 @@
 }
 
 .%cssClass% .ace_constant, .%cssClass% .ace_constant.ace_other {
+  %constant%
+}
+
+.%cssClass% .ace_constant.ace_character,  {
+  %constant%
+}
+
+.%cssClass% .ace_constant.ace_character.ace_escape,  {
   %constant%
 }
 
@@ -230,5 +238,5 @@
 }
 
 .%cssClass% .ace_collab.ace_user1 {
-  %collab.user1%   
+  %collab.user1%
 }

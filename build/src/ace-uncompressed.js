@@ -241,7 +241,7 @@ exportAce(ACE_NAMESPACE);
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/worker/worker_client', 'ace/keyboard/hash_handler', 'ace/keyboard/state_handler', 'ace/lib/net', 'ace/placeholder', 'ace/config', 'ace/theme/textmate'], function(require, exports, module) {
+define('ace/ace', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/lib/dom', 'ace/lib/event', 'ace/editor', 'ace/edit_session', 'ace/undomanager', 'ace/virtual_renderer', 'ace/multi_select', 'ace/worker/worker_client', 'ace/keyboard/hash_handler', 'ace/keyboard/state_handler', 'ace/placeholder', 'ace/config', 'ace/theme/textmate'], function(require, exports, module) {
 "use strict";
 
 require("./lib/fixoldbrowsers");
@@ -253,12 +253,12 @@ var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
+var MultiSelect = require("./multi_select").MultiSelect;
 
 // The following require()s are for inclusion in the built ace file
 require("./worker/worker_client");
 require("./keyboard/hash_handler");
 require("./keyboard/state_handler");
-require("./lib/net");
 require("./placeholder");
 require("./config").init();
 
@@ -272,6 +272,7 @@ exports.edit = function(el) {
     el.innerHTML = '';
 
     var editor = new Editor(new Renderer(el, require("./theme/textmate")));
+    new MultiSelect(editor);
     editor.setSession(doc);
 
     var env = {};
@@ -2447,7 +2448,7 @@ var Editor = function(renderer, session) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
-    
+
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
     this.keyBinding = new KeyBinding(this);
 
@@ -2715,21 +2716,29 @@ var Editor = function(renderer, session) {
     this.$updateHighlightActiveLine = function() {
         var session = this.getSession();
 
-        if (session.$highlightLineMarker) {
+        if (session.$highlightLineMarker)
             session.removeMarker(session.$highlightLineMarker);
-        }
-        session.$highlightLineMarker = null;
+        if (typeof this.$lastrow == "number")
+            this.renderer.removeGutterDecoration(this.$lastrow, "ace_gutter_active_line");
 
-        if (this.getHighlightActiveLine() && (this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
+        session.$highlightLineMarker = null;
+        this.$lastrow = null;
+
+        if (this.getHighlightActiveLine()) {
             var cursor = this.getCursorPosition(),
                 foldLine = this.session.getFoldLine(cursor.row);
-            var range;
-            if (foldLine) {
-                range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
-            } else {
-                range = new Range(cursor.row, 0, cursor.row+1, 0);
+
+            if ((this.getSelectionStyle() != "line" || !this.selection.isMultiLine())) {
+                var range;
+                if (foldLine) {
+                    range = new Range(foldLine.start.row, 0, foldLine.end.row + 1, 0);
+                } else {
+                    range = new Range(cursor.row, 0, cursor.row+1, 0);
+                }
+                session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
             }
-            session.$highlightLineMarker = session.addMarker(range, "ace_active_line", "background");
+
+            this.renderer.addGutterDecoration(this.$lastrow = cursor.row, "ace_gutter_active_line");
         }
     };
 
@@ -2799,16 +2808,7 @@ var Editor = function(renderer, session) {
     };
 
     this.onCut = function() {
-        if (this.$readOnly)
-            return;
-
-        var range = this.getSelectionRange();
-        this._emit("cut", range);
-
-        if (!this.selection.isEmpty()) {
-            this.session.remove(range);
-            this.clearSelection();
-        }
+        this.commands.exec("cut", this);
     };
 
     this.insert = function(text) {
@@ -2983,6 +2983,14 @@ var Editor = function(renderer, session) {
         return this.$highlightSelectedWord;
     };
 
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.renderer.setAnimatedScroll(shouldAnimate);
+    };
+
+    this.getAnimatedScroll = function(){
+        return this.renderer.getAnimatedScroll();
+    };
+
     this.setShowInvisibles = function(showInvisibles) {
         if (this.getShowInvisibles() == showInvisibles)
             return;
@@ -3037,7 +3045,7 @@ var Editor = function(renderer, session) {
         this.$showFoldWidgets = show;
         this.renderer.updateFull();
     };
-    
+
     this.getShowFoldWidgets = function() {
         return this.renderer.$gutterLayer.getShowFoldWidgets();
     };
@@ -3254,7 +3262,7 @@ var Editor = function(renderer, session) {
             range.start.row += linesMoved;
             range.end.row += linesMoved;
             selection.setSelectionRange(range, reverse);
-        } 
+        }
         else {
             selection.setSelectionAnchor(rows.last+linesMoved+1, 0);
             selection.$moveSelection(function() {
@@ -3418,13 +3426,13 @@ var Editor = function(renderer, session) {
             cursor.column -= 2;
             pos = this.session.findMatchingBracket(cursor);
         }
-        
+
         if (pos) {
             this.clearSelection();
             this.moveCursorTo(pos.row, pos.column);
         }
     };
-    
+
     this.gotoLine = function(lineNumber, column) {
         this.selection.clearSelection();
         this.session.unfold({row: lineNumber - 1, column: column || 0});
@@ -3516,12 +3524,19 @@ var Editor = function(renderer, session) {
             this.$search.set(options);
 
         var range = this.$search.find(this.session);
+        var replaced = 0;
         if (!range)
-            return;
+            return replaced;
 
-        this.$tryReplace(range, replacement);
-        if (range !== null)
+        if (this.$tryReplace(range, replacement)) {
+            replaced = 1;
+        }
+        if (range !== null) {
             this.selection.setSelectionRange(range);
+            this.renderer.scrollSelectionIntoView(range.start, range.end);
+        }
+
+        return replaced;
     };
 
     this.replaceAll = function(replacement, options) {
@@ -3530,19 +3545,25 @@ var Editor = function(renderer, session) {
         }
 
         var ranges = this.$search.findAll(this.session);
+        var replaced = 0;
         if (!ranges.length)
-            return;
+            return replaced;
 
         var selection = this.getSelectionRange();
         this.clearSelection();
         this.selection.moveCursorTo(0, 0);
 
         this.$blockScrolling += 1;
-        for (var i = ranges.length - 1; i >= 0; --i)
-            this.$tryReplace(ranges[i], replacement);
+        for (var i = ranges.length - 1; i >= 0; --i) {
+            if(this.$tryReplace(ranges[i], replacement)) {
+                replaced++;
+            }
+        }
 
         this.selection.setSelectionRange(selection);
         this.$blockScrolling -= 1;
+
+        return replaced;
     };
 
     this.$tryReplace = function(range, replacement) {
@@ -3594,7 +3615,23 @@ var Editor = function(renderer, session) {
         var range = this.$search.find(this.session);
         if (range) {
             this.session.unfold(range);
-            this.selection.setSelectionRange(range); // this scrolls selection into view
+
+            this.$blockScrolling += 1;
+            this.selection.setSelectionRange(range);
+            this.$blockScrolling -= 1;
+
+            if (this.getAnimatedScroll()) {
+                var cursor = this.getCursorPosition();
+                if (!this.isRowFullyVisible(cursor.row))
+                    this.scrollToLine(cursor.row, true);
+    
+                //@todo scroll X
+                //if (!this.isColumnFullyVisible(cursor.column))
+                    //this.scrollToRow(cursor.column);
+            }
+            else {
+                this.renderer.scrollSelectionIntoView(range.start, range.end);
+            }
         }
     };
 
@@ -4302,7 +4339,7 @@ function DefaultHandlers(editor) {
             if (!editor.$mouseHandler.$clickSelection) {
                 if (!dragCursor) {
                     editor.moveCursorToPosition(pos);
-                    editor.selection.clearSelection(pos.row, pos.column);
+                    editor.selection.clearSelection();
                 }
             }
 
@@ -4337,7 +4374,6 @@ function DefaultHandlers(editor) {
                 if (distance > DRAG_OFFSET) {
                     state = STATE_SELECT;
                     var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-                    cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
                     onStartSelect(cursor);
                 }
                 else if ((time - mousedownTime) > editor.getDragDelay()) {
@@ -4364,7 +4400,7 @@ function DefaultHandlers(editor) {
             else {
                 if (!_self.$clickSelection) {
                     editor.moveCursorToPosition(pos);
-                    editor.selection.clearSelection(pos.row, pos.column);
+                    editor.selection.clearSelection();
                 }
             }
             state = STATE_SELECT;
@@ -4373,7 +4409,6 @@ function DefaultHandlers(editor) {
         var onUpdateSelectionInterval = function() {
             var anchor;
             var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            cursor.row = Math.max(0, Math.min(cursor.row, editor.session.getLength()-1));
 
             if (_self.$clickSelection) {
                 if (_self.$clickSelection.contains(cursor.row, cursor.column)) {
@@ -4399,8 +4434,6 @@ function DefaultHandlers(editor) {
 
         var onDragSelectionInterval = function() {
             dragCursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            dragCursor.row = Math.max(0, Math.min(dragCursor.row, editor.session.getLength() - 1));
-
             editor.moveCursorToPosition(dragCursor);
         };
 
@@ -4822,7 +4855,6 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
         var pageX = event.getDocumentX(this.domEvent);
         var pageY = event.getDocumentY(this.domEvent);
         this.$pos = this.editor.renderer.screenToTextCoordinates(pageX, pageY);
-        this.$pos.row = Math.max(0, Math.min(this.$pos.row, this.editor.session.getLength()-1));
         return this.$pos;
     };
     
@@ -4922,7 +4954,7 @@ function FoldHandler(editor) {
         var position = e.getDocumentPosition();
         var session = editor.session;
         
-        // If the user dclicked on a fold, then expand it.
+        // If the user clicked on a fold, then expand it.
         var fold = session.getFoldAt(position.row, position.column, 1);
         if (fold) {
             if (e.getAccelKey())
@@ -5202,91 +5234,109 @@ exports.commands = [{
     name: "selectup",
     bindKey: bindKey("Shift-Up", "Shift-Up"),
     exec: function(editor) { editor.getSelection().selectUp(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "golineup",
     bindKey: bindKey("Up", "Up|Ctrl-P"),
     exec: function(editor, args) { editor.navigateUp(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selecttoend",
     bindKey: bindKey("Ctrl-Shift-End|Alt-Shift-Down", "Command-Shift-Down"),
     exec: function(editor) { editor.getSelection().selectFileEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotoend",
     bindKey: bindKey("Ctrl-End|Ctrl-Down", "Command-End|Command-Down"),
     exec: function(editor) { editor.navigateFileEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectdown",
     bindKey: bindKey("Shift-Down", "Shift-Down"),
     exec: function(editor) { editor.getSelection().selectDown(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "golinedown",
     bindKey: bindKey("Down", "Down|Ctrl-N"),
     exec: function(editor, args) { editor.navigateDown(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectwordleft",
     bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
     exec: function(editor) { editor.getSelection().selectWordLeft(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotowordleft",
     bindKey: bindKey("Ctrl-Left", "Option-Left"),
     exec: function(editor) { editor.navigateWordLeft(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selecttolinestart",
     bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left"),
     exec: function(editor) { editor.getSelection().selectLineStart(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotolinestart",
     bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
     exec: function(editor) { editor.navigateLineStart(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectleft",
     bindKey: bindKey("Shift-Left", "Shift-Left"),
     exec: function(editor) { editor.getSelection().selectLeft(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotoleft",
     bindKey: bindKey("Left", "Left|Ctrl-B"),
     exec: function(editor, args) { editor.navigateLeft(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectwordright",
     bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
     exec: function(editor) { editor.getSelection().selectWordRight(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotowordright",
     bindKey: bindKey("Ctrl-Right", "Option-Right"),
     exec: function(editor) { editor.navigateWordRight(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selecttolineend",
     bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right"),
     exec: function(editor) { editor.getSelection().selectLineEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotolineend",
     bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
     exec: function(editor) { editor.navigateLineEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectright",
     bindKey: bindKey("Shift-Right", "Shift-Right"),
     exec: function(editor) { editor.getSelection().selectRight(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "gotoright",
     bindKey: bindKey("Right", "Right|Ctrl-F"),
     exec: function(editor, args) { editor.navigateRight(args.times); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectpagedown",
@@ -5322,11 +5372,13 @@ exports.commands = [{
     name: "selectlinestart",
     bindKey: bindKey("Shift-Home", "Shift-Home"),
     exec: function(editor) { editor.getSelection().selectLineStart(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "selectlineend",
     bindKey: bindKey("Shift-End", "Shift-End"),
     exec: function(editor) { editor.getSelection().selectLineEnd(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, {
     name: "togglerecording",
@@ -5342,18 +5394,33 @@ exports.commands = [{
     name: "jumptomatching",
     bindKey: bindKey("Ctrl-Shift-P", "Ctrl-Shift-P"),
     exec: function(editor) { editor.jumpToMatching(); },
+    multiSelectAction: "forEach",
     readOnly: true
 }, 
 
 // commands disabled in readOnly mode
 {
+    name: "cut",
+    exec: function(editor) {
+        var range = editor.getSelectionRange();
+        editor._emit("cut", range);
+
+        if (!editor.selection.isEmpty()) {
+            editor.session.remove(range);
+            editor.clearSelection();
+        }
+    },
+    multiSelectAction: "forEach"
+}, {
     name: "removeline",
     bindKey: bindKey("Ctrl-D", "Command-D"),
-    exec: function(editor) { editor.removeLines(); }
+    exec: function(editor) { editor.removeLines(); },
+    multiSelectAction: "forEach"
 }, {
     name: "togglecomment",
     bindKey: bindKey("Ctrl-7", "Command-7"),
-    exec: function(editor) { editor.toggleCommentLines(); }
+    exec: function(editor) { editor.toggleCommentLines(); },
+    multiSelectAction: "forEach"
 }, {
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
@@ -5405,62 +5472,76 @@ exports.commands = [{
 }, {
     name: "del",
     bindKey: bindKey("Delete", "Delete|Ctrl-D"),
-    exec: function(editor) { editor.remove("right"); }
+    exec: function(editor) { editor.remove("right"); },
+    multiSelectAction: "forEach"
 }, {
     name: "backspace",
     bindKey: bindKey(
-        "Ctrl-Backspace|Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
+        "Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",
         "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"
     ),
-    exec: function(editor) { editor.remove("left"); }
+    exec: function(editor) { editor.remove("left"); },
+    multiSelectAction: "forEach"
 }, {
     name: "removetolinestart",
-    bindKey: bindKey("Alt-Backspace", "Option-Backspace"),
-    exec: function(editor) { editor.removeToLineStart(); }
+    bindKey: bindKey("Alt-Backspace", "Command-Backspace"),
+    exec: function(editor) { editor.removeToLineStart(); },
+    multiSelectAction: "forEach"
 }, {
     name: "removetolineend",
     bindKey: bindKey("Alt-Delete", "Ctrl-K"),
-    exec: function(editor) { editor.removeToLineEnd(); }
+    exec: function(editor) { editor.removeToLineEnd(); },
+    multiSelectAction: "forEach"
 }, {
     name: "removewordleft",
     bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-    exec: function(editor) { editor.removeWordLeft(); }
+    exec: function(editor) { editor.removeWordLeft(); },
+    multiSelectAction: "forEach"
 }, {
     name: "removewordright",
     bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-    exec: function(editor) { editor.removeWordRight(); }
+    exec: function(editor) { editor.removeWordRight(); },
+    multiSelectAction: "forEach"
 }, {
     name: "outdent",
     bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-    exec: function(editor) { editor.blockOutdent(); }
+    exec: function(editor) { editor.blockOutdent(); },
+    multiSelectAction: "forEach"
 }, {
     name: "indent",
     bindKey: bindKey("Tab", "Tab"),
-    exec: function(editor) { editor.indent(); }
+    exec: function(editor) { editor.indent(); },
+    multiSelectAction: "forEach"
 }, {
     name: "insertstring",
-    exec: function(editor, str) { editor.insert(str); }
+    exec: function(editor, str) { editor.insert(str); },
+    multiSelectAction: "forEach"
 }, {
     name: "inserttext",
     exec: function(editor, args) {
         editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
-    }
+    },
+    multiSelectAction: "forEach"
 }, {
     name: "splitline",
     bindKey: bindKey(null, "Ctrl-O"),
-    exec: function(editor) { editor.splitLine(); }
+    exec: function(editor) { editor.splitLine(); },
+    multiSelectAction: "forEach"
 }, {
     name: "transposeletters",
     bindKey: bindKey("Ctrl-T", "Ctrl-T"),
-    exec: function(editor) { editor.transposeLetters(); }
+    exec: function(editor) { editor.transposeLetters(); },
+    multiSelectAction: function(editor) {editor.transposeSelections(1); }
 }, {
     name: "touppercase",
     bindKey: bindKey("Ctrl-U", "Ctrl-U"),
-    exec: function(editor) { editor.toUpperCase(); }
+    exec: function(editor) { editor.toUpperCase(); },
+    multiSelectAction: "forEach"
 }, {
     name: "tolowercase",
     bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
-    exec: function(editor) { editor.toLowerCase(); }
+    exec: function(editor) { editor.toLowerCase(); },
+    multiSelectAction: "forEach"
 }];
 
 });
@@ -5974,6 +6055,10 @@ var EditSession = function(text, mode) {
                 return callback(_self.$modes[mode]);
             
             _self.$modes[mode] = new module.Mode();
+            _self._emit("loadmode", {
+                name: mode,
+                mode: _self.$modes[mode]
+            });
             callback(_self.$modes[mode]);
         }
 
@@ -6905,8 +6990,8 @@ var EditSession = function(text, mode) {
     }
 
     this.getScreenLastRowColumn = function(screenRow) {
-        //return this.screenToDocumentColumn(screenRow, Number.MAX_VALUE / 10)
-        return this.documentToScreenColumn(screenRow, this.doc.getLine(screenRow).length);
+        var pos = this.screenToDocumentPosition(screenRow, Number.MAX_VALUE)
+        return this.documentToScreenColumn(pos.row, pos.column);
     };
 
     this.getDocumentLastRowColumn = function(docRow, docColumn) {
@@ -7021,16 +7106,10 @@ var EditSession = function(text, mode) {
 
         docColumn += this.$getStringScreenWidth(line, screenColumn)[1];
 
-        // Need to do some clamping action here.
-        if (this.$useWrapMode) {
-            if (docColumn >= column) {
-                // We remove one character at the end such that the docColumn
-                // position returned is not associated to the next row on the
-                // screen.
-                docColumn = column - 1;
-            }
-        } else {
-            docColumn = Math.min(docColumn, line.length);
+        // We remove one character at the end so that the docColumn
+        // position returned is not associated to the next row on the screen.
+        if (this.$useWrapMode && docColumn >= column) {
+            docColumn = column - 1;
         }
 
         if (foldLine) {
@@ -7481,18 +7560,18 @@ var Selection = function(session) {
     this.selectionLead = this.doc.createAnchor(0, 0);
     this.selectionAnchor = this.doc.createAnchor(0, 0);
 
-    var _self = this;
+    var self = this;
     this.selectionLead.on("change", function(e) {
-        _self._emit("changeCursor");
-        if (!_self.$isEmpty)
-            _self._emit("changeSelection");
-        if (!_self.$preventUpdateDesiredColumnOnChange && e.old.column != e.value.column)
-            _self.$updateDesiredColumn();
+        self._emit("changeCursor");
+        if (!self.$isEmpty)
+            self._emit("changeSelection");
+        if (!self.$keepDesiredColumnOnChange && e.old.column != e.value.column)
+            self.$desiredColumn = null;
     });
 
     this.selectionAnchor.on("change", function() {
-        if (!_self.$isEmpty)
-            _self._emit("changeSelection");
+        if (!self.$isEmpty)
+            self._emit("changeSelection");
     });
 };
 
@@ -7602,12 +7681,7 @@ var Selection = function(session) {
             this.setSelectionAnchor(range.start.row, range.start.column);
             this.selectTo(range.end.row, range.end.column);
         }
-        this.$updateDesiredColumn();
-    };
-
-    this.$updateDesiredColumn = function() {
-        var cursor = this.getCursor();
-        this.$desiredColumn = this.session.documentToScreenColumn(cursor.row, cursor.column);
+        this.$desiredColumn = null;
     };
 
     this.$moveSelection = function(mover) {
@@ -7814,14 +7888,14 @@ var Selection = function(session) {
             this.moveCursorTo(fold.end.row, fold.end.column);
             return;
         }
-        
+
         // first skip space
         if (match = this.session.nonTokenRe.exec(rightOfCursor)) {
             column += this.session.nonTokenRe.lastIndex;
             this.session.nonTokenRe.lastIndex = 0;
             rightOfCursor = line.substring(column);
         }
-        
+
         // if at line end proceed with next line
         if (column >= line.length) {
             this.moveCursorTo(row, line.length);
@@ -7830,7 +7904,7 @@ var Selection = function(session) {
                 this.moveCursorWordRight();
             return;
         }
-        
+
         // advance to the end of the next token
         if (match = this.session.tokenRe.exec(rightOfCursor)) {
             column += this.session.tokenRe.lastIndex;
@@ -7855,19 +7929,19 @@ var Selection = function(session) {
         if (str == null) {
             str = this.doc.getLine(row).substring(0, column)
         }
-        
+
         var leftOfCursor = lang.stringReverse(str);
         var match;
         this.session.nonTokenRe.lastIndex = 0;
         this.session.tokenRe.lastIndex = 0;
-        
+
         // skip whitespace
         if (match = this.session.nonTokenRe.exec(leftOfCursor)) {
             column -= this.session.nonTokenRe.lastIndex;
             leftOfCursor = leftOfCursor.slice(this.session.nonTokenRe.lastIndex);
             this.session.nonTokenRe.lastIndex = 0;
         }
-        
+
         // if at begin of the line proceed in line above
         if (column <= 0) {
             this.moveCursorTo(row, 0);
@@ -7892,8 +7966,14 @@ var Selection = function(session) {
             this.selectionLead.column
         );
 
-        var screenCol = (chars === 0 && this.$desiredColumn) || screenPos.column;
-        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenCol);
+        if (chars === 0) {
+            if (this.$desiredColumn)
+                screenPos.column = this.$desiredColumn;
+            else
+                this.$desiredColumn = screenPos.column;
+        }
+
+        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column);
 
         // move the cursor and update the desired column
         this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
@@ -7903,7 +7983,7 @@ var Selection = function(session) {
         this.moveCursorTo(position.row, position.column);
     };
 
-    this.moveCursorTo = function(row, column, preventUpdateDesiredColumn) {
+    this.moveCursorTo = function(row, column, keepDesiredColumn) {
         // Ensure the row/column is not inside of a fold.
         var fold = this.session.getFoldAt(row, column, 1);
         if (fold) {
@@ -7911,20 +7991,46 @@ var Selection = function(session) {
             column = fold.start.column;
         }
 
-        this.$preventUpdateDesiredColumnOnChange = true;
+        this.$keepDesiredColumnOnChange = true;
         this.selectionLead.setPosition(row, column);
-        this.$preventUpdateDesiredColumnOnChange = false;
+        this.$keepDesiredColumnOnChange = false;
 
-        if (!preventUpdateDesiredColumn)
-            this.$updateDesiredColumn(this.selectionLead.column);
+        if (!keepDesiredColumn)
+            this.$desiredColumn = null;
     };
 
-    this.moveCursorToScreen = function(row, column, preventUpdateDesiredColumn) {
+    this.moveCursorToScreen = function(row, column, keepDesiredColumn) {
         var pos = this.session.screenToDocumentPosition(row, column);
-        row = pos.row;
-        column = pos.column;
-        this.moveCursorTo(row, column, preventUpdateDesiredColumn);
+        this.moveCursorTo(pos.row, pos.column, keepDesiredColumn);
     };
+
+    // remove listeners from document
+    this.detach = function() {
+        this.selectionLead.detach();
+        this.selectionAnchor.detach();
+        this.session = this.doc = null;
+    }
+
+    this.fromOrientedRange = function(range) {
+        this.setSelectionRange(range, range.cursor == range.start);
+        this.$desiredColumn = range.desiredColumn || this.$desiredColumn;
+    }
+
+    this.toOrientedRange = function(range) {
+        var r = this.getRange();
+        if (range) {
+            range.start.column = r.start.column;
+            range.start.row = r.start.row;
+            range.end.column = r.end.column;
+            range.end.row = r.end.row;
+        } else {
+            range = r;
+        }
+
+        range.cursor = this.isBackwards() ? range.start : range.end;
+        range.desiredColumn = this.$desiredColumn;
+        return range;
+    }
 
 }).call(Selection.prototype);
 
@@ -7983,7 +8089,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 };
 
 (function() {
-    this.isEequal = function(range) {
+    this.isEqual = function(range) {
         return this.start.row == range.start.row &&
             this.end.row == range.end.row &&
             this.start.column == range.start.column &&
@@ -8047,6 +8153,11 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
     this.containsRange = function(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
+    }
+
+    this.intersectsRange = function(range) {
+        var cmp = this.compareRange(range);
+        return (cmp == -1 || cmp == 0 || cmp == 1);
     }
 
     this.isEnd = function(row, column) {
@@ -8207,6 +8318,21 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
         return Range.fromPoints(start || this.start, end || this.end);
     };
+
+    this.fixOrientation = function() {
+        if (
+            this.start.row < this.end.row 
+            || (this.start.row == this.end.row && this.start.column < this.end.column)
+        ) {
+            return false;
+        }
+        
+        var temp = this.start;
+        this.end = this.start;
+        this.start = temp;
+        return true;
+    };
+
 
     this.isEmpty = function() {
         return (this.start.row == this.end.row && this.start.column == this.end.column);
@@ -8521,23 +8647,30 @@ var Tokenizer = function(rules, flag) {
         var ruleRegExps = [];
         var matchTotal = 0;
         var mapping = this.matchMappings[key] = {};
-        
+
         for ( var i = 0; i < state.length; i++) {
+
+            if (state[i].regex instanceof RegExp)
+                state[i].regex = state[i].regex.toString().slice(1, -1);
+
             // Count number of matching groups. 2 extra groups from the full match
             // And the catch-all on the end (used to force a match);
             var matchcount = new RegExp("(?:(" + state[i].regex + ")|(.))").exec("a").length - 2;
-        
+
             // Replace any backreferences and offset appropriately.
             var adjustedregex = state[i].regex.replace(/\\([0-9]+)/g, function (match, digit) {
                 return "\\" + (parseInt(digit, 10) + matchTotal + 1);
             });
-            
+
+            if (matchcount > 1 && state[i].token.length !== matchcount-1)
+                throw new Error("Matching groups and length of the token array don't match in rule #" + i + " of state " + key);
+
             mapping[matchTotal] = {
                 rule: i,
                 len: matchcount
             };
             matchTotal += matchcount;
-            
+
             ruleRegExps.push(adjustedregex);
         }
 
@@ -8553,47 +8686,47 @@ var Tokenizer = function(rules, flag) {
         var mapping = this.matchMappings[currentState];
         var re = this.regExps[currentState];
         re.lastIndex = 0;
-        
+
         var match, tokens = [];
-        
+
         var lastIndex = 0;
-        
+
         var token = {
             type: null,
             value: ""
         };
-        
+
         while (match = re.exec(line)) {
             var type = "text";
             var rule = null;
             var value = [match[0]];
 
             for (var i = 0; i < match.length-2; i++) {
-                if (match[i + 1] !== undefined) {
-                    rule = state[mapping[i].rule];
-                    
-                    if (mapping[i].len > 1) {
-                        value = match.slice(i+2, i+1+mapping[i].len);
-                    }
-                    
-                    // compute token type
-                    if (typeof rule.token == "function")
-                        type = rule.token.apply(this, value);
-                    else
-                        type = rule.token;
+                if (match[i + 1] === undefined)
+                    continue;
 
-                    var next = rule.next;                    
-                    if (next && next !== currentState) {
-                        currentState = next;
-                        state = this.rules[currentState];
-                        mapping = this.matchMappings[currentState];
-                        lastIndex = re.lastIndex;
+                rule = state[mapping[i].rule];
 
-                        re = this.regExps[currentState];
-                        re.lastIndex = lastIndex;
-                    }
-                    break;
+                if (mapping[i].len > 1)
+                    value = match.slice(i+2, i+1+mapping[i].len);
+
+                // compute token type
+                if (typeof rule.token == "function")
+                    type = rule.token.apply(this, value);
+                else
+                    type = rule.token;
+
+                var next = rule.next;
+                if (next && next !== currentState) {
+                    currentState = next;
+                    state = this.rules[currentState];
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = re.lastIndex;
+
+                    re = this.regExps[currentState];
+                    re.lastIndex = lastIndex;
                 }
+                break;
             }
 
             if (value[0]) {
@@ -8602,13 +8735,15 @@ var Tokenizer = function(rules, flag) {
                     type = [type];
                 }
                 for (var i = 0; i < value.length; i++) {
+                    if (!value[i])
+                        continue;
+
                     if ((!rule || rule.merge || type[i] === "text") && token.type === type[i]) {
                         token.value += value[i];
                     } else {
-                        if (token.type) {
+                        if (token.type)
                             tokens.push(token);
-                        }
-                    
+
                         token = {
                             type: type[i],
                             value: value[i]
@@ -8616,10 +8751,10 @@ var Tokenizer = function(rules, flag) {
                     }
                 }
             }
-            
+
             if (lastIndex == line.length)
                 break;
-            
+
             lastIndex = re.lastIndex;
         }
 
@@ -9130,6 +9265,7 @@ var Document = function(text) {
 
         position = this.$clipPosition(position);
 
+        // only detect new lines if the document has no line break yet
         if (this.getLength() <= 1)
             this.$detectNewLine(text);
 
@@ -10441,7 +10577,7 @@ function Folding() {
             // sometimes singleline folds can be missed by the code above
             if (!range.isMultiLine()) {
                 fold = this.getFoldAt(range.start.row, range.start.column, 1);
-                if (fold && range.isEequal(fold.range)) {
+                if (fold && range.isEqual(fold.range)) {
                     this.removeFold(fold);
                     return;
                 }
@@ -10832,7 +10968,7 @@ var Fold = exports.Fold = function(range, placeholder) {
     };
 
     this.addSubFold = function(fold) {
-        if (this.range.isEequal(fold))
+        if (this.range.isEqual(fold))
             return this;
 
         if (!this.range.containsRange(fold))
@@ -11510,21 +11646,153 @@ Search.SELECTION = 2;
 
 exports.Search = Search;
 });
-define('ace/commands/command_manager', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
+define('ace/commands/command_manager', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/keyboard/hash_handler', 'ace/lib/event_emitter'], function(require, exports, module) {
 "use strict";
 
-var keyUtil = require("../lib/keys");
+var oop = require("../lib/oop");
+var HashHandler = require("../keyboard/hash_handler").HashHandler;
+var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
 var CommandManager = function(platform, commands) {
-    if (typeof platform !== "string")
-        throw new TypeError("'platform' argument must be either 'mac' or 'win'");
-
     this.platform = platform;
     this.commands = {};
     this.commmandKeyBinding = {};
 
-    if (commands)
-        commands.forEach(this.addCommand, this);
+    this.addCommands(commands);
+    
+    this.setDefaultHandler("exec", function(e) {
+        e.command.exec(e.editor, e.args || {});
+    });
+};
+
+oop.inherits(CommandManager, HashHandler);
+
+(function() {
+
+    oop.implement(this, EventEmitter);
+
+    this.exec = function(command, editor, args) {
+        if (typeof command === 'string')
+            command = this.commands[command];
+
+        if (!command)
+            return false;
+
+        if (editor && editor.$readOnly && !command.readOnly)
+            return false;
+
+        this._emit("exec", {editor: editor, command: command, args: args});
+        return true;
+    };
+
+    this.toggleRecording = function() {
+        if (this.$inReplay)
+            return;
+        if (this.recording) {
+            this.macro.pop();
+            this.removeEventListener("exec", this.$addCommandToMacro);
+
+            if (!this.macro.length)
+                this.macro = this.oldMacro;
+
+            return this.recording = false;
+        }
+        if (!this.$addCommandToMacro) {
+            this.$addCommandToMacro = function(e) {
+                    this.macro.push([e.command, e.args]);
+                }.bind(this);
+        }
+
+        this.oldMacro = this.macro;
+        this.macro = [];
+        this.on("exec", this.$addCommandToMacro);
+        return this.recording = true;
+    };
+
+    this.replay = function(editor) {
+        if (this.$inReplay || !this.macro)
+            return;
+
+        if (this.recording)
+            return this.toggleRecording();
+
+        try {
+            this.$inReplay = true;
+            this.macro.forEach(function(x) {
+                if (typeof x == "string")
+                    this.exec(x, editor);
+                else
+                    this.exec(x[0], editor, x[1]);
+            }, this);
+        } finally {
+            this.$inReplay = false;
+        }
+    };
+
+    this.trimMacro = function(m) {
+        return m.map(function(x){
+            if (typeof x[0] != "string")
+                x[0] = x[0].name;
+            if (!x[1])
+                x = x[0];
+            return x;
+        });
+    };
+
+}).call(CommandManager.prototype);
+
+exports.CommandManager = CommandManager;
+
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Mozilla Skywriter.
+ *
+ * The Initial Developer of the Original Code is
+ * Mozilla.
+ * Portions created by the Initial Developer are Copyright (C) 2009
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Fabian Jakobs <fabian AT ajax DOT org>
+ *   Julian Viereck (julian.viereck@gmail.com)
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
+"use strict";
+
+var keyUtil  = require("../lib/keys");
+
+function HashHandler(config, platform) {
+    this.platform = platform;
+    this.commands = {};
+    this.commmandKeyBinding = {};
+
+    this.addCommands(config);
 };
 
 (function() {
@@ -11545,7 +11813,7 @@ var CommandManager = function(platform, commands) {
         command = this.commands[name];
         delete this.commands[name];
 
-        // exaustive search is brute force but since removeCommand is
+        // exhaustive search is brute force but since removeCommand is
         // not a performance critical operation this should be OK
         var ckb = this.commmandKeyBinding;
         for (var hashId in ckb) {
@@ -11557,7 +11825,7 @@ var CommandManager = function(platform, commands) {
     };
 
     this.addCommands = function(commands) {
-        Object.keys(commands).forEach(function(name) {
+        commands && Object.keys(commands).forEach(function(name) {
             var command = commands[name];
             if (typeof command === "string")
                 return this.bindKey(command, name);
@@ -11603,14 +11871,14 @@ var CommandManager = function(platform, commands) {
 
         var key = typeof binding == "string" ? binding: binding[this.platform];
         this.bindKey(key, command);
-    }
+    };
 
     function parseKeys(keys, val, ret) {
         var key;
         var hashId = 0;
-        var parts = splitSafe(keys);
+        var parts = splitSafe(keys.toLowerCase());
 
-        for (var i=0, l = parts.length; i < l; i++) {
+        for (var i = 0, l = parts.length; i < l; i++) {
             if (keyUtil.KEY_MODS[parts[i]])
                 hashId = hashId | keyUtil.KEY_MODS[parts[i]];
             else
@@ -11620,95 +11888,28 @@ var CommandManager = function(platform, commands) {
         return {
             key: key,
             hashId: hashId
-        }
+        };
     }
 
-    function splitSafe(s, separator) {
-        return (s.toLowerCase()
-            .trim()
+    function splitSafe(s) {
+        return (s.trim()
             .split(new RegExp("[\\s ]*\\-[\\s ]*", "g"), 999));
     }
 
-    this.findKeyCommand = function findKeyCommand(hashId, textOrKey) {
-        // Convert keyCode to the string representation.
-        if (typeof textOrKey == "number") {
-            textOrKey = keyUtil.keyCodeToString(textOrKey);
-        }
-
+    this.findKeyCommand = function findKeyCommand(hashId, keyString) {
         var ckbr = this.commmandKeyBinding;
-        return ckbr[hashId] && ckbr[hashId][textOrKey.toLowerCase()];
+        return ckbr[hashId] && ckbr[hashId][keyString.toLowerCase()];
     }
 
-    this.exec = function(command, editor, args) {
-        if (typeof command === 'string')
-            command = this.commands[command];
-
-        if (!command)
-            return false;
-
-        if (editor && editor.$readOnly && !command.readOnly)
-            return false;
-
-        command.exec(editor, args || {});
-        return true;
-    };
-
-    this.toggleRecording = function() {
-        if (this.$inReplay)
-            return;
-        if (this.recording) {
-            this.macro.pop();
-            this.exec = this.normal_exec;
-
-            if (!this.macro.length)
-                this.macro = this.oldMacro;
-
-            return this.recording = false;
-        }
-        this.oldMacro = this.macro;
-        this.macro = [];
-        this.normal_exec = this.exec;
-        this.exec = function(command, editor, args) {
-            this.macro.push([command, args]);
-            return this.normal_exec(command, editor, args);
+    this.handleKeyboard = function(data, hashId, keyString, keyCode) {
+        return {
+            command: this.findKeyCommand(hashId, keyString)
         };
-        return this.recording = true;
     };
 
-    this.replay = function(editor) {
-        if (this.$inReplay || !this.macro)
-            return;
+}).call(HashHandler.prototype)
 
-        if (this.recording)
-            return this.toggleRecording();
-
-        try {
-            this.$inReplay = true;
-            this.macro.forEach(function(x) {
-                if (typeof x == "string")
-                    this.exec(x, editor);
-                else
-                    this.exec(x[0], editor, x[1]);
-            }, this)
-        } finally {
-            this.$inReplay = false;
-        }
-    };
-
-    this.trimMacro = function(m) {
-        return m.map(function(x){
-            if (typeof x[0] != "string")
-                x[0] = x[0].name;
-            if (!x[1])
-                x = x[0];
-            return x
-        })
-    }
-
-}).call(CommandManager.prototype);
-
-exports.CommandManager = CommandManager;
-
+exports.HashHandler = HashHandler;
 });
 /* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
@@ -11866,13 +12067,13 @@ dom.importCssString(editorCss, "ace_editor");
 
 var VirtualRenderer = function(container, theme) {
     var _self = this;
-    
+
     this.container = container;
 
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
-    
+
     dom.addCssClass(container, "ace_editor");
 
     this.setTheme(theme);
@@ -11890,8 +12091,8 @@ var VirtualRenderer = function(container, theme) {
     this.scroller.appendChild(this.content);
 
     this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));    
-    
+    this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
+
     this.$markerBack = new MarkerLayer(this.content);
 
     var textLayer = this.$textLayer = new TextLayer(this.content);
@@ -11909,6 +12110,8 @@ var VirtualRenderer = function(container, theme) {
     this.$horizScroll = true;
     this.$horizScrollAlwaysVisible = true;
 
+    this.$animatedScroll = false;
+
     this.scrollBar = new ScrollBar(container);
     this.scrollBar.addEventListener("scroll", function(e) {
         _self.session.setScrollTop(e.data);
@@ -11916,11 +12119,18 @@ var VirtualRenderer = function(container, theme) {
 
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    
+
     event.addListener(this.scroller, "scroll", function() {
         var scrollLeft = _self.scroller.scrollLeft;
         _self.scrollLeft = scrollLeft;
         _self.session.setScrollLeft(scrollLeft);
+
+        if (scrollLeft == 0) {
+            _self.$gutter.className = "ace_gutter";
+        }
+        else {
+            _self.$gutter.className = "ace_gutter horscroll";
+        }
     });
 
     this.cursorPos = {
@@ -12080,6 +12290,14 @@ var VirtualRenderer = function(container, theme) {
         return this.session.adjustWrapLimit(limit);
     };
 
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.$animatedScroll = shouldAnimate;
+    };
+
+    this.getAnimatedScroll = function() {
+        return this.$animatedScroll;
+    };
+
     this.setShowInvisibles = function(showInvisibles) {
         if (this.$textLayer.setShowInvisibles(showInvisibles))
             this.$loop.schedule(this.CHANGE_TEXT);
@@ -12158,7 +12376,7 @@ var VirtualRenderer = function(container, theme) {
         // this persists in IE9
         if (useragent.isIE)
             return;
-        
+
         if (this.layerConfig.lastRow === 0)
             return;
 
@@ -12234,13 +12452,13 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             this.scroller.scrollLeft = this.scrollLeft;
-            
+
             // read the value after writing it since the value might get clipped
             var scrollLeft = this.scroller.scrollLeft;
             this.scrollLeft = scrollLeft;
             this.session.setScrollLeft(scrollLeft);
         }
-        
+
         // full
         if (changes & this.CHANGE_FULL) {
             this.$textLayer.checkForSizeChanges();
@@ -12453,12 +12671,18 @@ var VirtualRenderer = function(container, theme) {
         this.$cursorLayer.showCursor();
     };
 
-    this.scrollCursorIntoView = function() {
+    this.scrollSelectionIntoView = function(anchor, lead) {
+        // first scroll anchor into view then scroll lead into view
+        this.scrollCursorIntoView(anchor);
+        this.scrollCursorIntoView(lead);
+    };
+
+    this.scrollCursorIntoView = function(cursor) {
         // the editor is not visible
         if (this.$size.scrollerHeight === 0)
             return;
 
-        var pos = this.$cursorLayer.getPixelPosition();
+        var pos = this.$cursorLayer.getPixelPosition(cursor);
 
         var left = pos.left;
         var top = pos.top;
@@ -12504,13 +12728,46 @@ var VirtualRenderer = function(container, theme) {
         this.session.setScrollTop(row * this.lineHeight);
     };
 
+    this.STEPS = 10;
+    this.$calcSteps = function(fromValue, toValue){
+        var i = 0;
+        var l = this.STEPS;
+        var steps = [];
+
+        var func  = function(t, x_min, dx) {
+            if ((t /= .5) < 1)
+                return dx / 2 * Math.pow(t, 3) + x_min;
+            return dx / 2 * (Math.pow(t - 2, 3) + 2) + x_min;
+        };
+
+        for (i = 0; i < l; ++i)
+            steps.push(func(i / this.STEPS, fromValue, toValue - fromValue));
+        steps.push(toValue);
+
+        return steps;
+    };
+
     this.scrollToLine = function(line, center) {
         var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
         var offset = pos.top;
         if (center)
             offset -= this.$size.scrollerHeight / 2;
 
-        this.session.setScrollTop(offset);
+        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
+            var _self = this;
+            var steps = _self.$calcSteps(this.scrollTop, offset);
+
+            clearInterval(this.$timer);
+            this.$timer = setInterval(function() {
+                _self.session.setScrollTop(steps.shift());
+                
+                if (!steps.length)
+                    clearInterval(_self.$timer);
+            }, 10);
+        }
+        else {
+            this.session.setScrollTop(offset);
+        }
     };
 
     this.scrollToY = function(scrollTop) {
@@ -12542,6 +12799,19 @@ var VirtualRenderer = function(container, theme) {
         if (deltaY > 0 && this.session.getScrollTop() + this.$size.scrollerHeight < this.layerConfig.maxHeight)
            return true;
         // todo: handle horizontal scrolling
+    };
+
+    this.pixelToScreenCoordinates = function(pageX, pageY) {
+        var canvasPos = this.scroller.getBoundingClientRect();
+
+        var col = Math.round(
+            (pageX + this.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft()) / this.characterWidth
+        );
+        var row = Math.floor(
+            (pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop()) / this.lineHeight
+        );
+
+        return {row: row, column: col};
     };
 
     this.screenToTextCoordinates = function(pageX, pageY) {
@@ -12614,7 +12884,7 @@ var VirtualRenderer = function(container, theme) {
     this._loadTheme = function(name, callback) {
         if (!config.get("packaged"))
             return callback();
-            
+
         var base = name.split("/").pop();
         var filename = config.get("themePath") + "/theme-" + base + config.get("suffix");
         net.loadScript(filename, callback);
@@ -12626,16 +12896,16 @@ var VirtualRenderer = function(container, theme) {
         this.$themeValue = theme;
         if (!theme || typeof theme == "string") {
             var moduleName = theme || "ace/theme/textmate";
-            
+
             var module;
             try {
                 module = require(moduleName);
             } catch (e) {};
             if (module)
                 return afterLoad(module);
-            
+
             _self._loadTheme(moduleName, function() {
-                require([theme], function(module) {
+                require([moduleName], function(module) {
                     if (_self.$themeValue !== theme)
                         return;
 
@@ -12769,11 +13039,11 @@ var Gutter = function(parentEl) {
     this.addGutterDecoration = function(row, className){
         if (!this.$decorations[row])
             this.$decorations[row] = "";
-        this.$decorations[row] += " ace_" + className;
+        this.$decorations[row] += " " + className;
     };
 
     this.removeGutterDecoration = function(row, className){
-        this.$decorations[row] = this.$decorations[row].replace(" ace_" + className, "");
+        this.$decorations[row] = this.$decorations[row].replace(" " + className, "");
     };
 
     this.setBreakpoints = function(rows) {
@@ -13000,7 +13270,7 @@ var Marker = function(parentEl) {
     };
 
     /**
-     * Draws a marker, which spans a range of text in a single line
+     * Draws a marker, which spans a range of text on multiple lines
      */ 
     this.drawTextMarker = function(stringBuilder, range, clazz, layerConfig) {
         // selection start
@@ -13075,7 +13345,7 @@ var Marker = function(parentEl) {
     };
 
     /**
-     * Draws a marker which covers one single full line
+     * Draws a marker which covers part or whole width of a single screen line
      */
     this.drawSingleLineMarker = function(stringBuilder, range, clazz, layerConfig, extraLength, type) {
         var padding = type === "background" ? 0 : this.$padding;
@@ -13210,7 +13480,7 @@ var Text = function(parentEl) {
         lineHeight : 1
     };
 
-    this.$measureSizes = function() {
+    this.$measureSizes = useragent.isIE || useragent.isOldGecko ? function() {
         var n = 1000;
         if (!this.$measureNode) {
             var measureNode = this.$measureNode = dom.createElement("div");
@@ -13220,7 +13490,7 @@ var Text = function(parentEl) {
             style.left = style.top = (-n * 40)  + "px";
 
             style.visibility = "hidden";
-            style.position = "absolute";
+            style.position = "fixed";
             style.overflow = "visible";
             style.whiteSpace = "nowrap";
 
@@ -13237,7 +13507,6 @@ var Text = function(parentEl) {
                     container = container.parentNode;
                 container.appendChild(measureNode);
             }
-
         }
         
         // Size and width can be null if the editor is not visible or
@@ -13257,7 +13526,46 @@ var Text = function(parentEl) {
 
         // Size and width can be null if the editor is not visible or
         // detached from the document
-        if (size.width == 0 && size.height == 0)
+        if (size.width == 0 || size.height == 0)
+            return null;
+
+        return size;
+    } 
+    : function() {
+        if (!this.$measureNode) {
+            var measureNode = this.$measureNode = dom.createElement("div");
+            var style = measureNode.style;
+
+            style.width = style.height = "auto";
+            style.left = style.top = -100 + "px";
+
+            style.visibility = "hidden";
+            style.position = "fixed";
+            style.overflow = "visible";
+            style.whiteSpace = "nowrap";
+
+            measureNode.innerHTML = "X";
+
+            var container = this.element.parentNode;
+            while (container && !dom.hasCssClass(container, "ace_editor"))
+                container = container.parentNode;
+
+            if (!container)
+                return this.$measureNode = null;
+
+            container.appendChild(measureNode);
+        }
+        
+        var rect = this.$measureNode.getBoundingClientRect();
+
+        var size = {
+            height: rect.height,
+            width: rect.width
+        };
+
+        // Size and width can be null if the editor is not visible or
+        // detached from the document
+        if (size.width == 0 || size.height == 0)
             return null;
 
         return size;
@@ -13371,16 +13679,16 @@ var Text = function(parentEl) {
     };
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
-        var fragment = this.element.ownerDocument.createDocumentFragment(),
-            row = firstRow,
-            fold = this.session.getNextFoldLine(row),
-            foldStart = fold ?fold.start.row :Infinity;
+        var fragment = this.element.ownerDocument.createDocumentFragment();
+        var row = firstRow;
+        var foldLine = this.session.getNextFoldLine(row);
+        var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (true) {
             if (row > foldStart) {
-                row = fold.end.row+1;
-                fold = this.session.getNextFoldLine(row, fold);
-                foldStart = fold ?fold.start.row :Infinity;
+                row = foldLine.end.row+1;
+                foldLine = this.session.getNextFoldLine(row, foldLine);
+                foldStart = foldLine ? foldLine.start.row : Infinity;
             }
             if (row > lastRow)
                 break;
@@ -13419,15 +13727,15 @@ var Text = function(parentEl) {
         var html = [];
         var firstRow = config.firstRow, lastRow = config.lastRow;
 
-        var row = firstRow,
-            fold = this.session.getNextFoldLine(row),
-            foldStart = fold ?fold.start.row :Infinity;
+        var row = firstRow;
+        var foldLine = this.session.getNextFoldLine(row);
+        var foldStart = foldLine ? foldLine.start.row : Infinity;
 
         while (true) {
             if (row > foldStart) {
-                row = fold.end.row+1;
-                fold = this.session.getNextFoldLine(row, fold);
-                foldStart = fold ?fold.start.row :Infinity;
+                row = foldLine.end.row+1;
+                foldLine = this.session.getNextFoldLine(row, foldLine);
+                foldStart = foldLine ? foldLine.start.row :Infinity;
             }
             if (row > lastRow)
                 break;
@@ -13728,11 +14036,10 @@ var Cursor = function(parentEl) {
     this.element.className = "ace_layer ace_cursor-layer";
     parentEl.appendChild(this.element);
 
-    this.cursor = dom.createElement("div");
-    this.cursor.className = "ace_cursor ace_hidden";
-    this.element.appendChild(this.cursor);
-
     this.isVisible = false;
+
+    this.cursors = [];
+    this.cursor = this.addCursor();
 };
 
 (function() {
@@ -13746,30 +14053,54 @@ var Cursor = function(parentEl) {
         this.session = session;
     };
 
+    this.addCursor = function() {
+        var el = dom.createElement("div");
+        var className = "ace_cursor";
+        if (!this.isVisible)
+            className += " ace_hidden";
+        if (this.overwrite)
+            className += " ace_overwrite";
+
+        el.className = className;
+        this.element.appendChild(el);
+        this.cursors.push(el);
+        return el;
+    };
+
+    this.removeCursor = function() {
+        if (this.cursors.length > 1) {
+            var el = this.cursors.pop();
+            el.parentNode.removeChild(el);
+            return el;
+        }
+    };
+
     this.hideCursor = function() {
         this.isVisible = false;
-        dom.addCssClass(this.cursor, "ace_hidden");
+        for (var i = this.cursors.length; i--; )
+            dom.addCssClass(this.cursors[i], "ace_hidden");
         clearInterval(this.blinkId);
     };
 
     this.showCursor = function() {
         this.isVisible = true;
-        dom.removeCssClass(this.cursor, "ace_hidden");
-        this.cursor.style.visibility = "visible";
+        for (var i = this.cursors.length; i--; )
+            dom.removeCssClass(this.cursors[i], "ace_hidden");
+
+        this.element.style.visibility = "";
         this.restartTimer();
     };
 
     this.restartTimer = function() {
         clearInterval(this.blinkId);
-        if (!this.isVisible) {
+        if (!this.isVisible)
             return;
-        }
 
-        var cursor = this.cursor;
+        var element = this.element;
         this.blinkId = setInterval(function() {
-            cursor.style.visibility = "hidden";
+            element.style.visibility = "hidden";
             setTimeout(function() {
-                cursor.style.visibility = "visible";
+                element.style.visibility = "visible";
             }, 400);
         }, 1000);
     };
@@ -13799,23 +14130,51 @@ var Cursor = function(parentEl) {
     this.update = function(config) {
         this.config = config;
 
-        this.pixelPos = this.getPixelPosition(null, true);
+        if (this.session.selectionMarkerCount > 1) {
+            var selections = this.session.$selectionMarkers;
+            var i = 0, sel, cursorIndex = 0;
 
-        this.cursor.style.left = this.pixelPos.left + "px";
-        this.cursor.style.top =  this.pixelPos.top + "px";
-        this.cursor.style.width = config.characterWidth + "px";
-        this.cursor.style.height = config.lineHeight + "px";
+            for (var i = selections.length; i--; ) {
+                sel = selections[i];
+                var pixelPos = this.getPixelPosition(sel.cursor, true);
 
-        var overwrite = this.session.getOverwrite()
-        if (overwrite != this.overwrite) {
-            this.overwrite = overwrite;
-            if (overwrite)
-                dom.addCssClass(this.cursor, "ace_overwrite");
-            else
-                dom.removeCssClass(this.cursor, "ace_overwrite");
+                var style = (this.cursors[cursorIndex++] || this.addCursor()).style;
+
+                style.left = pixelPos.left + "px";
+                style.top = pixelPos.top + "px";
+                style.width = config.characterWidth + "px";
+                style.height = config.lineHeight + "px";
+            }
+            if (cursorIndex > 1)
+                while (this.cursors.length > cursorIndex)
+                    this.removeCursor();
+        } else {
+            var pixelPos = this.getPixelPosition(null, true);
+            var style = this.cursor.style;
+            style.left = pixelPos.left + "px";
+            style.top = pixelPos.top + "px";
+            style.width = config.characterWidth + "px";
+            style.height = config.lineHeight + "px";
+
+            while (this.cursors.length > 1)
+                this.removeCursor();
         }
 
+        var overwrite = this.session.getOverwrite();
+        if (overwrite != this.overwrite)
+            this.$setOverite(overwrite);
+
         this.restartTimer();
+    };
+
+    this.$setOverite = function(overwrite) {
+        this.overwrite = overwrite;
+        for (var i = this.cursors.length; i--; ) {
+            if (overwrite)
+                dom.addCssClass(this.cursors[i], "ace_overwrite");
+            else
+                dom.removeCssClass(this.cursors[i], "ace_overwrite");
+        }
     };
 
     this.destroy = function() {
@@ -13912,6 +14271,8 @@ var ScrollBar = function(parent) {
         this.inner.style.height = height + "px";
     };
 
+    // TODO: on chrome 17+ after for small zoom levels after this function
+    // this.element.scrollTop != scrollTop which makes page to scroll up.
     this.setScrollTop = function(scrollTop) {
         this.element.scrollTop = scrollTop;
     };
@@ -13996,7 +14357,6 @@ exports.RenderLoop = RenderLoop;
 });
 define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);\n" +
   "\n" +
-  "\n" +
   ".ace_editor {\n" +
   "    position: absolute;\n" +
   "    overflow: hidden;\n" +
@@ -14031,6 +14391,11 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    height: 100%;\n" +
   "    width: auto;\n" +
   "    cursor: default;\n" +
+  "    z-index: 1000;\n" +
+  "}\n" +
+  "\n" +
+  ".ace_gutter.horscroll {\n" +
+  "    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);\n" +
   "}\n" +
   "\n" +
   ".ace_gutter-cell {\n" +
@@ -14154,12 +14519,12 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "\n" +
   ".ace_marker-layer .ace_selection {\n" +
   "    position: absolute;\n" +
-  "    z-index: 4;\n" +
+  "    z-index: 5;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_bracket {\n" +
   "    position: absolute;\n" +
-  "    z-index: 5;\n" +
+  "    z-index: 6;\n" +
   "}\n" +
   "\n" +
   ".ace_marker-layer .ace_active_line {\n" +
@@ -14167,9 +14532,13 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    z-index: 2;\n" +
   "}\n" +
   "\n" +
+  ".ace_gutter .ace_gutter_active_line{\n" +
+  "    background-color : #dcdcdc;\n" +
+  "}\n" +
+  "\n" +
   ".ace_marker-layer .ace_selected_word {\n" +
   "    position: absolute;\n" +
-  "    z-index: 6;\n" +
+  "    z-index: 4;\n" +
   "    box-sizing: border-box;\n" +
   "    -moz-box-sizing: border-box;\n" +
   "    -webkit-box-sizing: border-box;\n" +
@@ -14275,7 +14644,1126 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "}\n" +
   "");
 
-/* ***** BEGIN LICENSE BLOCK *****
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Harutyun Amirjanyan <amirjanyan AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/multi_select', ['require', 'exports', 'module' , 'ace/range_list', 'ace/range', 'ace/selection', 'ace/mouse/multi_select_handler', 'ace/commands/multi_select_commands', 'ace/search', 'ace/edit_session', 'ace/editor'], function(require, exports, module) {
+
+var RangeList = require("./range_list").RangeList;
+var Range = require("./range").Range;
+var Selection = require("./selection").Selection;
+var onMouseDown = require("./mouse/multi_select_handler").onMouseDown;
+exports.commands = require("./commands/multi_select_commands");
+
+// Todo: session.find or editor.findVolatile that returns range
+var Search = require("./search").Search;
+var search = new Search();
+
+function find(session, needle, dir) {
+    search.$options.wrap = true;
+    search.$options.needle = needle;
+    search.$options.backwards = dir == -1;
+    return search.find(session);
+}
+
+// extend EditSession
+var EditSession = require("./edit_session").EditSession;
+(function() {
+    this.getSelectionMarkers = function() {
+        return this.$selectionMarkers;
+    };
+}).call(EditSession.prototype);
+
+// extend Selection
+(function() {
+    // list of ranges in reverse addition order
+    this.ranges = null;
+
+    // automatically sorted list of ranges
+    this.rangeList = null;
+
+    /**
+     * Selection.addRange(Range) -> Void
+     *
+     * adds a range to selection entering multiselect mode if necessary
+     **/
+    this.addRange = function(range) {
+        if (!this.inMultiSelectMode && this.rangeCount == 0) {
+            var oldRange = this.toOrientedRange();
+            if (!range || !range.isEqual(oldRange)) {
+                this.rangeList.add(oldRange);
+                this.$onAddRange(oldRange);
+            }
+        }
+
+        if (!range)
+            return;
+
+        if (!range.cursor)
+            range.cursor = range.end;
+
+        var removed = this.rangeList.add(range);
+
+        this.$onAddRange(range);
+
+        if (removed.length)
+            this.$onRemoveRange(removed);
+
+        if (this.rangeCount > 0 && !this.inMultiSelectMode) {
+            this._emit("multiSelect");
+            this.inMultiSelectMode = true;
+            this.session.$undoSelect = false;
+            this.rangeList.attach(this.session);
+        }
+    };
+
+    this.toSingleRange = function(range) {
+        range = range || this.ranges[0];
+        var removed = this.rangeList.removeAll();
+        if (removed.length)
+            this.$onRemoveRange(removed);
+
+        range && this.fromOrientedRange(range);
+    };
+    
+    /**
+     * Selection.addRange(pos) -> Range
+     * pos: {row, column}
+     *
+     * removes range containing pos (if exists)
+     **/
+    this.substractPoint = function(pos) {
+        var removed = this.rangeList.substractPoint(pos);
+        if (removed) {
+            this.$onRemoveRange(removed);
+            return removed[0];
+        }
+    };
+
+    /**
+     * Selection.mergeOverlappingRanges() -> Void
+     *
+     * merges overlapping ranges ensuring consistency after changes
+     **/
+    this.mergeOverlappingRanges = function() {
+        var removed = this.rangeList.merge();
+        if (removed.length)
+            this.$onRemoveRange(removed);
+        else if(this.ranges[0])
+            this.fromOrientedRange(this.ranges[0]);
+    };
+
+    this.$onAddRange = function(range) {
+        this.rangeCount = this.rangeList.ranges.length;
+        this.ranges.unshift(range);
+        this.fromOrientedRange(range);
+        this._emit("addRange", {range: range});
+    };
+
+    this.$onRemoveRange = function(removed) {
+        this.rangeCount = this.rangeList.ranges.length;
+        if (this.rangeCount == 1 && this.inMultiSelectMode) {
+            var lastRange = this.rangeList.ranges.pop();
+            removed.push(lastRange);
+            this.rangeCount = 0;
+        }
+
+        for (var i = removed.length; i--; ) {
+            var index = this.ranges.indexOf(removed[i]);
+            this.ranges.splice(index, 1);
+        }
+
+        this._emit("removeRange", {ranges: removed});
+
+        if (this.rangeCount == 0 && this.inMultiSelectMode) {
+            this.inMultiSelectMode = false;
+            this._emit("singleSelect");
+            this.session.$undoSelect = true;
+            this.rangeList.detach(this.session);
+        }
+
+        lastRange = lastRange || this.ranges[0];
+        if (lastRange && !lastRange.isEqual(this.getRange()))
+            this.fromOrientedRange(lastRange);
+    };
+
+    // adds multicursor support to selection
+    this.$initRangeList = function() {
+        if (this.rangeList)
+            return;
+
+        this.rangeList = new RangeList();
+        this.ranges = [];
+        this.rangeCount = 0;
+    };
+
+    this.getAllRanges = function() {
+        return this.rangeList.ranges.concat();
+    };
+
+    this.splitIntoLines = function () {
+        if (this.rangeCount > 1) {
+            var ranges = this.rangeList.ranges;
+            var lastRange = ranges[ranges.length - 1];
+            var range = Range.fromPoints(ranges[0].start, lastRange.end);
+
+            this.toSingleRange();
+            this.setSelectionRange(range, lastRange.cursor == lastRange.start);
+        } else {
+            var cursor = this.session.documentToScreenPosition(this.selectionLead);
+            var anchor = this.session.documentToScreenPosition(this.selectionAnchor);
+
+            var rectSel = this.rectangularRangeBlock(cursor, anchor);
+            rectSel.forEach(this.addRange, this);
+        }
+    };
+
+    /**
+     *   Selection.rectangularRangeBlock(screenCursor, screenAnchor, includeEmptyLines) -> [Range]
+     *   gets list of ranges composing rectangular block on the screen
+     *   @includeEmptyLines if true includes ranges inside the block which
+     *         are empty becuase of the clipping
+     */
+    this.rectangularRangeBlock = function(screenCursor, screenAnchor, includeEmptyLines) {
+        var rectSel = [];
+
+        var xBackwards = screenCursor.column < screenAnchor.column;
+        if (xBackwards) {
+            var startColumn = screenCursor.column;
+            var endColumn = screenAnchor.column;
+        } else {
+            var startColumn = screenAnchor.column;
+            var endColumn = screenCursor.column;
+        }
+
+        var yBackwards = screenCursor.row < screenAnchor.row;
+        if (yBackwards) {
+            var startRow = screenCursor.row;
+            var endRow = screenAnchor.row;
+        } else {
+            var startRow = screenAnchor.row;
+            var endRow = screenCursor.row;
+        }
+
+        if (startColumn < 0)
+            startColumn = 0;
+        if (startRow < 0)
+            startRow = 0;
+
+        if (startRow == endRow)
+            includeEmptyLines = true;
+
+        for (var row = startRow; row <= endRow; row++) {
+            var range = Range.fromPoints(
+                this.session.screenToDocumentPosition(row, startColumn),
+                this.session.screenToDocumentPosition(row, endColumn)
+            );
+            if (range.isEmpty()) {
+                if (docEnd && isSamePoint(range.end, docEnd))
+                    break;
+                var docEnd = range.end;
+            }
+            range.cursor = xBackwards ? range.start : range.end;
+            rectSel.push(range);
+        }
+
+        if (yBackwards)
+            rectSel.reverse();
+
+        if (!includeEmptyLines) {
+            var end = rectSel.length - 1;
+            while (rectSel[end].isEmpty() && end > 0)
+                end--;
+            if (end > 0) {
+                var start = 0;
+                while (rectSel[start].isEmpty())
+                    start++;
+            }
+            for (var i = end; i >= start; i--) {
+                if (rectSel[i].isEmpty())
+                    rectSel.splice(i, 1);
+            }
+        }
+
+        return rectSel;
+    };
+}).call(Selection.prototype);
+
+// extend Editor
+var Editor = require("./editor").Editor;
+(function() {
+    /**
+     * Editor.updateSelectionMarkers() -> Void
+     *
+     * updates cursor and marker layers
+     **/
+    this.updateSelectionMarkers = function() {
+        this.renderer.updateCursor();
+        this.renderer.updateBackMarkers();
+    };
+
+    /**
+     * Editor.addSelectionMarker(orientedRange) -> Range
+     * - orientedRange: range with cursor
+     *
+     * adds selection and cursor
+     **/
+    this.addSelectionMarker = function(orientedRange) {
+        if (!orientedRange.cursor)
+            orientedRange.cursor = orientedRange.end;
+
+        var style = this.getSelectionStyle();
+        orientedRange.marker = this.session.addMarker(orientedRange, "ace_selection", style);
+
+        this.session.$selectionMarkers.push(orientedRange);
+        this.session.selectionMarkerCount = this.session.$selectionMarkers.length;
+        return orientedRange;
+    };
+
+    this.removeSelectionMarkers = function(ranges) {
+        for (var i = ranges.length; i--; ) {
+            var range = ranges[i];
+            if (!range.marker)
+                continue;
+            this.session.removeMarker(range.marker);
+            var index = this.session.$selectionMarkers.indexOf(range);
+            if (index != -1)
+                this.session.$selectionMarkers.splice(index, 1);
+        }
+        this.session.selectionMarkerCount = this.session.$selectionMarkers.length;
+    };
+
+    this.$onAddRange = function(e) {
+        this.addSelectionMarker(e.range);
+        this.renderer.updateCursor();
+        this.renderer.updateBackMarkers();
+    };
+    
+    this.$onRemoveRange = function(e) {
+        this.removeSelectionMarkers(e.ranges);
+        this.renderer.updateCursor();
+        this.renderer.updateBackMarkers();
+    };
+    
+    this.$onMultiSelect = function(e) {
+        if (this.inMultiSelectMode)
+            return;
+        this.inMultiSelectMode = true;
+
+        this.setStyle("multiselect");
+        this.keyBinding.addKeyboardHandler(exports.commands.keyboardHandler);
+        this.commands.on("exec", this.$onMultiSelectExec);
+
+        this.renderer.updateCursor();
+        this.renderer.updateBackMarkers();
+    };
+    
+    this.$onSingleSelect = function(e) {
+        if (this.session.multiSelect.inVirtualMode)
+            return;
+        this.inMultiSelectMode = false;
+
+        this.unsetStyle("multiselect");
+        this.keyBinding.removeKeyboardHandler(exports.commands.keyboardHandler);
+
+        this.commands.removeEventListener("exec", this.$onMultiSelectExec);
+        this.renderer.updateCursor();
+        this.renderer.updateBackMarkers();
+    };
+
+    this.$onMultiSelectExec = function(e) {
+        var command = e.command;
+        var editor = e.editor;
+        if (!command.multiSelectAction) {
+            command.exec(editor, e.args || {});
+            editor.multiSelect.addRange(editor.multiSelect.toOrientedRange());
+            editor.multiSelect.mergeOverlappingRanges();
+        } else if (command.multiSelectAction == "forEach") {
+            editor.forEachSelection(command, e.args);
+        } else if (command.multiSelectAction == "single") {
+            editor.exitMultiSelectMode();
+            command.exec(editor, e.args || {});
+        } else {
+            command.multiSelectAction(editor, e.args || {});
+        }
+        e.preventDefault();
+    };
+
+    /**
+     * Editor.forEachSelection(cmd, args) -> Void
+     * - cmd: command to execute
+     * - args: arguments to the command
+     *
+     * executes command for each selection range
+     **/
+    this.forEachSelection = function(cmd, args) {
+        if (this.inVirtualSelectionMode)
+            return;
+
+        var session = this.session;
+        var selection = this.selection;
+        var rangeList = selection.rangeList;
+
+        var reg = selection._eventRegistry;
+        selection._eventRegistry = {};
+
+        var tmpSel = new Selection(session);
+        this.inVirtualSelectionMode = true;
+        for (var i = rangeList.ranges.length; i--;) {
+            tmpSel.fromOrientedRange(rangeList.ranges[i]);
+            this.selection = session.selection = tmpSel;
+            cmd.exec(this, args || {});
+            tmpSel.toOrientedRange(rangeList.ranges[i]);
+        }
+        tmpSel.detach();
+
+        this.selection = session.selection = selection;
+        this.inVirtualSelectionMode = false;
+        selection._eventRegistry = reg;
+        selection.mergeOverlappingRanges();
+
+        this.onCursorChange();
+        this.onSelectionChange();
+    };
+    
+    /**
+    * Editor.exitMultiSelectMode() -> Void
+    *
+    * removes all selections except the last added one.
+    **/
+    this.exitMultiSelectMode = function() {
+        if (this.inVirtualSelectionMode)
+            return;
+        this.multiSelect.toSingleRange();
+    };
+
+    this.getCopyText = function() {
+        var text = "";
+        if (this.inMultiSelectMode) {
+            var ranges = this.multiSelect.rangeList.ranges;
+            text = [];
+            for (var i = 0; i < ranges.length; i++) {
+                text.push(this.session.getTextRange(ranges[i]));
+            }
+            text = text.join(this.session.getDocument().getNewLineCharacter());
+        } else if (!this.selection.isEmpty()) {
+            text = this.session.getTextRange(this.getSelectionRange());
+        }
+
+        return text;
+    };
+
+
+    // commands
+    /**
+     * Editor.selectMoreLines(dir, skip) -> Void
+     * - dir: -1 up, 1 down
+     * - skip: remove active selection range if true
+     *
+     * adds cursor above or bellow active cursor
+     **/
+    this.selectMoreLines = function(dir, skip) {
+        var range = this.selection.toOrientedRange();
+        var isBackwards = range.cursor == range.end;
+
+        var screenLead = this.session.documentToScreenPosition(range.cursor);
+        if (this.selection.$desiredColumn)
+            screenLead.column = this.selection.$desiredColumn;
+
+        var lead = this.session.screenToDocumentPosition(screenLead.row + dir, screenLead.column);
+
+        if (!range.isEmpty()) {
+            var screenAnchor = this.session.documentToScreenPosition(isBackwards ? range.end : range.start);
+            var anchor = this.session.screenToDocumentPosition(screenAnchor.row + dir, screenAnchor.column);
+        } else {
+            var anchor = lead;
+        }
+
+        if (isBackwards) {
+            var newRange = Range.fromPoints(lead, anchor);
+            newRange.cursor = newRange.start;
+        } else {
+            var newRange = Range.fromPoints(anchor, lead);
+            newRange.cursor = newRange.end;
+        }
+
+        newRange.desiredColumn = screenLead.column;
+        if (!this.selection.inMultiSelectMode) {
+            this.selection.addRange(range);
+        } else {
+            if (skip)
+                var toRemove = range.cursor;
+        }
+
+        this.selection.addRange(newRange);
+        if (toRemove)
+            this.selection.substractPoint(toRemove);
+    };
+
+    /**
+     * Editor.transposeSelections(dir) -> Void
+     * - dir: direction to rotate selections
+     *
+     * contents 
+     * empty ranges are expanded to word
+     **/
+    this.transposeSelections = function(dir) {
+        var session = this.session;
+        var sel = session.multiSelect;
+        var all = sel.ranges;
+
+        for (var i = all.length; i--; ) {
+            var range = all[i];
+            if (range.isEmpty()) {
+                var tmp = session.getWordRange(range.start.row, range.start.column);
+                range.start.row = tmp.start.row;
+                range.start.column = tmp.start.column;
+                range.end.row = tmp.end.row;
+                range.end.column = tmp.end.column;
+            }
+        }
+        sel.mergeOverlappingRanges();
+        
+        var words = [];
+        for (var i = all.length; i--; ) {
+            var range = all[i];
+            words.unshift(session.getTextRange(range));
+        }
+
+        if (dir < 0)
+            words.unshift(words.pop());
+        else
+            words.push(words.shift());
+
+        for (var i = all.length; i--; ) {
+            var range = all[i];
+            var tmp = range.clone();
+            session.replace(range, words[i]);
+            range.start.row = tmp.start.row;
+            range.start.column = tmp.start.column;
+        }
+    }
+
+    /**
+     * Editor.selectMore(dir, skip) -> Void
+     * - dir: 1 next, -1 previous
+     * - skip: remove active selection range if true
+     *
+     * finds next occurence of text in active selection
+     * and adds it to the selections
+     **/
+    this.selectMore = function (dir, skip) {
+        var session = this.session;
+        var sel = session.multiSelect;
+
+        var range = sel.toOrientedRange();
+        if (range.isEmpty()) {
+            var range = session.getWordRange(range.start.row, range.start.column);
+            range.cursor = range.end;
+            this.multiSelect.addRange(range);
+        }
+        var needle = session.getTextRange(range);
+
+        var newRange = find(session, needle, dir);
+        if (newRange) {
+            newRange.cursor = dir == -1 ? newRange.start : newRange.end;
+            this.multiSelect.addRange(newRange);
+        }
+        if (skip)
+            this.multiSelect.substractPoint(range.cursor);
+    };
+}).call(Editor.prototype);
+
+
+function isSamePoint(p1, p2) {
+    return p1.row == p2.row && p1.column == p2.column;
+}
+
+// patch
+// adds multicursor support to a session
+exports.onSessionChange = function(e) {
+    var session = e.session;
+    if (!session.multiSelect) {
+        session.$selectionMarkers = [];
+        session.selection.$initRangeList();
+        session.multiSelect = session.selection;
+    }
+    this.multiSelect = session.multiSelect;
+
+    var oldSession = e.oldSession;
+    if (oldSession) {
+        // todo use events
+        if (oldSession.multiSelect && oldSession.multiSelect.editor == this)
+            oldSession.multiSelect.editor = null;
+
+        session.multiSelect.removeEventListener("addRange", this.$onAddRange);
+        session.multiSelect.removeEventListener("removeRange", this.$onRemoveRange);
+        session.multiSelect.removeEventListener("multiSelect", this.$onMultiSelect);
+        session.multiSelect.removeEventListener("singleSelect", this.$onSingleSelect);
+    }
+
+    session.multiSelect.on("addRange", this.$onAddRange);
+    session.multiSelect.on("removeRange", this.$onRemoveRange);
+    session.multiSelect.on("multiSelect", this.$onMultiSelect);
+    session.multiSelect.on("singleSelect", this.$onSingleSelect);
+
+    // this.$onSelectionChange = this.onSelectionChange.bind(this);
+
+    if (this.inMultiSelectMode != session.selection.inMultiSelectMode) {
+        if (session.selection.inMultiSelectMode)
+            this.$onMultiSelect();
+        else
+            this.$onSingleSelect();
+    }
+};
+
+/**
+ * MultiSelect(editor) -> Void
+ *
+ * adds multiple selection support to the editor
+ * (note: should be called only once for each editor instance)
+ **/
+function MultiSelect(editor) {
+    editor.$onAddRange = editor.$onAddRange.bind(editor);
+    editor.$onRemoveRange = editor.$onRemoveRange.bind(editor);
+    editor.$onMultiSelect = editor.$onMultiSelect.bind(editor);
+    editor.$onSingleSelect = editor.$onSingleSelect.bind(editor);
+
+    exports.onSessionChange.call(editor, editor);
+    editor.on("changeSession", exports.onSessionChange.bind(editor));
+
+    editor.on("mousedown", onMouseDown);
+    editor.commands.addCommands(exports.commands.defaultCommands);
+}
+
+exports.MultiSelect = MultiSelect;
+
+});/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Harutyun Amirjanyan <amirjanyan AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/range_list', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
+
+
+var RangeList = function() {
+    this.ranges = [];
+};
+
+(function() {
+    this.comparePoints = function(p1, p2) {
+        return p1.row - p2.row || p1.column - p2.column;
+    };
+
+    this.pointIndex = function(pos, startIndex) {
+        var list = this.ranges;
+
+        for (var i = startIndex || 0; i < list.length; i++) {
+            var range = list[i];
+            var cmp = this.comparePoints(pos, range.end);
+
+            if (cmp > 0)
+                continue;
+            if (cmp == 0)
+                return i;
+            cmp = this.comparePoints(pos, range.start);
+            if (cmp >= 0)
+                return i;
+
+            return -i-1;
+        }
+        return -i - 1;
+    };
+
+    this.add = function(range) {
+        var startIndex = this.pointIndex(range.start);
+        if (startIndex < 0)
+            startIndex = -startIndex - 1;
+
+        var endIndex = this.pointIndex(range.end, startIndex);
+
+        if (endIndex < 0)
+            endIndex = -endIndex - 1;
+        else
+            endIndex++;
+
+        return this.ranges.splice(startIndex, endIndex - startIndex, range);
+    };
+
+    this.addList = function(list) {
+        var removed = [];
+        for (var i = list.length; i--; ) {
+            removed.push.call(removed, this.add(list[i]));
+        }
+        return removed;
+    };
+
+    this.substractPoint = function(pos) {
+        var i = this.pointIndex(pos);
+
+        if (i >= 0)
+            return this.ranges.splice(i, 1);
+    };
+
+    // merge overlapping ranges
+    this.merge = function() {
+        var removed = [];
+        var list = this.ranges;
+        var next = list[0], range;
+        for (var i = 1; i < list.length; i++) {
+            range = next;
+            next = list[i];
+            var cmp = this.comparePoints(range.end, next.start);
+            if (cmp < 0)
+                continue;
+
+            if (cmp == 0 && !(range.isEmpty() || next.isEmpty()))
+                continue;
+
+            if (this.comparePoints(range.end, next.end) < 0) {
+                range.end.row = next.end.row;
+                range.end.column = next.end.column;
+            }
+
+            list.splice(i, 1);
+            removed.push(next);
+            next = range;
+            i--;
+        }
+
+        return removed;
+    };
+
+    this.contains = function(row, column) {
+        return this.pointIndex({row: row, column: column}) >= 0;
+    };
+
+    this.containsPoint = function(pos) {
+        return this.pointIndex(pos) >= 0;
+    };
+
+    this.rangeAtPoint = function(pos) {
+        var i = this.pointIndex(pos);
+        if (i >= 0)
+            return this.ranges[i];
+    };
+
+
+    this.clipRows = function(startRow, endRow) {
+        var list = this.ranges;
+        if (list[0].start.row > endRow || list[list.length - 1].start.row < startRow)
+            return [];
+
+        var startIndex = this.pointIndex({row: startRow, column: 0});
+        if (startIndex < 0)
+            startIndex = -startIndex - 1;
+        var endIndex = this.pointIndex({row: endRow, column: 0}, startIndex);
+        if (endIndex < 0)
+            endIndex = -endIndex - 1;
+
+        var clipped = [];
+        for (var i = startIndex; i < endIndex; i++) {
+            clipped.push(list[i]);
+        }
+        return clipped;
+    };
+
+    this.removeAll = function() {
+        return this.ranges.splice(0, this.ranges.length);
+    };
+
+    this.attach = function(session) {
+        if (this.session)
+            this.detach();
+
+        this.session = session;
+        this.onChange = this.$onChange.bind(this);
+
+        this.session.on('change', this.onChange);
+    };
+
+    this.detach = function() {
+        if (!this.session)
+            return;
+        this.session.removeListener('change', this.onChange);
+        this.session = null;
+    };
+
+    this.$onChange = function(e) {
+        var changeRange = e.data.range;
+        if (e.data.action[0] == "i"){
+            var start = changeRange.start;
+            var end = changeRange.end;
+        } else {
+            var end = changeRange.start;
+            var start = changeRange.end;
+        }
+        var startRow = start.row;
+        var endRow = end.row;
+        var lineDif = endRow - startRow;
+
+        var colDiff = -start.column + end.column;
+
+        var ranges = this.ranges;
+
+        for (var i=0, n = ranges.length; i < n; i++) {
+            var r = ranges[i];
+            if (r.end.row < startRow)
+                continue;
+            if (r.start.row > startRow)
+                break;
+
+            if (r.start.row == startRow && r.start.column >= start.column ) {
+                r.start.column += colDiff;
+                r.start.row += lineDif;
+            }
+            if (r.end.row == startRow && r.end.column >=  start.column) {
+                r.end.column += colDiff;
+                r.end.row += lineDif;
+            }
+        }
+
+        if (lineDif != 0 && i < n) {
+            for (; i < n; i++) {
+                var r = ranges[i];
+                r.start.row += lineDif;
+                r.end.row += lineDif;
+            }
+        }
+    };
+
+}).call(RangeList.prototype);
+
+exports.RangeList = RangeList;
+});
+/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Harutyun Amirjanyan <amirjanyan AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mouse/multi_select_handler', ['require', 'exports', 'module' , 'ace/lib/event'], function(require, exports, module) {
+
+var event = require("../lib/event");
+
+
+// mouse
+function isSamePoint(p1, p2) {
+    return p1.row == p2.row && p1.column == p2.column;
+}
+
+function onMouseDown(e) {
+    var ev = e.domEvent;
+    var alt = ev.altKey;
+    var shift = ev.shiftKey;
+    var ctrl = e.getAccelKey();
+    var button = e.getButton();
+
+    if (!ctrl && !alt) {
+        if (e.editor.inMultiSelectMode) {
+            if (button == 0) {
+                e.editor.exitMultiSelectMode();
+            } else if (button == 2) {
+                var editor = e.editor;
+                var selectionEmpty = editor.selection.isEmpty();
+                editor.textInput.onContextMenu({x: e.clientX, y: e.clientY}, selectionEmpty);
+                event.capture(editor.container, function(){}, editor.textInput.onContextMenuClose);
+                e.stop();
+            }
+        }
+        return;
+    }
+
+    var editor = e.editor;
+    var selection = editor.selection;
+    var isMultiSelect = editor.inMultiSelectMode;
+    var pos = e.getDocumentPosition();
+    var cursor = selection.getCursor();
+    var inSelection = e.inSelection() || (selection.isEmpty() && isSamePoint(pos, cursor));
+
+
+    var mouseX = e.pageX, mouseY = e.pageY;
+    var onMouseSelection = function(e) {
+        mouseX = event.getDocumentX(e);
+        mouseY = event.getDocumentY(e);
+    };
+
+    var blockSelect = function() {
+        var newCursor = editor.renderer.pixelToScreenCoordinates(mouseX, mouseY);
+        var cursor = session.screenToDocumentPosition(newCursor.row, newCursor.column);
+
+        if (isSamePoint(screenCursor, newCursor)
+            && isSamePoint(cursor, selection.selectionLead))
+            return;
+        screenCursor = newCursor;
+
+        editor.selection.moveCursorToPosition(cursor);
+        editor.selection.clearSelection();
+        editor.renderer.scrollCursorIntoView();
+
+        editor.removeSelectionMarkers(rectSel);
+        rectSel = selection.rectangularRangeBlock(screenCursor, screenAnchor);
+        rectSel.forEach(editor.addSelectionMarker, editor);
+        editor.updateSelectionMarkers();
+    };
+    
+    var session = editor.session;
+    var screenAnchor = editor.renderer.pixelToScreenCoordinates(mouseX, mouseY);
+    var screenCursor = screenAnchor;
+
+    
+
+    if (ctrl && !shift && !alt && button == 0) {
+        if (!isMultiSelect && inSelection)
+            return; // dragging
+
+        if (!isMultiSelect)
+            selection.addRange(selection.toOrientedRange());
+
+
+        var oldRange = selection.rangeList.rangeAtPoint(pos);
+
+        event.capture(editor.container, function(){}, function() {
+            var tmpSel = selection.toOrientedRange();
+
+            if (oldRange && tmpSel.isEmpty() && isSamePoint(oldRange.cursor, tmpSel.cursor))
+                selection.substractPoint(tmpSel.cursor);
+            else
+                selection.addRange(tmpSel);
+        });
+
+    } else if (!shift && alt && button == 0) {
+        e.stop();
+
+        if (isMultiSelect && !ctrl)
+            selection.toSingleRange();
+        else if (!isMultiSelect && ctrl)
+            selection.addRange();
+
+        selection.moveCursorToPosition(pos);
+        selection.clearSelection();
+
+        var rectSel = [];
+
+        var onMouseSelectionEnd = function(e) {
+            clearInterval(timerId);
+            editor.removeSelectionMarkers(rectSel);
+            for (var i = 0; i < rectSel.length; i++)
+                selection.addRange(rectSel[i]);
+        };
+
+        var onSelectionInterval = blockSelect;
+
+        event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
+        var timerId = setInterval(function() {onSelectionInterval();}, 20);
+
+        return e.preventDefault();
+    }
+}
+
+
+exports.onMouseDown = onMouseDown;
+
+});/* vim:ts=4:sts=4:sw=4:
+ * ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Harutyun Amirjanyan <amirjanyan AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/commands/multi_select_commands', ['require', 'exports', 'module' , 'ace/keyboard/hash_handler'], function(require, exports, module) {
+
+// commands to enter multiselect mode
+exports.defaultCommands = [{
+    name: "addCursorAbove",
+    exec: function(editor) { editor.selectMoreLines(-1); },
+    bindKey: {win: "Ctrl-Alt-Up", mac: "Ctrl-Alt-Up"},
+    readonly: true
+}, {
+    name: "addCursorBelow",
+    exec: function(editor) { editor.selectMoreLines(1); },
+    bindKey: {win: "Ctrl-Alt-Down", mac: "Ctrl-Alt-Down"},
+    readonly: true
+}, {
+    name: "addCursorAboveSkipCurrent",
+    exec: function(editor) { editor.selectMoreLines(-1, true); },
+    bindKey: {win: "Ctrl-Alt-Shift-Up", mac: "Ctrl-Alt-Shift-Up"},
+    readonly: true
+}, {
+    name: "addCursorBelowSkipCurrent",
+    exec: function(editor) { editor.selectMoreLines(1, true); },
+    bindKey: {win: "Ctrl-Alt-Shift-Down", mac: "Ctrl-Alt-Shift-Down"},
+    readonly: true
+}, {
+    name: "selectMoreBefore",
+    exec: function(editor) { editor.selectMore(-1); },
+    bindKey: {win: "Ctrl-Alt-Left", mac: "Ctrl-Alt-Left"},
+    readonly: true
+}, {
+    name: "selectMoreAfter",
+    exec: function(editor) { editor.selectMore(1); },
+    bindKey: {win: "Ctrl-Alt-Right", mac: "Ctrl-Alt-Right"},
+    readonly: true
+}, {
+    name: "selectNextBefore",
+    exec: function(editor) { editor.selectMore(-1, true); },
+    bindKey: {win: "Ctrl-Alt-Shift-Left", mac: "Ctrl-Alt-Shift-Left"},
+    readonly: true
+}, {
+    name: "selectNextAfter",
+    exec: function(editor) { editor.selectMore(1, true); },
+    bindKey: {win: "Ctrl-Alt-Shift-Right", mac: "Ctrl-Alt-Shift-Right"},
+    readonly: true
+},  {
+    name: "splitIntoLines",
+    exec: function(editor) { editor.multiSelect.splitIntoLines(); },
+    bindKey: {win: "Ctrl-Shift-L", mac: "Ctrl-Shift-L"},
+    readonly: true
+}];
+
+// commands active in multiselect mode
+exports.multiEditCommands = [{
+    name: "singleSelection",
+    bindKey: "esc",
+    exec: function(editor) { editor.exitMultiSelectMode(); },
+    readonly: true
+}];
+
+var HashHandler = require("../keyboard/hash_handler").HashHandler;
+exports.keyboardHandler = new HashHandler(exports.multiEditCommands);
+
+});/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -14440,123 +15928,6 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
 
 exports.WorkerClient = WorkerClient;
 
-});
-/* ***** BEGIN LICENSE BLOCK *****
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is Mozilla Skywriter.
- *
- * The Initial Developer of the Original Code is
- * Mozilla.
- * Portions created by the Initial Developer are Copyright (C) 2009
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- *   Fabian Jakobs <fabian AT ajax DOT org>
- *   Julian Viereck (julian.viereck@gmail.com)
- *
- * Alternatively, the contents of this file may be used under the terms of
- * either the GNU General Public License Version 2 or later (the "GPL"), or
- * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
- * in which case the provisions of the GPL or the LGPL are applicable instead
- * of those above. If you wish to allow use of your version of this file only
- * under the terms of either the GPL or the LGPL, and not to allow others to
- * use your version of this file under the terms of the MPL, indicate your
- * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete
- * the provisions above, a recipient may use your version of this file under
- * the terms of any one of the MPL, the GPL or the LGPL.
- *
- * ***** END LICENSE BLOCK ***** */
-
-define('ace/keyboard/hash_handler', ['require', 'exports', 'module' , 'ace/lib/keys'], function(require, exports, module) {
-"use strict";
-
-var keyUtil  = require("../lib/keys");
-
-function HashHandler(config) {
-    this.setConfig(config);
-}
-
-(function() {
-    function splitSafe(s, separator, limit, bLowerCase) {
-        return (bLowerCase && s.toLowerCase() || s)
-            .replace(/(?:^\s+|\n|\s+$)/g, "")
-            .split(new RegExp("[\\s ]*" + separator + "[\\s ]*", "g"), limit || 999);
-    }
-
-    function parseKeys(keys, val, ret) {
-        var key,
-            hashId = 0,
-            parts  = splitSafe(keys, "\\-", null, true),
-            i      = 0,
-            l      = parts.length;
-
-        for (; i < l; ++i) {
-            if (keyUtil.KEY_MODS[parts[i]])
-                hashId = hashId | keyUtil.KEY_MODS[parts[i]];
-            else
-                key = parts[i] || "-"; //when empty, the splitSafe removed a '-'
-        }
-
-        (ret[hashId] || (ret[hashId] = {}))[key] = val;
-        return ret;
-    }
-
-    function objectReverse(obj, keySplit) {
-        var i, j, l, key,
-            ret = {};
-        for (i in obj) {
-            key = obj[i];
-            if (keySplit && typeof key == "string") {
-                key = key.split(keySplit);
-                for (j = 0, l = key.length; j < l; ++j)
-                    parseKeys.call(this, key[j], i, ret);
-            }
-            else {
-                parseKeys.call(this, key, i, ret);
-            }
-        }
-        return ret;
-    }
-
-    this.setConfig = function(config) {
-        this.$config = config;
-        if (typeof this.$config.reverse == "undefined")
-            this.$config.reverse = objectReverse.call(this, this.$config, "|");
-    };
-
-    /**
-     * This function is called by keyBinding.
-     */
-    this.handleKeyboard = function(data, hashId, textOrKey, keyCode) {
-        // Figure out if a commandKey was pressed or just some text was insert.
-        if (hashId != 0 || keyCode != 0) {
-            return {
-                command: (this.$config.reverse[hashId] || {})[textOrKey]
-            }
-        } else {
-            return {
-                command: "inserttext",
-                args: {
-                    text: textOrKey
-                }
-            }
-        }
-    }
-}).call(HashHandler.prototype)
-
-exports.HashHandler = HashHandler;
 });
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -15097,7 +16468,7 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_cursor {\
-  border-left: 2px solid black;\
+  border-left: 1px solid black;\
 }\
 \
 .ace-tm .ace_cursor.ace_overwrite {\
@@ -15112,6 +16483,10 @@ exports.cssText = ".ace-tm .ace_editor {\
 .ace-tm .ace_line .ace_storage,\
 .ace-tm .ace_line .ace_keyword {\
   color: blue;\
+}\
+\
+.ace-tm .ace_line .ace_constant {\
+  color: rgb(197, 6, 11);\
 }\
 \
 .ace-tm .ace_line .ace_constant.ace_buildin {\

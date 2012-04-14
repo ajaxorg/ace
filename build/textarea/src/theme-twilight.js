@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-twilight .ace_cursor {\
-  border-left: 2px solid #A7A7A7;\
+  border-left: 1px solid #A7A7A7;\
 }\
 \
 .ace-twilight .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #A7A7A7;\
 }\
- \
+\
 .ace-twilight .ace_marker-layer .ace_selection {\
   background: rgba(221, 240, 255, 0.20);\
 }\
@@ -96,16 +96,24 @@ exports.cssText = "\
 .ace-twilight .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(221, 240, 255, 0.20);\
 }\
-       \
+\
 .ace-twilight .ace_invisible {\
   color: rgba(255, 255, 255, 0.25);\
 }\
 \
-.ace-twilight .ace_keyword {\
+.ace-twilight .ace_keyword, .ace-twilight .ace_meta {\
   color:#CDA869;\
 }\
 \
-.ace-twilight .ace_constant {\
+.ace-twilight .ace_constant, .ace-twilight .ace_constant.ace_other {\
+  color:#CF6A4C;\
+}\
+\
+.ace-twilight .ace_constant.ace_character,  {\
+  color:#CF6A4C;\
+}\
+\
+.ace-twilight .ace_constant.ace_character.ace_escape,  {\
   color:#CF6A4C;\
 }\
 \
@@ -124,6 +132,10 @@ color:#D2A8A1;\
   color:#9B859D;\
 }\
 \
+.ace-twilight .ace_support.ace_constant {\
+  color:#CF6A4C;\
+}\
+\
 .ace-twilight .ace_fold {\
     background-color: #AC885B;\
     border-color: #F8F8F8;\
@@ -135,6 +147,10 @@ color:#D2A8A1;\
 \
 .ace-twilight .ace_storage {\
   color:#F9EE98;\
+}\
+\
+.ace-twilight .ace_variable {\
+  color:#AC885B;\
 }\
 \
 .ace-twilight .ace_string {\

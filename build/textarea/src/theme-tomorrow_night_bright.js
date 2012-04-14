@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow-night-bright .ace_cursor {\
-  border-left: 2px solid #9F9F9F;\
+  border-left: 1px solid #9F9F9F;\
 }\
 \
 .ace-tomorrow-night-bright .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #9F9F9F;\
 }\
- \
+\
 .ace-tomorrow-night-bright .ace_marker-layer .ace_selection {\
   background: #424242;\
 }\
@@ -96,12 +96,12 @@ exports.cssText = "\
 .ace-tomorrow-night-bright .ace_marker-layer .ace_selected_word {\
   border: 1px solid #424242;\
 }\
-       \
+\
 .ace-tomorrow-night-bright .ace_invisible {\
   color: #343434;\
 }\
 \
-.ace-tomorrow-night-bright .ace_keyword {\
+.ace-tomorrow-night-bright .ace_keyword, .ace-tomorrow-night-bright .ace_meta {\
   color:#C397D8;\
 }\
 \
@@ -117,6 +117,10 @@ exports.cssText = "\
   color:#E78C45;\
 }\
 \
+.ace-tomorrow-night-bright .ace_constant.ace_other {\
+  color:#EEEEEE;\
+}\
+\
 .ace-tomorrow-night-bright .ace_invalid {\
   color:#CED2CF;\
 background-color:#DF5F5F;\
@@ -125,6 +129,10 @@ background-color:#DF5F5F;\
 .ace-tomorrow-night-bright .ace_invalid.ace_deprecated {\
   color:#CED2CF;\
 background-color:#B798BF;\
+}\
+\
+.ace-tomorrow-night-bright .ace_support.ace_constant {\
+  color:#E78C45;\
 }\
 \
 .ace-tomorrow-night-bright .ace_fold {\
@@ -140,8 +148,12 @@ background-color:#B798BF;\
   color:#C397D8;\
 }\
 \
-.ace-tomorrow-night-bright .ace_storage.ace_type {\
+.ace-tomorrow-night-bright .ace_storage.ace_type,  .ace-tomorrow-night-bright .ace_support.ace_type{\
   color:#C397D8;\
+}\
+\
+.ace-tomorrow-night-bright .ace_variable {\
+  color:#7AA6DA;\
 }\
 \
 .ace-tomorrow-night-bright .ace_variable.ace_parameter {\

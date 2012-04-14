@@ -68,14 +68,14 @@ exports.cssText = "\
 }\
 \
 .ace-idle-fingers .ace_cursor {\
-  border-left: 2px solid #91FF00;\
+  border-left: 1px solid #91FF00;\
 }\
 \
 .ace-idle-fingers .ace_cursor.ace_overwrite {\
   border-left: 0px;\
   border-bottom: 1px solid #91FF00;\
 }\
- \
+\
 .ace-idle-fingers .ace_marker-layer .ace_selection {\
   background: rgba(90, 100, 126, 0.88);\
 }\
@@ -96,7 +96,7 @@ exports.cssText = "\
 .ace-idle-fingers .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(90, 100, 126, 0.88);\
 }\
-       \
+\
 .ace-idle-fingers .ace_invisible {\
   color: #404040;\
 }\
@@ -106,6 +106,14 @@ exports.cssText = "\
 }\
 \
 .ace-idle-fingers .ace_constant, .ace-idle-fingers .ace_constant.ace_other {\
+  color:#6C99BB;\
+}\
+\
+.ace-idle-fingers .ace_constant.ace_character,  {\
+  color:#6C99BB;\
+}\
+\
+.ace-idle-fingers .ace_constant.ace_character.ace_escape,  {\
   color:#6C99BB;\
 }\
 \
@@ -158,7 +166,7 @@ color:#BC9458;\
 \
 .ace-idle-fingers .ace_collab.ace_user1 {\
   color:#323232;\
-background-color:#FFF980;   \
+background-color:#FFF980;\
 }";
 
     var dom = require("../lib/dom");
