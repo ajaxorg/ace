@@ -1,6 +1,5 @@
 @import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);
 
-
 .ace_editor {
     position: absolute;
     overflow: hidden;
@@ -35,6 +34,11 @@
     height: 100%;
     width: auto;
     cursor: default;
+    z-index: 1000;
+}
+
+.ace_gutter.horscroll {
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
 }
 
 .ace_gutter-cell {
@@ -147,6 +151,10 @@
     opacity: 0.2;
 }
 
+.ace_editor.multiselect .ace_cursor {
+    border-left-width: 1px;
+}
+
 .ace_line {
     white-space: nowrap;
 }
@@ -158,12 +166,12 @@
 
 .ace_marker-layer .ace_selection {
     position: absolute;
-    z-index: 4;
+    z-index: 5;
 }
 
 .ace_marker-layer .ace_bracket {
     position: absolute;
-    z-index: 5;
+    z-index: 6;
 }
 
 .ace_marker-layer .ace_active_line {
@@ -171,9 +179,13 @@
     z-index: 2;
 }
 
+.ace_gutter .ace_gutter_active_line{
+    background-color : #dcdcdc;
+}
+
 .ace_marker-layer .ace_selected_word {
     position: absolute;
-    z-index: 6;
+    z-index: 4;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
