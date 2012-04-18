@@ -5639,7 +5639,7 @@ var KeyBinding = function(editor) {
 
         // allow keyboardHandler to consume keys
         if (toExecute.command != "null")
-            success = commands.exec(toExecute.command, this.$editor, toExecute.args);
+            success = commands.exec(toExecute.command, this.$editor, toExecute.args, e);
         else
             success = true;
 
@@ -5985,7 +5985,7 @@ exports.commands = [{
     multiSelectAction: "forEach"
 }, {
     name: "togglecomment",
-    bindKey: bindKey("Ctrl-7", "Command-7"),
+    bindKey: bindKey("Ctrl-/", "Command-/"),
     exec: function(editor) { editor.toggleCommentLines(); },
     multiSelectAction: "forEach"
 }, {
@@ -13259,7 +13259,7 @@ var VirtualRenderer = function(container, theme) {
         if (center)
             offset -= this.$size.scrollerHeight / 2;
 
-        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
+        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 100000) {
             var _self = this;
             var steps = _self.$calcSteps(this.scrollTop, offset);
 
