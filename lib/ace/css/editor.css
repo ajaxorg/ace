@@ -289,3 +289,20 @@
     background-color: #FFB4B4;
     border-color: #DE5555;
 }
+
+.ace_fade-fold-widgets .ace_fold-widget {
+    -moz-transition: 0.5s opacity;
+    -webkit-transition: 0.5s opacity;
+    -o-transition: 0.5s opacity;
+    -ms-transition: 0.5s opacity;
+    transition: 0.5s opacity;
+    opacity: 0;
+}
+.ace_fade-fold-widgets:hover .ace_fold-widget {
+    -moz-transition-duration: 0s;
+    -webkit-transition-duration: 0s;
+    -o-transition-duration: 0s;
+    -ms-transition-duration: 0s;
+    transition-duration: 0s;
+    opacity:1;
+}
