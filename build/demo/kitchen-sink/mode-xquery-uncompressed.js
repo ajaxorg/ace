@@ -359,7 +359,7 @@ define('ace/mode/xquery_tokenizer', ['require', 'exports', 'module' , 'ace/token
       for(var i in this.cache)
       {
         var c = this.cache[i];
-        if(c && c.line == line && c.state == startState) {
+        if(c && c.line == line && c.startState == startState) {
           return c.tokens;
         }
       }
