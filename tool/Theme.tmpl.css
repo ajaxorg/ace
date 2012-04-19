@@ -27,7 +27,7 @@
 }
 
 .%cssClass% .ace_cursor {
-  border-left: 1px solid %cursor%;
+  border-left: 2px solid %cursor%;
 }
 
 .%cssClass% .ace_cursor.ace_overwrite {
@@ -37,6 +37,11 @@
 
 .%cssClass% .ace_marker-layer .ace_selection {
   background: %selection%;
+}
+
+.%cssClass%.multiselect .ace_selection.start {
+  box-shadow: 0 0 3px 0px %background%;
+  border-radius: 2px;
 }
 
 .%cssClass% .ace_marker-layer .ace_step {

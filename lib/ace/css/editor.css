@@ -151,6 +151,10 @@
     opacity: 0.2;
 }
 
+.ace_editor.multiselect .ace_cursor {
+    border-left-width: 1px;
+}
+
 .ace_line {
     white-space: nowrap;
 }
