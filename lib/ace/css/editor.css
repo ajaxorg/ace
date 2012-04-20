@@ -131,6 +131,7 @@
 
 .ace_text-layer {
     color: black;
+    font: inherit !important;
 }
 
 .ace_cjk {
