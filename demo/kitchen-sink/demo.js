@@ -475,6 +475,9 @@ bindCheckbox("enable_behaviours", function(checked) {
     env.editor.setBehavioursEnabled(checked);
 });
 
+bindCheckbox("fade_fold_widgets", function(checked) {
+    env.editor.setFadeFoldWidgets(checked);
+});
 
 var secondSession = null;
 bindDropdown("split", function(value) {
