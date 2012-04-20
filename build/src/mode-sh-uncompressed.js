@@ -164,6 +164,8 @@ exports.Mode = Mode;
  *
  * Contributor(s):
  *      Rich Healey <richo AT psych0tik DOT net>
+ *      Javier Perez-Griffo <javier AT besol DOT es>
+ *      James Tan   <jamestyj AT gmail DOT com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -191,14 +193,20 @@ var ShHighlightRules = function() {
     var reservedKeywords = lang.arrayToMap(
         ('!|{|}|case|do|done|elif|else|'+
         'esac|fi|for|if|in|then|until|while|'+
-        '&|;'
+        '&|;|export|local|read|typeset|unset|'+
+        'elif|select|set'
         ).split('|')
     );
 
     var languageConstructs = lang.arrayToMap(
-            // TODO
-        ('echo|exit|eval|source|[|]|test|'+
-         'true|false|read'
+        ('[|]|alias|bg|bind|break|builtin|'+
+         'cd|command|compgen|complete|continue|'+
+         'dirs|disown|echo|enable|eval|exec|'+
+         'exit|fc|fg|getopts|hash|help|history|'+
+         'jobs|kill|let|logout|popd|printf|pushd|'+
+         'pwd|return|set|shift|shopt|source|'+
+         'suspend|test|times|trap|type|ulimit|'+
+         'umask|unalias|wait'
          ).split('|')
     );
 

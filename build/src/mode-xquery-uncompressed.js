@@ -131,6 +131,9 @@ oop.inherits(Mode, TextMode);
         
         worker.on("highlight", function(tokens) {
           self.$tokenizer.cache = tokens.data;
+          var firstRow = 0;
+          var lastRow = session.getLength() - 1;
+          session.bgTokenizer.fireUpdateEvent(firstRow, lastRow);
         });
         return worker;
     };

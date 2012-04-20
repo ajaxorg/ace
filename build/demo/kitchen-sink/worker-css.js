@@ -2136,7 +2136,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
-    this.intersectsRange = function(range) {
+    this.intersects = function(range) {
         var cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
     }

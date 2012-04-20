@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-idle-fingers .ace_cursor {\
-  border-left: 1px solid #91FF00;\
+  border-left: 2px solid #91FF00;\
 }\
 \
 .ace-idle-fingers .ace_cursor.ace_overwrite {\
@@ -78,6 +78,11 @@ exports.cssText = "\
 \
 .ace-idle-fingers .ace_marker-layer .ace_selection {\
   background: rgba(90, 100, 126, 0.88);\
+}\
+\
+.ace-idle-fingers.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px #323232;\
+  border-radius: 2px;\
 }\
 \
 .ace-idle-fingers .ace_marker-layer .ace_step {\

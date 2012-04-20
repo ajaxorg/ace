@@ -3265,7 +3265,7 @@ exports.cssText = ".ace-tm .ace_editor {\
 }\
 \
 .ace-tm .ace_cursor {\
-  border-left: 1px solid black;\
+  border-left: 2px solid black;\
 }\
 \
 .ace-tm .ace_cursor.ace_overwrite {\
@@ -3367,7 +3367,10 @@ exports.cssText = ".ace-tm .ace_editor {\
 .ace-tm .ace_marker-layer .ace_selection {\
   background: rgb(181, 213, 255);\
 }\
-\
+.ace-tm.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px white;\
+  border-radius: 2px;\
+}\
 .ace-tm .ace_marker-layer .ace_step {\
   background: rgb(252, 255, 0);\
 }\
@@ -6004,7 +6007,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
-    this.intersectsRange = function(range) {
+    this.intersects = function(range) {
         var cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
     }
@@ -6565,9 +6568,8 @@ var Tokenizer = function(rules, flag) {
                 else
                     type = rule.token;
 
-                var next = rule.next;
-                if (next && next !== currentState) {
-                    currentState = next;
+                if (rule.next) {
+                    currentState = rule.next;
                     state = this.rules[currentState];
                     mapping = this.matchMappings[currentState];
                     lastIndex = re.lastIndex;
@@ -6687,8 +6689,6 @@ var TextHighlightRules = function() {
                 var rule = state[i];
                 if (rule.next) {
                     rule.next = prefix + rule.next;
-                } else {
-                    rule.next = prefix + key;
                 }
             }
             this.$rules[prefix + key] = state;
@@ -11195,7 +11195,7 @@ var Split = function(container, theme, splits) {
     this.$splits = 0;
     this.$editorCSS = "";
     this.$editors = [];
-    this.$oriantation = this.BESIDE;
+    this.$orientation = this.BESIDE;
 
     this.setSplits(splits || 1);
     this.$cEditor = this.$editors[0];
@@ -11352,15 +11352,15 @@ var Split = function(container, theme, splits) {
         return session;
     };
 
-    this.getOriantation = function() {
-        return this.$oriantation;
+    this.getOrientation = function() {
+        return this.$orientation;
     };
 
-    this.setOriantation = function(oriantation) {
-        if (this.$oriantation == oriantation) {
+    this.setOrientation = function(orientation) {
+        if (this.$orientation == orientation) {
             return;
         }
-        this.$oriantation = oriantation;
+        this.$orientation = orientation;
         this.resize();
     };
 
@@ -11369,7 +11369,7 @@ var Split = function(container, theme, splits) {
         var height = this.$container.clientHeight;
         var editor;
 
-        if (this.$oriantation == this.BESIDE) {
+        if (this.$orientation == this.BESIDE) {
             var editorWidth = width / this.$splits;
             for (var i = 0; i < this.$splits; i++) {
                 editor = this.$editors[i];
@@ -12598,11 +12598,12 @@ var Editor = function(renderer, session) {
         if (!ranges.length)
             return replaced;
 
+        this.$blockScrolling += 1;
+
         var selection = this.getSelectionRange();
         this.clearSelection();
         this.selection.moveCursorTo(0, 0);
 
-        this.$blockScrolling += 1;
         for (var i = ranges.length - 1; i >= 0; --i) {
             if(this.$tryReplace(ranges[i], replacement)) {
                 replaced++;
@@ -16017,7 +16018,7 @@ var Marker = function(parentEl) {
             }
             else {
                 this.drawSingleLineMarker(
-                    html, range, marker.clazz, config,
+                    html, range, marker.clazz + " start", config,
                     null, marker.type
                 );
             }
@@ -16040,7 +16041,7 @@ var Marker = function(parentEl) {
             row, range.start.column,
             row, this.session.getScreenLastRowColumn(row)
         );
-        this.drawSingleLineMarker(stringBuilder, lineRange, clazz, layerConfig, 1, "text");
+        this.drawSingleLineMarker(stringBuilder, lineRange, clazz + " start", layerConfig, 1, "text");
 
         // selection end
         row = range.end.row;
@@ -16070,7 +16071,7 @@ var Marker = function(parentEl) {
         );
 
         stringBuilder.push(
-            "<div class='", clazz, "' style='",
+            "<div class='", clazz, " start' style='",
             "height:", height, "px;",
             "width:", width, "px;",
             "top:", top, "px;",
@@ -16856,11 +16857,11 @@ var Cursor = function(parentEl) {
         if (!this.isVisible)
             return;
 
-        var element = this.element;
+        var element = this.cursors.length == 1 ? this.cursor : this.element;
         this.blinkId = setInterval(function() {
             element.style.visibility = "hidden";
             setTimeout(function() {
-                element.style.visibility = "visible";
+                element.style.visibility = "";
             }, 400);
         }, 1000);
     };
@@ -16890,7 +16891,7 @@ var Cursor = function(parentEl) {
     this.update = function(config) {
         this.config = config;
 
-        if (this.session.selectionMarkerCount > 1) {
+        if (this.session.selectionMarkerCount > 0) {
             var selections = this.session.$selectionMarkers;
             var i = 0, sel, cursorIndex = 0;
 
@@ -17268,6 +17269,10 @@ define("text!ace/css/editor.css", [], "@import url(//fonts.googleapis.com/css?fa
   "    opacity: 0.2;\n" +
   "}\n" +
   "\n" +
+  ".ace_editor.multiselect .ace_cursor {\n" +
+  "    border-left-width: 1px;\n" +
+  "}\n" +
+  "\n" +
   ".ace_line {\n" +
   "    white-space: nowrap;\n" +
   "}\n" +
@@ -17482,17 +17487,18 @@ var EditSession = require("./edit_session").EditSession;
      *
      * adds a range to selection entering multiselect mode if necessary
      **/
-    this.addRange = function(range) {
-        if (!this.inMultiSelectMode && this.rangeCount == 0) {
-            var oldRange = this.toOrientedRange();
-            if (!range || !range.isEqual(oldRange)) {
-                this.rangeList.add(oldRange);
-                this.$onAddRange(oldRange);
-            }
-        }
-
+    this.addRange = function(range, $blockChangeEvents) {
         if (!range)
             return;
+
+        if (!this.inMultiSelectMode && this.rangeCount == 0) {
+            var oldRange = this.toOrientedRange();
+            if (range.intersects(oldRange))
+                return $blockChangeEvents || this.fromOrientedRange(range);
+
+            this.rangeList.add(oldRange);
+            this.$onAddRange(oldRange);
+        }
 
         if (!range.cursor)
             range.cursor = range.end;
@@ -17504,12 +17510,14 @@ var EditSession = require("./edit_session").EditSession;
         if (removed.length)
             this.$onRemoveRange(removed);
 
-        if (this.rangeCount > 0 && !this.inMultiSelectMode) {
+        if (this.rangeCount > 1 && !this.inMultiSelectMode) {
             this._emit("multiSelect");
             this.inMultiSelectMode = true;
             this.session.$undoSelect = false;
             this.rangeList.attach(this.session);
         }
+
+        return $blockChangeEvents || this.fromOrientedRange(range);
     };
 
     this.toSingleRange = function(range) {
@@ -17551,7 +17559,6 @@ var EditSession = require("./edit_session").EditSession;
     this.$onAddRange = function(range) {
         this.rangeCount = this.rangeList.ranges.length;
         this.ranges.unshift(range);
-        this.fromOrientedRange(range);
         this._emit("addRange", {range: range});
     };
 
@@ -17715,17 +17722,34 @@ var Editor = require("./editor").Editor;
         return orientedRange;
     };
 
+    /**
+     * Editor.removeSelectionMarker(range) -> Void
+     * - range: selection range added with addSelectionMarker
+     *
+     * removes selection marker
+     **/
+    this.removeSelectionMarker = function(range) {
+        if (!range.marker)
+            return;
+        this.session.removeMarker(range.marker);
+        var index = this.session.$selectionMarkers.indexOf(range);
+        if (index != -1)
+            this.session.$selectionMarkers.splice(index, 1);
+        this.session.selectionMarkerCount = this.session.$selectionMarkers.length;
+    };
+
     this.removeSelectionMarkers = function(ranges) {
+        var markerList = this.session.$selectionMarkers;
         for (var i = ranges.length; i--; ) {
             var range = ranges[i];
             if (!range.marker)
                 continue;
             this.session.removeMarker(range.marker);
-            var index = this.session.$selectionMarkers.indexOf(range);
+            var index = markerList.indexOf(range);
             if (index != -1)
-                this.session.$selectionMarkers.splice(index, 1);
+                markerList.splice(index, 1);
         }
-        this.session.selectionMarkerCount = this.session.$selectionMarkers.length;
+        this.session.selectionMarkerCount = markerList.length;
     };
 
     this.$onAddRange = function(e) {
@@ -17848,6 +17872,37 @@ var Editor = require("./editor").Editor;
         return text;
     };
 
+    /**
+     * Editor.findAll(dir, options) -> Number
+     * - needle: text to find
+     * - options: search options
+     * - additive: keeps 
+     *
+     * finds and selects all the occurencies of needle
+     * returns number of found ranges
+     **/
+    this.findAll = function(needle, options, additive) {
+        options = options || {};
+        options.needle = needle || options.needle;
+        this.$search.set(options);
+
+        var ranges = this.$search.findAll(this.session);
+        if (!ranges.length)
+            return 0;
+
+        this.$blockScrolling += 1;
+        var selection = this.multiSelect;
+        
+        if (!additive)
+            selection.toSingleRange(ranges[0]);
+        
+        for (var i = ranges.length; i--; )
+            selection.addRange(ranges[i], true);
+
+        this.$blockScrolling -= 1;
+
+        return ranges.length;
+    };
 
     // commands
     /**
@@ -18029,6 +18084,33 @@ function MultiSelect(editor) {
 
     editor.on("mousedown", onMouseDown);
     editor.commands.addCommands(exports.commands.defaultCommands);
+    
+    addAltCursorListeners(editor);
+}
+
+function addAltCursorListeners(editor){
+    var el = editor.textInput.getElement();
+    var altCursor = false;
+    var contentEl = editor.renderer.content;
+    el.addEventListener("keydown", function(e) {
+        if (e.keyCode == 18 && !(e.ctrlKey || e.shiftKey || e.metaKey)) {
+            if (!altCursor) {
+                contentEl.style.cursor = "crosshair";
+                altCursor = true;
+            }
+        } else if (altCursor) {
+            contentEl.style.cursor = "";
+        }
+    });
+    
+    el.addEventListener("keyup", reset);
+    el.addEventListener("blur", reset);
+    function reset() {
+        if (altCursor) {
+            contentEl.style.cursor = "";
+            altCursor = false;
+        }
+    }
 }
 
 exports.MultiSelect = MultiSelect;
@@ -18377,9 +18459,10 @@ function onMouseDown(e) {
         if (!isMultiSelect && inSelection)
             return; // dragging
 
-        if (!isMultiSelect)
-            selection.addRange(selection.toOrientedRange());
-
+        if (!isMultiSelect) {
+            var range = selection.toOrientedRange();
+            editor.addSelectionMarker(range);
+        }
 
         var oldRange = selection.rangeList.rangeAtPoint(pos);
 
@@ -18388,8 +18471,13 @@ function onMouseDown(e) {
 
             if (oldRange && tmpSel.isEmpty() && isSamePoint(oldRange.cursor, tmpSel.cursor))
                 selection.substractPoint(tmpSel.cursor);
-            else
+            else {
+                if (range) {
+                    editor.removeSelectionMarker(range);
+                    selection.addRange(range);
+                }
                 selection.addRange(tmpSel);
+            }
         });
 
     } else if (!shift && alt && button == 0) {
