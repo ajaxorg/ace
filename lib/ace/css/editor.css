@@ -300,10 +300,10 @@
     opacity: 0;
 }
 .ace_fade-fold-widgets:hover .ace_fold-widget {
-    -moz-transition-duration: 0s;
-    -webkit-transition-duration: 0s;
-    -o-transition-duration: 0s;
-    -ms-transition-duration: 0s;
-    transition-duration: 0s;
+    -moz-transition-duration: 0.05s;
+    -webkit-transition-duration: 0.05s;
+    -o-transition-duration: 0.05s;
+    -ms-transition-duration: 0.05s;
+    transition-duration: 0.05s;
     opacity:1;
 }
