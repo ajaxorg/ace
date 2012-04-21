@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-solarized-light .ace_cursor {\
-  border-left: 1px solid #000000;\
+  border-left: 2px solid #000000;\
 }\
 \
 .ace-solarized-light .ace_cursor.ace_overwrite {\
@@ -78,6 +78,11 @@ exports.cssText = "\
 \
 .ace-solarized-light .ace_marker-layer .ace_selection {\
   background: #073642;\
+}\
+\
+.ace-solarized-light.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px #FDF6E3;\
+  border-radius: 2px;\
 }\
 \
 .ace-solarized-light .ace_marker-layer .ace_step {\
