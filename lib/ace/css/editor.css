@@ -304,5 +304,10 @@
     -o-transition-duration: 0.05s;
     -ms-transition-duration: 0.05s;
     transition-duration: 0.05s;
+    -moz-transition-delay: 0.2s;
+    -webkit-transition-delay: 0.2s;
+    -o-transition-delay: 0.2s;
+    -ms-transition-delay: 0.2s;
+    transition-delay: 0.2s;	
     opacity:1;
 }
