@@ -17,7 +17,7 @@
         "asyncjs": "0.0.x",
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
-        "libxml": "0.0.x",
+        "plist": "",
         "dryice": "0.4.2",
         "panino" : "~1.0.15"
     },

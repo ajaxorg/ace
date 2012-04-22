@@ -37,7 +37,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var buildAce = require("Makefile.dryice.js").buildAce;
+var buildAce = require("./Makefile.dryice").buildAce;
 
 
 var ACE_HOME = __dirname;
