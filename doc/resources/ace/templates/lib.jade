@@ -1,25 +1,4 @@
 - var methodSection = constructorSection = propertySection = eventSection = false;
-
-mixin argument(arg, reqOptObj)
-  td
-    p
-      i
-        #{arg.name}
-  if arg.types
-    td
-      p
-        for type, i in arg.types
-         - if (i == arg.types.length - 1)
-          mixin link(type)
-         - else
-          mixin link(type) |
-  td
-    -var argStatus = "Required. "
-      if reqOptObj.length > 0
-        for argInfo in reqOptObj
-         - if (argInfo !== undefined && arg.name === argInfo.name && argInfo.optional)
-            -argStatus = "Optional. "
-      mixin markdown(argStatus + arg.description)
     
 -function renameMemberTitle(title, count)
   if title.indexOf("ethods") >= 0
@@ -29,7 +8,7 @@ mixin argument(arg, reqOptObj)
   else
     span #{title} (#{count})
 
-mixin article(obj, parents, memberType)
+mixin article(obj, parents)
   if typeof obj === 'string'
     obj = list[obj]
 
@@ -92,7 +71,6 @@ mixin article(obj, parents, memberType)
     
     else
 
-      -var reqOptObj = [];
       .section.method
         .memberContent
           if obj.signatures
@@ -100,34 +78,16 @@ mixin article(obj, parents, memberType)
               ul.signatures
                 -var loops = 0;
                 for sig in obj.signatures
-                  if sig.args
-                    for arg in sig.args
-                      -reqOptObj.push({name: arg.name, optional: arg.optional}) // only sig object has "optional" information; store for later use
                   li.signature
                     ul
-                      li.signature-call!= sanitize_link(signature(obj, sig, memberType, obj.id))
+                      li.signature-call!= signature(obj, sig, ["methodClicker"])
                         if sig.returns
                           li.signature-returns
                             ul.argument-types
                               for ret in sig.returns
-                                non_link = obj.type == 'constant' || ret.type == 'Void' || ret.type == 'null'
-                                //- N.B: type can be array. E.g. [ Element... ]
-                                //- N.B: type can be array. E.g. [ Element1, Element2 ]
-                                text = ''
-                                if (typeof ret.type !== 'string')
-                                  - text = ret.type.map(function(r){ return link(r || '?', true, ['link-short']);}).join(', ');
-                                else
-                                  if non_link
-                                    text = ret.type
-                                  else
-                                    text = link(ret.type || '?', true, ['link-short'], "ret")
-                                if ret.ellipsis
-                                  text = text + '...'
-                                if ret.array
-                                  text = '[ ' + text + ' ]'
-                                li.argument-type!= sanitize_link(text)
+                                li.argument-type!= returnLink(obj, ret, [])
                     -if (loops == 0)
-                      -loops = 1 // ensure that we only print ONE meta info UL per signature (some methods have multiple forms)
+                      -loops = 1 // ensure that we only print ONE meta info UL per signature (some methods have multiple signatures)
                       ul.metaInfo
                           if obj.readonly
                             li
@@ -146,9 +106,14 @@ mixin article(obj, parents, memberType)
                                   | &nbsp; (since #{obj.deprecated.from})
                                   if obj.deprecated.off
                                     | &nbsp;and will be removed on #{obj.deprecated.off}
-                          if obj.aliases && obj.aliases.length
+                          if obj.alias_of
                             li
-                              span.label.alias
+                              span.label.alias.single
+                                | Aliased as: 
+                                != link(obj.alias_of)
+                          else if obj.aliases.length
+                            li
+                              span.label.alias.multiple
                                 | Aliased as:
                                 ul.alias
                                   for alias in obj.aliases
@@ -165,7 +130,7 @@ mixin article(obj, parents, memberType)
 
             if obj.ellipsis_description
               div(id='ellipsis_#{obj.id}', class='ellipsis_description')
-                mixin markdown(obj.short_description)
+                mixin markdown(obj.ellipsis_description)
               div(id='short_#{obj.id}', class='short_description hiddenSpan')
                 mixin markdown(obj.short_description)
 
@@ -178,11 +143,7 @@ mixin article(obj, parents, memberType)
 
               if obj.arguments
                 h4 Arguments
-                table.argument-list.zebra-striped.bordered-table
-                  tbody
-                    -for (var a = 0; a < obj.arguments.length; a++)
-                      tr
-                        mixin argument(obj.arguments[a], reqOptObj)  
+                  != argumentTable(obj.arguments, ["argument-list", "zebra-striped", "bordered-table"])
 
               if descArray[0].length && descArray[0] !== '' && descArray[0] !== '\n'
                 h4 Description
@@ -191,12 +152,12 @@ mixin article(obj, parents, memberType)
               if obj.bound && ~obj.bound.indexOf('#')
                 p.note.methodized
                   | This method can be called <em>either</em> as an 
-                  != link(obj.bound, 'instance method', ['link-short'])
+                  != link(obj.bound, ['link-short'], 'instance method')
                   |  <em>or</em> as a generic method. If calling as generic, pass the instance in as the first argument.
               else if obj.bound && !~obj.bound.indexOf('#')
                 p.note.functionalized
                   | This method can be called <em>either</em> as an instance method <em>or</em> as a 
-                  != link(obj.bound, 'generic method', ['link-short'])
+                  != link(obj.bound, ['link-short'], 'generic method')
                   |. If calling as generic, pass the instance in as the first argument.
 
               - var r; // Probably inefficient; we want the Returns section under the Arguments, no matter where in source it's defined
@@ -252,9 +213,29 @@ mixin article(obj, parents, memberType)
 
 
 mixin api()
+  -pos = 0
   for obj in tree.children
-    mixin article(obj, [])
-
+    .classContent
+      .membersBackground
+      div(class=' members pos#{pos}')
+        div(class=' membersContent pos#{pos}')
+            h1.memberHeader
+              -var heading = obj.path
+              span.name #{heading}
+            
+            -if (true || obj.filename.indexOf("index") < 0)
+              ul(class='tabs pos#{pos}', data-tabs='tabs')
+                for selector, title in {'Events': ['event', 'events'], 'Constructors': ['constructor', 'constructors'], 'Class methods': ['class method', 'class_methods'], 'Class properties': ['class property', 'class_properties'], 'Instance methods': ['instance method', 'instance_methods'], 'Instance properties': ['instance property', 'instance_properties'], 'Constants': ['constant', 'constants']}
+                  members = obj.children.filter(function(x){return x.type === selector[0]})
+                    li(class="dropdown", data-dropdown="dropdown")
+                      if members.length
+                        a(href="\#", class="dropdown-toggle")!= renameMemberTitle(title, members.length)
+                        ul.dropdown-menu
+                          for m in members
+                            li(data-id='#{m.id}', class='memberLink')
+                              mixin internalLink(m, [], true)
+       -pos++       
+      mixin article(obj, [])
 
 
 mixin short_description_list(collection)
@@ -268,19 +249,15 @@ mixin short_description_list(collection)
         if obj.short_description
           mixin markdown(obj.short_description)
 
+mixin internalLink(obj, classes, short)
+  != internalLink(obj, classes, short)
 
-
-mixin link(obj, short, classes)
-  l = link(obj, short, classes)
-  != sanitize_link(l)
+mixin link(obj, classes, short)
+  l = link(obj, classes, short)
+  != l
 
 mixin links(collection)
   ul.method-list
     for obj in collection
       li
         mixin link(obj)
-
-//- we want to force these links to lowercase;
-//- our Linux server doesn't distinguish between case. TODO: fix that?
--function sanitize_link(l) 
-  != l
