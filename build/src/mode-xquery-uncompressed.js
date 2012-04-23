@@ -130,6 +130,7 @@ oop.inherits(Mode, TextMode);
         worker.attachToDocument(session.getDocument());
         
         worker.on("start", function(e) {
+          console.log("start");
           that.deltas = [];
         });
 
@@ -150,10 +151,10 @@ oop.inherits(Mode, TextMode);
           for(var i in that.deltas)
           {
             var delta = that.deltas[i];
+            //console.log(delta);
             if (delta.action === "insertLines")
             {
               var newLineCount = delta.range.end.row - delta.range.start.row;
-              this.$insertNewRows(delta.range.start.row, newLineCount);
               for (var i = 0; i < newLineCount; i++) {
                 lines.splice(delta.range.start.row + i, 0, undefined);
               }
@@ -162,20 +163,21 @@ oop.inherits(Mode, TextMode);
             {
               if (session.getDocument().isNewLine(delta.text))
               {
-                lines.splice(delta.range.start.row, 0, undefined);
+                lines.splice(delta.range.end.row, 0, undefined);
               } else {
                 delete lines[delta.range.start.row];
               } 
             } else if (delta.action === "removeLines") {
               var oldLineCount = delta.range.end.row - delta.range.start.row;
-              lines.splice(delta.range.start.row, oldLineCount);
+                for (var i = 0; i < newLineCount; i++) {
+                  lines.splice(delta.range.start.row + i, 1);
+                } 
             } else if (delta.action === "removeText") {
               if (session.getDocument().isNewLine(delta.text))
               {
-                lines.splice(delta.range.start.row, 0);
-              } else {
-                delete lines[delta.range.start.row];
+                lines.splice(delta.range.end.row, 1);
               }
+              delete lines[delta.range.start.row];
             }           
           }
           

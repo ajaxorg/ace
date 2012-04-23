@@ -66726,7 +66726,7 @@ define('ace/mode/xquery/XQuerySemanticHighlighter', ['require', 'exports', 'modu
         if(sourceLine == tokenizedLine) {
           result[i] = { tokens: lineTokens, state: nextState };
         } else {
-          result[i] = false; 
+          result[i] = undefined; 
         }
       }
       return result;
