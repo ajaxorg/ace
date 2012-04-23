@@ -390,10 +390,28 @@ function saveOption(el, val) {
     }
 }
 
+themeEl.addEventListener("mouseover", function(e){
+    this.desiredValue = e.target.value;
+    if (!this.$timer)
+        this.$timer = setTimeout(this.updateTheme);
+})
+
+themeEl.addEventListener("mouseout", function(e){
+    this.desiredValue = null;
+    if (!this.$timer)
+        this.$timer = setTimeout(this.updateTheme, 20);
+})
+
+themeEl.updateTheme = function(){
+    env.split.setTheme(themeEl.desiredValue || themeEl.selectedValue);
+    themeEl.$timer = null;
+}
+
 bindDropdown("theme", function(value) {
     if (!value)
         return;
 	env.editor.setTheme(value);
+	themeEl.selectedValue = value;
 });
 
 bindDropdown("keybinding", function(value) {
