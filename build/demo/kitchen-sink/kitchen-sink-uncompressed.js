@@ -244,7 +244,7 @@ exportAce(ACE_NAMESPACE);
  * ***** END LICENSE BLOCK ***** */
 
 
-define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/less.less', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'ace/split', 'ace/multi_select'], function(require, exports, module) {
+define('kitchen-sink/demo', ['require', 'exports', 'module' , 'ace/lib/fixoldbrowsers', 'ace/config', 'ace/lib/event', 'ace/theme/textmate', 'ace/edit_session', 'ace/undomanager', 'ace/keyboard/keybinding/vim', 'ace/keyboard/keybinding/emacs', 'ace/keyboard/hash_handler', 'text!kitchen-sink/docs/plaintext.txt', 'text!kitchen-sink/docs/javascript.js', 'text!kitchen-sink/docs/coffeescript.coffee', 'text!kitchen-sink/docs/json.json', 'text!kitchen-sink/docs/css.css', 'text!kitchen-sink/docs/scss.scss', 'text!kitchen-sink/docs/less.less', 'text!kitchen-sink/docs/html.html', 'text!kitchen-sink/docs/xml.xml', 'text!kitchen-sink/docs/svg.svg', 'text!kitchen-sink/docs/php.php', 'text!kitchen-sink/docs/coldfusion.cfm', 'text!kitchen-sink/docs/python.py', 'text!kitchen-sink/docs/ruby.rb', 'text!kitchen-sink/docs/perl.pl', 'text!kitchen-sink/docs/ocaml.ml', 'text!kitchen-sink/docs/lua.lua', 'text!kitchen-sink/docs/liquid.liquid', 'text!kitchen-sink/docs/java.java', 'text!kitchen-sink/docs/clojure.clj', 'text!kitchen-sink/docs/groovy.groovy', 'text!kitchen-sink/docs/scala.scala', 'text!kitchen-sink/docs/csharp.cs', 'text!kitchen-sink/docs/powershell.ps1', 'text!kitchen-sink/docs/cpp.cpp', 'text!kitchen-sink/docs/Haxe.hx', 'text!kitchen-sink/docs/sh.sh', 'text!kitchen-sink/docs/xquery.xq', 'text!kitchen-sink/docs/markdown.md', 'text!kitchen-sink/docs/textile.textile', 'text!kitchen-sink/docs/latex.tex', 'text!kitchen-sink/docs/sql.sql', 'text!kitchen-sink/docs/pgsql.pgsql', 'text!kitchen-sink/docs/golang.go', 'ace/split', 'ace/multi_select'], function(require, exports, module) {
 "use strict";
 
 require("ace/lib/fixoldbrowsers");
@@ -299,6 +299,7 @@ var modes = [
     new Mode("coldfusion", "ColdFusion", ["cfm"]),
     new Mode("csharp", "C#", ["cs"]),
     new Mode("css", "CSS", ["css"]),
+    new Mode("golang", "Go", ["go"]),
     new Mode("groovy", "Groovy", ["groovy"]),
     new Mode("haxe", "haXe", ["hx"]),
     new Mode("html", "HTML", ["html", "htm"]),
@@ -467,6 +468,10 @@ var docs = [
     new WrappedDoc(
         "pgsql", "pgSQL",
         require("text!./docs/pgsql.pgsql")
+    ),
+    new Doc(
+        "golang", "Go",
+        require("text!./docs/golang.go")
     )
 ];
 
@@ -11135,6 +11140,42 @@ define("text!kitchen-sink/docs/pgsql.pgsql", [], "\n" +
   "$$;\n" +
   "\n" +
   "END;\n" +
+  "");
+
+define("text!kitchen-sink/docs/golang.go", [], "// Concurrent computation of pi.\n" +
+  "// See http://goo.gl/ZuTZM.\n" +
+  "//\n" +
+  "// This demonstrates Go's ability to handle\n" +
+  "// large numbers of concurrent processes.\n" +
+  "// It is an unreasonable way to calculate pi.\n" +
+  "package main\n" +
+  "\n" +
+  "import (\n" +
+  "    \"fmt\"\n" +
+  "    \"math\"\n" +
+  ")\n" +
+  "\n" +
+  "func main() {\n" +
+  "    fmt.Println(pi(5000))\n" +
+  "}\n" +
+  "\n" +
+  "// pi launches n goroutines to compute an\n" +
+  "// approximation of pi.\n" +
+  "func pi(n int) float64 {\n" +
+  "    ch := make(chan float64)\n" +
+  "    for k := 0; k <= n; k++ {\n" +
+  "        go term(ch, float64(k))\n" +
+  "    }\n" +
+  "    f := 0.0\n" +
+  "    for k := 0; k <= n; k++ {\n" +
+  "        f += <-ch\n" +
+  "    }\n" +
+  "    return f\n" +
+  "}\n" +
+  "\n" +
+  "func term(ch chan float64, k float64) {\n" +
+  "    ch <- 4 * math.Pow(-1, k) / (2*k + 1)\n" +
+  "}\n" +
   "");
 
 /* vim:ts=4:sts=4:sw=4:
