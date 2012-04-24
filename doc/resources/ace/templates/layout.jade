@@ -7,47 +7,21 @@ include lib
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-mixin head('Prototype')
+mixin head(title + " - " + fileName)
 
 body
 
-  mixin topBar("Ace")
+  mixin navBar
 
   mixin header
 
-  .container
-    .content
-      .row.container
-        .span5.offset4.sidebarContainer
+  .container-fluid
+      .row-fluid
+        .span2.sidebarContainer
           #sidebar
             include ace_menu.jade
-        .span11
-          for obj in tree.children
-            .membersBackground
-            .members
-              .membersContent
-                  h1.memberHeader
-                    -var heading = obj.path.replace('_', '')
-                    span.name #{heading}
-                      span.editInC9 
-                        mixin formatGHHref(obj.href, 'nodejs_ref_guide')
-                  
-                  -if (true || obj.filename.indexOf("index") < 0)
-                    if obj.type == 'class' || obj.type == 'namespace' || obj.type == 'section'
-                      ul(class='tabs', data-tabs='tabs')
-                        for selector, title in {'Events': ['event', 'events'], 'Constructors': ['constructor', 'constructors'], 'Class methods': ['class method', 'class_methods'], 'Class properties': ['class property', 'class_properties'], 'Instance methods': ['instance method', 'instance_methods'], 'Instance properties': ['instance property', 'instance_properties'], 'Constants': ['constant', 'constants']}
-                          methods = obj.children.filter(function(x){return x.type === selector[0]})
-                            li(class="dropdown", data-dropdown="dropdown")
-                              if methods.length
-                                a(href="\#", class="dropdown-toggle")!= renameMemberTitle(title, methods.length)
-                                ul.dropdown-menu
-                                  for m in methods
-                                    li(data-id='#{m.id}', class='memberLink')
-                                      mixin link(m, true)                                 
-                    else
-                      ul(class='tabs', data-tabs='tabs')
-                      -console.log("I did not create a menu for: { obj.id: " + obj.id + ", obj.name: " + obj.name + " }, which is a " + obj.type)
-          #content
+        .span10
+          #documentation
              mixin api()
 
              div(id="disqus_thread")
@@ -55,5 +29,3 @@ body
     mixin footer
 
   mixin endingScripts
-
-</html>

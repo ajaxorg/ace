@@ -5,8 +5,8 @@ body {
     min-width: 1010px;
 }
 body {
-    background: #ffffff url(../images/main-bg.png) 0 0 repeat;
-    color: #2d2d2d;
+    background: #edf5fa url(../images/main_bg.png) 0 0 repeat;
+    color: #262626
 }
 
 ul {
@@ -147,26 +147,34 @@ a.brand {
     cursor: pointer;
 }
 
+.ace_logo {
+	position: absolute;
+	top: 8px;
+	z-index: 20000;
+	left: 400px;
+}
+
 .masthead {
-    background: #55a500 url(../images/header-back.png) repeat-x 0 bottom;
+    background: #000000 url(../images/header_back.png) repeat-x 0 bottom;
+    background-position-y: 70px;
 }
 .masthead .container {
     width: 680px;
-    padding-left: 285px;
+    padding-left: 60px;
     margin: 0 auto;
 }
 .jumbotron {
-    min-width: 1000px;
-    padding-top: 40px;
-    position: relative;
+	min-width: 1000px;
+	position: relative;
+	height: 200px;
+	top: -36px;
 }
 
 .jumbotron .inner {
-/*    background: transparent url(../images/header-back.png) top center;*/
     padding: 45px 0;
-/*    -webkit-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
-    -moz-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);*/
+    padding-top: 75px;
 }
+
 .c9-sponsor {
     background: url(../images/c9-sponsor.png) no-repeat 0 0;
     z-index: 1;
@@ -524,23 +532,16 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
     background: url(../images/sidebar-border.png) repeat-y 95px 0;
     padding-bottom : 50px;
 }
-.content {
-    /*background: url(../images/content-top-bg.png) repeat-x 0 0;*/
+.container-fluid {
     border-top: 1px solid #fffffe;
 }
-.content .row {
+/*
+.container-fluid .row-fluid {
     width: 1000px;
     margin-left: auto;
     margin-right: auto;
-}
-.container .content .span11 {
-    padding-top: 10px;
-    float: right;
-}
-.content .span5 {
-    margin-right: 25px;
-     
-}
+}*/
+
 #sidebar {
     margin-top: 9px;
     /*background: url(../images/sidebar-border.png) repeat-y right 0;*/
