@@ -481,6 +481,7 @@ bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
 });
 
+env.editor.setAnimatedScroll(true);
 bindCheckbox("animate_scroll", function(checked) {
     env.editor.setAnimatedScroll(checked);
 });
