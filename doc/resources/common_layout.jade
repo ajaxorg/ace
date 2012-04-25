@@ -36,25 +36,20 @@ mixin head(guideTitle, additionalCSS)
 	script(src="#{dirPrefix}resources/javascripts/jquery.collapse.js")
 	script(src="#{dirPrefix}resources/javascripts/jquery.cookie.js")
 	script(src="#{dirPrefix}resources/javascripts/bootstrap-dropdown.js")
+	script(src="#{dirPrefix}resources/javascripts/jquery-scrollspy.js")
+	script(script src="#{dirPrefix}resources/javascripts/prettify-extension.js")
 
 mixin navBar
 	div.navbar.navbar-fixed-top
 		div.navbar-inner
 			div.container
+				ul.nav.topLinks
+					li#ace_site
+						a(href='http://ace.ajax.org') Ace
+					li#ace_api.active
+						a(href='http://ace.ajax.org/api') Ace API Reference
 				form(id='searchbox', action='', class='navbar-search pull-right')	
-					input(class='span3', name='query', type='text', placeholder="Search Documentation", title="Search across all the documentation")
-
-mixin header
-	header.jumbotron.masthead#overview
-		div.ace_logo
-			a(href="http://ace.ajax.org")
-				img(src="#{dirPrefix}resources/images/ace_logo.png", alt="Ace Logo")
-		.container-fluid
-			.row-fluid
-				.span2
-					&nbsp;
-				.span10
-					h1 Ace API Reference
+					input(class='search-query span3', name='query', type='text', placeholder="Search", title="Search across all the documentation")
 
 mixin footer
 	footer#footer
@@ -67,7 +62,7 @@ mixin endingScripts
 	<script defer src="#{dirPrefix}resources/javascripts/plugins.js"></script>
 	<script defer src="#{dirPrefix}resources/javascripts/prettify.js"></script>
 	<script defer src="#{dirPrefix}resources/javascripts/prettify-extension.js"></script>
-	<script defer src="#{dirPrefix}resources/javascripts/script.js"></script>
+	<script defer src="#{dirPrefix}resources/javascripts/ux.js"></script>
 	<script defer src="#{dirPrefix}resources/javascripts/disqus-ext.js"></script>
 	<script defer src="#{dirPrefix}resources/javascripts/ga.js"></script>
 	//-<script defer src="tree.js"></script>
@@ -84,26 +79,7 @@ mixin identifyBuild(tree, type)
 		-dirPrefix = './'
 
 mixin markdown(text, inline)
-	html = markdown(text, inline)
-	!= restoreNotes(html)
-
--function restoreNotes(html)
-	-var noteORegex = new RegExp('<note>', "ig")
-	-var noteCRegex = new RegExp('</note>', "ig")
-	-var warningORegex = new RegExp('<warning>', "ig")
-	-var warningCRegex = new RegExp('</warning>', "ig")
-
-	if (html.match(noteORegex))
-		-html = html.replace(noteORegex, "<div class='alert-message block-message warning'>")
-	if (html.match(warningORegex))
-		-html = html.replace(warningORegex, "<div class='alert-message block-message error'>")
-
-	if (html.match(noteCRegex))
-		-html = html.replace(noteCRegex, "</div>")
-		if (html.match(warningCRegex))
-		-html = html.replace(warningCRegex, "</div>")
-
-	!= html
+	!= markdown(text, inline)
 
 mixin formatGHHref(url, type)
 	url = url.substring(url.indexOf("src/") + 4)

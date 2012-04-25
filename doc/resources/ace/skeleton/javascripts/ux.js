@@ -48,6 +48,7 @@ $(function () {
     // init prettyprint
     $('pre > code').addClass('prettyprint');
     prettyPrint();
+    
 });
 
 $(document).ready(function () {
@@ -86,7 +87,7 @@ $(document).ready(function () {
         var $classContent = $(this).closest('.classContent');
         
         $(this).scrollspy({
-            min: $classContent.position().top - 55,
+            min: $classContent.position().top,
             max: $classContent.position().top + $classContent.height(),
             onEnter: function (element, position) {
                 var $pagination = $(element);
@@ -135,7 +136,7 @@ $(document).ready(function () {
             }
         });
     });
-
+    
     $('span.methodClicker, article.article, h3.methodClicker').each(function () {
         var a = $(this);
         var constructorPos = a.attr("id").indexOf("new ");

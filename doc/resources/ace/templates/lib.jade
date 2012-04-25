@@ -141,12 +141,7 @@ mixin article(obj, parents)
 							-description = obj.description.substring(obj.short_description.length) // cut the short_desc out
 							descArray = description.split("\n#### ")
 
-							if obj.arguments
-								h4 Arguments
-									!= argumentTable(obj.arguments, ["argument-list", "zebra-striped", "bordered-table"])
-
 							if descArray[0].length && descArray[0] !== '' && descArray[0] !== '\n'
-								h4 Description
 								mixin markdown(descArray[0])
 
 							if obj.bound && ~obj.bound.indexOf('#')
@@ -160,15 +155,14 @@ mixin article(obj, parents)
 									!= link(obj.bound, ['link-short'], 'generic method')
 									|. If calling as generic, pass the instance in as the first argument.
 
-							- var r; // Probably inefficient; we want the Returns section under the Arguments, no matter where in source it's defined
-							- for (var a = 1; a < descArray.length; a++)
-								if (descArray[a].indexOf("Returns") >= 0)
-									mixin markdown("\n#### " + descArray[a])
-									r = a
+							if obj.arguments
+								h4 Arguments
+								!= argumentTable(obj.arguments, ["argument-list", "table", "table-striped", "table-bordered"])
 								
-							- for (var a = 1; a < descArray.length; a++)
-								if (a != r)
-									mixin markdown("\n#### " + descArray[a])			
+							
+							if obj.retDesc
+								h4 Returns
+								!= returnTable(obj.retDesc, ["return-list", "table", "table-striped", "table-bordered"])   
 
 	//- children
 	for child in obj.children.filter(function(x){return x.type === 'section'})

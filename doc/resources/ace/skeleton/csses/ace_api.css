@@ -3,10 +3,8 @@
 */
 body {
     min-width: 1010px;
-}
-body {
-    background: #edf5fa url(../images/main_bg.png) 0 0 repeat;
-    color: #262626
+    color: #2D2D2D;
+    background: #EDF5FA url(../images/main_bg.png) 0 0 repeat;
 }
 
 ul {
@@ -22,14 +20,6 @@ a, a:hover {
 }
 
 code {
-/*    background-color: #fce68c;*/
-    
-/*    font-size: 11px;
-    line-height: 16px;
-    font-family: 'Ubuntu Mono',Monaco,Consolas,monospace !important;
-    padding: 0;
-    
-    */
     font-size: 12px;
     line-height: 16px;
     font-family: 'Ubuntu Mono',Monaco,Consolas,monospace !important;
@@ -39,6 +29,7 @@ code {
     display: inline-block;
     padding: 0 4px;
     margin: 2px 1px;
+    color: inherit;
 }
 
 pre {
@@ -96,22 +87,8 @@ blockquote p{
   Header and shoulders
 */
 
-#topSection {
-    margin: 0 auto;
-    width: 1000px;
-    position : relative;
-}
-
-#topSection .leftnav{
-    width : 286px;
-}
-
-#topSection .dropdown {
-    margin-right: 0px;
-}
-
-#topSection .versions {
-    margin-right: 0;
+ul.topLinks {
+	left: 290px;
 }
 
 .small_win #topSection {
@@ -149,30 +126,9 @@ a.brand {
 
 .ace_logo {
 	position: absolute;
-	top: 8px;
+	top: 45px;
 	z-index: 20000;
-	left: 400px;
-}
-
-.masthead {
-    background: #000000 url(../images/header_back.png) repeat-x 0 bottom;
-    background-position-y: 70px;
-}
-.masthead .container {
-    width: 680px;
-    padding-left: 60px;
-    margin: 0 auto;
-}
-.jumbotron {
-	min-width: 1000px;
-	position: relative;
-	height: 200px;
-	top: -36px;
-}
-
-.jumbotron .inner {
-    padding: 45px 0;
-    padding-top: 75px;
+	left: 210px;
 }
 
 .c9-sponsor {
@@ -196,6 +152,12 @@ a.brand {
     color: white;
 /*    text-align: center;*/
     text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+}
+
+.headerTitle {
+	position: relative;
+	top: 100px;
+	left: 250px;
 }
 
 /*
@@ -225,7 +187,7 @@ ul.menu {
 
 /* need specificity to "beat" the above colors */
 .menu li .menu-item a.currentItem, .menuTwo li .menu-item  {
-    color: #618100;
+    color: #0072bc;
 }
 
 /*
@@ -383,6 +345,11 @@ ul.menu {
 .tabs a.menu:after, .tabs .dropdown-toggle:after {
     margin-top: 22px;
 }
+
+.dropdown .caret {
+	margin-top: 14px;
+}
+
 /*.backToMDN {
     position: absolute;
     right: 0px;
@@ -528,12 +495,26 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
   Center content (the "real stuff")
 */
 
-.content .container {
-    background: url(../images/sidebar-border.png) repeat-y 95px 0;
-    padding-bottom : 50px;
+.content .row {
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
 }
-.container-fluid {
-    border-top: 1px solid #fffffe;
+
+.content .centerpiece {
+	background: url(../images/sidebar_border.png) repeat-y 180px 0;
+	padding-bottom: 50px;
+}
+
+header.filler {
+	position: relative;
+	background: #EDF5FA;
+	height: 50px;
+	width: 100%;
+}
+
+#container {
+    background: #edf5fa url(../images/main_bg.png) 0 0 repeat;
 }
 /*
 .container-fluid .row-fluid {
@@ -541,6 +522,10 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
     margin-left: auto;
     margin-right: auto;
 }*/
+
+.sidebarContainer {
+	margin-right: 25px;
+}
 
 #sidebar {
     margin-top: 9px;
@@ -556,26 +541,24 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
     color: #404040;
 }
 
-#sidebar #well
-
-#content {
+#documentation {
     padding-bottom: 10px;
 }
 
-#content article.article {
+#documentation article.article {
 /*    border-bottom: 1px solid #e9e9e9;*/
     border-top: 1px solid #e9e9e9;
     padding: 16px 10px 2px;
 }
-div#content article:last-child {
+div#documentation article:last-child {
     border-bottom: 1px solid #e9e9e9;
     padding-bottom: 40px;
 }
-#content article.article.methodToggleOpen {
-    background: url(../images/method-bg.png) repeat 0 0;
+#documentation article.article.methodToggleOpen {
+    background: url(../images/method_bg.png) repeat 0 0;
     margin : 0 0 10px 0;
 }
-#content article:first-child {
+#documentation article:first-child {
     border:none;
 }
 
@@ -689,7 +672,11 @@ li.signature {
     cursor: pointer;
 }
 .signature-call a {
-    color: #859c59;
+    color: #8e487e;
+}
+
+.sigClassName {
+	display: none;
 }
 
 .eventObjName {
@@ -741,9 +728,6 @@ li.signature {
 .alias:hover, .related-to:hover {
     opacity: 0.8;
     cursor: pointer;
-}
-.memberContent {
-  
 }
 .memberContent .title {
     
@@ -806,8 +790,11 @@ table td, .bordered-table th + th, .bordered-table td + td, .bordered-table th +
 .zebra-striped tbody tr:hover td, .zebra-striped tbody tr:hover th {
 }
 
-.argument-list{
+.argument-list {
     margin-bottom : 13px;
+}
+.argName {
+	font-style: italic;
 }
 
 table td{
@@ -816,15 +803,19 @@ table td{
 /*
   Everyday I'm togglin'
 */
-#content h3 {
+.mainContent {
+	padding-top: 10px;
+	float: right
+}
+
+#documentation h3 {
     font-size: 24px;
     margin-top: 5px; 
-/*    margin: 10px 0;*/
 }
-#content h3.methodToggle {
+#documentation h3.methodToggle {
     margin: 0;
 }
-#content h3.sectionHeader {
+#documentation h3.sectionHeader {
     margin: 10px 0 17px 0;
     line-height : 24px;
 }

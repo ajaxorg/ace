@@ -10,17 +10,18 @@ include lib
 mixin head(title + " - " + fileName)
 
 body
-
+  
   mixin navBar
 
-  mixin header
+  header.filler
 
-  .container-fluid
-      .row-fluid
-        .span2.sidebarContainer
+  .container
+      .content
+       .row.centerpiece
+        .span3.offset6.sidebarContainer
           #sidebar
             include ace_menu.jade
-        .span10
+        .span9.mainContent
           #documentation
              mixin api()
 
