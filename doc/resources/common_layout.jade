@@ -43,6 +43,8 @@ mixin navBar
 	div.navbar.navbar-fixed-top
 		div.navbar-inner
 			div.container
+				a(class="brand", href="/")
+
 				ul.nav.topLinks
 					li#ace_site
 						a(href='http://ace.ajax.org') Ace
@@ -54,7 +56,8 @@ mixin navBar
 mixin footer
 	footer#footer
 				.container
-					.footer-text 
+					.footer-text.pull-right
+						Ace & Cloud9 IDE are &copy; <a href="http://c9.io/site/company/">c9.io</a> 2012
 
 
 mixin endingScripts

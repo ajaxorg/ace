@@ -98,16 +98,12 @@ ul.topLinks {
     margin-right: 40%;
 }
 .brand {
-    background: transparent url(../images/node-logo.png) no-repeat 13px 5px;
-/*    margin-top: 7px;*/
-/*    height: 30px;*/
-    width: 105px;
-    outline: none;
-    height: 40px;
-    padding: 0 10px !important; 
-    border: none;
-    
-/*    height: 30px;*/
+	background: transparent url(../images/ace_logo_menu.png) no-repeat 13px 5px;
+	width: 105px;
+	outline: none;
+	height: 40px;
+	padding: 0 10px !important;
+	border: none;
 }
 .brand.dropdown-toggle:after {
     content: none;
@@ -323,25 +319,9 @@ ul.menu {
     padding-right: 10px;
     margin-bottom: 5px;
     position: absolute;
-    
-/*    line-height: inherit;
-    margin-bottom: -37px;
-    margin-top: -42px;*/
-/*    margin-left: 10px;*/
+
 }
-.srolledHeader .memberHeader {
-    
-/*    margin-bottom: -21px;
-    margin-top: -27px;*/
-}
-.membersContent .tabs, 
-.membersContent .tabs li,
-.membersContent .tabs li a {
-/*    line-height: inherit;*/
-}
-.membersContent .tabs li a {
-/*    display: inline;*/
-}
+
 .tabs a.menu:after, .tabs .dropdown-toggle:after {
     margin-top: 22px;
 }
@@ -350,21 +330,17 @@ ul.menu {
 	margin-top: 14px;
 }
 
-/*.backToMDN {
-    position: absolute;
-    right: 0px;
-    top: -20px;
-}*/
+li.dropdown {
+	color: #2D2D2D;
+	font-weight: bold;
+}
+
+
 .backToMDN, .editInC9 {
     font-size: 11px;
     color: #657383;
     margin : 0 0 0 5px;
 }
-/*.editInC9 {
-}
-.backToMDN {
-    top: 0;
-}*/
 
 .backToMDN a, .editInC9 a {
     color: #657383;
@@ -384,12 +360,16 @@ ul.menu {
 }
 .tabs, .pills {
     margin-bottom: 0;
-/*    margin-left: 10px;
-    margin-right: 10px;*/
 }
 .srolledHeader .members .tabs {
     background-color: white;
 }
+
+li.dropdown {
+	color: #2D2D2D;
+	font-weight: bold;
+}
+
 .members .tabs .dropdown a,
 .members .tabs a.menu:after, 
 .members .tabs .dropdown-toggle:after {
@@ -470,6 +450,7 @@ ul.menu {
     border-radius: 0 0 6px 6px;
     top: 32px;
     right: 0px;
+    width: 150px;
 }
 .srolled .tabs .menu-dropdown, .srolled .tabs .dropdown-menu {
     top: 32px;
@@ -513,8 +494,8 @@ header.filler {
 	width: 100%;
 }
 
-#container {
-    background: #edf5fa url(../images/main_bg.png) 0 0 repeat;
+.container {
+    width: 100%;
 }
 /*
 .container-fluid .row-fluid {
@@ -524,7 +505,8 @@ header.filler {
 }*/
 
 .sidebarContainer {
-	margin-right: 25px;
+	width: 280px;
+	margin-left: 0px;
 }
 
 #sidebar {
@@ -806,6 +788,8 @@ table td{
 .mainContent {
 	padding-top: 10px;
 	float: right
+	margin-left: 0px;
+	width: 695px;
 }
 
 #documentation h3 {
@@ -889,12 +873,11 @@ h3.methodToggle.active {
 */
 
 #footer {
-    /*position:fixed; */
     left:0px;
     bottom:0px;
     padding-top: 0;
     width:100%;
-    background: #101010 url(../images/footer-bg.png) repeat 0 0;
+    background: #101010 url(../images/dashed_back.png) repeat 0 0;
     color: #c3c3c3;
     border-top: none;
     font-size: 12px;
@@ -907,7 +890,6 @@ h3.methodToggle.active {
     margin-left: auto;
     margin-right: auto;
     min-height: 60px;
-    background:  url(../images/arrow-footer.png) no-repeat 261px 0;
 }
 #footer .footer-text {
     display: block;

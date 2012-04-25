@@ -87,7 +87,7 @@ $(document).ready(function () {
         var $classContent = $(this).closest('.classContent');
         
         $(this).scrollspy({
-            min: $classContent.position().top,
+            min: $classContent.position().top - 35,
             max: $classContent.position().top + $classContent.height(),
             onEnter: function (element, position) {
                 var $pagination = $(element);
