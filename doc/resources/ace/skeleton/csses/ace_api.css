@@ -88,7 +88,7 @@ blockquote p{
 */
 
 ul.topLinks {
-	left: 290px;
+	padding-left: 290px;
 }
 
 .small_win #topSection {
@@ -110,14 +110,6 @@ ul.topLinks {
     display: block;
     height: 40px;
     border: none;
-}
-.open .brand,
-.brand:hover{
-  background: rgba(255, 255, 255, 0.05) url(../images/node-logo.png) no-repeat 13px 5px !important;
-}
-
-a.brand {
-    cursor: pointer;
 }
 
 .ace_logo {
@@ -245,7 +237,7 @@ ul.menu {
     position: fixed;
 }
 .shadow.members{
-    background: #FFF;
+    background: #edf8fd;
     box-shadow: 0 0.1em 1em rgba(0,0,0, 0.3);
     -moz-box-shadow: 0 0.1em 1em rgba(0,0,0, 0.3);
     -o-box-shadow: 0 0.1em 1em rgba(0,0,0, 0.3);
@@ -328,6 +320,7 @@ ul.menu {
 
 .dropdown .caret {
 	margin-top: 14px;
+	color: #6D8CA0;
 }
 
 li.dropdown {
@@ -375,7 +368,6 @@ li.dropdown {
 .members .tabs .dropdown-toggle:after {
     margin-right: 0;
     margin-left: 6px;
-    font-weight : normal;
 }
 
 .members .tabs ul li {
@@ -456,7 +448,7 @@ li.dropdown {
     top: 32px;
 }
 .dropdown-toggle {
-    color: #8a8a8a;
+    color: #6D8CA0;
 }
 
 ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
@@ -735,41 +727,14 @@ li.signature {
     margin: 20px 0 10px;
     line-height : 18px;
 }
-.bordered-table{
-    margin-bottom: 0;
-    background-color: white;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
+
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th {
+    background-color: #F9F9F9;
 }
-.bordered-table thead tr:first-child th:first-child, .bordered-table tbody tr:first-child td:first-child{
-    -webkit-border-radius: 6px 0 0 0;
-    -moz-border-radius: 6px 0 0 0;
-    border-radius: 6px 0 0 0;
-}
-.bordered-table tbody tr:last-child td:last-child{
-    -webkit-border-radius: 0 0 6px 0;
-    -moz-border-radius: 0 0 6px 0;
-    border-radius: 0 0 6px 0;
-}
-.bordered-table thead tr:first-child th:last-child, .bordered-table tbody tr:first-child td:last-child{
-    -webkit-border-radius: 0 6px 0 0;
-    -moz-border-radius: 0 6px 0 0;
-    border-radius: 0 6px 0 0;
-}
-.actions .run-in-c9 img {
-    padding-top: 3px;
-}
-table td, .bordered-table th + th, .bordered-table td + td, .bordered-table th + td {
-    border-top: none;
-}
-.zebra-striped tbody tr:nth-child(odd) td, .zebra-striped tbody tr:nth-child(odd) th {
-    background-color: transparent;
-}
-.zebra-striped tbody tr:nth-child(even) td, .zebra-striped tbody tr:nth-child(even) th {
+.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) th {
     background-color: #fbfbfb;
-}
-.zebra-striped tbody tr:hover td, .zebra-striped tbody tr:hover th {
+} 
+.table-striped tbody tr:hover td, .table-striped tbody tr:hover th {
 }
 
 .argument-list {
@@ -779,9 +744,7 @@ table td, .bordered-table th + th, .bordered-table td + td, .bordered-table th +
 	font-style: italic;
 }
 
-table td{
-    padding: 8px 10px 8px 10px;
-}
+
 /*
   Everyday I'm togglin'
 */
@@ -790,6 +753,7 @@ table td{
 	float: right
 	margin-left: 0px;
 	width: 695px;
+	padding-left: 5px;
 }
 
 #documentation h3 {
@@ -893,7 +857,7 @@ h3.methodToggle.active {
 }
 #footer .footer-text {
     display: block;
-    float: left;
+    float: right;
     margin-right: 10px;
     margin-top: 24px;
 }
@@ -905,10 +869,9 @@ h3.methodToggle.active {
 #footer .sponsors .sponsor {
     padding-right: 22px;
 }
-#footer .container
-#footer a {
-/*    color: #c3c3c3;
-    text-decoration: underline;*/
+
+#footer a, #footer a:hover {
+    color: white;
 }
 #footer .c9-logo {
     width: 141px;

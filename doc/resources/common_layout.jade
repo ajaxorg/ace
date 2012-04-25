@@ -43,7 +43,7 @@ mixin navBar
 	div.navbar.navbar-fixed-top
 		div.navbar-inner
 			div.container
-				a(class="brand", href="/")
+				span.brand
 
 				ul.nav.topLinks
 					li#ace_site
@@ -51,13 +51,12 @@ mixin navBar
 					li#ace_api.active
 						a(href='http://ace.ajax.org/api') Ace API Reference
 				form(id='searchbox', action='', class='navbar-search pull-right')	
-					input(class='search-query span3', name='query', type='text', placeholder="Search", title="Search across all the documentation")
+					input(class='search-query span3', name='query', type='text', placeholder="Search the API", title="Search across all the documentation")
 
 mixin footer
 	footer#footer
 				.container
-					.footer-text.pull-right
-						Ace & Cloud9 IDE are &copy; <a href="http://c9.io/site/company/">c9.io</a> 2012
+					.footer-text.pull-right Ace & Cloud9 IDE are &copy; <a href="http://c9.io/site/company/">c9.io</a> 2012
 
 
 mixin endingScripts
