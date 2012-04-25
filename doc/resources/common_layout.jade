@@ -9,12 +9,15 @@ mixin doctype
 	<!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 	<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-mixin head(guideTitle, additionalCSS)
+mixin head
 	meta(charset="utf-8")
 	//- N.B. http://blog.yjl.im/2011/01/bad-value-x-ua-compatible-for-attribute.html
 	meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
 
-	title #{guideTitle}
+	-if (isIndex)
+		title #{title}
+	-else
+		title #{title} - #{fileName}
 
 	meta(name="generator", content="c9-doc-build")
 	meta(name="description", content="A complete and community-driven resource for learning and developing Node.js applications.")
@@ -27,9 +30,6 @@ mixin head(guideTitle, additionalCSS)
 	link(rel="stylesheet", href="#{dirPrefix}resources/csses/ace_api.css")
 
 	link(href="#{dirPrefix}resources/images/favicon.ico", rel="icon", type="image/x-icon")
-
-	if additionalCSS
-		link(rel="stylesheet", href="#{additionalCSS}")
 
 	script(src="#{dirPrefix}resources/javascripts/jquery.js")
 	script(src="#{dirPrefix}resources/javascripts/clicker.js")
@@ -93,4 +93,4 @@ mixin formatGHHref(url, type)
 		url = 'src/' + url
 
 	-url = url.replace(/\/{2,}/g, "/").replace(/\//g,"%2F")
-	<a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fc9%2Fnodemanual.org.git&file=#{url}&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a>
+	<a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%ace.git&file=#{url}&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a>

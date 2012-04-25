@@ -966,3 +966,35 @@ body #dsq-reply h3{
 #dsq-global-toolbar, #dsq-pagination, .dsq-trackback-url{
     display : none;
 }
+
+html
+{
+height: 100%;
+}
+
+body
+{
+height: 100%;
+}
+
+#nonFooter
+{
+position: relative;
+min-height: 100%;
+}
+
+* html #nonFooter
+{
+height: 100%;
+}
+
+#wrapper
+{
+padding-bottom: 9em;
+}
+
+#footer
+{
+position: relative;
+margin-top: -3.5em;
+}

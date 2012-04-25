@@ -7,26 +7,32 @@ include lib
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-mixin head(title + " - " + fileName)
+mixin head
 
 body
-  
-  mixin navBar
 
-  header.filler
+	#nonFooter
+		#wrapper
+			mixin navBar
+		
+			header.filler
+		
+			
+			.container
+					.content
+						.row.centerpiece
+							.span3.offset6.sidebarContainer
+								#sidebar
+									include ace_menu.jade
+							.span9.mainContent
+								#documentation
+									-if (isIndex)
+										mixin markdown(indexContent)
+									-else
+										mixin api()
+		
+								div(id="disqus_thread")
 
-  .container
-      .content
-       .row.centerpiece
-        .span3.offset6.sidebarContainer
-          #sidebar
-            include ace_menu.jade
-        .span9.mainContent
-          #documentation
-             mixin api()
+	mixin footer
 
-             div(id="disqus_thread")
-
-    mixin footer
-
-  mixin endingScripts
+	mixin endingScripts
