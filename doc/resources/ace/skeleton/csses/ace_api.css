@@ -842,15 +842,14 @@ h3.methodToggle.active {
     padding-top: 0;
     width:100%;
     background: #101010 url(../images/dashed_back.png) repeat 0 0;
-    color: #c3c3c3;
-    border-top: none;
     font-size: 12px;
+    color: white;
+    border-top: none;
     margin-top: 0;
 }
 #footer .container {
     width: 710px;
     padding-left: 300px;
-    font-size: 11px;
     margin-left: auto;
     margin-right: auto;
     min-height: 60px;
@@ -871,7 +870,7 @@ h3.methodToggle.active {
 }
 
 #footer a, #footer a:hover {
-    color: white;
+    color: #8DD0FF;
 }
 #footer .c9-logo {
     width: 141px;
@@ -966,6 +965,8 @@ body #dsq-reply h3{
 #dsq-global-toolbar, #dsq-pagination, .dsq-trackback-url{
     display : none;
 }
+
+/* Sticky footer stuff */
 
 html
 {
