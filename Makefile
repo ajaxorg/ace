@@ -12,6 +12,10 @@ build:
 	./Makefile.dryice.js demo
 	./Makefile.dryice.js bm
 
+ .PHONY : doc
+doc:
+	cd doc; node build.js
+
 clean:
 	rm -rf build
 	rm -rf ace-*
