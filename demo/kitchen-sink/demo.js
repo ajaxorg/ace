@@ -93,6 +93,7 @@ var modes = [
     new Mode("coldfusion", "ColdFusion", ["cfm"]),
     new Mode("csharp", "C#", ["cs"]),
     new Mode("css", "CSS", ["css"]),
+    new Mode("golang", "Go", ["go"]),
     new Mode("groovy", "Groovy", ["groovy"]),
     new Mode("haxe", "haXe", ["hx"]),
     new Mode("html", "HTML", ["html", "htm"]),
@@ -261,6 +262,10 @@ var docs = [
     new WrappedDoc(
         "pgsql", "pgSQL",
         require("ace/requirejs/text!./docs/pgsql.pgsql")
+    ),
+    new Doc(
+        "golang", "Go",
+        require("ace/requirejs/text!./docs/golang.go")
     )
 ];
 

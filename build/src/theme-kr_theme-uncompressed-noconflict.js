@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-kr-theme .ace_cursor {\
-  border-left: 1px solid #FF9900;\
+  border-left: 2px solid #FF9900;\
 }\
 \
 .ace-kr-theme .ace_cursor.ace_overwrite {\
@@ -78,6 +78,11 @@ exports.cssText = "\
 \
 .ace-kr-theme .ace_marker-layer .ace_selection {\
   background: rgba(170, 0, 255, 0.45);\
+}\
+\
+.ace-kr-theme.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px #0B0A09;\
+  border-radius: 2px;\
 }\
 \
 .ace-kr-theme .ace_marker-layer .ace_step {\

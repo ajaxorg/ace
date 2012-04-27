@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-merbivore-soft .ace_cursor {\
-  border-left: 1px solid #FFFFFF;\
+  border-left: 2px solid #FFFFFF;\
 }\
 \
 .ace-merbivore-soft .ace_cursor.ace_overwrite {\
@@ -78,6 +78,11 @@ exports.cssText = "\
 \
 .ace-merbivore-soft .ace_marker-layer .ace_selection {\
   background: #494949;\
+}\
+\
+.ace-merbivore-soft.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px #1C1C1C;\
+  border-radius: 2px;\
 }\
 \
 .ace-merbivore-soft .ace_marker-layer .ace_step {\

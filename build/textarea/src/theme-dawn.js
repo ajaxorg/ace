@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-dawn .ace_cursor {\
-  border-left: 1px solid #000000;\
+  border-left: 2px solid #000000;\
 }\
 \
 .ace-dawn .ace_cursor.ace_overwrite {\
@@ -78,6 +78,11 @@ exports.cssText = "\
 \
 .ace-dawn .ace_marker-layer .ace_selection {\
   background: rgba(39, 95, 255, 0.30);\
+}\
+\
+.ace-dawn.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px #F9F9F9;\
+  border-radius: 2px;\
 }\
 \
 .ace-dawn .ace_marker-layer .ace_step {\
