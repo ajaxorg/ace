@@ -7,32 +7,34 @@ include lib
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-mixin head
-
-body
-
-	#nonFooter
-		#wrapper
-			mixin navBar
-		
-			header.filler
-		
+html(xmlns="http://www.w3.org/1999/xhtml")
+	head
+		mixin head
+	
+	body
+	
+		#nonFooter
+			#wrapper
+				mixin navBar
 			
-			.container
-					.content
-						.row.centerpiece
-							.span3.offset6.sidebarContainer
-								#sidebar
-									include ace_menu.jade
-							.span9.mainContent
-								#documentation
-									-if (isIndex)
-										mixin markdown(indexContent)
-									-else
-										mixin api()
-		
-								div(id="disqus_thread")
-
-	mixin footer
-
-	mixin endingScripts
+				header.filler
+			
+				
+				.container
+						.content
+							.row.centerpiece
+								.span3.offset6.sidebarContainer
+									#sidebar
+										include ace_menu.jade
+								.span9.mainContent
+									#documentation
+										-if (isIndex)
+											mixin markdown(indexContent)
+										-else
+											mixin api()
+			
+									div(id="disqus_thread")
+	
+		mixin footer
+	
+		mixin endingScripts

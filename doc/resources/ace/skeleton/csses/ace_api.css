@@ -87,8 +87,15 @@ blockquote p{
   Header and shoulders
 */
 
-ul.topLinks {
-	padding-left: 290px;
+.navbar .nav > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+
+.navbar {
+    text-align:center;
 }
 
 .small_win #topSection {
@@ -119,27 +126,26 @@ ul.topLinks {
 	left: 210px;
 }
 
-.c9-sponsor {
-    background: url(../images/c9-sponsor.png) no-repeat 0 0;
-    z-index: 1;
-    width: 112px;
-    height: 119px;
-    position: absolute;
-    top: 55px;
-    right: 0;
-    outline: none;
+.masthead {
+   background: #101010 url(../images/dashed_back.png) repeat 0 0;
 }
-.jumbotron h1 {
-    font-size: 54px;
-    line-height: 1;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+.masthead .container {
+    /*width: 680px;*/
+    padding-left: 285px;
+    margin: 0 auto;
+    color: white;
+}
+.jumbotron {
+    min-width: 1000px;
+    padding-top: 40px;
+    position: relative;
 }
 
-.jumbotron h1, .jumbotron p {
-    margin-bottom: 9px;
-    color: white;
-/*    text-align: center;*/
-    text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+.jumbotron .inner {
+/*    background: transparent url(../images/header-back.png) top center;*/
+    padding: 45px 0;
+/*    -webkit-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
+    -moz-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);*/
 }
 
 .headerTitle {
@@ -489,12 +495,19 @@ header.filler {
 .container {
     width: 100%;
 }
+
 /*
 .container-fluid .row-fluid {
     width: 1000px;
     margin-left: auto;
     margin-right: auto;
 }*/
+
+.divider {
+	height: 3px;
+	background-color: #BEDAEA;
+	margin-bottom: 3px;
+}
 
 .sidebarContainer {
 	width: 280px;
@@ -515,6 +528,10 @@ header.filler {
     color: #404040;
 }
 
+.mainContent .hero-unit {
+	background: rgba(255, 255, 255, 0.5);	
+}
+
 #documentation {
     padding-bottom: 10px;
 }
@@ -529,13 +546,22 @@ div#documentation article:last-child {
     padding-bottom: 40px;
 }
 #documentation article.article.methodToggleOpen {
-    background: url(../images/method_bg.png) repeat 0 0;
-    margin : 0 0 10px 0;
+	background: rgba(255, 255, 255, 0.5);
+	padding: 20px;
+	font-size: 13px;
+	line-height: 24px;
+	margin: 0 0 10px 0;
 }
+
 #documentation article:first-child {
     border:none;
 }
 
+.site_logo {
+	display: block;  
+	margin-left: auto;   
+	margin-right: auto;
+}
 /*
     Edit in Cloud9, sucka
 */
