@@ -395,10 +395,28 @@ function saveOption(el, val) {
     }
 }
 
+themeEl.addEventListener("mouseover", function(e){
+    this.desiredValue = e.target.value;
+    if (!this.$timer)
+        this.$timer = setTimeout(this.updateTheme);
+})
+
+themeEl.addEventListener("mouseout", function(e){
+    this.desiredValue = null;
+    if (!this.$timer)
+        this.$timer = setTimeout(this.updateTheme, 20);
+})
+
+themeEl.updateTheme = function(){
+    env.split.setTheme(themeEl.desiredValue || themeEl.selectedValue);
+    themeEl.$timer = null;
+}
+
 bindDropdown("theme", function(value) {
     if (!value)
         return;
 	env.editor.setTheme(value);
+	themeEl.selectedValue = value;
 });
 
 bindDropdown("keybinding", function(value) {
@@ -468,6 +486,7 @@ bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
 });
 
+env.editor.setAnimatedScroll(true);
 bindCheckbox("animate_scroll", function(checked) {
     env.editor.setAnimatedScroll(checked);
 });
@@ -480,6 +499,9 @@ bindCheckbox("enable_behaviours", function(checked) {
     env.editor.setBehavioursEnabled(checked);
 });
 
+bindCheckbox("fade_fold_widgets", function(checked) {
+    env.editor.setFadeFoldWidgets(checked);
+});
 
 var secondSession = null;
 bindDropdown("split", function(value) {

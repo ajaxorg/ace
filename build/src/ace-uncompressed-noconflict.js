@@ -2444,12 +2444,12 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var CommandManager = require("./commands/command_manager").CommandManager;
 var defaultCommands = require("./commands/default_commands").commands;
 
-var Editor = function(renderer, session) {
+var Editor = function(renderer, session, listenElement) {
     var container = renderer.getContainerElement();
     this.container = container;
     this.renderer = renderer;
 
-    this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
+    this.textInput  = new TextInput(renderer.getTextAreaContainer(), this, listenElement);
     this.keyBinding = new KeyBinding(this);
 
     // TODO detect touch event support
@@ -3849,7 +3849,7 @@ var event = require("../lib/event");
 var useragent = require("../lib/useragent");
 var dom = require("../lib/dom");
 
-var TextInput = function(parentNode, host) {
+var TextInput = function(parentNode, host, listenElement) {
 
     var text = dom.createElement("textarea");
     if (useragent.isTouchPad)
@@ -3959,7 +3959,9 @@ var TextInput = function(parentNode, host) {
         }, 0);
     };
 
-    event.addCommandKeyListener(text, host.onCommandKey.bind(host));
+    if (listenElement != false)
+        event.addCommandKeyListener(listenElement || text, host.onCommandKey.bind(host));
+    
     if (useragent.isOldIE) {
         var keytable = { 13:1, 27:1 };
         event.addListener(text, "keyup", function (e) {
@@ -5073,7 +5075,7 @@ var KeyBinding = function(editor) {
 
         // allow keyboardHandler to consume keys
         if (toExecute.command != "null")
-            success = commands.exec(toExecute.command, this.$editor, toExecute.args);
+            success = commands.exec(toExecute.command, this.$editor, toExecute.args, e);
         else
             success = true;
 
@@ -5419,7 +5421,7 @@ exports.commands = [{
     multiSelectAction: "forEach"
 }, {
     name: "togglecomment",
-    bindKey: bindKey("Ctrl-7", "Command-7"),
+    bindKey: bindKey("Ctrl-/", "Command-/"),
     exec: function(editor) { editor.toggleCommentLines(); },
     multiSelectAction: "forEach"
 }, {
@@ -12751,7 +12753,7 @@ var VirtualRenderer = function(container, theme) {
         if (center)
             offset -= this.$size.scrollerHeight / 2;
 
-        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 10000) {
+        if (this.$animatedScroll && Math.abs(offset - this.scrollTop) < 100000) {
             var _self = this;
             var steps = _self.$calcSteps(this.scrollTop, offset);
 
