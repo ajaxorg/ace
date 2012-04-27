@@ -75,14 +75,9 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #F8F8F0;\
 }\
-\
+ \
 .ace-monokai .ace_marker-layer .ace_selection {\
   background: #49483E;\
-}\
-\
-.ace-monokai.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #272822;\
-  border-radius: 2px;\
 }\
 \
 .ace-monokai .ace_marker-layer .ace_step {\
@@ -101,7 +96,7 @@ exports.cssText = "\
 .ace-monokai .ace_marker-layer .ace_selected_word {\
   border: 1px solid #49483E;\
 }\
-\
+       \
 .ace-monokai .ace_invisible {\
   color: #49483E;\
 }\

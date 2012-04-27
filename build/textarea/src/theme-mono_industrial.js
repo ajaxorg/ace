@@ -75,14 +75,9 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #FFFFFF;\
 }\
-\
+ \
 .ace-mono-industrial .ace_marker-layer .ace_selection {\
   background: rgba(145, 153, 148, 0.40);\
-}\
-\
-.ace-mono-industrial.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #222C28;\
-  border-radius: 2px;\
 }\
 \
 .ace-mono-industrial .ace_marker-layer .ace_step {\
@@ -101,7 +96,7 @@ exports.cssText = "\
 .ace-mono-industrial .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(145, 153, 148, 0.40);\
 }\
-\
+       \
 .ace-mono-industrial .ace_invisible {\
   color: rgba(102, 108, 104, 0.50);\
 }\
@@ -115,14 +110,6 @@ exports.cssText = "\
 }\
 \
 .ace-mono-industrial .ace_constant, .ace-mono-industrial .ace_constant.ace_other {\
-  color:#E98800;\
-}\
-\
-.ace-mono-industrial .ace_constant.ace_character,  {\
-  color:#E98800;\
-}\
-\
-.ace-mono-industrial .ace_constant.ace_character.ace_escape,  {\
   color:#E98800;\
 }\
 \
