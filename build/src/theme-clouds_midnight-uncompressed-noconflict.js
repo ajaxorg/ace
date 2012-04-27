@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-clouds-midnight .ace_cursor {\
-  border-left: 2px solid #7DA5DC;\
+  border-left: 1px solid #7DA5DC;\
 }\
 \
 .ace-clouds-midnight .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-clouds-midnight .ace_marker-layer .ace_selection {\
   background: #000000;\
-}\
-\
-.ace-clouds-midnight.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #191919;\
-  border-radius: 2px;\
 }\
 \
 .ace-clouds-midnight .ace_marker-layer .ace_step {\

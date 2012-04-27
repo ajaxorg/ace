@@ -1360,7 +1360,7 @@ var JavaScriptHighlightRules = function() {
                 token : "comment",
                 regex : /\/\/.*$/
             },
-            DocCommentHighlightRules.getStartRule("doc-start"),
+            new DocCommentHighlightRules().getStartRule("doc-start"),
             {
                 token : "comment", // multi line comment
                 merge : true,
@@ -1368,11 +1368,11 @@ var JavaScriptHighlightRules = function() {
                 next : "comment"
             }, {
                 token : "string",
-                regex : "'(?=.)",
+                regex : "'",
                 next  : "qstring"
             }, {
                 token : "string",
-                regex : '"(?=.)',
+                regex : '"',
                 next  : "qqstring"
             }, {
                 token : "constant.numeric", // hex
@@ -1392,10 +1392,11 @@ var JavaScriptHighlightRules = function() {
                     "text",
                     "storage.type",
                     "text",
-                    "paren.lparen"
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
                 ],
-                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()",
-                next: "function_arguments"
+                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // match stuff like: Sound.prototype.play = myfunc
                 token : [
                     "storage.type",
@@ -1407,8 +1408,7 @@ var JavaScriptHighlightRules = function() {
                     "keyword.operator",
                     "text"
                 ],
-                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)",
-                next: "function_arguments"
+                regex : "(" + identifierRe + ")(\\.)(prototype)(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)"
             }, { // match stuff like: Sound.play = function() {  }
                 token : [
                     "storage.type",
@@ -1419,10 +1419,11 @@ var JavaScriptHighlightRules = function() {
                     "text",
                     "storage.type",
                     "text",
-                    "paren.lparen"
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
                 ],
-                regex : "(" + identifierRe + ")(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()",
-                next: "function_arguments"
+                regex : "(" + identifierRe + ")(\\.)(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // match stuff like: play = function() {  }
                 token : [
                     "entity.name.function",
@@ -1431,20 +1432,22 @@ var JavaScriptHighlightRules = function() {
                     "text",
                     "storage.type",
                     "text",
-                    "paren.lparen"
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
                 ],
-                regex : "(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()",
-                next: "function_arguments"
+                regex : "(" + identifierRe +")(\\s*)(=)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // match regular function like: function myFunc(arg) { }
                 token : [
                     "storage.type",
                     "text",
                     "entity.name.function",
                     "text",
-                    "paren.lparen"
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
                 ],
-                regex : "(function)(\\s+)(" + identifierRe + ")(\\s*)(\\()",
-                next: "function_arguments"
+                regex : "(function)(\\s+)(" + identifierRe + ")(\\s*)(\\()(.*?)(\\))"
             }, { // match stuff like: foobar: function() { }
                 token : [
                     "entity.name.function",
@@ -1453,20 +1456,22 @@ var JavaScriptHighlightRules = function() {
                     "text",
                     "storage.type",
                     "text",
-                    "paren.lparen"
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
                 ],
-                regex : "(" + identifierRe + ")(\\s*)(:)(\\s*)(function)(\\s*)(\\()",
-                next: "function_arguments"
+                regex : "(" + identifierRe + ")(\\s*)(:)(\\s*)(function)(\\s*)(\\()(.*?)(\\))"
             }, { // Attempt to match : function() { } (this is for issues with 'foo': function() { })
                 token : [
                     "text",
                     "text",
                     "storage.type",
                     "text",
-                    "paren.lparen"
+                    "paren.lparen",
+                    "variable.parameter",
+                    "paren.rparen"
                 ],
-                regex : "(:)(\\s*)(function)(\\s*)(\\()",
-                next: "function_arguments"
+                regex : "(:)(\\s*)(function)?(\\s*)(\\()([^)]*)(\\))"
             }, {
                 token : "constant.language.boolean",
                 regex : /(?:true|false)\b/
@@ -1536,7 +1541,6 @@ var JavaScriptHighlightRules = function() {
         // regular expressions are only allowed after certain tokens. This
         // makes sure we don't mix up regexps with the divison operator
         "regex_allowed": [
-            DocCommentHighlightRules.getStartRule("doc-start"),
             {
                 token : "comment", // multi line comment
                 merge : true,
@@ -1564,9 +1568,10 @@ var JavaScriptHighlightRules = function() {
         "regex": [
             {
                 token: "regexp.keyword.operator",
-                regex: "\\\\(?:u[\\da-fA-F]{4}|x[\\da-fA-F]{2}|.)"
+                regex: "\\\\(?:u[\\da-fA-F]{4}|x[\\da-fA-F]{2}|.)",
+                next: "regex"
             }, {
-                // flag
+				// flag
                 token: "string.regexp",
                 regex: "/\\w*",
                 next: "start",
@@ -1574,6 +1579,7 @@ var JavaScriptHighlightRules = function() {
             }, {
                 token: "string.regexp",
                 regex: "[^\\\\/\\[]+",
+                next: "regex",
                 merge: true
             }, {
                 token: "string.regexp.charachterclass",
@@ -1589,7 +1595,8 @@ var JavaScriptHighlightRules = function() {
         "regex_character_class": [
             {
                 token: "regexp.keyword.operator",
-                regex: "\\\\(?:u[\\da-fA-F]{4}|x[\\da-fA-F]{2}|.)"
+                regex: "\\\\(?:u[\\da-fA-F]{4}|x[\\da-fA-F]{2}|.)",
+                next: "regex_character_class"
             }, {
                 token: "string.regexp.charachterclass",
                 regex: "]",
@@ -1598,24 +1605,7 @@ var JavaScriptHighlightRules = function() {
             }, {
                 token: "string.regexp.charachterclass",
                 regex: "[^\\\\\\]]+",
-                merge: true
-            }, {
-                token: "empty",
-                regex: "",
-                next: "start"
-            }
-        ],
-        "function_arguments": [
-            {
-                token: "variable.parameter",
-                regex: identifierRe,
-            }, {
-                token: "punctuation.operator",
-                regex: "[, ]+",
-                merge: true
-            }, {
-                token: "punctuation.operator",
-                regex: "$",
+                next: "regex_character_class",
                 merge: true
             }, {
                 token: "empty",
@@ -1653,18 +1643,11 @@ var JavaScriptHighlightRules = function() {
                 regex : escapedRe
             }, {
                 token : "string",
-                regex : '[^"\\\\]+',
-                merge : true
+                regex : '[^"\\\\]+'
             }, {
                 token : "string",
-                regex : "\\\\$",
-                next  : "qqstring",
-                merge : true
-            }, {
-                token : "string",
-                regex : '"|$',
-                next  : "start",
-                merge : true
+                regex : '"',
+                next  : "start"
             }
         ],
         "qstring" : [
@@ -1673,24 +1656,17 @@ var JavaScriptHighlightRules = function() {
                 regex : escapedRe
             }, {
                 token : "string",
-                regex : "[^'\\\\]+",
-                merge : true
+                regex : "[^'\\\\]+"
             }, {
                 token : "string",
-                regex : "\\\\$",
-                next  : "qstring",
-                merge : true
-            }, {
-                token : "string",
-                regex : "'|$",
-                next  : "start",
-                merge : true
+                regex : "'",
+                next  : "start"
             }
         ]
     };
 
     this.embedRules(DocCommentHighlightRules, "doc-",
-        [ DocCommentHighlightRules.getEndRule("start") ]);
+        [ new DocCommentHighlightRules().getEndRule("start") ]);
 };
 
 oop.inherits(JavaScriptHighlightRules, TextHighlightRules);
@@ -1768,24 +1744,27 @@ var DocCommentHighlightRules = function() {
 
 oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
-DocCommentHighlightRules.getStartRule = function(start) {
-    return {
-        token : "comment.doc", // doc comment
-        merge : true,
-        regex : "\\/\\*(?=\\*)",
-        next  : start
-    };
-};
+(function() {
 
-DocCommentHighlightRules.getEndRule = function (start) {
-    return {
-        token : "comment.doc", // closing comment
-        merge : true,
-        regex : "\\*\\/",
-        next  : start
+    this.getStartRule = function(start) {
+        return {
+            token : "comment.doc", // doc comment
+            merge : true,
+            regex : "\\/\\*(?=\\*)",
+            next  : start
+        };
     };
-};
+    
+    this.getEndRule = function (start) {
+        return {
+            token : "comment.doc", // closing comment
+            merge : true,
+            regex : "\\*\\/",
+            next  : start
+        };
+    };
 
+}).call(DocCommentHighlightRules.prototype);
 
 exports.DocCommentHighlightRules = DocCommentHighlightRules;
 

@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-twilight .ace_cursor {\
-  border-left: 2px solid #A7A7A7;\
+  border-left: 1px solid #A7A7A7;\
 }\
 \
 .ace-twilight .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-twilight .ace_marker-layer .ace_selection {\
   background: rgba(221, 240, 255, 0.20);\
-}\
-\
-.ace-twilight.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #141414;\
-  border-radius: 2px;\
 }\
 \
 .ace-twilight .ace_marker-layer .ace_step {\

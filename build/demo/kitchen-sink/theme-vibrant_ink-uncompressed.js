@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-vibrant-ink .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-vibrant-ink .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-vibrant-ink .ace_marker-layer .ace_selection {\
   background: #6699CC;\
-}\
-\
-.ace-vibrant-ink.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #0F0F0F;\
-  border-radius: 2px;\
 }\
 \
 .ace-vibrant-ink .ace_marker-layer .ace_step {\

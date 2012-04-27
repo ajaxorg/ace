@@ -1399,7 +1399,7 @@ EventEmitter._dispatchEvent = function(eventName, e) {
     }
     
     if (defaultHandler && !e.defaultPrevented)
-        return defaultHandler(e);
+        defaultHandler(e);
 };
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
@@ -1804,9 +1804,10 @@ var Document = function(text) {
                                                          range.end.column);
         }
         else {
-            var lines = this.getLines(range.start.row+1, range.end.row-1);
-            lines.unshift((this.$lines[range.start.row] || "").substring(range.start.column));
-            lines.push((this.$lines[range.end.row] || "").substring(0, range.end.column));
+            var lines = [];
+            lines.push(this.$lines[range.start.row].substring(range.start.column));
+            lines.push.apply(lines, this.getLines(range.start.row+1, range.end.row-1));
+            lines.push(this.$lines[range.end.row].substring(0, range.end.column));
             return lines.join(this.getNewLineCharacter());
         }
     };
@@ -2172,7 +2173,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
-    this.intersects = function(range) {
+    this.intersectsRange = function(range) {
         var cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
     }

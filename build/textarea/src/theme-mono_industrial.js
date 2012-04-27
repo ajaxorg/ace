@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-mono-industrial .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-mono-industrial .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-mono-industrial .ace_marker-layer .ace_selection {\
   background: rgba(145, 153, 148, 0.40);\
-}\
-\
-.ace-mono-industrial.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #222C28;\
-  border-radius: 2px;\
 }\
 \
 .ace-mono-industrial .ace_marker-layer .ace_step {\

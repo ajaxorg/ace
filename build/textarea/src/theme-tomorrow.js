@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow .ace_cursor {\
-  border-left: 2px solid #AEAFAD;\
+  border-left: 1px solid #AEAFAD;\
 }\
 \
 .ace-tomorrow .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-tomorrow .ace_marker-layer .ace_selection {\
   background: #D6D6D6;\
-}\
-\
-.ace-tomorrow.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #FFFFFF;\
-  border-radius: 2px;\
 }\
 \
 .ace-tomorrow .ace_marker-layer .ace_step {\

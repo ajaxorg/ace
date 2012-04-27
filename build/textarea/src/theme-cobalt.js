@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-cobalt .ace_cursor {\
-  border-left: 2px solid #FFFFFF;\
+  border-left: 1px solid #FFFFFF;\
 }\
 \
 .ace-cobalt .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-cobalt .ace_marker-layer .ace_selection {\
   background: rgba(179, 101, 57, 0.75);\
-}\
-\
-.ace-cobalt.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #002240;\
-  border-radius: 2px;\
 }\
 \
 .ace-cobalt .ace_marker-layer .ace_step {\

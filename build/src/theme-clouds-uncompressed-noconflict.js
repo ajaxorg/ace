@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-clouds .ace_cursor {\
-  border-left: 2px solid #000000;\
+  border-left: 1px solid #000000;\
 }\
 \
 .ace-clouds .ace_cursor.ace_overwrite {\
@@ -78,11 +78,6 @@ exports.cssText = "\
 \
 .ace-clouds .ace_marker-layer .ace_selection {\
   background: #BDD5FC;\
-}\
-\
-.ace-clouds.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #FFFFFF;\
-  border-radius: 2px;\
 }\
 \
 .ace-clouds .ace_marker-layer .ace_step {\
