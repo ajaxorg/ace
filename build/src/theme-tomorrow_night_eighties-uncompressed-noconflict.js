@@ -68,7 +68,7 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow-night-eighties .ace_cursor {\
-  border-left: 1px solid #CCCCCC;\
+  border-left: 2px solid #CCCCCC;\
 }\
 \
 .ace-tomorrow-night-eighties .ace_cursor.ace_overwrite {\
@@ -78,6 +78,11 @@ exports.cssText = "\
 \
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_selection {\
   background: #515151;\
+}\
+\
+.ace-tomorrow-night-eighties.multiselect .ace_selection.start {\
+  box-shadow: 0 0 3px 0px #2D2D2D;\
+  border-radius: 2px;\
 }\
 \
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_step {\
