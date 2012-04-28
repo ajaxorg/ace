@@ -164,7 +164,7 @@ var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocComme
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var PhpHighlightRules = function() {
-    var docComment = DocCommentHighlightRules;
+    var docComment = new DocCommentHighlightRules();
     // http://php.net/quickref.php
     var builtinFunctions = lang.arrayToMap(
         ('abs|acos|acosh|addcslashes|addslashes|aggregate|aggregate_info|aggregate_methods|aggregate_methods_by_list|aggregate_methods_by_regexp|' +
@@ -1269,7 +1269,7 @@ var PhpHighlightRules = function() {
     };
 
     this.embedRules(DocCommentHighlightRules, "doc-",
-        [ DocCommentHighlightRules.getEndRule("start") ]);
+        [ new DocCommentHighlightRules().getEndRule("start") ]);
 };
 
 oop.inherits(PhpHighlightRules, TextHighlightRules);
@@ -1347,24 +1347,27 @@ var DocCommentHighlightRules = function() {
 
 oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
-DocCommentHighlightRules.getStartRule = function(start) {
-    return {
-        token : "comment.doc", // doc comment
-        merge : true,
-        regex : "\\/\\*(?=\\*)",
-        next  : start
-    };
-};
+(function() {
 
-DocCommentHighlightRules.getEndRule = function (start) {
-    return {
-        token : "comment.doc", // closing comment
-        merge : true,
-        regex : "\\*\\/",
-        next  : start
+    this.getStartRule = function(start) {
+        return {
+            token : "comment.doc", // doc comment
+            merge : true,
+            regex : "\\/\\*(?=\\*)",
+            next  : start
+        };
     };
-};
+    
+    this.getEndRule = function (start) {
+        return {
+            token : "comment.doc", // closing comment
+            merge : true,
+            regex : "\\*\\/",
+            next  : start
+        };
+    };
 
+}).call(DocCommentHighlightRules.prototype);
 
 exports.DocCommentHighlightRules = DocCommentHighlightRules;
 

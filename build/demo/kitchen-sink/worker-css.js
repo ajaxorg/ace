@@ -2070,7 +2070,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 };
 
 (function() {
-    this.isEqual = function(range) {
+    this.isEequal = function(range) {
         return this.start.row == range.start.row &&
             this.end.row == range.end.row &&
             this.start.column == range.start.column &&
@@ -2134,11 +2134,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
     this.containsRange = function(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
-    }
-
-    this.intersects = function(range) {
-        var cmp = this.compareRange(range);
-        return (cmp == -1 || cmp == 0 || cmp == 1);
     }
 
     this.isEnd = function(row, column) {
@@ -2299,21 +2294,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
         return Range.fromPoints(start || this.start, end || this.end);
     };
-
-    this.fixOrientation = function() {
-        if (
-            this.start.row < this.end.row 
-            || (this.start.row == this.end.row && this.start.column < this.end.column)
-        ) {
-            return false;
-        }
-        
-        var temp = this.start;
-        this.end = this.start;
-        this.start = temp;
-        return true;
-    };
-
 
     this.isEmpty = function() {
         return (this.start.row == this.end.row && this.start.column == this.end.column);

@@ -75,14 +75,9 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #A7A7A7;\
 }\
-\
+ \
 .ace-twilight .ace_marker-layer .ace_selection {\
   background: rgba(221, 240, 255, 0.20);\
-}\
-\
-.ace-twilight.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #141414;\
-  border-radius: 2px;\
 }\
 \
 .ace-twilight .ace_marker-layer .ace_step {\
@@ -101,7 +96,7 @@ exports.cssText = "\
 .ace-twilight .ace_marker-layer .ace_selected_word {\
   border: 1px solid rgba(221, 240, 255, 0.20);\
 }\
-\
+       \
 .ace-twilight .ace_invisible {\
   color: rgba(255, 255, 255, 0.25);\
 }\
@@ -111,14 +106,6 @@ exports.cssText = "\
 }\
 \
 .ace-twilight .ace_constant, .ace-twilight .ace_constant.ace_other {\
-  color:#CF6A4C;\
-}\
-\
-.ace-twilight .ace_constant.ace_character,  {\
-  color:#CF6A4C;\
-}\
-\
-.ace-twilight .ace_constant.ace_character.ace_escape,  {\
   color:#CF6A4C;\
 }\
 \

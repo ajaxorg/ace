@@ -84,7 +84,7 @@ var HaxeHighlightRules = function() {
                 token : "comment",
                 regex : "\\/\\/.*$"
             },
-            DocCommentHighlightRules.getStartRule("doc-start"),
+            new DocCommentHighlightRules().getStartRule("doc-start"),
             {
                 token : "comment", // multi line comment
                 regex : "\\/\\*",
@@ -153,7 +153,7 @@ var HaxeHighlightRules = function() {
     };
 
     this.embedRules(DocCommentHighlightRules, "doc-",
-        [ DocCommentHighlightRules.getEndRule("start") ]);
+        [ new DocCommentHighlightRules().getEndRule("start") ]);
 };
 
 oop.inherits(HaxeHighlightRules, TextHighlightRules);
@@ -231,24 +231,27 @@ var DocCommentHighlightRules = function() {
 
 oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
-DocCommentHighlightRules.getStartRule = function(start) {
-    return {
-        token : "comment.doc", // doc comment
-        merge : true,
-        regex : "\\/\\*(?=\\*)",
-        next  : start
-    };
-};
+(function() {
 
-DocCommentHighlightRules.getEndRule = function (start) {
-    return {
-        token : "comment.doc", // closing comment
-        merge : true,
-        regex : "\\*\\/",
-        next  : start
+    this.getStartRule = function(start) {
+        return {
+            token : "comment.doc", // doc comment
+            merge : true,
+            regex : "\\/\\*(?=\\*)",
+            next  : start
+        };
     };
-};
+    
+    this.getEndRule = function (start) {
+        return {
+            token : "comment.doc", // closing comment
+            merge : true,
+            regex : "\\*\\/",
+            next  : start
+        };
+    };
 
+}).call(DocCommentHighlightRules.prototype);
 
 exports.DocCommentHighlightRules = DocCommentHighlightRules;
 

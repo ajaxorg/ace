@@ -75,14 +75,9 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #FFFFFF;\
 }\
-\
+ \
 .ace-merbivore .ace_marker-layer .ace_selection {\
   background: #454545;\
-}\
-\
-.ace-merbivore.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #161616;\
-  border-radius: 2px;\
 }\
 \
 .ace-merbivore .ace_marker-layer .ace_step {\
@@ -101,7 +96,7 @@ exports.cssText = "\
 .ace-merbivore .ace_marker-layer .ace_selected_word {\
   border: 1px solid #454545;\
 }\
-\
+       \
 .ace-merbivore .ace_invisible {\
   color: #404040;\
 }\
@@ -111,14 +106,6 @@ exports.cssText = "\
 }\
 \
 .ace-merbivore .ace_constant, .ace-merbivore .ace_constant.ace_other {\
-  color:#1EDAFB;\
-}\
-\
-.ace-merbivore .ace_constant.ace_character,  {\
-  color:#1EDAFB;\
-}\
-\
-.ace-merbivore .ace_constant.ace_character.ace_escape,  {\
   color:#1EDAFB;\
 }\
 \

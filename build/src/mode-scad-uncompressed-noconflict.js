@@ -197,7 +197,7 @@ var scadHighlightRules = function() {
                 token : "comment",
                 regex : "\\/\\/.*$"
             },
-            DocCommentHighlightRules.getStartRule("start"),
+            new DocCommentHighlightRules().getStartRule("start"),
             {
                 token : "comment", // multi line comment
                 merge : true,
@@ -291,7 +291,7 @@ var scadHighlightRules = function() {
     };
     
     this.embedRules(DocCommentHighlightRules, "doc-",
-        [ DocCommentHighlightRules.getEndRule("start") ]);
+        [ new DocCommentHighlightRules().getEndRule("start") ]);
 };
 
 oop.inherits(scadHighlightRules, TextHighlightRules);
@@ -369,24 +369,27 @@ var DocCommentHighlightRules = function() {
 
 oop.inherits(DocCommentHighlightRules, TextHighlightRules);
 
-DocCommentHighlightRules.getStartRule = function(start) {
-    return {
-        token : "comment.doc", // doc comment
-        merge : true,
-        regex : "\\/\\*(?=\\*)",
-        next  : start
-    };
-};
+(function() {
 
-DocCommentHighlightRules.getEndRule = function (start) {
-    return {
-        token : "comment.doc", // closing comment
-        merge : true,
-        regex : "\\*\\/",
-        next  : start
+    this.getStartRule = function(start) {
+        return {
+            token : "comment.doc", // doc comment
+            merge : true,
+            regex : "\\/\\*(?=\\*)",
+            next  : start
+        };
     };
-};
+    
+    this.getEndRule = function (start) {
+        return {
+            token : "comment.doc", // closing comment
+            merge : true,
+            regex : "\\*\\/",
+            next  : start
+        };
+    };
 
+}).call(DocCommentHighlightRules.prototype);
 
 exports.DocCommentHighlightRules = DocCommentHighlightRules;
 

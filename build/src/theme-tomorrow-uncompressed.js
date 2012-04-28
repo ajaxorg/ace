@@ -75,14 +75,9 @@ exports.cssText = "\
   border-left: 0px;\
   border-bottom: 1px solid #AEAFAD;\
 }\
-\
+ \
 .ace-tomorrow .ace_marker-layer .ace_selection {\
   background: #D6D6D6;\
-}\
-\
-.ace-tomorrow.multiselect .ace_selection.start {\
-  box-shadow: 0 0 3px 0px #FFFFFF;\
-  border-radius: 2px;\
 }\
 \
 .ace-tomorrow .ace_marker-layer .ace_step {\
@@ -101,7 +96,7 @@ exports.cssText = "\
 .ace-tomorrow .ace_marker-layer .ace_selected_word {\
   border: 1px solid #D6D6D6;\
 }\
-\
+       \
 .ace-tomorrow .ace_invisible {\
   color: #D1D1D1;\
 }\

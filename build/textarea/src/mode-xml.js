@@ -125,18 +125,12 @@ var XmlHighlightRules = function() {
             regex : "<\\!--",
             next : "comment"
         }, {
-            token : "xml_pe",
-            regex : "<\\!.*?>"
-        }, {
             token : "meta.tag", // opening tag
             regex : "<\\/?",
             next : "tag"
         }, {
             token : "text",
             regex : "\\s+"
-        }, {
-            token : "constant.character.entity",
-            regex : "(?:&#[0-9]+;)|(?:&#x[0-9a-fA-F]+;)|(?:&[a-zA-Z0-9_:\\.-]+;)"
         }, {
             token : "text",
             regex : "[^<]+"
@@ -286,7 +280,7 @@ exports.tag = function(states, name, nextState) {
             }
         },        
         merge : true,
-        regex : "[-_a-zA-Z0-9:]+",
+        regex : "[-_a-zA-Z0-9:!]+",
         next : name + "_embed_attribute_list" 
     }, {
         token: "empty",
