@@ -1,0 +1,16 @@
+{
+    "main": "./demo.js",
+    "mappings": {
+        "ace": "../.."
+    },
+    "config": {
+        "github.com/sourcemint/bundler-js/0/-meta/config/0": {
+            "adapter": "github.com/sourcemint/sdk-requirejs/0",
+            "resources": [
+                "./icons/*",
+                "./logo.png",
+                "./styles.css"
+            ]
+        }
+    }
+}
