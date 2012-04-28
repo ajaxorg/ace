@@ -1,0 +1,1695 @@
+<!DOCTYPE html><!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Ace API - selection</title>
+    <meta name="generator" content="c9-doc-build">
+    <meta name="description" content="Ace API documentation for the online code editor.">
+    <meta name="author" content="Garen J. Torikian">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="./resources/csses/bootstrap.min.css">
+    <link rel="stylesheet" href="./resources/csses/prettify.css">
+    <link rel="stylesheet" href="./resources/csses/ace_api.css">
+    <link href="./resources/images/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="./resources/javascripts/jquery.js"></script>
+    <script src="./resources/javascripts/clicker.js"></script>
+    <script src="./resources/javascripts/jquery.collapse.js"></script>
+    <script src="./resources/javascripts/jquery.cookie.js"></script>
+    <script src="./resources/javascripts/bootstrap-dropdown.js"></script>
+    <script src="./resources/javascripts/jquery-scrollspy.js"></script>
+    <script script src="./resources/javascripts/prettify-extension.js"></script>
+  </head>
+  <body>
+    <div id="nonFooter">
+      <div id="wrapper">
+        <div class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container"><span class="brand"></span>
+              <ul class="nav topLinks">
+                <li id="ace_site"><a href="../../index.html">Ace</a></li>
+                <li id="ace_api" class="active"><a href="http://ace.ajax.org/api">Ace API Reference</a></li>
+              </ul>
+              <form id="searchbox" action="" class="navbar-search pull-right">	
+                <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
+              </form>
+            </div>
+          </div>
+        </div>
+        <header class="filler"></header>
+        <div class="container">
+          <div class="content">
+            <div class="row centerpiece">
+              <div class="span3 offset6 sidebarContainer">
+                <div id="sidebar">
+                  <div id="well">
+                    <h3>Ace Reference</h3>
+                    <div class="swirl_divider"> </div>
+                    <ul class="menu">
+                      <li>
+                        <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="split.html" class="menuLink namespace">Split</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="span9 mainContent">
+                <div id="documentation">
+                  <div class="classContent">
+                    <div class="membersBackground"></div>
+                    <div class=" members pos0">
+                      <div class=" membersContent pos0">
+                        <h1 class="memberHeader"><span class="name">Selection<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Ffjakobs%2FDesktop%2FEclipseWorkspaces%2Fajax.org%2Fcloud9infra%2Fsupport%2Fcloud9%2Fsupport%2Face%2Flib%2Face%2Fselection.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                        </h1>
+                        <ul data-tabs="tabs" class="nav tabs pos0">
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="new Selection" class="memberLink"><a href="#Selection.new" class="" title="new Selection (constructor)" data-id="new Selection">new</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (45)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="Selection.addRange" class="memberLink"><a href="multi_select.html#Selection.addRange" class="" title="Selection.addRange (class method)" data-id="Selection.addRange">addRange</a>
+                              </li>
+                              <li data-id="Selection.clearSelection" class="memberLink"><a href="#Selection.clearSelection" class="" title="Selection.clearSelection (class method)" data-id="Selection.clearSelection">clearSelection</a>
+                              </li>
+                              <li data-id="Selection.getCursor" class="memberLink"><a href="#Selection.getCursor" class="" title="Selection.getCursor (class method)" data-id="Selection.getCursor">getCursor</a>
+                              </li>
+                              <li data-id="Selection.getRange" class="memberLink"><a href="#Selection.getRange" class="" title="Selection.getRange (class method)" data-id="Selection.getRange">getRange</a>
+                              </li>
+                              <li data-id="Selection.getSelectionAnchor" class="memberLink"><a href="#Selection.getSelectionAnchor" class="" title="Selection.getSelectionAnchor (class method)" data-id="Selection.getSelectionAnchor">getSelectionAnchor</a>
+                              </li>
+                              <li data-id="Selection.getSelectionLead" class="memberLink"><a href="#Selection.getSelectionLead" class="" title="Selection.getSelectionLead (class method)" data-id="Selection.getSelectionLead">getSelectionLead</a>
+                              </li>
+                              <li data-id="Selection.isBackwards" class="memberLink"><a href="#Selection.isBackwards" class="" title="Selection.isBackwards (class method)" data-id="Selection.isBackwards">isBackwards</a>
+                              </li>
+                              <li data-id="Selection.isEmpty" class="memberLink"><a href="#Selection.isEmpty" class="" title="Selection.isEmpty (class method)" data-id="Selection.isEmpty">isEmpty</a>
+                              </li>
+                              <li data-id="Selection.isMultiLine" class="memberLink"><a href="#Selection.isMultiLine" class="" title="Selection.isMultiLine (class method)" data-id="Selection.isMultiLine">isMultiLine</a>
+                              </li>
+                              <li data-id="Selection.mergeOverlappingRanges" class="memberLink"><a href="multi_select.html#Selection.mergeOverlappingRanges" class="" title="Selection.mergeOverlappingRanges (class method)" data-id="Selection.mergeOverlappingRanges">mergeOverlappingRanges</a>
+                              </li>
+                              <li data-id="Selection.moveCursorBy" class="memberLink"><a href="#Selection.moveCursorBy" class="" title="Selection.moveCursorBy (class method)" data-id="Selection.moveCursorBy">moveCursorBy</a>
+                              </li>
+                              <li data-id="Selection.moveCursorDown" class="memberLink"><a href="#Selection.moveCursorDown" class="" title="Selection.moveCursorDown (class method)" data-id="Selection.moveCursorDown">moveCursorDown</a>
+                              </li>
+                              <li data-id="Selection.moveCursorFileEnd" class="memberLink"><a href="#Selection.moveCursorFileEnd" class="" title="Selection.moveCursorFileEnd (class method)" data-id="Selection.moveCursorFileEnd">moveCursorFileEnd</a>
+                              </li>
+                              <li data-id="Selection.moveCursorFileStart" class="memberLink"><a href="#Selection.moveCursorFileStart" class="" title="Selection.moveCursorFileStart (class method)" data-id="Selection.moveCursorFileStart">moveCursorFileStart</a>
+                              </li>
+                              <li data-id="Selection.moveCursorLeft" class="memberLink"><a href="#Selection.moveCursorLeft" class="" title="Selection.moveCursorLeft (class method)" data-id="Selection.moveCursorLeft">moveCursorLeft</a>
+                              </li>
+                              <li data-id="Selection.moveCursorLineEnd" class="memberLink"><a href="#Selection.moveCursorLineEnd" class="" title="Selection.moveCursorLineEnd (class method)" data-id="Selection.moveCursorLineEnd">moveCursorLineEnd</a>
+                              </li>
+                              <li data-id="Selection.moveCursorLineStart" class="memberLink"><a href="#Selection.moveCursorLineStart" class="" title="Selection.moveCursorLineStart (class method)" data-id="Selection.moveCursorLineStart">moveCursorLineStart</a>
+                              </li>
+                              <li data-id="Selection.moveCursorRight" class="memberLink"><a href="#Selection.moveCursorRight" class="" title="Selection.moveCursorRight (class method)" data-id="Selection.moveCursorRight">moveCursorRight</a>
+                              </li>
+                              <li data-id="Selection.moveCursorTo" class="memberLink"><a href="#Selection.moveCursorTo" class="" title="Selection.moveCursorTo (class method)" data-id="Selection.moveCursorTo">moveCursorTo</a>
+                              </li>
+                              <li data-id="Selection.moveCursorToPosition" class="memberLink"><a href="#Selection.moveCursorToPosition" class="" title="Selection.moveCursorToPosition (class method)" data-id="Selection.moveCursorToPosition">moveCursorToPosition</a>
+                              </li>
+                              <li data-id="Selection.moveCursorToScreen" class="memberLink"><a href="#Selection.moveCursorToScreen" class="" title="Selection.moveCursorToScreen (class method)" data-id="Selection.moveCursorToScreen">moveCursorToScreen</a>
+                              </li>
+                              <li data-id="Selection.moveCursorUp" class="memberLink"><a href="#Selection.moveCursorUp" class="" title="Selection.moveCursorUp (class method)" data-id="Selection.moveCursorUp">moveCursorUp</a>
+                              </li>
+                              <li data-id="Selection.moveCursorWordLeft" class="memberLink"><a href="#Selection.moveCursorWordLeft" class="" title="Selection.moveCursorWordLeft (class method)" data-id="Selection.moveCursorWordLeft">moveCursorWordLeft</a>
+                              </li>
+                              <li data-id="Selection.moveCursorWordRight" class="memberLink"><a href="#Selection.moveCursorWordRight" class="" title="Selection.moveCursorWordRight (class method)" data-id="Selection.moveCursorWordRight">moveCursorWordRight</a>
+                              </li>
+                              <li data-id="Selection.rectangularRangeBlock" class="memberLink"><a href="multi_select.html#Selection.rectangularRangeBlock" class="" title="Selection.rectangularRangeBlock (class method)" data-id="Selection.rectangularRangeBlock">rectangularRangeBlock</a>
+                              </li>
+                              <li data-id="Selection.substractPoint" class="memberLink"><a href="multi_select.html#Selection.substractPoint" class="" title="Selection.substractPoint (class method)" data-id="Selection.substractPoint">substractPoint</a>
+                              </li>
+                              <li data-id="Selection.selectAll" class="memberLink"><a href="#Selection.selectAll" class="" title="Selection.selectAll (class method)" data-id="Selection.selectAll">selectAll</a>
+                              </li>
+                              <li data-id="Selection.selectAWord" class="memberLink"><a href="#Selection.selectAWord" class="" title="Selection.selectAWord (class method)" data-id="Selection.selectAWord">selectAWord</a>
+                              </li>
+                              <li data-id="Selection.selectDown" class="memberLink"><a href="#Selection.selectDown" class="" title="Selection.selectDown (class method)" data-id="Selection.selectDown">selectDown</a>
+                              </li>
+                              <li data-id="Selection.selectFileEnd" class="memberLink"><a href="#Selection.selectFileEnd" class="" title="Selection.selectFileEnd (class method)" data-id="Selection.selectFileEnd">selectFileEnd</a>
+                              </li>
+                              <li data-id="Selection.selectFileStart" class="memberLink"><a href="#Selection.selectFileStart" class="" title="Selection.selectFileStart (class method)" data-id="Selection.selectFileStart">selectFileStart</a>
+                              </li>
+                              <li data-id="Selection.selectLeft" class="memberLink"><a href="#Selection.selectLeft" class="" title="Selection.selectLeft (class method)" data-id="Selection.selectLeft">selectLeft</a>
+                              </li>
+                              <li data-id="Selection.selectLine" class="memberLink"><a href="#Selection.selectLine" class="" title="Selection.selectLine (class method)" data-id="Selection.selectLine">selectLine</a>
+                              </li>
+                              <li data-id="Selection.selectLineEnd" class="memberLink"><a href="#Selection.selectLineEnd" class="" title="Selection.selectLineEnd (class method)" data-id="Selection.selectLineEnd">selectLineEnd</a>
+                              </li>
+                              <li data-id="Selection.selectLineStart" class="memberLink"><a href="#Selection.selectLineStart" class="" title="Selection.selectLineStart (class method)" data-id="Selection.selectLineStart">selectLineStart</a>
+                              </li>
+                              <li data-id="Selection.selectRight" class="memberLink"><a href="#Selection.selectRight" class="" title="Selection.selectRight (class method)" data-id="Selection.selectRight">selectRight</a>
+                              </li>
+                              <li data-id="Selection.selectTo" class="memberLink"><a href="#Selection.selectTo" class="" title="Selection.selectTo (class method)" data-id="Selection.selectTo">selectTo</a>
+                              </li>
+                              <li data-id="Selection.selectToPosition" class="memberLink"><a href="#Selection.selectToPosition" class="" title="Selection.selectToPosition (class method)" data-id="Selection.selectToPosition">selectToPosition</a>
+                              </li>
+                              <li data-id="Selection.selectUp" class="memberLink"><a href="#Selection.selectUp" class="" title="Selection.selectUp (class method)" data-id="Selection.selectUp">selectUp</a>
+                              </li>
+                              <li data-id="Selection.selectWord" class="memberLink"><a href="#Selection.selectWord" class="" title="Selection.selectWord (class method)" data-id="Selection.selectWord">selectWord</a>
+                              </li>
+                              <li data-id="Selection.selectWordLeft" class="memberLink"><a href="#Selection.selectWordLeft" class="" title="Selection.selectWordLeft (class method)" data-id="Selection.selectWordLeft">selectWordLeft</a>
+                              </li>
+                              <li data-id="Selection.selectWordRight" class="memberLink"><a href="#Selection.selectWordRight" class="" title="Selection.selectWordRight (class method)" data-id="Selection.selectWordRight">selectWordRight</a>
+                              </li>
+                              <li data-id="Selection.setSelectionAnchor" class="memberLink"><a href="#Selection.setSelectionAnchor" class="" title="Selection.setSelectionAnchor (class method)" data-id="Selection.setSelectionAnchor">setSelectionAnchor</a>
+                              </li>
+                              <li data-id="Selection.setSelectionRange" class="memberLink"><a href="#Selection.setSelectionRange" class="" title="Selection.setSelectionRange (class method)" data-id="Selection.setSelectionRange">setSelectionRange</a>
+                              </li>
+                              <li data-id="Selection.shiftSelection" class="memberLink"><a href="#Selection.shiftSelection" class="" title="Selection.shiftSelection (class method)" data-id="Selection.shiftSelection">shiftSelection</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <article id="Selection" data-title="Selection (class)" class="article">
+                      <div class="section description">
+                        <div class="memberContent"><p>Contains the cursor position and the text selection of an edit session.
+
+</p>
+<p>The row/columns used in the selection are in document coordinates representing ths coordinates as thez appear in the document before applying soft wrap and folding.</p>
+
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Constructors</h3>
+                    <article id="Selection.new" data-title="new Selection (constructor)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new Selection" class="member-name methodClicker">Selection</span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_new Selection" class="ellipsis_description"><p>Creates a new <code>Selection</code> object. ...</p>
+
+                            </div>
+                            <div id="short_new Selection" class="short_description hiddenSpan"><p>Creates a new <code>Selection</code> object.</p>
+
+                            </div>
+                            <h3 id="new Selection" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The session to use</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Methods</h3>
+                    <article id="Selection.addRange" data-title="Selection.addRange (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.addRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">addRange</span></span>(<span class="sigArgList"><a href="range.html#Range" class="argument methodClicker" title="Range (class)" data-id="Range">Range</a> range, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> $blockChangeEvents</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.addRange" class="ellipsis_description"><p>Adds a range to a selection by entering multiselect mode, if necessary. ...</p>
+
+                            </div>
+                            <div id="short_Selection.addRange" class="short_description hiddenSpan"><p>Adds a range to a selection by entering multiselect mode, if necessary.</p>
+
+                            </div>
+                            <h3 id="Selection.addRange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">range</td><td class="argType" "><a href="range.html#Range" class="" title="Range (class)" data-id="Range">Range</a></td><td class="argDescription ">Required. The new range to add</td></tr><tr class="argumentRow "><td class="argName ">$blockChangeEvents</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Whether or not to block changing events</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.clearSelection" data-title="Selection.clearSelection (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.clearSelection" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">clearSelection</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.clearSelection" class="ellipsis_description"><p>[Empties the selection (by de-selecting it). This function also emits the <code>&#39;changeSelection&#39;</code> event.]{: #Selection.c...</p>
+
+                            </div>
+                            <div id="short_Selection.clearSelection" class="short_description hiddenSpan"><p>Empties the selection (by de-selecting it). This function also emits the <code>&#39;changeSelection&#39;</code> event.</p>
+
+                            </div>
+                            <h3 id="Selection.clearSelection" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.getCursor" data-title="Selection.getCursor (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.getCursor" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">getCursor</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.getCursor" class="ellipsis_description"><p>Gets the current position of the cursor. ...</p>
+
+                            </div>
+                            <div id="short_Selection.getCursor" class="short_description hiddenSpan"><p>Gets the current position of the cursor.</p>
+
+                            </div>
+                            <h3 id="Selection.getCursor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.getRange" data-title="Selection.getRange (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.getRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">getRange</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.getRange" class="ellipsis_description"><p>Returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code></a> for the selected text.</p>
+
+                            </div>
+                            <div id="short_Selection.getRange" class="short_description hiddenSpan"><p>Returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code></a> for the selected text.</p>
+
+                            </div>
+                            <h3 id="Selection.getRange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.getSelectionAnchor" data-title="Selection.getSelectionAnchor (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.getSelectionAnchor" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">getSelectionAnchor</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                  <li><span class="label related-to">Related to <a href="anchor.html#Anchor.getPosition" class="" title="Anchor.getPosition (class method)" data-id="Anchor.getPosition">Anchor.getPosition</a>	</span></li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.getSelectionAnchor" class="ellipsis_description"><p>Returns an object containing the <code>row</code> and <code>column</code> of the calling selection anchor. ...</p>
+
+                            </div>
+                            <div id="short_Selection.getSelectionAnchor" class="short_description hiddenSpan"><p>Returns an object containing the <code>row</code> and <code>column</code> of the calling selection anchor.</p>
+
+                            </div>
+                            <h3 id="Selection.getSelectionAnchor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.getSelectionLead" data-title="Selection.getSelectionLead (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.getSelectionLead" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">getSelectionLead</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.getSelectionLead" class="ellipsis_description"><p>Returns an object containing the <code>row</code> and <code>column</code> of the calling selection lead. ...</p>
+
+                            </div>
+                            <div id="short_Selection.getSelectionLead" class="short_description hiddenSpan"><p>Returns an object containing the <code>row</code> and <code>column</code> of the calling selection lead.</p>
+
+                            </div>
+                            <h3 id="Selection.getSelectionLead" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.isBackwards" data-title="Selection.isBackwards (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.isBackwards" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">isBackwards</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.isBackwards" class="ellipsis_description"><p>Returns <code>true</code> if the selection is going backwards in the document. ...</p>
+
+                            </div>
+                            <div id="short_Selection.isBackwards" class="short_description hiddenSpan"><p>Returns <code>true</code> if the selection is going backwards in the document.</p>
+
+                            </div>
+                            <h3 id="Selection.isBackwards" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.isEmpty" data-title="Selection.isEmpty (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.isEmpty" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">isEmpty</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.isEmpty" class="ellipsis_description"><p>Returns <code>true</code> if the selection is empty. ...</p>
+
+                            </div>
+                            <div id="short_Selection.isEmpty" class="short_description hiddenSpan"><p>Returns <code>true</code> if the selection is empty.</p>
+
+                            </div>
+                            <h3 id="Selection.isEmpty" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.isMultiLine" data-title="Selection.isMultiLine (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.isMultiLine" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">isMultiLine</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.isMultiLine" class="ellipsis_description"><p>Returns <code>true</code> if the selection is a multi-line. ...</p>
+
+                            </div>
+                            <div id="short_Selection.isMultiLine" class="short_description hiddenSpan"><p>Returns <code>true</code> if the selection is a multi-line.</p>
+
+                            </div>
+                            <h3 id="Selection.isMultiLine" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.mergeOverlappingRanges" data-title="Selection.mergeOverlappingRanges (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.mergeOverlappingRanges" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">mergeOverlappingRanges</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.mergeOverlappingRanges" class="ellipsis_description"><p>Merges overlapping ranges ensuring consistency after changes ...</p>
+
+                            </div>
+                            <div id="short_Selection.mergeOverlappingRanges" class="short_description hiddenSpan"><p>Merges overlapping ranges ensuring consistency after changes</p>
+
+                            </div>
+                            <h3 id="Selection.mergeOverlappingRanges" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorBy" data-title="Selection.moveCursorBy (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorBy" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorBy</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> rows, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> chars</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                  <li><span class="label related-to">Related to <a href="edit_session.html#EditSession.documentToScreenPosition" class="" title="EditSession.documentToScreenPosition (class method)" data-id="EditSession.documentToScreenPosition">EditSession.documentToScreenPosition</a>	</span></li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorBy" class="ellipsis_description"><p>Moves the cursor to position indicated by the parameters. Negative numbers move the cursor backwards in the document. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorBy" class="short_description hiddenSpan"><p>Moves the cursor to position indicated by the parameters. Negative numbers move the cursor backwards in the document.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorBy" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">rows</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The number of rows to move by</td></tr><tr class="argumentRow "><td class="argName ">chars</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The number of characters to move by</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorDown" data-title="Selection.moveCursorDown (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorDown" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorDown</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorDown" class="ellipsis_description"><p>Moves the cursor down one row. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorDown" class="short_description hiddenSpan"><p>Moves the cursor down one row.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorDown" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorFileEnd" data-title="Selection.moveCursorFileEnd (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorFileEnd" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorFileEnd</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorFileEnd" class="ellipsis_description"><p>Moves the cursor to the end of the file. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorFileEnd" class="short_description hiddenSpan"><p>Moves the cursor to the end of the file.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorFileEnd" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorFileStart" data-title="Selection.moveCursorFileStart (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorFileStart" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorFileStart</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorFileStart" class="ellipsis_description"><p>Moves the cursor to the start of the file. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorFileStart" class="short_description hiddenSpan"><p>Moves the cursor to the start of the file.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorFileStart" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorLeft" data-title="Selection.moveCursorLeft (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorLeft" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorLeft</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorLeft" class="ellipsis_description"><p>Moves the cursor left one column. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorLeft" class="short_description hiddenSpan"><p>Moves the cursor left one column.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorLineEnd" data-title="Selection.moveCursorLineEnd (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorLineEnd" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorLineEnd</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorLineEnd" class="ellipsis_description"><p>Moves the cursor to the end of the line. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorLineEnd" class="short_description hiddenSpan"><p>Moves the cursor to the end of the line.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorLineEnd" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorLineStart" data-title="Selection.moveCursorLineStart (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorLineStart" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorLineStart</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorLineStart" class="ellipsis_description"><p>Moves the cursor to the start of the line. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorLineStart" class="short_description hiddenSpan"><p>Moves the cursor to the start of the line.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorLineStart" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorRight" data-title="Selection.moveCursorRight (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorRight" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorRight</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorRight" class="ellipsis_description"><p>Moves the cursor right one column. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorRight" class="short_description hiddenSpan"><p>Moves the cursor right one column.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorRight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorTo" data-title="Selection.moveCursorTo (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorTo" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorTo</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> keepDesiredColumn</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorTo" class="ellipsis_description"><p>Moves the cursor to the row and column provided. [If <code>preventUpdateDesiredColumn</code> is <code>true</code>, then the cursor stays i...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorTo" class="short_description hiddenSpan"><p>If <code>preventUpdateDesiredColumn</code> is <code>true</code>, then the cursor stays in the same column position as its original point.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorTo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to move to</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column to move to</td></tr><tr class="argumentRow "><td class="argName ">keepDesiredColumn</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, the cursor move does not respect the previous column</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorToPosition" data-title="Selection.moveCursorToPosition (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorToPosition" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorToPosition</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> position</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorToPosition" class="ellipsis_description"><p>Moves the selection to the position indicated by its <code>row</code> and <code>column</code>. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorToPosition" class="short_description hiddenSpan"><p>Moves the selection to the position indicated by its <code>row</code> and <code>column</code>.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorToPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">position</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. The position to move to</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorToScreen" data-title="Selection.moveCursorToScreen (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorToScreen" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorToScreen</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> keepDesiredColumn</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorToScreen" class="ellipsis_description"><p>Moves the cursor to the screen position indicated by row and column. If <code>preventUpdateDesiredColumn</code> is <code>true</code>, then the cursor stays in the same column position as its original point. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorToScreen" class="short_description hiddenSpan"><p>Moves the cursor to the screen position indicated by row and column. If <code>preventUpdateDesiredColumn</code> is <code>true</code>, then the cursor stays in the same column position as its original point.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorToScreen" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to move to</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column to move to</td></tr><tr class="argumentRow "><td class="argName ">keepDesiredColumn</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, the cursor move does not respect the previous column</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorUp" data-title="Selection.moveCursorUp (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorUp" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorUp</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorUp" class="ellipsis_description"><p>Moves the cursor up one row. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorUp" class="short_description hiddenSpan"><p>Moves the cursor up one row.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorUp" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorWordLeft" data-title="Selection.moveCursorWordLeft (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorWordLeft" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorWordLeft</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorWordLeft" class="ellipsis_description"><p>Moves the cursor to the word on the left. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorWordLeft" class="short_description hiddenSpan"><p>Moves the cursor to the word on the left.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorWordLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.moveCursorWordRight" data-title="Selection.moveCursorWordRight (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.moveCursorWordRight" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorWordRight</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.moveCursorWordRight" class="ellipsis_description"><p>Moves the cursor to the word on the right. ...</p>
+
+                            </div>
+                            <div id="short_Selection.moveCursorWordRight" class="short_description hiddenSpan"><p>Moves the cursor to the word on the right.</p>
+
+                            </div>
+                            <h3 id="Selection.moveCursorWordRight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.rectangularRangeBlock" data-title="Selection.rectangularRangeBlock (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.rectangularRangeBlock" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">rectangularRangeBlock</span></span>(<span class="sigArgList"><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/layer/cursor.js" class="argument methodClicker" title="Cursor" data-id="Cursor">Cursor</a> screenCursor, <a href="anchor.html#Anchor" class="argument methodClicker" title="Anchor (class)" data-id="Anchor">Anchor</a> screenAnchor, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> includeEmptyLines</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.rectangularRangeBlock" class="ellipsis_description"><p>Gets list of ranges composing rectangular block on the screen
+ ...</p>
+
+                            </div>
+                            <div id="short_Selection.rectangularRangeBlock" class="short_description hiddenSpan"><p>Gets list of ranges composing rectangular block on the screen
+</p>
+
+                            </div>
+                            <h3 id="Selection.rectangularRangeBlock" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description"><p>/
+   this.rectangularRangeBlock = function(screenCursor, screenAnchor, includeEmptyLines) {
+       var rectSel = [];
+
+</p>
+<pre><code>   var xBackwards = screenCursor.column &lt; screenAnchor.column;
+   if (xBackwards) {
+       var startColumn = screenCursor.column;
+       var endColumn = screenAnchor.column;
+   } else {
+       var startColumn = screenAnchor.column;
+       var endColumn = screenCursor.column;
+   }
+
+   var yBackwards = screenCursor.row &lt; screenAnchor.row;
+   if (yBackwards) {
+       var startRow = screenCursor.row;
+       var endRow = screenAnchor.row;
+   } else {
+       var startRow = screenAnchor.row;
+       var endRow = screenCursor.row;
+   }
+
+   if (startColumn &lt; 0)
+       startColumn = 0;
+   if (startRow &lt; 0)
+       startRow = 0;
+
+   if (startRow == endRow)
+       includeEmptyLines = true;
+
+   for (var row = startRow; row &lt;= endRow; row++) {
+       var range = Range.fromPoints(
+           this.session.screenToDocumentPosition(row, startColumn),
+           this.session.screenToDocumentPosition(row, endColumn)
+       );
+       if (range.isEmpty()) {
+           if (docEnd &amp;&amp; isSamePoint(range.end, docEnd))
+               break;
+           var docEnd = range.end;
+       }
+       range.cursor = xBackwards ? range.start : range.end;
+       rectSel.push(range);
+   }
+
+   if (yBackwards)
+       rectSel.reverse();
+
+   if (!includeEmptyLines) {
+       var end = rectSel.length - 1;
+       while (rectSel[end].isEmpty() &amp;&amp; end &gt; 0)
+           end--;
+       if (end &gt; 0) {
+           var start = 0;
+           while (rectSel[start].isEmpty())
+               start++;
+       }
+       for (var i = end; i &gt;= start; i--) {
+           if (rectSel[i].isEmpty())
+               rectSel.splice(i, 1);
+       }
+   }
+
+   return rectSel;</code></pre>
+<p>   };
+}).call(Selection.prototype);
+
+</p>
+<p>// extend Editor
+var Editor = require(&quot;./editor&quot;).Editor;
+(function() {
+
+</p>
+<p>   /** extension
+Editor.updateSelectionMarkers()
+
+</p>
+<p>Updates the cursor and marker layers.</p>
+
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">screenCursor</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/layer/cursor.js" class="" title="Cursor" data-id="Cursor">Cursor</a></td><td class="argDescription ">Required. The cursor to use</td></tr><tr class="argumentRow "><td class="argName ">screenAnchor</td><td class="argType" "><a href="anchor.html#Anchor" class="" title="Anchor (class)" data-id="Anchor">Anchor</a></td><td class="argDescription ">Required. The anchor to use</td></tr><tr class="argumentRow "><td class="argName ">includeEmptyLins</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If true, this includes ranges inside the block which are empty due to clipping</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.substractPoint" data-title="Selection.substractPoint (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.substractPoint" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">substractPoint</span></span>(<span class="sigArgList"><a href="range.html#Range" class="argument methodClicker" title="Range (class)" data-id="Range">Range</a> pos</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.substractPoint" class="ellipsis_description"><p>Removes a Range containing pos (if it exists). ...</p>
+
+                            </div>
+                            <div id="short_Selection.substractPoint" class="short_description hiddenSpan"><p>Removes a Range containing pos (if it exists).</p>
+
+                            </div>
+                            <h3 id="Selection.substractPoint" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">pos</td><td class="argType" "><a href="range.html#Range" class="" title="Range (class)" data-id="Range">Range</a></td><td class="argDescription ">Required. The position to remove, as a <code>{row, column}</code> object</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectAll" data-title="Selection.selectAll (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectAll" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectAll</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectAll" class="ellipsis_description"><p>Selects all the text in the document. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectAll" class="short_description hiddenSpan"><p>Selects all the text in the document.</p>
+
+                            </div>
+                            <h3 id="Selection.selectAll" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectAWord" data-title="Selection.selectAWord (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectAWord" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectAWord</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                  <li><span class="label related-to">Related to <a href="edit_session.html#EditSession.getAWordRange" class="" title="EditSession.getAWordRange (class method)" data-id="EditSession.getAWordRange">EditSession.getAWordRange</a>	</span></li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectAWord" class="ellipsis_description"><p>Selects a word, including its right whitespace. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectAWord" class="short_description hiddenSpan"><p>Selects a word, including its right whitespace.</p>
+
+                            </div>
+                            <h3 id="Selection.selectAWord" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectDown" data-title="Selection.selectDown (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectDown" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectDown</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectDown" class="ellipsis_description"><p>Moves the selection down one row. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectDown" class="short_description hiddenSpan"><p>Moves the selection down one row.</p>
+
+                            </div>
+                            <h3 id="Selection.selectDown" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectFileEnd" data-title="Selection.selectFileEnd (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectFileEnd" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectFileEnd</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectFileEnd" class="ellipsis_description"><p>Moves the selection to the end of the file. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectFileEnd" class="short_description hiddenSpan"><p>Moves the selection to the end of the file.</p>
+
+                            </div>
+                            <h3 id="Selection.selectFileEnd" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectFileStart" data-title="Selection.selectFileStart (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectFileStart" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectFileStart</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectFileStart" class="ellipsis_description"><p>Moves the selection to the start of the file. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectFileStart" class="short_description hiddenSpan"><p>Moves the selection to the start of the file.</p>
+
+                            </div>
+                            <h3 id="Selection.selectFileStart" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectLeft" data-title="Selection.selectLeft (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectLeft" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectLeft</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectLeft" class="ellipsis_description"><p>Moves the selection left one column. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectLeft" class="short_description hiddenSpan"><p>Moves the selection left one column.</p>
+
+                            </div>
+                            <h3 id="Selection.selectLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectLine" data-title="Selection.selectLine (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectLine" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectLine</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectLine" class="ellipsis_description"><p>Selects the entire line. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectLine" class="short_description hiddenSpan"><p>Selects the entire line.</p>
+
+                            </div>
+                            <h3 id="Selection.selectLine" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectLineEnd" data-title="Selection.selectLineEnd (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectLineEnd" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectLineEnd</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectLineEnd" class="ellipsis_description"><p>Moves the selection to the end of the current line. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectLineEnd" class="short_description hiddenSpan"><p>Moves the selection to the end of the current line.</p>
+
+                            </div>
+                            <h3 id="Selection.selectLineEnd" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectLineStart" data-title="Selection.selectLineStart (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectLineStart" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectLineStart</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectLineStart" class="ellipsis_description"><p>Moves the selection to the beginning of the current line. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectLineStart" class="short_description hiddenSpan"><p>Moves the selection to the beginning of the current line.</p>
+
+                            </div>
+                            <h3 id="Selection.selectLineStart" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectRight" data-title="Selection.selectRight (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectRight" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectRight</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectRight" class="ellipsis_description"><p>Moves the selection right one column. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectRight" class="short_description hiddenSpan"><p>Moves the selection right one column.</p>
+
+                            </div>
+                            <h3 id="Selection.selectRight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectTo" data-title="Selection.selectTo (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectTo" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectTo</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectTo" class="ellipsis_description"><p>Moves the selection cursor to the indicated row and column. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectTo" class="short_description hiddenSpan"><p>Moves the selection cursor to the indicated row and column.</p>
+
+                            </div>
+                            <h3 id="Selection.selectTo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to select to</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column to select to</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectToPosition" data-title="Selection.selectToPosition (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectToPosition" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectToPosition</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> pos</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectToPosition" class="ellipsis_description"><p>Moves the selection cursor to the row and column indicated by <code>pos</code>. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectToPosition" class="short_description hiddenSpan"><p>Moves the selection cursor to the row and column indicated by <code>pos</code>.</p>
+
+                            </div>
+                            <h3 id="Selection.selectToPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">pos</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. An object containing the row and column</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectUp" data-title="Selection.selectUp (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectUp" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectUp</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectUp" class="ellipsis_description"><p>Moves the selection up one row. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectUp" class="short_description hiddenSpan"><p>Moves the selection up one row.</p>
+
+                            </div>
+                            <h3 id="Selection.selectUp" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectWord" data-title="Selection.selectWord (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectWord" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectWord</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                  <li><span class="label related-to">Related to <a href="edit_session.html#EditSession.getWordRange" class="" title="EditSession.getWordRange (class method)" data-id="EditSession.getWordRange">EditSession.getWordRange</a>	</span></li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectWord" class="ellipsis_description"><p>Moves the selection to highlight the entire word. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectWord" class="short_description hiddenSpan"><p>Moves the selection to highlight the entire word.</p>
+
+                            </div>
+                            <h3 id="Selection.selectWord" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectWordLeft" data-title="Selection.selectWordLeft (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectWordLeft" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectWordLeft</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectWordLeft" class="ellipsis_description"><p>Moves the selection to the first word on the left. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectWordLeft" class="short_description hiddenSpan"><p>Moves the selection to the first word on the left.</p>
+
+                            </div>
+                            <h3 id="Selection.selectWordLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.selectWordRight" data-title="Selection.selectWordRight (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.selectWordRight" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">selectWordRight</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.selectWordRight" class="ellipsis_description"><p>Moves the selection to the first word on the right. ...</p>
+
+                            </div>
+                            <div id="short_Selection.selectWordRight" class="short_description hiddenSpan"><p>Moves the selection to the first word on the right.</p>
+
+                            </div>
+                            <h3 id="Selection.selectWordRight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.setSelectionAnchor" data-title="Selection.setSelectionAnchor (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.setSelectionAnchor" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">setSelectionAnchor</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.setSelectionAnchor" class="ellipsis_description"><p>Sets the row and column position of the anchor. This function also emits the <code>&#39;changeSelection&#39;</code> event. ...</p>
+
+                            </div>
+                            <div id="short_Selection.setSelectionAnchor" class="short_description hiddenSpan"><p>Sets the row and column position of the anchor. This function also emits the <code>&#39;changeSelection&#39;</code> event.</p>
+
+                            </div>
+                            <h3 id="Selection.setSelectionAnchor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new row</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new column</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.setSelectionRange" data-title="Selection.setSelectionRange (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.setSelectionRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">setSelectionRange</span></span>(<span class="sigArgList"><a href="range.html#Range" class="argument methodClicker" title="Range (class)" data-id="Range">Range</a> range, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> reverse</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.setSelectionRange" class="ellipsis_description"><p>Sets the selection to the provided range. ...</p>
+
+                            </div>
+                            <div id="short_Selection.setSelectionRange" class="short_description hiddenSpan"><p>Sets the selection to the provided range.</p>
+
+                            </div>
+                            <h3 id="Selection.setSelectionRange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">range</td><td class="argType" "><a href="range.html#Range" class="" title="Range (class)" data-id="Range">Range</a></td><td class="argDescription ">Required. The range of text to select</td></tr><tr class="argumentRow "><td class="argName ">reverse</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Indicates if the range should go backwards (<code>true</code>) or not</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Selection.shiftSelection" data-title="Selection.shiftSelection (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Selection.shiftSelection" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">shiftSelection</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> columns</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Selection.shiftSelection" class="ellipsis_description"><p>Shifts the selection up (or down, if <a href="#Selection.isBackwards" class="link-short" title="Selection.isBackwards (class method)" data-id="Selection.isBackwards">isBackwards</a> is true) the given number of columns. ...</p>
+
+                            </div>
+                            <div id="short_Selection.shiftSelection" class="short_description hiddenSpan"><p>Shifts the selection up (or down, if <a href="#Selection.isBackwards" class="link-short" title="Selection.isBackwards (class method)" data-id="Selection.isBackwards">isBackwards</a> is true) the given number of columns.</p>
+
+                            </div>
+                            <h3 id="Selection.shiftSelection" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">columns</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The number of columns to shift by</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+                <div id="disqus_thread"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="container">
+        <div class="footer-text pull-right"> 
+          <p><a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012</p>
+        </div>
+      </div>
+    </footer>
+    <!-- scripts concatenated and minified via ant build script--><script defer src="./resources/javascripts/plugins.js"></script>
+    <script defer src="./resources/javascripts/prettify.js"></script>
+    <script defer src="./resources/javascripts/prettify-extension.js"></script>
+    <script defer src="./resources/javascripts/ux.js"></script>
+    <script defer src="./resources/javascripts/disqus-ext.js"></script>
+    <script defer src="./resources/javascripts/ga.js"></script>
+    <!-- end scripts--><!--[if lt IE 7]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>
+      window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})
+      
+      
+    </script><![endif]-->
+  </body>
+</html>

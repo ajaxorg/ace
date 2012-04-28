@@ -1,0 +1,15 @@
+{
+  "name": "ace_docs",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ajaxorg/ace.git"
+  },
+  "engines": {
+    "node": "~0.6.0"
+  },
+  "dependencies": {
+    "panino" : "~1.0.12"
+  },
+  "devDependencies": {}
+}
