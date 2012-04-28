@@ -18,18 +18,19 @@
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
         "libxml": "0.0.x",
-        "dryice": "0.4.2"
+        "dryice": "0.4.2",
+        "panino" : "~1.0.12"
     },
-
+    "engines": {
+      "node": "~0.6.0"
+    },
     "licenses": [{
         "type": "MPL",
         "url": "http://www.mozilla.org/MPL/"
-    },
-    {
+    }, {
         "type": "GPL",
         "url": "http://www.gnu.org/licenses/gpl.html"
-    },
-    {
+    }, {
         "type": "LGPL",
         "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
     }],
