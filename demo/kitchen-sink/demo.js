@@ -301,7 +301,8 @@ split.on("focus", function(editor) {
 });
 env.split = split;
 window.env = env;
-window.ace = env.editor;
+window.editor = window.ace = env.editor;
+env.editor.setAnimatedScroll(true);
 
 var docEl = document.getElementById("doc");
 var modeEl = document.getElementById("mode");
@@ -395,13 +396,13 @@ function saveOption(el, val) {
     }
 }
 
-themeEl.addEventListener("mouseover", function(e){
+event.addListener(themeEl, "mouseover", function(e){
     this.desiredValue = e.target.value;
     if (!this.$timer)
         this.$timer = setTimeout(this.updateTheme);
 })
 
-themeEl.addEventListener("mouseout", function(e){
+event.addListener(themeEl, "mouseout", function(e){
     this.desiredValue = null;
     if (!this.$timer)
         this.$timer = setTimeout(this.updateTheme, 20);
@@ -486,7 +487,6 @@ bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
 });
 
-env.editor.setAnimatedScroll(true);
 bindCheckbox("animate_scroll", function(checked) {
     env.editor.setAnimatedScroll(checked);
 });
