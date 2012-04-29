@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Ace API - anchor</title>
+    <title>Ace API - undomanager</title>
     <meta name="generator" content="c9-doc-build">
     <meta name="description" content="Ace API documentation for the online code editor.">
     <meta name="author" content="Garen J. Torikian">
@@ -30,8 +30,8 @@
           <div class="navbar-inner">
             <div class="container"><span class="brand"></span>
               <ul class="nav topLinks">
-                <li id="ace_site"><a href="../../index.html">Ace</a></li>
-                <li id="ace_api" class="active"><a href="http://ace.ajax.org/api">Ace API Reference</a></li>
+                <li id="ace_site"><a href="../index.html">Ace</a></li>
+                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
               </ul>
               <form id="searchbox" action="" class="navbar-search pull-right">	
                 <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
@@ -104,30 +104,30 @@
                     <div class="membersBackground"></div>
                     <div class=" members pos0">
                       <div class=" membersContent pos0">
-                        <h1 class="memberHeader"><span class="name">Anchor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Ffjakobs%2FDesktop%2FEclipseWorkspaces%2Fajax.org%2Fcloud9infra%2Fsupport%2Fcloud9%2Fsupport%2Face%2Flib%2Face%2Fanchor.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                        <h1 class="memberHeader"><span class="name">UndoManager<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Fgjtorikian%2FDeveloper%2Face%2Flib%2Face%2Fundomanager.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
                         </h1>
                         <ul data-tabs="tabs" class="nav tabs pos0">
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (1)</span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                              <li data-id="Anchor@onChange" class="memberLink"><a href="#Anchor@onChange" class="" title="Anchor@onChange (event)" data-id="Anchor@onChange">onChange</a>
-                              </li>
-                            </ul>
+                          <li data-dropdown="dropdown" class="dropdown">
                           </li>
                           <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                              <li data-id="new Anchor" class="memberLink"><a href="#Anchor.new" class="" title="new Anchor (constructor)" data-id="new Anchor">new</a>
+                              <li data-id="new UndoManager" class="memberLink"><a href="#UndoManager.new" class="" title="new UndoManager (constructor)" data-id="new UndoManager">new</a>
                               </li>
                             </ul>
                           </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (4)</span><b class="caret"></b></a>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (6)</span><b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                              <li data-id="Anchor.detach" class="memberLink"><a href="#Anchor.detach" class="" title="Anchor.detach (class method)" data-id="Anchor.detach">detach</a>
+                              <li data-id="UndoManager.execute" class="memberLink"><a href="#UndoManager.execute" class="" title="UndoManager.execute (class method)" data-id="UndoManager.execute">execute</a>
                               </li>
-                              <li data-id="Anchor.getDocument" class="memberLink"><a href="#Anchor.getDocument" class="" title="Anchor.getDocument (class method)" data-id="Anchor.getDocument">getDocument</a>
+                              <li data-id="UndoManager.hasRedo" class="memberLink"><a href="#UndoManager.hasRedo" class="" title="UndoManager.hasRedo (class method)" data-id="UndoManager.hasRedo">hasRedo</a>
                               </li>
-                              <li data-id="Anchor.getPosition" class="memberLink"><a href="#Anchor.getPosition" class="" title="Anchor.getPosition (class method)" data-id="Anchor.getPosition">getPosition</a>
+                              <li data-id="UndoManager.hasUndo" class="memberLink"><a href="#UndoManager.hasUndo" class="" title="UndoManager.hasUndo (class method)" data-id="UndoManager.hasUndo">hasUndo</a>
                               </li>
-                              <li data-id="Anchor.setPosition" class="memberLink"><a href="#Anchor.setPosition" class="" title="Anchor.setPosition (class method)" data-id="Anchor.setPosition">setPosition</a>
+                              <li data-id="UndoManager.redo" class="memberLink"><a href="#UndoManager.redo" class="" title="UndoManager.redo (class method)" data-id="UndoManager.redo">redo</a>
+                              </li>
+                              <li data-id="UndoManager.reset" class="memberLink"><a href="#UndoManager.reset" class="" title="UndoManager.reset (class method)" data-id="UndoManager.reset">reset</a>
+                              </li>
+                              <li data-id="UndoManager.undo" class="memberLink"><a href="#UndoManager.undo" class="" title="UndoManager.undo (class method)" data-id="UndoManager.undo">undo</a>
                               </li>
                             </ul>
                           </li>
@@ -142,22 +142,22 @@
                         </ul>
                       </div>
                     </div>
-                    <article id="Anchor" data-title="Anchor (class)" class="article">
+                    <article id="UndoManager" data-title="UndoManager (class)" class="article">
                       <div class="section description">
-                        <div class="memberContent"><p>Defines the floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the cursor is updated</p>
+                        <div class="memberContent"><p>This object maintains the undo stack for an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a>.</p>
 
                         </div>
                       </div>
                     </article>
                     <h3 class="sectionHeader">Constructors</h3>
-                    <article id="Anchor.new" data-title="new Anchor (constructor)" class="article">
+                    <article id="UndoManager.new" data-title="new UndoManager (constructor)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new Anchor" class="member-name methodClicker">Anchor</span>(<span class="sigArgList"><a href="document.html#Document" class="argument methodClicker" title="Document (class)" data-id="Document">Document</a> doc, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column</span>)</li>
+                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new UndoManager" class="member-name methodClicker">UndoManager</span>(<span class="sigArgList"></span>)</li>
                                 </ul>
                                 <ul class="metaInfo">
                                 </ul>
@@ -165,90 +165,31 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_new Anchor" class="ellipsis_description"><p>Creates a new <code>Anchor</code> and associates it with a document. ...</p>
+                            <div id="ellipsis_new UndoManager" class="ellipsis_description"><p>Resets the current undo state and creates a new <code>UndoManager</code>. ...</p>
 
                             </div>
-                            <div id="short_new Anchor" class="short_description hiddenSpan"><p>Creates a new <code>Anchor</code> and associates it with a document.</p>
+                            <div id="short_new UndoManager" class="short_description hiddenSpan"><p>Resets the current undo state and creates a new <code>UndoManager</code>.</p>
 
                             </div>
-                            <h3 id="new Anchor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="new UndoManager" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">doc</td><td class="argType" "><a href="document.html#Document" class="" title="Document (class)" data-id="Document">Document</a></td><td class="argDescription ">Required. The document to associate with the anchor</td></tr><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting row position</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting column position</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                    <h3 class="sectionHeader">Events</h3>
-                    <article id="Anchor.event.onChange" data-title="Anchor@onChange (event)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span class="eventObjName">Anchor</span><span class="eventListenerStart">.on("</span><span id="Anchor@onChange" class="member-name eventMember methodClicker">onChange</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/lib/event.js" class="argument methodClicker" title="Event" data-id="Event">Event</a> e<span class="eventFunctionClose">))</span></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Anchor@onChange" class="ellipsis_description"><p>Fires whenever the anchor position changes. Events that can trigger this function include <code>&#39;includeText&#39;</code>, `&#39;insertL...</p>
-
-                            </div>
-                            <div id="short_Anchor@onChange" class="short_description hiddenSpan"><p>Fires whenever the anchor position changes. Events that can trigger this function include <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
-
-                            </div>
-                            <h3 id="Anchor@onChange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">e</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/lib/event.js" class="" title="Event" data-id="Event">Event</a></td><td class="argDescription ">Required. Contains data about the event</td></tr></table>
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
                     <h3 class="sectionHeader">Methods</h3>
-                    <article id="Anchor.detach" data-title="Anchor.detach (class method)" class="article">
+                    <article id="UndoManager.execute" data-title="UndoManager.execute (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="Anchor.detach" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">detach</span></span>(<span class="sigArgList"></span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Anchor.detach" class="ellipsis_description"><p>When called, the <code>&#39;change&#39;</code> event listener is removed. ...</p>
-
-                            </div>
-                            <div id="short_Anchor.detach" class="short_description hiddenSpan"><p>When called, the <code>&#39;change&#39;</code> event listener is removed.</p>
-
-                            </div>
-                            <h3 id="Anchor.detach" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                    <article id="Anchor.getDocument" data-title="Anchor.getDocument (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Anchor.getDocument" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">getDocument</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-call"><span id="UndoManager.execute" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">execute</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> options</span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><a href="document.html#Document" class="returnType " title="Document (class)" data-id="Document">Document</a></li>
+                                        <li class="argument-type"><span class="returnType " title="UndoManager.execute (class method)">Void</span></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -258,30 +199,33 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_Anchor.getDocument" class="ellipsis_description"><p>Returns the current document. ...</p>
+                            <div id="ellipsis_UndoManager.execute" class="ellipsis_description"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="Array" data-id="Array"><code>Array</code></a>, w...</p>
 
                             </div>
-                            <div id="short_Anchor.getDocument" class="short_description hiddenSpan"><p>Returns the current document.</p>
+                            <div id="short_UndoManager.execute" class="short_description hiddenSpan"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="Array" data-id="Array"><code>Array</code></a>, with two elements:
+<em> <code>args[0]</code> is an array of deltas
+</em> <code>args[1]</code> is the document to associate with</p>
 
                             </div>
-                            <h3 id="Anchor.getDocument" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="UndoManager.execute" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">options</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. Contains additional properties</td></tr></table>
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="Anchor.getPosition" data-title="Anchor.getPosition (class method)" class="article">
+                    <article id="UndoManager.hasRedo" data-title="UndoManager.hasRedo (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="Anchor.getPosition" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">getPosition</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-call"><span id="UndoManager.hasRedo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">hasRedo</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -291,27 +235,32 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_Anchor.getPosition" class="ellipsis_description"><p>Returns an object identifying the <code>row</code> and <code>column</code> position of the current anchor. ...</p>
+                            <div id="ellipsis_UndoManager.hasRedo" class="ellipsis_description"><p>Returns <code>true</code> if there are redo operations left to perform. ...</p>
 
                             </div>
-                            <div id="short_Anchor.getPosition" class="short_description hiddenSpan"><p>Returns an object identifying the <code>row</code> and <code>column</code> position of the current anchor.</p>
+                            <div id="short_UndoManager.hasRedo" class="short_description hiddenSpan"><p>Returns <code>true</code> if there are redo operations left to perform.</p>
 
                             </div>
-                            <h3 id="Anchor.getPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="UndoManager.hasRedo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="Anchor.setPosition" data-title="Anchor.setPosition (class method)" class="article">
+                    <article id="UndoManager.hasUndo" data-title="UndoManager.hasUndo (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="Anchor.setPosition" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">setPosition</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> noClip</span>)</li>
+                                  <li class="signature-call"><span id="UndoManager.hasUndo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">hasUndo</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
+                                      </ul>
+                                    </li></li>
                                 </ul>
                                 <ul class="metaInfo">
                                 </ul>
@@ -319,15 +268,115 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_Anchor.setPosition" class="ellipsis_description"><p>Sets the anchor position to the specified row and column. If <code>noClip</code> is <code>true</code>, the position is not clipped. ...</p>
+                            <div id="ellipsis_UndoManager.hasUndo" class="ellipsis_description"><p>Returns <code>true</code> if there are undo operations left to perform. ...</p>
 
                             </div>
-                            <div id="short_Anchor.setPosition" class="short_description hiddenSpan"><p>Sets the anchor position to the specified row and column. If <code>noClip</code> is <code>true</code>, the position is not clipped.</p>
+                            <div id="short_UndoManager.hasUndo" class="short_description hiddenSpan"><p>Returns <code>true</code> if there are undo operations left to perform.</p>
 
                             </div>
-                            <h3 id="Anchor.setPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="UndoManager.hasUndo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row index to move the anchor to</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column index to move the anchor to</td></tr><tr class="argumentRow "><td class="argName ">noClip</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Identifies if you want the position to be clipped</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="UndoManager.redo" data-title="UndoManager.redo (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="UndoManager.redo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">redo</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> dontSelect</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><span class="returnType " title="UndoManager.redo (class method)">Void</span></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_UndoManager.redo" class="ellipsis_description"><p>Perform a redo operation on the document, reimplementing the last change.</p>
+
+                            </div>
+                            <div id="short_UndoManager.redo" class="short_description hiddenSpan"><p>Perform a redo operation on the document, reimplementing the last change.</p>
+
+                            </div>
+                            <h3 id="UndoManager.redo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="UndoManager.reset" data-title="UndoManager.reset (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="UndoManager.reset" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">reset</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><span class="returnType " title="UndoManager.reset (class method)">Void</span></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_UndoManager.reset" class="ellipsis_description"><p>Destroys the stack of undo and redo redo operations. ...</p>
+
+                            </div>
+                            <div id="short_UndoManager.reset" class="short_description hiddenSpan"><p>Destroys the stack of undo and redo redo operations.</p>
+
+                            </div>
+                            <h3 id="UndoManager.reset" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="UndoManager.undo" data-title="UndoManager.undo (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="UndoManager.undo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">undo</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> dontSelect</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_UndoManager.undo" class="ellipsis_description"><p>[Perform an undo operation on the document, reverting the last change. Returns the range of the undo.]{: #UndoManage...</p>
+
+                            </div>
+                            <div id="short_UndoManager.undo" class="short_description hiddenSpan"><p>Perform an undo operation on the document, reverting the last change. Returns the range of the undo.</p>
+
+                            </div>
+                            <h3 id="UndoManager.undo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
                             </div>
                           </div>
                         </div>

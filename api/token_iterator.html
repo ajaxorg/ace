@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Ace API - undomanager</title>
+    <title>Ace API - token_iterator</title>
     <meta name="generator" content="c9-doc-build">
     <meta name="description" content="Ace API documentation for the online code editor.">
     <meta name="author" content="Garen J. Torikian">
@@ -30,8 +30,8 @@
           <div class="navbar-inner">
             <div class="container"><span class="brand"></span>
               <ul class="nav topLinks">
-                <li id="ace_site"><a href="../../index.html">Ace</a></li>
-                <li id="ace_api" class="active"><a href="http://ace.ajax.org/api">Ace API Reference</a></li>
+                <li id="ace_site"><a href="../index.html">Ace</a></li>
+                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
               </ul>
               <form id="searchbox" action="" class="navbar-search pull-right">	
                 <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
@@ -104,30 +104,28 @@
                     <div class="membersBackground"></div>
                     <div class=" members pos0">
                       <div class=" membersContent pos0">
-                        <h1 class="memberHeader"><span class="name">UndoManager<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Ffjakobs%2FDesktop%2FEclipseWorkspaces%2Fajax.org%2Fcloud9infra%2Fsupport%2Fcloud9%2Fsupport%2Face%2Flib%2Face%2Fundomanager.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                        <h1 class="memberHeader"><span class="name">TokenIterator<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Fgjtorikian%2FDeveloper%2Face%2Flib%2Face%2Ftoken_iterator.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
                         </h1>
                         <ul data-tabs="tabs" class="nav tabs pos0">
                           <li data-dropdown="dropdown" class="dropdown">
                           </li>
                           <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                              <li data-id="new UndoManager" class="memberLink"><a href="#UndoManager.new" class="" title="new UndoManager (constructor)" data-id="new UndoManager">new</a>
+                              <li data-id="new TokenIterator" class="memberLink"><a href="#TokenIterator.new" class="" title="new TokenIterator (constructor)" data-id="new TokenIterator">new</a>
                               </li>
                             </ul>
                           </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (6)</span><b class="caret"></b></a>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (5)</span><b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                              <li data-id="UndoManager.execute" class="memberLink"><a href="#UndoManager.execute" class="" title="UndoManager.execute (class method)" data-id="UndoManager.execute">execute</a>
+                              <li data-id="TokenIterator.getCurrentToken" class="memberLink"><a href="#TokenIterator.getCurrentToken" class="" title="TokenIterator.getCurrentToken (class method)" data-id="TokenIterator.getCurrentToken">getCurrentToken</a>
                               </li>
-                              <li data-id="UndoManager.hasRedo" class="memberLink"><a href="#UndoManager.hasRedo" class="" title="UndoManager.hasRedo (class method)" data-id="UndoManager.hasRedo">hasRedo</a>
+                              <li data-id="TokenIterator.getCurrentTokenColumn" class="memberLink"><a href="#TokenIterator.getCurrentTokenColumn" class="" title="TokenIterator.getCurrentTokenColumn (class method)" data-id="TokenIterator.getCurrentTokenColumn">getCurrentTokenColumn</a>
                               </li>
-                              <li data-id="UndoManager.hasUndo" class="memberLink"><a href="#UndoManager.hasUndo" class="" title="UndoManager.hasUndo (class method)" data-id="UndoManager.hasUndo">hasUndo</a>
+                              <li data-id="TokenIterator.getCurrentTokenRow" class="memberLink"><a href="#TokenIterator.getCurrentTokenRow" class="" title="TokenIterator.getCurrentTokenRow (class method)" data-id="TokenIterator.getCurrentTokenRow">getCurrentTokenRow</a>
                               </li>
-                              <li data-id="UndoManager.redo" class="memberLink"><a href="#UndoManager.redo" class="" title="UndoManager.redo (class method)" data-id="UndoManager.redo">redo</a>
+                              <li data-id="TokenIterator.stepBackward" class="memberLink"><a href="#TokenIterator.stepBackward" class="" title="TokenIterator.stepBackward (class method)" data-id="TokenIterator.stepBackward">stepBackward</a>
                               </li>
-                              <li data-id="UndoManager.reset" class="memberLink"><a href="#UndoManager.reset" class="" title="UndoManager.reset (class method)" data-id="UndoManager.reset">reset</a>
-                              </li>
-                              <li data-id="UndoManager.undo" class="memberLink"><a href="#UndoManager.undo" class="" title="UndoManager.undo (class method)" data-id="UndoManager.undo">undo</a>
+                              <li data-id="TokenIterator.stepForward" class="memberLink"><a href="#TokenIterator.stepForward" class="" title="TokenIterator.stepForward (class method)" data-id="TokenIterator.stepForward">stepForward</a>
                               </li>
                             </ul>
                           </li>
@@ -142,22 +140,22 @@
                         </ul>
                       </div>
                     </div>
-                    <article id="UndoManager" data-title="UndoManager (class)" class="article">
+                    <article id="TokenIterator" data-title="TokenIterator (class)" class="article">
                       <div class="section description">
-                        <div class="memberContent"><p>This object maintains the undo stack for an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a>.</p>
+                        <div class="memberContent"><p>This class provides an essay way to treat the document as a stream of tokens, and provides methods to iterate over these tokens.</p>
 
                         </div>
                       </div>
                     </article>
                     <h3 class="sectionHeader">Constructors</h3>
-                    <article id="UndoManager.new" data-title="new UndoManager (constructor)" class="article">
+                    <article id="TokenIterator.new" data-title="new TokenIterator (constructor)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new UndoManager" class="member-name methodClicker">UndoManager</span>(<span class="sigArgList"></span>)</li>
+                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new TokenIterator" class="member-name methodClicker">TokenIterator</span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> initialRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> initialColumn</span>)</li>
                                 </ul>
                                 <ul class="metaInfo">
                                 </ul>
@@ -165,31 +163,32 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_new UndoManager" class="ellipsis_description"><p>Resets the current undo state and creates a new <code>UndoManager</code>. ...</p>
+                            <div id="ellipsis_new TokenIterator" class="ellipsis_description"><p>Creates a new token iterator object. The inital token index is set to the provided row and column coordinates. ...</p>
 
                             </div>
-                            <div id="short_new UndoManager" class="short_description hiddenSpan"><p>Resets the current undo state and creates a new <code>UndoManager</code>.</p>
+                            <div id="short_new TokenIterator" class="short_description hiddenSpan"><p>Creates a new token iterator object. The inital token index is set to the provided row and column coordinates.</p>
 
                             </div>
-                            <h3 id="new UndoManager" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="new TokenIterator" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The session to associate with</td></tr><tr class="argumentRow "><td class="argName ">initialRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start the tokenizing at</td></tr><tr class="argumentRow "><td class="argName ">initialColumn</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column to start the tokenizing at</td></tr></table>
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
                     <h3 class="sectionHeader">Methods</h3>
-                    <article id="UndoManager.execute" data-title="UndoManager.execute (class method)" class="article">
+                    <article id="TokenIterator.getCurrentToken" data-title="TokenIterator.getCurrentToken (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="UndoManager.execute" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">execute</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> options</span>)
+                                  <li class="signature-call"><span id="TokenIterator.getCurrentToken" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">getCurrentToken</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="UndoManager.execute (class method)">Void</span></li>
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -199,66 +198,30 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_UndoManager.execute" class="ellipsis_description"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="Array" data-id="Array"><code>Array</code></a>, w...</p>
+                            <div id="ellipsis_TokenIterator.getCurrentToken" class="ellipsis_description"><p>Returns the current tokenized string. ...</p>
 
                             </div>
-                            <div id="short_UndoManager.execute" class="short_description hiddenSpan"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="Array" data-id="Array"><code>Array</code></a>, with two elements:
-<em> <code>args[0]</code> is an array of deltas
-</em> <code>args[1]</code> is the document to associate with</p>
+                            <div id="short_TokenIterator.getCurrentToken" class="short_description hiddenSpan"><p>Returns the current tokenized string.</p>
 
                             </div>
-                            <h3 id="UndoManager.execute" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">options</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. Contains additional properties</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                    <article id="UndoManager.hasRedo" data-title="UndoManager.hasRedo (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="UndoManager.hasRedo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">hasRedo</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_UndoManager.hasRedo" class="ellipsis_description"><p>Returns <code>true</code> if there are redo operations left to perform. ...</p>
-
-                            </div>
-                            <div id="short_UndoManager.hasRedo" class="short_description hiddenSpan"><p>Returns <code>true</code> if there are redo operations left to perform.</p>
-
-                            </div>
-                            <h3 id="UndoManager.hasRedo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="TokenIterator.getCurrentToken" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="UndoManager.hasUndo" data-title="UndoManager.hasUndo (class method)" class="article">
+                    <article id="TokenIterator.getCurrentTokenColumn" data-title="TokenIterator.getCurrentTokenColumn (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="UndoManager.hasUndo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">hasUndo</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-call"><span id="TokenIterator.getCurrentTokenColumn" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">getCurrentTokenColumn</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="returnType " title="Boolean" data-id="Boolean">Boolean</a></li>
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -268,30 +231,30 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_UndoManager.hasUndo" class="ellipsis_description"><p>Returns <code>true</code> if there are undo operations left to perform. ...</p>
+                            <div id="ellipsis_TokenIterator.getCurrentTokenColumn" class="ellipsis_description"><p>Returns the current column. ...</p>
 
                             </div>
-                            <div id="short_UndoManager.hasUndo" class="short_description hiddenSpan"><p>Returns <code>true</code> if there are undo operations left to perform.</p>
+                            <div id="short_TokenIterator.getCurrentTokenColumn" class="short_description hiddenSpan"><p>Returns the current column.</p>
 
                             </div>
-                            <h3 id="UndoManager.hasUndo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="TokenIterator.getCurrentTokenColumn" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="UndoManager.redo" data-title="UndoManager.redo (class method)" class="article">
+                    <article id="TokenIterator.getCurrentTokenRow" data-title="TokenIterator.getCurrentTokenRow (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="UndoManager.redo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">redo</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> dontSelect</span>)
+                                  <li class="signature-call"><span id="TokenIterator.getCurrentTokenRow" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">getCurrentTokenRow</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="UndoManager.redo (class method)">Void</span></li>
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -301,64 +264,30 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_UndoManager.redo" class="ellipsis_description"><p>Perform a redo operation on the document, reimplementing the last change.</p>
+                            <div id="ellipsis_TokenIterator.getCurrentTokenRow" class="ellipsis_description"><p>Returns the current row. ...</p>
 
                             </div>
-                            <div id="short_UndoManager.redo" class="short_description hiddenSpan"><p>Perform a redo operation on the document, reimplementing the last change.</p>
+                            <div id="short_TokenIterator.getCurrentTokenRow" class="short_description hiddenSpan"><p>Returns the current row.</p>
 
                             </div>
-                            <h3 id="UndoManager.redo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                    <article id="UndoManager.reset" data-title="UndoManager.reset (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="UndoManager.reset" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">reset</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="UndoManager.reset (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_UndoManager.reset" class="ellipsis_description"><p>Destroys the stack of undo and redo redo operations. ...</p>
-
-                            </div>
-                            <div id="short_UndoManager.reset" class="short_description hiddenSpan"><p>Destroys the stack of undo and redo redo operations.</p>
-
-                            </div>
-                            <h3 id="UndoManager.reset" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="TokenIterator.getCurrentTokenRow" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="UndoManager.undo" data-title="UndoManager.undo (class method)" class="article">
+                    <article id="TokenIterator.stepBackward" data-title="TokenIterator.stepBackward (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="UndoManager.undo" class="member-name methodClicker"><span class="sigClassName">UndoManager.</span><span class="sigMemberName">undo</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> dontSelect</span>)
+                                  <li class="signature-call"><span id="TokenIterator.stepBackward" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">stepBackward</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                                        <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a> ]</li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -368,15 +297,48 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_UndoManager.undo" class="ellipsis_description"><p>[Perform an undo operation on the document, reverting the last change. Returns the range of the undo.]{: #UndoManage...</p>
+                            <div id="ellipsis_TokenIterator.stepBackward" class="ellipsis_description"><p>Tokenizes all the items from the current point to the row prior in the document. ...</p>
 
                             </div>
-                            <div id="short_UndoManager.undo" class="short_description hiddenSpan"><p>Perform an undo operation on the document, reverting the last change. Returns the range of the undo.</p>
+                            <div id="short_TokenIterator.stepBackward" class="short_description hiddenSpan"><p>Tokenizes all the items from the current point to the row prior in the document.</p>
 
                             </div>
-                            <h3 id="UndoManager.undo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="TokenIterator.stepBackward" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
+                              <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="returnDescription ">If the current point is not at the top of the file, this function returns <code>null</code>. Otherwise, it returns an array of the tokenized strings.</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="TokenIterator.stepForward" data-title="TokenIterator.stepForward (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="TokenIterator.stepForward" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">stepForward</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_TokenIterator.stepForward" class="ellipsis_description"><p>Tokenizes all the items from the current point until the next row in the document. If the current point is at the en...</p>
+
+                            </div>
+                            <div id="short_TokenIterator.stepForward" class="short_description hiddenSpan"><p>Tokenizes all the items from the current point until the next row in the document. If the current point is at the end of the file, this function returns <code>null</code>. Otherwise, it returns the tokenized string.</p>
+
+                            </div>
+                            <h3 id="TokenIterator.stepForward" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
                             </div>
                           </div>
                         </div>

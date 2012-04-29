@@ -481,13 +481,11 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
 }
 
 .content .centerpiece {
-	background: url(../images/sidebar_border.png) repeat-y 180px 0;
-	padding-bottom: 50px;
+
 }
 
 header.filler {
 	position: relative;
-	background: #EDF5FA;
 	height: 50px;
 	width: 100%;
 }
@@ -1008,6 +1006,8 @@ height: 100%;
 {
 position: relative;
 min-height: 100%;
+background: url(../images/sidebar_border.png) repeat-y 400px 0;
+padding-bottom: 9em;
 }
 
 * html #nonFooter
@@ -1017,7 +1017,7 @@ height: 100%;
 
 #wrapper
 {
-padding-bottom: 9em;
+
 }
 
 #footer

@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Ace API - token_iterator</title>
+    <title>Ace API - anchor</title>
     <meta name="generator" content="c9-doc-build">
     <meta name="description" content="Ace API documentation for the online code editor.">
     <meta name="author" content="Garen J. Torikian">
@@ -30,8 +30,8 @@
           <div class="navbar-inner">
             <div class="container"><span class="brand"></span>
               <ul class="nav topLinks">
-                <li id="ace_site"><a href="../../index.html">Ace</a></li>
-                <li id="ace_api" class="active"><a href="http://ace.ajax.org/api">Ace API Reference</a></li>
+                <li id="ace_site"><a href="../index.html">Ace</a></li>
+                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
               </ul>
               <form id="searchbox" action="" class="navbar-search pull-right">	
                 <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
@@ -104,28 +104,30 @@
                     <div class="membersBackground"></div>
                     <div class=" members pos0">
                       <div class=" membersContent pos0">
-                        <h1 class="memberHeader"><span class="name">TokenIterator<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Ffjakobs%2FDesktop%2FEclipseWorkspaces%2Fajax.org%2Fcloud9infra%2Fsupport%2Fcloud9%2Fsupport%2Face%2Flib%2Face%2Ftoken_iterator.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                        <h1 class="memberHeader"><span class="name">Anchor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=src%2Fps:%2Fgithub.com%2Fajaxorg%2Face%2Fblob%2Fmaster%2FUsers%2Fgjtorikian%2FDeveloper%2Face%2Flib%2Face%2Fanchor.js&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
                         </h1>
                         <ul data-tabs="tabs" class="nav tabs pos0">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (1)</span><b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                              <li data-id="new TokenIterator" class="memberLink"><a href="#TokenIterator.new" class="" title="new TokenIterator (constructor)" data-id="new TokenIterator">new</a>
+                              <li data-id="Anchor@onChange" class="memberLink"><a href="#Anchor@onChange" class="" title="Anchor@onChange (event)" data-id="Anchor@onChange">onChange</a>
                               </li>
                             </ul>
                           </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (5)</span><b class="caret"></b></a>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                              <li data-id="TokenIterator.getCurrentToken" class="memberLink"><a href="#TokenIterator.getCurrentToken" class="" title="TokenIterator.getCurrentToken (class method)" data-id="TokenIterator.getCurrentToken">getCurrentToken</a>
+                              <li data-id="new Anchor" class="memberLink"><a href="#Anchor.new" class="" title="new Anchor (constructor)" data-id="new Anchor">new</a>
                               </li>
-                              <li data-id="TokenIterator.getCurrentTokenColumn" class="memberLink"><a href="#TokenIterator.getCurrentTokenColumn" class="" title="TokenIterator.getCurrentTokenColumn (class method)" data-id="TokenIterator.getCurrentTokenColumn">getCurrentTokenColumn</a>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (4)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="Anchor.detach" class="memberLink"><a href="#Anchor.detach" class="" title="Anchor.detach (class method)" data-id="Anchor.detach">detach</a>
                               </li>
-                              <li data-id="TokenIterator.getCurrentTokenRow" class="memberLink"><a href="#TokenIterator.getCurrentTokenRow" class="" title="TokenIterator.getCurrentTokenRow (class method)" data-id="TokenIterator.getCurrentTokenRow">getCurrentTokenRow</a>
+                              <li data-id="Anchor.getDocument" class="memberLink"><a href="#Anchor.getDocument" class="" title="Anchor.getDocument (class method)" data-id="Anchor.getDocument">getDocument</a>
                               </li>
-                              <li data-id="TokenIterator.stepBackward" class="memberLink"><a href="#TokenIterator.stepBackward" class="" title="TokenIterator.stepBackward (class method)" data-id="TokenIterator.stepBackward">stepBackward</a>
+                              <li data-id="Anchor.getPosition" class="memberLink"><a href="#Anchor.getPosition" class="" title="Anchor.getPosition (class method)" data-id="Anchor.getPosition">getPosition</a>
                               </li>
-                              <li data-id="TokenIterator.stepForward" class="memberLink"><a href="#TokenIterator.stepForward" class="" title="TokenIterator.stepForward (class method)" data-id="TokenIterator.stepForward">stepForward</a>
+                              <li data-id="Anchor.setPosition" class="memberLink"><a href="#Anchor.setPosition" class="" title="Anchor.setPosition (class method)" data-id="Anchor.setPosition">setPosition</a>
                               </li>
                             </ul>
                           </li>
@@ -140,22 +142,22 @@
                         </ul>
                       </div>
                     </div>
-                    <article id="TokenIterator" data-title="TokenIterator (class)" class="article">
+                    <article id="Anchor" data-title="Anchor (class)" class="article">
                       <div class="section description">
-                        <div class="memberContent"><p>This class provides an essay way to treat the document as a stream of tokens, and provides methods to iterate over these tokens.</p>
+                        <div class="memberContent"><p>Defines the floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the cursor is updated</p>
 
                         </div>
                       </div>
                     </article>
                     <h3 class="sectionHeader">Constructors</h3>
-                    <article id="TokenIterator.new" data-title="new TokenIterator (constructor)" class="article">
+                    <article id="Anchor.new" data-title="new Anchor (constructor)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new TokenIterator" class="member-name methodClicker">TokenIterator</span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> initialRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> initialColumn</span>)</li>
+                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new Anchor" class="member-name methodClicker">Anchor</span>(<span class="sigArgList"><a href="document.html#Document" class="argument methodClicker" title="Document (class)" data-id="Document">Document</a> doc, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column</span>)</li>
                                 </ul>
                                 <ul class="metaInfo">
                                 </ul>
@@ -163,34 +165,59 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_new TokenIterator" class="ellipsis_description"><p>Creates a new token iterator object. The inital token index is set to the provided row and column coordinates. ...</p>
+                            <div id="ellipsis_new Anchor" class="ellipsis_description"><p>Creates a new <code>Anchor</code> and associates it with a document. ...</p>
 
                             </div>
-                            <div id="short_new TokenIterator" class="short_description hiddenSpan"><p>Creates a new token iterator object. The inital token index is set to the provided row and column coordinates.</p>
+                            <div id="short_new Anchor" class="short_description hiddenSpan"><p>Creates a new <code>Anchor</code> and associates it with a document.</p>
 
                             </div>
-                            <h3 id="new TokenIterator" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="new Anchor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The session to associate with</td></tr><tr class="argumentRow "><td class="argName ">initialRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start the tokenizing at</td></tr><tr class="argumentRow "><td class="argName ">initialColumn</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column to start the tokenizing at</td></tr></table>
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">doc</td><td class="argType" "><a href="document.html#Document" class="" title="Document (class)" data-id="Document">Document</a></td><td class="argDescription ">Required. The document to associate with the anchor</td></tr><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting row position</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting column position</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Events</h3>
+                    <article id="Anchor.event.onChange" data-title="Anchor@onChange (event)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span class="eventObjName">Anchor</span><span class="eventListenerStart">.on("</span><span id="Anchor@onChange" class="member-name eventMember methodClicker">onChange</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/lib/event.js" class="argument methodClicker" title="Event" data-id="Event">Event</a> e<span class="eventFunctionClose">))</span></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Anchor@onChange" class="ellipsis_description"><p>Fires whenever the anchor position changes. Events that can trigger this function include <code>&#39;includeText&#39;</code>, `&#39;insertL...</p>
+
+                            </div>
+                            <div id="short_Anchor@onChange" class="short_description hiddenSpan"><p>Fires whenever the anchor position changes. Events that can trigger this function include <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
+
+                            </div>
+                            <h3 id="Anchor@onChange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">e</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/lib/event.js" class="" title="Event" data-id="Event">Event</a></td><td class="argDescription ">Required. Contains data about the event</td></tr></table>
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
                     <h3 class="sectionHeader">Methods</h3>
-                    <article id="TokenIterator.getCurrentToken" data-title="TokenIterator.getCurrentToken (class method)" class="article">
+                    <article id="Anchor.detach" data-title="Anchor.detach (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="TokenIterator.getCurrentToken" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">getCurrentToken</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
-                                      </ul>
-                                    </li></li>
+                                  <li class="signature-call"><span id="Anchor.detach" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">detach</span></span>(<span class="sigArgList"></span>)</li>
                                 </ul>
                                 <ul class="metaInfo">
                                 </ul>
@@ -198,30 +225,30 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_TokenIterator.getCurrentToken" class="ellipsis_description"><p>Returns the current tokenized string. ...</p>
+                            <div id="ellipsis_Anchor.detach" class="ellipsis_description"><p>When called, the <code>&#39;change&#39;</code> event listener is removed. ...</p>
 
                             </div>
-                            <div id="short_TokenIterator.getCurrentToken" class="short_description hiddenSpan"><p>Returns the current tokenized string.</p>
+                            <div id="short_Anchor.detach" class="short_description hiddenSpan"><p>When called, the <code>&#39;change&#39;</code> event listener is removed.</p>
 
                             </div>
-                            <h3 id="TokenIterator.getCurrentToken" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="Anchor.detach" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="TokenIterator.getCurrentTokenColumn" data-title="TokenIterator.getCurrentTokenColumn (class method)" class="article">
+                    <article id="Anchor.getDocument" data-title="Anchor.getDocument (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="TokenIterator.getCurrentTokenColumn" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">getCurrentTokenColumn</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-call"><span id="Anchor.getDocument" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">getDocument</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
+                                        <li class="argument-type"><a href="document.html#Document" class="returnType " title="Document (class)" data-id="Document">Document</a></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -231,30 +258,30 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_TokenIterator.getCurrentTokenColumn" class="ellipsis_description"><p>Returns the current column. ...</p>
+                            <div id="ellipsis_Anchor.getDocument" class="ellipsis_description"><p>Returns the current document. ...</p>
 
                             </div>
-                            <div id="short_TokenIterator.getCurrentTokenColumn" class="short_description hiddenSpan"><p>Returns the current column.</p>
+                            <div id="short_Anchor.getDocument" class="short_description hiddenSpan"><p>Returns the current document.</p>
 
                             </div>
-                            <h3 id="TokenIterator.getCurrentTokenColumn" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="Anchor.getDocument" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="TokenIterator.getCurrentTokenRow" data-title="TokenIterator.getCurrentTokenRow (class method)" class="article">
+                    <article id="Anchor.getPosition" data-title="Anchor.getPosition (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="TokenIterator.getCurrentTokenRow" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">getCurrentTokenRow</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-call"><span id="Anchor.getPosition" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">getPosition</span></span>(<span class="sigArgList"></span>)
                                     <li class="signature-returns">
                                       <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
                                       </ul>
                                     </li></li>
                                 </ul>
@@ -264,32 +291,27 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_TokenIterator.getCurrentTokenRow" class="ellipsis_description"><p>Returns the current row. ...</p>
+                            <div id="ellipsis_Anchor.getPosition" class="ellipsis_description"><p>Returns an object identifying the <code>row</code> and <code>column</code> position of the current anchor. ...</p>
 
                             </div>
-                            <div id="short_TokenIterator.getCurrentTokenRow" class="short_description hiddenSpan"><p>Returns the current row.</p>
+                            <div id="short_Anchor.getPosition" class="short_description hiddenSpan"><p>Returns an object identifying the <code>row</code> and <code>column</code> position of the current anchor.</p>
 
                             </div>
-                            <h3 id="TokenIterator.getCurrentTokenRow" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="Anchor.getPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
                             </div>
                           </div>
                         </div>
                       </div>
                     </article>
-                    <article id="TokenIterator.stepBackward" data-title="TokenIterator.stepBackward (class method)" class="article">
+                    <article id="Anchor.setPosition" data-title="Anchor.setPosition (class method)" class="article">
                       <div class="section method">
                         <div class="memberContent">
                           <div class="title">
                             <ul class="signatures">
                               <li class="signature">
                                 <ul>
-                                  <li class="signature-call"><span id="TokenIterator.stepBackward" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">stepBackward</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a> ]</li>
-                                      </ul>
-                                    </li></li>
+                                  <li class="signature-call"><span id="Anchor.setPosition" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">setPosition</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> noClip</span>)</li>
                                 </ul>
                                 <ul class="metaInfo">
                                 </ul>
@@ -297,48 +319,15 @@
                             </ul>
                           </div>
                           <div class="sideToggler">
-                            <div id="ellipsis_TokenIterator.stepBackward" class="ellipsis_description"><p>Tokenizes all the items from the current point to the row prior in the document. ...</p>
+                            <div id="ellipsis_Anchor.setPosition" class="ellipsis_description"><p>Sets the anchor position to the specified row and column. If <code>noClip</code> is <code>true</code>, the position is not clipped. ...</p>
 
                             </div>
-                            <div id="short_TokenIterator.stepBackward" class="short_description hiddenSpan"><p>Tokenizes all the items from the current point to the row prior in the document.</p>
+                            <div id="short_Anchor.setPosition" class="short_description hiddenSpan"><p>Sets the anchor position to the specified row and column. If <code>noClip</code> is <code>true</code>, the position is not clipped.</p>
 
                             </div>
-                            <h3 id="TokenIterator.stepBackward" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <h3 id="Anchor.setPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                             <div class="description">
-                              <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="returnDescription ">If the current point is not at the top of the file, this function returns <code>null</code>. Otherwise, it returns an array of the tokenized strings.</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                    <article id="TokenIterator.stepForward" data-title="TokenIterator.stepForward (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="TokenIterator.stepForward" class="member-name methodClicker"><span class="sigClassName">TokenIterator.</span><span class="sigMemberName">stepForward</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_TokenIterator.stepForward" class="ellipsis_description"><p>Tokenizes all the items from the current point until the next row in the document. If the current point is at the en...</p>
-
-                            </div>
-                            <div id="short_TokenIterator.stepForward" class="short_description hiddenSpan"><p>Tokenizes all the items from the current point until the next row in the document. If the current point is at the end of the file, this function returns <code>null</code>. Otherwise, it returns the tokenized string.</p>
-
-                            </div>
-                            <h3 id="TokenIterator.stepForward" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row index to move the anchor to</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column index to move the anchor to</td></tr><tr class="argumentRow "><td class="argName ">noClip</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Identifies if you want the position to be clipped</td></tr></table>
                             </div>
                           </div>
                         </div>
