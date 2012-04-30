@@ -482,7 +482,8 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
 }
 
 .content .centerpiece {
-
+	background: url(../images/sidebar_border.png) repeat-y 180px 0;
+	padding-bottom: 9em;
 }
 
 header.filler {
@@ -1007,8 +1008,6 @@ height: 100%;
 {
 position: relative;
 min-height: 100%;
-background: url(../images/sidebar_border.png) repeat-y 400px 0;
-padding-bottom: 9em;
 }
 
 * html #nonFooter
