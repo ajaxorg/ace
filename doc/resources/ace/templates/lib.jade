@@ -217,7 +217,7 @@ mixin api()
 							-var heading = obj.path
 							span.name #{heading}
 								span.editInC9
-									mixin formatGHHref(obj.href, 'nodejs_ref_guide')
+									mixin formatGHHref(obj.fullPath, 'nodejs_ref_guide')
 						
 						-if (true || obj.filename.indexOf("index") < 0)
 							ul(class='nav tabs pos#{pos}', data-tabs='tabs')
@@ -258,13 +258,7 @@ mixin links(collection)
 				mixin link(obj)
 
 mixin formatGHHref(url, type)
-	url = url.substring(url.indexOf("src/") + 4)
-
-	if type == 'nodejs_ref_guide'
-		url = url.substring(0, url.lastIndexOf("#"))
-		url = 'src/' + url
-	else if type == 'nodejs_dev_guide'
-		url = 'src/' + url
+	url = url.substring(url.indexOf("ace/lib"))
 
 	-url = url.replace(/\/{2,}/g, "/").replace(/\//g,"%2F")
-	<a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git&file=#{url}&line_start=3&line_end=0' title='Edit in Cloud9 IDE'>[edit]</a>
+	<a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a>
