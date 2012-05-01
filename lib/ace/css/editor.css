@@ -1,4 +1,3 @@
-@import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);
 
 .ace_editor {
     position: absolute;
@@ -131,6 +130,7 @@
 
 .ace_text-layer {
     color: black;
+    font: inherit !important;
 }
 
 .ace_cjk {
@@ -177,10 +177,6 @@
 .ace_marker-layer .ace_active_line {
     position: absolute;
     z-index: 2;
-}
-
-.ace_gutter .ace_gutter_active_line{
-    background-color : #dcdcdc;
 }
 
 .ace_marker-layer .ace_selected_word {
@@ -288,4 +284,26 @@
 .ace_fold-widget.invalid {
     background-color: #FFB4B4;
     border-color: #DE5555;
+}
+
+.ace_fade-fold-widgets .ace_fold-widget {
+    -moz-transition: 0.5s opacity;
+    -webkit-transition: 0.5s opacity;
+    -o-transition: 0.5s opacity;
+    -ms-transition: 0.5s opacity;
+    transition: 0.5s opacity;
+    opacity: 0;
+}
+.ace_fade-fold-widgets:hover .ace_fold-widget {
+    -moz-transition-duration: 0.05s;
+    -webkit-transition-duration: 0.05s;
+    -o-transition-duration: 0.05s;
+    -ms-transition-duration: 0.05s;
+    transition-duration: 0.05s;
+    -moz-transition-delay: 0.2s;
+    -webkit-transition-delay: 0.2s;
+    -o-transition-delay: 0.2s;
+    -ms-transition-delay: 0.2s;
+    transition-delay: 0.2s;	
+    opacity:1;
 }
