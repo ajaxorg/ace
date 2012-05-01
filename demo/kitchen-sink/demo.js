@@ -302,6 +302,7 @@ split.on("focus", function(editor) {
 env.split = split;
 window.env = env;
 window.editor = window.ace = env.editor;
+env.editor.setAnimatedScroll(true);
 
 var docEl = document.getElementById("doc");
 var modeEl = document.getElementById("mode");
@@ -315,6 +316,7 @@ var showGutterEl = document.getElementById("show_gutter");
 var showPrintMarginEl = document.getElementById("show_print_margin");
 var highlightSelectedWordE = document.getElementById("highlight_selected_word");
 var showHScrollEl = document.getElementById("show_hscroll");
+var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
 
@@ -371,6 +373,7 @@ function updateUIEditorOptions() {
     saveOption(showPrintMarginEl, editor.renderer.getShowPrintMargin());
     saveOption(highlightSelectedWordE, editor.getHighlightSelectedWord());
     saveOption(showHScrollEl, editor.renderer.getHScrollBarAlwaysVisible());
+    saveOption(animateScrollEl, editor.getAnimatedScroll());
     saveOption(softTabEl, session.getUseSoftTabs());
     saveOption(behavioursEl, editor.getBehavioursEnabled());
 }
@@ -482,6 +485,10 @@ bindCheckbox("highlight_selected_word", function(checked) {
 
 bindCheckbox("show_hscroll", function(checked) {
     env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+});
+
+bindCheckbox("animate_scroll", function(checked) {
+    env.editor.setAnimatedScroll(checked);
 });
 
 bindCheckbox("soft_tab", function(checked) {
