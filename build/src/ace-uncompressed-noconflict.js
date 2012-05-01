@@ -1874,22 +1874,6 @@ exports.preventDefault = function(e) {
         e.returnValue = false;
 };
 
-exports.getDocumentX = function(e) {
-    if (e.clientX) {
-        return e.clientX + dom.getPageScrollLeft();
-    } else {
-        return e.pageX;
-    }
-};
-
-exports.getDocumentY = function(e) {
-    if (e.clientY) {
-        return e.clientY + dom.getPageScrollTop();
-    } else {
-        return e.pageY;
-    }
-};
-
 /*
  * @return {Number} 0 for left button, 1 for middle button, 2 for right button
  */
@@ -2486,6 +2470,7 @@ var Editor = function(renderer, session) {
 
     this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
     this.textInput  = new TextInput(renderer.getTextAreaContainer(), this);
+    this.renderer.textarea = this.textInput.getElement();
     this.keyBinding = new KeyBinding(this);
 
     // TODO detect touch event support
@@ -2791,11 +2776,7 @@ var Editor = function(renderer, session) {
 
     this.$cursorChange = function() {
         this.renderer.updateCursor();
-
-        // move text input over the cursor
-        // this is required for iOS and IME
-        this.renderer.moveTextAreaToCursor(this.textInput.getElement());
-    }
+    };
 
     /**
      * Editor@onDocumentChange(e) 
@@ -2864,7 +2845,6 @@ var Editor = function(renderer, session) {
 
         this.$highlightBrackets();
         this.$updateHighlightActiveLine();
-        this.$updateHighlightGutterLine();
     };
 
     /** internal, hide
@@ -2896,21 +2876,6 @@ var Editor = function(renderer, session) {
         }
     };
 
-    /** internal, hide
-     * Editor.$updateHighlightGutterLine()
-     * 
-     * 
-     **/
-    this.$updateHighlightGutterLine = function(){
-        if (typeof this.$lastrow == "number")
-            this.renderer.removeGutterDecoration(this.$lastrow, "ace_gutter_active_line");
-
-        this.$lastrow = null;
-
-        if (this.$highlightGutterLine)
-            this.renderer.addGutterDecoration(
-                this.$lastrow = this.getCursorPosition().row, "ace_gutter_active_line");
-    }
 
     /**
      * Editor@onSelectionChange(e) 
@@ -2932,7 +2897,6 @@ var Editor = function(renderer, session) {
             session.$selectionMarker = session.addMarker(range, "ace_selection", style);
         } else {
             this.$updateHighlightActiveLine();
-            this.$updateHighlightGutterLine();
         }
 
         if (this.$highlightSelectedWord)
@@ -3011,7 +2975,6 @@ var Editor = function(renderer, session) {
         // Update the active line marker as due to folding changes the current
         // line range on the screen might have changed.
         this.$updateHighlightActiveLine();
-        this.$updateHighlightGutterLine();
         // TODO: This might be too much updating. Okay for now.
         this.renderer.updateFull();
     };
@@ -3297,12 +3260,11 @@ var Editor = function(renderer, session) {
     };
 
     this.$highlightGutterLine = true;
-    this.setHighlightGutterLine = function(shouldHighlightGutterLine) {
-        if (this.$highlightGutterLine == shouldHighlightGutterLine)
+    this.setHighlightGutterLine = function(shouldHighlight) {
+        if (this.$highlightGutterLine == shouldHighlight)
             return;
 
-        this.$highlightGutterLine = shouldHighlightGutterLine;
-        this.$updateHighlightGutterLine();
+        this.renderer.setHighlightGutterLine(shouldHighlight);
     };
 
     this.getHighlightGutterLine = function() {
@@ -4672,7 +4634,9 @@ var TextInput = function(parentNode, host) {
     var text = dom.createElement("textarea");
     if (useragent.isTouchPad)
         text.setAttribute("x-palm-disable-auto-cap", true);
-        
+
+    text.setAttribute("wrap", "off");
+
     text.style.left = "-10000px";
     text.style.position = "fixed";
     parentNode.insertBefore(text, parentNode.firstChild);
@@ -4954,10 +4918,10 @@ var MouseEvent = require("./mouse_event").MouseEvent;
 
 var MouseHandler = function(editor) {
     this.editor = editor;
-    
-    new DefaultHandlers(editor);
-    new DefaultGutterHandler(editor);
-    
+
+    new DefaultHandlers(this);
+    new DefaultGutterHandler(this);
+
     event.addListener(editor.container, "mousedown", function(e) {
         editor.focus();
         return event.preventDefault(e);
@@ -4974,7 +4938,7 @@ var MouseHandler = function(editor) {
     event.addMultiMouseDownListener(mouseTarget, 0, 3, 600, this.onMouseEvent.bind(this, "tripleclick"));
     event.addMultiMouseDownListener(mouseTarget, 0, 4, 600, this.onMouseEvent.bind(this, "quadclick"));
     event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this, "mousewheel"));
-    
+
     var gutterEl = editor.renderer.$gutter;
     event.addListener(gutterEl, "mousedown", this.onMouseEvent.bind(this, "guttermousedown"));
     event.addListener(gutterEl, "click", this.onMouseEvent.bind(this, "gutterclick"));
@@ -4996,7 +4960,7 @@ var MouseHandler = function(editor) {
     this.onMouseEvent = function(name, e) {
         this.editor._emit(name, new MouseEvent(e, this.editor));
     };
-    
+
     this.$dragDelay = 250;
     this.setDragDelay = function(dragDelay) {
         this.$dragDelay = dragDelay;
@@ -5020,10 +4984,48 @@ var MouseHandler = function(editor) {
         mouseEvent.speed = this.$scrollSpeed * 2;
         mouseEvent.wheelX = e.wheelX;
         mouseEvent.wheelY = e.wheelY;
-        
+
         this.editor._emit(name, mouseEvent);
     };
 
+    this.setState = function(state) {
+        this.state = state;
+    };
+
+    this.captureMouse = function(ev, state) {
+        if (state)
+            this.setState(state);
+
+        this.x = ev.x;
+        this.y = ev.y;
+
+        // do not move textarea during selection
+        var kt = this.editor.renderer.$keepTextAreaAtCursor;
+        this.editor.renderer.$keepTextAreaAtCursor = false;
+
+        var self = this;
+        var onMouseSelection = function(e) {
+            self.x = e.clientX;
+            self.y = e.clientY;
+        };
+
+        var onMouseSelectionEnd = function(e) {
+            clearInterval(timerId);
+            self[self.state + "End"] && self[self.state + "End"](e);
+            self.$clickSelection = null;
+            self.editor.renderer.$keepTextAreaAtCursor = kt;
+            self.editor.renderer.$moveTextAreaToCursor();
+        };
+
+        var onSelectionInterval = function() {
+            self[self.state] && self[self.state]();
+        }
+
+        event.capture(this.editor.container, onMouseSelection, onMouseSelectionEnd);
+        var timerId = setInterval(onSelectionInterval, 20);
+
+        ev.preventDefault();
+    };
 }).call(MouseHandler.prototype);
 
 exports.MouseHandler = MouseHandler;
@@ -5052,6 +5054,7 @@ exports.MouseHandler = MouseHandler;
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
  *      Mike de Boer <mike AT ajax DOT org>
+ *      Harutyun Amirjanyan <harutyun AT c9 DOT io>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -5067,241 +5070,290 @@ exports.MouseHandler = MouseHandler;
  *
  * ***** END LICENSE BLOCK ***** */
 
-ace.define('ace/mouse/default_handlers', ['require', 'exports', 'module' , 'ace/lib/event', 'ace/lib/dom', 'ace/lib/browser_focus'], function(require, exports, module) {
+ace.define('ace/mouse/default_handlers', ['require', 'exports', 'module' , 'ace/lib/dom', 'ace/lib/browser_focus'], function(require, exports, module) {
 "use strict";
 
-var event = require("../lib/event");
 var dom = require("../lib/dom");
 var BrowserFocus = require("../lib/browser_focus").BrowserFocus;
 
-var STATE_UNKNOWN = 0;
-var STATE_SELECT = 1;
-var STATE_DRAG = 2;
 
 var DRAG_OFFSET = 5; // pixels
 
-function DefaultHandlers(editor) {
-    this.editor = editor;
-    this.$clickSelection = null;
-    this.browserFocus = new BrowserFocus();
 
-    editor.setDefaultHandler("mousedown", this.onMouseDown.bind(this));
-    editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(this));
-    editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(this));
-    editor.setDefaultHandler("quadclick", this.onQuadClick.bind(this));
-    editor.setDefaultHandler("mousewheel", this.onScroll.bind(this));
+
+function DefaultHandlers(mouseHandler) {
+    mouseHandler.$clickSelection = null;
+    mouseHandler.browserFocus = new BrowserFocus();
+
+    var editor = mouseHandler.editor;
+    editor.setDefaultHandler("mousedown", this.onMouseDown.bind(mouseHandler));
+    editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(mouseHandler));
+    editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(mouseHandler));
+    editor.setDefaultHandler("quadclick", this.onQuadClick.bind(mouseHandler));
+    editor.setDefaultHandler("mousewheel", this.onScroll.bind(mouseHandler));
+
+    var exports = ["select", "startSelect", "drag", "dragEnd", "dragWait",
+        "dragWaitEnd", "startDrag"];
+
+    exports.forEach(function(x) {
+        mouseHandler[x] = this[x];
+    }, this);
+
+    mouseHandler.selectByLines = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
+    mouseHandler.selectByWords = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
 }
 
 (function() {
-    
+
     this.onMouseDown = function(ev) {
+        this.mousedownEvent = ev;
         var inSelection = ev.inSelection();
-        var pageX = ev.pageX;
-        var pageY = ev.pageY;
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
         var _self = this;
-        
+
+        this.ev = ev
         var selectionRange = editor.getSelectionRange();
         var selectionEmpty = selectionRange.isEmpty();
-        var state = STATE_UNKNOWN;
-        
+
         var button = ev.getButton();
         if (button !== 0) {
             if (selectionEmpty) {
                 editor.moveCursorToPosition(pos);
                 editor.selection.clearSelection();
             }
-            if (button == 2) {
-                editor.textInput.onContextMenu({x: ev.clientX, y: ev.clientY}, selectionEmpty);
-                event.capture(editor.container, function(){}, editor.textInput.onContextMenuClose);
-            }
+            // 2: contextmenu, 1: linux paste
+            this.moveTextarea = function() {
+                editor.textInput.onContextMenu({x: _self.x, y: _self.y});
+            };
+            this.moveTextareaEnd = editor.textInput.onContextMenuClose;
+            
+            editor.textInput.onContextMenu({x: this.x, y: this.y}, selectionEmpty);
+            this.captureMouse(ev, "moveTextarea");
+
             return;
         }
 
         // if this click caused the editor to be focused should not clear the
         // selection
-        if (
-            inSelection && (
-                !this.browserFocus.isFocused()
-                || new Date().getTime() - this.browserFocus.lastFocus < 20
-                || !editor.isFocused()
-            )
-        ) {
+        if (inSelection && !editor.isFocused()) {
             editor.focus();
             return;
         }
 
-        if (!inSelection) {
+        if (!inSelection || this.$clickSelection || ev.getShiftKey()) {
             // Directly pick STATE_SELECT, since the user is not clicking inside
             // a selection.
-            onStartSelect(pos);
-        }
-
-        var mousePageX = pageX, mousePageY = pageY;
-        var mousedownTime = (new Date()).getTime();
-        var dragCursor, dragRange, dragSelectionMarker;
-
-        var onMouseSelection = function(e) {
-            mousePageX = event.getDocumentX(e);
-            mousePageY = event.getDocumentY(e);
-        };
-
-        var onMouseSelectionEnd = function(e) {
-            clearInterval(timerId);
-            if (state == STATE_UNKNOWN)
-                onStartSelect(pos);
-            else if (state == STATE_DRAG)
-                onMouseDragSelectionEnd(e);
-
-            _self.$clickSelection = null;
-            state = STATE_UNKNOWN;
-        };
-
-        var onMouseDragSelectionEnd = function(e) {
-            dom.removeCssClass(editor.container, "ace_dragging");
-            editor.session.removeMarker(dragSelectionMarker);
-
-            if (!editor.$mouseHandler.$clickSelection) {
-                if (!dragCursor) {
-                    editor.moveCursorToPosition(pos);
-                    editor.selection.clearSelection();
-                }
-            }
-
-            if (!dragCursor)
-                return;
-
-            if (dragRange.contains(dragCursor.row, dragCursor.column)) {
-                dragCursor = null;
-                return;
-            }
-
-            editor.clearSelection();
-            if (e && (e.ctrlKey || e.altKey)) {
-                var session = editor.session;
-                var newRange = session.insert(dragCursor, session.getTextRange(dragRange));
+            this.startSelect(pos);
+        } else if (inSelection) {
+            var e = ev.domEvent;
+            if ((e.ctrlKey || e.altKey)) {
+                this.startDrag();
             } else {
-                var newRange = editor.moveText(dragRange, dragCursor);
+                this.mousedownEvent.time = (new Date()).getTime();
+                this.setState("dragWait");
             }
-            if (!newRange) {
-                dragCursor = null;
-                return;
-            }
-
-            editor.selection.setSelectionRange(newRange);
-        };
-
-        var onSelectionInterval = function() {
-            if (state == STATE_UNKNOWN) {
-                var distance = calcDistance(pageX, pageY, mousePageX, mousePageY);
-                var time = (new Date()).getTime();
-
-                if (distance > DRAG_OFFSET) {
-                    state = STATE_SELECT;
-                    var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-                    onStartSelect(cursor);
-                }
-                else if ((time - mousedownTime) > editor.getDragDelay()) {
-                    state = STATE_DRAG;
-                    dragRange = editor.getSelectionRange();
-                    var style = editor.getSelectionStyle();
-                    dragSelectionMarker = editor.session.addMarker(dragRange, "ace_selection", style);
-                    editor.clearSelection();
-                    dom.addCssClass(editor.container, "ace_dragging");
-                }
-
-            }
-
-            if (state == STATE_DRAG)
-                onDragSelectionInterval();
-            else if (state == STATE_SELECT)
-                onUpdateSelectionInterval();
-        };
-
-        function onStartSelect(pos) {
-            if (ev.getShiftKey()) {
-                editor.selection.selectToPosition(pos);
-            }
-            else {
-                if (!_self.$clickSelection) {
-                    editor.moveCursorToPosition(pos);
-                    editor.selection.clearSelection();
-                }
-            }
-            state = STATE_SELECT;
         }
 
-        var onUpdateSelectionInterval = function() {
-            var anchor;
-            var cursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-
-            if (_self.$clickSelection) {
-                if (_self.$clickSelection.contains(cursor.row, cursor.column)) {
-                    editor.selection.setSelectionRange(_self.$clickSelection);
-                }
-                else {
-                    if (_self.$clickSelection.compare(cursor.row, cursor.column) == -1) {
-                        anchor = _self.$clickSelection.end;
-                    }
-                    else {
-                        anchor = _self.$clickSelection.start;
-                    }
-                    editor.selection.setSelectionAnchor(anchor.row, anchor.column);
-                    editor.selection.selectToPosition(cursor);
-                }
-            }
-            else {
-                editor.selection.selectToPosition(cursor);
-            }
-
-            editor.renderer.scrollCursorIntoView();
-        };
-
-        var onDragSelectionInterval = function() {
-            dragCursor = editor.renderer.screenToTextCoordinates(mousePageX, mousePageY);
-            editor.moveCursorToPosition(dragCursor);
-        };
-
-        event.capture(editor.container, onMouseSelection, onMouseSelectionEnd);
-        var timerId = setInterval(onSelectionInterval, 20);
-
-        return ev.preventDefault();
+        this.captureMouse(ev)
     };
-    
+
+    this.startSelect = function(pos) {
+        pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);
+        if (this.mousedownEvent.getShiftKey()) {
+            this.editor.selection.selectToPosition(pos);
+        }
+        else if (!this.$clickSelection) {
+            this.editor.moveCursorToPosition(pos);
+            this.editor.selection.clearSelection();
+        }
+        this.setState("select");
+    }
+
+    this.select = function() {
+        var anchor, editor = this.editor;
+        var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
+
+        if (this.$clickSelection) {
+            var cmp = this.$clickSelection.comparePoint(cursor);
+
+            if (cmp == -1) {
+                anchor = this.$clickSelection.end;
+            } else if (cmp == 1) {
+                anchor = this.$clickSelection.start;
+            } else {
+                cursor = this.$clickSelection.end;
+                anchor = this.$clickSelection.start;
+            }
+            editor.selection.setSelectionAnchor(anchor.row, anchor.column);
+        }
+        editor.selection.selectToPosition(cursor);
+
+        editor.renderer.scrollCursorIntoView();
+    };
+
+    this.extendSelectionBy = function(unitName) {
+        var anchor, editor = this.editor;
+        var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
+        var range = editor.selection[unitName](cursor.row, cursor.column);
+
+        if (this.$clickSelection) {
+            var cmpStart = this.$clickSelection.comparePoint(range.start);
+            var cmpEnd = this.$clickSelection.comparePoint(range.end);
+
+            if (cmpStart == -1 && cmpEnd <= 0) {
+                anchor = this.$clickSelection.end;
+                cursor = range.start;
+            } else if (cmpEnd == 1 && cmpStart >= 0) {
+                anchor = this.$clickSelection.start;
+                cursor = range.end;
+            } else if (cmpStart == -1 && cmpEnd == 1) {
+                cursor = range.end;
+                anchor = range.start;
+            } else {
+                cursor = this.$clickSelection.end;
+                anchor = this.$clickSelection.start;
+            }
+            editor.selection.setSelectionAnchor(anchor.row, anchor.column);
+        }
+        editor.selection.selectToPosition(cursor);
+
+        editor.renderer.scrollCursorIntoView();
+    };
+
+    this.startDrag = function() {
+        var editor = this.editor;
+        this.setState("drag");
+        this.dragRange = editor.getSelectionRange();
+        var style = editor.getSelectionStyle();
+        this.dragSelectionMarker = editor.session.addMarker(this.dragRange, "ace_selection", style);
+        editor.clearSelection();
+        dom.addCssClass(editor.container, "ace_dragging");
+        if (!this.$dragKeybinding) {
+            this.$dragKeybinding = {
+                handleKeyboard: function(data, hashId, keyString, keyCode) {
+                    if (keyString == "esc")
+                        return {command: this.command};
+                },
+                command: {
+                    exec: function(editor) {
+                        var self = editor.$mouseHandler;
+                        self.dragCursor = null
+                        self.dragEnd();
+                        self.startSelect();
+                    }
+                }
+            }
+        }
+
+        editor.keyBinding.addKeyboardHandler(this.$dragKeybinding);
+    };
+
+    this.dragWait = function() {
+        var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
+        var time = (new Date()).getTime();
+        var editor = this.editor;
+
+        if (distance > DRAG_OFFSET) {
+            this.startSelect();
+        } else if ((time - this.mousedownEvent.time) > editor.getDragDelay()) {
+            this.startDrag()
+        }
+    };
+
+    this.dragWaitEnd = function(e) {
+        this.mousedownEvent.domEvent = e;
+        this.startSelect();
+    };
+
+    this.drag = function() {
+        var editor = this.editor;
+        this.dragCursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
+        editor.moveCursorToPosition(this.dragCursor);
+        editor.renderer.scrollCursorIntoView();
+    };
+
+    this.dragEnd = function(e) {
+        var editor = this.editor;
+        var dragCursor = this.dragCursor;
+        var dragRange = this.dragRange;
+        dom.removeCssClass(editor.container, "ace_dragging");
+        editor.session.removeMarker(this.dragSelectionMarker);
+        editor.keyBinding.removeKeyboardHandler(this.$dragKeybinding);
+
+        if (!dragCursor)
+            return;
+
+        editor.clearSelection();
+        if (e && (e.ctrlKey || e.altKey)) {
+            var session = editor.session;
+            var newRange = dragRange;
+            newRange.end = session.insert(dragCursor, session.getTextRange(dragRange));
+            newRange.start = dragCursor;
+        } else if (dragRange.contains(dragCursor.row, dragCursor.column)) {
+            return;
+        } else {
+            var newRange = editor.moveText(dragRange, dragCursor);
+        }
+
+        if (!newRange)
+            return;
+
+        editor.selection.setSelectionRange(newRange);
+    };
+
     this.onDoubleClick = function(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
-        
+
+        this.setState("selectByWords");
+
         editor.moveCursorToPosition(pos);
         editor.selection.selectWord();
         this.$clickSelection = editor.getSelectionRange();
     };
-    
+
     this.onTripleClick = function(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
-        
+
+        this.setState("selectByLines");
+
         editor.moveCursorToPosition(pos);
         editor.selection.selectLine();
         this.$clickSelection = editor.getSelectionRange();
     };
-    
+
     this.onQuadClick = function(ev) {
         var editor = this.editor;
-        
+
         editor.selectAll();
         this.$clickSelection = editor.getSelectionRange();
+        this.setState("select");
     };
-    
+
     this.onScroll = function(ev) {
         var editor = this.editor;
-        
+        var isScrolable = editor.renderer.isScrollableBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed);
+        if (isScrolable) {
+            this.$passScrollEvent = false;
+        } else {
+            if (this.$passScrollEvent)
+                return;
+
+            if (!this.$scrollStopTimeout) {
+                var self = this;
+                this.$scrollStopTimeout = setTimeout(function() {
+                    self.$passScrollEvent = true;
+                    self.$scrollStopTimeout = null;
+                }, 200);
+            }
+        }
+
         editor.renderer.scrollBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed);
-        if (editor.renderer.isScrollableBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed))
-            return ev.preventDefault();
+        return ev.preventDefault();
     };
-    
+
 }).call(DefaultHandlers.prototype);
 
 exports.DefaultHandlers = DefaultHandlers;
@@ -5578,13 +5630,24 @@ exports.EventEmitter = EventEmitter;
 ace.define('ace/mouse/default_gutter_handler', ['require', 'exports', 'module' ], function(require, exports, module) {
 "use strict";
 
-function GutterHandler(editor) {
-    editor.setDefaultHandler("gutterclick", function(e) {
+function GutterHandler(mouseHandler) {
+    var editor = mouseHandler.editor;
+
+    mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
+        if (e.domEvent.target.className.indexOf("ace_gutter-cell") == -1)
+            return;
+
+        if (!editor.isFocused())
+            return;
+
         var row = e.getDocumentPosition().row;
         var selection = editor.session.selection;
-        
+
         selection.moveCursorTo(row, 0);
         selection.selectLine();
+
+        mouseHandler.$clickSelection = selection.getRange();
+        mouseHandler.captureMouse(e, "selectByLines");
     });
 }
 
@@ -5641,11 +5704,8 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
     this.domEvent = domEvent;
     this.editor = editor;
     
-    this.pageX = event.getDocumentX(domEvent);
-    this.pageY = event.getDocumentY(domEvent);
-    
-    this.clientX = domEvent.clientX;
-    this.clientY = domEvent.clientY;
+    this.x = this.clientX = domEvent.clientX;
+    this.y = this.clientY = domEvent.clientY;
 
     this.$pos = null;
     this.$inSelection = null;
@@ -5679,10 +5739,8 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
     this.getDocumentPosition = function() {
         if (this.$pos)
             return this.$pos;
-            
-        var pageX = event.getDocumentX(this.domEvent);
-        var pageY = event.getDocumentY(this.domEvent);
-        this.$pos = this.editor.renderer.screenToTextCoordinates(pageX, pageY);
+        
+        this.$pos = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY);
         return this.$pos;
     };
     
@@ -9010,11 +9068,11 @@ var Selection = function(session) {
     this.doc = session.getDocument();
 
     this.clearSelection();
-    this.selectionLead = this.doc.createAnchor(0, 0);
-    this.selectionAnchor = this.doc.createAnchor(0, 0);
+    this.lead = this.selectionLead = this.doc.createAnchor(0, 0);
+    this.anchor = this.selectionAnchor = this.doc.createAnchor(0, 0);
 
     var self = this;
-    this.selectionLead.on("change", function(e) {
+    this.lead.on("change", function(e) {
         self._emit("changeCursor");
         if (!self.$isEmpty)
             self._emit("changeSelection");
@@ -9039,8 +9097,8 @@ var Selection = function(session) {
     **/
     this.isEmpty = function() {
         return (this.$isEmpty || (
-            this.selectionAnchor.row == this.selectionLead.row &&
-            this.selectionAnchor.column == this.selectionLead.column
+            this.anchor.row == this.lead.row &&
+            this.anchor.column == this.lead.column
         ));
     };
 
@@ -9063,7 +9121,7 @@ var Selection = function(session) {
     * Gets the current position of the cursor.
     **/
     this.getCursor = function() {
-        return this.selectionLead.getPosition();
+        return this.lead.getPosition();
     };
 
     /**
@@ -9074,7 +9132,7 @@ var Selection = function(session) {
     * Sets the row and column position of the anchor. This function also emits the `'changeSelection'` event.
     **/
     this.setSelectionAnchor = function(row, column) {
-        this.selectionAnchor.setPosition(row, column);
+        this.anchor.setPosition(row, column);
 
         if (this.$isEmpty) {
             this.$isEmpty = false;
@@ -9092,7 +9150,7 @@ var Selection = function(session) {
         if (this.$isEmpty)
             return this.getSelectionLead()
         else
-            return this.selectionAnchor.getPosition();
+            return this.anchor.getPosition();
     };
 
     /** 
@@ -9101,7 +9159,7 @@ var Selection = function(session) {
     * Returns an object containing the `row` and `column` of the calling selection lead.
     **/
     this.getSelectionLead = function() {
-        return this.selectionLead.getPosition();
+        return this.lead.getPosition();
     };
 
     /**
@@ -9113,7 +9171,7 @@ var Selection = function(session) {
     **/
     this.shiftSelection = function(columns) {
         if (this.$isEmpty) {
-            this.moveCursorTo(this.selectionLead.row, this.selectionLead.column + columns);
+            this.moveCursorTo(this.lead.row, this.lead.column + columns);
             return;
         };
 
@@ -9138,8 +9196,8 @@ var Selection = function(session) {
     * Returns `true` if the selection is going backwards in the document.
     **/
     this.isBackwards = function() {
-        var anchor = this.selectionAnchor;
-        var lead = this.selectionLead;
+        var anchor = this.anchor;
+        var lead = this.lead;
         return (anchor.row > lead.row || (anchor.row == lead.row && anchor.column > lead.column));
     };
 
@@ -9149,8 +9207,8 @@ var Selection = function(session) {
     * [Returns the [[Range `Range`]] for the selected text.]{: #Selection.getRange}
     **/
     this.getRange = function() {
-        var anchor = this.selectionAnchor;
-        var lead = this.selectionLead;
+        var anchor = this.anchor;
+        var lead = this.lead;
 
         if (this.isEmpty())
             return Range.fromPoints(lead, lead);
@@ -9195,18 +9253,23 @@ var Selection = function(session) {
     *
     **/
     this.setSelectionRange = function(range, reverse) {
-        if (reverse) {
-            this.setSelectionAnchor(range.end.row, range.end.column);
-            this.selectTo(range.start.row, range.start.column);
+        if (range.isEmpty()) {
+            this.lead.setPosition(range.start.row, range.start.column);
+            this.clearSelection();
+        } else if (reverse) {
+            this.$isEmpty = false;
+            this.anchor.setPosition(range.end.row, range.end.column);
+            this.lead.setPosition(range.start.row, range.start.column);
         } else {
-            this.setSelectionAnchor(range.start.row, range.start.column);
-            this.selectTo(range.end.row, range.end.column);
+            this.$isEmpty = false;
+            this.anchor.setPosition(range.start.row, range.start.column);
+            this.lead.setPosition(range.end.row, range.end.column);
         }
         this.$desiredColumn = null;
     };
 
     this.$moveSelection = function(mover) {
-        var lead = this.selectionLead;
+        var lead = this.lead;
         if (this.$isEmpty)
             this.setSelectionAnchor(lead.row, lead.column);
 
@@ -9337,7 +9400,7 @@ var Selection = function(session) {
     **/
     this.getWordRange = function(row, column) {
         if (typeof column == "undefined") {
-            var cursor = row || this.selectionLead;
+            var cursor = row || this.lead;
             row = cursor.row;
             column = cursor.column;
         }
@@ -9360,7 +9423,7 @@ var Selection = function(session) {
     };
 
     this.getLineRange = function(row, excludeLastChar) {
-        var rowStart = typeof row == "number" ? row : this.selectionLead.row;
+        var rowStart = typeof row == "number" ? row : this.lead.row;
         var rowEnd;
 
         var foldLine = this.session.getFoldLine(rowStart);
@@ -9409,7 +9472,7 @@ var Selection = function(session) {
     * Moves the cursor left one column.
     **/
     this.moveCursorLeft = function() {
-        var cursor = this.selectionLead.getPosition(),
+        var cursor = this.lead.getPosition(),
             fold;
 
         if (fold = this.session.getFoldAt(cursor.row, cursor.column, -1)) {
@@ -9435,19 +9498,19 @@ var Selection = function(session) {
     * Moves the cursor right one column.
     **/
     this.moveCursorRight = function() {
-        var cursor = this.selectionLead.getPosition(),
+        var cursor = this.lead.getPosition(),
             fold;
         if (fold = this.session.getFoldAt(cursor.row, cursor.column, 1)) {
             this.moveCursorTo(fold.end.row, fold.end.column);
         }
-        else if (this.selectionLead.column == this.doc.getLine(this.selectionLead.row).length) {
-            if (this.selectionLead.row < this.doc.getLength() - 1) {
-                this.moveCursorTo(this.selectionLead.row + 1, 0);
+        else if (this.lead.column == this.doc.getLine(this.lead.row).length) {
+            if (this.lead.row < this.doc.getLength() - 1) {
+                this.moveCursorTo(this.lead.row + 1, 0);
             }
         }
         else {
             var tabSize = this.session.getTabSize();
-            var cursor = this.selectionLead;
+            var cursor = this.lead;
             if (this.session.isTabStop(cursor) && this.doc.getLine(cursor.row).slice(cursor.column, cursor.column+tabSize).split(" ").length-1 == tabSize)
                 this.moveCursorBy(0, tabSize);
             else
@@ -9461,8 +9524,8 @@ var Selection = function(session) {
     * Moves the cursor to the start of the line.
     **/
     this.moveCursorLineStart = function() {
-        var row = this.selectionLead.row;
-        var column = this.selectionLead.column;
+        var row = this.lead.row;
+        var column = this.lead.column;
         var screenRow = this.session.documentToScreenRow(row, column);
 
         // Determ the doc-position of the first character at the screen line.
@@ -9494,7 +9557,7 @@ var Selection = function(session) {
     * Moves the cursor to the end of the line.
     **/
     this.moveCursorLineEnd = function() {
-        var lead = this.selectionLead;
+        var lead = this.lead;
         var lastRowColumnPosition =
             this.session.getDocumentLastRowColumnPosition(lead.row, lead.column);
         this.moveCursorTo(
@@ -9529,8 +9592,8 @@ var Selection = function(session) {
     * Moves the cursor to the word on the right.
     **/
     this.moveCursorLongWordRight = function() {
-        var row = this.selectionLead.row;
-        var column = this.selectionLead.column;
+        var row = this.lead.row;
+        var column = this.lead.column;
         var line = this.doc.getLine(row);
         var rightOfCursor = line.substring(column);
 
@@ -9576,8 +9639,8 @@ var Selection = function(session) {
     * Moves the cursor to the word on the left.
     **/
     this.moveCursorLongWordLeft = function() {
-        var row = this.selectionLead.row;
-        var column = this.selectionLead.column;
+        var row = this.lead.row;
+        var column = this.lead.column;
 
         // skip folds
         var fold;
@@ -9658,8 +9721,8 @@ var Selection = function(session) {
     };
 
     this.moveCursorShortWordRight = function() {
-        var row = this.selectionLead.row;
-        var column = this.selectionLead.column;
+        var row = this.lead.row;
+        var column = this.lead.column;
         var line = this.doc.getLine(row);
         var rightOfCursor = line.substring(column);
 
@@ -9676,8 +9739,8 @@ var Selection = function(session) {
     };
 
     this.moveCursorShortWordLeft = function() {
-        var row = this.selectionLead.row;
-        var column = this.selectionLead.column;
+        var row = this.lead.row;
+        var column = this.lead.column;
 
         var fold;
         if (fold = this.session.getFoldAt(row, column, -1))
@@ -9716,8 +9779,8 @@ var Selection = function(session) {
     **/
     this.moveCursorBy = function(rows, chars) {
         var screenPos = this.session.documentToScreenPosition(
-            this.selectionLead.row,
-            this.selectionLead.column
+            this.lead.row,
+            this.lead.column
         );
 
         if (chars === 0) {
@@ -9760,7 +9823,7 @@ var Selection = function(session) {
         }
 
         this.$keepDesiredColumnOnChange = true;
-        this.selectionLead.setPosition(row, column);
+        this.lead.setPosition(row, column);
         this.$keepDesiredColumnOnChange = false;
 
         if (!keepDesiredColumn)
@@ -9782,8 +9845,8 @@ var Selection = function(session) {
 
     // remove listeners from document
     this.detach = function() {
-        this.selectionLead.detach();
-        this.selectionAnchor.detach();
+        this.lead.detach();
+        this.anchor.detach();
         this.session = this.doc = null;
     }
 
@@ -14698,6 +14761,9 @@ var VirtualRenderer = function(container, theme) {
     // TODO: this breaks rendering in Cloud9 with multiple ace instances
 //    // Imports CSS once per DOM document ('ace_editor' serves as an identifier).
 //    dom.importCssString(editorCss, "ace_editor", container.ownerDocument);
+    
+    // in IE <= 9 the native cursor always shines through
+    this.$keepTextAreaAtCursor = !useragent.isIE;
 
     dom.addCssClass(container, "ace_editor");
 
@@ -14715,6 +14781,7 @@ var VirtualRenderer = function(container, theme) {
     this.content.className = "ace_content";
     this.scroller.appendChild(this.content);
 
+    this.setHighlightGutterLine(true);
     this.$gutterLayer = new GutterLayer(this.$gutter);
     this.$gutterLayer.on("changeGutterWidth", this.onResize.bind(this, true));
     this.setFadeFoldWidgets(true);
@@ -15065,6 +15132,33 @@ var VirtualRenderer = function(container, theme) {
             dom.removeCssClass(this.$gutter, "ace_fade-fold-widgets");
     };
 
+    this.$highlightGutterLine = false;
+    this.setHighlightGutterLine = function(shouldHighlight) {
+        if (this.$highlightGutterLine == shouldHighlight)
+            return;
+        this.$highlightGutterLine = shouldHighlight;
+        
+        
+        if (!this.$gutterLineHighlight) {
+            this.$gutterLineHighlight = dom.createElement("div");
+            this.$gutterLineHighlight.className = "ace_gutter_active_line";
+            this.$gutter.appendChild(this.$gutterLineHighlight);
+            return;
+        }
+
+        this.$gutterLineHighlight.style.display = shouldHighlight ? "" : "none";
+        this.$updateGutterLineHighlight();
+    };
+
+    this.getHighlightGutterLine = function() {
+        return this.$highlightGutterLine;
+    };
+
+    this.$updateGutterLineHighlight = function() {
+        this.$gutterLineHighlight.style.top = this.$cursorLayer.$pixelPos.top + "px";
+        this.$gutterLineHighlight.style.height = this.layerConfig.lineHeight + "px";
+    };
+    
     this.$updatePrintMargin = function() {
         var containerEl;
 
@@ -15112,30 +15206,23 @@ var VirtualRenderer = function(container, theme) {
         return this.container;
     };
 
-    /**
-    * VirtualRenderer.moveTextAreaToCursor(textarea) -> Void
-    * - textarea (DOMElement): A text area to work with
-    *
-    * Changes the position of `textarea` to where the cursor is pointing.
-    **/
-    this.moveTextAreaToCursor = function(textarea) {
-        // in IE the native cursor always shines through
-        // this persists in IE9
-        if (useragent.isIE)
+    // move text input over the cursor
+    // this is required for iOS and IME
+    this.$moveTextAreaToCursor = function() {
+        if (!this.$keepTextAreaAtCursor)
             return;
 
-        if (this.layerConfig.lastRow === 0)
+        var posTop = this.$cursorLayer.$pixelPos.top;
+        var posLeft = this.$cursorLayer.$pixelPos.left;
+        posTop -= this.layerConfig.offset;
+
+        if (posTop < 0 || posTop > this.layerConfig.height)
             return;
 
-        var pos = this.$cursorLayer.getPixelPosition();
-        if (!pos)
-            return;
-
-        var bounds = this.content.getBoundingClientRect();
-        var offset = this.layerConfig.offset;
-
-        textarea.style.left = (bounds.left + pos.left) + "px";
-        textarea.style.top = (bounds.top + pos.top - this.scrollTop + offset) + "px";
+        posLeft += (this.showGutter ? this.$gutterLayer.gutterWidth : 0) - this.scrollLeft;
+        var bounds = this.container.getBoundingClientRect();
+        this.textarea.style.left = (bounds.left + posLeft) + "px";
+        this.textarea.style.top = (bounds.top + posTop) + "px";
     };
 
     /**
@@ -15256,6 +15343,8 @@ var VirtualRenderer = function(container, theme) {
             this.$markerBack.update(this.layerConfig);
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
+            this.$moveTextAreaToCursor();
+            this.$highlightGutterLine && this.$updateGutterLineHighlight();
             return;
         }
 
@@ -15272,6 +15361,8 @@ var VirtualRenderer = function(container, theme) {
             this.$markerBack.update(this.layerConfig);
             this.$markerFront.update(this.layerConfig);
             this.$cursorLayer.update(this.layerConfig);
+            this.$moveTextAreaToCursor();
+            this.$highlightGutterLine && this.$updateGutterLineHighlight();
             return;
         }
 
@@ -15291,8 +15382,11 @@ var VirtualRenderer = function(container, theme) {
                 this.$gutterLayer.update(this.layerConfig);
         }
 
-        if (changes & this.CHANGE_CURSOR)
+        if (changes & this.CHANGE_CURSOR) {
             this.$cursorLayer.update(this.layerConfig);
+            this.$moveTextAreaToCursor();
+            this.$highlightGutterLine && this.$updateGutterLineHighlight();
+        }
 
         if (changes & (this.CHANGE_MARKER | this.CHANGE_MARKER_FRONT)) {
             this.$markerFront.update(this.layerConfig);
@@ -15369,7 +15463,7 @@ var VirtualRenderer = function(container, theme) {
         // For debugging.
         // console.log(JSON.stringify(this.layerConfig));
 
-        this.$gutterLayer.element.style.marginTop = (-offset) + "px";
+        this.$gutter.style.marginTop = (-offset) + "px";
         this.content.style.marginTop = (-offset) + "px";
         this.content.style.width = longestLine + 2 * this.$padding + "px";
         this.content.style.height = minHeight + "px";
@@ -15719,14 +15813,24 @@ var VirtualRenderer = function(container, theme) {
         // todo: handle horizontal scrolling
     };
 
-    this.screenToTextCoordinates = function(pageX, pageY) {
+    this.pixelToScreenCoordinates = function(x, y) {
+        var canvasPos = this.scroller.getBoundingClientRect();
+
+        var offset = (x + this.scrollLeft - canvasPos.left - this.$padding) / this.characterWidth;
+        var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
+        var col = Math.round(offset);
+
+        return {row: row, column: col, side: offset - col > 0 ? 1 : -1};
+    };
+
+    this.screenToTextCoordinates = function(x, y) {
         var canvasPos = this.scroller.getBoundingClientRect();
 
         var col = Math.round(
-            (pageX + this.scrollLeft - canvasPos.left - this.$padding - dom.getPageScrollLeft()) / this.characterWidth
+            (x + this.scrollLeft - canvasPos.left - this.$padding) / this.characterWidth
         );
         var row = Math.floor(
-            (pageY + this.scrollTop - canvasPos.top - dom.getPageScrollTop()) / this.lineHeight
+            (y + this.scrollTop - canvasPos.top) / this.lineHeight
         );
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0));
@@ -16734,9 +16838,9 @@ var Text = function(parentEl) {
             if (a) {
                 return new Array(c.length+1).join("&#160;");
             } else if (c == "&") {
-                return useragent.isOldGecko ? "&" : "&amp;";
+                return "&#38;";
             } else if (c == "<") {
-                return "&lt;";
+                return "&#60;";
             } else if (c == "\t") {
                 var tabSize = self.session.getScreenTabSize(screenColumn + tabIdx);
                 screenColumn += tabSize - 1;
@@ -16750,10 +16854,7 @@ var Text = function(parentEl) {
                     (self.config.characterWidth * 2) +
                     "px'>" + space + "</span>";
             } else if (b) {
-                if (self.showInvisibles)
-                    return "<span class='ace_invisible ace_invalid'>" + self.SPACE_CHAR + "</span>";
-                else
-                    return "&#160;";
+                return "<span class='ace_invisible ace_invalid'>" + self.SPACE_CHAR + "</span>";
             } else {
                 screenColumn += 1;
                 return "<span class='ace_cjk' style='width:" +
@@ -17121,6 +17222,9 @@ var Cursor = function(parentEl) {
         if (overwrite != this.overwrite)
             this.$setOverite(overwrite);
 
+        // cache for textarea and gutter highlight
+        this.$pixelPos = pixelPos;
+
         this.restartTimer();
     };
 
@@ -17416,6 +17520,12 @@ ace.define("text!ace/css/editor.css", [], "\n" +
   "    z-index: 1000;\n" +
   "}\n" +
   "\n" +
+  ".ace_gutter_active_line {\n" +
+  "    position: absolute;\n" +
+  "    right: 0;\n" +
+  "    width: 100%;\n" +
+  "}\n" +
+  "\n" +
   ".ace_gutter.horscroll {\n" +
   "    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);\n" +
   "}\n" +
@@ -17474,8 +17584,8 @@ ace.define("text!ace/css/editor.css", [], "\n" +
   ".ace_editor textarea {\n" +
   "    position: fixed;\n" +
   "    z-index: 0;\n" +
-  "    width: 10px;\n" +
-  "    height: 30px;\n" +
+  "    width: 0.5em;\n" +
+  "    height: 1em;\n" +
   "    opacity: 0;\n" +
   "    background: transparent;\n" +
   "    appearance: none;\n" +
@@ -18759,10 +18869,10 @@ function onMouseDown(e) {
     var inSelection = e.inSelection() || (selection.isEmpty() && isSamePoint(pos, cursor));
 
 
-    var mouseX = e.pageX, mouseY = e.pageY;
+    var mouseX = e.x, mouseY = e.y;
     var onMouseSelection = function(e) {
-        mouseX = event.getDocumentX(e);
-        mouseY = event.getDocumentY(e);
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     };
 
     var blockSelect = function() {
