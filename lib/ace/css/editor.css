@@ -36,6 +36,12 @@
     z-index: 1000;
 }
 
+.ace_gutter_active_line {
+    position: absolute;
+    right: 0;
+    width: 100%;
+}
+
 .ace_gutter.horscroll {
     box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
 }
@@ -94,8 +100,8 @@
 .ace_editor textarea {
     position: fixed;
     z-index: 0;
-    width: 10px;
-    height: 30px;
+    width: 0.5em;
+    height: 1em;
     opacity: 0;
     background: transparent;
     appearance: none;
