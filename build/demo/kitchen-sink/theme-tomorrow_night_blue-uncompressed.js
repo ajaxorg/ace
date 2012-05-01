@@ -49,8 +49,8 @@ exports.cssText = "\
 }\
 \
 .ace-tomorrow-night-blue .ace_gutter {\
-  background: #e8e8e8;\
-  color: #333;\
+  background: #022346;\
+  color: #7388b5;\
 }\
 \
 .ace-tomorrow-night-blue .ace_print_margin {\
@@ -94,8 +94,11 @@ exports.cssText = "\
   border: 1px solid #404F7D;\
 }\
 \
-.ace-tomorrow-night-blue .ace_marker-layer .ace_active_line {\
+.ace-tomorrow-night-blue .ace_marker-layer .ace_active_line{\
   background: #00346E;\
+}\
+.ace-tomorrow-night-blue .ace_gutter_active_line{\
+  background: #022040;\
 }\
 \
 .ace-tomorrow-night-blue .ace_marker-layer .ace_selected_word {\

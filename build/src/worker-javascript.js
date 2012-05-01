@@ -154,7 +154,8 @@ define('ace/lib/fixoldbrowsers', ['require', 'exports', 'module' , 'ace/lib/rege
 require("./regexp");
 require("./es5-shim");
 
-});/*
+});
+/*
  *  Based on code from:
  *
  * XRegExp 1.5.0
@@ -1322,7 +1323,8 @@ var prepareString = "a"[0] != "a",
         }
         return Object(o);
     };
-});/* vim:ts=4:sts=4:sw=4:
+});
+/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -1399,7 +1401,7 @@ EventEmitter._dispatchEvent = function(eventName, e) {
     }
     
     if (defaultHandler && !e.defaultPrevented)
-        defaultHandler(e);
+        return defaultHandler(e);
 };
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
@@ -1442,7 +1444,8 @@ EventEmitter.removeAllListeners = function(eventName) {
 
 exports.EventEmitter = EventEmitter;
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -1590,7 +1593,8 @@ oop.inherits(JavaScriptWorker, Mirror);
     
 }).call(JavaScriptWorker.prototype);
 
-});define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
+});
+define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
 "use strict";
 
 var Document = require("../document").Document;
@@ -1632,7 +1636,8 @@ var Mirror = exports.Mirror = function(sender) {
     
 }).call(Mirror.prototype);
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -1712,11 +1717,11 @@ var Document = function(text) {
     oop.implement(this, EventEmitter);
 
     /**
-	* Document.setValue(text) -> Void
-	* - text (String): The text to use
-	*
+    * Document.setValue(text) -> Void
+    * - text (String): The text to use
+    *
     * Replaces all the lines in the current `Document` with the value of `text`.
-	**/
+    **/
     this.setValue = function(text) {
         var len = this.getLength();
         this.remove(new Range(0, 0, len, this.getLine(len-1).length));
@@ -1724,21 +1729,21 @@ var Document = function(text) {
     };
 
     /**
-	* Document.getValue() -> String
-	* 
-	* Returns all the lines in the document as a single string, split by the new line character.
-	**/
+    * Document.getValue() -> String
+    * 
+    * Returns all the lines in the document as a single string, split by the new line character.
+    **/
     this.getValue = function() {
         return this.getAllLines().join(this.getNewLineCharacter());
     };
 
     /** 
-	* Document.createAnchor(row, column) -> Anchor
-	* - row (Number): The row number to use
+    * Document.createAnchor(row, column) -> Anchor
+    * - row (Number): The row number to use
     * - column (Number): The column number to use
     *
-	* Creates a new `Anchor` to define a floating point in the document.
-	**/
+    * Creates a new `Anchor` to define a floating point in the document.
+    **/
     this.createAnchor = function(row, column) {
         return new Anchor(this, row, column);
     };
@@ -1765,10 +1770,10 @@ var Document = function(text) {
 
 
     /** internal, hide
-	* Document.$detectNewLine(text) -> Void
-	* 
-	* 
-	**/
+    * Document.$detectNewLine(text) -> Void
+    * 
+    * 
+    **/
     this.$detectNewLine = function(text) {
         var match = text.match(/^.*?(\r\n|\r|\n)/m);
         if (match) {
@@ -1828,82 +1833,81 @@ var Document = function(text) {
     };
 
     /**
-	* Document.isNewLine(text) -> Boolean
-	* - text (String): The text to check
+    * Document.isNewLine(text) -> Boolean
+    * - text (String): The text to check
     *
-	* Returns `true` if `text` is a newline character (either `\r\n`, `\r`, or `\n`).
+    * Returns `true` if `text` is a newline character (either `\r\n`, `\r`, or `\n`).
     *
-	**/
+    **/
     this.isNewLine = function(text) {
         return (text == "\r\n" || text == "\r" || text == "\n");
     };
 
     /**
-	* Document.getLine(row) -> String
-	* - row (Number): The row index to retrieve
-	* 
+    * Document.getLine(row) -> String
+    * - row (Number): The row index to retrieve
+    * 
     * Returns a verbatim copy of the given line as it is in the document
     *
-	**/
+    **/
     this.getLine = function(row) {
         return this.$lines[row] || "";
     };
 
     /**
-	* Document.getLines(firstRow, lastRow) -> [String]
-	* - firstRow (Number): The first row index to retrieve
+    * Document.getLines(firstRow, lastRow) -> [String]
+    * - firstRow (Number): The first row index to retrieve
     * - lastRow (Number): The final row index to retrieve
-	* 
+    * 
     * Returns an array of strings of the rows between `firstRow` and `lastRow`. This function is inclusive of `lastRow`.
     *
-	**/
+    **/
     this.getLines = function(firstRow, lastRow) {
         return this.$lines.slice(firstRow, lastRow + 1);
     };
 
     /**
-	* Document.getAllLines() -> [String]
-	* 
-	* Returns all lines in the document as string array. Warning: The caller should not modify this array!
-	**/
+    * Document.getAllLines() -> [String]
+    * 
+    * Returns all lines in the document as string array. Warning: The caller should not modify this array!
+    **/
     this.getAllLines = function() {
         return this.getLines(0, this.getLength());
     };
 
     /**
-	* Document.getLength() -> Number
-	* 
-	* Returns the number of rows in the document.
-	**/
+    * Document.getLength() -> Number
+    * 
+    * Returns the number of rows in the document.
+    **/
     this.getLength = function() {
         return this.$lines.length;
     };
 
     /**
-	* Document.getTextRange(range) -> String
-	* - range (Range): The range to work with
-	* 
+    * Document.getTextRange(range) -> String
+    * - range (Range): The range to work with
+    * 
     * [Given a range within the document, this function returns all the text within that range as a single string.]{: #Document.getTextRange.desc}
-	**/
+    **/
     this.getTextRange = function(range) {
         if (range.start.row == range.end.row) {
             return this.$lines[range.start.row].substring(range.start.column,
                                                          range.end.column);
         }
         else {
-            var lines = [];
-            lines.push(this.$lines[range.start.row].substring(range.start.column));
-            lines.push.apply(lines, this.getLines(range.start.row+1, range.end.row-1));
-            lines.push(this.$lines[range.end.row].substring(0, range.end.column));
+            var lines = this.getLines(range.start.row+1, range.end.row-1);
+            lines.unshift((this.$lines[range.start.row] || "").substring(range.start.column));
+            lines.push((this.$lines[range.end.row] || "").substring(0, range.end.column));
             return lines.join(this.getNewLineCharacter());
         }
     };
 
     /** internal, hide
-	* Document.$clipPosition(position) -> Number
-	* 
+    * Document.$clipPosition(position) -> Number
     * 
-	**/
+    * 
+    **/
     this.$clipPosition = function(position) {
         var length = this.getLength();
         if (position.row >= length) {
@@ -1914,14 +1918,14 @@ var Document = function(text) {
     };
 
     /**
-	* Document.insert(position, text) -> Number
-	* - position (Number): The position to start inserting at 
+    * Document.insert(position, text) -> Number
+    * - position (Number): The position to start inserting at 
     * - text (String): A chunk of text to insert
-	* + (Number): The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
+    * + (Number): The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
     * Inserts a block of `text` and the indicated `position`.
     *
     * 
-	**/
+    **/
     this.insert = function(position, text) {
         if (!text || text.length === 0)
             return position;
@@ -1946,10 +1950,10 @@ var Document = function(text) {
     };
 
     /**
-	* Document.insertLines(row, lines) -> Object
-	* - row (Number): The index of the row to insert at
+    * Document.insertLines(row, lines) -> Object
+    * - row (Number): The index of the row to insert at
     * - lines (Array): An array of strings
-	* + (Object): Returns an object containing the final row and column, like this:<br/>
+    * + (Object): Returns an object containing the final row and column, like this:<br/>
     *   ```{row: endRow, column: 0}```<br/>
     *   If `lines` is empty, this function returns an object containing the current row, and column, like this:<br/>
     *   ```{row: row, column: 0}```
@@ -1957,7 +1961,7 @@ var Document = function(text) {
     * Inserts the elements in `lines` into the document, starting at the row index given by `row`. This method also triggers the `'change'` event.
     *
     *
-	**/
+    **/
     this.insertLines = function(row, lines) {
         if (lines.length == 0)
             return {row: row, column: 0};
@@ -1977,16 +1981,16 @@ var Document = function(text) {
     };
 
     /**
-	* Document.insertNewLine(position) -> Object
-	* - position (String): The position to insert at
-	* + (Object): Returns an object containing the final row and column, like this:<br/>
+    * Document.insertNewLine(position) -> Object
+    * - position (String): The position to insert at
+    * + (Object): Returns an object containing the final row and column, like this:<br/>
     *    ```{row: endRow, column: 0}```
     * 
     * Inserts a new line into the document at the current row's `position`. This method also triggers the `'change'` event. 
     *
     *   
     *
-	**/
+    **/
     this.insertNewLine = function(position) {
         position = this.$clipPosition(position);
         var line = this.$lines[position.row] || "";
@@ -2010,7 +2014,7 @@ var Document = function(text) {
     };
 
     /**
-	* Document.insertInLine(position, text) -> Object | Number
+    * Document.insertInLine(position, text) -> Object | Number
     * - position (Number): The position to insert at
     * - text (String): A chunk of text
     * + (Object): Returns an object containing the final row and column, like this:<br/>
@@ -2021,7 +2025,7 @@ var Document = function(text) {
     *
     *
     *
-	**/
+    **/
     this.insertInLine = function(position, text) {
         if (text.length == 0)
             return position;
@@ -2047,14 +2051,14 @@ var Document = function(text) {
     };
 
     /**
-	* Document.remove(range) -> Object
-	* - range (Range): A specified Range to remove
-	* + (Object): Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
+    * Document.remove(range) -> Object
+    * - range (Range): A specified Range to remove
+    * + (Object): Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
     * 
     * Removes the `range` from the document.
     *
     *
-	**/
+    **/
     this.remove = function(range) {
         // clip to document
         range.start = this.$clipPosition(range.start);
@@ -2088,7 +2092,7 @@ var Document = function(text) {
     };
 
     /**
-	* Document.removeInLine(row, startColumn, endColumn) -> Object
+    * Document.removeInLine(row, startColumn, endColumn) -> Object
     * - row (Number): The row to remove from
     * - startColumn (Number): The column to start removing at 
     * - endColumn (Number): The column to stop removing at
@@ -2118,15 +2122,15 @@ var Document = function(text) {
     };
 
     /**
-	* Document.removeLines(firstRow, lastRow) -> [String]
-	* - firstRow (Number): The first row to be removed
+    * Document.removeLines(firstRow, lastRow) -> [String]
+    * - firstRow (Number): The first row to be removed
     * - lastRow (Number): The last row to be removed
     * + ([String]): Returns all the removed lines.
     * 
     * Removes a range of full lines. This method also triggers the `'change'` event.
     * 
     *
-	**/
+    **/
     this.removeLines = function(firstRow, lastRow) {
         var range = new Range(firstRow, 0, lastRow + 1, 0);
         var removed = this.$lines.splice(firstRow, lastRow - firstRow + 1);
@@ -2142,12 +2146,12 @@ var Document = function(text) {
     };
 
     /**
-	* Document.removeNewLine(row) -> Void
-	* - row (Number): The row to check
-	* 
+    * Document.removeNewLine(row) -> Void
+    * - row (Number): The row to check
+    * 
     * Removes the new line between `row` and the row immediately following it. This method also triggers the `'change'` event.
     *
-	**/
+    **/
     this.removeNewLine = function(row) {
         var firstLine = this.getLine(row);
         var secondLine = this.getLine(row+1);
@@ -2166,9 +2170,9 @@ var Document = function(text) {
     };
 
     /**
-	* Document.replace(range, text) -> Object
+    * Document.replace(range, text) -> Object
     * - range (Range): A specified Range to replace
-	* - text (String): The new text to use as a replacement
+    * - text (String): The new text to use as a replacement
     * + (Object): Returns an object containing the final row and column, like this:
     *     {row: endRow, column: 0}
     * If the text and range are empty, this function returns an object containing the current `range.start` value.
@@ -2176,7 +2180,7 @@ var Document = function(text) {
     *
     * Replaces a range in the document with the new `text`.
     *
-	**/
+    **/
     this.replace = function(range, text) {
         if (text.length == 0 && range.isEmpty())
             return range.start;
@@ -2198,10 +2202,10 @@ var Document = function(text) {
     };
 
     /**
-	* Document.applyDeltas(deltas) -> Void
-	* 
-	* Applies all the changes previously accumulated. These can be either `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
-	**/
+    * Document.applyDeltas(deltas) -> Void
+    * 
+    * Applies all the changes previously accumulated. These can be either `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
+    **/
     this.applyDeltas = function(deltas) {
         for (var i=0; i<deltas.length; i++) {
             var delta = deltas[i];
@@ -2219,10 +2223,10 @@ var Document = function(text) {
     };
 
     /**
-	* Document.revertDeltas(deltas) -> Void
-	* 
-	* Reverts any changes previously applied. These can be either `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
-	**/
+    * Document.revertDeltas(deltas) -> Void
+    * 
+    * Reverts any changes previously applied. These can be either `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
+    **/
     this.revertDeltas = function(deltas) {
         for (var i=deltas.length-1; i>=0; i--) {
             var delta = deltas[i];
@@ -7698,7 +7702,8 @@ loop:   for (;;) {
 if (typeof exports === 'object' && exports)
     exports.JSHINT = JSHINT;
 
-});/* -*- Mode: JS; tab-width: 4; indent-tabs-mode: nil; -*-
+});
+/* -*- Mode: JS; tab-width: 4; indent-tabs-mode: nil; -*-
  * vim: set sw=4 ts=4 et tw=78:
  * ***** BEGIN LICENSE BLOCK *****
  *
@@ -9769,7 +9774,8 @@ exports.Parser = Parser;
 exports.Module = Module;
 exports.Export = Export;
 
-});/* vim: set sw=4 ts=4 et tw=78: */
+});
+/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -10366,7 +10372,8 @@ Tokenizer.prototype = {
 exports.isIdentifier = isIdentifier;
 exports.Tokenizer = Tokenizer;
 
-});/* vim: set sw=4 ts=4 et tw=78: */
+});
+/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -11061,7 +11068,8 @@ exports.Dict = Dict;
 exports.WeakMap = _WeakMap;
 exports.Stack = Stack;
 
-});/* vim: set sw=4 ts=4 et tw=78: */
+});
+/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *

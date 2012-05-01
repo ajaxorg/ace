@@ -49,8 +49,8 @@ exports.cssText = "\
 }\
 \
 .ace-solarized-dark .ace_gutter {\
-  background: #e8e8e8;\
-  color: #333;\
+  background: #09222b;\
+  color: #d0edf7;\
 }\
 \
 .ace-solarized-dark .ace_print_margin {\
@@ -96,6 +96,9 @@ exports.cssText = "\
 \
 .ace-solarized-dark .ace_marker-layer .ace_active_line {\
   background: #073642;\
+}\
+.ace-solarized-dark .ace_gutter_active_line{\
+  background: #0d3440;\
 }\
 \
 .ace-solarized-dark .ace_marker-layer .ace_selected_word {\
