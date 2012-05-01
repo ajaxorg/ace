@@ -3904,6 +3904,14 @@ var Editor = function(renderer, session) {
         return this.$highlightSelectedWord;
     };
 
+    this.setAnimatedScroll = function(shouldAnimate){
+        this.renderer.setAnimatedScroll(shouldAnimate);
+    };
+
+    this.getAnimatedScroll = function(){
+        return this.renderer.getAnimatedScroll();
+    };
+
     /**
      * Editor.setShowInvisibles(showInvisibles) 
      * - showInvisibles (Boolean): Specifies whether or not to show invisible characters
