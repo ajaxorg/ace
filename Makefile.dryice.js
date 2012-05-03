@@ -442,12 +442,11 @@ function exportAce(ns, module, requireBase) {
         var template = function() {
             (function() {
                 REQUIRE_NS.require(["MODULE"], function(a) {
-					a.config.init();
+                    a.config.init();
                     if (!window.NS)
                         window.NS = {};
                     for (var key in a) if (a.hasOwnProperty(key))
                         NS[key] = a[key];
-					require("./config").init();
                 });
             })();
         };
@@ -464,3 +463,5 @@ function exportAce(ns, module, requireBase) {
 
 if (!module.parent)
     main(process.argv);
+else
+    exports.buildAce = buildAce;
