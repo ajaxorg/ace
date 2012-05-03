@@ -43,7 +43,7 @@ var copy = require('dryice').copy;
 var ACE_HOME = __dirname;
 
 function main(args) {
-    var target;
+    var target = "minimal";
     if (args.length == 3) {
         target = args[2];
         // Check if 'target' contains some allowed value.
@@ -52,12 +52,13 @@ function main(args) {
         }
     }
 
-    if (!target) {
+    if (target == "help") {
         console.log("--- Ace Dryice Build Tool ---");
         console.log("");
         console.log("Options:");
+        console.log("  minimal     Runs minimal build of Ace");
         console.log("  normal      Runs embedded build of Ace");
-        console.log("  demo      Runs demo build of Ace");
+        console.log("  demo        Runs demo build of Ace");
         console.log("  bm          Runs bookmarklet build of Ace");
         process.exit(0);
     }
@@ -70,6 +71,15 @@ function main(args) {
         textPluginPattern: /^ace\/requirejs\/text!/
     };
 
+    if (target == "minimal") {
+        buildAce(aceProject, {
+            compress: false,
+            noconflict: false,
+            suffix: "",
+            compat: true,
+            name: "ace"
+        });
+    }
     if (target == "normal") {
         ace(aceProject);
     }
@@ -113,14 +123,14 @@ function ace(aceProject) {
     buildAce(aceProject, {
         compress: false,
         noconflict: false,
-        suffix: "-uncompressed.js",
+        suffix: "-uncompressed",
         compat: true,
         name: "ace"
     });
     buildAce(aceProject, {
         compress: false,
         noconflict: true,
-        suffix: "-uncompressed-noconflict.js",
+        suffix: "-uncompressed-noconflict",
         compat: true,
         name: "ace",
         workers: []
@@ -130,7 +140,7 @@ function ace(aceProject) {
     buildAce(aceProject, {
         compress: true,
         noconflict: false,
-        suffix: ".js",
+        suffix: "",
         compat: true,
         name: "ace",
         workers: []
@@ -138,7 +148,7 @@ function ace(aceProject) {
     buildAce(aceProject, {
         compress: true,
         noconflict: true,
-        suffix: "-noconflict.js",
+        suffix: "-noconflict",
         compat: true,
         name: "ace",
         workers: []
@@ -199,7 +209,7 @@ function demo(aceProject) {
         noconflict: false,
         compat: false,
         name: "kitchen-sink",
-        suffix: "-uncompressed.js",
+        suffix: "",
         keybindings: []
     });
 }
@@ -213,7 +223,7 @@ function buildAce(aceProject, options) {
         requires: null,
         compress: false,
         noconflict: false,
-        suffix: ".js",
+        suffix: "",
         name: "ace",
         compat: true,
         modes: [
@@ -252,6 +262,15 @@ function buildAce(aceProject, options) {
         var exportFilter = exportAce(options.ns, options.exportModule);
     }
 
+    // remove use strict
+    filters.push(function(text) {
+        return text.replace(/['"]use strict['"];/g, "");
+    })
+    // remove redundant comments
+    filters.push(function(text) {
+        return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1");
+    })
+
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
 
@@ -279,7 +298,7 @@ function buildAce(aceProject, options) {
     copy({
         source: ace,
         filter: exportFilter ? filters.concat(exportFilter) : filters,
-        dest:   targetDir + '/' + name + suffix
+        dest:   targetDir + suffix + '/' + name + ".js"
     });
 
     if (options.compat) {
@@ -292,7 +311,7 @@ function buildAce(aceProject, options) {
                 }
             ],
             filter: filters,
-            dest:   targetDir + "/" + name + "-compat" + suffix
+            dest:   targetDir + suffix + "/" + name + "-compat.js"
         });
     }
 
@@ -309,7 +328,7 @@ function buildAce(aceProject, options) {
                 }
             ],
             filter: filters,
-            dest:   targetDir + "/mode-" + mode + suffix
+            dest:   targetDir + suffix + "/mode-" + mode + ".js"
         });
     });
 
@@ -324,7 +343,7 @@ function buildAce(aceProject, options) {
                 require: ["ace/theme/" + theme]
             }],
             filter: filters,
-            dest:   targetDir + "/theme-" + theme + suffix
+            dest:   targetDir + suffix + "/theme-" + theme + ".js"
         });
     });
 
@@ -377,7 +396,7 @@ function buildAce(aceProject, options) {
                 }
             ],
             filter: filters,
-            dest: "build/src/keybinding-" + keybinding + suffix
+            dest: targetDir + suffix + "/keybinding-" + keybinding + ".js"
         });
     });
 }
@@ -423,10 +442,12 @@ function exportAce(ns, module, requireBase) {
         var template = function() {
             (function() {
                 REQUIRE_NS.require(["MODULE"], function(a) {
+					a.config.init();
                     if (!window.NS)
                         window.NS = {};
                     for (var key in a) if (a.hasOwnProperty(key))
                         NS[key] = a[key];
+					require("./config").init();
                 });
             })();
         };
