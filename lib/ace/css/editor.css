@@ -42,8 +42,8 @@
     width: 100%;
 }
 
-.ace_gutter.horscroll {
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+.ace_scroller.horscroll {
+    box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;
 }
 
 .ace_gutter-cell {
