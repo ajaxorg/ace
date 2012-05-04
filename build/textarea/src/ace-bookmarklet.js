@@ -9759,17 +9759,12 @@ var Selection = function(session) {
     *
     **/
     this.setSelectionRange = function(range, reverse) {
-        if (range.isEmpty()) {
-            this.lead.setPosition(range.start.row, range.start.column);
-            this.clearSelection();
-        } else if (reverse) {
-            this.$isEmpty = false;
-            this.anchor.setPosition(range.end.row, range.end.column);
-            this.lead.setPosition(range.start.row, range.start.column);
+        if (reverse) {
+            this.setSelectionAnchor(range.end.row, range.end.column);
+            this.selectTo(range.start.row, range.start.column);
         } else {
-            this.$isEmpty = false;
-            this.anchor.setPosition(range.start.row, range.start.column);
-            this.lead.setPosition(range.end.row, range.end.column);
+            this.setSelectionAnchor(range.start.row, range.start.column);
+            this.selectTo(range.end.row, range.end.column);
         }
         this.$desiredColumn = null;
     };
