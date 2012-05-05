@@ -57,7 +57,6 @@ try {
 		compat: true,
 		name: "ace"
 	});
-	process.exit(0);
 } catch (e) {
 	console.log("--- Ace Build error ---");
 	console.log(e);
