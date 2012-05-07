@@ -244,7 +244,14 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
         this.$worker = new Worker(config.get("workerPath") + "/" + packagedJs);
     }
     else {
-        var workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
+        var workerUrl;
+        if (typeof require.supports !== "undefined" && require.supports.indexOf("ucjs2-pinf-0") >= 0) {
+            // We are running in the sourcemint loader.
+            workerUrl = require.nameToUrl("ace/worker/worker_sourcemint");
+        } else {
+            // We are running in RequireJS.
+            workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
+        }
         this.$worker = new Worker(workerUrl);
 
         var tlns = {};
@@ -388,8 +395,8 @@ var XQueryHighlightRules = function() {
   var keywords = lang.arrayToMap(
     ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
      "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
-     "using|stemming|" +
-     "while|" + 
+     "using|stemming|collection|schema|" +
+     "while|validate|on|nodes|index|" + 
      "external|" +
      "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
     );

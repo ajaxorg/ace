@@ -13,15 +13,7 @@
 
 # A handy place to put stuff that git should ignore:
 /ignore/
-node_modules/htmlparser/
-node_modules/amd-loader/
-node_modules/asyncjs/
-node_modules/jsdom/
-node_modules/libxml/
-node_modules/mime/
-node_modules/dryice/
-node_modules/uglify-js/
-node_modules/.bin/
+node_modules/
 tool/node_modules/
 
 .git-ref

@@ -49,8 +49,8 @@ exports.cssText = "\
 }\
 \
 .ace-monokai .ace_gutter {\
-  background: #e8e8e8;\
-  color: #333;\
+  background: #292a24;\
+  color: #f1f1f1;\
 }\
 \
 .ace-monokai .ace_print_margin {\
@@ -94,8 +94,11 @@ exports.cssText = "\
   border: 1px solid #49483E;\
 }\
 \
-.ace-monokai .ace_marker-layer .ace_active_line {\
+.ace-monokai .ace_marker-layer .ace_active_line{\
   background: #49483E;\
+}\
+.ace-monokai .ace_gutter_active_line{\
+  background: #191916;\
 }\
 \
 .ace-monokai .ace_marker-layer .ace_selected_word {\

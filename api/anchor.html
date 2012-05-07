@@ -1,0 +1,363 @@
+<!DOCTYPE html><!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Ace API - anchor</title>
+    <meta name="generator" content="c9-doc-build">
+    <meta name="description" content="Ace API documentation for the online code editor.">
+    <meta name="author" content="Garen J. Torikian">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="./resources/csses/bootstrap.min.css">
+    <link rel="stylesheet" href="./resources/csses/prettify.css">
+    <link rel="stylesheet" href="./resources/csses/ace_api.css">
+    <link href="./resources/images/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="./resources/javascripts/jquery.js"></script>
+    <script src="./resources/javascripts/clicker.js"></script>
+    <script src="./resources/javascripts/jquery.collapse.js"></script>
+    <script src="./resources/javascripts/jquery.cookie.js"></script>
+    <script src="./resources/javascripts/bootstrap-dropdown.js"></script>
+    <script src="./resources/javascripts/jquery-scrollspy.js"></script>
+    <script script src="./resources/javascripts/prettify-extension.js"></script>
+  </head>
+  <body>
+    <div id="nonFooter">
+      <div id="wrapper">
+        <div class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container"><span class="brand"></span>
+              <ul class="nav topLinks">
+                <li id="ace_site"><a href="../index.html">Ace</a></li>
+                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
+              </ul>
+              <form id="searchbox" action="" class="navbar-search pull-right">	
+                <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
+              </form>
+            </div>
+          </div>
+        </div>
+        <header class="filler"></header>
+        <div class="container">
+          <div class="content">
+            <div class="row centerpiece">
+              <div class="span3 offset6 sidebarContainer">
+                <div id="sidebar">
+                  <div id="well">
+                    <h3>Ace Reference</h3>
+                    <div class="swirl_divider"> </div>
+                    <ul class="menu">
+                      <li>
+                        <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="span9 mainContent">
+                <div id="documentation">
+                  <div class="classContent">
+                    <div class="membersBackground"></div>
+                    <div class=" members pos0">
+                      <div class=" membersContent pos0">
+                        <h1 class="memberHeader"><span class="name">Anchor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                        </h1>
+                        <ul data-tabs="tabs" class="nav tabs pos0">
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (1)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="Anchor@onChange" class="memberLink"><a href="#Anchor@onChange" class="" title="Anchor@onChange (event)" data-id="Anchor@onChange">onChange</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="new Anchor" class="memberLink"><a href="#Anchor.new" class="" title="new Anchor (constructor)" data-id="new Anchor">new</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (4)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="Anchor.detach" class="memberLink"><a href="#Anchor.detach" class="" title="Anchor.detach (class method)" data-id="Anchor.detach">detach</a>
+                              </li>
+                              <li data-id="Anchor.getDocument" class="memberLink"><a href="#Anchor.getDocument" class="" title="Anchor.getDocument (class method)" data-id="Anchor.getDocument">getDocument</a>
+                              </li>
+                              <li data-id="Anchor.getPosition" class="memberLink"><a href="#Anchor.getPosition" class="" title="Anchor.getPosition (class method)" data-id="Anchor.getPosition">getPosition</a>
+                              </li>
+                              <li data-id="Anchor.setPosition" class="memberLink"><a href="#Anchor.setPosition" class="" title="Anchor.setPosition (class method)" data-id="Anchor.setPosition">setPosition</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <article id="Anchor" data-title="Anchor (class)" class="article">
+                      <div class="section description">
+                        <div class="memberContent"><p>Defines the floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the cursor is updated</p>
+
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Constructors</h3>
+                    <article id="Anchor.new" data-title="new Anchor (constructor)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new Anchor" class="member-name methodClicker">Anchor</span>(<span class="sigArgList"><a href="document.html#Document" class="argument methodClicker" title="Document (class)" data-id="Document">Document</a> doc, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_new Anchor" class="ellipsis_description"><p>Creates a new <code>Anchor</code> and associates it with a document. ...</p>
+
+                            </div>
+                            <div id="short_new Anchor" class="short_description hiddenSpan"><p>Creates a new <code>Anchor</code> and associates it with a document.</p>
+
+                            </div>
+                            <h3 id="new Anchor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">doc</td><td class="argType" "><a href="document.html#Document" class="" title="Document (class)" data-id="Document">Document</a></td><td class="argDescription ">Required. The document to associate with the anchor</td></tr><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting row position</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting column position</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Events</h3>
+                    <article id="Anchor.event.onChange" data-title="Anchor@onChange (event)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span class="eventObjName">Anchor</span><span class="eventListenerStart">.on("</span><span id="Anchor@onChange" class="member-name eventMember methodClicker">onChange</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/lib/event.js" class="argument methodClicker" title="Event" data-id="Event">Event</a> e<span class="eventFunctionClose">))</span></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Anchor@onChange" class="ellipsis_description"><p>Fires whenever the anchor position changes. Events that can trigger this function include <code>&#39;includeText&#39;</code>, `&#39;insertL...</p>
+
+                            </div>
+                            <div id="short_Anchor@onChange" class="short_description hiddenSpan"><p>Fires whenever the anchor position changes. Events that can trigger this function include <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
+
+                            </div>
+                            <h3 id="Anchor@onChange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">e</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/lib/event.js" class="" title="Event" data-id="Event">Event</a></td><td class="argDescription ">Required. Contains data about the event</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Methods</h3>
+                    <article id="Anchor.detach" data-title="Anchor.detach (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Anchor.detach" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">detach</span></span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Anchor.detach" class="ellipsis_description"><p>When called, the <code>&#39;change&#39;</code> event listener is removed. ...</p>
+
+                            </div>
+                            <div id="short_Anchor.detach" class="short_description hiddenSpan"><p>When called, the <code>&#39;change&#39;</code> event listener is removed.</p>
+
+                            </div>
+                            <h3 id="Anchor.detach" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Anchor.getDocument" data-title="Anchor.getDocument (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Anchor.getDocument" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">getDocument</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="document.html#Document" class="returnType " title="Document (class)" data-id="Document">Document</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Anchor.getDocument" class="ellipsis_description"><p>Returns the current document. ...</p>
+
+                            </div>
+                            <div id="short_Anchor.getDocument" class="short_description hiddenSpan"><p>Returns the current document.</p>
+
+                            </div>
+                            <h3 id="Anchor.getDocument" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Anchor.getPosition" data-title="Anchor.getPosition (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Anchor.getPosition" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">getPosition</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Anchor.getPosition" class="ellipsis_description"><p>Returns an object identifying the <code>row</code> and <code>column</code> position of the current anchor. ...</p>
+
+                            </div>
+                            <div id="short_Anchor.getPosition" class="short_description hiddenSpan"><p>Returns an object identifying the <code>row</code> and <code>column</code> position of the current anchor.</p>
+
+                            </div>
+                            <h3 id="Anchor.getPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Anchor.setPosition" data-title="Anchor.setPosition (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Anchor.setPosition" class="member-name methodClicker"><span class="sigClassName">Anchor.</span><span class="sigMemberName">setPosition</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> column, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> noClip</span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Anchor.setPosition" class="ellipsis_description"><p>Sets the anchor position to the specified row and column. If <code>noClip</code> is <code>true</code>, the position is not clipped. ...</p>
+
+                            </div>
+                            <div id="short_Anchor.setPosition" class="short_description hiddenSpan"><p>Sets the anchor position to the specified row and column. If <code>noClip</code> is <code>true</code>, the position is not clipped.</p>
+
+                            </div>
+                            <h3 id="Anchor.setPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row index to move the anchor to</td></tr><tr class="argumentRow "><td class="argName ">column</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The column index to move the anchor to</td></tr><tr class="argumentRow "><td class="argName ">noClip</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Identifies if you want the position to be clipped</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+                <div id="disqus_thread"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="container">
+        <div class="footer-text pull-right"> 
+          <p><a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012</p>
+        </div>
+      </div>
+    </footer>
+    <!-- scripts concatenated and minified via ant build script--><script defer src="./resources/javascripts/plugins.js"></script>
+    <script defer src="./resources/javascripts/prettify.js"></script>
+    <script defer src="./resources/javascripts/prettify-extension.js"></script>
+    <script defer src="./resources/javascripts/ux.js"></script>
+    <script defer src="./resources/javascripts/disqus-ext.js"></script>
+    <script defer src="./resources/javascripts/ga.js"></script>
+    <!-- end scripts--><!--[if lt IE 7]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>
+      window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})
+      
+      
+    </script><![endif]-->
+  </body>
+</html>

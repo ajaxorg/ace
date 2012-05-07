@@ -301,7 +301,8 @@ split.on("focus", function(editor) {
 });
 env.split = split;
 window.env = env;
-window.ace = env.editor;
+window.editor = window.ace = env.editor;
+env.editor.setAnimatedScroll(true);
 
 var docEl = document.getElementById("doc");
 var modeEl = document.getElementById("mode");
@@ -395,10 +396,28 @@ function saveOption(el, val) {
     }
 }
 
+event.addListener(themeEl, "mouseover", function(e){
+    this.desiredValue = e.target.value;
+    if (!this.$timer)
+        this.$timer = setTimeout(this.updateTheme);
+})
+
+event.addListener(themeEl, "mouseout", function(e){
+    this.desiredValue = null;
+    if (!this.$timer)
+        this.$timer = setTimeout(this.updateTheme, 20);
+})
+
+themeEl.updateTheme = function(){
+    env.split.setTheme(themeEl.desiredValue || themeEl.selectedValue);
+    themeEl.$timer = null;
+}
+
 bindDropdown("theme", function(value) {
     if (!value)
         return;
 	env.editor.setTheme(value);
+	themeEl.selectedValue = value;
 });
 
 bindDropdown("keybinding", function(value) {
@@ -480,6 +499,9 @@ bindCheckbox("enable_behaviours", function(checked) {
     env.editor.setBehavioursEnabled(checked);
 });
 
+bindCheckbox("fade_fold_widgets", function(checked) {
+    env.editor.setFadeFoldWidgets(checked);
+});
 
 var secondSession = null;
 bindDropdown("split", function(value) {

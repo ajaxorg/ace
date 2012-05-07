@@ -118,7 +118,8 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -490,7 +491,8 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 }).call(FoldMode.prototype);
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -655,7 +657,14 @@ var WorkerClient = function(topLevelNamespaces, packagedJs, mod, classname) {
         this.$worker = new Worker(config.get("workerPath") + "/" + packagedJs);
     }
     else {
-        var workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
+        var workerUrl;
+        if (typeof require.supports !== "undefined" && require.supports.indexOf("ucjs2-pinf-0") >= 0) {
+            // We are running in the sourcemint loader.
+            workerUrl = require.nameToUrl("ace/worker/worker_sourcemint");
+        } else {
+            // We are running in RequireJS.
+            workerUrl = this.$normalizePath(require.nameToUrl("ace/worker/worker", null, "_"));
+        }
         this.$worker = new Worker(workerUrl);
 
         var tlns = {};

@@ -154,7 +154,8 @@ define('ace/lib/fixoldbrowsers', ['require', 'exports', 'module' , 'ace/lib/rege
 require("./regexp");
 require("./es5-shim");
 
-});/**
+});
+/*
  *  Based on code from:
  *
  * XRegExp 1.5.0
@@ -292,7 +293,7 @@ define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, ex
 
 define('ace/lib/es5-shim', ['require', 'exports', 'module' ], function(require, exports, module) {
 
-/**
+/*
  * Brings an environment as close to ECMAScript 5 compliance
  * as is possible with the facilities of erstwhile engines.
  *
@@ -1322,7 +1323,8 @@ var prepareString = "a"[0] != "a",
         }
         return Object(o);
     };
-});/* vim:ts=4:sts=4:sw=4:
+});
+/* vim:ts=4:sts=4:sw=4:
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -1399,7 +1401,7 @@ EventEmitter._dispatchEvent = function(eventName, e) {
     }
     
     if (defaultHandler && !e.defaultPrevented)
-        defaultHandler(e);
+        return defaultHandler(e);
 };
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
@@ -1442,7 +1444,8 @@ EventEmitter.removeAllListeners = function(eventName) {
 
 exports.EventEmitter = EventEmitter;
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -1590,7 +1593,8 @@ oop.inherits(JavaScriptWorker, Mirror);
     
 }).call(JavaScriptWorker.prototype);
 
-});define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
+});
+define('ace/worker/mirror', ['require', 'exports', 'module' , 'ace/document', 'ace/lib/lang'], function(require, exports, module) {
 "use strict";
 
 var Document = require("../document").Document;
@@ -1632,7 +1636,8 @@ var Mirror = exports.Mirror = function(sender) {
     
 }).call(Mirror.prototype);
 
-});/* ***** BEGIN LICENSE BLOCK *****
+});
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -1677,6 +1682,21 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Range = require("./range").Range;
 var Anchor = require("./anchor").Anchor;
 
+/**
+ * class Document
+ *
+ * Contains the text of the document. Documents are controlled by a single [[EditSession `EditSession`]]. At its core, `Document`s are just an array of strings, with each row in the document matching up to the array index.
+ *
+ *
+ **/
+
+ /**
+ * new Document([text])
+ * - text (String | Array): The starting text
+ *
+ * Creates a new `Document`. If `text` is included, the `Document` contains those strings; otherwise, it's empty.
+ *
+ **/
 var Document = function(text) {
     this.$lines = [];
 
@@ -1696,19 +1716,47 @@ var Document = function(text) {
 
     oop.implement(this, EventEmitter);
 
+    /**
+    * Document.setValue(text) -> Void
+    * - text (String): The text to use
+    *
+    * Replaces all the lines in the current `Document` with the value of `text`.
+    **/
     this.setValue = function(text) {
         var len = this.getLength();
         this.remove(new Range(0, 0, len, this.getLine(len-1).length));
         this.insert({row: 0, column:0}, text);
     };
 
+    /**
+    * Document.getValue() -> String
+    * 
+    * Returns all the lines in the document as a single string, split by the new line character.
+    **/
     this.getValue = function() {
         return this.getAllLines().join(this.getNewLineCharacter());
     };
 
+    /** 
+    * Document.createAnchor(row, column) -> Anchor
+    * - row (Number): The row number to use
+    * - column (Number): The column number to use
+    *
+    * Creates a new `Anchor` to define a floating point in the document.
+    **/
     this.createAnchor = function(row, column) {
         return new Anchor(this, row, column);
     };
+
+    /** internal, hide
+    * Document.$split(text) -> [String]
+    * - text (String): The text to work with
+    * + ([String]): A String array, with each index containing a piece of the original `text` string.
+    * 
+    * Splits a string of text on any newline (`\n`) or carriage-return ('\r') characters.
+    *
+    *
+    **/
 
     // check for IE split bug
     if ("aaa".split(/a/).length == 0)
@@ -1721,6 +1769,11 @@ var Document = function(text) {
         };
 
 
+    /** internal, hide
+    * Document.$detectNewLine(text) -> Void
+    * 
+    * 
+    **/
     this.$detectNewLine = function(text) {
         var match = text.match(/^.*?(\r\n|\r|\n)/m);
         if (match) {
@@ -1730,6 +1783,17 @@ var Document = function(text) {
         }
     };
 
+    /**
+    * Document.getNewLineCharacter() -> String
+    * + (String): If `newLineMode == windows`, `\r\n` is returned.<br/>
+    *  If `newLineMode == unix`, `\n` is returned.<br/>
+    *  If `newLineMode == auto`, the value of `autoNewLine` is returned.
+    * 
+    * Returns the newline character that's being used, depending on the value of `newLineMode`. 
+    *
+    * 
+    * 
+    **/
     this.getNewLineCharacter = function() {
       switch (this.$newLineMode) {
           case "windows":
@@ -1745,6 +1809,12 @@ var Document = function(text) {
 
     this.$autoNewLine = "\n";
     this.$newLineMode = "auto";
+    /**
+     * Document.setNewLineMode(newLineMode) -> Void
+     * - newLineMode(String): [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
+     * 
+     * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
+     **/
     this.setNewLineMode = function(newLineMode) {
         if (this.$newLineMode === newLineMode)
             return;
@@ -1752,51 +1822,92 @@ var Document = function(text) {
         this.$newLineMode = newLineMode;
     };
 
+    /**
+    * Document.getNewLineMode() -> String
+    * 
+    * [Returns the type of newlines being used; either `windows`, `unix`, or `auto`]{: #Document.getNewLineMode}
+    *
+    **/
     this.getNewLineMode = function() {
         return this.$newLineMode;
     };
 
+    /**
+    * Document.isNewLine(text) -> Boolean
+    * - text (String): The text to check
+    *
+    * Returns `true` if `text` is a newline character (either `\r\n`, `\r`, or `\n`).
+    *
+    **/
     this.isNewLine = function(text) {
         return (text == "\r\n" || text == "\r" || text == "\n");
     };
 
     /**
-     * Get a verbatim copy of the given line as it is in the document
-     */
+    * Document.getLine(row) -> String
+    * - row (Number): The row index to retrieve
+    * 
+    * Returns a verbatim copy of the given line as it is in the document
+    *
+    **/
     this.getLine = function(row) {
         return this.$lines[row] || "";
     };
 
+    /**
+    * Document.getLines(firstRow, lastRow) -> [String]
+    * - firstRow (Number): The first row index to retrieve
+    * - lastRow (Number): The final row index to retrieve
+    * 
+    * Returns an array of strings of the rows between `firstRow` and `lastRow`. This function is inclusive of `lastRow`.
+    *
+    **/
     this.getLines = function(firstRow, lastRow) {
         return this.$lines.slice(firstRow, lastRow + 1);
     };
 
     /**
-     * Returns all lines in the document as string array. Warning: The caller
-     * should not modify this array!
-     */
+    * Document.getAllLines() -> [String]
+    * 
+    * Returns all lines in the document as string array. Warning: The caller should not modify this array!
+    **/
     this.getAllLines = function() {
         return this.getLines(0, this.getLength());
     };
 
+    /**
+    * Document.getLength() -> Number
+    * 
+    * Returns the number of rows in the document.
+    **/
     this.getLength = function() {
         return this.$lines.length;
     };
 
+    /**
+    * Document.getTextRange(range) -> String
+    * - range (Range): The range to work with
+    * 
+    * [Given a range within the document, this function returns all the text within that range as a single string.]{: #Document.getTextRange.desc}
+    **/
     this.getTextRange = function(range) {
         if (range.start.row == range.end.row) {
             return this.$lines[range.start.row].substring(range.start.column,
                                                          range.end.column);
         }
         else {
-            var lines = [];
-            lines.push(this.$lines[range.start.row].substring(range.start.column));
-            lines.push.apply(lines, this.getLines(range.start.row+1, range.end.row-1));
-            lines.push(this.$lines[range.end.row].substring(0, range.end.column));
+            var lines = this.getLines(range.start.row+1, range.end.row-1);
+            lines.unshift((this.$lines[range.start.row] || "").substring(range.start.column));
+            lines.push((this.$lines[range.end.row] || "").substring(0, range.end.column));
             return lines.join(this.getNewLineCharacter());
         }
     };
 
+    /** internal, hide
+    * Document.$clipPosition(position) -> Number
+    * 
+    * 
+    **/
     this.$clipPosition = function(position) {
         var length = this.getLength();
         if (position.row >= length) {
@@ -1806,6 +1917,15 @@ var Document = function(text) {
         return position;
     };
 
+    /**
+    * Document.insert(position, text) -> Number
+    * - position (Number): The position to start inserting at 
+    * - text (String): A chunk of text to insert
+    * + (Number): The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
+    * Inserts a block of `text` and the indicated `position`.
+    *
+    * 
+    **/
     this.insert = function(position, text) {
         if (!text || text.length === 0)
             return position;
@@ -1829,6 +1949,19 @@ var Document = function(text) {
         return position;
     };
 
+    /**
+    * Document.insertLines(row, lines) -> Object
+    * - row (Number): The index of the row to insert at
+    * - lines (Array): An array of strings
+    * + (Object): Returns an object containing the final row and column, like this:<br/>
+    *   ```{row: endRow, column: 0}```<br/>
+    *   If `lines` is empty, this function returns an object containing the current row, and column, like this:<br/>
+    *   ```{row: row, column: 0}```
+    *
+    * Inserts the elements in `lines` into the document, starting at the row index given by `row`. This method also triggers the `'change'` event.
+    *
+    *
+    **/
     this.insertLines = function(row, lines) {
         if (lines.length == 0)
             return {row: row, column: 0};
@@ -1847,6 +1980,17 @@ var Document = function(text) {
         return range.end;
     };
 
+    /**
+    * Document.insertNewLine(position) -> Object
+    * - position (String): The position to insert at
+    * + (Object): Returns an object containing the final row and column, like this:<br/>
+    *    ```{row: endRow, column: 0}```
+    * 
+    * Inserts a new line into the document at the current row's `position`. This method also triggers the `'change'` event. 
+    *
+    *   
+    *
+    **/
     this.insertNewLine = function(position) {
         position = this.$clipPosition(position);
         var line = this.$lines[position.row] || "";
@@ -1869,6 +2013,19 @@ var Document = function(text) {
         return end;
     };
 
+    /**
+    * Document.insertInLine(position, text) -> Object | Number
+    * - position (Number): The position to insert at
+    * - text (String): A chunk of text
+    * + (Object): Returns an object containing the final row and column, like this:<br/>
+    *     ```{row: endRow, column: 0}```
+    * + (Number): If `text` is empty, this function returns the value of `position`
+    * 
+    * Inserts `text` into the `position` at the current row. This method also triggers the `'change'` event.
+    *
+    *
+    *
+    **/
     this.insertInLine = function(position, text) {
         if (text.length == 0)
             return position;
@@ -1893,6 +2050,15 @@ var Document = function(text) {
         return end;
     };
 
+    /**
+    * Document.remove(range) -> Object
+    * - range (Range): A specified Range to remove
+    * + (Object): Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
+    * 
+    * Removes the `range` from the document.
+    *
+    *
+    **/
     this.remove = function(range) {
         // clip to document
         range.start = this.$clipPosition(range.start);
@@ -1925,6 +2091,17 @@ var Document = function(text) {
         return range.start;
     };
 
+    /**
+    * Document.removeInLine(row, startColumn, endColumn) -> Object
+    * - row (Number): The row to remove from
+    * - startColumn (Number): The column to start removing at 
+    * - endColumn (Number): The column to stop removing at
+    * + (Object): Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
+    *
+    * Removes the specified columns from the `row`. This method also triggers the `'change'` event.
+    *
+    * 
+    **/
     this.removeInLine = function(row, startColumn, endColumn) {
         if (startColumn == endColumn)
             return;
@@ -1945,12 +2122,15 @@ var Document = function(text) {
     };
 
     /**
-     * Removes a range of full lines
-     *
-     * @param firstRow {Integer} The first row to be removed
-     * @param lastRow {Integer} The last row to be removed
-     * @return {String[]} The removed lines
-     */
+    * Document.removeLines(firstRow, lastRow) -> [String]
+    * - firstRow (Number): The first row to be removed
+    * - lastRow (Number): The last row to be removed
+    * + ([String]): Returns all the removed lines.
+    * 
+    * Removes a range of full lines. This method also triggers the `'change'` event.
+    * 
+    *
+    **/
     this.removeLines = function(firstRow, lastRow) {
         var range = new Range(firstRow, 0, lastRow + 1, 0);
         var removed = this.$lines.splice(firstRow, lastRow - firstRow + 1);
@@ -1965,6 +2145,13 @@ var Document = function(text) {
         return removed;
     };
 
+    /**
+    * Document.removeNewLine(row) -> Void
+    * - row (Number): The row to check
+    * 
+    * Removes the new line between `row` and the row immediately following it. This method also triggers the `'change'` event.
+    *
+    **/
     this.removeNewLine = function(row) {
         var firstLine = this.getLine(row);
         var secondLine = this.getLine(row+1);
@@ -1982,6 +2169,18 @@ var Document = function(text) {
         this._emit("change", { data: delta });
     };
 
+    /**
+    * Document.replace(range, text) -> Object
+    * - range (Range): A specified Range to replace
+    * - text (String): The new text to use as a replacement
+    * + (Object): Returns an object containing the final row and column, like this:
+    *     {row: endRow, column: 0}
+    * If the text and range are empty, this function returns an object containing the current `range.start` value.
+    * If the text is the exact same as what currently exists, this function returns an object containing the current `range.end` value.
+    *
+    * Replaces a range in the document with the new `text`.
+    *
+    **/
     this.replace = function(range, text) {
         if (text.length == 0 && range.isEmpty())
             return range.start;
@@ -2002,6 +2201,11 @@ var Document = function(text) {
         return end;
     };
 
+    /**
+    * Document.applyDeltas(deltas) -> Void
+    * 
+    * Applies all the changes previously accumulated. These can be either `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
+    **/
     this.applyDeltas = function(deltas) {
         for (var i=0; i<deltas.length; i++) {
             var delta = deltas[i];
@@ -2018,6 +2222,11 @@ var Document = function(text) {
         }
     };
 
+    /**
+    * Document.revertDeltas(deltas) -> Void
+    * 
+    * Reverts any changes previously applied. These can be either `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
+    **/
     this.revertDeltas = function(deltas) {
         for (var i=deltas.length-1; i>=0; i--) {
             var delta = deltas[i];
@@ -2079,6 +2288,23 @@ exports.Document = Document;
 define('ace/range', ['require', 'exports', 'module' ], function(require, exports, module) {
 "use strict";
 
+/**
+ * class Range
+ *
+ * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogus to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
+ *
+ **/
+
+/**
+ * new Range(startRow, startColumn, endRow, endColumn)
+ * - startRow (Number): The starting row
+ * - startColumn (Number): The starting column
+ * - endRow (Number): The ending row
+ * - endColumn (Number): The ending column
+ *
+ * Creates a new `Range` object with the given starting and ending row and column points.
+ *
+ **/
 var Range = function(startRow, startColumn, endRow, endColumn) {
     this.start = {
         row: startRow,
@@ -2092,6 +2318,13 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 };
 
 (function() {
+    /**
+     * Range.isEqual(range) -> Boolean
+     * - range (Range): A range to check against
+     *
+     * Returns `true` if and only if the starting row and column, and ending tow and column, are equivalent to those given by `range`.
+     *
+     **/ 
     this.isEqual = function(range) {
         return this.start.row == range.start.row &&
             this.end.row == range.end.row &&
@@ -2099,28 +2332,51 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             this.end.column == range.end.column
     };
 
+    /**
+     * Range.toString() -> String
+     *
+     * Returns a string containing the range's row and column information, given like this:
+     *
+     *    [start.row/start.column] -> [end.row/end.column]
+     *
+     **/ 
+
     this.toString = function() {
         return ("Range: [" + this.start.row + "/" + this.start.column +
             "] -> [" + this.end.row + "/" + this.end.column + "]");
     };
 
+    /** related to: Range.compare
+     * Range.contains(row, column) -> Boolean
+     * - row (Number): A row to check for
+     * - column (Number): A column to check for
+     *
+     * Returns `true` if the `row` and `column` provided are within the given range. This can better be expressed as returning `true` if:
+     *
+     *    this.start.row <= row <= this.end.row &&
+     *    this.start.column <= column <= this.end.column
+     *
+     **/ 
+
     this.contains = function(row, column) {
         return this.compare(row, column) == 0;
     };
 
-    /**
-     * Compares this range (A) with another range (B), where B is the passed in
-     * range.
+    /** related to: Range.compare
+     * Range.compareRange(range) -> Number
+     * - range (Range): A range to compare with
+     * + (Number): This method returns one of the following numbers:<br/>
+     * <br/>
+     * * `-2`: (B) is in front of (A), and doesn't intersect with (A)<br/>
+     * * `-1`: (B) begins before (A) but ends inside of (A)<br/>
+     * * `0`: (B) is completely inside of (A) OR (A) is completely inside of (B)<br/>
+     * * `+1`: (B) begins inside of (A) but ends outside of (A)<br/>
+     * * `+2`: (B) is after (A) and doesn't intersect with (A)<br/>
+     * * `42`: FTW state: (B) ends in (A) but starts outside of (A)
+     * 
+     * Compares `this` range (A) with another range (B).
      *
-     * Return values:
-     *  -2: (B) is infront of (A) and doesn't intersect with (A)
-     *  -1: (B) begins before (A) but ends inside of (A)
-     *   0: (B) is completly inside of (A) OR (A) is complety inside of (B)
-     *  +1: (B) begins inside of (A) but ends outside of (A)
-     *  +2: (B) is after (A) and doesn't intersect with (A)
-     *
-     *  42: FTW state: (B) ends in (A) but starts outside of (A)
-     */
+     **/ 
     this.compareRange = function(range) {
         var cmp,
             end = range.end,
@@ -2150,27 +2406,86 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+    /** related to: Range.compare
+     * Range.comparePoint(p) -> Number
+     * - p (Range): A point to compare with
+     * + (Number): This method returns one of the following numbers:<br/>
+     * * `0` if the two points are exactly equal<br/>
+     * * `-1` if `p.row` is less then the calling range<br/>
+     * * `1` if `p.row` is greater than the calling range<br/>
+     * <br/>
+     * If the starting row of the calling range is equal to `p.row`, and:<br/>
+     * * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
+     * * Otherwise, it returns -1<br/>
+     *<br/>
+     * If the ending row of the calling range is equal to `p.row`, and:<br/>
+     * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
+     * * Otherwise, it returns 1<br/>
+     *
+     * Checks the row and column points of `p` with the row and column points of the calling range.
+     *
+     * 
+     *
+     **/ 
     this.comparePoint = function(p) {
         return this.compare(p.row, p.column);
     }
 
+    /** related to: Range.comparePoint
+     * Range.containsRange(range) -> Boolean
+     * - range (Range): A range to compare with
+     *
+     * Checks the start and end points of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
+     *
+     **/ 
     this.containsRange = function(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     }
 
+    /**
+     * Range.intersects(range) -> Boolean
+     * - range (Range): A range to compare with
+     *
+     * Returns `true` if passed in `range` intersects with the one calling this method.
+     *
+     **/
     this.intersects = function(range) {
         var cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
     }
 
+    /**
+     * Range.isEnd(row, column) -> Boolean
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     *
+     * Returns `true` if the caller's ending row point is the same as `row`, and if the caller's ending column is the same as `column`.
+     *
+     **/
     this.isEnd = function(row, column) {
         return this.end.row == row && this.end.column == column;
     }
 
+    /**
+     * Range.isStart(row, column) -> Boolean
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     *
+     * Returns `true` if the caller's starting row point is the same as `row`, and if the caller's starting column is the same as `column`.
+     *
+     **/ 
     this.isStart = function(row, column) {
         return this.start.row == row && this.start.column == column;
     }
 
+    /**
+     * Range.setStart(row, column)
+     * - row (Number): A row point to set
+     * - column (Number): A column point to set
+     *
+     * Sets the starting row and column for the range.
+     *
+     **/ 
     this.setStart = function(row, column) {
         if (typeof row == "object") {
             this.start.column = row.column;
@@ -2181,6 +2496,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+    /**
+     * Range.setEnd(row, column)
+     * - row (Number): A row point to set
+     * - column (Number): A column point to set
+     *
+     * Sets the starting row and column for the range.
+     *
+     **/ 
     this.setEnd = function(row, column) {
         if (typeof row == "object") {
             this.end.column = row.column;
@@ -2191,6 +2514,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+    /** related to: Range.compare
+     * Range.inside(row, column) -> Boolean
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     *
+     * Returns `true` if the `row` and `column` are within the given range.
+     *
+     **/ 
     this.inside = function(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column) || this.isStart(row, column)) {
@@ -2202,6 +2533,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return false;
     }
 
+    /** related to: Range.compare
+     * Range.insideStart(row, column) -> Boolean
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     *
+     * Returns `true` if the `row` and `column` are within the given range's starting points.
+     *
+     **/ 
     this.insideStart = function(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column)) {
@@ -2213,6 +2552,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return false;
     }
 
+    /** related to: Range.compare
+     * Range.insideEnd(row, column) -> Boolean
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     *
+     * Returns `true` if the `row` and `column` are within the given range's ending points.
+     *
+     **/ 
     this.insideEnd = function(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isStart(row, column)) {
@@ -2224,6 +2571,27 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return false;
     }
 
+    /** 
+     * Range.compare(row, column) -> Number
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     * + (Number): This method returns one of the following numbers:<br/>
+     * * `0` if the two points are exactly equal <br/>
+     * * `-1` if `p.row` is less then the calling range <br/>
+     * * `1` if `p.row` is greater than the calling range <br/>
+     *  <br/>
+     * If the starting row of the calling range is equal to `p.row`, and: <br/>
+     * * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
+     * * Otherwise, it returns -1<br/>
+     * <br/>
+     * If the ending row of the calling range is equal to `p.row`, and: <br/>
+     * * `p.column` is less than or equal to the calling range's ending column, this returns `0` <br/>
+     * * Otherwise, it returns 1
+     *
+     * Checks the row and column points with the row and column points of the calling range.
+     *
+     *
+     **/
     this.compare = function(row, column) {
         if (!this.isMultiLine()) {
             if (row === this.start.row) {
@@ -2247,8 +2615,28 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Like .compare(), but if isStart is true, return -1;
-     */
+     * Range.compareStart(row, column) -> Number
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     * + (Number): This method returns one of the following numbers:<br/>
+     * <br/>
+     * * `0` if the two points are exactly equal<br/>
+     * * `-1` if `p.row` is less then the calling range<br/>
+     * * `1` if `p.row` is greater than the calling range, or if `isStart` is `true`.<br/>
+     * <br/>
+     * If the starting row of the calling range is equal to `p.row`, and:<br/>
+     * * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
+     * * Otherwise, it returns -1<br/>
+     * <br/>
+     * If the ending row of the calling range is equal to `p.row`, and:<br/>
+     * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
+     * * Otherwise, it returns 1
+     *
+     * Checks the row and column points with the row and column points of the calling range.
+     *
+     *
+     *
+     **/
     this.compareStart = function(row, column) {
         if (this.start.row == row && this.start.column == column) {
             return -1;
@@ -2258,8 +2646,26 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     }
 
     /**
-     * Like .compare(), but if isEnd is true, return 1;
-     */
+     * Range.compareEnd(row, column) -> Number
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     * + (Number): This method returns one of the following numbers:<br/>
+     * * `0` if the two points are exactly equal<br/>
+     * * `-1` if `p.row` is less then the calling range<br/>
+     * * `1` if `p.row` is greater than the calling range, or if `isEnd` is `true.<br/>
+     * <br/>
+     * If the starting row of the calling range is equal to `p.row`, and:<br/>
+     * * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
+     * * Otherwise, it returns -1<br/>
+     *<br/>
+     * If the ending row of the calling range is equal to `p.row`, and:<br/>
+     * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
+     * * Otherwise, it returns 1
+     *
+     * Checks the row and column points with the row and column points of the calling range.
+     *
+     *
+     **/
     this.compareEnd = function(row, column) {
         if (this.end.row == row && this.end.column == column) {
             return 1;
@@ -2268,6 +2674,21 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+   /** 
+     * Range.compareInside(row, column) -> Number
+     * - row (Number): A row point to compare with
+     * - column (Number): A column point to compare with
+     * + (Number): This method returns one of the following numbers:<br/>
+     * * `1` if the ending row of the calling range is equal to `row`, and the ending column of the calling range is equal to `column`<br/>
+     * * `-1` if the starting row of the calling range is equal to `row`, and the starting column of the calling range is equal to `column`<br/>
+     * <br/>
+     * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
+     *
+     * Checks the row and column points with the row and column points of the calling range.
+     *
+     *
+     *
+     **/
     this.compareInside = function(row, column) {
         if (this.end.row == row && this.end.column == column) {
             return 1;
@@ -2278,6 +2699,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         }
     }
 
+   /** 
+     * Range.clipRows(firstRow, lastRow) -> Range
+     * - firstRow (Number): The starting row
+     * - lastRow (Number): The ending row
+     *
+     * Returns the part of the current `Range` that occurs within the boundaries of `firstRow` and `lastRow` as a new `Range` object.
+     *
+    **/
     this.clipRows = function(firstRow, lastRow) {
         if (this.end.row > lastRow) {
             var end = {
@@ -2309,6 +2738,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return Range.fromPoints(start || this.start, end || this.end);
     };
 
+   /** 
+     * Range.extend(row, column) -> Range
+     * - row (Number): A new row to extend to
+     * - column (Number): A new column to extend to
+     *
+     *  Changes the row and column points for the calling range for both the starting and ending points. This method returns that range with a new row.
+     *
+    **/
     this.extend = function(row, column) {
         var cmp = this.compare(row, column);
 
@@ -2322,33 +2759,36 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return Range.fromPoints(start || this.start, end || this.end);
     };
 
-    this.fixOrientation = function() {
-        if (
-            this.start.row < this.end.row 
-            || (this.start.row == this.end.row && this.start.column < this.end.column)
-        ) {
-            return false;
-        }
-        
-        var temp = this.start;
-        this.end = this.start;
-        this.start = temp;
-        return true;
-    };
-
-
     this.isEmpty = function() {
         return (this.start.row == this.end.row && this.start.column == this.end.column);
     };
 
+   /** 
+     * Range.isMultiLine() -> Boolean
+     *
+     * Returns true if the range spans across multiple lines.
+     *
+    **/
     this.isMultiLine = function() {
         return (this.start.row !== this.end.row);
     };
 
+   /** 
+     * Range.clone() -> Range
+     *
+     * Returns a duplicate of the calling range.
+     *
+    **/
     this.clone = function() {
         return Range.fromPoints(this.start, this.end);
     };
 
+   /** 
+     * Range.collapseRows() -> Range
+     *
+     * Returns a range containing the starting and ending rows of the original range, but with a column value of `0`.
+     *
+    **/
     this.collapseRows = function() {
         if (this.end.column == 0)
             return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0)
@@ -2356,6 +2796,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             return new Range(this.start.row, 0, this.end.row, 0)
     };
 
+   /** 
+     * Range.toScreenRange(session) -> Range
+     * - session (EditSession): The `EditSession` to retrieve coordinates from
+     * 
+     * Given the current `Range`, this function converts those starting and ending points into screen positions, and then returns a new `Range` object.
+    **/
     this.toScreenRange = function(session) {
         var screenPosStart =
             session.documentToScreenPosition(this.start);
@@ -2370,7 +2816,14 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
 }).call(Range.prototype);
 
-
+/** 
+ * Range.fromPoints(start, end) -> Range
+ * - start (Range): A starting point to use
+ * - end (Range): An ending point to use
+ * 
+ * Creates and returns a new `Range` based on the row and column of the given parameters.
+ *
+**/
 Range.fromPoints = function(start, end) {
     return new Range(start.row, start.column, end.row, end.column);
 };
@@ -2421,9 +2874,22 @@ var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
 /**
- * An Anchor is a floating pointer in the document. Whenever text is inserted or
- * deleted before the cursor, the position of the cursor is updated
- */
+ * class Anchor
+ *
+ * Defines the floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the cursor is updated
+ *
+ **/
+
+/**
+ * new Anchor(doc, row, column)
+ * - doc (Document): The document to associate with the anchor
+ * - row (Number): The starting row position
+ * - column (Number): The starting column position
+ *
+ * Creates a new `Anchor` and associates it with a document.
+ *
+ **/
+
 var Anchor = exports.Anchor = function(doc, row, column) {
     this.document = doc;
     
@@ -2440,14 +2906,36 @@ var Anchor = exports.Anchor = function(doc, row, column) {
 
     oop.implement(this, EventEmitter);
     
+    /**
+     * Anchor.getPosition() -> Object
+     *
+     * Returns an object identifying the `row` and `column` position of the current anchor.
+     *
+     **/
+
     this.getPosition = function() {
         return this.$clipPositionToDocument(this.row, this.column);
     };
-    
+ 
+     /**
+     * Anchor.getDocument() -> Document
+     *
+     * Returns the current document.
+     *
+     **/
+        
     this.getDocument = function() {
         return this.document;
     };
     
+     /**
+     * Anchor@onChange(e)
+     * - e (Event): Contains data about the event
+     *
+     * Fires whenever the anchor position changes. Events that can trigger this function include `'includeText'`, `'insertLines'`, `'removeText'`, and `'removeLines'`.
+     *
+     **/
+
     this.onChange = function(e) {
         var delta = e.data;
         var range = delta.range;
@@ -2513,6 +3001,16 @@ var Anchor = exports.Anchor = function(doc, row, column) {
         this.setPosition(row, column, true);
     };
 
+     /**
+     * Anchor.setPosition(row, column, noClip)
+     * - row (Number): The row index to move the anchor to
+     * - column (Number): The column index to move the anchor to
+     * - noClip (Boolean): Identifies if you want the position to be clipped
+     *
+     * Sets the anchor position to the specified row and column. If `noClip` is `true`, the position is not clipped.
+     *
+     **/
+
     this.setPosition = function(row, column, noClip) {
         var pos;
         if (noClip) {
@@ -2541,10 +3039,26 @@ var Anchor = exports.Anchor = function(doc, row, column) {
         });
     };
     
+    /**
+     * Anchor.detach()
+     *
+     * When called, the `'change'` event listener is removed.
+     *
+     **/
+
     this.detach = function() {
         this.document.removeEventListener("change", this.$onChange);
     };
     
+    /** internal, hide
+     * Anchor.clipPositionToDocument(row, column)
+     * - row (Number): The row index to clip the anchor to
+     * - column (Number): The column index to clip the anchor to
+     *
+     * Clips the anchor position to the specified row and column.
+     *
+     **/
+
     this.$clipPositionToDocument = function(row, column) {
         var pos = {};
     
@@ -2673,7 +3187,7 @@ exports.arrayToMap = function(arr) {
 
 };
 
-/**
+/*
  * splice out of 'array' anything that === 'value'
  */
 exports.arrayRemove = function(array, value) {
@@ -7188,7 +7702,8 @@ loop:   for (;;) {
 if (typeof exports === 'object' && exports)
     exports.JSHINT = JSHINT;
 
-});/* -*- Mode: JS; tab-width: 4; indent-tabs-mode: nil; -*-
+});
+/* -*- Mode: JS; tab-width: 4; indent-tabs-mode: nil; -*-
  * vim: set sw=4 ts=4 et tw=78:
  * ***** BEGIN LICENSE BLOCK *****
  *
@@ -9259,7 +9774,8 @@ exports.Parser = Parser;
 exports.Module = Module;
 exports.Export = Export;
 
-});/* vim: set sw=4 ts=4 et tw=78: */
+});
+/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -9856,7 +10372,8 @@ Tokenizer.prototype = {
 exports.isIdentifier = isIdentifier;
 exports.Tokenizer = Tokenizer;
 
-});/* vim: set sw=4 ts=4 et tw=78: */
+});
+/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -10551,7 +11068,8 @@ exports.Dict = Dict;
 exports.WeakMap = _WeakMap;
 exports.Stack = Stack;
 
-});/* vim: set sw=4 ts=4 et tw=78: */
+});
+/* vim: set sw=4 ts=4 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *

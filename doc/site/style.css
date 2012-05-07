@@ -51,12 +51,12 @@ PRE{
     padding : 10px;
 }
 
-#header {
-    height : 227px;
-    position:relative;
-    overflow:hidden;
-    background: url(images/background.png) repeat-x 0 0;
-    border-bottom:1px solid #c9e8fa;   
+	#header {
+	height: 93px;
+	position: relative;
+	background: url(images/background.png) repeat-x 0 0;
+	border-bottom: 1px solid #C9E8FA;
+	margin-top: 40px;
 }
 
 #header .content .signature {
@@ -72,31 +72,30 @@ PRE{
 .content {
     width:970px;
     position:relative;
-    overflow:hidden;
     margin:0 auto;
 }
 
 #header .content {
-    height:184px;
-    margin-top:22px;
+	height: 100%;
+	z-index: 90000;
 }
 
 #header .content .logo {
-    width  : 282px;
-    height : 184px;
-    background:url(images/logo.png) no-repeat 0 0;
-    position:absolute;
-    top:0;
-    left:0;
+	width: 141px;
+	height: 92px;
+	background: url(images/logo_half.png) no-repeat 0 0;
+	position: absolute;
+	top: -14px;
+	left: 0;
 }
 
 #header .content .title {
-    width  : 605px;
-    height : 58px;
-    background:url(images/ace.png) no-repeat 0 0;
-    position:absolute;
-    top:98px;
-    left:329px;
+	width: 605px;
+	height: 58px;
+	background: url(images/ace.png) no-repeat 0 0;
+	position: absolute;
+	top: 22px;
+	left: 329px;
 }
 
 #wrapper {

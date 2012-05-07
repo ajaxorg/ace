@@ -1,0 +1,388 @@
+<!DOCTYPE html><!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Ace API - search</title>
+    <meta name="generator" content="c9-doc-build">
+    <meta name="description" content="Ace API documentation for the online code editor.">
+    <meta name="author" content="Garen J. Torikian">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="./resources/csses/bootstrap.min.css">
+    <link rel="stylesheet" href="./resources/csses/prettify.css">
+    <link rel="stylesheet" href="./resources/csses/ace_api.css">
+    <link href="./resources/images/favicon.ico" rel="icon" type="image/x-icon">
+    <script src="./resources/javascripts/jquery.js"></script>
+    <script src="./resources/javascripts/clicker.js"></script>
+    <script src="./resources/javascripts/jquery.collapse.js"></script>
+    <script src="./resources/javascripts/jquery.cookie.js"></script>
+    <script src="./resources/javascripts/bootstrap-dropdown.js"></script>
+    <script src="./resources/javascripts/jquery-scrollspy.js"></script>
+    <script script src="./resources/javascripts/prettify-extension.js"></script>
+  </head>
+  <body>
+    <div id="nonFooter">
+      <div id="wrapper">
+        <div class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container"><span class="brand"></span>
+              <ul class="nav topLinks">
+                <li id="ace_site"><a href="../index.html">Ace</a></li>
+                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
+              </ul>
+              <form id="searchbox" action="" class="navbar-search pull-right">	
+                <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
+              </form>
+            </div>
+          </div>
+        </div>
+        <header class="filler"></header>
+        <div class="container">
+          <div class="content">
+            <div class="row centerpiece">
+              <div class="span3 offset6 sidebarContainer">
+                <div id="sidebar">
+                  <div id="well">
+                    <h3>Ace Reference</h3>
+                    <div class="swirl_divider"> </div>
+                    <ul class="menu">
+                      <li>
+                        <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                      </li>
+                      <li>
+                        <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="span9 mainContent">
+                <div id="documentation">
+                  <div class="classContent">
+                    <div class="membersBackground"></div>
+                    <div class=" members pos0">
+                      <div class=" membersContent pos0">
+                        <h1 class="memberHeader"><span class="name">Search<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                        </h1>
+                        <ul data-tabs="tabs" class="nav tabs pos0">
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="new Search" class="memberLink"><a href="#Search.new" class="" title="new Search (constructor)" data-id="new Search">new</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (5)</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                              <li data-id="Search.find" class="memberLink"><a href="#Search.find" class="" title="Search.find (class method)" data-id="Search.find">find</a>
+                              </li>
+                              <li data-id="Search.findAll" class="memberLink"><a href="#Search.findAll" class="" title="Search.findAll (class method)" data-id="Search.findAll">findAll</a>
+                              </li>
+                              <li data-id="Search.getOptions" class="memberLink"><a href="#Search.getOptions" class="" title="Search.getOptions (class method)" data-id="Search.getOptions">getOptions</a>
+                              </li>
+                              <li data-id="Search.replace" class="memberLink"><a href="#Search.replace" class="" title="Search.replace (class method)" data-id="Search.replace">replace</a>
+                              </li>
+                              <li data-id="Search.set" class="memberLink"><a href="#Search.set" class="" title="Search.set (class method)" data-id="Search.set">set</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                          <li data-dropdown="dropdown" class="dropdown">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <article id="Search" data-title="Search (class)" class="article">
+                      <div class="section description">
+                        <div class="memberContent"><p>A class designed to handle all sorts of text searches within a <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a>.</p>
+
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Constructors</h3>
+                    <article id="Search.new" data-title="new Search (constructor)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new Search" class="member-name methodClicker">Search</span>(<span class="sigArgList"></span>)</li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_new Search" class="ellipsis_description"><p>Creates a new <code>Search</code> object. The search options contain the following defaults:
+ ...</p>
+
+                            </div>
+                            <div id="short_new Search" class="short_description hiddenSpan"><p>Creates a new <code>Search</code> object. The search options contain the following defaults:
+</p>
+
+                            </div>
+                            <h3 id="new Search" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description"><ul>
+<li><code>needle</code>: <code>&quot;&quot;</code></li>
+<li><code>backwards</code>: <code>false</code></li>
+<li><code>wrap</code>: <code>false</code></li>
+<li><code>caseSensitive</code>: <code>false</code></li>
+<li><code>wholeWord</code>: <code>false</code></li>
+<li><code>scope</code>: <code>ALL</code></li>
+<li><code>regExp</code>: <code>false</code></li>
+</ul>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <h3 class="sectionHeader">Methods</h3>
+                    <article id="Search.find" data-title="Search.find (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Search.find" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">find</span></span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Search.find" class="ellipsis_description"><p>Searches for <code>options.needle</code>. If found, this method returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code></a> where the text first occurs. If `...</p>
+
+                            </div>
+                            <div id="short_Search.find" class="short_description hiddenSpan"><p>Searches for <code>options.needle</code>. If found, this method returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code></a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
+
+                            </div>
+                            <h3 id="Search.find" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The session to search with</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Search.findAll" data-title="Search.findAll (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Search.findAll" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">findAll</span></span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type">[ <a href="range.html#Range" class="returnType " title="Range (class)" data-id="Range">Range</a> ]</li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Search.findAll" class="ellipsis_description"><p>Searches for all occurances <code>options.needle</code>. If found, this method returns an array of <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code>s</a> where the...</p>
+
+                            </div>
+                            <div id="short_Search.findAll" class="short_description hiddenSpan"><p>Searches for all occurances <code>options.needle</code>. If found, this method returns an array of <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code>s</a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
+
+                            </div>
+                            <h3 id="Search.findAll" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The session to search with</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Search.getOptions" data-title="Search.getOptions (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Search.getOptions" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">getOptions</span></span>(<span class="sigArgList"></span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Search.getOptions" class="ellipsis_description"><p>Returns an object containing all the search options.</p>
+
+                            </div>
+                            <div id="short_Search.getOptions" class="short_description hiddenSpan"><p>Returns an object containing all the search options.</p>
+
+                            </div>
+                            <h3 id="Search.getOptions" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Search.replace" data-title="Search.replace (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Search.replace" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">replace</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> input, <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> replacement</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Search.replace" class="ellipsis_description"><p>Searches for <code>options.needle</code> in <code>input</code>, and, if found, replaces it with <code>replacement</code>. ...</p>
+
+                            </div>
+                            <div id="short_Search.replace" class="short_description hiddenSpan"><p>Searches for <code>options.needle</code> in <code>input</code>, and, if found, replaces it with <code>replacement</code>.</p>
+
+                            </div>
+                            <h3 id="Search.replace" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">input</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The text to search in</td></tr><tr class="argumentRow "><td class="argName ">replacement</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The replacing text</td></tr></table>
+                              <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="returnDescription ">If <code>options.regExp</code> is <code>true</code>, this function returns <code>input</code> with the replacement already made. Otherwise, this function just returns <code>replacement</code>.<br/> If <code>options.needle</code> was not found, this function returns <code>null</code>.</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                    <article id="Search.set" data-title="Search.set (class method)" class="article">
+                      <div class="section method">
+                        <div class="memberContent">
+                          <div class="title">
+                            <ul class="signatures">
+                              <li class="signature">
+                                <ul>
+                                  <li class="signature-call"><span id="Search.set" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">set</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> options</span>)
+                                    <li class="signature-returns">
+                                      <ul class="argument-types">
+                                        <li class="argument-type"><a href="#Search" class="returnType " title="Search (class)" data-id="Search">Search</a></li>
+                                      </ul>
+                                    </li></li>
+                                </ul>
+                                <ul class="metaInfo">
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="sideToggler">
+                            <div id="ellipsis_Search.set" class="ellipsis_description"><p>Sets the search options via the <code>options</code> parameter. ...</p>
+
+                            </div>
+                            <div id="short_Search.set" class="short_description hiddenSpan"><p>Sets the search options via the <code>options</code> parameter.</p>
+
+                            </div>
+                            <h3 id="Search.set" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                            <div class="description">
+                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">options</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. An object containing all the new search properties</td></tr></table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+                <div id="disqus_thread"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="container">
+        <div class="footer-text pull-right"> 
+          <p><a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012</p>
+        </div>
+      </div>
+    </footer>
+    <!-- scripts concatenated and minified via ant build script--><script defer src="./resources/javascripts/plugins.js"></script>
+    <script defer src="./resources/javascripts/prettify.js"></script>
+    <script defer src="./resources/javascripts/prettify-extension.js"></script>
+    <script defer src="./resources/javascripts/ux.js"></script>
+    <script defer src="./resources/javascripts/disqus-ext.js"></script>
+    <script defer src="./resources/javascripts/ga.js"></script>
+    <!-- end scripts--><!--[if lt IE 7]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>
+      window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})
+      
+      
+    </script><![endif]-->
+  </body>
+</html>

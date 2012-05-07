@@ -1,3 +1,5 @@
+.PHONY : doc build clean dist
+
 build:
 	git rev-parse HEAD > .git-ref
 	mkdir -p build/src
@@ -11,6 +13,9 @@ build:
 	./Makefile.dryice.js normal
 	./Makefile.dryice.js demo
 	./Makefile.dryice.js bm
+
+doc:
+	cd doc; node build.js
 
 clean:
 	rm -rf build

@@ -56,7 +56,7 @@ oop.inherits(Mode, TextMode);
 
         var tokenizedLine = this.$tokenizer.getLineTokens(line, state);
         var tokens = tokenizedLine.tokens;
-	
+    
         var chunks = ["function", "then", "do", "repeat"];
         
         if (state == "start") {
@@ -198,7 +198,7 @@ var LuaHighlightRules = function() {
     this.$rules = {
         "start" : 
 
-		
+        
         // bracketed comments
         [{
             token : "comment",           // --[[ comment
@@ -219,9 +219,9 @@ var LuaHighlightRules = function() {
             token : "comment",           // --[====+[ comment
             regex : strPre + '\\-\\-\\[\\={5}\\=*\\[.*\\]\\={5}\\=*\\]'
         },
-		
-		// multiline bracketed comments
-		{
+        
+        // multiline bracketed comments
+        {
             token : "comment",           // --[[ comment
             regex : strPre + '\\-\\-\\[\\[.*$',
             merge : true,
@@ -271,7 +271,7 @@ var LuaHighlightRules = function() {
         }, 
         
         // bracketed strings
-		{
+        {
             token : "string",           // [[ string
             regex : strPre + '\\[\\[.*\\]\\]'
         }, {
@@ -290,8 +290,8 @@ var LuaHighlightRules = function() {
             token : "string",           // [====+[ string
             regex : strPre + '\\[\\={5}\\=*\\[.*\\]\\={5}\\=*\\]'
         },
-		
-		// multiline bracketed strings
+        
+        // multiline bracketed strings
         {
             token : "string",           // [[ string
             regex : strPre + '\\[\\[.*$',
