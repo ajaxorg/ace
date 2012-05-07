@@ -12,29 +12,23 @@ html(xmlns="http://www.w3.org/1999/xhtml")
 		mixin head
 	
 	body
-	
+		mixin navBar
 		#nonFooter
 			#wrapper
-				mixin navBar
-			
-				header.filler
-			
-				
-				.container
-						.content
-							.row.centerpiece
-								.span3.offset6.sidebarContainer
-									#sidebar
-										include ace_menu.jade
-								.span9.mainContent
-									#documentation
-										-if (isIndex)
-											mixin markdown(indexContent)
-										-else
-											mixin api()
-			
-									div(id="disqus_thread")
-	
+				.content
+					.row.centerpiece
+						.span3#sidebarContainer
+							#sidebar
+								include ace_menu.jade
+						.span9#mainContent
+							#documentation
+								-if (isIndex)
+									mixin markdown(indexContent)
+								-else
+									mixin api()
+
+							div(id="disqus_thread")
+			.push
 		mixin footer
 	
 		mixin endingScripts

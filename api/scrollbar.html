@@ -24,313 +24,311 @@
     <script script src="./resources/javascripts/prettify-extension.js"></script>
   </head>
   <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div id="topSection" class="container"><span class="brand"></span>
+          <ul class="nav topLinks">
+            <li id="ace_site"><a href="../index.html">Ace</a></li>
+            <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
+          </ul>
+          <form id="searchbox" action="" class="navbar-search pull-right">	
+            <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
+          </form>
+        </div>
+      </div>
+    </div>
     <div id="nonFooter">
       <div id="wrapper">
-        <div class="navbar navbar-fixed-top">
-          <div class="navbar-inner">
-            <div class="container"><span class="brand"></span>
-              <ul class="nav topLinks">
-                <li id="ace_site"><a href="../index.html">Ace</a></li>
-                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
-              </ul>
-              <form id="searchbox" action="" class="navbar-search pull-right">	
-                <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
-              </form>
-            </div>
-          </div>
-        </div>
-        <header class="filler"></header>
-        <div class="container">
-          <div class="content">
-            <div class="row centerpiece">
-              <div class="span3 offset6 sidebarContainer">
-                <div id="sidebar">
-                  <div id="well">
-                    <h3>Ace Reference</h3>
-                    <div class="swirl_divider"> </div>
-                    <ul class="menu">
-                      <li>
-                        <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
-                      </li>
-                    </ul>
-                  </div>
+        <div class="content">
+          <div class="row centerpiece">
+            <div id="sidebarContainer" class="span3">
+              <div id="sidebar">
+                <div id="well">
+                  <h3>Ace Reference</h3>
+                  <div class="swirl_divider"> </div>
+                  <ul class="menu">
+                    <li>
+                      <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                    </li>
+                  </ul>
                 </div>
               </div>
-              <div class="span9 mainContent">
-                <div id="documentation">
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos0">
-                      <div class=" membersContent pos0">
-                        <h1 class="memberHeader"><span class="name">ScrollBar<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos0">
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (1)</span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                              <li data-id="ScrollBar@onScroll" class="memberLink"><a href="#ScrollBar@onScroll" class="" title="ScrollBar@onScroll (event)" data-id="ScrollBar@onScroll">onScroll</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                              <li data-id="new ScrollBar" class="memberLink"><a href="#ScrollBar.new" class="" title="new ScrollBar (constructor)" data-id="new ScrollBar">new</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (4)</span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                              <li data-id="ScrollBar.getWidth" class="memberLink"><a href="#ScrollBar.getWidth" class="" title="ScrollBar.getWidth (class method)" data-id="ScrollBar.getWidth">getWidth</a>
-                              </li>
-                              <li data-id="ScrollBar.setHeight" class="memberLink"><a href="#ScrollBar.setHeight" class="" title="ScrollBar.setHeight (class method)" data-id="ScrollBar.setHeight">setHeight</a>
-                              </li>
-                              <li data-id="ScrollBar.setInnerHeight" class="memberLink"><a href="#ScrollBar.setInnerHeight" class="" title="ScrollBar.setInnerHeight (class method)" data-id="ScrollBar.setInnerHeight">setInnerHeight</a>
-                              </li>
-                              <li data-id="ScrollBar.setScrollTop" class="memberLink"><a href="#ScrollBar.setScrollTop" class="" title="ScrollBar.setScrollTop (class method)" data-id="ScrollBar.setScrollTop">setScrollTop</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
+            </div>
+            <div id="mainContent" class="span9">
+              <div id="documentation">
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos0">
+                    <div class=" membersContent pos0">
+                      <h1 class="memberHeader"><span class="name">ScrollBar<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos0">
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (1)</span><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li data-id="ScrollBar@onScroll" class="memberLink"><a href="#ScrollBar@onScroll" class="" title="ScrollBar@onScroll (event)" data-id="ScrollBar@onScroll">onScroll</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li data-id="new ScrollBar" class="memberLink"><a href="#ScrollBar.new" class="" title="new ScrollBar (constructor)" data-id="new ScrollBar">new</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (4)</span><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li data-id="ScrollBar.getWidth" class="memberLink"><a href="#ScrollBar.getWidth" class="" title="ScrollBar.getWidth (class method)" data-id="ScrollBar.getWidth">getWidth</a>
+                            </li>
+                            <li data-id="ScrollBar.setHeight" class="memberLink"><a href="#ScrollBar.setHeight" class="" title="ScrollBar.setHeight (class method)" data-id="ScrollBar.setHeight">setHeight</a>
+                            </li>
+                            <li data-id="ScrollBar.setInnerHeight" class="memberLink"><a href="#ScrollBar.setInnerHeight" class="" title="ScrollBar.setInnerHeight (class method)" data-id="ScrollBar.setInnerHeight">setInnerHeight</a>
+                            </li>
+                            <li data-id="ScrollBar.setScrollTop" class="memberLink"><a href="#ScrollBar.setScrollTop" class="" title="ScrollBar.setScrollTop (class method)" data-id="ScrollBar.setScrollTop">setScrollTop</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="ScrollBar" data-title="ScrollBar (class)" class="article">
+                    <div class="section description">
+                      <div class="memberContent"><p>A set of methods for setting and retrieving the editor&#39;s scrollbar.</p>
+
                       </div>
                     </div>
-                    <article id="ScrollBar" data-title="ScrollBar (class)" class="article">
-                      <div class="section description">
-                        <div class="memberContent"><p>A set of methods for setting and retrieving the editor&#39;s scrollbar.</p>
-
+                  </article>
+                  <h3 class="sectionHeader">Constructors</h3>
+                  <article id="ScrollBar.new" data-title="new ScrollBar (constructor)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new ScrollBar" class="member-name methodClicker">ScrollBar</span>(<span class="sigArgList"><a href="https://developer.mozilla.org/en/DOM/element" class="argument methodClicker" title="DOMElement" data-id="DOMElement">DOMElement</a> parent</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
                         </div>
-                      </div>
-                    </article>
-                    <h3 class="sectionHeader">Constructors</h3>
-                    <article id="ScrollBar.new" data-title="new ScrollBar (constructor)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new ScrollBar" class="member-name methodClicker">ScrollBar</span>(<span class="sigArgList"><a href="https://developer.mozilla.org/en/DOM/element" class="argument methodClicker" title="DOMElement" data-id="DOMElement">DOMElement</a> parent</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                        <div class="sideToggler">
+                          <div id="ellipsis_new ScrollBar" class="ellipsis_description"><p>Creates a new <code>ScrollBar</code>. <code>parent</code> is the owner of the scroll bar. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_new ScrollBar" class="ellipsis_description"><p>Creates a new <code>ScrollBar</code>. <code>parent</code> is the owner of the scroll bar. ...</p>
+                          <div id="short_new ScrollBar" class="short_description hiddenSpan"><p>Creates a new <code>ScrollBar</code>. <code>parent</code> is the owner of the scroll bar.</p>
 
-                            </div>
-                            <div id="short_new ScrollBar" class="short_description hiddenSpan"><p>Creates a new <code>ScrollBar</code>. <code>parent</code> is the owner of the scroll bar.</p>
-
-                            </div>
-                            <h3 id="new ScrollBar" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">parent</td><td class="argType" "><a href="https://developer.mozilla.org/en/DOM/element" class="" title="DOMElement" data-id="DOMElement">DOMElement</a></td><td class="argDescription ">Required. A DOM element</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="new ScrollBar" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">parent</td><td class="argType" "><a href="https://developer.mozilla.org/en/DOM/element" class="" title="DOMElement" data-id="DOMElement">DOMElement</a></td><td class="argDescription ">Required. A DOM element</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <h3 class="sectionHeader">Events</h3>
-                    <article id="ScrollBar.event.onScroll" data-title="ScrollBar@onScroll (event)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="sideToggler">
-                            <div id="ellipsis_ScrollBar@onScroll" class="ellipsis_description"><p>Emitted when the scroll bar, well, scrolls. ...</p>
+                    </div>
+                  </article>
+                  <h3 class="sectionHeader">Events</h3>
+                  <article id="ScrollBar.event.onScroll" data-title="ScrollBar@onScroll (event)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="sideToggler">
+                          <div id="ellipsis_ScrollBar@onScroll" class="ellipsis_description"><p>Emitted when the scroll bar, well, scrolls. ...</p>
 
-                            </div>
-                            <div id="short_ScrollBar@onScroll" class="short_description hiddenSpan"><p>Emitted when the scroll bar, well, scrolls.</p>
+                          </div>
+                          <div id="short_ScrollBar@onScroll" class="short_description hiddenSpan"><p>Emitted when the scroll bar, well, scrolls.</p>
 
-                            </div>
-                            <h3 id="ScrollBar@onScroll" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
+                          </div>
+                          <h3 id="ScrollBar@onScroll" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <h3 class="sectionHeader">Methods</h3>
-                    <article id="ScrollBar.getWidth" data-title="ScrollBar.getWidth (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="ScrollBar.getWidth" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">getWidth</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <h3 class="sectionHeader">Methods</h3>
+                  <article id="ScrollBar.getWidth" data-title="ScrollBar.getWidth (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="ScrollBar.getWidth" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">getWidth</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_ScrollBar.getWidth" class="ellipsis_description"><p>Returns the width of the scroll bar. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_ScrollBar.getWidth" class="ellipsis_description"><p>Returns the width of the scroll bar. ...</p>
+                          <div id="short_ScrollBar.getWidth" class="short_description hiddenSpan"><p>Returns the width of the scroll bar.</p>
 
-                            </div>
-                            <div id="short_ScrollBar.getWidth" class="short_description hiddenSpan"><p>Returns the width of the scroll bar.</p>
-
-                            </div>
-                            <h3 id="ScrollBar.getWidth" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
+                          </div>
+                          <h3 id="ScrollBar.getWidth" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="ScrollBar.setHeight" data-title="ScrollBar.setHeight (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="ScrollBar.setHeight" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">setHeight</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> height</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="ScrollBar.setHeight" data-title="ScrollBar.setHeight (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="ScrollBar.setHeight" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">setHeight</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> height</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_ScrollBar.setHeight" class="ellipsis_description"><p>Sets the height of the scroll bar, in pixels. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_ScrollBar.setHeight" class="ellipsis_description"><p>Sets the height of the scroll bar, in pixels. ...</p>
+                          <div id="short_ScrollBar.setHeight" class="short_description hiddenSpan"><p>Sets the height of the scroll bar, in pixels.</p>
 
-                            </div>
-                            <div id="short_ScrollBar.setHeight" class="short_description hiddenSpan"><p>Sets the height of the scroll bar, in pixels.</p>
-
-                            </div>
-                            <h3 id="ScrollBar.setHeight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">height</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new height</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="ScrollBar.setHeight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">height</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new height</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="ScrollBar.setInnerHeight" data-title="ScrollBar.setInnerHeight (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="ScrollBar.setInnerHeight" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">setInnerHeight</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> height</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="ScrollBar.setInnerHeight" data-title="ScrollBar.setInnerHeight (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="ScrollBar.setInnerHeight" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">setInnerHeight</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> height</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_ScrollBar.setInnerHeight" class="ellipsis_description"><p>Sets the inner height of the scroll bar, in pixels. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_ScrollBar.setInnerHeight" class="ellipsis_description"><p>Sets the inner height of the scroll bar, in pixels. ...</p>
+                          <div id="short_ScrollBar.setInnerHeight" class="short_description hiddenSpan"><p>Sets the inner height of the scroll bar, in pixels.</p>
 
-                            </div>
-                            <div id="short_ScrollBar.setInnerHeight" class="short_description hiddenSpan"><p>Sets the inner height of the scroll bar, in pixels.</p>
-
-                            </div>
-                            <h3 id="ScrollBar.setInnerHeight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">height</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new inner height</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="ScrollBar.setInnerHeight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">height</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new inner height</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="ScrollBar.setScrollTop" data-title="ScrollBar.setScrollTop (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="ScrollBar.setScrollTop" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">setScrollTop</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> scrollTop</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="ScrollBar.setScrollTop" data-title="ScrollBar.setScrollTop (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="ScrollBar.setScrollTop" class="member-name methodClicker"><span class="sigClassName">ScrollBar.</span><span class="sigMemberName">setScrollTop</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> scrollTop</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_ScrollBar.setScrollTop" class="ellipsis_description"><p>Sets the scroll top of the scroll bar. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_ScrollBar.setScrollTop" class="ellipsis_description"><p>Sets the scroll top of the scroll bar. ...</p>
+                          <div id="short_ScrollBar.setScrollTop" class="short_description hiddenSpan"><p>Sets the scroll top of the scroll bar.</p>
 
-                            </div>
-                            <div id="short_ScrollBar.setScrollTop" class="short_description hiddenSpan"><p>Sets the scroll top of the scroll bar.</p>
-
-                            </div>
-                            <h3 id="ScrollBar.setScrollTop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">scrollTop</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new scroll top</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="ScrollBar.setScrollTop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">scrollTop</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new scroll top</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                  </div>
+                    </div>
+                  </article>
                 </div>
-                <div id="disqus_thread"></div>
               </div>
+              <div id="disqus_thread"></div>
             </div>
           </div>
         </div>
       </div>
+      <div class="push"></div>
     </div>
-    <footer id="footer">
-      <div class="container">
+    <div id="footer">
+      <div class="footerInner">
         <div class="footer-text pull-right"> 
           <p><a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012</p>
         </div>
       </div>
-    </footer>
+    </div>
     <!-- scripts concatenated and minified via ant build script--><script defer src="./resources/javascripts/plugins.js"></script>
     <script defer src="./resources/javascripts/prettify.js"></script>
     <script defer src="./resources/javascripts/prettify-extension.js"></script>

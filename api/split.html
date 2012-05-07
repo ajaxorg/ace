@@ -24,683 +24,681 @@
     <script script src="./resources/javascripts/prettify-extension.js"></script>
   </head>
   <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div id="topSection" class="container"><span class="brand"></span>
+          <ul class="nav topLinks">
+            <li id="ace_site"><a href="../index.html">Ace</a></li>
+            <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
+          </ul>
+          <form id="searchbox" action="" class="navbar-search pull-right">	
+            <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
+          </form>
+        </div>
+      </div>
+    </div>
     <div id="nonFooter">
       <div id="wrapper">
-        <div class="navbar navbar-fixed-top">
-          <div class="navbar-inner">
-            <div class="container"><span class="brand"></span>
-              <ul class="nav topLinks">
-                <li id="ace_site"><a href="../index.html">Ace</a></li>
-                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
-              </ul>
-              <form id="searchbox" action="" class="navbar-search pull-right">	
-                <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
-              </form>
+        <div class="content">
+          <div class="row centerpiece">
+            <div id="sidebarContainer" class="span3">
+              <div id="sidebar">
+                <div id="well">
+                  <h3>Ace Reference</h3>
+                  <div class="swirl_divider"> </div>
+                  <ul class="menu">
+                    <li>
+                      <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <header class="filler"></header>
-        <div class="container">
-          <div class="content">
-            <div class="row centerpiece">
-              <div class="span3 offset6 sidebarContainer">
-                <div id="sidebar">
-                  <div id="well">
-                    <h3>Ace Reference</h3>
-                    <div class="swirl_divider"> </div>
-                    <ul class="menu">
-                      <li>
-                        <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
-                      </li>
-                    </ul>
+            <div id="mainContent" class="span9">
+              <div id="documentation">
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos0">
+                    <div class=" membersContent pos0">
+                      <h1 class="memberHeader"><span class="name">Split.blur<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos0">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
                   </div>
+                  <article id="Split.blur" data-title="Split.blur (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.blur" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">blur</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.blur (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label related-to">Related to <a href="editor.html#Editor.blur" class="" title="Editor.blur (class method)" data-id="Editor.blur">Editor.blur</a>	</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.blur" class="ellipsis_description"><p>Blurs the current editor. ...</p>
+
+                          </div>
+                          <div id="short_Split.blur" class="short_description hiddenSpan"><p>Blurs the current editor.</p>
+
+                          </div>
+                          <h3 id="Split.blur" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos1">
+                    <div class=" membersContent pos1">
+                      <h1 class="memberHeader"><span class="name">Split.focus<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos1">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.focus" data-title="Split.focus (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.focus" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">focus</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.focus (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label related-to">Related to <a href="editor.html#Editor.focus" class="" title="Editor.focus (class method)" data-id="Editor.focus">Editor.focus</a>	</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.focus" class="ellipsis_description"><p>Focuses the current editor. ...</p>
+
+                          </div>
+                          <div id="short_Split.focus" class="short_description hiddenSpan"><p>Focuses the current editor.</p>
+
+                          </div>
+                          <h3 id="Split.focus" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos2">
+                    <div class=" membersContent pos2">
+                      <h1 class="memberHeader"><span class="name">Split.getCurrentEditor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos2">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.getCurrentEditor" data-title="Split.getCurrentEditor (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.getCurrentEditor" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">getCurrentEditor</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><a href="editor.html#Editor" class="returnType " title="Editor (class)" data-id="Editor">Editor</a></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.getCurrentEditor" class="ellipsis_description"><p>Returns the current editor. ...</p>
+
+                          </div>
+                          <div id="short_Split.getCurrentEditor" class="short_description hiddenSpan"><p>Returns the current editor.</p>
+
+                          </div>
+                          <h3 id="Split.getCurrentEditor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos3">
+                    <div class=" membersContent pos3">
+                      <h1 class="memberHeader"><span class="name">Split.getEditor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos3">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.getEditor" data-title="Split.getEditor (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.getEditor" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">getEditor</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> idx</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><a href="editor.html#Editor" class="returnType " title="Editor (class)" data-id="Editor">Editor</a></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.getEditor" class="ellipsis_description"><p>Returns the editor identified by the index <code>idx</code>. ...</p>
+
+                          </div>
+                          <div id="short_Split.getEditor" class="short_description hiddenSpan"><p>Returns the editor identified by the index <code>idx</code>.</p>
+
+                          </div>
+                          <h3 id="Split.getEditor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">idx</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The index of the editor you want</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos4">
+                    <div class=" membersContent pos4">
+                      <h1 class="memberHeader"><span class="name">Split.getSplits<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos4">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.getSplits" data-title="Split.getSplits (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.getSplits" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">getSplits</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.getSplits" class="ellipsis_description"><p>Returns the number of splits. ...</p>
+
+                          </div>
+                          <div id="short_Split.getSplits" class="short_description hiddenSpan"><p>Returns the number of splits.</p>
+
+                          </div>
+                          <h3 id="Split.getSplits" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos5">
+                    <div class=" membersContent pos5">
+                      <h1 class="memberHeader"><span class="name">Split.resize<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos5">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.resize" data-title="Split.resize (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.resize" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">resize</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.resize (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label internal">Internal</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.resize" class="ellipsis_description"><p> ...</p>
+
+                          </div>
+                          <div id="short_Split.resize" class="short_description hiddenSpan">
+                          </div>
+                          <h3 id="Split.resize" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos6">
+                    <div class=" membersContent pos6">
+                      <h1 class="memberHeader"><span class="name">Split.setFontSize<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos6">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.setFontSize" data-title="Split.setFontSize (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.setFontSize" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">setFontSize</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> size</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.setFontSize (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label related-to">Related to <a href="editor.html#Editor.setFontSize" class="" title="Editor.setFontSize (class method)" data-id="Editor.setFontSize">Editor.setFontSize</a>	</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.setFontSize" class="ellipsis_description"><p>Sets the font size, in pixels, for all the available editors. ...</p>
+
+                          </div>
+                          <div id="short_Split.setFontSize" class="short_description hiddenSpan"><p>Sets the font size, in pixels, for all the available editors.</p>
+
+                          </div>
+                          <h3 id="Split.setFontSize" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">size</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new font size</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos7">
+                    <div class=" membersContent pos7">
+                      <h1 class="memberHeader"><span class="name">Split.setSession<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos7">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.setSession" data-title="Split.setSession (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.setSession" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">setSession</span></span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> idx</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.setSession (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label related-to">Related to <a href="editor.html#Editor.setSession" class="" title="Editor.setSession (class method)" data-id="Editor.setSession">Editor.setSession</a>	</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.setSession" class="ellipsis_description"><p>Sets a new <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a> for the indicated editor. ...</p>
+
+                          </div>
+                          <div id="short_Split.setSession" class="short_description hiddenSpan"><p>Sets a new <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a> for the indicated editor.</p>
+
+                          </div>
+                          <h3 id="Split.setSession" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The new edit session</td></tr><tr class="argumentRow "><td class="argName ">idx</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The editor&#39;s index you&#39;re interested in</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos8">
+                    <div class=" membersContent pos8">
+                      <h1 class="memberHeader"><span class="name">Split.setTheme<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos8">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.setTheme" data-title="Split.setTheme (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.setTheme" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">setTheme</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> theme</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.setTheme (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label related-to">Related to <a href="editor.html#Editor.setTheme" class="" title="Editor.setTheme (class method)" data-id="Editor.setTheme">Editor.setTheme</a>	</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.setTheme" class="ellipsis_description"><p>Sets a theme for each of the available editors. ...</p>
+
+                          </div>
+                          <div id="short_Split.setTheme" class="short_description hiddenSpan"><p>Sets a theme for each of the available editors.</p>
+
+                          </div>
+                          <h3 id="Split.setTheme" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">theme</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The name of the theme to set</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos9">
+                    <div class=" membersContent pos9">
+                      <h1 class="memberHeader"><span class="name">Split.UndoManagerProxy<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos9">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="Split.UndoManagerProxy" data-title="Split.UndoManagerProxy (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="Split.UndoManagerProxy" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">UndoManagerProxy</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="Split.UndoManagerProxy (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label internal">Internal</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_Split.UndoManagerProxy" class="ellipsis_description"><p> ...</p>
+
+                          </div>
+                          <div id="short_Split.UndoManagerProxy" class="short_description hiddenSpan">
+                          </div>
+                          <h3 id="Split.UndoManagerProxy" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </div>
-              <div class="span9 mainContent">
-                <div id="documentation">
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos0">
-                      <div class=" membersContent pos0">
-                        <h1 class="memberHeader"><span class="name">Split.blur<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos0">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.blur" data-title="Split.blur (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.blur" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">blur</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.blur (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label related-to">Related to <a href="editor.html#Editor.blur" class="" title="Editor.blur (class method)" data-id="Editor.blur">Editor.blur</a>	</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.blur" class="ellipsis_description"><p>Blurs the current editor. ...</p>
-
-                            </div>
-                            <div id="short_Split.blur" class="short_description hiddenSpan"><p>Blurs the current editor.</p>
-
-                            </div>
-                            <h3 id="Split.blur" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos1">
-                      <div class=" membersContent pos1">
-                        <h1 class="memberHeader"><span class="name">Split.focus<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos1">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.focus" data-title="Split.focus (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.focus" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">focus</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.focus (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label related-to">Related to <a href="editor.html#Editor.focus" class="" title="Editor.focus (class method)" data-id="Editor.focus">Editor.focus</a>	</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.focus" class="ellipsis_description"><p>Focuses the current editor. ...</p>
-
-                            </div>
-                            <div id="short_Split.focus" class="short_description hiddenSpan"><p>Focuses the current editor.</p>
-
-                            </div>
-                            <h3 id="Split.focus" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos2">
-                      <div class=" membersContent pos2">
-                        <h1 class="memberHeader"><span class="name">Split.getCurrentEditor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos2">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.getCurrentEditor" data-title="Split.getCurrentEditor (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.getCurrentEditor" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">getCurrentEditor</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="editor.html#Editor" class="returnType " title="Editor (class)" data-id="Editor">Editor</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.getCurrentEditor" class="ellipsis_description"><p>Returns the current editor. ...</p>
-
-                            </div>
-                            <div id="short_Split.getCurrentEditor" class="short_description hiddenSpan"><p>Returns the current editor.</p>
-
-                            </div>
-                            <h3 id="Split.getCurrentEditor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos3">
-                      <div class=" membersContent pos3">
-                        <h1 class="memberHeader"><span class="name">Split.getEditor<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos3">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.getEditor" data-title="Split.getEditor (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.getEditor" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">getEditor</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> idx</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="editor.html#Editor" class="returnType " title="Editor (class)" data-id="Editor">Editor</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.getEditor" class="ellipsis_description"><p>Returns the editor identified by the index <code>idx</code>. ...</p>
-
-                            </div>
-                            <div id="short_Split.getEditor" class="short_description hiddenSpan"><p>Returns the editor identified by the index <code>idx</code>.</p>
-
-                            </div>
-                            <h3 id="Split.getEditor" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">idx</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The index of the editor you want</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos4">
-                      <div class=" membersContent pos4">
-                        <h1 class="memberHeader"><span class="name">Split.getSplits<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos4">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.getSplits" data-title="Split.getSplits (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.getSplits" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">getSplits</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.getSplits" class="ellipsis_description"><p>Returns the number of splits. ...</p>
-
-                            </div>
-                            <div id="short_Split.getSplits" class="short_description hiddenSpan"><p>Returns the number of splits.</p>
-
-                            </div>
-                            <h3 id="Split.getSplits" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos5">
-                      <div class=" membersContent pos5">
-                        <h1 class="memberHeader"><span class="name">Split.resize<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos5">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.resize" data-title="Split.resize (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.resize" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">resize</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.resize (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label internal">Internal</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.resize" class="ellipsis_description"><p> ...</p>
-
-                            </div>
-                            <div id="short_Split.resize" class="short_description hiddenSpan">
-                            </div>
-                            <h3 id="Split.resize" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos6">
-                      <div class=" membersContent pos6">
-                        <h1 class="memberHeader"><span class="name">Split.setFontSize<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos6">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.setFontSize" data-title="Split.setFontSize (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.setFontSize" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">setFontSize</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> size</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.setFontSize (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label related-to">Related to <a href="editor.html#Editor.setFontSize" class="" title="Editor.setFontSize (class method)" data-id="Editor.setFontSize">Editor.setFontSize</a>	</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.setFontSize" class="ellipsis_description"><p>Sets the font size, in pixels, for all the available editors. ...</p>
-
-                            </div>
-                            <div id="short_Split.setFontSize" class="short_description hiddenSpan"><p>Sets the font size, in pixels, for all the available editors.</p>
-
-                            </div>
-                            <h3 id="Split.setFontSize" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">size</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The new font size</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos7">
-                      <div class=" membersContent pos7">
-                        <h1 class="memberHeader"><span class="name">Split.setSession<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos7">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.setSession" data-title="Split.setSession (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.setSession" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">setSession</span></span>(<span class="sigArgList"><a href="edit_session.html#EditSession" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> idx</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.setSession (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label related-to">Related to <a href="editor.html#Editor.setSession" class="" title="Editor.setSession (class method)" data-id="Editor.setSession">Editor.setSession</a>	</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.setSession" class="ellipsis_description"><p>Sets a new <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a> for the indicated editor. ...</p>
-
-                            </div>
-                            <div id="short_Split.setSession" class="short_description hiddenSpan"><p>Sets a new <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a> for the indicated editor.</p>
-
-                            </div>
-                            <h3 id="Split.setSession" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">session</td><td class="argType" "><a href="edit_session.html#EditSession" class="" title="EditSession (class)" data-id="EditSession">EditSession</a></td><td class="argDescription ">Required. The new edit session</td></tr><tr class="argumentRow "><td class="argName ">idx</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The editor&#39;s index you&#39;re interested in</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos8">
-                      <div class=" membersContent pos8">
-                        <h1 class="memberHeader"><span class="name">Split.setTheme<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos8">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.setTheme" data-title="Split.setTheme (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.setTheme" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">setTheme</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> theme</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.setTheme (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label related-to">Related to <a href="editor.html#Editor.setTheme" class="" title="Editor.setTheme (class method)" data-id="Editor.setTheme">Editor.setTheme</a>	</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.setTheme" class="ellipsis_description"><p>Sets a theme for each of the available editors. ...</p>
-
-                            </div>
-                            <div id="short_Split.setTheme" class="short_description hiddenSpan"><p>Sets a theme for each of the available editors.</p>
-
-                            </div>
-                            <h3 id="Split.setTheme" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">theme</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The name of the theme to set</td></tr></table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos9">
-                      <div class=" membersContent pos9">
-                        <h1 class="memberHeader"><span class="name">Split.UndoManagerProxy<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos9">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <article id="Split.UndoManagerProxy" data-title="Split.UndoManagerProxy (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="Split.UndoManagerProxy" class="member-name methodClicker"><span class="sigClassName">Split.</span><span class="sigMemberName">UndoManagerProxy</span></span>(<span class="sigArgList"></span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><span class="returnType " title="Split.UndoManagerProxy (class method)">Void</span></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label internal">Internal</span></li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_Split.UndoManagerProxy" class="ellipsis_description"><p> ...</p>
-
-                            </div>
-                            <div id="short_Split.UndoManagerProxy" class="short_description hiddenSpan">
-                            </div>
-                            <h3 id="Split.UndoManagerProxy" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </div>
-                </div>
-                <div id="disqus_thread"></div>
-              </div>
+              <div id="disqus_thread"></div>
             </div>
           </div>
         </div>
       </div>
+      <div class="push"></div>
     </div>
-    <footer id="footer">
-      <div class="container">
+    <div id="footer">
+      <div class="footerInner">
         <div class="footer-text pull-right"> 
           <p><a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012</p>
         </div>
       </div>
-    </footer>
+    </div>
     <!-- scripts concatenated and minified via ant build script--><script defer src="./resources/javascripts/plugins.js"></script>
     <script defer src="./resources/javascripts/prettify.js"></script>
     <script defer src="./resources/javascripts/prettify-extension.js"></script>

@@ -24,427 +24,425 @@
     <script script src="./resources/javascripts/prettify-extension.js"></script>
   </head>
   <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div id="topSection" class="container"><span class="brand"></span>
+          <ul class="nav topLinks">
+            <li id="ace_site"><a href="../index.html">Ace</a></li>
+            <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
+          </ul>
+          <form id="searchbox" action="" class="navbar-search pull-right">	
+            <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
+          </form>
+        </div>
+      </div>
+    </div>
     <div id="nonFooter">
       <div id="wrapper">
-        <div class="navbar navbar-fixed-top">
-          <div class="navbar-inner">
-            <div class="container"><span class="brand"></span>
-              <ul class="nav topLinks">
-                <li id="ace_site"><a href="../index.html">Ace</a></li>
-                <li id="ace_api" class="active"><a href="index.html">Ace API Reference</a></li>
-              </ul>
-              <form id="searchbox" action="" class="navbar-search pull-right">	
-                <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3">
-              </form>
-            </div>
-          </div>
-        </div>
-        <header class="filler"></header>
-        <div class="container">
-          <div class="content">
-            <div class="row centerpiece">
-              <div class="span3 offset6 sidebarContainer">
-                <div id="sidebar">
-                  <div id="well">
-                    <h3>Ace Reference</h3>
-                    <div class="swirl_divider"> </div>
-                    <ul class="menu">
-                      <li>
-                        <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
-                      </li>
-                      <li>
-                        <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
-                      </li>
-                    </ul>
-                  </div>
+        <div class="content">
+          <div class="row centerpiece">
+            <div id="sidebarContainer" class="span3">
+              <div id="sidebar">
+                <div id="well">
+                  <h3>Ace Reference</h3>
+                  <div class="swirl_divider"> </div>
+                  <ul class="menu">
+                    <li>
+                      <div class="menu-item"><a href="ace.html" class="menuLink namespace">Ace</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="anchor.html" class="menuLink namespace">Anchor</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="document.html" class="menuLink namespace">Document    </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="edit_session.html" class="menuLink namespace">EditSession                                                    </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="editor.html" class="menuLink namespace">Editor</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="range.html" class="menuLink namespace">Range</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="search.html" class="menuLink namespace">Search                     </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="selection.html" class="menuLink namespace">Selection   </a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                    </li>
+                    <li>
+                      <div class="menu-item"><a href="virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                    </li>
+                  </ul>
                 </div>
               </div>
-              <div class="span9 mainContent">
-                <div id="documentation">
-                  <div class="classContent">
-                    <div class="membersBackground"></div>
-                    <div class=" members pos0">
-                      <div class=" membersContent pos0">
-                        <h1 class="memberHeader"><span class="name">BackgroundTokenizer<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
-                        </h1>
-                        <ul data-tabs="tabs" class="nav tabs pos0">
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                              <li data-id="new BackgroundTokenizer" class="memberLink"><a href="#BackgroundTokenizer.new" class="" title="new BackgroundTokenizer (constructor)" data-id="new BackgroundTokenizer">new</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (8)</span><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                              <li data-id="BackgroundTokenizer.$tokenizeRows" class="memberLink"><a href="#BackgroundTokenizer.$tokenizeRows" class="" title="BackgroundTokenizer.$tokenizeRows (class method)" data-id="BackgroundTokenizer.$tokenizeRows">$tokenizeRows</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.fireUpdateEvent" class="memberLink"><a href="#BackgroundTokenizer.fireUpdateEvent" class="" title="BackgroundTokenizer.fireUpdateEvent (class method)" data-id="BackgroundTokenizer.fireUpdateEvent">fireUpdateEvent</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.getState" class="memberLink"><a href="#BackgroundTokenizer.getState" class="" title="BackgroundTokenizer.getState (class method)" data-id="BackgroundTokenizer.getState">getState</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.getTokens" class="memberLink"><a href="#BackgroundTokenizer.getTokens" class="" title="BackgroundTokenizer.getTokens (class method)" data-id="BackgroundTokenizer.getTokens">getTokens</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.setDocument" class="memberLink"><a href="#BackgroundTokenizer.setDocument" class="" title="BackgroundTokenizer.setDocument (class method)" data-id="BackgroundTokenizer.setDocument">setDocument</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.setTokenizer" class="memberLink"><a href="#BackgroundTokenizer.setTokenizer" class="" title="BackgroundTokenizer.setTokenizer (class method)" data-id="BackgroundTokenizer.setTokenizer">setTokenizer</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.start" class="memberLink"><a href="#BackgroundTokenizer.start" class="" title="BackgroundTokenizer.start (class method)" data-id="BackgroundTokenizer.start">start</a>
-                              </li>
-                              <li data-id="BackgroundTokenizer.stop" class="memberLink"><a href="#BackgroundTokenizer.stop" class="" title="BackgroundTokenizer.stop (class method)" data-id="BackgroundTokenizer.stop">stop</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                          <li data-dropdown="dropdown" class="dropdown">
-                          </li>
-                        </ul>
+            </div>
+            <div id="mainContent" class="span9">
+              <div id="documentation">
+                <div class="classContent">
+                  <div class="membersBackground"></div>
+                  <div class=" members pos0">
+                    <div class=" membersContent pos0">
+                      <h1 class="memberHeader"><span class="name">BackgroundTokenizer<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+                      </h1>
+                      <ul data-tabs="tabs" class="nav tabs pos0">
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Constructors (1)</span><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li data-id="new BackgroundTokenizer" class="memberLink"><a href="#BackgroundTokenizer.new" class="" title="new BackgroundTokenizer (constructor)" data-id="new BackgroundTokenizer">new</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (8)</span><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li data-id="BackgroundTokenizer.$tokenizeRows" class="memberLink"><a href="#BackgroundTokenizer.$tokenizeRows" class="" title="BackgroundTokenizer.$tokenizeRows (class method)" data-id="BackgroundTokenizer.$tokenizeRows">$tokenizeRows</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.fireUpdateEvent" class="memberLink"><a href="#BackgroundTokenizer.fireUpdateEvent" class="" title="BackgroundTokenizer.fireUpdateEvent (class method)" data-id="BackgroundTokenizer.fireUpdateEvent">fireUpdateEvent</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.getState" class="memberLink"><a href="#BackgroundTokenizer.getState" class="" title="BackgroundTokenizer.getState (class method)" data-id="BackgroundTokenizer.getState">getState</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.getTokens" class="memberLink"><a href="#BackgroundTokenizer.getTokens" class="" title="BackgroundTokenizer.getTokens (class method)" data-id="BackgroundTokenizer.getTokens">getTokens</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.setDocument" class="memberLink"><a href="#BackgroundTokenizer.setDocument" class="" title="BackgroundTokenizer.setDocument (class method)" data-id="BackgroundTokenizer.setDocument">setDocument</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.setTokenizer" class="memberLink"><a href="#BackgroundTokenizer.setTokenizer" class="" title="BackgroundTokenizer.setTokenizer (class method)" data-id="BackgroundTokenizer.setTokenizer">setTokenizer</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.start" class="memberLink"><a href="#BackgroundTokenizer.start" class="" title="BackgroundTokenizer.start (class method)" data-id="BackgroundTokenizer.start">start</a>
+                            </li>
+                            <li data-id="BackgroundTokenizer.stop" class="memberLink"><a href="#BackgroundTokenizer.stop" class="" title="BackgroundTokenizer.stop (class method)" data-id="BackgroundTokenizer.stop">stop</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                        <li data-dropdown="dropdown" class="dropdown">
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <article id="BackgroundTokenizer" data-title="BackgroundTokenizer (class)" class="article">
+                    <div class="section description">
+                      <div class="memberContent"><p>Tokenizes the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> in the background, and caches the tokenized rows for future use. If a certain row is changed, everything below that row is re-tokenized.</p>
+
                       </div>
                     </div>
-                    <article id="BackgroundTokenizer" data-title="BackgroundTokenizer (class)" class="article">
-                      <div class="section description">
-                        <div class="memberContent"><p>Tokenizes the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> in the background, and caches the tokenized rows for future use. If a certain row is changed, everything below that row is re-tokenized.</p>
-
+                  </article>
+                  <h3 class="sectionHeader">Constructors</h3>
+                  <article id="BackgroundTokenizer.new" data-title="new BackgroundTokenizer (constructor)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new BackgroundTokenizer" class="member-name methodClicker">BackgroundTokenizer</span>(<span class="sigArgList"><a href="tokenizer.html#Tokenizer" class="argument methodClicker" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a> tokenizer, <a href="editor.html#Editor" class="argument methodClicker" title="Editor (class)" data-id="Editor">Editor</a> editor</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
                         </div>
-                      </div>
-                    </article>
-                    <h3 class="sectionHeader">Constructors</h3>
-                    <article id="BackgroundTokenizer.new" data-title="new BackgroundTokenizer (constructor)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="new BackgroundTokenizer" class="member-name methodClicker">BackgroundTokenizer</span>(<span class="sigArgList"><a href="tokenizer.html#Tokenizer" class="argument methodClicker" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a> tokenizer, <a href="editor.html#Editor" class="argument methodClicker" title="Editor (class)" data-id="Editor">Editor</a> editor</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                        <div class="sideToggler">
+                          <div id="ellipsis_new BackgroundTokenizer" class="ellipsis_description"><p>Creates a new <code>BackgroundTokenizer</code> object. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_new BackgroundTokenizer" class="ellipsis_description"><p>Creates a new <code>BackgroundTokenizer</code> object. ...</p>
+                          <div id="short_new BackgroundTokenizer" class="short_description hiddenSpan"><p>Creates a new <code>BackgroundTokenizer</code> object.</p>
 
-                            </div>
-                            <div id="short_new BackgroundTokenizer" class="short_description hiddenSpan"><p>Creates a new <code>BackgroundTokenizer</code> object.</p>
-
-                            </div>
-                            <h3 id="new BackgroundTokenizer" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">tokenizer</td><td class="argType" "><a href="tokenizer.html#Tokenizer" class="" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a></td><td class="argDescription ">Required. The tokenizer to use</td></tr><tr class="argumentRow "><td class="argName ">editor</td><td class="argType" "><a href="editor.html#Editor" class="" title="Editor (class)" data-id="Editor">Editor</a></td><td class="argDescription ">Required. The editor to associate with</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="new BackgroundTokenizer" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">tokenizer</td><td class="argType" "><a href="tokenizer.html#Tokenizer" class="" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a></td><td class="argDescription ">Required. The tokenizer to use</td></tr><tr class="argumentRow "><td class="argName ">editor</td><td class="argType" "><a href="editor.html#Editor" class="" title="Editor (class)" data-id="Editor">Editor</a></td><td class="argDescription ">Required. The editor to associate with</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <h3 class="sectionHeader">Methods</h3>
-                    <article id="BackgroundTokenizer.$tokenizeRows" data-title="BackgroundTokenizer.$tokenizeRows (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.$tokenizeRows" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">$tokenizeRows</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a> ]</li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <h3 class="sectionHeader">Methods</h3>
+                  <article id="BackgroundTokenizer.$tokenizeRows" data-title="BackgroundTokenizer.$tokenizeRows (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.$tokenizeRows" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">$tokenizeRows</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a> ]</li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.$tokenizeRows" class="ellipsis_description"><p>Tokenizes all the rows within the specified region. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.$tokenizeRows" class="ellipsis_description"><p>Tokenizes all the rows within the specified region. ...</p>
+                          <div id="short_BackgroundTokenizer.$tokenizeRows" class="short_description hiddenSpan"><p>Tokenizes all the rows within the specified region.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.$tokenizeRows" class="short_description hiddenSpan"><p>Tokenizes all the rows within the specified region.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.$tokenizeRows" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">startRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
-                              <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a> of <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a>s</td><td class="returnDescription ">A list of the tokenized rows. Each item in the list is an object with two properties, <code>state</code> and <code>start</code>.</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.$tokenizeRows" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">startRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
+                            <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a> of <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a>s</td><td class="returnDescription ">A list of the tokenized rows. Each item in the list is an object with two properties, <code>state</code> and <code>start</code>.</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.fireUpdateEvent" data-title="BackgroundTokenizer.fireUpdateEvent (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.fireUpdateEvent" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">fireUpdateEvent</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.fireUpdateEvent" data-title="BackgroundTokenizer.fireUpdateEvent (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.fireUpdateEvent" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">fireUpdateEvent</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.fireUpdateEvent" class="ellipsis_description"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.fireUpdateEvent" class="ellipsis_description"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated. ...</p>
+                          <div id="short_BackgroundTokenizer.fireUpdateEvent" class="short_description hiddenSpan"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.fireUpdateEvent" class="short_description hiddenSpan"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.fireUpdateEvent" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting row region</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The final row region</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.fireUpdateEvent" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting row region</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The final row region</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.getState" data-title="BackgroundTokenizer.getState (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.getState" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">getState</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.getState" data-title="BackgroundTokenizer.getState (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.getState" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">getState</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.getState" class="ellipsis_description"><p>Returns the state of tokenization for a row.</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.getState" class="ellipsis_description"><p>Returns the state of tokenization for a row.</p>
+                          <div id="short_BackgroundTokenizer.getState" class="short_description hiddenSpan"><p>Returns the state of tokenization for a row.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.getState" class="short_description hiddenSpan"><p>Returns the state of tokenization for a row.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.getState" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.getState" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.getTokens" data-title="BackgroundTokenizer.getTokens (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.getTokens" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">getTokens</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
-                                    <li class="signature-returns">
-                                      <ul class="argument-types">
-                                        <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a> ]</li>
-                                      </ul>
-                                    </li></li>
-                                </ul>
-                                <ul class="metaInfo">
-                                  <li><span class="label related-to">Related to <a href="#BackgroundTokenizer.$tokenizeRows" class="" title="BackgroundTokenizer.$tokenizeRows (class method)" data-id="BackgroundTokenizer.$tokenizeRows">BackgroundTokenizer.$tokenizeRows</a>	</span></li>
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.getTokens" data-title="BackgroundTokenizer.getTokens (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.getTokens" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">getTokens</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a> ]</li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                                <li><span class="label related-to">Related to <a href="#BackgroundTokenizer.$tokenizeRows" class="" title="BackgroundTokenizer.$tokenizeRows (class method)" data-id="BackgroundTokenizer.$tokenizeRows">BackgroundTokenizer.$tokenizeRows</a>	</span></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.getTokens" class="ellipsis_description"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.getTokens" class="ellipsis_description"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows. ...</p>
+                          <div id="short_BackgroundTokenizer.getTokens" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.getTokens" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.getTokens" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.getTokens" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.setDocument" data-title="BackgroundTokenizer.setDocument (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.setDocument" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">setDocument</span></span>(<span class="sigArgList"><a href="document.html#Document" class="argument methodClicker" title="Document (class)" data-id="Document">Document</a> doc</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.setDocument" data-title="BackgroundTokenizer.setDocument (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.setDocument" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">setDocument</span></span>(<span class="sigArgList"><a href="document.html#Document" class="argument methodClicker" title="Document (class)" data-id="Document">Document</a> doc</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.setDocument" class="ellipsis_description"><p>Sets a new document to associate with this object. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.setDocument" class="ellipsis_description"><p>Sets a new document to associate with this object. ...</p>
+                          <div id="short_BackgroundTokenizer.setDocument" class="short_description hiddenSpan"><p>Sets a new document to associate with this object.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.setDocument" class="short_description hiddenSpan"><p>Sets a new document to associate with this object.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.setDocument" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">doc</td><td class="argType" "><a href="document.html#Document" class="" title="Document (class)" data-id="Document">Document</a></td><td class="argDescription ">Required. The new document to associate with</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.setDocument" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">doc</td><td class="argType" "><a href="document.html#Document" class="" title="Document (class)" data-id="Document">Document</a></td><td class="argDescription ">Required. The new document to associate with</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.setTokenizer" data-title="BackgroundTokenizer.setTokenizer (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.setTokenizer" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">setTokenizer</span></span>(<span class="sigArgList"><a href="tokenizer.html#Tokenizer" class="argument methodClicker" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a> tokenizer</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.setTokenizer" data-title="BackgroundTokenizer.setTokenizer (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.setTokenizer" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">setTokenizer</span></span>(<span class="sigArgList"><a href="tokenizer.html#Tokenizer" class="argument methodClicker" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a> tokenizer</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.setTokenizer" class="ellipsis_description"><p>Sets a new tokenizer for this object. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.setTokenizer" class="ellipsis_description"><p>Sets a new tokenizer for this object. ...</p>
+                          <div id="short_BackgroundTokenizer.setTokenizer" class="short_description hiddenSpan"><p>Sets a new tokenizer for this object.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.setTokenizer" class="short_description hiddenSpan"><p>Sets a new tokenizer for this object.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.setTokenizer" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">tokenizer</td><td class="argType" "><a href="tokenizer.html#Tokenizer" class="" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a></td><td class="argDescription ">Required. The new tokenizer to use</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.setTokenizer" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">tokenizer</td><td class="argType" "><a href="tokenizer.html#Tokenizer" class="" title="Tokenizer (class)" data-id="Tokenizer">Tokenizer</a></td><td class="argDescription ">Required. The new tokenizer to use</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.start" data-title="BackgroundTokenizer.start (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.start" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">start</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> startRow</span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.start" data-title="BackgroundTokenizer.start (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.start" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">start</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> startRow</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.start" class="ellipsis_description"><p>Starts tokenizing at the row indicated. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.start" class="ellipsis_description"><p>Starts tokenizing at the row indicated. ...</p>
+                          <div id="short_BackgroundTokenizer.start" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.start" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.start" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">startRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr></table>
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.start" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">startRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr></table>
                           </div>
                         </div>
                       </div>
-                    </article>
-                    <article id="BackgroundTokenizer.stop" data-title="BackgroundTokenizer.stop (class method)" class="article">
-                      <div class="section method">
-                        <div class="memberContent">
-                          <div class="title">
-                            <ul class="signatures">
-                              <li class="signature">
-                                <ul>
-                                  <li class="signature-call"><span id="BackgroundTokenizer.stop" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">stop</span></span>(<span class="sigArgList"></span>)</li>
-                                </ul>
-                                <ul class="metaInfo">
-                                </ul>
-                              </li>
-                            </ul>
+                    </div>
+                  </article>
+                  <article id="BackgroundTokenizer.stop" data-title="BackgroundTokenizer.stop (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="BackgroundTokenizer.stop" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">stop</span></span>(<span class="sigArgList"></span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_BackgroundTokenizer.stop" class="ellipsis_description"><p>Stops tokenizing. ...</p>
+
                           </div>
-                          <div class="sideToggler">
-                            <div id="ellipsis_BackgroundTokenizer.stop" class="ellipsis_description"><p>Stops tokenizing. ...</p>
+                          <div id="short_BackgroundTokenizer.stop" class="short_description hiddenSpan"><p>Stops tokenizing.</p>
 
-                            </div>
-                            <div id="short_BackgroundTokenizer.stop" class="short_description hiddenSpan"><p>Stops tokenizing.</p>
-
-                            </div>
-                            <h3 id="BackgroundTokenizer.stop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                            <div class="description">
-                            </div>
+                          </div>
+                          <h3 id="BackgroundTokenizer.stop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
                           </div>
                         </div>
                       </div>
-                    </article>
-                  </div>
+                    </div>
+                  </article>
                 </div>
-                <div id="disqus_thread"></div>
               </div>
+              <div id="disqus_thread"></div>
             </div>
           </div>
         </div>
       </div>
+      <div class="push"></div>
     </div>
-    <footer id="footer">
-      <div class="container">
+    <div id="footer">
+      <div class="footerInner">
         <div class="footer-text pull-right"> 
           <p><a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012</p>
         </div>
       </div>
-    </footer>
+    </div>
     <!-- scripts concatenated and minified via ant build script--><script defer src="./resources/javascripts/plugins.js"></script>
     <script defer src="./resources/javascripts/prettify.js"></script>
     <script defer src="./resources/javascripts/prettify-extension.js"></script>
