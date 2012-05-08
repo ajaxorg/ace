@@ -16,6 +16,7 @@
 /ignore/
 node_modules/
 tool/node_modules/
+build/
 
 .git-ref
 npm-debug.log
