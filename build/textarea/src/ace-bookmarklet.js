@@ -413,7 +413,7 @@ exports.transformTextarea = function(element, loader) {
         right: "0px",
         bottom: "0px",
         position: "absolute",
-        padding: "5px 5px 5px 50px",
+        padding: "5px 5px 5px 65px",
         zIndex: 100,
         color: "white",
         display: "none",
