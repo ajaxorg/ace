@@ -8,8 +8,7 @@
 
 .ace_scroller {
     position: absolute;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .ace_content {
@@ -33,7 +32,7 @@
     height: 100%;
     width: auto;
     cursor: default;
-    z-index: 1000;
+    z-index: 4;
 }
 
 .ace_gutter_active_line {
