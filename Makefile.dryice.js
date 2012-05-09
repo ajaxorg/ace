@@ -108,7 +108,7 @@ function bookmarklet(aceProject) {
         exportModule: "ace/ext/textarea",
         compress: false,
         noconflict: true,
-        suffix: ".js",
+        suffix: "",
         compat: false,
         name: "ace-bookmarklet",
         workers: [],
@@ -123,14 +123,14 @@ function ace(aceProject) {
     buildAce(aceProject, {
         compress: false,
         noconflict: false,
-        suffix: "-uncompressed",
+        suffix: "",
         compat: true,
         name: "ace"
     });
     buildAce(aceProject, {
         compress: false,
         noconflict: true,
-        suffix: "-uncompressed-noconflict",
+        suffix: "-noconflict",
         compat: true,
         name: "ace",
         workers: []
@@ -140,7 +140,7 @@ function ace(aceProject) {
     buildAce(aceProject, {
         compress: true,
         noconflict: false,
-        suffix: "",
+        suffix: "-min",
         compat: true,
         name: "ace",
         workers: []
@@ -148,7 +148,7 @@ function ace(aceProject) {
     buildAce(aceProject, {
         compress: true,
         noconflict: true,
-        suffix: "-noconflict",
+        suffix: "-min-noconflict",
         compat: true,
         name: "ace",
         workers: []
@@ -185,33 +185,65 @@ function demo(aceProject) {
         ref = "";
         version = "";
     }
-
-    copy({
-        source: "kitchen-sink.html",
-        dest:   "build/kitchen-sink.html",
-        filter: [ function(data) {
+    var changeComments = function(data) {
             return (data
                 .replace("DEVEL-->", "")
                 .replace("<!--DEVEL", "")
                 .replace("PACKAGE-->", "")
                 .replace("<!--PACKAGE", "")
+                .replace("DEVEL*/", "")
+                .replace("/*DEVEL", "")
+                .replace("PACKAGE*/", "")
+                .replace("/*PACKAGE", "")
                 .replace("%version%", version)
                 .replace("%commit%", ref)
             );
+        }
+
+    copy({
+        source: "kitchen-sink.html",
+        dest:   "build/kitchen-sink.html",
+        filter: [changeComments,  function(data) {
+            return data.replace(/"(demo|build)\//g, "\"");
         }]
     });
 
-    buildAce(aceProject, {
-        targetDir: "build/demo/kitchen-sink",
-        ns: "ace",
-        requires: "kitchen-sink/demo",
-        compress: false,
-        noconflict: false,
-        compat: false,
-        name: "kitchen-sink",
-        suffix: "",
-        keybindings: []
+    copy({
+        source: "demo/kitchen-sink/styles.css",
+        dest:   "build/kitchen-sink/styles.css",
+        filter: [ changeComments ]
     });
+
+    fs.readdirSync("demo/kitchen-sink/docs/").forEach(function(x) {
+        copy({
+            source: "demo/kitchen-sink/docs/" + x,
+            dest:   "build/kitchen-sink/docs/" + x
+        });
+    });
+
+    var demo = copy.createDataObject();
+    copy({
+        source: "demo/kitchen-sink/demo.js",
+        dest: demo,
+        filter: [changeComments, function(data) {
+            return data.replace(/"(demo|build)\//g, "\"");
+        }, function(data) {
+            return data.replace("define(", "define('kitchen-sink/demo',");
+        }]
+    });
+    copy({
+        source: "lib/ace/split.js",
+        dest: demo,
+        filter: [changeComments, function(data) {
+            return data.replace("define(", "define('ace/split',");
+        }]
+    });
+    copy({
+        source: demo,
+        dest:   "build/kitchen-sink/demo.js",
+    });
+
+    copyFileSync("demo/kitchen-sink/logo.png", "build/kitchen-sink/logo.png");
 }
 
 function buildAce(aceProject, options) {
@@ -418,6 +450,27 @@ function cloneProject(project) {
 
     return clone;
 }
+function copyFileSync(srcFile, destFile) {
+    var BUF_LENGTH = 64*1024,
+        buf = new Buffer(BUF_LENGTH),
+        bytesRead = BUF_LENGTH,
+        pos = 0,
+        fdr = null,
+        fdw = null;
+
+
+    fdr = fs.openSync(srcFile, 'r');
+    fdw = fs.openSync(destFile, 'w');
+
+    while (bytesRead === BUF_LENGTH) {
+        bytesRead = fs.readSync(fdr, buf, 0, BUF_LENGTH, pos);
+        fs.writeSync(fdw, buf, 0, bytesRead);
+        pos += bytesRead;
+    }
+
+    fs.closeSync(fdr);
+    fs.closeSync(fdw);
+}
 
 function filterTextPlugin(text) {
     return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text!");
@@ -442,7 +495,7 @@ function exportAce(ns, module, requireBase) {
         var template = function() {
             (function() {
                 REQUIRE_NS.require(["MODULE"], function(a) {
-                    a.config.init();
+                    a && a.config.init();
                     if (!window.NS)
                         window.NS = {};
                     for (var key in a) if (a.hasOwnProperty(key))
