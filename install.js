@@ -1,5 +1,5 @@
-/* vim:ts=4:sts=4:sw=4:
- * ***** BEGIN LICENSE BLOCK *****
+#!/usr/bin/env node
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -21,6 +21,7 @@
  *
  * Contributor(s):
  *      Fabian Jakobs <fabian AT ajax DOT org>
+ *      Julian Viereck <julian.viereck@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -36,40 +37,28 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
-var dom = require("../lib/dom");
+var buildAce = require("./Makefile.dryice").buildAce;
 
-function GutterHandler(mouseHandler) {
-    var editor = mouseHandler.editor;
 
-    mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
-        var target = e.domEvent.target;
-        if (target.className.indexOf("ace_gutter-cell") == -1)
-            return;
+var ACE_HOME = __dirname;
 
-        if (!editor.isFocused())
-            return;
-
-        var padding = parseInt(dom.computedStyle(target).paddingLeft);
-        if (e.x < padding + target.getBoundingClientRect().left + 1)
-            return;
-
-        var row = e.getDocumentPosition().row;
-        var selection = editor.session.selection;
-
-        if (e.getShiftKey()) {
-            selection.selectTo(row, 0);
-        } else {
-            selection.moveCursorTo(row, 0);
-            selection.selectLine();
-            mouseHandler.$clickSelection = selection.getRange();
-        }
-
-        mouseHandler.captureMouse(e, "selectByLines");
-    });
+try {
+    var aceProject = {
+        roots: [
+            ACE_HOME + '/lib',
+            ACE_HOME + '/demo'
+        ],
+        textPluginPattern: /^ace\/requirejs\/text!/
+    };
+	buildAce(aceProject, {
+		compress: false,
+		noconflict: false,
+		suffix: "",
+		compat: true,
+		name: "ace"
+	});
+} catch (e) {
+	console.log("--- Ace Build error ---");
+	console.log(e);
+	process.exit(0);
 }
-
-exports.GutterHandler = GutterHandler;
-
-});

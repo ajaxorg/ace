@@ -17,7 +17,7 @@
         "asyncjs": "0.0.x",
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
-        "libxml": "0.0.x",
+        "plist": "",
         "dryice": "0.4.2",
         "panino" : "~1.0.15"
     },
@@ -41,7 +41,8 @@
         "lib": "lib/ace"
     },
     "scripts": {
-        "test": "node lib/ace/test/all.js"
+        "test": "node lib/ace/test/all.js",
+        "postinstall": "node ./install.js"
     },
     "config": {
         "github.com/sourcemint/bundler-js/0/-meta/config/0": {
@@ -62,7 +63,7 @@
                     "dynamicLinks": [
                         "/lib/ace/mode/*_worker.js"
                     ]
-    }
+                }
             }
         }
     }
