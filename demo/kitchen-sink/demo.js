@@ -144,7 +144,7 @@ function initDoc(file, path, doc) {
         session.setWrapLimitRange(80, 80);
     }
     var mode = getModeFromPath(path)
-    doc.modeName = mode.name;
+    session.modeName = mode.name;
     session.setMode(mode.mode);
 }
 
@@ -219,7 +219,7 @@ function prepareDocList(docs) {
             doc = {name: doc || path};
 
         doc.path = path;
-        doc.desc = doc.name.replace(/^(ace|docs|demo)/, "");
+        doc.desc = doc.name.replace(/^(ace|docs|demo|build)\//, "");
         if (doc.desc.length > 18)
             doc.desc = doc.desc.slice(0, 7) + ".." + doc.desc.slice(-9)
 
@@ -249,6 +249,17 @@ env.split = split;
 window.env = env;
 window.editor = window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
+
+function onResize() {
+    var left = env.split.$container.offsetLeft;
+    var width = document.documentElement.clientWidth - left;
+    container.style.width = width + "px";
+    container.style.height = document.documentElement.clientHeight + "px";
+    env.split.resize();
+}
+
+window.onresize = onResize;
+env.editor.renderer.onResize(true);
 
 /**
  * This demonstrates how you can define commands and bind shortcuts to them.
@@ -351,8 +362,7 @@ bindDropdown("doc", function(name) {
     }
 });
 
-function updateUIEditorOptions() {
-return
+function updateUIEditorOptions() {return
     var editor = env.editor;
     var session = editor.session;
 
@@ -376,7 +386,7 @@ return
 }
 
 function saveOption(el, val) {
-    if (!el.onchange || el.onclick)
+    if (!el.onchange && !el.onclick)
         return;
 
     if ("checked" in el) {
@@ -561,17 +571,8 @@ function fillDropdown(list, el) {
     });
 }
 
-function onResize() {
-    var left = env.split.$container.offsetLeft;
-    var width = document.documentElement.clientWidth - left;
-    container.style.width = width + "px";
-    container.style.height = document.documentElement.clientHeight + "px";
-    env.split.resize();
-}
 
-window.onresize = onResize;
-env.editor.renderer.onResize(true);
-
+/************** dragover ***************************/
 event.addListener(container, "dragover", function(e) {
     return event.preventDefault(e);
 });
