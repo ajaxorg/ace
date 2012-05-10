@@ -362,7 +362,7 @@ bindDropdown("doc", function(name) {
     }
 });
 
-function updateUIEditorOptions() {return
+function updateUIEditorOptions() {
     var editor = env.editor;
     var session = editor.session;
 
