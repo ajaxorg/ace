@@ -76,7 +76,6 @@ function main(args) {
             compress: false,
             noconflict: false,
             suffix: "",
-            compat: true,
             name: "ace"
         });
     }
@@ -109,7 +108,6 @@ function bookmarklet(aceProject) {
         compress: false,
         noconflict: true,
         suffix: ".js",
-        compat: false,
         name: "ace-bookmarklet",
         workers: [],
         keybindings: []
@@ -124,14 +122,12 @@ function ace(aceProject) {
         compress: false,
         noconflict: false,
         suffix: "-uncompressed",
-        compat: true,
         name: "ace"
     });
     buildAce(aceProject, {
         compress: false,
         noconflict: true,
         suffix: "-uncompressed-noconflict",
-        compat: true,
         name: "ace",
         workers: []
     });
@@ -141,7 +137,6 @@ function ace(aceProject) {
         compress: true,
         noconflict: false,
         suffix: "",
-        compat: true,
         name: "ace",
         workers: []
     });
@@ -149,7 +144,6 @@ function ace(aceProject) {
         compress: true,
         noconflict: true,
         suffix: "-noconflict",
-        compat: true,
         name: "ace",
         workers: []
     });
@@ -225,7 +219,6 @@ function buildAce(aceProject, options) {
         noconflict: false,
         suffix: "",
         name: "ace",
-        compat: true,
         modes: [
             "css", "html", "javascript", "php", "coldfusion", "python", "lua", "xml", "ruby", "java", "c_cpp",
             "coffee", "perl", "csharp", "haxe", "liquid", "svg", "clojure", "scss", "json", "groovy",
@@ -300,20 +293,6 @@ function buildAce(aceProject, options) {
         filter: exportFilter ? filters.concat(exportFilter) : filters,
         dest:   targetDir + suffix + '/' + name + ".js"
     });
-
-    if (options.compat) {
-        project.assumeAllFilesLoaded();
-        copy({
-            source: [
-                {
-                    project: cloneProject(project),
-                    require: [ "pilot/index" ]
-                }
-            ],
-            filter: filters,
-            dest:   targetDir + suffix + "/" + name + "-compat.js"
-        });
-    }
 
     console.log('# ace modes ---------');
 
