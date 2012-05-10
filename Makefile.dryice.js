@@ -38,6 +38,8 @@
  * ***** END LICENSE BLOCK ***** */
 
 var fs = require("fs");
+if (!fs.existsSync)
+    fs.existsSync = require("path").existsSync;
 var copy = require('dryice').copy;
 
 var ACE_HOME = __dirname;
@@ -258,21 +260,13 @@ function buildAce(aceProject, options) {
         suffix: "",
         name: "ace",
         compat: true,
-        modes: [
-            "css", "html", "javascript", "php", "coldfusion", "python", "lua", "xml", "ruby", "java", "c_cpp",
-            "coffee", "perl", "csharp", "haxe", "liquid", "svg", "clojure", "scss", "json", "groovy",
-            "ocaml", "scala", "textile", "scad", "markdown", "latex", "powershell", "sql",
-            "text", "pgsql", "sh", "xquery", "less", "golang", "c9search"
-        ],
-        themes: [
-            "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn",
-            "dreamweaver", "eclipse",
-            "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
-            "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",
-            "solarized_light", "textmate", "tomorrow", "tomorrow_night",
-            "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties",
-            "twilight", "vibrant_ink"
-        ],
+        modes: fs.readdirSync("lib/ace/mode").map(function(x) {
+                if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker/.test(x))
+                    return x.slice(0, -3);
+            }).filter(function(x){return !!x}),
+        themes: fs.readdirSync("lib/ace/theme").map(function(x){
+                return x.slice(-3) == ".js" && x.slice(0, -3)
+            }).filter(function(x){return !!x}),
         workers: ["javascript", "coffee", "css", "json"],
         keybindings: ["vim", "emacs"]
     };
@@ -317,12 +311,10 @@ function buildAce(aceProject, options) {
         dest: ace
     });
     copy({
-        source: [
-            {
-                project: project,
-                require: options.requires
-            }
-        ],
+        source: [{
+            project: project,
+            require: options.requires
+        }],
         filter: [ copy.filter.moduleDefines ],
         dest: ace
     });
@@ -336,12 +328,10 @@ function buildAce(aceProject, options) {
     if (options.compat) {
         project.assumeAllFilesLoaded();
         copy({
-            source: [
-                {
-                    project: cloneProject(project),
-                    require: [ "pilot/index" ]
-                }
-            ],
+            source: [{
+                project: cloneProject(project),
+                require: [ "pilot/index" ]
+            }],
             filter: filters,
             dest:   targetDir + suffix + "/" + name + "-compat.js"
         });
@@ -353,12 +343,10 @@ function buildAce(aceProject, options) {
     options.modes.forEach(function(mode) {
         console.log("mode " + mode);
         copy({
-            source: [
-                {
-                    project: cloneProject(project),
-                    require: [ 'ace/mode/' + mode ]
-                }
-            ],
+            source: [{
+                project: cloneProject(project),
+                require: [ 'ace/mode/' + mode ]
+            }],
             filter: filters,
             dest:   targetDir + suffix + "/mode-" + mode + ".js"
         });
@@ -369,14 +357,16 @@ function buildAce(aceProject, options) {
     project.assumeAllFilesLoaded();
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
-        copy({
-            source: [{
-                project: cloneProject(project),
-                require: ["ace/theme/" + theme]
-            }],
-            filter: filters,
-            dest:   targetDir + suffix + "/theme-" + theme + ".js"
-        });
+        var themePath = "lib/ace/theme/" + theme
+        var js = fs.readFileSync(themePath + ".js", "utf8")
+        js = js.replace("define(", "define('ace/theme/" + theme + "',")
+        
+        if (fs.existsSync(themePath + ".css", "utf8")) {
+            var css = fs.readFileSync(themePath + ".css", "utf8")
+            js = js.replace(/require\(.ace\/requirejs\/text!.*?\)/, quoteString(css))
+        }
+        
+        fs.writeFileSync(targetDir + suffix + "/theme-" + theme + ".js", js);        
     });
 
     console.log('# ace worker ---------');
@@ -421,12 +411,10 @@ function buildAce(aceProject, options) {
     project.assumeAllFilesLoaded();
     options.keybindings.forEach(function(keybinding) {
         copy({
-            source: [
-                {
-                    project: cloneProject(project),
-                    require: [ 'ace/keyboard/' + keybinding ]
-                }
-            ],
+            source: [{
+                project: cloneProject(project),
+                require: [ 'ace/keyboard/' + keybinding ]
+            }],
             filter: filters,
             dest: targetDir + suffix + "/keybinding-" + keybinding + ".js"
         });
@@ -470,6 +458,10 @@ function copyFileSync(srcFile, destFile) {
 
     fs.closeSync(fdr);
     fs.closeSync(fdw);
+}
+
+function quoteString(str) {
+    return '"' + str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"';
 }
 
 function filterTextPlugin(text) {
