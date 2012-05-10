@@ -78,7 +78,6 @@ function main(args) {
             compress: false,
             noconflict: false,
             suffix: "",
-            compat: true,
             name: "ace"
         });
     }
@@ -111,7 +110,6 @@ function bookmarklet(aceProject) {
         compress: false,
         noconflict: true,
         suffix: "",
-        compat: false,
         name: "ace-bookmarklet",
         workers: [],
         keybindings: []
@@ -126,14 +124,12 @@ function ace(aceProject) {
         compress: false,
         noconflict: false,
         suffix: "",
-        compat: true,
         name: "ace"
     });
     buildAce(aceProject, {
         compress: false,
         noconflict: true,
         suffix: "-noconflict",
-        compat: true,
         name: "ace",
         workers: []
     });
@@ -143,7 +139,6 @@ function ace(aceProject) {
         compress: true,
         noconflict: false,
         suffix: "-min",
-        compat: true,
         name: "ace",
         workers: []
     });
@@ -151,7 +146,6 @@ function ace(aceProject) {
         compress: true,
         noconflict: true,
         suffix: "-min-noconflict",
-        compat: true,
         name: "ace",
         workers: []
     });
@@ -259,7 +253,6 @@ function buildAce(aceProject, options) {
         noconflict: false,
         suffix: "",
         name: "ace",
-        compat: true,
         modes: fs.readdirSync("lib/ace/mode").map(function(x) {
                 if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker/.test(x))
                     return x.slice(0, -3);
@@ -324,18 +317,6 @@ function buildAce(aceProject, options) {
         filter: exportFilter ? filters.concat(exportFilter) : filters,
         dest:   targetDir + suffix + '/' + name + ".js"
     });
-
-    if (options.compat) {
-        project.assumeAllFilesLoaded();
-        copy({
-            source: [{
-                project: cloneProject(project),
-                require: [ "pilot/index" ]
-            }],
-            filter: filters,
-            dest:   targetDir + suffix + "/" + name + "-compat.js"
-        });
-    }
 
     console.log('# ace modes ---------');
 
