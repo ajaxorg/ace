@@ -677,13 +677,6 @@ require("ace/multi_select").MultiSelect(env.editor);
 
 
 
-
-
-/* var Editor = require("ace/editor").Editor;
-var UndoManager = require("ace/undomanager").UndoManager;
-var Renderer = require("ace/virtual_renderer").VirtualRenderer;
-var MultiSelect = require("ace/multi_select").MultiSelect; */
-
 function singleLineEditor(el) {
     var renderer = new Renderer(el);
     renderer.scrollBar.element.style.display = "none";
@@ -734,7 +727,7 @@ function singleLineEditor(el) {
     editor.setHighlightActiveLine(false);
     editor.setShowPrintMargin(false);
     editor.renderer.setShowGutter(false);
-    editor.renderer.setHighlightGutterLine(false);
+    // editor.renderer.setHighlightGutterLine(false);
     return editor;
 };
 
