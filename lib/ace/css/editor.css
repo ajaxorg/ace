@@ -96,8 +96,8 @@
     height: 100%;
 }
 
-.ace_editor textarea {
-    position: fixed;
+.ace_editor > textarea {
+    position: absolute;
     z-index: 0;
     width: 0.5em;
     height: 1em;
