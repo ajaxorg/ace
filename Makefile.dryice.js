@@ -254,7 +254,7 @@ function buildAce(aceProject, options) {
         suffix: "",
         name: "ace",
         modes: fs.readdirSync("lib/ace/mode").map(function(x) {
-                if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker/.test(x))
+                if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/.test(x))
                     return x.slice(0, -3);
             }).filter(function(x){return !!x}),
         themes: fs.readdirSync("lib/ace/theme").map(function(x){
