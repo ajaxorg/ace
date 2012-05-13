@@ -39,7 +39,7 @@
 
 
 define(function(require, exports, module) {
-"use strict";
+"never use strict";
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init();
@@ -57,6 +57,9 @@ var vim = require("ace/keyboard/vim").handler;
 var emacs = require("ace/keyboard/emacs").handler;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var Editor = require("ace/editor").Editor;
+var MultiSelect = require("ace/multi_select").MultiSelect;
 
 // workers do not work for file:
 if (location.protocol == "file:")
@@ -250,16 +253,30 @@ window.env = env;
 window.editor = window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
 
+var consoleHight = 20;
 function onResize() {
     var left = env.split.$container.offsetLeft;
     var width = document.documentElement.clientWidth - left;
     container.style.width = width + "px";
-    container.style.height = document.documentElement.clientHeight + "px";
+    container.style.height = document.documentElement.clientHeight - consoleHight + "px";
     env.split.resize();
+
+	consoleEl.style.width = width + "px";
+	cmdLine.resize()
 }
 
+var consoleEl = dom.createElement("div");
+container.parentNode.appendChild(consoleEl);
+consoleEl.style.position="fixed"
+consoleEl.style.bottom = "1px"
+consoleEl.style.right = 0
+consoleEl.style.background = "white"
+consoleEl.style.border = "1px solid #baf"
+consoleEl.style.zIndex = "100"
+var cmdLine = new singleLineEditor(consoleEl);
+
 window.onresize = onResize;
-env.editor.renderer.onResize(true);
+onResize();
 
 /**
  * This demonstrates how you can define commands and bind shortcuts to them.
@@ -603,6 +620,70 @@ event.addListener(container, "drop", function(e) {
 
 // add multiple cursor support to editor
 require("ace/multi_select").MultiSelect(env.editor);
+
+
+
+
+
+/* var Editor = require("ace/editor").Editor;
+var UndoManager = require("ace/undomanager").UndoManager;
+var Renderer = require("ace/virtual_renderer").VirtualRenderer;
+var MultiSelect = require("ace/multi_select").MultiSelect; */
+
+function singleLineEditor(el) {
+	var renderer = new Renderer(el);
+	renderer.scrollBar.element.style.display = "none";
+	renderer.scrollBar.width = 0;
+	renderer.content.style.height = "auto";
+
+	renderer.screenToTextCoordinates = function(x, y) {
+		var pos = this.pixelToScreenCoordinates(x, y);
+		return this.session.screenToDocumentPosition(
+			Math.min(this.session.getScreenLength() - 1, Math.max(pos.row, 0)),
+			Math.max(pos.column, 0)
+		);
+	};
+	// todo size change event
+	renderer.$computeLayerConfig = function() {
+		var longestLine = this.$getLongestLine();
+		var firstRow = 0;
+		var lastRow = this.session.getLength();
+		var height = this.session.getScreenLength() * this.lineHeight;
+
+		this.scrollTop = 0;
+		var config = this.layerConfig;
+		config.width = longestLine;
+		config.padding = this.$padding;
+		config.firstRow = 0;
+		config.firstRowScreen = 0;
+		config.lastRow = lastRow;
+		config.lineHeight = this.lineHeight;
+		config.characterWidth = this.characterWidth;
+		config.minHeight = height;
+		config.maxHeight = height;
+		config.offset = 0;
+		config.height = height;
+
+		this.$gutterLayer.element.style.marginTop = 0 + "px";
+		this.content.style.marginTop = 0 + "px";
+		this.content.style.width = longestLine + 2 * this.$padding + "px";
+		this.content.style.height = height + "px";
+		this.scroller.style.height = height + "px";
+		this.container.style.height = height + "px";
+	};
+	renderer.isScrollableBy=function(){return false};
+
+	var editor = new Editor(renderer);
+	new MultiSelect(editor);
+	editor.session.setUndoManager(new UndoManager());
+
+	editor.setHighlightActiveLine(false);
+	editor.setShowPrintMargin(false);
+	editor.renderer.setShowGutter(false);
+	editor.renderer.setHighlightGutterLine(false);
+	return editor;
+};
+
 
 });
 
