@@ -261,8 +261,8 @@ function onResize() {
     container.style.height = document.documentElement.clientHeight - consoleHight + "px";
     env.split.resize();
 
-	consoleEl.style.width = width + "px";
-	cmdLine.resize()
+    consoleEl.style.width = width + "px";
+    cmdLine.resize()
 }
 
 var consoleEl = dom.createElement("div");
@@ -274,6 +274,56 @@ consoleEl.style.background = "white"
 consoleEl.style.border = "1px solid #baf"
 consoleEl.style.zIndex = "100"
 var cmdLine = new singleLineEditor(consoleEl);
+cmdLine.editor = env.editor;
+env.editor.cmdLine = cmdLine;
+
+env.editor.commands.addCommands([{
+    name: "gotoline",
+    bindKey: {win: "Ctrl-L", mac: "Command-L"},
+    exec: function(editor, line) {
+        if (typeof needle == "object") {
+            var arg = this.name + " " + editor.getCursorPosition().row;
+            editor.cmdLine.setValue(arg, 1)
+            editor.cmdLine.focus()
+            return
+        }
+        line = parseInt(line, 10);
+        if (!isNaN(line))
+            editor.gotoLine(line);
+    },
+    readOnly: true
+}, {
+    name: "find",
+    bindKey: {win: "Ctrl-F", mac: "Command-F"},
+    exec: function(editor, needle) {
+        if (typeof needle == "object") {
+            var arg = this.name + " " + editor.getCopyText()
+            editor.cmdLine.setValue(arg, 1)
+            editor.cmdLine.focus()
+            return
+        }
+        editor.find(needle);
+    },
+    readOnly: true
+}, {
+    name: "focusCommandLine",
+    bindKey: "shift-esc",
+    exec: function(editor, needle) { editor.cmdLine.focus(); },
+    readOnly: true
+}])
+
+cmdLine.commands.bindKeys({
+    "Shift-Return|Ctrl-Return|Alt-Return": function(cmdLine) { cmdLine.insert("\n")},
+    "Esc|Shift-Esc": function(cmdLine){ cmdLine.editor.focus(); },
+    "Return": function(cmdLine){
+        var command = cmdLine.getValue().split(/\s+/);
+        var editor = cmdLine.editor;
+        editor.commands.exec(command[0], editor, command[1]);
+        editor.focus();
+    },
+})
+
+cmdLine.commands.removeCommands(["find", "goToLine", "findAll", "replace", "replaceAll"])
 
 window.onresize = onResize;
 onResize();
@@ -631,57 +681,57 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var MultiSelect = require("ace/multi_select").MultiSelect; */
 
 function singleLineEditor(el) {
-	var renderer = new Renderer(el);
-	renderer.scrollBar.element.style.display = "none";
-	renderer.scrollBar.width = 0;
-	renderer.content.style.height = "auto";
+    var renderer = new Renderer(el);
+    renderer.scrollBar.element.style.display = "none";
+    renderer.scrollBar.width = 0;
+    renderer.content.style.height = "auto";
 
-	renderer.screenToTextCoordinates = function(x, y) {
-		var pos = this.pixelToScreenCoordinates(x, y);
-		return this.session.screenToDocumentPosition(
-			Math.min(this.session.getScreenLength() - 1, Math.max(pos.row, 0)),
-			Math.max(pos.column, 0)
-		);
-	};
-	// todo size change event
-	renderer.$computeLayerConfig = function() {
-		var longestLine = this.$getLongestLine();
-		var firstRow = 0;
-		var lastRow = this.session.getLength();
-		var height = this.session.getScreenLength() * this.lineHeight;
+    renderer.screenToTextCoordinates = function(x, y) {
+        var pos = this.pixelToScreenCoordinates(x, y);
+        return this.session.screenToDocumentPosition(
+            Math.min(this.session.getScreenLength() - 1, Math.max(pos.row, 0)),
+            Math.max(pos.column, 0)
+        );
+    };
+    // todo size change event
+    renderer.$computeLayerConfig = function() {
+        var longestLine = this.$getLongestLine();
+        var firstRow = 0;
+        var lastRow = this.session.getLength();
+        var height = this.session.getScreenLength() * this.lineHeight;
 
-		this.scrollTop = 0;
-		var config = this.layerConfig;
-		config.width = longestLine;
-		config.padding = this.$padding;
-		config.firstRow = 0;
-		config.firstRowScreen = 0;
-		config.lastRow = lastRow;
-		config.lineHeight = this.lineHeight;
-		config.characterWidth = this.characterWidth;
-		config.minHeight = height;
-		config.maxHeight = height;
-		config.offset = 0;
-		config.height = height;
+        this.scrollTop = 0;
+        var config = this.layerConfig;
+        config.width = longestLine;
+        config.padding = this.$padding;
+        config.firstRow = 0;
+        config.firstRowScreen = 0;
+        config.lastRow = lastRow;
+        config.lineHeight = this.lineHeight;
+        config.characterWidth = this.characterWidth;
+        config.minHeight = height;
+        config.maxHeight = height;
+        config.offset = 0;
+        config.height = height;
 
-		this.$gutterLayer.element.style.marginTop = 0 + "px";
-		this.content.style.marginTop = 0 + "px";
-		this.content.style.width = longestLine + 2 * this.$padding + "px";
-		this.content.style.height = height + "px";
-		this.scroller.style.height = height + "px";
-		this.container.style.height = height + "px";
-	};
-	renderer.isScrollableBy=function(){return false};
+        this.$gutterLayer.element.style.marginTop = 0 + "px";
+        this.content.style.marginTop = 0 + "px";
+        this.content.style.width = longestLine + 2 * this.$padding + "px";
+        this.content.style.height = height + "px";
+        this.scroller.style.height = height + "px";
+        this.container.style.height = height + "px";
+    };
+    renderer.isScrollableBy=function(){return false};
 
-	var editor = new Editor(renderer);
-	new MultiSelect(editor);
-	editor.session.setUndoManager(new UndoManager());
+    var editor = new Editor(renderer);
+    new MultiSelect(editor);
+    editor.session.setUndoManager(new UndoManager());
 
-	editor.setHighlightActiveLine(false);
-	editor.setShowPrintMargin(false);
-	editor.renderer.setShowGutter(false);
-	editor.renderer.setHighlightGutterLine(false);
-	return editor;
+    editor.setHighlightActiveLine(false);
+    editor.setShowPrintMargin(false);
+    editor.renderer.setShowGutter(false);
+    editor.renderer.setHighlightGutterLine(false);
+    return editor;
 };
 
 
