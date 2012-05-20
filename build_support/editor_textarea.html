@@ -9,6 +9,7 @@
 <body>
 
 <div id="wrapper">
+
 <div class="content" style="width: 950px">
     <div class="column1" style="margin-top: 47px">
         <textarea id="textarea" style="width:300px; height:300px">
@@ -19,8 +20,11 @@ function foo() {
     var bar = true;
 }</textarea><br>
         SourceUrl: <br>
-        <input id="srcURL" style="width:300px" value="http://ajaxorg.github.com/ace/build/textarea/src/"></input><br>
+        <input id="srcURL" style="width:300px" value="http://ajaxorg.github.com/ace-builds/textarea/src/"></input><br>
         <button id="buBuild">Build Link</button> <br> <a href="#"></a>
+        <a href="https://github.com/ajaxorg/ace/">
+            <div class="fork_on_github" ></div>
+        </a>
     </div>
     <div class="column2">
         <h1>Ace Bookmarklet Builder</h1>
@@ -73,7 +77,7 @@ function inject(callback) {
                 }
             });
         }
-        callback();
+        callback && callback();
     });
 }
 

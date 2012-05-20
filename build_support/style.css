@@ -74,7 +74,6 @@ PRE{
 .content {
     width:970px;
     position:relative;
-    overflow:hidden;
     margin:0 auto;
 }
 
@@ -115,7 +114,6 @@ PRE{
 
 #wrapper .content .column1 {
     position:relative;
-    overflow:hidden;
     float:left;
     width:315px;
     margin-right:31px;
