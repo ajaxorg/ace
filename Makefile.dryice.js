@@ -49,9 +49,8 @@ function main(args) {
     if (args.length == 3) {
         target = args[2];
         // Check if 'target' contains some allowed value.
-        if (target != "normal" && target != "bm" && target != "demo") {
-            target = null;
-        }
+        if (!/^(normal|bm|demo|minimal)$/.test(target))
+            target = "help";
     }
 
     if (target == "help") {
@@ -338,6 +337,15 @@ function buildAce(aceProject, options) {
     project.assumeAllFilesLoaded();
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
+        /*copy({
+            source: [{
+                project: cloneProject(project),
+                require: ["ace/theme/" + theme]
+            }],
+            filter: filters,
+            dest:   targetDir + suffix + "/theme-" + theme + ".js"
+        });*/
+        // use this instead, to not create separate modules for js and css
         var themePath = "lib/ace/theme/" + theme
         var js = fs.readFileSync(themePath + ".js", "utf8")
         js = js.replace("define(", "define('ace/theme/" + theme + "',")
@@ -346,8 +354,9 @@ function buildAce(aceProject, options) {
             var css = fs.readFileSync(themePath + ".css", "utf8")
             js = js.replace(/require\(.ace\/requirejs\/text!.*?\)/, quoteString(css))
         }
+        filters.forEach(function(f) {js = f(js); })
         
-        fs.writeFileSync(targetDir + suffix + "/theme-" + theme + ".js", js);        
+        fs.writeFileSync(targetDir + suffix + "/theme-" + theme + ".js", js); 
     });
 
     console.log('# ace worker ---------');
@@ -406,7 +415,8 @@ function buildAce(aceProject, options) {
 function cloneProject(project) {
     var clone = copy.createCommonJsProject({
         roots: project.roots,
-        ignores: project.ignoreRequires
+        ignores: project.ignoreRequires,
+        textPluginPattern: project.textPluginPattern
     });
 
     Object.keys(project.currentModules).forEach(function(module) {
