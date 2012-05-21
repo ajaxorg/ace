@@ -39,11 +39,10 @@ mixin head
 	script(src="#{dirPrefix}resources/javascripts/bootstrap-dropdown.js")
 	script(src="#{dirPrefix}resources/javascripts/jquery-scrollspy.js")
 	script(script src="#{dirPrefix}resources/javascripts/prettify-extension.js")
-
 mixin navBar
 	div.navbar.navbar-fixed-top
 		div.navbar-inner
-			div.container
+			div#topSection.container
 				span.brand
 
 				ul.nav.topLinks
@@ -55,8 +54,8 @@ mixin navBar
 					input(class='search-query span3', name='query', type='text', placeholder="Search the API", title="Search across all the documentation")
 
 mixin footer
-	footer#footer
-				.container
+	div#footer
+				.footerInner
 					.footer-text.pull-right 
 						p
 							<a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012

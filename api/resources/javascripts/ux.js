@@ -9,9 +9,13 @@ $(function () {
     if (window.addEventListener) window.addEventListener('load', loadCallback, true);
     else window.attachEvent('load', loadCallback, true);
 
-    if (pathName.indexOf("nodejs_ref_guide") >= 0) $('li#node_js_ref').addClass("active");
-    else if (pathName.indexOf("nodejs_dev_guide") >= 0) $('li#nodejs_dev_guide').addClass("active");
-    else if (pathName.indexOf("js_doc") >= 0) $('li#js_doc').addClass("active");
+    // sticky footer stuff
+    if ($('#mainContent').height() > $('#sidebarContainer').height()) {
+        $('#nonFooter').css( {
+            'min-height': '100%'
+        });
+        $('#nonFooter').height("auto");
+    }
 
     function loadCallback(evt) {
         var form = document.getElementById("searchbox");

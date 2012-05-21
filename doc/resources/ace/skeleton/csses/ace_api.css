@@ -98,19 +98,25 @@ blockquote p{
     text-align:center;
 }
 
+#topSection {
+    width: 1000px;
+}
 .small_win #topSection {
     width: 100%;
 }
 .small_win #topSection .dropdown {
     margin-right: 40%;
 }
+.navbar .brand {
+    margin-left: 0px;
+}
 .brand {
-	background: transparent url(../images/ace_logo_menu.png) no-repeat 13px 5px;
-	width: 105px;
-	outline: none;
-	height: 40px;
-	padding: 0 10px !important;
-	border: none;
+    background: transparent url(../images/ace_logo_menu.png) no-repeat 13px 5px;
+    width: 105px;
+    outline: none;
+    height: 40px;
+    padding: 0 10px !important;
+    border: none;
 }
 .brand.dropdown-toggle:after {
     content: none;
@@ -120,10 +126,10 @@ blockquote p{
 }
 
 .ace_logo {
-	position: absolute;
-	top: 45px;
-	z-index: 20000;
-	left: 210px;
+    position: absolute;
+    top: 45px;
+    z-index: 20000;
+    left: 210px;
 }
 
 .masthead {
@@ -149,9 +155,9 @@ blockquote p{
 }
 
 .headerTitle {
-	position: relative;
-	top: 100px;
-	left: 250px;
+    position: relative;
+    top: 100px;
+    left: 250px;
 }
 
 /*
@@ -277,6 +283,8 @@ ul.menu {
   
   top : 11px;*/
   z-index: 103;
+  padding-right: 10px;
+  margin-right: -5px;
   /*width: 700px;*/
 }
 .srolledHeader .membersContent {
@@ -326,13 +334,13 @@ ul.menu {
 }
 
 .dropdown .caret {
-	margin-top: 14px;
-	color: #6D8CA0;
+    margin-top: 14px;
+    color: #6D8CA0;
 }
 
 li.dropdown {
-	color: #2D2D2D;
-	font-weight: bold;
+    color: #2D2D2D;
+    font-weight: bold;
 }
 
 
@@ -366,8 +374,8 @@ li.dropdown {
 }
 
 li.dropdown {
-	color: #2D2D2D;
-	font-weight: bold;
+    color: #2D2D2D;
+    font-weight: bold;
 }
 
 .members .tabs .dropdown a,
@@ -475,25 +483,31 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
   Center content (the "real stuff")
 */
 
-.content .row {
-	width: 1000px;
-	margin-left: auto;
-	margin-right: auto;
+#nonFooter {
+    padding-top: 40px;
+}
+#wrapper {
+    height: 100%;
 }
 
-.content .centerpiece {
-	background: url(../images/sidebar_border.png) repeat-y 180px 0;
-	padding-bottom: 9em;
+.content {
+    height: 100%;
+}
+.content .row {
+    width: 1060px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 header.filler {
-	position: relative;
-	height: 50px;
-	width: 100%;
+    position: relative;
+    height: 40px;
+    width: 100%;
 }
 
-.container {
-    width: 100%;
+.centerpiece {
+    background: url(../images/sidebar_border.png) repeat-y 230px 0;
+    height: 100%;
 }
 
 /*
@@ -504,14 +518,13 @@ header.filler {
 }*/
 
 .divider {
-	height: 3px;
-	background-color: #BEDAEA;
-	margin-bottom: 3px;
+    height: 3px;
+    background-color: #BEDAEA;
+    margin-bottom: 3px;
 }
 
-.sidebarContainer {
-	width: 280px;
-	margin-left: 0px;
+#sidebarContainer {
+    margin-right: 60px;
 }
 
 #sidebar {
@@ -528,8 +541,12 @@ header.filler {
     color: #404040;
 }
 
-.mainContent .hero-unit {
-	background: rgba(255, 255, 255, 0.5);	
+#mainContent {
+    margin-left: 30px;
+}
+
+#mainContent .hero-unit {
+    background: rgba(255, 255, 255, 0.5);   
 }
 
 #documentation {
@@ -546,11 +563,11 @@ div#documentation article:last-child {
     padding-bottom: 40px;
 }
 #documentation article.article.methodToggleOpen {
-	background: rgba(255, 255, 255, 0.5);
-	padding: 20px;
-	font-size: 13px;
-	line-height: 24px;
-	margin: 0 0 10px 0;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+    font-size: 13px;
+    line-height: 24px;
+    margin: 0 0 10px 0;
 }
 
 #documentation article:first-child {
@@ -558,9 +575,9 @@ div#documentation article:last-child {
 }
 
 .site_logo {
-	display: block;  
-	margin-left: auto;   
-	margin-right: auto;
+    display: block;  
+    margin-left: auto;   
+    margin-right: auto;
 }
 /*
     Edit in Cloud9, sucka
@@ -676,7 +693,7 @@ li.signature {
 }
 
 .sigClassName {
-	display: none;
+    display: none;
 }
 
 .eventObjName {
@@ -767,20 +784,13 @@ li.signature {
     margin-bottom : 13px;
 }
 .argName {
-	font-style: italic;
+    font-style: italic;
 }
 
 
 /*
   Everyday I'm togglin'
 */
-.mainContent {
-	padding-top: 10px;
-	float: right
-	margin-left: 0px;
-	width: 695px;
-	padding-left: 5px;
-}
 
 #documentation h3 {
     font-size: 24px;
@@ -863,72 +873,32 @@ h3.methodToggle.active {
 */
 
 #footer {
-    left:0px;
-    bottom:0px;
-    padding-top: 0;
     width:100%;
     background: #101010 url(../images/dashed_back.png) repeat 0 0;
     font-size: 12px;
     color: white;
-    border-top: none;
-    margin-top: 0;
+    height: 40px;
 }
-#footer .container {
-    width: 710px;
+#footer .footerInner {
     padding-left: 300px;
     margin-left: auto;
     margin-right: auto;
-    min-height: 60px;
+    min-height: 40px;
 }
 #footer .footer-text {
     display: block;
+    font-size: 12px;
     float: right;
-    margin-right: 10px;
-    margin-top: 24px;
 }
-#footer .sponsors {
-    display: inline-block;
-    margin-top: 18px;
-}
-
-#footer .sponsors .sponsor {
-    padding-right: 22px;
+#footer div.footerInner div.footer-text p {
+    font-size: 12px;
+    font-family: Arial;
+    line-height: 18px;
+    margin: 10px 15px 0px 1px;
 }
 
 #footer a, #footer a:hover {
     color: #8DD0FF;
-}
-#footer .c9-logo {
-    width: 141px;
-    height: 20px;
-    background:  url(../images/c9-log-footer.png) no-repeat 0 0;
-    display: inline-block;
-    padding-right: 10px;
-}
-#footer .joyent-logo {
-    width: 70px;
-    height: 19px;
-    background:  url(../images/joyent-logo-footer.png) no-repeat 0 0;
-    display: inline-block;
-    padding-right: 10px;
-}
-#footer .mozilla-logo {
-    width: 78px;
-    height: 24px;
-    background:  url(../images/mozilla-logo-footer.png) no-repeat 0 0;
-    display: inline-block;
-    padding-right: 10px;
-}
-#footer .debuggable-logo {
-    width: 119px;
-    height: 25px;
-    background:  url(../images/debuggable-logo-footer.png) no-repeat 0 0;
-    display: inline-block;
-    padding-right: 0 !important;
-    margin-bottom : -3px;
-}
-#footer .span11 {
-    margin-left: 0;
 }
 
 .logoText, .logoImg {
@@ -994,34 +964,22 @@ body #dsq-reply h3{
 
 /* Sticky footer stuff */
 
-html
-{
-height: 100%;
+* {
+    margin: 0;
 }
-
-body
-{
-height: 100%;
+html, body {
+    height: 100%;
 }
-
-#nonFooter
-{
-position: relative;
-min-height: 100%;
+#nonFooter {
+    height: 100%;
+    margin: 0 auto -40px; /* the bottom margin is the negative value of the footer's height */
 }
-
-* html #nonFooter
-{
-height: 100%;
+div.push {
+    height: 40px; /* .push must be the same height as .footer */
 }
-
-#wrapper
-{
-
+#footer, div.push {
+clear: both;
 }
-
-#footer
-{
-position: relative;
-margin-top: -3.5em;
+#footer {
+    margin-top: 40px;
 }
