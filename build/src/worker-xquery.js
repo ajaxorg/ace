@@ -9465,7 +9465,7 @@ exports.org = org;
 
 });
 define('ace/mode/xquery/XQueryLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryLexer.g 2012-04-23 09:26:57
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryLexer.g 2012-05-22 13:12:18
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -19874,7 +19874,7 @@ org.antlr.lang.extend(XQDTLexer, org.antlr.runtime.Lexer, {
 
   comments: [],
 
-  addComment: function(start, stop){ },
+  addComment: function(start, stop){ this.comments.push({ start: start, stop: stop }); },
 
   isWsExplicit: false,
 
@@ -19896,7 +19896,7 @@ org.antlr.lang.extend(XQDTLexer, org.antlr.runtime.Lexer, {
 
 });
 define('ace/mode/xquery/XQueryParser', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/StringLexer', 'ace/mode/xquery/XMLLexer', 'ace/mode/xquery/XQueryLexer', 'ace/mode/xquery/XQDTParser', 'ace/mode/xquery/Position'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryParser.g 2012-04-23 09:27:07
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryParser.g 2012-05-22 13:12:27
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -21099,7 +21099,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: ver, enc
+            // elements: enc, ver
             // token labels: 
             // rule labels: retval, ver, enc
             // token list labels: 
@@ -21311,7 +21311,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: pm_Prolog, p_ModuleDecl
+            // elements: p_ModuleDecl, pm_Prolog
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -21712,7 +21712,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: s, nd, dnd, fto, od, i
+            // elements: nd, i, s, od, fto, dnd
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -25131,7 +25131,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: td, vv, vdv, qn
+            // elements: vv, vdv, qn, td
             // token labels: 
             // rule labels: qn, vv, retval, vdv, td
             // token list labels: 
@@ -25745,15 +25745,15 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: pl, soe, qn, st
+            // elements: st, pl, qn, soe
             // token labels: 
-            // rule labels: qn, soe, retval, pl, st
+            // rule labels: soe, qn, retval, pl, st
             // token list labels: 
             // rule list labels: 
             if ( this.state.backtracking===0 ) {
             retval.tree = root_0;
-            var stream_qn=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token qn",qn!=null?qn.tree:null);
             var stream_soe=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token soe",soe!=null?soe.tree:null);
+            var stream_qn=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token qn",qn!=null?qn.tree:null);
             var stream_retval=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token retval",retval!=null?retval.tree:null);
             var stream_pl=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token pl",pl!=null?pl.tree:null);
             var stream_st=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token st",st!=null?st.tree:null);
@@ -26022,7 +26022,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: td, qn
+            // elements: qn, td
             // token labels: 
             // rule labels: qn, retval, td
             // token list labels: 
@@ -37796,7 +37796,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: pm_DirElemContent, p_DirAttributeList
+            // elements: p_DirAttributeList, pm_DirElemContent
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -40706,7 +40706,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: k, r, l
+                    // elements: l, k, r
                     // token labels: r, l, k
                     // rule labels: retval
                     // token list labels: 
@@ -41005,7 +41005,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: BINARY, LPAREN, RPAREN
+                    // elements: LPAREN, RPAREN, BINARY
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -41053,7 +41053,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: RPAREN, LPAREN, ITEM
+                    // elements: ITEM, RPAREN, LPAREN
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -44401,7 +44401,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: nn, nl
+            // elements: nl, nn
             // token labels: 
             // rule labels: retval, nn, nl
             // token list labels: 
@@ -57441,7 +57441,7 @@ org.antlr.lang.extend(XQueryParser.DFA44, org.antlr.runtime.DFA, {
                             var index44_33 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( ((((this.lc(XQS))&&(this.lc(MLS)))||((this.lc(XQS))&&(this.lc(MLS)))||(this.lc(XQS))||((this.lc(XQS))&&(this.lc(MLS)))||((this.lc(XQS))&&(this.lc(MLS))))) ) {s = 67;}
+                            if ( ((((this.lc(XQS))&&(this.lc(MLS)))||(this.lc(XQS))||((this.lc(XQS))&&(this.lc(MLS)))||((this.lc(XQS))&&(this.lc(MLS)))||((this.lc(XQS))&&(this.lc(MLS))))) ) {s = 67;}
 
                             else if ( (true) ) {s = 71;}
 
@@ -58955,7 +58955,7 @@ org.antlr.lang.extend(XQueryParser.DFA119, org.antlr.runtime.DFA, {
                             s = -1;
                             if ( ((this.synpred8_XQueryParser()||(this.synpred8_XQueryParser()&&(this.lc(MLS))))) ) {s = 45;}
 
-                            else if ( ((this.synpred9_XQueryParser()||(this.synpred9_XQueryParser()&&(this.lc(MLS))))) ) {s = 46;}
+                            else if ( (((this.synpred9_XQueryParser()&&(this.lc(MLS)))||this.synpred9_XQueryParser())) ) {s = 46;}
 
                             else if ( (this.synpred10_XQueryParser()) ) {s = 49;}
 
@@ -62417,7 +62417,7 @@ org.antlr.lang.augmentObject(XQueryParser, {
 })();
 exports.XQueryParser = XQueryParser;
 });define('ace/mode/xquery/StringLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/StringLexer.g 2012-04-23 09:26:59
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/StringLexer.g 2012-05-22 13:12:20
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -64102,7 +64102,7 @@ org.antlr.lang.extend(StringLexer.DFA8, org.antlr.runtime.DFA, {
 })();
 exports.StringLexer = StringLexer;
 });define('ace/mode/xquery/XMLLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XMLLexer.g 2012-04-23 09:27:01
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XMLLexer.g 2012-05-22 13:12:21
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -67136,8 +67136,18 @@ var XQuerySemanticHighlighter = require("./XQuerySemanticHighlighter").XQuerySem
 var XQDTParser = exports.XQDTParser = function(input, state)
 {
   this.highlighter = new XQuerySemanticHighlighter();
-  var self = this;
-  input.getTokenSource().addComment = function(start, stop) { self.highlighter.addToken(start, stop, "comment") };
+  var that = this;
+
+  input.getTokenSource().addComment = function(start, stop) { 
+    var comments = input.getTokenSource().comments;
+    for(var i in comments)
+    { 
+      var c = comments[i];
+      that.highlighter.addToken(c.start, c.stop, "comment");
+    }
+    input.getTokenSource().comments = [];
+    that.highlighter.addToken(start, stop, "comment")
+  };
   XQDTParser.superclass.constructor.call(this, input, state);
 };
 
@@ -67239,8 +67249,11 @@ define('ace/mode/xquery/XQuerySemanticHighlighter', ['require', 'exports', 'modu
         //Check if the tokenized line is equal to the original one:
         if(sourceLine == tokenizedLine) {
           result[i] = { tokens: lineTokens, state: nextState };
+          //result[i] = { line: sourceLine, startState: previousState, tokens: { tokens: lineTokens, state: nextState } };
         } else {
-          result[i] = undefined; 
+          console.log("sourceLine: " + sourceLine);
+          console.log("tokenizedLine: " + tokenizedLine);
+          result[i] = { tokens: [ { type: "_error", value: sourceLine } ], state: nextState };
         }
       }
       return result;
