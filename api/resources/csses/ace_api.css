@@ -132,28 +132,6 @@ blockquote p{
     left: 210px;
 }
 
-.masthead {
-   background: #101010 url(../images/dashed_back.png) repeat 0 0;
-}
-.masthead .container {
-    /*width: 680px;*/
-    padding-left: 285px;
-    margin: 0 auto;
-    color: white;
-}
-.jumbotron {
-    min-width: 1000px;
-    padding-top: 40px;
-    position: relative;
-}
-
-.jumbotron .inner {
-/*    background: transparent url(../images/header-back.png) top center;*/
-    padding: 45px 0;
-/*    -webkit-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);
-    -moz-box-shadow: inset 0 10px 30px rgba(0,0,0,.3);*/
-}
-
 .headerTitle {
     position: relative;
     top: 100px;
@@ -545,10 +523,6 @@ header.filler {
     margin-left: 30px;
 }
 
-#mainContent .hero-unit {
-    background: rgba(255, 255, 255, 0.5);   
-}
-
 #documentation {
     padding-bottom: 10px;
 }
@@ -688,6 +662,7 @@ li.signature {
 .signature-call {
     cursor: pointer;
 }
+
 .signature-call a {
     color: #8e487e;
 }
@@ -777,8 +752,6 @@ li.signature {
 .table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) th {
     background-color: #fbfbfb;
 } 
-.table-striped tbody tr:hover td, .table-striped tbody tr:hover th {
-}
 
 .argument-list {
     margin-bottom : 13px;
