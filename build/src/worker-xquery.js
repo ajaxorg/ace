@@ -1546,12 +1546,14 @@ exports.implement = function(proto, mixin) {
  *
  * ***** END LICENSE BLOCK ***** */
  
-define('ace/mode/xquery_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/xquery/xquery'], function(require, exports, module) {
+define('ace/mode/xquery_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/xquery/xquery', 'ace/tokenizer', 'ace/mode/xquery_highlight_rules'], function(require, exports, module) {
 "use strict";
     
 var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
 var xquery = require("../mode/xquery/xquery");
+var Tokenizer = require("../tokenizer").Tokenizer;
+var XQueryHighlightRules = require("./xquery_highlight_rules").XQueryHighlightRules;
 
 window.addEventListener = function() {};
 
@@ -1585,6 +1587,7 @@ oop.inherits(XQueryWorker, Mirror);
     } else {
      this.sender.emit("ok");
     }
+    parser.highlighter.tokenizer = new Tokenizer(new XQueryHighlightRules().getRules());
     var tokens = parser.highlighter.getTokens();
     this.sender.emit("highlight", tokens);
   };
@@ -9465,7 +9468,7 @@ exports.org = org;
 
 });
 define('ace/mode/xquery/XQueryLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryLexer.g 2012-05-22 13:12:18
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryLexer.g 2012-05-22 16:42:43
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -19896,7 +19899,7 @@ org.antlr.lang.extend(XQDTLexer, org.antlr.runtime.Lexer, {
 
 });
 define('ace/mode/xquery/XQueryParser', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/StringLexer', 'ace/mode/xquery/XMLLexer', 'ace/mode/xquery/XQueryLexer', 'ace/mode/xquery/XQDTParser', 'ace/mode/xquery/Position'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryParser.g 2012-05-22 13:12:27
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryParser.g 2012-05-22 16:42:51
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -21099,7 +21102,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: enc, ver
+            // elements: ver, enc
             // token labels: 
             // rule labels: retval, ver, enc
             // token list labels: 
@@ -21311,7 +21314,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: p_ModuleDecl, pm_Prolog
+            // elements: pm_Prolog, p_ModuleDecl
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -21712,7 +21715,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: nd, i, s, od, fto, dnd
+            // elements: s, nd, dnd, fto, od, i
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -23820,7 +23823,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: ah, sp, us
+            // elements: ah, us, sp
             // token labels: 
             // rule labels: retval, sp, us
             // token list labels: 
@@ -24226,7 +24229,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: us, nn, ah
+            // elements: ah, nn, us
             // token labels: 
             // rule labels: retval, nn, us
             // token list labels: 
@@ -24375,7 +24378,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: us, nn
+            // elements: nn, us
             // token labels: 
             // rule labels: retval, nn, us
             // token list labels: 
@@ -25131,7 +25134,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: vv, vdv, qn, td
+            // elements: td, vv, vdv, qn
             // token labels: 
             // rule labels: qn, vv, retval, vdv, td
             // token list labels: 
@@ -25745,15 +25748,15 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: st, pl, qn, soe
+            // elements: pl, soe, qn, st
             // token labels: 
-            // rule labels: soe, qn, retval, pl, st
+            // rule labels: qn, soe, retval, pl, st
             // token list labels: 
             // rule list labels: 
             if ( this.state.backtracking===0 ) {
             retval.tree = root_0;
-            var stream_soe=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token soe",soe!=null?soe.tree:null);
             var stream_qn=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token qn",qn!=null?qn.tree:null);
+            var stream_soe=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token soe",soe!=null?soe.tree:null);
             var stream_retval=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token retval",retval!=null?retval.tree:null);
             var stream_pl=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token pl",pl!=null?pl.tree:null);
             var stream_st=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token st",st!=null?st.tree:null);
@@ -26022,7 +26025,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: qn, td
+            // elements: td, qn
             // token labels: 
             // rule labels: qn, retval, td
             // token list labels: 
@@ -37796,7 +37799,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: p_DirAttributeList, pm_DirElemContent
+            // elements: pm_DirElemContent, p_DirAttributeList
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -40706,7 +40709,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: l, k, r
+                    // elements: k, r, l
                     // token labels: r, l, k
                     // rule labels: retval
                     // token list labels: 
@@ -41005,7 +41008,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: LPAREN, RPAREN, BINARY
+                    // elements: BINARY, LPAREN, RPAREN
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -41053,7 +41056,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: ITEM, RPAREN, LPAREN
+                    // elements: RPAREN, LPAREN, ITEM
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -44401,7 +44404,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: nl, nn
+            // elements: nn, nl
             // token labels: 
             // rule labels: retval, nn, nl
             // token list labels: 
@@ -62417,7 +62420,7 @@ org.antlr.lang.augmentObject(XQueryParser, {
 })();
 exports.XQueryParser = XQueryParser;
 });define('ace/mode/xquery/StringLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/StringLexer.g 2012-05-22 13:12:20
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/StringLexer.g 2012-05-22 16:42:44
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -64102,7 +64105,7 @@ org.antlr.lang.extend(StringLexer.DFA8, org.antlr.runtime.DFA, {
 })();
 exports.StringLexer = StringLexer;
 });define('ace/mode/xquery/XMLLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XMLLexer.g 2012-05-22 13:12:21
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XMLLexer.g 2012-05-22 16:42:46
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -67195,6 +67198,7 @@ define('ace/mode/xquery/XQuerySemanticHighlighter', ['require', 'exports', 'modu
   
   var Position = require("./Position").Position;
   var XQuerySemanticHighlighter = exports.XQuerySemanticHighlighter = function() {
+    this.tokenizer = null;
     this.plain = null;
     this.source = [];
     this.lines = [];
@@ -67253,7 +67257,12 @@ define('ace/mode/xquery/XQuerySemanticHighlighter', ['require', 'exports', 'modu
         } else {
           console.log("sourceLine: " + sourceLine);
           console.log("tokenizedLine: " + tokenizedLine);
-          result[i] = { tokens: [ { type: "_error", value: sourceLine } ], state: nextState };
+          result[i] = { tokens: [ { type: "text", value: sourceLine } ], state: nextState };
+        }
+
+        if(result[i].tokens.length === 1 && result[i].tokens[0].type === "text" && this.tokenizer instanceof Object) {
+          var prev = result[i - 1] ?  result[i - 1].state : "start";
+          result[i] = this.tokenizer.getLineTokens(result[i].tokens[0].value, prev);
         }
       }
       return result;
@@ -67368,3 +67377,452 @@ define('ace/mode/xquery/Position', ['require', 'exports', 'module' ], function(r
   };
 
 }); 
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/tokenizer', ['require', 'exports', 'module' ], function(require, exports, module) {
+"use strict";
+
+/**
+ * class Tokenizer
+ *
+ * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
+ *
+ **/
+
+/**
+ * new Tokenizer(rules, flag)
+ * - rules (Object): The highlighting rules
+ * - flag (String): Any additional regular expression flags to pass (like "i" for case insensitive)
+ *
+ * Constructs a new tokenizer based on the given rules and flags.
+ *
+ **/
+var Tokenizer = function(rules, flag) {
+    flag = flag ? "g" + flag : "g";
+    this.rules = rules;
+
+    this.regExps = {};
+    this.matchMappings = {};
+    for ( var key in this.rules) {
+        var rule = this.rules[key];
+        var state = rule;
+        var ruleRegExps = [];
+        var matchTotal = 0;
+        var mapping = this.matchMappings[key] = {};
+
+        for ( var i = 0; i < state.length; i++) {
+
+            if (state[i].regex instanceof RegExp)
+                state[i].regex = state[i].regex.toString().slice(1, -1);
+
+            // Count number of matching groups. 2 extra groups from the full match
+            // And the catch-all on the end (used to force a match);
+            var matchcount = new RegExp("(?:(" + state[i].regex + ")|(.))").exec("a").length - 2;
+
+            // Replace any backreferences and offset appropriately.
+            var adjustedregex = state[i].regex.replace(/\\([0-9]+)/g, function (match, digit) {
+                return "\\" + (parseInt(digit, 10) + matchTotal + 1);
+            });
+
+            if (matchcount > 1 && state[i].token.length !== matchcount-1)
+                throw new Error("Matching groups and length of the token array don't match in rule #" + i + " of state " + key);
+
+            mapping[matchTotal] = {
+                rule: i,
+                len: matchcount
+            };
+            matchTotal += matchcount;
+
+            ruleRegExps.push(adjustedregex);
+        }
+
+        this.regExps[key] = new RegExp("(?:(" + ruleRegExps.join(")|(") + ")|(.))", flag);
+    }
+};
+
+(function() {
+
+    /**
+    * Tokenizer.getLineTokens() -> Object
+    * 
+    * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
+    **/
+    this.getLineTokens = function(line, startState) {
+        var currentState = startState;
+        var state = this.rules[currentState];
+        var mapping = this.matchMappings[currentState];
+        var re = this.regExps[currentState];
+        re.lastIndex = 0;
+
+        var match, tokens = [];
+
+        var lastIndex = 0;
+
+        var token = {
+            type: null,
+            value: ""
+        };
+
+        while (match = re.exec(line)) {
+            var type = "text";
+            var rule = null;
+            var value = [match[0]];
+
+            for (var i = 0; i < match.length-2; i++) {
+                if (match[i + 1] === undefined)
+                    continue;
+
+                rule = state[mapping[i].rule];
+
+                if (mapping[i].len > 1)
+                    value = match.slice(i+2, i+1+mapping[i].len);
+
+                // compute token type
+                if (typeof rule.token == "function")
+                    type = rule.token.apply(this, value);
+                else
+                    type = rule.token;
+
+                if (rule.next) {
+                    currentState = rule.next;
+                    state = this.rules[currentState];
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = re.lastIndex;
+
+                    re = this.regExps[currentState];
+                    re.lastIndex = lastIndex;
+                }
+                break;
+            }
+
+            if (value[0]) {
+                if (typeof type == "string") {
+                    value = [value.join("")];
+                    type = [type];
+                }
+                for (var i = 0; i < value.length; i++) {
+                    if (!value[i])
+                        continue;
+
+                    if ((!rule || rule.merge || type[i] === "text") && token.type === type[i]) {
+                        token.value += value[i];
+                    } else {
+                        if (token.type)
+                            tokens.push(token);
+
+                        token = {
+                            type: type[i],
+                            value: value[i]
+                        };
+                    }
+                }
+            }
+
+            if (lastIndex == line.length)
+                break;
+
+            lastIndex = re.lastIndex;
+        }
+
+        if (token.type)
+            tokens.push(token);
+
+        return {
+            tokens : tokens,
+            state : currentState
+        };
+    };
+
+}).call(Tokenizer.prototype);
+
+exports.Tokenizer = Tokenizer;
+});
+/*
+ *  eXide - web-based XQuery IDE
+ *  
+ *  Copyright (C) 2011 Wolfgang Meier
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+define('ace/mode/xquery_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var lang = require("../lib/lang");
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+var XQueryHighlightRules = function() {
+
+  var keywords = lang.arrayToMap(
+    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
+     "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
+     "using|stemming|collection|schema|" +
+     "while|validate|on|nodes|index|" + 
+     "external|" +
+     "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
+    );
+    
+    // regexp must not have capturing parentheses
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        start : [ {
+            token : "text",
+            regex : "<\\!\\[CDATA\\[",
+            next : "cdata"
+        }, {
+            token : "xml_pe",
+            regex : "<\\?.*?\\?>"
+        }, {
+            token : "comment",
+            regex : "<\\!--",
+            next : "comment"
+    }, {
+      token : "comment",
+      regex : "\\(:",
+      next : "comment"
+        }, {
+            token : "text", // opening tag
+            regex : "<\\/?",
+            next : "tag"
+        }, {
+            token : "constant", // number
+            regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+    }, {
+            token : "variable", // variable
+            regex : "\\$[a-zA-Z_][a-zA-Z0-9_\\-:]*\\b"
+    }, {
+      token: "string",
+      regex : '".*?"'
+    }, {
+      token: "string",
+      regex : "'.*?'"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token: "support.function",
+            regex: "\\w[\\w+_\\-:]+(?=\\()"
+        }, {
+      token : function(value) {
+            if (keywords[value])
+                return "keyword";
+            else
+                return "identifier";
+      },
+      regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
+    }, {
+            token: "keyword.operator",
+            regex: "\\*|=|<|>|\\-|\\+|and|or|eq|ne|lt|gt"
+        }, {
+            token: "lparen",
+            regex: "[[({]"
+        }, {
+            token: "rparen",
+            regex: "[\\])}]"
+        } ],
+
+        tag : [ {
+            token : "text",
+            regex : ">",
+            next : "start"
+        }, {
+            token : "meta.tag",
+            regex : "[-_a-zA-Z0-9:]+"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token : "string",
+            regex : '".*?"'
+        }, {
+            token : "string",
+            regex : "'.*?'"
+        } ],
+
+        cdata : [ {
+            token : "text",
+            regex : "\\]\\]>",
+            next : "start"
+        }, {
+            token : "text",
+            regex : "\\s+"
+        }, {
+            token : "text",
+            regex : "(?:[^\\]]|\\](?!\\]>))+"
+        } ],
+
+        comment : [ {
+            token : "comment",
+            regex : ".*?-->",
+            next : "start"
+        }, {
+      token: "comment",
+      regex : ".*:\\)",
+      next : "start"
+        }, {
+            token : "comment",
+            regex : ".+"
+    } ]
+    };
+};
+
+oop.inherits(XQueryHighlightRules, TextHighlightRules);
+
+exports.XQueryHighlightRules = XQueryHighlightRules;
+});
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Fabian Jakobs <fabian AT ajax DOT org>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/mode/text_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/lang'], function(require, exports, module) {
+"use strict";
+
+var lang = require("../lib/lang");
+
+var TextHighlightRules = function() {
+
+    // regexp must not have capturing parentheses
+    // regexps are ordered -> the first match is used
+
+    this.$rules = {
+        "start" : [{
+            token : "empty_line",
+            regex : '^$'
+        }, {
+            token : "text",
+            regex : ".+"
+        }]
+    };
+};
+
+(function() {
+
+    this.addRules = function(rules, prefix) {
+        for (var key in rules) {
+            var state = rules[key];
+            for (var i=0; i<state.length; i++) {
+                var rule = state[i];
+                if (rule.next) {
+                    rule.next = prefix + rule.next;
+                }
+            }
+            this.$rules[prefix + key] = state;
+        }
+    };
+
+    this.getRules = function() {
+        return this.$rules;
+    };
+    
+    this.embedRules = function (HighlightRules, prefix, escapeRules, states) {
+        var embedRules = new HighlightRules().getRules();
+        if (states) {
+            for (var i = 0; i < states.length; i++) {
+                states[i] = prefix + states[i];
+            }
+        } else {
+            states = [];
+            for (var key in embedRules) {
+                states.push(prefix + key);
+            }
+        }
+        this.addRules(embedRules, prefix);
+        
+        for (var i = 0; i < states.length; i++) {
+            Array.prototype.unshift.apply(this.$rules[states[i]], lang.deepCopy(escapeRules));
+        }
+        
+        if (!this.$embeds) {
+            this.$embeds = [];
+        }
+        this.$embeds.push(prefix);
+    }
+    
+    this.getEmbeds = function() {
+        return this.$embeds;
+    }
+
+}).call(TextHighlightRules.prototype);
+
+exports.TextHighlightRules = TextHighlightRules;
+});

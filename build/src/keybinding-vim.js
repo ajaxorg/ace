@@ -1,1 +1,1593 @@
-define("ace/keyboard/vim",["require","exports","module","ace/lib/keys","ace/keyboard/vim/commands","ace/keyboard/vim/maps/util"],function(a,b,c){var d=a("../lib/keys"),e=a("./vim/commands"),f=e.coreCommands,g=a("./vim/maps/util"),h={i:{command:f.start},I:{command:f.startBeginning},a:{command:f.append},A:{command:f.appendEnd},"ctrl-f":{command:"gotopagedown"},"ctrl-b":{command:"gotopageup"}};b.handler={handleKeyboard:function(a,b,c,d,g){if(b!=0&&(c==""||c=="\0"))return null;b==1&&(c="ctrl-"+c);if(a.state=="start"){if(b==-1||b==1)return e.inputBuffer.idle&&h[c]?h[c]:{command:{exec:function(a){e.inputBuffer.push(a,c)}}};if(c.length==1&&(b==0||b==4))return{command:"null",passEvent:!0};if(c=="esc")return{command:f.stop}}else{if(c=="esc"||c=="ctrl-[")return a.state="start",{command:f.stop};if(c=="ctrl-w")return{command:"removewordleft"}}},attach:function(a){a.on("click",b.onCursorMove),g.currentMode!=="insert"&&e.coreCommands.stop.exec(a)},detach:function(a){a.removeListener("click",b.onCursorMove),g.noMode(a),g.currentMode="normal"}},b.onCursorMove=function(a){e.onCursorMove(a.editor,a),b.onCursorMove.scheduled=!1}}),define("ace/keyboard/vim/commands",["require","exports","module","ace/keyboard/vim/maps/util","ace/keyboard/vim/maps/motions","ace/keyboard/vim/maps/operators","ace/keyboard/vim/maps/aliases","ace/keyboard/vim/registers"],function(a,b,c){function r(a){q.previous={action:{action:{fn:a}}}}"never use strict";var d=a("./maps/util"),e=a("./maps/motions"),f=a("./maps/operators"),g=a("./maps/aliases"),h=a("./registers"),i=1,j=2,k=3,l=4,m=8;b.searchStore={current:"",options:{needle:"",backwards:!1,wrap:!0,caseSensitive:!1,wholeWord:!1,regExp:!1}};var n=function(b,c,d){while(0<c--)b.apply(this,d)},o=function(a){var b=a.renderer,c=b.$cursorLayer.getPixelPosition(),d=c.top,e=m*b.layerConfig.lineHeight;2*e>b.$size.scrollerHeight&&(e=b.$size.scrollerHeight/2),b.scrollTop>d-e&&b.session.setScrollTop(d-e),b.scrollTop+b.$size.scrollerHeight<d+e+b.lineHeight&&b.session.setScrollTop(d+e+b.lineHeight-b.$size.scrollerHeight)},p={z:{param:!0,fn:function(a,b,c,d){switch(d){case"z":a.alignCursor(null,.5);break;case"t":a.alignCursor(null,0);break;case"b":a.alignCursor(null,1)}}},r:{param:!0,fn:function(a,b,c,d){d&&d.length&&(n(function(){a.insert(d)},c||1),a.navigateLeft())}},R:{fn:function(a,b,c,e){d.insertMode(a),a.setOverwrite(!0)}},"~":{fn:function(a,b,c){n(function(){var b=a.selection.getRange();b.isEmpty()&&b.end.column++;var c=a.session.getTextRange(b),d=c.toUpperCase();d==c?a.navigateRight():a.session.replace(b,d)},c||1)}},"*":{fn:function(a,b,c,d){a.selection.selectWord(),a.findNext(),o(a);var e=a.selection.getRange();a.selection.setSelectionRange(e,!0)}},"#":{fn:function(a,b,c,d){a.selection.selectWord(),a.findPrevious(),o(a);var e=a.selection.getRange();a.selection.setSelectionRange(e,!0)}},n:{fn:function(a,b,c,d){var e=a.getLastSearchOptions();e.backwards=!1,a.selection.moveCursorRight(),a.selection.clearSelection(),a.findNext(e),o(a);var f=a.selection.getRange();f.end.row=f.start.row,f.end.column=f.start.column,a.selection.setSelectionRange(f,!0)}},N:{fn:function(a,b,c,d){var e=a.getLastSearchOptions();e.backwards=!0,a.findPrevious(e),o(a);var f=a.selection.getRange();f.end.row=f.start.row,f.end.column=f.start.column,a.selection.setSelectionRange(f,!0)}},v:{fn:function(a,b,c,e){a.selection.selectRight(),d.visualMode(a,!1)},acceptsMotion:!0},V:{fn:function(a,b,c,e){var f=a.getCursorPosition().row;a.selection.clearSelection(),a.selection.moveCursorTo(f,0),a.selection.selectLineEnd(),a.selection.visualLineStart=f,d.visualMode(a,!0)},acceptsMotion:!0},Y:{fn:function(a,b,c,e){d.copyLine(a)}},p:{fn:function(a,b,c,d){var e=h._default;a.setOverwrite(!1);if(e.isLine){var f=a.getCursorPosition(),g=e.text.split("\n");a.session.getDocument().insertLines(f.row+1,g),a.moveCursorTo(f.row+1,0)}else a.navigateRight(),a.insert(e.text),a.navigateLeft();a.setOverwrite(!0),a.selection.clearSelection()}},P:{fn:function(a,b,c,d){var e=h._default;a.setOverwrite(!1);if(e.isLine){var f=a.getCursorPosition(),g=e.text.split("\n");a.session.getDocument().insertLines(f.row,g),a.moveCursorTo(f.row,0)}else a.insert(e.text);a.setOverwrite(!0),a.selection.clearSelection()}},J:{fn:function(a,b,c,d){var e=a.session;b=a.getSelectionRange();var f={row:b.start.row,column:b.start.column};c=c||b.end.row-b.start.row;var g=Math.min(f.row+(c||1),e.getLength()-1);b.start.column=e.getLine(f.row).length,b.end.column=e.getLine(g).length,b.end.row=g;var h="";for(var i=f.row;i<g;i++){var j=e.getLine(i+1);h+=" "+/^\s*(.*)$/.exec(j)[1]||""}e.replace(b,h),a.moveCursorTo(f.row,f.column)}},u:{fn:function(a,b,c,d){c=parseInt(c||1,10);for(var e=0;e<c;e++)a.undo();a.selection.clearSelection()}},"ctrl-r":{fn:function(a,b,c,d){c=parseInt(c||1,10);for(var e=0;e<c;e++)a.redo();a.selection.clearSelection()}},":":{fn:function(a,b,c,d){a.blur(),txtConsoleInput.focus(),txtConsoleInput.setValue(":")}},"/":{fn:function(a,b,c,d){a.blur(),txtConsoleInput.focus(),txtConsoleInput.setValue("/")}},".":{fn:function(a,b,c,e){d.onInsertReplaySequence=q.lastInsertCommands;var f=q.previous;f&&q.exec(a,f.action,f.param)}}},q=b.inputBuffer={accepting:[i,j,k,l],currentCmd:null,currentCount:"",operator:null,motion:null,lastInsertCommands:[],push:function(a,b,c){this.idle=!1;var d=this.waitingForParam;if(d)this.exec(a,d,b);else if(b==="0"&&!this.currentCount.length||!b.match(/^\d+$/)||!this.isAccepting(i))if(!this.operator&&this.isAccepting(j)&&f[b])this.operator={"char":b,count:this.getCount()},this.currentCmd=j,this.accepting=[i,k,l],this.exec(a,{operator:this.operator});else if(e[b]&&this.isAccepting(k)){this.currentCmd=k;var h={operator:this.operator,motion:{"char":b,count:this.getCount()}};e[b].param?this.waitForParam(h):this.exec(a,h)}else if(g[b]&&this.isAccepting(k))g[b].operator.count=this.getCount(),this.exec(a,g[b]);else if(p[b]&&this.isAccepting(l)){var m={action:{fn:p[b].fn,count:this.getCount()}};p[b].param?this.waitForParam(m):this.exec(a,m),p[b].acceptsMotion&&(this.idle=!1)}else this.operator?this.exec(a,{operator:this.operator},b):this.reset();else this.currentCount+=b,this.currentCmd=i,this.accepting=[i,j,k,l]},waitForParam:function(a){this.waitingForParam=a},getCount:function(){var a=this.currentCount;return this.currentCount="",a&&parseInt(a,10)},exec:function(a,b,c){var g=b.motion,h=b.operator,i=b.action;c||(c=b.param),h&&(this.previous={action:b,param:c});if(h&&!a.selection.isEmpty()){f[h.char].selFn&&(f[h.char].selFn(a,a.getSelectionRange(),h.count,c),this.reset());return}if(!g&&!i&&h&&c)f[h.char].fn(a,null,h.count,c),this.reset();else if(g){var j=function(b){b&&typeof b=="function"&&(g.count&&!k.handlesCount?n(b,g.count,[a,null,g.count,c]):b(a,null,g.count,c))},k=e[g.char],l=k.sel;h?l&&n(function(){j(k.sel),f[h.char].fn(a,a.getSelectionRange(),h.count,c)},h.count||1):(d.onVisualMode||d.onVisualLineMode)&&l?j(k.sel):j(k.nav),this.reset()}else i&&(i.fn(a,a.getSelectionRange(),i.count,c),this.reset());s(a)},isAccepting:function(a){return this.accepting.indexOf(a)!==-1},reset:function(){this.operator=null,this.motion=null,this.currentCount="",this.accepting=[i,j,k,l],this.idle=!0,this.waitingForParam=null}};b.coreCommands={start:{exec:function t(a){d.insertMode(a),r(t)}},startBeginning:{exec:function u(a){a.navigateLineStart(),d.insertMode(a),r(u)}},stop:{exec:function(b){q.reset(),d.onVisualMode=!1,d.onVisualLineMode=!1,q.lastInsertCommands=d.normalMode(b)}},append:{exec:function v(a){var b=a.getCursorPosition(),c=a.session.getLine(b.row).length;c&&a.navigateRight(),d.insertMode(a),r(v)}},appendEnd:{exec:function w(a){a.navigateLineEnd(),d.insertMode(a),r(w)}}};var s=b.onCursorMove=function(a,b){if(d.currentMode==="insert"||s.running)return;if(!a.selection.isEmpty()){s.running=!0;if(d.onVisualLineMode){var c=a.selection.visualLineStart,e=a.getCursorPosition().row;if(c<=e){var f=a.session.getLine(e);a.selection.clearSelection(),a.selection.moveCursorTo(c,0),a.selection.selectTo(e,f.length)}else{var f=a.session.getLine(c);a.selection.clearSelection(),a.selection.moveCursorTo(c,f.length),a.selection.selectTo(e,0)}}s.running=!1;return}b&&(d.onVisualLineMode||d.onVisualMode)&&(a.selection.clearSelection(),d.normalMode(a)),s.running=!0;var g=a.getCursorPosition(),h=a.session.getLine(g.row).length;h&&g.column===h&&a.navigateLeft(),s.running=!1}}),define("ace/keyboard/vim/maps/util",["require","exports","module","ace/keyboard/vim/registers","ace/lib/dom"],function(a,b,c){var d=a("../registers"),e=a("../../../lib/dom");e.importCssString(".insert-mode. ace_cursor{    border-left: 2px solid #333333;}.ace_dark.insert-mode .ace_cursor{    border-left: 2px solid #eeeeee;}.normal-mode .ace_cursor{    border: 0!important;    background-color: red;    opacity: 0.5;}","vimMode"),c.exports={onVisualMode:!1,onVisualLineMode:!1,currentMode:"normal",noMode:function(a){a.unsetStyle("insert-mode"),a.unsetStyle("normal-mode"),a.commands.recording&&a.commands.toggleRecording(),a.setOverwrite(!1)},insertMode:function(a){this.currentMode="insert",a.setStyle("insert-mode"),a.unsetStyle("normal-mode"),a.setOverwrite(!1),a.keyBinding.$data.buffer="",a.keyBinding.$data.state="insertMode",this.onVisualMode=!1,this.onVisualLineMode=!1,this.onInsertReplaySequence?(a.commands.macro=this.onInsertReplaySequence,a.commands.replay(a),this.onInsertReplaySequence=null,this.normalMode(a)):(a._emit("vimMode","insert"),a.commands.recording||a.commands.toggleRecording())},normalMode:function(a){this.currentMode="normal",a.unsetStyle("insert-mode"),a.setStyle("normal-mode"),a.clearSelection();var b;return a.getOverwrite()||(b=a.getCursorPosition(),b.column>0&&a.navigateLeft()),a.setOverwrite(!0),a.keyBinding.$data.buffer="",a.keyBinding.$data.state="start",this.onVisualMode=!1,this.onVisualLineMode=!1,a._emit("changeVimMode","normal"),a.commands.recording?(a.commands.toggleRecording(),a.commands.macro):[]},visualMode:function(a,b){if(this.onVisualLineMode&&b||this.onVisualMode&&!b){this.normalMode(a);return}a.setStyle("insert-mode"),a.unsetStyle("normal-mode"),a._emit("changeVimMode","visual"),b?this.onVisualLineMode=!0:(this.onVisualMode=!0,this.onVisualLineMode=!1)},getRightNthChar:function(a,b,c,d){var e=a.getSession().getLine(b.row),f=e.substr(b.column+1).split(c);return d<f.length?f.slice(0,d).join(c).length:null},getLeftNthChar:function(a,b,c,d){var e=a.getSession().getLine(b.row),f=e.substr(0,b.column).split(c);return d<f.length?f.slice(-1*d).join(c).length:null},toRealChar:function(a){return a.length===1?a:/^shift-./.test(a)?a[a.length-1].toUpperCase():""},copyLine:function(a){var b=a.getCursorPosition();a.selection.clearSelection(),a.moveCursorTo(b.row,b.column),a.selection.selectLine(),d._default.isLine=!0,d._default.text=a.getCopyText().replace(/\n$/,""),a.selection.clearSelection(),a.moveCursorTo(b.row,b.column)}}}),define("ace/keyboard/vim/registers",["require","exports","module"],function(a,b,c){"never use strict",c.exports={_default:{text:"",isLine:!1}}}),"use strict",define("ace/keyboard/vim/maps/motions",["require","exports","module","ace/keyboard/vim/maps/util","ace/search","ace/range"],function(a,b,c){function f(a,b){if(b=="extend")var c=!0;else var d=b;this.nav=function(b){var c=a(b);if(!c)return;if(!c.end)var e=c;else if(d)var e=c.start;else var e=c.end;b.clearSelection(),b.moveCursorTo(e.row,e.column)},this.sel=function(b){var e=a(b);if(!e)return;if(c)return b.selection.setSelectionRange(e);if(!e.end)var f=e;else if(d)var f=e.start;else var f=e.end;b.selection.selectTo(f.row,f.column)}}function m(a,b,c){return l.$options.needle=b,l.$options.backwards=c==-1,l.find(a.session)}var d=a("./util"),e=function(a,b){var c=a.renderer.getScrollTopRow(),d=a.getCursorPosition().row,e=d-c;b&&b.call(a),a.renderer.scrollToRow(a.getCursorPosition().row-e)},g=/[\s.\/\\()\"'-:,.;<>~!@#$%^&*|+=\[\]{}`~?]/,h=/[.\/\\()\"'-:,.;<>~!@#$%^&*|+=\[\]{}`~?]/,i=/\s/,j=function(a,b){var c=a.selection;this.range=c.getRange(),b=b||c.selectionLead,this.row=b.row,this.col=b.column;var d=a.session.getLine(this.row),e=a.session.getLength();this.ch=d[this.col]||"\n",this.skippedLines=0,this.next=function(){return this.ch=d[++this.col]||this.handleNewLine(1),this.ch},this.prev=function(){return this.ch=d[--this.col]||this.handleNewLine(-1),this.ch},this.peek=function(b){var c=d[this.col+b];return c?c:b==-1?"\n":this.col==d.length-1?"\n":a.session.getLine(this.row+1)[0]||"\n"},this.handleNewLine=function(b){if(b==1)return this.col==d.length?"\n":this.row==e-1?"":(this.col=0,this.row++,d=a.session.getLine(this.row),this.skippedLines++,d[0]||"\n");if(b==-1)return this.row==0?"":(this.row--,d=a.session.getLine(this.row),this.col=d.length,this.skippedLines--,"\n")},this.debug=function(){console.log(d.substring(0,this.col)+"|"+this.ch+"'"+this.col+"'"+d.substr(this.col+1))}},k=a("ace/search").Search,l=new k,n=a("ace/range").Range;c.exports={w:new f(function(a){var b=new j(a);if(b.ch&&h.test(b.ch))while(b.ch&&h.test(b.ch))b.next();else while(b.ch&&!g.test(b.ch))b.next();while(b.ch&&i.test(b.ch)&&b.skippedLines<2)b.next();return b.skippedLines==2&&b.prev(),{column:b.col,row:b.row}}),W:new f(function(a){var b=new j(a);while(b.ch&&(!i.test(b.ch)||!!i.test(b.peek(1)))&&b.skippedLines<2)b.next();return b.skippedLines==2?b.prev():b.next(),{column:b.col,row:b.row}}),b:new f(function(a){var b=new j(a);b.prev();while(b.ch&&i.test(b.ch)&&b.skippedLines>-2)b.prev();if(b.ch&&h.test(b.ch))while(b.ch&&h.test(b.ch))b.prev();else while(b.ch&&!g.test(b.ch))b.prev();return b.ch&&b.next(),{column:b.col,row:b.row}}),B:new f(function(a){var b=new j(a);b.prev();while(b.ch&&(!!i.test(b.ch)||!i.test(b.peek(-1)))&&b.skippedLines>-2)b.prev();return b.skippedLines==-2&&b.next(),{column:b.col,row:b.row}},!0),e:new f(function(a){var b=new j(a);b.next();while(b.ch&&i.test(b.ch))b.next();if(b.ch&&h.test(b.ch))while(b.ch&&h.test(b.ch))b.next();else while(b.ch&&!g.test(b.ch))b.next();return b.ch&&b.prev(),{column:b.col,row:b.row}}),E:new f(function(a){var b=new j(a);b.next();while(b.ch&&(!!i.test(b.ch)||!i.test(b.peek(1))))b.next();return{column:b.col,row:b.row}}),l:{nav:function(a){a.navigateRight()},sel:function(a){var b=a.getCursorPosition(),c=b.column,d=a.session.getLine(b.row).length;d&&c!==d&&a.selection.selectRight()}},h:{nav:function(a){var b=a.getCursorPosition();b.column>0&&a.navigateLeft()},sel:function(a){var b=a.getCursorPosition();b.column>0&&a.selection.selectLeft()}},k:{nav:function(a){a.navigateUp()},sel:function(a){a.selection.selectUp()}},j:{nav:function(a){a.navigateDown()},sel:function(a){a.selection.selectDown()}},i:{param:!0,sel:function(a,b,c,d){switch(d){case"w":a.selection.selectWord();break;case"W":a.selection.selectAWord();break;case"(":case"{":case"[":var e=a.getCursorPosition(),f=a.session.$findClosingBracket(d,e,/paren/);if(!f)return;var g=a.session.$findOpeningBracket(a.session.$brackets[d],e,/paren/);if(!g)return;g.column++,a.selection.setSelectionRange(n.fromPoints(g,f));break;case"'":case'"':case"/":var f=m(a,d,1);if(!f)return;var g=m(a,d,-1);if(!g)return;a.selection.setSelectionRange(n.fromPoints(g.end,f.start))}}},a:{param:!0,sel:function(a,b,c,d){switch(d){case"w":a.selection.selectAWord();break;case"W":a.selection.selectAWord();break;case"(":case"{":case"[":var e=a.getCursorPosition(),f=a.session.$findClosingBracket(d,e,/paren/);if(!f)return;var g=a.session.$findOpeningBracket(a.session.$brackets[d],e,/paren/);if(!g)return;f.column++,a.selection.setSelectionRange(n.fromPoints(g,f));break;case"'":case'"':case"/":var f=m(a,d,1);if(!f)return;var g=m(a,d,-1);if(!g)return;f.column++,a.selection.setSelectionRange(n.fromPoints(g.start,f.end))}}},f:{param:!0,handlesCount:!0,nav:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getRightNthChar(a,g,e,c||1);typeof h=="number"&&(f.selection.clearSelection(),f.moveCursorTo(g.row,h+g.column+1))},sel:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getRightNthChar(a,g,e,c||1);typeof h=="number"&&f.moveCursorTo(g.row,h+g.column+1)}},F:{param:!0,handlesCount:!0,nav:function(a,b,c,e){c=parseInt(c,10)||1;var f=a,g=f.getCursorPosition(),h=d.getLeftNthChar(a,g,e,c);typeof h=="number"&&(f.selection.clearSelection(),f.moveCursorTo(g.row,g.column-h-1))},sel:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getLeftNthChar(a,g,e,c||1);typeof h=="number"&&f.moveCursorTo(g.row,g.column-h-1)}},t:{param:!0,handlesCount:!0,nav:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getRightNthChar(a,g,e,c||1);typeof h=="number"&&(f.selection.clearSelection(),f.moveCursorTo(g.row,h+g.column))},sel:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getRightNthChar(a,g,e,c||1);typeof h=="number"&&f.moveCursorTo(g.row,h+g.column)}},T:{param:!0,handlesCount:!0,nav:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getLeftNthChar(a,g,e,c||1);typeof h=="number"&&(f.selection.clearSelection(),f.moveCursorTo(g.row,-h+g.column))},sel:function(a,b,c,e){var f=a,g=f.getCursorPosition(),h=d.getLeftNthChar(a,g,e,c||1);typeof h=="number"&&f.moveCursorTo(g.row,-h+g.column)}},"^":{nav:function(a){a.navigateLineStart()},sel:function(a){a.selection.selectLineStart()}},$:{nav:function(a){a.navigateLineEnd()},sel:function(a){a.selection.selectLineEnd()}},0:{nav:function(a){var b=a;b.navigateTo(b.selection.selectionLead.row,0)},sel:function(a){var b=a;b.selectTo(b.selection.selectionLead.row,0)}},G:{nav:function(a,b,c,d){!c&&c!==0&&(c=a.session.getLength()),a.gotoLine(c)},sel:function(a,b,c,d){!c&&c!==0&&(c=a.session.getLength()),a.selection.selectTo(c,0)}},g:{param:!0,nav:function(a,b,c,d){switch(d){case"m":console.log("Middle line");break;case"e":console.log("End of prev word");break;case"g":a.gotoLine(c||0);case"u":a.gotoLine(c||0);case"U":a.gotoLine(c||0)}},sel:function(a,b,c,d){switch(d){case"m":console.log("Middle line");break;case"e":console.log("End of prev word");break;case"g":a.selection.selectTo(c||0,0)}}},o:{nav:function(a,b,c,e){c=c||1;var f="";while(0<c--)f+="\n";f.length&&(a.navigateLineEnd(),a.insert(f),d.insertMode(a))}},O:{nav:function(a,b,c,e){var f=a.getCursorPosition().row;c=c||1;var g="";while(0<c--)g+="\n";g.length&&(f>0?(a.navigateUp(),a.navigateLineEnd(),a.insert(g)):(a.session.insert({row:0,column:0},g),a.navigateUp()),d.insertMode(a))}},"%":new f(function(a){var b=/[\[\]{}()]/g,c=a.getCursorPosition(),d=a.session.getLine(c.row)[c.column];if(!b.test(d)){var e=m(a,b);if(!e)return;c=e.start}var f=a.session.findMatchingBracket({row:c.row,column:c.column+1});return f}),"ctrl-d":{nav:function(a,b,c,d){a.selection.clearSelection(),e(a,a.gotoPageDown)},sel:function(a,b,c,d){e(a,a.selectPageDown)}},"ctrl-u":{nav:function(a,b,c,d){a.selection.clearSelection(),e(a,a.gotoPageUp)},sel:function(a,b,c,d){e(a,a.selectPageUp)}}},c.exports.backspace=c.exports.left=c.exports.h,c.exports.right=c.exports.l,c.exports.up=c.exports.k,c.exports.down=c.exports.j,c.exports.pagedown=c.exports["ctrl-d"],c.exports.pageup=c.exports["ctrl-u"]}),define("ace/keyboard/vim/maps/operators",["require","exports","module","ace/keyboard/vim/maps/util","ace/keyboard/vim/registers"],function(a,b,c){"never use strict";var d=a("./util"),e=a("../registers");c.exports={d:{selFn:function(a,b,c,f){e._default.text=a.getCopyText(),e._default.isLine=d.onVisualLineMode,d.onVisualLineMode?a.removeLines():a.session.remove(b),d.normalMode(a)},fn:function(a,b,c,d){c=c||1;switch(d){case"d":e._default.text="",e._default.isLine=!0;for(var f=0;f<c;f++){a.selection.selectLine(),e._default.text+=a.getCopyText();var g=a.getSelectionRange();a.session.remove(g),a.selection.clearSelection()}e._default.text=e._default.text.replace(/\n$/,"");break;default:b&&(a.selection.setSelectionRange(b),e._default.text=a.getCopyText(),e._default.isLine=!1,a.session.remove(b),a.selection.clearSelection())}}},c:{selFn:function(a,b,c,e){a.session.remove(b),d.insertMode(a)},fn:function(a,b,c,e){c=c||1;switch(e){case"c":for(var f=0;f<c;f++)a.removeLines(),d.insertMode(a);break;default:b&&(a.session.remove(b),d.insertMode(a))}}},y:{selFn:function(a,b,c,f){e._default.text=a.getCopyText(),e._default.isLine=d.onVisualLineMode,a.selection.clearSelection(),d.normalMode(a)},fn:function(a,b,c,d){c=c||1;switch(d){case"y":var f=a.getCursorPosition();a.selection.selectLine();for(var g=0;g<c-1;g++)a.selection.moveCursorDown();e._default.text=a.getCopyText().replace(/\n$/,""),a.selection.clearSelection(),e._default.isLine=!0,a.moveCursorToPosition(f);break;default:if(b){var f=a.getCursorPosition();a.selection.setSelectionRange(b),e._default.text=a.getCopyText(),e._default.isLine=!1,a.selection.clearSelection(),a.moveCursorTo(f.row,f.column)}}}},">":{selFn:function(a,b,c,e){c=c||1;for(var f=0;f<c;f++)a.indent();d.normalMode(a)},fn:function(a,b,c,d){c=parseInt(c||1,10);switch(d){case">":var e=a.getCursorPosition();a.selection.selectLine();for(var f=0;f<c-1;f++)a.selection.moveCursorDown();a.indent(),a.selection.clearSelection(),a.moveCursorToPosition(e),a.navigateLineEnd(),a.navigateLineStart()}}},"<":{selFn:function(a,b,c,e){c=c||1;for(var f=0;f<c;f++)a.blockOutdent();d.normalMode(a)},fn:function(a,b,c,d){c=c||1;switch(d){case"<":var e=a.getCursorPosition();a.selection.selectLine();for(var f=0;f<c-1;f++)a.selection.moveCursorDown();a.blockOutdent(),a.selection.clearSelection(),a.moveCursorToPosition(e),a.navigateLineEnd(),a.navigateLineStart()}}}}}),"use strict",define("ace/keyboard/vim/maps/aliases",["require","exports","module"],function(a,b,c){c.exports={x:{operator:{"char":"d",count:1},motion:{"char":"l",count:1}},X:{operator:{"char":"d",count:1},motion:{"char":"h",count:1}},D:{operator:{"char":"d",count:1},motion:{"char":"$",count:1}},C:{operator:{"char":"c",count:1},motion:{"char":"$",count:1}},s:{operator:{"char":"c",count:1},motion:{"char":"l",count:1}},S:{operator:{"char":"c",count:1},param:"c"}}})
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Sergi Mansilla <sergi AT c9 DOT io>
+ *      Harutyun Amirjanyan <harutyun AT c9 DOT io>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define('ace/keyboard/vim', ['require', 'exports', 'module' , 'ace/lib/keys', 'ace/keyboard/vim/commands', 'ace/keyboard/vim/maps/util'], function(require, exports, module) {
+
+
+var keyUtil = require("../lib/keys");
+var cmds = require("./vim/commands");
+var coreCommands = cmds.coreCommands;
+var util = require("./vim/maps/util");
+
+var startCommands = {
+    "i": {
+        command: coreCommands.start
+    },
+    "I": {
+        command: coreCommands.startBeginning
+    },
+    "a": {
+        command: coreCommands.append
+    },
+    "A": {
+        command: coreCommands.appendEnd
+    },
+    "ctrl-f": {
+        command: "gotopagedown"
+    },
+    "ctrl-b": {
+        command: "gotopageup"
+    },
+};
+
+exports.handler = {
+    handleKeyboard: function(data, hashId, key, keyCode, e) {
+        // ignore command keys (shift, ctrl etc.)
+        if (hashId != 0 && (key == "" || key == "\x00"))
+            return null;
+
+        if (hashId == 1)
+            key = "ctrl-" + key;
+
+        if (data.state == "start") {
+            if (hashId == -1 || hashId == 1) {
+                if (cmds.inputBuffer.idle && startCommands[key])
+                    return startCommands[key];
+
+                return { command: {
+                    exec: function(editor) {cmds.inputBuffer.push(editor, key);}
+                } };
+            } // wait for input
+            else if (key.length == 1 && (hashId == 0 || hashId == 4)) { //no modifier || shift
+                return {command: "null", passEvent: true};
+            } else if (key == "esc") {
+                return {command: coreCommands.stop};
+            }
+        } else {
+            if (key == "esc" || key == "ctrl-[") {
+                data.state = "start";
+                return {command: coreCommands.stop};
+            } else if (key == "ctrl-w") {
+                return {command: "removewordleft"};
+            }
+        }
+    },
+
+    attach: function(editor) {
+        editor.on("click", exports.onCursorMove);
+        if (util.currentMode !== "insert")
+            cmds.coreCommands.stop.exec(editor);
+    },
+
+    detach: function(editor) {
+        editor.removeListener("click", exports.onCursorMove);
+        util.noMode(editor);
+        util.currentMode = "normal";
+    }
+};
+
+
+exports.onCursorMove = function(e) {
+    cmds.onCursorMove(e.editor, e);
+    exports.onCursorMove.scheduled = false;
+};
+
+});
+ 
+define('ace/keyboard/vim/commands', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/keyboard/vim/maps/motions', 'ace/keyboard/vim/maps/operators', 'ace/keyboard/vim/maps/aliases', 'ace/keyboard/vim/registers'], function(require, exports, module) {
+
+"never use strict";
+
+var util = require("./maps/util");
+var motions = require("./maps/motions");
+var operators = require("./maps/operators");
+var alias = require("./maps/aliases");
+var registers = require("./registers");
+
+var NUMBER = 1;
+var OPERATOR = 2;
+var MOTION = 3;
+var ACTION = 4;
+var HMARGIN = 8; // Minimum amount of line separation between margins;
+
+exports.searchStore = {
+    current: "",
+    options: {
+        needle: "",
+        backwards: false,
+        wrap: true,
+        caseSensitive: false,
+        wholeWord: false,
+        regExp: false
+    }
+};
+
+var repeat = function repeat(fn, count, args) {
+    while (0 < count--)
+        fn.apply(this, args);
+};
+
+var ensureScrollMargin = function(editor) {
+    var renderer = editor.renderer;
+    var pos = renderer.$cursorLayer.getPixelPosition();
+
+    var top = pos.top;
+
+    var margin = HMARGIN * renderer.layerConfig.lineHeight;
+    if (2 * margin > renderer.$size.scrollerHeight)
+        margin = renderer.$size.scrollerHeight / 2;
+
+    if (renderer.scrollTop > top - margin) {
+        renderer.session.setScrollTop(top - margin);
+    }
+
+    if (renderer.scrollTop + renderer.$size.scrollerHeight < top + margin + renderer.lineHeight) {
+        renderer.session.setScrollTop(top + margin + renderer.lineHeight - renderer.$size.scrollerHeight);
+    }
+};
+
+var actions = {
+    "z": {
+        param: true,
+        fn: function(editor, range, count, param) {
+            switch (param) {
+                case "z":
+                    editor.alignCursor(null, 0.5);
+                    break;
+                case "t":
+                    editor.alignCursor(null, 0);
+                    break;
+                case "b":
+                    editor.alignCursor(null, 1);
+                    break;
+            }
+        }
+    },
+    "r": {
+        param: true,
+        fn: function(editor, range, count, param) {
+            if (param && param.length) {
+                repeat(function() { editor.insert(param); }, count || 1);
+                editor.navigateLeft();
+            }
+        }
+    },
+    "R": {
+        fn: function(editor, range, count, param) {
+            util.insertMode(editor);
+            editor.setOverwrite(true);
+        }
+    },
+    "~": {
+        fn: function(editor, range, count) {
+            repeat(function() {
+                var range = editor.selection.getRange();
+                if (range.isEmpty())
+                    range.end.column++;
+                var text = editor.session.getTextRange(range);
+                var toggled = text.toUpperCase();
+                if (toggled == text)
+                    editor.navigateRight();
+                else
+                    editor.session.replace(range, toggled);
+            }, count || 1);
+        }
+    },
+    "*": {
+        fn: function(editor, range, count, param) {
+            editor.selection.selectWord();
+            editor.findNext();
+            ensureScrollMargin(editor);
+            var r = editor.selection.getRange();
+            editor.selection.setSelectionRange(r, true);
+        }
+    },
+    "#": {
+        fn: function(editor, range, count, param) {
+            editor.selection.selectWord();
+            editor.findPrevious();
+            ensureScrollMargin(editor);
+            var r = editor.selection.getRange();
+            editor.selection.setSelectionRange(r, true);
+        }
+    },
+    "n": {
+        fn: function(editor, range, count, param) {
+            var options = editor.getLastSearchOptions();
+            options.backwards = false;
+
+            editor.selection.moveCursorRight();
+            editor.selection.clearSelection();
+            editor.findNext(options);
+
+            ensureScrollMargin(editor);
+            var r = editor.selection.getRange();
+            r.end.row = r.start.row;
+            r.end.column = r.start.column;
+            editor.selection.setSelectionRange(r, true);
+        }
+    },
+    "N": {
+        fn: function(editor, range, count, param) {
+            var options = editor.getLastSearchOptions();
+            options.backwards = true;
+
+            editor.findPrevious(options);
+            ensureScrollMargin(editor);
+            var r = editor.selection.getRange();
+            r.end.row = r.start.row;
+            r.end.column = r.start.column;
+            editor.selection.setSelectionRange(r, true);
+        }
+    },
+    "v": {
+        fn: function(editor, range, count, param) {
+            editor.selection.selectRight();
+            util.visualMode(editor, false);
+        },
+        acceptsMotion: true
+    },
+    "V": {
+        fn: function(editor, range, count, param) {
+            //editor.selection.selectLine();
+            //editor.selection.selectLeft();
+            var row = editor.getCursorPosition().row;
+            editor.selection.clearSelection();
+            editor.selection.moveCursorTo(row, 0);
+            editor.selection.selectLineEnd();
+            editor.selection.visualLineStart = row;
+
+            util.visualMode(editor, true);
+        },
+        acceptsMotion: true
+    },
+    "Y": {
+        fn: function(editor, range, count, param) {
+            util.copyLine(editor);
+        }
+    },
+    "p": {
+        fn: function(editor, range, count, param) {
+            var defaultReg = registers._default;
+
+            editor.setOverwrite(false);
+            if (defaultReg.isLine) {
+                var pos = editor.getCursorPosition();
+                var lines = defaultReg.text.split("\n");
+                editor.session.getDocument().insertLines(pos.row + 1, lines);
+                editor.moveCursorTo(pos.row + 1, 0);
+            }
+            else {
+                editor.navigateRight();
+                editor.insert(defaultReg.text);
+                editor.navigateLeft();
+            }
+            editor.setOverwrite(true);
+            editor.selection.clearSelection();
+        }
+    },
+    "P": {
+        fn: function(editor, range, count, param) {
+            var defaultReg = registers._default;
+            editor.setOverwrite(false);
+
+            if (defaultReg.isLine) {
+                var pos = editor.getCursorPosition();
+                var lines = defaultReg.text.split("\n");
+                editor.session.getDocument().insertLines(pos.row, lines);
+                editor.moveCursorTo(pos.row, 0);
+            }
+            else {
+                editor.insert(defaultReg.text);
+            }
+            editor.setOverwrite(true);
+            editor.selection.clearSelection();
+        }
+    },
+    "J": {
+        fn: function(editor, range, count, param) {
+            var session = editor.session;
+            range = editor.getSelectionRange();
+            var pos = {row: range.start.row, column: range.start.column};
+            count = count || range.end.row - range.start.row;
+            var maxRow = Math.min(pos.row + (count || 1), session.getLength() - 1);
+
+            range.start.column = session.getLine(pos.row).length;
+            range.end.column = session.getLine(maxRow).length;
+            range.end.row = maxRow;
+
+            var text = "";
+            for (var i = pos.row; i < maxRow; i++) {
+                var nextLine = session.getLine(i + 1);
+                text += " " + /^\s*(.*)$/.exec(nextLine)[1] || "";
+            }
+
+            session.replace(range, text);
+            editor.moveCursorTo(pos.row, pos.column);
+        }
+    },
+    "u": {
+        fn: function(editor, range, count, param) {
+            count = parseInt(count || 1, 10);
+            for (var i = 0; i < count; i++) {
+                editor.undo();
+            }
+            editor.selection.clearSelection();
+        }
+    },
+    "ctrl-r": {
+        fn: function(editor, range, count, param) {
+            count = parseInt(count || 1, 10);
+            for (var i = 0; i < count; i++) {
+                editor.redo();
+            }
+            editor.selection.clearSelection();
+        }
+    },
+    ":": {
+        fn: function(editor, range, count, param) {
+            editor.blur();
+            txtConsoleInput.focus();
+            txtConsoleInput.setValue(":");
+        }
+    },
+    "/": {
+        fn: function(editor, range, count, param) {
+            editor.blur();
+            txtConsoleInput.focus();
+            txtConsoleInput.setValue("/");
+        }
+    },
+    ".": {
+        fn: function(editor, range, count, param) {
+            util.onInsertReplaySequence = inputBuffer.lastInsertCommands;
+            var previous = inputBuffer.previous;
+            if (previous) // If there is a previous action
+                inputBuffer.exec(editor, previous.action, previous.param);
+        }
+    }
+};
+
+var inputBuffer = exports.inputBuffer = {
+    accepting: [NUMBER, OPERATOR, MOTION, ACTION],
+    currentCmd: null,
+    //currentMode: 0,
+    currentCount: "",
+
+    // Types
+    operator: null,
+    motion: null,
+
+    lastInsertCommands: [],
+
+    push: function(editor, char, keyId) {
+        this.idle = false;
+        var wObj = this.waitingForParam;
+        if (wObj) {
+            this.exec(editor, wObj, char);
+        }
+        // If input is a number (that doesn't start with 0)
+        else if (!(char === "0" && !this.currentCount.length) &&
+            (char.match(/^\d+$/) && this.isAccepting(NUMBER))) {
+            // Assuming that char is always of type String, and not Number
+            this.currentCount += char;
+            this.currentCmd = NUMBER;
+            this.accepting = [NUMBER, OPERATOR, MOTION, ACTION];
+        }
+        else if (!this.operator && this.isAccepting(OPERATOR) && operators[char]) {
+            this.operator = {
+                char: char,
+                count: this.getCount()
+            };
+            this.currentCmd = OPERATOR;
+            this.accepting = [NUMBER, MOTION, ACTION];
+            this.exec(editor, { operator: this.operator });
+        }
+        else if (motions[char] && this.isAccepting(MOTION)) {
+            this.currentCmd = MOTION;
+
+            var ctx = {
+                operator: this.operator,
+                motion: {
+                    char: char,
+                    count: this.getCount()
+                }
+            };
+
+            if (motions[char].param)
+                this.waitForParam(ctx);
+            else
+                this.exec(editor, ctx);
+        }
+        else if (alias[char] && this.isAccepting(MOTION)) {
+            alias[char].operator.count = this.getCount();
+            this.exec(editor, alias[char]);
+        }
+        else if (actions[char] && this.isAccepting(ACTION)) {
+            var actionObj = {
+                action: {
+                    fn: actions[char].fn,
+                    count: this.getCount()
+                }
+            };
+
+            if (actions[char].param) {
+                this.waitForParam(actionObj);
+            }
+            else {
+                this.exec(editor, actionObj);
+            }
+
+            if (actions[char].acceptsMotion)
+                this.idle = false;
+        }
+        else if (this.operator) {
+            this.exec(editor, { operator: this.operator }, char);
+        }
+        else {
+            this.reset();
+        }
+    },
+
+    waitForParam: function(cmd) {
+        this.waitingForParam = cmd;
+    },
+
+    getCount: function() {
+        var count = this.currentCount;
+        this.currentCount = "";
+        return count && parseInt(count, 10);
+    },
+
+    exec: function(editor, action, param) {
+        var m = action.motion;
+        var o = action.operator;
+        var a = action.action;
+
+        if (!param)
+            param = action.param;
+
+        if (o) {
+            this.previous = {
+                action: action,
+                param: param
+            };
+        }
+
+        if (o && !editor.selection.isEmpty()) {
+            if (operators[o.char].selFn) {
+                operators[o.char].selFn(editor, editor.getSelectionRange(), o.count, param);
+                this.reset();
+            }
+            return;
+        }
+
+        // There is an operator, but no motion or action. We try to pass the
+        // current char to the operator to see if it responds to it (an example
+        // of this is the 'dd' operator).
+        else if (!m && !a && o && param) {
+            operators[o.char].fn(editor, null, o.count, param);
+            this.reset();
+        }
+        else if (m) {
+            var run = function(fn) {
+                if (fn && typeof fn === "function") { // There should always be a motion
+                    if (m.count && !motionObj.handlesCount)
+                        repeat(fn, m.count, [editor, null, m.count, param]);
+                    else
+                        fn(editor, null, m.count, param);
+                }
+            };
+
+            var motionObj = motions[m.char];
+            var selectable = motionObj.sel;
+
+            if (!o) {
+                if ((util.onVisualMode || util.onVisualLineMode) && selectable)
+                    run(motionObj.sel);
+                else
+                    run(motionObj.nav);
+            }
+            else if (selectable) {
+                repeat(function() {
+                    run(motionObj.sel);
+                    operators[o.char].fn(editor, editor.getSelectionRange(), o.count, param);
+                }, o.count || 1);
+            }
+            this.reset();
+        }
+        else if (a) {
+            a.fn(editor, editor.getSelectionRange(), a.count, param);
+            this.reset();
+        }
+        handleCursorMove(editor);
+    },
+
+    isAccepting: function(type) {
+        return this.accepting.indexOf(type) !== -1;
+    },
+
+    reset: function() {
+        this.operator = null;
+        this.motion = null;
+        this.currentCount = "";
+        this.accepting = [NUMBER, OPERATOR, MOTION, ACTION];
+        this.idle = true;
+        this.waitingForParam = null;
+    }
+};
+
+function setPreviousCommand(fn) {
+    inputBuffer.previous = { action: { action: { fn: fn } } };
+}
+
+exports.coreCommands = {
+    start: {
+        exec: function start(editor) {
+            util.insertMode(editor);
+            setPreviousCommand(start);
+        }
+    },
+    startBeginning: {
+        exec: function startBeginning(editor) {
+            editor.navigateLineStart();
+            util.insertMode(editor);
+            setPreviousCommand(startBeginning);
+        }
+    },
+    // Stop Insert mode as soon as possible. Works like typing <Esc> in
+    // insert mode.
+    stop: {
+        exec: function stop(editor) {
+            inputBuffer.reset();
+            util.onVisualMode = false;
+            util.onVisualLineMode = false;
+            inputBuffer.lastInsertCommands = util.normalMode(editor);
+        }
+    },
+    append: {
+        exec: function append(editor) {
+            var pos = editor.getCursorPosition();
+            var lineLen = editor.session.getLine(pos.row).length;
+            if (lineLen)
+                editor.navigateRight();
+            util.insertMode(editor);
+            setPreviousCommand(append);
+        }
+    },
+    appendEnd: {
+        exec: function appendEnd(editor) {
+            editor.navigateLineEnd();
+            util.insertMode(editor);
+            setPreviousCommand(appendEnd);
+        }
+    }
+};
+
+var handleCursorMove = exports.onCursorMove = function(editor, e) {
+    if (util.currentMode === 'insert' || handleCursorMove.running)
+        return;
+    else if(!editor.selection.isEmpty()) {
+        handleCursorMove.running = true;
+        if (util.onVisualLineMode) {
+            var originRow = editor.selection.visualLineStart;
+            var cursorRow = editor.getCursorPosition().row;
+            if(originRow <= cursorRow) {
+                var endLine = editor.session.getLine(cursorRow);
+                editor.selection.clearSelection();
+                editor.selection.moveCursorTo(originRow, 0);
+                editor.selection.selectTo(cursorRow, endLine.length);
+            } else {
+                var endLine = editor.session.getLine(originRow);
+                editor.selection.clearSelection();
+                editor.selection.moveCursorTo(originRow, endLine.length);
+                editor.selection.selectTo(cursorRow, 0);
+            }
+        }
+        handleCursorMove.running = false;
+        return;
+    }
+    else {
+        if (e && (util.onVisualLineMode || util.onVisualMode)) {
+            editor.selection.clearSelection();
+            util.normalMode(editor);
+        }
+
+        handleCursorMove.running = true;
+        var pos = editor.getCursorPosition();
+        var lineLen = editor.session.getLine(pos.row).length;
+
+        if (lineLen && pos.column === lineLen)
+            editor.navigateLeft();
+        handleCursorMove.running = false;
+    }
+};
+});
+define('ace/keyboard/vim/maps/util', ['require', 'exports', 'module' , 'ace/keyboard/vim/registers', 'ace/lib/dom'], function(require, exports, module) {
+var registers = require("../registers");
+
+var dom = require("../../../lib/dom");
+dom.importCssString('.insert-mode. ace_cursor{\
+    border-left: 2px solid #333333;\
+}\
+.ace_dark.insert-mode .ace_cursor{\
+    border-left: 2px solid #eeeeee;\
+}\
+.normal-mode .ace_cursor{\
+    border: 0!important;\
+    background-color: red;\
+    opacity: 0.5;\
+}', 'vimMode');
+
+module.exports = {
+    onVisualMode: false,
+    onVisualLineMode: false,
+    currentMode: 'normal',
+    noMode: function(editor) {
+        editor.unsetStyle('insert-mode');
+        editor.unsetStyle('normal-mode');
+        if (editor.commands.recording)
+            editor.commands.toggleRecording();
+        editor.setOverwrite(false);
+    },
+    insertMode: function(editor) {
+        this.currentMode = 'insert';
+        // Switch editor to insert mode
+        editor.setStyle('insert-mode');
+        editor.unsetStyle('normal-mode');
+
+        editor.setOverwrite(false);
+        editor.keyBinding.$data.buffer = "";
+        editor.keyBinding.$data.state = "insertMode";
+        this.onVisualMode = false;
+        this.onVisualLineMode = false;
+        if(this.onInsertReplaySequence) {
+            // Ok, we're apparently replaying ("."), so let's do it
+            editor.commands.macro = this.onInsertReplaySequence;
+            editor.commands.replay(editor);
+            this.onInsertReplaySequence = null;
+            this.normalMode(editor);
+        } else {
+            editor._emit("vimMode", "insert");
+            // Record any movements, insertions in insert mode
+            if(!editor.commands.recording)
+                editor.commands.toggleRecording();
+        }
+    },
+    normalMode: function(editor) {
+        // Switch editor to normal mode
+        this.currentMode = 'normal';
+
+        editor.unsetStyle('insert-mode');
+        editor.setStyle('normal-mode');
+        editor.clearSelection();
+
+        var pos;
+        if (!editor.getOverwrite()) {
+            pos = editor.getCursorPosition();
+            if (pos.column > 0)
+                editor.navigateLeft();
+        }
+
+        editor.setOverwrite(true);
+        editor.keyBinding.$data.buffer = "";
+        editor.keyBinding.$data.state = "start";
+        this.onVisualMode = false;
+        this.onVisualLineMode = false;
+        editor._emit("changeVimMode", "normal");
+        // Save recorded keystrokes
+        if (editor.commands.recording) {
+            editor.commands.toggleRecording();
+            return editor.commands.macro;
+        }
+        else {
+            return [];
+        }
+    },
+    visualMode: function(editor, lineMode) {
+        if (
+            (this.onVisualLineMode && lineMode)
+            || (this.onVisualMode && !lineMode)
+        ) {
+            this.normalMode(editor);
+            return;
+        }
+
+        editor.setStyle('insert-mode');
+        editor.unsetStyle('normal-mode');
+
+        editor._emit("changeVimMode", "visual");
+        if (lineMode) {
+            this.onVisualLineMode = true;
+        } else {
+            this.onVisualMode = true;
+            this.onVisualLineMode = false;
+        }
+    },
+    getRightNthChar: function(editor, cursor, char, n) {
+        var line = editor.getSession().getLine(cursor.row);
+        var matches = line.substr(cursor.column + 1).split(char);
+
+        return n < matches.length ? matches.slice(0, n).join(char).length : null;
+    },
+    getLeftNthChar: function(editor, cursor, char, n) {
+        var line = editor.getSession().getLine(cursor.row);
+        var matches = line.substr(0, cursor.column).split(char);
+
+        return n < matches.length ? matches.slice(-1 * n).join(char).length : null;
+    },
+    toRealChar: function(char) {
+        if (char.length === 1)
+            return char;
+
+        if (/^shift-./.test(char))
+            return char[char.length - 1].toUpperCase();
+        else
+            return "";
+    },
+    copyLine: function(editor) {
+        var pos = editor.getCursorPosition();
+        editor.selection.clearSelection();
+        editor.moveCursorTo(pos.row, pos.column);
+        editor.selection.selectLine();
+        registers._default.isLine = true;
+        registers._default.text = editor.getCopyText().replace(/\n$/, "");
+        editor.selection.clearSelection();
+        editor.moveCursorTo(pos.row, pos.column);
+    }
+};
+});
+
+define('ace/keyboard/vim/registers', ['require', 'exports', 'module' ], function(require, exports, module) {
+
+"never use strict";
+
+module.exports = {
+    _default: {
+        text: "",
+        isLine: false
+    }
+};
+
+});
+ 
+"use strict"
+
+define('ace/keyboard/vim/maps/motions', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/search', 'ace/range'], function(require, exports, module) {
+
+var util = require("./util");
+
+var keepScrollPosition = function(editor, fn) {
+    var scrollTopRow = editor.renderer.getScrollTopRow();
+    var initialRow = editor.getCursorPosition().row;
+    var diff = initialRow - scrollTopRow;
+    fn && fn.call(editor);
+    editor.renderer.scrollToRow(editor.getCursorPosition().row - diff);
+};
+
+function Motion(getRange, type){
+    if (type == 'extend')
+        var extend = true;
+    else
+        var reverse = type;
+
+    this.nav = function(editor) {
+        var r = getRange(editor);
+        if (!r)
+            return;
+        if (!r.end)
+            var a = r;
+        else if (reverse)
+            var a = r.start;
+        else
+            var a = r.end;
+
+        editor.clearSelection();
+        editor.moveCursorTo(a.row, a.column);
+    }
+    this.sel = function(editor){
+        var r = getRange(editor);
+        if (!r)
+            return;
+        if (extend)
+            return editor.selection.setSelectionRange(r);
+
+        if (!r.end)
+            var a = r;
+        else if (reverse)
+            var a = r.start;
+        else
+            var a = r.end;
+
+        editor.selection.selectTo(a.row, a.column);
+    }
+}
+
+var nonWordRe = /[\s.\/\\()\"'-:,.;<>~!@#$%^&*|+=\[\]{}`~?]/;
+var wordSeparatorRe = /[.\/\\()\"'-:,.;<>~!@#$%^&*|+=\[\]{}`~?]/;
+var whiteRe = /\s/;
+var StringStream = function(editor, cursor) {
+    var sel = editor.selection;
+    this.range = sel.getRange();
+    cursor = cursor || sel.selectionLead;
+    this.row = cursor.row;
+    this.col = cursor.column;
+    var line = editor.session.getLine(this.row);
+    var maxRow = editor.session.getLength()
+    this.ch = line[this.col] || '\n'
+    this.skippedLines = 0;
+
+    this.next = function() {
+        this.ch = line[++this.col] || this.handleNewLine(1);
+        //this.debug()
+        return this.ch;
+    }
+    this.prev = function() {
+        this.ch = line[--this.col] || this.handleNewLine(-1);
+        //this.debug()
+        return this.ch;
+    }
+    this.peek = function(dir) {
+        var ch = line[this.col + dir];
+        if (ch)
+            return ch;
+        if (dir == -1)
+            return '\n';
+        if (this.col == line.length - 1)
+            return '\n';
+        return editor.session.getLine(this.row + 1)[0] || '\n';
+    }
+
+    this.handleNewLine = function(dir) {
+        if (dir == 1){
+            if (this.col == line.length)
+                return '\n';
+            if (this.row == maxRow - 1)
+                return '';
+            this.col = 0;
+            this.row ++;
+            line = editor.session.getLine(this.row);
+            this.skippedLines++;
+            return line[0] || '\n';
+        }
+        if (dir == -1) {
+            if (this.row == 0)
+                return '';
+            this.row --;
+            line = editor.session.getLine(this.row);
+            this.col = line.length;
+            this.skippedLines--;
+            return '\n';
+        }
+    }
+    this.debug = function() {
+        console.log(line.substring(0, this.col)+'|'+this.ch+'\''+this.col+'\''+line.substr(this.col+1));
+    }
+}
+
+var Search = require("ace/search").Search;
+var search = new Search();
+
+function find(editor, needle, dir) {
+    search.$options.needle = needle;
+    search.$options.backwards = dir == -1;
+    return search.find(editor.session);
+}
+
+var Range = require("ace/range").Range;
+
+module.exports = {
+    "w": new Motion(function(editor) {
+        var str = new StringStream(editor);
+
+        if (str.ch && wordSeparatorRe.test(str.ch)) {
+            while (str.ch && wordSeparatorRe.test(str.ch))
+                str.next();
+        } else {
+            while (str.ch && !nonWordRe.test(str.ch))
+                str.next();
+        }
+        while (str.ch && whiteRe.test(str.ch) && str.skippedLines < 2)
+            str.next();
+
+        str.skippedLines == 2 && str.prev();
+        return {column: str.col, row: str.row};
+    }),
+    "W": new Motion(function(editor) {
+        var str = new StringStream(editor);
+        while(str.ch && !(whiteRe.test(str.ch) && !whiteRe.test(str.peek(1))) && str.skippedLines < 2)
+            str.next();
+        if (str.skippedLines == 2)
+            str.prev();
+        else
+            str.next();
+
+        return {column: str.col, row: str.row}
+    }),
+    "b": new Motion(function(editor) {
+        var str = new StringStream(editor);
+
+        str.prev();
+        while (str.ch && whiteRe.test(str.ch) && str.skippedLines > -2)
+            str.prev();
+
+        if (str.ch && wordSeparatorRe.test(str.ch)) {
+            while (str.ch && wordSeparatorRe.test(str.ch))
+                str.prev();
+        } else {
+            while (str.ch && !nonWordRe.test(str.ch))
+                str.prev();
+        }
+        str.ch && str.next();
+        return {column: str.col, row: str.row};
+    }),
+    "B": new Motion(function(editor) {
+        var str = new StringStream(editor)
+        str.prev();
+        while(str.ch && !(!whiteRe.test(str.ch) && whiteRe.test(str.peek(-1))) && str.skippedLines > -2)
+            str.prev();
+
+        if (str.skippedLines == -2)
+            str.next();
+
+        return {column: str.col, row: str.row};
+    }, true),
+    "e": new Motion(function(editor) {
+        var str = new StringStream(editor);
+
+        str.next();
+        while (str.ch && whiteRe.test(str.ch))
+            str.next();
+
+        if (str.ch && wordSeparatorRe.test(str.ch)) {
+            while (str.ch && wordSeparatorRe.test(str.ch))
+                str.next();
+        } else {
+            while (str.ch && !nonWordRe.test(str.ch))
+                str.next();
+        }
+        str.ch && str.prev();
+        return {column: str.col, row: str.row};
+    }),
+    "E": new Motion(function(editor) {
+        var str = new StringStream(editor);
+        str.next();
+        while(str.ch && !(!whiteRe.test(str.ch) && whiteRe.test(str.peek(1))))
+            str.next();
+
+        return {column: str.col, row: str.row};
+    }),
+
+    "l": {
+        nav: function(editor) {
+            editor.navigateRight();
+        },
+        sel: function(editor) {
+            var pos = editor.getCursorPosition();
+            var col = pos.column;
+            var lineLen = editor.session.getLine(pos.row).length;
+
+            // Solving the behavior at the end of the line due to the
+            // different 0 index-based colum positions in ACE.
+            if (lineLen && col !== lineLen) //In selection mode you can select the newline
+                editor.selection.selectRight();
+        }
+    },
+    "h": {
+        nav: function(editor) {
+            var pos = editor.getCursorPosition();
+            if (pos.column > 0)
+                editor.navigateLeft();
+        },
+        sel: function(editor) {
+            var pos = editor.getCursorPosition();
+            if (pos.column > 0)
+                editor.selection.selectLeft();
+        }
+    },
+    "k": {
+        nav: function(editor) {
+            editor.navigateUp();
+        },
+        sel: function(editor) {
+            editor.selection.selectUp();
+        }
+    },
+    "j": {
+        nav: function(editor) {
+            editor.navigateDown();
+        },
+        sel: function(editor) {
+            editor.selection.selectDown();
+        }
+    },
+
+    "i": {
+        param: true,
+        sel: function(editor, range, count, param) {
+            switch (param) {
+                case "w":
+                    editor.selection.selectWord();
+                    break;
+                case "W":
+                    editor.selection.selectAWord();
+                    break;
+                case "(":
+                case "{":
+                case "[":
+                    var cursor = editor.getCursorPosition()
+                    var end = editor.session.$findClosingBracket(param, cursor, /paren/)
+                    if (!end)
+                        return;
+                    var start = editor.session.$findOpeningBracket(editor.session.$brackets[param], cursor, /paren/)
+                    if (!start)
+                        return;
+                    start.column ++;
+                    editor.selection.setSelectionRange(Range.fromPoints(start, end))
+                    break
+                case "'":
+                case "\"":
+                case "/":
+                    var end = find(editor, param, 1)
+                    if (!end)
+                        return;
+                    var start = find(editor, param, -1)
+                    if (!start)
+                        return;
+                    editor.selection.setSelectionRange(Range.fromPoints(start.end, end.start))
+                    break
+            }
+        }
+    },
+    "a": {
+        param: true,
+        sel: function(editor, range, count, param) {
+            switch (param) {
+                case "w":
+                    editor.selection.selectAWord();
+                    break;
+                case "W":
+                    editor.selection.selectAWord();
+                    break;
+                case "(":
+                case "{":
+                case "[":
+                    var cursor = editor.getCursorPosition();
+                    var end = editor.session.$findClosingBracket(param, cursor, /paren/);
+                    if (!end)
+                        return;
+                    var start = editor.session.$findOpeningBracket(editor.session.$brackets[param], cursor, /paren/);
+                    if (!start)
+                        return;
+                    end.column ++;
+                    editor.selection.setSelectionRange(Range.fromPoints(start, end));
+                    break;
+                case "'":
+                case "\"":
+                case "/":
+                    var end = find(editor, param, 1);
+                    if (!end)
+                        return;
+                    var start = find(editor, param, -1);
+                    if (!start)
+                        return;
+                    end.column ++;
+                    editor.selection.setSelectionRange(Range.fromPoints(start.start, end.end));
+                    break;
+            }
+        }
+    },
+
+    "f": {
+        param: true,
+        handlesCount: true,
+        nav: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getRightNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.selection.clearSelection(); // Why does it select in the first place?
+                ed.moveCursorTo(cursor.row, column + cursor.column + 1);
+            }
+        },
+        sel: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getRightNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.moveCursorTo(cursor.row, column + cursor.column + 1);
+            }
+        }
+    },
+    "F": {
+        param: true,
+        handlesCount: true,
+        nav: function(editor, range, count, param) {
+            count = parseInt(count, 10) || 1;
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getLeftNthChar(editor, cursor, param, count);
+
+            if (typeof column === "number") {
+                ed.selection.clearSelection(); // Why does it select in the first place?
+                ed.moveCursorTo(cursor.row, cursor.column - column - 1);
+            }
+        },
+        sel: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getLeftNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.moveCursorTo(cursor.row, cursor.column - column - 1);
+            }
+        }
+    },
+    "t": {
+        param: true,
+        handlesCount: true,
+        nav: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getRightNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.selection.clearSelection(); // Why does it select in the first place?
+                ed.moveCursorTo(cursor.row, column + cursor.column);
+            }
+        },
+        sel: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getRightNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.moveCursorTo(cursor.row, column + cursor.column);
+            }
+        }
+    },
+    "T": {
+        param: true,
+        handlesCount: true,
+        nav: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getLeftNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.selection.clearSelection(); // Why does it select in the first place?
+                ed.moveCursorTo(cursor.row, -column + cursor.column);
+            }
+        },
+        sel: function(editor, range, count, param) {
+            var ed = editor;
+            var cursor = ed.getCursorPosition();
+            var column = util.getLeftNthChar(editor, cursor, param, count || 1);
+
+            if (typeof column === "number") {
+                ed.moveCursorTo(cursor.row, -column + cursor.column);
+            }
+        }
+    },
+
+    "^": {
+        nav: function(editor) {
+            editor.navigateLineStart();
+        },
+        sel: function(editor) {
+            editor.selection.selectLineStart();
+        }
+    },
+    "$": {
+        nav: function(editor) {
+            editor.navigateLineEnd();
+        },
+        sel: function(editor) {
+            editor.selection.selectLineEnd();
+        }
+    },
+    "0": {
+        nav: function(editor) {
+            var ed = editor;
+            ed.navigateTo(ed.selection.selectionLead.row, 0);
+        },
+        sel: function(editor) {
+            var ed = editor;
+            ed.selectTo(ed.selection.selectionLead.row, 0);
+        }
+    },
+    "G": {
+        nav: function(editor, range, count, param) {
+            if (!count && count !== 0) { // Stupid JS
+                count = editor.session.getLength();
+            }
+            editor.gotoLine(count);
+        },
+        sel: function(editor, range, count, param) {
+            if (!count && count !== 0) { // Stupid JS
+                count = editor.session.getLength();
+            }
+            editor.selection.selectTo(count, 0);
+        }
+    },
+    "g": {
+        param: true,
+        nav: function(editor, range, count, param) {
+            switch(param) {
+                case "m":
+                    console.log("Middle line");
+                    break;
+                case "e":
+                    console.log("End of prev word");
+                    break;
+                case "g":
+                    editor.gotoLine(count || 0);
+                case "u":
+                    editor.gotoLine(count || 0);
+                case "U":
+                    editor.gotoLine(count || 0);
+            }
+        },
+        sel: function(editor, range, count, param) {
+            switch(param) {
+                case "m":
+                    console.log("Middle line");
+                    break;
+                case "e":
+                    console.log("End of prev word");
+                    break;
+                case "g":
+                    editor.selection.selectTo(count || 0, 0);
+            }
+        }
+    },
+    "o": {
+        nav: function(editor, range, count, param) {
+            count = count || 1;
+            var content = "";
+            while (0 < count--)
+                content += "\n";
+
+            if (content.length) {
+                editor.navigateLineEnd()
+                editor.insert(content);
+                util.insertMode(editor);
+            }
+        }
+    },
+    "O": {
+        nav: function(editor, range, count, param) {
+            var row = editor.getCursorPosition().row;
+            count = count || 1;
+            var content = "";
+            while (0 < count--)
+                content += "\n";
+
+            if (content.length) {
+                if(row > 0) {
+                    editor.navigateUp();
+                    editor.navigateLineEnd()
+                    editor.insert(content);
+                } else {
+                    editor.session.insert({row: 0, column: 0}, content);
+                    editor.navigateUp();
+                }
+                util.insertMode(editor);
+            }
+        }
+    },
+    "%": new Motion(function(editor){
+        var brRe = /[\[\]{}()]/g;
+        var cursor = editor.getCursorPosition();
+        var ch = editor.session.getLine(cursor.row)[cursor.column];
+        if (!brRe.test(ch)) {
+            var range = find(editor, brRe);
+            if (!range)
+                return;
+            cursor = range.start;
+        }
+        var match = editor.session.findMatchingBracket({
+            row: cursor.row,
+            column: cursor.column + 1
+        });
+
+        return match;
+    }),
+    "ctrl-d": {
+        nav: function(editor, range, count, param) {
+            editor.selection.clearSelection();
+            keepScrollPosition(editor, editor.gotoPageDown);
+        },
+        sel: function(editor, range, count, param) {
+            keepScrollPosition(editor, editor.selectPageDown);
+        }
+    },
+    "ctrl-u": {
+        nav: function(editor, range, count, param) {
+            editor.selection.clearSelection();
+            keepScrollPosition(editor, editor.gotoPageUp);
+
+        },
+        sel: function(editor, range, count, param) {
+            keepScrollPosition(editor, editor.selectPageUp);
+        }
+    },
+};
+
+module.exports.backspace = module.exports.left = module.exports.h;
+module.exports.right = module.exports.l;
+module.exports.up = module.exports.k;
+module.exports.down = module.exports.j;
+module.exports.pagedown = module.exports["ctrl-d"];
+module.exports.pageup = module.exports["ctrl-u"];
+
+});
+ 
+define('ace/keyboard/vim/maps/operators', ['require', 'exports', 'module' , 'ace/keyboard/vim/maps/util', 'ace/keyboard/vim/registers'], function(require, exports, module) {
+
+"never use strict";
+
+var util = require("./util");
+var registers = require("../registers");
+
+module.exports = {
+    "d": {
+        selFn: function(editor, range, count, param) {
+            registers._default.text = editor.getCopyText();
+            registers._default.isLine = util.onVisualLineMode;
+            if(util.onVisualLineMode)
+                editor.removeLines();
+            else
+                editor.session.remove(range);
+            util.normalMode(editor);
+        },
+        fn: function(editor, range, count, param) {
+            count = count || 1;
+            switch (param) {
+                case "d":
+                    registers._default.text = "";
+                    registers._default.isLine = true;
+                    for (var i = 0; i < count; i++) {
+                        editor.selection.selectLine();
+                        registers._default.text += editor.getCopyText();
+                        var selRange = editor.getSelectionRange();
+                        editor.session.remove(selRange);
+                        editor.selection.clearSelection();
+                    }
+                    registers._default.text = registers._default.text.replace(/\n$/, "");
+                    break;
+                default:
+                    if (range) {
+                        editor.selection.setSelectionRange(range);
+                        registers._default.text = editor.getCopyText();
+                        registers._default.isLine = false;
+                        editor.session.remove(range);
+                        editor.selection.clearSelection();
+                    }
+            }
+        }
+    },
+    "c": {
+        selFn: function(editor, range, count, param) {
+            editor.session.remove(range);
+            util.insertMode(editor);
+        },
+        fn: function(editor, range, count, param) {
+            count = count || 1;
+            switch (param) {
+                case "c":
+                    for (var i = 0; i < count; i++) {
+                        editor.removeLines();
+                        util.insertMode(editor);
+                    }
+
+                    break;
+                default:
+                    if (range) {
+
+                        // range.end.column ++;
+                        editor.session.remove(range);
+                        util.insertMode(editor);
+                    }
+            }
+        }
+    },
+    "y": {
+        selFn: function(editor, range, count, param) {
+            registers._default.text = editor.getCopyText();
+            registers._default.isLine = util.onVisualLineMode;
+            editor.selection.clearSelection();
+            util.normalMode(editor);
+        },
+        fn: function(editor, range, count, param) {
+            count = count || 1;
+            switch (param) {
+                case "y":
+                    var pos = editor.getCursorPosition();
+                    editor.selection.selectLine();
+                    for (var i = 0; i < count - 1; i++) {
+                        editor.selection.moveCursorDown();
+                    }
+                    registers._default.text = editor.getCopyText().replace(/\n$/, "");
+                    editor.selection.clearSelection();
+                    registers._default.isLine = true;
+                    editor.moveCursorToPosition(pos);
+                    break;
+                default:
+                    if (range) {
+                        var pos = editor.getCursorPosition();
+                        editor.selection.setSelectionRange(range);
+                        registers._default.text = editor.getCopyText();
+                        registers._default.isLine = false;
+                        editor.selection.clearSelection();
+                        editor.moveCursorTo(pos.row, pos.column);
+                    }
+            }
+        }
+    },
+    ">": {
+        selFn: function(editor, range, count, param) {
+            count = count || 1;
+            for (var i = 0; i < count; i++) {
+                editor.indent();
+            }
+            util.normalMode(editor);
+        },
+        fn: function(editor, range, count, param) {
+            count = parseInt(count || 1, 10);
+            switch (param) {
+                case ">":
+                    var pos = editor.getCursorPosition();
+                    editor.selection.selectLine();
+                    for (var i = 0; i < count - 1; i++) {
+                        editor.selection.moveCursorDown();
+                    }
+                    editor.indent();
+                    editor.selection.clearSelection();
+                    editor.moveCursorToPosition(pos);
+                    editor.navigateLineEnd();
+                    editor.navigateLineStart();
+                    break;
+            }
+        }
+    },
+    "<": {
+        selFn: function(editor, range, count, param) {
+            count = count || 1;
+            for (var i = 0; i < count; i++) {
+                editor.blockOutdent();
+            }
+            util.normalMode(editor);
+        },
+        fn: function(editor, range, count, param) {
+            count = count || 1;
+            switch (param) {
+                case "<":
+                    var pos = editor.getCursorPosition();
+                    editor.selection.selectLine();
+                    for (var i = 0; i < count - 1; i++) {
+                        editor.selection.moveCursorDown();
+                    }
+                    editor.blockOutdent();
+                    editor.selection.clearSelection();
+                    editor.moveCursorToPosition(pos);
+                    editor.navigateLineEnd();
+                    editor.navigateLineStart();
+                    break;
+            }
+        }
+    }
+};
+});
+ 
+"use strict"
+
+define('ace/keyboard/vim/maps/aliases', ['require', 'exports', 'module' ], function(require, exports, module) {
+module.exports = {
+    "x": {
+        operator: {
+            char: "d",
+            count: 1
+        },
+        motion: {
+            char: "l",
+            count: 1
+        }
+    },
+    "X": {
+        operator: {
+            char: "d",
+            count: 1
+        },
+        motion: {
+            char: "h",
+            count: 1
+        }
+    },
+    "D": {
+        operator: {
+            char: "d",
+            count: 1
+        },
+        motion: {
+            char: "$",
+            count: 1
+        }
+    },
+    "C": {
+        operator: {
+            char: "c",
+            count: 1
+        },
+        motion: {
+            char: "$",
+            count: 1
+        }
+    },
+    "s": {
+        operator: {
+            char: "c",
+            count: 1
+        },
+        motion: {
+            char: "l",
+            count: 1
+        }
+    },
+    "S": {
+        operator: {
+            char: "c",
+            count: 1
+        },
+        param: "c"
+    }
+};
+});
+
