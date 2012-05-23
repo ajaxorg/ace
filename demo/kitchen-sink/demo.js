@@ -121,7 +121,7 @@ var modes = [
     new Mode("xml", "XML", ["xml"]),
     new Mode("sh", "SH", ["sh"]),
     new Mode("xquery", "XQuery", ["xq"]),
-    new Mode("yaml", "YAML", require("ace/mode/yaml").Mode, ["yaml"])
+    new Mode("yaml", "YAML", ["yaml"])
 ];
 
 modesByName = {};
