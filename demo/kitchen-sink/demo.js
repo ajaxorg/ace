@@ -109,6 +109,7 @@ var modes = [
     new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
+    new Mode("scad", "OpenSCAD", ["scad"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
     new Mode("pgsql", "pgSQL", ["pgsql", "sql"]),
     new Mode("php", "PHP", ["php"]),
@@ -123,7 +124,8 @@ var modes = [
     new Mode("textile", "Textile", ["textile"]),
     new Mode("xml", "XML", ["xml"]),
     new Mode("sh", "SH", ["sh"]),
-    new Mode("xquery", "XQuery", ["xq"])
+    new Mode("xquery", "XQuery", ["xq"]),
+    new Mode("yaml", "YAML", ["yaml"])
 ];
 
 modesByName = {};
@@ -168,6 +170,7 @@ var docs = {
     "docs/less.less": "LESS",
     "docs/html.html": "HTML",
     "docs/xml.xml": "XML",
+    "docs/yaml.yaml": "YAML",
     "docs/svg.svg": "SVG",
     "docs/php.php": "PHP",
     "docs/coldfusion.cfm": "ColdFusion",
@@ -175,6 +178,7 @@ var docs = {
     "docs/ruby.rb": "Ruby",
     "docs/perl.pl": "Perl",
     "docs/ocaml.ml": "OCaml",
+    "docs/OpenSCAD.scad": "OpenSCAD",
     "docs/lua.lua": "Lua",
     "docs/liquid.liquid": "Liquid",
     "docs/java.java": "Java",
