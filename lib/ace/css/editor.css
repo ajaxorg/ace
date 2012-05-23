@@ -18,13 +18,6 @@
     cursor: text;
 }
 
-.ace_composition {
-    position: absolute;
-    background: #555;
-    color: #DDD;
-    z-index: 4;
-}
-
 .ace_gutter {
     position: absolute;
     overflow : hidden;
@@ -32,12 +25,6 @@
     width: auto;
     cursor: default;
     z-index: 4;
-}
-
-.ace_gutter_active_line {
-    position: absolute;
-    left: 0;
-    right: 0;
 }
 
 .ace_scroller.horscroll {
@@ -95,8 +82,8 @@
     height: 100%;
 }
 
-.ace_editor textarea {
-    position: fixed;
+.ace_editor > textarea {
+    position: absolute;
     z-index: 0;
     width: 0.5em;
     height: 1em;
@@ -108,6 +95,15 @@
     resize: none;
     outline: none;
     overflow: hidden;
+}
+
+.ace_editor > textarea.ace_composition {
+    background: #fff;
+    color: #000;
+    z-index: 1000;
+    opacity: 1;
+	border: solid lightgray 1px;
+	margin: -1px
 }
 
 .ace_layer {
