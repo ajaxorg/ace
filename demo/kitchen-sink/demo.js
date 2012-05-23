@@ -106,6 +106,7 @@ var modes = [
     new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
+    new Mode("scad", "OpenSCAD", ["scad"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
     new Mode("pgsql", "pgSQL", ["pgsql", "sql"]),
     new Mode("php", "PHP", ["php"]),
@@ -223,6 +224,10 @@ var docs = [
     new Doc(
         "scala", "Scala",
         require("ace/requirejs/text!./docs/scala.scala")
+    ),
+    new Doc(
+        "scad", "OpenSCAD",
+        require("ace/requirejs/text!./docs/OpenSCAD.scad")
     ),
     new Doc(
         "csharp", "C#",
@@ -421,8 +426,8 @@ themeEl.updateTheme = function(){
 bindDropdown("theme", function(value) {
     if (!value)
         return;
-	env.editor.setTheme(value);
-	themeEl.selectedValue = value;
+    env.editor.setTheme(value);
+    themeEl.selectedValue = value;
 });
 
 bindDropdown("keybinding", function(value) {
