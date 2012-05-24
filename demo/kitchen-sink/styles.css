@@ -1,4 +1,6 @@
+/*PACKAGE
 @import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);
+  PACKAGE*/
 
 html {
     height: 100%;
@@ -26,7 +28,7 @@ body {
 #editor {
     position: absolute;
     top:  0px;
-    left: 300px;
+    left: 280px;
     bottom: 0px;
     right: 0px;
     background: white;
