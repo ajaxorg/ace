@@ -1,24 +1,44 @@
-/*
- *  eXide - web-based XQuery IDE
- *  
- *  Copyright (C) 2011 Wolfgang Meier
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-ace.define('ace/mode/xquery', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/xquery_highlight_rules', 'ace/mode/behaviour/xquery', 'ace/range'], function(require, exports, module) {
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      Wolfgang Meier
+ *      William Candillon <wcandillon AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+ace.define('ace/mode/xquery', ['require', 'exports', 'module' , 'ace/worker/worker_client', 'ace/lib/oop', 'ace/mode/text', 'ace/tokenizer', 'ace/mode/xquery_highlight_rules', 'ace/mode/behaviour/xquery', 'ace/range'], function(require, exports, module) {
 "use strict";
 
+var WorkerClient = require("../worker/worker_client").WorkerClient;
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
@@ -96,6 +116,78 @@ oop.inherits(Mode, TextMode);
             doc.replace(range, outdent ? line.match(re)[1] : "(:" + line + ":)");
         }
     };
+    
+    this.deltas = [];
+
+    this.createWorker = function(session) {
+        var worker = new WorkerClient(["ace"], "worker-xquery.js", "ace/mode/xquery_worker", "XQueryWorker");
+        var that = this;
+
+        session.getDocument().on('change', function(evt){
+          that.deltas.push(evt.data);
+        });
+        
+        worker.attachToDocument(session.getDocument());
+        
+        worker.on("start", function(e) {
+          console.log("start");
+          that.deltas = [];
+        });
+
+        worker.on("error", function(e) {
+          session.setAnnotations([e.data]);
+        });
+        
+        worker.on("ok", function(e) {
+            session.clearAnnotations();
+        });
+        
+        worker.on("highlight", function(tokens) {
+          var firstRow = 0;
+          var lastRow = session.getLength() - 1;
+          
+          var lines = tokens.data;
+          
+          for(var i in that.deltas)
+          {
+            var delta = that.deltas[i];
+            //console.log(delta);
+            if (delta.action === "insertLines")
+            {
+              var newLineCount = delta.range.end.row - delta.range.start.row;
+              for (var i = 0; i < newLineCount; i++) {
+                lines.splice(delta.range.start.row + i, 0, undefined);
+              }
+            }
+            else if (delta.action === "insertText")
+            {
+              if (session.getDocument().isNewLine(delta.text))
+              {
+                lines.splice(delta.range.end.row, 0, undefined);
+              } else {
+                delete lines[delta.range.start.row];
+              } 
+            } else if (delta.action === "removeLines") {
+              var oldLineCount = delta.range.end.row - delta.range.start.row;
+                for (var i = 0; i < newLineCount; i++) {
+                  lines.splice(delta.range.start.row + i, 1);
+                } 
+            } else if (delta.action === "removeText") {
+              if (session.getDocument().isNewLine(delta.text))
+              {
+                lines.splice(delta.range.end.row, 1);
+              }
+              delete lines[delta.range.start.row];
+            }           
+          }
+          
+          session.bgTokenizer.lines = lines;
+          session.bgTokenizer.fireUpdateEvent(firstRow, lastRow);
+        });
+        
+        return worker;
+    };
+    
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
@@ -130,8 +222,8 @@ var XQueryHighlightRules = function() {
   var keywords = lang.arrayToMap(
     ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
      "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
-     "using|stemming|" +
-     "while|" + 
+     "using|stemming|collection|schema|" +
+     "while|validate|on|nodes|index|" + 
      "external|" +
      "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
     );

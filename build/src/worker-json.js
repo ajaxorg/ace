@@ -187,6 +187,9 @@ define('ace/lib/regexp', ['require', 'exports', 'module' ], function(require, ex
             return !x.lastIndex;
         }();
 
+    if (compliantLastIndexIncrement && compliantExecNpcg)
+        return;
+
     //---------------------------------
     //  Overriden native methods
     //---------------------------------
