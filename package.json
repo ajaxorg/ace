@@ -18,7 +18,7 @@
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
         "plist": "",
-        "dryice": "0.4.2",
+        "dryice": "",
         "panino" : "~1.0.15"
     },
     "engines": {
