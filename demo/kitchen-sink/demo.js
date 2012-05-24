@@ -106,6 +106,7 @@ var modes = [
     new Mode("liquid", "Liquid", ["liquid"]),
     new Mode("markdown", "Markdown", ["md", "markdown"]),
     new Mode("ocaml", "OCaml", ["ml", "mli"]),
+    new Mode("scad", "OpenSCAD", ["scad"]),
     new Mode("perl", "Perl", ["pl", "pm"]),
     new Mode("pgsql", "pgSQL", ["pgsql", "sql"]),
     new Mode("php", "PHP", ["php"]),
@@ -120,7 +121,8 @@ var modes = [
     new Mode("textile", "Textile", ["textile"]),
     new Mode("xml", "XML", ["xml"]),
     new Mode("sh", "SH", ["sh"]),
-    new Mode("xquery", "XQuery", ["xq"])
+    new Mode("xquery", "XQuery", ["xq"]),
+    new Mode("yaml", "YAML", ["yaml"])
 ];
 
 modesByName = {};
@@ -166,6 +168,10 @@ var docs = [
     new Doc(
         "xml", "XML",
         require("ace/requirejs/text!./docs/xml.xml")
+    ),
+    new Doc(
+        "yaml", "YAML",
+        require("ace/requirejs/text!./docs/yaml.yaml")
     ),
     new Doc(
         "svg", "SVG",
@@ -218,6 +224,10 @@ var docs = [
     new Doc(
         "scala", "Scala",
         require("ace/requirejs/text!./docs/scala.scala")
+    ),
+    new Doc(
+        "scad", "OpenSCAD",
+        require("ace/requirejs/text!./docs/OpenSCAD.scad")
     ),
     new Doc(
         "csharp", "C#",
@@ -416,8 +426,8 @@ themeEl.updateTheme = function(){
 bindDropdown("theme", function(value) {
     if (!value)
         return;
-	env.editor.setTheme(value);
-	themeEl.selectedValue = value;
+    env.editor.setTheme(value);
+    themeEl.selectedValue = value;
 });
 
 bindDropdown("keybinding", function(value) {

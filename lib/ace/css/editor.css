@@ -1,4 +1,3 @@
-
 .ace_editor {
     position: absolute;
     overflow: hidden;
@@ -37,8 +36,8 @@
 
 .ace_gutter_active_line {
     position: absolute;
+    left: 0;
     right: 0;
-    width: 100%;
 }
 
 .ace_scroller.horscroll {
@@ -129,6 +128,7 @@
 .ace_gutter .ace_layer {
     position: relative;
     min-width: 40px;
+    width: auto;
     text-align: right;
     pointer-events: auto;
 }

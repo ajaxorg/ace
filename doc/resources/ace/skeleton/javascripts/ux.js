@@ -52,7 +52,6 @@ $(function () {
     // init prettyprint
     $('pre > code').addClass('prettyprint');
     prettyPrint();
-    
 });
 
 $(document).ready(function () {
