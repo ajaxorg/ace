@@ -201,12 +201,7 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var XQueryHighlightRules = function() {
 
   var keywords = lang.arrayToMap(
-    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
-     "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
-     "using|stemming|collection|schema|" +
-     "while|validate|on|nodes|index|" + 
-     "external|" +
-     "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
+    ("after|ancestor|ancestor-or-self|and|as|ascending|attribute|before|case|cast|castable|child|collation|comment|copy|count|declare|default|delete|descendant|descendant-or-self|descending|div|document|document-node|element|else|empty|empty-sequence|end|eq|every|except|first|following|following-sibling|for|function|ge|group|gt|idiv|if|import|insert|instance|intersect|into|is|item|last|le|let|lt|mod|modify|module|namespace|namespace-node|ne|node|only|or|order|ordered|parent|preceding|preceding-sibling|processing-instruction|rename|replace|return|satisfies|schema-attribute|schema-element|self|some|stable|start|switch|text|to|treat|try|typeswitch|union|unordered|validate|where|with|xquery|contains|paragraphs|sentences|times|words|by|collectionreturn|variable|version|option|when|encoding|toswitch|catch|tumbling|sliding|window|at|using|stemming|collection|schema|while|on|nodes|index|external|then|in|updating|value|of|containsbreak|loop|continue|exit|returning").split("|")
     );
     
     // regexp must not have capturing parentheses
@@ -260,7 +255,7 @@ var XQueryHighlightRules = function() {
       regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
     }, {
             token: "keyword.operator",
-            regex: "\\*|=|<|>|\\-|\\+|and|or|eq|ne|lt|gt"
+            regex: "\\*|=|<|>|\\-|\\+"
         }, {
             token: "lparen",
             regex: "[[({]"
@@ -288,14 +283,14 @@ var XQueryHighlightRules = function() {
         } ],
 
         cdata : [ {
-            token : "text",
+            token : "comment",
             regex : "\\]\\]>",
             next : "start"
         }, {
-            token : "text",
+            token : "comment",
             regex : "\\s+"
         }, {
-            token : "text",
+            token : "comment",
             regex : "(?:[^\\]]|\\](?!\\]>))+"
         } ],
 

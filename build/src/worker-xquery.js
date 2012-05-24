@@ -9468,7 +9468,7 @@ exports.org = org;
 
 });
 define('ace/mode/xquery/XQueryLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryLexer.g 2012-05-22 16:42:43
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryLexer.g 2012-05-24 17:09:22
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -19899,7 +19899,7 @@ org.antlr.lang.extend(XQDTLexer, org.antlr.runtime.Lexer, {
 
 });
 define('ace/mode/xquery/XQueryParser', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/StringLexer', 'ace/mode/xquery/XMLLexer', 'ace/mode/xquery/XQueryLexer', 'ace/mode/xquery/XQDTParser', 'ace/mode/xquery/Position'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryParser.g 2012-05-22 16:42:51
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XQueryParser.g 2012-05-24 17:09:31
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -21102,7 +21102,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: ver, enc
+            // elements: enc, ver
             // token labels: 
             // rule labels: retval, ver, enc
             // token list labels: 
@@ -21314,7 +21314,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: pm_Prolog, p_ModuleDecl
+            // elements: p_ModuleDecl, pm_Prolog
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -21439,7 +21439,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: p_StringLiteral, p_NCName
+            // elements: p_NCName, p_StringLiteral
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -21715,17 +21715,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: s, nd, dnd, fto, od, i
+            // elements: dnd, i, fto, nd, od, s
             // token labels: 
             // rule labels: retval
             // token list labels: 
-            // rule list labels: od, fto, s, nd, dnd, i
+            // rule list labels: od, s, fto, nd, dnd, i
             if ( this.state.backtracking===0 ) {
             retval.tree = root_0;
             var stream_retval=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token retval",retval!=null?retval.tree:null);
             var stream_od=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token od",list_od);
-            var stream_fto=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token fto",list_fto);
             var stream_s=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token s",list_s);
+            var stream_fto=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token fto",list_fto);
             var stream_nd=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token nd",list_nd);
             var stream_dnd=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token dnd",list_dnd);
             var stream_i=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token i",list_i);
@@ -23823,7 +23823,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: ah, us, sp
+            // elements: sp, ah, us
             // token labels: 
             // rule labels: retval, sp, us
             // token list labels: 
@@ -25134,7 +25134,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: td, vv, vdv, qn
+            // elements: qn, vdv, td, vv
             // token labels: 
             // rule labels: qn, vv, retval, vdv, td
             // token list labels: 
@@ -25748,15 +25748,15 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: pl, soe, qn, st
+            // elements: qn, soe, st, pl
             // token labels: 
-            // rule labels: qn, soe, retval, pl, st
+            // rule labels: soe, qn, retval, pl, st
             // token list labels: 
             // rule list labels: 
             if ( this.state.backtracking===0 ) {
             retval.tree = root_0;
-            var stream_qn=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token qn",qn!=null?qn.tree:null);
             var stream_soe=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token soe",soe!=null?soe.tree:null);
+            var stream_qn=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token qn",qn!=null?qn.tree:null);
             var stream_retval=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token retval",retval!=null?retval.tree:null);
             var stream_pl=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token pl",pl!=null?pl.tree:null);
             var stream_st=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"token st",st!=null?st.tree:null);
@@ -26025,7 +26025,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: td, qn
+            // elements: qn, td
             // token labels: 
             // rule labels: qn, retval, td
             // token list labels: 
@@ -32779,7 +32779,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: p_ValueExpr, PLUS
+            // elements: PLUS, p_ValueExpr
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -33458,7 +33458,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             }
 
             if ( this.state.backtracking===0 ) {
-              this.ao(k);
+              this.ak(k);
             }
 
 
@@ -39047,7 +39047,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         return;
     })(),
 
-    // xquery/XQueryParser.g:1189:1: p_CDataSection : L_CDataSection ;
+    // xquery/XQueryParser.g:1189:1: p_CDataSection : c= L_CDataSection ;
     // $ANTLR start "p_CDataSection"
     p_CDataSection: function() {
         var retval = new XQueryParser.p_CDataSection_return();
@@ -39055,19 +39055,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var L_CDataSection380 = null;
+        var c = null;
 
-        var L_CDataSection380_tree=null;
+        var c_tree=null;
 
         try {
-            // xquery/XQueryParser.g:1190:9: ( L_CDataSection )
-            // xquery/XQueryParser.g:1190:11: L_CDataSection
+            // xquery/XQueryParser.g:1190:9: (c= L_CDataSection )
+            // xquery/XQueryParser.g:1190:11: c= L_CDataSection
             root_0 = this.adaptor.nil();
 
-            L_CDataSection380=this.match(this.input,L_CDataSection,XQueryParser.FOLLOW_L_CDataSection_in_p_CDataSection8865); if (this.state.failed) return retval;
+            c=this.match(this.input,L_CDataSection,XQueryParser.FOLLOW_L_CDataSection_in_p_CDataSection8867); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            L_CDataSection380_tree = this.adaptor.create(L_CDataSection380);
-            this.adaptor.addChild(root_0, L_CDataSection380_tree);
+            c_tree = this.adaptor.create(c);
+            this.adaptor.addChild(root_0, c_tree);
+            }
+            if ( this.state.backtracking===0 ) {
+               this.ac(c); 
             }
 
 
@@ -39113,14 +39116,14 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var pm_CompDocConstructor381 = null;
-         var pm_CompElemConstructor382 = null;
-         var pm_CompAttrConstructor383 = null;
-         var p_CompNamespaceConstructor384 = null;
-         var p_CompTextConstructor385 = null;
-         var pm_CompCommentConstructor386 = null;
-         var pm_CompPIConstructor387 = null;
-         var p_CompBinaryConstructor388 = null;
+         var pm_CompDocConstructor380 = null;
+         var pm_CompElemConstructor381 = null;
+         var pm_CompAttrConstructor382 = null;
+         var p_CompNamespaceConstructor383 = null;
+         var p_CompTextConstructor384 = null;
+         var pm_CompCommentConstructor385 = null;
+         var pm_CompPIConstructor386 = null;
+         var p_CompBinaryConstructor387 = null;
 
 
         try {
@@ -39164,12 +39167,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1198:11: pm_CompDocConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pm_CompDocConstructor_in_p_ComputedConstructor8897);
-                    pm_CompDocConstructor381=this.pm_CompDocConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_pm_CompDocConstructor_in_p_ComputedConstructor8901);
+                    pm_CompDocConstructor380=this.pm_CompDocConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompDocConstructor381.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompDocConstructor380.getTree());
 
 
                     break;
@@ -39177,12 +39180,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1199:11: pm_CompElemConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pm_CompElemConstructor_in_p_ComputedConstructor8909);
-                    pm_CompElemConstructor382=this.pm_CompElemConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_pm_CompElemConstructor_in_p_ComputedConstructor8913);
+                    pm_CompElemConstructor381=this.pm_CompElemConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompElemConstructor382.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompElemConstructor381.getTree());
 
 
                     break;
@@ -39190,12 +39193,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1200:11: pm_CompAttrConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pm_CompAttrConstructor_in_p_ComputedConstructor8921);
-                    pm_CompAttrConstructor383=this.pm_CompAttrConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_pm_CompAttrConstructor_in_p_ComputedConstructor8925);
+                    pm_CompAttrConstructor382=this.pm_CompAttrConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompAttrConstructor383.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompAttrConstructor382.getTree());
 
 
                     break;
@@ -39203,12 +39206,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1201:11: p_CompNamespaceConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_CompNamespaceConstructor_in_p_ComputedConstructor8933);
-                    p_CompNamespaceConstructor384=this.p_CompNamespaceConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CompNamespaceConstructor_in_p_ComputedConstructor8937);
+                    p_CompNamespaceConstructor383=this.p_CompNamespaceConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CompNamespaceConstructor384.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CompNamespaceConstructor383.getTree());
 
 
                     break;
@@ -39216,12 +39219,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1202:11: p_CompTextConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_CompTextConstructor_in_p_ComputedConstructor8945);
-                    p_CompTextConstructor385=this.p_CompTextConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CompTextConstructor_in_p_ComputedConstructor8949);
+                    p_CompTextConstructor384=this.p_CompTextConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CompTextConstructor385.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CompTextConstructor384.getTree());
 
 
                     break;
@@ -39229,12 +39232,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1203:11: pm_CompCommentConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pm_CompCommentConstructor_in_p_ComputedConstructor8957);
-                    pm_CompCommentConstructor386=this.pm_CompCommentConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_pm_CompCommentConstructor_in_p_ComputedConstructor8961);
+                    pm_CompCommentConstructor385=this.pm_CompCommentConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompCommentConstructor386.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompCommentConstructor385.getTree());
 
 
                     break;
@@ -39242,12 +39245,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1204:11: pm_CompPIConstructor
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pm_CompPIConstructor_in_p_ComputedConstructor8969);
-                    pm_CompPIConstructor387=this.pm_CompPIConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_pm_CompPIConstructor_in_p_ComputedConstructor8973);
+                    pm_CompPIConstructor386=this.pm_CompPIConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompPIConstructor387.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_CompPIConstructor386.getTree());
 
 
                     break;
@@ -39259,12 +39262,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         if (this.state.backtracking>0) {this.state.failed=true; return retval;}
                         throw new org.antlr.runtime.FailedPredicateException(this.input, "p_ComputedConstructor", "this.lc(MLS)");
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_CompBinaryConstructor_in_p_ComputedConstructor8984);
-                    p_CompBinaryConstructor388=this.p_CompBinaryConstructor();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CompBinaryConstructor_in_p_ComputedConstructor8988);
+                    p_CompBinaryConstructor387=this.p_CompBinaryConstructor();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CompBinaryConstructor388.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CompBinaryConstructor387.getTree());
 
 
                     break;
@@ -39312,20 +39315,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET389 = null;
-        var RBRACKET391 = null;
-         var p_StatementsAndOptionalExpr390 = null;
+        var LBRACKET388 = null;
+        var RBRACKET390 = null;
+         var p_StatementsAndOptionalExpr389 = null;
 
         var k_tree=null;
-        var LBRACKET389_tree=null;
-        var RBRACKET391_tree=null;
+        var LBRACKET388_tree=null;
+        var RBRACKET390_tree=null;
 
         try {
             // xquery/XQueryParser.g:1211:9: (k= DOCUMENT LBRACKET p_StatementsAndOptionalExpr RBRACKET )
             // xquery/XQueryParser.g:1211:11: k= DOCUMENT LBRACKET p_StatementsAndOptionalExpr RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,DOCUMENT,XQueryParser.FOLLOW_DOCUMENT_in_pm_CompDocConstructor9013); if (this.state.failed) return retval;
+            k=this.match(this.input,DOCUMENT,XQueryParser.FOLLOW_DOCUMENT_in_pm_CompDocConstructor9017); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -39333,21 +39336,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LBRACKET389=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompDocConstructor9017); if (this.state.failed) return retval;
+            LBRACKET388=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompDocConstructor9021); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET389_tree = this.adaptor.create(LBRACKET389);
-            this.adaptor.addChild(root_0, LBRACKET389_tree);
+            LBRACKET388_tree = this.adaptor.create(LBRACKET388);
+            this.adaptor.addChild(root_0, LBRACKET388_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompDocConstructor9019);
-            p_StatementsAndOptionalExpr390=this.p_StatementsAndOptionalExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompDocConstructor9023);
+            p_StatementsAndOptionalExpr389=this.p_StatementsAndOptionalExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr390.getTree());
-            RBRACKET391=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompDocConstructor9021); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr389.getTree());
+            RBRACKET390=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompDocConstructor9025); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET391_tree = this.adaptor.create(RBRACKET391);
-            this.adaptor.addChild(root_0, RBRACKET391_tree);
+            RBRACKET390_tree = this.adaptor.create(RBRACKET390);
+            this.adaptor.addChild(root_0, RBRACKET390_tree);
             }
 
 
@@ -39394,26 +39397,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET393 = null;
-        var RBRACKET395 = null;
-        var LBRACKET396 = null;
-        var RBRACKET398 = null;
-         var p_QName392 = null;
-         var p_Expr394 = null;
-         var pm_ContentExpr397 = null;
+        var LBRACKET392 = null;
+        var RBRACKET394 = null;
+        var LBRACKET395 = null;
+        var RBRACKET397 = null;
+         var p_QName391 = null;
+         var p_Expr393 = null;
+         var pm_ContentExpr396 = null;
 
         var k_tree=null;
-        var LBRACKET393_tree=null;
-        var RBRACKET395_tree=null;
-        var LBRACKET396_tree=null;
-        var RBRACKET398_tree=null;
+        var LBRACKET392_tree=null;
+        var RBRACKET394_tree=null;
+        var LBRACKET395_tree=null;
+        var RBRACKET397_tree=null;
 
         try {
             // xquery/XQueryParser.g:1216:9: (k= ELEMENT ( p_QName | ( LBRACKET p_Expr[true,true] RBRACKET ) ) LBRACKET pm_ContentExpr RBRACKET )
             // xquery/XQueryParser.g:1216:11: k= ELEMENT ( p_QName | ( LBRACKET p_Expr[true,true] RBRACKET ) ) LBRACKET pm_ContentExpr RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,ELEMENT,XQueryParser.FOLLOW_ELEMENT_in_pm_CompElemConstructor9057); if (this.state.failed) return retval;
+            k=this.match(this.input,ELEMENT,XQueryParser.FOLLOW_ELEMENT_in_pm_CompElemConstructor9061); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -39441,12 +39444,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt156) {
                 case 1 :
                     // xquery/XQueryParser.g:1216:37: p_QName
-                    this.pushFollow(XQueryParser.FOLLOW_p_QName_in_pm_CompElemConstructor9062);
-                    p_QName392=this.p_QName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_QName_in_pm_CompElemConstructor9066);
+                    p_QName391=this.p_QName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName392.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName391.getTree());
 
 
                     break;
@@ -39454,21 +39457,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1216:47: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1216:47: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1216:48: LBRACKET p_Expr[true,true] RBRACKET
-                    LBRACKET393=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompElemConstructor9067); if (this.state.failed) return retval;
+                    LBRACKET392=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompElemConstructor9071); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LBRACKET393_tree = this.adaptor.create(LBRACKET393);
-                    this.adaptor.addChild(root_0, LBRACKET393_tree);
+                    LBRACKET392_tree = this.adaptor.create(LBRACKET392);
+                    this.adaptor.addChild(root_0, LBRACKET392_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_pm_CompElemConstructor9069);
-                    p_Expr394=this.p_Expr(true, true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_pm_CompElemConstructor9073);
+                    p_Expr393=this.p_Expr(true, true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr394.getTree());
-                    RBRACKET395=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompElemConstructor9072); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr393.getTree());
+                    RBRACKET394=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompElemConstructor9076); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RBRACKET395_tree = this.adaptor.create(RBRACKET395);
-                    this.adaptor.addChild(root_0, RBRACKET395_tree);
+                    RBRACKET394_tree = this.adaptor.create(RBRACKET394);
+                    this.adaptor.addChild(root_0, RBRACKET394_tree);
                     }
 
 
@@ -39479,21 +39482,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            LBRACKET396=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompElemConstructor9076); if (this.state.failed) return retval;
+            LBRACKET395=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompElemConstructor9080); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET396_tree = this.adaptor.create(LBRACKET396);
-            this.adaptor.addChild(root_0, LBRACKET396_tree);
+            LBRACKET395_tree = this.adaptor.create(LBRACKET395);
+            this.adaptor.addChild(root_0, LBRACKET395_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_pm_ContentExpr_in_pm_CompElemConstructor9078);
-            pm_ContentExpr397=this.pm_ContentExpr();
+            this.pushFollow(XQueryParser.FOLLOW_pm_ContentExpr_in_pm_CompElemConstructor9082);
+            pm_ContentExpr396=this.pm_ContentExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_ContentExpr397.getTree());
-            RBRACKET398=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompElemConstructor9080); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pm_ContentExpr396.getTree());
+            RBRACKET397=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompElemConstructor9084); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET398_tree = this.adaptor.create(RBRACKET398);
-            this.adaptor.addChild(root_0, RBRACKET398_tree);
+            RBRACKET397_tree = this.adaptor.create(RBRACKET397);
+            this.adaptor.addChild(root_0, RBRACKET397_tree);
             }
 
 
@@ -39539,7 +39542,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_StatementsAndOptionalExpr399 = null;
+         var p_StatementsAndOptionalExpr398 = null;
 
 
         try {
@@ -39547,12 +39550,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1222:11: p_StatementsAndOptionalExpr
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_ContentExpr9107);
-            p_StatementsAndOptionalExpr399=this.p_StatementsAndOptionalExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_ContentExpr9111);
+            p_StatementsAndOptionalExpr398=this.p_StatementsAndOptionalExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr399.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr398.getTree());
 
 
 
@@ -39598,26 +39601,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET401 = null;
-        var RBRACKET403 = null;
-        var LBRACKET404 = null;
-        var RBRACKET406 = null;
-         var p_QName400 = null;
-         var p_Expr402 = null;
-         var p_StatementsAndOptionalExpr405 = null;
+        var LBRACKET400 = null;
+        var RBRACKET402 = null;
+        var LBRACKET403 = null;
+        var RBRACKET405 = null;
+         var p_QName399 = null;
+         var p_Expr401 = null;
+         var p_StatementsAndOptionalExpr404 = null;
 
         var k_tree=null;
-        var LBRACKET401_tree=null;
-        var RBRACKET403_tree=null;
-        var LBRACKET404_tree=null;
-        var RBRACKET406_tree=null;
+        var LBRACKET400_tree=null;
+        var RBRACKET402_tree=null;
+        var LBRACKET403_tree=null;
+        var RBRACKET405_tree=null;
 
         try {
             // xquery/XQueryParser.g:1228:9: (k= ATTRIBUTE ( p_QName | ( LBRACKET p_Expr[true,true] RBRACKET ) ) LBRACKET p_StatementsAndOptionalExpr RBRACKET )
             // xquery/XQueryParser.g:1228:11: k= ATTRIBUTE ( p_QName | ( LBRACKET p_Expr[true,true] RBRACKET ) ) LBRACKET p_StatementsAndOptionalExpr RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,ATTRIBUTE,XQueryParser.FOLLOW_ATTRIBUTE_in_pm_CompAttrConstructor9136); if (this.state.failed) return retval;
+            k=this.match(this.input,ATTRIBUTE,XQueryParser.FOLLOW_ATTRIBUTE_in_pm_CompAttrConstructor9140); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -39645,12 +39648,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt157) {
                 case 1 :
                     // xquery/XQueryParser.g:1228:39: p_QName
-                    this.pushFollow(XQueryParser.FOLLOW_p_QName_in_pm_CompAttrConstructor9141);
-                    p_QName400=this.p_QName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_QName_in_pm_CompAttrConstructor9145);
+                    p_QName399=this.p_QName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName400.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName399.getTree());
 
 
                     break;
@@ -39658,21 +39661,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1228:49: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1228:49: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1228:50: LBRACKET p_Expr[true,true] RBRACKET
-                    LBRACKET401=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompAttrConstructor9146); if (this.state.failed) return retval;
+                    LBRACKET400=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompAttrConstructor9150); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LBRACKET401_tree = this.adaptor.create(LBRACKET401);
-                    this.adaptor.addChild(root_0, LBRACKET401_tree);
+                    LBRACKET400_tree = this.adaptor.create(LBRACKET400);
+                    this.adaptor.addChild(root_0, LBRACKET400_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_pm_CompAttrConstructor9148);
-                    p_Expr402=this.p_Expr(true, true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_pm_CompAttrConstructor9152);
+                    p_Expr401=this.p_Expr(true, true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr402.getTree());
-                    RBRACKET403=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompAttrConstructor9151); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr401.getTree());
+                    RBRACKET402=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompAttrConstructor9155); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RBRACKET403_tree = this.adaptor.create(RBRACKET403);
-                    this.adaptor.addChild(root_0, RBRACKET403_tree);
+                    RBRACKET402_tree = this.adaptor.create(RBRACKET402);
+                    this.adaptor.addChild(root_0, RBRACKET402_tree);
                     }
 
 
@@ -39683,21 +39686,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            LBRACKET404=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompAttrConstructor9155); if (this.state.failed) return retval;
+            LBRACKET403=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompAttrConstructor9159); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET404_tree = this.adaptor.create(LBRACKET404);
-            this.adaptor.addChild(root_0, LBRACKET404_tree);
+            LBRACKET403_tree = this.adaptor.create(LBRACKET403);
+            this.adaptor.addChild(root_0, LBRACKET403_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompAttrConstructor9157);
-            p_StatementsAndOptionalExpr405=this.p_StatementsAndOptionalExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompAttrConstructor9161);
+            p_StatementsAndOptionalExpr404=this.p_StatementsAndOptionalExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr405.getTree());
-            RBRACKET406=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompAttrConstructor9159); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr404.getTree());
+            RBRACKET405=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompAttrConstructor9163); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET406_tree = this.adaptor.create(RBRACKET406);
-            this.adaptor.addChild(root_0, RBRACKET406_tree);
+            RBRACKET405_tree = this.adaptor.create(RBRACKET405);
+            this.adaptor.addChild(root_0, RBRACKET405_tree);
             }
 
 
@@ -39744,26 +39747,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET408 = null;
-        var RBRACKET410 = null;
-        var LBRACKET411 = null;
-        var RBRACKET413 = null;
-         var p_Prefix407 = null;
-         var p_PrefixExpr409 = null;
-         var p_URIExpr412 = null;
+        var LBRACKET407 = null;
+        var RBRACKET409 = null;
+        var LBRACKET410 = null;
+        var RBRACKET412 = null;
+         var p_Prefix406 = null;
+         var p_PrefixExpr408 = null;
+         var p_URIExpr411 = null;
 
         var k_tree=null;
-        var LBRACKET408_tree=null;
-        var RBRACKET410_tree=null;
-        var LBRACKET411_tree=null;
-        var RBRACKET413_tree=null;
+        var LBRACKET407_tree=null;
+        var RBRACKET409_tree=null;
+        var LBRACKET410_tree=null;
+        var RBRACKET412_tree=null;
 
         try {
             // xquery/XQueryParser.g:1233:9: (k= NAMESPACE ( p_Prefix | ( LBRACKET p_PrefixExpr RBRACKET ) ) LBRACKET ( p_URIExpr )? RBRACKET )
             // xquery/XQueryParser.g:1233:11: k= NAMESPACE ( p_Prefix | ( LBRACKET p_PrefixExpr RBRACKET ) ) LBRACKET ( p_URIExpr )? RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,NAMESPACE,XQueryParser.FOLLOW_NAMESPACE_in_p_CompNamespaceConstructor9187); if (this.state.failed) return retval;
+            k=this.match(this.input,NAMESPACE,XQueryParser.FOLLOW_NAMESPACE_in_p_CompNamespaceConstructor9191); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -39791,12 +39794,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt158) {
                 case 1 :
                     // xquery/XQueryParser.g:1233:39: p_Prefix
-                    this.pushFollow(XQueryParser.FOLLOW_p_Prefix_in_p_CompNamespaceConstructor9192);
-                    p_Prefix407=this.p_Prefix();
+                    this.pushFollow(XQueryParser.FOLLOW_p_Prefix_in_p_CompNamespaceConstructor9196);
+                    p_Prefix406=this.p_Prefix();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Prefix407.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Prefix406.getTree());
 
 
                     break;
@@ -39804,21 +39807,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1233:50: ( LBRACKET p_PrefixExpr RBRACKET )
                     // xquery/XQueryParser.g:1233:50: ( LBRACKET p_PrefixExpr RBRACKET )
                     // xquery/XQueryParser.g:1233:51: LBRACKET p_PrefixExpr RBRACKET
-                    LBRACKET408=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9197); if (this.state.failed) return retval;
+                    LBRACKET407=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9201); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LBRACKET408_tree = this.adaptor.create(LBRACKET408);
-                    this.adaptor.addChild(root_0, LBRACKET408_tree);
+                    LBRACKET407_tree = this.adaptor.create(LBRACKET407);
+                    this.adaptor.addChild(root_0, LBRACKET407_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_PrefixExpr_in_p_CompNamespaceConstructor9199);
-                    p_PrefixExpr409=this.p_PrefixExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_PrefixExpr_in_p_CompNamespaceConstructor9203);
+                    p_PrefixExpr408=this.p_PrefixExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PrefixExpr409.getTree());
-                    RBRACKET410=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9201); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PrefixExpr408.getTree());
+                    RBRACKET409=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9205); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RBRACKET410_tree = this.adaptor.create(RBRACKET410);
-                    this.adaptor.addChild(root_0, RBRACKET410_tree);
+                    RBRACKET409_tree = this.adaptor.create(RBRACKET409);
+                    this.adaptor.addChild(root_0, RBRACKET409_tree);
                     }
 
 
@@ -39829,10 +39832,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            LBRACKET411=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9205); if (this.state.failed) return retval;
+            LBRACKET410=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9209); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET411_tree = this.adaptor.create(LBRACKET411);
-            this.adaptor.addChild(root_0, LBRACKET411_tree);
+            LBRACKET410_tree = this.adaptor.create(LBRACKET410);
+            this.adaptor.addChild(root_0, LBRACKET410_tree);
             }
             // xquery/XQueryParser.g:1233:93: ( p_URIExpr )?
             var alt159=2;
@@ -39844,22 +39847,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt159) {
                 case 1 :
                     // xquery/XQueryParser.g:1233:93: p_URIExpr
-                    this.pushFollow(XQueryParser.FOLLOW_p_URIExpr_in_p_CompNamespaceConstructor9207);
-                    p_URIExpr412=this.p_URIExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_URIExpr_in_p_CompNamespaceConstructor9211);
+                    p_URIExpr411=this.p_URIExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_URIExpr412.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_URIExpr411.getTree());
 
 
                     break;
 
             }
 
-            RBRACKET413=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9210); if (this.state.failed) return retval;
+            RBRACKET412=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9214); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET413_tree = this.adaptor.create(RBRACKET413);
-            this.adaptor.addChild(root_0, RBRACKET413_tree);
+            RBRACKET412_tree = this.adaptor.create(RBRACKET412);
+            this.adaptor.addChild(root_0, RBRACKET412_tree);
             }
 
 
@@ -39905,7 +39908,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_NCName414 = null;
+         var p_NCName413 = null;
 
 
         try {
@@ -39913,12 +39916,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1238:11: p_NCName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_p_Prefix9236);
-            p_NCName414=this.p_NCName();
+            this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_p_Prefix9240);
+            p_NCName413=this.p_NCName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NCName414.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NCName413.getTree());
 
 
 
@@ -39963,7 +39966,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_Expr415 = null;
+         var p_Expr414 = null;
 
 
         try {
@@ -39971,12 +39974,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1243:11: p_Expr[true,true]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_PrefixExpr9262);
-            p_Expr415=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_PrefixExpr9266);
+            p_Expr414=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr415.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr414.getTree());
 
 
 
@@ -40021,7 +40024,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_Expr416 = null;
+         var p_Expr415 = null;
 
 
         try {
@@ -40029,12 +40032,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1248:11: p_Expr[true,true]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_URIExpr9289);
-            p_Expr416=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_URIExpr9293);
+            p_Expr415=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr416.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr415.getTree());
 
 
 
@@ -40080,20 +40083,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET417 = null;
-        var RBRACKET419 = null;
-         var p_Expr418 = null;
+        var LBRACKET416 = null;
+        var RBRACKET418 = null;
+         var p_Expr417 = null;
 
         var k_tree=null;
-        var LBRACKET417_tree=null;
-        var RBRACKET419_tree=null;
+        var LBRACKET416_tree=null;
+        var RBRACKET418_tree=null;
 
         try {
             // xquery/XQueryParser.g:1253:9: (k= TEXT LBRACKET p_Expr[true,true] RBRACKET )
             // xquery/XQueryParser.g:1253:11: k= TEXT LBRACKET p_Expr[true,true] RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,TEXT,XQueryParser.FOLLOW_TEXT_in_p_CompTextConstructor9318); if (this.state.failed) return retval;
+            k=this.match(this.input,TEXT,XQueryParser.FOLLOW_TEXT_in_p_CompTextConstructor9322); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -40101,21 +40104,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LBRACKET417=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompTextConstructor9322); if (this.state.failed) return retval;
+            LBRACKET416=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompTextConstructor9326); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET417_tree = this.adaptor.create(LBRACKET417);
-            this.adaptor.addChild(root_0, LBRACKET417_tree);
+            LBRACKET416_tree = this.adaptor.create(LBRACKET416);
+            this.adaptor.addChild(root_0, LBRACKET416_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_CompTextConstructor9324);
-            p_Expr418=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_CompTextConstructor9328);
+            p_Expr417=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr418.getTree());
-            RBRACKET419=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompTextConstructor9327); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr417.getTree());
+            RBRACKET418=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompTextConstructor9331); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET419_tree = this.adaptor.create(RBRACKET419);
-            this.adaptor.addChild(root_0, RBRACKET419_tree);
+            RBRACKET418_tree = this.adaptor.create(RBRACKET418);
+            this.adaptor.addChild(root_0, RBRACKET418_tree);
             }
 
 
@@ -40162,20 +40165,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET420 = null;
-        var RBRACKET422 = null;
-         var p_Expr421 = null;
+        var LBRACKET419 = null;
+        var RBRACKET421 = null;
+         var p_Expr420 = null;
 
         var k_tree=null;
-        var LBRACKET420_tree=null;
-        var RBRACKET422_tree=null;
+        var LBRACKET419_tree=null;
+        var RBRACKET421_tree=null;
 
         try {
             // xquery/XQueryParser.g:1258:9: (k= BINARY LBRACKET p_Expr[true,true] RBRACKET )
             // xquery/XQueryParser.g:1258:11: k= BINARY LBRACKET p_Expr[true,true] RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,BINARY,XQueryParser.FOLLOW_BINARY_in_p_CompBinaryConstructor9355); if (this.state.failed) return retval;
+            k=this.match(this.input,BINARY,XQueryParser.FOLLOW_BINARY_in_p_CompBinaryConstructor9359); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -40183,21 +40186,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LBRACKET420=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompBinaryConstructor9359); if (this.state.failed) return retval;
+            LBRACKET419=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_CompBinaryConstructor9363); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET420_tree = this.adaptor.create(LBRACKET420);
-            this.adaptor.addChild(root_0, LBRACKET420_tree);
+            LBRACKET419_tree = this.adaptor.create(LBRACKET419);
+            this.adaptor.addChild(root_0, LBRACKET419_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_CompBinaryConstructor9361);
-            p_Expr421=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_CompBinaryConstructor9365);
+            p_Expr420=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr421.getTree());
-            RBRACKET422=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompBinaryConstructor9364); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr420.getTree());
+            RBRACKET421=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_CompBinaryConstructor9368); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET422_tree = this.adaptor.create(RBRACKET422);
-            this.adaptor.addChild(root_0, RBRACKET422_tree);
+            RBRACKET421_tree = this.adaptor.create(RBRACKET421);
+            this.adaptor.addChild(root_0, RBRACKET421_tree);
             }
 
 
@@ -40244,20 +40247,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET423 = null;
-        var RBRACKET425 = null;
-         var p_StatementsAndOptionalExpr424 = null;
+        var LBRACKET422 = null;
+        var RBRACKET424 = null;
+         var p_StatementsAndOptionalExpr423 = null;
 
         var k_tree=null;
-        var LBRACKET423_tree=null;
-        var RBRACKET425_tree=null;
+        var LBRACKET422_tree=null;
+        var RBRACKET424_tree=null;
 
         try {
             // xquery/XQueryParser.g:1264:9: (k= COMMENT LBRACKET p_StatementsAndOptionalExpr RBRACKET )
             // xquery/XQueryParser.g:1264:11: k= COMMENT LBRACKET p_StatementsAndOptionalExpr RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,COMMENT,XQueryParser.FOLLOW_COMMENT_in_pm_CompCommentConstructor9393); if (this.state.failed) return retval;
+            k=this.match(this.input,COMMENT,XQueryParser.FOLLOW_COMMENT_in_pm_CompCommentConstructor9397); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -40265,21 +40268,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LBRACKET423=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompCommentConstructor9397); if (this.state.failed) return retval;
+            LBRACKET422=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompCommentConstructor9401); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET423_tree = this.adaptor.create(LBRACKET423);
-            this.adaptor.addChild(root_0, LBRACKET423_tree);
+            LBRACKET422_tree = this.adaptor.create(LBRACKET422);
+            this.adaptor.addChild(root_0, LBRACKET422_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompCommentConstructor9399);
-            p_StatementsAndOptionalExpr424=this.p_StatementsAndOptionalExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompCommentConstructor9403);
+            p_StatementsAndOptionalExpr423=this.p_StatementsAndOptionalExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr424.getTree());
-            RBRACKET425=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompCommentConstructor9401); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr423.getTree());
+            RBRACKET424=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompCommentConstructor9405); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET425_tree = this.adaptor.create(RBRACKET425);
-            this.adaptor.addChild(root_0, RBRACKET425_tree);
+            RBRACKET424_tree = this.adaptor.create(RBRACKET424);
+            this.adaptor.addChild(root_0, RBRACKET424_tree);
             }
 
 
@@ -40326,26 +40329,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LBRACKET427 = null;
-        var RBRACKET429 = null;
-        var LBRACKET430 = null;
-        var RBRACKET432 = null;
-         var p_NCName426 = null;
-         var p_Expr428 = null;
-         var p_StatementsAndOptionalExpr431 = null;
+        var LBRACKET426 = null;
+        var RBRACKET428 = null;
+        var LBRACKET429 = null;
+        var RBRACKET431 = null;
+         var p_NCName425 = null;
+         var p_Expr427 = null;
+         var p_StatementsAndOptionalExpr430 = null;
 
         var k_tree=null;
-        var LBRACKET427_tree=null;
-        var RBRACKET429_tree=null;
-        var LBRACKET430_tree=null;
-        var RBRACKET432_tree=null;
+        var LBRACKET426_tree=null;
+        var RBRACKET428_tree=null;
+        var LBRACKET429_tree=null;
+        var RBRACKET431_tree=null;
 
         try {
             // xquery/XQueryParser.g:1270:9: (k= PROCESSING_INSTRUCTION ( p_NCName | ( LBRACKET p_Expr[true,true] RBRACKET ) ) LBRACKET p_StatementsAndOptionalExpr RBRACKET )
             // xquery/XQueryParser.g:1270:11: k= PROCESSING_INSTRUCTION ( p_NCName | ( LBRACKET p_Expr[true,true] RBRACKET ) ) LBRACKET p_StatementsAndOptionalExpr RBRACKET
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,PROCESSING_INSTRUCTION,XQueryParser.FOLLOW_PROCESSING_INSTRUCTION_in_pm_CompPIConstructor9430); if (this.state.failed) return retval;
+            k=this.match(this.input,PROCESSING_INSTRUCTION,XQueryParser.FOLLOW_PROCESSING_INSTRUCTION_in_pm_CompPIConstructor9434); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -40373,12 +40376,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt160) {
                 case 1 :
                     // xquery/XQueryParser.g:1270:52: p_NCName
-                    this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_pm_CompPIConstructor9435);
-                    p_NCName426=this.p_NCName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_pm_CompPIConstructor9439);
+                    p_NCName425=this.p_NCName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NCName426.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NCName425.getTree());
 
 
                     break;
@@ -40386,21 +40389,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1270:63: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1270:63: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1270:64: LBRACKET p_Expr[true,true] RBRACKET
-                    LBRACKET427=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompPIConstructor9440); if (this.state.failed) return retval;
+                    LBRACKET426=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompPIConstructor9444); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LBRACKET427_tree = this.adaptor.create(LBRACKET427);
-                    this.adaptor.addChild(root_0, LBRACKET427_tree);
+                    LBRACKET426_tree = this.adaptor.create(LBRACKET426);
+                    this.adaptor.addChild(root_0, LBRACKET426_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_pm_CompPIConstructor9442);
-                    p_Expr428=this.p_Expr(true, true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_pm_CompPIConstructor9446);
+                    p_Expr427=this.p_Expr(true, true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr428.getTree());
-                    RBRACKET429=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompPIConstructor9445); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr427.getTree());
+                    RBRACKET428=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompPIConstructor9449); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RBRACKET429_tree = this.adaptor.create(RBRACKET429);
-                    this.adaptor.addChild(root_0, RBRACKET429_tree);
+                    RBRACKET428_tree = this.adaptor.create(RBRACKET428);
+                    this.adaptor.addChild(root_0, RBRACKET428_tree);
                     }
 
 
@@ -40411,21 +40414,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            LBRACKET430=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompPIConstructor9449); if (this.state.failed) return retval;
+            LBRACKET429=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_pm_CompPIConstructor9453); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET430_tree = this.adaptor.create(LBRACKET430);
-            this.adaptor.addChild(root_0, LBRACKET430_tree);
+            LBRACKET429_tree = this.adaptor.create(LBRACKET429);
+            this.adaptor.addChild(root_0, LBRACKET429_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompPIConstructor9451);
-            p_StatementsAndOptionalExpr431=this.p_StatementsAndOptionalExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompPIConstructor9455);
+            p_StatementsAndOptionalExpr430=this.p_StatementsAndOptionalExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr431.getTree());
-            RBRACKET432=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompPIConstructor9453); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr430.getTree());
+            RBRACKET431=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_pm_CompPIConstructor9457); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET432_tree = this.adaptor.create(RBRACKET432);
-            this.adaptor.addChild(root_0, RBRACKET432_tree);
+            RBRACKET431_tree = this.adaptor.create(RBRACKET431);
+            this.adaptor.addChild(root_0, RBRACKET431_tree);
             }
 
 
@@ -40471,22 +40474,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var QUESTION434 = null;
-         var p_AtomicOrUnionType433 = null;
+        var QUESTION433 = null;
+         var p_AtomicOrUnionType432 = null;
 
-        var QUESTION434_tree=null;
+        var QUESTION433_tree=null;
 
         try {
             // xquery/XQueryParser.g:1293:9: ( p_AtomicOrUnionType ( QUESTION )? )
             // xquery/XQueryParser.g:1293:11: p_AtomicOrUnionType ( QUESTION )?
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_AtomicOrUnionType_in_p_SingleType9497);
-            p_AtomicOrUnionType433=this.p_AtomicOrUnionType();
+            this.pushFollow(XQueryParser.FOLLOW_p_AtomicOrUnionType_in_p_SingleType9501);
+            p_AtomicOrUnionType432=this.p_AtomicOrUnionType();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AtomicOrUnionType433.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AtomicOrUnionType432.getTree());
             // xquery/XQueryParser.g:1293:31: ( QUESTION )?
             var alt161=2;
             var LA161_0 = this.input.LA(1);
@@ -40497,10 +40500,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt161) {
                 case 1 :
                     // xquery/XQueryParser.g:1293:31: QUESTION
-                    QUESTION434=this.match(this.input,QUESTION,XQueryParser.FOLLOW_QUESTION_in_p_SingleType9499); if (this.state.failed) return retval;
+                    QUESTION433=this.match(this.input,QUESTION,XQueryParser.FOLLOW_QUESTION_in_p_SingleType9503); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    QUESTION434_tree = this.adaptor.create(QUESTION434);
-                    this.adaptor.addChild(root_0, QUESTION434_tree);
+                    QUESTION433_tree = this.adaptor.create(QUESTION433);
+                    this.adaptor.addChild(root_0, QUESTION433_tree);
                     }
 
 
@@ -40561,13 +40564,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         try {
             // xquery/XQueryParser.g:1298:9: (k= AS st= p_SequenceType -> ^( TypeDeclaration $st) )
             // xquery/XQueryParser.g:1298:11: k= AS st= p_SequenceType
-            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_TypeDeclaration9528); if (this.state.failed) return retval; 
+            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_TypeDeclaration9532); if (this.state.failed) return retval; 
             if ( this.state.backtracking===0 ) stream_AS.add(k);
 
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypeDeclaration9534);
+            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypeDeclaration9538);
             st=this.p_SequenceType();
 
             this.state._fsp--;
@@ -40694,22 +40697,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt163) {
                 case 1 :
                     // xquery/XQueryParser.g:1304:11: k= EMPTY_SEQUENCE l= LPAREN r= RPAREN
-                    k=this.match(this.input,EMPTY_SEQUENCE,XQueryParser.FOLLOW_EMPTY_SEQUENCE_in_p_SequenceType9587); if (this.state.failed) return retval; 
+                    k=this.match(this.input,EMPTY_SEQUENCE,XQueryParser.FOLLOW_EMPTY_SEQUENCE_in_p_SequenceType9591); if (this.state.failed) return retval; 
                     if ( this.state.backtracking===0 ) stream_EMPTY_SEQUENCE.add(k);
 
                     if ( this.state.backtracking===0 ) {
                       this.ak(k);
                     }
-                    l=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SequenceType9593); if (this.state.failed) return retval; 
+                    l=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SequenceType9597); if (this.state.failed) return retval; 
                     if ( this.state.backtracking===0 ) stream_LPAREN.add(l);
 
-                    r=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SequenceType9597); if (this.state.failed) return retval; 
+                    r=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SequenceType9601); if (this.state.failed) return retval; 
                     if ( this.state.backtracking===0 ) stream_RPAREN.add(r);
 
 
 
                     // AST REWRITE
-                    // elements: k, r, l
+                    // elements: r, k, l
                     // token labels: r, l, k
                     // rule labels: retval
                     // token list labels: 
@@ -40751,7 +40754,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1306:11: it= p_ItemType ( ( p_OccurrenceIndicator )=>oi= p_OccurrenceIndicator )?
-                    this.pushFollow(XQueryParser.FOLLOW_p_ItemType_in_p_SequenceType9646);
+                    this.pushFollow(XQueryParser.FOLLOW_p_ItemType_in_p_SequenceType9650);
                     it=this.p_ItemType();
 
                     this.state._fsp--;
@@ -40763,7 +40766,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt162) {
                         case 1 :
                             // xquery/XQueryParser.g:1306:26: ( p_OccurrenceIndicator )=>oi= p_OccurrenceIndicator
-                            this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_p_SequenceType9657);
+                            this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_p_SequenceType9661);
                             oi=this.p_OccurrenceIndicator();
 
                             this.state._fsp--;
@@ -40856,19 +40859,19 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var set435 = null;
+        var set434 = null;
 
-        var set435_tree=null;
+        var set434_tree=null;
 
         try {
             // xquery/XQueryParser.g:1312:9: ( QUESTION | STAR | PLUS )
             // xquery/XQueryParser.g:
             root_0 = this.adaptor.nil();
 
-            set435=this.input.LT(1);
+            set434=this.input.LT(1);
             if ( (this.input.LA(1)>=QUESTION && this.input.LA(1)<=PLUS) ) {
                 this.input.consume();
-                if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set435));
+                if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set434));
                 this.state.errorRecovery=false;this.state.failed=false;
             }
             else {
@@ -40921,22 +40924,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var BINARY437 = null;
-        var LPAREN438 = null;
-        var RPAREN439 = null;
-        var ITEM440 = null;
-        var LPAREN441 = null;
-        var RPAREN442 = null;
-         var p_KindTest436 = null;
-         var p_AtomicOrUnionType443 = null;
-         var p_ParenthesizedItemType444 = null;
+        var BINARY436 = null;
+        var LPAREN437 = null;
+        var RPAREN438 = null;
+        var ITEM439 = null;
+        var LPAREN440 = null;
+        var RPAREN441 = null;
+         var p_KindTest435 = null;
+         var p_AtomicOrUnionType442 = null;
+         var p_ParenthesizedItemType443 = null;
 
-        var BINARY437_tree=null;
-        var LPAREN438_tree=null;
-        var RPAREN439_tree=null;
-        var ITEM440_tree=null;
-        var LPAREN441_tree=null;
-        var RPAREN442_tree=null;
+        var BINARY436_tree=null;
+        var LPAREN437_tree=null;
+        var RPAREN438_tree=null;
+        var ITEM439_tree=null;
+        var LPAREN440_tree=null;
+        var RPAREN441_tree=null;
         var stream_RPAREN=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token RPAREN");
         var stream_ITEM=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token ITEM");
         var stream_BINARY=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token BINARY");
@@ -40949,12 +40952,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt164) {
                 case 1 :
                     // xquery/XQueryParser.g:1317:11: p_KindTest
-                    this.pushFollow(XQueryParser.FOLLOW_p_KindTest_in_p_ItemType9759);
-                    p_KindTest436=this.p_KindTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_KindTest_in_p_ItemType9763);
+                    p_KindTest435=this.p_KindTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) stream_p_KindTest.add(p_KindTest436.getTree());
+                    if ( this.state.backtracking===0 ) stream_p_KindTest.add(p_KindTest435.getTree());
 
 
                     // AST REWRITE
@@ -40993,14 +40996,14 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     }
                     // xquery/XQueryParser.g:1319:29: ( BINARY LPAREN RPAREN )
                     // xquery/XQueryParser.g:1319:30: BINARY LPAREN RPAREN
-                    BINARY437=this.match(this.input,BINARY,XQueryParser.FOLLOW_BINARY_in_p_ItemType9799); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_BINARY.add(BINARY437);
+                    BINARY436=this.match(this.input,BINARY,XQueryParser.FOLLOW_BINARY_in_p_ItemType9803); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_BINARY.add(BINARY436);
 
-                    LPAREN438=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ItemType9801); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_LPAREN.add(LPAREN438);
+                    LPAREN437=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ItemType9805); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_LPAREN.add(LPAREN437);
 
-                    RPAREN439=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ItemType9803); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_RPAREN.add(RPAREN439);
+                    RPAREN438=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ItemType9807); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_RPAREN.add(RPAREN438);
 
 
 
@@ -41008,7 +41011,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: BINARY, LPAREN, RPAREN
+                    // elements: RPAREN, BINARY, LPAREN
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -41041,14 +41044,14 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1321:11: ( ITEM LPAREN RPAREN )
                     // xquery/XQueryParser.g:1321:11: ( ITEM LPAREN RPAREN )
                     // xquery/XQueryParser.g:1321:12: ITEM LPAREN RPAREN
-                    ITEM440=this.match(this.input,ITEM,XQueryParser.FOLLOW_ITEM_in_p_ItemType9845); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_ITEM.add(ITEM440);
+                    ITEM439=this.match(this.input,ITEM,XQueryParser.FOLLOW_ITEM_in_p_ItemType9849); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_ITEM.add(ITEM439);
 
-                    LPAREN441=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ItemType9847); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_LPAREN.add(LPAREN441);
+                    LPAREN440=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ItemType9851); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_LPAREN.add(LPAREN440);
 
-                    RPAREN442=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ItemType9849); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_RPAREN.add(RPAREN442);
+                    RPAREN441=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ItemType9853); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_RPAREN.add(RPAREN441);
 
 
 
@@ -41056,7 +41059,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     // AST REWRITE
-                    // elements: RPAREN, LPAREN, ITEM
+                    // elements: LPAREN, ITEM, RPAREN
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -41089,12 +41092,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1326:11: p_AtomicOrUnionType
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AtomicOrUnionType_in_p_ItemType9893);
-                    p_AtomicOrUnionType443=this.p_AtomicOrUnionType();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AtomicOrUnionType_in_p_ItemType9897);
+                    p_AtomicOrUnionType442=this.p_AtomicOrUnionType();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AtomicOrUnionType443.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AtomicOrUnionType442.getTree());
 
 
                     break;
@@ -41102,12 +41105,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1327:11: p_ParenthesizedItemType
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_ParenthesizedItemType_in_p_ItemType9905);
-                    p_ParenthesizedItemType444=this.p_ParenthesizedItemType();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ParenthesizedItemType_in_p_ItemType9909);
+                    p_ParenthesizedItemType443=this.p_ParenthesizedItemType();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ParenthesizedItemType444.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ParenthesizedItemType443.getTree());
 
 
                     break;
@@ -41154,18 +41157,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QName445 = null;
+         var p_QName444 = null;
 
         var stream_p_QName=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"rule p_QName");
         try {
             // xquery/XQueryParser.g:1332:9: ( p_QName -> ^( AtomicOrUnionType p_QName ) )
             // xquery/XQueryParser.g:1332:11: p_QName
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_AtomicOrUnionType9931);
-            p_QName445=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_AtomicOrUnionType9935);
+            p_QName444=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) stream_p_QName.add(p_QName445.getTree());
+            if ( this.state.backtracking===0 ) stream_p_QName.add(p_QName444.getTree());
 
 
             // AST REWRITE
@@ -41237,16 +41240,16 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_DocumentTest446 = null;
-         var p_ElementTest447 = null;
-         var p_AttributeTest448 = null;
-         var p_SchemaElementTest449 = null;
-         var p_SchemaAttributeTest450 = null;
-         var p_PITest451 = null;
-         var p_CommentTest452 = null;
-         var p_TextTest453 = null;
-         var p_NamespaceNodeTest454 = null;
-         var p_AnyKindTest455 = null;
+         var p_DocumentTest445 = null;
+         var p_ElementTest446 = null;
+         var p_AttributeTest447 = null;
+         var p_SchemaElementTest448 = null;
+         var p_SchemaAttributeTest449 = null;
+         var p_PITest450 = null;
+         var p_CommentTest451 = null;
+         var p_TextTest452 = null;
+         var p_NamespaceNodeTest453 = null;
+         var p_AnyKindTest454 = null;
 
 
         try {
@@ -41296,12 +41299,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1338:11: p_DocumentTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_DocumentTest_in_p_KindTest9981);
-                    p_DocumentTest446=this.p_DocumentTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_DocumentTest_in_p_KindTest9985);
+                    p_DocumentTest445=this.p_DocumentTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_DocumentTest446.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_DocumentTest445.getTree());
 
 
                     break;
@@ -41309,12 +41312,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1339:11: p_ElementTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_ElementTest_in_p_KindTest9993);
-                    p_ElementTest447=this.p_ElementTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ElementTest_in_p_KindTest9997);
+                    p_ElementTest446=this.p_ElementTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementTest447.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementTest446.getTree());
 
 
                     break;
@@ -41322,12 +41325,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1340:11: p_AttributeTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AttributeTest_in_p_KindTest10005);
-                    p_AttributeTest448=this.p_AttributeTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AttributeTest_in_p_KindTest10009);
+                    p_AttributeTest447=this.p_AttributeTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeTest448.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeTest447.getTree());
 
 
                     break;
@@ -41335,12 +41338,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1341:11: p_SchemaElementTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_SchemaElementTest_in_p_KindTest10017);
-                    p_SchemaElementTest449=this.p_SchemaElementTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_SchemaElementTest_in_p_KindTest10021);
+                    p_SchemaElementTest448=this.p_SchemaElementTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SchemaElementTest449.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SchemaElementTest448.getTree());
 
 
                     break;
@@ -41348,12 +41351,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1342:11: p_SchemaAttributeTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_SchemaAttributeTest_in_p_KindTest10029);
-                    p_SchemaAttributeTest450=this.p_SchemaAttributeTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_SchemaAttributeTest_in_p_KindTest10033);
+                    p_SchemaAttributeTest449=this.p_SchemaAttributeTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SchemaAttributeTest450.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SchemaAttributeTest449.getTree());
 
 
                     break;
@@ -41361,12 +41364,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1343:11: p_PITest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_PITest_in_p_KindTest10041);
-                    p_PITest451=this.p_PITest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_PITest_in_p_KindTest10045);
+                    p_PITest450=this.p_PITest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PITest451.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PITest450.getTree());
 
 
                     break;
@@ -41374,12 +41377,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1344:11: p_CommentTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_CommentTest_in_p_KindTest10053);
-                    p_CommentTest452=this.p_CommentTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CommentTest_in_p_KindTest10057);
+                    p_CommentTest451=this.p_CommentTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CommentTest452.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CommentTest451.getTree());
 
 
                     break;
@@ -41387,12 +41390,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1345:11: p_TextTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_TextTest_in_p_KindTest10065);
-                    p_TextTest453=this.p_TextTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_TextTest_in_p_KindTest10069);
+                    p_TextTest452=this.p_TextTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TextTest453.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TextTest452.getTree());
 
 
                     break;
@@ -41400,12 +41403,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1346:11: p_NamespaceNodeTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_NamespaceNodeTest_in_p_KindTest10077);
-                    p_NamespaceNodeTest454=this.p_NamespaceNodeTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_NamespaceNodeTest_in_p_KindTest10081);
+                    p_NamespaceNodeTest453=this.p_NamespaceNodeTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NamespaceNodeTest454.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NamespaceNodeTest453.getTree());
 
 
                     break;
@@ -41413,12 +41416,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1347:11: p_AnyKindTest
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AnyKindTest_in_p_KindTest10089);
-                    p_AnyKindTest455=this.p_AnyKindTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AnyKindTest_in_p_KindTest10093);
+                    p_AnyKindTest454=this.p_AnyKindTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AnyKindTest455.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AnyKindTest454.getTree());
 
 
                     break;
@@ -41465,33 +41468,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var NODE456 = null;
-        var LPAREN457 = null;
-        var RPAREN458 = null;
+        var NODE455 = null;
+        var LPAREN456 = null;
+        var RPAREN457 = null;
 
-        var NODE456_tree=null;
-        var LPAREN457_tree=null;
-        var RPAREN458_tree=null;
+        var NODE455_tree=null;
+        var LPAREN456_tree=null;
+        var RPAREN457_tree=null;
 
         try {
             // xquery/XQueryParser.g:1352:9: ( NODE LPAREN RPAREN )
             // xquery/XQueryParser.g:1352:11: NODE LPAREN RPAREN
             root_0 = this.adaptor.nil();
 
-            NODE456=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_AnyKindTest10115); if (this.state.failed) return retval;
+            NODE455=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_AnyKindTest10119); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            NODE456_tree = this.adaptor.create(NODE456);
-            this.adaptor.addChild(root_0, NODE456_tree);
+            NODE455_tree = this.adaptor.create(NODE455);
+            this.adaptor.addChild(root_0, NODE455_tree);
             }
-            LPAREN457=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_AnyKindTest10117); if (this.state.failed) return retval;
+            LPAREN456=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_AnyKindTest10121); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN457_tree = this.adaptor.create(LPAREN457);
-            this.adaptor.addChild(root_0, LPAREN457_tree);
+            LPAREN456_tree = this.adaptor.create(LPAREN456);
+            this.adaptor.addChild(root_0, LPAREN456_tree);
             }
-            RPAREN458=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_AnyKindTest10119); if (this.state.failed) return retval;
+            RPAREN457=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_AnyKindTest10123); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN458_tree = this.adaptor.create(RPAREN458);
-            this.adaptor.addChild(root_0, RPAREN458_tree);
+            RPAREN457_tree = this.adaptor.create(RPAREN457);
+            this.adaptor.addChild(root_0, RPAREN457_tree);
             }
 
 
@@ -41537,30 +41540,30 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var DOCUMENT_NODE459 = null;
-        var LPAREN460 = null;
-        var RPAREN463 = null;
-         var p_ElementTest461 = null;
-         var p_SchemaElementTest462 = null;
+        var DOCUMENT_NODE458 = null;
+        var LPAREN459 = null;
+        var RPAREN462 = null;
+         var p_ElementTest460 = null;
+         var p_SchemaElementTest461 = null;
 
-        var DOCUMENT_NODE459_tree=null;
-        var LPAREN460_tree=null;
-        var RPAREN463_tree=null;
+        var DOCUMENT_NODE458_tree=null;
+        var LPAREN459_tree=null;
+        var RPAREN462_tree=null;
 
         try {
             // xquery/XQueryParser.g:1357:9: ( DOCUMENT_NODE LPAREN ( p_ElementTest | p_SchemaElementTest )? RPAREN )
             // xquery/XQueryParser.g:1357:11: DOCUMENT_NODE LPAREN ( p_ElementTest | p_SchemaElementTest )? RPAREN
             root_0 = this.adaptor.nil();
 
-            DOCUMENT_NODE459=this.match(this.input,DOCUMENT_NODE,XQueryParser.FOLLOW_DOCUMENT_NODE_in_p_DocumentTest10145); if (this.state.failed) return retval;
+            DOCUMENT_NODE458=this.match(this.input,DOCUMENT_NODE,XQueryParser.FOLLOW_DOCUMENT_NODE_in_p_DocumentTest10149); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            DOCUMENT_NODE459_tree = this.adaptor.create(DOCUMENT_NODE459);
-            this.adaptor.addChild(root_0, DOCUMENT_NODE459_tree);
+            DOCUMENT_NODE458_tree = this.adaptor.create(DOCUMENT_NODE458);
+            this.adaptor.addChild(root_0, DOCUMENT_NODE458_tree);
             }
-            LPAREN460=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_DocumentTest10147); if (this.state.failed) return retval;
+            LPAREN459=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_DocumentTest10151); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN460_tree = this.adaptor.create(LPAREN460);
-            this.adaptor.addChild(root_0, LPAREN460_tree);
+            LPAREN459_tree = this.adaptor.create(LPAREN459);
+            this.adaptor.addChild(root_0, LPAREN459_tree);
             }
             // xquery/XQueryParser.g:1357:32: ( p_ElementTest | p_SchemaElementTest )?
             var alt166=3;
@@ -41575,33 +41578,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt166) {
                 case 1 :
                     // xquery/XQueryParser.g:1357:33: p_ElementTest
-                    this.pushFollow(XQueryParser.FOLLOW_p_ElementTest_in_p_DocumentTest10150);
-                    p_ElementTest461=this.p_ElementTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ElementTest_in_p_DocumentTest10154);
+                    p_ElementTest460=this.p_ElementTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementTest461.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementTest460.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1357:49: p_SchemaElementTest
-                    this.pushFollow(XQueryParser.FOLLOW_p_SchemaElementTest_in_p_DocumentTest10154);
-                    p_SchemaElementTest462=this.p_SchemaElementTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_SchemaElementTest_in_p_DocumentTest10158);
+                    p_SchemaElementTest461=this.p_SchemaElementTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SchemaElementTest462.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SchemaElementTest461.getTree());
 
 
                     break;
 
             }
 
-            RPAREN463=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_DocumentTest10158); if (this.state.failed) return retval;
+            RPAREN462=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_DocumentTest10162); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN463_tree = this.adaptor.create(RPAREN463);
-            this.adaptor.addChild(root_0, RPAREN463_tree);
+            RPAREN462_tree = this.adaptor.create(RPAREN462);
+            this.adaptor.addChild(root_0, RPAREN462_tree);
             }
 
 
@@ -41647,33 +41650,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var TEXT464 = null;
-        var LPAREN465 = null;
-        var RPAREN466 = null;
+        var TEXT463 = null;
+        var LPAREN464 = null;
+        var RPAREN465 = null;
 
-        var TEXT464_tree=null;
-        var LPAREN465_tree=null;
-        var RPAREN466_tree=null;
+        var TEXT463_tree=null;
+        var LPAREN464_tree=null;
+        var RPAREN465_tree=null;
 
         try {
             // xquery/XQueryParser.g:1362:9: ( TEXT LPAREN RPAREN )
             // xquery/XQueryParser.g:1362:11: TEXT LPAREN RPAREN
             root_0 = this.adaptor.nil();
 
-            TEXT464=this.match(this.input,TEXT,XQueryParser.FOLLOW_TEXT_in_p_TextTest10184); if (this.state.failed) return retval;
+            TEXT463=this.match(this.input,TEXT,XQueryParser.FOLLOW_TEXT_in_p_TextTest10188); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            TEXT464_tree = this.adaptor.create(TEXT464);
-            this.adaptor.addChild(root_0, TEXT464_tree);
+            TEXT463_tree = this.adaptor.create(TEXT463);
+            this.adaptor.addChild(root_0, TEXT463_tree);
             }
-            LPAREN465=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_TextTest10186); if (this.state.failed) return retval;
+            LPAREN464=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_TextTest10190); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN465_tree = this.adaptor.create(LPAREN465);
-            this.adaptor.addChild(root_0, LPAREN465_tree);
+            LPAREN464_tree = this.adaptor.create(LPAREN464);
+            this.adaptor.addChild(root_0, LPAREN464_tree);
             }
-            RPAREN466=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_TextTest10188); if (this.state.failed) return retval;
+            RPAREN465=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_TextTest10192); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN466_tree = this.adaptor.create(RPAREN466);
-            this.adaptor.addChild(root_0, RPAREN466_tree);
+            RPAREN465_tree = this.adaptor.create(RPAREN465);
+            this.adaptor.addChild(root_0, RPAREN465_tree);
             }
 
 
@@ -41719,33 +41722,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var COMMENT467 = null;
-        var LPAREN468 = null;
-        var RPAREN469 = null;
+        var COMMENT466 = null;
+        var LPAREN467 = null;
+        var RPAREN468 = null;
 
-        var COMMENT467_tree=null;
-        var LPAREN468_tree=null;
-        var RPAREN469_tree=null;
+        var COMMENT466_tree=null;
+        var LPAREN467_tree=null;
+        var RPAREN468_tree=null;
 
         try {
             // xquery/XQueryParser.g:1367:9: ( COMMENT LPAREN RPAREN )
             // xquery/XQueryParser.g:1367:11: COMMENT LPAREN RPAREN
             root_0 = this.adaptor.nil();
 
-            COMMENT467=this.match(this.input,COMMENT,XQueryParser.FOLLOW_COMMENT_in_p_CommentTest10214); if (this.state.failed) return retval;
+            COMMENT466=this.match(this.input,COMMENT,XQueryParser.FOLLOW_COMMENT_in_p_CommentTest10218); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            COMMENT467_tree = this.adaptor.create(COMMENT467);
-            this.adaptor.addChild(root_0, COMMENT467_tree);
+            COMMENT466_tree = this.adaptor.create(COMMENT466);
+            this.adaptor.addChild(root_0, COMMENT466_tree);
             }
-            LPAREN468=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_CommentTest10216); if (this.state.failed) return retval;
+            LPAREN467=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_CommentTest10220); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN468_tree = this.adaptor.create(LPAREN468);
-            this.adaptor.addChild(root_0, LPAREN468_tree);
+            LPAREN467_tree = this.adaptor.create(LPAREN467);
+            this.adaptor.addChild(root_0, LPAREN467_tree);
             }
-            RPAREN469=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_CommentTest10218); if (this.state.failed) return retval;
+            RPAREN468=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_CommentTest10222); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN469_tree = this.adaptor.create(RPAREN469);
-            this.adaptor.addChild(root_0, RPAREN469_tree);
+            RPAREN468_tree = this.adaptor.create(RPAREN468);
+            this.adaptor.addChild(root_0, RPAREN468_tree);
             }
 
 
@@ -41791,33 +41794,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var NAMESPACE_NODE470 = null;
-        var LPAREN471 = null;
-        var RPAREN472 = null;
+        var NAMESPACE_NODE469 = null;
+        var LPAREN470 = null;
+        var RPAREN471 = null;
 
-        var NAMESPACE_NODE470_tree=null;
-        var LPAREN471_tree=null;
-        var RPAREN472_tree=null;
+        var NAMESPACE_NODE469_tree=null;
+        var LPAREN470_tree=null;
+        var RPAREN471_tree=null;
 
         try {
             // xquery/XQueryParser.g:1372:9: ( NAMESPACE_NODE LPAREN RPAREN )
             // xquery/XQueryParser.g:1372:11: NAMESPACE_NODE LPAREN RPAREN
             root_0 = this.adaptor.nil();
 
-            NAMESPACE_NODE470=this.match(this.input,NAMESPACE_NODE,XQueryParser.FOLLOW_NAMESPACE_NODE_in_p_NamespaceNodeTest10244); if (this.state.failed) return retval;
+            NAMESPACE_NODE469=this.match(this.input,NAMESPACE_NODE,XQueryParser.FOLLOW_NAMESPACE_NODE_in_p_NamespaceNodeTest10248); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            NAMESPACE_NODE470_tree = this.adaptor.create(NAMESPACE_NODE470);
-            this.adaptor.addChild(root_0, NAMESPACE_NODE470_tree);
+            NAMESPACE_NODE469_tree = this.adaptor.create(NAMESPACE_NODE469);
+            this.adaptor.addChild(root_0, NAMESPACE_NODE469_tree);
             }
-            LPAREN471=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_NamespaceNodeTest10246); if (this.state.failed) return retval;
+            LPAREN470=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_NamespaceNodeTest10250); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN471_tree = this.adaptor.create(LPAREN471);
-            this.adaptor.addChild(root_0, LPAREN471_tree);
+            LPAREN470_tree = this.adaptor.create(LPAREN470);
+            this.adaptor.addChild(root_0, LPAREN470_tree);
             }
-            RPAREN472=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_NamespaceNodeTest10248); if (this.state.failed) return retval;
+            RPAREN471=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_NamespaceNodeTest10252); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN472_tree = this.adaptor.create(RPAREN472);
-            this.adaptor.addChild(root_0, RPAREN472_tree);
+            RPAREN471_tree = this.adaptor.create(RPAREN471);
+            this.adaptor.addChild(root_0, RPAREN471_tree);
             }
 
 
@@ -41863,30 +41866,30 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var PROCESSING_INSTRUCTION473 = null;
-        var LPAREN474 = null;
-        var RPAREN477 = null;
-         var p_NCName475 = null;
-         var p_StringLiteral476 = null;
+        var PROCESSING_INSTRUCTION472 = null;
+        var LPAREN473 = null;
+        var RPAREN476 = null;
+         var p_NCName474 = null;
+         var p_StringLiteral475 = null;
 
-        var PROCESSING_INSTRUCTION473_tree=null;
-        var LPAREN474_tree=null;
-        var RPAREN477_tree=null;
+        var PROCESSING_INSTRUCTION472_tree=null;
+        var LPAREN473_tree=null;
+        var RPAREN476_tree=null;
 
         try {
             // xquery/XQueryParser.g:1377:9: ( PROCESSING_INSTRUCTION LPAREN ( p_NCName | p_StringLiteral )? RPAREN )
             // xquery/XQueryParser.g:1377:11: PROCESSING_INSTRUCTION LPAREN ( p_NCName | p_StringLiteral )? RPAREN
             root_0 = this.adaptor.nil();
 
-            PROCESSING_INSTRUCTION473=this.match(this.input,PROCESSING_INSTRUCTION,XQueryParser.FOLLOW_PROCESSING_INSTRUCTION_in_p_PITest10274); if (this.state.failed) return retval;
+            PROCESSING_INSTRUCTION472=this.match(this.input,PROCESSING_INSTRUCTION,XQueryParser.FOLLOW_PROCESSING_INSTRUCTION_in_p_PITest10278); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            PROCESSING_INSTRUCTION473_tree = this.adaptor.create(PROCESSING_INSTRUCTION473);
-            this.adaptor.addChild(root_0, PROCESSING_INSTRUCTION473_tree);
+            PROCESSING_INSTRUCTION472_tree = this.adaptor.create(PROCESSING_INSTRUCTION472);
+            this.adaptor.addChild(root_0, PROCESSING_INSTRUCTION472_tree);
             }
-            LPAREN474=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_PITest10276); if (this.state.failed) return retval;
+            LPAREN473=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_PITest10280); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN474_tree = this.adaptor.create(LPAREN474);
-            this.adaptor.addChild(root_0, LPAREN474_tree);
+            LPAREN473_tree = this.adaptor.create(LPAREN473);
+            this.adaptor.addChild(root_0, LPAREN473_tree);
             }
             // xquery/XQueryParser.g:1377:41: ( p_NCName | p_StringLiteral )?
             var alt167=3;
@@ -41901,33 +41904,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt167) {
                 case 1 :
                     // xquery/XQueryParser.g:1377:42: p_NCName
-                    this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_p_PITest10279);
-                    p_NCName475=this.p_NCName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_p_PITest10283);
+                    p_NCName474=this.p_NCName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NCName475.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NCName474.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1377:53: p_StringLiteral
-                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_PITest10283);
-                    p_StringLiteral476=this.p_StringLiteral();
+                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_PITest10287);
+                    p_StringLiteral475=this.p_StringLiteral();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral476.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral475.getTree());
 
 
                     break;
 
             }
 
-            RPAREN477=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_PITest10287); if (this.state.failed) return retval;
+            RPAREN476=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_PITest10291); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN477_tree = this.adaptor.create(RPAREN477);
-            this.adaptor.addChild(root_0, RPAREN477_tree);
+            RPAREN476_tree = this.adaptor.create(RPAREN476);
+            this.adaptor.addChild(root_0, RPAREN476_tree);
             }
 
 
@@ -41973,32 +41976,32 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var ATTRIBUTE478 = null;
-        var LPAREN479 = null;
-        var COMMA481 = null;
-        var RPAREN483 = null;
-         var p_AttribNameOrWildcard480 = null;
-         var p_TypeName482 = null;
+        var ATTRIBUTE477 = null;
+        var LPAREN478 = null;
+        var COMMA480 = null;
+        var RPAREN482 = null;
+         var p_AttribNameOrWildcard479 = null;
+         var p_TypeName481 = null;
 
-        var ATTRIBUTE478_tree=null;
-        var LPAREN479_tree=null;
-        var COMMA481_tree=null;
-        var RPAREN483_tree=null;
+        var ATTRIBUTE477_tree=null;
+        var LPAREN478_tree=null;
+        var COMMA480_tree=null;
+        var RPAREN482_tree=null;
 
         try {
             // xquery/XQueryParser.g:1382:9: ( ATTRIBUTE LPAREN ( p_AttribNameOrWildcard ( COMMA p_TypeName )? )? RPAREN )
             // xquery/XQueryParser.g:1382:11: ATTRIBUTE LPAREN ( p_AttribNameOrWildcard ( COMMA p_TypeName )? )? RPAREN
             root_0 = this.adaptor.nil();
 
-            ATTRIBUTE478=this.match(this.input,ATTRIBUTE,XQueryParser.FOLLOW_ATTRIBUTE_in_p_AttributeTest10313); if (this.state.failed) return retval;
+            ATTRIBUTE477=this.match(this.input,ATTRIBUTE,XQueryParser.FOLLOW_ATTRIBUTE_in_p_AttributeTest10317); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            ATTRIBUTE478_tree = this.adaptor.create(ATTRIBUTE478);
-            this.adaptor.addChild(root_0, ATTRIBUTE478_tree);
+            ATTRIBUTE477_tree = this.adaptor.create(ATTRIBUTE477);
+            this.adaptor.addChild(root_0, ATTRIBUTE477_tree);
             }
-            LPAREN479=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_AttributeTest10315); if (this.state.failed) return retval;
+            LPAREN478=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_AttributeTest10319); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN479_tree = this.adaptor.create(LPAREN479);
-            this.adaptor.addChild(root_0, LPAREN479_tree);
+            LPAREN478_tree = this.adaptor.create(LPAREN478);
+            this.adaptor.addChild(root_0, LPAREN478_tree);
             }
             // xquery/XQueryParser.g:1382:28: ( p_AttribNameOrWildcard ( COMMA p_TypeName )? )?
             var alt169=2;
@@ -42010,12 +42013,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt169) {
                 case 1 :
                     // xquery/XQueryParser.g:1382:29: p_AttribNameOrWildcard ( COMMA p_TypeName )?
-                    this.pushFollow(XQueryParser.FOLLOW_p_AttribNameOrWildcard_in_p_AttributeTest10318);
-                    p_AttribNameOrWildcard480=this.p_AttribNameOrWildcard();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AttribNameOrWildcard_in_p_AttributeTest10322);
+                    p_AttribNameOrWildcard479=this.p_AttribNameOrWildcard();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttribNameOrWildcard480.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttribNameOrWildcard479.getTree());
                     // xquery/XQueryParser.g:1382:52: ( COMMA p_TypeName )?
                     var alt168=2;
                     var LA168_0 = this.input.LA(1);
@@ -42026,17 +42029,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt168) {
                         case 1 :
                             // xquery/XQueryParser.g:1382:53: COMMA p_TypeName
-                            COMMA481=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_AttributeTest10321); if (this.state.failed) return retval;
+                            COMMA480=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_AttributeTest10325); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            COMMA481_tree = this.adaptor.create(COMMA481);
-                            this.adaptor.addChild(root_0, COMMA481_tree);
+                            COMMA480_tree = this.adaptor.create(COMMA480);
+                            this.adaptor.addChild(root_0, COMMA480_tree);
                             }
-                            this.pushFollow(XQueryParser.FOLLOW_p_TypeName_in_p_AttributeTest10323);
-                            p_TypeName482=this.p_TypeName();
+                            this.pushFollow(XQueryParser.FOLLOW_p_TypeName_in_p_AttributeTest10327);
+                            p_TypeName481=this.p_TypeName();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeName482.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeName481.getTree());
 
 
                             break;
@@ -42049,10 +42052,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            RPAREN483=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_AttributeTest10329); if (this.state.failed) return retval;
+            RPAREN482=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_AttributeTest10333); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN483_tree = this.adaptor.create(RPAREN483);
-            this.adaptor.addChild(root_0, RPAREN483_tree);
+            RPAREN482_tree = this.adaptor.create(RPAREN482);
+            this.adaptor.addChild(root_0, RPAREN482_tree);
             }
 
 
@@ -42098,10 +42101,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var STAR485 = null;
-         var p_AttributeName484 = null;
+        var STAR484 = null;
+         var p_AttributeName483 = null;
 
-        var STAR485_tree=null;
+        var STAR484_tree=null;
 
         try {
             // xquery/XQueryParser.g:1387:9: ( p_AttributeName | STAR )
@@ -42126,12 +42129,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1387:11: p_AttributeName
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AttributeName_in_p_AttribNameOrWildcard10357);
-                    p_AttributeName484=this.p_AttributeName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AttributeName_in_p_AttribNameOrWildcard10361);
+                    p_AttributeName483=this.p_AttributeName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeName484.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeName483.getTree());
 
 
                     break;
@@ -42139,10 +42142,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1387:29: STAR
                     root_0 = this.adaptor.nil();
 
-                    STAR485=this.match(this.input,STAR,XQueryParser.FOLLOW_STAR_in_p_AttribNameOrWildcard10361); if (this.state.failed) return retval;
+                    STAR484=this.match(this.input,STAR,XQueryParser.FOLLOW_STAR_in_p_AttribNameOrWildcard10365); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    STAR485_tree = this.adaptor.create(STAR485);
-                    this.adaptor.addChild(root_0, STAR485_tree);
+                    STAR484_tree = this.adaptor.create(STAR484);
+                    this.adaptor.addChild(root_0, STAR484_tree);
                     }
 
 
@@ -42190,40 +42193,40 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var SCHEMA_ATTRIBUTE486 = null;
-        var LPAREN487 = null;
-        var RPAREN489 = null;
-         var p_AttributeDeclaration488 = null;
+        var SCHEMA_ATTRIBUTE485 = null;
+        var LPAREN486 = null;
+        var RPAREN488 = null;
+         var p_AttributeDeclaration487 = null;
 
-        var SCHEMA_ATTRIBUTE486_tree=null;
-        var LPAREN487_tree=null;
-        var RPAREN489_tree=null;
+        var SCHEMA_ATTRIBUTE485_tree=null;
+        var LPAREN486_tree=null;
+        var RPAREN488_tree=null;
 
         try {
             // xquery/XQueryParser.g:1392:9: ( SCHEMA_ATTRIBUTE LPAREN p_AttributeDeclaration RPAREN )
             // xquery/XQueryParser.g:1392:11: SCHEMA_ATTRIBUTE LPAREN p_AttributeDeclaration RPAREN
             root_0 = this.adaptor.nil();
 
-            SCHEMA_ATTRIBUTE486=this.match(this.input,SCHEMA_ATTRIBUTE,XQueryParser.FOLLOW_SCHEMA_ATTRIBUTE_in_p_SchemaAttributeTest10387); if (this.state.failed) return retval;
+            SCHEMA_ATTRIBUTE485=this.match(this.input,SCHEMA_ATTRIBUTE,XQueryParser.FOLLOW_SCHEMA_ATTRIBUTE_in_p_SchemaAttributeTest10391); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SCHEMA_ATTRIBUTE486_tree = this.adaptor.create(SCHEMA_ATTRIBUTE486);
-            this.adaptor.addChild(root_0, SCHEMA_ATTRIBUTE486_tree);
+            SCHEMA_ATTRIBUTE485_tree = this.adaptor.create(SCHEMA_ATTRIBUTE485);
+            this.adaptor.addChild(root_0, SCHEMA_ATTRIBUTE485_tree);
             }
-            LPAREN487=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SchemaAttributeTest10389); if (this.state.failed) return retval;
+            LPAREN486=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SchemaAttributeTest10393); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN487_tree = this.adaptor.create(LPAREN487);
-            this.adaptor.addChild(root_0, LPAREN487_tree);
+            LPAREN486_tree = this.adaptor.create(LPAREN486);
+            this.adaptor.addChild(root_0, LPAREN486_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_AttributeDeclaration_in_p_SchemaAttributeTest10391);
-            p_AttributeDeclaration488=this.p_AttributeDeclaration();
+            this.pushFollow(XQueryParser.FOLLOW_p_AttributeDeclaration_in_p_SchemaAttributeTest10395);
+            p_AttributeDeclaration487=this.p_AttributeDeclaration();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeDeclaration488.getTree());
-            RPAREN489=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SchemaAttributeTest10393); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeDeclaration487.getTree());
+            RPAREN488=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SchemaAttributeTest10397); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN489_tree = this.adaptor.create(RPAREN489);
-            this.adaptor.addChild(root_0, RPAREN489_tree);
+            RPAREN488_tree = this.adaptor.create(RPAREN488);
+            this.adaptor.addChild(root_0, RPAREN488_tree);
             }
 
 
@@ -42269,7 +42272,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_AttributeName490 = null;
+         var p_AttributeName489 = null;
 
 
         try {
@@ -42277,12 +42280,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1397:11: p_AttributeName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_AttributeName_in_p_AttributeDeclaration10419);
-            p_AttributeName490=this.p_AttributeName();
+            this.pushFollow(XQueryParser.FOLLOW_p_AttributeName_in_p_AttributeDeclaration10423);
+            p_AttributeName489=this.p_AttributeName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeName490.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AttributeName489.getTree());
 
 
 
@@ -42327,34 +42330,34 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var ELEMENT491 = null;
-        var LPAREN492 = null;
-        var COMMA494 = null;
-        var QUESTION496 = null;
-        var RPAREN497 = null;
-         var p_ElementNameOrWildcard493 = null;
-         var p_TypeName495 = null;
+        var ELEMENT490 = null;
+        var LPAREN491 = null;
+        var COMMA493 = null;
+        var QUESTION495 = null;
+        var RPAREN496 = null;
+         var p_ElementNameOrWildcard492 = null;
+         var p_TypeName494 = null;
 
-        var ELEMENT491_tree=null;
-        var LPAREN492_tree=null;
-        var COMMA494_tree=null;
-        var QUESTION496_tree=null;
-        var RPAREN497_tree=null;
+        var ELEMENT490_tree=null;
+        var LPAREN491_tree=null;
+        var COMMA493_tree=null;
+        var QUESTION495_tree=null;
+        var RPAREN496_tree=null;
 
         try {
             // xquery/XQueryParser.g:1402:9: ( ELEMENT LPAREN ( p_ElementNameOrWildcard ( COMMA p_TypeName ( QUESTION )? )? )? RPAREN )
             // xquery/XQueryParser.g:1402:11: ELEMENT LPAREN ( p_ElementNameOrWildcard ( COMMA p_TypeName ( QUESTION )? )? )? RPAREN
             root_0 = this.adaptor.nil();
 
-            ELEMENT491=this.match(this.input,ELEMENT,XQueryParser.FOLLOW_ELEMENT_in_p_ElementTest10445); if (this.state.failed) return retval;
+            ELEMENT490=this.match(this.input,ELEMENT,XQueryParser.FOLLOW_ELEMENT_in_p_ElementTest10449); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            ELEMENT491_tree = this.adaptor.create(ELEMENT491);
-            this.adaptor.addChild(root_0, ELEMENT491_tree);
+            ELEMENT490_tree = this.adaptor.create(ELEMENT490);
+            this.adaptor.addChild(root_0, ELEMENT490_tree);
             }
-            LPAREN492=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ElementTest10447); if (this.state.failed) return retval;
+            LPAREN491=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ElementTest10451); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN492_tree = this.adaptor.create(LPAREN492);
-            this.adaptor.addChild(root_0, LPAREN492_tree);
+            LPAREN491_tree = this.adaptor.create(LPAREN491);
+            this.adaptor.addChild(root_0, LPAREN491_tree);
             }
             // xquery/XQueryParser.g:1402:26: ( p_ElementNameOrWildcard ( COMMA p_TypeName ( QUESTION )? )? )?
             var alt173=2;
@@ -42366,12 +42369,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt173) {
                 case 1 :
                     // xquery/XQueryParser.g:1402:27: p_ElementNameOrWildcard ( COMMA p_TypeName ( QUESTION )? )?
-                    this.pushFollow(XQueryParser.FOLLOW_p_ElementNameOrWildcard_in_p_ElementTest10450);
-                    p_ElementNameOrWildcard493=this.p_ElementNameOrWildcard();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ElementNameOrWildcard_in_p_ElementTest10454);
+                    p_ElementNameOrWildcard492=this.p_ElementNameOrWildcard();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementNameOrWildcard493.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementNameOrWildcard492.getTree());
                     // xquery/XQueryParser.g:1402:51: ( COMMA p_TypeName ( QUESTION )? )?
                     var alt172=2;
                     var LA172_0 = this.input.LA(1);
@@ -42382,17 +42385,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt172) {
                         case 1 :
                             // xquery/XQueryParser.g:1402:52: COMMA p_TypeName ( QUESTION )?
-                            COMMA494=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_ElementTest10453); if (this.state.failed) return retval;
+                            COMMA493=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_ElementTest10457); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            COMMA494_tree = this.adaptor.create(COMMA494);
-                            this.adaptor.addChild(root_0, COMMA494_tree);
+                            COMMA493_tree = this.adaptor.create(COMMA493);
+                            this.adaptor.addChild(root_0, COMMA493_tree);
                             }
-                            this.pushFollow(XQueryParser.FOLLOW_p_TypeName_in_p_ElementTest10455);
-                            p_TypeName495=this.p_TypeName();
+                            this.pushFollow(XQueryParser.FOLLOW_p_TypeName_in_p_ElementTest10459);
+                            p_TypeName494=this.p_TypeName();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeName495.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeName494.getTree());
                             // xquery/XQueryParser.g:1402:69: ( QUESTION )?
                             var alt171=2;
                             var LA171_0 = this.input.LA(1);
@@ -42403,10 +42406,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                             switch (alt171) {
                                 case 1 :
                                     // xquery/XQueryParser.g:1402:69: QUESTION
-                                    QUESTION496=this.match(this.input,QUESTION,XQueryParser.FOLLOW_QUESTION_in_p_ElementTest10457); if (this.state.failed) return retval;
+                                    QUESTION495=this.match(this.input,QUESTION,XQueryParser.FOLLOW_QUESTION_in_p_ElementTest10461); if (this.state.failed) return retval;
                                     if ( this.state.backtracking===0 ) {
-                                    QUESTION496_tree = this.adaptor.create(QUESTION496);
-                                    this.adaptor.addChild(root_0, QUESTION496_tree);
+                                    QUESTION495_tree = this.adaptor.create(QUESTION495);
+                                    this.adaptor.addChild(root_0, QUESTION495_tree);
                                     }
 
 
@@ -42426,10 +42429,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            RPAREN497=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ElementTest10464); if (this.state.failed) return retval;
+            RPAREN496=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ElementTest10468); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN497_tree = this.adaptor.create(RPAREN497);
-            this.adaptor.addChild(root_0, RPAREN497_tree);
+            RPAREN496_tree = this.adaptor.create(RPAREN496);
+            this.adaptor.addChild(root_0, RPAREN496_tree);
             }
 
 
@@ -42475,10 +42478,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var STAR499 = null;
-         var p_QName498 = null;
+        var STAR498 = null;
+         var p_QName497 = null;
 
-        var STAR499_tree=null;
+        var STAR498_tree=null;
 
         try {
             // xquery/XQueryParser.g:1407:9: ( p_QName | STAR )
@@ -42503,12 +42506,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1407:11: p_QName
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ElementNameOrWildcard10490);
-                    p_QName498=this.p_QName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ElementNameOrWildcard10494);
+                    p_QName497=this.p_QName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName498.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName497.getTree());
 
 
                     break;
@@ -42516,10 +42519,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1407:21: STAR
                     root_0 = this.adaptor.nil();
 
-                    STAR499=this.match(this.input,STAR,XQueryParser.FOLLOW_STAR_in_p_ElementNameOrWildcard10494); if (this.state.failed) return retval;
+                    STAR498=this.match(this.input,STAR,XQueryParser.FOLLOW_STAR_in_p_ElementNameOrWildcard10498); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    STAR499_tree = this.adaptor.create(STAR499);
-                    this.adaptor.addChild(root_0, STAR499_tree);
+                    STAR498_tree = this.adaptor.create(STAR498);
+                    this.adaptor.addChild(root_0, STAR498_tree);
                     }
 
 
@@ -42567,40 +42570,40 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var SCHEMA_ELEMENT500 = null;
-        var LPAREN501 = null;
-        var RPAREN503 = null;
-         var p_ElementDeclaration502 = null;
+        var SCHEMA_ELEMENT499 = null;
+        var LPAREN500 = null;
+        var RPAREN502 = null;
+         var p_ElementDeclaration501 = null;
 
-        var SCHEMA_ELEMENT500_tree=null;
-        var LPAREN501_tree=null;
-        var RPAREN503_tree=null;
+        var SCHEMA_ELEMENT499_tree=null;
+        var LPAREN500_tree=null;
+        var RPAREN502_tree=null;
 
         try {
             // xquery/XQueryParser.g:1411:9: ( SCHEMA_ELEMENT LPAREN p_ElementDeclaration RPAREN )
             // xquery/XQueryParser.g:1411:11: SCHEMA_ELEMENT LPAREN p_ElementDeclaration RPAREN
             root_0 = this.adaptor.nil();
 
-            SCHEMA_ELEMENT500=this.match(this.input,SCHEMA_ELEMENT,XQueryParser.FOLLOW_SCHEMA_ELEMENT_in_p_SchemaElementTest10512); if (this.state.failed) return retval;
+            SCHEMA_ELEMENT499=this.match(this.input,SCHEMA_ELEMENT,XQueryParser.FOLLOW_SCHEMA_ELEMENT_in_p_SchemaElementTest10516); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SCHEMA_ELEMENT500_tree = this.adaptor.create(SCHEMA_ELEMENT500);
-            this.adaptor.addChild(root_0, SCHEMA_ELEMENT500_tree);
+            SCHEMA_ELEMENT499_tree = this.adaptor.create(SCHEMA_ELEMENT499);
+            this.adaptor.addChild(root_0, SCHEMA_ELEMENT499_tree);
             }
-            LPAREN501=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SchemaElementTest10514); if (this.state.failed) return retval;
+            LPAREN500=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SchemaElementTest10518); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN501_tree = this.adaptor.create(LPAREN501);
-            this.adaptor.addChild(root_0, LPAREN501_tree);
+            LPAREN500_tree = this.adaptor.create(LPAREN500);
+            this.adaptor.addChild(root_0, LPAREN500_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ElementDeclaration_in_p_SchemaElementTest10516);
-            p_ElementDeclaration502=this.p_ElementDeclaration();
+            this.pushFollow(XQueryParser.FOLLOW_p_ElementDeclaration_in_p_SchemaElementTest10520);
+            p_ElementDeclaration501=this.p_ElementDeclaration();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementDeclaration502.getTree());
-            RPAREN503=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SchemaElementTest10518); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementDeclaration501.getTree());
+            RPAREN502=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SchemaElementTest10522); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN503_tree = this.adaptor.create(RPAREN503);
-            this.adaptor.addChild(root_0, RPAREN503_tree);
+            RPAREN502_tree = this.adaptor.create(RPAREN502);
+            this.adaptor.addChild(root_0, RPAREN502_tree);
             }
 
 
@@ -42646,7 +42649,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_ElementName504 = null;
+         var p_ElementName503 = null;
 
 
         try {
@@ -42654,12 +42657,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1416:11: p_ElementName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ElementName_in_p_ElementDeclaration10544);
-            p_ElementName504=this.p_ElementName();
+            this.pushFollow(XQueryParser.FOLLOW_p_ElementName_in_p_ElementDeclaration10548);
+            p_ElementName503=this.p_ElementName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementName504.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ElementName503.getTree());
 
 
 
@@ -42704,7 +42707,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QName505 = null;
+         var p_QName504 = null;
 
 
         try {
@@ -42712,12 +42715,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1421:11: p_QName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_AttributeName10570);
-            p_QName505=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_AttributeName10574);
+            p_QName504=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName505.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName504.getTree());
 
 
 
@@ -42762,7 +42765,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QName506 = null;
+         var p_QName505 = null;
 
 
         try {
@@ -42770,12 +42773,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1426:11: p_QName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ElementName10596);
-            p_QName506=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ElementName10600);
+            p_QName505=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName506.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName505.getTree());
 
 
 
@@ -42820,7 +42823,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QName507 = null;
+         var p_QName506 = null;
 
 
         try {
@@ -42828,12 +42831,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1431:11: p_QName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_TypeName10622);
-            p_QName507=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_TypeName10626);
+            p_QName506=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName507.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName506.getTree());
 
 
 
@@ -42878,9 +42881,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_Annotation508 = null;
-         var p_AnyFunctionTest509 = null;
-         var p_TypedFunctionTest510 = null;
+         var p_Annotation507 = null;
+         var p_AnyFunctionTest508 = null;
+         var p_TypedFunctionTest509 = null;
 
 
         try {
@@ -42902,12 +42905,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt175) {
                 case 1 :
                     // xquery/XQueryParser.g:1436:11: p_Annotation
-                    this.pushFollow(XQueryParser.FOLLOW_p_Annotation_in_p_FunctionTest10648);
-                    p_Annotation508=this.p_Annotation();
+                    this.pushFollow(XQueryParser.FOLLOW_p_Annotation_in_p_FunctionTest10652);
+                    p_Annotation507=this.p_Annotation();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Annotation508.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Annotation507.getTree());
 
 
                     break;
@@ -42959,23 +42962,23 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt176) {
                 case 1 :
                     // xquery/XQueryParser.g:1436:26: p_AnyFunctionTest
-                    this.pushFollow(XQueryParser.FOLLOW_p_AnyFunctionTest_in_p_FunctionTest10652);
-                    p_AnyFunctionTest509=this.p_AnyFunctionTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AnyFunctionTest_in_p_FunctionTest10656);
+                    p_AnyFunctionTest508=this.p_AnyFunctionTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AnyFunctionTest509.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AnyFunctionTest508.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1436:46: p_TypedFunctionTest
-                    this.pushFollow(XQueryParser.FOLLOW_p_TypedFunctionTest_in_p_FunctionTest10656);
-                    p_TypedFunctionTest510=this.p_TypedFunctionTest();
+                    this.pushFollow(XQueryParser.FOLLOW_p_TypedFunctionTest_in_p_FunctionTest10660);
+                    p_TypedFunctionTest509=this.p_TypedFunctionTest();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypedFunctionTest510.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypedFunctionTest509.getTree());
 
 
                     break;
@@ -43026,40 +43029,40 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var FUNCTION511 = null;
-        var LPAREN512 = null;
-        var STAR513 = null;
-        var RPAREN514 = null;
+        var FUNCTION510 = null;
+        var LPAREN511 = null;
+        var STAR512 = null;
+        var RPAREN513 = null;
 
-        var FUNCTION511_tree=null;
-        var LPAREN512_tree=null;
-        var STAR513_tree=null;
-        var RPAREN514_tree=null;
+        var FUNCTION510_tree=null;
+        var LPAREN511_tree=null;
+        var STAR512_tree=null;
+        var RPAREN513_tree=null;
 
         try {
             // xquery/XQueryParser.g:1441:9: ( FUNCTION LPAREN STAR RPAREN )
             // xquery/XQueryParser.g:1441:11: FUNCTION LPAREN STAR RPAREN
             root_0 = this.adaptor.nil();
 
-            FUNCTION511=this.match(this.input,FUNCTION,XQueryParser.FOLLOW_FUNCTION_in_p_AnyFunctionTest10683); if (this.state.failed) return retval;
+            FUNCTION510=this.match(this.input,FUNCTION,XQueryParser.FOLLOW_FUNCTION_in_p_AnyFunctionTest10687); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            FUNCTION511_tree = this.adaptor.create(FUNCTION511);
-            this.adaptor.addChild(root_0, FUNCTION511_tree);
+            FUNCTION510_tree = this.adaptor.create(FUNCTION510);
+            this.adaptor.addChild(root_0, FUNCTION510_tree);
             }
-            LPAREN512=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_AnyFunctionTest10685); if (this.state.failed) return retval;
+            LPAREN511=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_AnyFunctionTest10689); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN512_tree = this.adaptor.create(LPAREN512);
-            this.adaptor.addChild(root_0, LPAREN512_tree);
+            LPAREN511_tree = this.adaptor.create(LPAREN511);
+            this.adaptor.addChild(root_0, LPAREN511_tree);
             }
-            STAR513=this.match(this.input,STAR,XQueryParser.FOLLOW_STAR_in_p_AnyFunctionTest10687); if (this.state.failed) return retval;
+            STAR512=this.match(this.input,STAR,XQueryParser.FOLLOW_STAR_in_p_AnyFunctionTest10691); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            STAR513_tree = this.adaptor.create(STAR513);
-            this.adaptor.addChild(root_0, STAR513_tree);
+            STAR512_tree = this.adaptor.create(STAR512);
+            this.adaptor.addChild(root_0, STAR512_tree);
             }
-            RPAREN514=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_AnyFunctionTest10689); if (this.state.failed) return retval;
+            RPAREN513=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_AnyFunctionTest10693); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN514_tree = this.adaptor.create(RPAREN514);
-            this.adaptor.addChild(root_0, RPAREN514_tree);
+            RPAREN513_tree = this.adaptor.create(RPAREN513);
+            this.adaptor.addChild(root_0, RPAREN513_tree);
             }
 
 
@@ -43105,35 +43108,35 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var FUNCTION515 = null;
-        var LPAREN516 = null;
-        var COMMA518 = null;
-        var RPAREN520 = null;
-        var AS521 = null;
-         var p_SequenceType517 = null;
-         var p_SequenceType519 = null;
-         var p_SequenceType522 = null;
+        var FUNCTION514 = null;
+        var LPAREN515 = null;
+        var COMMA517 = null;
+        var RPAREN519 = null;
+        var AS520 = null;
+         var p_SequenceType516 = null;
+         var p_SequenceType518 = null;
+         var p_SequenceType521 = null;
 
-        var FUNCTION515_tree=null;
-        var LPAREN516_tree=null;
-        var COMMA518_tree=null;
-        var RPAREN520_tree=null;
-        var AS521_tree=null;
+        var FUNCTION514_tree=null;
+        var LPAREN515_tree=null;
+        var COMMA517_tree=null;
+        var RPAREN519_tree=null;
+        var AS520_tree=null;
 
         try {
             // xquery/XQueryParser.g:1446:9: ( FUNCTION LPAREN ( p_SequenceType ( COMMA p_SequenceType )* )? RPAREN AS p_SequenceType )
             // xquery/XQueryParser.g:1446:11: FUNCTION LPAREN ( p_SequenceType ( COMMA p_SequenceType )* )? RPAREN AS p_SequenceType
             root_0 = this.adaptor.nil();
 
-            FUNCTION515=this.match(this.input,FUNCTION,XQueryParser.FOLLOW_FUNCTION_in_p_TypedFunctionTest10715); if (this.state.failed) return retval;
+            FUNCTION514=this.match(this.input,FUNCTION,XQueryParser.FOLLOW_FUNCTION_in_p_TypedFunctionTest10719); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            FUNCTION515_tree = this.adaptor.create(FUNCTION515);
-            this.adaptor.addChild(root_0, FUNCTION515_tree);
+            FUNCTION514_tree = this.adaptor.create(FUNCTION514);
+            this.adaptor.addChild(root_0, FUNCTION514_tree);
             }
-            LPAREN516=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_TypedFunctionTest10717); if (this.state.failed) return retval;
+            LPAREN515=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_TypedFunctionTest10721); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN516_tree = this.adaptor.create(LPAREN516);
-            this.adaptor.addChild(root_0, LPAREN516_tree);
+            LPAREN515_tree = this.adaptor.create(LPAREN515);
+            this.adaptor.addChild(root_0, LPAREN515_tree);
             }
             // xquery/XQueryParser.g:1446:27: ( p_SequenceType ( COMMA p_SequenceType )* )?
             var alt178=2;
@@ -43145,12 +43148,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt178) {
                 case 1 :
                     // xquery/XQueryParser.g:1446:28: p_SequenceType ( COMMA p_SequenceType )*
-                    this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypedFunctionTest10720);
-                    p_SequenceType517=this.p_SequenceType();
+                    this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypedFunctionTest10724);
+                    p_SequenceType516=this.p_SequenceType();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType517.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType516.getTree());
                     // xquery/XQueryParser.g:1446:43: ( COMMA p_SequenceType )*
                     loop177:
                     do {
@@ -43165,17 +43168,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         switch (alt177) {
                         case 1 :
                             // xquery/XQueryParser.g:1446:44: COMMA p_SequenceType
-                            COMMA518=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_TypedFunctionTest10723); if (this.state.failed) return retval;
+                            COMMA517=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_TypedFunctionTest10727); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            COMMA518_tree = this.adaptor.create(COMMA518);
-                            this.adaptor.addChild(root_0, COMMA518_tree);
+                            COMMA517_tree = this.adaptor.create(COMMA517);
+                            this.adaptor.addChild(root_0, COMMA517_tree);
                             }
-                            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypedFunctionTest10725);
-                            p_SequenceType519=this.p_SequenceType();
+                            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypedFunctionTest10729);
+                            p_SequenceType518=this.p_SequenceType();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType519.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType518.getTree());
 
 
                             break;
@@ -43191,22 +43194,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            RPAREN520=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_TypedFunctionTest10731); if (this.state.failed) return retval;
+            RPAREN519=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_TypedFunctionTest10735); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN520_tree = this.adaptor.create(RPAREN520);
-            this.adaptor.addChild(root_0, RPAREN520_tree);
+            RPAREN519_tree = this.adaptor.create(RPAREN519);
+            this.adaptor.addChild(root_0, RPAREN519_tree);
             }
-            AS521=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_TypedFunctionTest10733); if (this.state.failed) return retval;
+            AS520=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_TypedFunctionTest10737); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            AS521_tree = this.adaptor.create(AS521);
-            this.adaptor.addChild(root_0, AS521_tree);
+            AS520_tree = this.adaptor.create(AS520);
+            this.adaptor.addChild(root_0, AS520_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypedFunctionTest10735);
-            p_SequenceType522=this.p_SequenceType();
+            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_TypedFunctionTest10739);
+            p_SequenceType521=this.p_SequenceType();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType522.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType521.getTree());
 
 
 
@@ -43251,33 +43254,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LPAREN523 = null;
-        var RPAREN525 = null;
-         var p_ItemType524 = null;
+        var LPAREN522 = null;
+        var RPAREN524 = null;
+         var p_ItemType523 = null;
 
-        var LPAREN523_tree=null;
-        var RPAREN525_tree=null;
+        var LPAREN522_tree=null;
+        var RPAREN524_tree=null;
 
         try {
             // xquery/XQueryParser.g:1451:9: ( LPAREN p_ItemType RPAREN )
             // xquery/XQueryParser.g:1451:11: LPAREN p_ItemType RPAREN
             root_0 = this.adaptor.nil();
 
-            LPAREN523=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ParenthesizedItemType10761); if (this.state.failed) return retval;
+            LPAREN522=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_ParenthesizedItemType10765); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN523_tree = this.adaptor.create(LPAREN523);
-            this.adaptor.addChild(root_0, LPAREN523_tree);
+            LPAREN522_tree = this.adaptor.create(LPAREN522);
+            this.adaptor.addChild(root_0, LPAREN522_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ItemType_in_p_ParenthesizedItemType10763);
-            p_ItemType524=this.p_ItemType();
+            this.pushFollow(XQueryParser.FOLLOW_p_ItemType_in_p_ParenthesizedItemType10767);
+            p_ItemType523=this.p_ItemType();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ItemType524.getTree());
-            RPAREN525=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ParenthesizedItemType10765); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ItemType523.getTree());
+            RPAREN524=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_ParenthesizedItemType10769); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN525_tree = this.adaptor.create(RPAREN525);
-            this.adaptor.addChild(root_0, RPAREN525_tree);
+            RPAREN524_tree = this.adaptor.create(RPAREN524);
+            this.adaptor.addChild(root_0, RPAREN524_tree);
             }
 
 
@@ -43323,17 +43326,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var QUOT526 = null;
-        var QUOT528 = null;
-        var APOS529 = null;
-        var APOS531 = null;
-         var pg_QuotStringLiteralContent527 = null;
-         var pg_AposStringLiteralContent530 = null;
+        var QUOT525 = null;
+        var QUOT527 = null;
+        var APOS528 = null;
+        var APOS530 = null;
+         var pg_QuotStringLiteralContent526 = null;
+         var pg_AposStringLiteralContent529 = null;
 
-        var QUOT526_tree=null;
-        var QUOT528_tree=null;
-        var APOS529_tree=null;
-        var APOS531_tree=null;
+        var QUOT525_tree=null;
+        var QUOT527_tree=null;
+        var APOS528_tree=null;
+        var APOS530_tree=null;
         var stream_APOS=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token APOS");
         var stream_QUOT=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token QUOT");
         var stream_pg_QuotStringLiteralContent=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"rule pg_QuotStringLiteralContent");
@@ -43359,20 +43362,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt179) {
                 case 1 :
                     // xquery/XQueryParser.g:1481:11: QUOT pg_QuotStringLiteralContent QUOT
-                    QUOT526=this.match(this.input,QUOT,XQueryParser.FOLLOW_QUOT_in_p_StringLiteral10816); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_QUOT.add(QUOT526);
+                    QUOT525=this.match(this.input,QUOT,XQueryParser.FOLLOW_QUOT_in_p_StringLiteral10820); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_QUOT.add(QUOT525);
 
                     if ( this.state.backtracking===0 ) {
                        this.pushStringLexer(false);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_pg_QuotStringLiteralContent_in_p_StringLiteral10820);
-                    pg_QuotStringLiteralContent527=this.pg_QuotStringLiteralContent();
+                    this.pushFollow(XQueryParser.FOLLOW_pg_QuotStringLiteralContent_in_p_StringLiteral10824);
+                    pg_QuotStringLiteralContent526=this.pg_QuotStringLiteralContent();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) stream_pg_QuotStringLiteralContent.add(pg_QuotStringLiteralContent527.getTree());
-                    QUOT528=this.match(this.input,QUOT,XQueryParser.FOLLOW_QUOT_in_p_StringLiteral10822); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_QUOT.add(QUOT528);
+                    if ( this.state.backtracking===0 ) stream_pg_QuotStringLiteralContent.add(pg_QuotStringLiteralContent526.getTree());
+                    QUOT527=this.match(this.input,QUOT,XQueryParser.FOLLOW_QUOT_in_p_StringLiteral10826); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_QUOT.add(QUOT527);
 
                     if ( this.state.backtracking===0 ) {
                        this.popLexer(); 
@@ -43414,20 +43417,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1483:11: APOS pg_AposStringLiteralContent APOS
-                    APOS529=this.match(this.input,APOS,XQueryParser.FOLLOW_APOS_in_p_StringLiteral10861); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_APOS.add(APOS529);
+                    APOS528=this.match(this.input,APOS,XQueryParser.FOLLOW_APOS_in_p_StringLiteral10865); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_APOS.add(APOS528);
 
                     if ( this.state.backtracking===0 ) {
                       this.pushStringLexer(true);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_pg_AposStringLiteralContent_in_p_StringLiteral10865);
-                    pg_AposStringLiteralContent530=this.pg_AposStringLiteralContent();
+                    this.pushFollow(XQueryParser.FOLLOW_pg_AposStringLiteralContent_in_p_StringLiteral10869);
+                    pg_AposStringLiteralContent529=this.pg_AposStringLiteralContent();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) stream_pg_AposStringLiteralContent.add(pg_AposStringLiteralContent530.getTree());
-                    APOS531=this.match(this.input,APOS,XQueryParser.FOLLOW_APOS_in_p_StringLiteral10867); if (this.state.failed) return retval; 
-                    if ( this.state.backtracking===0 ) stream_APOS.add(APOS531);
+                    if ( this.state.backtracking===0 ) stream_pg_AposStringLiteralContent.add(pg_AposStringLiteralContent529.getTree());
+                    APOS530=this.match(this.input,APOS,XQueryParser.FOLLOW_APOS_in_p_StringLiteral10871); if (this.state.failed) return retval; 
+                    if ( this.state.backtracking===0 ) stream_APOS.add(APOS530);
 
                     if ( this.state.backtracking===0 ) {
                        this.popLexer(); 
@@ -43511,9 +43514,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var set532 = null;
+        var set531 = null;
 
-        var set532_tree=null;
+        var set531_tree=null;
 
         try {
             // xquery/XQueryParser.g:1491:9: ( ( ESCAPE_QUOT | L_CharRef | L_PredefinedEntityRef | ~ ( QUOT | AMP ) )* )
@@ -43534,10 +43537,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt180) {
                 case 1 :
                     // xquery/XQueryParser.g:
-                    set532=this.input.LT(1);
+                    set531=this.input.LT(1);
                     if ( (this.input.LA(1)>=L_QuotAttrContentChar && this.input.LA(1)<=HASH)||(this.input.LA(1)>=COMMA && this.input.LA(1)<=APOS)||(this.input.LA(1)>=NCNameStartChar && this.input.LA(1)<=EXPLICITLY) ) {
                         this.input.consume();
-                        if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set532));
+                        if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set531));
                         this.state.errorRecovery=false;this.state.failed=false;
                     }
                     else {
@@ -43599,9 +43602,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var set533 = null;
+        var set532 = null;
 
-        var set533_tree=null;
+        var set532_tree=null;
 
         try {
             // xquery/XQueryParser.g:1499:9: ( ( ESCAPE_APOS | L_CharRef | L_PredefinedEntityRef | ~ ( APOS | AMP ) )* )
@@ -43622,10 +43625,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt181) {
                 case 1 :
                     // xquery/XQueryParser.g:
-                    set533=this.input.LT(1);
+                    set532=this.input.LT(1);
                     if ( (this.input.LA(1)>=L_QuotAttrContentChar && this.input.LA(1)<=HASH)||(this.input.LA(1)>=COMMA && this.input.LA(1)<=CHARREF_HEX)||(this.input.LA(1)>=QUOT && this.input.LA(1)<=EXPLICITLY) ) {
                         this.input.consume();
-                        if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set533));
+                        if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set532));
                         this.state.errorRecovery=false;this.state.failed=false;
                     }
                     else {
@@ -43687,19 +43690,19 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var L_ElementContentChar534 = null;
+        var L_ElementContentChar533 = null;
 
-        var L_ElementContentChar534_tree=null;
+        var L_ElementContentChar533_tree=null;
 
         try {
             // xquery/XQueryParser.g:1514:9: ( L_ElementContentChar )
             // xquery/XQueryParser.g:1514:11: L_ElementContentChar
             root_0 = this.adaptor.nil();
 
-            L_ElementContentChar534=this.match(this.input,L_ElementContentChar,XQueryParser.FOLLOW_L_ElementContentChar_in_p_ElementContentChar11042); if (this.state.failed) return retval;
+            L_ElementContentChar533=this.match(this.input,L_ElementContentChar,XQueryParser.FOLLOW_L_ElementContentChar_in_p_ElementContentChar11046); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            L_ElementContentChar534_tree = this.adaptor.create(L_ElementContentChar534);
-            this.adaptor.addChild(root_0, L_ElementContentChar534_tree);
+            L_ElementContentChar533_tree = this.adaptor.create(L_ElementContentChar533);
+            this.adaptor.addChild(root_0, L_ElementContentChar533_tree);
             }
 
 
@@ -43745,16 +43748,16 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var L_QuotAttrContentChar535 = null;
+        var L_QuotAttrContentChar534 = null;
 
-        var L_QuotAttrContentChar535_tree=null;
+        var L_QuotAttrContentChar534_tree=null;
         var stream_L_QuotAttrContentChar=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token L_QuotAttrContentChar");
 
         try {
             // xquery/XQueryParser.g:1519:9: ( L_QuotAttrContentChar -> ^( AttributeValueChar L_QuotAttrContentChar ) )
             // xquery/XQueryParser.g:1519:11: L_QuotAttrContentChar
-            L_QuotAttrContentChar535=this.match(this.input,L_QuotAttrContentChar,XQueryParser.FOLLOW_L_QuotAttrContentChar_in_p_QuotAttrContentChar11068); if (this.state.failed) return retval; 
-            if ( this.state.backtracking===0 ) stream_L_QuotAttrContentChar.add(L_QuotAttrContentChar535);
+            L_QuotAttrContentChar534=this.match(this.input,L_QuotAttrContentChar,XQueryParser.FOLLOW_L_QuotAttrContentChar_in_p_QuotAttrContentChar11072); if (this.state.failed) return retval; 
+            if ( this.state.backtracking===0 ) stream_L_QuotAttrContentChar.add(L_QuotAttrContentChar534);
 
 
 
@@ -43827,16 +43830,16 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var L_AposAttrContentChar536 = null;
+        var L_AposAttrContentChar535 = null;
 
-        var L_AposAttrContentChar536_tree=null;
+        var L_AposAttrContentChar535_tree=null;
         var stream_L_AposAttrContentChar=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token L_AposAttrContentChar");
 
         try {
             // xquery/XQueryParser.g:1525:9: ( L_AposAttrContentChar -> ^( AttributeValueChar L_AposAttrContentChar ) )
             // xquery/XQueryParser.g:1525:11: L_AposAttrContentChar
-            L_AposAttrContentChar536=this.match(this.input,L_AposAttrContentChar,XQueryParser.FOLLOW_L_AposAttrContentChar_in_p_AposAttrContentChar11118); if (this.state.failed) return retval; 
-            if ( this.state.backtracking===0 ) stream_L_AposAttrContentChar.add(L_AposAttrContentChar536);
+            L_AposAttrContentChar535=this.match(this.input,L_AposAttrContentChar,XQueryParser.FOLLOW_L_AposAttrContentChar_in_p_AposAttrContentChar11122); if (this.state.failed) return retval; 
+            if ( this.state.backtracking===0 ) stream_L_AposAttrContentChar.add(L_AposAttrContentChar535);
 
 
 
@@ -43909,8 +43912,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var pg_QName537 = null;
-         var p_NCName538 = null;
+         var pg_QName536 = null;
+         var p_NCName537 = null;
 
         var stream_p_NCName=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"rule p_NCName");
         this.setWsExplicit(true);
@@ -43948,23 +43951,23 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1546:11: pg_QName
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pg_QName_in_p_QName11204);
-                    pg_QName537=this.pg_QName();
+                    this.pushFollow(XQueryParser.FOLLOW_pg_QName_in_p_QName11208);
+                    pg_QName536=this.pg_QName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pg_QName537.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pg_QName536.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1547:11: p_NCName
-                    this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_p_QName11216);
-                    p_NCName538=this.p_NCName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_p_QName11220);
+                    p_NCName537=this.p_NCName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) stream_p_NCName.add(p_NCName538.getTree());
+                    if ( this.state.backtracking===0 ) stream_p_NCName.add(p_NCName537.getTree());
 
 
                     // AST REWRITE
@@ -44039,8 +44042,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var pg_QName539 = null;
-         var p_FNCName540 = null;
+         var pg_QName538 = null;
+         var p_FNCName539 = null;
 
         var stream_p_FNCName=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"rule p_FNCName");
         try {
@@ -44286,23 +44289,23 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1553:11: pg_QName
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_pg_QName_in_pg_FQName11277);
-                    pg_QName539=this.pg_QName();
+                    this.pushFollow(XQueryParser.FOLLOW_pg_QName_in_pg_FQName11281);
+                    pg_QName538=this.pg_QName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pg_QName539.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pg_QName538.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1554:11: p_FNCName
-                    this.pushFollow(XQueryParser.FOLLOW_p_FNCName_in_pg_FQName11289);
-                    p_FNCName540=this.p_FNCName();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FNCName_in_pg_FQName11293);
+                    p_FNCName539=this.p_FNCName();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) stream_p_FNCName.add(p_FNCName540.getTree());
+                    if ( this.state.backtracking===0 ) stream_p_FNCName.add(p_FNCName539.getTree());
 
 
                     // AST REWRITE
@@ -44376,26 +44379,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var COLON541 = null;
+        var COLON540 = null;
          var nn = null;
          var nl = null;
 
-        var COLON541_tree=null;
+        var COLON540_tree=null;
         var stream_COLON=new org.antlr.runtime.tree.RewriteRuleTokenStream(this.adaptor,"token COLON");
         var stream_p_NCName=new org.antlr.runtime.tree.RewriteRuleSubtreeStream(this.adaptor,"rule p_NCName");
         try {
             // xquery/XQueryParser.g:1558:9: (nn= p_NCName COLON nl= p_NCName -> ^( QName $nn $nl) )
             // xquery/XQueryParser.g:1558:11: nn= p_NCName COLON nl= p_NCName
-            this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_pg_QName11333);
+            this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_pg_QName11337);
             nn=this.p_NCName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) stream_p_NCName.add(nn.getTree());
-            COLON541=this.match(this.input,COLON,XQueryParser.FOLLOW_COLON_in_pg_QName11335); if (this.state.failed) return retval; 
-            if ( this.state.backtracking===0 ) stream_COLON.add(COLON541);
+            COLON540=this.match(this.input,COLON,XQueryParser.FOLLOW_COLON_in_pg_QName11339); if (this.state.failed) return retval; 
+            if ( this.state.backtracking===0 ) stream_COLON.add(COLON540);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_pg_QName11339);
+            this.pushFollow(XQueryParser.FOLLOW_p_NCName_in_pg_QName11343);
             nl=this.p_NCName();
 
             this.state._fsp--;
@@ -44404,7 +44407,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
             // AST REWRITE
-            // elements: nn, nl
+            // elements: nl, nn
             // token labels: 
             // rule labels: retval, nn, nl
             // token list labels: 
@@ -44475,19 +44478,19 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var set542 = null;
+        var set541 = null;
 
-        var set542_tree=null;
+        var set541_tree=null;
 
         try {
             // xquery/XQueryParser.g:1590:9: ( L_NCName | ANCESTOR | ANCESTOR_OR_SELF | AND | AS | ASCENDING | AT | ATTRIBUTE | BASE_URI | BOUNDARY_SPACE | BY | CASE | CAST | CASTABLE | CHILD | COLLATION | COMMENT | CONSTRUCTION | COPY_NAMESPACES | DECLARE | DEFAULT | DESCENDANT | DESCENDANT_OR_SELF | DESCENDING | DIV | DOCUMENT | DOCUMENT_NODE | ELEMENT | ELSE | EMPTY | EMPTY_SEQUENCE | ENCODING | EQ | EVERY | EXCEPT | EXTERNAL | FOLLOWING | FOLLOWING_SIBLING | FOR | FUNCTION | GE | GREATEST | GT | IDIV | IF | IMPORT | IN | INHERIT | INSTANCE | INTERSECT | IS | ITEM | LAX | LE | LEAST | LET | LT | MOD | MODULE | NAMESPACE | NE | NO_INHERIT | NO_PRESERVE | NODE | OF | OPTION | OR | ORDER | ORDERED | ORDERING | PARENT | PRECEDING | PRECEDING_SIBLING | PRESERVE | PROCESSING_INSTRUCTION | RETURN | SATISFIES | SCHEMA | SCHEMA_ATTRIBUTE | SCHEMA_ELEMENT | SELF | SOME | STABLE | STRICT | STRIP | SWITCH | TEXT | THEN | TO | TREAT | TYPESWITCH | UNION | UNORDERED | VALIDATE | VARIABLE | VERSION | WHERE | XQUERY | ALLOWING | CATCH | CONTEXT | COUNT | DECIMAL_FORMAT | DECIMAL_SEPARATOR | DIGIT | END | GROUP | GROUPING_SEPARATOR | INFINITY | MINUS_SIGN | NAMESPACE_NODE | NAN | NEXT | ONLY | PATTERN_SEPARATOR | PERCENT | PER_MILLE | PREVIOUS | SLIDING | START | TRY | TUMBLING | TYPE | WHEN | WINDOW | ZERO_DIGIT | AFTER | BEFORE | COPY | DELETE | FIRST | INSERT | INTO | LAST | MODIFY | NODES | RENAME | REPLACE | REVALIDATION | SKIP | VALUE | WITH | ALL | ANY | CONTAINS | CONTENT | DIACRITICS | DIFFERENT | DISTANCE | ENTIRE | EXACTLY | FROM | FT_OPTION | FTAND | FTNOT | FTOR | INSENSITIVE | LANGUAGE | LEVELS | LOWERCASE | MOST | NO | NOT | OCCURS | PARAGRAPH | PARAGRAPHS | PHRASE | RELATIONSHIP | SAME | SCORE | SENSITIVE | SENTENCE | SENTENCES | STEMMING | STOP | THESAURUS | TIMES | UPPERCASE | USING | WEIGHT | WILDCARDS | WITHOUT | WORD | WORDS | BREAK | CONTINUE | EXIT | LOOP | RETURNING | WHILE | CHECK | COLLECTION | CONSTRAINT | EXPLICITLY | FOREACH | FOREIGN | INDEX | INTEGRITY | KEY | ON | UNIQUE | BINARY | AMP_ER | APOS_ER | QUOT_ER )
             // xquery/XQueryParser.g:
             root_0 = this.adaptor.nil();
 
-            set542=this.input.LT(1);
+            set541=this.input.LT(1);
             if ( (this.input.LA(1)>=ANCESTOR && this.input.LA(1)<=SKIP)||(this.input.LA(1)>=VALUE && this.input.LA(1)<=QUOT_ER)||this.input.LA(1)==L_NCName||this.input.LA(1)==EXPLICITLY ) {
                 this.input.consume();
-                if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set542));
+                if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set541));
                 this.state.errorRecovery=false;this.state.failed=false;
             }
             else {
@@ -44540,19 +44543,19 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var set543 = null;
+        var set542 = null;
 
-        var set543_tree=null;
+        var set542_tree=null;
 
         try {
             // xquery/XQueryParser.g:1609:9: ( L_NCName | ANCESTOR | ANCESTOR_OR_SELF | AND | AS | ASCENDING | AT | BASE_URI | BOUNDARY_SPACE | BY | CASE | CAST | CASTABLE | CHILD | COLLATION | CONSTRUCTION | COPY_NAMESPACES | DECLARE | DEFAULT | DESCENDANT | DESCENDANT_OR_SELF | DESCENDING | DIV | DOCUMENT | ELSE | EMPTY | ENCODING | EQ | EVERY | EXCEPT | EXTERNAL | FOLLOWING | FOLLOWING_SIBLING | FOR | FUNCTION | GE | GREATEST | GT | IDIV | IMPORT | IN | INHERIT | INSTANCE | INTERSECT | IS | LAX | LE | LEAST | LET | LT | MOD | MODULE | NAMESPACE | NE | NO_INHERIT | NO_PRESERVE | OF | OPTION | OR | ORDER | ORDERED | ORDERING | PARENT | PRECEDING | PRECEDING_SIBLING | PRESERVE | RETURN | SATISFIES | SCHEMA | SELF | SOME | STABLE | STRICT | STRIP | THEN | TO | TREAT | UNION | UNORDERED | VALIDATE | VARIABLE | VERSION | WHERE | XQUERY | ALLOWING | CATCH | CONTEXT | COUNT | DECIMAL_FORMAT | DECIMAL_SEPARATOR | DIGIT | END | GROUP | GROUPING_SEPARATOR | INFINITY | MINUS_SIGN | NAN | NEXT | ONLY | PATTERN_SEPARATOR | PERCENT | PER_MILLE | PREVIOUS | SLIDING | START | TRY | TUMBLING | TYPE | WHEN | WINDOW | ZERO_DIGIT | AFTER | BEFORE | COPY | DELETE | FIRST | INSERT | INTO | LAST | MODIFY | NODES | RENAME | REPLACE | REVALIDATION | SKIP | UPDATING | VALUE | WITH | ALL | ANY | CONTAINS | CONTENT | DIACRITICS | DIFFERENT | DISTANCE | ENTIRE | EXACTLY | FROM | FT_OPTION | FTAND | FTNOT | FTOR | INSENSITIVE | LANGUAGE | LEVELS | LOWERCASE | MOST | NO | NOT | OCCURS | PARAGRAPH | PARAGRAPHS | PHRASE | RELATIONSHIP | SAME | SCORE | SENSITIVE | SENTENCE | SENTENCES | STEMMING | STOP | THESAURUS | TIMES | UPPERCASE | USING | WEIGHT | WILDCARDS | WITHOUT | WORD | WORDS | BREAK | CONTINUE | EXIT | LOOP | RETURNING | CHECK | COLLECTION | CONSTRAINT | EXPLICITLY | FOREACH | FOREIGN | INDEX | INTEGRITY | KEY | ON | UNIQUE | BINARY | AMP_ER | APOS_ER | QUOT_ER )
             // xquery/XQueryParser.g:
             root_0 = this.adaptor.nil();
 
-            set543=this.input.LT(1);
+            set542=this.input.LT(1);
             if ( (this.input.LA(1)>=ANCESTOR && this.input.LA(1)<=AT)||(this.input.LA(1)>=BASE_URI && this.input.LA(1)<=COLLATION)||(this.input.LA(1)>=CONSTRUCTION && this.input.LA(1)<=DOCUMENT)||(this.input.LA(1)>=ELSE && this.input.LA(1)<=EMPTY)||(this.input.LA(1)>=ENCODING && this.input.LA(1)<=IDIV)||(this.input.LA(1)>=IMPORT && this.input.LA(1)<=IS)||(this.input.LA(1)>=LAX && this.input.LA(1)<=NO_PRESERVE)||(this.input.LA(1)>=OF && this.input.LA(1)<=PRESERVE)||(this.input.LA(1)>=RETURN && this.input.LA(1)<=SCHEMA)||(this.input.LA(1)>=SELF && this.input.LA(1)<=STRIP)||(this.input.LA(1)>=THEN && this.input.LA(1)<=TREAT)||(this.input.LA(1)>=UNION && this.input.LA(1)<=MINUS_SIGN)||(this.input.LA(1)>=NAN && this.input.LA(1)<=START)||(this.input.LA(1)>=TRY && this.input.LA(1)<=RETURNING)||(this.input.LA(1)>=CHECK && this.input.LA(1)<=QUOT_ER)||this.input.LA(1)==L_NCName||this.input.LA(1)==EXPLICITLY ) {
                 this.input.consume();
-                if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set543));
+                if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, this.adaptor.create(set542));
                 this.state.errorRecovery=false;this.state.failed=false;
             }
             else {
@@ -44605,11 +44608,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_InsertExpr544 = null;
-         var p_DeleteExpr545 = null;
-         var p_RenameExpr546 = null;
-         var p_ReplaceExpr547 = null;
-         var p_TransformExpr548 = null;
+         var p_InsertExpr543 = null;
+         var p_DeleteExpr544 = null;
+         var p_RenameExpr545 = null;
+         var p_ReplaceExpr546 = null;
+         var p_TransformExpr547 = null;
 
 
         try {
@@ -44644,12 +44647,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1647:11: p_InsertExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_InsertExpr_in_pg_UpdateExpr13330);
-                    p_InsertExpr544=this.p_InsertExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_InsertExpr_in_pg_UpdateExpr13334);
+                    p_InsertExpr543=this.p_InsertExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_InsertExpr544.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_InsertExpr543.getTree());
 
 
                     break;
@@ -44657,12 +44660,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1648:11: p_DeleteExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_DeleteExpr_in_pg_UpdateExpr13342);
-                    p_DeleteExpr545=this.p_DeleteExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_DeleteExpr_in_pg_UpdateExpr13346);
+                    p_DeleteExpr544=this.p_DeleteExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_DeleteExpr545.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_DeleteExpr544.getTree());
 
 
                     break;
@@ -44670,12 +44673,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1649:11: p_RenameExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_RenameExpr_in_pg_UpdateExpr13354);
-                    p_RenameExpr546=this.p_RenameExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_RenameExpr_in_pg_UpdateExpr13358);
+                    p_RenameExpr545=this.p_RenameExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_RenameExpr546.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_RenameExpr545.getTree());
 
 
                     break;
@@ -44683,12 +44686,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1650:11: p_ReplaceExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_ReplaceExpr_in_pg_UpdateExpr13366);
-                    p_ReplaceExpr547=this.p_ReplaceExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ReplaceExpr_in_pg_UpdateExpr13370);
+                    p_ReplaceExpr546=this.p_ReplaceExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ReplaceExpr547.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ReplaceExpr546.getTree());
 
 
                     break;
@@ -44696,12 +44699,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1651:11: p_TransformExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_TransformExpr_in_pg_UpdateExpr13378);
-                    p_TransformExpr548=this.p_TransformExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_TransformExpr_in_pg_UpdateExpr13382);
+                    p_TransformExpr547=this.p_TransformExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TransformExpr548.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TransformExpr547.getTree());
 
 
                     break;
@@ -44748,11 +44751,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var SEMICOLON549 = null;
+        var SEMICOLON548 = null;
         var k = null;
         var list_k=null;
 
-        var SEMICOLON549_tree=null;
+        var SEMICOLON548_tree=null;
         var k_tree=null;
 
         try {
@@ -44760,7 +44763,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1656:11: k+= DECLARE k+= REVALIDATION (k+= STRICT | k+= LAX | k+= SKIP ) SEMICOLON
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,DECLARE,XQueryParser.FOLLOW_DECLARE_in_pm_RevalidationDecl13406); if (this.state.failed) return retval;
+            k=this.match(this.input,DECLARE,XQueryParser.FOLLOW_DECLARE_in_pm_RevalidationDecl13410); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -44768,7 +44771,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            k=this.match(this.input,REVALIDATION,XQueryParser.FOLLOW_REVALIDATION_in_pm_RevalidationDecl13410); if (this.state.failed) return retval;
+            k=this.match(this.input,REVALIDATION,XQueryParser.FOLLOW_REVALIDATION_in_pm_RevalidationDecl13414); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -44799,7 +44802,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt185) {
                 case 1 :
                     // xquery/XQueryParser.g:1656:39: k+= STRICT
-                    k=this.match(this.input,STRICT,XQueryParser.FOLLOW_STRICT_in_pm_RevalidationDecl13415); if (this.state.failed) return retval;
+                    k=this.match(this.input,STRICT,XQueryParser.FOLLOW_STRICT_in_pm_RevalidationDecl13419); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -44812,7 +44815,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1656:51: k+= LAX
-                    k=this.match(this.input,LAX,XQueryParser.FOLLOW_LAX_in_pm_RevalidationDecl13421); if (this.state.failed) return retval;
+                    k=this.match(this.input,LAX,XQueryParser.FOLLOW_LAX_in_pm_RevalidationDecl13425); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -44825,7 +44828,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 3 :
                     // xquery/XQueryParser.g:1656:60: k+= SKIP
-                    k=this.match(this.input,SKIP,XQueryParser.FOLLOW_SKIP_in_pm_RevalidationDecl13427); if (this.state.failed) return retval;
+                    k=this.match(this.input,SKIP,XQueryParser.FOLLOW_SKIP_in_pm_RevalidationDecl13431); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -44842,10 +44845,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
-            SEMICOLON549=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_pm_RevalidationDecl13432); if (this.state.failed) return retval;
+            SEMICOLON548=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_pm_RevalidationDecl13436); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON549_tree = this.adaptor.create(SEMICOLON549);
-            this.adaptor.addChild(root_0, SEMICOLON549_tree);
+            SEMICOLON548_tree = this.adaptor.create(SEMICOLON548);
+            this.adaptor.addChild(root_0, SEMICOLON548_tree);
             }
 
 
@@ -44939,7 +44942,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt187) {
                         case 1 :
                             // xquery/XQueryParser.g:1661:13: k+= AS (k+= FIRST | k+= LAST )
-                            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_InsertExprTargetChoice13462); if (this.state.failed) return retval;
+                            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_InsertExprTargetChoice13466); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
                             k_tree = this.adaptor.create(k);
                             this.adaptor.addChild(root_0, k_tree);
@@ -44967,7 +44970,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                             switch (alt186) {
                                 case 1 :
                                     // xquery/XQueryParser.g:1661:20: k+= FIRST
-                                    k=this.match(this.input,FIRST,XQueryParser.FOLLOW_FIRST_in_p_InsertExprTargetChoice13467); if (this.state.failed) return retval;
+                                    k=this.match(this.input,FIRST,XQueryParser.FOLLOW_FIRST_in_p_InsertExprTargetChoice13471); if (this.state.failed) return retval;
                                     if ( this.state.backtracking===0 ) {
                                     k_tree = this.adaptor.create(k);
                                     this.adaptor.addChild(root_0, k_tree);
@@ -44980,7 +44983,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                                     break;
                                 case 2 :
                                     // xquery/XQueryParser.g:1661:31: k+= LAST
-                                    k=this.match(this.input,LAST,XQueryParser.FOLLOW_LAST_in_p_InsertExprTargetChoice13473); if (this.state.failed) return retval;
+                                    k=this.match(this.input,LAST,XQueryParser.FOLLOW_LAST_in_p_InsertExprTargetChoice13477); if (this.state.failed) return retval;
                                     if ( this.state.backtracking===0 ) {
                                     k_tree = this.adaptor.create(k);
                                     this.adaptor.addChild(root_0, k_tree);
@@ -45000,7 +45003,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
                     }
 
-                    k=this.match(this.input,INTO,XQueryParser.FOLLOW_INTO_in_p_InsertExprTargetChoice13480); if (this.state.failed) return retval;
+                    k=this.match(this.input,INTO,XQueryParser.FOLLOW_INTO_in_p_InsertExprTargetChoice13484); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45021,7 +45024,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1662:11: ka= AFTER
                     root_0 = this.adaptor.nil();
 
-                    ka=this.match(this.input,AFTER,XQueryParser.FOLLOW_AFTER_in_p_InsertExprTargetChoice13497); if (this.state.failed) return retval;
+                    ka=this.match(this.input,AFTER,XQueryParser.FOLLOW_AFTER_in_p_InsertExprTargetChoice13501); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     ka_tree = this.adaptor.create(ka);
                     this.adaptor.addChild(root_0, ka_tree);
@@ -45036,7 +45039,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1663:11: kb= BEFORE
                     root_0 = this.adaptor.nil();
 
-                    kb=this.match(this.input,BEFORE,XQueryParser.FOLLOW_BEFORE_in_p_InsertExprTargetChoice13513); if (this.state.failed) return retval;
+                    kb=this.match(this.input,BEFORE,XQueryParser.FOLLOW_BEFORE_in_p_InsertExprTargetChoice13517); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     kb_tree = this.adaptor.create(kb);
                     this.adaptor.addChild(root_0, kb_tree);
@@ -45092,9 +45095,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_SourceExpr550 = null;
-         var p_InsertExprTargetChoice551 = null;
-         var p_TargetExpr552 = null;
+         var p_SourceExpr549 = null;
+         var p_InsertExprTargetChoice550 = null;
+         var p_TargetExpr551 = null;
 
         var k_tree=null;
 
@@ -45103,7 +45106,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1668:11: k+= INSERT (k+= NODE | k+= NODES ) p_SourceExpr p_InsertExprTargetChoice p_TargetExpr
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,INSERT,XQueryParser.FOLLOW_INSERT_in_p_InsertExpr13543); if (this.state.failed) return retval;
+            k=this.match(this.input,INSERT,XQueryParser.FOLLOW_INSERT_in_p_InsertExpr13547); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45131,7 +45134,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt189) {
                 case 1 :
                     // xquery/XQueryParser.g:1668:22: k+= NODE
-                    k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_InsertExpr13548); if (this.state.failed) return retval;
+                    k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_InsertExpr13552); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45144,7 +45147,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1668:32: k+= NODES
-                    k=this.match(this.input,NODES,XQueryParser.FOLLOW_NODES_in_p_InsertExpr13554); if (this.state.failed) return retval;
+                    k=this.match(this.input,NODES,XQueryParser.FOLLOW_NODES_in_p_InsertExpr13558); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45158,24 +45161,24 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            this.pushFollow(XQueryParser.FOLLOW_p_SourceExpr_in_p_InsertExpr13557);
-            p_SourceExpr550=this.p_SourceExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_SourceExpr_in_p_InsertExpr13561);
+            p_SourceExpr549=this.p_SourceExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SourceExpr550.getTree());
-            this.pushFollow(XQueryParser.FOLLOW_p_InsertExprTargetChoice_in_p_InsertExpr13559);
-            p_InsertExprTargetChoice551=this.p_InsertExprTargetChoice();
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SourceExpr549.getTree());
+            this.pushFollow(XQueryParser.FOLLOW_p_InsertExprTargetChoice_in_p_InsertExpr13563);
+            p_InsertExprTargetChoice550=this.p_InsertExprTargetChoice();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_InsertExprTargetChoice551.getTree());
-            this.pushFollow(XQueryParser.FOLLOW_p_TargetExpr_in_p_InsertExpr13561);
-            p_TargetExpr552=this.p_TargetExpr();
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_InsertExprTargetChoice550.getTree());
+            this.pushFollow(XQueryParser.FOLLOW_p_TargetExpr_in_p_InsertExpr13565);
+            p_TargetExpr551=this.p_TargetExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TargetExpr552.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TargetExpr551.getTree());
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
@@ -45225,7 +45228,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_TargetExpr553 = null;
+         var p_TargetExpr552 = null;
 
         var k_tree=null;
 
@@ -45234,7 +45237,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1673:11: k+= DELETE (k+= NODE | k+= NODES ) p_TargetExpr
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,DELETE,XQueryParser.FOLLOW_DELETE_in_p_DeleteExpr13591); if (this.state.failed) return retval;
+            k=this.match(this.input,DELETE,XQueryParser.FOLLOW_DELETE_in_p_DeleteExpr13595); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45262,7 +45265,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt190) {
                 case 1 :
                     // xquery/XQueryParser.g:1673:22: k+= NODE
-                    k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_DeleteExpr13596); if (this.state.failed) return retval;
+                    k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_DeleteExpr13600); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45275,7 +45278,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1673:32: k+= NODES
-                    k=this.match(this.input,NODES,XQueryParser.FOLLOW_NODES_in_p_DeleteExpr13602); if (this.state.failed) return retval;
+                    k=this.match(this.input,NODES,XQueryParser.FOLLOW_NODES_in_p_DeleteExpr13606); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45289,12 +45292,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            this.pushFollow(XQueryParser.FOLLOW_p_TargetExpr_in_p_DeleteExpr13605);
-            p_TargetExpr553=this.p_TargetExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_TargetExpr_in_p_DeleteExpr13609);
+            p_TargetExpr552=this.p_TargetExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TargetExpr553.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TargetExpr552.getTree());
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
@@ -45344,8 +45347,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
+         var p_ExprSingle553 = null;
          var p_ExprSingle554 = null;
-         var p_ExprSingle555 = null;
 
         var k_tree=null;
 
@@ -45354,7 +45357,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1678:11: k+= REPLACE (k+= VALUE k+= OF )? k+= NODE p_ExprSingle[true] k+= WITH p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,REPLACE,XQueryParser.FOLLOW_REPLACE_in_p_ReplaceExpr13635); if (this.state.failed) return retval;
+            k=this.match(this.input,REPLACE,XQueryParser.FOLLOW_REPLACE_in_p_ReplaceExpr13639); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45372,7 +45375,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt191) {
                 case 1 :
                     // xquery/XQueryParser.g:1678:23: k+= VALUE k+= OF
-                    k=this.match(this.input,VALUE,XQueryParser.FOLLOW_VALUE_in_p_ReplaceExpr13640); if (this.state.failed) return retval;
+                    k=this.match(this.input,VALUE,XQueryParser.FOLLOW_VALUE_in_p_ReplaceExpr13644); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45380,7 +45383,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,OF,XQueryParser.FOLLOW_OF_in_p_ReplaceExpr13644); if (this.state.failed) return retval;
+                    k=this.match(this.input,OF,XQueryParser.FOLLOW_OF_in_p_ReplaceExpr13648); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -45394,7 +45397,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ReplaceExpr13650); if (this.state.failed) return retval;
+            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ReplaceExpr13654); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45402,26 +45405,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ReplaceExpr13652);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ReplaceExpr13656);
+            p_ExprSingle553=this.p_ExprSingle(true);
+
+            this.state._fsp--;
+            if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle553.getTree());
+            k=this.match(this.input,WITH,XQueryParser.FOLLOW_WITH_in_p_ReplaceExpr13661); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) {
+            k_tree = this.adaptor.create(k);
+            this.adaptor.addChild(root_0, k_tree);
+            }
+            if (org.antlr.lang.isNull(list_k)) list_k = [];
+            list_k.push(k);
+
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ReplaceExpr13663);
             p_ExprSingle554=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle554.getTree());
-            k=this.match(this.input,WITH,XQueryParser.FOLLOW_WITH_in_p_ReplaceExpr13657); if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) {
-            k_tree = this.adaptor.create(k);
-            this.adaptor.addChild(root_0, k_tree);
-            }
-            if (org.antlr.lang.isNull(list_k)) list_k = [];
-            list_k.push(k);
-
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ReplaceExpr13659);
-            p_ExprSingle555=this.p_ExprSingle(true);
-
-            this.state._fsp--;
-            if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle555.getTree());
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
@@ -45471,8 +45474,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_TargetExpr556 = null;
-         var p_NewNameExpr557 = null;
+         var p_TargetExpr555 = null;
+         var p_NewNameExpr556 = null;
 
         var k_tree=null;
 
@@ -45481,7 +45484,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1683:11: k+= RENAME k+= NODE p_TargetExpr k+= AS p_NewNameExpr
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,RENAME,XQueryParser.FOLLOW_RENAME_in_p_RenameExpr13690); if (this.state.failed) return retval;
+            k=this.match(this.input,RENAME,XQueryParser.FOLLOW_RENAME_in_p_RenameExpr13694); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45489,7 +45492,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_RenameExpr13694); if (this.state.failed) return retval;
+            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_RenameExpr13698); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45497,13 +45500,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_TargetExpr_in_p_RenameExpr13696);
-            p_TargetExpr556=this.p_TargetExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_TargetExpr_in_p_RenameExpr13700);
+            p_TargetExpr555=this.p_TargetExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TargetExpr556.getTree());
-            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_RenameExpr13700); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TargetExpr555.getTree());
+            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_RenameExpr13704); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45511,12 +45514,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_NewNameExpr_in_p_RenameExpr13702);
-            p_NewNameExpr557=this.p_NewNameExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_NewNameExpr_in_p_RenameExpr13706);
+            p_NewNameExpr556=this.p_NewNameExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NewNameExpr557.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_NewNameExpr556.getTree());
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
@@ -45564,7 +45567,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_ExprSingle558 = null;
+         var p_ExprSingle557 = null;
 
 
         try {
@@ -45572,12 +45575,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1688:11: p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_SourceExpr13730);
-            p_ExprSingle558=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_SourceExpr13734);
+            p_ExprSingle557=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle558.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle557.getTree());
 
 
 
@@ -45622,7 +45625,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_ExprSingle559 = null;
+         var p_ExprSingle558 = null;
 
 
         try {
@@ -45630,12 +45633,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1693:11: p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TargetExpr13757);
-            p_ExprSingle559=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TargetExpr13761);
+            p_ExprSingle558=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle559.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle558.getTree());
 
 
 
@@ -45680,7 +45683,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_ExprSingle560 = null;
+         var p_ExprSingle559 = null;
 
 
         try {
@@ -45688,12 +45691,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1698:11: p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_NewNameExpr13784);
-            p_ExprSingle560=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_NewNameExpr13788);
+            p_ExprSingle559=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle560.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle559.getTree());
 
 
 
@@ -45740,23 +45743,23 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var d = null;
         var e = null;
-        var BIND561 = null;
-        var COMMA563 = null;
-        var BIND564 = null;
+        var BIND560 = null;
+        var COMMA562 = null;
+        var BIND563 = null;
         var k = null;
         var list_k=null;
          var v = null;
          var w = null;
-         var p_ExprSingle562 = null;
+         var p_ExprSingle561 = null;
+         var p_ExprSingle564 = null;
          var p_ExprSingle565 = null;
          var p_ExprSingle566 = null;
-         var p_ExprSingle567 = null;
 
         var d_tree=null;
         var e_tree=null;
-        var BIND561_tree=null;
-        var COMMA563_tree=null;
-        var BIND564_tree=null;
+        var BIND560_tree=null;
+        var COMMA562_tree=null;
+        var BIND563_tree=null;
         var k_tree=null;
 
         try {
@@ -45764,7 +45767,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1703:11: k+= COPY d= DOLLAR v= p_VarName BIND p_ExprSingle[true] ( COMMA e= DOLLAR w= p_VarName BIND p_ExprSingle[true] )* k+= MODIFY p_ExprSingle[true] k+= RETURN p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,COPY,XQueryParser.FOLLOW_COPY_in_p_TransformExpr13813); if (this.state.failed) return retval;
+            k=this.match(this.input,COPY,XQueryParser.FOLLOW_COPY_in_p_TransformExpr13817); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45772,12 +45775,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_TransformExpr13817); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_TransformExpr13821); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_TransformExpr13821);
+            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_TransformExpr13825);
             v=this.p_VarName();
 
             this.state._fsp--;
@@ -45786,17 +45789,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                this.av(d, (v?v.stop:null)); 
             }
-            BIND561=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_TransformExpr13825); if (this.state.failed) return retval;
+            BIND560=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_TransformExpr13829); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            BIND561_tree = this.adaptor.create(BIND561);
-            this.adaptor.addChild(root_0, BIND561_tree);
+            BIND560_tree = this.adaptor.create(BIND560);
+            this.adaptor.addChild(root_0, BIND560_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13827);
-            p_ExprSingle562=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13831);
+            p_ExprSingle561=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle562.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle561.getTree());
             // xquery/XQueryParser.g:1703:90: ( COMMA e= DOLLAR w= p_VarName BIND p_ExprSingle[true] )*
             loop192:
             do {
@@ -45811,17 +45814,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt192) {
                 case 1 :
                     // xquery/XQueryParser.g:1703:91: COMMA e= DOLLAR w= p_VarName BIND p_ExprSingle[true]
-                    COMMA563=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_TransformExpr13831); if (this.state.failed) return retval;
+                    COMMA562=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_TransformExpr13835); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    COMMA563_tree = this.adaptor.create(COMMA563);
-                    this.adaptor.addChild(root_0, COMMA563_tree);
+                    COMMA562_tree = this.adaptor.create(COMMA562);
+                    this.adaptor.addChild(root_0, COMMA562_tree);
                     }
-                    e=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_TransformExpr13835); if (this.state.failed) return retval;
+                    e=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_TransformExpr13839); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     e_tree = this.adaptor.create(e);
                     this.adaptor.addChild(root_0, e_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_TransformExpr13839);
+                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_TransformExpr13843);
                     w=this.p_VarName();
 
                     this.state._fsp--;
@@ -45830,17 +45833,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                        this.av(e, (w?w.stop:null)); 
                     }
-                    BIND564=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_TransformExpr13843); if (this.state.failed) return retval;
+                    BIND563=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_TransformExpr13847); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    BIND564_tree = this.adaptor.create(BIND564);
-                    this.adaptor.addChild(root_0, BIND564_tree);
+                    BIND563_tree = this.adaptor.create(BIND563);
+                    this.adaptor.addChild(root_0, BIND563_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13845);
-                    p_ExprSingle565=this.p_ExprSingle(true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13849);
+                    p_ExprSingle564=this.p_ExprSingle(true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle565.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle564.getTree());
 
 
                     break;
@@ -45850,7 +45853,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 }
             } while (true);
 
-            k=this.match(this.input,MODIFY,XQueryParser.FOLLOW_MODIFY_in_p_TransformExpr13852); if (this.state.failed) return retval;
+            k=this.match(this.input,MODIFY,XQueryParser.FOLLOW_MODIFY_in_p_TransformExpr13856); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45858,26 +45861,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13854);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13858);
+            p_ExprSingle565=this.p_ExprSingle(true);
+
+            this.state._fsp--;
+            if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle565.getTree());
+            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_TransformExpr13863); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) {
+            k_tree = this.adaptor.create(k);
+            this.adaptor.addChild(root_0, k_tree);
+            }
+            if (org.antlr.lang.isNull(list_k)) list_k = [];
+            list_k.push(k);
+
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13865);
             p_ExprSingle566=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle566.getTree());
-            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_TransformExpr13859); if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) {
-            k_tree = this.adaptor.create(k);
-            this.adaptor.addChild(root_0, k_tree);
-            }
-            if (org.antlr.lang.isNull(list_k)) list_k = [];
-            list_k.push(k);
-
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_TransformExpr13861);
-            p_ExprSingle567=this.p_ExprSingle(true);
-
-            this.state._fsp--;
-            if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle567.getTree());
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
@@ -45925,12 +45928,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var SEMICOLON569 = null;
+        var SEMICOLON568 = null;
         var k = null;
         var list_k=null;
-         var p_FTMatchOptions568 = null;
+         var p_FTMatchOptions567 = null;
 
-        var SEMICOLON569_tree=null;
+        var SEMICOLON568_tree=null;
         var k_tree=null;
 
         try {
@@ -45938,7 +45941,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1714:11: k+= DECLARE k+= FT_OPTION p_FTMatchOptions SEMICOLON
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,DECLARE,XQueryParser.FOLLOW_DECLARE_in_pm_FTOptionDecl13899); if (this.state.failed) return retval;
+            k=this.match(this.input,DECLARE,XQueryParser.FOLLOW_DECLARE_in_pm_FTOptionDecl13903); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45946,7 +45949,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            k=this.match(this.input,FT_OPTION,XQueryParser.FOLLOW_FT_OPTION_in_pm_FTOptionDecl13903); if (this.state.failed) return retval;
+            k=this.match(this.input,FT_OPTION,XQueryParser.FOLLOW_FT_OPTION_in_pm_FTOptionDecl13907); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -45954,16 +45957,16 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTMatchOptions_in_pm_FTOptionDecl13905);
-            p_FTMatchOptions568=this.p_FTMatchOptions();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTMatchOptions_in_pm_FTOptionDecl13909);
+            p_FTMatchOptions567=this.p_FTMatchOptions();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMatchOptions568.getTree());
-            SEMICOLON569=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_pm_FTOptionDecl13907); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMatchOptions567.getTree());
+            SEMICOLON568=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_pm_FTOptionDecl13911); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON569_tree = this.adaptor.create(SEMICOLON569);
-            this.adaptor.addChild(root_0, SEMICOLON569_tree);
+            SEMICOLON568_tree = this.adaptor.create(SEMICOLON568);
+            this.adaptor.addChild(root_0, SEMICOLON568_tree);
             }
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
@@ -46024,7 +46027,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1719:11: ks= SCORE d= DOLLAR v= p_VarName
             root_0 = this.adaptor.nil();
 
-            ks=this.match(this.input,SCORE,XQueryParser.FOLLOW_SCORE_in_p_FTScoreVar13937); if (this.state.failed) return retval;
+            ks=this.match(this.input,SCORE,XQueryParser.FOLLOW_SCORE_in_p_FTScoreVar13941); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             ks_tree = this.adaptor.create(ks);
             this.adaptor.addChild(root_0, ks_tree);
@@ -46032,12 +46035,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(ks);
             }
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_FTScoreVar13943); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_FTScoreVar13947); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_FTScoreVar13947);
+            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_FTScoreVar13951);
             v=this.p_VarName();
 
             this.state._fsp--;
@@ -46092,9 +46095,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_StringConcatExpr570 = null;
-         var p_FTSelection571 = null;
-         var p_FTIgnoreOption572 = null;
+         var p_StringConcatExpr569 = null;
+         var p_FTSelection570 = null;
+         var p_FTIgnoreOption571 = null;
 
         var k_tree=null;
 
@@ -46103,12 +46106,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1724:11: p_StringConcatExpr (k+= CONTAINS k+= TEXT p_FTSelection ( p_FTIgnoreOption )? )?
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_StringConcatExpr_in_p_FTContainsExpr13975);
-            p_StringConcatExpr570=this.p_StringConcatExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StringConcatExpr_in_p_FTContainsExpr13979);
+            p_StringConcatExpr569=this.p_StringConcatExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringConcatExpr570.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringConcatExpr569.getTree());
             // xquery/XQueryParser.g:1724:30: (k+= CONTAINS k+= TEXT p_FTSelection ( p_FTIgnoreOption )? )?
             var alt194=2;
             var LA194_0 = this.input.LA(1);
@@ -46119,7 +46122,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt194) {
                 case 1 :
                     // xquery/XQueryParser.g:1724:32: k+= CONTAINS k+= TEXT p_FTSelection ( p_FTIgnoreOption )?
-                    k=this.match(this.input,CONTAINS,XQueryParser.FOLLOW_CONTAINS_in_p_FTContainsExpr13981); if (this.state.failed) return retval;
+                    k=this.match(this.input,CONTAINS,XQueryParser.FOLLOW_CONTAINS_in_p_FTContainsExpr13985); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -46127,7 +46130,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,TEXT,XQueryParser.FOLLOW_TEXT_in_p_FTContainsExpr13985); if (this.state.failed) return retval;
+                    k=this.match(this.input,TEXT,XQueryParser.FOLLOW_TEXT_in_p_FTContainsExpr13989); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -46138,12 +46141,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(list_k);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTSelection_in_p_FTContainsExpr13989);
-                    p_FTSelection571=this.p_FTSelection();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTSelection_in_p_FTContainsExpr13993);
+                    p_FTSelection570=this.p_FTSelection();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTSelection571.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTSelection570.getTree());
                     // xquery/XQueryParser.g:1724:81: ( p_FTIgnoreOption )?
                     var alt193=2;
                     var LA193_0 = this.input.LA(1);
@@ -46154,12 +46157,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt193) {
                         case 1 :
                             // xquery/XQueryParser.g:1724:81: p_FTIgnoreOption
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTIgnoreOption_in_p_FTContainsExpr13991);
-                            p_FTIgnoreOption572=this.p_FTIgnoreOption();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTIgnoreOption_in_p_FTContainsExpr13995);
+                            p_FTIgnoreOption571=this.p_FTIgnoreOption();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTIgnoreOption572.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTIgnoreOption571.getTree());
 
 
                             break;
@@ -46216,8 +46219,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_FTOr573 = null;
-         var p_FTPosFilter574 = null;
+         var p_FTOr572 = null;
+         var p_FTPosFilter573 = null;
 
 
         try {
@@ -46225,12 +46228,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1729:11: p_FTOr ( p_FTPosFilter )*
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTOr_in_p_FTSelection14021);
-            p_FTOr573=this.p_FTOr();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTOr_in_p_FTSelection14025);
+            p_FTOr572=this.p_FTOr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTOr573.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTOr572.getTree());
             // xquery/XQueryParser.g:1729:18: ( p_FTPosFilter )*
             loop195:
             do {
@@ -46245,12 +46248,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt195) {
                 case 1 :
                     // xquery/XQueryParser.g:1729:18: p_FTPosFilter
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTPosFilter_in_p_FTSelection14023);
-                    p_FTPosFilter574=this.p_FTPosFilter();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTPosFilter_in_p_FTSelection14027);
+                    p_FTPosFilter573=this.p_FTPosFilter();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTPosFilter574.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTPosFilter573.getTree());
 
 
                     break;
@@ -46305,20 +46308,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var kw = null;
-        var LBRACKET575 = null;
-        var RBRACKET577 = null;
-         var p_Expr576 = null;
+        var LBRACKET574 = null;
+        var RBRACKET576 = null;
+         var p_Expr575 = null;
 
         var kw_tree=null;
-        var LBRACKET575_tree=null;
-        var RBRACKET577_tree=null;
+        var LBRACKET574_tree=null;
+        var RBRACKET576_tree=null;
 
         try {
             // xquery/XQueryParser.g:1734:9: (kw= WEIGHT LBRACKET p_Expr[true,true] RBRACKET )
             // xquery/XQueryParser.g:1734:11: kw= WEIGHT LBRACKET p_Expr[true,true] RBRACKET
             root_0 = this.adaptor.nil();
 
-            kw=this.match(this.input,WEIGHT,XQueryParser.FOLLOW_WEIGHT_in_p_FTWeight14052); if (this.state.failed) return retval;
+            kw=this.match(this.input,WEIGHT,XQueryParser.FOLLOW_WEIGHT_in_p_FTWeight14056); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             kw_tree = this.adaptor.create(kw);
             this.adaptor.addChild(root_0, kw_tree);
@@ -46326,21 +46329,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(kw);
             }
-            LBRACKET575=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_FTWeight14056); if (this.state.failed) return retval;
+            LBRACKET574=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_FTWeight14060); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET575_tree = this.adaptor.create(LBRACKET575);
-            this.adaptor.addChild(root_0, LBRACKET575_tree);
+            LBRACKET574_tree = this.adaptor.create(LBRACKET574);
+            this.adaptor.addChild(root_0, LBRACKET574_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_FTWeight14058);
-            p_Expr576=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_FTWeight14062);
+            p_Expr575=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr576.getTree());
-            RBRACKET577=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_FTWeight14061); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr575.getTree());
+            RBRACKET576=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_FTWeight14065); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET577_tree = this.adaptor.create(RBRACKET577);
-            this.adaptor.addChild(root_0, RBRACKET577_tree);
+            RBRACKET576_tree = this.adaptor.create(RBRACKET576);
+            this.adaptor.addChild(root_0, RBRACKET576_tree);
             }
 
 
@@ -46387,8 +46390,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var ko = null;
+         var p_FTAnd577 = null;
          var p_FTAnd578 = null;
-         var p_FTAnd579 = null;
 
         var ko_tree=null;
 
@@ -46397,12 +46400,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1739:11: p_FTAnd (ko= FTOR p_FTAnd )*
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTAnd_in_p_FTOr14087);
-            p_FTAnd578=this.p_FTAnd();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTAnd_in_p_FTOr14091);
+            p_FTAnd577=this.p_FTAnd();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTAnd578.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTAnd577.getTree());
             // xquery/XQueryParser.g:1739:19: (ko= FTOR p_FTAnd )*
             loop196:
             do {
@@ -46417,7 +46420,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt196) {
                 case 1 :
                     // xquery/XQueryParser.g:1739:21: ko= FTOR p_FTAnd
-                    ko=this.match(this.input,FTOR,XQueryParser.FOLLOW_FTOR_in_p_FTOr14093); if (this.state.failed) return retval;
+                    ko=this.match(this.input,FTOR,XQueryParser.FOLLOW_FTOR_in_p_FTOr14097); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     ko_tree = this.adaptor.create(ko);
                     this.adaptor.addChild(root_0, ko_tree);
@@ -46425,12 +46428,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(ko);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTAnd_in_p_FTOr14097);
-                    p_FTAnd579=this.p_FTAnd();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTAnd_in_p_FTOr14101);
+                    p_FTAnd578=this.p_FTAnd();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTAnd579.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTAnd578.getTree());
 
 
                     break;
@@ -46485,8 +46488,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var ka = null;
+         var p_FTMildNot579 = null;
          var p_FTMildNot580 = null;
-         var p_FTMildNot581 = null;
 
         var ka_tree=null;
 
@@ -46495,12 +46498,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1744:11: p_FTMildNot (ka= FTAND p_FTMildNot )*
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTMildNot_in_p_FTAnd14126);
-            p_FTMildNot580=this.p_FTMildNot();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTMildNot_in_p_FTAnd14130);
+            p_FTMildNot579=this.p_FTMildNot();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMildNot580.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMildNot579.getTree());
             // xquery/XQueryParser.g:1744:23: (ka= FTAND p_FTMildNot )*
             loop197:
             do {
@@ -46515,7 +46518,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt197) {
                 case 1 :
                     // xquery/XQueryParser.g:1744:25: ka= FTAND p_FTMildNot
-                    ka=this.match(this.input,FTAND,XQueryParser.FOLLOW_FTAND_in_p_FTAnd14132); if (this.state.failed) return retval;
+                    ka=this.match(this.input,FTAND,XQueryParser.FOLLOW_FTAND_in_p_FTAnd14136); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     ka_tree = this.adaptor.create(ka);
                     this.adaptor.addChild(root_0, ka_tree);
@@ -46523,12 +46526,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(ka);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTMildNot_in_p_FTAnd14136);
-                    p_FTMildNot581=this.p_FTMildNot();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTMildNot_in_p_FTAnd14140);
+                    p_FTMildNot580=this.p_FTMildNot();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMildNot581.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMildNot580.getTree());
 
 
                     break;
@@ -46584,8 +46587,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
+         var p_FTUnaryNot581 = null;
          var p_FTUnaryNot582 = null;
-         var p_FTUnaryNot583 = null;
 
         var k_tree=null;
 
@@ -46594,12 +46597,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1749:11: p_FTUnaryNot (k+= NOT k+= IN p_FTUnaryNot )*
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTUnaryNot_in_p_FTMildNot14165);
-            p_FTUnaryNot582=this.p_FTUnaryNot();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTUnaryNot_in_p_FTMildNot14169);
+            p_FTUnaryNot581=this.p_FTUnaryNot();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnaryNot582.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnaryNot581.getTree());
             // xquery/XQueryParser.g:1749:24: (k+= NOT k+= IN p_FTUnaryNot )*
             loop198:
             do {
@@ -46614,7 +46617,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt198) {
                 case 1 :
                     // xquery/XQueryParser.g:1749:26: k+= NOT k+= IN p_FTUnaryNot
-                    k=this.match(this.input,NOT,XQueryParser.FOLLOW_NOT_in_p_FTMildNot14171); if (this.state.failed) return retval;
+                    k=this.match(this.input,NOT,XQueryParser.FOLLOW_NOT_in_p_FTMildNot14175); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -46622,7 +46625,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,IN,XQueryParser.FOLLOW_IN_in_p_FTMildNot14175); if (this.state.failed) return retval;
+                    k=this.match(this.input,IN,XQueryParser.FOLLOW_IN_in_p_FTMildNot14179); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -46633,12 +46636,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(list_k);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTUnaryNot_in_p_FTMildNot14179);
-                    p_FTUnaryNot583=this.p_FTUnaryNot();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTUnaryNot_in_p_FTMildNot14183);
+                    p_FTUnaryNot582=this.p_FTUnaryNot();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnaryNot583.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnaryNot582.getTree());
 
 
                     break;
@@ -46693,7 +46696,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var kn = null;
-         var p_FTPrimaryWithOptions584 = null;
+         var p_FTPrimaryWithOptions583 = null;
 
         var kn_tree=null;
 
@@ -46712,7 +46715,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt199) {
                 case 1 :
                     // xquery/XQueryParser.g:1754:13: kn= FTNOT
-                    kn=this.match(this.input,FTNOT,XQueryParser.FOLLOW_FTNOT_in_p_FTUnaryNot14212); if (this.state.failed) return retval;
+                    kn=this.match(this.input,FTNOT,XQueryParser.FOLLOW_FTNOT_in_p_FTUnaryNot14216); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     kn_tree = this.adaptor.create(kn);
                     this.adaptor.addChild(root_0, kn_tree);
@@ -46726,12 +46729,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTPrimaryWithOptions_in_p_FTUnaryNot14219);
-            p_FTPrimaryWithOptions584=this.p_FTPrimaryWithOptions();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTPrimaryWithOptions_in_p_FTUnaryNot14223);
+            p_FTPrimaryWithOptions583=this.p_FTPrimaryWithOptions();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTPrimaryWithOptions584.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTPrimaryWithOptions583.getTree());
 
 
 
@@ -46776,9 +46779,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_FTPrimary585 = null;
-         var p_FTMatchOptions586 = null;
-         var p_FTWeight587 = null;
+         var p_FTPrimary584 = null;
+         var p_FTMatchOptions585 = null;
+         var p_FTWeight586 = null;
 
 
         try {
@@ -46786,12 +46789,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1759:11: p_FTPrimary ( p_FTMatchOptions )? ( p_FTWeight )?
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTPrimary_in_p_FTPrimaryWithOptions14245);
-            p_FTPrimary585=this.p_FTPrimary();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTPrimary_in_p_FTPrimaryWithOptions14249);
+            p_FTPrimary584=this.p_FTPrimary();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTPrimary585.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTPrimary584.getTree());
             // xquery/XQueryParser.g:1759:23: ( p_FTMatchOptions )?
             var alt200=2;
             var LA200_0 = this.input.LA(1);
@@ -46802,12 +46805,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt200) {
                 case 1 :
                     // xquery/XQueryParser.g:1759:23: p_FTMatchOptions
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTMatchOptions_in_p_FTPrimaryWithOptions14247);
-                    p_FTMatchOptions586=this.p_FTMatchOptions();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTMatchOptions_in_p_FTPrimaryWithOptions14251);
+                    p_FTMatchOptions585=this.p_FTMatchOptions();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMatchOptions586.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMatchOptions585.getTree());
 
 
                     break;
@@ -46824,12 +46827,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt201) {
                 case 1 :
                     // xquery/XQueryParser.g:1759:41: p_FTWeight
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTWeight_in_p_FTPrimaryWithOptions14250);
-                    p_FTWeight587=this.p_FTWeight();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTWeight_in_p_FTPrimaryWithOptions14254);
+                    p_FTWeight586=this.p_FTWeight();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWeight587.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWeight586.getTree());
 
 
                     break;
@@ -46880,15 +46883,15 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LPAREN590 = null;
-        var RPAREN592 = null;
-         var p_FTWords588 = null;
-         var p_FTTimes589 = null;
-         var p_FTSelection591 = null;
-         var p_FTExtensionSelection593 = null;
+        var LPAREN589 = null;
+        var RPAREN591 = null;
+         var p_FTWords587 = null;
+         var p_FTTimes588 = null;
+         var p_FTSelection590 = null;
+         var p_FTExtensionSelection592 = null;
 
-        var LPAREN590_tree=null;
-        var RPAREN592_tree=null;
+        var LPAREN589_tree=null;
+        var RPAREN591_tree=null;
 
         try {
             // xquery/XQueryParser.g:1767:9: ( ( p_FTWords ( p_FTTimes )? ) | ( LPAREN p_FTSelection RPAREN ) | p_FTExtensionSelection )
@@ -46920,12 +46923,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
                     // xquery/XQueryParser.g:1767:11: ( p_FTWords ( p_FTTimes )? )
                     // xquery/XQueryParser.g:1767:12: p_FTWords ( p_FTTimes )?
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTWords_in_p_FTPrimary14281);
-                    p_FTWords588=this.p_FTWords();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTWords_in_p_FTPrimary14285);
+                    p_FTWords587=this.p_FTWords();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWords588.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWords587.getTree());
                     // xquery/XQueryParser.g:1767:22: ( p_FTTimes )?
                     var alt202=2;
                     var LA202_0 = this.input.LA(1);
@@ -46936,12 +46939,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt202) {
                         case 1 :
                             // xquery/XQueryParser.g:1767:22: p_FTTimes
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTTimes_in_p_FTPrimary14283);
-                            p_FTTimes589=this.p_FTTimes();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTTimes_in_p_FTPrimary14287);
+                            p_FTTimes588=this.p_FTTimes();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTTimes589.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTTimes588.getTree());
 
 
                             break;
@@ -46960,21 +46963,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
                     // xquery/XQueryParser.g:1768:11: ( LPAREN p_FTSelection RPAREN )
                     // xquery/XQueryParser.g:1768:12: LPAREN p_FTSelection RPAREN
-                    LPAREN590=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_FTPrimary14298); if (this.state.failed) return retval;
+                    LPAREN589=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_FTPrimary14302); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LPAREN590_tree = this.adaptor.create(LPAREN590);
-                    this.adaptor.addChild(root_0, LPAREN590_tree);
+                    LPAREN589_tree = this.adaptor.create(LPAREN589);
+                    this.adaptor.addChild(root_0, LPAREN589_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTSelection_in_p_FTPrimary14300);
-                    p_FTSelection591=this.p_FTSelection();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTSelection_in_p_FTPrimary14304);
+                    p_FTSelection590=this.p_FTSelection();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTSelection591.getTree());
-                    RPAREN592=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_FTPrimary14302); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTSelection590.getTree());
+                    RPAREN591=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_FTPrimary14306); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RPAREN592_tree = this.adaptor.create(RPAREN592);
-                    this.adaptor.addChild(root_0, RPAREN592_tree);
+                    RPAREN591_tree = this.adaptor.create(RPAREN591);
+                    this.adaptor.addChild(root_0, RPAREN591_tree);
                     }
 
 
@@ -46986,12 +46989,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1769:11: p_FTExtensionSelection
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTExtensionSelection_in_p_FTPrimary14315);
-                    p_FTExtensionSelection593=this.p_FTExtensionSelection();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTExtensionSelection_in_p_FTPrimary14319);
+                    p_FTExtensionSelection592=this.p_FTExtensionSelection();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTExtensionSelection593.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTExtensionSelection592.getTree());
 
 
                     break;
@@ -47038,8 +47041,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_FTWordsValue594 = null;
-         var p_FTAnyallOption595 = null;
+         var p_FTWordsValue593 = null;
+         var p_FTAnyallOption594 = null;
 
 
         try {
@@ -47047,12 +47050,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1774:11: p_FTWordsValue ( p_FTAnyallOption )?
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTWordsValue_in_p_FTWords14341);
-            p_FTWordsValue594=this.p_FTWordsValue();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTWordsValue_in_p_FTWords14345);
+            p_FTWordsValue593=this.p_FTWordsValue();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWordsValue594.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWordsValue593.getTree());
             // xquery/XQueryParser.g:1774:26: ( p_FTAnyallOption )?
             var alt204=2;
             var LA204_0 = this.input.LA(1);
@@ -47063,12 +47066,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt204) {
                 case 1 :
                     // xquery/XQueryParser.g:1774:26: p_FTAnyallOption
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTAnyallOption_in_p_FTWords14343);
-                    p_FTAnyallOption595=this.p_FTAnyallOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTAnyallOption_in_p_FTWords14347);
+                    p_FTAnyallOption594=this.p_FTAnyallOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTAnyallOption595.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTAnyallOption594.getTree());
 
 
                     break;
@@ -47119,13 +47122,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LBRACKET597 = null;
-        var RBRACKET599 = null;
-         var p_StringLiteral596 = null;
-         var p_Expr598 = null;
+        var LBRACKET596 = null;
+        var RBRACKET598 = null;
+         var p_StringLiteral595 = null;
+         var p_Expr597 = null;
 
-        var LBRACKET597_tree=null;
-        var RBRACKET599_tree=null;
+        var LBRACKET596_tree=null;
+        var RBRACKET598_tree=null;
 
         try {
             // xquery/XQueryParser.g:1779:9: ( p_StringLiteral | ( LBRACKET p_Expr[true,true] RBRACKET ) )
@@ -47150,12 +47153,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1779:11: p_StringLiteral
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTWordsValue14370);
-                    p_StringLiteral596=this.p_StringLiteral();
+                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTWordsValue14374);
+                    p_StringLiteral595=this.p_StringLiteral();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral596.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral595.getTree());
 
 
                     break;
@@ -47165,21 +47168,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
                     // xquery/XQueryParser.g:1780:11: ( LBRACKET p_Expr[true,true] RBRACKET )
                     // xquery/XQueryParser.g:1780:12: LBRACKET p_Expr[true,true] RBRACKET
-                    LBRACKET597=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_FTWordsValue14383); if (this.state.failed) return retval;
+                    LBRACKET596=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_FTWordsValue14387); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LBRACKET597_tree = this.adaptor.create(LBRACKET597);
-                    this.adaptor.addChild(root_0, LBRACKET597_tree);
+                    LBRACKET596_tree = this.adaptor.create(LBRACKET596);
+                    this.adaptor.addChild(root_0, LBRACKET596_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_FTWordsValue14385);
-                    p_Expr598=this.p_Expr(true, true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_FTWordsValue14389);
+                    p_Expr597=this.p_Expr(true, true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr598.getTree());
-                    RBRACKET599=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_FTWordsValue14388); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr597.getTree());
+                    RBRACKET598=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_FTWordsValue14392); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RBRACKET599_tree = this.adaptor.create(RBRACKET599);
-                    this.adaptor.addChild(root_0, RBRACKET599_tree);
+                    RBRACKET598_tree = this.adaptor.create(RBRACKET598);
+                    this.adaptor.addChild(root_0, RBRACKET598_tree);
                     }
 
 
@@ -47230,14 +47233,14 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var L_Pragma600 = null;
-        var LBRACKET601 = null;
-        var RBRACKET603 = null;
-         var p_FTSelection602 = null;
+        var L_Pragma599 = null;
+        var LBRACKET600 = null;
+        var RBRACKET602 = null;
+         var p_FTSelection601 = null;
 
-        var L_Pragma600_tree=null;
-        var LBRACKET601_tree=null;
-        var RBRACKET603_tree=null;
+        var L_Pragma599_tree=null;
+        var LBRACKET600_tree=null;
+        var RBRACKET602_tree=null;
 
         try {
             // xquery/XQueryParser.g:1785:9: ( ( L_Pragma )+ LBRACKET ( p_FTSelection )? RBRACKET )
@@ -47259,10 +47262,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt206) {
                 case 1 :
                     // xquery/XQueryParser.g:1785:11: L_Pragma
-                    L_Pragma600=this.match(this.input,L_Pragma,XQueryParser.FOLLOW_L_Pragma_in_p_FTExtensionSelection14415); if (this.state.failed) return retval;
+                    L_Pragma599=this.match(this.input,L_Pragma,XQueryParser.FOLLOW_L_Pragma_in_p_FTExtensionSelection14419); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    L_Pragma600_tree = this.adaptor.create(L_Pragma600);
-                    this.adaptor.addChild(root_0, L_Pragma600_tree);
+                    L_Pragma599_tree = this.adaptor.create(L_Pragma599);
+                    this.adaptor.addChild(root_0, L_Pragma599_tree);
                     }
 
 
@@ -47279,10 +47282,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 cnt206++;
             } while (true);
 
-            LBRACKET601=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_FTExtensionSelection14418); if (this.state.failed) return retval;
+            LBRACKET600=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_FTExtensionSelection14422); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET601_tree = this.adaptor.create(LBRACKET601);
-            this.adaptor.addChild(root_0, LBRACKET601_tree);
+            LBRACKET600_tree = this.adaptor.create(LBRACKET600);
+            this.adaptor.addChild(root_0, LBRACKET600_tree);
             }
             // xquery/XQueryParser.g:1785:30: ( p_FTSelection )?
             var alt207=2;
@@ -47294,22 +47297,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt207) {
                 case 1 :
                     // xquery/XQueryParser.g:1785:30: p_FTSelection
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTSelection_in_p_FTExtensionSelection14420);
-                    p_FTSelection602=this.p_FTSelection();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTSelection_in_p_FTExtensionSelection14424);
+                    p_FTSelection601=this.p_FTSelection();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTSelection602.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTSelection601.getTree());
 
 
                     break;
 
             }
 
-            RBRACKET603=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_FTExtensionSelection14423); if (this.state.failed) return retval;
+            RBRACKET602=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_FTExtensionSelection14427); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET603_tree = this.adaptor.create(RBRACKET603);
-            this.adaptor.addChild(root_0, RBRACKET603_tree);
+            RBRACKET602_tree = this.adaptor.create(RBRACKET602);
+            this.adaptor.addChild(root_0, RBRACKET602_tree);
             }
 
 
@@ -47355,11 +47358,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var WORDS604 = null;
+        var WORDS603 = null;
         var k = null;
         var list_k=null;
 
-        var WORDS604_tree=null;
+        var WORDS603_tree=null;
         var k_tree=null;
 
         try {
@@ -47392,7 +47395,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1790:13: (k+= ANY (k+= WORD )? )
                     // xquery/XQueryParser.g:1790:13: (k+= ANY (k+= WORD )? )
                     // xquery/XQueryParser.g:1790:14: k+= ANY (k+= WORD )?
-                    k=this.match(this.input,ANY,XQueryParser.FOLLOW_ANY_in_p_FTAnyallOption14454); if (this.state.failed) return retval;
+                    k=this.match(this.input,ANY,XQueryParser.FOLLOW_ANY_in_p_FTAnyallOption14458); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47410,7 +47413,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt208) {
                         case 1 :
                             // xquery/XQueryParser.g:1790:22: k+= WORD
-                            k=this.match(this.input,WORD,XQueryParser.FOLLOW_WORD_in_p_FTAnyallOption14458); if (this.state.failed) return retval;
+                            k=this.match(this.input,WORD,XQueryParser.FOLLOW_WORD_in_p_FTAnyallOption14462); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
                             k_tree = this.adaptor.create(k);
                             this.adaptor.addChild(root_0, k_tree);
@@ -47434,7 +47437,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1790:33: (k+= ALL ( WORDS )? )
                     // xquery/XQueryParser.g:1790:33: (k+= ALL ( WORDS )? )
                     // xquery/XQueryParser.g:1790:34: k+= ALL ( WORDS )?
-                    k=this.match(this.input,ALL,XQueryParser.FOLLOW_ALL_in_p_FTAnyallOption14467); if (this.state.failed) return retval;
+                    k=this.match(this.input,ALL,XQueryParser.FOLLOW_ALL_in_p_FTAnyallOption14471); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47452,10 +47455,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt209) {
                         case 1 :
                             // xquery/XQueryParser.g:1790:41: WORDS
-                            WORDS604=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTAnyallOption14469); if (this.state.failed) return retval;
+                            WORDS603=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTAnyallOption14473); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            WORDS604_tree = this.adaptor.create(WORDS604);
-                            this.adaptor.addChild(root_0, WORDS604_tree);
+                            WORDS603_tree = this.adaptor.create(WORDS603);
+                            this.adaptor.addChild(root_0, WORDS603_tree);
                             }
 
 
@@ -47471,7 +47474,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 3 :
                     // xquery/XQueryParser.g:1790:51: k+= PHRASE
-                    k=this.match(this.input,PHRASE,XQueryParser.FOLLOW_PHRASE_in_p_FTAnyallOption14477); if (this.state.failed) return retval;
+                    k=this.match(this.input,PHRASE,XQueryParser.FOLLOW_PHRASE_in_p_FTAnyallOption14481); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47534,7 +47537,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_FTRange605 = null;
+         var p_FTRange604 = null;
 
         var k_tree=null;
 
@@ -47543,7 +47546,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1795:11: k+= OCCURS p_FTRange k+= TIMES
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,OCCURS,XQueryParser.FOLLOW_OCCURS_in_p_FTTimes14509); if (this.state.failed) return retval;
+            k=this.match(this.input,OCCURS,XQueryParser.FOLLOW_OCCURS_in_p_FTTimes14513); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -47551,13 +47554,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTRange_in_p_FTTimes14511);
-            p_FTRange605=this.p_FTRange();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTRange_in_p_FTTimes14515);
+            p_FTRange604=this.p_FTRange();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTRange605.getTree());
-            k=this.match(this.input,TIMES,XQueryParser.FOLLOW_TIMES_in_p_FTTimes14515); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTRange604.getTree());
+            k=this.match(this.input,TIMES,XQueryParser.FOLLOW_TIMES_in_p_FTTimes14519); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -47614,11 +47617,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
+         var p_AdditiveExpr605 = null;
          var p_AdditiveExpr606 = null;
          var p_AdditiveExpr607 = null;
          var p_AdditiveExpr608 = null;
          var p_AdditiveExpr609 = null;
-         var p_AdditiveExpr610 = null;
 
         var k_tree=null;
 
@@ -47666,7 +47669,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1800:13: (k+= EXACTLY p_AdditiveExpr )
                     // xquery/XQueryParser.g:1800:13: (k+= EXACTLY p_AdditiveExpr )
                     // xquery/XQueryParser.g:1800:14: k+= EXACTLY p_AdditiveExpr
-                    k=this.match(this.input,EXACTLY,XQueryParser.FOLLOW_EXACTLY_in_p_FTRange14548); if (this.state.failed) return retval;
+                    k=this.match(this.input,EXACTLY,XQueryParser.FOLLOW_EXACTLY_in_p_FTRange14552); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47674,7 +47677,39 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14550);
+                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14554);
+                    p_AdditiveExpr605=this.p_AdditiveExpr();
+
+                    this.state._fsp--;
+                    if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AdditiveExpr605.getTree());
+
+
+
+
+
+                    break;
+                case 2 :
+                    // xquery/XQueryParser.g:1801:13: (k+= AT k+= LEAST p_AdditiveExpr )
+                    // xquery/XQueryParser.g:1801:13: (k+= AT k+= LEAST p_AdditiveExpr )
+                    // xquery/XQueryParser.g:1801:14: k+= AT k+= LEAST p_AdditiveExpr
+                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTRange14572); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) {
+                    k_tree = this.adaptor.create(k);
+                    this.adaptor.addChild(root_0, k_tree);
+                    }
+                    if (org.antlr.lang.isNull(list_k)) list_k = [];
+                    list_k.push(k);
+
+                    k=this.match(this.input,LEAST,XQueryParser.FOLLOW_LEAST_in_p_FTRange14576); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) {
+                    k_tree = this.adaptor.create(k);
+                    this.adaptor.addChild(root_0, k_tree);
+                    }
+                    if (org.antlr.lang.isNull(list_k)) list_k = [];
+                    list_k.push(k);
+
+                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14578);
                     p_AdditiveExpr606=this.p_AdditiveExpr();
 
                     this.state._fsp--;
@@ -47686,11 +47721,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     break;
-                case 2 :
-                    // xquery/XQueryParser.g:1801:13: (k+= AT k+= LEAST p_AdditiveExpr )
-                    // xquery/XQueryParser.g:1801:13: (k+= AT k+= LEAST p_AdditiveExpr )
-                    // xquery/XQueryParser.g:1801:14: k+= AT k+= LEAST p_AdditiveExpr
-                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTRange14568); if (this.state.failed) return retval;
+                case 3 :
+                    // xquery/XQueryParser.g:1802:13: (k+= AT k+= MOST p_AdditiveExpr )
+                    // xquery/XQueryParser.g:1802:13: (k+= AT k+= MOST p_AdditiveExpr )
+                    // xquery/XQueryParser.g:1802:14: k+= AT k+= MOST p_AdditiveExpr
+                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTRange14596); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47698,7 +47733,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,LEAST,XQueryParser.FOLLOW_LEAST_in_p_FTRange14572); if (this.state.failed) return retval;
+                    k=this.match(this.input,MOST,XQueryParser.FOLLOW_MOST_in_p_FTRange14600); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47706,7 +47741,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14574);
+                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14602);
                     p_AdditiveExpr607=this.p_AdditiveExpr();
 
                     this.state._fsp--;
@@ -47718,11 +47753,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
 
                     break;
-                case 3 :
-                    // xquery/XQueryParser.g:1802:13: (k+= AT k+= MOST p_AdditiveExpr )
-                    // xquery/XQueryParser.g:1802:13: (k+= AT k+= MOST p_AdditiveExpr )
-                    // xquery/XQueryParser.g:1802:14: k+= AT k+= MOST p_AdditiveExpr
-                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTRange14592); if (this.state.failed) return retval;
+                case 4 :
+                    // xquery/XQueryParser.g:1803:13: (k+= FROM p_AdditiveExpr k+= TO p_AdditiveExpr )
+                    // xquery/XQueryParser.g:1803:13: (k+= FROM p_AdditiveExpr k+= TO p_AdditiveExpr )
+                    // xquery/XQueryParser.g:1803:14: k+= FROM p_AdditiveExpr k+= TO p_AdditiveExpr
+                    k=this.match(this.input,FROM,XQueryParser.FOLLOW_FROM_in_p_FTRange14620); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47730,31 +47765,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,MOST,XQueryParser.FOLLOW_MOST_in_p_FTRange14596); if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) {
-                    k_tree = this.adaptor.create(k);
-                    this.adaptor.addChild(root_0, k_tree);
-                    }
-                    if (org.antlr.lang.isNull(list_k)) list_k = [];
-                    list_k.push(k);
-
-                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14598);
+                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14622);
                     p_AdditiveExpr608=this.p_AdditiveExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AdditiveExpr608.getTree());
-
-
-
-
-
-                    break;
-                case 4 :
-                    // xquery/XQueryParser.g:1803:13: (k+= FROM p_AdditiveExpr k+= TO p_AdditiveExpr )
-                    // xquery/XQueryParser.g:1803:13: (k+= FROM p_AdditiveExpr k+= TO p_AdditiveExpr )
-                    // xquery/XQueryParser.g:1803:14: k+= FROM p_AdditiveExpr k+= TO p_AdditiveExpr
-                    k=this.match(this.input,FROM,XQueryParser.FOLLOW_FROM_in_p_FTRange14616); if (this.state.failed) return retval;
+                    k=this.match(this.input,TO,XQueryParser.FOLLOW_TO_in_p_FTRange14626); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -47762,26 +47779,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14618);
+                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14628);
                     p_AdditiveExpr609=this.p_AdditiveExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AdditiveExpr609.getTree());
-                    k=this.match(this.input,TO,XQueryParser.FOLLOW_TO_in_p_FTRange14622); if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) {
-                    k_tree = this.adaptor.create(k);
-                    this.adaptor.addChild(root_0, k_tree);
-                    }
-                    if (org.antlr.lang.isNull(list_k)) list_k = [];
-                    list_k.push(k);
-
-                    this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTRange14624);
-                    p_AdditiveExpr610=this.p_AdditiveExpr();
-
-                    this.state._fsp--;
-                    if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AdditiveExpr610.getTree());
 
 
 
@@ -47838,11 +47841,11 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_FTOrder611 = null;
-         var p_FTWindow612 = null;
-         var p_FTDistance613 = null;
-         var p_FTScope614 = null;
-         var p_FTContent615 = null;
+         var p_FTOrder610 = null;
+         var p_FTWindow611 = null;
+         var p_FTDistance612 = null;
+         var p_FTScope613 = null;
+         var p_FTContent614 = null;
 
 
         try {
@@ -47879,12 +47882,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1808:11: p_FTOrder
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTOrder_in_p_FTPosFilter14655);
-                    p_FTOrder611=this.p_FTOrder();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTOrder_in_p_FTPosFilter14659);
+                    p_FTOrder610=this.p_FTOrder();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTOrder611.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTOrder610.getTree());
 
 
                     break;
@@ -47892,12 +47895,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1808:23: p_FTWindow
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTWindow_in_p_FTPosFilter14659);
-                    p_FTWindow612=this.p_FTWindow();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTWindow_in_p_FTPosFilter14663);
+                    p_FTWindow611=this.p_FTWindow();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWindow612.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWindow611.getTree());
 
 
                     break;
@@ -47905,12 +47908,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1808:36: p_FTDistance
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTDistance_in_p_FTPosFilter14663);
-                    p_FTDistance613=this.p_FTDistance();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTDistance_in_p_FTPosFilter14667);
+                    p_FTDistance612=this.p_FTDistance();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTDistance613.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTDistance612.getTree());
 
 
                     break;
@@ -47918,12 +47921,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1808:51: p_FTScope
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTScope_in_p_FTPosFilter14667);
-                    p_FTScope614=this.p_FTScope();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTScope_in_p_FTPosFilter14671);
+                    p_FTScope613=this.p_FTScope();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTScope614.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTScope613.getTree());
 
 
                     break;
@@ -47931,12 +47934,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1808:63: p_FTContent
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTContent_in_p_FTPosFilter14671);
-                    p_FTContent615=this.p_FTContent();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTContent_in_p_FTPosFilter14675);
+                    p_FTContent614=this.p_FTContent();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTContent615.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTContent614.getTree());
 
 
                     break;
@@ -47992,7 +47995,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1813:11: ko= ORDERED
             root_0 = this.adaptor.nil();
 
-            ko=this.match(this.input,ORDERED,XQueryParser.FOLLOW_ORDERED_in_p_FTOrder14699); if (this.state.failed) return retval;
+            ko=this.match(this.input,ORDERED,XQueryParser.FOLLOW_ORDERED_in_p_FTOrder14703); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             ko_tree = this.adaptor.create(ko);
             this.adaptor.addChild(root_0, ko_tree);
@@ -48045,8 +48048,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var kw = null;
-         var p_AdditiveExpr616 = null;
-         var p_FTUnit617 = null;
+         var p_AdditiveExpr615 = null;
+         var p_FTUnit616 = null;
 
         var kw_tree=null;
 
@@ -48055,7 +48058,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1818:11: kw= WINDOW p_AdditiveExpr p_FTUnit
             root_0 = this.adaptor.nil();
 
-            kw=this.match(this.input,WINDOW,XQueryParser.FOLLOW_WINDOW_in_p_FTWindow14729); if (this.state.failed) return retval;
+            kw=this.match(this.input,WINDOW,XQueryParser.FOLLOW_WINDOW_in_p_FTWindow14733); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             kw_tree = this.adaptor.create(kw);
             this.adaptor.addChild(root_0, kw_tree);
@@ -48063,18 +48066,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(kw);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTWindow14733);
-            p_AdditiveExpr616=this.p_AdditiveExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_AdditiveExpr_in_p_FTWindow14737);
+            p_AdditiveExpr615=this.p_AdditiveExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AdditiveExpr616.getTree());
-            this.pushFollow(XQueryParser.FOLLOW_p_FTUnit_in_p_FTWindow14735);
-            p_FTUnit617=this.p_FTUnit();
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AdditiveExpr615.getTree());
+            this.pushFollow(XQueryParser.FOLLOW_p_FTUnit_in_p_FTWindow14739);
+            p_FTUnit616=this.p_FTUnit();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnit617.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnit616.getTree());
 
 
 
@@ -48120,8 +48123,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var kd = null;
-         var p_FTRange618 = null;
-         var p_FTUnit619 = null;
+         var p_FTRange617 = null;
+         var p_FTUnit618 = null;
 
         var kd_tree=null;
 
@@ -48130,7 +48133,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1823:11: kd= DISTANCE p_FTRange p_FTUnit
             root_0 = this.adaptor.nil();
 
-            kd=this.match(this.input,DISTANCE,XQueryParser.FOLLOW_DISTANCE_in_p_FTDistance14763); if (this.state.failed) return retval;
+            kd=this.match(this.input,DISTANCE,XQueryParser.FOLLOW_DISTANCE_in_p_FTDistance14767); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             kd_tree = this.adaptor.create(kd);
             this.adaptor.addChild(root_0, kd_tree);
@@ -48138,18 +48141,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(kd);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_FTRange_in_p_FTDistance14767);
-            p_FTRange618=this.p_FTRange();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTRange_in_p_FTDistance14771);
+            p_FTRange617=this.p_FTRange();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTRange618.getTree());
-            this.pushFollow(XQueryParser.FOLLOW_p_FTUnit_in_p_FTDistance14769);
-            p_FTUnit619=this.p_FTUnit();
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTRange617.getTree());
+            this.pushFollow(XQueryParser.FOLLOW_p_FTUnit_in_p_FTDistance14773);
+            p_FTUnit618=this.p_FTUnit();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnit619.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTUnit618.getTree());
 
 
 
@@ -48227,7 +48230,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt213) {
                 case 1 :
                     // xquery/XQueryParser.g:1828:13: k+= WORDS
-                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTUnit14799); if (this.state.failed) return retval;
+                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTUnit14803); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48240,7 +48243,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1828:24: k+= SENTENCES
-                    k=this.match(this.input,SENTENCES,XQueryParser.FOLLOW_SENTENCES_in_p_FTUnit14805); if (this.state.failed) return retval;
+                    k=this.match(this.input,SENTENCES,XQueryParser.FOLLOW_SENTENCES_in_p_FTUnit14809); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48253,7 +48256,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 3 :
                     // xquery/XQueryParser.g:1828:39: k+= PARAGRAPHS
-                    k=this.match(this.input,PARAGRAPHS,XQueryParser.FOLLOW_PARAGRAPHS_in_p_FTUnit14811); if (this.state.failed) return retval;
+                    k=this.match(this.input,PARAGRAPHS,XQueryParser.FOLLOW_PARAGRAPHS_in_p_FTUnit14815); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48316,7 +48319,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_FTBigUnit620 = null;
+         var p_FTBigUnit619 = null;
 
         var k_tree=null;
 
@@ -48345,7 +48348,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt214) {
                 case 1 :
                     // xquery/XQueryParser.g:1833:12: k+= SAME
-                    k=this.match(this.input,SAME,XQueryParser.FOLLOW_SAME_in_p_FTScope14844); if (this.state.failed) return retval;
+                    k=this.match(this.input,SAME,XQueryParser.FOLLOW_SAME_in_p_FTScope14848); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48358,7 +48361,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1833:22: k+= DIFFERENT
-                    k=this.match(this.input,DIFFERENT,XQueryParser.FOLLOW_DIFFERENT_in_p_FTScope14850); if (this.state.failed) return retval;
+                    k=this.match(this.input,DIFFERENT,XQueryParser.FOLLOW_DIFFERENT_in_p_FTScope14854); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48375,12 +48378,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_FTBigUnit_in_p_FTScope14855);
-            p_FTBigUnit620=this.p_FTBigUnit();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTBigUnit_in_p_FTScope14859);
+            p_FTBigUnit619=this.p_FTBigUnit();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTBigUnit620.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTBigUnit619.getTree());
 
 
 
@@ -48455,7 +48458,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt215) {
                 case 1 :
                     // xquery/XQueryParser.g:1838:13: k+= SENTENCE
-                    k=this.match(this.input,SENTENCE,XQueryParser.FOLLOW_SENTENCE_in_p_FTBigUnit14885); if (this.state.failed) return retval;
+                    k=this.match(this.input,SENTENCE,XQueryParser.FOLLOW_SENTENCE_in_p_FTBigUnit14889); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48468,7 +48471,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1838:27: k+= PARAGRAPH
-                    k=this.match(this.input,PARAGRAPH,XQueryParser.FOLLOW_PARAGRAPH_in_p_FTBigUnit14891); if (this.state.failed) return retval;
+                    k=this.match(this.input,PARAGRAPH,XQueryParser.FOLLOW_PARAGRAPH_in_p_FTBigUnit14895); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48575,7 +48578,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1843:13: (k+= AT k+= START )
                     // xquery/XQueryParser.g:1843:13: (k+= AT k+= START )
                     // xquery/XQueryParser.g:1843:14: k+= AT k+= START
-                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTContent14926); if (this.state.failed) return retval;
+                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTContent14930); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48583,7 +48586,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,START,XQueryParser.FOLLOW_START_in_p_FTContent14930); if (this.state.failed) return retval;
+                    k=this.match(this.input,START,XQueryParser.FOLLOW_START_in_p_FTContent14934); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48601,7 +48604,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1843:32: (k+= AT k+= END )
                     // xquery/XQueryParser.g:1843:32: (k+= AT k+= END )
                     // xquery/XQueryParser.g:1843:33: k+= AT k+= END
-                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTContent14938); if (this.state.failed) return retval;
+                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTContent14942); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48609,7 +48612,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,END,XQueryParser.FOLLOW_END_in_p_FTContent14942); if (this.state.failed) return retval;
+                    k=this.match(this.input,END,XQueryParser.FOLLOW_END_in_p_FTContent14946); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48627,7 +48630,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1843:49: (k+= ENTIRE k+= CONTENT )
                     // xquery/XQueryParser.g:1843:49: (k+= ENTIRE k+= CONTENT )
                     // xquery/XQueryParser.g:1843:50: k+= ENTIRE k+= CONTENT
-                    k=this.match(this.input,ENTIRE,XQueryParser.FOLLOW_ENTIRE_in_p_FTContent14950); if (this.state.failed) return retval;
+                    k=this.match(this.input,ENTIRE,XQueryParser.FOLLOW_ENTIRE_in_p_FTContent14954); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48635,7 +48638,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,CONTENT,XQueryParser.FOLLOW_CONTENT_in_p_FTContent14954); if (this.state.failed) return retval;
+                    k=this.match(this.input,CONTENT,XQueryParser.FOLLOW_CONTENT_in_p_FTContent14958); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -48700,7 +48703,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var ku = null;
-         var p_FTMatchOption621 = null;
+         var p_FTMatchOption620 = null;
 
         var ku_tree=null;
 
@@ -48724,7 +48727,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt217) {
                 case 1 :
                     // xquery/XQueryParser.g:1848:12: ku= USING p_FTMatchOption
-                    ku=this.match(this.input,USING,XQueryParser.FOLLOW_USING_in_p_FTMatchOptions14988); if (this.state.failed) return retval;
+                    ku=this.match(this.input,USING,XQueryParser.FOLLOW_USING_in_p_FTMatchOptions14992); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     ku_tree = this.adaptor.create(ku);
                     this.adaptor.addChild(root_0, ku_tree);
@@ -48732,12 +48735,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(ku);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTMatchOption_in_p_FTMatchOptions14992);
-                    p_FTMatchOption621=this.p_FTMatchOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTMatchOption_in_p_FTMatchOptions14996);
+                    p_FTMatchOption620=this.p_FTMatchOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMatchOption621.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTMatchOption620.getTree());
 
 
                     break;
@@ -48797,14 +48800,14 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_FTLanguageOption622 = null;
-         var p_FTWildCardOption623 = null;
-         var p_FTThesaurusOption624 = null;
-         var p_FTStemOption625 = null;
-         var p_FTCaseOption626 = null;
-         var p_FTDiacriticsOption627 = null;
-         var p_FTStopWordOption628 = null;
-         var p_FTExtensionOption629 = null;
+         var p_FTLanguageOption621 = null;
+         var p_FTWildCardOption622 = null;
+         var p_FTThesaurusOption623 = null;
+         var p_FTStemOption624 = null;
+         var p_FTCaseOption625 = null;
+         var p_FTDiacriticsOption626 = null;
+         var p_FTStopWordOption627 = null;
+         var p_FTExtensionOption628 = null;
 
 
         try {
@@ -48816,12 +48819,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1853:11: p_FTLanguageOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTLanguageOption_in_p_FTMatchOption15020);
-                    p_FTLanguageOption622=this.p_FTLanguageOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTLanguageOption_in_p_FTMatchOption15024);
+                    p_FTLanguageOption621=this.p_FTLanguageOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTLanguageOption622.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTLanguageOption621.getTree());
 
 
                     break;
@@ -48829,12 +48832,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1854:11: p_FTWildCardOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTWildCardOption_in_p_FTMatchOption15032);
-                    p_FTWildCardOption623=this.p_FTWildCardOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTWildCardOption_in_p_FTMatchOption15036);
+                    p_FTWildCardOption622=this.p_FTWildCardOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWildCardOption623.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTWildCardOption622.getTree());
 
 
                     break;
@@ -48842,12 +48845,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1855:11: p_FTThesaurusOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusOption_in_p_FTMatchOption15044);
-                    p_FTThesaurusOption624=this.p_FTThesaurusOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusOption_in_p_FTMatchOption15048);
+                    p_FTThesaurusOption623=this.p_FTThesaurusOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusOption624.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusOption623.getTree());
 
 
                     break;
@@ -48855,12 +48858,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1856:11: p_FTStemOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTStemOption_in_p_FTMatchOption15056);
-                    p_FTStemOption625=this.p_FTStemOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTStemOption_in_p_FTMatchOption15060);
+                    p_FTStemOption624=this.p_FTStemOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStemOption625.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStemOption624.getTree());
 
 
                     break;
@@ -48868,12 +48871,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1857:11: p_FTCaseOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTCaseOption_in_p_FTMatchOption15068);
-                    p_FTCaseOption626=this.p_FTCaseOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTCaseOption_in_p_FTMatchOption15072);
+                    p_FTCaseOption625=this.p_FTCaseOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTCaseOption626.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTCaseOption625.getTree());
 
 
                     break;
@@ -48881,12 +48884,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1858:11: p_FTDiacriticsOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTDiacriticsOption_in_p_FTMatchOption15080);
-                    p_FTDiacriticsOption627=this.p_FTDiacriticsOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTDiacriticsOption_in_p_FTMatchOption15084);
+                    p_FTDiacriticsOption626=this.p_FTDiacriticsOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTDiacriticsOption627.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTDiacriticsOption626.getTree());
 
 
                     break;
@@ -48894,12 +48897,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1859:11: p_FTStopWordOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTStopWordOption_in_p_FTMatchOption15092);
-                    p_FTStopWordOption628=this.p_FTStopWordOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTStopWordOption_in_p_FTMatchOption15096);
+                    p_FTStopWordOption627=this.p_FTStopWordOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWordOption628.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWordOption627.getTree());
 
 
                     break;
@@ -48907,12 +48910,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1860:11: p_FTExtensionOption
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTExtensionOption_in_p_FTMatchOption15104);
-                    p_FTExtensionOption629=this.p_FTExtensionOption();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTExtensionOption_in_p_FTMatchOption15108);
+                    p_FTExtensionOption628=this.p_FTExtensionOption();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTExtensionOption629.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTExtensionOption628.getTree());
 
 
                     break;
@@ -49008,7 +49011,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1865:13: (k+= CASE k+= INSENSITIVE )
                     // xquery/XQueryParser.g:1865:13: (k+= CASE k+= INSENSITIVE )
                     // xquery/XQueryParser.g:1865:14: k+= CASE k+= INSENSITIVE
-                    k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_FTCaseOption15135); if (this.state.failed) return retval;
+                    k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_FTCaseOption15139); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49016,7 +49019,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,INSENSITIVE,XQueryParser.FOLLOW_INSENSITIVE_in_p_FTCaseOption15139); if (this.state.failed) return retval;
+                    k=this.match(this.input,INSENSITIVE,XQueryParser.FOLLOW_INSENSITIVE_in_p_FTCaseOption15143); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49034,7 +49037,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1866:13: (k+= CASE k+= SENSITIVE )
                     // xquery/XQueryParser.g:1866:13: (k+= CASE k+= SENSITIVE )
                     // xquery/XQueryParser.g:1866:14: k+= CASE k+= SENSITIVE
-                    k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_FTCaseOption15157); if (this.state.failed) return retval;
+                    k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_FTCaseOption15161); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49042,7 +49045,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,SENSITIVE,XQueryParser.FOLLOW_SENSITIVE_in_p_FTCaseOption15161); if (this.state.failed) return retval;
+                    k=this.match(this.input,SENSITIVE,XQueryParser.FOLLOW_SENSITIVE_in_p_FTCaseOption15165); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49058,7 +49061,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 3 :
                     // xquery/XQueryParser.g:1867:13: k+= LOWERCASE
-                    k=this.match(this.input,LOWERCASE,XQueryParser.FOLLOW_LOWERCASE_in_p_FTCaseOption15178); if (this.state.failed) return retval;
+                    k=this.match(this.input,LOWERCASE,XQueryParser.FOLLOW_LOWERCASE_in_p_FTCaseOption15182); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49071,7 +49074,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 4 :
                     // xquery/XQueryParser.g:1868:13: k+= UPPERCASE
-                    k=this.match(this.input,UPPERCASE,XQueryParser.FOLLOW_UPPERCASE_in_p_FTCaseOption15194); if (this.state.failed) return retval;
+                    k=this.match(this.input,UPPERCASE,XQueryParser.FOLLOW_UPPERCASE_in_p_FTCaseOption15198); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49175,7 +49178,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1873:13: (k+= DIACRITICS k+= INSENSITIVE )
                     // xquery/XQueryParser.g:1873:13: (k+= DIACRITICS k+= INSENSITIVE )
                     // xquery/XQueryParser.g:1873:14: k+= DIACRITICS k+= INSENSITIVE
-                    k=this.match(this.input,DIACRITICS,XQueryParser.FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15229); if (this.state.failed) return retval;
+                    k=this.match(this.input,DIACRITICS,XQueryParser.FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15233); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49183,7 +49186,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,INSENSITIVE,XQueryParser.FOLLOW_INSENSITIVE_in_p_FTDiacriticsOption15233); if (this.state.failed) return retval;
+                    k=this.match(this.input,INSENSITIVE,XQueryParser.FOLLOW_INSENSITIVE_in_p_FTDiacriticsOption15237); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49201,7 +49204,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1874:13: (k+= DIACRITICS k+= SENSITIVE )
                     // xquery/XQueryParser.g:1874:13: (k+= DIACRITICS k+= SENSITIVE )
                     // xquery/XQueryParser.g:1874:14: k+= DIACRITICS k+= SENSITIVE
-                    k=this.match(this.input,DIACRITICS,XQueryParser.FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15251); if (this.state.failed) return retval;
+                    k=this.match(this.input,DIACRITICS,XQueryParser.FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15255); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49209,7 +49212,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,SENSITIVE,XQueryParser.FOLLOW_SENSITIVE_in_p_FTDiacriticsOption15255); if (this.state.failed) return retval;
+                    k=this.match(this.input,SENSITIVE,XQueryParser.FOLLOW_SENSITIVE_in_p_FTDiacriticsOption15259); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49303,7 +49306,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt221) {
                 case 1 :
                     // xquery/XQueryParser.g:1879:13: k+= STEMMING
-                    k=this.match(this.input,STEMMING,XQueryParser.FOLLOW_STEMMING_in_p_FTStemOption15290); if (this.state.failed) return retval;
+                    k=this.match(this.input,STEMMING,XQueryParser.FOLLOW_STEMMING_in_p_FTStemOption15294); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49318,7 +49321,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1879:27: (k+= NO k+= STEMMING )
                     // xquery/XQueryParser.g:1879:27: (k+= NO k+= STEMMING )
                     // xquery/XQueryParser.g:1879:28: k+= NO k+= STEMMING
-                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTStemOption15297); if (this.state.failed) return retval;
+                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTStemOption15301); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49326,7 +49329,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,STEMMING,XQueryParser.FOLLOW_STEMMING_in_p_FTStemOption15301); if (this.state.failed) return retval;
+                    k=this.match(this.input,STEMMING,XQueryParser.FOLLOW_STEMMING_in_p_FTStemOption15305); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49390,18 +49393,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LPAREN631 = null;
-        var COMMA633 = null;
-        var RPAREN635 = null;
+        var LPAREN630 = null;
+        var COMMA632 = null;
+        var RPAREN634 = null;
         var k = null;
         var list_k=null;
-         var p_FTThesaurusID630 = null;
-         var p_FTThesaurusID632 = null;
-         var p_FTThesaurusID634 = null;
+         var p_FTThesaurusID629 = null;
+         var p_FTThesaurusID631 = null;
+         var p_FTThesaurusID633 = null;
 
-        var LPAREN631_tree=null;
-        var COMMA633_tree=null;
-        var RPAREN635_tree=null;
+        var LPAREN630_tree=null;
+        var COMMA632_tree=null;
+        var RPAREN634_tree=null;
         var k_tree=null;
 
         try {
@@ -49445,7 +49448,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1884:13: (k+= THESAURUS ( p_FTThesaurusID | k+= DEFAULT ) )
                     // xquery/XQueryParser.g:1884:13: (k+= THESAURUS ( p_FTThesaurusID | k+= DEFAULT ) )
                     // xquery/XQueryParser.g:1884:14: k+= THESAURUS ( p_FTThesaurusID | k+= DEFAULT )
-                    k=this.match(this.input,THESAURUS,XQueryParser.FOLLOW_THESAURUS_in_p_FTThesaurusOption15337); if (this.state.failed) return retval;
+                    k=this.match(this.input,THESAURUS,XQueryParser.FOLLOW_THESAURUS_in_p_FTThesaurusOption15341); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49473,18 +49476,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt222) {
                         case 1 :
                             // xquery/XQueryParser.g:1884:28: p_FTThesaurusID
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15340);
-                            p_FTThesaurusID630=this.p_FTThesaurusID();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15344);
+                            p_FTThesaurusID629=this.p_FTThesaurusID();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusID630.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusID629.getTree());
 
 
                             break;
                         case 2 :
                             // xquery/XQueryParser.g:1884:46: k+= DEFAULT
-                            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_FTThesaurusOption15346); if (this.state.failed) return retval;
+                            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_FTThesaurusOption15350); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
                             k_tree = this.adaptor.create(k);
                             this.adaptor.addChild(root_0, k_tree);
@@ -49508,7 +49511,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1885:13: (k+= THESAURUS LPAREN ( p_FTThesaurusID | k+= DEFAULT ) ( COMMA p_FTThesaurusID )* RPAREN )
                     // xquery/XQueryParser.g:1885:13: (k+= THESAURUS LPAREN ( p_FTThesaurusID | k+= DEFAULT ) ( COMMA p_FTThesaurusID )* RPAREN )
                     // xquery/XQueryParser.g:1885:14: k+= THESAURUS LPAREN ( p_FTThesaurusID | k+= DEFAULT ) ( COMMA p_FTThesaurusID )* RPAREN
-                    k=this.match(this.input,THESAURUS,XQueryParser.FOLLOW_THESAURUS_in_p_FTThesaurusOption15365); if (this.state.failed) return retval;
+                    k=this.match(this.input,THESAURUS,XQueryParser.FOLLOW_THESAURUS_in_p_FTThesaurusOption15369); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49516,10 +49519,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    LPAREN631=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_FTThesaurusOption15367); if (this.state.failed) return retval;
+                    LPAREN630=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_FTThesaurusOption15371); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LPAREN631_tree = this.adaptor.create(LPAREN631);
-                    this.adaptor.addChild(root_0, LPAREN631_tree);
+                    LPAREN630_tree = this.adaptor.create(LPAREN630);
+                    this.adaptor.addChild(root_0, LPAREN630_tree);
                     }
                     // xquery/XQueryParser.g:1885:34: ( p_FTThesaurusID | k+= DEFAULT )
                     var alt223=2;
@@ -49541,18 +49544,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt223) {
                         case 1 :
                             // xquery/XQueryParser.g:1885:35: p_FTThesaurusID
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15370);
-                            p_FTThesaurusID632=this.p_FTThesaurusID();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15374);
+                            p_FTThesaurusID631=this.p_FTThesaurusID();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusID632.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusID631.getTree());
 
 
                             break;
                         case 2 :
                             // xquery/XQueryParser.g:1885:53: k+= DEFAULT
-                            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_FTThesaurusOption15376); if (this.state.failed) return retval;
+                            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_FTThesaurusOption15380); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
                             k_tree = this.adaptor.create(k);
                             this.adaptor.addChild(root_0, k_tree);
@@ -49580,17 +49583,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         switch (alt224) {
                         case 1 :
                             // xquery/XQueryParser.g:1885:66: COMMA p_FTThesaurusID
-                            COMMA633=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_FTThesaurusOption15380); if (this.state.failed) return retval;
+                            COMMA632=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_FTThesaurusOption15384); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            COMMA633_tree = this.adaptor.create(COMMA633);
-                            this.adaptor.addChild(root_0, COMMA633_tree);
+                            COMMA632_tree = this.adaptor.create(COMMA632);
+                            this.adaptor.addChild(root_0, COMMA632_tree);
                             }
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15382);
-                            p_FTThesaurusID634=this.p_FTThesaurusID();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15386);
+                            p_FTThesaurusID633=this.p_FTThesaurusID();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusID634.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTThesaurusID633.getTree());
 
 
                             break;
@@ -49600,10 +49603,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         }
                     } while (true);
 
-                    RPAREN635=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_FTThesaurusOption15386); if (this.state.failed) return retval;
+                    RPAREN634=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_FTThesaurusOption15390); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RPAREN635_tree = this.adaptor.create(RPAREN635);
-                    this.adaptor.addChild(root_0, RPAREN635_tree);
+                    RPAREN634_tree = this.adaptor.create(RPAREN634);
+                    this.adaptor.addChild(root_0, RPAREN634_tree);
                     }
 
 
@@ -49615,7 +49618,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1886:13: (k+= NO k+= THESAURUS )
                     // xquery/XQueryParser.g:1886:13: (k+= NO k+= THESAURUS )
                     // xquery/XQueryParser.g:1886:14: k+= NO k+= THESAURUS
-                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTThesaurusOption15404); if (this.state.failed) return retval;
+                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTThesaurusOption15408); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49623,7 +49626,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,THESAURUS,XQueryParser.FOLLOW_THESAURUS_in_p_FTThesaurusOption15408); if (this.state.failed) return retval;
+                    k=this.match(this.input,THESAURUS,XQueryParser.FOLLOW_THESAURUS_in_p_FTThesaurusOption15412); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49689,9 +49692,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
+         var p_StringLiteral635 = null;
          var p_StringLiteral636 = null;
-         var p_StringLiteral637 = null;
-         var p_FTLiteralRange638 = null;
+         var p_FTLiteralRange637 = null;
 
         var k_tree=null;
 
@@ -49700,7 +49703,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1891:11: k+= AT p_StringLiteral (k+= RELATIONSHIP p_StringLiteral )? ( p_FTLiteralRange k+= LEVELS )?
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTThesaurusID15441); if (this.state.failed) return retval;
+            k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTThesaurusID15445); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -49708,12 +49711,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTThesaurusID15443);
-            p_StringLiteral636=this.p_StringLiteral();
+            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTThesaurusID15447);
+            p_StringLiteral635=this.p_StringLiteral();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral636.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral635.getTree());
             // xquery/XQueryParser.g:1891:33: (k+= RELATIONSHIP p_StringLiteral )?
             var alt226=2;
             var LA226_0 = this.input.LA(1);
@@ -49724,7 +49727,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt226) {
                 case 1 :
                     // xquery/XQueryParser.g:1891:34: k+= RELATIONSHIP p_StringLiteral
-                    k=this.match(this.input,RELATIONSHIP,XQueryParser.FOLLOW_RELATIONSHIP_in_p_FTThesaurusID15448); if (this.state.failed) return retval;
+                    k=this.match(this.input,RELATIONSHIP,XQueryParser.FOLLOW_RELATIONSHIP_in_p_FTThesaurusID15452); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49732,12 +49735,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTThesaurusID15450);
-                    p_StringLiteral637=this.p_StringLiteral();
+                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTThesaurusID15454);
+                    p_StringLiteral636=this.p_StringLiteral();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral637.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral636.getTree());
 
 
                     break;
@@ -49761,13 +49764,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt227) {
                 case 1 :
                     // xquery/XQueryParser.g:1891:69: p_FTLiteralRange k+= LEVELS
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTLiteralRange_in_p_FTThesaurusID15455);
-                    p_FTLiteralRange638=this.p_FTLiteralRange();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTLiteralRange_in_p_FTThesaurusID15459);
+                    p_FTLiteralRange637=this.p_FTLiteralRange();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTLiteralRange638.getTree());
-                    k=this.match(this.input,LEVELS,XQueryParser.FOLLOW_LEVELS_in_p_FTThesaurusID15459); if (this.state.failed) return retval;
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTLiteralRange637.getTree());
+                    k=this.match(this.input,LEVELS,XQueryParser.FOLLOW_LEVELS_in_p_FTThesaurusID15463); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49828,21 +49831,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
+        var L_IntegerLiteral638 = null;
         var L_IntegerLiteral639 = null;
         var L_IntegerLiteral640 = null;
         var L_IntegerLiteral641 = null;
-        var L_IntegerLiteral642 = null;
-        var TO643 = null;
-        var L_IntegerLiteral644 = null;
+        var TO642 = null;
+        var L_IntegerLiteral643 = null;
         var k = null;
         var list_k=null;
 
+        var L_IntegerLiteral638_tree=null;
         var L_IntegerLiteral639_tree=null;
         var L_IntegerLiteral640_tree=null;
         var L_IntegerLiteral641_tree=null;
-        var L_IntegerLiteral642_tree=null;
-        var TO643_tree=null;
-        var L_IntegerLiteral644_tree=null;
+        var TO642_tree=null;
+        var L_IntegerLiteral643_tree=null;
         var k_tree=null;
 
         try {
@@ -49889,7 +49892,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1896:13: (k+= EXACTLY L_IntegerLiteral )
                     // xquery/XQueryParser.g:1896:13: (k+= EXACTLY L_IntegerLiteral )
                     // xquery/XQueryParser.g:1896:14: k+= EXACTLY L_IntegerLiteral
-                    k=this.match(this.input,EXACTLY,XQueryParser.FOLLOW_EXACTLY_in_p_FTLiteralRange15494); if (this.state.failed) return retval;
+                    k=this.match(this.input,EXACTLY,XQueryParser.FOLLOW_EXACTLY_in_p_FTLiteralRange15498); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49897,10 +49900,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    L_IntegerLiteral639=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15496); if (this.state.failed) return retval;
+                    L_IntegerLiteral638=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15500); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    L_IntegerLiteral639_tree = this.adaptor.create(L_IntegerLiteral639);
-                    this.adaptor.addChild(root_0, L_IntegerLiteral639_tree);
+                    L_IntegerLiteral638_tree = this.adaptor.create(L_IntegerLiteral638);
+                    this.adaptor.addChild(root_0, L_IntegerLiteral638_tree);
                     }
 
 
@@ -49912,7 +49915,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1897:13: (k+= AT k+= LEAST L_IntegerLiteral )
                     // xquery/XQueryParser.g:1897:13: (k+= AT k+= LEAST L_IntegerLiteral )
                     // xquery/XQueryParser.g:1897:14: k+= AT k+= LEAST L_IntegerLiteral
-                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTLiteralRange15514); if (this.state.failed) return retval;
+                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTLiteralRange15518); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49920,7 +49923,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,LEAST,XQueryParser.FOLLOW_LEAST_in_p_FTLiteralRange15518); if (this.state.failed) return retval;
+                    k=this.match(this.input,LEAST,XQueryParser.FOLLOW_LEAST_in_p_FTLiteralRange15522); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49928,10 +49931,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    L_IntegerLiteral640=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15520); if (this.state.failed) return retval;
+                    L_IntegerLiteral639=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15524); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    L_IntegerLiteral640_tree = this.adaptor.create(L_IntegerLiteral640);
-                    this.adaptor.addChild(root_0, L_IntegerLiteral640_tree);
+                    L_IntegerLiteral639_tree = this.adaptor.create(L_IntegerLiteral639);
+                    this.adaptor.addChild(root_0, L_IntegerLiteral639_tree);
                     }
 
 
@@ -49943,7 +49946,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1898:13: (k+= AT k+= MOST L_IntegerLiteral )
                     // xquery/XQueryParser.g:1898:13: (k+= AT k+= MOST L_IntegerLiteral )
                     // xquery/XQueryParser.g:1898:14: k+= AT k+= MOST L_IntegerLiteral
-                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTLiteralRange15538); if (this.state.failed) return retval;
+                    k=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTLiteralRange15542); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49951,7 +49954,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,MOST,XQueryParser.FOLLOW_MOST_in_p_FTLiteralRange15542); if (this.state.failed) return retval;
+                    k=this.match(this.input,MOST,XQueryParser.FOLLOW_MOST_in_p_FTLiteralRange15546); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49959,10 +49962,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    L_IntegerLiteral641=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15544); if (this.state.failed) return retval;
+                    L_IntegerLiteral640=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15548); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    L_IntegerLiteral641_tree = this.adaptor.create(L_IntegerLiteral641);
-                    this.adaptor.addChild(root_0, L_IntegerLiteral641_tree);
+                    L_IntegerLiteral640_tree = this.adaptor.create(L_IntegerLiteral640);
+                    this.adaptor.addChild(root_0, L_IntegerLiteral640_tree);
                     }
 
 
@@ -49974,7 +49977,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1899:13: (k+= FROM L_IntegerLiteral TO L_IntegerLiteral )
                     // xquery/XQueryParser.g:1899:13: (k+= FROM L_IntegerLiteral TO L_IntegerLiteral )
                     // xquery/XQueryParser.g:1899:14: k+= FROM L_IntegerLiteral TO L_IntegerLiteral
-                    k=this.match(this.input,FROM,XQueryParser.FOLLOW_FROM_in_p_FTLiteralRange15562); if (this.state.failed) return retval;
+                    k=this.match(this.input,FROM,XQueryParser.FOLLOW_FROM_in_p_FTLiteralRange15566); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -49982,20 +49985,20 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    L_IntegerLiteral642=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15564); if (this.state.failed) return retval;
+                    L_IntegerLiteral641=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15568); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    L_IntegerLiteral642_tree = this.adaptor.create(L_IntegerLiteral642);
-                    this.adaptor.addChild(root_0, L_IntegerLiteral642_tree);
+                    L_IntegerLiteral641_tree = this.adaptor.create(L_IntegerLiteral641);
+                    this.adaptor.addChild(root_0, L_IntegerLiteral641_tree);
                     }
-                    TO643=this.match(this.input,TO,XQueryParser.FOLLOW_TO_in_p_FTLiteralRange15566); if (this.state.failed) return retval;
+                    TO642=this.match(this.input,TO,XQueryParser.FOLLOW_TO_in_p_FTLiteralRange15570); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    TO643_tree = this.adaptor.create(TO643);
-                    this.adaptor.addChild(root_0, TO643_tree);
+                    TO642_tree = this.adaptor.create(TO642);
+                    this.adaptor.addChild(root_0, TO642_tree);
                     }
-                    L_IntegerLiteral644=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15568); if (this.state.failed) return retval;
+                    L_IntegerLiteral643=this.match(this.input,L_IntegerLiteral,XQueryParser.FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15572); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    L_IntegerLiteral644_tree = this.adaptor.create(L_IntegerLiteral644);
-                    this.adaptor.addChild(root_0, L_IntegerLiteral644_tree);
+                    L_IntegerLiteral643_tree = this.adaptor.create(L_IntegerLiteral643);
+                    this.adaptor.addChild(root_0, L_IntegerLiteral643_tree);
                     }
 
 
@@ -50055,9 +50058,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_FTStopWords645 = null;
+         var p_FTStopWords644 = null;
+         var p_FTStopWordsInclExcl645 = null;
          var p_FTStopWordsInclExcl646 = null;
-         var p_FTStopWordsInclExcl647 = null;
 
         var k_tree=null;
 
@@ -50113,7 +50116,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1904:13: (k+= STOP k+= WORDS p_FTStopWords ( p_FTStopWordsInclExcl )* )
                     // xquery/XQueryParser.g:1904:13: (k+= STOP k+= WORDS p_FTStopWords ( p_FTStopWordsInclExcl )* )
                     // xquery/XQueryParser.g:1904:14: k+= STOP k+= WORDS p_FTStopWords ( p_FTStopWordsInclExcl )*
-                    k=this.match(this.input,STOP,XQueryParser.FOLLOW_STOP_in_p_FTStopWordOption15604); if (this.state.failed) return retval;
+                    k=this.match(this.input,STOP,XQueryParser.FOLLOW_STOP_in_p_FTStopWordOption15608); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50121,7 +50124,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTStopWordOption15608); if (this.state.failed) return retval;
+                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTStopWordOption15612); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50129,12 +50132,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_FTStopWords_in_p_FTStopWordOption15610);
-                    p_FTStopWords645=this.p_FTStopWords();
+                    this.pushFollow(XQueryParser.FOLLOW_p_FTStopWords_in_p_FTStopWordOption15614);
+                    p_FTStopWords644=this.p_FTStopWords();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWords645.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWords644.getTree());
                     // xquery/XQueryParser.g:1904:45: ( p_FTStopWordsInclExcl )*
                     loop229:
                     do {
@@ -50149,12 +50152,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         switch (alt229) {
                         case 1 :
                             // xquery/XQueryParser.g:1904:45: p_FTStopWordsInclExcl
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15612);
-                            p_FTStopWordsInclExcl646=this.p_FTStopWordsInclExcl();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15616);
+                            p_FTStopWordsInclExcl645=this.p_FTStopWordsInclExcl();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWordsInclExcl646.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWordsInclExcl645.getTree());
 
 
                             break;
@@ -50174,7 +50177,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1905:13: (k+= STOP k+= WORDS k+= DEFAULT ( p_FTStopWordsInclExcl )* )
                     // xquery/XQueryParser.g:1905:13: (k+= STOP k+= WORDS k+= DEFAULT ( p_FTStopWordsInclExcl )* )
                     // xquery/XQueryParser.g:1905:14: k+= STOP k+= WORDS k+= DEFAULT ( p_FTStopWordsInclExcl )*
-                    k=this.match(this.input,STOP,XQueryParser.FOLLOW_STOP_in_p_FTStopWordOption15631); if (this.state.failed) return retval;
+                    k=this.match(this.input,STOP,XQueryParser.FOLLOW_STOP_in_p_FTStopWordOption15635); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50182,7 +50185,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTStopWordOption15635); if (this.state.failed) return retval;
+                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTStopWordOption15639); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50190,7 +50193,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_FTStopWordOption15639); if (this.state.failed) return retval;
+                    k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_FTStopWordOption15643); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50212,12 +50215,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         switch (alt230) {
                         case 1 :
                             // xquery/XQueryParser.g:1905:42: p_FTStopWordsInclExcl
-                            this.pushFollow(XQueryParser.FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15641);
-                            p_FTStopWordsInclExcl647=this.p_FTStopWordsInclExcl();
+                            this.pushFollow(XQueryParser.FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15645);
+                            p_FTStopWordsInclExcl646=this.p_FTStopWordsInclExcl();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWordsInclExcl647.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWordsInclExcl646.getTree());
 
 
                             break;
@@ -50237,7 +50240,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1906:13: (k+= NO k+= STOP k+= WORDS )
                     // xquery/XQueryParser.g:1906:13: (k+= NO k+= STOP k+= WORDS )
                     // xquery/XQueryParser.g:1906:14: k+= NO k+= STOP k+= WORDS
-                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTStopWordOption15660); if (this.state.failed) return retval;
+                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTStopWordOption15664); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50245,7 +50248,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,STOP,XQueryParser.FOLLOW_STOP_in_p_FTStopWordOption15664); if (this.state.failed) return retval;
+                    k=this.match(this.input,STOP,XQueryParser.FOLLOW_STOP_in_p_FTStopWordOption15668); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50253,7 +50256,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTStopWordOption15668); if (this.state.failed) return retval;
+                    k=this.match(this.input,WORDS,XQueryParser.FOLLOW_WORDS_in_p_FTStopWordOption15672); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50318,17 +50321,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var ka = null;
-        var LPAREN649 = null;
-        var COMMA651 = null;
-        var RPAREN653 = null;
-         var p_StringLiteral648 = null;
-         var p_StringLiteral650 = null;
-         var p_StringLiteral652 = null;
+        var LPAREN648 = null;
+        var COMMA650 = null;
+        var RPAREN652 = null;
+         var p_StringLiteral647 = null;
+         var p_StringLiteral649 = null;
+         var p_StringLiteral651 = null;
 
         var ka_tree=null;
-        var LPAREN649_tree=null;
-        var COMMA651_tree=null;
-        var RPAREN653_tree=null;
+        var LPAREN648_tree=null;
+        var COMMA650_tree=null;
+        var RPAREN652_tree=null;
 
         try {
             // xquery/XQueryParser.g:1911:9: ( (ka= AT p_StringLiteral ) | ( LPAREN p_StringLiteral ( COMMA p_StringLiteral )* RPAREN ) )
@@ -50355,7 +50358,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
                     // xquery/XQueryParser.g:1911:11: (ka= AT p_StringLiteral )
                     // xquery/XQueryParser.g:1911:12: ka= AT p_StringLiteral
-                    ka=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTStopWords15702); if (this.state.failed) return retval;
+                    ka=this.match(this.input,AT,XQueryParser.FOLLOW_AT_in_p_FTStopWords15706); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     ka_tree = this.adaptor.create(ka);
                     this.adaptor.addChild(root_0, ka_tree);
@@ -50363,12 +50366,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(ka);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTStopWords15706);
-                    p_StringLiteral648=this.p_StringLiteral();
+                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTStopWords15710);
+                    p_StringLiteral647=this.p_StringLiteral();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral648.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral647.getTree());
 
 
 
@@ -50381,17 +50384,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
                     // xquery/XQueryParser.g:1912:11: ( LPAREN p_StringLiteral ( COMMA p_StringLiteral )* RPAREN )
                     // xquery/XQueryParser.g:1912:12: LPAREN p_StringLiteral ( COMMA p_StringLiteral )* RPAREN
-                    LPAREN649=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_FTStopWords15720); if (this.state.failed) return retval;
+                    LPAREN648=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_FTStopWords15724); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    LPAREN649_tree = this.adaptor.create(LPAREN649);
-                    this.adaptor.addChild(root_0, LPAREN649_tree);
+                    LPAREN648_tree = this.adaptor.create(LPAREN648);
+                    this.adaptor.addChild(root_0, LPAREN648_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTStopWords15722);
-                    p_StringLiteral650=this.p_StringLiteral();
+                    this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTStopWords15726);
+                    p_StringLiteral649=this.p_StringLiteral();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral650.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral649.getTree());
                     // xquery/XQueryParser.g:1912:35: ( COMMA p_StringLiteral )*
                     loop232:
                     do {
@@ -50406,17 +50409,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         switch (alt232) {
                         case 1 :
                             // xquery/XQueryParser.g:1912:36: COMMA p_StringLiteral
-                            COMMA651=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_FTStopWords15725); if (this.state.failed) return retval;
+                            COMMA650=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_FTStopWords15729); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            COMMA651_tree = this.adaptor.create(COMMA651);
-                            this.adaptor.addChild(root_0, COMMA651_tree);
+                            COMMA650_tree = this.adaptor.create(COMMA650);
+                            this.adaptor.addChild(root_0, COMMA650_tree);
                             }
-                            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTStopWords15727);
-                            p_StringLiteral652=this.p_StringLiteral();
+                            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTStopWords15731);
+                            p_StringLiteral651=this.p_StringLiteral();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral652.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral651.getTree());
 
 
                             break;
@@ -50426,10 +50429,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         }
                     } while (true);
 
-                    RPAREN653=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_FTStopWords15731); if (this.state.failed) return retval;
+                    RPAREN652=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_FTStopWords15735); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    RPAREN653_tree = this.adaptor.create(RPAREN653);
-                    this.adaptor.addChild(root_0, RPAREN653_tree);
+                    RPAREN652_tree = this.adaptor.create(RPAREN652);
+                    this.adaptor.addChild(root_0, RPAREN652_tree);
                     }
 
 
@@ -50482,7 +50485,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_FTStopWords654 = null;
+         var p_FTStopWords653 = null;
 
         var k_tree=null;
 
@@ -50513,7 +50516,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt234) {
                 case 1 :
                     // xquery/XQueryParser.g:1917:14: k+= UNION
-                    k=this.match(this.input,UNION,XQueryParser.FOLLOW_UNION_in_p_FTStopWordsInclExcl15763); if (this.state.failed) return retval;
+                    k=this.match(this.input,UNION,XQueryParser.FOLLOW_UNION_in_p_FTStopWordsInclExcl15767); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50526,7 +50529,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:1917:25: k+= EXCEPT
-                    k=this.match(this.input,EXCEPT,XQueryParser.FOLLOW_EXCEPT_in_p_FTStopWordsInclExcl15769); if (this.state.failed) return retval;
+                    k=this.match(this.input,EXCEPT,XQueryParser.FOLLOW_EXCEPT_in_p_FTStopWordsInclExcl15773); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50540,12 +50543,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            this.pushFollow(XQueryParser.FOLLOW_p_FTStopWords_in_p_FTStopWordsInclExcl15772);
-            p_FTStopWords654=this.p_FTStopWords();
+            this.pushFollow(XQueryParser.FOLLOW_p_FTStopWords_in_p_FTStopWordsInclExcl15776);
+            p_FTStopWords653=this.p_FTStopWords();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWords654.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_FTStopWords653.getTree());
 
 
 
@@ -50597,7 +50600,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var kl = null;
-         var p_StringLiteral655 = null;
+         var p_StringLiteral654 = null;
 
         var kl_tree=null;
 
@@ -50606,7 +50609,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1922:11: kl= LANGUAGE p_StringLiteral
             root_0 = this.adaptor.nil();
 
-            kl=this.match(this.input,LANGUAGE,XQueryParser.FOLLOW_LANGUAGE_in_p_FTLanguageOption15804); if (this.state.failed) return retval;
+            kl=this.match(this.input,LANGUAGE,XQueryParser.FOLLOW_LANGUAGE_in_p_FTLanguageOption15808); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             kl_tree = this.adaptor.create(kl);
             this.adaptor.addChild(root_0, kl_tree);
@@ -50614,12 +50617,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(kl);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTLanguageOption15808);
-            p_StringLiteral655=this.p_StringLiteral();
+            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTLanguageOption15812);
+            p_StringLiteral654=this.p_StringLiteral();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral655.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral654.getTree());
 
 
 
@@ -50694,7 +50697,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt235) {
                 case 1 :
                     // xquery/XQueryParser.g:1927:13: k+= WILDCARDS
-                    k=this.match(this.input,WILDCARDS,XQueryParser.FOLLOW_WILDCARDS_in_p_FTWildCardOption15838); if (this.state.failed) return retval;
+                    k=this.match(this.input,WILDCARDS,XQueryParser.FOLLOW_WILDCARDS_in_p_FTWildCardOption15842); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50709,7 +50712,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1927:28: (k+= NO k+= WILDCARDS )
                     // xquery/XQueryParser.g:1927:28: (k+= NO k+= WILDCARDS )
                     // xquery/XQueryParser.g:1927:29: k+= NO k+= WILDCARDS
-                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTWildCardOption15845); if (this.state.failed) return retval;
+                    k=this.match(this.input,NO,XQueryParser.FOLLOW_NO_in_p_FTWildCardOption15849); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50717,7 +50720,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if (org.antlr.lang.isNull(list_k)) list_k = [];
                     list_k.push(k);
 
-                    k=this.match(this.input,WILDCARDS,XQueryParser.FOLLOW_WILDCARDS_in_p_FTWildCardOption15849); if (this.state.failed) return retval;
+                    k=this.match(this.input,WILDCARDS,XQueryParser.FOLLOW_WILDCARDS_in_p_FTWildCardOption15853); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -50782,8 +50785,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var ko = null;
-         var p_QName656 = null;
-         var p_StringLiteral657 = null;
+         var p_QName655 = null;
+         var p_StringLiteral656 = null;
 
         var ko_tree=null;
 
@@ -50792,7 +50795,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1932:11: ko= OPTION p_QName p_StringLiteral
             root_0 = this.adaptor.nil();
 
-            ko=this.match(this.input,OPTION,XQueryParser.FOLLOW_OPTION_in_p_FTExtensionOption15882); if (this.state.failed) return retval;
+            ko=this.match(this.input,OPTION,XQueryParser.FOLLOW_OPTION_in_p_FTExtensionOption15886); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             ko_tree = this.adaptor.create(ko);
             this.adaptor.addChild(root_0, ko_tree);
@@ -50800,18 +50803,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(ko);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_FTExtensionOption15886);
-            p_QName656=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_FTExtensionOption15890);
+            p_QName655=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName656.getTree());
-            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTExtensionOption15888);
-            p_StringLiteral657=this.p_StringLiteral();
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName655.getTree());
+            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_FTExtensionOption15892);
+            p_StringLiteral656=this.p_StringLiteral();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral657.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral656.getTree());
 
 
 
@@ -50858,7 +50861,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var list_k=null;
-         var p_UnionExpr658 = null;
+         var p_UnionExpr657 = null;
 
         var k_tree=null;
 
@@ -50867,7 +50870,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1937:11: k+= WITHOUT k+= CONTENT p_UnionExpr
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,WITHOUT,XQueryParser.FOLLOW_WITHOUT_in_p_FTIgnoreOption15916); if (this.state.failed) return retval;
+            k=this.match(this.input,WITHOUT,XQueryParser.FOLLOW_WITHOUT_in_p_FTIgnoreOption15920); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -50875,7 +50878,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if (org.antlr.lang.isNull(list_k)) list_k = [];
             list_k.push(k);
 
-            k=this.match(this.input,CONTENT,XQueryParser.FOLLOW_CONTENT_in_p_FTIgnoreOption15920); if (this.state.failed) return retval;
+            k=this.match(this.input,CONTENT,XQueryParser.FOLLOW_CONTENT_in_p_FTIgnoreOption15924); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -50886,12 +50889,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(list_k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_UnionExpr_in_p_FTIgnoreOption15924);
-            p_UnionExpr658=this.p_UnionExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_UnionExpr_in_p_FTIgnoreOption15928);
+            p_UnionExpr657=this.p_UnionExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_UnionExpr658.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_UnionExpr657.getTree());
 
 
 
@@ -50936,7 +50939,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_StatementsAndOptionalExpr659 = null;
+         var p_StatementsAndOptionalExpr658 = null;
 
 
         try {
@@ -50944,12 +50947,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1948:11: p_StatementsAndOptionalExpr
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_p_Program15956);
-            p_StatementsAndOptionalExpr659=this.p_StatementsAndOptionalExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndOptionalExpr_in_p_Program15960);
+            p_StatementsAndOptionalExpr658=this.p_StatementsAndOptionalExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr659.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndOptionalExpr658.getTree());
 
 
 
@@ -50994,7 +50997,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_Hybrid660 = null;
+         var p_Hybrid659 = null;
 
 
         try {
@@ -51016,12 +51019,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt236) {
                 case 1 :
                     // xquery/XQueryParser.g:1953:11: p_Hybrid[$strict,true]
-                    this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_Statements15983);
-                    p_Hybrid660=this.p_Hybrid(strict, true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_Statements15987);
+                    p_Hybrid659=this.p_Hybrid(strict, true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid660.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid659.getTree());
 
 
                     break;
@@ -51075,7 +51078,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_Statements661 = null;
+         var p_Statements660 = null;
 
 
         try {
@@ -51083,12 +51086,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1958:11: p_Statements[false]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_StatementsAndExpr16011);
-            p_Statements661=this.p_Statements(false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_StatementsAndExpr16015);
+            p_Statements660=this.p_Statements(false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements661.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements660.getTree());
 
 
 
@@ -51133,7 +51136,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_Statements662 = null;
+         var p_Statements661 = null;
 
 
         try {
@@ -51141,12 +51144,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:1963:11: p_Statements[false]
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_StatementsAndOptionalExpr16038);
-            p_Statements662=this.p_Statements(false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_StatementsAndOptionalExpr16042);
+            p_Statements661=this.p_Statements(false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements662.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements661.getTree());
 
 
 
@@ -51191,8 +51194,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_HybridExprSingle663 = null;
-         var p_Statement664 = null;
+         var p_HybridExprSingle662 = null;
+         var p_Statement663 = null;
 
 
         try {
@@ -51204,12 +51207,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1967:11: p_HybridExprSingle[$strict,$allowConcat]
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_HybridExprSingle_in_p_Hybrid16065);
-                    p_HybridExprSingle663=this.p_HybridExprSingle(strict, allowConcat);
+                    this.pushFollow(XQueryParser.FOLLOW_p_HybridExprSingle_in_p_Hybrid16069);
+                    p_HybridExprSingle662=this.p_HybridExprSingle(strict, allowConcat);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_HybridExprSingle663.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_HybridExprSingle662.getTree());
 
 
                     break;
@@ -51217,12 +51220,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1968:11: p_Statement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_Statement_in_p_Hybrid16078);
-                    p_Statement664=this.p_Statement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_Statement_in_p_Hybrid16082);
+                    p_Statement663=this.p_Statement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statement664.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statement663.getTree());
 
 
                     break;
@@ -51275,12 +51278,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_AssignStatement665 = null;
-         var p_BreakStatement666 = null;
-         var p_ContinueStatement667 = null;
-         var p_ExitStatement668 = null;
-         var p_VarDeclStatement669 = null;
-         var p_WhileStatement670 = null;
+         var p_AssignStatement664 = null;
+         var p_BreakStatement665 = null;
+         var p_ContinueStatement666 = null;
+         var p_ExitStatement667 = null;
+         var p_VarDeclStatement668 = null;
+         var p_WhileStatement669 = null;
 
 
         try {
@@ -51319,12 +51322,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1985:11: p_AssignStatement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_AssignStatement_in_p_Statement16109);
-                    p_AssignStatement665=this.p_AssignStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_AssignStatement_in_p_Statement16113);
+                    p_AssignStatement664=this.p_AssignStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AssignStatement665.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AssignStatement664.getTree());
 
 
                     break;
@@ -51332,12 +51335,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1986:11: p_BreakStatement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_BreakStatement_in_p_Statement16121);
-                    p_BreakStatement666=this.p_BreakStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_BreakStatement_in_p_Statement16125);
+                    p_BreakStatement665=this.p_BreakStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BreakStatement666.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BreakStatement665.getTree());
 
 
                     break;
@@ -51345,12 +51348,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1987:11: p_ContinueStatement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_ContinueStatement_in_p_Statement16133);
-                    p_ContinueStatement667=this.p_ContinueStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ContinueStatement_in_p_Statement16137);
+                    p_ContinueStatement666=this.p_ContinueStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ContinueStatement667.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ContinueStatement666.getTree());
 
 
                     break;
@@ -51358,12 +51361,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1988:11: p_ExitStatement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_ExitStatement_in_p_Statement16145);
-                    p_ExitStatement668=this.p_ExitStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ExitStatement_in_p_Statement16149);
+                    p_ExitStatement667=this.p_ExitStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExitStatement668.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExitStatement667.getTree());
 
 
                     break;
@@ -51371,12 +51374,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1989:11: p_VarDeclStatement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_VarDeclStatement_in_p_Statement16157);
-                    p_VarDeclStatement669=this.p_VarDeclStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_VarDeclStatement_in_p_Statement16161);
+                    p_VarDeclStatement668=this.p_VarDeclStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_VarDeclStatement669.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_VarDeclStatement668.getTree());
 
 
                     break;
@@ -51384,12 +51387,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:1990:11: p_WhileStatement
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_WhileStatement_in_p_Statement16169);
-                    p_WhileStatement670=this.p_WhileStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_WhileStatement_in_p_Statement16173);
+                    p_WhileStatement669=this.p_WhileStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_WhileStatement670.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_WhileStatement669.getTree());
 
 
                     break;
@@ -51436,17 +51439,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var SEMICOLON671 = null;
+        var SEMICOLON670 = null;
          var e = null;
 
-        var SEMICOLON671_tree=null;
+        var SEMICOLON670_tree=null;
 
         try {
             // xquery/XQueryParser.g:1993:9: (e= p_Expr[$strict,$allowConcat] SEMICOLON )
             // xquery/XQueryParser.g:1993:11: e= p_Expr[$strict,$allowConcat] SEMICOLON
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_HybridExprSingle16196);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_HybridExprSingle16200);
             e=this.p_Expr(strict, allowConcat);
 
             this.state._fsp--;
@@ -51455,10 +51458,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                if (strict || this.input.LT(1).getType() != SEMICOLON) throw new org.antlr.runtime.RecognitionException(this.input); 
             }
-            SEMICOLON671=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_HybridExprSingle16211); if (this.state.failed) return retval;
+            SEMICOLON670=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_HybridExprSingle16215); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON671_tree = this.adaptor.create(SEMICOLON671);
-            this.adaptor.addChild(root_0, SEMICOLON671_tree);
+            SEMICOLON670_tree = this.adaptor.create(SEMICOLON670);
+            this.adaptor.addChild(root_0, SEMICOLON670_tree);
             }
 
 
@@ -51509,26 +51512,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var SEMICOLON673 = null;
-         var p_ExprSimple672 = null;
+        var SEMICOLON672 = null;
+         var p_ExprSimple671 = null;
 
-        var SEMICOLON673_tree=null;
+        var SEMICOLON672_tree=null;
 
         try {
             // xquery/XQueryParser.g:2029:9: ( p_ExprSimple SEMICOLON )
             // xquery/XQueryParser.g:2029:11: p_ExprSimple SEMICOLON
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSimple_in_p_ApplyStatement16261);
-            p_ExprSimple672=this.p_ExprSimple();
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSimple_in_p_ApplyStatement16265);
+            p_ExprSimple671=this.p_ExprSimple();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSimple672.getTree());
-            SEMICOLON673=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_ApplyStatement16263); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSimple671.getTree());
+            SEMICOLON672=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_ApplyStatement16267); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON673_tree = this.adaptor.create(SEMICOLON673);
-            this.adaptor.addChild(root_0, SEMICOLON673_tree);
+            SEMICOLON672_tree = this.adaptor.create(SEMICOLON672);
+            this.adaptor.addChild(root_0, SEMICOLON672_tree);
             }
 
 
@@ -51575,26 +51578,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var d = null;
-        var BIND674 = null;
-        var SEMICOLON676 = null;
+        var BIND673 = null;
+        var SEMICOLON675 = null;
          var v = null;
-         var p_ExprSingle675 = null;
+         var p_ExprSingle674 = null;
 
         var d_tree=null;
-        var BIND674_tree=null;
-        var SEMICOLON676_tree=null;
+        var BIND673_tree=null;
+        var SEMICOLON675_tree=null;
 
         try {
             // xquery/XQueryParser.g:2034:9: (d= DOLLAR v= p_VarName BIND p_ExprSingle[true] SEMICOLON )
             // xquery/XQueryParser.g:2034:11: d= DOLLAR v= p_VarName BIND p_ExprSingle[true] SEMICOLON
             root_0 = this.adaptor.nil();
 
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_AssignStatement16291); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_AssignStatement16295); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_AssignStatement16295);
+            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_AssignStatement16299);
             v=this.p_VarName();
 
             this.state._fsp--;
@@ -51603,21 +51606,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                this.av(d, (v?v.stop:null)); 
             }
-            BIND674=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_AssignStatement16299); if (this.state.failed) return retval;
+            BIND673=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_AssignStatement16303); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            BIND674_tree = this.adaptor.create(BIND674);
-            this.adaptor.addChild(root_0, BIND674_tree);
+            BIND673_tree = this.adaptor.create(BIND673);
+            this.adaptor.addChild(root_0, BIND673_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_AssignStatement16301);
-            p_ExprSingle675=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_AssignStatement16305);
+            p_ExprSingle674=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle675.getTree());
-            SEMICOLON676=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_AssignStatement16304); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle674.getTree());
+            SEMICOLON675=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_AssignStatement16308); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON676_tree = this.adaptor.create(SEMICOLON676);
-            this.adaptor.addChild(root_0, SEMICOLON676_tree);
+            SEMICOLON675_tree = this.adaptor.create(SEMICOLON675);
+            this.adaptor.addChild(root_0, SEMICOLON675_tree);
             }
 
 
@@ -51663,33 +51666,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LBRACKET677 = null;
-        var RBRACKET679 = null;
-         var p_Statements678 = null;
+        var LBRACKET676 = null;
+        var RBRACKET678 = null;
+         var p_Statements677 = null;
 
-        var LBRACKET677_tree=null;
-        var RBRACKET679_tree=null;
+        var LBRACKET676_tree=null;
+        var RBRACKET678_tree=null;
 
         try {
             // xquery/XQueryParser.g:2039:9: ( LBRACKET p_Statements[false] RBRACKET )
             // xquery/XQueryParser.g:2039:11: LBRACKET p_Statements[false] RBRACKET
             root_0 = this.adaptor.nil();
 
-            LBRACKET677=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_BlockStatement16330); if (this.state.failed) return retval;
+            LBRACKET676=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_BlockStatement16334); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET677_tree = this.adaptor.create(LBRACKET677);
-            this.adaptor.addChild(root_0, LBRACKET677_tree);
+            LBRACKET676_tree = this.adaptor.create(LBRACKET676);
+            this.adaptor.addChild(root_0, LBRACKET676_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_BlockStatement16332);
-            p_Statements678=this.p_Statements(false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_BlockStatement16336);
+            p_Statements677=this.p_Statements(false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements678.getTree());
-            RBRACKET679=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_BlockStatement16335); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements677.getTree());
+            RBRACKET678=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_BlockStatement16339); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET679_tree = this.adaptor.create(RBRACKET679);
-            this.adaptor.addChild(root_0, RBRACKET679_tree);
+            RBRACKET678_tree = this.adaptor.create(RBRACKET678);
+            this.adaptor.addChild(root_0, RBRACKET678_tree);
             }
 
 
@@ -51735,33 +51738,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LBRACKET680 = null;
-        var RBRACKET682 = null;
-         var p_Statements681 = null;
+        var LBRACKET679 = null;
+        var RBRACKET681 = null;
+         var p_Statements680 = null;
 
-        var LBRACKET680_tree=null;
-        var RBRACKET682_tree=null;
+        var LBRACKET679_tree=null;
+        var RBRACKET681_tree=null;
 
         try {
             // xquery/XQueryParser.g:2043:9: ( LBRACKET p_Statements[$strict] RBRACKET )
             // xquery/XQueryParser.g:2043:11: LBRACKET p_Statements[$strict] RBRACKET
             root_0 = this.adaptor.nil();
 
-            LBRACKET680=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_BlockHybrid16361); if (this.state.failed) return retval;
+            LBRACKET679=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_BlockHybrid16365); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET680_tree = this.adaptor.create(LBRACKET680);
-            this.adaptor.addChild(root_0, LBRACKET680_tree);
+            LBRACKET679_tree = this.adaptor.create(LBRACKET679);
+            this.adaptor.addChild(root_0, LBRACKET679_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_BlockHybrid16363);
-            p_Statements681=this.p_Statements(strict);
+            this.pushFollow(XQueryParser.FOLLOW_p_Statements_in_p_BlockHybrid16367);
+            p_Statements680=this.p_Statements(strict);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements681.getTree());
-            RBRACKET682=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_BlockHybrid16366); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Statements680.getTree());
+            RBRACKET681=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_BlockHybrid16370); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET682_tree = this.adaptor.create(RBRACKET682);
-            this.adaptor.addChild(root_0, RBRACKET682_tree);
+            RBRACKET681_tree = this.adaptor.create(RBRACKET681);
+            this.adaptor.addChild(root_0, RBRACKET681_tree);
             }
 
 
@@ -51808,17 +51811,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var SEMICOLON683 = null;
+        var SEMICOLON682 = null;
 
         var k_tree=null;
-        var SEMICOLON683_tree=null;
+        var SEMICOLON682_tree=null;
 
         try {
             // xquery/XQueryParser.g:2048:9: (k= BREAK k= LOOP SEMICOLON )
             // xquery/XQueryParser.g:2048:11: k= BREAK k= LOOP SEMICOLON
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,BREAK,XQueryParser.FOLLOW_BREAK_in_p_BreakStatement16394); if (this.state.failed) return retval;
+            k=this.match(this.input,BREAK,XQueryParser.FOLLOW_BREAK_in_p_BreakStatement16398); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -51826,7 +51829,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,LOOP,XQueryParser.FOLLOW_LOOP_in_p_BreakStatement16400); if (this.state.failed) return retval;
+            k=this.match(this.input,LOOP,XQueryParser.FOLLOW_LOOP_in_p_BreakStatement16404); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -51834,10 +51837,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            SEMICOLON683=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_BreakStatement16404); if (this.state.failed) return retval;
+            SEMICOLON682=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_BreakStatement16408); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON683_tree = this.adaptor.create(SEMICOLON683);
-            this.adaptor.addChild(root_0, SEMICOLON683_tree);
+            SEMICOLON682_tree = this.adaptor.create(SEMICOLON682);
+            this.adaptor.addChild(root_0, SEMICOLON682_tree);
             }
 
 
@@ -51884,17 +51887,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var SEMICOLON684 = null;
+        var SEMICOLON683 = null;
 
         var k_tree=null;
-        var SEMICOLON684_tree=null;
+        var SEMICOLON683_tree=null;
 
         try {
             // xquery/XQueryParser.g:2053:9: (k= CONTINUE k= LOOP SEMICOLON )
             // xquery/XQueryParser.g:2053:11: k= CONTINUE k= LOOP SEMICOLON
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,CONTINUE,XQueryParser.FOLLOW_CONTINUE_in_p_ContinueStatement16432); if (this.state.failed) return retval;
+            k=this.match(this.input,CONTINUE,XQueryParser.FOLLOW_CONTINUE_in_p_ContinueStatement16436); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -51902,7 +51905,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,LOOP,XQueryParser.FOLLOW_LOOP_in_p_ContinueStatement16438); if (this.state.failed) return retval;
+            k=this.match(this.input,LOOP,XQueryParser.FOLLOW_LOOP_in_p_ContinueStatement16442); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -51910,10 +51913,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            SEMICOLON684=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_ContinueStatement16442); if (this.state.failed) return retval;
+            SEMICOLON683=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_ContinueStatement16446); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON684_tree = this.adaptor.create(SEMICOLON684);
-            this.adaptor.addChild(root_0, SEMICOLON684_tree);
+            SEMICOLON683_tree = this.adaptor.create(SEMICOLON683);
+            this.adaptor.addChild(root_0, SEMICOLON683_tree);
             }
 
 
@@ -51960,18 +51963,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var SEMICOLON686 = null;
-         var p_ExprSingle685 = null;
+        var SEMICOLON685 = null;
+         var p_ExprSingle684 = null;
 
         var k_tree=null;
-        var SEMICOLON686_tree=null;
+        var SEMICOLON685_tree=null;
 
         try {
             // xquery/XQueryParser.g:2058:9: (k= EXIT k= RETURNING p_ExprSingle[true] SEMICOLON )
             // xquery/XQueryParser.g:2058:11: k= EXIT k= RETURNING p_ExprSingle[true] SEMICOLON
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,EXIT,XQueryParser.FOLLOW_EXIT_in_p_ExitStatement16470); if (this.state.failed) return retval;
+            k=this.match(this.input,EXIT,XQueryParser.FOLLOW_EXIT_in_p_ExitStatement16474); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -51979,7 +51982,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,RETURNING,XQueryParser.FOLLOW_RETURNING_in_p_ExitStatement16476); if (this.state.failed) return retval;
+            k=this.match(this.input,RETURNING,XQueryParser.FOLLOW_RETURNING_in_p_ExitStatement16480); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -51987,16 +51990,16 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ExitStatement16480);
-            p_ExprSingle685=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ExitStatement16484);
+            p_ExprSingle684=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle685.getTree());
-            SEMICOLON686=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_ExitStatement16483); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle684.getTree());
+            SEMICOLON685=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_ExitStatement16487); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON686_tree = this.adaptor.create(SEMICOLON686);
-            this.adaptor.addChild(root_0, SEMICOLON686_tree);
+            SEMICOLON685_tree = this.adaptor.create(SEMICOLON685);
+            this.adaptor.addChild(root_0, SEMICOLON685_tree);
             }
 
 
@@ -52042,9 +52045,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_InitialClause687 = null;
-         var p_IntermediateClause688 = null;
-         var p_ReturnStatement689 = null;
+         var p_InitialClause686 = null;
+         var p_IntermediateClause687 = null;
+         var p_ReturnStatement688 = null;
 
 
         try {
@@ -52052,12 +52055,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2063:11: p_InitialClause ( p_IntermediateClause )* p_ReturnStatement
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_InitialClause_in_p_FLWORStatement16509);
-            p_InitialClause687=this.p_InitialClause();
+            this.pushFollow(XQueryParser.FOLLOW_p_InitialClause_in_p_FLWORStatement16513);
+            p_InitialClause686=this.p_InitialClause();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_InitialClause687.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_InitialClause686.getTree());
             // xquery/XQueryParser.g:2063:27: ( p_IntermediateClause )*
             loop239:
             do {
@@ -52072,12 +52075,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt239) {
                 case 1 :
                     // xquery/XQueryParser.g:2063:27: p_IntermediateClause
-                    this.pushFollow(XQueryParser.FOLLOW_p_IntermediateClause_in_p_FLWORStatement16511);
-                    p_IntermediateClause688=this.p_IntermediateClause();
+                    this.pushFollow(XQueryParser.FOLLOW_p_IntermediateClause_in_p_FLWORStatement16515);
+                    p_IntermediateClause687=this.p_IntermediateClause();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IntermediateClause688.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IntermediateClause687.getTree());
 
 
                     break;
@@ -52087,12 +52090,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 }
             } while (true);
 
-            this.pushFollow(XQueryParser.FOLLOW_p_ReturnStatement_in_p_FLWORStatement16514);
-            p_ReturnStatement689=this.p_ReturnStatement();
+            this.pushFollow(XQueryParser.FOLLOW_p_ReturnStatement_in_p_FLWORStatement16518);
+            p_ReturnStatement688=this.p_ReturnStatement();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ReturnStatement689.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ReturnStatement688.getTree());
 
 
 
@@ -52138,7 +52141,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_Hybrid690 = null;
+         var p_Hybrid689 = null;
 
         var k_tree=null;
 
@@ -52147,7 +52150,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2068:11: k= RETURN p_Hybrid[false,false]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_ReturnStatement16546); if (this.state.failed) return retval;
+            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_ReturnStatement16550); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52155,12 +52158,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_ReturnStatement16550);
-            p_Hybrid690=this.p_Hybrid(false, false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_ReturnStatement16554);
+            p_Hybrid689=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid690.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid689.getTree());
 
 
 
@@ -52206,22 +52209,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LPAREN691 = null;
-        var RPAREN693 = null;
-         var p_Expr692 = null;
+        var LPAREN690 = null;
+        var RPAREN692 = null;
+         var p_Expr691 = null;
+         var p_Hybrid693 = null;
          var p_Hybrid694 = null;
-         var p_Hybrid695 = null;
 
         var k_tree=null;
-        var LPAREN691_tree=null;
-        var RPAREN693_tree=null;
+        var LPAREN690_tree=null;
+        var RPAREN692_tree=null;
 
         try {
             // xquery/XQueryParser.g:2073:9: (k= IF LPAREN p_Expr[true,true] RPAREN k= THEN p_Hybrid[false,false] k= ELSE p_Hybrid[false,false] )
             // xquery/XQueryParser.g:2073:11: k= IF LPAREN p_Expr[true,true] RPAREN k= THEN p_Hybrid[false,false] k= ELSE p_Hybrid[false,false]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,IF,XQueryParser.FOLLOW_IF_in_p_IfStatement16579); if (this.state.failed) return retval;
+            k=this.match(this.input,IF,XQueryParser.FOLLOW_IF_in_p_IfStatement16583); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52229,23 +52232,23 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LPAREN691=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_IfStatement16583); if (this.state.failed) return retval;
+            LPAREN690=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_IfStatement16587); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN691_tree = this.adaptor.create(LPAREN691);
-            this.adaptor.addChild(root_0, LPAREN691_tree);
+            LPAREN690_tree = this.adaptor.create(LPAREN690);
+            this.adaptor.addChild(root_0, LPAREN690_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_IfStatement16585);
-            p_Expr692=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_IfStatement16589);
+            p_Expr691=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr692.getTree());
-            RPAREN693=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_IfStatement16588); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr691.getTree());
+            RPAREN692=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_IfStatement16592); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN693_tree = this.adaptor.create(RPAREN693);
-            this.adaptor.addChild(root_0, RPAREN693_tree);
+            RPAREN692_tree = this.adaptor.create(RPAREN692);
+            this.adaptor.addChild(root_0, RPAREN692_tree);
             }
-            k=this.match(this.input,THEN,XQueryParser.FOLLOW_THEN_in_p_IfStatement16592); if (this.state.failed) return retval;
+            k=this.match(this.input,THEN,XQueryParser.FOLLOW_THEN_in_p_IfStatement16596); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52253,26 +52256,26 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_IfStatement16596);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_IfStatement16600);
+            p_Hybrid693=this.p_Hybrid(false, false);
+
+            this.state._fsp--;
+            if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid693.getTree());
+            k=this.match(this.input,ELSE,XQueryParser.FOLLOW_ELSE_in_p_IfStatement16605); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) {
+            k_tree = this.adaptor.create(k);
+            this.adaptor.addChild(root_0, k_tree);
+            }
+            if ( this.state.backtracking===0 ) {
+              this.ak(k);
+            }
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_IfStatement16609);
             p_Hybrid694=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid694.getTree());
-            k=this.match(this.input,ELSE,XQueryParser.FOLLOW_ELSE_in_p_IfStatement16601); if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) {
-            k_tree = this.adaptor.create(k);
-            this.adaptor.addChild(root_0, k_tree);
-            }
-            if ( this.state.backtracking===0 ) {
-              this.ak(k);
-            }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_IfStatement16605);
-            p_Hybrid695=this.p_Hybrid(false, false);
-
-            this.state._fsp--;
-            if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid695.getTree());
 
 
 
@@ -52318,22 +52321,22 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LPAREN696 = null;
-        var RPAREN698 = null;
-         var p_Expr697 = null;
-         var p_SwitchCaseStatement699 = null;
-         var p_Hybrid700 = null;
+        var LPAREN695 = null;
+        var RPAREN697 = null;
+         var p_Expr696 = null;
+         var p_SwitchCaseStatement698 = null;
+         var p_Hybrid699 = null;
 
         var k_tree=null;
-        var LPAREN696_tree=null;
-        var RPAREN698_tree=null;
+        var LPAREN695_tree=null;
+        var RPAREN697_tree=null;
 
         try {
             // xquery/XQueryParser.g:2078:9: (k= SWITCH LPAREN p_Expr[true,true] RPAREN ( p_SwitchCaseStatement )+ k= DEFAULT k= RETURN p_Hybrid[false,false] )
             // xquery/XQueryParser.g:2078:11: k= SWITCH LPAREN p_Expr[true,true] RPAREN ( p_SwitchCaseStatement )+ k= DEFAULT k= RETURN p_Hybrid[false,false]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,SWITCH,XQueryParser.FOLLOW_SWITCH_in_p_SwitchStatement16634); if (this.state.failed) return retval;
+            k=this.match(this.input,SWITCH,XQueryParser.FOLLOW_SWITCH_in_p_SwitchStatement16638); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52341,21 +52344,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LPAREN696=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SwitchStatement16638); if (this.state.failed) return retval;
+            LPAREN695=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_SwitchStatement16642); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN696_tree = this.adaptor.create(LPAREN696);
-            this.adaptor.addChild(root_0, LPAREN696_tree);
+            LPAREN695_tree = this.adaptor.create(LPAREN695);
+            this.adaptor.addChild(root_0, LPAREN695_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_SwitchStatement16640);
-            p_Expr697=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_SwitchStatement16644);
+            p_Expr696=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr697.getTree());
-            RPAREN698=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SwitchStatement16643); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr696.getTree());
+            RPAREN697=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_SwitchStatement16647); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN698_tree = this.adaptor.create(RPAREN698);
-            this.adaptor.addChild(root_0, RPAREN698_tree);
+            RPAREN697_tree = this.adaptor.create(RPAREN697);
+            this.adaptor.addChild(root_0, RPAREN697_tree);
             }
             // xquery/XQueryParser.g:2078:67: ( p_SwitchCaseStatement )+
             var cnt240=0;
@@ -52372,12 +52375,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt240) {
                 case 1 :
                     // xquery/XQueryParser.g:2078:67: p_SwitchCaseStatement
-                    this.pushFollow(XQueryParser.FOLLOW_p_SwitchCaseStatement_in_p_SwitchStatement16645);
-                    p_SwitchCaseStatement699=this.p_SwitchCaseStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_SwitchCaseStatement_in_p_SwitchStatement16649);
+                    p_SwitchCaseStatement698=this.p_SwitchCaseStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SwitchCaseStatement699.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SwitchCaseStatement698.getTree());
 
 
                     break;
@@ -52393,7 +52396,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 cnt240++;
             } while (true);
 
-            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_SwitchStatement16650); if (this.state.failed) return retval;
+            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_SwitchStatement16654); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52401,7 +52404,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_SwitchStatement16656); if (this.state.failed) return retval;
+            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_SwitchStatement16660); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52409,12 +52412,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_SwitchStatement16660);
-            p_Hybrid700=this.p_Hybrid(false, false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_SwitchStatement16664);
+            p_Hybrid699=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid700.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid699.getTree());
 
 
 
@@ -52460,8 +52463,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_SwitchCaseOperand701 = null;
-         var p_Hybrid702 = null;
+         var p_SwitchCaseOperand700 = null;
+         var p_Hybrid701 = null;
 
         var k_tree=null;
 
@@ -52485,7 +52488,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt241) {
                 case 1 :
                     // xquery/XQueryParser.g:2083:12: k= CASE p_SwitchCaseOperand
-                    k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_SwitchCaseStatement16690); if (this.state.failed) return retval;
+                    k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_SwitchCaseStatement16694); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -52493,12 +52496,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(k);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_SwitchCaseOperand_in_p_SwitchCaseStatement16694);
-                    p_SwitchCaseOperand701=this.p_SwitchCaseOperand();
+                    this.pushFollow(XQueryParser.FOLLOW_p_SwitchCaseOperand_in_p_SwitchCaseStatement16698);
+                    p_SwitchCaseOperand700=this.p_SwitchCaseOperand();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SwitchCaseOperand701.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SwitchCaseOperand700.getTree());
 
 
                     break;
@@ -52514,7 +52517,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 cnt241++;
             } while (true);
 
-            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_SwitchCaseStatement16700); if (this.state.failed) return retval;
+            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_SwitchCaseStatement16704); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52522,12 +52525,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_SwitchCaseStatement16704);
-            p_Hybrid702=this.p_Hybrid(false, false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_SwitchCaseStatement16708);
+            p_Hybrid701=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid702.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid701.getTree());
 
 
 
@@ -52573,9 +52576,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_BlockStatement703 = null;
-         var p_CatchErrorList704 = null;
-         var p_BlockStatement705 = null;
+         var p_BlockStatement702 = null;
+         var p_CatchErrorList703 = null;
+         var p_BlockStatement704 = null;
 
         var k_tree=null;
 
@@ -52584,7 +52587,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2088:11: k= TRY p_BlockStatement (k= CATCH p_CatchErrorList p_BlockStatement )+
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,TRY,XQueryParser.FOLLOW_TRY_in_p_TryCatchStatement16733); if (this.state.failed) return retval;
+            k=this.match(this.input,TRY,XQueryParser.FOLLOW_TRY_in_p_TryCatchStatement16737); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52592,12 +52595,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_BlockStatement_in_p_TryCatchStatement16737);
-            p_BlockStatement703=this.p_BlockStatement();
+            this.pushFollow(XQueryParser.FOLLOW_p_BlockStatement_in_p_TryCatchStatement16741);
+            p_BlockStatement702=this.p_BlockStatement();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockStatement703.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockStatement702.getTree());
             // xquery/XQueryParser.g:2088:49: (k= CATCH p_CatchErrorList p_BlockStatement )+
             var cnt242=0;
             loop242:
@@ -52613,7 +52616,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt242) {
                 case 1 :
                     // xquery/XQueryParser.g:2088:50: k= CATCH p_CatchErrorList p_BlockStatement
-                    k=this.match(this.input,CATCH,XQueryParser.FOLLOW_CATCH_in_p_TryCatchStatement16742); if (this.state.failed) return retval;
+                    k=this.match(this.input,CATCH,XQueryParser.FOLLOW_CATCH_in_p_TryCatchStatement16746); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -52621,18 +52624,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(k);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_CatchErrorList_in_p_TryCatchStatement16746);
-                    p_CatchErrorList704=this.p_CatchErrorList();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CatchErrorList_in_p_TryCatchStatement16750);
+                    p_CatchErrorList703=this.p_CatchErrorList();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CatchErrorList704.getTree());
-                    this.pushFollow(XQueryParser.FOLLOW_p_BlockStatement_in_p_TryCatchStatement16748);
-                    p_BlockStatement705=this.p_BlockStatement();
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CatchErrorList703.getTree());
+                    this.pushFollow(XQueryParser.FOLLOW_p_BlockStatement_in_p_TryCatchStatement16752);
+                    p_BlockStatement704=this.p_BlockStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockStatement705.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockStatement704.getTree());
 
 
                     break;
@@ -52696,9 +52699,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_BlockHybrid706 = null;
-         var p_CatchErrorList707 = null;
-         var p_BlockHybrid708 = null;
+         var p_BlockHybrid705 = null;
+         var p_CatchErrorList706 = null;
+         var p_BlockHybrid707 = null;
 
         var k_tree=null;
 
@@ -52707,7 +52710,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2092:11: k= TRY p_BlockHybrid[$strict] (k= CATCH p_CatchErrorList p_BlockHybrid[$strict] )+
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,TRY,XQueryParser.FOLLOW_TRY_in_p_TryCatchHybrid16780); if (this.state.failed) return retval;
+            k=this.match(this.input,TRY,XQueryParser.FOLLOW_TRY_in_p_TryCatchHybrid16784); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52715,12 +52718,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16784);
-            p_BlockHybrid706=this.p_BlockHybrid(strict);
+            this.pushFollow(XQueryParser.FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16788);
+            p_BlockHybrid705=this.p_BlockHybrid(strict);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockHybrid706.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockHybrid705.getTree());
             // xquery/XQueryParser.g:2092:55: (k= CATCH p_CatchErrorList p_BlockHybrid[$strict] )+
             var cnt243=0;
             loop243:
@@ -52736,7 +52739,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt243) {
                 case 1 :
                     // xquery/XQueryParser.g:2092:56: k= CATCH p_CatchErrorList p_BlockHybrid[$strict]
-                    k=this.match(this.input,CATCH,XQueryParser.FOLLOW_CATCH_in_p_TryCatchHybrid16790); if (this.state.failed) return retval;
+                    k=this.match(this.input,CATCH,XQueryParser.FOLLOW_CATCH_in_p_TryCatchHybrid16794); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     k_tree = this.adaptor.create(k);
                     this.adaptor.addChild(root_0, k_tree);
@@ -52744,18 +52747,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                       this.ak(k);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_CatchErrorList_in_p_TryCatchHybrid16794);
-                    p_CatchErrorList707=this.p_CatchErrorList();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CatchErrorList_in_p_TryCatchHybrid16798);
+                    p_CatchErrorList706=this.p_CatchErrorList();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CatchErrorList707.getTree());
-                    this.pushFollow(XQueryParser.FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16796);
-                    p_BlockHybrid708=this.p_BlockHybrid(strict);
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CatchErrorList706.getTree());
+                    this.pushFollow(XQueryParser.FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16800);
+                    p_BlockHybrid707=this.p_BlockHybrid(strict);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockHybrid708.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_BlockHybrid707.getTree());
 
 
                     break;
@@ -52820,24 +52823,24 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var d = null;
-        var LPAREN709 = null;
-        var RPAREN711 = null;
+        var LPAREN708 = null;
+        var RPAREN710 = null;
          var v = null;
-         var p_Expr710 = null;
-         var p_CaseStatement712 = null;
-         var p_Hybrid713 = null;
+         var p_Expr709 = null;
+         var p_CaseStatement711 = null;
+         var p_Hybrid712 = null;
 
         var k_tree=null;
         var d_tree=null;
-        var LPAREN709_tree=null;
-        var RPAREN711_tree=null;
+        var LPAREN708_tree=null;
+        var RPAREN710_tree=null;
 
         try {
             // xquery/XQueryParser.g:2097:9: (k= TYPESWITCH LPAREN p_Expr[true,true] RPAREN ( p_CaseStatement )+ k= DEFAULT (d= DOLLAR v= p_VarName )? k= RETURN p_Hybrid[false,false] )
             // xquery/XQueryParser.g:2097:11: k= TYPESWITCH LPAREN p_Expr[true,true] RPAREN ( p_CaseStatement )+ k= DEFAULT (d= DOLLAR v= p_VarName )? k= RETURN p_Hybrid[false,false]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,TYPESWITCH,XQueryParser.FOLLOW_TYPESWITCH_in_p_TypeswitchStatement16829); if (this.state.failed) return retval;
+            k=this.match(this.input,TYPESWITCH,XQueryParser.FOLLOW_TYPESWITCH_in_p_TypeswitchStatement16833); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52845,21 +52848,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LPAREN709=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_TypeswitchStatement16833); if (this.state.failed) return retval;
+            LPAREN708=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_TypeswitchStatement16837); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN709_tree = this.adaptor.create(LPAREN709);
-            this.adaptor.addChild(root_0, LPAREN709_tree);
+            LPAREN708_tree = this.adaptor.create(LPAREN708);
+            this.adaptor.addChild(root_0, LPAREN708_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_TypeswitchStatement16835);
-            p_Expr710=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_TypeswitchStatement16839);
+            p_Expr709=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr710.getTree());
-            RPAREN711=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_TypeswitchStatement16838); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr709.getTree());
+            RPAREN710=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_TypeswitchStatement16842); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN711_tree = this.adaptor.create(RPAREN711);
-            this.adaptor.addChild(root_0, RPAREN711_tree);
+            RPAREN710_tree = this.adaptor.create(RPAREN710);
+            this.adaptor.addChild(root_0, RPAREN710_tree);
             }
             // xquery/XQueryParser.g:2097:71: ( p_CaseStatement )+
             var cnt244=0;
@@ -52876,12 +52879,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt244) {
                 case 1 :
                     // xquery/XQueryParser.g:2097:71: p_CaseStatement
-                    this.pushFollow(XQueryParser.FOLLOW_p_CaseStatement_in_p_TypeswitchStatement16840);
-                    p_CaseStatement712=this.p_CaseStatement();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CaseStatement_in_p_TypeswitchStatement16844);
+                    p_CaseStatement711=this.p_CaseStatement();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CaseStatement712.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CaseStatement711.getTree());
 
 
                     break;
@@ -52897,7 +52900,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 cnt244++;
             } while (true);
 
-            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_TypeswitchStatement16845); if (this.state.failed) return retval;
+            k=this.match(this.input,DEFAULT,XQueryParser.FOLLOW_DEFAULT_in_p_TypeswitchStatement16849); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52915,12 +52918,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt245) {
                 case 1 :
                     // xquery/XQueryParser.g:2097:114: d= DOLLAR v= p_VarName
-                    d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_TypeswitchStatement16852); if (this.state.failed) return retval;
+                    d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_TypeswitchStatement16856); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     d_tree = this.adaptor.create(d);
                     this.adaptor.addChild(root_0, d_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_TypeswitchStatement16856);
+                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_TypeswitchStatement16860);
                     v=this.p_VarName();
 
                     this.state._fsp--;
@@ -52935,7 +52938,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_TypeswitchStatement16864); if (this.state.failed) return retval;
+            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_TypeswitchStatement16868); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -52943,12 +52946,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_TypeswitchStatement16868);
-            p_Hybrid713=this.p_Hybrid(false, false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_TypeswitchStatement16872);
+            p_Hybrid712=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid713.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid712.getTree());
 
 
 
@@ -52995,21 +52998,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var k = null;
         var d = null;
-        var AS714 = null;
+        var AS713 = null;
          var v = null;
-         var p_SequenceType715 = null;
-         var p_Hybrid716 = null;
+         var p_SequenceType714 = null;
+         var p_Hybrid715 = null;
 
         var k_tree=null;
         var d_tree=null;
-        var AS714_tree=null;
+        var AS713_tree=null;
 
         try {
             // xquery/XQueryParser.g:2102:9: (k= CASE (d= DOLLAR v= p_VarName AS )? p_SequenceType k= RETURN p_Hybrid[false,false] )
             // xquery/XQueryParser.g:2102:11: k= CASE (d= DOLLAR v= p_VarName AS )? p_SequenceType k= RETURN p_Hybrid[false,false]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_CaseStatement16897); if (this.state.failed) return retval;
+            k=this.match(this.input,CASE,XQueryParser.FOLLOW_CASE_in_p_CaseStatement16901); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53027,12 +53030,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt246) {
                 case 1 :
                     // xquery/XQueryParser.g:2102:34: d= DOLLAR v= p_VarName AS
-                    d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_CaseStatement16904); if (this.state.failed) return retval;
+                    d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_CaseStatement16908); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     d_tree = this.adaptor.create(d);
                     this.adaptor.addChild(root_0, d_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_CaseStatement16908);
+                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_CaseStatement16912);
                     v=this.p_VarName();
 
                     this.state._fsp--;
@@ -53041,10 +53044,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     if ( this.state.backtracking===0 ) {
                        this.av(d, (v?v.stop:null)); 
                     }
-                    AS714=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_CaseStatement16912); if (this.state.failed) return retval;
+                    AS713=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_CaseStatement16916); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    AS714_tree = this.adaptor.create(AS714);
-                    this.adaptor.addChild(root_0, AS714_tree);
+                    AS713_tree = this.adaptor.create(AS713);
+                    this.adaptor.addChild(root_0, AS713_tree);
                     }
 
 
@@ -53052,13 +53055,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             }
 
-            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_CaseStatement16916);
-            p_SequenceType715=this.p_SequenceType();
+            this.pushFollow(XQueryParser.FOLLOW_p_SequenceType_in_p_CaseStatement16920);
+            p_SequenceType714=this.p_SequenceType();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType715.getTree());
-            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_CaseStatement16920); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_SequenceType714.getTree());
+            k=this.match(this.input,RETURN,XQueryParser.FOLLOW_RETURN_in_p_CaseStatement16924); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53066,12 +53069,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_CaseStatement16924);
-            p_Hybrid716=this.p_Hybrid(false, false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_CaseStatement16928);
+            p_Hybrid715=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid716.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid715.getTree());
 
 
 
@@ -53119,25 +53122,25 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var k = null;
         var d = null;
         var e = null;
-        var BIND719 = null;
-        var COMMA721 = null;
-        var BIND723 = null;
-        var SEMICOLON725 = null;
+        var BIND718 = null;
+        var COMMA720 = null;
+        var BIND722 = null;
+        var SEMICOLON724 = null;
          var v = null;
          var w = null;
-         var p_Annotation717 = null;
-         var p_TypeDeclaration718 = null;
-         var p_ExprSingle720 = null;
-         var p_TypeDeclaration722 = null;
-         var p_ExprSingle724 = null;
+         var p_Annotation716 = null;
+         var p_TypeDeclaration717 = null;
+         var p_ExprSingle719 = null;
+         var p_TypeDeclaration721 = null;
+         var p_ExprSingle723 = null;
 
         var k_tree=null;
         var d_tree=null;
         var e_tree=null;
-        var BIND719_tree=null;
-        var COMMA721_tree=null;
-        var BIND723_tree=null;
-        var SEMICOLON725_tree=null;
+        var BIND718_tree=null;
+        var COMMA720_tree=null;
+        var BIND722_tree=null;
+        var SEMICOLON724_tree=null;
 
         try {
             // xquery/XQueryParser.g:2107:9: ( ( p_Annotation )* k= VARIABLE d= DOLLAR v= p_VarName ( p_TypeDeclaration )? ( BIND p_ExprSingle[true] )? ( COMMA e= DOLLAR w= p_VarName ( p_TypeDeclaration )? ( BIND p_ExprSingle[true] )? )* SEMICOLON )
@@ -53158,12 +53161,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt247) {
                 case 1 :
                     // xquery/XQueryParser.g:2107:11: p_Annotation
-                    this.pushFollow(XQueryParser.FOLLOW_p_Annotation_in_p_VarDeclStatement16951);
-                    p_Annotation717=this.p_Annotation();
+                    this.pushFollow(XQueryParser.FOLLOW_p_Annotation_in_p_VarDeclStatement16955);
+                    p_Annotation716=this.p_Annotation();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Annotation717.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Annotation716.getTree());
 
 
                     break;
@@ -53173,7 +53176,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 }
             } while (true);
 
-            k=this.match(this.input,VARIABLE,XQueryParser.FOLLOW_VARIABLE_in_p_VarDeclStatement16956); if (this.state.failed) return retval;
+            k=this.match(this.input,VARIABLE,XQueryParser.FOLLOW_VARIABLE_in_p_VarDeclStatement16960); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53181,12 +53184,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_VarDeclStatement16962); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_VarDeclStatement16966); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_VarDeclStatement16966);
+            this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_VarDeclStatement16970);
             v=this.p_VarName();
 
             this.state._fsp--;
@@ -53205,12 +53208,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt248) {
                 case 1 :
                     // xquery/XQueryParser.g:2107:98: p_TypeDeclaration
-                    this.pushFollow(XQueryParser.FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement16970);
-                    p_TypeDeclaration718=this.p_TypeDeclaration();
+                    this.pushFollow(XQueryParser.FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement16974);
+                    p_TypeDeclaration717=this.p_TypeDeclaration();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeDeclaration718.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeDeclaration717.getTree());
 
 
                     break;
@@ -53227,17 +53230,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt249) {
                 case 1 :
                     // xquery/XQueryParser.g:2107:118: BIND p_ExprSingle[true]
-                    BIND719=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_VarDeclStatement16974); if (this.state.failed) return retval;
+                    BIND718=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_VarDeclStatement16978); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    BIND719_tree = this.adaptor.create(BIND719);
-                    this.adaptor.addChild(root_0, BIND719_tree);
+                    BIND718_tree = this.adaptor.create(BIND718);
+                    this.adaptor.addChild(root_0, BIND718_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_VarDeclStatement16976);
-                    p_ExprSingle720=this.p_ExprSingle(true);
+                    this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_VarDeclStatement16980);
+                    p_ExprSingle719=this.p_ExprSingle(true);
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle720.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle719.getTree());
 
 
                     break;
@@ -53258,17 +53261,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt252) {
                 case 1 :
                     // xquery/XQueryParser.g:2108:12: COMMA e= DOLLAR w= p_VarName ( p_TypeDeclaration )? ( BIND p_ExprSingle[true] )?
-                    COMMA721=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_VarDeclStatement16992); if (this.state.failed) return retval;
+                    COMMA720=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_VarDeclStatement16996); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    COMMA721_tree = this.adaptor.create(COMMA721);
-                    this.adaptor.addChild(root_0, COMMA721_tree);
+                    COMMA720_tree = this.adaptor.create(COMMA720);
+                    this.adaptor.addChild(root_0, COMMA720_tree);
                     }
-                    e=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_VarDeclStatement16996); if (this.state.failed) return retval;
+                    e=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_VarDeclStatement17000); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
                     e_tree = this.adaptor.create(e);
                     this.adaptor.addChild(root_0, e_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_VarDeclStatement17000);
+                    this.pushFollow(XQueryParser.FOLLOW_p_VarName_in_p_VarDeclStatement17004);
                     w=this.p_VarName();
 
                     this.state._fsp--;
@@ -53287,12 +53290,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt250) {
                         case 1 :
                             // xquery/XQueryParser.g:2108:65: p_TypeDeclaration
-                            this.pushFollow(XQueryParser.FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement17004);
-                            p_TypeDeclaration722=this.p_TypeDeclaration();
+                            this.pushFollow(XQueryParser.FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement17008);
+                            p_TypeDeclaration721=this.p_TypeDeclaration();
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeDeclaration722.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_TypeDeclaration721.getTree());
 
 
                             break;
@@ -53309,17 +53312,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     switch (alt251) {
                         case 1 :
                             // xquery/XQueryParser.g:2108:85: BIND p_ExprSingle[true]
-                            BIND723=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_VarDeclStatement17008); if (this.state.failed) return retval;
+                            BIND722=this.match(this.input,BIND,XQueryParser.FOLLOW_BIND_in_p_VarDeclStatement17012); if (this.state.failed) return retval;
                             if ( this.state.backtracking===0 ) {
-                            BIND723_tree = this.adaptor.create(BIND723);
-                            this.adaptor.addChild(root_0, BIND723_tree);
+                            BIND722_tree = this.adaptor.create(BIND722);
+                            this.adaptor.addChild(root_0, BIND722_tree);
                             }
-                            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_VarDeclStatement17010);
-                            p_ExprSingle724=this.p_ExprSingle(true);
+                            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_VarDeclStatement17014);
+                            p_ExprSingle723=this.p_ExprSingle(true);
 
                             this.state._fsp--;
                             if (this.state.failed) return retval;
-                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle724.getTree());
+                            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle723.getTree());
 
 
                             break;
@@ -53335,10 +53338,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 }
             } while (true);
 
-            SEMICOLON725=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_VarDeclStatement17027); if (this.state.failed) return retval;
+            SEMICOLON724=this.match(this.input,SEMICOLON,XQueryParser.FOLLOW_SEMICOLON_in_p_VarDeclStatement17031); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            SEMICOLON725_tree = this.adaptor.create(SEMICOLON725);
-            this.adaptor.addChild(root_0, SEMICOLON725_tree);
+            SEMICOLON724_tree = this.adaptor.create(SEMICOLON724);
+            this.adaptor.addChild(root_0, SEMICOLON724_tree);
             }
 
 
@@ -53385,21 +53388,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var LPAREN726 = null;
-        var RPAREN728 = null;
-         var p_Expr727 = null;
-         var p_Hybrid729 = null;
+        var LPAREN725 = null;
+        var RPAREN727 = null;
+         var p_Expr726 = null;
+         var p_Hybrid728 = null;
 
         var k_tree=null;
-        var LPAREN726_tree=null;
-        var RPAREN728_tree=null;
+        var LPAREN725_tree=null;
+        var RPAREN727_tree=null;
 
         try {
             // xquery/XQueryParser.g:2114:9: (k= WHILE LPAREN p_Expr[true,true] RPAREN p_Hybrid[false,false] )
             // xquery/XQueryParser.g:2114:11: k= WHILE LPAREN p_Expr[true,true] RPAREN p_Hybrid[false,false]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,WHILE,XQueryParser.FOLLOW_WHILE_in_p_WhileStatement17055); if (this.state.failed) return retval;
+            k=this.match(this.input,WHILE,XQueryParser.FOLLOW_WHILE_in_p_WhileStatement17059); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53407,28 +53410,28 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            LPAREN726=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_WhileStatement17059); if (this.state.failed) return retval;
+            LPAREN725=this.match(this.input,LPAREN,XQueryParser.FOLLOW_LPAREN_in_p_WhileStatement17063); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LPAREN726_tree = this.adaptor.create(LPAREN726);
-            this.adaptor.addChild(root_0, LPAREN726_tree);
+            LPAREN725_tree = this.adaptor.create(LPAREN725);
+            this.adaptor.addChild(root_0, LPAREN725_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_WhileStatement17061);
-            p_Expr727=this.p_Expr(true, true);
+            this.pushFollow(XQueryParser.FOLLOW_p_Expr_in_p_WhileStatement17065);
+            p_Expr726=this.p_Expr(true, true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr727.getTree());
-            RPAREN728=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_WhileStatement17064); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Expr726.getTree());
+            RPAREN727=this.match(this.input,RPAREN,XQueryParser.FOLLOW_RPAREN_in_p_WhileStatement17068); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RPAREN728_tree = this.adaptor.create(RPAREN728);
-            this.adaptor.addChild(root_0, RPAREN728_tree);
+            RPAREN727_tree = this.adaptor.create(RPAREN727);
+            this.adaptor.addChild(root_0, RPAREN727_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_WhileStatement17066);
-            p_Hybrid729=this.p_Hybrid(false, false);
+            this.pushFollow(XQueryParser.FOLLOW_p_Hybrid_in_p_WhileStatement17070);
+            p_Hybrid728=this.p_Hybrid(false, false);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid729.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_Hybrid728.getTree());
 
 
 
@@ -53473,9 +53476,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QuantifiedExpr730 = null;
-         var p_OrExpr731 = null;
-         var pg_UpdateExpr732 = null;
+         var p_QuantifiedExpr729 = null;
+         var p_OrExpr730 = null;
+         var pg_UpdateExpr731 = null;
 
 
         try {
@@ -53487,12 +53490,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:2119:11: p_QuantifiedExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_QuantifiedExpr_in_p_ExprSimple17093);
-                    p_QuantifiedExpr730=this.p_QuantifiedExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_QuantifiedExpr_in_p_ExprSimple17097);
+                    p_QuantifiedExpr729=this.p_QuantifiedExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QuantifiedExpr730.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QuantifiedExpr729.getTree());
 
 
                     break;
@@ -53500,12 +53503,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                     // xquery/XQueryParser.g:2120:11: p_OrExpr
                     root_0 = this.adaptor.nil();
 
-                    this.pushFollow(XQueryParser.FOLLOW_p_OrExpr_in_p_ExprSimple17105);
-                    p_OrExpr731=this.p_OrExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_p_OrExpr_in_p_ExprSimple17109);
+                    p_OrExpr730=this.p_OrExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_OrExpr731.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_OrExpr730.getTree());
 
 
                     break;
@@ -53517,12 +53520,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                         if (this.state.backtracking>0) {this.state.failed=true; return retval;}
                         throw new org.antlr.runtime.FailedPredicateException(this.input, "p_ExprSimple", "this.lc(XQU)");
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_pg_UpdateExpr_in_p_ExprSimple17120);
-                    pg_UpdateExpr732=this.pg_UpdateExpr();
+                    this.pushFollow(XQueryParser.FOLLOW_pg_UpdateExpr_in_p_ExprSimple17124);
+                    pg_UpdateExpr731=this.pg_UpdateExpr();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pg_UpdateExpr732.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, pg_UpdateExpr731.getTree());
 
 
                     break;
@@ -53569,33 +53572,33 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-        var LBRACKET733 = null;
-        var RBRACKET735 = null;
-         var p_StatementsAndExpr734 = null;
+        var LBRACKET732 = null;
+        var RBRACKET734 = null;
+         var p_StatementsAndExpr733 = null;
 
-        var LBRACKET733_tree=null;
-        var RBRACKET735_tree=null;
+        var LBRACKET732_tree=null;
+        var RBRACKET734_tree=null;
 
         try {
             // xquery/XQueryParser.g:2126:9: ( LBRACKET p_StatementsAndExpr RBRACKET )
             // xquery/XQueryParser.g:2126:11: LBRACKET p_StatementsAndExpr RBRACKET
             root_0 = this.adaptor.nil();
 
-            LBRACKET733=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_BlockExpr17146); if (this.state.failed) return retval;
+            LBRACKET732=this.match(this.input,LBRACKET,XQueryParser.FOLLOW_LBRACKET_in_p_BlockExpr17150); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            LBRACKET733_tree = this.adaptor.create(LBRACKET733);
-            this.adaptor.addChild(root_0, LBRACKET733_tree);
+            LBRACKET732_tree = this.adaptor.create(LBRACKET732);
+            this.adaptor.addChild(root_0, LBRACKET732_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndExpr_in_p_BlockExpr17148);
-            p_StatementsAndExpr734=this.p_StatementsAndExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_StatementsAndExpr_in_p_BlockExpr17152);
+            p_StatementsAndExpr733=this.p_StatementsAndExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndExpr734.getTree());
-            RBRACKET735=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_BlockExpr17150); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StatementsAndExpr733.getTree());
+            RBRACKET734=this.match(this.input,RBRACKET,XQueryParser.FOLLOW_RBRACKET_in_p_BlockExpr17154); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
-            RBRACKET735_tree = this.adaptor.create(RBRACKET735);
-            this.adaptor.addChild(root_0, RBRACKET735_tree);
+            RBRACKET734_tree = this.adaptor.create(RBRACKET734);
+            this.adaptor.addChild(root_0, RBRACKET734_tree);
             }
 
 
@@ -53642,8 +53645,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_QName736 = null;
-         var p_CollectionTypeDecl737 = null;
+         var p_QName735 = null;
+         var p_CollectionTypeDecl736 = null;
 
         var k_tree=null;
 
@@ -53652,7 +53655,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2134:11: k= COLLECTION p_QName ( p_CollectionTypeDecl )?
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,COLLECTION,XQueryParser.FOLLOW_COLLECTION_in_p_CollectionDecl17181); if (this.state.failed) return retval;
+            k=this.match(this.input,COLLECTION,XQueryParser.FOLLOW_COLLECTION_in_p_CollectionDecl17185); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53660,12 +53663,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_CollectionDecl17185);
-            p_QName736=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_CollectionDecl17189);
+            p_QName735=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName736.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName735.getTree());
             // xquery/XQueryParser.g:2134:47: ( p_CollectionTypeDecl )?
             var alt254=2;
             var LA254_0 = this.input.LA(1);
@@ -53676,12 +53679,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt254) {
                 case 1 :
                     // xquery/XQueryParser.g:2134:47: p_CollectionTypeDecl
-                    this.pushFollow(XQueryParser.FOLLOW_p_CollectionTypeDecl_in_p_CollectionDecl17187);
-                    p_CollectionTypeDecl737=this.p_CollectionTypeDecl();
+                    this.pushFollow(XQueryParser.FOLLOW_p_CollectionTypeDecl_in_p_CollectionDecl17191);
+                    p_CollectionTypeDecl736=this.p_CollectionTypeDecl();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CollectionTypeDecl737.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_CollectionTypeDecl736.getTree());
 
 
                     break;
@@ -53733,8 +53736,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_KindTest738 = null;
-         var p_OccurrenceIndicator739 = null;
+         var p_KindTest737 = null;
+         var p_OccurrenceIndicator738 = null;
 
         var k_tree=null;
 
@@ -53745,7 +53748,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
             // xquery/XQueryParser.g:2138:11: (k= AS p_KindTest ( ( p_OccurrenceIndicator )=> p_OccurrenceIndicator )? )
             // xquery/XQueryParser.g:2138:12: k= AS p_KindTest ( ( p_OccurrenceIndicator )=> p_OccurrenceIndicator )?
-            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_CollectionTypeDecl17216); if (this.state.failed) return retval;
+            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_CollectionTypeDecl17220); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53753,12 +53756,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_KindTest_in_p_CollectionTypeDecl17220);
-            p_KindTest738=this.p_KindTest();
+            this.pushFollow(XQueryParser.FOLLOW_p_KindTest_in_p_CollectionTypeDecl17224);
+            p_KindTest737=this.p_KindTest();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_KindTest738.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_KindTest737.getTree());
             // xquery/XQueryParser.g:2138:43: ( ( p_OccurrenceIndicator )=> p_OccurrenceIndicator )?
             var alt255=2;
             var LA255_0 = this.input.LA(1);
@@ -53769,12 +53772,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt255) {
                 case 1 :
                     // xquery/XQueryParser.g:2138:44: ( p_OccurrenceIndicator )=> p_OccurrenceIndicator
-                    this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_p_CollectionTypeDecl17229);
-                    p_OccurrenceIndicator739=this.p_OccurrenceIndicator();
+                    this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_p_CollectionTypeDecl17233);
+                    p_OccurrenceIndicator738=this.p_OccurrenceIndicator();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_OccurrenceIndicator739.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_OccurrenceIndicator738.getTree());
 
 
                     break;
@@ -53829,21 +53832,21 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-        var COMMA743 = null;
-         var p_IndexName740 = null;
-         var p_IndexDomainExpr741 = null;
-         var p_IndexKeySpec742 = null;
-         var p_IndexKeySpec744 = null;
+        var COMMA742 = null;
+         var p_IndexName739 = null;
+         var p_IndexDomainExpr740 = null;
+         var p_IndexKeySpec741 = null;
+         var p_IndexKeySpec743 = null;
 
         var k_tree=null;
-        var COMMA743_tree=null;
+        var COMMA742_tree=null;
 
         try {
             // xquery/XQueryParser.g:2142:9: (k= INDEX p_IndexName k= ON k= NODES p_IndexDomainExpr k= BY p_IndexKeySpec ( COMMA p_IndexKeySpec )* )
             // xquery/XQueryParser.g:2142:11: k= INDEX p_IndexName k= ON k= NODES p_IndexDomainExpr k= BY p_IndexKeySpec ( COMMA p_IndexKeySpec )*
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,INDEX,XQueryParser.FOLLOW_INDEX_in_p_IndexDecl17259); if (this.state.failed) return retval;
+            k=this.match(this.input,INDEX,XQueryParser.FOLLOW_INDEX_in_p_IndexDecl17263); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53851,13 +53854,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_IndexName_in_p_IndexDecl17263);
-            p_IndexName740=this.p_IndexName();
+            this.pushFollow(XQueryParser.FOLLOW_p_IndexName_in_p_IndexDecl17267);
+            p_IndexName739=this.p_IndexName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexName740.getTree());
-            k=this.match(this.input,ON,XQueryParser.FOLLOW_ON_in_p_IndexDecl17267); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexName739.getTree());
+            k=this.match(this.input,ON,XQueryParser.FOLLOW_ON_in_p_IndexDecl17271); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53865,7 +53868,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,NODES,XQueryParser.FOLLOW_NODES_in_p_IndexDecl17273); if (this.state.failed) return retval;
+            k=this.match(this.input,NODES,XQueryParser.FOLLOW_NODES_in_p_IndexDecl17277); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53873,13 +53876,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_IndexDomainExpr_in_p_IndexDecl17277);
-            p_IndexDomainExpr741=this.p_IndexDomainExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_IndexDomainExpr_in_p_IndexDecl17281);
+            p_IndexDomainExpr740=this.p_IndexDomainExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexDomainExpr741.getTree());
-            k=this.match(this.input,BY,XQueryParser.FOLLOW_BY_in_p_IndexDecl17281); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexDomainExpr740.getTree());
+            k=this.match(this.input,BY,XQueryParser.FOLLOW_BY_in_p_IndexDecl17285); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -53887,12 +53890,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_IndexKeySpec_in_p_IndexDecl17285);
-            p_IndexKeySpec742=this.p_IndexKeySpec();
+            this.pushFollow(XQueryParser.FOLLOW_p_IndexKeySpec_in_p_IndexDecl17289);
+            p_IndexKeySpec741=this.p_IndexKeySpec();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeySpec742.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeySpec741.getTree());
             // xquery/XQueryParser.g:2142:142: ( COMMA p_IndexKeySpec )*
             loop256:
             do {
@@ -53907,17 +53910,17 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
                 switch (alt256) {
                 case 1 :
                     // xquery/XQueryParser.g:2142:143: COMMA p_IndexKeySpec
-                    COMMA743=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_IndexDecl17288); if (this.state.failed) return retval;
+                    COMMA742=this.match(this.input,COMMA,XQueryParser.FOLLOW_COMMA_in_p_IndexDecl17292); if (this.state.failed) return retval;
                     if ( this.state.backtracking===0 ) {
-                    COMMA743_tree = this.adaptor.create(COMMA743);
-                    this.adaptor.addChild(root_0, COMMA743_tree);
+                    COMMA742_tree = this.adaptor.create(COMMA742);
+                    this.adaptor.addChild(root_0, COMMA742_tree);
                     }
-                    this.pushFollow(XQueryParser.FOLLOW_p_IndexKeySpec_in_p_IndexDecl17290);
-                    p_IndexKeySpec744=this.p_IndexKeySpec();
+                    this.pushFollow(XQueryParser.FOLLOW_p_IndexKeySpec_in_p_IndexDecl17294);
+                    p_IndexKeySpec743=this.p_IndexKeySpec();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeySpec744.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeySpec743.getTree());
 
 
                     break;
@@ -53971,7 +53974,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QName745 = null;
+         var p_QName744 = null;
 
 
         try {
@@ -53979,12 +53982,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2146:11: p_QName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_IndexName17317);
-            p_QName745=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_IndexName17321);
+            p_QName744=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName745.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName744.getTree());
 
 
 
@@ -54029,7 +54032,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_PathExpr746 = null;
+         var p_PathExpr745 = null;
 
 
         try {
@@ -54037,12 +54040,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2150:11: p_PathExpr
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_IndexDomainExpr17342);
-            p_PathExpr746=this.p_PathExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_IndexDomainExpr17346);
+            p_PathExpr745=this.p_PathExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr746.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr745.getTree());
 
 
 
@@ -54087,9 +54090,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_IndexKeyExpr747 = null;
-         var p_IndexKeyTypeDecl748 = null;
-         var p_IndexKeyCollation749 = null;
+         var p_IndexKeyExpr746 = null;
+         var p_IndexKeyTypeDecl747 = null;
+         var p_IndexKeyCollation748 = null;
 
 
         try {
@@ -54097,12 +54100,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2154:11: p_IndexKeyExpr ( p_IndexKeyTypeDecl )? ( p_IndexKeyCollation )?
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_IndexKeyExpr_in_p_IndexKeySpec17367);
-            p_IndexKeyExpr747=this.p_IndexKeyExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_IndexKeyExpr_in_p_IndexKeySpec17371);
+            p_IndexKeyExpr746=this.p_IndexKeyExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeyExpr747.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeyExpr746.getTree());
             // xquery/XQueryParser.g:2154:26: ( p_IndexKeyTypeDecl )?
             var alt257=2;
             var LA257_0 = this.input.LA(1);
@@ -54113,12 +54116,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt257) {
                 case 1 :
                     // xquery/XQueryParser.g:2154:26: p_IndexKeyTypeDecl
-                    this.pushFollow(XQueryParser.FOLLOW_p_IndexKeyTypeDecl_in_p_IndexKeySpec17369);
-                    p_IndexKeyTypeDecl748=this.p_IndexKeyTypeDecl();
+                    this.pushFollow(XQueryParser.FOLLOW_p_IndexKeyTypeDecl_in_p_IndexKeySpec17373);
+                    p_IndexKeyTypeDecl747=this.p_IndexKeyTypeDecl();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeyTypeDecl748.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeyTypeDecl747.getTree());
 
 
                     break;
@@ -54135,12 +54138,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt258) {
                 case 1 :
                     // xquery/XQueryParser.g:2154:46: p_IndexKeyCollation
-                    this.pushFollow(XQueryParser.FOLLOW_p_IndexKeyCollation_in_p_IndexKeySpec17372);
-                    p_IndexKeyCollation749=this.p_IndexKeyCollation();
+                    this.pushFollow(XQueryParser.FOLLOW_p_IndexKeyCollation_in_p_IndexKeySpec17376);
+                    p_IndexKeyCollation748=this.p_IndexKeyCollation();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeyCollation749.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_IndexKeyCollation748.getTree());
 
 
                     break;
@@ -54191,7 +54194,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_PathExpr750 = null;
+         var p_PathExpr749 = null;
 
 
         try {
@@ -54199,12 +54202,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2158:11: p_PathExpr
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_IndexKeyExpr17398);
-            p_PathExpr750=this.p_PathExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_IndexKeyExpr17402);
+            p_PathExpr749=this.p_PathExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr750.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr749.getTree());
 
 
 
@@ -54250,8 +54253,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_AtomicType751 = null;
-         var p_OccurrenceIndicator752 = null;
+         var p_AtomicType750 = null;
+         var p_OccurrenceIndicator751 = null;
 
         var k_tree=null;
 
@@ -54260,7 +54263,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2162:11: k= AS p_AtomicType ( p_OccurrenceIndicator )?
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_IndexKeyTypeDecl17425); if (this.state.failed) return retval;
+            k=this.match(this.input,AS,XQueryParser.FOLLOW_AS_in_p_IndexKeyTypeDecl17429); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54268,12 +54271,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_AtomicType_in_p_IndexKeyTypeDecl17429);
-            p_AtomicType751=this.p_AtomicType();
+            this.pushFollow(XQueryParser.FOLLOW_p_AtomicType_in_p_IndexKeyTypeDecl17433);
+            p_AtomicType750=this.p_AtomicType();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AtomicType751.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_AtomicType750.getTree());
             // xquery/XQueryParser.g:2162:44: ( p_OccurrenceIndicator )?
             var alt259=2;
             var LA259_0 = this.input.LA(1);
@@ -54284,12 +54287,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt259) {
                 case 1 :
                     // xquery/XQueryParser.g:2162:44: p_OccurrenceIndicator
-                    this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_p_IndexKeyTypeDecl17431);
-                    p_OccurrenceIndicator752=this.p_OccurrenceIndicator();
+                    this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_p_IndexKeyTypeDecl17435);
+                    p_OccurrenceIndicator751=this.p_OccurrenceIndicator();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_OccurrenceIndicator752.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_OccurrenceIndicator751.getTree());
 
 
                     break;
@@ -54340,7 +54343,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
 
         var root_0 = null;
 
-         var p_QName753 = null;
+         var p_QName752 = null;
 
 
         try {
@@ -54348,12 +54351,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2166:11: p_QName
             root_0 = this.adaptor.nil();
 
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_AtomicType17457);
-            p_QName753=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_AtomicType17461);
+            p_QName752=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName753.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName752.getTree());
 
 
 
@@ -54399,7 +54402,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_StringLiteral754 = null;
+         var p_StringLiteral753 = null;
 
         var k_tree=null;
 
@@ -54408,7 +54411,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2170:11: k= COLLATION p_StringLiteral
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,COLLATION,XQueryParser.FOLLOW_COLLATION_in_p_IndexKeyCollation17484); if (this.state.failed) return retval;
+            k=this.match(this.input,COLLATION,XQueryParser.FOLLOW_COLLATION_in_p_IndexKeyCollation17488); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54416,12 +54419,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_IndexKeyCollation17488);
-            p_StringLiteral754=this.p_StringLiteral();
+            this.pushFollow(XQueryParser.FOLLOW_p_StringLiteral_in_p_IndexKeyCollation17492);
+            p_StringLiteral753=this.p_StringLiteral();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral754.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_StringLiteral753.getTree());
 
 
 
@@ -54467,9 +54470,9 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_QName755 = null;
-         var p_ICCollection756 = null;
-         var p_ICForeignKey757 = null;
+         var p_QName754 = null;
+         var p_ICCollection755 = null;
+         var p_ICForeignKey756 = null;
 
         var k_tree=null;
 
@@ -54478,7 +54481,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2174:11: k= INTEGRITY k= CONSTRAINT p_QName ( p_ICCollection | p_ICForeignKey )
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,INTEGRITY,XQueryParser.FOLLOW_INTEGRITY_in_p_ICDecl17515); if (this.state.failed) return retval;
+            k=this.match(this.input,INTEGRITY,XQueryParser.FOLLOW_INTEGRITY_in_p_ICDecl17519); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54486,7 +54489,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,CONSTRAINT,XQueryParser.FOLLOW_CONSTRAINT_in_p_ICDecl17521); if (this.state.failed) return retval;
+            k=this.match(this.input,CONSTRAINT,XQueryParser.FOLLOW_CONSTRAINT_in_p_ICDecl17525); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54494,12 +54497,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICDecl17525);
-            p_QName755=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICDecl17529);
+            p_QName754=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName755.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName754.getTree());
             // xquery/XQueryParser.g:2174:74: ( p_ICCollection | p_ICForeignKey )
             var alt260=2;
             var LA260_0 = this.input.LA(1);
@@ -54520,23 +54523,23 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt260) {
                 case 1 :
                     // xquery/XQueryParser.g:2174:75: p_ICCollection
-                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollection_in_p_ICDecl17528);
-                    p_ICCollection756=this.p_ICCollection();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollection_in_p_ICDecl17532);
+                    p_ICCollection755=this.p_ICCollection();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollection756.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollection755.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:2174:92: p_ICForeignKey
-                    this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKey_in_p_ICDecl17532);
-                    p_ICForeignKey757=this.p_ICForeignKey();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKey_in_p_ICDecl17536);
+                    p_ICForeignKey756=this.p_ICForeignKey();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKey757.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKey756.getTree());
 
 
                     break;
@@ -54588,10 +54591,10 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_QName758 = null;
-         var p_ICCollSequence759 = null;
-         var p_ICCollSequenceUnique760 = null;
-         var p_ICCollNode761 = null;
+         var p_QName757 = null;
+         var p_ICCollSequence758 = null;
+         var p_ICCollSequenceUnique759 = null;
+         var p_ICCollNode760 = null;
 
         var k_tree=null;
 
@@ -54600,7 +54603,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2178:11: k= ON k= COLLECTION p_QName ( p_ICCollSequence | p_ICCollSequenceUnique | p_ICCollNode )
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,ON,XQueryParser.FOLLOW_ON_in_p_ICCollection17560); if (this.state.failed) return retval;
+            k=this.match(this.input,ON,XQueryParser.FOLLOW_ON_in_p_ICCollection17564); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54608,7 +54611,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,COLLECTION,XQueryParser.FOLLOW_COLLECTION_in_p_ICCollection17566); if (this.state.failed) return retval;
+            k=this.match(this.input,COLLECTION,XQueryParser.FOLLOW_COLLECTION_in_p_ICCollection17570); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54616,12 +54619,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollection17570);
-            p_QName758=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollection17574);
+            p_QName757=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName758.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName757.getTree());
             // xquery/XQueryParser.g:2178:67: ( p_ICCollSequence | p_ICCollSequenceUnique | p_ICCollNode )
             var alt261=3;
             switch ( this.input.LA(1) ) {
@@ -54645,34 +54648,34 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             switch (alt261) {
                 case 1 :
                     // xquery/XQueryParser.g:2178:68: p_ICCollSequence
-                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollSequence_in_p_ICCollection17573);
-                    p_ICCollSequence759=this.p_ICCollSequence();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollSequence_in_p_ICCollection17577);
+                    p_ICCollSequence758=this.p_ICCollSequence();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollSequence759.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollSequence758.getTree());
 
 
                     break;
                 case 2 :
                     // xquery/XQueryParser.g:2178:87: p_ICCollSequenceUnique
-                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollSequenceUnique_in_p_ICCollection17577);
-                    p_ICCollSequenceUnique760=this.p_ICCollSequenceUnique();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollSequenceUnique_in_p_ICCollection17581);
+                    p_ICCollSequenceUnique759=this.p_ICCollSequenceUnique();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollSequenceUnique760.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollSequenceUnique759.getTree());
 
 
                     break;
                 case 3 :
                     // xquery/XQueryParser.g:2178:112: p_ICCollNode
-                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollNode_in_p_ICCollection17581);
-                    p_ICCollNode761=this.p_ICCollNode();
+                    this.pushFollow(XQueryParser.FOLLOW_p_ICCollNode_in_p_ICCollection17585);
+                    p_ICCollNode760=this.p_ICCollNode();
 
                     this.state._fsp--;
                     if (this.state.failed) return retval;
-                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollNode761.getTree());
+                    if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICCollNode760.getTree());
 
 
                     break;
@@ -54726,7 +54729,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var d = null;
         var k = null;
          var v = null;
-         var p_ExprSingle762 = null;
+         var p_ExprSingle761 = null;
 
         var d_tree=null;
         var k_tree=null;
@@ -54736,12 +54739,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2182:11: d= DOLLAR v= p_QName k= CHECK p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICCollSequence17609); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICCollSequence17613); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollSequence17613);
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollSequence17617);
             v=this.p_QName();
 
             this.state._fsp--;
@@ -54750,7 +54753,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                this.av(d, (v?v.stop:null)); 
             }
-            k=this.match(this.input,CHECK,XQueryParser.FOLLOW_CHECK_in_p_ICCollSequence17619); if (this.state.failed) return retval;
+            k=this.match(this.input,CHECK,XQueryParser.FOLLOW_CHECK_in_p_ICCollSequence17623); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54758,12 +54761,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ICCollSequence17623);
-            p_ExprSingle762=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ICCollSequence17627);
+            p_ExprSingle761=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle762.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle761.getTree());
 
 
 
@@ -54811,7 +54814,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var k = null;
         var d = null;
          var v = null;
-         var p_PathExpr763 = null;
+         var p_PathExpr762 = null;
 
         var k_tree=null;
         var d_tree=null;
@@ -54821,7 +54824,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2186:11: k= NODE d= DOLLAR v= p_QName k= CHECK k= UNIQUE k= KEY p_PathExpr
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ICCollSequenceUnique17651); if (this.state.failed) return retval;
+            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ICCollSequenceUnique17655); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54829,12 +54832,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICCollSequenceUnique17657); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICCollSequenceUnique17661); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollSequenceUnique17661);
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollSequenceUnique17665);
             v=this.p_QName();
 
             this.state._fsp--;
@@ -54843,7 +54846,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                this.av(d, (v?v.stop:null)); 
             }
-            k=this.match(this.input,CHECK,XQueryParser.FOLLOW_CHECK_in_p_ICCollSequenceUnique17667); if (this.state.failed) return retval;
+            k=this.match(this.input,CHECK,XQueryParser.FOLLOW_CHECK_in_p_ICCollSequenceUnique17671); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54851,7 +54854,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,UNIQUE,XQueryParser.FOLLOW_UNIQUE_in_p_ICCollSequenceUnique17673); if (this.state.failed) return retval;
+            k=this.match(this.input,UNIQUE,XQueryParser.FOLLOW_UNIQUE_in_p_ICCollSequenceUnique17677); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54859,7 +54862,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,KEY,XQueryParser.FOLLOW_KEY_in_p_ICCollSequenceUnique17679); if (this.state.failed) return retval;
+            k=this.match(this.input,KEY,XQueryParser.FOLLOW_KEY_in_p_ICCollSequenceUnique17683); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54867,12 +54870,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_ICCollSequenceUnique17683);
-            p_PathExpr763=this.p_PathExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_ICCollSequenceUnique17687);
+            p_PathExpr762=this.p_PathExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr763.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr762.getTree());
 
 
 
@@ -54920,7 +54923,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var k = null;
         var d = null;
          var v = null;
-         var p_ExprSingle764 = null;
+         var p_ExprSingle763 = null;
 
         var k_tree=null;
         var d_tree=null;
@@ -54930,7 +54933,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2190:11: k= FOREACH k= NODE d= DOLLAR v= p_QName k= CHECK p_ExprSingle[true]
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,FOREACH,XQueryParser.FOLLOW_FOREACH_in_p_ICCollNode17710); if (this.state.failed) return retval;
+            k=this.match(this.input,FOREACH,XQueryParser.FOLLOW_FOREACH_in_p_ICCollNode17714); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54938,7 +54941,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ICCollNode17716); if (this.state.failed) return retval;
+            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ICCollNode17720); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54946,12 +54949,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICCollNode17722); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICCollNode17726); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollNode17726);
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICCollNode17730);
             v=this.p_QName();
 
             this.state._fsp--;
@@ -54960,7 +54963,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                this.av(d, (v?v.stop:null)); 
             }
-            k=this.match(this.input,CHECK,XQueryParser.FOLLOW_CHECK_in_p_ICCollNode17732); if (this.state.failed) return retval;
+            k=this.match(this.input,CHECK,XQueryParser.FOLLOW_CHECK_in_p_ICCollNode17736); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -54968,12 +54971,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ICCollNode17736);
-            p_ExprSingle764=this.p_ExprSingle(true);
+            this.pushFollow(XQueryParser.FOLLOW_p_ExprSingle_in_p_ICCollNode17740);
+            p_ExprSingle763=this.p_ExprSingle(true);
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle764.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ExprSingle763.getTree());
 
 
 
@@ -55019,8 +55022,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_ICForeignKeySource765 = null;
-         var p_ICForeignKeyTarget766 = null;
+         var p_ICForeignKeySource764 = null;
+         var p_ICForeignKeyTarget765 = null;
 
         var k_tree=null;
 
@@ -55029,7 +55032,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2194:11: k= FOREIGN k= KEY p_ICForeignKeySource p_ICForeignKeyTarget
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,FOREIGN,XQueryParser.FOLLOW_FOREIGN_in_p_ICForeignKey17764); if (this.state.failed) return retval;
+            k=this.match(this.input,FOREIGN,XQueryParser.FOLLOW_FOREIGN_in_p_ICForeignKey17768); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55037,7 +55040,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            k=this.match(this.input,KEY,XQueryParser.FOLLOW_KEY_in_p_ICForeignKey17770); if (this.state.failed) return retval;
+            k=this.match(this.input,KEY,XQueryParser.FOLLOW_KEY_in_p_ICForeignKey17774); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55045,18 +55048,18 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeySource_in_p_ICForeignKey17774);
-            p_ICForeignKeySource765=this.p_ICForeignKeySource();
+            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeySource_in_p_ICForeignKey17778);
+            p_ICForeignKeySource764=this.p_ICForeignKeySource();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeySource765.getTree());
-            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeyTarget_in_p_ICForeignKey17776);
-            p_ICForeignKeyTarget766=this.p_ICForeignKeyTarget();
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeySource764.getTree());
+            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeyTarget_in_p_ICForeignKey17780);
+            p_ICForeignKeyTarget765=this.p_ICForeignKeyTarget();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeyTarget766.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeyTarget765.getTree());
 
 
 
@@ -55102,7 +55105,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_ICForeignKeyValues767 = null;
+         var p_ICForeignKeyValues766 = null;
 
         var k_tree=null;
 
@@ -55111,7 +55114,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2198:11: k= FROM p_ICForeignKeyValues
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,FROM,XQueryParser.FOLLOW_FROM_in_p_ICForeignKeySource17803); if (this.state.failed) return retval;
+            k=this.match(this.input,FROM,XQueryParser.FOLLOW_FROM_in_p_ICForeignKeySource17807); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55119,12 +55122,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeySource17807);
-            p_ICForeignKeyValues767=this.p_ICForeignKeyValues();
+            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeySource17811);
+            p_ICForeignKeyValues766=this.p_ICForeignKeyValues();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeyValues767.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeyValues766.getTree());
 
 
 
@@ -55170,7 +55173,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var root_0 = null;
 
         var k = null;
-         var p_ICForeignKeyValues768 = null;
+         var p_ICForeignKeyValues767 = null;
 
         var k_tree=null;
 
@@ -55179,7 +55182,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2202:11: k= TO p_ICForeignKeyValues
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,TO,XQueryParser.FOLLOW_TO_in_p_ICForeignKeyTarget17834); if (this.state.failed) return retval;
+            k=this.match(this.input,TO,XQueryParser.FOLLOW_TO_in_p_ICForeignKeyTarget17838); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55187,12 +55190,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeyTarget17838);
-            p_ICForeignKeyValues768=this.p_ICForeignKeyValues();
+            this.pushFollow(XQueryParser.FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeyTarget17842);
+            p_ICForeignKeyValues767=this.p_ICForeignKeyValues();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeyValues768.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_ICForeignKeyValues767.getTree());
 
 
 
@@ -55240,8 +55243,8 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
         var k = null;
         var d = null;
          var v = null;
-         var p_QName769 = null;
-         var p_PathExpr770 = null;
+         var p_QName768 = null;
+         var p_PathExpr769 = null;
 
         var k_tree=null;
         var d_tree=null;
@@ -55251,7 +55254,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             // xquery/XQueryParser.g:2206:11: k= COLLECTION p_QName k= NODE d= DOLLAR v= p_QName k= KEY p_PathExpr
             root_0 = this.adaptor.nil();
 
-            k=this.match(this.input,COLLECTION,XQueryParser.FOLLOW_COLLECTION_in_p_ICForeignKeyValues17865); if (this.state.failed) return retval;
+            k=this.match(this.input,COLLECTION,XQueryParser.FOLLOW_COLLECTION_in_p_ICForeignKeyValues17869); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55259,13 +55262,13 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICForeignKeyValues17869);
-            p_QName769=this.p_QName();
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICForeignKeyValues17873);
+            p_QName768=this.p_QName();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName769.getTree());
-            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ICForeignKeyValues17873); if (this.state.failed) return retval;
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_QName768.getTree());
+            k=this.match(this.input,NODE,XQueryParser.FOLLOW_NODE_in_p_ICForeignKeyValues17877); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55273,12 +55276,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICForeignKeyValues17879); if (this.state.failed) return retval;
+            d=this.match(this.input,DOLLAR,XQueryParser.FOLLOW_DOLLAR_in_p_ICForeignKeyValues17883); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             d_tree = this.adaptor.create(d);
             this.adaptor.addChild(root_0, d_tree);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICForeignKeyValues17883);
+            this.pushFollow(XQueryParser.FOLLOW_p_QName_in_p_ICForeignKeyValues17887);
             v=this.p_QName();
 
             this.state._fsp--;
@@ -55287,7 +55290,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
                this.av(d, (v?v.stop:null)); 
             }
-            k=this.match(this.input,KEY,XQueryParser.FOLLOW_KEY_in_p_ICForeignKeyValues17889); if (this.state.failed) return retval;
+            k=this.match(this.input,KEY,XQueryParser.FOLLOW_KEY_in_p_ICForeignKeyValues17893); if (this.state.failed) return retval;
             if ( this.state.backtracking===0 ) {
             k_tree = this.adaptor.create(k);
             this.adaptor.addChild(root_0, k_tree);
@@ -55295,12 +55298,12 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
             if ( this.state.backtracking===0 ) {
               this.ak(k);
             }
-            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_ICForeignKeyValues17893);
-            p_PathExpr770=this.p_PathExpr();
+            this.pushFollow(XQueryParser.FOLLOW_p_PathExpr_in_p_ICForeignKeyValues17897);
+            p_PathExpr769=this.p_PathExpr();
 
             this.state._fsp--;
             if (this.state.failed) return retval;
-            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr770.getTree());
+            if ( this.state.backtracking===0 ) this.adaptor.addChild(root_0, p_PathExpr769.getTree());
 
 
 
@@ -55760,7 +55763,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
     synpred17_XQueryParser_fragment: function() {
         // xquery/XQueryParser.g:1306:26: ( p_OccurrenceIndicator )
         // xquery/XQueryParser.g:1306:27: p_OccurrenceIndicator
-        this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_synpred17_XQueryParser9650);
+        this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_synpred17_XQueryParser9654);
         this.p_OccurrenceIndicator();
 
         this.state._fsp--;
@@ -55774,7 +55777,7 @@ org.antlr.lang.augmentObject(XQueryParser.prototype, {
     synpred18_XQueryParser_fragment: function() {
         // xquery/XQueryParser.g:2138:44: ( p_OccurrenceIndicator )
         // xquery/XQueryParser.g:2138:45: p_OccurrenceIndicator
-        this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_synpred18_XQueryParser17224);
+        this.pushFollow(XQueryParser.FOLLOW_p_OccurrenceIndicator_in_synpred18_XQueryParser17228);
         this.p_OccurrenceIndicator();
 
         this.state._fsp--;
@@ -56204,7 +56207,7 @@ org.antlr.lang.augmentObject(XQueryParser, {
     DFA2_acceptS:
         "\u0002\uffff\u0004\u0002\u0001\u0001\u0003\u0002",
     DFA2_specialS:
-        "\u0001\u0000\u0001\u0001\u0008\uffff}>",
+        "\u0001\u0001\u0001\u0000\u0008\uffff}>",
     DFA2_transitionS: [
             "\u0002\u0002\u0004\u0004\u0001\u0002\u0006\u0004\u0001\u0002"+
             "\u0001\u0004\u0001\u0002\u0002\u0004\u0001\u0002\u0001\u0004"+
@@ -56289,6 +56292,25 @@ org.antlr.lang.extend(XQueryParser.DFA2, org.antlr.runtime.DFA, {
         var retval = (function(s, input) {
             switch ( s ) {
                         case 0 : 
+                            var LA2_1 = input.LA(1);
+
+                             
+                            var index2_1 = input.index();
+                            input.rewind();
+                            s = -1;
+                            if ( (LA2_1==NAMESPACE) ) {s = 6;}
+
+                            else if ( (LA2_1==AND||(LA2_1>=CAST && LA2_1<=CASTABLE)||LA2_1==DIV||LA2_1==EQ||LA2_1==EXCEPT||LA2_1==GE||(LA2_1>=GT && LA2_1<=IDIV)||(LA2_1>=INSTANCE && LA2_1<=IS)||LA2_1==LE||(LA2_1>=LT && LA2_1<=MOD)||LA2_1==NE||LA2_1==OR||(LA2_1>=TO && LA2_1<=TREAT)||LA2_1==UNION||LA2_1==CONTAINS||(LA2_1>=CONCAT && LA2_1<=LPAREN)||LA2_1==LSQUARE||LA2_1==EQUAL||LA2_1==NOTEQUAL||LA2_1==COMMA||(LA2_1>=STAR && LA2_1<=SLASH_SLASH)||LA2_1==COLON||LA2_1==VBAR) ) {s = 7;}
+
+                            else if ( (LA2_1==SEMICOLON) && ((this.lc(XQS)))) {s = 8;}
+
+                            else if ( (LA2_1==EOF) ) {s = 9;}
+
+                             
+                            input.seek(index2_1);
+                            if ( s>=0 ) return s;
+                            break;
+                        case 1 : 
                             var LA2_0 = input.LA(1);
 
                              
@@ -56307,25 +56329,6 @@ org.antlr.lang.extend(XQueryParser.DFA2, org.antlr.runtime.DFA, {
 
                              
                             input.seek(index2_0);
-                            if ( s>=0 ) return s;
-                            break;
-                        case 1 : 
-                            var LA2_1 = input.LA(1);
-
-                             
-                            var index2_1 = input.index();
-                            input.rewind();
-                            s = -1;
-                            if ( (LA2_1==NAMESPACE) ) {s = 6;}
-
-                            else if ( (LA2_1==AND||(LA2_1>=CAST && LA2_1<=CASTABLE)||LA2_1==DIV||LA2_1==EQ||LA2_1==EXCEPT||LA2_1==GE||(LA2_1>=GT && LA2_1<=IDIV)||(LA2_1>=INSTANCE && LA2_1<=IS)||LA2_1==LE||(LA2_1>=LT && LA2_1<=MOD)||LA2_1==NE||LA2_1==OR||(LA2_1>=TO && LA2_1<=TREAT)||LA2_1==UNION||LA2_1==CONTAINS||(LA2_1>=CONCAT && LA2_1<=LPAREN)||LA2_1==LSQUARE||LA2_1==EQUAL||LA2_1==NOTEQUAL||LA2_1==COMMA||(LA2_1>=STAR && LA2_1<=SLASH_SLASH)||LA2_1==COLON||LA2_1==VBAR) ) {s = 7;}
-
-                            else if ( (LA2_1==SEMICOLON) && ((this.lc(XQS)))) {s = 8;}
-
-                            else if ( (LA2_1==EOF) ) {s = 9;}
-
-                             
-                            input.seek(index2_1);
                             if ( s>=0 ) return s;
                             break;
             }
@@ -56354,7 +56357,7 @@ org.antlr.lang.augmentObject(XQueryParser, {
         "\u0002\uffff\u0002\u0002\u0001\uffff\u0001\u0002\u0002\u0001\u0002"+
     "\u0002",
     DFA6_specialS:
-        "\u0001\u0002\u0001\u0000\u0002\uffff\u0001\u0001\u0005\uffff}>",
+        "\u0001\u0002\u0001\u0001\u0002\uffff\u0001\u0000\u0005\uffff}>",
     DFA6_transitionS: [
             "\u0002\u0002\u0004\u0005\u0001\u0002\u0006\u0005\u0001\u0002"+
             "\u0001\u0005\u0001\u0002\u0002\u0005\u0001\u0001\u0001\u0005"+
@@ -56453,6 +56456,23 @@ org.antlr.lang.extend(XQueryParser.DFA6, org.antlr.runtime.DFA, {
         var retval = (function(s, input) {
             switch ( s ) {
                         case 0 : 
+                            var LA6_4 = input.LA(1);
+
+                             
+                            var index6_4 = input.index();
+                            input.rewind();
+                            s = -1;
+                            if ( (LA6_4==EOF||LA6_4==AND||(LA6_4>=CAST && LA6_4<=CASTABLE)||LA6_4==DIV||LA6_4==EQ||LA6_4==EXCEPT||LA6_4==GE||(LA6_4>=GT && LA6_4<=IDIV)||(LA6_4>=INSTANCE && LA6_4<=IS)||LA6_4==LE||(LA6_4>=LT && LA6_4<=MOD)||LA6_4==NE||LA6_4==OR||(LA6_4>=TO && LA6_4<=TREAT)||LA6_4==UNION||LA6_4==CONTAINS||(LA6_4>=CONCAT && LA6_4<=LPAREN)||LA6_4==LSQUARE||LA6_4==EQUAL||LA6_4==NOTEQUAL||LA6_4==COMMA||(LA6_4>=STAR && LA6_4<=SLASH_SLASH)||LA6_4==COLON||LA6_4==VBAR) ) {s = 9;}
+
+                            else if ( (LA6_4==SEMICOLON) && ((this.lc(XQS)))) {s = 8;}
+
+                            else if ( (LA6_4==MODULE||LA6_4==SCHEMA) ) {s = 7;}
+
+                             
+                            input.seek(index6_4);
+                            if ( s>=0 ) return s;
+                            break;
+                        case 1 : 
                             var LA6_1 = input.LA(1);
 
                              
@@ -56471,23 +56491,6 @@ org.antlr.lang.extend(XQueryParser.DFA6, org.antlr.runtime.DFA, {
 
                              
                             input.seek(index6_1);
-                            if ( s>=0 ) return s;
-                            break;
-                        case 1 : 
-                            var LA6_4 = input.LA(1);
-
-                             
-                            var index6_4 = input.index();
-                            input.rewind();
-                            s = -1;
-                            if ( (LA6_4==EOF||LA6_4==AND||(LA6_4>=CAST && LA6_4<=CASTABLE)||LA6_4==DIV||LA6_4==EQ||LA6_4==EXCEPT||LA6_4==GE||(LA6_4>=GT && LA6_4<=IDIV)||(LA6_4>=INSTANCE && LA6_4<=IS)||LA6_4==LE||(LA6_4>=LT && LA6_4<=MOD)||LA6_4==NE||LA6_4==OR||(LA6_4>=TO && LA6_4<=TREAT)||LA6_4==UNION||LA6_4==CONTAINS||(LA6_4>=CONCAT && LA6_4<=LPAREN)||LA6_4==LSQUARE||LA6_4==EQUAL||LA6_4==NOTEQUAL||LA6_4==COMMA||(LA6_4>=STAR && LA6_4<=SLASH_SLASH)||LA6_4==COLON||LA6_4==VBAR) ) {s = 9;}
-
-                            else if ( (LA6_4==SEMICOLON) && ((this.lc(XQS)))) {s = 8;}
-
-                            else if ( (LA6_4==MODULE||LA6_4==SCHEMA) ) {s = 7;}
-
-                             
-                            input.seek(index6_4);
                             if ( s>=0 ) return s;
                             break;
                         case 2 : 
@@ -57699,7 +57702,7 @@ org.antlr.lang.extend(XQueryParser.DFA44, org.antlr.runtime.DFA, {
                             var index44_50 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( (((this.lc(XQS))||((this.lc(XQS))&&(this.lc(XQU))))) ) {s = 67;}
+                            if ( ((((this.lc(XQS))&&(this.lc(XQU)))||(this.lc(XQS)))) ) {s = 67;}
 
                             else if ( (true) ) {s = 71;}
 
@@ -57834,7 +57837,7 @@ org.antlr.lang.extend(XQueryParser.DFA44, org.antlr.runtime.DFA, {
                             var index44_59 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( (((this.lc(XQS))||((this.lc(XQS))&&(this.lc(XQU))))) ) {s = 67;}
+                            if ( ((((this.lc(XQS))&&(this.lc(XQU)))||(this.lc(XQS)))) ) {s = 67;}
 
                             else if ( (true) ) {s = 71;}
 
@@ -57849,7 +57852,7 @@ org.antlr.lang.extend(XQueryParser.DFA44, org.antlr.runtime.DFA, {
                             var index44_60 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( (((this.lc(XQS))||((this.lc(XQS))&&(this.lc(XQU))))) ) {s = 67;}
+                            if ( ((((this.lc(XQS))&&(this.lc(XQU)))||(this.lc(XQS)))) ) {s = 67;}
 
                             else if ( (true) ) {s = 71;}
 
@@ -57864,7 +57867,7 @@ org.antlr.lang.extend(XQueryParser.DFA44, org.antlr.runtime.DFA, {
                             var index44_61 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( (((this.lc(XQS))||((this.lc(XQS))&&(this.lc(XQU))))) ) {s = 67;}
+                            if ( ((((this.lc(XQS))&&(this.lc(XQU)))||(this.lc(XQS)))) ) {s = 67;}
 
                             else if ( (true) ) {s = 71;}
 
@@ -57879,7 +57882,7 @@ org.antlr.lang.extend(XQueryParser.DFA44, org.antlr.runtime.DFA, {
                             var index44_62 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( (((this.lc(XQS))||((this.lc(XQS))&&(this.lc(XQU))))) ) {s = 67;}
+                            if ( ((((this.lc(XQS))&&(this.lc(XQU)))||(this.lc(XQS)))) ) {s = 67;}
 
                             else if ( (true) ) {s = 71;}
 
@@ -58003,8 +58006,8 @@ org.antlr.lang.augmentObject(XQueryParser, {
         "\u0007\uffff\u0001\u0006\u0005\u0001\u0001\u0002\u0001\u0003\u0001"+
     "\u0004\u0001\u0005",
     DFA46_specialS:
-        "\u0001\uffff\u0001\u0005\u0001\u0003\u0001\u0002\u0001\u0000\u0001"+
-    "\u0001\u0001\u0004\u000a\uffff}>",
+        "\u0001\uffff\u0001\u0002\u0001\u0001\u0001\u0000\u0001\u0004\u0001"+
+    "\u0005\u0001\u0003\u000a\uffff}>",
     DFA46_transitionS: [
             "\u0025\u0007\u0001\u0001\u0005\u0007\u0001\u0003\u000a\u0007"+
             "\u0001\u0002\u0021\u0007\u0001\u0005\u001d\u0007\u0001\u0004"+
@@ -58163,36 +58166,6 @@ org.antlr.lang.extend(XQueryParser.DFA46, org.antlr.runtime.DFA, {
         var retval = (function(s, input) {
             switch ( s ) {
                         case 0 : 
-                            var LA46_4 = input.LA(1);
-
-                             
-                            var index46_4 = input.index();
-                            input.rewind();
-                            s = -1;
-                            if ( (LA46_4==LPAREN) && (this.synpred3_XQueryParser())) {s = 14;}
-
-                            else if ( (LA46_4==EOF||(LA46_4>=AND && LA46_4<=ASCENDING)||(LA46_4>=CASE && LA46_4<=CASTABLE)||LA46_4==COLLATION||LA46_4==DEFAULT||(LA46_4>=DESCENDING && LA46_4<=DIV)||LA46_4==EMPTY||LA46_4==EQ||LA46_4==EXCEPT||LA46_4==FOR||LA46_4==GE||(LA46_4>=GT && LA46_4<=IDIV)||(LA46_4>=INSTANCE && LA46_4<=IS)||LA46_4==LE||(LA46_4>=LET && LA46_4<=MOD)||LA46_4==NE||(LA46_4>=OR && LA46_4<=ORDER)||(LA46_4>=RETURN && LA46_4<=SATISFIES)||LA46_4==STABLE||(LA46_4>=TO && LA46_4<=TREAT)||LA46_4==UNION||LA46_4==WHERE||LA46_4==COUNT||(LA46_4>=END && LA46_4<=GROUP)||LA46_4==ONLY||LA46_4==START||(LA46_4>=AFTER && LA46_4<=BEFORE)||LA46_4==INTO||LA46_4==MODIFY||LA46_4==WITH||LA46_4==CONTAINS||LA46_4==CONCAT||LA46_4==RPAREN||(LA46_4>=RBRACKET && LA46_4<=EQUAL)||LA46_4==NOTEQUAL||LA46_4==COMMA||(LA46_4>=STAR && LA46_4<=SLASH_SLASH)||LA46_4==COLON||(LA46_4>=SEMICOLON && LA46_4<=VBAR)) ) {s = 7;}
-
-                             
-                            input.seek(index46_4);
-                            if ( s>=0 ) return s;
-                            break;
-                        case 1 : 
-                            var LA46_5 = input.LA(1);
-
-                             
-                            var index46_5 = input.index();
-                            input.rewind();
-                            s = -1;
-                            if ( (LA46_5==LPAREN) && (this.synpred4_XQueryParser())) {s = 15;}
-
-                            else if ( (LA46_5==EOF||(LA46_5>=AND && LA46_5<=ASCENDING)||(LA46_5>=CASE && LA46_5<=CASTABLE)||LA46_5==COLLATION||LA46_5==DEFAULT||(LA46_5>=DESCENDING && LA46_5<=DIV)||LA46_5==EMPTY||LA46_5==EQ||LA46_5==EXCEPT||LA46_5==FOR||LA46_5==GE||(LA46_5>=GT && LA46_5<=IDIV)||(LA46_5>=INSTANCE && LA46_5<=IS)||LA46_5==LE||(LA46_5>=LET && LA46_5<=MOD)||LA46_5==NE||(LA46_5>=OR && LA46_5<=ORDER)||(LA46_5>=RETURN && LA46_5<=SATISFIES)||LA46_5==STABLE||(LA46_5>=TO && LA46_5<=TREAT)||LA46_5==UNION||LA46_5==WHERE||LA46_5==COUNT||(LA46_5>=END && LA46_5<=GROUP)||LA46_5==ONLY||LA46_5==START||(LA46_5>=AFTER && LA46_5<=BEFORE)||LA46_5==INTO||LA46_5==MODIFY||LA46_5==WITH||LA46_5==CONTAINS||LA46_5==CONCAT||LA46_5==RPAREN||(LA46_5>=RBRACKET && LA46_5<=EQUAL)||LA46_5==NOTEQUAL||LA46_5==COMMA||(LA46_5>=STAR && LA46_5<=SLASH_SLASH)||LA46_5==COLON||(LA46_5>=SEMICOLON && LA46_5<=VBAR)) ) {s = 7;}
-
-                             
-                            input.seek(index46_5);
-                            if ( s>=0 ) return s;
-                            break;
-                        case 2 : 
                             var LA46_3 = input.LA(1);
 
                              
@@ -58207,7 +58180,7 @@ org.antlr.lang.extend(XQueryParser.DFA46, org.antlr.runtime.DFA, {
                             input.seek(index46_3);
                             if ( s>=0 ) return s;
                             break;
-                        case 3 : 
+                        case 1 : 
                             var LA46_2 = input.LA(1);
 
                              
@@ -58224,22 +58197,7 @@ org.antlr.lang.extend(XQueryParser.DFA46, org.antlr.runtime.DFA, {
                             input.seek(index46_2);
                             if ( s>=0 ) return s;
                             break;
-                        case 4 : 
-                            var LA46_6 = input.LA(1);
-
-                             
-                            var index46_6 = input.index();
-                            input.rewind();
-                            s = -1;
-                            if ( (LA46_6==LBRACKET) && (this.synpred5_XQueryParser())) {s = 16;}
-
-                            else if ( (LA46_6==EOF||(LA46_6>=AND && LA46_6<=ASCENDING)||(LA46_6>=CASE && LA46_6<=CASTABLE)||LA46_6==COLLATION||LA46_6==DEFAULT||(LA46_6>=DESCENDING && LA46_6<=DIV)||LA46_6==EMPTY||LA46_6==EQ||LA46_6==EXCEPT||LA46_6==FOR||LA46_6==GE||(LA46_6>=GT && LA46_6<=IDIV)||(LA46_6>=INSTANCE && LA46_6<=IS)||LA46_6==LE||(LA46_6>=LET && LA46_6<=MOD)||LA46_6==NE||(LA46_6>=OR && LA46_6<=ORDER)||(LA46_6>=RETURN && LA46_6<=SATISFIES)||LA46_6==STABLE||(LA46_6>=TO && LA46_6<=TREAT)||LA46_6==UNION||LA46_6==WHERE||LA46_6==COUNT||(LA46_6>=END && LA46_6<=GROUP)||LA46_6==ONLY||LA46_6==START||(LA46_6>=AFTER && LA46_6<=BEFORE)||LA46_6==INTO||LA46_6==MODIFY||LA46_6==WITH||LA46_6==CONTAINS||(LA46_6>=CONCAT && LA46_6<=RPAREN)||(LA46_6>=RBRACKET && LA46_6<=EQUAL)||LA46_6==NOTEQUAL||LA46_6==COMMA||(LA46_6>=STAR && LA46_6<=SLASH_SLASH)||LA46_6==COLON||(LA46_6>=SEMICOLON && LA46_6<=VBAR)) ) {s = 7;}
-
-                             
-                            input.seek(index46_6);
-                            if ( s>=0 ) return s;
-                            break;
-                        case 5 : 
+                        case 2 : 
                             var LA46_1 = input.LA(1);
 
                              
@@ -58256,6 +58214,51 @@ org.antlr.lang.extend(XQueryParser.DFA46, org.antlr.runtime.DFA, {
 
                              
                             input.seek(index46_1);
+                            if ( s>=0 ) return s;
+                            break;
+                        case 3 : 
+                            var LA46_6 = input.LA(1);
+
+                             
+                            var index46_6 = input.index();
+                            input.rewind();
+                            s = -1;
+                            if ( (LA46_6==LBRACKET) && (this.synpred5_XQueryParser())) {s = 16;}
+
+                            else if ( (LA46_6==EOF||(LA46_6>=AND && LA46_6<=ASCENDING)||(LA46_6>=CASE && LA46_6<=CASTABLE)||LA46_6==COLLATION||LA46_6==DEFAULT||(LA46_6>=DESCENDING && LA46_6<=DIV)||LA46_6==EMPTY||LA46_6==EQ||LA46_6==EXCEPT||LA46_6==FOR||LA46_6==GE||(LA46_6>=GT && LA46_6<=IDIV)||(LA46_6>=INSTANCE && LA46_6<=IS)||LA46_6==LE||(LA46_6>=LET && LA46_6<=MOD)||LA46_6==NE||(LA46_6>=OR && LA46_6<=ORDER)||(LA46_6>=RETURN && LA46_6<=SATISFIES)||LA46_6==STABLE||(LA46_6>=TO && LA46_6<=TREAT)||LA46_6==UNION||LA46_6==WHERE||LA46_6==COUNT||(LA46_6>=END && LA46_6<=GROUP)||LA46_6==ONLY||LA46_6==START||(LA46_6>=AFTER && LA46_6<=BEFORE)||LA46_6==INTO||LA46_6==MODIFY||LA46_6==WITH||LA46_6==CONTAINS||(LA46_6>=CONCAT && LA46_6<=RPAREN)||(LA46_6>=RBRACKET && LA46_6<=EQUAL)||LA46_6==NOTEQUAL||LA46_6==COMMA||(LA46_6>=STAR && LA46_6<=SLASH_SLASH)||LA46_6==COLON||(LA46_6>=SEMICOLON && LA46_6<=VBAR)) ) {s = 7;}
+
+                             
+                            input.seek(index46_6);
+                            if ( s>=0 ) return s;
+                            break;
+                        case 4 : 
+                            var LA46_4 = input.LA(1);
+
+                             
+                            var index46_4 = input.index();
+                            input.rewind();
+                            s = -1;
+                            if ( (LA46_4==LPAREN) && (this.synpred3_XQueryParser())) {s = 14;}
+
+                            else if ( (LA46_4==EOF||(LA46_4>=AND && LA46_4<=ASCENDING)||(LA46_4>=CASE && LA46_4<=CASTABLE)||LA46_4==COLLATION||LA46_4==DEFAULT||(LA46_4>=DESCENDING && LA46_4<=DIV)||LA46_4==EMPTY||LA46_4==EQ||LA46_4==EXCEPT||LA46_4==FOR||LA46_4==GE||(LA46_4>=GT && LA46_4<=IDIV)||(LA46_4>=INSTANCE && LA46_4<=IS)||LA46_4==LE||(LA46_4>=LET && LA46_4<=MOD)||LA46_4==NE||(LA46_4>=OR && LA46_4<=ORDER)||(LA46_4>=RETURN && LA46_4<=SATISFIES)||LA46_4==STABLE||(LA46_4>=TO && LA46_4<=TREAT)||LA46_4==UNION||LA46_4==WHERE||LA46_4==COUNT||(LA46_4>=END && LA46_4<=GROUP)||LA46_4==ONLY||LA46_4==START||(LA46_4>=AFTER && LA46_4<=BEFORE)||LA46_4==INTO||LA46_4==MODIFY||LA46_4==WITH||LA46_4==CONTAINS||LA46_4==CONCAT||LA46_4==RPAREN||(LA46_4>=RBRACKET && LA46_4<=EQUAL)||LA46_4==NOTEQUAL||LA46_4==COMMA||(LA46_4>=STAR && LA46_4<=SLASH_SLASH)||LA46_4==COLON||(LA46_4>=SEMICOLON && LA46_4<=VBAR)) ) {s = 7;}
+
+                             
+                            input.seek(index46_4);
+                            if ( s>=0 ) return s;
+                            break;
+                        case 5 : 
+                            var LA46_5 = input.LA(1);
+
+                             
+                            var index46_5 = input.index();
+                            input.rewind();
+                            s = -1;
+                            if ( (LA46_5==LPAREN) && (this.synpred4_XQueryParser())) {s = 15;}
+
+                            else if ( (LA46_5==EOF||(LA46_5>=AND && LA46_5<=ASCENDING)||(LA46_5>=CASE && LA46_5<=CASTABLE)||LA46_5==COLLATION||LA46_5==DEFAULT||(LA46_5>=DESCENDING && LA46_5<=DIV)||LA46_5==EMPTY||LA46_5==EQ||LA46_5==EXCEPT||LA46_5==FOR||LA46_5==GE||(LA46_5>=GT && LA46_5<=IDIV)||(LA46_5>=INSTANCE && LA46_5<=IS)||LA46_5==LE||(LA46_5>=LET && LA46_5<=MOD)||LA46_5==NE||(LA46_5>=OR && LA46_5<=ORDER)||(LA46_5>=RETURN && LA46_5<=SATISFIES)||LA46_5==STABLE||(LA46_5>=TO && LA46_5<=TREAT)||LA46_5==UNION||LA46_5==WHERE||LA46_5==COUNT||(LA46_5>=END && LA46_5<=GROUP)||LA46_5==ONLY||LA46_5==START||(LA46_5>=AFTER && LA46_5<=BEFORE)||LA46_5==INTO||LA46_5==MODIFY||LA46_5==WITH||LA46_5==CONTAINS||LA46_5==CONCAT||LA46_5==RPAREN||(LA46_5>=RBRACKET && LA46_5<=EQUAL)||LA46_5==NOTEQUAL||LA46_5==COMMA||(LA46_5>=STAR && LA46_5<=SLASH_SLASH)||LA46_5==COLON||(LA46_5>=SEMICOLON && LA46_5<=VBAR)) ) {s = 7;}
+
+                             
+                            input.seek(index46_5);
                             if ( s>=0 ) return s;
                             break;
             }
@@ -58958,11 +58961,11 @@ org.antlr.lang.extend(XQueryParser.DFA119, org.antlr.runtime.DFA, {
                             s = -1;
                             if ( ((this.synpred8_XQueryParser()||(this.synpred8_XQueryParser()&&(this.lc(MLS))))) ) {s = 45;}
 
-                            else if ( (((this.synpred9_XQueryParser()&&(this.lc(MLS)))||this.synpred9_XQueryParser())) ) {s = 46;}
+                            else if ( ((this.synpred9_XQueryParser()||(this.synpred9_XQueryParser()&&(this.lc(MLS))))) ) {s = 46;}
 
                             else if ( (this.synpred10_XQueryParser()) ) {s = 49;}
 
-                            else if ( ((this.synpred11_XQueryParser()||(this.synpred11_XQueryParser()&&(this.lc(MLS))))) ) {s = 47;}
+                            else if ( (((this.synpred11_XQueryParser()&&(this.lc(MLS)))||this.synpred11_XQueryParser())) ) {s = 47;}
 
                             else if ( (((this.synpred12_XQueryParser()&&(this.lc(MLS)))||this.synpred12_XQueryParser())) ) {s = 48;}
 
@@ -60868,8 +60871,8 @@ org.antlr.lang.augmentObject(XQueryParser, {
     DFA253_acceptS:
         "\u0003\uffff\u0001\u0002\u0005\uffff\u0001\u0001\u0001\u0003",
     DFA253_specialS:
-        "\u0004\uffff\u0001\u0002\u0001\u0001\u0001\u0004\u0001\u0000\u0001"+
-    "\u0003\u0002\uffff}>",
+        "\u0004\uffff\u0001\u0002\u0001\u0001\u0001\u0003\u0001\u0004\u0001"+
+    "\u0000\u0002\uffff}>",
     DFA253_transitionS: [
             "\u0020\u0003\u0001\u0002\u002f\u0003\u0001\u0001\u002e\u0003"+
             "\u0001\u0008\u0001\u0005\u0001\u0003\u0001\u0004\u0004\u0003"+
@@ -61038,18 +61041,18 @@ org.antlr.lang.extend(XQueryParser.DFA253, org.antlr.runtime.DFA, {
         var retval = (function(s, input) {
             switch ( s ) {
                         case 0 : 
-                            var LA253_7 = input.LA(1);
+                            var LA253_8 = input.LA(1);
 
                              
-                            var index253_7 = input.index();
+                            var index253_8 = input.index();
                             input.rewind();
                             s = -1;
-                            if ( (LA253_7==EOF||(LA253_7>=AND && LA253_7<=ASCENDING)||(LA253_7>=CASE && LA253_7<=CASTABLE)||LA253_7==COLLATION||LA253_7==DEFAULT||(LA253_7>=DESCENDING && LA253_7<=DIV)||LA253_7==EMPTY||LA253_7==EQ||LA253_7==EXCEPT||LA253_7==FOR||LA253_7==GE||(LA253_7>=GT && LA253_7<=IDIV)||(LA253_7>=INSTANCE && LA253_7<=IS)||LA253_7==LE||(LA253_7>=LET && LA253_7<=MOD)||LA253_7==NE||(LA253_7>=OR && LA253_7<=ORDER)||(LA253_7>=RETURN && LA253_7<=SATISFIES)||LA253_7==STABLE||(LA253_7>=TO && LA253_7<=TREAT)||LA253_7==UNION||LA253_7==WHERE||LA253_7==COUNT||(LA253_7>=END && LA253_7<=GROUP)||LA253_7==ONLY||LA253_7==START||(LA253_7>=AFTER && LA253_7<=BEFORE)||LA253_7==INTO||LA253_7==MODIFY||LA253_7==WITH||LA253_7==CONTAINS||(LA253_7>=CONCAT && LA253_7<=RPAREN)||(LA253_7>=RBRACKET && LA253_7<=EQUAL)||LA253_7==NOTEQUAL||LA253_7==COMMA||(LA253_7>=STAR && LA253_7<=SLASH_SLASH)||LA253_7==COLON||(LA253_7>=SEMICOLON && LA253_7<=VBAR)) ) {s = 3;}
+                            if ( (LA253_8==DOLLAR) && ((this.lc(XQU)))) {s = 10;}
 
-                            else if ( (LA253_7==NODE||LA253_7==VALUE) && ((this.lc(XQU)))) {s = 10;}
+                            else if ( (LA253_8==EOF||(LA253_8>=AND && LA253_8<=ASCENDING)||(LA253_8>=CASE && LA253_8<=CASTABLE)||LA253_8==COLLATION||LA253_8==DEFAULT||(LA253_8>=DESCENDING && LA253_8<=DIV)||LA253_8==EMPTY||LA253_8==EQ||LA253_8==EXCEPT||LA253_8==FOR||LA253_8==GE||(LA253_8>=GT && LA253_8<=IDIV)||(LA253_8>=INSTANCE && LA253_8<=IS)||LA253_8==LE||(LA253_8>=LET && LA253_8<=MOD)||LA253_8==NE||(LA253_8>=OR && LA253_8<=ORDER)||(LA253_8>=RETURN && LA253_8<=SATISFIES)||LA253_8==STABLE||(LA253_8>=TO && LA253_8<=TREAT)||LA253_8==UNION||LA253_8==WHERE||LA253_8==COUNT||(LA253_8>=END && LA253_8<=GROUP)||LA253_8==ONLY||LA253_8==START||(LA253_8>=AFTER && LA253_8<=BEFORE)||LA253_8==INTO||LA253_8==MODIFY||LA253_8==WITH||LA253_8==CONTAINS||(LA253_8>=CONCAT && LA253_8<=RPAREN)||(LA253_8>=RBRACKET && LA253_8<=EQUAL)||LA253_8==NOTEQUAL||LA253_8==COMMA||(LA253_8>=STAR && LA253_8<=SLASH_SLASH)||LA253_8==COLON||(LA253_8>=SEMICOLON && LA253_8<=VBAR)) ) {s = 3;}
 
                              
-                            input.seek(index253_7);
+                            input.seek(index253_8);
                             if ( s>=0 ) return s;
                             break;
                         case 1 : 
@@ -61083,21 +61086,6 @@ org.antlr.lang.extend(XQueryParser.DFA253, org.antlr.runtime.DFA, {
                             if ( s>=0 ) return s;
                             break;
                         case 3 : 
-                            var LA253_8 = input.LA(1);
-
-                             
-                            var index253_8 = input.index();
-                            input.rewind();
-                            s = -1;
-                            if ( (LA253_8==DOLLAR) && ((this.lc(XQU)))) {s = 10;}
-
-                            else if ( (LA253_8==EOF||(LA253_8>=AND && LA253_8<=ASCENDING)||(LA253_8>=CASE && LA253_8<=CASTABLE)||LA253_8==COLLATION||LA253_8==DEFAULT||(LA253_8>=DESCENDING && LA253_8<=DIV)||LA253_8==EMPTY||LA253_8==EQ||LA253_8==EXCEPT||LA253_8==FOR||LA253_8==GE||(LA253_8>=GT && LA253_8<=IDIV)||(LA253_8>=INSTANCE && LA253_8<=IS)||LA253_8==LE||(LA253_8>=LET && LA253_8<=MOD)||LA253_8==NE||(LA253_8>=OR && LA253_8<=ORDER)||(LA253_8>=RETURN && LA253_8<=SATISFIES)||LA253_8==STABLE||(LA253_8>=TO && LA253_8<=TREAT)||LA253_8==UNION||LA253_8==WHERE||LA253_8==COUNT||(LA253_8>=END && LA253_8<=GROUP)||LA253_8==ONLY||LA253_8==START||(LA253_8>=AFTER && LA253_8<=BEFORE)||LA253_8==INTO||LA253_8==MODIFY||LA253_8==WITH||LA253_8==CONTAINS||(LA253_8>=CONCAT && LA253_8<=RPAREN)||(LA253_8>=RBRACKET && LA253_8<=EQUAL)||LA253_8==NOTEQUAL||LA253_8==COMMA||(LA253_8>=STAR && LA253_8<=SLASH_SLASH)||LA253_8==COLON||(LA253_8>=SEMICOLON && LA253_8<=VBAR)) ) {s = 3;}
-
-                             
-                            input.seek(index253_8);
-                            if ( s>=0 ) return s;
-                            break;
-                        case 4 : 
                             var LA253_6 = input.LA(1);
 
                              
@@ -61110,6 +61098,21 @@ org.antlr.lang.extend(XQueryParser.DFA253, org.antlr.runtime.DFA, {
 
                              
                             input.seek(index253_6);
+                            if ( s>=0 ) return s;
+                            break;
+                        case 4 : 
+                            var LA253_7 = input.LA(1);
+
+                             
+                            var index253_7 = input.index();
+                            input.rewind();
+                            s = -1;
+                            if ( (LA253_7==EOF||(LA253_7>=AND && LA253_7<=ASCENDING)||(LA253_7>=CASE && LA253_7<=CASTABLE)||LA253_7==COLLATION||LA253_7==DEFAULT||(LA253_7>=DESCENDING && LA253_7<=DIV)||LA253_7==EMPTY||LA253_7==EQ||LA253_7==EXCEPT||LA253_7==FOR||LA253_7==GE||(LA253_7>=GT && LA253_7<=IDIV)||(LA253_7>=INSTANCE && LA253_7<=IS)||LA253_7==LE||(LA253_7>=LET && LA253_7<=MOD)||LA253_7==NE||(LA253_7>=OR && LA253_7<=ORDER)||(LA253_7>=RETURN && LA253_7<=SATISFIES)||LA253_7==STABLE||(LA253_7>=TO && LA253_7<=TREAT)||LA253_7==UNION||LA253_7==WHERE||LA253_7==COUNT||(LA253_7>=END && LA253_7<=GROUP)||LA253_7==ONLY||LA253_7==START||(LA253_7>=AFTER && LA253_7<=BEFORE)||LA253_7==INTO||LA253_7==MODIFY||LA253_7==WITH||LA253_7==CONTAINS||(LA253_7>=CONCAT && LA253_7<=RPAREN)||(LA253_7>=RBRACKET && LA253_7<=EQUAL)||LA253_7==NOTEQUAL||LA253_7==COMMA||(LA253_7>=STAR && LA253_7<=SLASH_SLASH)||LA253_7==COLON||(LA253_7>=SEMICOLON && LA253_7<=VBAR)) ) {s = 3;}
+
+                            else if ( (LA253_7==NODE||LA253_7==VALUE) && ((this.lc(XQU)))) {s = 10;}
+
+                             
+                            input.seek(index253_7);
                             if ( s>=0 ) return s;
                             break;
             }
@@ -61777,607 +61780,607 @@ org.antlr.lang.augmentObject(XQueryParser, {
     FOLLOW_RBRACKET_in_pg_EnclosedExprXml8763: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_L_DirCommentConstructor_in_p_DirCommentConstructor8794: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_L_DirPIConstructor_in_p_DirPIConstructor8830: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_L_CDataSection_in_p_CDataSection8865: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pm_CompDocConstructor_in_p_ComputedConstructor8897: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pm_CompElemConstructor_in_p_ComputedConstructor8909: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pm_CompAttrConstructor_in_p_ComputedConstructor8921: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_CompNamespaceConstructor_in_p_ComputedConstructor8933: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_CompTextConstructor_in_p_ComputedConstructor8945: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pm_CompCommentConstructor_in_p_ComputedConstructor8957: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pm_CompPIConstructor_in_p_ComputedConstructor8969: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_CompBinaryConstructor_in_p_ComputedConstructor8984: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DOCUMENT_in_pm_CompDocConstructor9013: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompDocConstructor9017: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompDocConstructor9019: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompDocConstructor9021: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ELEMENT_in_pm_CompElemConstructor9057: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_pm_CompElemConstructor9062: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompElemConstructor9067: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_pm_CompElemConstructor9069: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompElemConstructor9072: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompElemConstructor9076: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_pm_ContentExpr_in_pm_CompElemConstructor9078: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompElemConstructor9080: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_StatementsAndOptionalExpr_in_pm_ContentExpr9107: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ATTRIBUTE_in_pm_CompAttrConstructor9136: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_pm_CompAttrConstructor9141: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompAttrConstructor9146: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_pm_CompAttrConstructor9148: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompAttrConstructor9151: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompAttrConstructor9155: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompAttrConstructor9157: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompAttrConstructor9159: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NAMESPACE_in_p_CompNamespaceConstructor9187: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Prefix_in_p_CompNamespaceConstructor9192: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9197: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_PrefixExpr_in_p_CompNamespaceConstructor9199: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9201: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9205: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F003,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_URIExpr_in_p_CompNamespaceConstructor9207: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9210: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_NCName_in_p_Prefix9236: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Expr_in_p_PrefixExpr9262: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Expr_in_p_URIExpr9289: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_TEXT_in_p_CompTextConstructor9318: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_p_CompTextConstructor9322: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_CompTextConstructor9324: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_CompTextConstructor9327: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_BINARY_in_p_CompBinaryConstructor9355: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_p_CompBinaryConstructor9359: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_CompBinaryConstructor9361: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_CompBinaryConstructor9364: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_COMMENT_in_pm_CompCommentConstructor9393: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompCommentConstructor9397: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompCommentConstructor9399: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompCommentConstructor9401: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_PROCESSING_INSTRUCTION_in_pm_CompPIConstructor9430: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_NCName_in_pm_CompPIConstructor9435: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompPIConstructor9440: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_pm_CompPIConstructor9442: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompPIConstructor9445: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_pm_CompPIConstructor9449: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompPIConstructor9451: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_pm_CompPIConstructor9453: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AtomicOrUnionType_in_p_SingleType9497: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000800]),
-    FOLLOW_QUESTION_in_p_SingleType9499: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AS_in_p_TypeDeclaration9528: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SequenceType_in_p_TypeDeclaration9534: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_EMPTY_SEQUENCE_in_p_SequenceType9587: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_SequenceType9593: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_SequenceType9597: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ItemType_in_p_SequenceType9646: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00003800]),
-    FOLLOW_p_OccurrenceIndicator_in_p_SequenceType9657: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_L_CDataSection_in_p_CDataSection8867: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pm_CompDocConstructor_in_p_ComputedConstructor8901: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pm_CompElemConstructor_in_p_ComputedConstructor8913: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pm_CompAttrConstructor_in_p_ComputedConstructor8925: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_CompNamespaceConstructor_in_p_ComputedConstructor8937: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_CompTextConstructor_in_p_ComputedConstructor8949: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pm_CompCommentConstructor_in_p_ComputedConstructor8961: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pm_CompPIConstructor_in_p_ComputedConstructor8973: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_CompBinaryConstructor_in_p_ComputedConstructor8988: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DOCUMENT_in_pm_CompDocConstructor9017: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompDocConstructor9021: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompDocConstructor9023: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompDocConstructor9025: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ELEMENT_in_pm_CompElemConstructor9061: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_pm_CompElemConstructor9066: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompElemConstructor9071: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_pm_CompElemConstructor9073: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompElemConstructor9076: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompElemConstructor9080: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_pm_ContentExpr_in_pm_CompElemConstructor9082: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompElemConstructor9084: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_StatementsAndOptionalExpr_in_pm_ContentExpr9111: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ATTRIBUTE_in_pm_CompAttrConstructor9140: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_pm_CompAttrConstructor9145: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompAttrConstructor9150: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_pm_CompAttrConstructor9152: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompAttrConstructor9155: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompAttrConstructor9159: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompAttrConstructor9161: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompAttrConstructor9163: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NAMESPACE_in_p_CompNamespaceConstructor9191: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Prefix_in_p_CompNamespaceConstructor9196: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9201: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_PrefixExpr_in_p_CompNamespaceConstructor9203: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9205: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_p_CompNamespaceConstructor9209: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F003,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_URIExpr_in_p_CompNamespaceConstructor9211: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_CompNamespaceConstructor9214: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_NCName_in_p_Prefix9240: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Expr_in_p_PrefixExpr9266: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Expr_in_p_URIExpr9293: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_TEXT_in_p_CompTextConstructor9322: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_p_CompTextConstructor9326: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_CompTextConstructor9328: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_CompTextConstructor9331: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_BINARY_in_p_CompBinaryConstructor9359: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_p_CompBinaryConstructor9363: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_CompBinaryConstructor9365: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_CompBinaryConstructor9368: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_COMMENT_in_pm_CompCommentConstructor9397: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompCommentConstructor9401: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompCommentConstructor9403: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompCommentConstructor9405: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_PROCESSING_INSTRUCTION_in_pm_CompPIConstructor9434: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000001,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_NCName_in_pm_CompPIConstructor9439: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompPIConstructor9444: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_pm_CompPIConstructor9446: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompPIConstructor9449: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_pm_CompPIConstructor9453: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_StatementsAndOptionalExpr_in_pm_CompPIConstructor9455: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_pm_CompPIConstructor9457: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AtomicOrUnionType_in_p_SingleType9501: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000800]),
+    FOLLOW_QUESTION_in_p_SingleType9503: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AS_in_p_TypeDeclaration9532: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SequenceType_in_p_TypeDeclaration9538: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_EMPTY_SEQUENCE_in_p_SequenceType9591: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_SequenceType9597: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_SequenceType9601: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ItemType_in_p_SequenceType9650: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00003800]),
+    FOLLOW_p_OccurrenceIndicator_in_p_SequenceType9661: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_set_in_p_OccurrenceIndicator0: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_KindTest_in_p_ItemType9759: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_BINARY_in_p_ItemType9799: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_ItemType9801: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_ItemType9803: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ITEM_in_p_ItemType9845: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_ItemType9847: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_ItemType9849: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AtomicOrUnionType_in_p_ItemType9893: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ParenthesizedItemType_in_p_ItemType9905: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QName_in_p_AtomicOrUnionType9931: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_DocumentTest_in_p_KindTest9981: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ElementTest_in_p_KindTest9993: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AttributeTest_in_p_KindTest10005: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_SchemaElementTest_in_p_KindTest10017: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_SchemaAttributeTest_in_p_KindTest10029: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_PITest_in_p_KindTest10041: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_CommentTest_in_p_KindTest10053: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_TextTest_in_p_KindTest10065: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_NamespaceNodeTest_in_p_KindTest10077: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AnyKindTest_in_p_KindTest10089: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NODE_in_p_AnyKindTest10115: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_AnyKindTest10117: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_AnyKindTest10119: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DOCUMENT_NODE_in_p_DocumentTest10145: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_DocumentTest10147: new org.antlr.runtime.BitSet([0x00000000, 0x00000400,0x40000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_p_ElementTest_in_p_DocumentTest10150: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_p_SchemaElementTest_in_p_DocumentTest10154: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_DocumentTest10158: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_TEXT_in_p_TextTest10184: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_TextTest10186: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_TextTest10188: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_COMMENT_in_p_CommentTest10214: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_CommentTest10216: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_CommentTest10218: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NAMESPACE_NODE_in_p_NamespaceNodeTest10244: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_NamespaceNodeTest10246: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_NamespaceNodeTest10248: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_PROCESSING_INSTRUCTION_in_p_PITest10274: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_PITest10276: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x4FFFFFFF, 0x00000000,0x01C01300, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_NCName_in_p_PITest10279: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_PITest10283: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_PITest10287: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ATTRIBUTE_in_p_AttributeTest10313: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_AttributeTest10315: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x4FFFFFFF, 0x00001000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AttribNameOrWildcard_in_p_AttributeTest10318: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_AttributeTest10321: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_TypeName_in_p_AttributeTest10323: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_AttributeTest10329: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AttributeName_in_p_AttribNameOrWildcard10357: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_STAR_in_p_AttribNameOrWildcard10361: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SCHEMA_ATTRIBUTE_in_p_SchemaAttributeTest10387: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_SchemaAttributeTest10389: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AttributeDeclaration_in_p_SchemaAttributeTest10391: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_SchemaAttributeTest10393: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AttributeName_in_p_AttributeDeclaration10419: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ELEMENT_in_p_ElementTest10445: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_ElementTest10447: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x4FFFFFFF, 0x00001000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ElementNameOrWildcard_in_p_ElementTest10450: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_ElementTest10453: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_TypeName_in_p_ElementTest10455: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000800]),
-    FOLLOW_QUESTION_in_p_ElementTest10457: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_ElementTest10464: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QName_in_p_ElementNameOrWildcard10490: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_STAR_in_p_ElementNameOrWildcard10494: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SCHEMA_ELEMENT_in_p_SchemaElementTest10512: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_SchemaElementTest10514: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ElementDeclaration_in_p_SchemaElementTest10516: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_SchemaElementTest10518: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ElementName_in_p_ElementDeclaration10544: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QName_in_p_AttributeName10570: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QName_in_p_ElementName10596: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QName_in_p_TypeName10622: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Annotation_in_p_FunctionTest10648: new org.antlr.runtime.BitSet([0x00000000, 0x00400000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000080]),
-    FOLLOW_p_AnyFunctionTest_in_p_FunctionTest10652: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_TypedFunctionTest_in_p_FunctionTest10656: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FUNCTION_in_p_AnyFunctionTest10683: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_AnyFunctionTest10685: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00001000]),
-    FOLLOW_STAR_in_p_AnyFunctionTest10687: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_AnyFunctionTest10689: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FUNCTION_in_p_TypedFunctionTest10715: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_TypedFunctionTest10717: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x6FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SequenceType_in_p_TypedFunctionTest10720: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_TypedFunctionTest10723: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SequenceType_in_p_TypedFunctionTest10725: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_RPAREN_in_p_TypedFunctionTest10731: new org.antlr.runtime.BitSet([0x00080000, 0x00000000]),
-    FOLLOW_AS_in_p_TypedFunctionTest10733: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SequenceType_in_p_TypedFunctionTest10735: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LPAREN_in_p_ParenthesizedItemType10761: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ItemType_in_p_ParenthesizedItemType10763: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_ParenthesizedItemType10765: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_QUOT_in_p_StringLiteral10816: new org.antlr.runtime.BitSet([0xFFFFFFF0, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFFFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
-    FOLLOW_pg_QuotStringLiteralContent_in_p_StringLiteral10820: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000200, 0x00000000]),
-    FOLLOW_QUOT_in_p_StringLiteral10822: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_APOS_in_p_StringLiteral10861: new org.antlr.runtime.BitSet([0xFFFFFFF0, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFFFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
-    FOLLOW_pg_AposStringLiteralContent_in_p_StringLiteral10865: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000100, 0x00000000]),
-    FOLLOW_APOS_in_p_StringLiteral10867: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_set_in_pg_QuotStringLiteralContent10933: new org.antlr.runtime.BitSet([0xFFFFFFF2, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFDFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
-    FOLLOW_set_in_pg_AposStringLiteralContent10984: new org.antlr.runtime.BitSet([0xFFFFFFF2, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFEFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
-    FOLLOW_L_ElementContentChar_in_p_ElementContentChar11042: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_L_QuotAttrContentChar_in_p_QuotAttrContentChar11068: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_L_AposAttrContentChar_in_p_AposAttrContentChar11118: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pg_QName_in_p_QName11204: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_NCName_in_p_QName11216: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pg_QName_in_pg_FQName11277: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FNCName_in_pg_FQName11289: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_NCName_in_pg_QName11333: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x02000000]),
-    FOLLOW_COLON_in_pg_QName11335: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_NCName_in_pg_QName11339: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_KindTest_in_p_ItemType9763: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_BINARY_in_p_ItemType9803: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_ItemType9805: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_ItemType9807: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ITEM_in_p_ItemType9849: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_ItemType9851: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_ItemType9853: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AtomicOrUnionType_in_p_ItemType9897: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ParenthesizedItemType_in_p_ItemType9909: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QName_in_p_AtomicOrUnionType9935: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_DocumentTest_in_p_KindTest9985: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ElementTest_in_p_KindTest9997: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AttributeTest_in_p_KindTest10009: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_SchemaElementTest_in_p_KindTest10021: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_SchemaAttributeTest_in_p_KindTest10033: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_PITest_in_p_KindTest10045: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_CommentTest_in_p_KindTest10057: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_TextTest_in_p_KindTest10069: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_NamespaceNodeTest_in_p_KindTest10081: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AnyKindTest_in_p_KindTest10093: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NODE_in_p_AnyKindTest10119: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_AnyKindTest10121: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_AnyKindTest10123: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DOCUMENT_NODE_in_p_DocumentTest10149: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_DocumentTest10151: new org.antlr.runtime.BitSet([0x00000000, 0x00000400,0x40000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_p_ElementTest_in_p_DocumentTest10154: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_p_SchemaElementTest_in_p_DocumentTest10158: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_DocumentTest10162: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_TEXT_in_p_TextTest10188: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_TextTest10190: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_TextTest10192: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_COMMENT_in_p_CommentTest10218: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_CommentTest10220: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_CommentTest10222: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NAMESPACE_NODE_in_p_NamespaceNodeTest10248: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_NamespaceNodeTest10250: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_NamespaceNodeTest10252: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_PROCESSING_INSTRUCTION_in_p_PITest10278: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_PITest10280: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x4FFFFFFF, 0x00000000,0x01C01300, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_NCName_in_p_PITest10283: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_PITest10287: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_PITest10291: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ATTRIBUTE_in_p_AttributeTest10317: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_AttributeTest10319: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x4FFFFFFF, 0x00001000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AttribNameOrWildcard_in_p_AttributeTest10322: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_AttributeTest10325: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_TypeName_in_p_AttributeTest10327: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_AttributeTest10333: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AttributeName_in_p_AttribNameOrWildcard10361: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_STAR_in_p_AttribNameOrWildcard10365: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SCHEMA_ATTRIBUTE_in_p_SchemaAttributeTest10391: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_SchemaAttributeTest10393: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AttributeDeclaration_in_p_SchemaAttributeTest10395: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_SchemaAttributeTest10397: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AttributeName_in_p_AttributeDeclaration10423: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ELEMENT_in_p_ElementTest10449: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_ElementTest10451: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x4FFFFFFF, 0x00001000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ElementNameOrWildcard_in_p_ElementTest10454: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_ElementTest10457: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_TypeName_in_p_ElementTest10459: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000800]),
+    FOLLOW_QUESTION_in_p_ElementTest10461: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_ElementTest10468: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QName_in_p_ElementNameOrWildcard10494: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_STAR_in_p_ElementNameOrWildcard10498: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SCHEMA_ELEMENT_in_p_SchemaElementTest10516: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_SchemaElementTest10518: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ElementDeclaration_in_p_SchemaElementTest10520: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_SchemaElementTest10522: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ElementName_in_p_ElementDeclaration10548: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QName_in_p_AttributeName10574: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QName_in_p_ElementName10600: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QName_in_p_TypeName10626: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Annotation_in_p_FunctionTest10652: new org.antlr.runtime.BitSet([0x00000000, 0x00400000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000080]),
+    FOLLOW_p_AnyFunctionTest_in_p_FunctionTest10656: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_TypedFunctionTest_in_p_FunctionTest10660: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FUNCTION_in_p_AnyFunctionTest10687: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_AnyFunctionTest10689: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00001000]),
+    FOLLOW_STAR_in_p_AnyFunctionTest10691: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_AnyFunctionTest10693: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FUNCTION_in_p_TypedFunctionTest10719: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_TypedFunctionTest10721: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x6FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SequenceType_in_p_TypedFunctionTest10724: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_TypedFunctionTest10727: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SequenceType_in_p_TypedFunctionTest10729: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_RPAREN_in_p_TypedFunctionTest10735: new org.antlr.runtime.BitSet([0x00080000, 0x00000000]),
+    FOLLOW_AS_in_p_TypedFunctionTest10737: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SequenceType_in_p_TypedFunctionTest10739: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LPAREN_in_p_ParenthesizedItemType10765: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ItemType_in_p_ParenthesizedItemType10767: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_ParenthesizedItemType10769: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_QUOT_in_p_StringLiteral10820: new org.antlr.runtime.BitSet([0xFFFFFFF0, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFFFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
+    FOLLOW_pg_QuotStringLiteralContent_in_p_StringLiteral10824: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000200, 0x00000000]),
+    FOLLOW_QUOT_in_p_StringLiteral10826: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_APOS_in_p_StringLiteral10865: new org.antlr.runtime.BitSet([0xFFFFFFF0, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFFFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
+    FOLLOW_pg_AposStringLiteralContent_in_p_StringLiteral10869: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000100, 0x00000000]),
+    FOLLOW_APOS_in_p_StringLiteral10871: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_set_in_pg_QuotStringLiteralContent10937: new org.antlr.runtime.BitSet([0xFFFFFFF2, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFDFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
+    FOLLOW_set_in_pg_AposStringLiteralContent10988: new org.antlr.runtime.BitSet([0xFFFFFFF2, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFDFF,0xFFFFFEFF, 0xFFFFFFFF,0x001FFFFF, 0x00000000]),
+    FOLLOW_L_ElementContentChar_in_p_ElementContentChar11046: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_L_QuotAttrContentChar_in_p_QuotAttrContentChar11072: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_L_AposAttrContentChar_in_p_AposAttrContentChar11122: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pg_QName_in_p_QName11208: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_NCName_in_p_QName11220: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pg_QName_in_pg_FQName11281: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FNCName_in_pg_FQName11293: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_NCName_in_pg_QName11337: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x02000000]),
+    FOLLOW_COLON_in_pg_QName11339: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_NCName_in_pg_QName11343: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_set_in_p_NCName0: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_set_in_p_FNCName0: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_InsertExpr_in_pg_UpdateExpr13330: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_DeleteExpr_in_pg_UpdateExpr13342: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_RenameExpr_in_pg_UpdateExpr13354: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ReplaceExpr_in_pg_UpdateExpr13366: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_TransformExpr_in_pg_UpdateExpr13378: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DECLARE_in_pm_RevalidationDecl13406: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x02000000, 0x00000000]),
-    FOLLOW_REVALIDATION_in_pm_RevalidationDecl13410: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000008, 0x00000004,0x04000000, 0x00000000]),
-    FOLLOW_STRICT_in_pm_RevalidationDecl13415: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_LAX_in_pm_RevalidationDecl13421: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SKIP_in_pm_RevalidationDecl13427: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_pm_RevalidationDecl13432: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AS_in_p_InsertExprTargetChoice13462: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00120000, 0x00000000]),
-    FOLLOW_FIRST_in_p_InsertExprTargetChoice13467: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00080000, 0x00000000]),
-    FOLLOW_LAST_in_p_InsertExprTargetChoice13473: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00080000, 0x00000000]),
-    FOLLOW_INTO_in_p_InsertExprTargetChoice13480: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AFTER_in_p_InsertExprTargetChoice13497: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_BEFORE_in_p_InsertExprTargetChoice13513: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_INSERT_in_p_InsertExpr13543: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_NODE_in_p_InsertExpr13548: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_NODES_in_p_InsertExpr13554: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SourceExpr_in_p_InsertExpr13557: new org.antlr.runtime.BitSet([0x00080000, 0x00000000,0x00000000, 0x00000000,0x00086000, 0x00000000]),
-    FOLLOW_p_InsertExprTargetChoice_in_p_InsertExpr13559: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_TargetExpr_in_p_InsertExpr13561: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DELETE_in_p_DeleteExpr13591: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_NODE_in_p_DeleteExpr13596: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_NODES_in_p_DeleteExpr13602: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_TargetExpr_in_p_DeleteExpr13605: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_REPLACE_in_p_ReplaceExpr13635: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x10000000, 0x00000000]),
-    FOLLOW_VALUE_in_p_ReplaceExpr13640: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00008000, 0x00000000]),
-    FOLLOW_OF_in_p_ReplaceExpr13644: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_NODE_in_p_ReplaceExpr13650: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_ReplaceExpr13652: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_WITH_in_p_ReplaceExpr13657: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_ReplaceExpr13659: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_RENAME_in_p_RenameExpr13690: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_NODE_in_p_RenameExpr13694: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_TargetExpr_in_p_RenameExpr13696: new org.antlr.runtime.BitSet([0x00080000, 0x00000000]),
-    FOLLOW_AS_in_p_RenameExpr13700: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_NewNameExpr_in_p_RenameExpr13702: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_SourceExpr13730: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_TargetExpr13757: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_NewNameExpr13784: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_COPY_in_p_TransformExpr13813: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_TransformExpr13817: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_TransformExpr13821: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000020]),
-    FOLLOW_BIND_in_p_TransformExpr13825: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_TransformExpr13827: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000,0x00000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_TransformExpr13831: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_TransformExpr13835: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_TransformExpr13839: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000020]),
-    FOLLOW_BIND_in_p_TransformExpr13843: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_TransformExpr13845: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000,0x00000000, 0x00000400]),
-    FOLLOW_MODIFY_in_p_TransformExpr13852: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_TransformExpr13854: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
-    FOLLOW_RETURN_in_p_TransformExpr13859: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_TransformExpr13861: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DECLARE_in_pm_FTOptionDecl13899: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000100]),
-    FOLLOW_FT_OPTION_in_pm_FTOptionDecl13903: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000004, 0x00000000]),
-    FOLLOW_p_FTMatchOptions_in_pm_FTOptionDecl13905: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_pm_FTOptionDecl13907: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SCORE_in_p_FTScoreVar13937: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_FTScoreVar13943: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_FTScoreVar13947: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_StringConcatExpr_in_p_FTContainsExpr13975: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_CONTAINS_in_p_FTContainsExpr13981: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000010]),
-    FOLLOW_TEXT_in_p_FTContainsExpr13985: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTSelection_in_p_FTContainsExpr13989: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000020, 0x00000000]),
-    FOLLOW_p_FTIgnoreOption_in_p_FTContainsExpr13991: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTOr_in_p_FTSelection14021: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00080000, 0x00000000,0x00000800, 0x01000038]),
-    FOLLOW_p_FTPosFilter_in_p_FTSelection14023: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00080000, 0x00000000,0x00000800, 0x01000038]),
-    FOLLOW_WEIGHT_in_p_FTWeight14052: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_LBRACKET_in_p_FTWeight14056: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_FTWeight14058: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_FTWeight14061: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTAnd_in_p_FTOr14087: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000800]),
-    FOLLOW_FTOR_in_p_FTOr14093: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTAnd_in_p_FTOr14097: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000800]),
-    FOLLOW_p_FTMildNot_in_p_FTAnd14126: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000200]),
-    FOLLOW_FTAND_in_p_FTAnd14132: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTMildNot_in_p_FTAnd14136: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000200]),
-    FOLLOW_p_FTUnaryNot_in_p_FTMildNot14165: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00040000]),
-    FOLLOW_NOT_in_p_FTMildNot14171: new org.antlr.runtime.BitSet([0x00000000, 0x20000000]),
-    FOLLOW_IN_in_p_FTMildNot14175: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTUnaryNot_in_p_FTMildNot14179: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00040000]),
-    FOLLOW_FTNOT_in_p_FTUnaryNot14212: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTPrimaryWithOptions_in_p_FTUnaryNot14219: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTPrimary_in_p_FTPrimaryWithOptions14245: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x0000000C, 0x00000000]),
-    FOLLOW_p_FTMatchOptions_in_p_FTPrimaryWithOptions14247: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000008, 0x00000000]),
-    FOLLOW_p_FTWeight_in_p_FTPrimaryWithOptions14250: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTWords_in_p_FTPrimary14281: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00080000]),
-    FOLLOW_p_FTTimes_in_p_FTPrimary14283: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LPAREN_in_p_FTPrimary14298: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTSelection_in_p_FTPrimary14300: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_FTPrimary14302: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTExtensionSelection_in_p_FTPrimary14315: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTWordsValue_in_p_FTWords14341: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0xC0000000, 0x00400000]),
-    FOLLOW_p_FTAnyallOption_in_p_FTWords14343: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTWordsValue14370: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LBRACKET_in_p_FTWordsValue14383: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_FTWordsValue14385: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_FTWordsValue14388: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_L_Pragma_in_p_FTExtensionSelection14415: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001,0x00080000, 0x00000000]),
-    FOLLOW_LBRACKET_in_p_FTExtensionSelection14418: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000003,0x01C80300, 0x00000000]),
-    FOLLOW_p_FTSelection_in_p_FTExtensionSelection14420: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_FTExtensionSelection14423: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ANY_in_p_FTAnyallOption14454: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000040, 0x00000000]),
-    FOLLOW_WORD_in_p_FTAnyallOption14458: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ALL_in_p_FTAnyallOption14467: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
-    FOLLOW_WORDS_in_p_FTAnyallOption14469: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_PHRASE_in_p_FTAnyallOption14477: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_OCCURS_in_p_FTTimes14509: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x000000C0]),
-    FOLLOW_p_FTRange_in_p_FTTimes14511: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000001, 0x00000000]),
-    FOLLOW_TIMES_in_p_FTTimes14515: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_EXACTLY_in_p_FTRange14548: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AdditiveExpr_in_p_FTRange14550: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTRange14568: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000020, 0x00000000]),
-    FOLLOW_LEAST_in_p_FTRange14572: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AdditiveExpr_in_p_FTRange14574: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTRange14592: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00010000]),
-    FOLLOW_MOST_in_p_FTRange14596: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AdditiveExpr_in_p_FTRange14598: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FROM_in_p_FTRange14616: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AdditiveExpr_in_p_FTRange14618: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000040]),
-    FOLLOW_TO_in_p_FTRange14622: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AdditiveExpr_in_p_FTRange14624: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTOrder_in_p_FTPosFilter14655: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTWindow_in_p_FTPosFilter14659: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTDistance_in_p_FTPosFilter14663: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTScope_in_p_FTPosFilter14667: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTContent_in_p_FTPosFilter14671: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ORDERED_in_p_FTOrder14699: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_WINDOW_in_p_FTWindow14729: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AdditiveExpr_in_p_FTWindow14733: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x10200000,0x00000080, 0x00000000]),
-    FOLLOW_p_FTUnit_in_p_FTWindow14735: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DISTANCE_in_p_FTDistance14763: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x000000C0]),
-    FOLLOW_p_FTRange_in_p_FTDistance14767: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x10200000,0x00000080, 0x00000000]),
-    FOLLOW_p_FTUnit_in_p_FTDistance14769: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_WORDS_in_p_FTUnit14799: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SENTENCES_in_p_FTUnit14805: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_PARAGRAPHS_in_p_FTUnit14811: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SAME_in_p_FTScope14844: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x08100000]),
-    FOLLOW_DIFFERENT_in_p_FTScope14850: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x08100000]),
-    FOLLOW_p_FTBigUnit_in_p_FTScope14855: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SENTENCE_in_p_FTBigUnit14885: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_PARAGRAPH_in_p_FTBigUnit14891: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTContent14926: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000020, 0x00000000]),
-    FOLLOW_START_in_p_FTContent14930: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTContent14938: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00800000]),
-    FOLLOW_END_in_p_FTContent14942: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ENTIRE_in_p_FTContent14950: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_CONTENT_in_p_FTContent14954: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_USING_in_p_FTMatchOptions14988: new org.antlr.runtime.BitSet([0x04000000, 0x00000000,0x00010000, 0x00000000,0x00000000, 0xE002A004,0x00000012, 0x00000000]),
-    FOLLOW_p_FTMatchOption_in_p_FTMatchOptions14992: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000004, 0x00000000]),
-    FOLLOW_p_FTLanguageOption_in_p_FTMatchOption15020: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTWildCardOption_in_p_FTMatchOption15032: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTThesaurusOption_in_p_FTMatchOption15044: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTStemOption_in_p_FTMatchOption15056: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTCaseOption_in_p_FTMatchOption15068: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTDiacriticsOption_in_p_FTMatchOption15080: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTStopWordOption_in_p_FTMatchOption15092: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_FTExtensionOption_in_p_FTMatchOption15104: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_CASE_in_p_FTCaseOption15135: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00001000]),
-    FOLLOW_INSENSITIVE_in_p_FTCaseOption15139: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_CASE_in_p_FTCaseOption15157: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x04000000]),
-    FOLLOW_SENSITIVE_in_p_FTCaseOption15161: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LOWERCASE_in_p_FTCaseOption15178: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_UPPERCASE_in_p_FTCaseOption15194: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15229: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00001000]),
-    FOLLOW_INSENSITIVE_in_p_FTDiacriticsOption15233: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15251: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x04000000]),
-    FOLLOW_SENSITIVE_in_p_FTDiacriticsOption15255: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_STEMMING_in_p_FTStemOption15290: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NO_in_p_FTStemOption15297: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_STEMMING_in_p_FTStemOption15301: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_THESAURUS_in_p_FTThesaurusOption15337: new org.antlr.runtime.BitSet([0x00200000, 0x00000008]),
-    FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15340: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DEFAULT_in_p_FTThesaurusOption15346: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_THESAURUS_in_p_FTThesaurusOption15365: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_FTThesaurusOption15367: new org.antlr.runtime.BitSet([0x00200000, 0x00000008]),
-    FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15370: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_DEFAULT_in_p_FTThesaurusOption15376: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_FTThesaurusOption15380: new org.antlr.runtime.BitSet([0x00200000, 0x00000000]),
-    FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15382: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_RPAREN_in_p_FTThesaurusOption15386: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NO_in_p_FTThesaurusOption15404: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x80000000]),
-    FOLLOW_THESAURUS_in_p_FTThesaurusOption15408: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTThesaurusID15441: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTThesaurusID15443: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x008000C0]),
-    FOLLOW_RELATIONSHIP_in_p_FTThesaurusID15448: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTThesaurusID15450: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x000000C0]),
-    FOLLOW_p_FTLiteralRange_in_p_FTThesaurusID15455: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00004000]),
-    FOLLOW_LEVELS_in_p_FTThesaurusID15459: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_EXACTLY_in_p_FTLiteralRange15494: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15496: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTLiteralRange15514: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000020, 0x00000000]),
-    FOLLOW_LEAST_in_p_FTLiteralRange15518: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15520: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTLiteralRange15538: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00010000]),
-    FOLLOW_MOST_in_p_FTLiteralRange15542: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15544: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FROM_in_p_FTLiteralRange15562: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15564: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000040]),
-    FOLLOW_TO_in_p_FTLiteralRange15566: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15568: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_STOP_in_p_FTStopWordOption15604: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
-    FOLLOW_WORDS_in_p_FTStopWordOption15608: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_p_FTStopWords_in_p_FTStopWordOption15610: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
-    FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15612: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
-    FOLLOW_STOP_in_p_FTStopWordOption15631: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
-    FOLLOW_WORDS_in_p_FTStopWordOption15635: new org.antlr.runtime.BitSet([0x00000000, 0x00000008]),
-    FOLLOW_DEFAULT_in_p_FTStopWordOption15639: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
-    FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15641: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
-    FOLLOW_NO_in_p_FTStopWordOption15660: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x40000000]),
-    FOLLOW_STOP_in_p_FTStopWordOption15664: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
-    FOLLOW_WORDS_in_p_FTStopWordOption15668: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AT_in_p_FTStopWords15702: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTStopWords15706: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LPAREN_in_p_FTStopWords15720: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTStopWords15722: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_FTStopWords15725: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTStopWords15727: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
-    FOLLOW_RPAREN_in_p_FTStopWords15731: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_UNION_in_p_FTStopWordsInclExcl15763: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_EXCEPT_in_p_FTStopWordsInclExcl15769: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_p_FTStopWords_in_p_FTStopWordsInclExcl15772: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LANGUAGE_in_p_FTLanguageOption15804: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTLanguageOption15808: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_WILDCARDS_in_p_FTWildCardOption15838: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NO_in_p_FTWildCardOption15845: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000010, 0x00000000]),
-    FOLLOW_WILDCARDS_in_p_FTWildCardOption15849: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_OPTION_in_p_FTExtensionOption15882: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_FTExtensionOption15886: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_FTExtensionOption15888: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_WITHOUT_in_p_FTIgnoreOption15916: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_CONTENT_in_p_FTIgnoreOption15920: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_UnionExpr_in_p_FTIgnoreOption15924: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_StatementsAndOptionalExpr_in_p_Program15956: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_Statements15983: new org.antlr.runtime.BitSet([0xFFFF0002, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Statements_in_p_StatementsAndExpr16011: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Statements_in_p_StatementsAndOptionalExpr16038: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_HybridExprSingle_in_p_Hybrid16065: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Statement_in_p_Hybrid16078: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_AssignStatement_in_p_Statement16109: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_BreakStatement_in_p_Statement16121: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ContinueStatement_in_p_Statement16133: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ExitStatement_in_p_Statement16145: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_VarDeclStatement_in_p_Statement16157: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_WhileStatement_in_p_Statement16169: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Expr_in_p_HybridExprSingle16196: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_p_HybridExprSingle16211: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ExprSimple_in_p_ApplyStatement16261: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_p_ApplyStatement16263: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_AssignStatement16291: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_AssignStatement16295: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000020]),
-    FOLLOW_BIND_in_p_AssignStatement16299: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_AssignStatement16301: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_p_AssignStatement16304: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LBRACKET_in_p_BlockStatement16330: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F083,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Statements_in_p_BlockStatement16332: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_BlockStatement16335: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LBRACKET_in_p_BlockHybrid16361: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F083,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Statements_in_p_BlockHybrid16363: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_BlockHybrid16366: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_BREAK_in_p_BreakStatement16394: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000800, 0x00000000]),
-    FOLLOW_LOOP_in_p_BreakStatement16400: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_p_BreakStatement16404: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_CONTINUE_in_p_ContinueStatement16432: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000800, 0x00000000]),
-    FOLLOW_LOOP_in_p_ContinueStatement16438: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_p_ContinueStatement16442: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_EXIT_in_p_ExitStatement16470: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00001000, 0x00000000]),
-    FOLLOW_RETURNING_in_p_ExitStatement16476: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_ExitStatement16480: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
-    FOLLOW_SEMICOLON_in_p_ExitStatement16483: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_InitialClause_in_p_FLWORStatement16509: new org.antlr.runtime.BitSet([0x00000000, 0x00200000,0x04040040, 0x01084002]),
-    FOLLOW_p_IntermediateClause_in_p_FLWORStatement16511: new org.antlr.runtime.BitSet([0x00000000, 0x00200000,0x04040040, 0x01084002]),
-    FOLLOW_p_ReturnStatement_in_p_FLWORStatement16514: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_RETURN_in_p_ReturnStatement16546: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_ReturnStatement16550: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_IF_in_p_IfStatement16579: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_IfStatement16583: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_IfStatement16585: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_IfStatement16588: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000020]),
-    FOLLOW_THEN_in_p_IfStatement16592: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_IfStatement16596: new org.antlr.runtime.BitSet([0x00000000, 0x00000800]),
-    FOLLOW_ELSE_in_p_IfStatement16601: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_IfStatement16605: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_SWITCH_in_p_SwitchStatement16634: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_SwitchStatement16638: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_SwitchStatement16640: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_SwitchStatement16643: new org.antlr.runtime.BitSet([0x04000000, 0x00000000]),
-    FOLLOW_p_SwitchCaseStatement_in_p_SwitchStatement16645: new org.antlr.runtime.BitSet([0x04000000, 0x00000008]),
-    FOLLOW_DEFAULT_in_p_SwitchStatement16650: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
-    FOLLOW_RETURN_in_p_SwitchStatement16656: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_SwitchStatement16660: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_CASE_in_p_SwitchCaseStatement16690: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SwitchCaseOperand_in_p_SwitchCaseStatement16694: new org.antlr.runtime.BitSet([0x04000000, 0x00000000,0x04000000, 0x00000000]),
-    FOLLOW_RETURN_in_p_SwitchCaseStatement16700: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_SwitchCaseStatement16704: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_TRY_in_p_TryCatchStatement16733: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_p_BlockStatement_in_p_TryCatchStatement16737: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00020000]),
-    FOLLOW_CATCH_in_p_TryCatchStatement16742: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x01001001,0x01C01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_CatchErrorList_in_p_TryCatchStatement16746: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_p_BlockStatement_in_p_TryCatchStatement16748: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00020000]),
-    FOLLOW_TRY_in_p_TryCatchHybrid16780: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16784: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00020000]),
-    FOLLOW_CATCH_in_p_TryCatchHybrid16790: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x01001001,0x01C01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_CatchErrorList_in_p_TryCatchHybrid16794: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
-    FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16796: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00020000]),
-    FOLLOW_TYPESWITCH_in_p_TypeswitchStatement16829: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_TypeswitchStatement16833: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_TypeswitchStatement16835: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_TypeswitchStatement16838: new org.antlr.runtime.BitSet([0x04000000, 0x00000000]),
-    FOLLOW_p_CaseStatement_in_p_TypeswitchStatement16840: new org.antlr.runtime.BitSet([0x04000000, 0x00000008]),
-    FOLLOW_DEFAULT_in_p_TypeswitchStatement16845: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_TypeswitchStatement16852: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_TypeswitchStatement16856: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
-    FOLLOW_RETURN_in_p_TypeswitchStatement16864: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_TypeswitchStatement16868: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_CASE_in_p_CaseStatement16897: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_CaseStatement16904: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_CaseStatement16908: new org.antlr.runtime.BitSet([0x00080000, 0x00000000]),
-    FOLLOW_AS_in_p_CaseStatement16912: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_SequenceType_in_p_CaseStatement16916: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
-    FOLLOW_RETURN_in_p_CaseStatement16920: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_CaseStatement16924: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_Annotation_in_p_VarDeclStatement16951: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00001000,0x00000000, 0x00000000,0x00000000, 0x00000080]),
-    FOLLOW_VARIABLE_in_p_VarDeclStatement16956: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_VarDeclStatement16962: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_VarDeclStatement16966: new org.antlr.runtime.BitSet([0x00080000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
-    FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement16970: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
-    FOLLOW_BIND_in_p_VarDeclStatement16974: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_VarDeclStatement16976: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000400]),
-    FOLLOW_COMMA_in_p_VarDeclStatement16992: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_VarDeclStatement16996: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_VarName_in_p_VarDeclStatement17000: new org.antlr.runtime.BitSet([0x00080000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
-    FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement17004: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
-    FOLLOW_BIND_in_p_VarDeclStatement17008: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_VarDeclStatement17010: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000400]),
-    FOLLOW_SEMICOLON_in_p_VarDeclStatement17027: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_WHILE_in_p_WhileStatement17055: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
-    FOLLOW_LPAREN_in_p_WhileStatement17059: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Expr_in_p_WhileStatement17061: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
-    FOLLOW_RPAREN_in_p_WhileStatement17064: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_Hybrid_in_p_WhileStatement17066: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QuantifiedExpr_in_p_ExprSimple17093: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_OrExpr_in_p_ExprSimple17105: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_pg_UpdateExpr_in_p_ExprSimple17120: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_LBRACKET_in_p_BlockExpr17146: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_StatementsAndExpr_in_p_BlockExpr17148: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
-    FOLLOW_RBRACKET_in_p_BlockExpr17150: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_COLLECTION_in_p_CollectionDecl17181: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_CollectionDecl17185: new org.antlr.runtime.BitSet([0x00080002, 0x00000000]),
-    FOLLOW_p_CollectionTypeDecl_in_p_CollectionDecl17187: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AS_in_p_CollectionTypeDecl17216: new org.antlr.runtime.BitSet([0x80400000, 0x00000600,0x62004000, 0x10000010]),
-    FOLLOW_p_KindTest_in_p_CollectionTypeDecl17220: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00003800]),
-    FOLLOW_p_OccurrenceIndicator_in_p_CollectionTypeDecl17229: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_INDEX_in_p_IndexDecl17259: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_IndexName_in_p_IndexDecl17263: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_ON_in_p_IndexDecl17267: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
-    FOLLOW_NODES_in_p_IndexDecl17273: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_IndexDomainExpr_in_p_IndexDecl17277: new org.antlr.runtime.BitSet([0x02000000, 0x00000000]),
-    FOLLOW_BY_in_p_IndexDecl17281: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_IndexKeySpec_in_p_IndexDecl17285: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400]),
-    FOLLOW_COMMA_in_p_IndexDecl17288: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_IndexKeySpec_in_p_IndexDecl17290: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400]),
-    FOLLOW_p_QName_in_p_IndexName17317: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_PathExpr_in_p_IndexDomainExpr17342: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_IndexKeyExpr_in_p_IndexKeySpec17367: new org.antlr.runtime.BitSet([0x40080002, 0x00000000]),
-    FOLLOW_p_IndexKeyTypeDecl_in_p_IndexKeySpec17369: new org.antlr.runtime.BitSet([0x40000002, 0x00000000]),
-    FOLLOW_p_IndexKeyCollation_in_p_IndexKeySpec17372: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_PathExpr_in_p_IndexKeyExpr17398: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_AS_in_p_IndexKeyTypeDecl17425: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_AtomicType_in_p_IndexKeyTypeDecl17429: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00003800]),
-    FOLLOW_p_OccurrenceIndicator_in_p_IndexKeyTypeDecl17431: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_QName_in_p_AtomicType17457: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_COLLATION_in_p_IndexKeyCollation17484: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
-    FOLLOW_p_StringLiteral_in_p_IndexKeyCollation17488: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_INTEGRITY_in_p_ICDecl17515: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00010000, 0x00000000]),
-    FOLLOW_CONSTRAINT_in_p_ICDecl17521: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICDecl17525: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00440000, 0x00000000]),
-    FOLLOW_p_ICCollection_in_p_ICDecl17528: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ICForeignKey_in_p_ICDecl17532: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_ON_in_p_ICCollection17560: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00008000, 0x00000000]),
-    FOLLOW_COLLECTION_in_p_ICCollection17566: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICCollection17570: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x00000000, 0x00000000,0x80020000, 0x00000000]),
-    FOLLOW_p_ICCollSequence_in_p_ICCollection17573: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ICCollSequenceUnique_in_p_ICCollection17577: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_ICCollNode_in_p_ICCollection17581: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_ICCollSequence17609: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICCollSequence17613: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_CHECK_in_p_ICCollSequence17619: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_ICCollSequence17623: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_NODE_in_p_ICCollSequenceUnique17651: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_ICCollSequenceUnique17657: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICCollSequenceUnique17661: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_CHECK_in_p_ICCollSequenceUnique17667: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00800000, 0x00000000]),
-    FOLLOW_UNIQUE_in_p_ICCollSequenceUnique17673: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000]),
-    FOLLOW_KEY_in_p_ICCollSequenceUnique17679: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_PathExpr_in_p_ICCollSequenceUnique17683: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FOREACH_in_p_ICCollNode17710: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_NODE_in_p_ICCollNode17716: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_ICCollNode17722: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICCollNode17726: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_CHECK_in_p_ICCollNode17732: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_ExprSingle_in_p_ICCollNode17736: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FOREIGN_in_p_ICForeignKey17764: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000]),
-    FOLLOW_KEY_in_p_ICForeignKey17770: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000080]),
-    FOLLOW_p_ICForeignKeySource_in_p_ICForeignKey17774: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000040]),
-    FOLLOW_p_ICForeignKeyTarget_in_p_ICForeignKey17776: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_FROM_in_p_ICForeignKeySource17803: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00008000, 0x00000000]),
-    FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeySource17807: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_TO_in_p_ICForeignKeyTarget17834: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00008000, 0x00000000]),
-    FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeyTarget17838: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_COLLECTION_in_p_ICForeignKeyValues17865: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICForeignKeyValues17869: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
-    FOLLOW_NODE_in_p_ICForeignKeyValues17873: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
-    FOLLOW_DOLLAR_in_p_ICForeignKeyValues17879: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_QName_in_p_ICForeignKeyValues17883: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000]),
-    FOLLOW_KEY_in_p_ICForeignKeyValues17889: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
-    FOLLOW_p_PathExpr_in_p_ICForeignKeyValues17893: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_InsertExpr_in_pg_UpdateExpr13334: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_DeleteExpr_in_pg_UpdateExpr13346: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_RenameExpr_in_pg_UpdateExpr13358: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ReplaceExpr_in_pg_UpdateExpr13370: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_TransformExpr_in_pg_UpdateExpr13382: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DECLARE_in_pm_RevalidationDecl13410: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x02000000, 0x00000000]),
+    FOLLOW_REVALIDATION_in_pm_RevalidationDecl13414: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000008, 0x00000004,0x04000000, 0x00000000]),
+    FOLLOW_STRICT_in_pm_RevalidationDecl13419: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_LAX_in_pm_RevalidationDecl13425: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SKIP_in_pm_RevalidationDecl13431: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_pm_RevalidationDecl13436: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AS_in_p_InsertExprTargetChoice13466: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00120000, 0x00000000]),
+    FOLLOW_FIRST_in_p_InsertExprTargetChoice13471: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00080000, 0x00000000]),
+    FOLLOW_LAST_in_p_InsertExprTargetChoice13477: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00080000, 0x00000000]),
+    FOLLOW_INTO_in_p_InsertExprTargetChoice13484: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AFTER_in_p_InsertExprTargetChoice13501: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_BEFORE_in_p_InsertExprTargetChoice13517: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_INSERT_in_p_InsertExpr13547: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_NODE_in_p_InsertExpr13552: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_NODES_in_p_InsertExpr13558: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SourceExpr_in_p_InsertExpr13561: new org.antlr.runtime.BitSet([0x00080000, 0x00000000,0x00000000, 0x00000000,0x00086000, 0x00000000]),
+    FOLLOW_p_InsertExprTargetChoice_in_p_InsertExpr13563: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_TargetExpr_in_p_InsertExpr13565: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DELETE_in_p_DeleteExpr13595: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_NODE_in_p_DeleteExpr13600: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_NODES_in_p_DeleteExpr13606: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_TargetExpr_in_p_DeleteExpr13609: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_REPLACE_in_p_ReplaceExpr13639: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x10000000, 0x00000000]),
+    FOLLOW_VALUE_in_p_ReplaceExpr13644: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00008000, 0x00000000]),
+    FOLLOW_OF_in_p_ReplaceExpr13648: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_NODE_in_p_ReplaceExpr13654: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_ReplaceExpr13656: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_WITH_in_p_ReplaceExpr13661: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_ReplaceExpr13663: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_RENAME_in_p_RenameExpr13694: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_NODE_in_p_RenameExpr13698: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_TargetExpr_in_p_RenameExpr13700: new org.antlr.runtime.BitSet([0x00080000, 0x00000000]),
+    FOLLOW_AS_in_p_RenameExpr13704: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_NewNameExpr_in_p_RenameExpr13706: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_SourceExpr13734: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_TargetExpr13761: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_NewNameExpr13788: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_COPY_in_p_TransformExpr13817: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_TransformExpr13821: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_TransformExpr13825: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000020]),
+    FOLLOW_BIND_in_p_TransformExpr13829: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_TransformExpr13831: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000,0x00000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_TransformExpr13835: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_TransformExpr13839: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_TransformExpr13843: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000020]),
+    FOLLOW_BIND_in_p_TransformExpr13847: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_TransformExpr13849: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000,0x00000000, 0x00000400]),
+    FOLLOW_MODIFY_in_p_TransformExpr13856: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_TransformExpr13858: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
+    FOLLOW_RETURN_in_p_TransformExpr13863: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_TransformExpr13865: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DECLARE_in_pm_FTOptionDecl13903: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000100]),
+    FOLLOW_FT_OPTION_in_pm_FTOptionDecl13907: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000004, 0x00000000]),
+    FOLLOW_p_FTMatchOptions_in_pm_FTOptionDecl13909: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_pm_FTOptionDecl13911: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SCORE_in_p_FTScoreVar13941: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_FTScoreVar13947: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_FTScoreVar13951: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_StringConcatExpr_in_p_FTContainsExpr13979: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_CONTAINS_in_p_FTContainsExpr13985: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000010]),
+    FOLLOW_TEXT_in_p_FTContainsExpr13989: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTSelection_in_p_FTContainsExpr13993: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000020, 0x00000000]),
+    FOLLOW_p_FTIgnoreOption_in_p_FTContainsExpr13995: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTOr_in_p_FTSelection14025: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00080000, 0x00000000,0x00000800, 0x01000038]),
+    FOLLOW_p_FTPosFilter_in_p_FTSelection14027: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00080000, 0x00000000,0x00000800, 0x01000038]),
+    FOLLOW_WEIGHT_in_p_FTWeight14056: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_LBRACKET_in_p_FTWeight14060: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_FTWeight14062: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_FTWeight14065: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTAnd_in_p_FTOr14091: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000800]),
+    FOLLOW_FTOR_in_p_FTOr14097: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTAnd_in_p_FTOr14101: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000800]),
+    FOLLOW_p_FTMildNot_in_p_FTAnd14130: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000200]),
+    FOLLOW_FTAND_in_p_FTAnd14136: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTMildNot_in_p_FTAnd14140: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000200]),
+    FOLLOW_p_FTUnaryNot_in_p_FTMildNot14169: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00040000]),
+    FOLLOW_NOT_in_p_FTMildNot14175: new org.antlr.runtime.BitSet([0x00000000, 0x20000000]),
+    FOLLOW_IN_in_p_FTMildNot14179: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTUnaryNot_in_p_FTMildNot14183: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00040000]),
+    FOLLOW_FTNOT_in_p_FTUnaryNot14216: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTPrimaryWithOptions_in_p_FTUnaryNot14223: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTPrimary_in_p_FTPrimaryWithOptions14249: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x0000000C, 0x00000000]),
+    FOLLOW_p_FTMatchOptions_in_p_FTPrimaryWithOptions14251: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000008, 0x00000000]),
+    FOLLOW_p_FTWeight_in_p_FTPrimaryWithOptions14254: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTWords_in_p_FTPrimary14285: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00080000]),
+    FOLLOW_p_FTTimes_in_p_FTPrimary14287: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LPAREN_in_p_FTPrimary14302: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000001,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTSelection_in_p_FTPrimary14304: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_FTPrimary14306: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTExtensionSelection_in_p_FTPrimary14319: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTWordsValue_in_p_FTWords14345: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0xC0000000, 0x00400000]),
+    FOLLOW_p_FTAnyallOption_in_p_FTWords14347: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTWordsValue14374: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LBRACKET_in_p_FTWordsValue14387: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_FTWordsValue14389: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_FTWordsValue14392: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_L_Pragma_in_p_FTExtensionSelection14419: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001,0x00080000, 0x00000000]),
+    FOLLOW_LBRACKET_in_p_FTExtensionSelection14422: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400,0x20000000, 0x00000003,0x01C80300, 0x00000000]),
+    FOLLOW_p_FTSelection_in_p_FTExtensionSelection14424: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_FTExtensionSelection14427: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ANY_in_p_FTAnyallOption14458: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000040, 0x00000000]),
+    FOLLOW_WORD_in_p_FTAnyallOption14462: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ALL_in_p_FTAnyallOption14471: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
+    FOLLOW_WORDS_in_p_FTAnyallOption14473: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_PHRASE_in_p_FTAnyallOption14481: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_OCCURS_in_p_FTTimes14513: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x000000C0]),
+    FOLLOW_p_FTRange_in_p_FTTimes14515: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000001, 0x00000000]),
+    FOLLOW_TIMES_in_p_FTTimes14519: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_EXACTLY_in_p_FTRange14552: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AdditiveExpr_in_p_FTRange14554: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTRange14572: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000020, 0x00000000]),
+    FOLLOW_LEAST_in_p_FTRange14576: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AdditiveExpr_in_p_FTRange14578: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTRange14596: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00010000]),
+    FOLLOW_MOST_in_p_FTRange14600: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AdditiveExpr_in_p_FTRange14602: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FROM_in_p_FTRange14620: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AdditiveExpr_in_p_FTRange14622: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000040]),
+    FOLLOW_TO_in_p_FTRange14626: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AdditiveExpr_in_p_FTRange14628: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTOrder_in_p_FTPosFilter14659: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTWindow_in_p_FTPosFilter14663: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTDistance_in_p_FTPosFilter14667: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTScope_in_p_FTPosFilter14671: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTContent_in_p_FTPosFilter14675: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ORDERED_in_p_FTOrder14703: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_WINDOW_in_p_FTWindow14733: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AdditiveExpr_in_p_FTWindow14737: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x10200000,0x00000080, 0x00000000]),
+    FOLLOW_p_FTUnit_in_p_FTWindow14739: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DISTANCE_in_p_FTDistance14767: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x000000C0]),
+    FOLLOW_p_FTRange_in_p_FTDistance14771: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x10200000,0x00000080, 0x00000000]),
+    FOLLOW_p_FTUnit_in_p_FTDistance14773: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_WORDS_in_p_FTUnit14803: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SENTENCES_in_p_FTUnit14809: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_PARAGRAPHS_in_p_FTUnit14815: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SAME_in_p_FTScope14848: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x08100000]),
+    FOLLOW_DIFFERENT_in_p_FTScope14854: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x08100000]),
+    FOLLOW_p_FTBigUnit_in_p_FTScope14859: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SENTENCE_in_p_FTBigUnit14889: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_PARAGRAPH_in_p_FTBigUnit14895: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTContent14930: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000020, 0x00000000]),
+    FOLLOW_START_in_p_FTContent14934: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTContent14942: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00800000]),
+    FOLLOW_END_in_p_FTContent14946: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ENTIRE_in_p_FTContent14954: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_CONTENT_in_p_FTContent14958: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_USING_in_p_FTMatchOptions14992: new org.antlr.runtime.BitSet([0x04000000, 0x00000000,0x00010000, 0x00000000,0x00000000, 0xE002A004,0x00000012, 0x00000000]),
+    FOLLOW_p_FTMatchOption_in_p_FTMatchOptions14996: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000004, 0x00000000]),
+    FOLLOW_p_FTLanguageOption_in_p_FTMatchOption15024: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTWildCardOption_in_p_FTMatchOption15036: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTThesaurusOption_in_p_FTMatchOption15048: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTStemOption_in_p_FTMatchOption15060: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTCaseOption_in_p_FTMatchOption15072: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTDiacriticsOption_in_p_FTMatchOption15084: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTStopWordOption_in_p_FTMatchOption15096: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_FTExtensionOption_in_p_FTMatchOption15108: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_CASE_in_p_FTCaseOption15139: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00001000]),
+    FOLLOW_INSENSITIVE_in_p_FTCaseOption15143: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_CASE_in_p_FTCaseOption15161: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x04000000]),
+    FOLLOW_SENSITIVE_in_p_FTCaseOption15165: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LOWERCASE_in_p_FTCaseOption15182: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_UPPERCASE_in_p_FTCaseOption15198: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15233: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00001000]),
+    FOLLOW_INSENSITIVE_in_p_FTDiacriticsOption15237: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DIACRITICS_in_p_FTDiacriticsOption15255: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x04000000]),
+    FOLLOW_SENSITIVE_in_p_FTDiacriticsOption15259: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_STEMMING_in_p_FTStemOption15294: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NO_in_p_FTStemOption15301: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_STEMMING_in_p_FTStemOption15305: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_THESAURUS_in_p_FTThesaurusOption15341: new org.antlr.runtime.BitSet([0x00200000, 0x00000008]),
+    FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15344: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DEFAULT_in_p_FTThesaurusOption15350: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_THESAURUS_in_p_FTThesaurusOption15369: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_FTThesaurusOption15371: new org.antlr.runtime.BitSet([0x00200000, 0x00000008]),
+    FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15374: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_DEFAULT_in_p_FTThesaurusOption15380: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_FTThesaurusOption15384: new org.antlr.runtime.BitSet([0x00200000, 0x00000000]),
+    FOLLOW_p_FTThesaurusID_in_p_FTThesaurusOption15386: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_RPAREN_in_p_FTThesaurusOption15390: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NO_in_p_FTThesaurusOption15408: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x80000000]),
+    FOLLOW_THESAURUS_in_p_FTThesaurusOption15412: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTThesaurusID15445: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTThesaurusID15447: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x008000C0]),
+    FOLLOW_RELATIONSHIP_in_p_FTThesaurusID15452: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTThesaurusID15454: new org.antlr.runtime.BitSet([0x00200002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x000000C0]),
+    FOLLOW_p_FTLiteralRange_in_p_FTThesaurusID15459: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00004000]),
+    FOLLOW_LEVELS_in_p_FTThesaurusID15463: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_EXACTLY_in_p_FTLiteralRange15498: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15500: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTLiteralRange15518: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000020, 0x00000000]),
+    FOLLOW_LEAST_in_p_FTLiteralRange15522: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15524: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTLiteralRange15542: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00010000]),
+    FOLLOW_MOST_in_p_FTLiteralRange15546: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15548: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FROM_in_p_FTLiteralRange15566: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15568: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000040]),
+    FOLLOW_TO_in_p_FTLiteralRange15570: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_L_IntegerLiteral_in_p_FTLiteralRange15572: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_STOP_in_p_FTStopWordOption15608: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
+    FOLLOW_WORDS_in_p_FTStopWordOption15612: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_p_FTStopWords_in_p_FTStopWordOption15614: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
+    FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15616: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
+    FOLLOW_STOP_in_p_FTStopWordOption15635: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
+    FOLLOW_WORDS_in_p_FTStopWordOption15639: new org.antlr.runtime.BitSet([0x00000000, 0x00000008]),
+    FOLLOW_DEFAULT_in_p_FTStopWordOption15643: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
+    FOLLOW_p_FTStopWordsInclExcl_in_p_FTStopWordOption15645: new org.antlr.runtime.BitSet([0x00000002, 0x00020000,0x00000000, 0x00000200]),
+    FOLLOW_NO_in_p_FTStopWordOption15664: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x40000000]),
+    FOLLOW_STOP_in_p_FTStopWordOption15668: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000080, 0x00000000]),
+    FOLLOW_WORDS_in_p_FTStopWordOption15672: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AT_in_p_FTStopWords15706: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTStopWords15710: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LPAREN_in_p_FTStopWords15724: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTStopWords15726: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_FTStopWords15729: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTStopWords15731: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000400]),
+    FOLLOW_RPAREN_in_p_FTStopWords15735: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_UNION_in_p_FTStopWordsInclExcl15767: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_EXCEPT_in_p_FTStopWordsInclExcl15773: new org.antlr.runtime.BitSet([0x00200000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_p_FTStopWords_in_p_FTStopWordsInclExcl15776: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LANGUAGE_in_p_FTLanguageOption15808: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTLanguageOption15812: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_WILDCARDS_in_p_FTWildCardOption15842: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NO_in_p_FTWildCardOption15849: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000010, 0x00000000]),
+    FOLLOW_WILDCARDS_in_p_FTWildCardOption15853: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_OPTION_in_p_FTExtensionOption15886: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_FTExtensionOption15890: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_FTExtensionOption15892: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_WITHOUT_in_p_FTIgnoreOption15920: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_CONTENT_in_p_FTIgnoreOption15924: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_UnionExpr_in_p_FTIgnoreOption15928: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_StatementsAndOptionalExpr_in_p_Program15960: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_Statements15987: new org.antlr.runtime.BitSet([0xFFFF0002, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Statements_in_p_StatementsAndExpr16015: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Statements_in_p_StatementsAndOptionalExpr16042: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_HybridExprSingle_in_p_Hybrid16069: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Statement_in_p_Hybrid16082: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_AssignStatement_in_p_Statement16113: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_BreakStatement_in_p_Statement16125: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ContinueStatement_in_p_Statement16137: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ExitStatement_in_p_Statement16149: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_VarDeclStatement_in_p_Statement16161: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_WhileStatement_in_p_Statement16173: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Expr_in_p_HybridExprSingle16200: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_p_HybridExprSingle16215: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ExprSimple_in_p_ApplyStatement16265: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_p_ApplyStatement16267: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_AssignStatement16295: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_AssignStatement16299: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000020]),
+    FOLLOW_BIND_in_p_AssignStatement16303: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_AssignStatement16305: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_p_AssignStatement16308: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LBRACKET_in_p_BlockStatement16334: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F083,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Statements_in_p_BlockStatement16336: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_BlockStatement16339: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LBRACKET_in_p_BlockHybrid16365: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F083,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Statements_in_p_BlockHybrid16367: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_BlockHybrid16370: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_BREAK_in_p_BreakStatement16398: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000800, 0x00000000]),
+    FOLLOW_LOOP_in_p_BreakStatement16404: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_p_BreakStatement16408: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_CONTINUE_in_p_ContinueStatement16436: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000800, 0x00000000]),
+    FOLLOW_LOOP_in_p_ContinueStatement16442: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_p_ContinueStatement16446: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_EXIT_in_p_ExitStatement16474: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00001000, 0x00000000]),
+    FOLLOW_RETURNING_in_p_ExitStatement16480: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_ExitStatement16484: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000000]),
+    FOLLOW_SEMICOLON_in_p_ExitStatement16487: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_InitialClause_in_p_FLWORStatement16513: new org.antlr.runtime.BitSet([0x00000000, 0x00200000,0x04040040, 0x01084002]),
+    FOLLOW_p_IntermediateClause_in_p_FLWORStatement16515: new org.antlr.runtime.BitSet([0x00000000, 0x00200000,0x04040040, 0x01084002]),
+    FOLLOW_p_ReturnStatement_in_p_FLWORStatement16518: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_RETURN_in_p_ReturnStatement16550: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_ReturnStatement16554: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_IF_in_p_IfStatement16583: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_IfStatement16587: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_IfStatement16589: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_IfStatement16592: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000020]),
+    FOLLOW_THEN_in_p_IfStatement16596: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_IfStatement16600: new org.antlr.runtime.BitSet([0x00000000, 0x00000800]),
+    FOLLOW_ELSE_in_p_IfStatement16605: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_IfStatement16609: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_SWITCH_in_p_SwitchStatement16638: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_SwitchStatement16642: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_SwitchStatement16644: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_SwitchStatement16647: new org.antlr.runtime.BitSet([0x04000000, 0x00000000]),
+    FOLLOW_p_SwitchCaseStatement_in_p_SwitchStatement16649: new org.antlr.runtime.BitSet([0x04000000, 0x00000008]),
+    FOLLOW_DEFAULT_in_p_SwitchStatement16654: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
+    FOLLOW_RETURN_in_p_SwitchStatement16660: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_SwitchStatement16664: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_CASE_in_p_SwitchCaseStatement16694: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SwitchCaseOperand_in_p_SwitchCaseStatement16698: new org.antlr.runtime.BitSet([0x04000000, 0x00000000,0x04000000, 0x00000000]),
+    FOLLOW_RETURN_in_p_SwitchCaseStatement16704: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_SwitchCaseStatement16708: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_TRY_in_p_TryCatchStatement16737: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_p_BlockStatement_in_p_TryCatchStatement16741: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00020000]),
+    FOLLOW_CATCH_in_p_TryCatchStatement16746: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x01001001,0x01C01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_CatchErrorList_in_p_TryCatchStatement16750: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_p_BlockStatement_in_p_TryCatchStatement16752: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00020000]),
+    FOLLOW_TRY_in_p_TryCatchHybrid16784: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16788: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00020000]),
+    FOLLOW_CATCH_in_p_TryCatchHybrid16794: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x01001001,0x01C01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_CatchErrorList_in_p_TryCatchHybrid16798: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000001]),
+    FOLLOW_p_BlockHybrid_in_p_TryCatchHybrid16800: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00020000]),
+    FOLLOW_TYPESWITCH_in_p_TypeswitchStatement16833: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_TypeswitchStatement16837: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_TypeswitchStatement16839: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_TypeswitchStatement16842: new org.antlr.runtime.BitSet([0x04000000, 0x00000000]),
+    FOLLOW_p_CaseStatement_in_p_TypeswitchStatement16844: new org.antlr.runtime.BitSet([0x04000000, 0x00000008]),
+    FOLLOW_DEFAULT_in_p_TypeswitchStatement16849: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_TypeswitchStatement16856: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_TypeswitchStatement16860: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
+    FOLLOW_RETURN_in_p_TypeswitchStatement16868: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_TypeswitchStatement16872: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_CASE_in_p_CaseStatement16901: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_CaseStatement16908: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_CaseStatement16912: new org.antlr.runtime.BitSet([0x00080000, 0x00000000]),
+    FOLLOW_AS_in_p_CaseStatement16916: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x2FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_SequenceType_in_p_CaseStatement16920: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x04000000, 0x00000000]),
+    FOLLOW_RETURN_in_p_CaseStatement16924: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_CaseStatement16928: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_Annotation_in_p_VarDeclStatement16955: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00001000,0x00000000, 0x00000000,0x00000000, 0x00000080]),
+    FOLLOW_VARIABLE_in_p_VarDeclStatement16960: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_VarDeclStatement16966: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_VarDeclStatement16970: new org.antlr.runtime.BitSet([0x00080000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
+    FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement16974: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
+    FOLLOW_BIND_in_p_VarDeclStatement16978: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_VarDeclStatement16980: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000400]),
+    FOLLOW_COMMA_in_p_VarDeclStatement16996: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_VarDeclStatement17000: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_VarName_in_p_VarDeclStatement17004: new org.antlr.runtime.BitSet([0x00080000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
+    FOLLOW_p_TypeDeclaration_in_p_VarDeclStatement17008: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000420]),
+    FOLLOW_BIND_in_p_VarDeclStatement17012: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_VarDeclStatement17014: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x20000400]),
+    FOLLOW_SEMICOLON_in_p_VarDeclStatement17031: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_WHILE_in_p_WhileStatement17059: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x20000000, 0x00000000]),
+    FOLLOW_LPAREN_in_p_WhileStatement17063: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Expr_in_p_WhileStatement17065: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x40000000, 0x00000000]),
+    FOLLOW_RPAREN_in_p_WhileStatement17068: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_Hybrid_in_p_WhileStatement17070: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QuantifiedExpr_in_p_ExprSimple17097: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_OrExpr_in_p_ExprSimple17109: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_pg_UpdateExpr_in_p_ExprSimple17124: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_LBRACKET_in_p_BlockExpr17150: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F081,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_StatementsAndExpr_in_p_BlockExpr17152: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000002]),
+    FOLLOW_RBRACKET_in_p_BlockExpr17154: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_COLLECTION_in_p_CollectionDecl17185: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_CollectionDecl17189: new org.antlr.runtime.BitSet([0x00080002, 0x00000000]),
+    FOLLOW_p_CollectionTypeDecl_in_p_CollectionDecl17191: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AS_in_p_CollectionTypeDecl17220: new org.antlr.runtime.BitSet([0x80400000, 0x00000600,0x62004000, 0x10000010]),
+    FOLLOW_p_KindTest_in_p_CollectionTypeDecl17224: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00003800]),
+    FOLLOW_p_OccurrenceIndicator_in_p_CollectionTypeDecl17233: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_INDEX_in_p_IndexDecl17263: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_IndexName_in_p_IndexDecl17267: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_ON_in_p_IndexDecl17271: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00400000, 0x00000000]),
+    FOLLOW_NODES_in_p_IndexDecl17277: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_IndexDomainExpr_in_p_IndexDecl17281: new org.antlr.runtime.BitSet([0x02000000, 0x00000000]),
+    FOLLOW_BY_in_p_IndexDecl17285: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_IndexKeySpec_in_p_IndexDecl17289: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400]),
+    FOLLOW_COMMA_in_p_IndexDecl17292: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_IndexKeySpec_in_p_IndexDecl17294: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000400]),
+    FOLLOW_p_QName_in_p_IndexName17321: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_PathExpr_in_p_IndexDomainExpr17346: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_IndexKeyExpr_in_p_IndexKeySpec17371: new org.antlr.runtime.BitSet([0x40080002, 0x00000000]),
+    FOLLOW_p_IndexKeyTypeDecl_in_p_IndexKeySpec17373: new org.antlr.runtime.BitSet([0x40000002, 0x00000000]),
+    FOLLOW_p_IndexKeyCollation_in_p_IndexKeySpec17376: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_PathExpr_in_p_IndexKeyExpr17402: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_AS_in_p_IndexKeyTypeDecl17429: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_AtomicType_in_p_IndexKeyTypeDecl17433: new org.antlr.runtime.BitSet([0x00000002, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00003800]),
+    FOLLOW_p_OccurrenceIndicator_in_p_IndexKeyTypeDecl17435: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_QName_in_p_AtomicType17461: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_COLLATION_in_p_IndexKeyCollation17488: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x01C00300, 0x00000000]),
+    FOLLOW_p_StringLiteral_in_p_IndexKeyCollation17492: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_INTEGRITY_in_p_ICDecl17519: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00010000, 0x00000000]),
+    FOLLOW_CONSTRAINT_in_p_ICDecl17525: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICDecl17529: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00440000, 0x00000000]),
+    FOLLOW_p_ICCollection_in_p_ICDecl17532: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ICForeignKey_in_p_ICDecl17536: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_ON_in_p_ICCollection17564: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00008000, 0x00000000]),
+    FOLLOW_COLLECTION_in_p_ICCollection17570: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICCollection17574: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000,0x00000000, 0x00000000,0x80020000, 0x00000000]),
+    FOLLOW_p_ICCollSequence_in_p_ICCollection17577: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ICCollSequenceUnique_in_p_ICCollection17581: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_ICCollNode_in_p_ICCollection17585: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_ICCollSequence17613: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICCollSequence17617: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_CHECK_in_p_ICCollSequence17623: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_ICCollSequence17627: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_NODE_in_p_ICCollSequenceUnique17655: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_ICCollSequenceUnique17661: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICCollSequenceUnique17665: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_CHECK_in_p_ICCollSequenceUnique17671: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00800000, 0x00000000]),
+    FOLLOW_UNIQUE_in_p_ICCollSequenceUnique17677: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000]),
+    FOLLOW_KEY_in_p_ICCollSequenceUnique17683: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_PathExpr_in_p_ICCollSequenceUnique17687: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FOREACH_in_p_ICCollNode17714: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_NODE_in_p_ICCollNode17720: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_ICCollNode17726: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICCollNode17730: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_CHECK_in_p_ICCollNode17736: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E0F001,0x01F81320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_ExprSingle_in_p_ICCollNode17740: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FOREIGN_in_p_ICForeignKey17768: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000]),
+    FOLLOW_KEY_in_p_ICForeignKey17774: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000080]),
+    FOLLOW_p_ICForeignKeySource_in_p_ICForeignKey17778: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000040]),
+    FOLLOW_p_ICForeignKeyTarget_in_p_ICForeignKey17780: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_FROM_in_p_ICForeignKeySource17807: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00008000, 0x00000000]),
+    FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeySource17811: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_TO_in_p_ICForeignKeyTarget17838: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00008000, 0x00000000]),
+    FOLLOW_p_ICForeignKeyValues_in_p_ICForeignKeyTarget17842: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_COLLECTION_in_p_ICForeignKeyValues17869: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICForeignKeyValues17873: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00004000, 0x00000000]),
+    FOLLOW_NODE_in_p_ICForeignKeyValues17877: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
+    FOLLOW_DOLLAR_in_p_ICForeignKeyValues17883: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xF7FFFFFF, 0xFFFFFFFF,0x0FFFFFFF, 0x00000000,0x00001000, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_QName_in_p_ICForeignKeyValues17887: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x00200000, 0x00000000]),
+    FOLLOW_KEY_in_p_ICForeignKeyValues17893: new org.antlr.runtime.BitSet([0xFFFF0000, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF,0xAFFFFFFF, 0x01E09001,0x01F01320, 0x00000000,0x00100000, 0x00000000]),
+    FOLLOW_p_PathExpr_in_p_ICForeignKeyValues17897: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_set_in_synpred1_XQueryParser3535: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000000, 0x00000000,0x80000000, 0x00000000]),
     FOLLOW_DOLLAR_in_synpred1_XQueryParser3543: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_FOR_in_synpred1_XQueryParser3549: new org.antlr.runtime.BitSet([0x00000000, 0x00000000,0x00000000, 0x00000000,0x00000110, 0x00000000]),
@@ -62413,14 +62416,14 @@ org.antlr.lang.augmentObject(XQueryParser, {
     FOLLOW_COLON_in_synpred14_XQueryParser7321: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_p_NCName_in_synpred15_XQueryParser7339: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
     FOLLOW_LPAREN_in_synpred16_XQueryParser7595: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_OccurrenceIndicator_in_synpred17_XQueryParser9650: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
-    FOLLOW_p_OccurrenceIndicator_in_synpred18_XQueryParser17224: new org.antlr.runtime.BitSet([0x00000002, 0x00000000])
+    FOLLOW_p_OccurrenceIndicator_in_synpred17_XQueryParser9654: new org.antlr.runtime.BitSet([0x00000002, 0x00000000]),
+    FOLLOW_p_OccurrenceIndicator_in_synpred18_XQueryParser17228: new org.antlr.runtime.BitSet([0x00000002, 0x00000000])
 });
 
 })();
 exports.XQueryParser = XQueryParser;
 });define('ace/mode/xquery/StringLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/StringLexer.g 2012-05-22 16:42:44
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/StringLexer.g 2012-05-24 17:09:24
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -64105,7 +64108,7 @@ org.antlr.lang.extend(StringLexer.DFA8, org.antlr.runtime.DFA, {
 })();
 exports.StringLexer = StringLexer;
 });define('ace/mode/xquery/XMLLexer', ['require', 'exports', 'module' , 'ace/mode/xquery/antlr3-all', 'ace/mode/xquery/XQDTLexer'], function(require, exports, module) {
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XMLLexer.g 2012-05-22 16:42:46
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 xquery/XMLLexer.g 2012-05-24 17:09:26
 
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -67240,7 +67243,7 @@ define('ace/mode/xquery/XQuerySemanticHighlighter', ['require', 'exports', 'modu
         if(lineTokens.length > 0) {
           lineTokens[lineTokens.length - 1].type;
         }
-        nextState = nextState != "comment" ? "start" : nextState;
+        nextState = (nextState != "comment" && nextState != "string" && nextState != "cdata" && nextState != "tag") ? "start" : nextState;
         
         if(cursor < (sourceLine.length )) {
           value = sourceLine.substring(cursor);
@@ -67572,24 +67575,42 @@ var Tokenizer = function(rules, flag) {
 
 exports.Tokenizer = Tokenizer;
 });
-/*
- *  eXide - web-based XQuery IDE
- *  
- *  Copyright (C) 2011 Wolfgang Meier
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ * The Original Code is Ajax.org Code Editor (ACE).
+ *
+ * The Initial Developer of the Original Code is
+ * Ajax.org B.V.
+ * Portions created by the Initial Developer are Copyright (C) 2010
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *      William Candillon <wcandillon AT gmail DOT com>
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
 define('ace/mode/xquery_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/lib/lang', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 "use strict";
 
@@ -67600,12 +67621,7 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var XQueryHighlightRules = function() {
 
   var keywords = lang.arrayToMap(
-    ("return|for|let|where|order|by|declare|function|variable|xquery|version|option|namespace|import|module|when|encoding|" +
-     "switch|default|try|catch|group|tumbling|sliding|window|start|end|at|only|" +
-     "using|stemming|collection|schema|" +
-     "while|validate|on|nodes|index|" + 
-     "external|" +
-     "if|then|else|as|and|or|typeswitch|case|ascending|descending|empty|in|count|updating|insert|delete|replace|value|node|attribute|text|element|into|of|with|contains").split("|")
+    ("after|ancestor|ancestor-or-self|and|as|ascending|attribute|before|case|cast|castable|child|collation|comment|copy|count|declare|default|delete|descendant|descendant-or-self|descending|div|document|document-node|element|else|empty|empty-sequence|end|eq|every|except|first|following|following-sibling|for|function|ge|group|gt|idiv|if|import|insert|instance|intersect|into|is|item|last|le|let|lt|mod|modify|module|namespace|namespace-node|ne|node|only|or|order|ordered|parent|preceding|preceding-sibling|processing-instruction|rename|replace|return|satisfies|schema-attribute|schema-element|self|some|stable|start|switch|text|to|treat|try|typeswitch|union|unordered|validate|where|with|xquery|contains|paragraphs|sentences|times|words|by|collectionreturn|variable|version|option|when|encoding|toswitch|catch|tumbling|sliding|window|at|using|stemming|collection|schema|while|on|nodes|index|external|then|in|updating|value|of|containsbreak|loop|continue|exit|returning").split("|")
     );
     
     // regexp must not have capturing parentheses
@@ -67659,7 +67675,7 @@ var XQueryHighlightRules = function() {
       regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
     }, {
             token: "keyword.operator",
-            regex: "\\*|=|<|>|\\-|\\+|and|or|eq|ne|lt|gt"
+            regex: "\\*|=|<|>|\\-|\\+"
         }, {
             token: "lparen",
             regex: "[[({]"
@@ -67687,14 +67703,14 @@ var XQueryHighlightRules = function() {
         } ],
 
         cdata : [ {
-            token : "text",
+            token : "comment",
             regex : "\\]\\]>",
             next : "start"
         }, {
-            token : "text",
+            token : "comment",
             regex : "\\s+"
         }, {
-            token : "text",
+            token : "comment",
             regex : "(?:[^\\]]|\\](?!\\]>))+"
         } ],
 
