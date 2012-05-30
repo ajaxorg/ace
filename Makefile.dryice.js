@@ -347,14 +347,14 @@ function buildAce(aceProject, options) {
         });*/
         // use this instead, to not create separate modules for js and css
         var themePath = "lib/ace/theme/" + theme
-        var js = fs.readFileSync(themePath + ".js", "utf8")
-        js = js.replace("define(", "define('ace/theme/" + theme + "',")
+        var js = fs.readFileSync(themePath + ".js", "utf8");
+        js = js.replace("define(", "define('ace/theme/" + theme + "', ['require', 'exports', 'module', 'ace/lib/dom'], ");
         
         if (fs.existsSync(themePath + ".css", "utf8")) {
             var css = fs.readFileSync(themePath + ".css", "utf8")
             js = js.replace(/require\(.ace\/requirejs\/text!.*?\)/, quoteString(css))
         }
-        filters.forEach(function(f) {js = f(js); })
+        filters.forEach(function(f) {js = f(js); });
         
         fs.writeFileSync(targetDir + suffix + "/theme-" + theme + ".js", js); 
     });
