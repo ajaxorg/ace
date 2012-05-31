@@ -66,7 +66,7 @@ if (location.protocol == "file:")
     EditSession.prototype.$useWorker = false;
 
 /************** modes ***********************/
-var modesByName;
+var modes = [];
 function getModeFromPath(path) {
     var mode = modesByName.text;
     for (var i = 0; i < modes.length; i++) {
@@ -82,57 +82,60 @@ var Mode = function(name, desc, extensions) {
     this.name = name;
     this.desc = desc;
     this.mode = "ace/mode/" + name;
-    this.extRe = new RegExp("^.*\\.(" + extensions.join("|") + ")$", "g");
+    this.extRe = new RegExp("^.*\\.(" + extensions + ")$", "g");
 };
 
 Mode.prototype.supportsFile = function(filename) {
     return filename.match(this.extRe);
 };
 
-var modes = [
-    new Mode("c_cpp", "C/C++", ["c", "cpp", "cxx", "h", "hpp"]),
-    new Mode("clojure", "Clojure", ["clj"]),
-    new Mode("coffee", "CoffeeScript", ["coffee"]),
-    new Mode("coldfusion", "ColdFusion", ["cfm"]),
-    new Mode("csharp", "C#", ["cs"]),
-    new Mode("css", "CSS", ["css"]),
-    new Mode("golang", "Go", ["go"]),
-    new Mode("groovy", "Groovy", ["groovy"]),
-    new Mode("haxe", "haXe", ["hx"]),
-    new Mode("html", "HTML", ["html", "htm"]),
-    new Mode("java", "Java", ["java"]),
-    new Mode("diff", "Diff", ["diff", "patch"]),
-    new Mode("javascript", "JavaScript", ["js"]),
-    new Mode("json", "JSON", ["json"]),
-    new Mode("latex", "LaTeX", ["tex"]),
-    new Mode("less", "LESS", ["less"]),
-    new Mode("lua", "Lua", ["lua"]),
-    new Mode("liquid", "Liquid", ["liquid"]),
-    new Mode("markdown", "Markdown", ["md", "markdown"]),
-    new Mode("ocaml", "OCaml", ["ml", "mli"]),
-    new Mode("scad", "OpenSCAD", ["scad"]),
-    new Mode("perl", "Perl", ["pl", "pm"]),
-    new Mode("pgsql", "pgSQL", ["pgsql", "sql"]),
-    new Mode("php", "PHP", ["php"]),
-    new Mode("powershell", "Powershell", ["ps1"]),
-    new Mode("python", "Python", ["py"]),
-    new Mode("scala", "Scala", ["scala"]),
-    new Mode("scss", "SCSS", ["scss"]),
-    new Mode("ruby", "Ruby", ["rb"]),
-    new Mode("sql", "SQL", ["sql"]),
-    new Mode("svg", "SVG", ["svg"]),
-    new Mode("text", "Text", ["txt"]),
-    new Mode("textile", "Textile", ["textile"]),
-    new Mode("xml", "XML", ["xml"]),
-    new Mode("sh", "SH", ["sh"]),
-    new Mode("xquery", "XQuery", ["xq"]),
-    new Mode("yaml", "YAML", ["yaml"])
-];
+var modesByName = {
+    coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
+    coldfusion: ["ColdFusion"   , "cfm"],
+    csharp:     ["C#"           , "cs"],
+    css:        ["CSS"          , "css"],
+    diff:       ["Diff"         , "diff|patch"],
+    golang:     ["Go"           , "go"],
+    groovy:     ["Groovy"       , "groovy"],
+    haxe:       ["haXe"         , "hx"],
+    html:       ["HTML"         , "htm|html|xhtml"],
+    c_cpp:      ["C/C++"        , "c|cc|cpp|cxx|h|hh|hpp"],
+    clojure:    ["Clojure"      , "clj"],
+    java:       ["Java"         , "java"],
+    javascript: ["JavaScript"   , "js"],
+    json:       ["JSON"         , "json"],
+    latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
+    less:       ["LESS"         , "less"],
+    liquid:     ["Liquid"       , "liquid"],
+    lua:        ["Lua"          , "lua"],
+    markdown:   ["Markdown"     , "md|markdown"],
+    ocaml:      ["OCaml"        , "ml|mli"],
+    perl:       ["Perl"         , "pl|pm"],
+    pgsql:      ["pgSQL"        , "pgsql"],
+    php:        ["PHP"          , "php|phtml"],
+    powershell: ["Powershell"   , "ps1"],
+    python:     ["Python"       , "py"],
+    ruby:       ["Ruby"         , "ru|gemspec|rake|rb"],
+    scad:       ["OpenSCAD"     , "scad"],
+    scala:      ["Scala"        , "scala"],
+    scss:       ["SCSS"         , "scss|sass"],
+    sh:         ["SH"           , "sh|bash|bat"],
+    sql:        ["SQL"          , "sql"],
+    svg:        ["SVG"          , "svg"],
+    text:       ["Text"         , "txt"],
+    textile:    ["Textile"      , "textile"],
+    xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
+    xquery:     ["XQuery"       , "xq"],
+    yaml:       ["YAML"         , "yaml"]
+};
 
-modesByName = {};
-modes.forEach(function(m) {
-    modesByName[m.name] = m;
-});
+for (var name in modesByName) {
+    var mode = modesByName[name];
+    mode = new Mode(name, mode[0], mode[1])
+    modesByName[name] = mode;
+    modes.push(mode);
+}
+
 
 /*********** demo documents ***************************/
 var fileCache = {};
@@ -259,18 +262,6 @@ window.env = env;
 window.editor = window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
 
-var consoleHight = 20;
-function onResize() {
-    var left = env.split.$container.offsetLeft;
-    var width = document.documentElement.clientWidth - left;
-    container.style.width = width + "px";
-    container.style.height = document.documentElement.clientHeight - consoleHight + "px";
-    env.split.resize();
-
-    consoleEl.style.width = width + "px";
-    cmdLine.resize()
-}
-
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
 consoleEl.style.position="fixed"
@@ -331,9 +322,6 @@ cmdLine.commands.bindKeys({
 
 cmdLine.commands.removeCommands(["find", "goToLine", "findAll", "replace", "replaceAll"])
 
-window.onresize = onResize;
-onResize();
-
 /**
  * This demonstrates how you can define commands and bind shortcuts to them.
  */
@@ -367,6 +355,22 @@ var keybindings = {
 };
 
 
+
+/*********** manage layout ***************************/
+var consoleHight = 20;
+function onResize() {
+    var left = env.split.$container.offsetLeft;
+    var width = document.documentElement.clientWidth - left;
+    container.style.width = width + "px";
+    container.style.height = document.documentElement.clientHeight - consoleHight + "px";
+    env.split.resize();
+
+    consoleEl.style.width = width + "px";
+    cmdLine.resize()
+}
+
+window.onresize = onResize;
+onResize();
 
 /*********** options pane ***************************/
 var docEl = document.getElementById("doc");
@@ -654,24 +658,22 @@ event.addListener(container, "drop", function(e) {
     var file;
     try {
         file = e.dataTransfer.files[0];
+        if (window.FileReader) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var mode = getModeFromPath(file.name);
+
+                env.editor.session.doc.setValue(reader.result);
+                modeEl.value = mode.name;
+                env.editor.session.setMode(mode.mode);
+                env.editor.session.modeName = mode.name;
+            };
+            reader.readAsText(file);
+        }
+        return event.preventDefault(e);
     } catch(err) {
-        return event.stopEvent();
+        return event.stopEvent(e);
     }
-
-    if (window.FileReader) {
-        var reader = new FileReader();
-        reader.onload = function() {
-            var mode = getModeFromPath(file.name);
-
-            env.editor.session.doc.setValue(reader.result);
-            modeEl.value = mode.name;
-            env.editor.session.setMode(mode.mode);
-            env.editor.session.modeName = mode.name;
-        };
-        reader.readAsText(file);
-    }
-
-    return event.preventDefault(e);
 });
 
 // add multiple cursor support to editor
