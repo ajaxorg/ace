@@ -176,14 +176,10 @@ function demo() {
     }
     var changeComments = function(data) {
             return (data
-                .replace("DEVEL-->", "")
-                .replace("<!--DEVEL", "")
-                .replace("PACKAGE-->", "")
-                .replace("<!--PACKAGE", "")
-                .replace("DEVEL*/", "")
-                .replace("/*DEVEL", "")
-                .replace("PACKAGE*/", "")
-                .replace("/*PACKAGE", "")
+                .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
+                .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
+                .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
+                .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
                 .replace("%version%", version)
                 .replace("%commit%", ref)
             );

@@ -10,7 +10,7 @@ Features
 * Automatic indent and outdent
 * An optional command line
 * Handles huge documents (100,000 lines and more are no problem)
-* Fully customizable key bindings including VI and Emacs modes
+* Fully customizable key bindings including VIM and Emacs modes
 * Themes (TextMate themes can be imported)
 * Search and replace with regular expressions
 * Highlight matching parentheses
@@ -18,20 +18,16 @@ Features
 * Displays hidden characters
 * Drag and drop text using the mouse
 * Line wrapping
-* Unstructured / user code folding
-* Live syntax checker (currently JavaScript/CoffeeScript)
+* Code folding
+* Multiple selections
+* Live syntax checker (currently JavaScript/CoffeeScript/Css/XQuery)
 
 Take Ace for a spin!
 --------------------
 
-Check out the Ace live [demo](http://ajaxorg.github.com/ace/) or get a [Cloud9 IDE account](http://run.cloud9ide.com) to experience Ace while editing one of your own GitHub projects.
+Check out the Ace live [demo](http://ajaxorg.github.com/ace-builds/kitchen-sink.html) or get a [Cloud9 IDE account](http://c9.io) to experience Ace while editing one of your own GitHub projects.
 
-If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace/build/textarea/editor.html).
-
-History
--------
-
-Previously known as “Bespin” and “Skywriter” it’s now known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started as two independent projects, both aiming to build a no-compromise code editor component for the web. Bespin started as part of Mozilla Labs and was based on the canvas tag, while Ace is the Editor component of the Cloud9 IDE and is using the DOM for rendering. After the release of Ace at JSConf.eu 2010 in Berlin the Skywriter team decided to merge Ace with a simplified version of Skywriter's plugin system and some of Skywriter's extensibility points. All these changes have been merged back to Ace. Both Ajax.org and Mozilla are actively developing and maintaining Ace.
+If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace-builds/textarea/editor.html).
 
 Getting the code
 ----------------
@@ -40,14 +36,13 @@ Ace is a community project. We actively encourage and support contributions. The
 
 ```bash
     git clone git://github.com/ajaxorg/ace.git
-    cd ace
-    git submodule update --init --recursive
 ```
 
 Embedding Ace
 -------------
 
-Ace can be easily embedded into any existing web page. The Ace git repository ships with a pre-packaged version of Ace inside of the `build` directory. The same packaged files are also available as a separate [download](https://github.com/ajaxorg/ace/downloads). Simply copy the contents of the `src` subdirectory somewhere into your project and take a look at the included demos of how to use Ace.
+Ace can be easily embedded into any existing web page. You can either use one of pre-packaged versions of [ace](https://github.com/ajaxorg/ace-builds/) (just copy one of `src*` subdirectories somewhere into your project), or use requireJS to load contents of [lib/ace](https://github.com/ajaxorg/ace/tree/master/lib/ace) as `ace`
+
 
 The easiest version is simply:
 
@@ -55,9 +50,7 @@ The easiest version is simply:
     <div id="editor">some text</div>
     <script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
-    window.onload = function() {
         var editor = ace.edit("editor");
-    };
     </script>
 ```
 
@@ -96,10 +89,14 @@ Then the mode can be used like this:
     editor.getSession().setMode(new JavaScriptMode());
 ```
 
+and take a look at the one of [included](https://github.com/ajaxorg/ace-builds/blob/master/editor.html) [demos](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js) of how to use Ace.
+
 Documentation
 -------------
 
-You find a lot more sample code in the [demo app](https://github.com/ajaxorg/ace/blob/master/demo/demo.js).
+You can find api documentation at [http://ajaxorg.github.com/ace/api/index.html](http://ajaxorg.github.com/ace/api/index.html).
+
+And a lot more sample code in the [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
 
 There is also some documentation on the [wiki page](https://github.com/ajaxorg/ace/wiki).
 
@@ -126,42 +123,17 @@ The editor can then be opened at http://localhost:8888/index.html.
 Package Ace
 -----------
 
-To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Before you can build you need to make sure that the submodules are up to date.
+To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Make sure you at latest version of dryice
 
 ```bash
-    git submodule update --init --recursive
-```
-
-Make sure you at least version 0.3.0 of dryice
-
-```bash
-    npm install dryice
-```
-
-Afterwards Ace can be built by calling
-
-```bash
-    ./Makefile.dryice.js normal
-```
-
-The packaged Ace will be put in the 'build' folder.
-
-To build the bookmarklet version execute
-
-```bash
-    ./Makefile.dryice.js bm
+    npm install
+    node ./Makefile.dryice.js ;; -m to minify, -nc to use namespaced requre, -target ./path/to/build/dir
 ```
 
 Running the Unit Tests
 ----------------------
 
-The Ace unit tests run on node.js. Before the first run a couple of node modules have to be installed. The easiest way to do this is by using the node package manager (npm). In the Ace base directory simply call
-
-```bash
-    npm link .
-```
-
-To run the tests call:
+The Ace unit tests can run on node.js. Assuming you have already done `npm install`, just call:
 
 ```bash
     node lib/ace/test/all.js
