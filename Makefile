@@ -1,6 +1,6 @@
 .PHONY : doc build clean dist
 
-build:
+pre_build:
 	git rev-parse HEAD > .git-ref
 	mkdir -p build/src
 	mkdir -p build/demo/kitchen-sink
@@ -9,7 +9,8 @@ build:
 	cp -r demo/kitchen-sink/styles.css build/demo/kitchen-sink/styles.css
 	cp demo/kitchen-sink/logo.png build/demo/kitchen-sink/logo.png
 	cp -r doc/site/images build/textarea
-	
+
+build: pre_build
 	./Makefile.dryice.js normal
 	./Makefile.dryice.js demo
 	./Makefile.dryice.js bm
