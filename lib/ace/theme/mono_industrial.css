@@ -57,6 +57,10 @@
   background: rgba(12, 13, 12, 0.25);
 }
 
+.ace-mono-industrial .ace_gutter_active_line {
+  background-color : #dcdcdc;
+}
+
 .ace-mono-industrial .ace_marker-layer .ace_selected_word {
   border: 1px solid rgba(145, 153, 148, 0.40);
 }
