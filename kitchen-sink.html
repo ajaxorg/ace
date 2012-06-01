@@ -13,9 +13,19 @@
       commit  %commit%
 
     -->
+
+    <!--DEVEL-->
+      <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+    <!--DEVEL-->
+
+    <!--PACKAGE
+      <link rel="stylesheet" href="kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+    PACKAGE-->
 </head>
 <body>
-  <img id="logo" src="demo/kitchen-sink/logo.png">
+  <a href="http://ajaxorg.github.com/ace/" >
+    <img id="logo" src="demo/kitchen-sink/logo.png">
+  </a> 
   <table id="controls">
     <tr>
       <td>
@@ -216,8 +226,7 @@
 </div>
   <div id="editor"></div>
 
-<!-- DEVEL-->
-  <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+<!--DEVEL-->
   <script type="text/javascript">
       var require = {
           baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
@@ -228,10 +237,9 @@
   </script>
   <script src="demo/kitchen-sink/require.js" data-main="demo/kitchen-sink/demo" type="text/javascript"></script>
 
-<!--DEVEL -->
+<!--DEVEL-->
 
 <!--PACKAGE
-  <link rel="stylesheet" href="kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
   <script src="src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
   <script src="src/keybinding-vim.js"></script>
   <script src="src/keybinding-emacs.js"></script>
