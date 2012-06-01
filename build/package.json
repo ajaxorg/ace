@@ -1,0 +1,31 @@
+{
+    "name": "ace-connect",
+    "description": "Connect middleware for serving the Ajax.org Code Editor from a Node.js webapp",
+    "version": "0.1.6",
+    "homepage" : "http://github.com/ajaxorg/ace",
+    "engines": {"node": ">= 0.2.0"},
+    "author": "Fabian Jakobs <fabian@ajax.org>",
+    "main": "src/ace-connect",
+    "directories" : { 
+        "lib" : "./src"
+    },
+    "repository" : {
+        "type" : "git",
+         "url" : "http://github.com/ajaxorg/ace.git"
+    },
+    "dependencies": {
+        "connect": ">=1.3.0"
+    },
+    "licenses": [{
+        "type": "MPL",
+        "url": "http://www.mozilla.org/MPL/"
+    },
+    {
+        "type": "GPL",
+        "url": "http://www.gnu.org/licenses/gpl.html"
+    },
+    {
+        "type": "LGPL",
+        "url": "http://www.gnu.org/licenses/lgpl.html"
+    }]
+}
