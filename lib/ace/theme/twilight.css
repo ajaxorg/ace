@@ -57,6 +57,10 @@
   background: rgba(255, 255, 255, 0.031);
 }
 
+.ace-twilight .ace_gutter_active_line {
+  background-color : #dcdcdc;
+}
+
 .ace-twilight .ace_marker-layer .ace_selected_word {
   border: 1px solid rgba(221, 240, 255, 0.20);
 }
