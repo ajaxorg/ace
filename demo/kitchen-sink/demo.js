@@ -104,6 +104,7 @@ var modesByName = {
     java:       ["Java"         , "java"],
     javascript: ["JavaScript"   , "js"],
     json:       ["JSON"         , "json"],
+    jsx:        ["JSX"          , "jsx"],
     latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
     less:       ["LESS"         , "less"],
     liquid:     ["Liquid"       , "liquid"],
@@ -201,7 +202,8 @@ var docs = {
     "docs/latex.tex": {name: "LaTeX", wrapped: true},
     "docs/sql.sql": {name: "SQL", wrapped: true},
     "docs/pgsql.pgsql": {name: "pgSQL", wrapped: true},
-    "docs/golang.go": "Go"
+    "docs/golang.go": "Go",
+    "docs/jsx.jsx": "JSX"
 }
 
 var ownSource = {
