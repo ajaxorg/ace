@@ -45,7 +45,7 @@
 }
 
 .ace-pastel-on-dark .ace_marker-layer .ace_step {
-  background: rgb(102, 82, 0);
+  background: rgb(198, 219, 174);
 }
 
 .ace-pastel-on-dark .ace_marker-layer .ace_bracket {
@@ -148,4 +148,8 @@ color:#D2A8A1;
 
 .ace-pastel-on-dark .ace_markup.ace_underline {
     text-decoration:underline;
+}
+
+.ace-pastel-on-dark span.ace_c9searchresults {
+    cursor: pointer;
 }

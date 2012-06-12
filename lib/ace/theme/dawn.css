@@ -45,7 +45,7 @@
 }
 
 .ace-dawn .ace_marker-layer .ace_step {
-  background: rgb(255, 255, 0);
+  background: rgb(198, 219, 174);
 }
 
 .ace-dawn .ace_marker-layer .ace_bracket {
@@ -147,4 +147,8 @@ color:#5A525F;
 
 .ace-dawn .ace_markup.ace_list {
   color:#693A17;
+}
+
+.ace-dawn span.ace_c9searchresults {
+    cursor: pointer;
 }

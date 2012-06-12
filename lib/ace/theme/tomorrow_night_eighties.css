@@ -45,7 +45,7 @@
 }
 
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_step {
-  background: rgb(102, 82, 0);
+  background: rgb(198, 219, 174);
 }
 
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_bracket {
@@ -158,4 +158,8 @@ background-color:#CC99CC;
 
 .ace-tomorrow-night-eighties .ace_markup.ace_heading {
   color:#99CC99;
+}
+
+.ace-tomorrow-night-eighties span.ace_c9searchresults {
+    cursor: pointer;
 }

@@ -249,3 +249,7 @@
 .%cssClass% .ace_collab.ace_user1 {
   %collab.user1%
 }
+
+.%cssClass% span.ace_c9searchresults {
+    cursor: pointer;
+}

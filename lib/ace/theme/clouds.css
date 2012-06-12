@@ -45,7 +45,7 @@
 }
 
 .ace-clouds .ace_marker-layer .ace_step {
-  background: rgb(255, 255, 0);
+  background: rgb(198, 219, 174);
 }
 
 .ace-clouds .ace_marker-layer .ace_bracket {
@@ -116,4 +116,8 @@
 
 .ace-clouds .ace_markup.ace_underline {
     text-decoration:underline;
+}
+
+.ace-clouds span.ace_c9searchresults {
+    cursor: pointer;
 }

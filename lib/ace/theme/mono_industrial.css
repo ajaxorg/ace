@@ -45,7 +45,7 @@
 }
 
 .ace-mono-industrial .ace_marker-layer .ace_step {
-  background: rgb(102, 82, 0);
+  background: rgb(198, 219, 174);
 }
 
 .ace-mono-industrial .ace_marker-layer .ace_bracket {
@@ -146,4 +146,8 @@ background-color:#151C19;
 
 .ace-mono-industrial .ace_markup.ace_underline {
     text-decoration:underline;
+}
+
+.ace-mono-industrial span.ace_c9searchresults {
+    cursor: pointer;
 }

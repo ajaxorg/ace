@@ -45,7 +45,7 @@
 }
 
 .ace-merbivore .ace_marker-layer .ace_step {
-  background: rgb(102, 82, 0);
+  background: rgb(198, 219, 174);
 }
 
 .ace-merbivore .ace_marker-layer .ace_bracket {
@@ -138,4 +138,8 @@ color:#AD2EA4;
 
 .ace-merbivore .ace_markup.ace_underline {
     text-decoration:underline;
+}
+
+.ace-merbivore span.ace_c9searchresults {
+    cursor: pointer;
 }
