@@ -145,7 +145,3 @@ color:#FD971F;
 .ace-monokai .ace_markup.ace_underline {
     text-decoration:underline;
 }
-
-.ace-monokai span.ace_c9searchresults {
-    cursor: pointer;
-}

@@ -140,7 +140,3 @@ color:#99CC99;
 .ace-vibrant-ink .ace_markup.ace_underline {
     text-decoration:underline;
 }
-
-.ace-vibrant-ink span.ace_c9searchresults {
-    cursor: pointer;
-}

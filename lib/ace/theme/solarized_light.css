@@ -129,7 +129,3 @@
 .ace-solarized-light .ace_markup.ace_underline {
     text-decoration:underline;
 }
-
-.ace-solarized-light span.ace_c9searchresults {
-    cursor: pointer;
-}

@@ -130,7 +130,3 @@ color:#657B83;
 .ace-solarized-dark .ace_markup.ace_underline {
     text-decoration:underline;
 }
-
-.ace-solarized-dark span.ace_c9searchresults {
-    cursor: pointer;
-}

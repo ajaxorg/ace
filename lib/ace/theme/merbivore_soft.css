@@ -145,7 +145,3 @@ color:#AC4BB8;
 .ace-merbivore-soft .ace_markup.ace_underline {
     text-decoration:underline;
 }
-
-.ace-merbivore-soft span.ace_c9searchresults {
-    cursor: pointer;
-}

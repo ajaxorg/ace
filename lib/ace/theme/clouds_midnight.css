@@ -118,7 +118,3 @@ background-color:#E92E2E;
 .ace-clouds-midnight .ace_markup.ace_underline {
     text-decoration:underline;
 }
-
-.ace-clouds-midnight span.ace_c9searchresults {
-    cursor: pointer;
-}
