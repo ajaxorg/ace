@@ -39,6 +39,7 @@ mixin head
 	script(src="#{dirPrefix}resources/javascripts/bootstrap-dropdown.js")
 	script(src="#{dirPrefix}resources/javascripts/jquery-scrollspy.js")
 	script(script src="#{dirPrefix}resources/javascripts/prettify-extension.js")
+
 mixin navBar
 	div.navbar.navbar-fixed-top
 		div.navbar-inner
@@ -55,10 +56,10 @@ mixin navBar
 
 mixin footer
 	div#footer
-				.footerInner
-					.footer-text.pull-right 
-						p
-							<a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012
+		.footerInner
+			.footer-text.pull-right 
+				p
+					<a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012
 
 mixin endingScripts
 	// scripts concatenated and minified via ant build script

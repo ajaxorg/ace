@@ -57,6 +57,10 @@
   background: %active_line%;
 }
 
+.%cssClass% .ace_gutter_active_line {
+  background-color : #dcdcdc;
+}
+
 .%cssClass% .ace_marker-layer .ace_selected_word {
   %selected_word_highlight%
 }
