@@ -1,6 +1,10 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
+<% --[[--
+    index.lp from the Kepler Project's LuaDoc HTML doclet.
+    http://keplerproject.github.com/luadoc/
+--]] %>
 <head>
     <title>Reference</title>
     <link rel="stylesheet" href="<%=luadoc.doclet.html.link("luadoc.css")%>" type="text/css" />
