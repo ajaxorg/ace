@@ -90,6 +90,7 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
+    c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
@@ -167,6 +168,7 @@ function makeHuge(txt) {
 }
 
 var docs = {
+    "docs/c9search.c9search_results": "C9 Search Results",
     "docs/javascript.js": "JavaScript",
     "docs/plaintext.txt": {name: "Plain Text", prepare: makeHuge, wrapped: true},
     "docs/coffeescript.coffee": "Coffeescript",

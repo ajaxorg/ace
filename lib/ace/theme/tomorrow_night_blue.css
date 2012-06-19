@@ -8,8 +8,8 @@
 }
 
 .ace-tomorrow-night-blue .ace_gutter {
-  background: #022346;
-  color: #7388b5;
+  background: #e8e8e8;
+  color: #333;
 }
 
 .ace-tomorrow-night-blue .ace_print_margin {
@@ -45,7 +45,7 @@
 }
 
 .ace-tomorrow-night-blue .ace_marker-layer .ace_step {
-  background: rgb(127, 111, 19);
+  background: rgb(198, 219, 174);
 }
 
 .ace-tomorrow-night-blue .ace_marker-layer .ace_bracket {
@@ -58,7 +58,7 @@
 }
 
 .ace-tomorrow-night-blue .ace_gutter_active_line {
-  background-color: #022040;
+  background-color : #dcdcdc;
 }
 
 .ace-tomorrow-night-blue .ace_marker-layer .ace_selected_word {
