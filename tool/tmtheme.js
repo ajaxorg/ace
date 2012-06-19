@@ -32,8 +32,6 @@ var supportedScopes = {
    "function": "function",
    "function.buildin": "function.buildin",
 
-   "c9searchresults": "c9searchresults",
-   
    "storage": "storage",
    "storage.type": "storage.type",
 
