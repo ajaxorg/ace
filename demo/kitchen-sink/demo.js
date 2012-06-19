@@ -109,6 +109,7 @@ var modesByName = {
     less:       ["LESS"         , "less"],
     liquid:     ["Liquid"       , "liquid"],
     lua:        ["Lua"          , "lua"],
+    luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     markdown:   ["Markdown"     , "md|markdown"],
     ocaml:      ["OCaml"        , "ml|mli"],
     perl:       ["Perl"         , "pl|pm"],
@@ -186,6 +187,7 @@ var docs = {
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
     "docs/lua.lua": "Lua",
+    "docs/luapage.lp": "LuaPage",
     "docs/liquid.liquid": "Liquid",
     "docs/java.java": "Java",
     "docs/clojure.clj": "Clojure",
