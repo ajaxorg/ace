@@ -11,9 +11,7 @@
          "url" : "http://github.com/ajaxorg/ace.git"
     },
     "dependencies": {
-        "mime": "1.2.x"
-    },
-    "devDependencies": {
+        "mime": "1.2.x",
         "asyncjs": "0.0.x",
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
