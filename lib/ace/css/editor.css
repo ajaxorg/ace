@@ -8,7 +8,6 @@
 .ace_scroller {
     position: absolute;
     overflow: hidden;
-    width : 100%;
 }
 
 .ace_content {
