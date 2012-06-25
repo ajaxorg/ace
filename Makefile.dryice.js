@@ -62,8 +62,8 @@ function main(args) {
 
     if (type == "minimal") {
         buildAce({
-            compress: args.indexOf("-m") != -1,
-            noconflict: args.indexOf("-nc") != -1
+            compress: args.indexOf("--m") != -1,
+            noconflict: args.indexOf("--nc") != -1
         });
     } else if (type == "normal") {
         ace();

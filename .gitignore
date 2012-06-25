@@ -7,6 +7,7 @@
 .project
 .settings/
 .settings.xml
+.settings
 .c9settings.xml
 .c9revisions
 .settings.xml.old
@@ -16,7 +17,6 @@
 /ignore/
 node_modules/
 tool/node_modules/
-build/
 
 .git-ref
 npm-debug.log

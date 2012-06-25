@@ -22,7 +22,6 @@
 }
 
 .%cssClass% .ace_text-layer {
-  cursor: text;
   color: %foreground%;
 }
 

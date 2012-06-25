@@ -90,6 +90,7 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
+    c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
@@ -104,10 +105,12 @@ var modesByName = {
     java:       ["Java"         , "java"],
     javascript: ["JavaScript"   , "js"],
     json:       ["JSON"         , "json"],
+    jsx:        ["JSX"          , "jsx"],
     latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
     less:       ["LESS"         , "less"],
     liquid:     ["Liquid"       , "liquid"],
     lua:        ["Lua"          , "lua"],
+    luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     markdown:   ["Markdown"     , "md|markdown"],
     ocaml:      ["OCaml"        , "ml|mli"],
     perl:       ["Perl"         , "pl|pm"],
@@ -165,6 +168,7 @@ function makeHuge(txt) {
 }
 
 var docs = {
+    "docs/c9search.c9search_results": "C9 Search Results",
     "docs/javascript.js": "JavaScript",
     "docs/plaintext.txt": {name: "Plain Text", prepare: makeHuge, wrapped: true},
     "docs/coffeescript.coffee": "Coffeescript",
@@ -185,6 +189,7 @@ var docs = {
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
     "docs/lua.lua": "Lua",
+    "docs/luapage.lp": "LuaPage",
     "docs/liquid.liquid": "Liquid",
     "docs/java.java": "Java",
     "docs/clojure.clj": "Clojure",
@@ -201,7 +206,8 @@ var docs = {
     "docs/latex.tex": {name: "LaTeX", wrapped: true},
     "docs/sql.sql": {name: "SQL", wrapped: true},
     "docs/pgsql.pgsql": {name: "pgSQL", wrapped: true},
-    "docs/golang.go": "Go"
+    "docs/golang.go": "Go",
+    "docs/jsx.jsx": "JSX"
 }
 
 var ownSource = {
