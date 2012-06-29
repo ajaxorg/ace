@@ -57,7 +57,7 @@
 }
 
 .%cssClass% .ace_gutter_active_line {
-  background-color : #dcdcdc;
+  background-color: %active_line%;
 }
 
 .%cssClass% .ace_marker-layer .ace_selected_word {
