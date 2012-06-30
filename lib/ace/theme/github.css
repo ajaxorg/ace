@@ -13,8 +13,13 @@
   margin-bottom: 15px;
 }
 
-.ace-github .ace_keyword {
-  font-weight: bold;
+.ace-github .ace_gutter {
+  background: #e8e8e8;
+  color: #AAA;
+}
+
+.ace-github .ace_scroller {
+  background: #fff;
 }
 
 .ace-github .ace_string {
@@ -29,6 +34,14 @@
   color: #099;
 }
 
+.ace-github .ace_constant.ace_buildin {
+  color: #0086B3;
+}
+
+.ace-github .ace_support.ace_function {
+  color: #0086B3;
+}
+
 .ace-github .ace_comment {
   color: #998;
   font-style: italic;
@@ -38,15 +51,6 @@
   color: #0086B3;
 }
 
-.ace-github .ace_paren.ace_lparen,
-.ace-github .ace_paren.ace_rparen {
-  font-weight: bold;
-}
-
-.ace-github .ace_constant.ace_language.ace_boolean {
-  font-weight: bold;
-}
-
 .ace-github .ace_string.ace_regexp {
   color: #009926;
   font-weight: normal;
@@ -54,10 +58,6 @@
 
 .ace-github .ace_variable.ace_instancce {
   color: teal;
-}
-
-.ace-github .ace_constant.ace_language {
-  font-weight: bold;
 }
 
 .ace-github .ace_text-layer {
@@ -72,6 +72,9 @@
   border-bottom: 1px solid black;
 }
 
+.ace-github .ace_marker-layer .ace_active_line {
+  background: rgb(255, 255, 204);
+}
 .ace-github .ace_marker-layer .ace_selection {
   background: rgb(181, 213, 255);
 }
