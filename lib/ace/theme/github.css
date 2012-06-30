@@ -22,6 +22,10 @@
   background: #fff;
 }
 
+.ace-github .ace_keyword {
+  font-weight: bold;
+}
+
 .ace-github .ace_string {
   color: #D14;
 }
@@ -51,6 +55,14 @@
   color: #0086B3;
 }
 
+.ace-github .ace_paren {
+  font-weight: bold;
+}
+
+.ace-github .ace_boolean {
+  font-weight: bold;
+}
+
 .ace-github .ace_string.ace_regexp {
   color: #009926;
   font-weight: normal;
@@ -58,6 +70,10 @@
 
 .ace-github .ace_variable.ace_instancce {
   color: teal;
+}
+
+.ace-github .ace_constant.ace_language {
+  font-weight: bold;
 }
 
 .ace-github .ace_text-layer {
@@ -81,4 +97,9 @@
 .ace-github.multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px white;
   border-radius: 2px;
+}
+/* bold keywords cause cursor issues for some fonts */
+/* this disables bold style for editor and keeps for static highlighter */
+.ace-github.ace_editor .ace_line > span {
+    font-weight: normal !important;
 }
