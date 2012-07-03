@@ -395,7 +395,7 @@ function buildAce(options) {
                     'ace/lib/fixoldbrowsers',
                     'ace/lib/event_emitter',
                     'ace/lib/oop',
-                    'ace/mode/' + mode + '_worker'
+                    'ace/worker/' + mode
                 ]
             }],
             filter: filters,
