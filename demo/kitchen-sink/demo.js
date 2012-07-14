@@ -39,7 +39,7 @@
 
 
 define(function(require, exports, module) {
-"never use strict";
+"use strict";
 
 require("ace/lib/fixoldbrowsers");
 require("ace/config").init();
@@ -265,7 +265,7 @@ split.on("focus", function(editor) {
 });
 env.split = split;
 window.env = env;
-window.editor = window.ace = env.editor;
+window.ace = env.editor;
 env.editor.setAnimatedScroll(true);
 
 var consoleEl = dom.createElement("div");
@@ -337,12 +337,6 @@ commands.addCommand({
     name: "save",
     bindKey: {win: "Ctrl-S", mac: "Command-S"},
     exec: function() {alert("Fake Save File");}
-});
-
-commands.addCommand({
-    name: "print",
-    bindKey: {win: "Ctrl-P", mac: "Command-P"},
-    exec: function(editor) {editor.session.setValue("please,\ndo not waste paper\n");}
 });
 
 var keybindings = {
