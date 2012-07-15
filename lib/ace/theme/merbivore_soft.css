@@ -144,3 +144,7 @@ color:#AC4BB8;
 .ace-merbivore-soft .ace_markup.ace_underline {
     text-decoration:underline;
 }
+
+.ace-merbivore-soft .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWOQkZH5zzBz5sz/AA8EBB6crd1rAAAAAElFTkSuQmCC) right repeat-y;
+}

@@ -160,3 +160,7 @@ color:#5F5A60;
 .ace-twilight .ace_markup.ace_list {
   color:#F9EE98;
 }
+
+.ace-twilight .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQERH5zzBz5sz/AA5EBAYqeZXWAAAAAElFTkSuQmCC) right repeat-y;
+}
