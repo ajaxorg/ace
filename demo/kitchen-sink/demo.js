@@ -125,6 +125,7 @@ var modesByName = {
     sh:         ["SH"           , "sh|bash|bat"],
     sql:        ["SQL"          , "sql"],
     svg:        ["SVG"          , "svg"],
+    tcl:        ["Tcl"          , "tcl"],
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
