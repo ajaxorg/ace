@@ -180,6 +180,7 @@ var docs = {
     "docs/less.less": "LESS",
     "docs/html.html": "HTML",
     "docs/xml.xml": "XML",
+    "docs/tcl.tcl": "Tcl",    
     "docs/yaml.yaml": "YAML",
     "docs/svg.svg": "SVG",
     "docs/php.php": "PHP",
