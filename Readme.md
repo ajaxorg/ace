@@ -105,7 +105,7 @@ If you still need help, feel free to drop a mail on the [ace mailing list](http:
 Running Ace
 -----------
 
-After the checkout Ace works out of the box. No build step is required. Open 'editor.html' in any browser except Google Chrome. Google Chrome doesn't allow XMLHTTPRequests from files loaded from disc (i.e. with a file:/// URL). To open Ace in Chrome simply start the bundled mini HTTP server:
+After the checkout Ace works out of the box. No build step is required. To open editor with a file:/// URL see [wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-file:---). Or Simply start bundled mini HTTP server:
 
 ```bash
     ./static.py
@@ -115,19 +115,19 @@ Or using Node.JS
 
 ```bash
     npm install mime
-    ./static.js
+    node ./static.js
 ```
 
-The editor can then be opened at http://localhost:8888/index.html.
+The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
 
 Package Ace
 -----------
 
-To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Make sure you at latest version of dryice
+To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. (see the [wiki](https://github.com/ajaxorg/ace/wiki/Building-ace) more for details)
 
 ```bash
     npm install
-    node ./Makefile.dryice.js ;; -m to minify, -nc to use namespaced requre, -target ./path/to/build/dir
+    node ./Makefile.dryice.js
 ```
 
 Running the Unit Tests
