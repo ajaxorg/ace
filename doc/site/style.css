@@ -165,9 +165,8 @@ UL.menu-list {
 UL.menu-list LI {
     color:#2557b4;
     font-family:Trebuchet MS;
-    font-size:14px;
-    padding:7px 0;
-    border-bottom:1px dotted #d6e2e7;
+    font-size:12px;
+    padding:1px 0;
 }
 
 UL.menu-list LI:last-child {
