@@ -3,4 +3,4 @@
 	url = git://github.com/ajaxorg/ace.wiki.git
 [submodule "build"]
 	path = build
-	url = https://github.com/ajaxorg/ace-builds.git
+	url = git://github.com/ajaxorg/ace-builds.git
