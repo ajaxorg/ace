@@ -27,6 +27,12 @@
     z-index: 4;
 }
 
+.ace_gutter_active_line {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
 .ace_scroller.horscroll {
     box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;
 }
