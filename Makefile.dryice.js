@@ -43,7 +43,7 @@ if (!fs.existsSync)
 var copy = require('dryice').copy;
 
 var ACE_HOME = __dirname;
-var BUILD_DIR = "build";
+var BUILD_DIR = ACE_HOME + "/build";
 
 function main(args) {
     var type = "minimal";
@@ -146,20 +146,20 @@ function ace() {
     console.log('# ace License | Readme | Changelog ---------');
 
     copy({
-        source: "build_support/editor.html",
-        dest:   "build/editor.html"
+        source: ACE_HOME + "/build_support/editor.html",
+        dest:   BUILD_DIR + "/editor.html"
     });
     copy({
         source: ACE_HOME + "/LICENSE",
-        dest:   "build/LICENSE"
+        dest:   BUILD_DIR + "/LICENSE"
     });
     copy({
         source: ACE_HOME + "/Readme.md",
-        dest:   "build/Readme.md"
+        dest:   BUILD_DIR + "/Readme.md"
     });
     copy({
         source: ACE_HOME + "/ChangeLog.txt",
-        dest:   "build/ChangeLog.txt"
+        dest:   BUILD_DIR + "/ChangeLog.txt"
     });
 }
 
@@ -168,8 +168,8 @@ function demo() {
 
     var version, ref;
     try {
-        version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
-        ref = fs.readFileSync(__dirname + "/.git-ref").toString();
+        version = JSON.parse(fs.readFileSync(ACE_HOME + "/package.json")).version;
+        ref = fs.readFileSync(ACE_HOME + "/.git-ref").toString();
     } catch(e) {
         ref = "";
         version = "";
@@ -186,7 +186,7 @@ function demo() {
         }
 
     copy({
-        source: "kitchen-sink.html",
+        source: ACE_HOME + "/kitchen-sink.html",
         dest:   BUILD_DIR + "/kitchen-sink.html",
         filter: [changeComments,  function(data) {
             return data.replace(/"(demo|build)\//g, "\"");
@@ -194,21 +194,21 @@ function demo() {
     });
 
     copy({
-        source: "demo/kitchen-sink/styles.css",
+        source: ACE_HOME + "/demo/kitchen-sink/styles.css",
         dest:   BUILD_DIR + "/kitchen-sink/styles.css",
         filter: [ changeComments ]
     });
 
-    fs.readdirSync("demo/kitchen-sink/docs/").forEach(function(x) {
+    fs.readdirSync(ACE_HOME +"/demo/kitchen-sink/docs/").forEach(function(x) {
         copy({
-            source: "demo/kitchen-sink/docs/" + x,
+            source: ACE_HOME +"/demo/kitchen-sink/docs/" + x,
             dest:   BUILD_DIR + "/kitchen-sink/docs/" + x
         });
     });
 
     var demo = copy.createDataObject();
     copy({
-        source: "demo/kitchen-sink/demo.js",
+        source: ACE_HOME + "/demo/kitchen-sink/demo.js",
         dest: demo,
         filter: [changeComments, function(data) {
             return data.replace(/"(demo|build)\//g, "\"");
@@ -217,7 +217,7 @@ function demo() {
         }]
     });
     copy({
-        source: "lib/ace/split.js",
+        source: ACE_HOME + "/lib/ace/split.js",
         dest: demo,
         filter: [changeComments, function(data) {
             return data.replace("define(", "define('ace/split',");
@@ -228,7 +228,7 @@ function demo() {
         dest:   BUILD_DIR + "/kitchen-sink/demo.js",
     });
 
-    copyFileSync("demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
+    copyFileSync(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
 }
 
 function buildAce(options) {
@@ -246,13 +246,13 @@ function buildAce(options) {
         noconflict: false,
         suffix: null,
         name: "ace",
-        modes: fs.readdirSync("lib/ace/mode").map(function(x) {
+        modes: fs.readdirSync(ACE_HOME + "/lib/ace/mode").map(function(x) {
                 if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/.test(x))
                     return x.slice(0, -3);
-            }).filter(function(x){return !!x}),
-        themes: fs.readdirSync("lib/ace/theme").map(function(x){
-                return x.slice(-3) == ".js" && x.slice(0, -3)
-            }).filter(function(x){return !!x}),
+            }).filter(function(x) { return !!x; }),
+        themes: fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
+                return x.slice(-3) == ".js" && x.slice(0, -3);
+            }).filter(function(x){ return !!x; }),
         workers: ["javascript", "coffee", "css", "json", "xquery"],
         keybindings: ["vim", "emacs"]
     };
@@ -297,7 +297,7 @@ function buildAce(options) {
     var project = copy.createCommonJsProject(aceProject);
     var ace = copy.createDataObject();
     copy({
-        source: ["build_support/mini_require.js"],
+        source: [ACE_HOME + "/build_support/mini_require.js"],
         dest: ace
     });
     copy({
@@ -344,7 +344,7 @@ function buildAce(options) {
             dest:   targetDir + "/theme-" + theme + ".js"
         });*/
         // use this instead, to not create separate modules for js and css
-        var themePath = "lib/ace/theme/" + theme
+        var themePath = ACE_HOME + "/lib/ace/theme/" + theme
         var js = fs.readFileSync(themePath + ".js", "utf8");
         js = js.replace("define(", "define('ace/theme/" + theme + "', ['require', 'exports', 'module', 'ace/lib/dom'], ");
         
@@ -364,8 +364,8 @@ function buildAce(options) {
     options.keybindings.forEach(function(keybinding) {
         copy({
             source: [{
-                    project: cloneProject(project),
-                    require: [ 'ace/keyboard/' + keybinding ]
+                project: cloneProject(project),
+                require: [ 'ace/keyboard/' + keybinding ]
             }],
             filter: filters,
             dest: targetDir + "/keybinding-" + keybinding + ".js"
