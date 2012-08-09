@@ -49,6 +49,26 @@ var global = (function() {
     return this;
 })();
 
+// take care of the case when requirejs is used and we just need to patch it a little bit
+if (!ACE_NAMESPACE && typeof requirejs !== "undefined") {
+
+    var define = global.define;
+    global.define = function(id, deps, callback) {
+        if (typeof callback !== "function")
+            return define.apply(this, arguments);
+
+        return define(id, deps, function(require, exports, module) {
+            if (deps[2] == "module")
+                module.packaged = true;
+            return callback.apply(this, arguments);
+        });
+    };
+    global.define.packaged = true;
+
+    return;
+}
+
+
 var _define = function(module, deps, payload) {
     if (typeof module !== 'string') {
         if (_define.original)
@@ -160,29 +180,9 @@ var lookup = function(parentId, moduleName) {
 };
 
 function exportAce(ns) {
-
-    if (typeof requirejs !== "undefined") {
-
-        var define = global.define;
-        global.define = function(id, deps, callback) {
-            if (typeof callback !== "function")
-                return define.apply(this, arguments);
-
-            return define(id, deps, function(require, exports, module) {
-                if (deps[2] == "module")
-                    module.packaged = true;
-                return callback.apply(this, arguments);
-            });
-        };
-        global.define.packaged = true;
-
-        return;
-    }
-
     var require = function(module, callback) {
         return _require("", module, callback);
-    };
-    require.packaged = true;
+    };    
 
     var root = global;
     if (ns) {
@@ -191,15 +191,17 @@ function exportAce(ns) {
         root = global[ns];
     }
 
-    if (root.define)
+    if (!root.define || !root.define.packaged) {
         _define.original = root.define;
+        root.define = _define;
+        root.define.packaged = true;
+    }
 
-    root.define = _define;
-
-    if (root.require)
+    if (!root.require || !root.require.packaged) {
         _require.original = root.require;
-
-    root.require = require;
+        root.require = require;
+        root.require.packaged = true;
+    }
 }
 
 exportAce(ACE_NAMESPACE);
