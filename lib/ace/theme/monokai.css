@@ -143,3 +143,7 @@ color:#FD971F;
 .ace-monokai .ace_markup.ace_underline {
     text-decoration:underline;
 }
+
+.ace-monokai .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNQ11D6z7Bq1ar/ABCKBG6g04U2AAAAAElFTkSuQmCC) right repeat-y;
+}

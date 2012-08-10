@@ -148,3 +148,7 @@ color:#D2A8A1;
 .ace-pastel-on-dark .ace_markup.ace_underline {
     text-decoration:underline;
 }
+
+.ace-pastel-on-dark .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0dD4z9DR0fEfAA+vBBPqhbn1AAAAAElFTkSuQmCC) right repeat-y;
+}
