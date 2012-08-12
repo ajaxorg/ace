@@ -154,10 +154,6 @@ function ace() {
         dest:   BUILD_DIR + "/LICENSE"
     });
     copy({
-        source: ACE_HOME + "/Readme.md",
-        dest:   BUILD_DIR + "/Readme.md"
-    });
-    copy({
         source: ACE_HOME + "/ChangeLog.txt",
         dest:   BUILD_DIR + "/ChangeLog.txt"
     });
