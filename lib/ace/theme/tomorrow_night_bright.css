@@ -162,3 +162,7 @@ background-color:#B798BF;
 .ace-tomorrow-night-bright .ace_markup.ace_heading {
   color:#B9CA4A;
 }
+
+.ace-tomorrow-night-bright .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGD4z7Bq1ar/AAz9A/2naJQKAAAAAElFTkSuQmCC) right repeat-y;
+}
