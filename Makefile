@@ -16,7 +16,9 @@ build: pre_build
 	./Makefile.dryice.js bm
 
 doc:
-	cd doc; node build.js
+	cd doc;\
+	test -d node_modules || npm install;\
+	node build.js
 
 clean:
 	rm -rf build

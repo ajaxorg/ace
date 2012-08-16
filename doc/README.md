@@ -12,6 +12,7 @@ In the root directory, just run:
 
 In this directory, just run:
 
+    npm install
     node build.js
 
 # Build File
