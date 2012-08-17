@@ -122,9 +122,11 @@
                             </li>
                           </ul>
                         </li>
-                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (72)</span><b class="caret"></b></a>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (74)</span><b class="caret"></b></a>
                           <ul class="dropdown-menu">
                             <li data-id="EditSession.addDynamicMarker" class="memberLink"><a href="#EditSession.addDynamicMarker" class="" title="EditSession.addDynamicMarker (class method)" data-id="EditSession.addDynamicMarker">addDynamicMarker</a>
+                            </li>
+                            <li data-id="EditSession.addGutterDecoration" class="memberLink"><a href="#EditSession.addGutterDecoration" class="" title="EditSession.addGutterDecoration (class method)" data-id="EditSession.addGutterDecoration">addGutterDecoration</a>
                             </li>
                             <li data-id="EditSession.addMarker" class="memberLink"><a href="#EditSession.addMarker" class="" title="EditSession.addMarker (class method)" data-id="EditSession.addMarker">addMarker</a>
                             </li>
@@ -221,6 +223,8 @@
                             <li data-id="EditSession.redoChanges" class="memberLink"><a href="#EditSession.redoChanges" class="" title="EditSession.redoChanges (class method)" data-id="EditSession.redoChanges">redoChanges</a>
                             </li>
                             <li data-id="EditSession.remove" class="memberLink"><a href="#EditSession.remove" class="" title="EditSession.remove (class method)" data-id="EditSession.remove">remove</a>
+                            </li>
+                            <li data-id="EditSession.removeGutterDecoration" class="memberLink"><a href="#EditSession.removeGutterDecoration" class="" title="EditSession.removeGutterDecoration (class method)" data-id="EditSession.removeGutterDecoration">removeGutterDecoration</a>
                             </li>
                             <li data-id="EditSession.removeMarker" class="memberLink"><a href="#EditSession.removeMarker" class="" title="EditSession.removeMarker (class method)" data-id="EditSession.removeMarker">removeMarker</a>
                             </li>
@@ -489,6 +493,40 @@
                           <h3 id="EditSession.addDynamicMarker" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                             <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">marker</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. object with update method</td></tr><tr class="argumentRow "><td class="argName ">inFront</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Set to <code>true</code> to establish a front marker</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                  <article id="EditSession.addGutterDecoration" data-title="EditSession.addGutterDecoration (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="EditSession.addGutterDecoration" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">addGutterDecoration</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> className</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="EditSession.addGutterDecoration (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_EditSession.addGutterDecoration" class="ellipsis_description"><p>Adds <code>className</code> to the <code>row</code>, to be used for CSS stylings and whatnot.</p>
+
+                          </div>
+                          <div id="short_EditSession.addGutterDecoration" class="short_description hiddenSpan"><p>Adds <code>className</code> to the <code>row</code>, to be used for CSS stylings and whatnot.</p>
+
+                          </div>
+                          <h3 id="EditSession.addGutterDecoration" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row number</td></tr><tr class="argumentRow "><td class="argName ">className</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The class to add</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -2090,6 +2128,40 @@
                       </div>
                     </div>
                   </article>
+                  <article id="EditSession.removeGutterDecoration" data-title="EditSession.removeGutterDecoration (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="EditSession.removeGutterDecoration" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">removeGutterDecoration</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> className</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="EditSession.removeGutterDecoration (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_EditSession.removeGutterDecoration" class="ellipsis_description"><p>Removes <code>className</code> from the <code>row</code>.</p>
+
+                          </div>
+                          <div id="short_EditSession.removeGutterDecoration" class="short_description hiddenSpan"><p>Removes <code>className</code> from the <code>row</code>.</p>
+
+                          </div>
+                          <h3 id="EditSession.removeGutterDecoration" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row number</td></tr><tr class="argumentRow "><td class="argName ">className</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The class to add</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
                   <article id="EditSession.removeMarker" data-title="EditSession.removeMarker (class method)" class="article">
                     <div class="section method">
                       <div class="memberContent">
@@ -2227,7 +2299,7 @@
                           <ul class="signatures">
                             <li class="signature">
                               <ul>
-                                <li class="signature-call"><span id="EditSession.setBreakpoint" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">setBreakpoint</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row</span>)</li>
+                                <li class="signature-call"><span id="EditSession.setBreakpoint" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">setBreakpoint</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row, <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> className</span>)</li>
                               </ul>
                               <ul class="metaInfo">
                               </ul>
@@ -2243,7 +2315,7 @@
                           </div>
                           <h3 id="EditSession.setBreakpoint" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. A row index</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. A row index</td></tr><tr class="argumentRow "><td class="argName ">className</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. Class of the breakpoint</td></tr></table>
                           </div>
                         </div>
                       </div>
