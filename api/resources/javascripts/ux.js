@@ -9,14 +9,6 @@ $(function () {
     if (window.addEventListener) window.addEventListener('load', loadCallback, true);
     else window.attachEvent('load', loadCallback, true);
 
-    // sticky footer stuff
-    if ($('#mainContent').height() > $('#sidebarContainer').height()) {
-        $('#nonFooter').css( {
-            'min-height': '100%'
-        });
-        $('#nonFooter').height("auto");
-    }
-
     function loadCallback(evt) {
         var form = document.getElementById("searchbox");
         var input = form.query;

@@ -146,11 +146,11 @@ ul.menu {
     margin-left: 16px;
 }
 
-/*.menu li {
+.menu li {
     list-style-image: url(../images/menu_disc.png);
     margin-bottom: 3px;
     font-weight : 700;
-}*/
+}
 
 .menu li .menu-item a.menuLink, .menu li .menu-item span.menuLink {
     color: #262626;

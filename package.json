@@ -16,8 +16,7 @@
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
         "plist": "",
-        "dryice": "",
-        "panino" : "~1.0.15"
+        "dryice": ""
     },
     "mappings": {
         "ace": "."

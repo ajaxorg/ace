@@ -139,7 +139,7 @@
                   </div>
                   <article id="UndoManager" data-title="UndoManager (class)" class="article">
                     <div class="section description">
-                      <div class="memberContent"><p>This object maintains the undo stack for an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a>.</p>
+                      <div class="memberContent"><p>This object maintains the undo stack for an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession">EditSession</a>.</p>
 
                       </div>
                     </div>
@@ -160,7 +160,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_new UndoManager" class="ellipsis_description"><p>Resets the current undo state and creates a new <code>UndoManager</code>. ...</p>
+                          <div id="ellipsis_new UndoManager" class="ellipsis_description"><p>Resets the current undo state and creates a new <code>UndoManager</code>.</p>
 
                           </div>
                           <div id="short_new UndoManager" class="short_description hiddenSpan"><p>Resets the current undo state and creates a new <code>UndoManager</code>.</p>
@@ -194,12 +194,18 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_UndoManager.execute" class="ellipsis_description"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="[object Object]" data-id="[object Object]">undefined</a>, w...</p>
+                          <div id="ellipsis_UndoManager.execute" class="ellipsis_description"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="[object Object]" data-id="[object Object]">undefined</a>, with two elements:</p>
+<ul>
+<li><code>args[0]</code> is an array of deltas</li>
+<li><code>args[1]</code> is the document to associate with</li>
+</ul>
 
                           </div>
-                          <div id="short_UndoManager.execute" class="short_description hiddenSpan"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="[object Object]" data-id="[object Object]">undefined</a>, with two elements:
-<em> <code>args[0]</code> is an array of deltas
-</em> <code>args[1]</code> is the document to associate with</p>
+                          <div id="short_UndoManager.execute" class="short_description hiddenSpan"><p>Provides a means for implementing your own undo manager. <code>options</code> has one property, <code>args</code>, an <a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="link-short" title="[object Object]" data-id="[object Object]">undefined</a>, with two elements:</p>
+<ul>
+<li><code>args[0]</code> is an array of deltas</li>
+<li><code>args[1]</code> is the document to associate with</li>
+</ul>
 
                           </div>
                           <h3 id="UndoManager.execute" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -230,7 +236,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_UndoManager.hasRedo" class="ellipsis_description"><p>Returns <code>true</code> if there are redo operations left to perform. ...</p>
+                          <div id="ellipsis_UndoManager.hasRedo" class="ellipsis_description"><p>Returns <code>true</code> if there are redo operations left to perform.</p>
 
                           </div>
                           <div id="short_UndoManager.hasRedo" class="short_description hiddenSpan"><p>Returns <code>true</code> if there are redo operations left to perform.</p>
@@ -263,7 +269,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_UndoManager.hasUndo" class="ellipsis_description"><p>Returns <code>true</code> if there are undo operations left to perform. ...</p>
+                          <div id="ellipsis_UndoManager.hasUndo" class="ellipsis_description"><p>Returns <code>true</code> if there are undo operations left to perform.</p>
 
                           </div>
                           <div id="short_UndoManager.hasUndo" class="short_description hiddenSpan"><p>Returns <code>true</code> if there are undo operations left to perform.</p>
@@ -296,15 +302,15 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_UndoManager.redo" class="ellipsis_description"><p>Perform a redo operation on the document, reimplementing the last change.</p>
+                          <div id="ellipsis_UndoManager.redo" class="ellipsis_description"><p>[Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}</p>
 
                           </div>
-                          <div id="short_UndoManager.redo" class="short_description hiddenSpan"><p>Perform a redo operation on the document, reimplementing the last change.</p>
+                          <div id="short_UndoManager.redo" class="short_description hiddenSpan"><p>[Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}</p>
 
                           </div>
                           <h3 id="UndoManager.redo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. {:dontSelect}</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -330,7 +336,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_UndoManager.reset" class="ellipsis_description"><p>Destroys the stack of undo and redo redo operations. ...</p>
+                          <div id="ellipsis_UndoManager.reset" class="ellipsis_description"><p>Destroys the stack of undo and redo redo operations.</p>
 
                           </div>
                           <div id="short_UndoManager.reset" class="short_description hiddenSpan"><p>Destroys the stack of undo and redo redo operations.</p>
@@ -363,15 +369,15 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_UndoManager.undo" class="ellipsis_description"><p>[Perform an undo operation on the document, reverting the last change. Returns the range of the undo.]{: #UndoManage...</p>
+                          <div id="ellipsis_UndoManager.undo" class="ellipsis_description"><p>[Perform an undo operation on the document, reverting the last change. Returns the range of the undo.]{: #UndoManager.undo}</p>
 
                           </div>
-                          <div id="short_UndoManager.undo" class="short_description hiddenSpan"><p>Perform an undo operation on the document, reverting the last change. Returns the range of the undo.</p>
+                          <div id="short_UndoManager.undo" class="short_description hiddenSpan"><p>[Perform an undo operation on the document, reverting the last change. Returns the range of the undo.]{: #UndoManager.undo}</p>
 
                           </div>
                           <h3 id="UndoManager.undo" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. {:dontSelect}</td></tr></table>
                           </div>
                         </div>
                       </div>

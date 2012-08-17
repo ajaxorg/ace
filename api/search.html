@@ -137,7 +137,7 @@
                   </div>
                   <article id="Search" data-title="Search (class)" class="article">
                     <div class="section description">
-                      <div class="memberContent"><p>A class designed to handle all sorts of text searches within a <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a>.</p>
+                      <div class="memberContent"><p>A class designed to handle all sorts of text searches within a <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a>.</p>
 
                       </div>
                     </div>
@@ -158,23 +158,34 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_new Search" class="ellipsis_description"><p>Creates a new <code>Search</code> object. The search options contain the following defaults:
- ...</p>
+                          <div id="ellipsis_new Search" class="ellipsis_description"><p>Creates a new <code>Search</code> object. The following search options are avaliable:</p>
 
                           </div>
-                          <div id="short_new Search" class="short_description hiddenSpan"><p>Creates a new <code>Search</code> object. The search options contain the following defaults:
-</p>
+                          <div id="short_new Search" class="short_description hiddenSpan"><p>Creates a new <code>Search</code> object. The following search options are avaliable:</p>
+<ul>
+<li>needle: string or regular expression</li>
+<li>backwards: false</li>
+<li>wrap: false</li>
+<li>caseSensitive: false</li>
+<li>wholeWord: false</li>
+<li>range: Range or null for whole document</li>
+<li>regExp: false</li>
+<li>start: Range or position</li>
+<li>skipCurrent: false</li>
+</ul>
 
                           </div>
                           <h3 id="new Search" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description"><ul>
-<li><code>needle</code>: <code>&quot;&quot;</code></li>
-<li><code>backwards</code>: <code>false</code></li>
-<li><code>wrap</code>: <code>false</code></li>
-<li><code>caseSensitive</code>: <code>false</code></li>
-<li><code>wholeWord</code>: <code>false</code></li>
-<li><code>scope</code>: <code>ALL</code></li>
-<li><code>regExp</code>: <code>false</code></li>
+<li>needle: string or regular expression</li>
+<li>backwards: false</li>
+<li>wrap: false</li>
+<li>caseSensitive: false</li>
+<li>wholeWord: false</li>
+<li>range: Range or null for whole document</li>
+<li>regExp: false</li>
+<li>start: Range or position</li>
+<li>skipCurrent: false</li>
 </ul>
 
                           </div>
@@ -203,10 +214,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Search.find" class="ellipsis_description"><p>Searches for <code>options.needle</code>. If found, this method returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code></a> where the text first occurs. If `...</p>
+                          <div id="ellipsis_Search.find" class="ellipsis_description"><p>Searches for <code>options.needle</code>. If found, this method returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range">Range</a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
 
                           </div>
-                          <div id="short_Search.find" class="short_description hiddenSpan"><p>Searches for <code>options.needle</code>. If found, this method returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code></a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
+                          <div id="short_Search.find" class="short_description hiddenSpan"><p>Searches for <code>options.needle</code>. If found, this method returns the <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range">Range</a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
 
                           </div>
                           <h3 id="Search.find" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -237,10 +248,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Search.findAll" class="ellipsis_description"><p>Searches for all occurances <code>options.needle</code>. If found, this method returns an array of <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code>s</a> where the...</p>
+                          <div id="ellipsis_Search.findAll" class="ellipsis_description"><p>Searches for all occurances <code>options.needle</code>. If found, this method returns an array of <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range">Range</a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
 
                           </div>
-                          <div id="short_Search.findAll" class="short_description hiddenSpan"><p>Searches for all occurances <code>options.needle</code>. If found, this method returns an array of <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range"><code>Range</code>s</a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
+                          <div id="short_Search.findAll" class="short_description hiddenSpan"><p>Searches for all occurances <code>options.needle</code>. If found, this method returns an array of <a href="range.html#Range" class="link-short" title="Range (class)" data-id="Range">Range</a> where the text first occurs. If <code>options.backwards</code> is <code>true</code>, the search goes backwards in the session.</p>
 
                           </div>
                           <h3 id="Search.findAll" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -271,10 +282,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Search.getOptions" class="ellipsis_description"><p>Returns an object containing all the search options.</p>
+                          <div id="ellipsis_Search.getOptions" class="ellipsis_description"><p>[Returns an object containing all the search options.]{: #Search.getOptions}</p>
 
                           </div>
-                          <div id="short_Search.getOptions" class="short_description hiddenSpan"><p>Returns an object containing all the search options.</p>
+                          <div id="short_Search.getOptions" class="short_description hiddenSpan"><p>[Returns an object containing all the search options.]{: #Search.getOptions}</p>
 
                           </div>
                           <h3 id="Search.getOptions" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -304,7 +315,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Search.replace" class="ellipsis_description"><p>Searches for <code>options.needle</code> in <code>input</code>, and, if found, replaces it with <code>replacement</code>. ...</p>
+                          <div id="ellipsis_Search.replace" class="ellipsis_description"><p>Searches for <code>options.needle</code> in <code>input</code>, and, if found, replaces it with <code>replacement</code>.</p>
 
                           </div>
                           <div id="short_Search.replace" class="short_description hiddenSpan"><p>Searches for <code>options.needle</code> in <code>input</code>, and, if found, replaces it with <code>replacement</code>.</p>
@@ -339,7 +350,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Search.set" class="ellipsis_description"><p>Sets the search options via the <code>options</code> parameter. ...</p>
+                          <div id="ellipsis_Search.set" class="ellipsis_description"><p>Sets the search options via the <code>options</code> parameter.</p>
 
                           </div>
                           <div id="short_Search.set" class="short_description hiddenSpan"><p>Sets the search options via the <code>options</code> parameter.</p>

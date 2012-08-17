@@ -180,8 +180,6 @@
                             </li>
                             <li data-id="VirtualRenderer.setAnnotations" class="memberLink"><a href="#VirtualRenderer.setAnnotations" class="" title="VirtualRenderer.setAnnotations (class method)" data-id="VirtualRenderer.setAnnotations">setAnnotations</a>
                             </li>
-                            <li data-id="VirtualRenderer.setBreakpoints" class="memberLink"><a href="#VirtualRenderer.setBreakpoints" class="" title="VirtualRenderer.setBreakpoints (class method)" data-id="VirtualRenderer.setBreakpoints">setBreakpoints</a>
-                            </li>
                             <li data-id="VirtualRenderer.setCompositionText" class="memberLink"><a href="#VirtualRenderer.setCompositionText" class="" title="VirtualRenderer.setCompositionText (class method)" data-id="VirtualRenderer.setCompositionText">setCompositionText</a>
                             </li>
                             <li data-id="VirtualRenderer.setHScrollBarAlwaysVisible" class="memberLink"><a href="#VirtualRenderer.setHScrollBarAlwaysVisible" class="" title="VirtualRenderer.setHScrollBarAlwaysVisible (class method)" data-id="VirtualRenderer.setHScrollBarAlwaysVisible">setHScrollBarAlwaysVisible</a>
@@ -209,6 +207,8 @@
                             <li data-id="VirtualRenderer.unsetStyle" class="memberLink"><a href="#VirtualRenderer.unsetStyle" class="" title="VirtualRenderer.unsetStyle (class method)" data-id="VirtualRenderer.unsetStyle">unsetStyle</a>
                             </li>
                             <li data-id="VirtualRenderer.updateBackMarkers" class="memberLink"><a href="#VirtualRenderer.updateBackMarkers" class="" title="VirtualRenderer.updateBackMarkers (class method)" data-id="VirtualRenderer.updateBackMarkers">updateBackMarkers</a>
+                            </li>
+                            <li data-id="VirtualRenderer.updateBreakpoints" class="memberLink"><a href="#VirtualRenderer.updateBreakpoints" class="" title="VirtualRenderer.updateBreakpoints (class method)" data-id="VirtualRenderer.updateBreakpoints">updateBreakpoints</a>
                             </li>
                             <li data-id="VirtualRenderer.updateCursor" class="memberLink"><a href="#VirtualRenderer.updateCursor" class="" title="VirtualRenderer.updateCursor (class method)" data-id="VirtualRenderer.updateCursor">updateCursor</a>
                             </li>
@@ -262,7 +262,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_new VirtualRenderer" class="ellipsis_description"><p>Constructs a new <code>VirtualRenderer</code> within the <code>container</code> specified, applying the given <code>theme</code>. ...</p>
+                          <div id="ellipsis_new VirtualRenderer" class="ellipsis_description"><p>Constructs a new <code>VirtualRenderer</code> within the <code>container</code> specified, applying the given <code>theme</code>.</p>
 
                           </div>
                           <div id="short_new VirtualRenderer" class="short_description hiddenSpan"><p>Constructs a new <code>VirtualRenderer</code> within the <code>container</code> specified, applying the given <code>theme</code>.</p>
@@ -297,7 +297,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.addGutterDecoration" class="ellipsis_description"><p>Adds <code>className</code> to the <code>row</code>, to be used for CSS stylings and whatnot. ...</p>
+                          <div id="ellipsis_VirtualRenderer.addGutterDecoration" class="ellipsis_description"><p>Adds <code>className</code> to the <code>row</code>, to be used for CSS stylings and whatnot.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.addGutterDecoration" class="short_description hiddenSpan"><p>Adds <code>className</code> to the <code>row</code>, to be used for CSS stylings and whatnot.</p>
@@ -331,7 +331,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.adjustWrapLimit" class="ellipsis_description"><p>Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen. ...</p>
+                          <div id="ellipsis_VirtualRenderer.adjustWrapLimit" class="ellipsis_description"><p>Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.adjustWrapLimit" class="short_description hiddenSpan"><p>Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.</p>
@@ -359,7 +359,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.destroy" class="ellipsis_description"><p>Destroys the text and cursor layers for this renderer. ...</p>
+                          <div id="ellipsis_VirtualRenderer.destroy" class="ellipsis_description"><p>Destroys the text and cursor layers for this renderer.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.destroy" class="short_description hiddenSpan"><p>Destroys the text and cursor layers for this renderer.</p>
@@ -392,7 +392,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getAnimatedScroll" class="ellipsis_description"><p>Returns whether an animated scroll happens or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getAnimatedScroll" class="ellipsis_description"><p>Returns whether an animated scroll happens or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getAnimatedScroll" class="short_description hiddenSpan"><p>Returns whether an animated scroll happens or not.</p>
@@ -425,7 +425,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getContainerElement" class="ellipsis_description"><p>Returns the root element containing this renderer. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getContainerElement" class="ellipsis_description"><p>Returns the root element containing this renderer.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getContainerElement" class="short_description hiddenSpan"><p>Returns the root element containing this renderer.</p>
@@ -458,7 +458,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getFirstFullyVisibleRow" class="ellipsis_description"><p>Returns the index of the first fully visible row. &quot;Fully&quot; here means that the characters in the row are not truncate...</p>
+                          <div id="ellipsis_VirtualRenderer.getFirstFullyVisibleRow" class="ellipsis_description"><p>Returns the index of the first fully visible row. &quot;Fully&quot; here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getFirstFullyVisibleRow" class="short_description hiddenSpan"><p>Returns the index of the first fully visible row. &quot;Fully&quot; here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.</p>
@@ -491,10 +491,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getFirstVisibleRow" class="ellipsis_description"><p>Returns the index of the first visible row.</p>
+                          <div id="ellipsis_VirtualRenderer.getFirstVisibleRow" class="ellipsis_description"><p>[Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.getFirstVisibleRow" class="short_description hiddenSpan"><p>Returns the index of the first visible row.</p>
+                          <div id="short_VirtualRenderer.getFirstVisibleRow" class="short_description hiddenSpan"><p>[Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.getFirstVisibleRow" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -524,7 +524,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getHScrollBarAlwaysVisible" class="ellipsis_description"><p>Returns whether the horizontal scrollbar is set to be always visible. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getHScrollBarAlwaysVisible" class="ellipsis_description"><p>Returns whether the horizontal scrollbar is set to be always visible.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getHScrollBarAlwaysVisible" class="short_description hiddenSpan"><p>Returns whether the horizontal scrollbar is set to be always visible.</p>
@@ -557,7 +557,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getLastFullyVisibleRow" class="ellipsis_description"><p>Returns the index of the last fully visible row. &quot;Fully&quot; here means that the characters in the row are not truncated...</p>
+                          <div id="ellipsis_VirtualRenderer.getLastFullyVisibleRow" class="ellipsis_description"><p>Returns the index of the last fully visible row. &quot;Fully&quot; here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getLastFullyVisibleRow" class="short_description hiddenSpan"><p>Returns the index of the last fully visible row. &quot;Fully&quot; here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.</p>
@@ -590,10 +590,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getLastVisibleRow" class="ellipsis_description"><p>Returns the index of the last visible row.</p>
+                          <div id="ellipsis_VirtualRenderer.getLastVisibleRow" class="ellipsis_description"><p>[Returns the index of the last visible row.]{: #VirtualRenderer.getLastVisibleRow}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.getLastVisibleRow" class="short_description hiddenSpan"><p>Returns the index of the last visible row.</p>
+                          <div id="short_VirtualRenderer.getLastVisibleRow" class="short_description hiddenSpan"><p>[Returns the index of the last visible row.]{: #VirtualRenderer.getLastVisibleRow}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.getLastVisibleRow" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -623,7 +623,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getMouseEventTarget" class="ellipsis_description"><p>Returns the element that the mouse events are attached to ...</p>
+                          <div id="ellipsis_VirtualRenderer.getMouseEventTarget" class="ellipsis_description"><p>Returns the element that the mouse events are attached to</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getMouseEventTarget" class="short_description hiddenSpan"><p>Returns the element that the mouse events are attached to</p>
@@ -656,7 +656,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getPrintMarginColumn" class="ellipsis_description"><p>Returns whether the print margin column is being shown or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getPrintMarginColumn" class="ellipsis_description"><p>Returns whether the print margin column is being shown or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getPrintMarginColumn" class="short_description hiddenSpan"><p>Returns whether the print margin column is being shown or not.</p>
@@ -689,7 +689,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getScrollBottomRow" class="ellipsis_description"><p>Returns the last visible row, regardless of whether it&#39;s fully visible or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getScrollBottomRow" class="ellipsis_description"><p>Returns the last visible row, regardless of whether it&#39;s fully visible or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getScrollBottomRow" class="short_description hiddenSpan"><p>Returns the last visible row, regardless of whether it&#39;s fully visible or not.</p>
@@ -723,10 +723,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getScrollLeft" class="ellipsis_description"><p>Returns the value of the distance between the left of the editor and the leftmost part of the visible content. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getScrollLeft" class="ellipsis_description"><p>{:EditSession.getScrollLeft}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.getScrollLeft" class="short_description hiddenSpan"><p>Returns the value of the distance between the left of the editor and the leftmost part of the visible content.</p>
+                          <div id="short_VirtualRenderer.getScrollLeft" class="short_description hiddenSpan"><p>{:EditSession.getScrollLeft}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.getScrollLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -757,10 +757,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getScrollTop" class="ellipsis_description"><p>Returns the value of the distance between the top of the editor and the topmost part of the visible content. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getScrollTop" class="ellipsis_description"><p>{:EditSession.getScrollTop}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.getScrollTop" class="short_description hiddenSpan"><p>Returns the value of the distance between the top of the editor and the topmost part of the visible content.</p>
+                          <div id="short_VirtualRenderer.getScrollTop" class="short_description hiddenSpan"><p>{:EditSession.getScrollTop}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.getScrollTop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -790,7 +790,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getScrollTopRow" class="ellipsis_description"><p>Returns the first visible row, regardless of whether it&#39;s fully visible or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getScrollTopRow" class="ellipsis_description"><p>Returns the first visible row, regardless of whether it&#39;s fully visible or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getScrollTopRow" class="short_description hiddenSpan"><p>Returns the first visible row, regardless of whether it&#39;s fully visible or not.</p>
@@ -823,7 +823,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getShowGutter" class="ellipsis_description"><p>Returns <code>true</code> if the gutter is being shown. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getShowGutter" class="ellipsis_description"><p>Returns <code>true</code> if the gutter is being shown.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getShowGutter" class="short_description hiddenSpan"><p>Returns <code>true</code> if the gutter is being shown.</p>
@@ -856,7 +856,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getShowInvisibles" class="ellipsis_description"><p>Returns whether invisible characters are being shown or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getShowInvisibles" class="ellipsis_description"><p>Returns whether invisible characters are being shown or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getShowInvisibles" class="short_description hiddenSpan"><p>Returns whether invisible characters are being shown or not.</p>
@@ -889,7 +889,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getShowPrintMargin" class="ellipsis_description"><p>Returns whetherthe print margin is being shown or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getShowPrintMargin" class="ellipsis_description"><p>Returns whetherthe print margin is being shown or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getShowPrintMargin" class="short_description hiddenSpan"><p>Returns whetherthe print margin is being shown or not.</p>
@@ -922,7 +922,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getTextAreaContainer" class="ellipsis_description"><p>Returns the element to which the hidden text area is added. ...</p>
+                          <div id="ellipsis_VirtualRenderer.getTextAreaContainer" class="ellipsis_description"><p>Returns the element to which the hidden text area is added.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.getTextAreaContainer" class="short_description hiddenSpan"><p>Returns the element to which the hidden text area is added.</p>
@@ -955,10 +955,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.getTheme" class="ellipsis_description"><p>Returns the path of the current theme.</p>
+                          <div id="ellipsis_VirtualRenderer.getTheme" class="ellipsis_description"><p>[Returns the path of the current theme.]{: #VirtualRenderer.getTheme}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.getTheme" class="short_description hiddenSpan"><p>Returns the path of the current theme.</p>
+                          <div id="short_VirtualRenderer.getTheme" class="short_description hiddenSpan"><p>[Returns the path of the current theme.]{: #VirtualRenderer.getTheme}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.getTheme" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -988,7 +988,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.hideComposition" class="ellipsis_description"><p>Hides the current composition. ...</p>
+                          <div id="ellipsis_VirtualRenderer.hideComposition" class="ellipsis_description"><p>Hides the current composition.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.hideComposition" class="short_description hiddenSpan"><p>Hides the current composition.</p>
@@ -1021,7 +1021,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.hideCursor" class="ellipsis_description"><p>Hides the cursor icon. ...</p>
+                          <div id="ellipsis_VirtualRenderer.hideCursor" class="ellipsis_description"><p>Hides the cursor icon.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.hideCursor" class="short_description hiddenSpan"><p>Hides the cursor icon.</p>
@@ -1054,7 +1054,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.isScrollableBy" class="ellipsis_description"><p>Returns <code>true</code> if you can still scroll by either parameter; in other words, you haven&#39;t reached the end of the file ...</p>
+                          <div id="ellipsis_VirtualRenderer.isScrollableBy" class="ellipsis_description"><p>Returns <code>true</code> if you can still scroll by either parameter; in other words, you haven&#39;t reached the end of the file or line.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.isScrollableBy" class="short_description hiddenSpan"><p>Returns <code>true</code> if you can still scroll by either parameter; in other words, you haven&#39;t reached the end of the file or line.</p>
@@ -1088,10 +1088,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.onResize" class="ellipsis_description"><p>Triggers a resize of the editor.</p>
+                          <div id="ellipsis_VirtualRenderer.onResize" class="ellipsis_description"><p>[Triggers a resize of the editor.]{: #VirtualRenderer.onResize}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.onResize" class="short_description hiddenSpan"><p>Triggers a resize of the editor.</p>
+                          <div id="short_VirtualRenderer.onResize" class="short_description hiddenSpan"><p>[Triggers a resize of the editor.]{: #VirtualRenderer.onResize}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.onResize" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1122,7 +1122,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.removeGutterDecoration" class="ellipsis_description"><p>Removes <code>className</code> from the <code>row</code>. ...</p>
+                          <div id="ellipsis_VirtualRenderer.removeGutterDecoration" class="ellipsis_description"><p>Removes <code>className</code> from the <code>row</code>.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.removeGutterDecoration" class="short_description hiddenSpan"><p>Removes <code>className</code> from the <code>row</code>.</p>
@@ -1156,7 +1156,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.scrollBy" class="ellipsis_description"><p>Scrolls the editor across both x- and y-axes. ...</p>
+                          <div id="ellipsis_VirtualRenderer.scrollBy" class="ellipsis_description"><p>Scrolls the editor across both x- and y-axes.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.scrollBy" class="short_description hiddenSpan"><p>Scrolls the editor across both x- and y-axes.</p>
@@ -1190,7 +1190,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.scrollCursorIntoView" class="ellipsis_description"><p>Scrolls the cursor into the first visibile area of the editor ...</p>
+                          <div id="ellipsis_VirtualRenderer.scrollCursorIntoView" class="ellipsis_description"><p>Scrolls the cursor into the first visibile area of the editor</p>
 
                           </div>
                           <div id="short_VirtualRenderer.scrollCursorIntoView" class="short_description hiddenSpan"><p>Scrolls the cursor into the first visibile area of the editor</p>
@@ -1223,7 +1223,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.scrollToLine" class="ellipsis_description"><p>Gracefully scrolls the editor to the row indicated. ...</p>
+                          <div id="ellipsis_VirtualRenderer.scrollToLine" class="ellipsis_description"><p>Gracefully scrolls the editor to the row indicated.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.scrollToLine" class="short_description hiddenSpan"><p>Gracefully scrolls the editor to the row indicated.</p>
@@ -1258,7 +1258,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.scrollToRow" class="ellipsis_description"><p>Gracefully scrolls the top of the editor to the row indicated. ...</p>
+                          <div id="ellipsis_VirtualRenderer.scrollToRow" class="ellipsis_description"><p>Gracefully scrolls the top of the editor to the row indicated.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.scrollToRow" class="short_description hiddenSpan"><p>Gracefully scrolls the top of the editor to the row indicated.</p>
@@ -1292,7 +1292,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.scrollToX" class="ellipsis_description"><p>Scrolls the editor to the x pixel indicated. ...</p>
+                          <div id="ellipsis_VirtualRenderer.scrollToX" class="ellipsis_description"><p>Scrolls the editor to the x pixel indicated.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.scrollToX" class="short_description hiddenSpan"><p>Scrolls the editor to the x pixel indicated.</p>
@@ -1326,7 +1326,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.scrollToY" class="ellipsis_description"><p>Scrolls the editor to the y pixel indicated. ...</p>
+                          <div id="ellipsis_VirtualRenderer.scrollToY" class="ellipsis_description"><p>Scrolls the editor to the y pixel indicated.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.scrollToY" class="short_description hiddenSpan"><p>Scrolls the editor to the y pixel indicated.</p>
@@ -1360,7 +1360,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setAnimatedScroll" class="ellipsis_description"><p>Identifies whether you want to have an animated scroll or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setAnimatedScroll" class="ellipsis_description"><p>Identifies whether you want to have an animated scroll or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setAnimatedScroll" class="short_description hiddenSpan"><p>Identifies whether you want to have an animated scroll or not.</p>
@@ -1394,7 +1394,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setAnnotations" class="ellipsis_description"><p>Sets annotations for the gutter. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setAnnotations" class="ellipsis_description"><p>Sets annotations for the gutter.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setAnnotations" class="short_description hiddenSpan"><p>Sets annotations for the gutter.</p>
@@ -1403,40 +1403,6 @@
                           <h3 id="VirtualRenderer.setAnnotations" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                             <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">annotations</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription ">Required. An array containing annotations</td></tr></table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                  <article id="VirtualRenderer.setBreakpoints" data-title="VirtualRenderer.setBreakpoints (class method)" class="article">
-                    <div class="section method">
-                      <div class="memberContent">
-                        <div class="title">
-                          <ul class="signatures">
-                            <li class="signature">
-                              <ul>
-                                <li class="signature-call"><span id="VirtualRenderer.setBreakpoints" class="member-name methodClicker"><span class="sigClassName">VirtualRenderer.</span><span class="sigMemberName">setBreakpoints</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="argument methodClicker" title="Array" data-id="Array">Array</a> rows</span>)
-                                  <li class="signature-returns">
-                                    <ul class="argument-types">
-                                      <li class="argument-type"><span class="returnType " title="VirtualRenderer.setBreakpoints (class method)">Void</span></li>
-                                    </ul>
-                                  </li></li>
-                              </ul>
-                              <ul class="metaInfo">
-                              </ul>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setBreakpoints" class="ellipsis_description"><p>Sets a breakpoint for every row number indicated on <code>rows</code>. ...</p>
-
-                          </div>
-                          <div id="short_VirtualRenderer.setBreakpoints" class="short_description hiddenSpan"><p>Sets a breakpoint for every row number indicated on <code>rows</code>.</p>
-
-                          </div>
-                          <h3 id="VirtualRenderer.setBreakpoints" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                          <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">rows</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription ">Required. An array containg row numbers</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -1462,7 +1428,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setCompositionText" class="ellipsis_description"><p>Sets the inner text of the current composition to <code>text</code>. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setCompositionText" class="ellipsis_description"><p>Sets the inner text of the current composition to <code>text</code>.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setCompositionText" class="short_description hiddenSpan"><p>Sets the inner text of the current composition to <code>text</code>.</p>
@@ -1496,7 +1462,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setHScrollBarAlwaysVisible" class="ellipsis_description"><p>Identifies whether you want to show the horizontal scrollbar or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setHScrollBarAlwaysVisible" class="ellipsis_description"><p>Identifies whether you want to show the horizontal scrollbar or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setHScrollBarAlwaysVisible" class="short_description hiddenSpan"><p>Identifies whether you want to show the horizontal scrollbar or not.</p>
@@ -1530,7 +1496,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setPadding" class="ellipsis_description"><p>Sets the padding for all the layers. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setPadding" class="ellipsis_description"><p>Sets the padding for all the layers.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setPadding" class="short_description hiddenSpan"><p>Sets the padding for all the layers.</p>
@@ -1559,7 +1525,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setPrintMarginColumn" class="ellipsis_description"><p>Identifies whether you want to show the print margin column or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setPrintMarginColumn" class="ellipsis_description"><p>Identifies whether you want to show the print margin column or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setPrintMarginColumn" class="short_description hiddenSpan"><p>Identifies whether you want to show the print margin column or not.</p>
@@ -1593,10 +1559,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setSession" class="ellipsis_description"><p>Associates an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a>. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setSession" class="ellipsis_description"><p>Associates an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession">EditSession</a>.</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.setSession" class="short_description hiddenSpan"><p>Associates an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a>.</p>
+                          <div id="short_VirtualRenderer.setSession" class="short_description hiddenSpan"><p>Associates an <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession">EditSession</a>.</p>
 
                           </div>
                           <h3 id="VirtualRenderer.setSession" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1626,7 +1592,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setShowGutter" class="ellipsis_description"><p>Identifies whether you want to show the gutter or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setShowGutter" class="ellipsis_description"><p>Identifies whether you want to show the gutter or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setShowGutter" class="short_description hiddenSpan"><p>Identifies whether you want to show the gutter or not.</p>
@@ -1660,7 +1626,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setShowInvisibles" class="ellipsis_description"><p>Identifies whether you want to show invisible characters or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setShowInvisibles" class="ellipsis_description"><p>Identifies whether you want to show invisible characters or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setShowInvisibles" class="short_description hiddenSpan"><p>Identifies whether you want to show invisible characters or not.</p>
@@ -1689,7 +1655,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setShowPrintMargin" class="ellipsis_description"><p>Identifies whether you want to show the print margin or not. ...</p>
+                          <div id="ellipsis_VirtualRenderer.setShowPrintMargin" class="ellipsis_description"><p>Identifies whether you want to show the print margin or not.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.setShowPrintMargin" class="short_description hiddenSpan"><p>Identifies whether you want to show the print margin or not.</p>
@@ -1723,10 +1689,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setStyle" class="ellipsis_description"><p>Adds a new class, <code>style</code>, to the editor.</p>
+                          <div id="ellipsis_VirtualRenderer.setStyle" class="ellipsis_description"><p>[Adds a new class, <code>style</code>, to the editor.]{: #VirtualRenderer.setStyle}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.setStyle" class="short_description hiddenSpan"><p>Adds a new class, <code>style</code>, to the editor.</p>
+                          <div id="short_VirtualRenderer.setStyle" class="short_description hiddenSpan"><p>[Adds a new class, <code>style</code>, to the editor.]{: #VirtualRenderer.setStyle}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.setStyle" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1757,10 +1723,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.setTheme" class="ellipsis_description"><p>[Sets a new theme for the editor. <code>theme</code> should exist, and be a directory path, like <code>ace/theme/textmate</code>.]{: #Virt...</p>
+                          <div id="ellipsis_VirtualRenderer.setTheme" class="ellipsis_description"><p>[Sets a new theme for the editor. <code>theme</code> should exist, and be a directory path, like <code>ace/theme/textmate</code>.]{: #VirtualRenderer.setTheme}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.setTheme" class="short_description hiddenSpan"><p>Sets a new theme for the editor. <code>theme</code> should exist, and be a directory path, like <code>ace/theme/textmate</code>.</p>
+                          <div id="short_VirtualRenderer.setTheme" class="short_description hiddenSpan"><p>[Sets a new theme for the editor. <code>theme</code> should exist, and be a directory path, like <code>ace/theme/textmate</code>.]{: #VirtualRenderer.setTheme}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.setTheme" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1791,7 +1757,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.showCursor" class="ellipsis_description"><p>Shows the cursor icon. ...</p>
+                          <div id="ellipsis_VirtualRenderer.showCursor" class="ellipsis_description"><p>Shows the cursor icon.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.showCursor" class="short_description hiddenSpan"><p>Shows the cursor icon.</p>
@@ -1824,7 +1790,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.textToScreenCoordinates" class="ellipsis_description"><p>Returns an object containing the <code>pageX</code> and <code>pageY</code> coordinates of the document position. ...</p>
+                          <div id="ellipsis_VirtualRenderer.textToScreenCoordinates" class="ellipsis_description"><p>Returns an object containing the <code>pageX</code> and <code>pageY</code> coordinates of the document position.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.textToScreenCoordinates" class="short_description hiddenSpan"><p>Returns an object containing the <code>pageX</code> and <code>pageY</code> coordinates of the document position.</p>
@@ -1858,10 +1824,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.unsetStyle" class="ellipsis_description"><p>Removes the class <code>style</code> from the editor.</p>
+                          <div id="ellipsis_VirtualRenderer.unsetStyle" class="ellipsis_description"><p>[Removes the class <code>style</code> from the editor.]{: #VirtualRenderer.unsetStyle}</p>
 
                           </div>
-                          <div id="short_VirtualRenderer.unsetStyle" class="short_description hiddenSpan"><p>Removes the class <code>style</code> from the editor.</p>
+                          <div id="short_VirtualRenderer.unsetStyle" class="short_description hiddenSpan"><p>[Removes the class <code>style</code> from the editor.]{: #VirtualRenderer.unsetStyle}</p>
 
                           </div>
                           <h3 id="VirtualRenderer.unsetStyle" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1892,13 +1858,46 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateBackMarkers" class="ellipsis_description"><p>Schedules an update to all the back markers in the document. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateBackMarkers" class="ellipsis_description"><p>Schedules an update to all the back markers in the document.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateBackMarkers" class="short_description hiddenSpan"><p>Schedules an update to all the back markers in the document.</p>
 
                           </div>
                           <h3 id="VirtualRenderer.updateBackMarkers" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                  <article id="VirtualRenderer.updateBreakpoints" data-title="VirtualRenderer.updateBreakpoints (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="VirtualRenderer.updateBreakpoints" class="member-name methodClicker"><span class="sigClassName">VirtualRenderer.</span><span class="sigMemberName">updateBreakpoints</span></span>(<span class="sigArgList"></span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><span class="returnType " title="VirtualRenderer.updateBreakpoints (class method)">Void</span></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_VirtualRenderer.updateBreakpoints" class="ellipsis_description"><p>Redraw breakpoints.</p>
+
+                          </div>
+                          <div id="short_VirtualRenderer.updateBreakpoints" class="short_description hiddenSpan"><p>Redraw breakpoints.</p>
+
+                          </div>
+                          <h3 id="VirtualRenderer.updateBreakpoints" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                           </div>
                         </div>
@@ -1925,7 +1924,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateCursor" class="ellipsis_description"><p>Updates the cursor icon. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateCursor" class="ellipsis_description"><p>Updates the cursor icon.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateCursor" class="short_description hiddenSpan"><p>Updates the cursor icon.</p>
@@ -1958,7 +1957,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateFontSize" class="ellipsis_description"><p>Updates the font size. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateFontSize" class="ellipsis_description"><p>Updates the font size.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateFontSize" class="short_description hiddenSpan"><p>Updates the font size.</p>
@@ -1991,7 +1990,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateFrontMarkers" class="ellipsis_description"><p>Schedules an update to all the front markers in the document. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateFrontMarkers" class="ellipsis_description"><p>Schedules an update to all the front markers in the document.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateFrontMarkers" class="short_description hiddenSpan"><p>Schedules an update to all the front markers in the document.</p>
@@ -2024,7 +2023,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateFull" class="ellipsis_description"><p>Triggers a full update of all the layers, for all the rows. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateFull" class="ellipsis_description"><p>Triggers a full update of all the layers, for all the rows.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateFull" class="short_description hiddenSpan"><p>Triggers a full update of all the layers, for all the rows.</p>
@@ -2057,7 +2056,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateLines" class="ellipsis_description"><p>Triggers a partial update of the text, from the range given by the two parameters. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateLines" class="ellipsis_description"><p>Triggers a partial update of the text, from the range given by the two parameters.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateLines" class="short_description hiddenSpan"><p>Triggers a partial update of the text, from the range given by the two parameters.</p>
@@ -2091,7 +2090,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.updateText" class="ellipsis_description"><p>Triggers a full update of the text, for all the rows. ...</p>
+                          <div id="ellipsis_VirtualRenderer.updateText" class="ellipsis_description"><p>Triggers a full update of the text, for all the rows.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.updateText" class="short_description hiddenSpan"><p>Triggers a full update of the text, for all the rows.</p>
@@ -2124,7 +2123,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.visualizeBlur" class="ellipsis_description"><p>Blurs the current container. ...</p>
+                          <div id="ellipsis_VirtualRenderer.visualizeBlur" class="ellipsis_description"><p>Blurs the current container.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.visualizeBlur" class="short_description hiddenSpan"><p>Blurs the current container.</p>
@@ -2157,7 +2156,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_VirtualRenderer.visualizeFocus" class="ellipsis_description"><p>Focuses the current container. ...</p>
+                          <div id="ellipsis_VirtualRenderer.visualizeFocus" class="ellipsis_description"><p>Focuses the current container.</p>
 
                           </div>
                           <div id="short_VirtualRenderer.visualizeFocus" class="short_description hiddenSpan"><p>Focuses the current container.</p>
