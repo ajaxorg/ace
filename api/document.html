@@ -173,7 +173,7 @@
                   </div>
                   <article id="Document" data-title="Document (class)" class="article">
                     <div class="section description">
-                      <div class="memberContent"><p>Contains the text of the document. Documents are controlled by a single <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession"><code>EditSession</code></a>. At its core, <code>Document</code>s are just an array of strings, with each row in the document matching up to the array index.</p>
+                      <div class="memberContent"><p>Contains the text of the document. Document can be attached to several <a href="edit_session.html#EditSession" class="link-short" title="EditSession (class)" data-id="EditSession">EditSession</a>s. At its core, <code>Document</code>s are just an array of strings, with each row in the document matching up to the array index.</p>
 
                       </div>
                     </div>
@@ -194,7 +194,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_new Document" class="ellipsis_description"><p>Creates a new <code>Document</code>. If <code>text</code> is included, the <code>Document</code> contains those strings; otherwise, it&#39;s empty. ...</p>
+                          <div id="ellipsis_new Document" class="ellipsis_description"><p>Creates a new <code>Document</code>. If <code>text</code> is included, the <code>Document</code> contains those strings; otherwise, it&#39;s empty.</p>
 
                           </div>
                           <div id="short_new Document" class="short_description hiddenSpan"><p>Creates a new <code>Document</code>. If <code>text</code> is included, the <code>Document</code> contains those strings; otherwise, it&#39;s empty.</p>
@@ -229,7 +229,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.applyDeltas" class="ellipsis_description"><p>Applies all the changes previously accumulated. These can be either <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>...</p>
+                          <div id="ellipsis_Document.applyDeltas" class="ellipsis_description"><p>Applies all the changes previously accumulated. These can be either <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
 
                           </div>
                           <div id="short_Document.applyDeltas" class="short_description hiddenSpan"><p>Applies all the changes previously accumulated. These can be either <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
@@ -262,7 +262,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.createAnchor" class="ellipsis_description"><p>Creates a new <code>Anchor</code> to define a floating point in the document. ...</p>
+                          <div id="ellipsis_Document.createAnchor" class="ellipsis_description"><p>Creates a new <code>Anchor</code> to define a floating point in the document.</p>
 
                           </div>
                           <div id="short_Document.createAnchor" class="short_description hiddenSpan"><p>Creates a new <code>Anchor</code> to define a floating point in the document.</p>
@@ -296,7 +296,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getAllLines" class="ellipsis_description"><p>Returns all lines in the document as string array. Warning: The caller should not modify this array! ...</p>
+                          <div id="ellipsis_Document.getAllLines" class="ellipsis_description"><p>Returns all lines in the document as string array. Warning: The caller should not modify this array!</p>
 
                           </div>
                           <div id="short_Document.getAllLines" class="short_description hiddenSpan"><p>Returns all lines in the document as string array. Warning: The caller should not modify this array!</p>
@@ -329,7 +329,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getLength" class="ellipsis_description"><p>Returns the number of rows in the document. ...</p>
+                          <div id="ellipsis_Document.getLength" class="ellipsis_description"><p>Returns the number of rows in the document.</p>
 
                           </div>
                           <div id="short_Document.getLength" class="short_description hiddenSpan"><p>Returns the number of rows in the document.</p>
@@ -362,7 +362,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getLine" class="ellipsis_description"><p>Returns a verbatim copy of the given line as it is in the document ...</p>
+                          <div id="ellipsis_Document.getLine" class="ellipsis_description"><p>Returns a verbatim copy of the given line as it is in the document</p>
 
                           </div>
                           <div id="short_Document.getLine" class="short_description hiddenSpan"><p>Returns a verbatim copy of the given line as it is in the document</p>
@@ -396,7 +396,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getLines" class="ellipsis_description"><p>Returns an array of strings of the rows between <code>firstRow</code> and <code>lastRow</code>. This function is inclusive of <code>lastRow</code>. ...</p>
+                          <div id="ellipsis_Document.getLines" class="ellipsis_description"><p>Returns an array of strings of the rows between <code>firstRow</code> and <code>lastRow</code>. This function is inclusive of <code>lastRow</code>.</p>
 
                           </div>
                           <div id="short_Document.getLines" class="short_description hiddenSpan"><p>Returns an array of strings of the rows between <code>firstRow</code> and <code>lastRow</code>. This function is inclusive of <code>lastRow</code>.</p>
@@ -430,7 +430,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getNewLineCharacter" class="ellipsis_description"><p>Returns the newline character that&#39;s being used, depending on the value of <code>newLineMode</code>. ...</p>
+                          <div id="ellipsis_Document.getNewLineCharacter" class="ellipsis_description"><p>Returns the newline character that&#39;s being used, depending on the value of <code>newLineMode</code>.</p>
 
                           </div>
                           <div id="short_Document.getNewLineCharacter" class="short_description hiddenSpan"><p>Returns the newline character that&#39;s being used, depending on the value of <code>newLineMode</code>.</p>
@@ -464,10 +464,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getNewLineMode" class="ellipsis_description"><p>Returns the type of newlines being used; either <code>windows</code>, <code>unix</code>, or <code>auto</code></p>
+                          <div id="ellipsis_Document.getNewLineMode" class="ellipsis_description"><p>[Returns the type of newlines being used; either <code>windows</code>, <code>unix</code>, or <code>auto</code>]{: #Document.getNewLineMode}</p>
 
                           </div>
-                          <div id="short_Document.getNewLineMode" class="short_description hiddenSpan"><p>Returns the type of newlines being used; either <code>windows</code>, <code>unix</code>, or <code>auto</code></p>
+                          <div id="short_Document.getNewLineMode" class="short_description hiddenSpan"><p>[Returns the type of newlines being used; either <code>windows</code>, <code>unix</code>, or <code>auto</code>]{: #Document.getNewLineMode}</p>
 
                           </div>
                           <h3 id="Document.getNewLineMode" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -497,10 +497,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getTextRange" class="ellipsis_description"><p>[Given a range within the document, this function returns all the text within that range as a single string.]{: #Doc...</p>
+                          <div id="ellipsis_Document.getTextRange" class="ellipsis_description"><p>[Given a range within the document, this function returns all the text within that range as a single string.]{: #Document.getTextRange.desc}</p>
 
                           </div>
-                          <div id="short_Document.getTextRange" class="short_description hiddenSpan"><p>Given a range within the document, this function returns all the text within that range as a single string.</p>
+                          <div id="short_Document.getTextRange" class="short_description hiddenSpan"><p>[Given a range within the document, this function returns all the text within that range as a single string.]{: #Document.getTextRange.desc}</p>
 
                           </div>
                           <h3 id="Document.getTextRange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -531,7 +531,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.getValue" class="ellipsis_description"><p>Returns all the lines in the document as a single string, split by the new line character. ...</p>
+                          <div id="ellipsis_Document.getValue" class="ellipsis_description"><p>Returns all the lines in the document as a single string, split by the new line character.</p>
 
                           </div>
                           <div id="short_Document.getValue" class="short_description hiddenSpan"><p>Returns all the lines in the document as a single string, split by the new line character.</p>
@@ -564,11 +564,6 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.insert" class="ellipsis_description"><p> ...</p>
-
-                          </div>
-                          <div id="short_Document.insert" class="short_description hiddenSpan">
-                          </div>
                           <h3 id="Document.insert" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                             <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">position</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The position to start inserting at</td></tr><tr class="argumentRow "><td class="argName ">text</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. A chunk of text to insert</td></tr></table>
@@ -599,7 +594,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.insertInLine" class="ellipsis_description"><p>Inserts <code>text</code> into the <code>position</code> at the current row. This method also triggers the <code>&#39;change&#39;</code> event. ...</p>
+                          <div id="ellipsis_Document.insertInLine" class="ellipsis_description"><p>Inserts <code>text</code> into the <code>position</code> at the current row. This method also triggers the <code>&#39;change&#39;</code> event.</p>
 
                           </div>
                           <div id="short_Document.insertInLine" class="short_description hiddenSpan"><p>Inserts <code>text</code> into the <code>position</code> at the current row. This method also triggers the <code>&#39;change&#39;</code> event.</p>
@@ -634,7 +629,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.insertLines" class="ellipsis_description"><p>Inserts the elements in <code>lines</code> into the document, starting at the row index given by <code>row</code>. This method also trigge...</p>
+                          <div id="ellipsis_Document.insertLines" class="ellipsis_description"><p>Inserts the elements in <code>lines</code> into the document, starting at the row index given by <code>row</code>. This method also triggers the <code>&#39;change&#39;</code> event.</p>
 
                           </div>
                           <div id="short_Document.insertLines" class="short_description hiddenSpan"><p>Inserts the elements in <code>lines</code> into the document, starting at the row index given by <code>row</code>. This method also triggers the <code>&#39;change&#39;</code> event.</p>
@@ -669,7 +664,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.insertNewLine" class="ellipsis_description"><p>Inserts a new line into the document at the current row&#39;s <code>position</code>. This method also triggers the <code>&#39;change&#39;</code> event. ...</p>
+                          <div id="ellipsis_Document.insertNewLine" class="ellipsis_description"><p>Inserts a new line into the document at the current row&#39;s <code>position</code>. This method also triggers the <code>&#39;change&#39;</code> event.</p>
 
                           </div>
                           <div id="short_Document.insertNewLine" class="short_description hiddenSpan"><p>Inserts a new line into the document at the current row&#39;s <code>position</code>. This method also triggers the <code>&#39;change&#39;</code> event.</p>
@@ -704,7 +699,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.isNewLine" class="ellipsis_description"><p>Returns <code>true</code> if <code>text</code> is a newline character (either <code>\r\n</code>, <code>\r</code>, or <code>\n</code>). ...</p>
+                          <div id="ellipsis_Document.isNewLine" class="ellipsis_description"><p>Returns <code>true</code> if <code>text</code> is a newline character (either <code>\r\n</code>, <code>\r</code>, or <code>\n</code>).</p>
 
                           </div>
                           <div id="short_Document.isNewLine" class="short_description hiddenSpan"><p>Returns <code>true</code> if <code>text</code> is a newline character (either <code>\r\n</code>, <code>\r</code>, or <code>\n</code>).</p>
@@ -738,7 +733,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.remove" class="ellipsis_description"><p>Removes the <code>range</code> from the document. ...</p>
+                          <div id="ellipsis_Document.remove" class="ellipsis_description"><p>Removes the <code>range</code> from the document.</p>
 
                           </div>
                           <div id="short_Document.remove" class="short_description hiddenSpan"><p>Removes the <code>range</code> from the document.</p>
@@ -773,7 +768,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.removeInLine" class="ellipsis_description"><p>Removes the specified columns from the <code>row</code>. This method also triggers the <code>&#39;change&#39;</code> event. ...</p>
+                          <div id="ellipsis_Document.removeInLine" class="ellipsis_description"><p>Removes the specified columns from the <code>row</code>. This method also triggers the <code>&#39;change&#39;</code> event.</p>
 
                           </div>
                           <div id="short_Document.removeInLine" class="short_description hiddenSpan"><p>Removes the specified columns from the <code>row</code>. This method also triggers the <code>&#39;change&#39;</code> event.</p>
@@ -808,7 +803,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.removeLines" class="ellipsis_description"><p>Removes a range of full lines. This method also triggers the <code>&#39;change&#39;</code> event. ...</p>
+                          <div id="ellipsis_Document.removeLines" class="ellipsis_description"><p>Removes a range of full lines. This method also triggers the <code>&#39;change&#39;</code> event.</p>
 
                           </div>
                           <div id="short_Document.removeLines" class="short_description hiddenSpan"><p>Removes a range of full lines. This method also triggers the <code>&#39;change&#39;</code> event.</p>
@@ -843,7 +838,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.removeNewLine" class="ellipsis_description"><p>Removes the new line between <code>row</code> and the row immediately following it. This method also triggers the <code>&#39;change&#39;</code> event. ...</p>
+                          <div id="ellipsis_Document.removeNewLine" class="ellipsis_description"><p>Removes the new line between <code>row</code> and the row immediately following it. This method also triggers the <code>&#39;change&#39;</code> event.</p>
 
                           </div>
                           <div id="short_Document.removeNewLine" class="short_description hiddenSpan"><p>Removes the new line between <code>row</code> and the row immediately following it. This method also triggers the <code>&#39;change&#39;</code> event.</p>
@@ -877,7 +872,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.replace" class="ellipsis_description"><p>Replaces a range in the document with the new <code>text</code>. ...</p>
+                          <div id="ellipsis_Document.replace" class="ellipsis_description"><p>Replaces a range in the document with the new <code>text</code>.</p>
 
                           </div>
                           <div id="short_Document.replace" class="short_description hiddenSpan"><p>Replaces a range in the document with the new <code>text</code>.</p>
@@ -912,7 +907,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.revertDeltas" class="ellipsis_description"><p>Reverts any changes previously applied. These can be either <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and `&#39;...</p>
+                          <div id="ellipsis_Document.revertDeltas" class="ellipsis_description"><p>Reverts any changes previously applied. These can be either <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
 
                           </div>
                           <div id="short_Document.revertDeltas" class="short_description hiddenSpan"><p>Reverts any changes previously applied. These can be either <code>&#39;includeText&#39;</code>, <code>&#39;insertLines&#39;</code>, <code>&#39;removeText&#39;</code>, and <code>&#39;removeLines&#39;</code>.</p>
@@ -945,15 +940,15 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.setNewLineMode" class="ellipsis_description"><p>Sets the new line mode.</p>
+                          <div id="ellipsis_Document.setNewLineMode" class="ellipsis_description"><p>[Sets the new line mode.]{: #Document.setNewLineMode.desc}</p>
 
                           </div>
-                          <div id="short_Document.setNewLineMode" class="short_description hiddenSpan"><p>Sets the new line mode.</p>
+                          <div id="short_Document.setNewLineMode" class="short_description hiddenSpan"><p>[Sets the new line mode.]{: #Document.setNewLineMode.desc}</p>
 
                           </div>
                           <h3 id="Document.setNewLineMode" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">newLineMode</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The newline mode to use; can be either <code>windows</code>, <code>unix</code>, or <code>auto</code></td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">newLineMode</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. [The newline mode to use; can be either <code>windows</code>, <code>unix</code>, or <code>auto</code>]{: #Document.setNewLineMode.param}</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -979,7 +974,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_Document.setValue" class="ellipsis_description"><p>Replaces all the lines in the current <code>Document</code> with the value of <code>text</code>. ...</p>
+                          <div id="ellipsis_Document.setValue" class="ellipsis_description"><p>Replaces all the lines in the current <code>Document</code> with the value of <code>text</code>.</p>
 
                           </div>
                           <div id="short_Document.setValue" class="short_description hiddenSpan"><p>Replaces all the lines in the current <code>Document</code> with the value of <code>text</code>.</p>

@@ -102,13 +102,17 @@
                       <h1 class="memberHeader"><span class="name">EditSession<span class="editInC9"><a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
                       </h1>
                       <ul data-tabs="tabs" class="nav tabs pos0">
-                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (3)</span><b class="caret"></b></a>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Events (5)</span><b class="caret"></b></a>
                           <ul class="dropdown-menu">
-                            <li data-id="EditSession@onChange" class="memberLink"><a href="#EditSession@onChange" class="" title="EditSession@onChange (event)" data-id="EditSession@onChange">onChange</a>
+                            <li data-id="EditSession@change" class="memberLink"><a href="#EditSession.change" class="" title="EditSession@change (event)" data-id="EditSession@change">change</a>
                             </li>
-                            <li data-id="EditSession@onChangeFold" class="memberLink"><a href="#EditSession@onChangeFold" class="" title="EditSession@onChangeFold (event)" data-id="EditSession@onChangeFold">onChangeFold</a>
+                            <li data-id="EditSession@changeFold" class="memberLink"><a href="#EditSession.changeFold" class="" title="EditSession@changeFold (event)" data-id="EditSession@changeFold">changeFold</a>
                             </li>
-                            <li data-id="EditSession@onReloadTokenizer" class="memberLink"><a href="#EditSession@onReloadTokenizer" class="" title="EditSession@onReloadTokenizer (event)" data-id="EditSession@onReloadTokenizer">onReloadTokenizer</a>
+                            <li data-id="EditSession@changeScrollLeft" class="memberLink"><a href="#EditSession.changeScrollLeft" class="" title="EditSession@changeScrollLeft (event)" data-id="EditSession@changeScrollLeft">changeScrollLeft</a>
+                            </li>
+                            <li data-id="EditSession@changeScrollTop" class="memberLink"><a href="#EditSession.changeScrollTop" class="" title="EditSession@changeScrollTop (event)" data-id="EditSession@changeScrollTop">changeScrollTop</a>
+                            </li>
+                            <li data-id="EditSession@tokenizerUpdate" class="memberLink"><a href="#EditSession.tokenizerUpdate" class="" title="EditSession@tokenizerUpdate (event)" data-id="EditSession@tokenizerUpdate">tokenizerUpdate</a>
                             </li>
                           </ul>
                         </li>
@@ -120,6 +124,8 @@
                         </li>
                         <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (72)</span><b class="caret"></b></a>
                           <ul class="dropdown-menu">
+                            <li data-id="EditSession.addDynamicMarker" class="memberLink"><a href="#EditSession.addDynamicMarker" class="" title="EditSession.addDynamicMarker (class method)" data-id="EditSession.addDynamicMarker">addDynamicMarker</a>
+                            </li>
                             <li data-id="EditSession.addMarker" class="memberLink"><a href="#EditSession.addMarker" class="" title="EditSession.addMarker (class method)" data-id="EditSession.addMarker">addMarker</a>
                             </li>
                             <li data-id="EditSession.clearAnnotations" class="memberLink"><a href="#EditSession.clearAnnotations" class="" title="EditSession.clearAnnotations (class method)" data-id="EditSession.clearAnnotations">clearAnnotations</a>
@@ -153,8 +159,6 @@
                             <li data-id="EditSession.getNewLineMode" class="memberLink"><a href="#EditSession.getNewLineMode" class="" title="EditSession.getNewLineMode (class method)" data-id="EditSession.getNewLineMode">getNewLineMode</a>
                             </li>
                             <li data-id="EditSession.getOverwrite" class="memberLink"><a href="#EditSession.getOverwrite" class="" title="EditSession.getOverwrite (class method)" data-id="EditSession.getOverwrite">getOverwrite</a>
-                            </li>
-                            <li data-id="EditSession.getRowHeight" class="memberLink"><a href="#EditSession.getRowHeight" class="" title="EditSession.getRowHeight (class method)" data-id="EditSession.getRowHeight">getRowHeight</a>
                             </li>
                             <li data-id="EditSession.getRowLength" class="memberLink"><a href="#EditSession.getRowLength" class="" title="EditSession.getRowLength (class method)" data-id="EditSession.getRowLength">getRowLength</a>
                             </li>
@@ -192,8 +196,6 @@
                             </li>
                             <li data-id="EditSession.getValue" class="memberLink"><a href="#EditSession.getValue" class="" title="EditSession.getValue (class method)" data-id="EditSession.getValue">getValue</a>
                             </li>
-                            <li data-id="EditSession.getWidth" class="memberLink"><a href="#EditSession.getWidth" class="" title="EditSession.getWidth (class method)" data-id="EditSession.getWidth">getWidth</a>
-                            </li>
                             <li data-id="EditSession.getWordRange" class="memberLink"><a href="#EditSession.getWordRange" class="" title="EditSession.getWordRange (class method)" data-id="EditSession.getWordRange">getWordRange</a>
                             </li>
                             <li data-id="EditSession.getWrapLimit" class="memberLink"><a href="#EditSession.getWrapLimit" class="" title="EditSession.getWrapLimit (class method)" data-id="EditSession.getWrapLimit">getWrapLimit</a>
@@ -211,6 +213,8 @@
                             <li data-id="EditSession.moveLinesUp" class="memberLink"><a href="#EditSession.moveLinesUp" class="" title="EditSession.moveLinesUp (class method)" data-id="EditSession.moveLinesUp">moveLinesUp</a>
                             </li>
                             <li data-id="EditSession.moveText" class="memberLink"><a href="#EditSession.moveText" class="" title="EditSession.moveText (class method)" data-id="EditSession.moveText">moveText</a>
+                            </li>
+                            <li data-id="EditSession.onReloadTokenizer" class="memberLink"><a href="#EditSession.onReloadTokenizer" class="" title="EditSession.onReloadTokenizer (class method)" data-id="EditSession.onReloadTokenizer">onReloadTokenizer</a>
                             </li>
                             <li data-id="EditSession.outdentRows" class="memberLink"><a href="#EditSession.outdentRows" class="" title="EditSession.outdentRows (class method)" data-id="EditSession.outdentRows">outdentRows</a>
                             </li>
@@ -279,7 +283,7 @@
                   </div>
                   <article id="EditSession" data-title="EditSession (class)" class="article">
                     <div class="section description">
-                      <div class="memberContent"><p>Stores various states related to a <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a>. A single <code>EditSession</code> can be in charge of several <code>Document</code>s.</p>
+                      <div class="memberContent"><p>Stores all the data about <a href="editor.html#Editor" class="link-short" title="Editor (class)" data-id="Editor">Editor</a> state providing easy way to change editors state.  <code>EditSession</code> can be attached to only one <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a>. Same <code>Document</code> can be attached to several <code>EditSession</code>s.</p>
 
                       </div>
                     </div>
@@ -300,7 +304,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_new EditSession" class="ellipsis_description"><p>Sets up a new <code>EditSession</code> and associates it with the given <code>Document</code> and <code>TextMode</code>. ...</p>
+                          <div id="ellipsis_new EditSession" class="ellipsis_description"><p>Sets up a new <code>EditSession</code> and associates it with the given <code>Document</code> and <code>TextMode</code>.</p>
 
                           </div>
                           <div id="short_new EditSession" class="short_description hiddenSpan"><p>Sets up a new <code>EditSession</code> and associates it with the given <code>Document</code> and <code>TextMode</code>.</p>
@@ -315,14 +319,14 @@
                     </div>
                   </article>
                   <h3 class="sectionHeader">Events</h3>
-                  <article id="EditSession.event.onChange" data-title="EditSession@onChange (event)" class="article">
+                  <article id="EditSession.event.change" data-title="EditSession@change (event)" class="article">
                     <div class="section method">
                       <div class="memberContent">
                         <div class="title">
                           <ul class="signatures">
                             <li class="signature">
                               <ul>
-                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession@onChange" class="member-name eventMember methodClicker">onChange</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span>e<span class="eventFunctionClose">))</span></li>
+                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession.change" class="member-name eventMember methodClicker">change</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span>e<span class="eventFunctionClose">))</span></li>
                               </ul>
                               <ul class="metaInfo">
                               </ul>
@@ -330,27 +334,27 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession@onChange" class="ellipsis_description"><p>Emitted when the document changes. ...</p>
+                          <div id="ellipsis_EditSession@change" class="ellipsis_description"><p>Emitted when the document changes.</p>
 
                           </div>
-                          <div id="short_EditSession@onChange" class="short_description hiddenSpan"><p>Emitted when the document changes.</p>
+                          <div id="short_EditSession@change" class="short_description hiddenSpan"><p>Emitted when the document changes.</p>
 
                           </div>
-                          <h3 id="EditSession@onChange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <h3 id="EditSession@change" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                           </div>
                         </div>
                       </div>
                     </div>
                   </article>
-                  <article id="EditSession.event.onChangeFold" data-title="EditSession@onChangeFold (event)" class="article">
+                  <article id="EditSession.event.changeFold" data-title="EditSession@changeFold (event)" class="article">
                     <div class="section method">
                       <div class="memberContent">
                         <div class="title">
                           <ul class="signatures">
                             <li class="signature">
                               <ul>
-                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession@onChangeFold" class="member-name eventMember methodClicker">onChangeFold</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span>e<span class="eventFunctionClose">))</span></li>
+                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession.changeFold" class="member-name eventMember methodClicker">changeFold</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span>e<span class="eventFunctionClose">))</span></li>
                               </ul>
                               <ul class="metaInfo">
                               </ul>
@@ -358,27 +362,27 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession@onChangeFold" class="ellipsis_description"><p>Emitted when a code fold changes its state. ...</p>
+                          <div id="ellipsis_EditSession@changeFold" class="ellipsis_description"><p>Emitted when a code fold added or removed.</p>
 
                           </div>
-                          <div id="short_EditSession@onChangeFold" class="short_description hiddenSpan"><p>Emitted when a code fold changes its state.</p>
+                          <div id="short_EditSession@changeFold" class="short_description hiddenSpan"><p>Emitted when a code fold added or removed.</p>
 
                           </div>
-                          <h3 id="EditSession@onChangeFold" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <h3 id="EditSession@changeFold" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                           </div>
                         </div>
                       </div>
                     </div>
                   </article>
-                  <article id="EditSession.event.onReloadTokenizer" data-title="EditSession@onReloadTokenizer (event)" class="article">
+                  <article id="EditSession.event.changeScrollLeft" data-title="EditSession@changeScrollLeft (event)" class="article">
                     <div class="section method">
                       <div class="memberContent">
                         <div class="title">
                           <ul class="signatures">
                             <li class="signature">
                               <ul>
-                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession@onReloadTokenizer" class="member-name eventMember methodClicker">onReloadTokenizer</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span>e<span class="eventFunctionClose">))</span></li>
+                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession.changeScrollLeft" class="member-name eventMember methodClicker">changeScrollLeft</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span><span class="eventFunctionClose">))</span></li>
                               </ul>
                               <ul class="metaInfo">
                               </ul>
@@ -386,13 +390,69 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession@onReloadTokenizer" class="ellipsis_description"><p>Reloads all the tokens on the current session. This function calls [[BackgroundTokenizer.start `BackgroundTokenizer....</p>
+                          <div id="ellipsis_EditSession@changeScrollLeft" class="ellipsis_description"><p>Emitted when the scroll left changes.</p>
 
                           </div>
-                          <div id="short_EditSession@onReloadTokenizer" class="short_description hiddenSpan"><p>Reloads all the tokens on the current session. This function calls <a href="background_tokenizer.html#BackgroundTokenizer.start" class="link-short" title="BackgroundTokenizer.start (class method)" data-id="BackgroundTokenizer.start"><code>BackgroundTokenizer.start ()</code></a> to all the rows; it also emits the <code>&#39;tokenizerUpdate&#39;</code> event.</p>
+                          <div id="short_EditSession@changeScrollLeft" class="short_description hiddenSpan"><p>Emitted when the scroll left changes.</p>
 
                           </div>
-                          <h3 id="EditSession@onReloadTokenizer" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <h3 id="EditSession@changeScrollLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                  <article id="EditSession.event.changeScrollTop" data-title="EditSession@changeScrollTop (event)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession.changeScrollTop" class="member-name eventMember methodClicker">changeScrollTop</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span><span class="eventFunctionClose">))</span></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_EditSession@changeScrollTop" class="ellipsis_description"><p>Emitted when the scroll top changes.</p>
+
+                          </div>
+                          <div id="short_EditSession@changeScrollTop" class="short_description hiddenSpan"><p>Emitted when the scroll top changes.</p>
+
+                          </div>
+                          <h3 id="EditSession@changeScrollTop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                  <article id="EditSession.event.tokenizerUpdate" data-title="EditSession@tokenizerUpdate (event)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span class="eventObjName">EditSession</span><span class="eventListenerStart">.on("</span><span id="EditSession.tokenizerUpdate" class="member-name eventMember methodClicker">tokenizerUpdate</span><span class="eventListenerClose">", </span><span class="eventFunctionOpen">function(</span>e<span class="eventFunctionClose">))</span></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_EditSession@tokenizerUpdate" class="ellipsis_description"><p>Emitted when a background tokenizer asynchronousely processes new rows.</p>
+
+                          </div>
+                          <div id="short_EditSession@tokenizerUpdate" class="short_description hiddenSpan"><p>Emitted when a background tokenizer asynchronousely processes new rows.</p>
+
+                          </div>
+                          <h3 id="EditSession@tokenizerUpdate" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                           </div>
                         </div>
@@ -400,6 +460,40 @@
                     </div>
                   </article>
                   <h3 class="sectionHeader">Methods</h3>
+                  <article id="EditSession.addDynamicMarker" data-title="EditSession.addDynamicMarker (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="EditSession.addDynamicMarker" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">addDynamicMarker</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> marker, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> inFront</span>)
+                                  <li class="signature-returns">
+                                    <ul class="argument-types">
+                                      <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                                    </ul>
+                                  </li></li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_EditSession.addDynamicMarker" class="ellipsis_description"><p>Adds a dynamic marker to the session.</p>
+
+                          </div>
+                          <div id="short_EditSession.addDynamicMarker" class="short_description hiddenSpan"><p>Adds a dynamic marker to the session.</p>
+
+                          </div>
+                          <h3 id="EditSession.addDynamicMarker" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">marker</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. object with update method</td></tr><tr class="argumentRow "><td class="argName ">inFront</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. Set to <code>true</code> to establish a front marker</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
                   <article id="EditSession.addMarker" data-title="EditSession.addMarker (class method)" class="article">
                     <div class="section method">
                       <div class="memberContent">
@@ -420,7 +514,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.addMarker" class="ellipsis_description"><p>Adds a new marker to the given <code>Range</code>. If <code>inFront</code> is <code>true</code>, a front marker is defined, and the `&#39;changeFrontMark...</p>
+                          <div id="ellipsis_EditSession.addMarker" class="ellipsis_description"><p>Adds a new marker to the given <code>Range</code>. If <code>inFront</code> is <code>true</code>, a front marker is defined, and the <code>&#39;changeFrontMarker&#39;</code> event fires; otherwise, the <code>&#39;changeBackMarker&#39;</code> event fires.</p>
 
                           </div>
                           <div id="short_EditSession.addMarker" class="short_description hiddenSpan"><p>Adds a new marker to the given <code>Range</code>. If <code>inFront</code> is <code>true</code>, a front marker is defined, and the <code>&#39;changeFrontMarker&#39;</code> event fires; otherwise, the <code>&#39;changeBackMarker&#39;</code> event fires.</p>
@@ -449,7 +543,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.clearAnnotations" class="ellipsis_description"><p>Clears all the annotations for this session. This function also triggers the <code>&#39;changeAnnotation&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.clearAnnotations" class="ellipsis_description"><p>Clears all the annotations for this session. This function also triggers the <code>&#39;changeAnnotation&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.clearAnnotations" class="short_description hiddenSpan"><p>Clears all the annotations for this session. This function also triggers the <code>&#39;changeAnnotation&#39;</code> event.</p>
@@ -477,7 +571,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.clearBreakpoint" class="ellipsis_description"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.clearBreakpoint" class="ellipsis_description"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.clearBreakpoint" class="short_description hiddenSpan"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
@@ -506,7 +600,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.clearBreakpoints" class="ellipsis_description"><p>Removes all breakpoints on the rows. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.clearBreakpoints" class="ellipsis_description"><p>Removes all breakpoints on the rows. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.clearBreakpoints" class="short_description hiddenSpan"><p>Removes all breakpoints on the rows. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
@@ -540,10 +634,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.documentToScreenPosition" class="ellipsis_description"><p>Converts document coordinates to screen coordinates. This takes into account code folding, word wrap, tab size, and any other visual modifications. ...</p>
+                          <div id="ellipsis_EditSession.documentToScreenPosition" class="ellipsis_description"><p>Converts document coordinates to screen coordinates. {:conversionConsiderations}</p>
 
                           </div>
-                          <div id="short_EditSession.documentToScreenPosition" class="short_description hiddenSpan"><p>Converts document coordinates to screen coordinates. This takes into account code folding, word wrap, tab size, and any other visual modifications.</p>
+                          <div id="short_EditSession.documentToScreenPosition" class="short_description hiddenSpan"><p>Converts document coordinates to screen coordinates. {:conversionConsiderations}</p>
 
                           </div>
                           <h3 id="EditSession.documentToScreenPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -575,7 +669,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.duplicateLines" class="ellipsis_description"><p>Duplicates all the text between <code>firstRow</code> and <code>lastRow</code>. ...</p>
+                          <div id="ellipsis_EditSession.duplicateLines" class="ellipsis_description"><p>Duplicates all the text between <code>firstRow</code> and <code>lastRow</code>.</p>
 
                           </div>
                           <div id="short_EditSession.duplicateLines" class="short_description hiddenSpan"><p>Duplicates all the text between <code>firstRow</code> and <code>lastRow</code>.</p>
@@ -610,7 +704,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getAnnotations" class="ellipsis_description"><p>Returns the annotations for the <code>EditSession</code>. ...</p>
+                          <div id="ellipsis_EditSession.getAnnotations" class="ellipsis_description"><p>Returns the annotations for the <code>EditSession</code>.</p>
 
                           </div>
                           <div id="short_EditSession.getAnnotations" class="short_description hiddenSpan"><p>Returns the annotations for the <code>EditSession</code>.</p>
@@ -643,7 +737,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getAWordRange" class="ellipsis_description"><p>Gets the range of a word, including its right whitespace. ...</p>
+                          <div id="ellipsis_EditSession.getAWordRange" class="ellipsis_description"><p>Gets the range of a word, including its right whitespace.</p>
 
                           </div>
                           <div id="short_EditSession.getAWordRange" class="short_description hiddenSpan"><p>Gets the range of a word, including its right whitespace.</p>
@@ -677,7 +771,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getBreakpoints" class="ellipsis_description"><p>Returns an array of numbers, indicating which rows have breakpoints. ...</p>
+                          <div id="ellipsis_EditSession.getBreakpoints" class="ellipsis_description"><p>Returns an array of numbers, indicating which rows have breakpoints.</p>
 
                           </div>
                           <div id="short_EditSession.getBreakpoints" class="short_description hiddenSpan"><p>Returns an array of numbers, indicating which rows have breakpoints.</p>
@@ -710,7 +804,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getDocument" class="ellipsis_description"><p>Returns the <code>Document</code> associated with this session. ...</p>
+                          <div id="ellipsis_EditSession.getDocument" class="ellipsis_description"><p>Returns the <code>Document</code> associated with this session.</p>
 
                           </div>
                           <div id="short_EditSession.getDocument" class="short_description hiddenSpan"><p>Returns the <code>Document</code> associated with this session.</p>
@@ -744,7 +838,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getLength" class="ellipsis_description"><p>Returns the number of rows in the document. ...</p>
+                          <div id="ellipsis_EditSession.getLength" class="ellipsis_description"><p>Returns the number of rows in the document.</p>
 
                           </div>
                           <div id="short_EditSession.getLength" class="short_description hiddenSpan"><p>Returns the number of rows in the document.</p>
@@ -778,7 +872,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getLine" class="ellipsis_description"><p>Returns a verbatim copy of the given line as it is in the document ...</p>
+                          <div id="ellipsis_EditSession.getLine" class="ellipsis_description"><p>Returns a verbatim copy of the given line as it is in the document</p>
 
                           </div>
                           <div id="short_EditSession.getLine" class="short_description hiddenSpan"><p>Returns a verbatim copy of the given line as it is in the document</p>
@@ -813,7 +907,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getLines" class="ellipsis_description"><p>Returns an array of strings of the rows between <code>firstRow</code> and <code>lastRow</code>. This function is inclusive of <code>lastRow</code>. ...</p>
+                          <div id="ellipsis_EditSession.getLines" class="ellipsis_description"><p>Returns an array of strings of the rows between <code>firstRow</code> and <code>lastRow</code>. This function is inclusive of <code>lastRow</code>.</p>
 
                           </div>
                           <div id="short_EditSession.getLines" class="short_description hiddenSpan"><p>Returns an array of strings of the rows between <code>firstRow</code> and <code>lastRow</code>. This function is inclusive of <code>lastRow</code>.</p>
@@ -847,7 +941,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getMarkers" class="ellipsis_description"><p>Returns an array containing the IDs of all the markers, either front or back. ...</p>
+                          <div id="ellipsis_EditSession.getMarkers" class="ellipsis_description"><p>Returns an array containing the IDs of all the markers, either front or back.</p>
 
                           </div>
                           <div id="short_EditSession.getMarkers" class="short_description hiddenSpan"><p>Returns an array containing the IDs of all the markers, either front or back.</p>
@@ -881,7 +975,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getMode" class="ellipsis_description"><p>Returns the current text mode. ...</p>
+                          <div id="ellipsis_EditSession.getMode" class="ellipsis_description"><p>Returns the current text mode.</p>
 
                           </div>
                           <div id="short_EditSession.getMode" class="short_description hiddenSpan"><p>Returns the current text mode.</p>
@@ -915,7 +1009,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getNewLineMode" class="ellipsis_description"><p>Returns the current new line mode. ...</p>
+                          <div id="ellipsis_EditSession.getNewLineMode" class="ellipsis_description"><p>Returns the current new line mode.</p>
 
                           </div>
                           <div id="short_EditSession.getNewLineMode" class="short_description hiddenSpan"><p>Returns the current new line mode.</p>
@@ -948,7 +1042,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getOverwrite" class="ellipsis_description"><p>Returns <code>true</code> if overwrites are enabled; <code>false</code> otherwise. ...</p>
+                          <div id="ellipsis_EditSession.getOverwrite" class="ellipsis_description"><p>Returns <code>true</code> if overwrites are enabled; <code>false</code> otherwise.</p>
 
                           </div>
                           <div id="short_EditSession.getOverwrite" class="short_description hiddenSpan"><p>Returns <code>true</code> if overwrites are enabled; <code>false</code> otherwise.</p>
@@ -956,40 +1050,6 @@
                           </div>
                           <h3 id="EditSession.getOverwrite" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                  <article id="EditSession.getRowHeight" data-title="EditSession.getRowHeight (class method)" class="article">
-                    <div class="section method">
-                      <div class="memberContent">
-                        <div class="title">
-                          <ul class="signatures">
-                            <li class="signature">
-                              <ul>
-                                <li class="signature-call"><span id="EditSession.getRowHeight" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">getRowHeight</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> config, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row</span>)
-                                  <li class="signature-returns">
-                                    <ul class="argument-types">
-                                      <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
-                                    </ul>
-                                  </li></li>
-                              </ul>
-                              <ul class="metaInfo">
-                              </ul>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getRowHeight" class="ellipsis_description"><p>Returns the height of the indicated row. This is mostly relevant for situations where wrapping occurs, and a single ...</p>
-
-                          </div>
-                          <div id="short_EditSession.getRowHeight" class="short_description hiddenSpan"><p>Returns the height of the indicated row. This is mostly relevant for situations where wrapping occurs, and a single line spans across multiple rows.</p>
-
-                          </div>
-                          <h3 id="EditSession.getRowHeight" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                          <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">config</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. An object containing a parameter indicating the <code>lineHeight</code>.</td></tr><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row number to check</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -1015,10 +1075,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getRowLength" class="ellipsis_description"><p>Returns the length of the indicated row. ...</p>
+                          <div id="ellipsis_EditSession.getRowLength" class="ellipsis_description"><p>Returns number of screenrows in a wrapped line.</p>
 
                           </div>
-                          <div id="short_EditSession.getRowLength" class="short_description hiddenSpan"><p>Returns the length of the indicated row.</p>
+                          <div id="short_EditSession.getRowLength" class="short_description hiddenSpan"><p>Returns number of screenrows in a wrapped line.</p>
 
                           </div>
                           <h3 id="EditSession.getRowLength" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1049,7 +1109,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getScreenLength" class="ellipsis_description"><p>Returns the length of the screen. ...</p>
+                          <div id="ellipsis_EditSession.getScreenLength" class="ellipsis_description"><p>Returns the length of the screen.</p>
 
                           </div>
                           <div id="short_EditSession.getScreenLength" class="short_description hiddenSpan"><p>Returns the length of the screen.</p>
@@ -1082,7 +1142,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getScreenTabSize" class="ellipsis_description"><p>The distance to the next tab stop at the specified screen column. ...</p>
+                          <div id="ellipsis_EditSession.getScreenTabSize" class="ellipsis_description"><p>The distance to the next tab stop at the specified screen column.</p>
 
                           </div>
                           <div id="short_EditSession.getScreenTabSize" class="short_description hiddenSpan"><p>The distance to the next tab stop at the specified screen column.</p>
@@ -1116,7 +1176,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getScreenWidth" class="ellipsis_description"><p>Returns the width of the screen. ...</p>
+                          <div id="ellipsis_EditSession.getScreenWidth" class="ellipsis_description"><p>Returns the width of the screen.</p>
 
                           </div>
                           <div id="short_EditSession.getScreenWidth" class="short_description hiddenSpan"><p>Returns the width of the screen.</p>
@@ -1149,10 +1209,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getScrollLeft" class="ellipsis_description"><p>[Returns the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #...</p>
+                          <div id="ellipsis_EditSession.getScrollLeft" class="ellipsis_description"><p>[Returns the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.getScrollLeft}</p>
 
                           </div>
-                          <div id="short_EditSession.getScrollLeft" class="short_description hiddenSpan"><p>Returns the value of the distance between the left of the editor and the leftmost part of the visible content.</p>
+                          <div id="short_EditSession.getScrollLeft" class="short_description hiddenSpan"><p>[Returns the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.getScrollLeft}</p>
 
                           </div>
                           <h3 id="EditSession.getScrollLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1182,10 +1242,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getScrollTop" class="ellipsis_description"><p>[Returns the value of the distance between the top of the editor and the topmost part of the visible content.]{: #Ed...</p>
+                          <div id="ellipsis_EditSession.getScrollTop" class="ellipsis_description"><p>[Returns the value of the distance between the top of the editor and the topmost part of the visible content.]{: #EditSession.getScrollTop}</p>
 
                           </div>
-                          <div id="short_EditSession.getScrollTop" class="short_description hiddenSpan"><p>Returns the value of the distance between the top of the editor and the topmost part of the visible content.</p>
+                          <div id="short_EditSession.getScrollTop" class="short_description hiddenSpan"><p>[Returns the value of the distance between the top of the editor and the topmost part of the visible content.]{: #EditSession.getScrollTop}</p>
 
                           </div>
                           <h3 id="EditSession.getScrollTop" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1215,7 +1275,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getSelection" class="ellipsis_description"><p>Returns the string of the current selection. ...</p>
+                          <div id="ellipsis_EditSession.getSelection" class="ellipsis_description"><p>Returns the string of the current selection.</p>
 
                           </div>
                           <div id="short_EditSession.getSelection" class="short_description hiddenSpan"><p>Returns the string of the current selection.</p>
@@ -1249,10 +1309,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getState" class="ellipsis_description"><p>Returns the state of tokenization for a row. ...</p>
+                          <div id="ellipsis_EditSession.getState" class="ellipsis_description"><p>{:BackgroundTokenizer.getState}</p>
 
                           </div>
-                          <div id="short_EditSession.getState" class="short_description hiddenSpan"><p>Returns the state of tokenization for a row.</p>
+                          <div id="short_EditSession.getState" class="short_description hiddenSpan"><p>{:BackgroundTokenizer.getState}</p>
 
                           </div>
                           <h3 id="EditSession.getState" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1283,7 +1343,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getTabSize" class="ellipsis_description"><p>Returns the current tab size. ...</p>
+                          <div id="ellipsis_EditSession.getTabSize" class="ellipsis_description"><p>Returns the current tab size.</p>
 
                           </div>
                           <div id="short_EditSession.getTabSize" class="short_description hiddenSpan"><p>Returns the current tab size.</p>
@@ -1316,7 +1376,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getTabString" class="ellipsis_description"><p>Returns the current value for tabs. If the user is using soft tabs, this will be a series of spaces (defined by [[Ed...</p>
+                          <div id="ellipsis_EditSession.getTabString" class="ellipsis_description"><p>Returns the current value for tabs. If the user is using soft tabs, this will be a series of spaces (defined by <a href="#EditSession.getTabSize" class="link-short" title="EditSession.getTabSize (class method)" data-id="EditSession.getTabSize">getTabSize</a>); otherwise it&#39;s simply <code>&#39;\t&#39;</code>.</p>
 
                           </div>
                           <div id="short_EditSession.getTabString" class="short_description hiddenSpan"><p>Returns the current value for tabs. If the user is using soft tabs, this will be a series of spaces (defined by <a href="#EditSession.getTabSize" class="link-short" title="EditSession.getTabSize (class method)" data-id="EditSession.getTabSize">getTabSize</a>); otherwise it&#39;s simply <code>&#39;\t&#39;</code>.</p>
@@ -1350,10 +1410,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getTextRange" class="ellipsis_description"><p>Given a range within the document, this function returns all the text within that range as a single string. ...</p>
+                          <div id="ellipsis_EditSession.getTextRange" class="ellipsis_description"><p>{:Document.getTextRange.desc}</p>
 
                           </div>
-                          <div id="short_EditSession.getTextRange" class="short_description hiddenSpan"><p>Given a range within the document, this function returns all the text within that range as a single string.</p>
+                          <div id="short_EditSession.getTextRange" class="short_description hiddenSpan"><p>{:Document.getTextRange.desc}</p>
 
                           </div>
                           <h3 id="EditSession.getTextRange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1384,7 +1444,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getTokenAt" class="ellipsis_description"><p>Returns an array of tokens at the indicated row and column. ...</p>
+                          <div id="ellipsis_EditSession.getTokenAt" class="ellipsis_description"><p>Returns an array of tokens at the indicated row and column.</p>
 
                           </div>
                           <div id="short_EditSession.getTokenAt" class="short_description hiddenSpan"><p>Returns an array of tokens at the indicated row and column.</p>
@@ -1405,7 +1465,7 @@
                           <ul class="signatures">
                             <li class="signature">
                               <ul>
-                                <li class="signature-call"><span id="EditSession.getTokens" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">getTokens</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
+                                <li class="signature-call"><span id="EditSession.getTokens" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">getTokens</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row</span>)
                                   <li class="signature-returns">
                                     <ul class="argument-types">
                                       <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="returnType " title="Array" data-id="Array">Array</a></li>
@@ -1419,7 +1479,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getTokens" class="ellipsis_description"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows. ...</p>
+                          <div id="ellipsis_EditSession.getTokens" class="ellipsis_description"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.</p>
 
                           </div>
                           <div id="short_EditSession.getTokens" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.</p>
@@ -1427,7 +1487,7 @@
                           </div>
                           <h3 id="EditSession.getTokens" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -1453,7 +1513,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getUndoManager" class="ellipsis_description"><p>Returns the current undo manager. ...</p>
+                          <div id="ellipsis_EditSession.getUndoManager" class="ellipsis_description"><p>Returns the current undo manager.</p>
 
                           </div>
                           <div id="short_EditSession.getUndoManager" class="short_description hiddenSpan"><p>Returns the current undo manager.</p>
@@ -1486,7 +1546,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getUseSoftTabs" class="ellipsis_description"><p>Returns <code>true</code> if soft tabs are being used, <code>false</code> otherwise. ...</p>
+                          <div id="ellipsis_EditSession.getUseSoftTabs" class="ellipsis_description"><p>Returns <code>true</code> if soft tabs are being used, <code>false</code> otherwise.</p>
 
                           </div>
                           <div id="short_EditSession.getUseSoftTabs" class="short_description hiddenSpan"><p>Returns <code>true</code> if soft tabs are being used, <code>false</code> otherwise.</p>
@@ -1519,7 +1579,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getUseWorker" class="ellipsis_description"><p>Returns <code>true</code> if workers are being used. ...</p>
+                          <div id="ellipsis_EditSession.getUseWorker" class="ellipsis_description"><p>Returns <code>true</code> if workers are being used.</p>
 
                           </div>
                           <div id="short_EditSession.getUseWorker" class="short_description hiddenSpan"><p>Returns <code>true</code> if workers are being used.</p>
@@ -1552,7 +1612,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getUseWrapMode" class="ellipsis_description"><p>Returns <code>true</code> if wrap mode is being used; <code>false</code> otherwise. ...</p>
+                          <div id="ellipsis_EditSession.getUseWrapMode" class="ellipsis_description"><p>Returns <code>true</code> if wrap mode is being used; <code>false</code> otherwise.</p>
 
                           </div>
                           <div id="short_EditSession.getUseWrapMode" class="short_description hiddenSpan"><p>Returns <code>true</code> if wrap mode is being used; <code>false</code> otherwise.</p>
@@ -1586,46 +1646,13 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getValue" class="ellipsis_description"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> as a string. ...</p>
+                          <div id="ellipsis_EditSession.getValue" class="ellipsis_description"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a> as a string.</p>
 
                           </div>
-                          <div id="short_EditSession.getValue" class="short_description hiddenSpan"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> as a string.</p>
+                          <div id="short_EditSession.getValue" class="short_description hiddenSpan"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a> as a string.</p>
 
                           </div>
                           <h3 id="EditSession.getValue" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                          <div class="description">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                  <article id="EditSession.getWidth" data-title="EditSession.getWidth (class method)" class="article">
-                    <div class="section method">
-                      <div class="memberContent">
-                        <div class="title">
-                          <ul class="signatures">
-                            <li class="signature">
-                              <ul>
-                                <li class="signature-call"><span id="EditSession.getWidth" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">getWidth</span></span>(<span class="sigArgList"></span>)
-                                  <li class="signature-returns">
-                                    <ul class="argument-types">
-                                      <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="returnType " title="Number" data-id="Number">Number</a></li>
-                                    </ul>
-                                  </li></li>
-                              </ul>
-                              <ul class="metaInfo">
-                              </ul>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getWidth" class="ellipsis_description"><p>Returns the width of the document. ...</p>
-
-                          </div>
-                          <div id="short_EditSession.getWidth" class="short_description hiddenSpan"><p>Returns the width of the document.</p>
-
-                          </div>
-                          <h3 id="EditSession.getWidth" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                           </div>
                         </div>
@@ -1652,7 +1679,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getWordRange" class="ellipsis_description"><p>Given a starting row and column, this method returns the <code>Range</code> of the first word boundary it finds. ...</p>
+                          <div id="ellipsis_EditSession.getWordRange" class="ellipsis_description"><p>Given a starting row and column, this method returns the <code>Range</code> of the first word boundary it finds.</p>
 
                           </div>
                           <div id="short_EditSession.getWordRange" class="short_description hiddenSpan"><p>Given a starting row and column, this method returns the <code>Range</code> of the first word boundary it finds.</p>
@@ -1686,7 +1713,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getWrapLimit" class="ellipsis_description"><p>Returns the value of wrap limit. ...</p>
+                          <div id="ellipsis_EditSession.getWrapLimit" class="ellipsis_description"><p>Returns the value of wrap limit.</p>
 
                           </div>
                           <div id="short_EditSession.getWrapLimit" class="short_description hiddenSpan"><p>Returns the value of wrap limit.</p>
@@ -1719,16 +1746,15 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.getWrapLimitRange" class="ellipsis_description"><p>Returns an object that defines the minimum and maximum of the wrap limit; it looks something like this:
- ...</p>
+                          <div id="ellipsis_EditSession.getWrapLimitRange" class="ellipsis_description"><p>Returns an object that defines the minimum and maximum of the wrap limit; it looks something like this:</p>
 
                           </div>
-                          <div id="short_EditSession.getWrapLimitRange" class="short_description hiddenSpan"><p>Returns an object that defines the minimum and maximum of the wrap limit; it looks something like this:
-</p>
+                          <div id="short_EditSession.getWrapLimitRange" class="short_description hiddenSpan"><p>Returns an object that defines the minimum and maximum of the wrap limit; it looks something like this:</p>
+<pre><code><span class="rules">{ <span class="rule"><span class="attribute">min</span>:<span class="value"> wrapLimitRange_min, max: wrapLimitRange_max </span>}</span></span></code></pre>
 
                           </div>
                           <h3 id="EditSession.getWrapLimitRange" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                          <div class="description"><pre><code>{ min: wrapLimitRange_min, max: wrapLimitRange_max }</code></pre>
+                          <div class="description"><pre><code><span class="rules">{ <span class="rule"><span class="attribute">min</span>:<span class="value"> wrapLimitRange_min, max: wrapLimitRange_max </span>}</span></span></code></pre>
 
                           </div>
                         </div>
@@ -1750,12 +1776,11 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.indentRows" class="ellipsis_description"><p>Indents all the rows, from <code>startRow</code> to <code>endRow</code> (inclusive), by prefixing each row with the token in <code>indentString</code>.
- ...</p>
+                          <div id="ellipsis_EditSession.indentRows" class="ellipsis_description"><p>Indents all the rows, from <code>startRow</code> to <code>endRow</code> (inclusive), by prefixing each row with the token in <code>indentString</code>.</p>
 
                           </div>
-                          <div id="short_EditSession.indentRows" class="short_description hiddenSpan"><p>Indents all the rows, from <code>startRow</code> to <code>endRow</code> (inclusive), by prefixing each row with the token in <code>indentString</code>.
-</p>
+                          <div id="short_EditSession.indentRows" class="short_description hiddenSpan"><p>Indents all the rows, from <code>startRow</code> to <code>endRow</code> (inclusive), by prefixing each row with the token in <code>indentString</code>.</p>
+<p>If <code>indentString</code> contains the <code>&#39;\t&#39;</code> character, it&#39;s replaced by whatever is defined by <a href="#EditSession.getTabString" class="link-short" title="EditSession.getTabString (class method)" data-id="EditSession.getTabString">getTabString</a>.</p>
 
                           </div>
                           <h3 id="EditSession.indentRows" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -1788,7 +1813,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.insert" class="ellipsis_description"><p>Inserts a block of <code>text</code> and the indicated <code>position</code>. ...</p>
+                          <div id="ellipsis_EditSession.insert" class="ellipsis_description"><p>Inserts a block of <code>text</code> and the indicated <code>position</code>.</p>
 
                           </div>
                           <div id="short_EditSession.insert" class="short_description hiddenSpan"><p>Inserts a block of <code>text</code> and the indicated <code>position</code>.</p>
@@ -1823,7 +1848,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.isTabStop" class="ellipsis_description"><p>Returns <code>true</code> if the character at the position is a soft tab. ...</p>
+                          <div id="ellipsis_EditSession.isTabStop" class="ellipsis_description"><p>Returns <code>true</code> if the character at the position is a soft tab.</p>
 
                           </div>
                           <div id="short_EditSession.isTabStop" class="short_description hiddenSpan"><p>Returns <code>true</code> if the character at the position is a soft tab.</p>
@@ -1858,11 +1883,6 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.moveLinesDown" class="ellipsis_description"><p> ...</p>
-
-                          </div>
-                          <div id="short_EditSession.moveLinesDown" class="short_description hiddenSpan">
-                          </div>
                           <h3 id="EditSession.moveLinesDown" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
                             <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The starting row to move down</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The final row to move down</td></tr></table>
@@ -1893,7 +1913,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.moveLinesUp" class="ellipsis_description"><p>Shifts all the lines in the document up one, starting from <code>firstRow</code> and ending at <code>lastRow</code>. ...</p>
+                          <div id="ellipsis_EditSession.moveLinesUp" class="ellipsis_description"><p>Shifts all the lines in the document up one, starting from <code>firstRow</code> and ending at <code>lastRow</code>.</p>
 
                           </div>
                           <div id="short_EditSession.moveLinesUp" class="short_description hiddenSpan"><p>Shifts all the lines in the document up one, starting from <code>firstRow</code> and ending at <code>lastRow</code>.</p>
@@ -1928,7 +1948,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.moveText" class="ellipsis_description"><p>{ row: newRowLocation, column: newColumnLocation } ...</p>
+                          <div id="ellipsis_EditSession.moveText" class="ellipsis_description"><p>{ row: newRowLocation, column: newColumnLocation }</p>
 
                           </div>
                           <div id="short_EditSession.moveText" class="short_description hiddenSpan"><p>{ row: newRowLocation, column: newColumnLocation }</p>
@@ -1938,6 +1958,34 @@
                           <div class="description">
                             <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">fromRange</td><td class="argType" "><a href="range.html#Range" class="" title="Range (class)" data-id="Range">Range</a></td><td class="argDescription ">Required. The range of text you want moved within the document</td></tr><tr class="argumentRow "><td class="argName ">toPosition</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription ">Required. The location (row and column) where you want to move the text to</td></tr></table>
                             <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="range.html#Range" class="" title="Range (class)" data-id="Range">Range</a></td><td class="returnDescription ">The new range where the text was moved to. Moves a range of text from the given range to the given position. <code>toPosition</code> is an object that looks like this:</td></tr></table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                  <article id="EditSession.onReloadTokenizer" data-title="EditSession.onReloadTokenizer (class method)" class="article">
+                    <div class="section method">
+                      <div class="memberContent">
+                        <div class="title">
+                          <ul class="signatures">
+                            <li class="signature">
+                              <ul>
+                                <li class="signature-call"><span id="EditSession.onReloadTokenizer" class="member-name methodClicker"><span class="sigClassName">EditSession.</span><span class="sigMemberName">onReloadTokenizer</span></span>(<span class="sigArgList">e</span>)</li>
+                              </ul>
+                              <ul class="metaInfo">
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="sideToggler">
+                          <div id="ellipsis_EditSession.onReloadTokenizer" class="ellipsis_description"><p>Reloads all the tokens on the current session. This function calls <a href="background_tokenizer.html#BackgroundTokenizer.start" class="link-short" title="BackgroundTokenizer.start (class method)" data-id="BackgroundTokenizer.start">start</a> to all the rows; it also emits the <code>&#39;tokenizerUpdate&#39;</code> event.</p>
+
+                          </div>
+                          <div id="short_EditSession.onReloadTokenizer" class="short_description hiddenSpan"><p>Reloads all the tokens on the current session. This function calls <a href="background_tokenizer.html#BackgroundTokenizer.start" class="link-short" title="BackgroundTokenizer.start (class method)" data-id="BackgroundTokenizer.start">start</a> to all the rows; it also emits the <code>&#39;tokenizerUpdate&#39;</code> event.</p>
+
+                          </div>
+                          <h3 id="EditSession.onReloadTokenizer" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
+                          <div class="description">
                           </div>
                         </div>
                       </div>
@@ -1958,7 +2006,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.outdentRows" class="ellipsis_description"><p>Outdents all the rows defined by the <code>start</code> and <code>end</code> properties of <code>range</code>. ...</p>
+                          <div id="ellipsis_EditSession.outdentRows" class="ellipsis_description"><p>Outdents all the rows defined by the <code>start</code> and <code>end</code> properties of <code>range</code>.</p>
 
                           </div>
                           <div id="short_EditSession.outdentRows" class="short_description hiddenSpan"><p>Outdents all the rows defined by the <code>start</code> and <code>end</code> properties of <code>range</code>.</p>
@@ -1992,7 +2040,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.redoChanges" class="ellipsis_description"><p>Re-implements a previously undone change to your document. ...</p>
+                          <div id="ellipsis_EditSession.redoChanges" class="ellipsis_description"><p>Re-implements a previously undone change to your document.</p>
 
                           </div>
                           <div id="short_EditSession.redoChanges" class="short_description hiddenSpan"><p>Re-implements a previously undone change to your document.</p>
@@ -2000,7 +2048,7 @@
                           </div>
                           <h3 id="EditSession.redoChanges" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">deltas</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription ">Required. An array of previous changes</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">deltas</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription ">Required. An array of previous changes</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. {:dontSelect}</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -2027,7 +2075,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.remove" class="ellipsis_description"><p>Removes the <code>range</code> from the document. ...</p>
+                          <div id="ellipsis_EditSession.remove" class="ellipsis_description"><p>Removes the <code>range</code> from the document.</p>
 
                           </div>
                           <div id="short_EditSession.remove" class="short_description hiddenSpan"><p>Removes the <code>range</code> from the document.</p>
@@ -2057,7 +2105,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.removeMarker" class="ellipsis_description"><p>Removes the marker with the specified ID. If this marker was in front, the <code>&#39;changeFrontMarker&#39;</code> event is emitted. I...</p>
+                          <div id="ellipsis_EditSession.removeMarker" class="ellipsis_description"><p>Removes the marker with the specified ID. If this marker was in front, the <code>&#39;changeFrontMarker&#39;</code> event is emitted. If the marker was in the back, the <code>&#39;changeBackMarker&#39;</code> event is emitted.</p>
 
                           </div>
                           <div id="short_EditSession.removeMarker" class="short_description hiddenSpan"><p>Removes the marker with the specified ID. If this marker was in front, the <code>&#39;changeFrontMarker&#39;</code> event is emitted. If the marker was in the back, the <code>&#39;changeBackMarker&#39;</code> event is emitted.</p>
@@ -2092,7 +2140,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.replace" class="ellipsis_description"><p>Replaces a range in the document with the new <code>text</code>. ...</p>
+                          <div id="ellipsis_EditSession.replace" class="ellipsis_description"><p>Replaces a range in the document with the new <code>text</code>.</p>
 
                           </div>
                           <div id="short_EditSession.replace" class="short_description hiddenSpan"><p>Replaces a range in the document with the new <code>text</code>.</p>
@@ -2128,10 +2176,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.screenToDocumentPosition" class="ellipsis_description"><p>Converts characters coordinates on the screen to characters coordinates within the document. [This takes into accoun...</p>
+                          <div id="ellipsis_EditSession.screenToDocumentPosition" class="ellipsis_description"><p>Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}</p>
 
                           </div>
-                          <div id="short_EditSession.screenToDocumentPosition" class="short_description hiddenSpan"><p>This takes into account code folding, word wrap, tab size, and any other visual modifications.</p>
+                          <div id="short_EditSession.screenToDocumentPosition" class="short_description hiddenSpan"><p>Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}</p>
 
                           </div>
                           <h3 id="EditSession.screenToDocumentPosition" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -2158,7 +2206,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setAnnotations" class="ellipsis_description"><p>Sets annotations for the <code>EditSession</code>. This functions emits the <code>&#39;changeAnnotation&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.setAnnotations" class="ellipsis_description"><p>Sets annotations for the <code>EditSession</code>. This functions emits the <code>&#39;changeAnnotation&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setAnnotations" class="short_description hiddenSpan"><p>Sets annotations for the <code>EditSession</code>. This functions emits the <code>&#39;changeAnnotation&#39;</code> event.</p>
@@ -2187,7 +2235,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setBreakpoint" class="ellipsis_description"><p>Sets a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.setBreakpoint" class="ellipsis_description"><p>Sets a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setBreakpoint" class="short_description hiddenSpan"><p>Sets a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
@@ -2216,7 +2264,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setBreakpoints" class="ellipsis_description"><p>Sets a breakpoint on every row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.setBreakpoints" class="ellipsis_description"><p>Sets a breakpoint on every row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setBreakpoints" class="short_description hiddenSpan"><p>Sets a breakpoint on every row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
@@ -2245,7 +2293,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setDocument" class="ellipsis_description"><p>Sets the <code>EditSession</code> to point to a new <code>Document</code>. If a <code>BackgroundTokenizer</code> exists, it also points to <code>doc</code>. ...</p>
+                          <div id="ellipsis_EditSession.setDocument" class="ellipsis_description"><p>Sets the <code>EditSession</code> to point to a new <code>Document</code>. If a <code>BackgroundTokenizer</code> exists, it also points to <code>doc</code>.</p>
 
                           </div>
                           <div id="short_EditSession.setDocument" class="short_description hiddenSpan"><p>Sets the <code>EditSession</code> to point to a new <code>Document</code>. If a <code>BackgroundTokenizer</code> exists, it also points to <code>doc</code>.</p>
@@ -2274,10 +2322,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setMode" class="ellipsis_description"><p>Sets a new text mode for the <code>EditSession</code>. This method also emits the <code>&#39;changeMode&#39;</code> event. If a [[BackgroundTokeni...</p>
+                          <div id="ellipsis_EditSession.setMode" class="ellipsis_description"><p>Sets a new text mode for the <code>EditSession</code>. This method also emits the <code>&#39;changeMode&#39;</code> event. If a <a href="background_tokenizer.html#BackgroundTokenizer" class="link-short" title="BackgroundTokenizer (class)" data-id="BackgroundTokenizer">BackgroundTokenizer</a> is set, the <code>&#39;tokenizerUpdate&#39;</code> event is also emitted.</p>
 
                           </div>
-                          <div id="short_EditSession.setMode" class="short_description hiddenSpan"><p>Sets a new text mode for the <code>EditSession</code>. This method also emits the <code>&#39;changeMode&#39;</code> event. If a <a href="background_tokenizer.html#BackgroundTokenizer" class="link-short" title="BackgroundTokenizer (class)" data-id="BackgroundTokenizer"><code>BackgroundTokenizer</code></a> is set, the <code>&#39;tokenizerUpdate&#39;</code> event is also emitted.</p>
+                          <div id="short_EditSession.setMode" class="short_description hiddenSpan"><p>Sets a new text mode for the <code>EditSession</code>. This method also emits the <code>&#39;changeMode&#39;</code> event. If a <a href="background_tokenizer.html#BackgroundTokenizer" class="link-short" title="BackgroundTokenizer (class)" data-id="BackgroundTokenizer">BackgroundTokenizer</a> is set, the <code>&#39;tokenizerUpdate&#39;</code> event is also emitted.</p>
 
                           </div>
                           <h3 id="EditSession.setMode" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -2304,15 +2352,15 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setNewLineMode" class="ellipsis_description"><p>Sets the new line mode. ...</p>
+                          <div id="ellipsis_EditSession.setNewLineMode" class="ellipsis_description"><p>{:Document.setNewLineMode.desc}</p>
 
                           </div>
-                          <div id="short_EditSession.setNewLineMode" class="short_description hiddenSpan"><p>Sets the new line mode.</p>
+                          <div id="short_EditSession.setNewLineMode" class="short_description hiddenSpan"><p>{:Document.setNewLineMode.desc}</p>
 
                           </div>
                           <h3 id="EditSession.setNewLineMode" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">newLineMode</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. The newline mode to use; can be either <code>windows</code>, <code>unix</code>, or <code>auto</code></td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">newLineMode</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription ">Required. {:Document.setNewLineMode.param}</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -2333,7 +2381,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setOverwrite" class="ellipsis_description"><p>Pass in <code>true</code> to enable overwrites in your session, or <code>false</code> to disable. If overwrites is enabled, any text you e...</p>
+                          <div id="ellipsis_EditSession.setOverwrite" class="ellipsis_description"><p>Pass in <code>true</code> to enable overwrites in your session, or <code>false</code> to disable. If overwrites is enabled, any text you enter will type over any text after it. If the value of <code>overwrite</code> changes, this function also emites the <code>changeOverwrite</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setOverwrite" class="short_description hiddenSpan"><p>Pass in <code>true</code> to enable overwrites in your session, or <code>false</code> to disable. If overwrites is enabled, any text you enter will type over any text after it. If the value of <code>overwrite</code> changes, this function also emites the <code>changeOverwrite</code> event.</p>
@@ -2362,10 +2410,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setScrollLeft" class="ellipsis_description"><p>[Sets the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #Edi...</p>
+                          <div id="ellipsis_EditSession.setScrollLeft" class="ellipsis_description"><p>[Sets the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.setScrollLeft}</p>
 
                           </div>
-                          <div id="short_EditSession.setScrollLeft" class="short_description hiddenSpan"><p>Sets the value of the distance between the left of the editor and the leftmost part of the visible content.</p>
+                          <div id="short_EditSession.setScrollLeft" class="short_description hiddenSpan"><p>[Sets the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.setScrollLeft}</p>
 
                           </div>
                           <h3 id="EditSession.setScrollLeft" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -2390,7 +2438,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setScrollTop" class="ellipsis_description"><p>This function sets the scroll top value. It also emits the <code>&#39;changeScrollTop&#39;</code> event. ...</p>
+                          <div id="ellipsis_EditSession.setScrollTop" class="ellipsis_description"><p>This function sets the scroll top value. It also emits the <code>&#39;changeScrollTop&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setScrollTop" class="short_description hiddenSpan"><p>This function sets the scroll top value. It also emits the <code>&#39;changeScrollTop&#39;</code> event.</p>
@@ -2419,7 +2467,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setTabSize" class="ellipsis_description"><p>Set the number of spaces that define a soft tab; for example, passing in <code>4</code> transforms the soft tabs to be equivale...</p>
+                          <div id="ellipsis_EditSession.setTabSize" class="ellipsis_description"><p>Set the number of spaces that define a soft tab; for example, passing in <code>4</code> transforms the soft tabs to be equivalent to four spaces. This function also emits the <code>changeTabSize</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setTabSize" class="short_description hiddenSpan"><p>Set the number of spaces that define a soft tab; for example, passing in <code>4</code> transforms the soft tabs to be equivalent to four spaces. This function also emits the <code>changeTabSize</code> event.</p>
@@ -2448,7 +2496,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setUndoManager" class="ellipsis_description"><p>Sets the undo manager. ...</p>
+                          <div id="ellipsis_EditSession.setUndoManager" class="ellipsis_description"><p>Sets the undo manager.</p>
 
                           </div>
                           <div id="short_EditSession.setUndoManager" class="short_description hiddenSpan"><p>Sets the undo manager.</p>
@@ -2477,7 +2525,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setUndoSelect" class="ellipsis_description"><p>ENables or disables highlighting of the range where an undo occured. ...</p>
+                          <div id="ellipsis_EditSession.setUndoSelect" class="ellipsis_description"><p>ENables or disables highlighting of the range where an undo occured.</p>
 
                           </div>
                           <div id="short_EditSession.setUndoSelect" class="short_description hiddenSpan"><p>ENables or disables highlighting of the range where an undo occured.</p>
@@ -2506,7 +2554,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setUseSoftTabs" class="ellipsis_description"><p>Pass <code>true</code> to enable the use of soft tabs. Soft tabs means you&#39;re using spaces instead of the tab character (<code>&#39;\t&#39;</code>). ...</p>
+                          <div id="ellipsis_EditSession.setUseSoftTabs" class="ellipsis_description"><p>Pass <code>true</code> to enable the use of soft tabs. Soft tabs means you&#39;re using spaces instead of the tab character (<code>&#39;\t&#39;</code>).</p>
 
                           </div>
                           <div id="short_EditSession.setUseSoftTabs" class="short_description hiddenSpan"><p>Pass <code>true</code> to enable the use of soft tabs. Soft tabs means you&#39;re using spaces instead of the tab character (<code>&#39;\t&#39;</code>).</p>
@@ -2535,7 +2583,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setUseWorker" class="ellipsis_description"><p>Identifies if you want to use a worker for the <code>EditSession</code>. ...</p>
+                          <div id="ellipsis_EditSession.setUseWorker" class="ellipsis_description"><p>Identifies if you want to use a worker for the <code>EditSession</code>.</p>
 
                           </div>
                           <div id="short_EditSession.setUseWorker" class="short_description hiddenSpan"><p>Identifies if you want to use a worker for the <code>EditSession</code>.</p>
@@ -2564,7 +2612,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setUseWrapMode" class="ellipsis_description"><p>Sets whether or not line wrapping is enabled. If <code>useWrapMode</code> is different than the current value, the `&#39;changeWrap...</p>
+                          <div id="ellipsis_EditSession.setUseWrapMode" class="ellipsis_description"><p>Sets whether or not line wrapping is enabled. If <code>useWrapMode</code> is different than the current value, the <code>&#39;changeWrapMode&#39;</code> event is emitted.</p>
 
                           </div>
                           <div id="short_EditSession.setUseWrapMode" class="short_description hiddenSpan"><p>Sets whether or not line wrapping is enabled. If <code>useWrapMode</code> is different than the current value, the <code>&#39;changeWrapMode&#39;</code> event is emitted.</p>
@@ -2593,7 +2641,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setValue" class="ellipsis_description"><p>Sets the session text. ...</p>
+                          <div id="ellipsis_EditSession.setValue" class="ellipsis_description"><p>Sets the session text.</p>
 
                           </div>
                           <div id="short_EditSession.setValue" class="short_description hiddenSpan"><p>Sets the session text.</p>
@@ -2622,7 +2670,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.setWrapLimitRange" class="ellipsis_description"><p>Sets the boundaries of wrap. Either value can be <code>null</code> to have an unconstrained wrap, or, they can be the same numb...</p>
+                          <div id="ellipsis_EditSession.setWrapLimitRange" class="ellipsis_description"><p>Sets the boundaries of wrap. Either value can be <code>null</code> to have an unconstrained wrap, or, they can be the same number to pin the limit. If the wrap limits for <code>min</code> or <code>max</code> are different, this method also emits the <code>&#39;changeWrapMode&#39;</code> event.</p>
 
                           </div>
                           <div id="short_EditSession.setWrapLimitRange" class="short_description hiddenSpan"><p>Sets the boundaries of wrap. Either value can be <code>null</code> to have an unconstrained wrap, or, they can be the same number to pin the limit. If the wrap limits for <code>min</code> or <code>max</code> are different, this method also emits the <code>&#39;changeWrapMode&#39;</code> event.</p>
@@ -2651,7 +2699,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.toggleOverwrite" class="ellipsis_description"><p>Sets the value of overwrite to the opposite of whatever it currently is. ...</p>
+                          <div id="ellipsis_EditSession.toggleOverwrite" class="ellipsis_description"><p>Sets the value of overwrite to the opposite of whatever it currently is.</p>
 
                           </div>
                           <div id="short_EditSession.toggleOverwrite" class="short_description hiddenSpan"><p>Sets the value of overwrite to the opposite of whatever it currently is.</p>
@@ -2685,10 +2733,10 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.toString" class="ellipsis_description"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> as a string. ...</p>
+                          <div id="ellipsis_EditSession.toString" class="ellipsis_description"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a> as a string.</p>
 
                           </div>
-                          <div id="short_EditSession.toString" class="short_description hiddenSpan"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> as a string.</p>
+                          <div id="short_EditSession.toString" class="short_description hiddenSpan"><p>Returns the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a> as a string.</p>
 
                           </div>
                           <h3 id="EditSession.toString" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
@@ -2718,7 +2766,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_EditSession.undoChanges" class="ellipsis_description"><p>Reverts previous changes to your document. ...</p>
+                          <div id="ellipsis_EditSession.undoChanges" class="ellipsis_description"><p>Reverts previous changes to your document.</p>
 
                           </div>
                           <div id="short_EditSession.undoChanges" class="short_description hiddenSpan"><p>Reverts previous changes to your document.</p>
@@ -2726,7 +2774,7 @@
                           </div>
                           <h3 id="EditSession.undoChanges" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">deltas</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription ">Required. An array of previous changes</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">deltas</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription ">Required. An array of previous changes</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription ">Required. [If <code>true</code>, doesn&#39;t select the range of where the change occured]{: #dontSelect}</td></tr></table>
                           </div>
                         </div>
                       </div>
