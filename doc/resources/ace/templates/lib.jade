@@ -128,11 +128,11 @@ mixin article(obj, parents)
 																	
 					div.sideToggler
 
-						if obj.ellipsis_description
+						if obj.short_description
 							div(id='ellipsis_#{obj.id}', class='ellipsis_description')
-								mixin markdown(obj.ellipsis_description)
-							div(id='short_#{obj.id}', class='short_description hiddenSpan')
 								mixin markdown(obj.short_description)
+							div(id='short_#{obj.id}', class='short_description hiddenSpan')
+								mixin markdown(obj.description)
 
 						h3(id='#{obj.id}', class='methodToggle methodClicker inactive')
 							&nbsp;&nbsp;&nbsp;

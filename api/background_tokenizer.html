@@ -110,10 +110,8 @@
                             </li>
                           </ul>
                         </li>
-                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (8)</span><b class="caret"></b></a>
+                        <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (7)</span><b class="caret"></b></a>
                           <ul class="dropdown-menu">
-                            <li data-id="BackgroundTokenizer.$tokenizeRows" class="memberLink"><a href="#BackgroundTokenizer.$tokenizeRows" class="" title="BackgroundTokenizer.$tokenizeRows (class method)" data-id="BackgroundTokenizer.$tokenizeRows">$tokenizeRows</a>
-                            </li>
                             <li data-id="BackgroundTokenizer.fireUpdateEvent" class="memberLink"><a href="#BackgroundTokenizer.fireUpdateEvent" class="" title="BackgroundTokenizer.fireUpdateEvent (class method)" data-id="BackgroundTokenizer.fireUpdateEvent">fireUpdateEvent</a>
                             </li>
                             <li data-id="BackgroundTokenizer.getState" class="memberLink"><a href="#BackgroundTokenizer.getState" class="" title="BackgroundTokenizer.getState (class method)" data-id="BackgroundTokenizer.getState">getState</a>
@@ -143,7 +141,7 @@
                   </div>
                   <article id="BackgroundTokenizer" data-title="BackgroundTokenizer (class)" class="article">
                     <div class="section description">
-                      <div class="memberContent"><p>Tokenizes the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document"><code>Document</code></a> in the background, and caches the tokenized rows for future use. If a certain row is changed, everything below that row is re-tokenized.</p>
+                      <div class="memberContent"><p>Tokenizes the current <a href="document.html#Document" class="link-short" title="Document (class)" data-id="Document">Document</a> in the background, and caches the tokenized rows for future use. If a certain row is changed, everything below that row is re-tokenized.</p>
 
                       </div>
                     </div>
@@ -164,7 +162,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_new BackgroundTokenizer" class="ellipsis_description"><p>Creates a new <code>BackgroundTokenizer</code> object. ...</p>
+                          <div id="ellipsis_new BackgroundTokenizer" class="ellipsis_description"><p>Creates a new <code>BackgroundTokenizer</code> object.</p>
 
                           </div>
                           <div id="short_new BackgroundTokenizer" class="short_description hiddenSpan"><p>Creates a new <code>BackgroundTokenizer</code> object.</p>
@@ -179,41 +177,6 @@
                     </div>
                   </article>
                   <h3 class="sectionHeader">Methods</h3>
-                  <article id="BackgroundTokenizer.$tokenizeRows" data-title="BackgroundTokenizer.$tokenizeRows (class method)" class="article">
-                    <div class="section method">
-                      <div class="memberContent">
-                        <div class="title">
-                          <ul class="signatures">
-                            <li class="signature">
-                              <ul>
-                                <li class="signature-call"><span id="BackgroundTokenizer.$tokenizeRows" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">$tokenizeRows</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
-                                  <li class="signature-returns">
-                                    <ul class="argument-types">
-                                      <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a> ]</li>
-                                    </ul>
-                                  </li></li>
-                              </ul>
-                              <ul class="metaInfo">
-                              </ul>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.$tokenizeRows" class="ellipsis_description"><p>Tokenizes all the rows within the specified region. ...</p>
-
-                          </div>
-                          <div id="short_BackgroundTokenizer.$tokenizeRows" class="short_description hiddenSpan"><p>Tokenizes all the rows within the specified region.</p>
-
-                          </div>
-                          <h3 id="BackgroundTokenizer.$tokenizeRows" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
-                          <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">startRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
-                            <h4>Returns</h4><table class="returnTable return-list table table-striped table-bordered"><tr class=" "><td class="returnType "><a href="http://www.nodemanual.org/latest/js_doc/Array.html" class="" title="Array" data-id="Array">Array</a> of <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a>s</td><td class="returnDescription ">A list of the tokenized rows. Each item in the list is an object with two properties, <code>state</code> and <code>start</code>.</td></tr></table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
                   <article id="BackgroundTokenizer.fireUpdateEvent" data-title="BackgroundTokenizer.fireUpdateEvent (class method)" class="article">
                     <div class="section method">
                       <div class="memberContent">
@@ -229,7 +192,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.fireUpdateEvent" class="ellipsis_description"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated. ...</p>
+                          <div id="ellipsis_BackgroundTokenizer.fireUpdateEvent" class="ellipsis_description"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated.</p>
 
                           </div>
                           <div id="short_BackgroundTokenizer.fireUpdateEvent" class="short_description hiddenSpan"><p>Emits the <code>&#39;update&#39;</code> event. <code>firstRow</code> and <code>lastRow</code> are used to define the boundaries of the region to be updated.</p>
@@ -263,15 +226,15 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.getState" class="ellipsis_description"><p>Returns the state of tokenization for a row.</p>
+                          <div id="ellipsis_BackgroundTokenizer.getState" class="ellipsis_description"><p>[Returns the state of tokenization at the end of a row.]{: #BackgroundTokenizer.getState}</p>
 
                           </div>
-                          <div id="short_BackgroundTokenizer.getState" class="short_description hiddenSpan"><p>Returns the state of tokenization for a row.</p>
+                          <div id="short_BackgroundTokenizer.getState" class="short_description hiddenSpan"><p>[Returns the state of tokenization at the end of a row.]{: #BackgroundTokenizer.getState}</p>
 
                           </div>
                           <h3 id="BackgroundTokenizer.getState" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to get state at</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -284,7 +247,7 @@
                           <ul class="signatures">
                             <li class="signature">
                               <ul>
-                                <li class="signature-call"><span id="BackgroundTokenizer.getTokens" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">getTokens</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> firstRow, <a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> lastRow</span>)
+                                <li class="signature-call"><span id="BackgroundTokenizer.getTokens" class="member-name methodClicker"><span class="sigClassName">BackgroundTokenizer.</span><span class="sigMemberName">getTokens</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="argument methodClicker" title="Number" data-id="Number">Number</a> row</span>)
                                   <li class="signature-returns">
                                     <ul class="argument-types">
                                       <li class="argument-type">[ <a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a> ]</li>
@@ -292,21 +255,20 @@
                                   </li></li>
                               </ul>
                               <ul class="metaInfo">
-                                <li><span class="label related-to">Related to <a href="#BackgroundTokenizer.$tokenizeRows" class="" title="BackgroundTokenizer.$tokenizeRows (class method)" data-id="BackgroundTokenizer.$tokenizeRows">BackgroundTokenizer.$tokenizeRows</a>	</span></li>
                               </ul>
                             </li>
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.getTokens" class="ellipsis_description"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows. ...</p>
+                          <div id="ellipsis_BackgroundTokenizer.getTokens" class="ellipsis_description"><p>Gives list of tokens of the row. (tokens are cached)</p>
 
                           </div>
-                          <div id="short_BackgroundTokenizer.getTokens" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.</p>
+                          <div id="short_BackgroundTokenizer.getTokens" class="short_description hiddenSpan"><p>Gives list of tokens of the row. (tokens are cached)</p>
 
                           </div>
                           <h3 id="BackgroundTokenizer.getTokens" class="methodToggle methodClicker inactive">&nbsp;&nbsp;&nbsp;</h3>
                           <div class="description">
-                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to start at</td></tr><tr class="argumentRow "><td class="argName ">lastRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to finish at</td></tr></table>
+                            <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">firstRow</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription ">Required. The row to get tokens at</td></tr></table>
                           </div>
                         </div>
                       </div>
@@ -327,7 +289,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.setDocument" class="ellipsis_description"><p>Sets a new document to associate with this object. ...</p>
+                          <div id="ellipsis_BackgroundTokenizer.setDocument" class="ellipsis_description"><p>Sets a new document to associate with this object.</p>
 
                           </div>
                           <div id="short_BackgroundTokenizer.setDocument" class="short_description hiddenSpan"><p>Sets a new document to associate with this object.</p>
@@ -356,7 +318,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.setTokenizer" class="ellipsis_description"><p>Sets a new tokenizer for this object. ...</p>
+                          <div id="ellipsis_BackgroundTokenizer.setTokenizer" class="ellipsis_description"><p>Sets a new tokenizer for this object.</p>
 
                           </div>
                           <div id="short_BackgroundTokenizer.setTokenizer" class="short_description hiddenSpan"><p>Sets a new tokenizer for this object.</p>
@@ -385,7 +347,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.start" class="ellipsis_description"><p>Starts tokenizing at the row indicated. ...</p>
+                          <div id="ellipsis_BackgroundTokenizer.start" class="ellipsis_description"><p>Starts tokenizing at the row indicated.</p>
 
                           </div>
                           <div id="short_BackgroundTokenizer.start" class="short_description hiddenSpan"><p>Starts tokenizing at the row indicated.</p>
@@ -414,7 +376,7 @@
                           </ul>
                         </div>
                         <div class="sideToggler">
-                          <div id="ellipsis_BackgroundTokenizer.stop" class="ellipsis_description"><p>Stops tokenizing. ...</p>
+                          <div id="ellipsis_BackgroundTokenizer.stop" class="ellipsis_description"><p>Stops tokenizing.</p>
 
                           </div>
                           <div id="short_BackgroundTokenizer.stop" class="short_description hiddenSpan"><p>Stops tokenizing.</p>

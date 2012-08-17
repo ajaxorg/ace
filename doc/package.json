@@ -1,0 +1,7 @@
+{
+    "name": "ace-api",
+    "version": "0.0.0",
+    "dependencies": {
+        "panino" : ">=1.0.15"
+    }
+}
