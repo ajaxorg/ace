@@ -47,6 +47,8 @@ var env = {};
 
 var dom = require("ace/lib/dom");
 var net = require("ace/lib/net");
+var lang = require("ace/lib/lang");
+var useragent = require("ace/lib/useragent");
 
 var event = require("ace/lib/event");
 var theme = require("ace/theme/textmate");
@@ -737,9 +739,40 @@ function singleLineEditor(el) {
     editor.setHighlightActiveLine(false);
     editor.setShowPrintMargin(false);
     editor.renderer.setShowGutter(false);
-    // editor.renderer.setHighlightGutterLine(false);
+    editor.renderer.setHighlightGutterLine(false);
     return editor;
 };
+
+
+/** simple statusbar **/
+var editor = env.editor;
+var statusBarEl = dom.createElement("div");
+statusBarEl.style.cssText = "color:gray;position:absolute;right:0;border-left:1px solid";
+cmdLine.container.appendChild(statusBarEl);
+var statusUpdate = lang.deferredCall(function() {
+    var status = [];
+    function add(s, sep) {s && status.push(s, sep || "|")}
+    if (editor.$vimModeHandler)
+        add(editor.$vimModeHandler.getStatusText());
+    else if (editor.commands.recording)
+        add("REC");
+    
+    var c = editor.selection.lead;
+    add(c.row + ":" + c.column, " ");
+    if (!editor.selection.isEmpty()) {
+        var r = editor.getSelectionRange()
+        add("(" + (r.end.row - r.start.row) + ":"  +(r.end.column - r.start.column) + ")");
+    }
+    status.pop();
+    statusBarEl.textContent = status.join("");
+});
+
+env.editor.on("changeStatus", function() {
+    statusUpdate.schedule(200);
+});
+env.editor.on("changeSelection", function() {
+    statusUpdate.schedule(200);
+});
 
 
 });
