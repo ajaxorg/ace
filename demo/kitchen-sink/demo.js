@@ -768,10 +768,10 @@ var statusUpdate = lang.deferredCall(function() {
 });
 
 env.editor.on("changeStatus", function() {
-    statusUpdate.schedule(200);
+    statusUpdate.schedule(50);
 });
 env.editor.on("changeSelection", function() {
-    statusUpdate.schedule(200);
+    statusUpdate.schedule(50);
 });
 
 
