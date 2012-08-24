@@ -131,7 +131,6 @@
 
 .ace_gutter .ace_layer {
     position: relative;
-    min-width: 40px;
     width: auto;
     text-align: right;
     pointer-events: auto;
