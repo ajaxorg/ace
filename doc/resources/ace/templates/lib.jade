@@ -216,7 +216,7 @@ mixin api()
 							-var heading = obj.path
 							span.name #{heading}
 								span.editInC9
-									mixin formatGHHref(obj.fullPath, 'nodejs_ref_guide')
+									mixin formatGHHref(obj.href, 'nodejs_ref_guide')
 						
 						-if (true || obj.filename.indexOf("index") < 0)
 							ul(class='nav tabs pos#{pos}', data-tabs='tabs')
