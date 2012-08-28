@@ -128,21 +128,14 @@ mixin article(obj, parents)
 																	
 					div.sideToggler
 
-						if obj.short_description
-							div(id='ellipsis_#{obj.id}', class='ellipsis_description')
-								mixin markdown(obj.short_description)
-							div(id='short_#{obj.id}', class='short_description hiddenSpan')
-								mixin markdown(obj.description)
+						div(id='ellipsis_#{obj.id}', class='ellipsis_description')
+							mixin markdown(obj.short_description)
 
 						h3(id='#{obj.id}', class='methodToggle methodClicker inactive')
 							&nbsp;&nbsp;&nbsp;
 						div.description
 
-							-description = obj.description.substring(obj.short_description.length) // cut the short_desc out
-							descArray = description.split("\n#### ")
-
-							if descArray[0].length && descArray[0] !== '' && descArray[0] !== '\n'
-								mixin markdown(descArray[0])
+							mixin markdown(obj.description)
 
 							if obj.bound && ~obj.bound.indexOf('#')
 								p.note.methodized
