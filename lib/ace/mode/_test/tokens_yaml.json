@@ -1,0 +1,410 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "# This sample document was taken from wikipedia:"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "# http://en.wikipedia.org/wiki/YAML#Sample_document"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "---"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "receipt:",
+   "     Oz-Ware Purchase Invoice"
+  ],
+  "types": [
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "date:",
+   "        ",
+   "2007",
+   "-08",
+   "-06"
+  ],
+  "types": [
+   "identifier",
+   "text",
+   "constant.numeric",
+   "constant.numeric",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "customer:"
+  ],
+  "types": [
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "given:",
+   "   Dorothy"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "family:",
+   "  Gale"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "items:"
+  ],
+  "types": [
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    - ",
+   "part_no:",
+   "   ",
+   "'A4786'"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "descrip:",
+   "   Water Bucket ",
+   "(",
+   "Filled",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "price:",
+   "     ",
+   "1.47"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "quantity:",
+   "  ",
+   "4"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    - ",
+   "part_no:",
+   "   ",
+   "'E1628'"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "descrip:",
+   "   High Heeled ",
+   "\"Ruby\"",
+   " Slippers"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "size:",
+   "      ",
+   "8"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "price:",
+   "     ",
+   "100.27"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "quantity:",
+   "  ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "bill-",
+   "to:",
+   "  ",
+   "&id001"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "variable"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "    ",
+   "street:",
+   " ",
+   "|"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "            123 Tornado Alley"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "            Suite 16"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "city:",
+   "   East Centerville"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "state:",
+   "  KS"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "ship-",
+   "to:",
+   "  ",
+   "*id001"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "specialDelivery:",
+   "  ",
+   ">"
+  ],
+  "types": [
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "    Follow the Yellow Brick"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "    Road to the Emerald City."
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "    Pay no attention to the"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "    man behind the curtain."
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "qqstring",
+  "values": [],
+  "types": []
+ }
+]

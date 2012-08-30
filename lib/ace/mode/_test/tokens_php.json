@@ -1,0 +1,417 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "<?php"
+  ],
+  "types": [
+   "support.php_tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "function",
+   " ",
+   "nfact",
+   "(",
+   "$n",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "variable",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "(",
+   "$n",
+   " ",
+   "==",
+   " ",
+   "0",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "variable",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "return",
+   " ",
+   "1",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.function",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "else",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "return",
+   " ",
+   "$n",
+   " ",
+   "*",
+   " ",
+   "nfact",
+   "(",
+   "$n",
+   " ",
+   "-",
+   " ",
+   "1",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.function",
+   "text",
+   "variable",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "lparen",
+   "variable",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "echo",
+   " ",
+   "\"",
+   "\\n",
+   "\\n",
+   "P",
+   "l",
+   "e",
+   "a",
+   "s",
+   "e",
+   " ",
+   "e",
+   "n",
+   "t",
+   "e",
+   "r",
+   " ",
+   "a",
+   " ",
+   "w",
+   "h",
+   "o",
+   "l",
+   "e",
+   " ",
+   "n",
+   "u",
+   "m",
+   "b",
+   "e",
+   "r",
+   " ",
+   ".",
+   ".",
+   ".",
+   " ",
+   "\"",
+   ";"
+  ],
+  "types": [
+   "support.function",
+   "text",
+   "string",
+   "constant.language.escape",
+   "constant.language.escape",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$num",
+   " ",
+   "=",
+   " ",
+   "trim",
+   "(",
+   "fgets",
+   "(",
+   "STDIN",
+   ")",
+   ")",
+   ";"
+  ],
+  "types": [
+   "variable",
+   "text",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "lparen",
+   "support.function",
+   "lparen",
+   "constant.language",
+   "rparen",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "// ===== PROCESS - Determing the factorial of the input number ====="
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$output",
+   " ",
+   "=",
+   " ",
+   "\"",
+   "\\n",
+   "\\n",
+   "F",
+   "a",
+   "c",
+   "t",
+   "o",
+   "r",
+   "i",
+   "a",
+   "l",
+   " ",
+   "\"",
+   " . ",
+   "$num",
+   " . ",
+   "\"",
+   " ",
+   "=",
+   " ",
+   "\"",
+   " . ",
+   "nfact",
+   "(",
+   "$num",
+   ")",
+   " . ",
+   "\"",
+   "\\n",
+   "\\n",
+   "\"",
+   ";"
+  ],
+  "types": [
+   "variable",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "constant.language.escape",
+   "constant.language.escape",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "text",
+   "variable",
+   "text",
+   "string",
+   "string",
+   "string",
+   "string",
+   "string",
+   "text",
+   "identifier",
+   "lparen",
+   "variable",
+   "rparen",
+   "text",
+   "string",
+   "constant.language.escape",
+   "constant.language.escape",
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "echo",
+   " ",
+   "$output",
+   ";"
+  ],
+  "types": [
+   "support.function",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "?>"
+  ],
+  "types": [
+   "support.php_tag"
+  ]
+ }
+]

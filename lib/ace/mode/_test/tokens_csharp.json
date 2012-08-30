@@ -1,0 +1,70 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "public",
+   " ",
+   "void",
+   " ",
+   "HelloWorld",
+   "(",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "//Say Hello!"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "Console",
+   ".",
+   "WriteLine",
+   "(",
+   "\"Hello World\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ }
+]

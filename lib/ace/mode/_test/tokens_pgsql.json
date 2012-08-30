@@ -1,0 +1,1735 @@
+[
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "BEGIN",
+   ";"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "/**"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "* Samples from PostgreSQL src/tutorial/basics.source"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "*/"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "CREATE",
+   " ",
+   "TABLE",
+   " ",
+   "weather",
+   " ",
+   "("
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "city",
+   "\t\t",
+   "varchar",
+   "(",
+   "80",
+   ")",
+   ","
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "temp_lo",
+   "\t\t",
+   "int",
+   ",\t\t",
+   "-- low temperature"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "temp_hi",
+   "\t\t",
+   "int",
+   ",\t\t",
+   "-- high temperature"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "prcp",
+   "\t\t",
+   "real",
+   ",\t\t",
+   "-- precipitation"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "\"date\"",
+   "\t\t",
+   "date"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   ")",
+   ";"
+  ],
+  "types": [
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "statement",
+  "values": [
+   "CREATE",
+   " ",
+   "TABLE",
+   " ",
+   "cities",
+   " ",
+   "("
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "name",
+   "\t\t",
+   "varchar",
+   "(",
+   "80",
+   ")",
+   ","
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "\t",
+   "location",
+   "\t",
+   "point"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   ")",
+   ";"
+  ],
+  "types": [
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "statement",
+  "values": [
+   "INSERT",
+   " ",
+   "INTO",
+   " ",
+   "weather"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "VALUES",
+   " ",
+   "(",
+   "'San Francisco'",
+   ", ",
+   "46",
+   ", ",
+   "50",
+   ", ",
+   "0.25",
+   ", ",
+   "'1994-11-27'",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "string",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "string",
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "statement",
+  "values": [
+   "INSERT",
+   " ",
+   "INTO",
+   " ",
+   "cities"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "VALUES",
+   " ",
+   "(",
+   "'San Francisco'",
+   ", ",
+   "'(-194.0, 53.0)'",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "string",
+   "text",
+   "string",
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "statement",
+  "values": [
+   "INSERT",
+   " ",
+   "INTO",
+   " ",
+   "weather",
+   " ",
+   "(",
+   "city",
+   ", ",
+   "temp_lo",
+   ", ",
+   "temp_hi",
+   ", ",
+   "prcp",
+   ", ",
+   "\"date\"",
+   ")"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.language",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "VALUES",
+   " ",
+   "(",
+   "'San Francisco'",
+   ", ",
+   "43",
+   ", ",
+   "57",
+   ", ",
+   "0.0",
+   ", ",
+   "'1994-11-29'",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "string",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "string",
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "statement",
+  "values": [
+   "INSERT",
+   " ",
+   "INTO",
+   " ",
+   "weather",
+   " ",
+   "(",
+   "date",
+   ", ",
+   "city",
+   ", ",
+   "temp_hi",
+   ", ",
+   "temp_lo",
+   ")"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "VALUES",
+   " ",
+   "(",
+   "'1994-11-29'",
+   ", ",
+   "'Hayward'",
+   ", ",
+   "54",
+   ", ",
+   "37",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "string",
+   "text",
+   "string",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "SELECT",
+   " ",
+   "city",
+   ", ",
+   "(",
+   "temp_hi",
+   "+",
+   "temp_lo",
+   ")",
+   "/",
+   "2",
+   " ",
+   "AS",
+   " ",
+   "temp_avg",
+   ", ",
+   "\"date\"",
+   " ",
+   "FROM",
+   " ",
+   "weather",
+   ";"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "keyword.operator",
+   "identifier",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.language",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "statement",
+  "values": [
+   "SELECT",
+   " ",
+   "city",
+   ", ",
+   "temp_lo",
+   ", ",
+   "temp_hi",
+   ", ",
+   "prcp",
+   ", ",
+   "\"date\"",
+   ", ",
+   "location"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.language",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "    ",
+   "FROM",
+   " ",
+   "weather",
+   ", ",
+   "cities"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "WHERE",
+   " ",
+   "city",
+   " ",
+   "=",
+   " ",
+   "name",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "keyword",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "/**"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "* Dollar quotes starting at the end of the line are colored as SQL unless"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "* a special language tag is used. Pearl and Python are currently implemented"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "* but lots of others are possible."
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "*/"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "create",
+   " ",
+   "or",
+   " ",
+   "replace",
+   " ",
+   "function",
+   " ",
+   "blob_content_chunked",
+   "("
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "    ",
+   "in",
+   " ",
+   "p_data",
+   " ",
+   "bytea",
+   ", "
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "statement",
+  "values": [
+   "    ",
+   "in",
+   " ",
+   "p_chunk",
+   " ",
+   "integer",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "returns",
+   " ",
+   "setof",
+   " ",
+   "bytea",
+   " ",
+   "as",
+   " ",
+   "$$"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "-- Still SQL comments"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "declare"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "\t",
+   "v_size",
+   " ",
+   "integer",
+   " ",
+   "=",
+   " ",
+   "octet_length",
+   "(",
+   "p_data",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "begin"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "\t",
+   "for",
+   " ",
+   "i",
+   " ",
+   "in",
+   " ",
+   "1",
+   "..",
+   "v_size",
+   " ",
+   "by",
+   " ",
+   "p_chunk",
+   " ",
+   "loop"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "constant.numeric",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "\t\t",
+   "return",
+   " ",
+   "next",
+   " ",
+   "substring",
+   "(",
+   "p_data",
+   " ",
+   "from",
+   " ",
+   "i",
+   " ",
+   "for",
+   " ",
+   "p_chunk",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "\t",
+   "end",
+   " ",
+   "loop",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "dollarSql",
+  "values": [
+   "end",
+   ";"
+  ],
+  "types": [
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$$",
+   " ",
+   "language",
+   " ",
+   "plpgsql",
+   " ",
+   "stable",
+   ";"
+  ],
+  "types": [
+   "string",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-- pl/perl"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "CREATE",
+   " ",
+   "FUNCTION",
+   " ",
+   "perl_max",
+   " ",
+   "(",
+   "integer",
+   ", ",
+   "integer",
+   ")",
+   " ",
+   "RETURNS",
+   " ",
+   "integer",
+   " ",
+   "AS",
+   " ",
+   "$perl$"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "keyword",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "# perl comment..."
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "my",
+   " ",
+   "(",
+   "$x",
+   ",",
+   "$y",
+   ")",
+   " ",
+   "=",
+   " @",
+   "_",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "identifier",
+   "keyword.operator",
+   "identifier",
+   "rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "(",
+   "!",
+   " ",
+   "defined",
+   " ",
+   "$x",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "        ",
+   "if",
+   " ",
+   "(",
+   "!",
+   " ",
+   "defined",
+   " ",
+   "$y",
+   ")",
+   " ",
+   "{",
+   " ",
+   "return",
+   " ",
+   "undef",
+   "; ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen",
+   "text",
+   "support.function",
+   "text",
+   "support.function",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "        ",
+   "return",
+   " ",
+   "$y",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "(",
+   "!",
+   " ",
+   "defined",
+   " ",
+   "$y",
+   ")",
+   " ",
+   "{",
+   " ",
+   "return",
+   " ",
+   "$x",
+   "; ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "(",
+   "$x",
+   " ",
+   ">",
+   " ",
+   "$y",
+   ")",
+   " ",
+   "{",
+   " ",
+   "return",
+   " ",
+   "$x",
+   "; ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "perl-start",
+  "values": [
+   "    ",
+   "return",
+   " ",
+   "$y",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$perl$",
+   " ",
+   "LANGUAGE",
+   " ",
+   "plperl",
+   ";"
+  ],
+  "types": [
+   "string",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-- pl/python"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "CREATE",
+   " ",
+   "FUNCTION",
+   " ",
+   "usesavedplan",
+   "(",
+   ")",
+   " ",
+   "RETURNS",
+   " ",
+   "trigger",
+   " ",
+   "AS",
+   " ",
+   "$python$"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "    ",
+   "# python comment..."
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "SD",
+   ".",
+   "has_key",
+   "(",
+   "\"plan\"",
+   ")",
+   ":"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "        ",
+   "plan",
+   " ",
+   "=",
+   " ",
+   "SD",
+   "[",
+   "\"plan\"",
+   "]"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "string",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "    ",
+   "else",
+   ":"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "        ",
+   "plan",
+   " ",
+   "=",
+   " ",
+   "plpy",
+   ".",
+   "prepare",
+   "(",
+   "\"SELECT 1\"",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "string",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "python-start",
+  "values": [
+   "        ",
+   "SD",
+   "[",
+   "\"plan\"",
+   "]",
+   " ",
+   "=",
+   " ",
+   "plan"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$python$",
+   " ",
+   "LANGUAGE",
+   " ",
+   "plpythonu",
+   ";"
+  ],
+  "types": [
+   "string",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-- psql commands"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\\df cash*"
+  ],
+  "types": [
+   "support.buildin"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-- Some string samples."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "select",
+   " ",
+   "'don'",
+   "'t do it now;'",
+   " ",
+   "|",
+   "|",
+   " ",
+   "'maybe later'",
+   ";"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "string",
+   "string",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "string",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "select",
+   " ",
+   "E",
+   "'dont\\'t do it'",
+   ";"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "identifier",
+   "string",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "select",
+   " ",
+   "length",
+   "(",
+   "'some other'",
+   "'s stuff'",
+   " ",
+   "|",
+   "|",
+   " ",
+   "$$",
+   "cat in hat's stuff $$",
+   ")",
+   ";"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "string",
+   "string",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "string",
+   "string",
+   "paren.rparen",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "dollarStatementString",
+  "values": [
+   "select",
+   " ",
+   "$$ strings"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "dollarStatementString",
+  "values": [
+   "over multiple "
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "dollarStatementString",
+  "values": [
+   "lines - use dollar quotes"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$$",
+   ";"
+  ],
+  "types": [
+   "string",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "END",
+   ";"
+  ],
+  "types": [
+   "keyword.statementBegin",
+   "statementEnd"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

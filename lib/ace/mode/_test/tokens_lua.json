@@ -1,0 +1,789 @@
+[
+ {
+  "state": "qcomment",
+  "values": [
+   "--[[--"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "qcomment",
+  "values": [
+   "num_args takes in 5.1 byte code and extracts the number of arguments"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "qcomment",
+  "values": [
+   "from its function header."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "--]]",
+   "--"
+  ],
+  "types": [
+   "comment",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "function",
+   " ",
+   "int",
+   "(",
+   "t",
+   ")"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "return",
+   " ",
+   "t",
+   ":",
+   "byte",
+   "(",
+   "1",
+   ")",
+   "+",
+   "t",
+   ":",
+   "byte",
+   "(",
+   "2",
+   ")",
+   "*",
+   "0x100",
+   "+",
+   "t",
+   ":",
+   "byte",
+   "(",
+   "3",
+   ")",
+   "*",
+   "0x10000",
+   "+",
+   "t",
+   ":",
+   "byte",
+   "(",
+   "4",
+   ")",
+   "*",
+   "0x1000000"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "end"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "function",
+   " ",
+   "num_args",
+   "(",
+   "func",
+   ")"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "local",
+   " ",
+   "dump",
+   " ",
+   "=",
+   " ",
+   "string",
+   ".",
+   "dump",
+   "(",
+   "func",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "support.function",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.library",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "local",
+   " ",
+   "offset",
+   ", ",
+   "cursor",
+   " ",
+   "=",
+   " ",
+   "int",
+   "(",
+   "dump",
+   ":",
+   "sub",
+   "(",
+   "13",
+   ")",
+   ")",
+   ", ",
+   "offset",
+   " ",
+   "+",
+   " ",
+   "26"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "support.function",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "--Get the params and var flag (whether there's a ... in the param)"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "return",
+   " ",
+   "dump",
+   ":",
+   "sub",
+   "(",
+   "cursor",
+   ")",
+   ":",
+   "byte",
+   "(",
+   ")",
+   ", ",
+   "dump",
+   ":",
+   "sub",
+   "(",
+   "cursor",
+   "+",
+   "1",
+   ")",
+   ":",
+   "byte",
+   "(",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "support.function",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "support.function",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "end"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-- Usage:"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "num_args",
+   "(",
+   "function",
+   "(",
+   "a",
+   ",",
+   "b",
+   ",",
+   "c",
+   ",",
+   "d",
+   ", ",
+   "...",
+   ")",
+   " ",
+   "end",
+   ")",
+   " ",
+   "-- return 4, 7"
+  ],
+  "types": [
+   "identifier",
+   "paren.lparen",
+   "keyword",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "paren.rparen",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-- Python styled string format operator"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "local",
+   " ",
+   "gm",
+   " ",
+   "=",
+   " ",
+   "debug",
+   ".",
+   "getmetatable",
+   "(",
+   "\"\"",
+   ")"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.library",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "string",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "gm",
+   ".",
+   "__mod",
+   "=",
+   "function",
+   "(",
+   "self",
+   ", ",
+   "other",
+   ")"
+  ],
+  "types": [
+   "identifier",
+   "text",
+   "support.function",
+   "keyword.operator",
+   "keyword",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "type",
+   "(",
+   "other",
+   ")",
+   " ",
+   "~",
+   "=",
+   " ",
+   "\"table\"",
+   " ",
+   "then",
+   " ",
+   "other",
+   " ",
+   "=",
+   " ",
+   "{",
+   "other",
+   "}",
+   " ",
+   "end"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "string",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "for",
+   " ",
+   "i",
+   ",",
+   "v",
+   " ",
+   "in",
+   " ",
+   "ipairs",
+   "(",
+   "other",
+   ")",
+   " ",
+   "do",
+   " ",
+   "other",
+   "[",
+   "i",
+   "]",
+   " ",
+   "=",
+   " ",
+   "tostring",
+   "(",
+   "v",
+   ")",
+   " ",
+   "end"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "return",
+   " ",
+   "self",
+   ":",
+   "format",
+   "(",
+   "unpack",
+   "(",
+   "other",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "end"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "qstring3",
+  "values": [
+   "print",
+   "(",
+   "[===["
+  ],
+  "types": [
+   "support.function",
+   "paren.lparen",
+   "string"
+  ]
+ },
+ {
+  "state": "qstring3",
+  "values": [
+   "    blah blah %s, (%d %d)"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "]===]",
+   "%",
+   "{",
+   "\"blah\"",
+   ", ",
+   "num_args",
+   "(",
+   "int",
+   ")",
+   "}",
+   ")"
+  ],
+  "types": [
+   "string",
+   "keyword.operator",
+   "paren.lparen",
+   "string",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "qcomment1",
+  "values": [
+   "--[=[--"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "qcomment1",
+  "values": [
+   "table.maxn is deprecated, use # instead."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "--]=]",
+   "--"
+  ],
+  "types": [
+   "comment",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "print",
+   "(",
+   "table",
+   ".",
+   "maxn",
+   "{",
+   "1",
+   ",",
+   "2",
+   ",",
+   "[",
+   "4",
+   "]",
+   "=",
+   "4",
+   ",",
+   "[",
+   "8",
+   "]",
+   "=",
+   "8",
+   ")",
+   " ",
+   "-- outputs 8 instead of 2"
+  ],
+  "types": [
+   "support.function",
+   "paren.lparen",
+   "constant.library",
+   "text",
+   "invalid.deprecated",
+   "paren.lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "text",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

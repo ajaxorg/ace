@@ -1,0 +1,126 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "SELECT",
+   " ",
+   "city",
+   ", ",
+   "COUNT",
+   "(",
+   "id",
+   ")",
+   " ",
+   "AS",
+   " ",
+   "users_count"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "FROM",
+   " ",
+   "users"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "WHERE",
+   " ",
+   "group_name",
+   " ",
+   "=",
+   " ",
+   "'salesman'"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "AND",
+   " ",
+   "created",
+   " ",
+   ">",
+   " ",
+   "'2011-05-21'"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "GROUP",
+   " ",
+   "BY",
+   " ",
+   "1"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "ORDER",
+   " ",
+   "BY",
+   " ",
+   "2",
+   " ",
+   "DESC"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword"
+  ]
+ }
+]

@@ -1,0 +1,273 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "Searching for 'var' in /workspace/configs"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "configs/default.js",
+   ":"
+  ],
+  "types": [
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    1",
+   ": ",
+   "var fs = require(\"fs\");"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t2",
+   ": ",
+   "var argv = require('optimist').argv;"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t3",
+   ": ",
+   "var path = require(\"path\");"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t5",
+   ": ",
+   "var clientExtensions = {};"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t6",
+   ": ",
+   "var clientDirs = fs.readdirSync(__dirname + \"/../plugins-client\");"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t7",
+   ": ",
+   "for (var i = 0; i < clientDirs.length; i++) {"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t8",
+   ":     ",
+   "var dir = clientDirs[i];"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t12",
+   ":     ",
+   "var name = dir.split(\".\")[1];"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t16",
+   ": ",
+   "var projectDir = (argv.w && path.resolve(process.cwd(), argv.w)) || process.cwd();"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t17",
+   ": ",
+   "var fsUrl = \"/workspace\";"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t19",
+   ": ",
+   "var port = argv.p || process.env.PORT || 3131;"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t20",
+   ": ",
+   "var host = argv.l || \"localhost\";"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t22",
+   ": ",
+   "var config = {"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "configs/local.js",
+   ":"
+  ],
+  "types": [
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t2",
+   ": ",
+   "var config = require(\"./default\");"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "configs/packed.js",
+   ":"
+  ],
+  "types": [
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t1",
+   ": ",
+   "var config = require(\"./default\");"
+  ],
+  "types": [
+   "c9searchresults.constant.numeric",
+   "c9searchresults.text",
+   "c9searchresults.text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "Found 15 matches in 3 files"
+  ],
+  "types": [
+   "text"
+  ]
+ }
+]
