@@ -17,7 +17,7 @@ build: pre_build
 
 doc:
 	cd doc;\
-	test -d node_modules || npm install;\
+	(test -d node_modules && npm update) || npm install;\
 	node build.js
 
 clean:

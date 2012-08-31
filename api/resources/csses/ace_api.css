@@ -485,7 +485,7 @@ header.filler {
 
 .centerpiece {
     background: url(../images/sidebar_border.png) repeat-y 230px 0;
-    height: 100%;
+    min-height: 100%;
 }
 
 /*
