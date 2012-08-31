@@ -1,6 +1,6 @@
 [
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "<?php"
   ],
@@ -9,12 +9,12 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [],
   "types": []
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "function",
    " ",
@@ -37,7 +37,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "    ",
    "if",
@@ -68,7 +68,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "        ",
    "return",
@@ -85,7 +85,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "    ",
    "}"
@@ -96,7 +96,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "    ",
    "else",
@@ -111,7 +111,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "        ",
    "return",
@@ -150,7 +150,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "    ",
    "}"
@@ -161,7 +161,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "}"
   ],
@@ -170,12 +170,12 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [],
   "types": []
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "echo",
    " ",
@@ -260,7 +260,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "$num",
    " ",
@@ -291,12 +291,12 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [],
   "types": []
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "// ===== PROCESS - Determing the factorial of the input number ====="
   ],
@@ -305,7 +305,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "$output",
    " ",
@@ -386,7 +386,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [
    "echo",
    " ",
@@ -401,7 +401,7 @@
   ]
  },
  {
-  "state": "start",
+  "state": "php-start",
   "values": [],
   "types": []
  },
