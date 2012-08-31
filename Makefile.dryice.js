@@ -255,7 +255,7 @@ function buildAce(options) {
         name: "ace",
         modes: modeNames,
         themes: themeNames,
-        workers: ["javascript", "coffee", "css", "json", "xquery"],
+        workers: ["javascript", "coffee", "css", "json", "xquery", "xml"],
         keybindings: ["vim", "emacs"]
     };
     
