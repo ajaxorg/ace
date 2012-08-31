@@ -8,11 +8,13 @@ var rootDir = __dirname + "/../lib/ace/"
 var deps = [{
 	path: "worker/jshint.js",
 	url: "https://raw.github.com/jshint/jshint/master/jshint.js",
-	needsFixup: true
-}, {
-	path: "worker/jslint.js",
-	url: "https://raw.github.com/douglascrockford/JSLint/master/jslint.js",
-	needsFixup: true
+	needsFixup: true,
+	postProcess: function(t) {
+		return t.replace(
+			/"Expected a conditional expression and instead saw an assignment."/g,
+			'"Assignment in conditional expression"'
+		);
+	}
 }, {
 	path: "mode/css/csslint.js",
 	url: "https://raw.github.com/stubbornella/csslint/master/release/csslint-node.js",
@@ -43,7 +45,9 @@ var getDep = function(dep) {
 			data = "define(function(require, exports, module) {\n"
 				+ data
 				+ "\n});"
-				
+		if (dep.postProcess)
+			data = dep.postProcess(data)
+			
 		fs.writeFile(rootDir + dep.path, data, "utf-8", function(err){
 			if (err) throw err
 			console.log("File " + dep.path + " saved.")
