@@ -207,10 +207,3 @@ function exportAce(ns) {
 exportAce(ACE_NAMESPACE);
 
 })();
-
-define('ace/requirejs/text', ['require', 'exports', 'module'], function(require, exports, module) {
-    // this won't be called it is needed only for included text modules
-    exports.load = function (name, req, onLoad, config) {
-        require("ace/lib/net").get(req.toUrl(name), onLoad);
-    };
-});

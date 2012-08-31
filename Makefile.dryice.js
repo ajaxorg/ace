@@ -34,7 +34,7 @@
  * and other provisions required by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
- * 
+ *
  * ***** END LICENSE BLOCK ***** */
 
 var fs = require("fs");
@@ -170,21 +170,16 @@ function demo() {
         ref = "";
         version = "";
     }
-
-    function changeComments(data) {
-        return (data
-            .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
-            .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
-            .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
-            .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
-            .replace("%version%", version)
-            .replace("%commit%", ref)
-        );
-    };
-    
-    function fixDocPaths(data) {
-        return data.replace(/"(demo|build)\//g, "\"");
-    }
+    var changeComments = function(data) {
+            return (data
+                .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
+                .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
+                .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
+                .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
+                .replace("%version%", version)
+                .replace("%commit%", ref)
+            );
+        }
 
     copy({
         source: ACE_HOME + "/kitchen-sink.html",
@@ -211,7 +206,9 @@ function demo() {
     copy({
         source: ACE_HOME + "/demo/kitchen-sink/demo.js",
         dest: demo,
-        filter: [changeComments, fixDocPaths, function(data) {
+        filter: [changeComments, function(data) {
+            return data.replace(/"(demo|build)\//g, "\"");
+        }, function(data) {
             return data.replace("define(", "define('kitchen-sink/demo',");
         }]
     });
@@ -236,14 +233,6 @@ function buildAce(options) {
         textPluginPattern: /^ace\/requirejs\/text!/
     };
 
-    var modeNames = fs.readdirSync(ACE_HOME + "/lib/ace/mode").map(function(x) {
-        if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/.test(x))
-            return x.slice(0, -3);
-    }).filter(function(x) { return !!x; });
-    var themeNames = fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
-        return x.slice(-3) == ".js" && x.slice(0, -3);
-    }).filter(function(x){ return !!x; });
-
     var defaults = {
         targetDir: BUILD_DIR + "/src",
         ns: "ace",
@@ -253,8 +242,13 @@ function buildAce(options) {
         noconflict: false,
         suffix: null,
         name: "ace",
-        modes: modeNames,
-        themes: themeNames,
+        modes: fs.readdirSync(ACE_HOME + "/lib/ace/mode").map(function(x) {
+                if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/.test(x))
+                    return x.slice(0, -3);
+            }).filter(function(x) { return !!x; }),
+        themes: fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
+                return x.slice(-3) == ".js" && x.slice(0, -3);
+            }).filter(function(x){ return !!x; }),
         workers: ["javascript", "coffee", "css", "json", "xquery"],
         keybindings: ["vim", "emacs"]
     };
@@ -277,6 +271,7 @@ function buildAce(options) {
 
     var filters = [
         copy.filter.moduleDefines,
+        filterTextPlugin,
         removeUseStrict,
         removeLicenceCmments
     ];
@@ -377,6 +372,7 @@ function buildAce(options) {
     
     filters = [
         copy.filter.moduleDefines,
+        filterTextPlugin,
         removeUseStrict,
         removeLicenceCmments
     ];
@@ -431,22 +427,6 @@ function cloneProject(project) {
 
     return clone;
 }
-
-copy.filter.addDefines = function(input, source) {
-    if (!source)
-        throw new Error('Missing filename for moduleDefines');
-
-    if (typeof input !== 'string')
-        input = input.toString();
-
-    var module = source.isLocation ? source.path : source;
-
-    input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
-
-    return 'define("ace/requirejs/text!' + module + '", [], ' + input + ');\n\n';
-};
-
 function copyFileSync(srcFile, destFile) {
     var BUF_LENGTH = 64*1024,
         buf = new Buffer(BUF_LENGTH),
@@ -473,12 +453,16 @@ function quoteString(str) {
     return '"' + str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"';
 }
 
+function filterTextPlugin(text) {
+    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text!");
+}
+
 function removeUseStrict(text) {
     return text.replace(/['"]use strict['"];/g, "");
 }
 
 function removeLicenceCmments(text) {
-    return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1").replace(/\n\/\/ vim.*\n(\/\/.*\n)+/g, "");
+    return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1");
 }
 
 function namespace(ns) {

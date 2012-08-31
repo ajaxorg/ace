@@ -39,11 +39,22 @@
 
 var buildAce = require("./Makefile.dryice").buildAce;
 
+
+var ACE_HOME = __dirname;
+
 try {
-	buildAce({
+    var aceProject = {
+        roots: [
+            ACE_HOME + '/lib',
+            ACE_HOME + '/demo'
+        ],
+        textPluginPattern: /^ace\/requirejs\/text!/
+    };
+	buildAce(aceProject, {
 		compress: false,
 		noconflict: false,
 		suffix: "",
+		compat: true,
 		name: "ace"
 	});
 } catch (e) {
