@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="user-scalable=no, width=device-width">
+    <meta name="author" content="Fabian Jakobs">
+    
+    <title>Ace on iPad</title>    
+    <style type="text/css" media="screen">
+      body {
+          overflow: hidden;
+      }
+      
+      #editor { 
+          margin: 0;
+          position: absolute;
+          font-size: 14px;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          -webkit-user-select: none;
+      }
+    </style>
+</head>
+<body>
+    <div id="editor">
+    </div>
+ani
+  <script src="kitchen-sink/require.js" type="text/javascript" charset="utf-8"></script>
+  <script>
+
+require({
+    paths: {
+        demo: "../demo",
+        ace: "../lib/ace",
+    }
+});
+
+require(["demo/ipad"], function(demo) {
+    var text = 'function foo(items) {\n\
+    for (var i=0; i<items.length; i++) {\n\
+    	alert(items[i] + "juhu");\n\
+    }\n\
+}';
+    for (var i=0; i<500; i++) 
+        text += "\njuhu " + i + "    " + Array(i%30).join("art ");
+    
+    demo.launch("editor", text);
+});
+
+  </script>  
+</body>
+</html>
