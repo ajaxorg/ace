@@ -26,6 +26,7 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
+    asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
     coldfusion: ["ColdFusion"   , "cfm"],
