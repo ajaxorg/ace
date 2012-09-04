@@ -1,0 +1,231 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "public",
+   " ",
+   "class",
+   " ",
+   "InfiniteLoop",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "comment",
+  "values": [
+   "    ",
+   "/*"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "     * This will cause the program to hang..."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "     *"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "     * Taken from:"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "     */"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "public",
+   " ",
+   "static",
+   " ",
+   "void",
+   " ",
+   "main",
+   "(",
+   "String",
+   "[",
+   "]",
+   " ",
+   "args",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "support.function",
+   "lparen",
+   "rparen",
+   "text",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "double",
+   " ",
+   "d",
+   " ",
+   "=",
+   " ",
+   "Double",
+   ".",
+   "parseDouble",
+   "(",
+   "\"2.2250738585072012e-308\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "lparen",
+   "string",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "// unreachable code"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "System",
+   ".",
+   "out",
+   ".",
+   "println",
+   "(",
+   "\"Value: \"",
+   " ",
+   "+",
+   " ",
+   "d",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "lparen",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ }
+]

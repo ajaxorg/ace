@@ -1,0 +1,433 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "# This is a simple comment"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "function",
+   " ",
+   "Hello",
+   "(",
+   "$name",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "variable.instance",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "Write-host",
+   " ",
+   "\"Hello $name\""
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "function",
+   " ",
+   "add",
+   "(",
+   "$left",
+   ", ",
+   "$right",
+   "=",
+   "4",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "variable.instance",
+   "text",
+   "variable.instance",
+   "keyword.operator",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "(",
+   "$right",
+   " ",
+   "-ne",
+   " ",
+   "4",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "return",
+   " ",
+   "$left"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "variable.instance"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}",
+   " ",
+   "elseif",
+   " ",
+   "(",
+   "$left",
+   " ",
+   "-eq",
+   " ",
+   "$null",
+   " ",
+   "-and",
+   " ",
+   "$right",
+   " ",
+   "-eq",
+   " ",
+   "2",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "rparen",
+   "text",
+   "keyword",
+   "text",
+   "lparen",
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.language",
+   "text",
+   "keyword.operator",
+   "text",
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "return",
+   " ",
+   "3"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}",
+   " ",
+   "else",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "rparen",
+   "text",
+   "keyword",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "return",
+   " ",
+   "2"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "$number",
+   " ",
+   "=",
+   " ",
+   "1",
+   " ",
+   "+",
+   " ",
+   "2",
+   ";"
+  ],
+  "types": [
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$number",
+   " ",
+   "+",
+   "=",
+   " ",
+   "3"
+  ],
+  "types": [
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "Write-Host",
+   " ",
+   "Hello",
+   " ",
+   "-",
+   "name",
+   " ",
+   "\"World\""
+  ],
+  "types": [
+   "support.function",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "$an_array",
+   " ",
+   "=",
+   " @",
+   "(",
+   "1",
+   ", ",
+   "2",
+   ", ",
+   "3",
+   ")"
+  ],
+  "types": [
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "text",
+   "lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "$a_hash",
+   " ",
+   "=",
+   " @",
+   "{",
+   "\"something\"",
+   " ",
+   "=",
+   " ",
+   "\"something else\"",
+   "}"
+  ],
+  "types": [
+   "variable.instance",
+   "text",
+   "keyword.operator",
+   "text",
+   "lparen",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "&",
+   " ",
+   "notepad",
+   " .\\",
+   "readme",
+   ".",
+   "md"
+  ],
+  "types": [
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

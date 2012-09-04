@@ -1,0 +1,207 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "// compound assignment operators"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "#include",
+   " ",
+   "<iostream>"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "constant"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "using",
+   " ",
+   "namespace",
+   " ",
+   "std",
+   ";"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "int",
+   " ",
+   "main",
+   " ",
+   "(",
+   ")"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "{"
+  ],
+  "types": [
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "int",
+   " ",
+   "a",
+   ",",
+   " ",
+   "b",
+   "=",
+   "3",
+   ";",
+   " ",
+   "/*",
+   " foobar */"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "comment",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "a",
+   " ",
+   "=",
+   " ",
+   "b",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "a",
+   "+",
+   "=",
+   "2",
+   ";",
+   " ",
+   "// equivalent to a=a+2"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "keyword.operator",
+   "keyword.operator",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "cout",
+   " ",
+   "<",
+   "<",
+   " ",
+   "a",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "return",
+   " ",
+   "0",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "constant.numeric",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ }
+]

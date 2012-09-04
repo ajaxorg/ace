@@ -1,0 +1,376 @@
+[
+ {
+  "state": "ruleset",
+  "values": [
+   ".text-layer",
+   " ",
+   "{"
+  ],
+  "types": [
+   "variable",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "font-family",
+   ": Monaco, ",
+   "\"Courier New\"",
+   ", ",
+   "monospace",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "string",
+   "text",
+   "support.constant.fonts",
+   "text"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "font-size",
+   ": ",
+   "12",
+   "px",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "cursor",
+   ": ",
+   "text",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   ".blinker",
+   " ",
+   "{"
+  ],
+  "types": [
+   "variable",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "animation-duration",
+   ": ",
+   "1",
+   "s",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "animation-name",
+   ": blink;"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "animation-iteration-count",
+   ": infinite;"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "animation-direction",
+   ": alternate;"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text"
+  ]
+ },
+ {
+  "state": "ruleset",
+  "values": [
+   "    ",
+   "animation-timing-function",
+   ": ",
+   "linear",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "media",
+  "values": [
+   "@keyframes blink {"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "    ",
+   "0",
+   "% ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "constant",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "        ",
+   "opacity",
+   ": ",
+   "0",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "media",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "    ",
+   "40",
+   "% ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "constant",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "        ",
+   "opacity",
+   ": ",
+   "0",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "media",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "    ",
+   "40",
+   ".5",
+   "% ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "constant",
+   "variable",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "        ",
+   "opacity",
+   ": ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "media",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "    ",
+   "100",
+   "% ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "constant",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "media_ruleset",
+  "values": [
+   "        ",
+   "opacity",
+   ": ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "media",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "string"
+  ]
+ }
+]

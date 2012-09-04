@@ -1,0 +1,1611 @@
+[
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "<",
+   "svg"
+  ],
+  "types": [
+   "meta.tag",
+   "meta.tag.tag-name"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "  ",
+   "width",
+   "=",
+   "\"800\"",
+   " ",
+   "height",
+   "=",
+   "\"600\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "  ",
+   "xmlns",
+   "=",
+   "\"http://www.w3.org/2000/svg\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "onload",
+   "=",
+   "\"StartAnimation(evt)\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "<",
+   "title",
+   ">",
+   "Test Tube Progress Bar",
+   "</",
+   "title",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "<",
+   "desc",
+   ">",
+   "Created for the Web Directions SVG competition",
+   "</",
+   "desc",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "  ",
+   "<",
+   "script",
+   " ",
+   "type",
+   "=",
+   "\"text/ecmascript\"",
+   ">",
+   "<",
+   "!",
+   "[",
+   "CDATA",
+   "["
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "keyword.operator",
+   "keyword.operator",
+   "paren.lparen",
+   "identifier",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "timevalue",
+   " ",
+   "=",
+   " ",
+   "0",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "timer_increment",
+   " ",
+   "=",
+   " ",
+   "1",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "max_time",
+   " ",
+   "=",
+   " ",
+   "100",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "hickory",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "dickory",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "dock",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "var",
+   " ",
+   "i",
+   ";"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "function",
+   " ",
+   "StartAnimation",
+   "(",
+   "evt",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "entity.name.function",
+   "paren.lparen",
+   "variable.parameter",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "hickory",
+   "  ",
+   "=",
+   " ",
+   "evt",
+   ".",
+   "target",
+   ".",
+   "ownerDocument",
+   ".",
+   "getElementById",
+   "(",
+   "\"hickory\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "dickory",
+   " ",
+   "=",
+   " ",
+   "evt",
+   ".",
+   "target",
+   ".",
+   "ownerDocument",
+   ".",
+   "getElementById",
+   "(",
+   "\"dickory\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "dock",
+   " ",
+   "=",
+   " ",
+   "evt",
+   ".",
+   "target",
+   ".",
+   "ownerDocument",
+   ".",
+   "getElementById",
+   "(",
+   "\"dock\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "ShowAndGrowElement",
+   "(",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "paren.lparen",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "    ",
+   "function",
+   " ",
+   "ShowAndGrowElement",
+   "(",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "storage.type",
+   "text",
+   "entity.name.function",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "timevalue",
+   " ",
+   "=",
+   " ",
+   "timevalue",
+   " ",
+   "+",
+   " ",
+   "timer_increment",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "if",
+   " ",
+   "(",
+   "timevalue",
+   " ",
+   ">",
+   " ",
+   "max_time",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "return",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "// Scale the text string gradually until it is 20 times larger"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "scalefactor",
+   " ",
+   "=",
+   " ",
+   "(",
+   "timevalue",
+   " ",
+   "*",
+   " ",
+   "650",
+   ")",
+   " ",
+   "/",
+   " ",
+   "max_time",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "if",
+   " ",
+   "(",
+   "timevalue",
+   " ",
+   "<",
+   " ",
+   "30",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "hickory",
+   ".",
+   "setAttribute",
+   "(",
+   "\"display\"",
+   ",",
+   " ",
+   "\"\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "hickory",
+   ".",
+   "setAttribute",
+   "(",
+   "\"transform\"",
+   ",",
+   " ",
+   "\"translate(\"",
+   " ",
+   "+",
+   " ",
+   "(",
+   "600",
+   "+",
+   "scalefactor",
+   "*",
+   "3",
+   "*",
+   "-1",
+   " ",
+   ")",
+   " ",
+   "+",
+   " ",
+   "\", -144 )\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "constant.numeric",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "keyword.operator",
+   "constant.numeric",
+   "text",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "if",
+   " ",
+   "(",
+   "timevalue",
+   " ",
+   ">",
+   " ",
+   "30",
+   " ",
+   "&",
+   "&",
+   " ",
+   "timevalue",
+   " ",
+   "<",
+   " ",
+   "66",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "dickory",
+   ".",
+   "setAttribute",
+   "(",
+   "\"display\"",
+   ",",
+   " ",
+   "\"\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "dickory",
+   ".",
+   "setAttribute",
+   "(",
+   "\"transform\"",
+   ",",
+   " ",
+   "\"translate(\"",
+   " ",
+   "+",
+   " ",
+   "(",
+   "-795",
+   "+",
+   "scalefactor",
+   "*",
+   "2",
+   ")",
+   " ",
+   "+",
+   " ",
+   "\", 0 )\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "constant.numeric",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "        ",
+   "if",
+   " ",
+   "(",
+   "timevalue",
+   " ",
+   ">",
+   " ",
+   "66",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "dock",
+   ".",
+   "setAttribute",
+   "(",
+   "\"display\"",
+   ",",
+   " ",
+   "\"\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "values": [
+   "            ",
+   "dock",
+   ".",
+   "setAttribute",
+   "(",
+   "\"transform\"",
+   ",",
+   " ",
+   "\"translate(\"",
+   " ",
+   "+",
+   " ",
+   "(",
+   "1450",
+   "+",
+   "scalefactor",
+   "*",
+   "2",
+   "*",
+   "-1",
+   ")",
+   " ",
+   "+",
+   " ",
+   "\", 144 )\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "support.function.dom",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "constant.numeric",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "keyword.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "// Call ShowAndGrowElement again <timer_increment> milliseconds later."
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "        ",
+   "setTimeout",
+   "(",
+   "\"ShowAndGrowElement()\"",
+   ",",
+   " ",
+   "timer_increment",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "js-start",
+  "values": [
+   "    ",
+   "window",
+   ".",
+   "ShowAndGrowElement",
+   " ",
+   "=",
+   " ",
+   "ShowAndGrowElement"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "punctuation.operator",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "]",
+   "]",
+   "</",
+   "script",
+   ">"
+  ],
+  "types": [
+   "text",
+   "paren.rparen",
+   "paren.rparen",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "  ",
+   "<",
+   "rect"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "fill",
+   "=",
+   "\"#2e3436\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "fill-rule",
+   "=",
+   "\"nonzero\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "stroke-width",
+   "=",
+   "\"3\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "y",
+   "=",
+   "\"0\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "x",
+   "=",
+   "\"0\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "height",
+   "=",
+   "\"600\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "width",
+   "=",
+   "\"800\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "id",
+   "=",
+   "\"rect3590\"",
+   "/>"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "<",
+   "text"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "style",
+   "=",
+   "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "x",
+   "=",
+   "\"50\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "y",
+   "=",
+   "\"350\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "id",
+   "=",
+   "\"hickory\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "       ",
+   "display",
+   "=",
+   "\"none\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        Hickory,",
+   "</",
+   "text",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "<",
+   "text"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "style",
+   "=",
+   "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "x",
+   "=",
+   "\"50\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "y",
+   "=",
+   "\"350\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "id",
+   "=",
+   "\"dickory\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "       ",
+   "display",
+   "=",
+   "\"none\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        dickory,",
+   "</",
+   "text",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "    ",
+   "<",
+   "text"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "style",
+   "=",
+   "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "x",
+   "=",
+   "\"50\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "y",
+   "=",
+   "\"350\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "       ",
+   "id",
+   "=",
+   "\"dock\""
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "       ",
+   "display",
+   "=",
+   "\"none\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        dock!",
+   "</",
+   "text",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "</",
+   "svg",
+   ">"
+  ],
+  "types": [
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ }
+]

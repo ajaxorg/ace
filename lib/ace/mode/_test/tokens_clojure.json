@@ -1,0 +1,437 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "(",
+   "defn",
+   " ",
+   "parting"
+  ],
+  "types": [
+   "keyword",
+   "support.function",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "\"returns a String parting in a given language",
+   "\""
+  ],
+  "types": [
+   "text",
+   "string",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "(",
+   "[",
+   "]",
+   " ",
+   "(",
+   "parting",
+   " ",
+   "\"World",
+   "\"",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "keyword",
+   "keyword",
+   "text",
+   "keyword",
+   "identifier",
+   "text",
+   "string",
+   "string",
+   "keyword",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "(",
+   "[",
+   "name",
+   "]",
+   " ",
+   "(",
+   "parting",
+   " ",
+   "name",
+   " ",
+   "\"en",
+   "\"",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "keyword",
+   "support.function",
+   "keyword",
+   "text",
+   "keyword",
+   "identifier",
+   "text",
+   "support.function",
+   "text",
+   "string",
+   "string",
+   "keyword",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  ",
+   "(",
+   "[",
+   "name",
+   " ",
+   "language",
+   "]"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "keyword",
+   "support.function",
+   "text",
+   "identifier",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "; condp is similar to a case statement in other languages."
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "; It is described in more detail later."
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "; It is used here to take different actions based on whether the"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "; parameter \"language\" is set to \"en\", \"es\" or something else."
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "(",
+   "condp",
+   " ",
+   "=",
+   " ",
+   "language"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "support.function",
+   "text",
+   "constant.language",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "\"en",
+   "\"",
+   " ",
+   "(",
+   "str",
+   " ",
+   "\"Goodbye, ",
+   "\"",
+   " ",
+   "name",
+   ")"
+  ],
+  "types": [
+   "text",
+   "string",
+   "string",
+   "text",
+   "keyword",
+   "support.function",
+   "text",
+   "string",
+   "string",
+   "text",
+   "support.function",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "\"es",
+   "\"",
+   " ",
+   "(",
+   "str",
+   " ",
+   "\"Adios, ",
+   "\"",
+   " ",
+   "name",
+   ")"
+  ],
+  "types": [
+   "text",
+   "string",
+   "string",
+   "text",
+   "keyword",
+   "support.function",
+   "text",
+   "string",
+   "string",
+   "text",
+   "support.function",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "(",
+   "throw",
+   " ",
+   "(",
+   "IllegalArgumentException",
+   "."
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "keyword",
+   "text",
+   "keyword",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "(",
+   "str",
+   " ",
+   "\"unsupported language ",
+   "\"",
+   " ",
+   "language",
+   ")",
+   ")",
+   ")",
+   ")",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "support.function",
+   "text",
+   "string",
+   "string",
+   "text",
+   "identifier",
+   "keyword",
+   "keyword",
+   "keyword",
+   "keyword",
+   "keyword",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "(",
+   "println",
+   " ",
+   "(",
+   "parting",
+   ")",
+   ")",
+   " ",
+   "; -> Goodbye, World"
+  ],
+  "types": [
+   "keyword",
+   "support.function",
+   "text",
+   "keyword",
+   "identifier",
+   "keyword",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "(",
+   "println",
+   " ",
+   "(",
+   "parting",
+   " ",
+   "\"Mark",
+   "\"",
+   ")",
+   ")",
+   " ",
+   "; -> Goodbye, Mark"
+  ],
+  "types": [
+   "keyword",
+   "support.function",
+   "text",
+   "keyword",
+   "identifier",
+   "text",
+   "string",
+   "string",
+   "keyword",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "(",
+   "println",
+   " ",
+   "(",
+   "parting",
+   " ",
+   "\"Mark",
+   "\"",
+   " ",
+   "\"es",
+   "\"",
+   ")",
+   ")",
+   " ",
+   "; -> Adios, Mark"
+  ],
+  "types": [
+   "keyword",
+   "support.function",
+   "text",
+   "keyword",
+   "identifier",
+   "text",
+   "string",
+   "string",
+   "text",
+   "string",
+   "string",
+   "keyword",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "(",
+   "println",
+   " ",
+   "(",
+   "parting",
+   " ",
+   "\"Mark",
+   "\"",
+   ", ",
+   "\"xy",
+   "\"",
+   ")",
+   ")",
+   " ",
+   "; -> java.lang.IllegalArgumentException: unsupported language xy"
+  ],
+  "types": [
+   "keyword",
+   "support.function",
+   "text",
+   "keyword",
+   "identifier",
+   "text",
+   "string",
+   "string",
+   "text",
+   "string",
+   "string",
+   "keyword",
+   "keyword",
+   "text",
+   "comment"
+  ]
+ }
+]

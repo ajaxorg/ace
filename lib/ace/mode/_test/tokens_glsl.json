@@ -1,0 +1,308 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "uniform",
+   " ",
+   "float",
+   " ",
+   "amplitude",
+   ";"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "attribute",
+   " ",
+   "float",
+   " ",
+   "displacement",
+   ";"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "varying",
+   " ",
+   "vec3",
+   " ",
+   "vNormal",
+   ";"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "void",
+   " ",
+   "main",
+   "(",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "vNormal",
+   " ",
+   "=",
+   " ",
+   "normal",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "// multiply our displacement by the"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "// amplitude. The amp will get animated"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "// so we'll have animated displacement"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "vec3",
+   " ",
+   "newPosition",
+   " ",
+   "=",
+   " ",
+   "position",
+   " ",
+   "+",
+   " "
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "                       ",
+   "normal",
+   " ",
+   "*",
+   " "
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "                       ",
+   "vec3",
+   "(",
+   "displacement",
+   " ",
+   "*"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "                            ",
+   "amplitude",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "gl_Position",
+   " ",
+   "=",
+   " ",
+   "projectionMatrix",
+   " ",
+   "*"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "                  ",
+   "modelViewMatrix",
+   " ",
+   "*"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "                  ",
+   "vec4",
+   "(",
+   "newPosition",
+   ",",
+   "1.0",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "paren.lparen",
+   "identifier",
+   "punctuation.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ }
+]

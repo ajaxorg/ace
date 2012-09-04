@@ -1,0 +1,766 @@
+[
+ {
+  "state": "regex_allowed",
+  "values": [
+   "function",
+   " ",
+   "foo",
+   "(",
+   "items",
+   ", ",
+   "nada",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "storage.type",
+   "text",
+   "entity.name.function",
+   "paren.lparen",
+   "variable.parameter",
+   "punctuation.operator",
+   "variable.parameter",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "    ",
+   "for",
+   " ",
+   "(",
+   "var",
+   " ",
+   "i",
+   "=",
+   "0",
+   ";",
+   " ",
+   "i",
+   "<",
+   "items",
+   ".",
+   "length",
+   ";",
+   " ",
+   "i",
+   "++",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "storage.type",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "identifier",
+   "punctuation.operator",
+   "support.constant",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "        ",
+   "alert",
+   "(",
+   "items",
+   "[",
+   "i",
+   "]",
+   " ",
+   "+",
+   " ",
+   "\"juhu",
+   "\\n",
+   "\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "constant.language.escape",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}",
+   "\t",
+   "// Real Tab."
+  ],
+  "types": [
+   "text",
+   "paren.rparen",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   " ",
+   "/************************************/"
+  ],
+  "types": [
+   "text",
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "/** total mess, tricky to highlight**/"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "function",
+   " ",
+   "(",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "storage.type",
+   "text",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "\t",
+   "/**"
+  ],
+  "types": [
+   "text",
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "\t * docComment"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t **/"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "r",
+   " ",
+   "=",
+   " ",
+   "/u",
+   "\\t",
+   "*/"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "string.regexp",
+   "regexp.keyword.operator",
+   "string.regexp"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "g",
+   " ",
+   "=",
+   " ",
+   "1.",
+   "00",
+   "E",
+   "^",
+   "1",
+   ",",
+   " ",
+   "y",
+   " ",
+   "=",
+   " ",
+   "1.2",
+   " ",
+   "+",
+   " ",
+   ".",
+   "2",
+   " ",
+   "+",
+   " ",
+   "052",
+   " ",
+   "+",
+   " ",
+   "0x25"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "punctuation.operator",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "t",
+   " ",
+   "=",
+   " ",
+   "[",
+   "'d'",
+   ",",
+   " ",
+   "''",
+   "]"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "text",
+   "string",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "function",
+   " ",
+   "(",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "storage.type",
+   "text",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "\t",
+   "/* eee */"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "qqstring",
+  "values": [
+   "\"s\\"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "s",
+   "\\u7824",
+   "sss",
+   "\\u",
+   "1\""
+  ],
+  "types": [
+   "string",
+   "constant.language.escape",
+   "string",
+   "constant.language.escape",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "qstring",
+  "values": [
+   "'\\"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "string'"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "'"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "string",
+   "'"
+  ],
+  "types": [
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "\"trailing space",
+   "\\ ",
+   "  "
+  ],
+  "types": [
+   "string",
+   "constant.language.escape",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\"         \"",
+   "    ",
+   "/",
+   "not",
+   " ",
+   "a",
+   " ",
+   "regexp",
+   "/",
+   "g"
+  ],
+  "types": [
+   "string",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   "/**"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "doc-start",
+  "values": [
+   " *doc"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   " */"
+  ],
+  "types": [
+   "comment.doc"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "a",
+   " ",
+   "=",
+   " ",
+   "{"
+  ],
+  "types": [
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "values": [
+   "\t",
+   "'a'",
+   ":",
+   " ",
+   "b",
+   ","
+  ],
+  "types": [
+   "text",
+   "string",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "'g'",
+   ": ",
+   "function",
+   "(",
+   "t",
+   ")"
+  ],
+  "types": [
+   "text",
+   "string",
+   "text",
+   "storage.type",
+   "paren.lparen",
+   "variable.parameter",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "gta",
+   ":",
+   "function",
+   "(",
+   "a",
+   ",",
+   "b",
+   ")"
+  ],
+  "types": [
+   "text",
+   "entity.name.function",
+   "punctuation.operator",
+   "storage.type",
+   "paren.lparen",
+   "variable.parameter",
+   "punctuation.operator",
+   "variable.parameter",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "function_arguments",
+  "values": [
+   "foo",
+   ".",
+   "protoype",
+   ".",
+   "d",
+   " ",
+   "=",
+   " ",
+   "function",
+   "(",
+   "a",
+   ", ",
+   "b",
+   ","
+  ],
+  "types": [
+   "identifier",
+   "punctuation.operator",
+   "storage.type",
+   "punctuation.operator",
+   "entity.name.function",
+   "text",
+   "keyword.operator",
+   "text",
+   "storage.type",
+   "paren.lparen",
+   "variable.parameter",
+   "punctuation.operator",
+   "variable.parameter",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "                          ",
+   "c",
+   ", ",
+   "d",
+   ")"
+  ],
+  "types": [
+   "punctuation.operator",
+   "variable.parameter",
+   "punctuation.operator",
+   "variable.parameter",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "foo",
+   ".",
+   "d",
+   " ",
+   "=",
+   "function",
+   "(",
+   "a",
+   ",     ",
+   "b",
+   ")"
+  ],
+  "types": [
+   "storage.type",
+   "punctuation.operator",
+   "entity.name.function",
+   "text",
+   "keyword.operator",
+   "storage.type",
+   "paren.lparen",
+   "variable.parameter",
+   "punctuation.operator",
+   "variable.parameter",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "foo",
+   ".",
+   "d",
+   " ",
+   "=",
+   "function",
+   "(",
+   "a",
+   ",  ",
+   "/*****/",
+   " ",
+   "d",
+   "\"string\"",
+   "   "
+  ],
+  "types": [
+   "storage.type",
+   "punctuation.operator",
+   "entity.name.function",
+   "text",
+   "keyword.operator",
+   "storage.type",
+   "paren.lparen",
+   "variable.parameter",
+   "punctuation.operator",
+   "comment.doc",
+   "text",
+   "identifier",
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

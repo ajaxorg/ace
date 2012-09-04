@@ -1,0 +1,300 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "/*",
+   " style.scss */"
+  ],
+  "types": [
+   "comment",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "#navbar",
+   " ",
+   "{"
+  ],
+  "types": [
+   "variable.language",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "$navbar-width",
+   ": ",
+   "800px",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "$items",
+   ": ",
+   "5",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "$navbar-color",
+   ": ",
+   "#ce4dd6",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "width",
+   ": ",
+   "$navbar-width",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "border-bottom",
+   ": ",
+   "2px",
+   " ",
+   "solid",
+   " ",
+   "$navbar-color",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "li",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "float",
+   ": ",
+   "left",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.type",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "width",
+   ": ",
+   "$navbar-width",
+   "/",
+   "$items",
+   " ",
+   "-",
+   " ",
+   "10px",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "variable",
+   "text",
+   "variable",
+   "text",
+   "constant",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "background-color",
+   ": ",
+   "lighten",
+   "(",
+   "$navbar-color",
+   ", ",
+   "20%",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        &",
+   ":hover",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "background-color",
+   ": ",
+   "lighten",
+   "(",
+   "$navbar-color",
+   ", ",
+   "10%",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ }
+]

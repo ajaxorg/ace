@@ -1,0 +1,129 @@
+[
+ {
+  "state": "comment",
+  "values": [
+   "/*EXPECTED"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "hello world!"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "*/"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "class",
+   " ",
+   "Test",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "language.support.class",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "static",
+   " ",
+   "function",
+   " ",
+   "run",
+   "(",
+   ")",
+   " ",
+   ":",
+   " ",
+   "void",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "storage.type",
+   "text",
+   "entity.name.function",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "punctuation.operator",
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "// console.log(\"hello world!\");"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "log",
+   " ",
+   "\"hello world!\"",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "string",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ }
+]
