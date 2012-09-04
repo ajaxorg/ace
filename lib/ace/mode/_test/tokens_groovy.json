@@ -1,0 +1,933 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "//http://groovy.codehaus.org/Martin+Fowler%27s+closure+examples+in+Groovy"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "class",
+   " ",
+   "Employee",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "def",
+   " ",
+   "name",
+   ", ",
+   "salary"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "boolean",
+   " ",
+   "manager"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "String",
+   " ",
+   "toString",
+   "(",
+   ")",
+   " ",
+   "{",
+   " ",
+   "return",
+   " ",
+   "name",
+   " ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "lparen",
+   "rparen",
+   "text",
+   "lparen",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "emps",
+   " ",
+   "=",
+   " ",
+   "[",
+   "new",
+   " ",
+   "Employee",
+   "(",
+   "name",
+   ":",
+   "'Guillaume'",
+   ", ",
+   "manager",
+   ":",
+   "true",
+   ", ",
+   "salary",
+   ":",
+   "200",
+   ")",
+   ","
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "identifier",
+   "text",
+   "constant.language.boolean",
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "new",
+   " ",
+   "Employee",
+   "(",
+   "name",
+   ":",
+   "'Graeme'",
+   ", ",
+   "manager",
+   ":",
+   "true",
+   ", ",
+   "salary",
+   ":",
+   "200",
+   ")",
+   ","
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "identifier",
+   "text",
+   "constant.language.boolean",
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "new",
+   " ",
+   "Employee",
+   "(",
+   "name",
+   ":",
+   "'Dierk'",
+   ", ",
+   "manager",
+   ":",
+   "false",
+   ", ",
+   "salary",
+   ":",
+   "151",
+   ")",
+   ","
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "identifier",
+   "text",
+   "constant.language.boolean",
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "new",
+   " ",
+   "Employee",
+   "(",
+   "name",
+   ":",
+   "'Bernd'",
+   ", ",
+   "manager",
+   ":",
+   "false",
+   ", ",
+   "salary",
+   ":",
+   "50",
+   ")",
+   "]"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "identifier",
+   "text",
+   "constant.language.boolean",
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "managers",
+   "(",
+   "emps",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "emps",
+   ".",
+   "findAll",
+   " ",
+   "{",
+   " ",
+   "e",
+   " ",
+   "-",
+   ">",
+   " ",
+   "e",
+   ".",
+   "isManager",
+   "(",
+   ")",
+   " ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "lparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "lparen",
+   "rparen",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "assert",
+   " ",
+   "emps",
+   "[",
+   "0",
+   "..",
+   "1",
+   "]",
+   " ",
+   "==",
+   " ",
+   "managers",
+   "(",
+   "emps",
+   ")",
+   " ",
+   "// [Guillaume, Graeme]"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "highPaid",
+   "(",
+   "emps",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "threshold",
+   " ",
+   "=",
+   " ",
+   "150"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "emps",
+   ".",
+   "findAll",
+   " ",
+   "{",
+   " ",
+   "e",
+   " ",
+   "-",
+   ">",
+   " ",
+   "e",
+   ".",
+   "salary",
+   " ",
+   ">",
+   " ",
+   "threshold",
+   " ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "lparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "assert",
+   " ",
+   "emps",
+   "[",
+   "0",
+   "..",
+   "2",
+   "]",
+   " ",
+   "==",
+   " ",
+   "highPaid",
+   "(",
+   "emps",
+   ")",
+   " ",
+   "// [Guillaume, Graeme, Dierk]"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "paidMore",
+   "(",
+   "amount",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "{",
+   " ",
+   "e",
+   " ",
+   "-",
+   ">",
+   " ",
+   "e",
+   ".",
+   "salary",
+   " ",
+   ">",
+   " ",
+   "amount",
+   "}"
+  ],
+  "types": [
+   "text",
+   "lparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "highPaid",
+   " ",
+   "=",
+   " ",
+   "paidMore",
+   "(",
+   "150",
+   ")"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "lparen",
+   "constant.numeric",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "assert",
+   " ",
+   "highPaid",
+   "(",
+   "emps",
+   "[",
+   "0",
+   "]",
+   ")",
+   " ",
+   "// true"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "lparen",
+   "constant.numeric",
+   "rparen",
+   "rparen",
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "assert",
+   " ",
+   "emps",
+   "[",
+   "0",
+   "..",
+   "2",
+   "]",
+   " ",
+   "==",
+   " ",
+   "emps",
+   ".",
+   "findAll",
+   "(",
+   "highPaid",
+   ")"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "rparen",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "filename",
+   " ",
+   "=",
+   " ",
+   "'test.txt'"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "new",
+   " ",
+   "File",
+   "(",
+   "filename",
+   ")",
+   ".",
+   "withReader",
+   "{",
+   " ",
+   "reader",
+   " ",
+   "-",
+   ">",
+   " ",
+   "doSomethingWith",
+   "(",
+   "reader",
+   ")",
+   " ",
+   "}"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "identifier",
+   "lparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "readersText"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "def",
+   " ",
+   "doSomethingWith",
+   "(",
+   "reader",
+   ")",
+   " ",
+   "{",
+   " ",
+   "readersText",
+   " ",
+   "=",
+   " ",
+   "reader",
+   ".",
+   "text",
+   " ",
+   "}"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "lparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "assert",
+   " ",
+   "new",
+   " ",
+   "File",
+   "(",
+   "filename",
+   ")",
+   ".",
+   "text",
+   " ",
+   "==",
+   " ",
+   "readersText"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "lparen",
+   "identifier",
+   "rparen",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier"
+  ]
+ }
+]

@@ -1,0 +1,250 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "<",
+   "html",
+   ">"
+  ],
+  "types": [
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "<",
+   "head",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "css-start",
+  "values": [
+   "    ",
+   "<",
+   "style",
+   " ",
+   "type",
+   "=",
+   "\"text/css\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name.style",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "css-ruleset",
+  "values": [
+   "        ",
+   ".text-layer",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "css-ruleset",
+  "values": [
+   "            ",
+   "font-family",
+   ": Monaco, ",
+   "\"Courier New\"",
+   ", ",
+   "monospace",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "string",
+   "text",
+   "support.constant.fonts",
+   "text"
+  ]
+ },
+ {
+  "state": "css-ruleset",
+  "values": [
+   "            ",
+   "font-size",
+   ": ",
+   "12",
+   "px",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "constant.numeric",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "css-ruleset",
+  "values": [
+   "            ",
+   "cursor",
+   ": ",
+   "text",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "css-start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "</",
+   "style",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name.style",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "</",
+   "head",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "<",
+   "body",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "<",
+   "h1",
+   " ",
+   "style",
+   "=",
+   "\"color:red\"",
+   ">",
+   "Juhu Kinners",
+   "</",
+   "h1",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "</",
+   "body",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "</",
+   "html",
+   ">"
+  ],
+  "types": [
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ }
+]

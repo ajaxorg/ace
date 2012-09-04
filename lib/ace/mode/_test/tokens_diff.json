@@ -1,0 +1,1051 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "diff",
+   " --git",
+   " a/lib/ace/edit_session.js",
+   " b/lib/ace/edit_session.js"
+  ],
+  "types": [
+   "variable",
+   "variable",
+   "keyword",
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "index 23fc3fc..ed3b273 100644"
+  ],
+  "types": [
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "---",
+   " a/lib/ace/edit_session.js"
+  ],
+  "types": [
+   "constant.numeric",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+++",
+   " b/lib/ace/edit_session.js"
+  ],
+  "types": [
+   "constant.numeric",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@@",
+   " -51,6 +51,7 ",
+   "@@",
+   " var TextMode = require(\"./mode/text\").Mode;"
+  ],
+  "types": [
+   "constant",
+   "constant.numeric",
+   "constant",
+   "comment.doc.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   " var Range = require(\"./range\").Range;"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   " var Document = require(\"./document\").Document;"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   " var BackgroundTokenizer = require(\"./background_tokenizer\").BackgroundTokenizer;"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "var SearchHighlight = require(\"./search_highlight\").SearchHighlight;"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   " /**"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "  * class EditSession"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@@",
+   " -307,6 +308,13 ",
+   "@@",
+   " var EditSession = function(text, mode) {"
+  ],
+  "types": [
+   "constant",
+   "constant.numeric",
+   "constant",
+   "comment.doc.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "         return token;"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "     };"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "    this.highlight = function(re) {"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "        if (!this.$searchHighlight) {"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "            var highlight = new SearchHighlight(null, \"ace_selected_word\", \"text\");"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "            this.$searchHighlight = this.addDynamicMarker(highlight);"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "        }"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "        this.$searchHighlight.setRegexp(re);"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "    }"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "     /**"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "     * EditSession.setUndoManager(undoManager)"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "     * - undoManager (UndoManager): The new undo manager"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@@",
+   " -556,7 +564,8 ",
+   "@@",
+   " var EditSession = function(text, mode) {"
+  ],
+  "types": [
+   "constant",
+   "constant.numeric",
+   "constant",
+   "comment.doc.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "             type : type || \"line\","
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "             renderer: typeof type == \"function\" ? type : null,"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "             clazz : clazz,"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "            inFront: !!inFront"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "            inFront: !!inFront,"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "            id: id"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "         }"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "         if (inFront) {"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "diff",
+   " --git",
+   " a/lib/ace/editor.js",
+   " b/lib/ace/editor.js"
+  ],
+  "types": [
+   "variable",
+   "variable",
+   "keyword",
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "index 834e603..b27ec73 100644"
+  ],
+  "types": [
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "---",
+   " a/lib/ace/editor.js"
+  ],
+  "types": [
+   "constant.numeric",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+++",
+   " b/lib/ace/editor.js"
+  ],
+  "types": [
+   "constant.numeric",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@@",
+   " -494,7 +494,7 ",
+   "@@",
+   " var Editor = function(renderer, session) {"
+  ],
+  "types": [
+   "constant",
+   "constant.numeric",
+   "constant",
+   "comment.doc.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "      * Emitted when a selection has changed."
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "      **/"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "     this.onSelectionChange = function(e) {"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "        var session = this.getSession();"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "        var session = this.session;"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "         if (session.$selectionMarker) {"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "             session.removeMarker(session.$selectionMarker);"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@@",
+   " -509,12 +509,40 ",
+   "@@",
+   " var Editor = function(renderer, session) {"
+  ],
+  "types": [
+   "constant",
+   "constant.numeric",
+   "constant",
+   "comment.doc.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "             this.$updateHighlightActiveLine();"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "         }"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "        var self = this;"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "        if (this.$highlightSelectedWord && !this.$wordHighlightTimer)"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "            this.$wordHighlightTimer = setTimeout(function() {"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "                self.session.$mode.highlightSelection(self);"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "                self.$wordHighlightTimer = null;"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "-",
+   "            }, 30, this);"
+  ],
+  "types": [
+   "support.function",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "        var re = this.$highlightSelectedWord && this.$getSelectionHighLightRegexp()"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "     };"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "diff",
+   " --git",
+   " a/lib/ace/search_highlight.js",
+   " b/lib/ace/search_highlight.js"
+  ],
+  "types": [
+   "variable",
+   "variable",
+   "keyword",
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "new file mode 100644"
+  ],
+  "types": [
+   "invisible"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "index 0000000..b2df779"
+  ],
+  "types": [
+   "variable"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "---",
+   " /dev/null"
+  ],
+  "types": [
+   "constant.numeric",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+++",
+   " b/lib/ace/search_highlight.js"
+  ],
+  "types": [
+   "constant.numeric",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@@",
+   " -0,0 +1,3 ",
+   "@@"
+  ],
+  "types": [
+   "constant",
+   "constant.numeric",
+   "constant"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "new"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "+",
+   "empty file"
+  ],
+  "types": [
+   "support.constant",
+   "text"
+  ]
+ }
+]

@@ -1,0 +1,749 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "#!/bin/sh"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "# Script to open a browser to current branch"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "# Repo formats:"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "# ssh   git@github.com:richoH/gh_pr.git"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "# http  https://richoH@github.com/richoH/gh_pr.git"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "# git   git://github.com/richoH/gh_pr.git"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "username=",
+   "`",
+   "git",
+   " ",
+   "config",
+   " ",
+   "-",
+   "-",
+   "get",
+   " ",
+   "github",
+   ".",
+   "user",
+   "`"
+  ],
+  "types": [
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "get_repo()",
+   " ",
+   "{"
+  ],
+  "types": [
+   "support.function",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "git",
+   " ",
+   "remote",
+   " ",
+   "-",
+   "v",
+   " | ",
+   "grep",
+   " $",
+   "{",
+   "@:",
+   "-",
+   "$username",
+   "}",
+   " | ",
+   "while",
+   " ",
+   "read",
+   " ",
+   "remote",
+   "; ",
+   "do"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "text",
+   "keyword.operator",
+   "variable",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "if",
+   " ",
+   "repo=",
+   "`",
+   "echo",
+   " ",
+   "$remote",
+   " | ",
+   "grep",
+   " ",
+   "-",
+   "E",
+   " ",
+   "-",
+   "o",
+   " ",
+   "\"git@github.com:[^ ]*\"",
+   "`; ",
+   "then"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "variable",
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "          ",
+   "echo",
+   " ",
+   "$repo",
+   " | ",
+   "sed",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s/^git@github\\.com://\"",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s/\\.git$//\""
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "          ",
+   "exit",
+   " ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "fi"
+  ],
+  "types": [
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "if",
+   " ",
+   "repo=",
+   "`",
+   "echo",
+   " ",
+   "$remote",
+   " | ",
+   "grep",
+   " ",
+   "-",
+   "E",
+   " ",
+   "-",
+   "o",
+   " ",
+   "\"https?://([^@]*@)?github.com/[^ ]*\\.git\"",
+   "`; ",
+   "then"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "variable",
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "          ",
+   "echo",
+   " ",
+   "$repo",
+   " | ",
+   "sed",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s|^https?://||\"",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s/^.*github\\.com\\///\"",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s/\\.git$//\""
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "          ",
+   "exit",
+   " ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "fi"
+  ],
+  "types": [
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "if",
+   " ",
+   "repo=",
+   "`",
+   "echo",
+   " ",
+   "$remote",
+   " | ",
+   "grep",
+   " ",
+   "-",
+   "E",
+   " ",
+   "-",
+   "o",
+   " ",
+   "\"git://github.com/[^ ]*\\.git\"",
+   "`; ",
+   "then"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "variable",
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "          ",
+   "echo",
+   " ",
+   "$repo",
+   " | ",
+   "sed",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s|^git://github.com/||\"",
+   " ",
+   "-",
+   "e",
+   " ",
+   "\"s/\\.git$//\""
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "          ",
+   "exit",
+   " ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "      ",
+   "fi"
+  ],
+  "types": [
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "done"
+  ],
+  "types": [
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "if",
+   " ",
+   "[",
+   " ",
+   "$?",
+   " ",
+   "-",
+   "eq",
+   " ",
+   "0",
+   " ",
+   "]",
+   "; ",
+   "then"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "text",
+   "variable.language",
+   "text",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "text",
+   "paren.rparen",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "echo",
+   " ",
+   "\"Couldn't find a valid remote\"",
+   " ",
+   ">",
+   "&2"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "support.function"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "exit",
+   " ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "fi"
+  ],
+  "types": [
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "if",
+   " ",
+   "repo=",
+   "`",
+   "get_repo",
+   " $@`; ",
+   "then"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "branch=",
+   "`",
+   "git",
+   " ",
+   "symbolic",
+   "-",
+   "ref",
+   " ",
+   "HEAD",
+   " ",
+   "2",
+   ">",
+   "/",
+   "dev",
+   "/",
+   "null",
+   "`"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "constant.numeric",
+   "keyword.operator",
+   "keyword.operator",
+   "identifier",
+   "keyword.operator",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "echo",
+   " ",
+   "\"http://github.com/$repo/pull/new/${branch##refs/heads/}\""
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "else"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "exit",
+   " ",
+   "1"
+  ],
+  "types": [
+   "text",
+   "constant.language",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "fi"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

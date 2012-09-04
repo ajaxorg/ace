@@ -1,0 +1,1243 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+  ],
+  "types": [
+   "xml_pe"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "<",
+   "query",
+   " ",
+   "xmlns:yahoo",
+   "=",
+   "\"http://www.yahooapis.com/v1/base.rng\""
+  ],
+  "types": [
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "yahoo:count",
+   "=",
+   "\"7\"",
+   " ",
+   "yahoo:created",
+   "=",
+   "\"2011-10-11T08:40:23Z\"",
+   " ",
+   "yahoo:lang",
+   "=",
+   "\"en-US\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "<",
+   "diagnostics",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "<",
+   "publiclyCallable",
+   ">",
+   "true",
+   "</",
+   "publiclyCallable",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "<",
+   "url",
+   " ",
+   "execution-start-time",
+   "=",
+   "\"0\"",
+   " ",
+   "execution-stop-time",
+   "=",
+   "\"25\"",
+   " ",
+   "execution-time",
+   "=",
+   "\"25\"",
+   ">",
+   "<![CDATA[http://where.yahooapis.com/v1/continents;start=0;count=10]]>",
+   "</",
+   "url",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "<",
+   "user-time",
+   ">",
+   "26",
+   "</",
+   "user-time",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "<",
+   "service-time",
+   ">",
+   "25",
+   "</",
+   "service-time",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "<",
+   "build-version",
+   ">",
+   "21978",
+   "</",
+   "build-version",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "</",
+   "diagnostics",
+   ">",
+   " "
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "<",
+   "results",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/24865670\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "24865670",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "Africa",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/24865675\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "24865675",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "Europe",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/24865673\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "24865673",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "South America",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/28289421\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "28289421",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "Antarctic",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/24865671\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "24865671",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "Asia",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/24865672\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "24865672",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "North America",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "tag_embed_attribute_list",
+  "values": [
+   "        ",
+   "<",
+   "place",
+   " ",
+   "xmlns",
+   "=",
+   "\"http://where.yahooapis.com/v1/schema.rng\""
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "xml:lang",
+   "=",
+   "\"en-US\"",
+   " ",
+   "yahoo:uri",
+   "=",
+   "\"http://where.yahooapis.com/v1/place/55949070\"",
+   ">"
+  ],
+  "types": [
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "woeid",
+   ">",
+   "55949070",
+   "</",
+   "woeid",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "placeTypeName",
+   " ",
+   "code",
+   "=",
+   "\"29\"",
+   ">",
+   "Continent",
+   "</",
+   "placeTypeName",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "text",
+   "entity.other.attribute-name",
+   "keyword.operator",
+   "string",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "<",
+   "name",
+   ">",
+   "Australia",
+   "</",
+   "name",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag",
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "</",
+   "place",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "</",
+   "results",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "</",
+   "query",
+   ">"
+  ],
+  "types": [
+   "meta.tag",
+   "meta.tag.tag-name",
+   "meta.tag"
+  ]
+ }
+]

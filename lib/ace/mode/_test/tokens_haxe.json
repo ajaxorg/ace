@@ -1,0 +1,337 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "class",
+   " ",
+   "Haxe",
+   " "
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "{"
+  ],
+  "types": [
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "public",
+   " ",
+   "static",
+   " ",
+   "function",
+   " ",
+   "main",
+   "(",
+   ")",
+   " "
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "// Say Hello!"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "var",
+   " ",
+   "greeting",
+   ":",
+   "String",
+   " ",
+   "=",
+   " ",
+   "\"Hello World\"",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "keyword",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "trace",
+   "(",
+   "greeting",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "var",
+   " ",
+   "targets",
+   ":",
+   "Array",
+   "<",
+   "String",
+   ">",
+   " ",
+   "=",
+   " ",
+   "[",
+   "\"Flash\"",
+   ",",
+   "\"Javascript\"",
+   ",",
+   "\"PHP\"",
+   ",",
+   "\"Neko\"",
+   ",",
+   "\"C++\"",
+   ",",
+   "\"iOS\"",
+   ",",
+   "\"Android\"",
+   ",",
+   "\"webOS\"",
+   "]",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "keyword",
+   "keyword.operator",
+   "keyword",
+   "keyword.operator",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "string",
+   "punctuation.operator",
+   "string",
+   "punctuation.operator",
+   "string",
+   "punctuation.operator",
+   "string",
+   "punctuation.operator",
+   "string",
+   "punctuation.operator",
+   "string",
+   "punctuation.operator",
+   "string",
+   "punctuation.operator",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "trace",
+   "(",
+   "\"Haxe is a great language that can target:\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "for",
+   " ",
+   "(",
+   "target",
+   " ",
+   "in",
+   " ",
+   "targets",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "trace",
+   " ",
+   "(",
+   "\" - \"",
+   " ",
+   "+",
+   " ",
+   "target",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "trace",
+   "(",
+   "\"And many more!\"",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "paren.lparen",
+   "string",
+   "paren.rparen",
+   "punctuation.operator"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ }
+]

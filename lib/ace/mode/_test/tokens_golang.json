@@ -1,0 +1,617 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "// Concurrent computation of pi."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "// See http://goo.gl/ZuTZM."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "//"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "// This demonstrates Go's ability to handle"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "// large numbers of concurrent processes."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "// It is an unreasonable way to calculate pi."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "package",
+   " ",
+   "main"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "import",
+   " ",
+   "("
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "\"fmt\""
+  ],
+  "types": [
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "\"math\""
+  ],
+  "types": [
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   ")"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "func",
+   " ",
+   "main",
+   "(",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "fmt",
+   ".",
+   "Println",
+   "(",
+   "pi",
+   "(",
+   "5000",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "// pi launches n goroutines to compute an"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "// approximation of pi."
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "func",
+   " ",
+   "pi",
+   "(",
+   "n",
+   " ",
+   "int",
+   ")",
+   " ",
+   "float64",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "ch",
+   " ",
+   ":",
+   "=",
+   " ",
+   "make",
+   "(",
+   "chan",
+   " ",
+   "float64",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "punctuation.operator",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "for",
+   " ",
+   "k",
+   " ",
+   ":",
+   "=",
+   " ",
+   "0",
+   ";",
+   " ",
+   "k",
+   " ",
+   "<=",
+   " ",
+   "n",
+   ";",
+   " ",
+   "k",
+   "++",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "punctuation.operator",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "go",
+   " ",
+   "term",
+   "(",
+   "ch",
+   ",",
+   " ",
+   "float64",
+   "(",
+   "k",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "f",
+   " ",
+   ":",
+   "=",
+   " ",
+   "0.0"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "punctuation.operator",
+   "keyword.operator",
+   "text",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "for",
+   " ",
+   "k",
+   " ",
+   ":",
+   "=",
+   " ",
+   "0",
+   ";",
+   " ",
+   "k",
+   " ",
+   "<=",
+   " ",
+   "n",
+   ";",
+   " ",
+   "k",
+   "++",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "punctuation.operator",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "keyword.operator",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "f",
+   " ",
+   "+",
+   "=",
+   " ",
+   "<",
+   "-",
+   "ch"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "return",
+   " ",
+   "f"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "func",
+   " ",
+   "term",
+   "(",
+   "ch",
+   " ",
+   "chan",
+   " ",
+   "float64",
+   ",",
+   " ",
+   "k",
+   " ",
+   "float64",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "ch",
+   " ",
+   "<",
+   "-",
+   " ",
+   "4",
+   " ",
+   "*",
+   " ",
+   "math",
+   ".",
+   "Pow",
+   "(",
+   "-1",
+   ",",
+   " ",
+   "k",
+   ")",
+   " / ",
+   "(",
+   "2",
+   "*",
+   "k",
+   " ",
+   "+",
+   " ",
+   "1",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "identifier",
+   "punctuation.operator",
+   "identifier",
+   "paren.lparen",
+   "constant.numeric",
+   "punctuation.operator",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "paren.lparen",
+   "constant.numeric",
+   "keyword.operator",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

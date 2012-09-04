@@ -1,0 +1,950 @@
+[
+ {
+  "state": "commandItem",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "proc",
+   " ",
+   "dijkstra",
+   " ",
+   "{",
+   "graph",
+   " ",
+   "origin",
+   "}",
+   " ",
+   "{"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "# Initialize"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "    ",
+   "dict",
+   " ",
+   "for",
+   " ",
+   "{",
+   "vertex",
+   " ",
+   "distmap",
+   "}",
+   " ",
+   "$",
+   "graph",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "dict",
+   " ",
+   "set",
+   " ",
+   "dist",
+   " ",
+   "$",
+   "vertex",
+   " ",
+   "Inf"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t",
+   "dict",
+   " ",
+   "set",
+   " ",
+   "path",
+   " ",
+   "$",
+   "vertex",
+   " ",
+   "{",
+   "}"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "paren.lparen",
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "    }"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "dict",
+   " ",
+   "set",
+   " ",
+   "dist",
+   " ",
+   "$",
+   "origin",
+   " 0"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "dict",
+   " ",
+   "set",
+   " ",
+   "path",
+   " ",
+   "$",
+   "origin",
+   " ",
+   "[",
+   "list",
+   " ",
+   "$",
+   "origin",
+   "]"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   " "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "    ",
+   "while",
+   " ",
+   "{",
+   "[",
+   "dict",
+   " ",
+   "size",
+   " ",
+   "$",
+   "graph",
+   "]",
+   "}",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "# Find unhandled node with least weight"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "set",
+   " ",
+   "d",
+   " ",
+   "Inf"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t",
+   "dict",
+   " ",
+   "for",
+   " ",
+   "{",
+   "uu",
+   " ",
+   "-",
+   "}",
+   " ",
+   "$",
+   "graph",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "support.function",
+   "paren.rparen",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t    ",
+   "if",
+   " ",
+   "{",
+   "$",
+   "d",
+   " ",
+   ">",
+   " ",
+   "[",
+   "set",
+   " ",
+   "dd",
+   " ",
+   "[",
+   "dict",
+   " ",
+   "get",
+   " ",
+   "$",
+   "dist",
+   " ",
+   "$",
+   "uu",
+   "]",
+   "]",
+   "}",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "support.function",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t\t",
+   "set",
+   " ",
+   "u",
+   " ",
+   "$",
+   "uu"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t\t",
+   "set",
+   " ",
+   "d",
+   " ",
+   "$",
+   "dd"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t    }"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t}"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   " "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "# No such node; graph must be disconnected"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "if",
+   " ",
+   "{",
+   "$",
+   "d",
+   " ",
+   "==",
+   " ",
+   "Inf",
+   "}",
+   " ",
+   "break"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "support.function",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   " "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commentfollow",
+  "values": [
+   "\t",
+   "# Update the weights for nodes\\"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t lead to by the node we've picked"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t",
+   "dict",
+   " ",
+   "for",
+   " ",
+   "{",
+   "v",
+   " ",
+   "dd",
+   "}",
+   " ",
+   "[",
+   "dict",
+   " ",
+   "get",
+   " ",
+   "$",
+   "graph",
+   " ",
+   "$",
+   "u",
+   "]",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t    ",
+   "if",
+   " ",
+   "{",
+   "[",
+   "dict",
+   " ",
+   "exists",
+   " ",
+   "$",
+   "graph",
+   " ",
+   "$",
+   "v",
+   "]",
+   "}",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t\t",
+   "set",
+   " ",
+   "alt",
+   " ",
+   "[",
+   "expr",
+   " ",
+   "{",
+   "$",
+   "d",
+   " ",
+   "+",
+   " ",
+   "$",
+   "dd",
+   "}",
+   "]"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "support.function",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t\t",
+   "if",
+   " ",
+   "{",
+   "$",
+   "alt",
+   " ",
+   "<",
+   " ",
+   "[",
+   "dict",
+   " ",
+   "get",
+   " ",
+   "$",
+   "dist",
+   " ",
+   "$",
+   "v",
+   "]",
+   "}",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "support.function",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t\t    ",
+   "dict",
+   " ",
+   "set",
+   " ",
+   "dist",
+   " ",
+   "$",
+   "v",
+   " ",
+   "$",
+   "alt"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t\t    ",
+   "dict",
+   " ",
+   "set",
+   " ",
+   "path",
+   " ",
+   "$",
+   "v",
+   " ",
+   "[",
+   "list",
+   " ",
+   "{*}",
+   "[",
+   "dict",
+   " ",
+   "get",
+   " ",
+   "$",
+   "path",
+   " ",
+   "$",
+   "u",
+   "]",
+   " ",
+   "$",
+   "v",
+   "]"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t\t}"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t    }"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "\t}"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   " "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "# Remove chosen node from graph still to be handled"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "\t",
+   "dict",
+   " ",
+   "unset",
+   " ",
+   "graph",
+   " ",
+   "$",
+   "u"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text",
+   "variable.instancce",
+   "variable.instancce"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "    }"
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "return",
+   " ",
+   "[",
+   "list",
+   " ",
+   "$",
+   "dist",
+   " ",
+   "$",
+   "path",
+   "]"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "keyword",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "text",
+   "variable.instancce",
+   "variable.instancce",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "commandItem",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "text"
+  ]
+ }
+]

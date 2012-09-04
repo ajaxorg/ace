@@ -1,0 +1,351 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "#!/usr/local/bin/python"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "import",
+   " ",
+   "string",
+   ", ",
+   "sys"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "# If no arguments were given, print a helpful message"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "if",
+   " ",
+   "len",
+   "(",
+   "sys",
+   ".",
+   "argv",
+   ")",
+   "==",
+   "1",
+   ":"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "qstring",
+  "values": [
+   "    ",
+   "print",
+   " ",
+   "'''Usage:"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "celsius temp1 temp2 ...'''"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "sys",
+   ".",
+   "exit",
+   "(",
+   "0",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "constant.numeric",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "# Loop over the arguments"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "for",
+   " ",
+   "i",
+   " ",
+   "in",
+   " ",
+   "sys",
+   ".",
+   "argv",
+   "[",
+   "1",
+   ":",
+   "]",
+   ":"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "constant.numeric",
+   "text",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "try",
+   ":"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "fahrenheit",
+   "=",
+   "float",
+   "(",
+   "string",
+   ".",
+   "atoi",
+   "(",
+   "i",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "keyword.operator",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "text",
+   "identifier",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "except",
+   " ",
+   "string",
+   ".",
+   "atoi_error",
+   ":"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "identifier",
+   "text",
+   "identifier",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "print",
+   " ",
+   "repr",
+   "(",
+   "i",
+   ")",
+   ", ",
+   "\"not a numeric value\""
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "else",
+   ":"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "celsius",
+   "=",
+   "(",
+   "fahrenheit",
+   "-",
+   "32",
+   ")",
+   "*",
+   "5.0",
+   "/",
+   "9.0"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "keyword.operator",
+   "paren.lparen",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "keyword.operator",
+   "constant.numeric",
+   "keyword.operator",
+   "constant.numeric"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "print",
+   " ",
+   "'%i\\260F = %i\\260C'",
+   " ",
+   "%",
+   " ",
+   "(",
+   "int",
+   "(",
+   "fahrenheit",
+   ")",
+   ", ",
+   "int",
+   "(",
+   "celsius",
+   "+",
+   ".5",
+   ")",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "paren.lparen",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "paren.rparen",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "identifier",
+   "keyword.operator",
+   "constant.numeric",
+   "paren.rparen",
+   "paren.rparen"
+  ]
+ }
+]

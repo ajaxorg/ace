@@ -1,0 +1,105 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "xquery",
+   " ",
+   "version",
+   " ",
+   "\"1.0\"",
+   ";"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword",
+   "text",
+   "string",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "let",
+   " ",
+   "$message",
+   " :",
+   "=",
+   " ",
+   "\"Hello World!\""
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "variable",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "return",
+   " <",
+   "results",
+   ">"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "meta.tag",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  <",
+   "message",
+   ">",
+   "{",
+   "$message",
+   "}",
+   "</",
+   "message",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "text",
+   "lparen",
+   "variable",
+   "rparen",
+   "text",
+   "meta.tag",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "</",
+   "results",
+   ">"
+  ],
+  "types": [
+   "text",
+   "meta.tag",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]

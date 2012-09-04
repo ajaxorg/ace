@@ -1,0 +1,308 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "#!/usr/bin/env coffee"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "try"
+  ],
+  "types": [
+   "keyword"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "throw",
+   " ",
+   "URIError",
+   " ",
+   "decodeURI",
+   "(",
+   "0xC0ffee",
+   " ",
+   "*",
+   " ",
+   "123456.7e-8",
+   " ",
+   "/",
+   " ",
+   ".9",
+   ")"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "language.support.class",
+   "text",
+   "language.support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "text",
+   "keyword.operator",
+   "text",
+   "constant.numeric",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "catch",
+   " ",
+   "e"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "identifier"
+  ]
+ },
+ {
+  "state": "qdoc",
+  "values": [
+   "    ",
+   "console",
+   ".log",
+   " ",
+   "'qstring'",
+   " ",
+   "+",
+   " ",
+   "\"qqstring\"",
+   " ",
+   "+",
+   " ",
+   "'''"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "identifier",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "qdoc",
+  "values": [
+   "        qdoc"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "qqdoc",
+  "values": [
+   "    '''",
+   " ",
+   "+",
+   " ",
+   "\"\"\""
+  ],
+  "types": [
+   "string",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "qqdoc",
+  "values": [
+   "        qqdoc"
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    \"\"\""
+  ],
+  "types": [
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "do",
+   " ",
+   "->"
+  ],
+  "types": [
+   "keyword",
+   "text",
+   "keyword.operator"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "    ",
+   "###"
+  ],
+  "types": [
+   "text",
+   "comment"
+  ]
+ },
+ {
+  "state": "comment",
+  "values": [
+   "    herecomment"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ###"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "heregex",
+  "values": [
+   "    ",
+   "re",
+   " ",
+   "=",
+   " ",
+   "/regex/imgy",
+   ".test",
+   " ",
+   "///"
+  ],
+  "types": [
+   "text",
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "string.regex",
+   "identifier",
+   "text",
+   "string.regex"
+  ]
+ },
+ {
+  "state": "heregex",
+  "values": [
+   "        ",
+   "heregex",
+   "  # comment"
+  ],
+  "types": [
+   "comment.regex",
+   "string.regex",
+   "comment.regex"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ///imgy"
+  ],
+  "types": [
+   "string.regex"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "this",
+   " ",
+   "isnt",
+   ":",
+   " ",
+   "`just JavaScript`"
+  ],
+  "types": [
+   "text",
+   "keyword",
+   "text",
+   "keyword",
+   "punctuation.operator",
+   "text",
+   "string"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "undefined"
+  ],
+  "types": [
+   "text",
+   "constant.language"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "sentence",
+   " ",
+   "=",
+   " ",
+   "\"#{ 22 / 7 } is a decent approximation of π\""
+  ],
+  "types": [
+   "identifier",
+   "text",
+   "keyword.operator",
+   "text",
+   "string"
+  ]
+ }
+]

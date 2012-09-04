@@ -1,0 +1,495 @@
+[
+ {
+  "state": "start",
+  "values": [
+   "/*",
+   " styles.less */"
+  ],
+  "types": [
+   "comment",
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "@base",
+   ": ",
+   "#f938ab",
+   ";"
+  ],
+  "types": [
+   "variable",
+   "text",
+   "constant.numeric",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   ".box-shadow",
+   "(",
+   "@style",
+   ", ",
+   "@c",
+   ")",
+   " ",
+   "when",
+   " ",
+   "(",
+   "iscolor",
+   "(",
+   "@c",
+   ")",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "variable.language",
+   "paren.lparen",
+   "variable",
+   "text",
+   "variable",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    box-shadow:         ",
+   "@style",
+   " ",
+   "@c",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    -webkit-box-shadow: ",
+   "@style",
+   " ",
+   "@c",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    -moz-box-shadow:    ",
+   "@style",
+   " ",
+   "@c",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   ".box-shadow",
+   "(",
+   "@style",
+   ", ",
+   "@alpha",
+   ": ",
+   "50%",
+   ")",
+   " ",
+   "when",
+   " ",
+   "(",
+   "isnumber",
+   "(",
+   "@alpha",
+   ")",
+   ")",
+   " ",
+   "{"
+  ],
+  "types": [
+   "variable.language",
+   "paren.lparen",
+   "variable",
+   "text",
+   "variable",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "keyword",
+   "text",
+   "paren.lparen",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "paren.rparen",
+   "paren.rparen",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   ".box-shadow",
+   "(",
+   "@style",
+   ", ",
+   "rgba",
+   "(",
+   "0",
+   ", ",
+   "0",
+   ", ",
+   "0",
+   ", ",
+   "@alpha",
+   ")",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "paren.lparen",
+   "variable",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "variable",
+   "paren.rparen",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ },
+ {
+  "state": "start",
+  "values": [
+   "// Box styles"
+  ],
+  "types": [
+   "comment"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   ".box",
+   " ",
+   "{",
+   " "
+  ],
+  "types": [
+   "variable.language",
+   "text",
+   "paren.lparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "color",
+   ": ",
+   "saturate",
+   "(",
+   "@base",
+   ", ",
+   "5%",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "border-color",
+   ": ",
+   "lighten",
+   "(",
+   "@base",
+   ", ",
+   "30%",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "div",
+   " ",
+   "{",
+   " ",
+   ".box-shadow",
+   "(",
+   "0",
+   " ",
+   "0",
+   " ",
+   "5px",
+   ", ",
+   "30%",
+   ")",
+   " ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "text",
+   "paren.lparen",
+   "text",
+   "variable.language",
+   "paren.lparen",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "  "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "a",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "color",
+   ": ",
+   "@base",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "variable",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        "
+  ],
+  "types": [
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        &",
+   ":hover",
+   " ",
+   "{"
+  ],
+  "types": [
+   "text",
+   "variable.language",
+   "text",
+   "paren.lparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "            ",
+   "color",
+   ": ",
+   "lighten",
+   "(",
+   "@base",
+   ", ",
+   "50%",
+   ")",
+   ";"
+  ],
+  "types": [
+   "text",
+   "support.type",
+   "text",
+   "support.function",
+   "paren.lparen",
+   "variable",
+   "text",
+   "constant.numeric",
+   "paren.rparen",
+   "text"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "        ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "    ",
+   "}"
+  ],
+  "types": [
+   "text",
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [
+   "}"
+  ],
+  "types": [
+   "paren.rparen"
+  ]
+ },
+ {
+  "state": "start",
+  "values": [],
+  "types": []
+ }
+]
