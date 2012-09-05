@@ -6,7 +6,7 @@ var https = require("https")
 var rootDir = __dirname + "/../lib/ace/"
 
 var deps = [{
-	path: "worker/jshint.js",
+	path: "mode/javascript/jshint.js",
 	url: "https://raw.github.com/jshint/jshint/master/jshint.js",
 	needsFixup: true,
 	postProcess: function(t) {
