@@ -69,7 +69,12 @@ function cleanMultiCapture(match) {
 
 // stupid yet necessary function, to transform JSON id comments into real comments
 function restoreComments(objStr) {
-  return objStr.replace(/"\s+(\/\/.+)",/g, "\$1")
+  return objStr.replace(/"\s+(\/\/.+)",/g, "\$1").replace(/ \/\/ ERROR/g, '", // ERROR');
+}
+
+function checkForLookBehind(str) {
+  var lookbehindRegExp = new RegExp("\\?<[=|!]");
+  return lookbehindRegExp.test(str) ? str + " // ERROR: This contains a lookbehind, which JS does not support :(" : str;
 }
 
 function assembleStateObjs(strState, pattern) {
@@ -86,19 +91,19 @@ function assembleStateObjs(strState, pattern) {
       }
       else {
         stateObj.token = patterns[p].name;
-        stateObj.regex = patterns[p].match;
+        stateObj.regex = checkForLookBehind(patterns[p].match);
       }
       statesObj[strState].push(stateObj);
     }
 
     stateObj = {};
     stateObj.token = "TODO";
-    stateObj.regex = pattern.end;
+    stateObj.regex = checkForLookBehind(pattern.end);
     stateObj.next = "start";
   }
   else {
     stateObj.token = "TODO";
-    stateObj.regex = pattern.end;
+    stateObj.regex = checkForLookBehind(pattern.end);
     stateObj.next = "start";
 
     statesObj[strState].push(stateObj);
@@ -141,7 +146,7 @@ function extractPatterns(patterns) {
       statesObj[strState] = [ ];
       statesObj[strState].push(assembleStateObjs(strState, pattern));
       
-      tokenObj.regex = pattern.begin;
+      tokenObj.regex = checkForLookBehind(pattern.begin);
       tokenObj.next = strState;
       startState.start.push(tokenObj);
     }
@@ -151,14 +156,14 @@ function extractPatterns(patterns) {
 
     else if (pattern.captures) {
       tokenObj.token = pattern.captures;
-      tokenObj.regex = pattern.match;
+      tokenObj.regex = checkForLookBehind(pattern.match);
 
       startState.start.push(tokenObj);
     }
 
     else if (pattern.match) {
       tokenObj.token = pattern.name;
-      tokenObj.regex = pattern.match;
+      tokenObj.regex = checkForLookBehind(pattern.match);
 
       startState.start.push(tokenObj);
     }
@@ -203,4 +208,9 @@ function convertLanguage(name) {
 }
 
 var tmLanguageFile  = process.argv.splice(2)[0];
+
+if (tmLanguageFile === undefined) {
+  console.error("Please pass in a language file via the command line.");
+  process.exit(1);
+}
 convertLanguage(tmLanguageFile);
