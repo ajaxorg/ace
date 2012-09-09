@@ -27,6 +27,9 @@ var supportedScopes = {
    "support.function.firebug": "support.firebug",
    "support.function.constant": "support.function.constant",
    "support.constant": "support.constant",
+   "support.class": "support.class",
+   "support.type": "support.type",
+   "support.other": "support.other",
 
    "function": "function",
    "function.buildin": "function.buildin",
@@ -206,6 +209,7 @@ function convertTheme(name) {
 		var styles = extractStyles(theme);
 
 		styles.cssClass = "ace-" + hyphenate(name);
+    styles.uuid = theme.uuid;
 		var css = fillTemplate(cssTemplate, styles);
 		css = css.replace(/[^\{\}]+{\s*}/g, "");
 
