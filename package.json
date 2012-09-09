@@ -22,14 +22,8 @@
         "ace": "."
     },
     "licenses": [{
-        "type": "MPL",
-        "url": "http://www.mozilla.org/MPL/"
-    }, {
-        "type": "GPL",
-        "url": "http://www.gnu.org/licenses/gpl.html"
-    }, {
-        "type": "LGPL",
-        "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
+        "type": "BSD New",
+        "url": "http://opensource.org/licenses/BSD-3-Clause"
     }],
     "directories": {
         "lib": "lib/ace"
