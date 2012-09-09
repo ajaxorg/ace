@@ -82,7 +82,7 @@
 }
 
 .%cssClass% .ace_constant.ace_character,  {
-  %constant%
+  %constant.character%
 }
 
 .%cssClass% .ace_constant.ace_character.ace_escape,  {

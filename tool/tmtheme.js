@@ -3,7 +3,6 @@ var fs = require("fs");
 var parseString = require("plist").parseString;
 function parseTheme(themeXml, callback) {
 	parseString(themeXml, function(_, theme) {
-		console.log(theme)
 		callback(theme[0])
 	});
 }

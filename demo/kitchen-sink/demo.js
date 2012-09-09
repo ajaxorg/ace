@@ -75,7 +75,7 @@ var Mode = function(name, desc, extensions) {
     this.name = name;
     this.desc = desc;
     this.mode = "ace/mode/" + name;
-    this.extRe = new RegExp("^.*\\.(" + extensions + ")$", "g");
+    this.extRe = new RegExp("^.*\\.(" + extensions + ")$"      , "g");
 };
 
 Mode.prototype.supportsFile = function(filename) {
@@ -83,49 +83,50 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
-    c9search:   ["C9Search"     , "c9search_results"],
-    coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
-    coldfusion: ["ColdFusion"   , "cfm"],
-    csharp:     ["C#"           , "cs"],
-    css:        ["CSS"          , "css"],
-    diff:       ["Diff"         , "diff|patch"],
-    glsl:       ["Glsl"         , "glsl|frag|vert"],
-    golang:     ["Go"           , "go"],
-    groovy:     ["Groovy"       , "groovy"],
-    haxe:       ["haXe"         , "hx"],
-    html:       ["HTML"         , "htm|html|xhtml"],
-    c_cpp:      ["C/C++"        , "c|cc|cpp|cxx|h|hh|hpp"],
-    clojure:    ["Clojure"      , "clj"],
-    jade:       ["Jade"         , "jade"],
-    java:       ["Java"         , "java"],
-    javascript: ["JavaScript"   , "js"],
-    json:       ["JSON"         , "json"],
-    jsx:        ["JSX"          , "jsx"],
-    latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
-    less:       ["LESS"         , "less"],
-    liquid:     ["Liquid"       , "liquid"],
-    lua:        ["Lua"          , "lua"],
-    luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
-    markdown:   ["Markdown"     , "md|markdown"],
-    ocaml:      ["OCaml"        , "ml|mli"],
-    perl:       ["Perl"         , "pl|pm"],
-    pgsql:      ["pgSQL"        , "pgsql"],
-    php:        ["PHP"          , "php|phtml"],
-    powershell: ["Powershell"   , "ps1"],
-    python:     ["Python"       , "py"],
-    ruby:       ["Ruby"         , "ru|gemspec|rake|rb"],
-    scad:       ["OpenSCAD"     , "scad"],
-    scala:      ["Scala"        , "scala"],
-    scss:       ["SCSS"         , "scss|sass"],
-    sh:         ["SH"           , "sh|bash|bat"],
-    sql:        ["SQL"          , "sql"],
-    svg:        ["SVG"          , "svg"],
-    tcl:        ["Tcl"          , "tcl"],
-    text:       ["Text"         , "txt"],
-    textile:    ["Textile"      , "textile"],
-    xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
-    xquery:     ["XQuery"       , "xq"],
-    yaml:       ["YAML"         , "yaml"]
+    c9search:   ["C9Search"           , "c9search_results"],
+    coffee:     ["CoffeeScript"       , "coffee|^Cakefile"],
+    coldfusion: ["ColdFusion"         , "cfm"],
+    csharp:     ["C#"                 , "cs"],
+    css:        ["CSS"                , "css"],
+    diff:       ["Diff"               , "diff|patch"],
+    glsl:       ["Glsl"               , "glsl|frag|vert"],
+    golang:     ["Go"                 , "go"],
+    groovy:     ["Groovy"             , "groovy"],
+    haxe:       ["haXe"               , "hx"],
+    html:       ["HTML"               , "htm|html|xhtml"],
+    c_cpp:      ["C/C++"              , "c|cc|cpp|cxx|h|hh|hpp"],
+    clojure:    ["Clojure"            , "clj"],
+    jade:       ["Jade"               , "jade"],
+    java:       ["Java"               , "java"],
+    javascript: ["JavaScript"         , "js"],
+    json:       ["JSON"               , "json"],
+    jsx:        ["JSX"                , "jsx"],
+    latex:      ["LaTeX"              , "latex|tex|ltx|bib"],
+    less:       ["LESS"               , "less"],
+    liquid:     ["Liquid"             , "liquid"],
+    lua:        ["Lua"                , "lua"],
+    luapage:    ["LuaPage"            , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
+    markdown:   ["Markdown"           , "md|markdown"],
+    objectivec: ["Objective-C/C++"    , "m"],
+    ocaml:      ["OCaml"              , "ml|mli"],
+    perl:       ["Perl"               , "pl|pm"],
+    pgsql:      ["pgSQL"              , "pgsql"],
+    php:        ["PHP"                , "php|phtml"],
+    powershell: ["Powershell"         , "ps1"],
+    python:     ["Python"             , "py"],
+    ruby:       ["Ruby"               , "ru|gemspec|rake|rb"],
+    scad:       ["OpenSCAD"           , "scad"],
+    scala:      ["Scala"              , "scala"],
+    scss:       ["SCSS"               , "scss|sass"],
+    sh:         ["SH"                 , "sh|bash|bat"],
+    sql:        ["SQL"                , "sql"],
+    svg:        ["SVG"                , "svg"],
+    tcl:        ["Tcl"                , "tcl"],
+    text:       ["Text"               , "txt"],
+    textile:    ["Textile"            , "textile"],
+    xml:        ["XML"                , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
+    xquery:     ["XQuery"             , "xq"],
+    yaml:       ["YAML"               , "yaml"]
 };
 
 for (var name in modesByName) {
@@ -187,6 +188,7 @@ var docs = {
     "docs/lua.lua": "Lua",
     "docs/luapage.lp": "LuaPage",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
+    "docs/objectivec.m": "Objective-C",
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
     "docs/perl.pl": "Perl",
@@ -236,7 +238,7 @@ function prepareDocList(docs) {
             doc = {name: doc || path};
 
         doc.path = path;
-        doc.desc = doc.name.replace(/^(ace|docs|demo|build)\//, "");
+        doc.desc = doc.name.replace(/^(ace|docs|demo|build)\//      , "");
         if (doc.desc.length > 18)
             doc.desc = doc.desc.slice(0, 7) + ".." + doc.desc.slice(-9)
 
@@ -325,7 +327,7 @@ cmdLine.commands.bindKeys({
     },
 })
 
-cmdLine.commands.removeCommands(["find", "gotoline", "findall", "replace", "replaceall"])
+cmdLine.commands.removeCommands(["find"      , "gotoline"      , "findall"      , "replace"      , "replaceall"])
 
 /**
  * This demonstrates how you can define commands and bind shortcuts to them.
@@ -389,15 +391,15 @@ var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
 
 var group = document.createElement("optgroup");
-group.setAttribute("label", "Mode Examples");
+group.setAttribute("label"      , "Mode Examples");
 fillDropdown(docs, group);
 docEl.appendChild(group);
 var group = document.createElement("optgroup");
-group.setAttribute("label", "Huge documents");
+group.setAttribute("label"      , "Huge documents");
 fillDropdown(hugeDocs, group);
 docEl.appendChild(group);
 var group = document.createElement("optgroup");
-group.setAttribute("label", "own source");
+group.setAttribute("label"      , "own source");
 fillDropdown(ownSource, group);
 docEl.appendChild(group);
 
@@ -479,13 +481,13 @@ function saveOption(el, val) {
     }
 }
 
-event.addListener(themeEl, "mouseover", function(e){
+event.addListener(themeEl      , "mouseover", function(e){
     this.desiredValue = e.target.value;
     if (!this.$timer)
         this.$timer = setTimeout(this.updateTheme);
 })
 
-event.addListener(themeEl, "mouseout", function(e){
+event.addListener(themeEl      , "mouseout", function(e){
     this.desiredValue = null;
     if (!this.$timer)
         this.$timer = setTimeout(this.updateTheme, 20);
@@ -653,11 +655,11 @@ function fillDropdown(list, el) {
 
 
 /************** dragover ***************************/
-event.addListener(container, "dragover", function(e) {
+event.addListener(container      , "dragover", function(e) {
     return event.preventDefault(e);
 });
 
-event.addListener(container, "drop", function(e) {
+event.addListener(container      , "drop", function(e) {
     var file;
     try {
         file = e.dataTransfer.files[0];
@@ -753,7 +755,7 @@ var statusUpdate = lang.deferredCall(function() {
         add("REC");
     
     var c = editor.selection.lead;
-    add(c.row + ":" + c.column, " ");
+    add(c.row + ":" + c.column      , " ");
     if (!editor.selection.isEmpty()) {
         var r = editor.getSelectionRange()
         add("(" + (r.end.row - r.start.row) + ":"  +(r.end.column - r.start.column) + ")");
