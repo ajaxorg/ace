@@ -117,7 +117,7 @@
   border: 1px solid rgb(192, 192, 192);
 }
 
-.ace-github .ace_gutter_active_line{
+.ace-github .ace_gutter_active_line {
     background-color : rgba(0, 0, 0, 0.07);
 }
 

@@ -17,6 +17,10 @@
   background: #ebebeb;
 }
 
+.ace-eclipse .ace_scroller {
+  background-color: #FFFFFF;
+}
+
 .ace-eclipse .ace_fold {
     background-color: rgb(60, 76, 114);
 }

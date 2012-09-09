@@ -17,7 +17,8 @@
   background: #e8e8e8;
 }
 
-.ace-chrome .ace_text-layer {
+.ace-chrome .ace_scroller {
+  background-color: #FFFFFF;
 }
 
 .ace-chrome .ace_cursor {
@@ -68,7 +69,7 @@
 
 .ace-chrome .ace_variable.ace_parameter {
   font-style:italic;
-color:#FD971F;
+  color:#FD971F;
 }
 .ace-chrome .ace_line .ace_keyword.ace_operator {
   color: rgb(104, 118, 135);
@@ -102,7 +103,7 @@ color:#FD971F;
   color: #0000A2;
 }
 
-.ace-chrome .ace_markup.ace_markupine {
+.ace-chrome .ace_markup.ace_underline {
     text-decoration:underline;
 }
 
@@ -154,11 +155,11 @@ color:#FD971F;
   color: rgb(255, 0, 0)
 }
 
-.ace-chrome .ace_line .ace_string{
+.ace-chrome .ace_line .ace_string {
   color: #1A1AA6;
 }
 
-.ace-chrome .ace_entity.ace_other.ace_attribute-name{
+.ace-chrome .ace_entity.ace_other.ace_attribute-name {
   color: #994409;
 }
 
