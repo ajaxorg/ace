@@ -164,7 +164,6 @@ function extractPatterns(patterns) {
       
       tokenObj.regex = checkForLookBehind(pattern.begin);
       tokenObj.next = strState;
-      startState.start.push(tokenObj);
     }
     else if( ( pattern.begin || pattern.end ) && !( pattern.begin && pattern.end ) ) {
       logDebug("Somehow, there's pattern.begin or pattern.end--but not both?", pattern);
@@ -174,27 +173,30 @@ function extractPatterns(patterns) {
       tokenObj.token.push([]);
       tokenObj.token.push(pattern.captures);
       tokenObj.regex = checkForLookBehind(pattern.match);
-
-      startState.start.push(tokenObj);
     }
 
     else if (pattern.match) {
       tokenObj.token.push(pattern.name);
       tokenObj.regex = checkForLookBehind(pattern.match);
-
-      startState.start.push(tokenObj);
     }
 
     else if (pattern.include) {
       tokenObj.token.push(pattern.include);
       tokenObj.regex = "";
-
-      startState.start.push(tokenObj);
     }
 
     else {
+      tokenObj.token.push("");
+      tokenObj.regex = "";
       logDebug("I've gone through every choice, and have no clue what this is:", pattern);
     }
+
+    // sometimes captures have names--not sure when or why
+    if (pattern.name) {
+      tokenObj.token.push(pattern.name);
+    }
+
+    startState.start.push(tokenObj);
   });
 
   var resultingObj = startState;
@@ -229,16 +231,19 @@ function convertLanguage(name) {
         if (devMode)
           console.log(util.inspect(language.patterns, false, 4));
 
-        var patterns = extractPatterns(language.patterns);
-        var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
-              language: languageNameSanitized,
-              languageTokens: patterns
-        });
-
         var languageMode = fillTemplate(modeTemplate, {
               language: languageNameSanitized,
               languageHighlightFilename: languageHighlightFilename
         });
+        
+        var patterns = extractPatterns(language.patterns);
+        var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
+              language: languageNameSanitized,
+              languageTokens: patterns,
+              uuid: language.uuid
+        });
+
+
 
         if (devMode) {
           console.log("Not writing, 'cause we're in dev mode, baby.");
