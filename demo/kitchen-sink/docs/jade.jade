@@ -1,158 +1,45 @@
 !!!doctype
 !!!5
+!!!
 
-- var methodSection, constructorSection, propertySection, eventSection;
+include something
 
--function renameMemberTitle(title, count)
-  if title.indexOf("ethods") >= 0
-    span Functions (#{count})
-  else if title.indexOf("ropert") >= 0
-    span Properties (#{count})   
-  else
-    span.AS.AS.AS #{title} (#{count})
+         include another_thing
 
+  // let's talk about it
+
+// 
+  here it is. a block comment!
+ and another row!
+but not here.
+
+     // 
+        a far spaced
+    should be lack of block
+
+   // also not a comment
+     div.attemptAtBlock
+  
+  span#myName
+
+  #{implicit}
+     !{more_explicit}
+
+  #idDiv
+
+    .idDiv
+
+    test(id="tag")
+    header(id="tag", blah="foo", meh="aads")
 mixin article(obj, parents)
-  if typeof obj === 'string'
-    obj = list[obj]
 
-  title = obj.id + (obj.type ? ' (' + obj.type + ')' : '')
-  article.article(id=obj.path, data-title=title)
-    if obj.type === 'section' || obj.type === 'namespace' || obj.type === 'class' || obj.type === 'mixin'
+  mixin bleh()
 
-      if obj.stability
-        mixin markdown
-        
-        span.label.deprecated
-          | Deprecated
-          if obj.deprecated.from
-            | &nbsp; (since #{obj.deprecated.from})
-            if obj.deprecated.off
-              | &nbsp;and will be removed on #{obj.deprecated.off}
-    if obj.alias_of
-      li
-        span.label.alias.single
-          | Aliased as: 
-          != link(obj.alias_of)
-          div.sideToggler
+    mixin clever-name
 
-            div(id='ellipsis_#{obj.id}', class='ellipsis_description')
-              mixin markdown(obj.short_description)
+ -var x = "0";
+ - y each z
 
-            h3(id='#{obj.id}', class='methodToggle methodClicker inactive')
-              &nbsp;&nbsp;&nbsp;
-            div.description
-
-              mixin markdown(obj.description)
-
-              if obj.bound && ~obj.bound.indexOf('#')
-                p.note.methodized
-                  | This method can be called <em>either</em> as an 
-                  != link(obj.bound, ['link-short'], 'instance method')
-                  |  <em>or</em> as a generic method. If calling as generic, pass the instance in as the first argument.
-              else if obj.bound && !~obj.bound.indexOf('#')
-                p.note.functionalized
-                  | This method can be called <em>either</em> as an instance method <em>or</em> as a 
-                  != link(obj.bound, ['link-short'], 'generic method')
-                  |. If calling as generic, pass the instance in as the first argument.
-
-              if obj.arguments
-                h4 Arguments
-                != argumentTable(obj.arguments, ["argument-list", "table", "table-striped", "table-bordered"])
-
-
-              if obj.returns
-                h4 Returns
-                != returnTable(obj.returns, ["return-list", "table", "table-striped", "table-bordered"])
-
-  //- children
-  for child in obj.children.filter(function(x){return x.type === 'section'})
-    mixin article(child, parents.concat(obj))
-  for child in obj.children.filter(function(x){return x.type === 'utility'})
-    mixin article(child, parents.concat(obj))
-
-  for child in obj.children.filter(function(x){return x.type === 'constructor'})
-    - if (!constructorSection)
-      - constructorSection = true
-      h3.sectionHeader Constructors
-    mixin article(child, parents.concat(obj))
-
-  for child in obj.children.filter(function(x){return x.type === 'namespace' || x.type === 'class' || x.type === 'mixin'})
-    mixin article(child, parents.concat(obj))
-
-  for child in obj.children.filter(function(x){return x.type === 'event'})
-    - if (!eventSection)
-      - eventSection = true
-      h3.sectionHeader Events
-    mixin article(child, parents.concat(obj), 'event')
-
-  for child in obj.children.filter(function(x){return x.type === 'class method'})
-    - if (!methodSection)
-      - methodSection = true
-      h3.sectionHeader Methods
-    mixin article(child, parents.concat(obj))
-
-  for child in obj.children.filter(function(x){return x.type === 'class property'})
-    - if (!propertySection)
-      - propertySection = true
-      h3.sectionHeader Properties
-    mixin article(child, parents.concat(obj))
-
-  for child in obj.children.filter(function(x){return x.type === 'instance method'})
-    mixin article(child, parents.concat(obj))
-  for child in obj.children.filter(function(x){return x.type === 'instance property'})
-    mixin article(child, parents.concat(obj))
-  for child in obj.children.filter(function(x){return x.type === 'constant'})
-    mixin article(child, parents.concat(obj))
-
-
-
-mixin api()
-  -pos = 0
-  for obj in tree.children
-    .classContent
-      .membersBackground
-
-      div(class=' members pos#{pos}')
-        div(class=' membersContent pos#{pos}')
-            h1.memberHeader
-              -var heading = obj.path
-              span.name #{heading}
-            
-            -if (true || obj.filename.indexOf("index") < 0)
-              ul(class='nav tabs pos#{pos}', data-tabs='tabs')
-                for selector, title in {'Events': ['event', 'events'], 'Constructors': ['constructor', 'constructors'], 'Class methods': ['class method', 'class_methods'], 'Class properties': ['class property', 'class_properties'], 'Instance methods': ['instance method', 'instance_methods'], 'Instance properties': ['instance property', 'instance_properties'], 'Constants': ['constant', 'constants']}
-                  members = obj.children.filter(function(x){return x.type === selector[0]})
-                    li(class="dropdown", data-dropdown="dropdown")
-                      if members.length
-                         a(href="\#", class="dropdown-toggle", data-toggle="dropdown")
-                            != renameMemberTitle(title, members.length)
-                            b.caret
-                        ul.dropdown-menu
-                          for m in members
-                            li(data-id='#{m.id}', class='memberLink')
-                              mixin link(m, [], true)
-       -pos++
-       -methodSection = constructorSection = propertySection = eventSection = false;
-       mixin article(obj, [])
-
-
-mixin short_description_list(collection)
-  ul.method-details-list
-    for obj in collection
-      if typeof obj === 'string'
-        obj = list[obj]
-      li.method-description
-        h4
-          mixin link(obj)
-        if obj.short_description
-          mixin markdown(obj.short_description)
-
-mixin link(obj, classes, short)
-  l = link(obj, classes, short)
-  != l
-
-mixin links(collection)
-  ul.method-list
-    for obj in collection
-      li
-        mixin link(obj)
+ - var items = ["one", "two", "three"]
+   each item in items
+    li= item

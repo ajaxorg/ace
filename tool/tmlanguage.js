@@ -4,11 +4,16 @@ var util = require("util");
 // for tracking token states
 var startState = { start: [] }, statesObj = { };
 
+
+var args = process.argv.splice(2);
+var tmLanguageFile  = args[0];
+var devMode         = args[1];
+
 var parseString = require("plist").parseString;
 function parseLanguage(languageXml, callback) {
-	parseString(languageXml, function(_, language) {
-		callback(language[0])
-	});
+  parseString(languageXml, function(_, language) {
+    callback(language[0])
+  });
 }
 
 function logDebug(string, obj) {
@@ -80,11 +85,11 @@ function checkForLookBehind(str) {
 function assembleStateObjs(strState, pattern) {
   var patterns = pattern.patterns;
   var stateObj = {};
-
+  var tokenElem = [];
+  
   if (patterns) {
     for (var p in patterns) {
       stateObj = {}; // this is apparently necessary
-
 
       if (patterns[p].include) {
         stateObj.include = patterns[p].include;
@@ -123,7 +128,7 @@ function extractPatterns(patterns) {
     state++;
     var i = 1;
     var tokenArray = [];
-    var tokenObj = {};
+    var tokenObj = { token: [] };
     var stateObj = {};
 
     if (pattern.comment) {
@@ -134,13 +139,24 @@ function extractPatterns(patterns) {
     if (pattern.begin && pattern.end) {
       var strState = "state_" + state;
       if ( pattern.beginCaptures === undefined && pattern.endCaptures === undefined) {
-        tokenObj.token = pattern.captures;
+        tokenObj.token.push(pattern.captures);
       }
       else if (pattern.beginCaptures) {
-        tokenObj.token = pattern.beginCaptures;
+        tokenObj.token.push(pattern.beginCaptures);
       }
       else if (pattern.endCaptures) {
-        tokenObj.token = pattern.endCaptures;
+        tokenObj.token.push(pattern.endCaptures);
+      }
+
+      if (tokenObj.token === undefined) {
+        if (pattern.name)
+          tokenObj.token.push(pattern.name);
+        else 
+          logDebug("There's no token name for this state transition", pattern)
+      }
+
+      if (tokenObj.token === undefined) {
+        tokenObj.token.push(pattern.name);
       }
 
       statesObj[strState] = [ ];
@@ -155,18 +171,27 @@ function extractPatterns(patterns) {
     }
 
     else if (pattern.captures) {
-      tokenObj.token = pattern.captures;
+      tokenObj.token.push([]);
+      tokenObj.token.push(pattern.captures);
       tokenObj.regex = checkForLookBehind(pattern.match);
 
       startState.start.push(tokenObj);
     }
 
     else if (pattern.match) {
-      tokenObj.token = pattern.name;
+      tokenObj.token.push(pattern.name);
       tokenObj.regex = checkForLookBehind(pattern.match);
 
       startState.start.push(tokenObj);
     }
+
+    else if (pattern.include) {
+      tokenObj.token.push(pattern.include);
+      tokenObj.regex = "";
+
+      startState.start.push(tokenObj);
+    }
+
     else {
       logDebug("I've gone through every choice, and have no clue what this is:", pattern);
     }
@@ -187,27 +212,43 @@ function fillTemplate(template, replacements) {
     });
 }
 
-var modeTemplate = fs.readFileSync(__dirname + "/theme_mode.tmpl.js", "utf8");
+var modeTemplate = fs.readFileSync(__dirname + "/mode.tmpl.js", "utf8");
+var modeHighlightTemplate = fs.readFileSync(__dirname + "/mode_highlight_rules.tmpl.js", "utf8");
 
 function convertLanguage(name) {
     var tmLanguage = fs.readFileSync(__dirname + "/" + name, "utf8");
     parseLanguage(tmLanguage, function(language) {
-    var outFile = __dirname + "/../lib/ace/mode/" + language.name.replace(/-/g, "_").toLowerCase() + "_highlight_rules.js";
-    console.log("Converting " + name + " to " + outFile);
-    
-      //console.log(util.inspect(language.patterns, false, 4));
+      var languageHighlightFilename = language.name.replace(/[-_]/g, "").toLowerCase();
+      var languageNameSanitized = language.name.replace(/-/g, "");
+      
+      var languageHighlightFile = __dirname + "/../lib/ace/mode/" + languageHighlightFilename + "_highlight_rules.js";
+      var languageModeFile = __dirname + "/../lib/ace/mode/" + languageHighlightFilename + ".js";
+      
+      console.log("Converting " + name + " to " + languageHighlightFile);
+      
+        if (devMode)
+          console.log(util.inspect(language.patterns, false, 4));
 
-      var patterns = extractPatterns(language.patterns);
-      var lang = fillTemplate(modeTemplate, {
-            language: language.name.replace(/-/g, ""),
-            languageTokens: patterns
-      });
+        var patterns = extractPatterns(language.patterns);
+        var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
+              language: languageNameSanitized,
+              languageTokens: patterns
+        });
 
-      fs.writeFileSync(outFile, lang);
+        var languageMode = fillTemplate(modeTemplate, {
+              language: languageNameSanitized,
+              languageHighlightFilename: languageHighlightFilename
+        });
+
+        if (devMode) {
+          console.log("Not writing, 'cause we're in dev mode, baby.");
+        }
+        else {
+          fs.writeFileSync(languageHighlightFile, languageHighlightRules);
+          fs.writeFileSync(languageModeFile, languageMode);
+        }
     });
 }
-
-var tmLanguageFile  = process.argv.splice(2)[0];
 
 if (tmLanguageFile === undefined) {
   console.error("Please pass in a language file via the command line.");
