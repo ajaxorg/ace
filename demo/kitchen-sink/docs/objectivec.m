@@ -72,7 +72,33 @@ int main( int argc, const char *argv[] ) {
 
 NSChangeSpelling
 
-
+@"0 != SUBQUERY(image, $x, 0 != SUBQUERY($x.bookmarkItems, $y, $y.@count == 0).@count).@count"
 
 @selector(lowercaseString) @selector(uppercaseString:)
 
+NSFetchRequest *localRequest = [[NSFetchRequest alloc] init];  
+localRequest.entity = [NSEntityDescription entityForName:@"VNSource" inManagedObjectContext:context];  
+localRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"resolution" ascending:YES]];  
+NSPredicate *predicate = [NSPredicate predicateWithFormat:@"0 != SUBQUERY(image, $x, 0 != SUBQUERY($x.bookmarkItems, $y, $y.@count == 0).@count).@count"];
+[NSPredicate predicateWithFormat:]
+NSString *predicateString = [NSString stringWithFormat:@"SELF beginsWith[cd] %@", searchString];
+NSPredicate *pred = [NSPredicate predicateWithFormat:predicateString];
+NSArray *filteredKeys = [[myMutableDictionary allKeys] filteredArrayUsingPredicate:pred]; 
+
+localRequest.predicate = [NSPredicate predicateWithFormat:@"whichChart = %@" argumentArray: listChartToDownload];
+localRequest.fetchBatchSize = 100;
+arrayRequest    = [context  executeFetchRequest:localRequest error:&error1];
+
+[localRequest   release];
+
+#ifndef Nil
+#define Nil __DARWIN_NULL   /* id of Nil class */
+#endif
+
+@implementation MyObject
+- (unsigned int)areaOfWidth:(unsigned int)width
+                height:(unsigned int)height
+{
+  return width*height;
+}
+@end
