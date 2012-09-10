@@ -78,7 +78,7 @@ function restoreComments(objStr) {
 }
 
 function checkForLookBehind(str) {
-  var lookbehindRegExp = new RegExp("\\?<[=|!]");
+  var lookbehindRegExp = new RegExp("\\?<[=|!]", "g");
   return lookbehindRegExp.test(str) ? str + " // ERROR: This contains a lookbehind, which JS does not support :(" : str;
 }
 
@@ -228,22 +228,32 @@ function convertLanguage(name) {
       
       console.log("Converting " + name + " to " + languageHighlightFile);
       
-        if (devMode)
+        if (devMode) {
           console.log(util.inspect(language.patterns, false, 4));
-
+          console.log(util.inspect(language.repository, false, 4));
+        }
+        
         var languageMode = fillTemplate(modeTemplate, {
               language: languageNameSanitized,
               languageHighlightFilename: languageHighlightFilename
         });
-        
+
         var patterns = extractPatterns(language.patterns);
+        var repository = {};
+
+        if (language.repository) {
+          for (var r in language.repository) {
+            repository[r] = language.repository[r];
+          }
+          repository = restoreComments(JSON.stringify(repository, null, "    "));
+        }
+
         var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
               language: languageNameSanitized,
               languageTokens: patterns,
+              respositoryRules: "/*** START REPOSITORY RULES " + repository + "END REPOSITORY RULES ***/",
               uuid: language.uuid
         });
-
-
 
         if (devMode) {
           console.log("Not writing, 'cause we're in dev mode, baby.");
