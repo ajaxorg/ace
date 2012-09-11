@@ -1,301 +1,195 @@
 [
  {
   "state": "start",
-  "values": [
-   "h1",
-   ". ",
-   "Textile document"
-  ],
-  "types": [
-   "markup.heading.1",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading.1", "h1" ],
+   [ "keyword", ". " ],
+   [ "text", "Textile document" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "h2",
-   ". ",
-   "Heading Two"
-  ],
-  "types": [
-   "markup.heading.2",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading.2", "h2" ],
+   [ "keyword", ". " ],
+   [ "text", "Heading Two" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "h3",
-   ". ",
-   "A two-line"
-  ],
-  "types": [
-   "markup.heading.3",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading.3", "h3" ],
+   [ "keyword", ". " ],
+   [ "text", "A two-line" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    header"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "    header" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "h2",
-   ". ",
-   "Another two-line"
-  ],
-  "types": [
-   "markup.heading.2",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading.2", "h2" ],
+   [ "keyword", ". " ],
+   [ "text", "Another two-line" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "header"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "header" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Paragraph:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Paragraph:" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "one, two,"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "one, two," ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "thee lines!"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "thee lines!" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "p",
-   "(",
-   "classone",
-   " ",
-   "two",
-   " ",
-   "three",
-   ")",
-   ". ",
-   "This is a paragraph with classes"
-  ],
-  "types": [
-   "markup.heading",
-   "keyword",
-   "string",
-   "text",
-   "string",
-   "text",
-   "string",
-   "keyword",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading", "p" ],
+   [ "keyword", "(" ],
+   [ "string", "classone" ],
+   [ "text", " " ],
+   [ "string", "two" ],
+   [ "text", " " ],
+   [ "string", "three" ],
+   [ "keyword", ")" ],
+   [ "keyword", ". " ],
+   [ "text", "This is a paragraph with classes" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "p",
-   "(",
-   "#",
-   "id",
-   ")",
-   ". ",
-   "(one with an id)"
-  ],
-  "types": [
-   "markup.heading",
-   "keyword",
-   "keyword",
-   "string",
-   "keyword",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading", "p" ],
+   [ "keyword", "(" ],
+   [ "keyword", "#" ],
+   [ "string", "id" ],
+   [ "keyword", ")" ],
+   [ "keyword", ". " ],
+   [ "text", "(one with an id)" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "p",
-   "(",
-   "one",
-   " ",
-   "two",
-   " ",
-   "three",
-   "#",
-   "my_id",
-   ")",
-   ". ",
-   "..classes + id"
-  ],
-  "types": [
-   "markup.heading",
-   "keyword",
-   "string",
-   "text",
-   "string",
-   "text",
-   "string",
-   "keyword",
-   "string",
-   "keyword",
-   "keyword",
-   "text"
+  "data": [
+   [ "markup.heading", "p" ],
+   [ "keyword", "(" ],
+   [ "string", "one" ],
+   [ "text", " " ],
+   [ "string", "two" ],
+   [ "text", " " ],
+   [ "string", "three" ],
+   [ "keyword", "#" ],
+   [ "string", "my_id" ],
+   [ "keyword", ")" ],
+   [ "keyword", ". " ],
+   [ "text", "..classes + id" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "*",
-   " Unordered list"
-  ],
-  "types": [
-   "keyword",
-   "text"
+  "data": [
+   [ "keyword", "*" ],
+   [ "text", " Unordered list" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "**",
-   " sublist"
-  ],
-  "types": [
-   "keyword",
-   "text"
+  "data": [
+   [ "keyword", "**" ],
+   [ "text", " sublist" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "*",
-   " back again!"
-  ],
-  "types": [
-   "keyword",
-   "text"
+  "data": [
+   [ "keyword", "*" ],
+   [ "text", " back again!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "**",
-   " sublist again.."
-  ],
-  "types": [
-   "keyword",
-   "text"
+  "data": [
+   [ "keyword", "**" ],
+   [ "text", " sublist again.." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "#",
-   " ordered"
-  ],
-  "types": [
-   "keyword",
-   "text"
+  "data": [
+   [ "keyword", "#" ],
+   [ "text", " ordered" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "bg. Blockquote!"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "bg. Blockquote!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    This is a two-list blockquote..!"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "    This is a two-list blockquote..!" ]
   ]
  }
 ]

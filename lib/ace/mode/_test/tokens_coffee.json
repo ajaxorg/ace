@@ -1,308 +1,188 @@
 [
  {
   "state": "start",
-  "values": [
-   "#!/usr/bin/env coffee"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "#!/usr/bin/env coffee" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "try"
-  ],
-  "types": [
-   "keyword"
+  "data": [
+   [ "keyword", "try" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "throw",
-   " ",
-   "URIError",
-   " ",
-   "decodeURI",
-   "(",
-   "0xC0ffee",
-   " ",
-   "*",
-   " ",
-   "123456.7e-8",
-   " ",
-   "/",
-   " ",
-   ".9",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "language.support.class",
-   "text",
-   "language.support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "throw" ],
+   [ "text", " " ],
+   [ "language.support.class", "URIError" ],
+   [ "text", " " ],
+   [ "language.support.function", "decodeURI" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "0xC0ffee" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ],
+   [ "text", " " ],
+   [ "constant.numeric", "123456.7e-8" ],
+   [ "text", " " ],
+   [ "keyword.operator", "/" ],
+   [ "text", " " ],
+   [ "constant.numeric", ".9" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "catch",
-   " ",
-   "e"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "catch" ],
+   [ "text", " " ],
+   [ "identifier", "e" ]
   ]
  },
  {
   "state": "qdoc",
-  "values": [
-   "    ",
-   "console",
-   ".log",
-   " ",
-   "'qstring'",
-   " ",
-   "+",
-   " ",
-   "\"qqstring\"",
-   " ",
-   "+",
-   " ",
-   "'''"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "identifier",
-   "text",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "console" ],
+   [ "identifier", ".log" ],
+   [ "text", " " ],
+   [ "string", "'qstring'" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\"qqstring\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "'''" ]
   ]
  },
  {
   "state": "qdoc",
-  "values": [
-   "        qdoc"
-  ],
-  "types": [
-   "string"
+  "data": [
+   [ "string", "        qdoc" ]
   ]
  },
  {
   "state": "qqdoc",
-  "values": [
-   "    '''",
-   " ",
-   "+",
-   " ",
-   "\"\"\""
-  ],
-  "types": [
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "string"
+  "data": [
+   [ "string", "    '''" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\"\"\"" ]
   ]
  },
  {
   "state": "qqdoc",
-  "values": [
-   "        qqdoc"
-  ],
-  "types": [
-   "string"
+  "data": [
+   [ "string", "        qqdoc" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    \"\"\""
-  ],
-  "types": [
-   "string"
+  "data": [
+   [ "string", "    \"\"\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "do",
-   " ",
-   "->"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword.operator"
+  "data": [
+   [ "keyword", "do" ],
+   [ "text", " " ],
+   [ "keyword.operator", "->" ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "    ",
-   "###"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "###" ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "    herecomment"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "    herecomment" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ###"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "    ###" ]
   ]
  },
  {
   "state": "heregex",
-  "values": [
-   "    ",
-   "re",
-   " ",
-   "=",
-   " ",
-   "/regex/imgy",
-   ".test",
-   " ",
-   "///"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "string.regex",
-   "identifier",
-   "text",
-   "string.regex"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "re" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string.regex", "/regex/imgy" ],
+   [ "identifier", ".test" ],
+   [ "text", " " ],
+   [ "string.regex", "///" ]
   ]
  },
  {
   "state": "heregex",
-  "values": [
-   "        ",
-   "heregex",
-   "  # comment"
-  ],
-  "types": [
-   "comment.regex",
-   "string.regex",
-   "comment.regex"
+  "data": [
+   [ "comment.regex", "        " ],
+   [ "string.regex", "heregex" ],
+   [ "comment.regex", "  # comment" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ///imgy"
-  ],
-  "types": [
-   "string.regex"
+  "data": [
+   [ "string.regex", "    ///imgy" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "this",
-   " ",
-   "isnt",
-   ":",
-   " ",
-   "`just JavaScript`"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "keyword",
-   "punctuation.operator",
-   "text",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "this" ],
+   [ "text", " " ],
+   [ "keyword", "isnt" ],
+   [ "punctuation.operator", ":" ],
+   [ "text", " " ],
+   [ "string", "`just JavaScript`" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "undefined"
-  ],
-  "types": [
-   "text",
-   "constant.language"
+  "data": [
+   [ "text", "    " ],
+   [ "constant.language", "undefined" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    "
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "    " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "sentence",
-   " ",
-   "=",
-   " ",
-   "\"#{ 22 / 7 } is a decent approximation of π\""
-  ],
-  "types": [
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "string"
+  "data": [
+   [ "identifier", "sentence" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"#{ 22 / 7 } is a decent approximation of π\"" ]
   ]
  }
 ]

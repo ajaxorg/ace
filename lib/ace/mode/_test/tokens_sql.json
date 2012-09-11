@@ -1,126 +1,73 @@
 [
  {
   "state": "start",
-  "values": [
-   "SELECT",
-   " ",
-   "city",
-   ", ",
-   "COUNT",
-   "(",
-   "id",
-   ")",
-   " ",
-   "AS",
-   " ",
-   "users_count"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "SELECT" ],
+   [ "text", " " ],
+   [ "identifier", "city" ],
+   [ "text", ", " ],
+   [ "support.function", "COUNT" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "id" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "AS" ],
+   [ "text", " " ],
+   [ "identifier", "users_count" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "FROM",
-   " ",
-   "users"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "FROM" ],
+   [ "text", " " ],
+   [ "identifier", "users" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "WHERE",
-   " ",
-   "group_name",
-   " ",
-   "=",
-   " ",
-   "'salesman'"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "string"
+  "data": [
+   [ "keyword", "WHERE" ],
+   [ "text", " " ],
+   [ "identifier", "group_name" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "'salesman'" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "AND",
-   " ",
-   "created",
-   " ",
-   ">",
-   " ",
-   "'2011-05-21'"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "string"
+  "data": [
+   [ "keyword", "AND" ],
+   [ "text", " " ],
+   [ "identifier", "created" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "string", "'2011-05-21'" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "GROUP",
-   " ",
-   "BY",
-   " ",
-   "1"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "keyword", "GROUP" ],
+   [ "text", " " ],
+   [ "keyword", "BY" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "ORDER",
-   " ",
-   "BY",
-   " ",
-   "2",
-   " ",
-   "DESC"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "constant.numeric",
-   "text",
-   "keyword"
+  "data": [
+   [ "keyword", "ORDER" ],
+   [ "text", " " ],
+   [ "keyword", "BY" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "text", " " ],
+   [ "keyword", "DESC" ]
   ]
  }
 ]

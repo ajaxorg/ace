@@ -1,250 +1,150 @@
 [
  {
   "state": "start",
-  "values": [
-   "<",
-   "html",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "html" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "<",
-   "head",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "head" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "css-start",
-  "values": [
-   "    ",
-   "<",
-   "style",
-   " ",
-   "type",
-   "=",
-   "\"text/css\"",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.style",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.style", "style" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"text/css\"" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "        ",
-   ".text-layer",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        " ],
+   [ "variable", ".text-layer" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "            ",
-   "font-family",
-   ": Monaco, ",
-   "\"Courier New\"",
-   ", ",
-   "monospace",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "string",
-   "text",
-   "support.constant.fonts",
-   "text"
+  "data": [
+   [ "text", "            " ],
+   [ "support.type", "font-family" ],
+   [ "text", ": Monaco, " ],
+   [ "string", "\"Courier New\"" ],
+   [ "text", ", " ],
+   [ "support.constant.fonts", "monospace" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "            ",
-   "font-size",
-   ": ",
-   "12",
-   "px",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "constant.numeric",
-   "keyword",
-   "text"
+  "data": [
+   [ "text", "            " ],
+   [ "support.type", "font-size" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "12" ],
+   [ "keyword", "px" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "            ",
-   "cursor",
-   ": ",
-   "text",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.constant",
-   "text"
+  "data": [
+   [ "text", "            " ],
+   [ "support.type", "cursor" ],
+   [ "text", ": " ],
+   [ "support.constant", "text" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "css-start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "</",
-   "style",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.style",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.style", "style" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "</",
-   "head",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "head" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "<",
-   "body",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "body" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "<",
-   "h1",
-   " ",
-   "style",
-   "=",
-   "\"color:red\"",
-   ">",
-   "Juhu Kinners",
-   "</",
-   "h1",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h1" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "style" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"color:red\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Juhu Kinners" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h1" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "</",
-   "body",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "body" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "html",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "html" ],
+   [ "meta.tag", ">" ]
   ]
  }
 ]

@@ -1,70 +1,42 @@
 [
  {
   "state": "start",
-  "values": [
-   "public",
-   " ",
-   "void",
-   " ",
-   "HelloWorld",
-   "(",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "void" ],
+   [ "text", " " ],
+   [ "identifier", "HelloWorld" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "//Say Hello!"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "//Say Hello!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "Console",
-   ".",
-   "WriteLine",
-   "(",
-   "\"Hello World\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "Console" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "WriteLine" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Hello World\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  }
 ]

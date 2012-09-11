@@ -1,324 +1,196 @@
 [
  {
   "state": "start",
-  "values": [
-   "\\usepackage",
-   "{",
-   "amsmath",
-   "}"
-  ],
-  "types": [
-   "keyword",
-   "lparen",
-   "text",
-   "rparen"
+  "data": [
+   [ "keyword", "\\usepackage" ],
+   [ "lparen", "{" ],
+   [ "text", "amsmath" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\\title",
-   "{",
-   "\\LaTeX",
-   "}"
-  ],
-  "types": [
-   "keyword",
-   "lparen",
-   "keyword",
-   "rparen"
+  "data": [
+   [ "keyword", "\\title" ],
+   [ "lparen", "{" ],
+   [ "keyword", "\\LaTeX" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\\date",
-   "{",
-   "}"
-  ],
-  "types": [
-   "keyword",
-   "lparen",
-   "rparen"
+  "data": [
+   [ "keyword", "\\date" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\\begin",
-   "{",
-   "document",
-   "}"
-  ],
-  "types": [
-   "keyword",
-   "lparen",
-   "text",
-   "rparen"
+  "data": [
+   [ "keyword", "\\begin" ],
+   [ "lparen", "{" ],
+   [ "text", "document" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "\\maketitle"
-  ],
-  "types": [
-   "text",
-   "keyword"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\maketitle" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "\\LaTeX",
-   "{",
-   "}",
-   " is a document preparation system for the ",
-   "\\TeX",
-   "{",
-   "}"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "lparen",
-   "rparen",
-   "text",
-   "keyword",
-   "lparen",
-   "rparen"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\LaTeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ],
+   [ "text", " is a document preparation system for the " ],
+   [ "keyword", "\\TeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  typesetting program. It offers programmable desktop publishing"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  typesetting program. It offers programmable desktop publishing" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  features and extensive facilities for automating most aspects of"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  features and extensive facilities for automating most aspects of" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  typesetting and desktop publishing, including numbering and"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  typesetting and desktop publishing, including numbering and" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  cross-referencing, tables and figures, page layout, bibliographies,"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  cross-referencing, tables and figures, page layout, bibliographies," ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  and much more. ",
-   "\\LaTeX",
-   "{",
-   "}",
-   " was originally written in 1984 by Leslie"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "lparen",
-   "rparen",
-   "text"
+  "data": [
+   [ "text", "  and much more. " ],
+   [ "keyword", "\\LaTeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ],
+   [ "text", " was originally written in 1984 by Leslie" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  Lamport and has become the dominant method for using ",
-   "\\TeX",
-   "; few"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text"
+  "data": [
+   [ "text", "  Lamport and has become the dominant method for using " ],
+   [ "keyword", "\\TeX" ],
+   [ "text", "; few" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  people write in plain ",
-   "\\TeX",
-   "{",
-   "}",
-   " anymore. The current version  is"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "lparen",
-   "rparen",
-   "text"
+  "data": [
+   [ "text", "  people write in plain " ],
+   [ "keyword", "\\TeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ],
+   [ "text", " anymore. The current version  is" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "\\LaTeXe",
-   "."
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\LaTeXe" ],
+   [ "text", "." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   " "
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", " " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "% This is a comment; it will not be shown in the final output."
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "% This is a comment; it will not be shown in the final output." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "% The following shows a little of the typesetting power of LaTeX:"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "% The following shows a little of the typesetting power of LaTeX:" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "\\begin",
-   "{",
-   "align",
-   "}"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "lparen",
-   "text",
-   "rparen"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\begin" ],
+   [ "lparen", "{" ],
+   [ "text", "align" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    E &= mc^2                              ",
-   "\\\\"
-  ],
-  "types": [
-   "text",
-   "keyword"
+  "data": [
+   [ "text", "    E &= mc^2                              " ],
+   [ "keyword", "\\\\" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    m &= ",
-   "\\frac",
-   "{",
-   "m_0",
-   "}",
-   "{",
-   "\\sqrt",
-   "{",
-   "1-",
-   "\\frac",
-   "{",
-   "v^2",
-   "}",
-   "{",
-   "c^2",
-   "}",
-   "}",
-   "}"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "lparen",
-   "text",
-   "rparen",
-   "lparen",
-   "keyword",
-   "lparen",
-   "text",
-   "keyword",
-   "lparen",
-   "text",
-   "rparen",
-   "lparen",
-   "text",
-   "rparen",
-   "rparen",
-   "rparen"
+  "data": [
+   [ "text", "    m &= " ],
+   [ "keyword", "\\frac" ],
+   [ "lparen", "{" ],
+   [ "text", "m_0" ],
+   [ "rparen", "}" ],
+   [ "lparen", "{" ],
+   [ "keyword", "\\sqrt" ],
+   [ "lparen", "{" ],
+   [ "text", "1-" ],
+   [ "keyword", "\\frac" ],
+   [ "lparen", "{" ],
+   [ "text", "v^2" ],
+   [ "rparen", "}" ],
+   [ "lparen", "{" ],
+   [ "text", "c^2" ],
+   [ "rparen", "}" ],
+   [ "rparen", "}" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "\\end",
-   "{",
-   "align",
-   "}"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "lparen",
-   "text",
-   "rparen"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\end" ],
+   [ "lparen", "{" ],
+   [ "text", "align" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\\end",
-   "{",
-   "document",
-   "}"
-  ],
-  "types": [
-   "keyword",
-   "lparen",
-   "text",
-   "rparen"
+  "data": [
+   [ "keyword", "\\end" ],
+   [ "lparen", "{" ],
+   [ "text", "document" ],
+   [ "rparen", "}" ]
   ]
  }
 ]
