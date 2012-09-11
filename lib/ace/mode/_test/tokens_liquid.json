@@ -1,1163 +1,698 @@
 [
  {
   "state": "start",
-  "values": [
-   "The following examples can be found in full at http://liquidmarkup.org/"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "The following examples can be found in full at http://liquidmarkup.org/" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Liquid is an extraction from the e-commerce system Shopify."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Liquid is an extraction from the e-commerce system Shopify." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "Shopify powers many thousands of e-commerce stores which all call for unique designs."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Shopify powers many thousands of e-commerce stores which all call for unique designs." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "For this we developed Liquid which allows our customers complete design freedom while"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "For this we developed Liquid which allows our customers complete design freedom while" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "maintaining the integrity of our servers."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "maintaining the integrity of our servers." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Liquid has been in production use since June 2006 and is now used by many other"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Liquid has been in production use since June 2006 and is now used by many other" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "hosted web applications."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "hosted web applications." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "It was developed for usage in Ruby on Rails web applications and integrates seamlessly"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "It was developed for usage in Ruby on Rails web applications and integrates seamlessly" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "as a plugin but it also works excellently as a stand alone library."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "as a plugin but it also works excellently as a stand alone library." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Here's what it looks like:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Here's what it looks like:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "<",
-   "ul",
-   " ",
-   "id",
-   "=",
-   "\"products\"",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "ul" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"products\"" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "for",
-   " ",
-   "product",
-   " ",
-   "in",
-   " ",
-   "products",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "products" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      ",
-   "<",
-   "li",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "      " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "li" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "<",
-   "h2",
-   ">",
-   "{{",
-   " ",
-   "product",
-   ".",
-   "title",
-   " ",
-   "}}",
-   "</",
-   "h2",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "variable",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "variable",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", "." ],
+   [ "identifier", "title" ],
+   [ "text", " " ],
+   [ "variable", "}}" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        Only {{ product.price | format_as_money }}"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "        Only {{ product.price | format_as_money }}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "<",
-   "p",
-   ">",
-   "{{",
-   " ",
-   "product",
-   ".",
-   "description",
-   " | ",
-   "prettyprint",
-   " | ",
-   "truncate",
-   ": ",
-   "200",
-   "  ",
-   "}}",
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "variable",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "support.function",
-   "text",
-   "constant.numeric",
-   "text",
-   "variable",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", "." ],
+   [ "identifier", "description" ],
+   [ "text", " | " ],
+   [ "identifier", "prettyprint" ],
+   [ "text", " | " ],
+   [ "support.function", "truncate" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "200" ],
+   [ "text", "  " ],
+   [ "variable", "}}" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "      ",
-   "</",
-   "li",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "      " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "li" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "endfor",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endfor" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "</",
-   "ul",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "ul" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Some more features include:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Some more features include:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "h2",
-   ">",
-   "Filters",
-   "</",
-   "h2",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Filters" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">",
-   " The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} ",
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", " The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">",
-   "The word \"tobi\" has {{ 'tobi' | size }} letters! ",
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", "The word \"tobi\" has {{ 'tobi' | size }} letters! " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">",
-   "Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} ",
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">",
-   "The date today is {{ 'now' | date: \"%Y %b %d\" }} ",
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", "The date today is {{ 'now' | date: \"%Y %b %d\" }} " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "h2",
-   ">",
-   "If",
-   "</",
-   "h2",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "If" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "if",
-   " ",
-   "user",
-   ".",
-   "name",
-   " ",
-   "=",
-   "=",
-   " ",
-   "'tobi'",
-   " ",
-   "or",
-   " ",
-   "user",
-   ".",
-   "name",
-   " ",
-   "=",
-   "=",
-   " ",
-   "'marc'",
-   " ",
-   "%}",
-   " "
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator",
-   "text",
-   "string",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator",
-   "text",
-   "string",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "identifier", "user" ],
+   [ "text", "." ],
+   [ "identifier", "name" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "'tobi'" ],
+   [ "text", " " ],
+   [ "identifier", "or" ],
+   [ "text", " " ],
+   [ "identifier", "user" ],
+   [ "text", "." ],
+   [ "identifier", "name" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "'marc'" ],
+   [ "text", " " ],
+   [ "variable", "%}" ],
+   [ "text", " " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    hi marc or tobi"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "    hi marc or tobi" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "endif",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endif" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "h2",
-   ">",
-   "Case",
-   "</",
-   "h2",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Case" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "case",
-   " ",
-   "template",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "template" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "when",
-   " ",
-   "'index'",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "string",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "when" ],
+   [ "text", " " ],
+   [ "string", "'index'" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "       Welcome"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "       Welcome" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "when",
-   " ",
-   "'product'",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "string",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "when" ],
+   [ "text", " " ],
+   [ "string", "'product'" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "       ",
-   "{{",
-   " ",
-   "product",
-   ".",
-   "vendor",
-   " | ",
-   "link_to_vendor",
-   " ",
-   "}}",
-   " / {{ product.title }}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "       " ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", "." ],
+   [ "identifier", "vendor" ],
+   [ "text", " | " ],
+   [ "identifier", "link_to_vendor" ],
+   [ "text", " " ],
+   [ "variable", "}}" ],
+   [ "text", " / {{ product.title }}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "else",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "       ",
-   "{{",
-   " ",
-   "page_title",
-   " ",
-   "}}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "identifier",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "       " ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "page_title" ],
+   [ "text", " " ],
+   [ "variable", "}}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "endcase",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endcase" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "h2",
-   ">",
-   "For Loops",
-   "</",
-   "h2",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "For Loops" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "for",
-   " ",
-   "item",
-   " ",
-   "in",
-   " ",
-   "array",
-   " ",
-   "%}",
-   " "
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "identifier", "item" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "array" ],
+   [ "text", " " ],
+   [ "variable", "%}" ],
+   [ "text", " " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{{",
-   " ",
-   "item",
-   " ",
-   "}}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "identifier",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "item" ],
+   [ "text", " " ],
+   [ "variable", "}}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "endfor",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endfor" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "h2",
-   ">",
-   "Tables",
-   "</",
-   "h2",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Tables" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "<",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "tablerow",
-   " ",
-   "item",
-   " ",
-   "in",
-   " ",
-   "items",
-   " ",
-   "cols",
-   ": ",
-   "3",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "constant.numeric",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "tablerow" ],
+   [ "text", " " ],
+   [ "identifier", "item" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "items" ],
+   [ "text", " " ],
+   [ "identifier", "cols" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "3" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "if",
-   " ",
-   "tablerowloop",
-   ".",
-   "col_first",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable.language",
-   "text",
-   "identifier",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "variable.language", "tablerowloop" ],
+   [ "text", "." ],
+   [ "identifier", "col_first" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      First column: {{ item.variable }}"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "      First column: {{ item.variable }}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "else",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      Different column: {{ item.variable }}"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "      Different column: {{ item.variable }}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{%",
-   " ",
-   "endif",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endif" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "{%",
-   " ",
-   "endtablerow",
-   " ",
-   "%}"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "keyword",
-   "text",
-   "variable"
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endtablerow" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "p",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  }
 ]

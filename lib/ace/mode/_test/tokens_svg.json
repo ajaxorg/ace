@@ -1,1611 +1,931 @@
 [
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "<",
-   "svg"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name"
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "svg" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "  ",
-   "width",
-   "=",
-   "\"800\"",
-   " ",
-   "height",
-   "=",
-   "\"600\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "  " ],
+   [ "entity.other.attribute-name", "width" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"800\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "height" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"600\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "  ",
-   "xmlns",
-   "=",
-   "\"http://www.w3.org/2000/svg\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "  " ],
+   [ "entity.other.attribute-name", "xmlns" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"http://www.w3.org/2000/svg\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "onload",
-   "=",
-   "\"StartAnimation(evt)\"",
-   ">"
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "  " ],
+   [ "entity.other.attribute-name", "onload" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"StartAnimation(evt)\"" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "<",
-   "title",
-   ">",
-   "Test Tube Progress Bar",
-   "</",
-   "title",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "title" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Test Tube Progress Bar" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "title" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "<",
-   "desc",
-   ">",
-   "Created for the Web Directions SVG competition",
-   "</",
-   "desc",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "desc" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Created for the Web Directions SVG competition" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "desc" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "  ",
-   "<",
-   "script",
-   " ",
-   "type",
-   "=",
-   "\"text/ecmascript\"",
-   ">",
-   "<",
-   "!",
-   "[",
-   "CDATA",
-   "["
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag",
-   "keyword.operator",
-   "keyword.operator",
-   "paren.lparen",
-   "identifier",
-   "paren.lparen"
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "script" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"text/ecmascript\"" ],
+   [ "meta.tag", ">" ],
+   [ "keyword.operator", "<" ],
+   [ "keyword.operator", "!" ],
+   [ "paren.lparen", "[" ],
+   [ "identifier", "CDATA" ],
+   [ "paren.lparen", "[" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "timevalue",
-   " ",
-   "=",
-   " ",
-   "0",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "timer_increment",
-   " ",
-   "=",
-   " ",
-   "1",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "timer_increment" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "max_time",
-   " ",
-   "=",
-   " ",
-   "100",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "max_time" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "100" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "hickory",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "hickory" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "dickory",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "dickory" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "dock",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "dock" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "i",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "i" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "function",
-   " ",
-   "StartAnimation",
-   "(",
-   "evt",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "entity.name.function",
-   "paren.lparen",
-   "variable.parameter",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "function" ],
+   [ "text", " " ],
+   [ "entity.name.function", "StartAnimation" ],
+   [ "paren.lparen", "(" ],
+   [ "variable.parameter", "evt" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "hickory",
-   "  ",
-   "=",
-   " ",
-   "evt",
-   ".",
-   "target",
-   ".",
-   "ownerDocument",
-   ".",
-   "getElementById",
-   "(",
-   "\"hickory\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "hickory" ],
+   [ "text", "  " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "evt" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "target" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "ownerDocument" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "getElementById" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"hickory\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "dickory",
-   " ",
-   "=",
-   " ",
-   "evt",
-   ".",
-   "target",
-   ".",
-   "ownerDocument",
-   ".",
-   "getElementById",
-   "(",
-   "\"dickory\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "dickory" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "evt" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "target" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "ownerDocument" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "getElementById" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"dickory\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "dock",
-   " ",
-   "=",
-   " ",
-   "evt",
-   ".",
-   "target",
-   ".",
-   "ownerDocument",
-   ".",
-   "getElementById",
-   "(",
-   "\"dock\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "dock" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "evt" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "target" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "ownerDocument" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "getElementById" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"dock\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "ShowAndGrowElement",
-   "(",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "ShowAndGrowElement" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "function",
-   " ",
-   "ShowAndGrowElement",
-   "(",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "entity.name.function",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "function" ],
+   [ "text", " " ],
+   [ "entity.name.function", "ShowAndGrowElement" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "timevalue",
-   " ",
-   "=",
-   " ",
-   "timevalue",
-   " ",
-   "+",
-   " ",
-   "timer_increment",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "identifier", "timer_increment" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "if",
-   " ",
-   "(",
-   "timevalue",
-   " ",
-   ">",
-   " ",
-   "max_time",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "identifier", "max_time" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "return",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "keyword", "return" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "// Scale the text string gradually until it is 20 times larger"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// Scale the text string gradually until it is 20 times larger" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "scalefactor",
-   " ",
-   "=",
-   " ",
-   "(",
-   "timevalue",
-   " ",
-   "*",
-   " ",
-   "650",
-   ")",
-   " ",
-   "/",
-   " ",
-   "max_time",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "scalefactor" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ],
+   [ "text", " " ],
+   [ "constant.numeric", "650" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword.operator", "/" ],
+   [ "text", " " ],
+   [ "identifier", "max_time" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "if",
-   " ",
-   "(",
-   "timevalue",
-   " ",
-   "<",
-   " ",
-   "30",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", "<" ],
+   [ "text", " " ],
+   [ "constant.numeric", "30" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "hickory",
-   ".",
-   "setAttribute",
-   "(",
-   "\"display\"",
-   ",",
-   " ",
-   "\"\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "hickory" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "setAttribute" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"display\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "hickory",
-   ".",
-   "setAttribute",
-   "(",
-   "\"transform\"",
-   ",",
-   " ",
-   "\"translate(\"",
-   " ",
-   "+",
-   " ",
-   "(",
-   "600",
-   "+",
-   "scalefactor",
-   "*",
-   "3",
-   "*",
-   "-1",
-   " ",
-   ")",
-   " ",
-   "+",
-   " ",
-   "\", -144 )\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "constant.numeric",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "constant.numeric",
-   "keyword.operator",
-   "constant.numeric",
-   "text",
-   "paren.rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "hickory" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "setAttribute" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"transform\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"translate(\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "600" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "scalefactor" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "3" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "-1" ],
+   [ "text", " " ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\", -144 )\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "if",
-   " ",
-   "(",
-   "timevalue",
-   " ",
-   ">",
-   " ",
-   "30",
-   " ",
-   "&",
-   "&",
-   " ",
-   "timevalue",
-   " ",
-   "<",
-   " ",
-   "66",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "constant.numeric", "30" ],
+   [ "text", " " ],
+   [ "keyword.operator", "&" ],
+   [ "keyword.operator", "&" ],
+   [ "text", " " ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", "<" ],
+   [ "text", " " ],
+   [ "constant.numeric", "66" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "dickory",
-   ".",
-   "setAttribute",
-   "(",
-   "\"display\"",
-   ",",
-   " ",
-   "\"\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "dickory" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "setAttribute" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"display\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "dickory",
-   ".",
-   "setAttribute",
-   "(",
-   "\"transform\"",
-   ",",
-   " ",
-   "\"translate(\"",
-   " ",
-   "+",
-   " ",
-   "(",
-   "-795",
-   "+",
-   "scalefactor",
-   "*",
-   "2",
-   ")",
-   " ",
-   "+",
-   " ",
-   "\", 0 )\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "constant.numeric",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "dickory" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "setAttribute" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"transform\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"translate(\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "-795" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "scalefactor" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "2" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\", 0 )\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "        ",
-   "if",
-   " ",
-   "(",
-   "timevalue",
-   " ",
-   ">",
-   " ",
-   "66",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "timevalue" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "constant.numeric", "66" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "dock",
-   ".",
-   "setAttribute",
-   "(",
-   "\"display\"",
-   ",",
-   " ",
-   "\"\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "dock" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "setAttribute" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"display\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "            ",
-   "dock",
-   ".",
-   "setAttribute",
-   "(",
-   "\"transform\"",
-   ",",
-   " ",
-   "\"translate(\"",
-   " ",
-   "+",
-   " ",
-   "(",
-   "1450",
-   "+",
-   "scalefactor",
-   "*",
-   "2",
-   "*",
-   "-1",
-   ")",
-   " ",
-   "+",
-   " ",
-   "\", 144 )\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "support.function.dom",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "constant.numeric",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "constant.numeric",
-   "keyword.operator",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "dock" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "setAttribute" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"transform\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"translate(\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "1450" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "scalefactor" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "2" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "-1" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\", 144 )\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "// Call ShowAndGrowElement again <timer_increment> milliseconds later."
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// Call ShowAndGrowElement again <timer_increment> milliseconds later." ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "        ",
-   "setTimeout",
-   "(",
-   "\"ShowAndGrowElement()\"",
-   ",",
-   " ",
-   "timer_increment",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "text",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "setTimeout" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"ShowAndGrowElement()\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "identifier", "timer_increment" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "js-start",
-  "values": [
-   "    ",
-   "window",
-   ".",
-   "ShowAndGrowElement",
-   " ",
-   "=",
-   " ",
-   "ShowAndGrowElement"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "punctuation.operator",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "    " ],
+   [ "variable.language", "window" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "ShowAndGrowElement" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "ShowAndGrowElement" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "]",
-   "]",
-   "</",
-   "script",
-   ">"
-  ],
-  "types": [
-   "text",
-   "paren.rparen",
-   "paren.rparen",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "  " ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", "]" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "script" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "  ",
-   "<",
-   "rect"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name"
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "rect" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "fill",
-   "=",
-   "\"#2e3436\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "fill" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"#2e3436\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "fill-rule",
-   "=",
-   "\"nonzero\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "fill-rule" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"nonzero\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "stroke-width",
-   "=",
-   "\"3\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "stroke-width" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"3\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "y",
-   "=",
-   "\"0\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "y" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"0\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "x",
-   "=",
-   "\"0\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "x" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"0\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "height",
-   "=",
-   "\"600\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "height" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"600\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "width",
-   "=",
-   "\"800\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "width" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"800\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "id",
-   "=",
-   "\"rect3590\"",
-   "/>"
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"rect3590\"" ],
+   [ "meta.tag", "/>" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "<",
-   "text"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "text" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "style",
-   "=",
-   "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "style" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "x",
-   "=",
-   "\"50\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "x" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"50\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "y",
-   "=",
-   "\"350\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "y" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"350\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "id",
-   "=",
-   "\"hickory\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"hickory\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "       ",
-   "display",
-   "=",
-   "\"none\"",
-   ">"
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "display" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"none\"" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        Hickory,",
-   "</",
-   "text",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "        Hickory," ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "text" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "<",
-   "text"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "text" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "style",
-   "=",
-   "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "style" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "x",
-   "=",
-   "\"50\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "x" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"50\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "y",
-   "=",
-   "\"350\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "y" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"350\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "id",
-   "=",
-   "\"dickory\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"dickory\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "       ",
-   "display",
-   "=",
-   "\"none\"",
-   ">"
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "display" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"none\"" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        dickory,",
-   "</",
-   "text",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "        dickory," ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "text" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "    ",
-   "<",
-   "text"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "text" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "style",
-   "=",
-   "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "style" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "x",
-   "=",
-   "\"50\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "x" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"50\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "y",
-   "=",
-   "\"350\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "y" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"350\"" ]
   ]
  },
  {
   "state": "tag_embed_attribute_list",
-  "values": [
-   "       ",
-   "id",
-   "=",
-   "\"dock\""
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"dock\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "       ",
-   "display",
-   "=",
-   "\"none\"",
-   ">"
-  ],
-  "types": [
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag"
+  "data": [
+   [ "text", "       " ],
+   [ "entity.other.attribute-name", "display" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"none\"" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        dock!",
-   "</",
-   "text",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "        dock!" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "text" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "svg",
-   ">"
-  ],
-  "types": [
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "svg" ],
+   [ "meta.tag", ">" ]
   ]
  }
 ]

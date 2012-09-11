@@ -1,337 +1,195 @@
 [
  {
   "state": "start",
-  "values": [
-   "class",
-   " ",
-   "Haxe",
-   " "
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text"
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Haxe" ],
+   [ "text", " " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "{"
-  ],
-  "types": [
-   "paren.lparen"
+  "data": [
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "public",
-   " ",
-   "static",
-   " ",
-   "function",
-   " ",
-   "main",
-   "(",
-   ")",
-   " "
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "static" ],
+   [ "text", " " ],
+   [ "keyword", "function" ],
+   [ "text", " " ],
+   [ "identifier", "main" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "// Say Hello!"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// Say Hello!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "var",
-   " ",
-   "greeting",
-   ":",
-   "String",
-   " ",
-   "=",
-   " ",
-   "\"Hello World\"",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "keyword",
-   "text",
-   "keyword.operator",
-   "text",
-   "string",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "greeting" ],
+   [ "punctuation.operator", ":" ],
+   [ "keyword", "String" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"Hello World\"" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "trace",
-   "(",
-   "greeting",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "trace" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "greeting" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        "
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "        " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "var",
-   " ",
-   "targets",
-   ":",
-   "Array",
-   "<",
-   "String",
-   ">",
-   " ",
-   "=",
-   " ",
-   "[",
-   "\"Flash\"",
-   ",",
-   "\"Javascript\"",
-   ",",
-   "\"PHP\"",
-   ",",
-   "\"Neko\"",
-   ",",
-   "\"C++\"",
-   ",",
-   "\"iOS\"",
-   ",",
-   "\"Android\"",
-   ",",
-   "\"webOS\"",
-   "]",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "keyword",
-   "keyword.operator",
-   "keyword",
-   "keyword.operator",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "string",
-   "punctuation.operator",
-   "string",
-   "punctuation.operator",
-   "string",
-   "punctuation.operator",
-   "string",
-   "punctuation.operator",
-   "string",
-   "punctuation.operator",
-   "string",
-   "punctuation.operator",
-   "string",
-   "punctuation.operator",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "targets" ],
+   [ "punctuation.operator", ":" ],
+   [ "keyword", "Array" ],
+   [ "keyword.operator", "<" ],
+   [ "keyword", "String" ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "paren.lparen", "[" ],
+   [ "string", "\"Flash\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"Javascript\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"PHP\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"Neko\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"C++\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"iOS\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"Android\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"webOS\"" ],
+   [ "paren.rparen", "]" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "trace",
-   "(",
-   "\"Haxe is a great language that can target:\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "trace" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Haxe is a great language that can target:\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "for",
-   " ",
-   "(",
-   "target",
-   " ",
-   "in",
-   " ",
-   "targets",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "target" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "targets" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "trace",
-   " ",
-   "(",
-   "\" - \"",
-   " ",
-   "+",
-   " ",
-   "target",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "            " ],
+   [ "keyword", "trace" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\" - \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "identifier", "target" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "trace",
-   "(",
-   "\"And many more!\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "trace" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"And many more!\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  }
 ]

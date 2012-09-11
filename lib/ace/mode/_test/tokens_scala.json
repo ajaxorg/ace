@@ -1,1287 +1,748 @@
 [
  {
   "state": "start",
-  "values": [
-   "// http://www.scala-lang.org/node/54"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "// http://www.scala-lang.org/node/54" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "package",
-   " ",
-   "examples",
-   ".",
-   "actors"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "package" ],
+   [ "text", " " ],
+   [ "identifier", "examples" ],
+   [ "text", "." ],
+   [ "identifier", "actors" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "import",
-   " ",
-   "scala",
-   ".",
-   "actors",
-   ".",
-   "Actor"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "import" ],
+   [ "text", " " ],
+   [ "identifier", "scala" ],
+   [ "text", "." ],
+   [ "identifier", "actors" ],
+   [ "text", "." ],
+   [ "identifier", "Actor" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "import",
-   " ",
-   "scala",
-   ".",
-   "actors",
-   ".",
-   "Actor",
-   ".",
-   "_"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "import" ],
+   [ "text", " " ],
+   [ "identifier", "scala" ],
+   [ "text", "." ],
+   [ "identifier", "actors" ],
+   [ "text", "." ],
+   [ "identifier", "Actor" ],
+   [ "text", "." ],
+   [ "identifier", "_" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "abstract",
-   " ",
-   "class",
-   " ",
-   "PingMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "abstract" ],
+   [ "text", " " ],
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "case",
-   " ",
-   "object",
-   " ",
-   "Start",
-   " ",
-   "extends",
-   " ",
-   "PingMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Start" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "case",
-   " ",
-   "object",
-   " ",
-   "SendPing",
-   " ",
-   "extends",
-   " ",
-   "PingMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "SendPing" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "case",
-   " ",
-   "object",
-   " ",
-   "Pong",
-   " ",
-   "extends",
-   " ",
-   "PingMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "abstract",
-   " ",
-   "class",
-   " ",
-   "PongMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "abstract" ],
+   [ "text", " " ],
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "PongMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "case",
-   " ",
-   "object",
-   " ",
-   "Ping",
-   " ",
-   "extends",
-   " ",
-   "PongMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PongMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "case",
-   " ",
-   "object",
-   " ",
-   "Stop",
-   " ",
-   "extends",
-   " ",
-   "PongMessage"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Stop" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PongMessage" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "object",
-   " ",
-   "pingpong",
-   " ",
-   "extends",
-   " ",
-   "Application",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "pingpong" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Application" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "val",
-   " ",
-   "pong",
-   " ",
-   "=",
-   " ",
-   "new",
-   " ",
-   "Pong"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "keyword",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "val" ],
+   [ "text", " " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "val",
-   " ",
-   "ping",
-   " ",
-   "=",
-   " ",
-   "new",
-   " ",
-   "Ping",
-   "(",
-   "100000",
-   ", ",
-   "pong",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "val" ],
+   [ "text", " " ],
+   [ "identifier", "ping" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "100000" ],
+   [ "text", ", " ],
+   [ "identifier", "pong" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "ping",
-   ".",
-   "start"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "ping" ],
+   [ "text", "." ],
+   [ "identifier", "start" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "pong",
-   ".",
-   "start"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "pong" ],
+   [ "text", "." ],
+   [ "identifier", "start" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "ping",
-   " ",
-   "!",
-   " ",
-   "Start"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "ping" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Start" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "class",
-   " ",
-   "Ping",
-   "(",
-   "count",
-   ": ",
-   "Int",
-   ", ",
-   "pong",
-   ": ",
-   "Actor",
-   ")",
-   " ",
-   "extends",
-   " ",
-   "Actor",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "support.function",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "count" ],
+   [ "text", ": " ],
+   [ "support.function", "Int" ],
+   [ "text", ", " ],
+   [ "identifier", "pong" ],
+   [ "text", ": " ],
+   [ "identifier", "Actor" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Actor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "def",
-   " ",
-   "act",
-   "(",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "def" ],
+   [ "text", " " ],
+   [ "identifier", "act" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "println",
-   "(",
-   "\"Ping: Initializing with count \"",
-   "+",
-   "count",
-   "+",
-   "\": \"",
-   "+",
-   "pong",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "string",
-   "keyword.operator",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: Initializing with count \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "count" ],
+   [ "keyword.operator", "+" ],
+   [ "string", "\": \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "pong" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "pingsLeft",
-   " ",
-   "=",
-   " ",
-   "count"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "count" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "loop",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "loop" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      ",
-   "react",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "      " ],
+   [ "identifier", "react" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "case",
-   " ",
-   "Start",
-   " ",
-   "=",
-   ">"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Start" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "println",
-   "(",
-   "\"Ping: starting.\"",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: starting.\"" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "pong",
-   " ",
-   "!",
-   " ",
-   "Ping"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "pingsLeft",
-   " ",
-   "=",
-   " ",
-   "pingsLeft",
-   " ",
-   "-",
-   " ",
-   "1"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "case",
-   " ",
-   "SendPing",
-   " ",
-   "=",
-   ">"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "SendPing" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "pong",
-   " ",
-   "!",
-   " ",
-   "Ping"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "pingsLeft",
-   " ",
-   "=",
-   " ",
-   "pingsLeft",
-   " ",
-   "-",
-   " ",
-   "1"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "case",
-   " ",
-   "Pong",
-   " ",
-   "=",
-   ">"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "if",
-   " ",
-   "(",
-   "pingsLeft",
-   " ",
-   "%",
-   " ",
-   "1000",
-   " ",
-   "==",
-   " ",
-   "0",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "%" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1000" ],
+   [ "text", " " ],
+   [ "keyword.operator", "==" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "println",
-   "(",
-   "\"Ping: pong from: \"",
-   "+",
-   "sender",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "keyword.operator",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: pong from: \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "sender" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "if",
-   " ",
-   "(",
-   "pingsLeft",
-   " ",
-   ">",
-   " ",
-   "0",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "self",
-   " ",
-   "!",
-   " ",
-   "SendPing"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "self" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "SendPing" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "else",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "println",
-   "(",
-   "\"Ping: Stop.\"",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: Stop.\"" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "pong",
-   " ",
-   "!",
-   " ",
-   "Stop"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Stop" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "exit",
-   "(",
-   "'stop",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "symbol.constant",
-   "paren.rparen"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "exit" ],
+   [ "paren.lparen", "(" ],
+   [ "symbol.constant", "'stop" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "      " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "  " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "class",
-   " ",
-   "Pong",
-   " ",
-   "extends",
-   " ",
-   "Actor",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Actor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "def",
-   " ",
-   "act",
-   "(",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "def" ],
+   [ "text", " " ],
+   [ "identifier", "act" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "pongCount",
-   " ",
-   "=",
-   " ",
-   "0"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "loop",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "loop" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      ",
-   "react",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "      " ],
+   [ "identifier", "react" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "case",
-   " ",
-   "Ping",
-   " ",
-   "=",
-   ">"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "if",
-   " ",
-   "(",
-   "pongCount",
-   " ",
-   "%",
-   " ",
-   "1000",
-   " ",
-   "==",
-   " ",
-   "0",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "%" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1000" ],
+   [ "text", " " ],
+   [ "keyword.operator", "==" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "println",
-   "(",
-   "\"Pong: ping \"",
-   "+",
-   "pongCount",
-   "+",
-   "\" from \"",
-   "+",
-   "sender",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "string",
-   "keyword.operator",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Pong: ping \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "pongCount" ],
+   [ "keyword.operator", "+" ],
+   [ "string", "\" from \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "sender" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "sender",
-   " ",
-   "!",
-   " ",
-   "Pong"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "sender" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "pongCount",
-   " ",
-   "=",
-   " ",
-   "pongCount",
-   " ",
-   "+",
-   " ",
-   "1"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "case",
-   " ",
-   "Stop",
-   " ",
-   "=",
-   ">"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "keyword.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Stop" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "println",
-   "(",
-   "\"Pong: Stop.\"",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Pong: Stop.\"" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "          ",
-   "exit",
-   "(",
-   "'stop",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "symbol.constant",
-   "paren.rparen"
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "exit" ],
+   [ "paren.lparen", "(" ],
+   [ "symbol.constant", "'stop" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "      ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "      " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "  " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  }
 ]

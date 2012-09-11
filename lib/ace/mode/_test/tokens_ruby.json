@@ -1,170 +1,104 @@
 [
  {
   "state": "start",
-  "values": [
-   "#!/usr/bin/ruby"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "#!/usr/bin/ruby" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "# Program to find the factorial of a number"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "# Program to find the factorial of a number" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "def",
-   " ",
-   "fact",
-   "(",
-   "n",
-   ")"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "keyword", "def" ],
+   [ "text", " " ],
+   [ "identifier", "fact" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "n" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "if",
-   " ",
-   "n",
-   " ",
-   "==",
-   " ",
-   "0"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "identifier", "n" ],
+   [ "text", " " ],
+   [ "keyword.operator", "==" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "1"
-  ],
-  "types": [
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "        " ],
+   [ "constant.numeric", "1" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "else"
-  ],
-  "types": [
-   "text",
-   "keyword"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "else" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "n",
-   " ",
-   "*",
-   " ",
-   "fact",
-   "(",
-   "n",
-   "-1",
-   ")"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "constant.numeric",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "n" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ],
+   [ "text", " " ],
+   [ "identifier", "fact" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "n" ],
+   [ "constant.numeric", "-1" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "end"
-  ],
-  "types": [
-   "text",
-   "keyword"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "end"
-  ],
-  "types": [
-   "keyword"
+  "data": [
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "puts",
-   " ",
-   "fact",
-   "(",
-   "ARGV",
-   "[",
-   "0",
-   "]",
-   ".",
-   "to_i",
-   ")"
-  ],
-  "types": [
-   "support.function",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "variable.class",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "support.function", "puts" ],
+   [ "text", " " ],
+   [ "identifier", "fact" ],
+   [ "paren.lparen", "(" ],
+   [ "variable.class", "ARGV" ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", "]" ],
+   [ "text", "." ],
+   [ "identifier", "to_i" ],
+   [ "paren.rparen", ")" ]
   ]
  }
 ]

@@ -1,129 +1,79 @@
 [
  {
   "state": "comment",
-  "values": [
-   "/*EXPECTED"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "/*EXPECTED" ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "hello world!"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "hello world!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "*/"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "*/" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "class",
-   " ",
-   "Test",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "language.support.class",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "language.support.class", "Test" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "static",
-   " ",
-   "function",
-   " ",
-   "run",
-   "(",
-   ")",
-   " ",
-   ":",
-   " ",
-   "void",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "storage.type",
-   "text",
-   "entity.name.function",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "punctuation.operator",
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "static" ],
+   [ "text", " " ],
+   [ "storage.type", "function" ],
+   [ "text", " " ],
+   [ "entity.name.function", "run" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "punctuation.operator", ":" ],
+   [ "text", " " ],
+   [ "keyword", "void" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "// console.log(\"hello world!\");"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// console.log(\"hello world!\");" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "log",
-   " ",
-   "\"hello world!\"",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "string",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "log" ],
+   [ "text", " " ],
+   [ "string", "\"hello world!\"" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  }
 ]
