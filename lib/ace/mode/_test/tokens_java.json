@@ -1,231 +1,139 @@
 [
  {
   "state": "start",
-  "values": [
-   "public",
-   " ",
-   "class",
-   " ",
-   "InfiniteLoop",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "lparen"
+  "data": [
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "InfiniteLoop" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "comment",
-  "values": [
-   "    ",
-   "/*"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "/*" ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "     * This will cause the program to hang..."
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "     * This will cause the program to hang..." ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "     *"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "     *" ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "     * Taken from:"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "     * Taken from:" ]
   ]
  },
  {
   "state": "comment",
-  "values": [
-   "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "     */"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "     */" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "public",
-   " ",
-   "static",
-   " ",
-   "void",
-   " ",
-   "main",
-   "(",
-   "String",
-   "[",
-   "]",
-   " ",
-   "args",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "lparen",
-   "support.function",
-   "lparen",
-   "rparen",
-   "text",
-   "identifier",
-   "rparen",
-   "text",
-   "lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "static" ],
+   [ "text", " " ],
+   [ "keyword", "void" ],
+   [ "text", " " ],
+   [ "identifier", "main" ],
+   [ "lparen", "(" ],
+   [ "support.function", "String" ],
+   [ "lparen", "[" ],
+   [ "rparen", "]" ],
+   [ "text", " " ],
+   [ "identifier", "args" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "double",
-   " ",
-   "d",
-   " ",
-   "=",
-   " ",
-   "Double",
-   ".",
-   "parseDouble",
-   "(",
-   "\"2.2250738585072012e-308\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "support.function",
-   "text",
-   "identifier",
-   "lparen",
-   "string",
-   "rparen",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "double" ],
+   [ "text", " " ],
+   [ "identifier", "d" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "support.function", "Double" ],
+   [ "text", "." ],
+   [ "identifier", "parseDouble" ],
+   [ "lparen", "(" ],
+   [ "string", "\"2.2250738585072012e-308\"" ],
+   [ "rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "// unreachable code"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// unreachable code" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "System",
-   ".",
-   "out",
-   ".",
-   "println",
-   "(",
-   "\"Value: \"",
-   " ",
-   "+",
-   " ",
-   "d",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.function",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "lparen",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "rparen",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.function", "System" ],
+   [ "text", "." ],
+   [ "identifier", "out" ],
+   [ "text", "." ],
+   [ "identifier", "println" ],
+   [ "lparen", "(" ],
+   [ "string", "\"Value: \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "identifier", "d" ],
+   [ "rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "rparen"
+  "data": [
+   [ "rparen", "}" ]
   ]
  }
 ]

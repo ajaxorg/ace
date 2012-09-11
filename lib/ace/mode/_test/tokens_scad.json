@@ -1,469 +1,267 @@
 [
  {
   "state": "start",
-  "values": [
-   "// ace can highlight scad!"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "// ace can highlight scad!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "module",
-   " ",
-   "Element",
-   "(",
-   "xpos",
-   ", ",
-   "ypos",
-   ", ",
-   "zpos",
-   ")",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "paren.rparen",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "module" ],
+   [ "text", " " ],
+   [ "identifier", "Element" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "xpos" ],
+   [ "text", ", " ],
+   [ "identifier", "ypos" ],
+   [ "text", ", " ],
+   [ "identifier", "zpos" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "translate",
-   "(",
-   "[",
-   "xpos",
-   ",",
-   "ypos",
-   ",",
-   "zpos",
-   "]",
-   ")",
-   "{"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "paren.rparen",
-   "paren.rparen",
-   "paren.lparen"
+  "data": [
+   [ "text", "\t" ],
+   [ "identifier", "translate" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.lparen", "[" ],
+   [ "identifier", "xpos" ],
+   [ "text", "," ],
+   [ "identifier", "ypos" ],
+   [ "text", "," ],
+   [ "identifier", "zpos" ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t",
-   "union",
-   "(",
-   ")",
-   "{"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "paren.lparen"
+  "data": [
+   [ "text", "\t\t" ],
+   [ "identifier", "union" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t\t",
-   "cube",
-   "(",
-   "[",
-   "10",
-   ",",
-   "10",
-   ",",
-   "4",
-   "]",
-   ",",
-   "true",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "identifier",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "\t\t\t" ],
+   [ "identifier", "cube" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "10" ],
+   [ "text", "," ],
+   [ "constant.numeric", "10" ],
+   [ "text", "," ],
+   [ "constant.numeric", "4" ],
+   [ "paren.rparen", "]" ],
+   [ "text", "," ],
+   [ "identifier", "true" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t\t",
-   "cylinder",
-   "(",
-   "10",
-   ",",
-   "15",
-   ",",
-   "5",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "\t\t\t" ],
+   [ "identifier", "cylinder" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "10" ],
+   [ "text", "," ],
+   [ "constant.numeric", "15" ],
+   [ "text", "," ],
+   [ "constant.numeric", "5" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t\t",
-   "translate",
-   "(",
-   "[",
-   "0",
-   ",",
-   "0",
-   ",",
-   "10",
-   "]",
-   ")",
-   "sphere",
-   "(",
-   "5",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "paren.rparen",
-   "identifier",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "\t\t\t" ],
+   [ "identifier", "translate" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "0" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "text", "," ],
+   [ "constant.numeric", "10" ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", ")" ],
+   [ "identifier", "sphere" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "5" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "\t\t" ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "\t" ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "union",
-   "(",
-   ")",
-   "{"
-  ],
-  "types": [
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "paren.lparen"
+  "data": [
+   [ "identifier", "union" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "for",
-   "(",
-   "i",
-   "=",
-   "[",
-   "0",
-   ":",
-   "30",
-   "]",
-   ")",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "paren.lparen",
-   "identifier",
-   "keyword.operator",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "paren.rparen",
-   "paren.lparen"
+  "data": [
+   [ "text", "\t" ],
+   [ "keyword", "for" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "i" ],
+   [ "keyword.operator", "=" ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "0" ],
+   [ "text", ":" ],
+   [ "constant.numeric", "30" ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t# ",
-   "Element",
-   "(",
-   "0",
-   ",",
-   "0",
-   ",",
-   "0",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "\t\t# " ],
+   [ "identifier", "Element" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "0" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t\t",
-   "Element",
-   "(",
-   "15",
-   "*",
-   "i",
-   ",",
-   "0",
-   ",",
-   "0",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "constant.numeric",
-   "keyword.operator",
-   "identifier",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "\t\t" ],
+   [ "identifier", "Element" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "15" ],
+   [ "keyword.operator", "*" ],
+   [ "identifier", "i" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "\t" ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "for",
-   " ",
-   "(",
-   "i",
-   " ",
-   "=",
-   " ",
-   "[",
-   "3",
-   ", ",
-   "5",
-   ", ",
-   "7",
-   ", ",
-   "11",
-   "]",
-   ")",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "paren.rparen",
-   "paren.lparen"
+  "data": [
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "i" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "3" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "5" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "7" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "11" ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "rotate",
-   "(",
-   "[",
-   "i",
-   "*",
-   "10",
-   ",",
-   "0",
-   ",",
-   "0",
-   "]",
-   ")",
-   "scale",
-   "(",
-   "[",
-   "1",
-   ",",
-   "1",
-   ",",
-   "i",
-   "]",
-   ")",
-   "cube",
-   "(",
-   "10",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.lparen",
-   "identifier",
-   "keyword.operator",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "paren.rparen",
-   "identifier",
-   "paren.lparen",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "identifier",
-   "paren.rparen",
-   "paren.rparen",
-   "identifier",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "\t" ],
+   [ "identifier", "rotate" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.lparen", "[" ],
+   [ "identifier", "i" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "10" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "text", "," ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", ")" ],
+   [ "identifier", "scale" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "1" ],
+   [ "text", "," ],
+   [ "constant.numeric", "1" ],
+   [ "text", "," ],
+   [ "identifier", "i" ],
+   [ "paren.rparen", "]" ],
+   [ "paren.rparen", ")" ],
+   [ "identifier", "cube" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "10" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  }
 ]

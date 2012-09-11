@@ -1,1844 +1,1202 @@
 [
  {
   "state": "start",
-  "values": [
-   "Ace (Ajax.org Cloud9 Editor)"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Ace (Ajax.org Cloud9 Editor)" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "============================"
-  ],
-  "types": [
-   "markup.heading.1"
+  "data": [
+   [ "markup.heading.1", "============================" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [",
-   "Cloud9 IDE",
-   "](",
-   "http://www.cloud9ide.com/",
-   ") and the successor of the Mozilla Skywriter (Bespin) Project."
-  ],
-  "types": [
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text"
+  "data": [
+   [ "text", "Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [" ],
+   [ "string", "Cloud9 IDE" ],
+   [ "text", "](" ],
+   [ "markup.underline", "http://www.cloud9ide.com/" ],
+   [ "text", ") and the successor of the Mozilla Skywriter (Bespin) Project." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Features"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Features" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "--------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "--------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "listblock",
-  "values": [
-   "* ",
-   "Syntax highlighting"
-  ],
-  "types": [
-   "markup.list",
-   "markup.list"
+  "data": [
+   [ "markup.list", "* " ],
+   [ "markup.list", "Syntax highlighting" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Automatic indent and outdent"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Automatic indent and outdent" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* An optional command line"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* An optional command line" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Handles huge documents (100,000 lines and more are no problem)"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Handles huge documents (100,000 lines and more are no problem)" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Fully customizable key bindings including VI and Emacs modes"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Fully customizable key bindings including VI and Emacs modes" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Themes (TextMate themes can be imported)"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Themes (TextMate themes can be imported)" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Search and replace with regular expressions"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Search and replace with regular expressions" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Highlight matching parentheses"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Highlight matching parentheses" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Toggle between soft tabs and real tabs"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Toggle between soft tabs and real tabs" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Displays hidden characters"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Displays hidden characters" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Drag and drop text using the mouse"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Drag and drop text using the mouse" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Line wrapping"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Line wrapping" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Unstructured / user code folding"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Unstructured / user code folding" ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "* Live syntax checker (currently JavaScript/CoffeeScript)"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "* Live syntax checker (currently JavaScript/CoffeeScript)" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Take Ace for a spin!"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Take Ace for a spin!" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "--------------------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "--------------------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Check out the Ace live [",
-   "demo",
-   "](",
-   "http://ajaxorg.github.com/ace/",
-   ") or get a [",
-   "Cloud9 IDE account",
-   "](",
-   "http://run.cloud9ide.com",
-   ") to experience Ace while editing one of your own GitHub projects."
-  ],
-  "types": [
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text"
+  "data": [
+   [ "text", "Check out the Ace live [" ],
+   [ "string", "demo" ],
+   [ "text", "](" ],
+   [ "markup.underline", "http://ajaxorg.github.com/ace/" ],
+   [ "text", ") or get a [" ],
+   [ "string", "Cloud9 IDE account" ],
+   [ "text", "](" ],
+   [ "markup.underline", "http://run.cloud9ide.com" ],
+   [ "text", ") to experience Ace while editing one of your own GitHub projects." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "If you want, you can use Ace as a textarea replacement thanks to the [",
-   "Ace Bookmarklet",
-   "](",
-   "http://ajaxorg.github.com/ace/build/textarea/editor.html",
-   ")."
-  ],
-  "types": [
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text"
+  "data": [
+   [ "text", "If you want, you can use Ace as a textarea replacement thanks to the [" ],
+   [ "string", "Ace Bookmarklet" ],
+   [ "text", "](" ],
+   [ "markup.underline", "http://ajaxorg.github.com/ace/build/textarea/editor.html" ],
+   [ "text", ")." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "History"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "History" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "-------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "-------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Previously known as “Bespin” and “Skywriter” it’s now known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started as two independent projects, both aiming to build a no-compromise code editor component for the web. Bespin started as part of Mozilla Labs and was based on the canvas tag, while Ace is the Editor component of the Cloud9 IDE and is using the DOM for rendering. After the release of Ace at JSConf.eu 2010 in Berlin the Skywriter team decided to merge Ace with a simplified version of Skywriter's plugin system and some of Skywriter's extensibility points. All these changes have been merged back to Ace. Both Ajax.org and Mozilla are actively developing and maintaining Ace."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Previously known as “Bespin” and “Skywriter” it’s now known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started as two independent projects, both aiming to build a no-compromise code editor component for the web. Bespin started as part of Mozilla Labs and was based on the canvas tag, while Ace is the Editor component of the Cloud9 IDE and is using the DOM for rendering. After the release of Ace at JSConf.eu 2010 in Berlin the Skywriter team decided to merge Ace with a simplified version of Skywriter's plugin system and some of Skywriter's extensibility points. All these changes have been merged back to Ace. Both Ajax.org and Mozilla are actively developing and maintaining Ace." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Getting the code"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Getting the code" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "----------------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "----------------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    git clone git://github.com/ajaxorg/ace.git"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    git clone git://github.com/ajaxorg/ace.git" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    cd ace"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    cd ace" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    git submodule update --init --recursive"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    git submodule update --init --recursive" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Embedding Ace"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Embedding Ace" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "-------------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "-------------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Ace can be easily embedded into any existing web page. The Ace git repository ships with a pre-packaged version of Ace inside of the ",
-   "`",
-   "build",
-   "`",
-   " directory. The same packaged files are also available as a separate [",
-   "download",
-   "](",
-   "https://github.com/ajaxorg/ace/downloads",
-   "). Simply copy the contents of the ",
-   "`",
-   "src",
-   "`",
-   " subdirectory somewhere into your project and take a look at the included demos of how to use Ace."
-  ],
-  "types": [
-   "text",
-   "support.function",
-   "support.function",
-   "support.function",
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text",
-   "support.function",
-   "support.function",
-   "support.function",
-   "text"
+  "data": [
+   [ "text", "Ace can be easily embedded into any existing web page. The Ace git repository ships with a pre-packaged version of Ace inside of the " ],
+   [ "support.function", "`" ],
+   [ "support.function", "build" ],
+   [ "support.function", "`" ],
+   [ "text", " directory. The same packaged files are also available as a separate [" ],
+   [ "string", "download" ],
+   [ "text", "](" ],
+   [ "markup.underline", "https://github.com/ajaxorg/ace/downloads" ],
+   [ "text", "). Simply copy the contents of the " ],
+   [ "support.function", "`" ],
+   [ "support.function", "src" ],
+   [ "support.function", "`" ],
+   [ "text", " subdirectory somewhere into your project and take a look at the included demos of how to use Ace." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "The easiest version is simply:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "The easiest version is simply:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "html-start",
-  "values": [
-   "```html"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```html" ]
   ]
  },
  {
   "state": "html-start",
-  "values": [
-   "    ",
-   "<",
-   "div",
-   " ",
-   "id",
-   "=",
-   "\"editor\"",
-   ">",
-   "some text",
-   "</",
-   "div",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag",
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "div" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"editor\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", "some text" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "div" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "html-start",
-  "values": [
-   "    ",
-   "<",
-   "script",
-   " ",
-   "src",
-   "=",
-   "\"src/ace.js\"",
-   " ",
-   "type",
-   "=",
-   "\"text/javascript\"",
-   " ",
-   "charset",
-   "=",
-   "\"utf-8\"",
-   ">",
-   "</",
-   "script",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "src" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"src/ace.js\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"text/javascript\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "charset" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"utf-8\"" ],
+   [ "meta.tag", ">" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "html-js-start",
-  "values": [
-   "    ",
-   "<",
-   "script",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "html-js-regex_allowed",
-  "values": [
-   "    ",
-   "window",
-   ".",
-   "onload",
-   " ",
-   "=",
-   " ",
-   "function",
-   "(",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "punctuation.operator",
-   "entity.name.function",
-   "text",
-   "keyword.operator",
-   "text",
-   "storage.type",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "window" ],
+   [ "punctuation.operator", "." ],
+   [ "entity.name.function", "onload" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "storage.type", "function" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "html-js-regex_allowed",
-  "values": [
-   "        ",
-   "var",
-   " ",
-   "editor",
-   " ",
-   "=",
-   " ",
-   "ace",
-   ".",
-   "edit",
-   "(",
-   "\"editor\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "        " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "editor" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "ace" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "edit" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"editor\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "html-js-regex_allowed",
-  "values": [
-   "    ",
-   "}",
-   ";"
-  ],
-  "types": [
-   "text",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "html-start",
-  "values": [
-   "    ",
-   "</",
-   "script",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "With \"editor\" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned ",
-   "`",
-   "absolute",
-   "`",
-   " or ",
-   "`",
-   "relative",
-   "`",
-   " for Ace to work. e.g."
-  ],
-  "types": [
-   "text",
-   "support.function",
-   "support.function",
-   "support.function",
-   "text",
-   "support.function",
-   "support.function",
-   "support.function",
-   "text"
+  "data": [
+   [ "text", "With \"editor\" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned " ],
+   [ "support.function", "`" ],
+   [ "support.function", "absolute" ],
+   [ "support.function", "`" ],
+   [ "text", " or " ],
+   [ "support.function", "`" ],
+   [ "support.function", "relative" ],
+   [ "support.function", "`" ],
+   [ "text", " for Ace to work. e.g." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "css-start",
-  "values": [
-   "```css"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```css" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "    ",
-   "#editor",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "#editor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "        ",
-   "position",
-   ": ",
-   "absolute",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.constant",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "position" ],
+   [ "text", ": " ],
+   [ "support.constant", "absolute" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "        ",
-   "width",
-   ": ",
-   "500",
-   "px",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "constant.numeric",
-   "keyword",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "width" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "500" ],
+   [ "keyword", "px" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "css-ruleset",
-  "values": [
-   "        ",
-   "height",
-   ": ",
-   "400",
-   "px",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "constant.numeric",
-   "keyword",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "height" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "400" ],
+   [ "keyword", "px" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "css-start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "To change the theme simply include the Theme's JavaScript file"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "To change the theme simply include the Theme's JavaScript file" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "html-start",
-  "values": [
-   "```html"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```html" ]
   ]
  },
  {
   "state": "html-start",
-  "values": [
-   "    ",
-   "<",
-   "script",
-   " ",
-   "src",
-   "=",
-   "\"src/theme-twilight.js\"",
-   " ",
-   "type",
-   "=",
-   "\"text/javascript\"",
-   " ",
-   "charset",
-   "=",
-   "\"utf-8\"",
-   ">",
-   "</",
-   "script",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "src" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"src/theme-twilight.js\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"text/javascript\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "charset" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"utf-8\"" ],
+   [ "meta.tag", ">" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "and configure the editor to use the theme:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "and configure the editor to use the theme:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-start",
-  "values": [
-   "```javascript"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```javascript" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "editor",
-   ".",
-   "setTheme",
-   "(",
-   "\"ace/theme/twilight\"",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "editor" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "setTheme" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"ace/theme/twilight\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "By default the editor only supports plain text mode; many other languages are available as separate modules. After including the mode's JavaScript file:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "By default the editor only supports plain text mode; many other languages are available as separate modules. After including the mode's JavaScript file:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "html-start",
-  "values": [
-   "```html"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```html" ]
   ]
  },
  {
   "state": "html-start",
-  "values": [
-   "    ",
-   "<",
-   "script",
-   " ",
-   "src",
-   "=",
-   "\"src/mode-javascript.js\"",
-   " ",
-   "type",
-   "=",
-   "\"text/javascript\"",
-   " ",
-   "charset",
-   "=",
-   "\"utf-8\"",
-   ">",
-   "</",
-   "script",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "text",
-   "entity.other.attribute-name",
-   "keyword.operator",
-   "string",
-   "meta.tag",
-   "meta.tag",
-   "meta.tag.tag-name.script",
-   "meta.tag"
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "src" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"src/mode-javascript.js\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"text/javascript\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "charset" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"utf-8\"" ],
+   [ "meta.tag", ">" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Then the mode can be used like this:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Then the mode can be used like this:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "js-start",
-  "values": [
-   "```javascript"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```javascript" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "var",
-   " ",
-   "JavaScriptMode",
-   " ",
-   "=",
-   " ",
-   "require",
-   "(",
-   "\"ace/mode/javascript\"",
-   ")",
-   ".",
-   "Mode",
-   ";"
-  ],
-  "types": [
-   "text",
-   "storage.type",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "string",
-   "paren.rparen",
-   "punctuation.operator",
-   "identifier",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "JavaScriptMode" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "require" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"ace/mode/javascript\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "Mode" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "js-regex_allowed",
-  "values": [
-   "    ",
-   "editor",
-   ".",
-   "getSession",
-   "(",
-   ")",
-   ".",
-   "setMode",
-   "(",
-   "new",
-   " ",
-   "JavaScriptMode",
-   "(",
-   ")",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "punctuation.operator",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "punctuation.operator",
-   "identifier",
-   "paren.lparen",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "paren.rparen",
-   "paren.rparen",
-   "punctuation.operator"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "editor" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "getSession" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "setMode" ],
+   [ "paren.lparen", "(" ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "JavaScriptMode" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Documentation"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Documentation" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "-------------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "-------------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "You find a lot more sample code in the [",
-   "demo app",
-   "](",
-   "https://github.com/ajaxorg/ace/blob/master/demo/demo.js",
-   ")."
-  ],
-  "types": [
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text"
+  "data": [
+   [ "text", "You find a lot more sample code in the [" ],
+   [ "string", "demo app" ],
+   [ "text", "](" ],
+   [ "markup.underline", "https://github.com/ajaxorg/ace/blob/master/demo/demo.js" ],
+   [ "text", ")." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "There is also some documentation on the [",
-   "wiki page",
-   "](",
-   "https://github.com/ajaxorg/ace/wiki",
-   ")."
-  ],
-  "types": [
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text"
+  "data": [
+   [ "text", "There is also some documentation on the [" ],
+   [ "string", "wiki page" ],
+   [ "text", "](" ],
+   [ "markup.underline", "https://github.com/ajaxorg/ace/wiki" ],
+   [ "text", ")." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "If you still need help, feel free to drop a mail on the [",
-   "ace mailing list",
-   "](",
-   "http://groups.google.com/group/ace-discuss",
-   ")."
-  ],
-  "types": [
-   "text",
-   "string",
-   "text",
-   "markup.underline",
-   "text"
+  "data": [
+   [ "text", "If you still need help, feel free to drop a mail on the [" ],
+   [ "string", "ace mailing list" ],
+   [ "text", "](" ],
+   [ "markup.underline", "http://groups.google.com/group/ace-discuss" ],
+   [ "text", ")." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Running Ace"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Running Ace" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "-----------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "-----------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "After the checkout Ace works out of the box. No build step is required. Open 'editor.html' in any browser except Google Chrome. Google Chrome doesn't allow XMLHTTPRequests from files loaded from disc (i.e. with a file:/// URL). To open Ace in Chrome simply start the bundled mini HTTP server:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "After the checkout Ace works out of the box. No build step is required. Open 'editor.html' in any browser except Google Chrome. Google Chrome doesn't allow XMLHTTPRequests from files loaded from disc (i.e. with a file:/// URL). To open Ace in Chrome simply start the bundled mini HTTP server:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    ./static.py"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    ./static.py" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Or using Node.JS"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Or using Node.JS" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    ./static.js"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    ./static.js" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "The editor can then be opened at http://localhost:8888/index.html."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "The editor can then be opened at http://localhost:8888/index.html." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Package Ace"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Package Ace" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "-----------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "-----------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Before you can build you need to make sure that the submodules are up to date."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. Before you can build you need to make sure that the submodules are up to date." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    git submodule update --init --recursive"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    git submodule update --init --recursive" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Afterwards Ace can be built by calling"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Afterwards Ace can be built by calling" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    ./Makefile.dryice.js normal"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    ./Makefile.dryice.js normal" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "The packaged Ace will be put in the 'build' folder."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "The packaged Ace will be put in the 'build' folder." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "To build the bookmarklet version execute"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "To build the bookmarklet version execute" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    ./Makefile.dryice.js bm"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    ./Makefile.dryice.js bm" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Running the Unit Tests"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Running the Unit Tests" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "----------------------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "----------------------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "The Ace unit tests run on node.js. Before the first run a couple of node modules have to be installed. The easiest way to do this is by using the node package manager (npm). In the Ace base directory simply call"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "The Ace unit tests run on node.js. Before the first run a couple of node modules have to be installed. The easiest way to do this is by using the node package manager (npm). In the Ace base directory simply call" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    npm link ."
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    npm link ." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "To run the tests call:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "To run the tests call:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "githubblock",
-  "values": [
-   "```bash"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```bash" ]
   ]
  },
  {
   "state": "githubblock",
-  "values": [
-   "    node lib/ace/test/all.js"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    node lib/ace/test/all.js" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "```"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "```" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "You can also run the tests in your browser by serving:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "You can also run the tests in your browser by serving:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "    http://localhost:8888/lib/ace/test/tests.html"
-  ],
-  "types": [
-   "support.function"
+  "data": [
+   [ "support.function", "    http://localhost:8888/lib/ace/test/tests.html" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "This makes debugging failing tests way more easier."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "This makes debugging failing tests way more easier." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Contributing"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Contributing" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "------------"
-  ],
-  "types": [
-   "markup.heading.2"
+  "data": [
+   [ "markup.heading.2", "------------" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Ace wouldn't be what it is without contributions! Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. To protect the interests of the Ace contributors and users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is the simplest of agreements, requiring that the contributions you make to an ajax.org project are only those you're allowed to make. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes ten minutes, and only needs to be completed once.  There are two versions of the agreement:"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Ace wouldn't be what it is without contributions! Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. To protect the interests of the Ace contributors and users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is the simplest of agreements, requiring that the contributions you make to an ajax.org project are only those you're allowed to make. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes ten minutes, and only needs to be completed once.  There are two versions of the agreement:" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "listblock",
-  "values": [
-   "1. ",
-   "[The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting."
-  ],
-  "types": [
-   "markup.list",
-   "markup.list"
+  "data": [
+   [ "markup.list", "1. " ],
+   [ "markup.list", "[The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting." ]
   ]
  },
  {
   "state": "listblock",
-  "values": [
-   "2. [The Corporate CLA](https://github.com/ajaxorg/ace/raw/master/doc/Corporate_Contributor_License_Agreement-v2.pdf): have your corporate lawyer review and submit this if your company is going to be contributing to ajax.org  projects"
-  ],
-  "types": [
-   "markup.list"
+  "data": [
+   [ "markup.list", "2. [The Corporate CLA](https://github.com/ajaxorg/ace/raw/master/doc/Corporate_Contributor_License_Agreement-v2.pdf): have your corporate lawyer review and submit this if your company is going to be contributing to ajax.org  projects" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "If you want to contribute to an ajax.org project please print the CLA and fill it out and sign it. Then either send it by snail mail or fax to us or send it back scanned (or as a photo) by email."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "If you want to contribute to an ajax.org project please print the CLA and fill it out and sign it. Then either send it by snail mail or fax to us or send it back scanned (or as a photo) by email." ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Email: fabian.jakobs@web.de"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Email: fabian.jakobs@web.de" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Fax: +31 (0) 206388953"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Fax: +31 (0) 206388953" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Address: Ajax.org B.V."
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Address: Ajax.org B.V." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  Keizersgracht 241"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  Keizersgracht 241" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  1016 EA, Amsterdam"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  1016 EA, Amsterdam" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  the Netherlands"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  the Netherlands" ]
   ]
  }
 ]

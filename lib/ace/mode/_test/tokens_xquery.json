@@ -1,105 +1,64 @@
 [
  {
   "state": "start",
-  "values": [
-   "xquery",
-   " ",
-   "version",
-   " ",
-   "\"1.0\"",
-   ";"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "string",
-   "text"
+  "data": [
+   [ "keyword", "xquery" ],
+   [ "text", " " ],
+   [ "keyword", "version" ],
+   [ "text", " " ],
+   [ "string", "\"1.0\"" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "let",
-   " ",
-   "$message",
-   " :",
-   "=",
-   " ",
-   "\"Hello World!\""
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "variable",
-   "text",
-   "keyword.operator",
-   "text",
-   "string"
+  "data": [
+   [ "keyword", "let" ],
+   [ "text", " " ],
+   [ "variable", "$message" ],
+   [ "text", " :" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"Hello World!\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "return",
-   " <",
-   "results",
-   ">"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "meta.tag",
-   "text"
+  "data": [
+   [ "keyword", "return" ],
+   [ "text", " <" ],
+   [ "meta.tag", "results" ],
+   [ "text", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  <",
-   "message",
-   ">",
-   "{",
-   "$message",
-   "}",
-   "</",
-   "message",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "text",
-   "lparen",
-   "variable",
-   "rparen",
-   "text",
-   "meta.tag",
-   "text"
+  "data": [
+   [ "text", "  <" ],
+   [ "meta.tag", "message" ],
+   [ "text", ">" ],
+   [ "lparen", "{" ],
+   [ "variable", "$message" ],
+   [ "rparen", "}" ],
+   [ "text", "</" ],
+   [ "meta.tag", "message" ],
+   [ "text", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "</",
-   "results",
-   ">"
-  ],
-  "types": [
-   "text",
-   "meta.tag",
-   "text"
+  "data": [
+   [ "text", "</" ],
+   [ "meta.tag", "results" ],
+   [ "text", ">" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  }
 ]

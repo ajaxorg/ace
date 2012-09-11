@@ -1,273 +1,175 @@
 [
  {
   "state": "start",
-  "values": [
-   "Searching for 'var' in /workspace/configs"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Searching for 'var' in /workspace/configs" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "configs/default.js",
-   ":"
-  ],
-  "types": [
-   "string",
-   "text"
+  "data": [
+   [ "string", "configs/default.js" ],
+   [ "text", ":" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    1",
-   ": ",
-   "var fs = require(\"fs\");"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "    1" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var fs = require(\"fs\");" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t2",
-   ": ",
-   "var argv = require('optimist').argv;"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t2" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var argv = require('optimist').argv;" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t3",
-   ": ",
-   "var path = require(\"path\");"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t3" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var path = require(\"path\");" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t5",
-   ": ",
-   "var clientExtensions = {};"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t5" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var clientExtensions = {};" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t6",
-   ": ",
-   "var clientDirs = fs.readdirSync(__dirname + \"/../plugins-client\");"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t6" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var clientDirs = fs.readdirSync(__dirname + \"/../plugins-client\");" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t7",
-   ": ",
-   "for (var i = 0; i < clientDirs.length; i++) {"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t7" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "for (var i = 0; i < clientDirs.length; i++) {" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t8",
-   ":     ",
-   "var dir = clientDirs[i];"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t8" ],
+   [ "c9searchresults.text", ":     " ],
+   [ "c9searchresults.text", "var dir = clientDirs[i];" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t12",
-   ":     ",
-   "var name = dir.split(\".\")[1];"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t12" ],
+   [ "c9searchresults.text", ":     " ],
+   [ "c9searchresults.text", "var name = dir.split(\".\")[1];" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t16",
-   ": ",
-   "var projectDir = (argv.w && path.resolve(process.cwd(), argv.w)) || process.cwd();"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t16" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var projectDir = (argv.w && path.resolve(process.cwd(), argv.w)) || process.cwd();" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t17",
-   ": ",
-   "var fsUrl = \"/workspace\";"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t17" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var fsUrl = \"/workspace\";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t19",
-   ": ",
-   "var port = argv.p || process.env.PORT || 3131;"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t19" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var port = argv.p || process.env.PORT || 3131;" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t20",
-   ": ",
-   "var host = argv.l || \"localhost\";"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t20" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var host = argv.l || \"localhost\";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t22",
-   ": ",
-   "var config = {"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t22" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var config = {" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "configs/local.js",
-   ":"
-  ],
-  "types": [
-   "string",
-   "text"
+  "data": [
+   [ "string", "configs/local.js" ],
+   [ "text", ":" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t2",
-   ": ",
-   "var config = require(\"./default\");"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t2" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var config = require(\"./default\");" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "configs/packed.js",
-   ":"
-  ],
-  "types": [
-   "string",
-   "text"
+  "data": [
+   [ "string", "configs/packed.js" ],
+   [ "text", ":" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t1",
-   ": ",
-   "var config = require(\"./default\");"
-  ],
-  "types": [
-   "c9searchresults.constant.numeric",
-   "c9searchresults.text",
-   "c9searchresults.text"
+  "data": [
+   [ "c9searchresults.constant.numeric", "\t1" ],
+   [ "c9searchresults.text", ": " ],
+   [ "c9searchresults.text", "var config = require(\"./default\");" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Found 15 matches in 3 files"
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "Found 15 matches in 3 files" ]
   ]
  }
 ]
