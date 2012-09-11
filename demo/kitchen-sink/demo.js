@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2010, Ajax.org B.V.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -14,7 +14,7 @@
  *     * Neither the name of Ajax.org B.V. nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -83,48 +83,49 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
-    c9search:   ["C9Search"     , "c9search_results"],
-    coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
-    coldfusion: ["ColdFusion"   , "cfm"],
-    csharp:     ["C#"           , "cs"],
-    css:        ["CSS"          , "css"],
-    diff:       ["Diff"         , "diff|patch"],
-    glsl:       ["Glsl"         , "glsl|frag|vert"],
-    golang:     ["Go"           , "go"],
-    groovy:     ["Groovy"       , "groovy"],
-    haxe:       ["haXe"         , "hx"],
-    html:       ["HTML"         , "htm|html|xhtml"],
-    c_cpp:      ["C/C++"        , "c|cc|cpp|cxx|h|hh|hpp"],
-    clojure:    ["Clojure"      , "clj"],
-    java:       ["Java"         , "java"],
-    javascript: ["JavaScript"   , "js"],
-    json:       ["JSON"         , "json"],
-    jsx:        ["JSX"          , "jsx"],
-    latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
-    less:       ["LESS"         , "less"],
-    liquid:     ["Liquid"       , "liquid"],
-    lua:        ["Lua"          , "lua"],
-    luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
-    markdown:   ["Markdown"     , "md|markdown"],
-    ocaml:      ["OCaml"        , "ml|mli"],
-    perl:       ["Perl"         , "pl|pm"],
-    pgsql:      ["pgSQL"        , "pgsql"],
-    php:        ["PHP"          , "php|phtml"],
-    powershell: ["Powershell"   , "ps1"],
-    python:     ["Python"       , "py"],
-    ruby:       ["Ruby"         , "ru|gemspec|rake|rb"],
-    scad:       ["OpenSCAD"     , "scad"],
-    scala:      ["Scala"        , "scala"],
-    scss:       ["SCSS"         , "scss|sass"],
-    sh:         ["SH"           , "sh|bash|bat"],
-    sql:        ["SQL"          , "sql"],
-    svg:        ["SVG"          , "svg"],
-    tcl:        ["Tcl"          , "tcl"],
-    text:       ["Text"         , "txt"],
-    textile:    ["Textile"      , "textile"],
-    xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
-    xquery:     ["XQuery"       , "xq"],
-    yaml:       ["YAML"         , "yaml"]
+    c9search:   ["C9Search"           , "c9search_results"],
+    coffee:     ["CoffeeScript"       , "coffee|^Cakefile"],
+    coldfusion: ["ColdFusion"         , "cfm"],
+    csharp:     ["C#"                 , "cs"],
+    css:        ["CSS"                , "css"],
+    diff:       ["Diff"               , "diff|patch"],
+    glsl:       ["Glsl"               , "glsl|frag|vert"],
+    golang:     ["Go"                 , "go"],
+    groovy:     ["Groovy"             , "groovy"],
+    haxe:       ["haXe"               , "hx"],
+    html:       ["HTML"               , "htm|html|xhtml"],
+    c_cpp:      ["C/C++"              , "c|cc|cpp|cxx|h|hh|hpp"],
+    clojure:    ["Clojure"            , "clj"],
+    jade:       ["Jade"               , "jade"],
+    java:       ["Java"               , "java"],
+    javascript: ["JavaScript"         , "js"],
+    json:       ["JSON"               , "json"],
+    jsx:        ["JSX"                , "jsx"],
+    latex:      ["LaTeX"              , "latex|tex|ltx|bib"],
+    less:       ["LESS"               , "less"],
+    liquid:     ["Liquid"             , "liquid"],
+    lua:        ["Lua"                , "lua"],
+    luapage:    ["LuaPage"            , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
+    markdown:   ["Markdown"           , "md|markdown"],
+    ocaml:      ["OCaml"              , "ml|mli"],
+    perl:       ["Perl"               , "pl|pm"],
+    pgsql:      ["pgSQL"              , "pgsql"],
+    php:        ["PHP"                , "php|phtml"],
+    powershell: ["Powershell"         , "ps1"],
+    python:     ["Python"             , "py"],
+    ruby:       ["Ruby"               , "ru|gemspec|rake|rb"],
+    scad:       ["OpenSCAD"           , "scad"],
+    scala:      ["Scala"              , "scala"],
+    scss:       ["SCSS"               , "scss|sass"],
+    sh:         ["SH"                 , "sh|bash|bat"],
+    sql:        ["SQL"                , "sql"],
+    svg:        ["SVG"                , "svg"],
+    tcl:        ["Tcl"                , "tcl"],
+    text:       ["Text"               , "txt"],
+    textile:    ["Textile"            , "textile"],
+    xml:        ["XML"                , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
+    xquery:     ["XQuery"             , "xq"],
+    yaml:       ["YAML"               , "yaml"]
 };
 
 for (var name in modesByName) {
@@ -176,6 +177,7 @@ var docs = {
     "docs/groovy.groovy": "Groovy",
     "docs/Haxe.hx": "haXe",
     "docs/html.html": "HTML",
+    "docs/jade.jade": "Jade",
     "docs/java.java": "Java",
     "docs/json.json": "JSON",
     "docs/jsx.jsx": "JSX",

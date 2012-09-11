@@ -76,6 +76,10 @@
   color:#99FFFF;
 }
 
+.ace-tomorrow-night-blue .ace_constant.ace_character  {
+  color:#FFC58F;
+}
+
 .ace-tomorrow-night-blue .ace_constant.ace_language {
   color:#FFC58F;
 }
@@ -109,6 +113,14 @@ background-color:#EBBBFF;
 
 .ace-tomorrow-night-blue .ace_support.ace_function {
   color:#BBDAFF;
+}
+
+.ace-tomorrow-night-blue .ace_support.ace_type {
+  color:#FFEEAD;
+}
+
+.ace-tomorrow-night-blue .ace_support.ace_class {
+  color:#FFEEAD;
 }
 
 .ace-tomorrow-night-blue .ace_storage {

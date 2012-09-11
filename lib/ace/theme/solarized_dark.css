@@ -72,6 +72,10 @@
   color:#859900;
 }
 
+.ace-solarized-dark .ace_constant.ace_character  {
+  color:#CB4B16;
+}
+
 .ace-solarized-dark .ace_constant.ace_language {
   color:#B58900;
 }
@@ -91,6 +95,14 @@
 
 .ace-solarized-dark .ace_support.ace_function {
   color:#268BD2;
+}
+
+.ace-solarized-dark .ace_support.ace_type {
+  color:#859900;
+}
+
+.ace-solarized-dark .ace_support.ace_class {
+  color:#859900;
 }
 
 .ace-solarized-dark .ace_storage {

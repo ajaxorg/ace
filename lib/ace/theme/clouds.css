@@ -1,4 +1,3 @@
-
 .ace-clouds .ace_editor {
   border: 2px solid rgb(159, 159, 159);
 }
@@ -93,7 +92,10 @@
     border-color: #000000;
 }
 
-.ace-clouds .ace_support.ace_function {
+.ace-clouds .ace_support.ace_function,
+.ace-clouds .ace_support.ace_class,
+.ace-clouds .ace_support.ace_type,
+.ace-clouds .ace_support.ace_other {
   color:#C52727;
 }
 

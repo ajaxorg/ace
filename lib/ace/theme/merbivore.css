@@ -57,7 +57,7 @@
 }
 
 .ace-merbivore .ace_gutter_active_line {
-  background-color : #333435;
+  background-color: #333435;
 }
 
 .ace-merbivore .ace_marker-layer .ace_selected_word {
@@ -112,6 +112,10 @@ background-color:#990000;
 
 .ace-merbivore .ace_support.ace_function {
   color:#FC6F09;
+}
+
+.ace-merbivore .ace_support.ace_type {
+  color:#1EDAFB;
 }
 
 .ace-merbivore .ace_storage {
