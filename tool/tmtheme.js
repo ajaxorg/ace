@@ -7,8 +7,6 @@ function parseTheme(themeXml, callback) {
 	});
 }
 
-
-
 var supportedScopes = {
    "keyword": "keyword",
    "keyword.operator": "keyword.operator",
