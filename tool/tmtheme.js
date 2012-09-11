@@ -180,10 +180,15 @@ var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
 var themes = {
+    "chrome": "Chrome",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
     "cobalt": "Cobalt",
+    //"crimson_editor": "Crimson Editor",
     "dawn": "Dawn",
+    //"dreamweaver": "Dreamweaver",
+    //"eclipse": "Eclipse",
+    "github": "GitHub",
     "idle_fingers": "idleFingers",
     "kr_theme": "krTheme",
     "merbivore": "Merbivore",
