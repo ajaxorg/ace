@@ -2,9 +2,9 @@ var fs = require("fs");
 
 var parseString = require("plist").parseString;
 function parseTheme(themeXml, callback) {
-	parseString(themeXml, function(_, theme) {
-		callback(theme[0])
-	});
+    parseString(themeXml, function(_, theme) {
+        callback(theme[0])
+    });
 }
 
 var supportedScopes = {
@@ -209,25 +209,25 @@ var themes = {
 function convertTheme(name) {
     console.log("Converting " + name);
     var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
-	parseTheme(tmTheme, function(theme) {
-		var styles = extractStyles(theme);
+    parseTheme(tmTheme, function(theme) {
+        var styles = extractStyles(theme);
 
-		styles.cssClass = "ace-" + hyphenate(name);
-    styles.uuid = theme.uuid;
-		var css = fillTemplate(cssTemplate, styles);
-		css = css.replace(/[^\{\}]+{\s*}/g, "");
+        styles.cssClass = "ace-" + hyphenate(name);
+        styles.uuid = theme.uuid;
+        var css = fillTemplate(cssTemplate, styles);
+        css = css.replace(/[^\{\}]+{\s*}/g, "");
 
-		var js = fillTemplate(jsTemplate, {
-			name: name,
-			css: "require('ace/requirejs/text!./" + name + ".css')", // quoteString(css), //
-			cssClass: "ace-" + hyphenate(name),
-			isDark: styles.isDark
-		});
+        var js = fillTemplate(jsTemplate, {
+            name: name,
+            css: "require('ace/requirejs/text!./" + name + ".css')", // quoteString(css), //
+            cssClass: "ace-" + hyphenate(name),
+            isDark: styles.isDark
+        });
 
-		fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
-		fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".css", css);
-	})
+        fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
+        fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".css", css);
+    })
 }
 
 for (var name in themes)
-	convertTheme(name);
+    convertTheme(name);

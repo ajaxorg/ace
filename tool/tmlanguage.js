@@ -82,6 +82,21 @@ function checkForLookBehind(str) {
   return lookbehindRegExp.test(str) ? str + " // ERROR: This contains a lookbehind, which JS does not support :(" : str;
 }
 
+function removeXFlag(str) {
+  if (str.slice(0,4) == "(?x)") {
+    str = str.substr(4).replace(/\\[\s#]|\s+|(?:#[^\n]*)/g, function(s) {
+      return s[0] == "\\" ? s[1] : "";
+    });
+  }
+  return str;
+}
+
+function transformRegExp(str) {
+  str = removeXFlag(str);
+  str = checkForLookBehind(str);
+  return str;
+}
+
 function assembleStateObjs(strState, pattern) {
   var patterns = pattern.patterns;
   var stateObj = {};
@@ -96,19 +111,19 @@ function assembleStateObjs(strState, pattern) {
       }
       else {
         stateObj.token = patterns[p].name;
-        stateObj.regex = checkForLookBehind(patterns[p].match);
+        stateObj.regex = transformRegExp(patterns[p].match);
       }
       statesObj[strState].push(stateObj);
     }
 
     stateObj = {};
     stateObj.token = "TODO";
-    stateObj.regex = checkForLookBehind(pattern.end);
+    stateObj.regex = transformRegExp(pattern.end);
     stateObj.next = "start";
   }
   else {
     stateObj.token = "TODO";
-    stateObj.regex = checkForLookBehind(pattern.end);
+    stateObj.regex = transformRegExp(pattern.end);
     stateObj.next = "start";
 
     statesObj[strState].push(stateObj);
@@ -132,7 +147,7 @@ function extractPatterns(patterns) {
     var stateObj = {};
 
     if (pattern.comment) {
-      startState.start.push("          // " + pattern.comment);
+      startState.start.push("          // " + pattern.comment.trim());
     }
 
     // it needs a state transition
@@ -162,7 +177,7 @@ function extractPatterns(patterns) {
       statesObj[strState] = [ ];
       statesObj[strState].push(assembleStateObjs(strState, pattern));
       
-      tokenObj.regex = checkForLookBehind(pattern.begin);
+      tokenObj.regex = transformRegExp(pattern.begin);
       tokenObj.next = strState;
     }
     else if( ( pattern.begin || pattern.end ) && !( pattern.begin && pattern.end ) ) {
@@ -172,12 +187,12 @@ function extractPatterns(patterns) {
     else if (pattern.captures) {
       tokenObj.token.push([]);
       tokenObj.token.push(pattern.captures);
-      tokenObj.regex = checkForLookBehind(pattern.match);
+      tokenObj.regex = transformRegExp(pattern.match);
     }
 
     else if (pattern.match) {
       tokenObj.token.push(pattern.name);
-      tokenObj.regex = checkForLookBehind(pattern.match);
+      tokenObj.regex = transformRegExp(pattern.match);
     }
 
     else if (pattern.include) {
@@ -251,7 +266,7 @@ function convertLanguage(name) {
         var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
               language: languageNameSanitized,
               languageTokens: patterns,
-              respositoryRules: "/*** START REPOSITORY RULES " + repository + "END REPOSITORY RULES ***/",
+              respositoryRules: "/*** START REPOSITORY RULES\n" + repository + "\nEND REPOSITORY RULES ***/",
               uuid: language.uuid
         });
 
