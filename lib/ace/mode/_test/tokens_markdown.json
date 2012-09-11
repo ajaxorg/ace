@@ -59,7 +59,7 @@
    "--------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -215,7 +215,7 @@
    "--------------------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -290,7 +290,7 @@
    "-------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -327,7 +327,7 @@
    "----------------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -338,7 +338,7 @@
  {
   "state": "start",
   "values": [
-   "Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the Mozilla tri-license (MPL/GPL/LGPL), the same license used by Firefox. This license is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!"
+   "Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!"
   ],
   "types": [
    "text"
@@ -414,7 +414,7 @@
    "-------------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -1166,7 +1166,7 @@
    "-------------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -1255,7 +1255,7 @@
    "-----------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -1384,7 +1384,7 @@
    "-----------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -1559,7 +1559,7 @@
    "----------------------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
@@ -1716,7 +1716,7 @@
    "------------"
   ],
   "types": [
-   "markup.heading.1"
+   "markup.heading.2"
   ]
  },
  {
