@@ -110,6 +110,14 @@ background-color:rgba(153, 0, 0, 0.68);
   color:#588E60;
 }
 
+.ace-mono-industrial .ace_support.ace_type {
+  color:#5778B6;
+}
+
+.ace-mono-industrial .ace_support.ace_class {
+  color:#5778B6;
+}
+
 .ace-mono-industrial .ace_storage {
   color:#C23B00;
 }

@@ -115,6 +115,10 @@ background-color:#FE3838;
     border-color: #E6E1DC;
 }
 
+.ace-merbivore-soft .ace_support.ace_type {
+  color:#68C1D8;
+}
+
 .ace-merbivore-soft .ace_storage {
   color:#FC803A;
 }

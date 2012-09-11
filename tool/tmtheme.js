@@ -3,12 +3,9 @@ var fs = require("fs");
 var parseString = require("plist").parseString;
 function parseTheme(themeXml, callback) {
 	parseString(themeXml, function(_, theme) {
-		console.log(theme)
 		callback(theme[0])
 	});
 }
-
-
 
 var supportedScopes = {
    "keyword": "keyword",
@@ -28,6 +25,9 @@ var supportedScopes = {
    "support.function.firebug": "support.firebug",
    "support.function.constant": "support.function.constant",
    "support.constant": "support.constant",
+   "support.class": "support.class",
+   "support.type": "support.type",
+   "support.other": "support.other",
 
    "function": "function",
    "function.buildin": "function.buildin",
@@ -178,10 +178,15 @@ var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
 var themes = {
+    //"chrome": "Chrome",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
     "cobalt": "Cobalt",
+    //"crimson_editor": "Crimson Editor",
     "dawn": "Dawn",
+    //"dreamweaver": "Dreamweaver",
+    //"eclipse": "Eclipse",
+    //"github": "GitHub",
     "idle_fingers": "idleFingers",
     "kr_theme": "krTheme",
     "merbivore": "Merbivore",
@@ -191,6 +196,7 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
+    //"textmate": "Textmate",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
     "tomorrow_night_blue": "Tomorrow-Night-Blue",
@@ -207,6 +213,7 @@ function convertTheme(name) {
 		var styles = extractStyles(theme);
 
 		styles.cssClass = "ace-" + hyphenate(name);
+    styles.uuid = theme.uuid;
 		var css = fillTemplate(cssTemplate, styles);
 		css = css.replace(/[^\{\}]+{\s*}/g, "");
 

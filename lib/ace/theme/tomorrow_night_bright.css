@@ -76,6 +76,10 @@
   color:#70C0B1;
 }
 
+.ace-tomorrow-night-bright .ace_constant.ace_character  {
+  color:#E78C45;
+}
+
 .ace-tomorrow-night-bright .ace_constant.ace_language {
   color:#E78C45;
 }
@@ -109,6 +113,14 @@ background-color:#B798BF;
 
 .ace-tomorrow-night-bright .ace_support.ace_function {
   color:#7AA6DA;
+}
+
+.ace-tomorrow-night-bright .ace_support.ace_type {
+  color:#E7C547;
+}
+
+.ace-tomorrow-night-bright .ace_support.ace_class {
+  color:#E7C547;
 }
 
 .ace-tomorrow-night-bright .ace_storage {
