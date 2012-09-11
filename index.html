@@ -2,39 +2,125 @@
 <html xmlns="http://www.w3.org/1999/xhtml"> 
     <head profile="http://www.w3.org/2005/10/profile"> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-        <title>ACE - Ajax.org Cloud9 Editor</title> 
-        <meta name="description" content=""/> 
-        <meta name="keywords" content=""/> 
+        <title>ACE - The High Performance Code Editor for the Web</title> 
+        <script src="./doc/resources/ace/skeleton/javascripts/jquery.js"></script>
+        <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
+        <script src="./doc/resources/ace/skeleton/javascripts/bootstrap-tab.js"></script>
+        <script src="doc/site/js/main.js"></script>
+        <link rel="stylesheet" href="./doc/resources/ace/skeleton/csses/bootstrap.min.css">
         <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
         <link rel="stylesheet" media="all and (max-device-width: 480px)" href="doc/site/iphone.css"> 
-        <link rel="stylesheet" media="all and (min-device-width: 481px) and (max-device-width: 1024px)" href="doc/site/iphone.css"> 
-        <link rel="stylesheet" href="./doc/resources/ace/skeleton/csses/bootstrap.min.css">
+        <link rel="stylesheet" media="all and (min-device-width: 481px) and (max-device-width: 1024px)" href="doc/site/iphone.css">
         <link rel="stylesheet" href="./doc/resources/ace/skeleton/csses/ace_api.css">
         <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
     </head> 
     <body> 
     	<a href="http://github.com/ajaxorg/ace"><img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
-        
-        <div class="navbar navbar-fixed-top">
-        
-          <div class="navbar-inner">
-            <div class="container"><span class="brand hidden"></span>
-              <ul class="nav topLinks">
-                <li id="ace_site" class="active"><a href="#">Ace</a></li>
-                <li id="ace_api"><a href="api/index.html">Ace API Reference</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div id="header"> 
-        	<div class="content"> 
-                <div class="logo"></div> 
-                <div class="title"></div> 
-            </div> 
-        </div>
         <div id="wrapper"> 
             <div class="content"> 
-                <div class="column1"> 
+                <div class="column2">
+                    <div id="top_container" class="collapse">
+                        <h1>The high performance code editor for the web.</h1>
+                        <div id="page_logo">
+                            <img src="doc/site/images/logo.png" />
+                        </div>
+                    </div>
+                    <div style="clear: both"></div>
+                    <ul id="tabnav" class="nav nav-pills">
+                        <li>
+                            <a href="/"><img src="api/resources/images/ace_logo_menu.png" /></a>
+                        </li>
+                        <li>
+                            <a href="#about" data-toggle="tab">About</a>
+                        </li>
+                        <li class="active">
+                            <a href="#embedding" data-toggle="tab">Embedding Guide</a>
+                        </li>
+                        <li>
+                            <a href="#howto" data-toggle="tab">How-To Guide</a>
+                        </li>
+                        <li>
+                            <a href="#api" data-toggle="tab">API Reference</a>
+                        </li>
+                        <li>
+                            <a href="#production" data-toggle="tab">ACE in Production</a>
+                        </li>
+                        <li>
+                            <a href="#support" data-toggle="tab">Support</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="about">
+                            <h1>About ACE</h1>
+                            <p id="first">Ace is a embeddable code editor written in JavaScript.
+                                It matches and extends the features, usability and performance of existing
+                                native editors such as TextMate, Vim or Eclipse. It can be easily embedded
+                                in any web page and JavaScript application. ACE is maintained as the
+                                primary editor for <a href="http://c9.io">Cloud9 IDE</a>
+                                and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
+                            <h2>Features</h2> 
+                            <div class="divider"></div> 
+                            <ul class="content-list"> 
+                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a></li> 
+                                <li>Auto indentation and outdent</li> 
+                                <li><a href="https://github.com/mozilla/gcli">An optional command line</a></li> 
+                                <li>Work with huge documents (1,000,000+ lines are no problem)</li> 
+                                <li>Fully customizable key bindings including VI and Emacs modes</li> 
+                                <li>Themes (TextMate themes can be imported)</li> 
+                                <li>Search and replace with regular expressions</li> 
+                                <li>Highlight matching parentheses</li> 
+                                <li>Toggle between soft tabs and real tabs</li> 
+                                <li>Displays hidden characters</li> 
+                                <li>Highlight selected word</li> 
+                            </ul>
+                            <h2>History</h2> 
+                            <div class="divider"></div> 
+                            <p>Previously known as “Bespin” or lately “Skywriter” it’s now
+                                known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started
+                                as two independent projects both aiming to build a no compromise
+                                code editor component for the web. Bespin started as part of
+                                Mozilla Labs and was based on the &lt;canvas> tag, while Ace is
+                                the Editor component of the <a href="http://cloud9ide.com">Cloud9 IDE</a>
+                                and is using the DOM for rendering. After the release of Ace at
+                                <a href="http://jsconf.eu/2010/speaker/kick_ass_code_editing_and_end.html">JSConf.eu 2010</a>
+                                in Berlin the Skywriter team decided to merge Ace with a simplified 
+                                version of Skywriter's plugin system  and some of Skywriter&apos;s
+                                extensibility points. All these changes have been merged back to Ace
+                                now, which supersedes Skywriter. Both <a href="http://c9.io">Cloud9 IDE</a>
+                                and <a href="http://mozilla.org">Mozilla</a> are actively developing and
+                                maintaining Ace.</p> 
+                        </div>
+                        <div class="tab-pane fade active in" id="embedding">
+                            <h2>Take Ace for a spin!</h2> 
+                            <div class="divider"></div> 
+                            <p>Check out the <a href="./build/kitchen-sink.html">Ace live demo</a> or get a <a href="http://c9.io">Cloud9 IDE account</a> to experience Ace while editing one of your own GitHub projects.</p> 
+                            <h2>Getting the code</h2> 
+                            <div class="divider"></div> 
+                            <p>Ace is a community project. We actively encourage and support
+                                contributions. The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>.
+                                Ace is a community project released under the BSD license &dash; 
+                                very simple andis friendly to all kinds of projects, whether OSS
+                                or not. We actively encourage and support contributions.
+                                Take charge of your editor and add your favorite language highlighting and keybindings!
+                            <pre>git clone git://github.com/ajaxorg/ace.git</pre></p>
+                        </div>
+                        <div class="tab-pane fade" id="embedding">
+                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                        </div>
+                        <div class="tab-pane fade" id="howto">
+                            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                        </div>
+                        <div class="tab-pane fade" id="api">
+                            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                        </div>
+                        <div class="tab-pane fade" id="production">
+                            <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
+                        </div>
+                        <div class="tab-pane fade" id="support">
+                            <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
+                        </div>
+                    </div>
+                <!--div class="column1"> 
                     <div class="site-menu"> 
                         <h4>User Resources</h4> 
                         <ul class="menu-list"> 
@@ -94,41 +180,7 @@
                             <li>see <a href="http://ajaxorg.github.com/ace-builds/kitchen-sink.html">demo</a> for full list</li> 
                         </ul> 
                     </div> 
-                </div> 
-                <div class="column2"> 
-                    <p id="first">Ace is a standalone code editor written in JavaScript. Our goal is to create a web based code editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page and JavaScript application. Ace is developed as the primary editor for <a href="http://www.cloud9ide.com">Cloud9 IDE</a> and the successor of the Mozilla Skywriter (Bespin) Project.</p> 
- 
-                    <h2>Features</h2> 
-                    <div class="divider"></div> 
- 
-<ul class="content-list"> 
-    <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a></li> 
-    <li>Auto indentation and outdent</li> 
-    <li><a href="https://github.com/mozilla/gcli">An optional command line</a></li> 
-    <li>Work with huge documents (100,000 lines and more are no problem)</li> 
-    <li>Fully customizable key bindings including VI and Emacs modes</li> 
-    <li>Themes (TextMate themes can be imported)</li> 
-    <li>Search and replace with regular expressions</li> 
-    <li>Highlight matching parentheses</li> 
-    <li>Toggle between soft tabs and real tabs</li> 
-    <li>Displays hidden characters</li> 
-    <li>Highlight selected word</li> 
-</ul> 
- 
-                    <h2>Take Ace for a spin!</h2> 
-                    <div class="divider"></div> 
-<p>Check out the <a href="./build/kitchen-sink.html">Ace live demo</a> or get a <a href="http://c9.io">Cloud9 IDE account</a> to experience Ace while editing one of your own GitHub projects.</p> 
- 
-                    <h2>History</h2> 
-                    <div class="divider"></div> 
-                    <p>Previously known as “Bespin” or lately “Skywriter” it’s now known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started as two independent projects both aiming to build a no compromise code editor component for the web. Bespin started as part of Mozilla Labs and was based on the &lt;canvas> tag, while Ace is the Editor component of the <a href="http://cloud9ide.com">Cloud9 IDE</a> and is using the DOM for rendering. After the release of Ace at <a href="http://jsconf.eu/2010/speaker/kick_ass_code_editing_and_end.html">JSConf.eu 2010</a> in Berlin the Skywriter team decided to merge Ace with a simplified version of Skywriter's plugin system  and some of Skywriter's  extensibility points. All these changes have been merged back to Ace now, which supersedes Skywriter. Both <a href="http://ajax.org">Ajax.org</a> and <a href="http://mozilla.org">Mozilla</a> are actively developing and maintaining Ace.</p> 
- 
-                    
-                    <h2>Getting the code</h2> 
-                    <div class="divider"></div> 
-                    <p>Ace is a community project. We actively encourage and support contributions. The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>. Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
-                    <pre>git clone git://github.com/ajaxorg/ace.git</pre></p> 
- 
+                </div-->
                 </div> 
             </div> 
         </div> 

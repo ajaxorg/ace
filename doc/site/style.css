@@ -5,9 +5,9 @@ body {
     
 }
 
-H2, H3, H4 {
-    font-family:Trebuchet MS;
-    font-weight:bold;
+h1, h2, h3, h4, h5, h6 {
+    font-family: Helvetica;
+    font-weight: 100;
     margin:0;
     padding:0;
 }
@@ -19,8 +19,6 @@ H2 {
 }
 
 H3 {
-    font-family:Trebuchet MS;
-    font-weight:bold;
     font-size:22px;
     color:#253741;
     margin-top:43px;
@@ -28,8 +26,6 @@ H3 {
 }
 
 H4 {
-    font-family:Trebuchet MS;
-    font-weight:bold;
     font-size:21px;
     color:#222222;
     margin-bottom:4px;
@@ -51,7 +47,7 @@ PRE{
     padding : 10px;
 }
 
-	#header {
+#header {
 	height: 93px;
 	position: relative;
 	background: url(images/background.png) repeat-x 0 0;
@@ -99,7 +95,7 @@ PRE{
 }
 
 #wrapper {
-    background:url(images/body_background.png) repeat-x 0 0;
+    background:url(images/body_background.png) repeat-x 0 -15px;
     min-height:250px;
 }
 
@@ -107,7 +103,7 @@ PRE{
     font-family:Arial;
     font-size:14px;
     color:#222222;
-    width:1000px;
+    width: 960px;
 }
 
 #wrapper .content .column1 {
@@ -122,8 +118,43 @@ PRE{
     position:relative;
     overflow:hidden;
     float:left;
-    width:600px;
-    padding-top:47px;
+    /*width:600px;*/
+}
+
+#top_container h1 {
+    font-size: 68px;
+    line-height: 60px;
+    width: 515px;
+    float: left;
+    font-weight: 100;
+    font-family: Helvetica;
+    padding-top: 20px;
+    color: #333;
+}
+
+#top_container {
+    overflow: hidden;
+    padding: 15px 40px;
+    height: 280px;
+    -webkit-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
+    opacity: 1;
+    margin-top: 25px;
+}
+
+#top_container.collapse {
+    padding: 0px;
+    height: 0px;
+    opacity: 0;
+    margin: 0;
+}
+
+#page_logo {
+    padding: 15px 0;
+    width: 350px;
+    float: right;
+    text-align: center;
+    height: 220px;
+    padding-top: 45px;
 }
 
 .fork_on_github {
@@ -151,7 +182,7 @@ PRE{
 }
 
 UL.content-list {
-    padding:15px;
+    padding: 15px 20px;
     margin:0;
 }
 
@@ -183,11 +214,8 @@ A:hover {
 }
 
 P#first{
-    background : rgba(255,255,255,0.5);
-    padding : 20px;
     font-size : 16px;
     line-height : 24px;
-    margin : 0 0 20px 0;
 }
 
 #footer {
@@ -223,6 +251,63 @@ UL.menu-footer LI A:hover {
     text-decoration:underline;
 }
 
+.nav-pills.nav {
+    margin: 25px 0 25px 0;
+    padding: 0;
+    border-radius: 5px;
+    border: 1px solid #d7d7d7;
+    background: #eeeeee;
+    background: -moz-linear-gradient(top,  #eeeeee 0%, #cccccc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));
+    background: -webkit-linear-gradient(top,  #eeeeee 0%,#cccccc 100%);
+    background: -o-linear-gradient(top,  #eeeeee 0%,#cccccc 100%);
+    background: -ms-linear-gradient(top,  #eeeeee 0%,#cccccc 100%);
+    background: linear-gradient(to bottom,  #eeeeee 0%,#cccccc 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 );
+    overflow: hidden;
+}
 
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    color: white;
+    background-color: #555;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
+    text-shadow: none;
+}
 
+.nav-tabs > li > a, .nav-pills > li > a {
+    padding-right: 30px;
+    padding-left: 30px;
+    border-right: 1px solid #bbb;
+    border-radius: 0;
+    margin: 0;
+    line-height: 24px;
+    font-size: 14px;
+    color: #333;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 1);
+    -moz-box-shadow: 0 0 1px rgba(255, 255, 255, 1);
+}
 
+.nav.nav-pills li:first-child > a {
+    padding-left: 29px;
+    padding-right: 29px;
+}
+
+.nav.nav-pills li:first-child > a > img {
+    width: 34px;
+}
+
+.nav.nav-pills li:last-child > a {
+    border-right: none;
+}
+
+.tab-content > .active, .pill-content > .active {
+    padding: 35px 30px;
+}
+
+#top_container, .tab-content > .active, .pill-content > .active {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid #DDD;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+}

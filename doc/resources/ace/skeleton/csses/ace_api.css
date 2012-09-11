@@ -94,6 +94,10 @@ blockquote p{
      zoom:1; /* hasLayout ie7 trigger */
 }
 
+.navbar .nav > li > a {
+    padding: 10px 15px 11px;
+}
+
 .navbar {
     text-align:center;
 }
@@ -111,8 +115,8 @@ blockquote p{
     margin-left: 0px;
 }
 .brand {
-    background: transparent url(../images/ace_logo_menu.png) no-repeat 13px 5px;
-    width: 105px;
+    background: transparent url(../images/ace_logo_menu.png) no-repeat 33px 5px;
+    width: 80px;
     outline: none;
     height: 40px;
     padding: 0 10px !important;
