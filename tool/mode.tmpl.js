@@ -53,7 +53,7 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
-    // Extra logic goes here. (see below)
+    // Extra logic goes here. 
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
