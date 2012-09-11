@@ -107,7 +107,6 @@ var modesByName = {
     lua:        ["Lua"                , "lua"],
     luapage:    ["LuaPage"            , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     markdown:   ["Markdown"           , "md|markdown"],
-    objectivec: ["Objective-C/C++"    , "m"],
     ocaml:      ["OCaml"              , "ml|mli"],
     perl:       ["Perl"               , "pl|pm"],
     pgsql:      ["pgSQL"              , "pgsql"],
@@ -188,7 +187,6 @@ var docs = {
     "docs/lua.lua": "Lua",
     "docs/luapage.lp": "LuaPage",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
-    "docs/objectivec.m": "Objective-C",
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
     "docs/perl.pl": "Perl",
