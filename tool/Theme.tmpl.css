@@ -77,16 +77,24 @@
   %keyword.operator%
 }
 
+.%cssClass% .ace_keyword.ace_other.ace_unit {
+  %keyword.other.unit%
+}
+
 .%cssClass% .ace_constant, .%cssClass% .ace_constant.ace_other {
   %constant%
 }
 
-.%cssClass% .ace_constant.ace_character  {
+.%cssClass% .ace_constant.ace_character {
   %constant.character%
 }
 
-.%cssClass% .ace_constant.ace_character.ace_escape  {
+.%cssClass% .ace_constant.ace_character.ace_escape {
   %constant.character.escape%
+}
+
+.%cssClass% .ace_constant.ace_character.ace_entity {
+  %constant.character.entity%
 }
 
 .%cssClass% .ace_constant.ace_language {
@@ -104,6 +112,10 @@
 .%cssClass% .ace_constant.ace_other {
   %constant.other%
 }
+
+.%cssClass% .ace_constant.ace_other.ace_color {
+  %constant.other.color%
+} 
 
 .%cssClass% .ace_invalid {
   %invalid%
@@ -123,6 +135,10 @@
 
 .%cssClass% .ace_support.ace_constant {
   %support.constant%
+}
+
+.%cssClass% support.constant.property-value {
+  %support.constant.property-value%
 }
 
 .%cssClass% .ace_fold {
@@ -210,6 +226,10 @@
   %ace.meta.tag.input%
 }
 
+.%cssClass% .ace_meta.ace_selector {
+  %meta.selector%
+}
+
 .%cssClass% .ace_entity.ace_other.ace_attribute-name {
   %entity.other.attribute-name%
 }
@@ -220,6 +240,14 @@
 
 .%cssClass% .ace_entity.ace_name.ace_function {
   %entity.name.function%
+}
+
+.%cssClass% .ace_entity.ace_other.ace_inherited-class {
+  %entity.other.inherited-class%
+}
+
+.%cssClass% .ace_entity.ace_name.ace_tag {
+  %entity.name.tag%
 }
 
 .%cssClass% .ace_markup.ace_underline {

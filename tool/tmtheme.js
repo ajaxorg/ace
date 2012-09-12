@@ -1,4 +1,8 @@
 var fs = require("fs");
+var path = require("path");
+var util = require("util");
+var cssParse = require("css-parse");
+var cssStringify = require("css-stringify");
 
 var parseString = require("plist").parseString;
 function parseTheme(themeXml, callback) {
@@ -6,6 +10,8 @@ function parseTheme(themeXml, callback) {
         callback(theme[0])
     });
 }
+
+var unsupportedScopes = { };
 
 var supportedScopes = {
    "keyword": "keyword",
@@ -90,22 +96,34 @@ function extractStyles(theme) {
     };
 
     for (var i=1; i<theme.settings.length; i++) {
-        var element = theme.settings[i];
-        if (!element.scope)
-            continue;
-        var scopes = element.scope.split(/\s*[|,]\s*/g);
-        for (var j=0; j<scopes.length; j++) {
-            var scope = scopes[j];
-            if (supportedScopes[scope]) {
-                colors[supportedScopes[scope]] = parseStyles(element.settings);
-            } else {
-                //console.log(scope + " is not supported!");
-            }
+      var element = theme.settings[i];
+      if (!element.scope)
+          continue;
+      var scopes = element.scope.split(/\s*[|,]\s*/g);
+      for (var j=0; j<scopes.length; j++) {
+        var scope = scopes[j];
+        var style = parseStyles(element.settings);
+
+        if (supportedScopes[scope]) {
+            colors[supportedScopes[scope]] = style;
+        } 
+        else if (style.length > 0) {
+          if (unsupportedScopes[scope] === undefined) {
+            unsupportedScopes[scope] = 1;
+          }
+          else {
+            unsupportedScopes[scope] = unsupportedScopes[scope] + 1;
+          }
         }
+      }
     }
 
-    if (!colors.fold)
-        colors.fold = ((colors["entity.name.function"] || colors.keyword).match(/\:([^;]+)/)||[])[1];
+    if (!colors.fold) {
+      var foldSource = colors["entity.name.function"] || colors.keyword;
+      if (foldSource) {
+        colors.fold = foldSource.match(/\:([^;]+)/)[1];
+      }
+    }
 
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
@@ -178,7 +196,7 @@ var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
 var themes = {
-    //"chrome": "Chrome",
+    //"chrome": "Chrome DevTools",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
     "cobalt": "Cobalt",
@@ -196,14 +214,15 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
-    //"textmate": "Textmate",
+    //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
     "tomorrow_night_blue": "Tomorrow-Night-Blue",
     "tomorrow_night_bright": "Tomorrow-Night-Bright",
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "twilight": "Twilight",
-    "vibrant_ink": "Vibrant Ink"
+    "vibrant_ink": "Vibrant Ink",
+    "xcode": "Xcode_default"
 };
 
 function convertTheme(name) {
@@ -224,10 +243,57 @@ function convertTheme(name) {
             isDark: styles.isDark
         });
 
+        // we're going to look for NEW rules in the parsed content only
+        // if such a rule exists, add it to the destination file
+        // this way, we preserve all hand-modified rules in the <theme>.css rules,
+        // (because some exist, for collab1 and ace_indentation_guide
+        try {
+          var outThemeCss = fs.readFileSync(__dirname + "/../lib/ace/theme/" + name + ".css");
+          var parsedExistingFile = cssParse(outThemeCss);
+          var parsedPotentialFile = cssParse(css);
+
+
+          for (var r = 0; r < parsedPotentialFile.stylesheet.rules.length; r++) {
+            var potentialSelectors = parsedPotentialFile.stylesheet.rules[r].selectors;
+            var found = false;
+
+            for (var e = 0; e < parsedExistingFile.stylesheet.rules.length; e++) {
+              var existingSelectors = parsedExistingFile.stylesheet.rules[e].selectors;
+
+              if (existingSelectors.join(",") === potentialSelectors.join(",")) {
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              console.log("Adding NEW rule: ", parsedPotentialFile.stylesheet.rules[r])
+              parsedExistingFile.stylesheet.rules.splice(r, 0, parsedPotentialFile.stylesheet.rules[r]);
+            }
+          }
+          css = cssStringify(parsedExistingFile, { compress: false });
+        } catch(e) {
+          console.log("Creating new file: " +  name + ".css")
+        }
+        
         fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
         fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".css", css);
     })
 }
 
-for (var name in themes)
+for (var name in themes) {
     convertTheme(name);
+}
+
+var sortedUnsupportedScopes = {};
+for (var u in unsupportedScopes) {
+  var value = unsupportedScopes[u];
+  if (sortedUnsupportedScopes[value] === undefined) {
+    sortedUnsupportedScopes[value] = [];
+  }
+  sortedUnsupportedScopes[value].push(u);
+}
+
+console.log("I found these unsupported scopes:");
+console.log(sortedUnsupportedScopes);
+console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
+console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
