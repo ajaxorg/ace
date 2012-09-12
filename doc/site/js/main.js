@@ -1,6 +1,12 @@
  $(function() {
      hljs.initHighlighting();
 
+    $("ul.menu-list li").click(function(e) {
+        if (e.target.tagName === "LI") {
+            console.log($(this).find("a"));
+            window.location = $(this).find("a").attr("href");
+        }
+    });
      var tabs = $("#tabnav"),
          tab_a_selector = "a";
 
@@ -17,10 +23,20 @@
                 firstLoad = false;
                 setTimeout(function() {
                     $("#top_container").removeClass("collapse");
+                    scrollIntoPosition(e.target);
                 }, 700);
             }
             else {
                 $("#top_container").removeClass("collapse");
+                scrollIntoPosition(e.target);
+            }
+        }
+
+        function scrollIntoPosition(el) {
+            if ($("body").scrollTop() > 345) {
+                $("body").stop().animate({
+                    scrollTop: ($(el).offset().top - 15)
+                }, 400);
             }
         }
 
@@ -33,7 +49,7 @@
 
      $(window).on("hashchange", function(e) {
          tabs.each(function() {
-            var idx = $.bbq.getState("nav") || "embedding";
+            var idx = $.bbq.getState("nav") || "about";
             $(this).find(tab_a_selector + "[href='#" + idx + "']").triggerHandler('click');
          });
      }).trigger("hashchange");

@@ -2,7 +2,7 @@ body {
     margin:0;
     padding:0;
     background-color:#e6f5fc;
-    
+    font-family: Helvetica, Arial;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -26,14 +26,12 @@ H2 {
 H3 {
     font-size:22px;
     color:#253741;
-    margin-top:43px;
     margin-bottom:8px;
 }
 
 H4 {
     font-size:21px;
     color:#222222;
-    margin-bottom:4px;
 }
 
 P {
@@ -45,6 +43,7 @@ P {
 
 UL{
     line-height : 22px;
+    font-size: 16px;
 }
 
 #header {
@@ -137,6 +136,7 @@ UL{
     padding: 15px 40px;
     height: 280px;
     -webkit-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
+    -moz-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
     opacity: 1;
     margin-top: 25px;
 }
@@ -182,8 +182,12 @@ UL{
 }
 
 UL.content-list {
-    padding: 15px 20px;
+    padding: 15px 0 15px 20px;
     margin:0;
+}
+
+UL.content-list li {
+    padding-left: 10px;
 }
 
 ul.menu-list {
@@ -194,19 +198,55 @@ ul.menu-list {
     overflow: auto;
 }
 
-UL.menu-list LI {
-    color:#2557b4;
+ul.menu-list li {
+    color: #2557B4;
     font-family: Helvetica, Trebuchet MS;
-    font-size:12px;
+    font-size: 12px;
     padding: 5px;
+    cursor: pointer;
     display: block;
     float: left;
     margin-right: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     width: 100px;
-    height: 80px;
-    border: 1px solid #bbb;
+    height: 90px;
     border-radius: 5px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.7);
+    margin-left: 22px;
+    margin-top: 20px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    -webkit-transition: box-shadow 0.4s;
+    -moz-transition: box-shadow 0.4s;
+    border: 1px solid #999;
+    background-image:     -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),					
+						-webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),					
+						-webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+						
+						-webkit-linear-gradient(-90deg, hsl(0,0%,78%)  0%, 
+														hsl(0,0%,90%) 47%, 
+														hsl(0,0%,78%) 53%,
+														hsl(0,0%,70%)100%);
+}
+
+ul.menu-list li:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+UL.menu-list LI a {
+    position: absolute;
+    bottom: 3px;
+    left: 8px;
+    color: #FFF;
+    text-align: left;
+    font-weight: bold;
+    text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8);
+}
+
+UL.menu-list LI a:hover {
+    text-decoration: none;
 }
 
 A {
@@ -286,6 +326,8 @@ UL.menu-footer LI A:hover {
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 1px rgba(255, 255, 255, 1);
     -moz-box-shadow: 0 0 1px rgba(255, 255, 255, 1);
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
 }
 
 .nav.nav-pills li:first-child > a {
@@ -299,6 +341,12 @@ UL.menu-footer LI A:hover {
 
 .nav.nav-pills li:last-child > a {
     border-right: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+.tab-content {
+    margin-bottom: 100px;
 }
 
 .tab-content > .active, .pill-content > .active {
@@ -312,6 +360,6 @@ UL.menu-footer LI A:hover {
     -moz-border-radius: 5px;
 }
 
-pre .xml .javascript {
+pre .xml .javascript, pre .xml .css {
     opacity: 1;
 }
