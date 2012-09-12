@@ -408,7 +408,7 @@ function buildAce(options) {
 
     if (options.shrinkwrap) {
         copy({
-          source: { root:targetDir },
+          source: { root:targetDir, exclude:/^worker-/ },
           dest: BUILD_DIR + '/ace-min.js'
         });
     }
