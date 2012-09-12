@@ -67,6 +67,7 @@
   color: #49483E
 }
 
+.ace-monokai .ace_entity.ace_name.ace_tag,
 .ace-monokai .ace_keyword,
 .ace-monokai .ace_meta,
 .ace-monokai .ace_storage {

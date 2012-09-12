@@ -68,12 +68,17 @@
 }
 
 .ace-clouds-midnight .ace_keyword,
-.ace-clouds-midnight .ace_meta {
+.ace-clouds-midnight .ace_meta,
+.ace-clouds-midnight .ace_support.ace_constant.ace_property-value {
   color: #927C5D
 }
 
 .ace-clouds-midnight .ace_keyword.ace_operator {
   color: #4B4B4B
+}
+
+.ace-clouds-midnight .ace_keyword.ace_other.ace_unit {
+  color: #366F1A
 }
 
 .ace-clouds-midnight .ace_constant.ace_language {
@@ -82,6 +87,10 @@
 
 .ace-clouds-midnight .ace_constant.ace_numeric {
   color: #46A609
+}
+
+.ace-clouds-midnight .ace_constant.ace_character.ace_entity {
+  color: #A165AC
 }
 
 .ace-clouds-midnight .ace_invalid {
@@ -110,6 +119,7 @@
   color: #3C403B
 }
 
+.ace-clouds-midnight .ace_entity.ace_name.ace_tag,
 .ace-clouds-midnight .ace_entity.ace_other.ace_attribute-name {
   color: #606060
 }

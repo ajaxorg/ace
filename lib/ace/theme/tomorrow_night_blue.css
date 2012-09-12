@@ -83,6 +83,7 @@
 .ace-tomorrow-night-blue .ace_constant.ace_character,
 .ace-tomorrow-night-blue .ace_constant.ace_language,
 .ace-tomorrow-night-blue .ace_constant.ace_numeric,
+.ace-tomorrow-night-blue .ace_keyword.ace_other.ace_unit,
 .ace-tomorrow-night-blue .ace_support.ace_constant,
 .ace-tomorrow-night-blue .ace_variable.ace_parameter {
   color: #FFC58F
@@ -119,6 +120,7 @@
   color: #D1F1A9
 }
 
+.ace-tomorrow-night-blue .ace_entity.ace_name.ace_tag,
 .ace-tomorrow-night-blue .ace_entity.ace_other.ace_attribute-name,
 .ace-tomorrow-night-blue .ace_meta.ace_tag,
 .ace-tomorrow-night-blue .ace_string.ace_regexp,

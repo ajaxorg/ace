@@ -16,6 +16,7 @@ var unsupportedScopes = { };
 var supportedScopes = {
    "keyword": "keyword",
    "keyword.operator": "keyword.operator",
+   "keyword.other.unit": "keyword.other.unit",
 
    "constant": "constant",
    "constant.language": "constant.language",
@@ -23,6 +24,7 @@ var supportedScopes = {
    "constant.numeric": "constant.numeric",
    "constant.character" : "constant.character",
    "constant.character.escape" : "constant.character.escape",
+   "constant.character.entity": "constant.character.entity",
    "constant.other" : "constant.other",
 
    "support": "support",
@@ -31,6 +33,7 @@ var supportedScopes = {
    "support.function.firebug": "support.firebug",
    "support.function.constant": "support.function.constant",
    "support.constant": "support.constant",
+   "support.constant.property-value": "support.constant.property-value",
    "support.class": "support.class",
    "support.type": "support.type",
    "support.other": "support.other",
@@ -59,11 +62,12 @@ var supportedScopes = {
    "meta": "meta",
    "meta.tag.sgml.doctype": "xml_pe",
    "meta.tag": "meta.tag",
-   "meta.tag.form": "meta.tag.form",
+   "meta.selector": "meta.selector",
    
    "entity.other.attribute-name": "entity.other.attribute-name",
    "entity.name.function": "entity.name.function",
    "entity.name": "entity.name",
+   "entity.name.tag": "entity.name.tag",
 
    "markup.heading": "markup.heading",
    "markup.heading.1": "markup.heading.1",

@@ -67,6 +67,7 @@
   color: #404040
 }
 
+.ace-merbivore .ace_entity.ace_name.ace_tag,
 .ace-merbivore .ace_keyword,
 .ace-merbivore .ace_meta,
 .ace-merbivore .ace_meta.ace_tag,

@@ -82,6 +82,7 @@
 .ace-tomorrow .ace_constant.ace_character,
 .ace-tomorrow .ace_constant.ace_language,
 .ace-tomorrow .ace_constant.ace_numeric,
+.ace-tomorrow .ace_keyword.ace_other.ace_unit,
 .ace-tomorrow .ace_support.ace_constant,
 .ace-tomorrow .ace_variable.ace_parameter {
   color: #F5871F
@@ -122,6 +123,7 @@
   color: #718C00
 }
 
+.ace-tomorrow .ace_entity.ace_name.ace_tag,
 .ace-tomorrow .ace_entity.ace_other.ace_attribute-name,
 .ace-tomorrow .ace_meta.ace_tag,
 .ace-tomorrow .ace_string.ace_regexp,

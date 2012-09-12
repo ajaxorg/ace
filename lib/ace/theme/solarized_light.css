@@ -93,6 +93,7 @@
 }
 
 .ace-solarized-light .ace_entity.ace_name.ace_function,
+.ace-solarized-light .ace_entity.ace_name.ace_tag,
 .ace-solarized-light .ace_support.ace_function,
 .ace-solarized-light .ace_variable,
 .ace-solarized-light .ace_variable.ace_language {

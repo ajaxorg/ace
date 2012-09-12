@@ -92,6 +92,7 @@
 }
 
 .ace-solarized-dark .ace_entity.ace_name.ace_function,
+.ace-solarized-dark .ace_entity.ace_name.ace_tag,
 .ace-solarized-dark .ace_support.ace_function,
 .ace-solarized-dark .ace_variable,
 .ace-solarized-dark .ace_variable.ace_language {

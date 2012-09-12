@@ -83,6 +83,7 @@
 .ace-tomorrow-night-eighties .ace_constant.ace_character,
 .ace-tomorrow-night-eighties .ace_constant.ace_language,
 .ace-tomorrow-night-eighties .ace_constant.ace_numeric,
+.ace-tomorrow-night-eighties .ace_keyword.ace_other.ace_unit,
 .ace-tomorrow-night-eighties .ace_support.ace_constant,
 .ace-tomorrow-night-eighties .ace_variable.ace_parameter {
   color: #F99157
@@ -123,6 +124,7 @@
   color: #999999
 }
 
+.ace-tomorrow-night-eighties .ace_entity.ace_name.ace_tag,
 .ace-tomorrow-night-eighties .ace_entity.ace_other.ace_attribute-name,
 .ace-tomorrow-night-eighties .ace_meta.ace_tag,
 .ace-tomorrow-night-eighties .ace_variable {
