@@ -13,7 +13,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h2, h3, h4, h5, h6 {
-    padding-top: 10px;
+    padding-top: 30px;
+    border-bottom: 1px solid #bedaea;
 }
 
 H2 {
@@ -44,12 +45,6 @@ P {
 
 UL{
     line-height : 22px;
-}
-
-PRE{
-    background : #333;
-    color : white;
-    padding : 10px;
 }
 
 #header {
@@ -177,7 +172,7 @@ PRE{
 }
 
 .divider {
-    height:3px;
+    height: 1px;
     background-color:#bedaea;
     margin-bottom:3px;
 }
@@ -191,22 +186,27 @@ UL.content-list {
     margin:0;
 }
 
-UL.menu-list {
-    padding:0;
-    margin:0 0 20px 0;
-    list-style-type:none;
-    line-height : 16px;
+ul.menu-list {
+    padding: 0;
+    margin: 15px 0 20px 0;
+    list-style-type: none;
+    line-height: 16px;
+    overflow: auto;
 }
 
 UL.menu-list LI {
     color:#2557b4;
-    font-family:Trebuchet MS;
+    font-family: Helvetica, Trebuchet MS;
     font-size:12px;
-    padding:1px 0;
-}
-
-UL.menu-list LI:last-child {
-    border-bottom:0;
+    padding: 5px;
+    display: block;
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    width: 100px;
+    height: 80px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
 }
 
 A {
@@ -310,4 +310,8 @@ UL.menu-footer LI A:hover {
     border: 1px solid #DDD;
     border-radius: 5px;
     -moz-border-radius: 5px;
+}
+
+pre .xml .javascript {
+    opacity: 1;
 }

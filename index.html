@@ -7,7 +7,9 @@
         <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
         <script src="./doc/resources/ace/skeleton/javascripts/bootstrap-tab.js"></script>
         <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/ace.js"></script>
+        <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
         <script src="doc/site/js/main.js"></script>
+        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
         <link rel="stylesheet" href="./doc/resources/ace/skeleton/csses/bootstrap.min.css">
         <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
         <link rel="stylesheet" media="all and (max-device-width: 480px)" href="doc/site/iphone.css">
@@ -15,7 +17,7 @@
         <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
     </head> 
     <body> 
-    	<a href="http://github.com/ajaxorg/ace"><img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
+        <a href="http://github.com/ajaxorg/ace"><img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
         <div id="wrapper"> 
             <div class="content"> 
                 <div class="column2">
@@ -59,7 +61,6 @@
                                 primary editor for <a href="http://c9.io">Cloud9 IDE</a>
                                 and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
                             <h2>Features</h2> 
-                            <div class="divider"></div> 
                             <ul class="content-list"> 
                                 <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a></li> 
                                 <li>Auto indentation and outdent</li> 
@@ -73,8 +74,17 @@
                                 <li>Displays hidden characters</li> 
                                 <li>Highlight selected word</li> 
                             </ul>
+                            <h2>Take Ace for a spin!</h2> 
+                            <p>Check out the <a href="./build/kitchen-sink.html">Ace live demo</a> or get a <a href="http://c9.io">Cloud9 IDE account</a> to experience Ace while editing one of your own GitHub projects.</p> 
+                            <h2>Getting the code</h2> 
+                            <p>Ace is a community project. We actively encourage and support
+                                contributions. The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>.
+                                Ace is a community project released under the BSD license &dash; 
+                                very simple andis friendly to all kinds of projects, whether OSS
+                                or not. We actively encourage and support contributions.
+                                Take charge of your editor and add your favorite language highlighting and keybindings!</p>
+                            <pre>git clone git://github.com/ajaxorg/ace.git</pre>
                             <h2>History</h2> 
-                            <div class="divider"></div> 
                             <p>Previously known as “Bespin” or lately “Skywriter” it’s now
                                 known as Ace (Ajax.org Cloud9 Editor)! Bespin and Ace started
                                 as two independent projects both aiming to build a no compromise
@@ -90,14 +100,14 @@
                                 and <a href="http://mozilla.org">Mozilla</a> are actively developing and
                                 maintaining Ace.</p> 
                             <h4>Related Projects</h4> 
-                            <ul class="menu-list"> 
+                            <ul> 
                                 <li><a href="https://github.com/joewalker/gcli">GCLI</a></li> 
                                 <li><a href="https://github.com/mozilla/dryice">DryIce</a></li>
                                 <li><a href="https://github.com/cadorn/ace-extjs">Ace wrapper for ExtJS</a></li>
                                 <li><a href="https://github.com/daveho/AceGWT">Ace wrapper for GWT</a></li>
                             </ul> 
                             <h4>Syntax Highlighters</h4> 
-                            <ul class="menu-list"> 
+                            <ul> 
                                 <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">Javascript</a></li> 
                                 <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">HTML</a></li> 
                                 <li><a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/mode">CSS</a></li> 
@@ -114,30 +124,197 @@
                         </div>
                         <div class="tab-pane fade active in" id="embedding">
                             <h1>Embedding ACE in Your Site</h1>
-                            <h2>Take Ace for a spin!</h2> 
-                            <div class="divider"></div> 
-                            <p>Check out the <a href="./build/kitchen-sink.html">Ace live demo</a> or get a <a href="http://c9.io">Cloud9 IDE account</a> to experience Ace while editing one of your own GitHub projects.</p> 
-                            <h2>Getting the code</h2> 
-                            <div class="divider"></div> 
-                            <p>Ace is a community project. We actively encourage and support
-                                contributions. The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>.
-                                Ace is a community project released under the BSD license &dash; 
-                                very simple andis friendly to all kinds of projects, whether OSS
-                                or not. We actively encourage and support contributions.
-                                Take charge of your editor and add your favorite language highlighting and keybindings!
-                            <pre>git clone git://github.com/ajaxorg/ace.git</pre></p>
-                        </div>
-                        <div class="tab-pane fade" id="embedding">
-                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                            <p>ACE can be easily embedded into any existing web page. You can either use one of
+                            the pre-packaged versions of <a href="https://github.com/ajaxorg/ace-builds/">ace</a>
+                            (just copy one of <code>src*</code> subdirectories somewhere into your project), or
+                            use requireJS to load the contents of
+                            <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace">lib/ace</a> as <code>ace</code>.</p>
+                            <p>Also, take a look at the one of the included demos for how to use Ace:</p>
+
+                            <ul>
+                                <li>
+                                    <a href="https://github.com/ajaxorg/ace-builds/blob/master/editor.html">Quick and dirty</a>
+                                </li>
+                                <li>
+                                    <a href="https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js">Full kitchen-sink</a>
+                                </li>
+                            </ul>
+                            
+                            <p>The easiest way to embed ACE is like so:</p>
+                            <pre><code class="html">&lt;div id="editor" style="position: absolute; height: 500px; width: 500px"&gt;some code&lt;/div&gt;</code></pre>
+                            <pre><code class="html">&lt;script src="src/ace.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+    var editor = ace.edit("editor");
+&lt;/script&gt;
+</code></pre>
                         </div>
                         <div class="tab-pane fade" id="howto">
-                            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                            <h1>How-To Guide</h1>
+                            <p>This is a collection of common operations developers typically perform
+                                on their ACE instance. In all of these cases ACE has been invoked on an
+                                element with the <code>id</code> set to <code>"editor"</code> like so:
+                            </p>
+                            <pre><code class="html">&lt;div id="editor" style="position: absolute; height: 500px; width: 500px"&gt;some code&lt;/div&gt;</code></pre>
+                            <p>...and the editor has been initialized by ACE like so:</p>
+                            <pre><code class="javscript">&lt;script src="src/ace.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script&gt;
+    var editor = ace.edit("editor");
+&lt;/script&gt;
+</code></pre>
+                            <h2>Setting Theme and Language Modes</h2>
+                            <p>To change the theme, configure the editor to use the theme using its module name. The theme file will be loaded on demand:</p>
+                            
+                            <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
+                            
+                            <p>By default, the editor only supports plain text mode. However, all other language modes are available as separate modules. Modes are also loaded on demand, and can be included like this:</p>
+                            
+                            <h2>Retrieving Editor States</h2>
+                            
+                            <p>Ace keeps all the editor states (selection, scroll position, etc.) in <code class="javascript">editor.session</code>, which is very useful for making a tabbed editor:</p>
+                            
+                            <pre><code class="javascript">var EditSession = require("ace/edit_session").EditSession;
+var js = new EditSession("some js code");
+var css = new EditSession(["some", "css", "code here"]);
+// and then to load document into editor, just call
+editor.setSession(js);</code></pre>
+                            
+                            <h2>Quickstart</h2>
+                            <p>To set and get content:`</p>
+
+                            <pre><code class="javascript">editor.setValue("the new text here"); // or session.setValue
+editor.getValue(); // or session.getValue</code></pre>
+                            
+                            <p>To get selected text:</p>
+                            
+                            <pre><code class="javascript">editor.session.getTextRange(editor.getSelectionRange());</code></pre>
+                            
+                            <p>To insert at cursor:</p>
+                            
+                            <pre><code class="javascript">editor.insert("Something cool");</code></pre>
+                            
+                            <p>To get the current cursor line and column:</p>
+                            
+                            <pre><code class="javascript">editor.selection.getCursor();</code></pre>
+                            
+                            <p>To go to a line:</p>
+                            
+                            <pre><code class="javascript">editor.gotoLine(lineNumber);</code></pre>
+                            
+                            <p>To get total number of lines:</p>
+                            
+                            <pre><code class="javascript">editor.session.getLength();</code></pre>
+                            
+                            <p>To set the default tab size:</p>
+                            
+                            <pre><code class="javascript">editor.getSession().setTabSize(4);</code></pre>
+                            
+                            <p>To use soft tabs:</p>
+                            
+                            <pre><code class="javascript">editor.getSession().setUseSoftTabs(true);</code></pre>
+                            
+                            <p>To set the font size:</p>
+                            
+                            <pre><code class="javascript">document.getElementById('editor').style.fontSize='12px';</code></pre>
+                            
+                            <p>To toggle word wrapping:</p>
+                            
+                            <pre><code class="javascript">editor.getSession().setUseWrapMode(true);</code></pre>
+                            
+                            <p>To set line highlighting:</p>
+                            
+                            <pre><code class="javascript">editor.setHighlightActiveLine(false);</code></pre>
+                            
+                            <p>To set the print margin visibility:</p>
+                            
+                            <pre><code class="javascript">editor.setShowPrintMargin(false);</code></pre>
+                            
+                            <p>To set the editor to read-only:</p>
+                            
+                            <pre><code class="javascript">editor.setReadOnly(true);  // false to make it editable</code></pre>
+                            
+                            <h3>Triggering Resizes</h3>
+                            
+                            <p>ACE only resizes itself on window events. If you resize the editor div in another manner, and need ACE to resize, use the following:</p>
+                            
+                            <pre><code class="javascript">editor.resize()</code></pre>
+                            
+                            <h3>Searching in Code</h3>
+                            
+                            <p>The main ACE search functionality is defined in <a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/search.js"><em>search.js</em></a>. The following options are available to you for your search parameters:</p>
+                            
+                            <ul>
+                            <li>
+                            <code>needle</code>: The string or regular expression you're looking for</li>
+                            <li>
+                            <code>backwards</code>: Whether to search backwards from where cursor currently is. Defaults to <code>false</code>.</li>
+                            <li>
+                            <code>wrap</code>: Whether to wrap the search back to the beginning when it hits the end. Defaults to <code>false</code>.</li>
+                            <li>
+                            <code>caseSensitive</code>: Whether the search ought to be case-sensitive. Defaults to <code>false</code>.</li>
+                            <li>
+                            <code>wholeWord</code>: Whether the search matches only on whole words. Defaults to <code>false</code>.</li>
+                            <li>
+                            <code>range</code>: The <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> to search within. Set this to <code>null</code> for the whole document</li>
+                            <li>
+                            <code>regExp</code>: Whether the search is a regular expression or not. Defaults to <code>false</code>.</li>
+                            <li>
+                            <code>start</code>: The starting <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> or cursor position to begin the search</li>
+                            <li>
+                            <code>skipCurrent</code>: Whether or not to include the current line in the search. Default to <code>false</code>.</li>
+                            </ul><p>Here's an example of how you can set up search on the editor object:</p>
+                            
+                            <pre><code>editor.find('needle',{
+    backwards: false,
+    wrap: false,
+    caseSensitive: false,
+    wholeWord: false,
+    regExp: false
+});
+editor.findNext();
+editor.findPrevious();</code></pre>
+                            
+                            <p>Here's how you can perform a replace:</p>
+                            
+                            <pre><code>editor.find('foo');
+editor.replace('bar');</code></pre>
+                            
+                            <p>And here's a replace all: </p>
+                            
+                            <pre><code>editor.replaceAll('bar');</code></pre>
+                            
+                            <p>(<code>editor.replaceAll</code> uses the needle set by <code>searchoptions.needle.</code>)</p>
+                            
+                            <h3>Listening to Events</h3>
+                            
+                            <p>To listen for an <code>onchange</code>:</p>
+                            
+                            <pre><code>editor.getSession().on('change', callback);</code></pre>
+                            
+                            <p>To listen for an <code>selection</code> change:</p>
+                            
+                            <pre><code>editor.getSession().selection.on('changeSelection', callback);</code></pre>
+                            
+                            <p>To listen for a <code>cursor</code> change:</p>
+                            
+                            <pre><code>editor.getSession().selection.on('changeCursor', callback);</code></pre>
+                            
+                            <h3>Adding New Commands and Keybindings</h3>
+                            
+                            <p>To assign key bindings to a custom function:</p>
+                            
+                            <pre><code>editor.commands.addCommand({
+    name: 'myCommand',
+    bindKey: {win: 'Ctrl-M',  mac: 'Command-M'},
+    exec: function(editor) {
+        //...
+    }
+});</code></pre></p>
                         </div>
                         <div class="tab-pane fade" id="api">
                             <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
                         </div>
                         <div class="tab-pane fade" id="production">
-                            <h4>Projects Using Ace</h4> 
+                            <h1>Projects Using Ace</h1>
                             <ul class="menu-list">
                                 <li><a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a></li>
                                 <li><a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a></li>

@@ -1,4 +1,6 @@
  $(function() {
+     hljs.initHighlighting();
+
      var tabs = $("#tabnav"),
          tab_a_selector = "a";
 
