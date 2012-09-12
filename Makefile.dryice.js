@@ -52,44 +52,44 @@ function main(args) {
     if (i != -1 && args[i+1])
         BUILD_DIR = args[i+1];
 
-    if (type == "minimal") {
-        buildAce({
-            compress: args.indexOf("--m") != -1,
-            noconflict: args.indexOf("--nc") != -1,
-            shrinkwrap: args.indexOf("--s") != -1
-        });
-    } else if (type == "normal") {
-        ace();
-    } else if (type == "demo") {
-        demo();
-    } else if (type == "bm") {
-        bookmarklet();
-    } else if (type == "full") {
-        ace();
-        demo();
-        bookmarklet();
+    if (args.indexOf("--h") == -1) {
+        if (type == "minimal") {
+            buildAce({
+                compress: args.indexOf("--m") != -1,
+                noconflict: args.indexOf("--nc") != -1,
+                shrinkwrap: args.indexOf("--s") != -1
+            });
+        } else if (type == "normal") {
+            ace();
+        } else if (type == "demo") {
+            demo();
+        } else if (type == "bm") {
+            bookmarklet();
+        } else if (type == "full") {
+            ace();
+            demo();
+            bookmarklet();
+        }
     }
-    else {
-        console.log("--- Ace Dryice Build Tool ---");
-        console.log("");
-        console.log("Options:");
-        console.log("  minimal     Places all necessary Ace files out in build dir [default]");
-        console.log("  normal      Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
-        console.log("  demo        Runs demo build of Ace");
-        console.log("  bm          Runs bookmarklet build of Ace");
-        console.log("  full        all of above");
-        console.log("args:");
-        console.log("  --target ./path   path to build folder");
-        console.log("flags: (only valid on minimal builds)");
-        console.log("  --m                minify");
-        console.log("  --nc               namespace require");
-        console.log("  --s                shrinkwrap (combines all output files into one)");
-        console.log("");
-        if (BUILD_DIR)
-            console.log(" output generated in " + type + __dirname + "/" + BUILD_DIR)
-        
-        process.exit(0);
-    }
+
+    console.log("--- Ace Dryice Build Tool ---");
+    console.log("");
+    console.log("Options:");
+    console.log("  minimal     Places necessary Ace files out in build dir; uses configuration flags below [default]");
+    console.log("  normal      Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
+    console.log("  demo        Runs demo build of Ace");
+    console.log("  bm          Runs bookmarklet build of Ace");
+    console.log("  full        all of above");
+    console.log("args:");
+    console.log("  --target ./path   path to build folder");
+    console.log("flags:");
+    console.log("  --h                print this help");
+    console.log("  --m                minify");
+    console.log("  --nc               namespace require");
+    console.log("  --s                shrinkwrap (combines all output files into one)");
+    console.log("");
+    if (BUILD_DIR)
+        console.log(" output generated in " + type + __dirname + "/" + BUILD_DIR)
 }
 
 function bookmarklet() {
@@ -406,7 +406,7 @@ function buildAce(options) {
 
     console.log('# combining files into one ---------');
 
-    if(options.shrinkwrap) {
+    if (options.shrinkwrap) {
         copy({
           source: { root:targetDir },
           dest: BUILD_DIR + '/ace-min.js'
