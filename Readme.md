@@ -6,11 +6,11 @@ Ace is a standalone code editor written in JavaScript. Our goal is to create a b
 Features
 --------
 
-* Syntax highlighting for over 40 languages (_.tmlanguage_ files can be imported)
-* Over 20 themes (TextMate themes can be imported)
+* Syntax highlighting for over 40 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
+* Over 20 themes (TextMate/Sublime/_.tmtheme_ files can be imported)
 * Automatic indent and outdent
 * An optional command line
-* Handles huge documents (4,000,000 lines is the upper limit)
+* Handles huge documents (at least check, 4,000,000 lines is the upper limit)
 * Fully customizable key bindings including vim and Emacs modes
 * Search and replace with regular expressions
 * Highlight matching parentheses
@@ -124,7 +124,7 @@ However, all you need is Node.js and npm installed to package ACE. Just run `npm
     node ./Makefile.dryice.js
 ```
 
-To package Ace, we use the dryice build tool developed by the Mozilla Skywriter team. (see the [wiki](https://github.com/ajaxorg/ace/wiki/Building-ace) for more details) Call `node Makefile.dryice.js` on the command-line to start the packing. This build script accepts following options
+To package Ace, we use the dryice build tool developed by the Mozilla Skywriter team. Call `node Makefile.dryice.js` on the command-line to start the packing. This build script accepts the following options
 
 ```bash
 -m                 minify build files with uglify-js          
@@ -133,7 +133,7 @@ To package Ace, we use the dryice build tool developed by the Mozilla Skywriter 
 --target ./path    specify relative path for output folder (default value is "./build")
 ```
 
-To generate all the files in ace-builds repository run node Makefile.dryice.js full --target ../ace-builds
+To generate all the files in the ace-builds repository, run `node Makefile.dryice.js full --target ../ace-builds`
 
 Running the Unit Tests
 ----------------------
@@ -158,9 +158,9 @@ This project is tested with [Travis CI](http://travis-ci.org)
 
 
 Contributing
-----------------
+------------
 
-Ace is a community project and wouldn't be what it is without contributions! We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
+Ace is a community project and wouldn't be what it is without contributions! We actively encourage and support contributions. The Ace source code is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
 
 Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. To protect the interests of the Ace contributors and users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is the simplest of agreements, requiring that the contributions you make to an ajax.org project are only those you're allowed to make. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes ten minutes, and only needs to be completed once.  There are two versions of the agreement:
 
