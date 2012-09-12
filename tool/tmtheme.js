@@ -124,9 +124,13 @@ function extractStyles(theme) {
       }
     }
 
-    if (!colors.fold)
-        colors.fold = ((colors["entity.name.function"] || colors.keyword).match(/\:([^;]+)/)||[])[1];
-
+    if (!colors.fold) {
+      var foldSource = colors["entity.name.function"] || colors.keyword;
+      if (foldSource) {
+        colors.fold = foldSource.match(/\:([^;]+)/)[1];
+      }
+    }
+      
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
 
@@ -198,15 +202,15 @@ var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
 var themes = {
-    //"chrome": "Chrome",
+    "chrome": "Chrome DevTools",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
     "cobalt": "Cobalt",
     //"crimson_editor": "Crimson Editor",
     "dawn": "Dawn",
-    //"dreamweaver": "Dreamweaver",
+    "dreamweaver": "Dreamweaver",
     //"eclipse": "Eclipse",
-    //"github": "GitHub",
+    "github": "GitHub",
     "idle_fingers": "idleFingers",
     "kr_theme": "krTheme",
     "merbivore": "Merbivore",
@@ -216,14 +220,15 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
-    //"textmate": "Textmate",
+    "textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
     "tomorrow_night_blue": "Tomorrow-Night-Blue",
     "tomorrow_night_bright": "Tomorrow-Night-Bright",
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "twilight": "Twilight",
-    "vibrant_ink": "Vibrant Ink"
+    "vibrant_ink": "Vibrant Ink",
+    "xcode": "Xcode_default"
 };
 
 function convertTheme(name) {
