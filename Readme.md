@@ -169,7 +169,7 @@ Feel free to fork and improve/enhance Ace any way you want. If you feel that the
 
 If you want to contribute to an ajax.org project please print the CLA and fill it out and sign it. Then either send it by snail mail or fax to us or send it back scanned (or as a photo) by email.
 
-Email: fabian.jakobs@web.de
+Email: ace+cla@c9.io
 
 Fax: +31 (0) 206388953
 
