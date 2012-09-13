@@ -18,7 +18,8 @@ var options = {
   assets      : "./resources/ace/skeleton",
   additionalObjs : "./additionalObjs.json",
   exclude     : ["**/*_test.js", "**/mode/**", "**/test/**", "**/theme/**", "**/worker/**"],
-  index       : "./index.md"
+  index       : "./index.md",
+  disableTests: true
 };
 
 files = [srcPath];
@@ -28,7 +29,7 @@ panino.parse(files, options, function (err, ast) {
     console.error(err);
     process.exit(1);
   }
-
+  
   panino.render('html', ast, options, function (err) {
     if (err) {
       console.error(err);

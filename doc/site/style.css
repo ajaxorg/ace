@@ -5,6 +5,22 @@ body {
     font-family: Helvetica, Arial;
 }
 
+#ace_editor_wrapper {
+    height: 275px;
+    position: relative;
+    border: 1px solid #DDD;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+#ace_editor_demo {
+    left: 0px;
+    top: 0px;
+    bottom: 1px;
+    right: 1px;
+    background: #fff;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: Helvetica;
     font-weight: 100;
@@ -37,13 +53,12 @@ H4 {
 P {
     padding:13px 0;
     margin:0;
-    line-height:22px;
-    font-size: 16px;
+    line-height:21px;
+    font-size: 15px;
 }
 
 UL{
-    line-height : 22px;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 #header {
@@ -188,6 +203,7 @@ UL.content-list {
 
 UL.content-list li {
     padding-left: 10px;
+    padding-bottom: 3px;
 }
 
 ul.menu-list {
@@ -235,18 +251,60 @@ ul.menu-list li:hover {
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
-UL.menu-list LI a {
+ul.menu-list li a {
     position: absolute;
-    bottom: 3px;
-    left: 8px;
-    color: #FFF;
-    text-align: left;
+    bottom: 0px;
+    left: 0px;
+    color: white;
+    text-align: center;
     font-weight: bold;
     text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8);
+    width: 100%;
+    display: block;
+    background: rgba(0, 0, 0, 0.6);
+    line-height: 12px;
+    padding: 4px 0;
 }
 
 UL.menu-list LI a:hover {
     text-decoration: none;
+}
+
+li#add_your_site p {
+    font-size: 32px;
+    border: 3px solid rgb(52, 160, 52);
+    color: rgb(52, 160, 52);
+    border-radius: 34px;
+    padding: 4px 4px 4px 7px;
+    width: 22px;
+    height: 22px;
+    line-height: 18px;
+    position: relative;
+    left: 31px;
+    top: 20px;
+    background: rgba(255, 255, 255, 1);
+}
+
+ul.menu-list li#add_your_site a {
+    color: #A3EEA3;
+}
+
+/* This is the animation code. */
+@-webkit-keyframes example {
+    0% { -webkit-transform: rotate(0deg); }
+    25% { -webkit-transform: rotate(3deg); }
+    50%   { -webkit-transform: rotate(0deg); }
+    75%   { -webkit-transform: rotate(-3deg); }
+}
+
+/* This is the element that we apply the animation to. */
+li#add_your_site {
+   -webkit-animation-name: example;
+   -webkit-animation-duration: 0.4s;
+   -webkit-animation-timing-function: ease; /* ease is the default */
+   -webkit-animation-delay: 0s;             /* 0 is the default */
+   -webkit-animation-iteration-count: infinite;    /* 1 is the default */
+   -webkit-animation-direction: alternate;  /* normal is the default */
 }
 
 A {
@@ -346,11 +404,11 @@ UL.menu-footer LI A:hover {
 }
 
 .tab-content {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
 .tab-content > .active, .pill-content > .active {
-    padding: 35px 30px;
+    padding: 25px 30px;
 }
 
 #top_container, .tab-content > .active, .pill-content > .active {
@@ -362,4 +420,33 @@ UL.menu-footer LI A:hover {
 
 pre .xml .javascript, pre .xml .css {
     opacity: 1;
+}
+
+#embed_link {
+    text-align: right;
+}
+#embed_link a {
+    color: #059C05;
+    font-weight: 100;
+    font-family: helvetica;
+    text-transform: uppercase;
+    font-size: 13px;
+    display: inline-block;
+    padding: 2px 10px;
+}
+
+p.highlight_note {
+    padding: 8px 35px 8px 14px;
+    margin-top: 10px;
+    color: #A0762E;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: #FCF8E3;
+    border: 1px solid #CA9C44;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+p.highlight_note a {
+    color: #537CC7;
 }

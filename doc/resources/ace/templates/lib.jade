@@ -77,6 +77,7 @@ mixin article(obj, parents)
         .memberContent
           if obj.signatures
             div.title
+              i(id='#{obj.path}', class='methodToggle methodClicker inactive icon-caret-right')
               ul.signatures
                 -var loops = 0;
                 for sig in obj.signatures
@@ -131,8 +132,7 @@ mixin article(obj, parents)
             div(id='ellipsis_#{obj.path}', class='ellipsis_description')
               mixin markdown(obj.short_description)
 
-            h3(id='#{obj.path}', class='methodToggle methodClicker inactive')
-              &nbsp;&nbsp;&nbsp;
+
             div.description
 
               mixin markdown(obj.description)
@@ -174,7 +174,7 @@ mixin article(obj, parents)
       h3.sectionHeader Events
     mixin article(child, parents.concat(obj), 'event')
 
-  for child in obj.children.filter(function(x){return x.type === 'class method'})
+  for child in obj.children.filter(function(x){return x.type === 'class method'})  
     - if (!methodSection)
       - methodSection = true
       h3.sectionHeader Methods

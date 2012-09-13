@@ -146,6 +146,14 @@ blockquote p{
   Menu venue
 */
 
+form.navbar-search {
+    float: none;
+}
+
+h3.api_title {
+    padding-top: 10px;
+}
+
 ul.menu {
     margin-left: 16px;
 }
@@ -227,7 +235,6 @@ ul.menu {
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.35); */
     padding-bottom: 15px;
 /*    height: 31px;*/
-    top: 40px;
     position: fixed;
 }
 .shadow.members{
@@ -275,7 +282,7 @@ ul.menu {
 .srolled .membersContent {
     /*top : 0;*/
     width : 695px;
-    padding-left : 305px;
+    padding-left : 407px;
     margin : 0 auto 0 auto;
 }
 .membersBackground {
@@ -532,7 +539,6 @@ header.filler {
 }
 
 #documentation article.article {
-/*    border-bottom: 1px solid #e9e9e9;*/
     border-top: 1px solid #e9e9e9;
     padding: 16px 10px 2px;
 }
@@ -773,9 +779,32 @@ li.signature {
     font-size: 24px;
     margin-top: 5px; 
 }
-#documentation h3.methodToggle {
-    margin: 0;
+#documentation i.methodToggle {
+    cursor: pointer;
+    color: #9f9f9f;
+    padding-top: 5px;
+    float: left;
 }
+#documentation i.methodToggle.methodToggleHover {
+    text-shadow: 0 0 10px #4699d5;
+    color: #4699d5;
+}
+#documentation i.methodToggle.active {
+    text-shadow: 0 0 10px #4699d5;
+    color: #4699d5;
+    /* Safari */
+    -webkit-transform: rotate(45deg);
+    
+    /* Firefox */
+    -moz-transform: rotate(45deg);
+    
+    /* IE */
+    -ms-transform: rotate(45deg);
+    
+    /* Opera */
+    -o-transform: rotate(45deg);
+}
+
 #documentation h3.sectionHeader {
     margin: 10px 0 17px 0;
     line-height : 24px;

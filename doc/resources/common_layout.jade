@@ -1,86 +1,58 @@
 -var dirPrefix = "./";
+-var sitePrefix = "../doc/site/";
 -var landingPage = 'false'
 -var versions = []
 
 mixin doctype
-	!!! 5
+    !!! 5
 
-	<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-	<!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-	<!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-	<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+    <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+    <!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+    <!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
 mixin head
-	meta(charset="utf-8")
-	//- N.B. http://blog.yjl.im/2011/01/bad-value-x-ua-compatible-for-attribute.html
-	meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
 
-	-if (isIndex)
-		title #{title}
-	-else
-		title #{classId} - #{title}
+    -if (isIndex)
+        title #{title}
+    -else
+        title #{classId} - #{title}
 
-	meta(name="generator", content="c9-doc-build")
-	meta(name="description", content="Ace API documentation for the online code editor.")
-	meta(name="author", content="Garen J. Torikian")
+    meta(name="generator", content="panino-doc-build")
+    meta(name="description", content="Ace API documentation for the online code editor")
+    meta(name="author", content="Garen J. Torikian")
 
-	meta(name="viewport", content="width=device-width,initial-scale=1")
+    script(src="#{dirPrefix}resources/javascripts/jquery.js")
+    script(src='#{sitePrefix}/js/main.js')
+    link(rel='stylesheet', media='all and (max-device-width: 480px)', href='doc/site/iphone.css')
+    link(rel='stylesheet', media='all and (min-device-width: 481px) and (max-device-width: 1024px)', href='doc/site/iphone.css')
+    link(href='#{dirPrefix}resources/ace/skeleton/images/favicon.ico', rel='icon', type='image/x-icon')
 
-	link(rel="stylesheet", href="#{dirPrefix}resources/csses/bootstrap.min.css")
-	link(rel="stylesheet", href="#{dirPrefix}resources/csses/prettify.css")
-	link(rel="stylesheet", href="#{dirPrefix}resources/csses/ace_api.css")
+    link(rel="stylesheet", href="#{dirPrefix}resources/csses/bootstrap.min.css")
+    link(href='#{sitePrefix}/style.css', rel='stylesheet', type='text/css')
+    link(rel="stylesheet", href="#{dirPrefix}resources/csses/ace_api.css")
+    link(rel="stylesheet", href="#{dirPrefix}resources/csses/font-awesome.css")
 
-	link(href="#{dirPrefix}resources/images/favicon.ico", rel="icon", type="image/x-icon")
+    link(href="#{dirPrefix}resources/images/favicon.ico", rel="icon", type="image/x-icon")
 
-	script(src="#{dirPrefix}resources/javascripts/jquery.js")
-	script(src="#{dirPrefix}resources/javascripts/clicker.js")
-	script(src="#{dirPrefix}resources/javascripts/jquery.collapse.js")
-	script(src="#{dirPrefix}resources/javascripts/jquery.cookie.js")
-	script(src="#{dirPrefix}resources/javascripts/bootstrap-dropdown.js")
-	script(src="#{dirPrefix}resources/javascripts/jquery-scrollspy.js")
-	script(script src="#{dirPrefix}resources/javascripts/prettify-extension.js")
+    script(src='#{dirPrefix}resources/javascripts/bbq.js')
+    script(src="#{dirPrefix}resources/javascripts/jquery.collapse.js")
+    script(src="#{dirPrefix}resources/javascripts/jquery.cookie.js")
+    script(src="#{dirPrefix}resources/javascripts/bootstrap-dropdown.js")
+    script(src='#{dirPrefix}resources/javascripts/bootstrap-tab.js')
 
-mixin navBar
-	div.navbar.navbar-fixed-top
-		div.navbar-inner
-			div#topSection.container
-				span.brand
-
-				ul.nav.topLinks
-					li#ace_site
-						a(href='../index.html') Ace
-					li#ace_api.active
-						a(href='index.html') Ace API Reference
-				form(id='searchbox', action='', class='navbar-search pull-right')	
-					input(class='search-query span3', name='query', type='text', placeholder="Search the API", title="Search across all the documentation")
-
-mixin footer
-	div#footer
-		.footerInner
-			.footer-text.pull-right 
-				p
-					<a href="http://www.c9.io">About Cloud9</a> | Ace & Cloud9 IDE are &copy; <a href="http://ajax.org">Ajax.org</a> 2012
 
 mixin endingScripts
-	// scripts concatenated and minified via ant build script
-	<script defer src="#{dirPrefix}resources/javascripts/plugins.js"></script>
-	<script defer src="#{dirPrefix}resources/javascripts/prettify.js"></script>
-	<script defer src="#{dirPrefix}resources/javascripts/prettify-extension.js"></script>
-	<script defer src="#{dirPrefix}resources/javascripts/ux.js"></script>
-	<script defer src="#{dirPrefix}resources/javascripts/disqus-ext.js"></script>
-	<script defer src="#{dirPrefix}resources/javascripts/ga.js"></script>
-	//-<script defer src="tree.js"></script>
-	// end scripts
-
-	//if lt IE 7
-		script(src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js")
-		script
-			window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})
-
+    script(defer, src="#{dirPrefix}resources/javascripts/ux.js")
+    script(src="#{dirPrefix}resources/javascripts/clicker.js")
+    script(src="#{dirPrefix}resources/javascripts/jquery-scrollspy.js")
+    script(defer, src="#{dirPrefix}resources/javascripts/disqus-ext.js")
+    script(defer, src="#{dirPrefix}resources/javascripts/ga.js")
 
 mixin identifyBuild(tree, type)
-		landingPage = 'true'
-		-dirPrefix = './'
+        landingPage = 'true'
+        -dirPrefix = './'
 
 mixin markdown(text, inline)
-	!= markdown(text, inline)
+    != markdown(text, inline)

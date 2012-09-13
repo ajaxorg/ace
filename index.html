@@ -7,6 +7,7 @@
         <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
         <script src="./doc/resources/ace/skeleton/javascripts/bootstrap-tab.js"></script>
         <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/ace.js"></script>
+        <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/mode-javascript.js"></script>
         <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
         <script src="doc/site/js/main.js"></script>
         <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
@@ -45,7 +46,7 @@
                             <a href="#howto" data-toggle="tab">How-To Guide</a>
                         </li>
                         <li>
-                            <a href="#api" data-toggle="tab">API Reference</a>
+                            <a href="./api/index.html">API Reference</a>
                         </li>
                         <li>
                             <a href="#production" data-toggle="tab">ACE in Production</a>
@@ -57,16 +58,33 @@
                     <div class="tab-content">
                         <div class="tab-pane fade" id="about">
                             <h1>Built for Code</h1>
-                            <p id="first">ACE is a embeddable code editor written in JavaScript.
-                                It matches and extends the features, usability and performance of existing
-                                native editors such as Sublime, Vim or TextMate. It can be easily embedded
+                            <p id="first">ACE is an embeddable code editor written in JavaScript.
+                                It matches the features and performance of native
+                                editors such as Sublime, Vim and TextMate. It can be easily embedded
                                 in any web page and JavaScript application. ACE is maintained as the
                                 primary editor for <a href="http://c9.io">Cloud9 IDE</a>
                                 and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
-                            <h2>Using ACE</h2>
-                            <p>Want ACE on your own site or web app? Check out our <a href="#nav=embedding">embedding
-                                guide</a> to get started right away!</p>
-                            <h2>Features</h2> 
+                            <div id="ace_editor_wrapper">
+                                <div id="ace_editor_demo">/**
+ * In fact, you're looking at ACE right now.
+ *
+ * We are currently showing off the JavaScript mode. ACE has support for 45
+ * language modes and 24 color themes!
+ */
+ 
+var resultString = "Hello, ACE! The result of your math is: ";
+function add(x, y) {
+    var result = x + y;
+    return resultString + result;
+}
+ 
+var addResult = add(3, 2);
+console.log(addResult);</div>
+                            </div>
+                            <p id="embed_link"><a href="#nav=embedding">Put this on your own site</a></p>
+                            <p class="highlight_note">Looking for a more full-featured demo? The <a href="http://ace.ajax.org/build/kitchen-sink.html">kitchen sink</a>
+                                demonstrates all ACE features.</p>
+                            <h2>ACE Features</h2> 
                             <ul class="content-list"> 
                                 <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a></li> 
                                 <li>Auto indentation and outdent</li> 
@@ -80,10 +98,6 @@
                                 <li>Displays hidden characters</li> 
                                 <li>Highlight selected word</li> 
                             </ul>
-                            <h2>Take ACE for a spin!</h2> 
-                            <p>The <a href="http://ace.ajax.org/build/kitchen-sink.html">kitchen sink demo</a>
-                                allows you to test all ACE features. You can check out the code for the
-                                demo <a href="https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js">on GitHub</a>.</p>
                             <h2>Getting the code</h2> 
                             <p>ACE is a community project. We actively encourage and support
                                 contributions! The ACE source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>
@@ -127,8 +141,10 @@
 &lt;style type="text/css" media="screen">
     #editor { 
         position: absolute;
-        width: 500px;
-        height: 400px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
     }
 &lt;/style>
 &lt;/head>
@@ -159,15 +175,14 @@
                         </div>
                         <div class="tab-pane fade" id="howto">
                             <h1>Nearly Everything you Want to do with ACE</h1>
-                            <p>This is a collection of common operations developers perform on ACE.
-                                <em>In all of these cases ACE has been invoked exactly
+                            <p><em>In all of these cases ACE has been invoked exactly
                                 as shown on the <a href="#nav=embedding">embedding guide</a>.</em></p>
                             <h2>Setting Themes</h2>
                             <p>To change the theme, configure the editor to use the theme using its module name. The theme file will be loaded on demand:</p>
                             
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
 
-                            <h2>Setting Other Language Modes</h2>
+                            <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules. Modes are also loaded on demand like this:</p>
 
                             <pre><code class="javascript">&lt;script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script></code></pre>
@@ -321,7 +336,7 @@ editor.replace('bar');</code></pre>
     exec: function(editor) {
         //...
     }
-});</code></pre></p>
+});</code></pre>
                         </div>
                         <div class="tab-pane fade" id="api">
                             <h1>API Reference</h1>
@@ -332,32 +347,97 @@ editor.replace('bar');</code></pre>
                             <p>ACE is used all over the web in all kinds of production applications. Here is
                                 just a small sampling:</a>
                             <ul class="menu-list">
-                                <li><a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a></li>
-                                <li><a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a></li>
+                                <li>
+                                    <img src="doc/site/images/github-logo.png"
+                                        style="position: relative; left: -15px; top: -9px;" />
+                                    <a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/khan-logo.png"
+                                        style="position: relative; left: -10px; top: -27px; width: 120px" />
+                                    <a href="http://ejohn.org/blog/introducing-khan-cs/">Khan Academy</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/cloud9-logo.png"
+                                        style="position: relative; left: -13px; top: -13px;" />
+                                    <a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a>
+                                </li>
+                                
+                                <li>
+                                    <img src="doc/site/images/firefox-logo.png"
+                                        style="position: relative; left: 0px; top: -20px;" />
+                                    <a href="https://builder.addons.mozilla.org/">Firefox Add-on Builder</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/codecademy-logo.png"
+                                        style="position: relative; left: -5px; top: 10px;" />
+                                    <a href="http://www.codecademy.com/">Codecademy</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/rstudio_logo_64.png"
+                                        style="position: relative; left: 19px; top: 2px;" />
+                                    <a href="http://rstudio.org/">RStudio</a>
+                                </li>
                                 <li><a href="https://github.com/Gozala/sky-edit">Sky Edit</a></li>
-                                <li><a href="http://www.wavemaker.com/">WaveMaker</a></li>
-                                <li><a href="http://rstudio.org/">RStudio</a></li>
-                                <li><a href="http://www.playmycode.com/">Play My Code</a></li>
-                                <li><a href="http://www.codecademy.com/">Codecademy</a></li>
-                                <li><a href="http://demo.qooxdoo.org/devel/playground/#">Qooxdoo playground</a></li>
-                                <li><a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a></li>
-                                <li><a href="http://developercompanion.com/">Developer Companion</a></li>
-                                <li><a href="https://builder.addons.mozilla.org/">Mozilla Add-on Builder</a></li>
-                                <li><a href="http://www.pythonanywhere.com/">PythonAnywhere</a></li>
-                                <li><a href="http://shiftedit.net/">shiftEdit</a></li> 
-                                <li><a href="http://www.akshell.com/">Akshell</a></li>
-                                <li><a href="http://beanstalkapp.com/">beanstalk</a></li>
-                                <li><a href="http://neutronide.com/">Neutron IDE</a></li>
-                                <li><a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a></li>
-                                <li><a href="http://www.weecod.com">Weecod</a></li>
-                                <li><a href="http://www.applaudcloud.com">AppLaud Cloud</a></li>
-                                <li><a href='http://rubymonk.com'>RubyMonk</a></li>
-                                <li><a href='http://rocktronica.github.com/tmpltr/'>tmpltr</a></li>
-                                <li><a href='http://dev.cmsmadesimple.org/projects/aceeditor'>CMS Made Simple</a></li>
-                                <li><a href='http://tryjasmine.com/'>Try Jasmine</a></li>
-                                <li><a href="http://codebender.cc/">Codebender</a></li>
-                                <li><a href="https://www.sharelatex.com">ShareLaTeX</a></li>
-                                <li><a href="http://ejohn.org/blog/introducing-khan-cs/">KhanAcademy</a></li>
+                                <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        style="position: relative; left: -10px; top: -12px;" />
+                                    <a href="http://www.wavemaker.com/">WaveMaker</a>
+                                </li>
+                                <li>
+                                    <a href="http://www.playmycode.com/">Play My Code</a>
+                                </li>
+                                <li>
+                                    <a href="http://demo.qooxdoo.org/devel/playground/#">Qooxdoo playground</a>
+                                </li>
+                                <li>
+                                    <a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a>
+                                </li>
+                                <li>
+                                    <a href="http://developercompanion.com/">Developer Companion</a>
+                                </li>
+                                <li>
+                                    <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
+                                </li>
+                                <li>
+                                    <a href="http://shiftedit.net/">shiftEdit</a>
+                                </li> 
+                                <li>
+                                    <a href="http://www.akshell.com/">Akshell</a>
+                                </li>
+                                <li>
+                                    <a href="http://beanstalkapp.com/">beanstalk</a>
+                                </li>
+                                <li>
+                                    <a href="http://neutronide.com/">Neutron IDE</a>
+                                </li>
+                                <li>
+                                    <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
+                                </li>
+                                <li>
+                                    <a href="http://www.weecod.com">Weecod</a>
+                                </li>
+                                <li>
+                                    <a href='http://rubymonk.com'>RubyMonk</a></li>
+                                <li>
+                                    <a href='http://rocktronica.github.com/tmpltr/'>tmpltr</a>
+                                </li>
+                                <li>
+                                    <a href='http://dev.cmsmadesimple.org/projects/aceeditor'>CMS Made Simple</a>
+                                </li>
+                                <li>
+                                    <a href='http://tryjasmine.com/'>Try Jasmine</a>
+                                </li>
+                                <li>
+                                    <a href="http://codebender.cc/">Codebender</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.sharelatex.com">ShareLaTeX</a>
+                                </li>
+                                <li id="add_your_site">
+                                    <p>+</p>
+                                    <a href="mailto:ace@c9.io?subject=Put me on the ACE site!">Your Site Here</a>
+                                </li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="support">
