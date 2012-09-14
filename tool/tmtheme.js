@@ -220,7 +220,7 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
-    "textmate": "Textmate (Mac Classic)",
+    //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
     "tomorrow_night_blue": "Tomorrow-Night-Blue",
