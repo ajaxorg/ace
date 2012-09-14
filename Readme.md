@@ -10,7 +10,7 @@ Features
 * Over 20 themes (TextMate/Sublime/_.tmtheme_ files can be imported)
 * Automatic indent and outdent
 * An optional command line
-* Handles huge documents (at least check, 4,000,000 lines is the upper limit)
+* Handles huge documents (at last check, 4,000,000 lines is the upper limit)
 * Fully customizable key bindings including vim and Emacs modes
 * Search and replace with regular expressions
 * Highlight matching parentheses
