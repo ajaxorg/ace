@@ -164,7 +164,16 @@
 }
 
 .ace_cursor.ace_hidden {
-    visibility: hidden;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+}
+
+.ace_cursor.ace_blinking {
+       -moz-transition: opacity 0.2s;
+    -webkit-transition: opacity 0.2s;
+         -o-transition: opacity 0.2s;
+        -ms-transition: opacity 0.2s;
+            transition: opacity 0.2s;
 }
 
 .ace_editor.multiselect .ace_cursor {
