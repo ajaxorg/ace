@@ -156,6 +156,13 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    opacity: 0.6;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"
+}
+
+.ace_cursor.ace_master{
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 
 .ace_cursor.ace_faded {
@@ -175,6 +182,7 @@
         -ms-transition: opacity 0.2s;
             transition: opacity 0.2s;
 }
+
 
 .ace_editor.multiselect .ace_cursor {
     border-left-width: 1px;
