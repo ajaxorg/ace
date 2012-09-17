@@ -22,14 +22,14 @@ $(function() {
     // used when page is access directly
     function magicClickInterceptor(e) {
         e.preventDefault();
-          
+            
         var state = {};
         state.api = $(this).attr("href").substring(6, $(this).attr("href").length - 5);
         $.bbq.pushState(state);
         
         var _self = $(this);
         $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
-            $("#apiHolder").removeClass("apiIntro").removeClass("span8");
+        $("#apiHolder").removeClass("apiIntro").removeClass("span8");
             ux();
             setupClicker();
         
@@ -46,6 +46,10 @@ $(function() {
     $('.menu-item a').click(magicClickInterceptor);
     $('a.argument').click(magicClickInterceptor);
     
+    $('a.external').click(function(e) {         
+        e.preventDefault();
+    });
+
      var tabs = $("#tabnav"),
          tab_a_selector = "a";
 
@@ -100,6 +104,7 @@ $(function() {
      $(window).on("hashchange", function(e) {
          tabs.each(function() {
             var idx = $.bbq.getState("nav") || "about";
+            var section = e.fragment.split("&")[1] || "";
             $(this).find(tab_a_selector + "[href='#" + idx + "']").triggerHandler('click');
             
             // handles dropping in from new link

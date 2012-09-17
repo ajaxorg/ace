@@ -156,6 +156,9 @@ form.navbar-search  .search-query {
 
 form.navbar-search  .search-query:focus, form.navbar-search  .search-query:active {
     border: 1px solid #666;
+}
+
+.navbar-search .search-query:focus, .navbar-search .search-query.focused {
     padding: 4px 9px;
 }
 
@@ -295,9 +298,14 @@ ul.menu {
 .srolled .membersContent {
     /*top : 0;*/
     width: 625px;
-    padding-left: 330px;
+    padding-left: 327px;
     margin : 0 auto 0 auto;
 }
+
+.srolled ul.nav {
+    padding-right: 10px;
+}
+
 .membersBackground {
 /*    background-color: white;
     position: fixed;
@@ -506,7 +514,6 @@ header.filler {
 }
 
 .centerpiece {
-    background: url(../images/sidebar_border.png) repeat-y 230px 0;
     min-height: 100%;
     padding: 10px 0;
 }
