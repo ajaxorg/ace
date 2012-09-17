@@ -1,4 +1,3 @@
-
 .ace-cobalt .ace_editor {
   border: 2px solid rgb(159, 159, 159);
 }
@@ -57,7 +56,7 @@
 }
 
 .ace-cobalt .ace_gutter_active_line {
-  background-color : rgba(0, 0, 0, 0.35);
+  background-color: rgba(0, 0, 0, 0.35);
 }
 
 .ace-cobalt .ace_marker-layer .ace_selected_word {
@@ -143,7 +142,6 @@ background-color:#001221;
 .ace-cobalt .ace_markup.ace_list {
   background-color:#130D26;
 }
-
 .ace-cobalt .ace_indent-guide {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgUHL4zzBz5sz/AA80BCzv+WXhAAAAAElFTkSuQmCC) right repeat-y;
 }

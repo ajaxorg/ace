@@ -76,6 +76,10 @@
   color:#66CCCC;
 }
 
+.ace-tomorrow-night-eighties .ace_constant.ace_character  {
+  color:#F99157;
+}
+
 .ace-tomorrow-night-eighties .ace_constant.ace_language {
   color:#F99157;
 }
@@ -109,6 +113,14 @@ background-color:#CC99CC;
 
 .ace-tomorrow-night-eighties .ace_support.ace_function {
   color:#6699CC;
+}
+
+.ace-tomorrow-night-eighties .ace_support.ace_type {
+  color:#FFCC66;
+}
+
+.ace-tomorrow-night-eighties .ace_support.ace_class {
+  color:#FFCC66;
 }
 
 .ace-tomorrow-night-eighties .ace_storage {

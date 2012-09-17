@@ -55,6 +55,7 @@
 .ace-monokai .ace_marker-layer .ace_active_line {
   background: #49483E;
 }
+
 .ace-monokai .ace_gutter_active_line {
   background-color: #191916;
 }
@@ -69,6 +70,10 @@
 
 .ace-monokai .ace_keyword, .ace-monokai .ace_meta {
   color:#F92672;
+}
+
+.ace-monokai .ace_constant.ace_character  {
+  color:#AE81FF;
 }
 
 .ace-monokai .ace_constant.ace_language {
@@ -104,6 +109,16 @@ background-color:#AE81FF;
 
 .ace-monokai .ace_support.ace_function {
   color:#66D9EF;
+}
+
+.ace-monokai .ace_support.ace_type {
+  font-style:italic;
+color:#66D9EF;
+}
+
+.ace-monokai .ace_support.ace_class {
+  font-style:italic;
+color:#66D9EF;
 }
 
 .ace-monokai .ace_storage {
