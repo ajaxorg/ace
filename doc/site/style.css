@@ -5,6 +5,10 @@ body {
     font-family: Helvetica, Arial;
 }
 
+#embed_ace_wrapper {
+    height: 525px;
+}
+
 .ace_editor_wrapper {
     height: 275px;
     position: relative;
