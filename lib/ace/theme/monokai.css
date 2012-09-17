@@ -53,11 +53,11 @@
 }
 
 .ace-monokai .ace_marker-layer .ace_active_line {
-  background: #49483E;
+  background: #202020;
 }
 
 .ace-monokai .ace_gutter_active_line {
-  background-color: #191916;
+  background-color: #272727;
 }
 
 .ace-monokai .ace_marker-layer .ace_selected_word {
