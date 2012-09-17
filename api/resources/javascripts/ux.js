@@ -37,7 +37,7 @@ $(function () {
     }).find('input');
 });
 
-$(document).ready(function () {
+function ux() {
     var d = 'a.menu, .dropdown-toggle'
 
     function clearMenus() {
@@ -121,7 +121,7 @@ $(document).ready(function () {
         });
     });
     
-    /*$('span.methodClicker, article.article, i.methodClicker').each(function () {
+    $('span.methodClicker, article.article, i.methodClicker').each(function () {
         var a = $(this);
         var constructorPos = a.attr("id").indexOf("new ");
 
@@ -132,13 +132,9 @@ $(document).ready(function () {
         }
 
         a.attr("id", objName);
-    });*/
-
-
-
+    });
+    
     function showMethodContent() {
-        if (!location.hash) return;
-
         var locationHash = location.hash.replace(/^#/, '').replace(/\./g, '\\.');
         var equalsPos = location.hash.indexOf("=");
         
@@ -155,7 +151,7 @@ $(document).ready(function () {
         }
     }
 
-    if (location.hash) {
+    if (location.hash.indexOf("section") >= 1) {
         showMethodContent();
         var data = location.hash;
         scrollTo(null, data.substr(1));
@@ -164,12 +160,12 @@ $(document).ready(function () {
     window.onhashchange = function () {
         showMethodContent();
     }
-});
+};
 
 function scrollTo(el, data) {
     if (!data) {
         data = el.getAttribute("data-id");
-        location.hash = data;
+        //location.hash = data;
     }
     var el = $("span#" + data.replace(/\./g, "\\."))[0];
     if (!el) return;

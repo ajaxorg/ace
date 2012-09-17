@@ -125,7 +125,7 @@ mixin article(obj, parents)
                             li
                               span.label.related-to
                                 | Related to: 
-                                != link(obj.related_to)  
+                                obj.related_to 
                                   
           div.sideToggler
 
@@ -231,10 +231,13 @@ mixin render_starting_tabs(obj, pos)
                           b.caret
                       ul.dropdown-menu
                         for m in members
-                          li(data-id='#{m.path}', class='memberLink')
+                          li(id='dropdown_#{m.path}', data-id='#{m.path}', class='memberLink')
                             mixin link(m, [], true)
      -methodSection = constructorSection = propertySection = eventSection = false;
      mixin article(obj, [])
+
+mixin rewriteLink(text)
+    != text.replace('a', 'bbbb')
 
 mixin short_description_list(collection)
   ul.method-details-list

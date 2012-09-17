@@ -5,15 +5,16 @@ body {
     font-family: Helvetica, Arial;
 }
 
-#ace_editor_wrapper {
+.ace_editor_wrapper {
     height: 275px;
     position: relative;
     border: 1px solid #DDD;
-    border-radius: 5px;
+    border-radius: 4px;
+    border-bottom-right-radius: 0px;
     margin-top: 5px;
 }
 
-#ace_editor_demo {
+#ace_editor_demo, #embedded_ace_code {
     left: 0px;
     top: 0px;
     bottom: 1px;
@@ -272,17 +273,17 @@ UL.menu-list LI a:hover {
 
 li#add_your_site p {
     font-size: 32px;
-    border: 3px solid rgb(52, 160, 52);
-    color: rgb(52, 160, 52);
+    border: 3px solid #34A034;
+    color: #34A034;
     border-radius: 34px;
-    padding: 4px 4px 4px 7px;
-    width: 22px;
+    padding: 3px 4px 4px 6px;
+    width: 20px;
     height: 22px;
     line-height: 18px;
     position: relative;
-    left: 31px;
-    top: 20px;
-    background: rgba(255, 255, 255, 1);
+    left: 33px;
+    top: 22px;
+    background: #fff;
 }
 
 ul.menu-list li#add_your_site a {
@@ -424,15 +425,22 @@ pre .xml .javascript, pre .xml .css {
 
 #embed_link {
     text-align: right;
+    padding-top: 0;
 }
 #embed_link a {
     color: #059C05;
     font-weight: 100;
     font-family: helvetica;
-    text-transform: uppercase;
     font-size: 13px;
     display: inline-block;
     padding: 2px 10px;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 1);
+    text-decoration: none;
 }
 
 p.highlight_note {
@@ -449,4 +457,9 @@ p.highlight_note {
 
 p.highlight_note a {
     color: #537CC7;
+}
+
+.apiIntro {
+    padding-left: 15px;
+    padding-bottom: 10px;
 }

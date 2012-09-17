@@ -1,49 +1,12 @@
 include ../../common_layout
 include lib
 
-mixin doctype
+#documentation.span8
+    -if (isIndex)
+        != content
+    -else
+        mixin api()
 
-html(xmlns="http://www.w3.org/1999/xhtml")
-    head
-        mixin head
-    
-    body
-        #wrapper
-            .content
-                .column2
-                  #top_container.collapse
-                    h1 The high performance code editor for the web.
-                    #page_logo
-                      img(src='doc/site/images/logo.png')
-                  div(style='clear: both;')
-                  ul#tabnav.nav.nav-pills
-                    li
-                      a(href='/')
-                        img(src='.//resources/images/ace_logo_menu.png')
-                    li
-                      a(href='../index.html#nav=about', data-toggle='tab') About
-                    li
-                      a(href='../index.html#nav=embedding', data-toggle='tab') Embedding Guide
-                    li
-                      a(href='../index.html#nav=howto', data-toggle='tab') How-To Guide
-                    li.active
-                      a(href='index.html') API Reference
-                    li
-                      a(href='../index.html#nav=production', data-toggle='tab') ACE in Production
-                    li
-                      a(href='../index.html#nav=support', data-toggle='tab') Support
-                  .tab-content
-                    .row.centerpiece
-                        .span3#sidebarContainer
-                            #sidebar
-                                include ace_menu.jade
-                        .span9#mainContent
-                            #documentation
-                                -if (isIndex)
-                                    != content
-                                -else
-                                    mixin api()
-        
-                            div(id="disqus_thread")
-    
-        mixin endingScripts
+    mixin endingScripts
+
+    div(id="disqus_thread")

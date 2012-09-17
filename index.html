@@ -5,14 +5,18 @@
         <title>ACE - The High Performance Code Editor for the Web</title> 
         <script src="./doc/resources/ace/skeleton/javascripts/jquery.js"></script>
         <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
-        <script src="./doc/resources/ace/skeleton/javascripts/bootstrap-tab.js"></script>
+        <script src="./api/resources/javascripts/bootstrap-tab.js"></script>
+        <script src="./api/resources/javascripts/bootstrap-dropdown.js"></script>
         <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/ace.js"></script>
         <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/mode-javascript.js"></script>
+        <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/mode-html.js"></script>
         <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
         <script src="doc/site/js/main.js"></script>
         <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
-        <link rel="stylesheet" href="./doc/resources/ace/skeleton/csses/bootstrap.min.css">
+        <link rel="stylesheet" href="./api/resources/csses/bootstrap.min.css">
         <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
+        <link href="api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" /> 
+        <link rel="stylesheet" href="./api/resources/csses/font-awesome.css">
         <link rel="stylesheet" media="all and (max-device-width: 480px)" href="doc/site/iphone.css">
         <link rel="stylesheet" media="all and (min-device-width: 481px) and (max-device-width: 1024px)" href="doc/site/iphone.css">
         <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
@@ -46,7 +50,7 @@
                             <a href="#howto" data-toggle="tab">How-To Guide</a>
                         </li>
                         <li>
-                            <a href="./api/index.html">API Reference</a>
+                            <a href="#api">API Reference</a>
                         </li>
                         <li>
                             <a href="#production" data-toggle="tab">ACE in Production</a>
@@ -64,45 +68,50 @@
                                 in any web page and JavaScript application. ACE is maintained as the
                                 primary editor for <a href="http://c9.io">Cloud9 IDE</a>
                                 and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
-                            <div id="ace_editor_wrapper">
+                            <div class="ace_editor_wrapper">
                                 <div id="ace_editor_demo">/**
  * In fact, you're looking at ACE right now.
  *
  * We are currently showing off the JavaScript mode. ACE has support for 45
  * language modes and 24 color themes!
  */
- 
-var resultString = "Hello, ACE! The result of your math is: ";
+
 function add(x, y) {
+    var resultString = "Hello, ACE! The result of your math is: ";
     var result = x + y;
     return resultString + result;
 }
- 
+
 var addResult = add(3, 2);
 console.log(addResult);</div>
                             </div>
-                            <p id="embed_link"><a href="#nav=embedding">Put this on your own site</a></p>
-                            <p class="highlight_note">Looking for a more full-featured demo? The <a href="http://ace.ajax.org/build/kitchen-sink.html">kitchen sink</a>
-                                demonstrates all ACE features.</p>
+                            <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
+                            <p class="highlight_note">Looking for a more full-featured demo? Check out the
+                                <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.</p>
                             <h2>ACE Features</h2> 
                             <ul class="content-list"> 
-                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a></li> 
-                                <li>Auto indentation and outdent</li> 
-                                <li><a href="https://github.com/mozilla/gcli">An optional command line</a></li> 
-                                <li>Work with huge documents (1,000,000+ lines are no problem)</li> 
-                                <li>Fully customizable key bindings including VI and Emacs modes</li> 
-                                <li>Themes (TextMate themes can be imported)</li> 
-                                <li>Search and replace with regular expressions</li> 
-                                <li>Highlight matching parentheses</li> 
-                                <li>Toggle between soft tabs and real tabs</li> 
-                                <li>Displays hidden characters</li> 
-                                <li>Highlight selected word</li> 
+                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 40 languages (TextMate/Sublime/<em>.tmlanguage</em> files can be imported)</li>
+                                <li>Over 20 themes (TextMate/Sublime/<em>.tmtheme</em> files can be imported)</li>
+                                <li>Automatic indent and outdent</li>
+                                <li>An optional command line</li>
+                                <li>Handles huge documents (at last check, 4,000,000 lines is the upper limit)</li>
+                                <li>Fully customizable key bindings including vim and Emacs modes</li>
+                                <li>Search and replace with regular expressions</li>
+                                <li>Highlight matching parentheses</li>
+                                <li>Toggle between soft tabs and real tabs</li>
+                                <li>Displays hidden characters</li>
+                                <li>Drag and drop text using the mouse</li>
+                                <li>Line wrapping</li>
+                                <li>Code folding</li>
+                                <li>Multiple cursors and selections</li>
+                                <li>Live syntax checker (currently JavaScript/CoffeeScript/CSS/XQuery)</li>
+                                <li>Cut, copy, and paste functionality</li>
                             </ul>
-                            <h2>Getting the code</h2> 
+                            <h2>Get the Open-Source Code</h2> 
                             <p>ACE is a community project. We actively encourage and support
                                 contributions! The ACE source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>
                                 and released under the BSD license &dash; 
-                                very simple and friendly to all kinds of projects, whether OSS
+                                very simple and friendly to all kinds of projects, whether open-source
                                 or not. Take charge of your editor and add your favorite language
                                 highlighting and keybindings!</p>
                             <pre>git clone git://github.com/ajaxorg/ace.git</pre>
@@ -111,7 +120,7 @@ console.log(addResult);</div>
                                 as two independent projects both aiming to build a no compromise
                                 code editor component for the web. Bespin started as part of
                                 Mozilla Labs and was based on the &lt;canvas> tag, while ACE is
-                                the Editor component of <a href="http://c9.io">Cloud9 IDE</a>
+                                the editor component of <a href="http://c9.io">Cloud9 IDE</a>
                                 and uses the DOM for rendering. After the release of ACE at
                                 <a href="http://jsconf.eu/2010/speaker/kick_ass_code_editing_and_end.html">JSConf.eu 2010</a>
                                 in Berlin the Skywriter team decided to merge ACE with a simplified 
@@ -130,11 +139,10 @@ console.log(addResult);</div>
                         </div>
                         <div class="tab-pane fade active in" id="embedding">
                             <h1>Embedding ACE in Your Site</h1>
-                            <p>ACE can be easily embedded into a web page. After you
-                                test the code below, check out the <a href="#nav=howto">How-To Guide</a>
-                                for more instructions.</p>
+                            <p>ACE can be easily embedded into a web page:</p>
 
-                            <pre><code class="html">&lt;!DOCTYPE html>
+                            <div class="ace_editor_wrapper">
+                                <div id="embedded_ace_code">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
 &lt;title>ACE in Action&lt;/title>
@@ -162,7 +170,7 @@ console.log(addResult);</div>
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
-&lt;/html></code></pre>
+&lt;/html></div></div>
                             <p>Now check out the <a href="#nav=howto">How-To Guide</a> for instructions on
                                 common operations, such as setting a different language mode or
                                 getting the contents from the editor.</p>
@@ -174,16 +182,17 @@ console.log(addResult);</div>
                             <pre><code class="javascript">var ace = require("lib/ace");</code></pre>
                         </div>
                         <div class="tab-pane fade" id="howto">
-                            <h1>Nearly Everything you Want to do with ACE</h1>
-                            <p><em>In all of these cases ACE has been invoked exactly
-                                as shown on the <a href="#nav=embedding">embedding guide</a>.</em></p>
+                            <h1>Working with ACE</h1>
+                            <p><em>In all of these examples ACE has been invoked 
+                                as shown in the <a href="#nav=embedding">embedding guide</a>.</em></p>
                             <h2>Setting Themes</h2>
-                            <p>To change the theme, configure the editor to use the theme using its module name. The theme file will be loaded on demand:</p>
+                            <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
                             
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
+                            <p><span class="expand_arrow">&gt;</span> (See all themes)</p>
 
                             <h2>Setting the Programming Language Mode</h2>
-                            <p>By default, the editor supports plain text mode. All other language modes are available as separate modules. Modes are also loaded on demand like this:</p>
+                            <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
 
                             <pre><code class="javascript">&lt;script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script></code></pre>
                             <p>The mode can then be used like this:</p>
@@ -262,9 +271,17 @@ editor.getValue(); // or session.getValue</code></pre>
                             
                             <pre><code class="javascript">editor.resize()</code></pre>
                             
-                            <h3>Searching in Code</h3>
-                            
-                            <p>The main ACE search functionality is defined in <a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/search.js"><em>search.js</em></a>. The following options are available to you for your search parameters:</p>
+                            <h3>Searching</h3>
+                            <pre><code>editor.find('needle',{
+    backwards: false,
+    wrap: false,
+    caseSensitive: false,
+    wholeWord: false,
+    regExp: false
+});
+editor.findNext();
+editor.findPrevious();</code></pre>
+                            <p>The following options are available to you for your search parameters:</p>
                             
                             <ul>
                             <li>
@@ -285,17 +302,7 @@ editor.getValue(); // or session.getValue</code></pre>
                             <code>start</code>: The starting <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> or cursor position to begin the search</li>
                             <li>
                             <code>skipCurrent</code>: Whether or not to include the current line in the search. Default to <code>false</code>.</li>
-                            </ul><p>Here's an example of how you can set up search on the editor object:</p>
-                            
-                            <pre><code>editor.find('needle',{
-    backwards: false,
-    wrap: false,
-    caseSensitive: false,
-    wholeWord: false,
-    regExp: false
-});
-editor.findNext();
-editor.findPrevious();</code></pre>
+                            </ul>
                             
                             <p>Here's how you can perform a replace:</p>
                             
@@ -337,10 +344,95 @@ editor.replace('bar');</code></pre>
         //...
     }
 });</code></pre>
+                        <h3>Importing Themes and Languages</h3>
+      <p>ACE supports the importing of <em>.tmtheme</em> and <em>.tmlanguage</em> files for use
+in the editor. The task is accomplished by two simple node scripts.</p>
+
+<h4>Importing Textmate/Sublime Themes</h4>
+<p>To import a <em>.tmtheme</em> file into ACE:</p>
+<ol>
+<li> Go to the <em>tool</em> folder, and run <code>npm install</code> to install required
+dependencies.</li>
+<li> Drop your <em>.tmtheme</em> file into the <em>tmthemes folder</em>.</li>
+<li> Update the <a href="https://github.com/ajaxorg/ace/blob/master/tool/tmtheme.js#L180">tmtheme.js</a> file to include your new theme.</li>
+<li> Run <code>node tmtheme.js</code>
+</li>
+</ol><p>Your <em>.tmtheme</em> will be converted and placed into <em>lib/ace/theme</em>
+alongside other themes. Note that there’s one more class we’ve added
+that isn’t available in regular Textmate themes, and that’s for
+<code>.ace_indent-guide</code>. This class adds indentation guides for your theme,
+using a base64-encoded png. In general, the dark themes and light themes
+each have their own strings, so you can just copy the class from an
+equivalent theme.</p>
+
+<h4>Importing Textmate/Sublime Languages</h4>
+
+<p>If you’re interested in porting over an existing <em>.tmlanguage</em> file into
+Ace’s mode syntax highlighting, there’s a tool to accomplish that, too.</p>
+
+<ol>
+<li> Go to the <em>tool</em> folder. Run <code>npm install</code> to install required
+dependencies.</li>
+<li> Drop your <em>.tmlanguage</em> file into the tools folder.</li>
+<li> Run <code>node tmlanguage.js &lt;path_to_tmlanguage_file&gt;</code>, such as
+<code>node tmlanguage.js MyGreatLanguage.tmlanguage</code>.</li>
+</ol><p>Your <em>.tmlanguage</em> file will be converted to the best of the converter’s
+ability. It is an understatement to say that the tool is imperfect.
+Probably, this will never be able to be fully autogenerated. In
+<em>.tmlanguage</em> files, for instance, one sees the use of
+lookbehinds/negative lookbehinds, which JavaScript regexps simply do not
+have. There’s a list of other non-determinable items, too:</p>
+
+<ul>
+<li>  Deciding which state to transition to<br>
+ While the tool does create new states correctly, it labels them
+with generic terms like <code>state_2</code>, <code>state_10</code> <em>e.t.c.</em>
+</li>
+<li>  Extending modes<br>
+ Many modes say something like <code>include source.c</code>, to mean, “add all
+the rules in C highlighting.” That syntax does not make sense to Ace
+or this tool</li>
+<li>  Rule preference order</li>
+<li>  Gathering keywords<br>
+ Most likely, you’ll need to take keywords from your language file
+and run them through <code>createKeywordMapper()</code>
+</li>
+</ul><p>Two files are created and placed in <em>lib/ace/mode</em>: one for the language
+mode, and one for the set of highlight rules. You will still need to add
+the code into <em>kitchen_sink.html</em> and <em>demo.js</em>, as well as write any
+tests for the highlighting.</p>
                         </div>
                         <div class="tab-pane fade" id="api">
-                            <h1>API Reference</h1>
-                            <p>ACE is awesome.</p>
+                            <div class="row centerpiece">
+    <div id="sidebarContainer" class="span3">
+        <div id="sidebar">
+                <div id="well">
+                <form id="searchbox" action="" class="navbar-search">   <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3"></form>
+                <ul class="menu">
+                <li><div class="menu-item"><a href="./api/ace.html" class="menuLink namespace">Ace</a></div></li>
+                <li><div class="menu-item"><a href="./api/anchor.html" class="menuLink namespace">Anchor</a></div></li>
+                <li><div class="menu-item"><a href="./api/background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div></li>
+                <li><div class="menu-item"><a href="./api/document.html" class="menuLink namespace">Document    </a></div></li>
+                <li><div class="menu-item"><a href="./api/edit_session.html" class="menuLink namespace">EditSession</a></div></li>
+                <li><div class="menu-item"><a href="./api/editor.html" class="menuLink namespace">Editor</a></div></li>
+                <li><div class="menu-item"><a href="./api/range.html" class="menuLink namespace">Range</a></div></li>
+                <li><div class="menu-item"><a href="./api/scrollbar.html" class="menuLink namespace">Scrollbar</a></div></li>
+                <li><div class="menu-item"><a href="./api/search.html" class="menuLink namespace">Search                     </a></div></li>
+                <li><div class="menu-item"><a href="./api/selection.html" class="menuLink namespace">Selection   </a></div></li>
+                <li><div class="menu-item"><a href="./api/token_iterator.html" class="menuLink namespace">TokenIterator</a></div></li>
+                <li><div class="menu-item"><a href="./api/tokenizer.html" class="menuLink namespace">Tokenizer</a></div></li>
+                <li><div class="menu-item"><a href="./api/undomanager.html" class="menuLink namespace">UndoManager</a></div></li>
+                <li><div class="menu-item"><a href="./api/virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div></li>
+                </ul>
+                </div>
+        </div>
+    </div>
+    <div  class="span8">
+    <div id="apiHolder" class="span8 apiIntro"><h1>Ace API Reference</h1>
+    <p>Welcome to the Ace API Reference Guide. Ace is a standalone code editor written in JavaScript that you can embed onto any website. We're used in a bunch of places already, like GitHub, Google, and Facebook.</p>
+    <p>On the left, you'll find a list of all of our currently documented classes. There are plenty more to do, but these represent the "core" set. For more information on how to work with Ace, check out the <a href="#nav=howto">embedding guide</a>.</p>
+    </div>
+    </div></div>
                         </div>
                         <div class="tab-pane fade" id="production">
                             <h1>Projects Using ACE</h1>
@@ -453,6 +545,10 @@ editor.replace('bar');</code></pre>
                 </div> 
             </div> 
         </div> 
+        <script src="./api/resources/javascripts/ux.js"></script>
+        <script src="./api/resources/javascripts/clicker.js"></script>
+        <script src="./api/resources/javascripts/jquery-scrollspy.js"></script>
+        <script defer src="./api/resources/javascripts/disqus-ext.js"></script>
         <script defer src="./api/resources/javascripts/ga.js"></script>
     </body> 
 </html>

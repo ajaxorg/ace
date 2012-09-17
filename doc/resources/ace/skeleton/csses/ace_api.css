@@ -1,25 +1,20 @@
 /*
   Generic "affects everything" stuff
 */
-body {
-    min-width: 1010px;
-    color: #2D2D2D;
-    background: #EDF5FA url(../images/main_bg.png) 0 0 repeat;
+
+#wrapper .content .column2 {
+    float: none;
 }
 
-ul {
+#documentation ul {
     font-size: 13px;
 }
 
-li {
+#documentation li {
     color: black;
 }
 
-a, a:hover {
-    color : #00438a;    
-}
-
-code {
+#documentation code {
     font-size: 12px;
     line-height: 16px;
     font-family: 'Ubuntu Mono',Monaco,Consolas,monospace !important;
@@ -32,7 +27,7 @@ code {
     color: inherit;
 }
 
-pre {
+#documentation pre {
     margin-top: 10px;
     border-radius: none;
     box-shadow: none;
@@ -51,29 +46,29 @@ pre {
     background : white;
 }
 
-pre code {
+#documentation pre code {
     background-color: transparent;
     border-radius: none;
     box-shadow: none;
 }
 
-a code {
+#documentation a code {
     color: #00438a;
 }
 
-h2 {
+#documentation h2 {
     font-size: 26px;
 }
-p {
+#documentation p {
     font-size: 13px;
     line-height : 20px;
     margin-bottom : 13px;
 }
-li p:last-child {
+#documentation li p:last-child {
     margin-bottom : 5px;
 }
 
-blockquote p{
+#documentation blockquote p{
     font-size: 14px;
     font-weight: 500;
     line-height: 23px;
@@ -148,6 +143,10 @@ blockquote p{
 
 form.navbar-search {
     float: none;
+}
+
+form.navbar-search  .search-query {
+    background-color: #FFFFFF;
 }
 
 h3.api_title {
@@ -281,8 +280,8 @@ ul.menu {
 }
 .srolled .membersContent {
     /*top : 0;*/
-    width : 695px;
-    padding-left : 407px;
+    width: 625px;
+    padding-left: 330px;
     margin : 0 auto 0 auto;
 }
 .membersBackground {
@@ -332,14 +331,12 @@ li.dropdown {
     font-weight: bold;
 }
 
-
-.backToMDN, .editInC9 {
+.editInC9 {
     font-size: 11px;
     color: #657383;
-    margin : 0 0 0 5px;
 }
 
-.backToMDN a, .editInC9 a {
+.editInC9 a {
     color: #657383;
     font-weight: normal;
     position : relative;
@@ -347,7 +344,7 @@ li.dropdown {
 }
 
 .tabs {
-    padding-top: 10px;
+    padding-top: 14px;
     /*border-bottom: 1px solid #848484;*/
     min-height : 27px;
     padding-bottom : 5px;
@@ -512,10 +509,6 @@ header.filler {
     margin-bottom: 3px;
 }
 
-#sidebarContainer {
-    margin-right: 60px;
-}
-
 #sidebar {
     margin-top: 9px;
     /*background: url(../images/sidebar-border.png) repeat-y right 0;*/
@@ -535,6 +528,7 @@ header.filler {
 }
 
 #documentation {
+    padding-left: 15px;
     padding-bottom: 10px;
 }
 
@@ -542,6 +536,11 @@ header.filler {
     border-top: 1px solid #e9e9e9;
     padding: 16px 10px 2px;
 }
+
+#documentation h3.sectionHeader + article.article {
+    border-top: none;
+}
+
 div#documentation article:last-child {
     border-bottom: 1px solid #e9e9e9;
     padding-bottom: 40px;
@@ -673,7 +672,7 @@ li.signature {
     cursor: pointer;
 }
 
-.signature-call a {
+#documentation .signature-call a {
     color: #8e487e;
 }
 
@@ -720,14 +719,14 @@ li.signature {
     text-transform: capitalize;
 }
 
-.alias a, .related-to a {
+#documentation .alias a, #documentation .related-to a {
     color: #ffffff;
     /* text-decoration: underline; */ 
 }
-.alias a:hover, .related-to a:hover {
+#documentation .alias a:hover, #documentation .related-to a:hover {
     text-decoration: none;
 }
-.alias:hover, .related-to:hover {
+.#documentation alias:hover, #documentation .related-to:hover {
     opacity: 0.8;
     cursor: pointer;
 }
@@ -966,26 +965,4 @@ body #dsq-reply h3{
 
 #dsq-global-toolbar, #dsq-pagination, .dsq-trackback-url{
     display : none;
-}
-
-/* Sticky footer stuff */
-
-* {
-    margin: 0;
-}
-html, body {
-    height: 100%;
-}
-#nonFooter {
-    height: 100%;
-    margin: 0 auto -40px; /* the bottom margin is the negative value of the footer's height */
-}
-div.push {
-    height: 40px; /* .push must be the same height as .footer */
-}
-#footer, div.push {
-clear: both;
-}
-#footer {
-    margin-top: 40px;
 }
