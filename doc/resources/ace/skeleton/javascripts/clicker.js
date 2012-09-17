@@ -28,7 +28,10 @@ function setupClicker() {
       if (!$article.hasClass('methodToggleOpen') || this.force) {
           $article.addClass('methodToggleOpen');
           $arrow.removeClass('inactive').addClass('active');
-          
+
+          if (!$arrow[0])
+            return;
+
           var data = $arrow[0].id.replace(/^js_/, "");
           //var state = {};
           //state.section = data;
