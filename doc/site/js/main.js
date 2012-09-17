@@ -4,10 +4,9 @@ $(function() {
     hljs.initHighlighting();
     editor = ace.edit("ace_editor_demo");
     embedded_editor = ace.edit("embedded_ace_code");
-    var javascriptMode = require("ace/mode/javascript").Mode;
-    var htmlMode = require("ace/mode/html").Mode;
-    editor.getSession().setMode(new javascriptMode());
-    embedded_editor.getSession().setMode(new htmlMode());
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode("ace/mode/javascript");
+    embedded_editor.getSession().setMode("ace/mode/html");
     
     $("ul.menu-list li").click(function(e) {
         if (e.target.tagName === "LI") {
