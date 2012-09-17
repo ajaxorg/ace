@@ -105,7 +105,7 @@ $(function() {
          tabs.each(function() {
             var idx = $.bbq.getState("nav") || "about";
             var section = e.fragment.split("&")[1] || "";
-            $(this).find(tab_a_selector + "[href='#" + idx + "&" + section + "']").triggerHandler('click');
+            $(this).find(tab_a_selector + "[href='#" + idx + "']").triggerHandler('click');
             
             // handles dropping in from new link
             var api = $.bbq.getState("api");
