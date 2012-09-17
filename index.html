@@ -137,7 +137,7 @@ console.log(addResult);</div>
                             <h1>Embedding ACE in Your Site</h1>
                             <p>ACE can be easily embedded into a web page:</p>
 
-                            <div class="ace_editor_wrapper">
+                            <div id="embed_ace_wrapper" class="ace_editor_wrapper">
                                 <div id="embedded_ace_code">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
@@ -162,7 +162,7 @@ console.log(addResult);</div>
 &lt;script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8">&lt;/script>
 &lt;script>
     var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
+    editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
