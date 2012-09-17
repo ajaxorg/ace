@@ -5,6 +5,10 @@ body {
     font-family: Helvetica, Arial;
 }
 
+#embed_ace_wrapper {
+    height: 525px;
+}
+
 .ace_editor_wrapper {
     height: 275px;
     position: relative;
@@ -463,4 +467,12 @@ p.highlight_note a {
 .apiIntro {
     padding-left: 15px;
     padding-bottom: 10px;
+}
+
+.prod_no_image {
+    position: relative; left: -10px; top: -12px;
+}
+
+#sidebarContainer {
+    margin: 0 20px 0 0;
 }

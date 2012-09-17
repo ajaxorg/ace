@@ -7,9 +7,7 @@
         <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
         <script src="./api/resources/javascripts/bootstrap-tab.js"></script>
         <script src="./api/resources/javascripts/bootstrap-dropdown.js"></script>
-        <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/ace.js"></script>
-        <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/mode-javascript.js"></script>
-        <script src="https://raw.github.com/ajaxorg/ace-builds/master/src-min/mode-html.js"></script>
+        <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
         <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
         <script src="doc/site/js/main.js"></script>
         <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
@@ -17,8 +15,6 @@
         <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
         <link href="api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" /> 
         <link rel="stylesheet" href="./api/resources/csses/font-awesome.css">
-        <link rel="stylesheet" media="all and (max-device-width: 480px)" href="doc/site/iphone.css">
-        <link rel="stylesheet" media="all and (min-device-width: 481px) and (max-device-width: 1024px)" href="doc/site/iphone.css">
         <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
     </head> 
     <body> 
@@ -32,7 +28,7 @@
                     <div id="top_container" class="collapse">
                         <h1>The high performance code editor for the web.</h1>
                         <div id="page_logo">
-                            <img src="doc/site/images/logo.png" />
+                            <img src="./doc/site/images/logo.png" />
                         </div>
                     </div>
                     <div style="clear: both"></div>
@@ -141,7 +137,7 @@ console.log(addResult);</div>
                             <h1>Embedding ACE in Your Site</h1>
                             <p>ACE can be easily embedded into a web page:</p>
 
-                            <div class="ace_editor_wrapper">
+                            <div id="embed_ace_wrapper" class="ace_editor_wrapper">
                                 <div id="embedded_ace_code">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
@@ -163,10 +159,10 @@ console.log(addResult);</div>
     return x;
 }&lt;/div>
     
-&lt;script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8">&lt;/script>
+&lt;script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8">&lt;/script>
 &lt;script>
     var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
+    editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
@@ -189,17 +185,14 @@ console.log(addResult);</div>
                             <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
                             
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
-                            <p><span class="expand_arrow">&gt;</span> (See all themes)</p>
+                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme"
+                                target="_blank">See all themes</a></p>
 
                             <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
+                            <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");</pre></code>
 
-                            <pre><code class="javascript">&lt;script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script></code></pre>
-                            <p>The mode can then be used like this:</p>
-                            <pre><code class="javascript">var javascriptMode = require("ace/mode/javascript").Mode;
-editor.getSession().setMode(new javascriptMode());</pre></code>
-
-                            <h2>One Editor, Multiple Sessions</h2>
+                            <!--h2>One Editor, Multiple Sessions</h2>
                             <p>ACE keeps everything about the state of the editor (selection, scroll position, etc.)
                                 in <code class="javascript">editor.session</code>. This means you can grab the
                                 session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
@@ -209,10 +202,10 @@ editor.getSession().setMode(new javascriptMode());</pre></code>
 var js = new EditSession("some js code");
 var css = new EditSession(["some", "css", "code here"]);
 // and then to load document into editor, just call
-editor.setSession(js);</code></pre>
+editor.setSession(js);</code></pre-->
                             
                             <h2>Common Operations</h2>
-                            <p>Set and get content:`</p>
+                            <p>Set and get content:</p>
 
                             <pre><code class="javascript">editor.setValue("the new text here"); // or session.setValue
 editor.getValue(); // or session.getValue</code></pre>
@@ -470,60 +463,103 @@ tests for the highlighting.</p>
                                         style="position: relative; left: 19px; top: 2px;" />
                                     <a href="http://rstudio.org/">RStudio</a>
                                 </li>
-                                <li><a href="https://github.com/Gozala/sky-edit">Sky Edit</a></li>
                                 <li>
                                     <img src="doc/site/images/empty-logo.png"
-                                        style="position: relative; left: -10px; top: -12px;" />
+                                        class="prod_no_image" />
+                                    <a href="https://github.com/Gozala/sky-edit">Sky Edit</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://www.wavemaker.com/">WaveMaker</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://www.playmycode.com/">Play My Code</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://demo.qooxdoo.org/devel/playground/#">Qooxdoo playground</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://developercompanion.com/">Developer Companion</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
+                                    <a href="http://www.applicationcraft.com/">Application Craft</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://shiftedit.net/">shiftEdit</a>
                                 </li> 
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://www.akshell.com/">Akshell</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://beanstalkapp.com/">beanstalk</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://neutronide.com/">Neutron IDE</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://www.weecod.com">Weecod</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href='http://rubymonk.com'>RubyMonk</a></li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href='http://rocktronica.github.com/tmpltr/'>tmpltr</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href='http://dev.cmsmadesimple.org/projects/aceeditor'>CMS Made Simple</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href='http://tryjasmine.com/'>Try Jasmine</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="http://codebender.cc/">Codebender</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/empty-logo.png"
+                                        class="prod_no_image" />
                                     <a href="https://www.sharelatex.com">ShareLaTeX</a>
                                 </li>
                                 <li id="add_your_site">
