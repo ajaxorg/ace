@@ -56,8 +56,10 @@ $(function() {
         e.preventDefault();
         embedded_editor.resize();
         editor.resize();
-        if ($(this).attr("href") === "/")
+        if ($(this).attr("href") === "/") {
+            window.location = "http://ace.ajax.org";
             return;
+        }
         if ($(this).attr("href").indexOf("#api") === 0) {
             $("#top_container").addClass("collapse");
             scrollIntoPosition(null, 0);
