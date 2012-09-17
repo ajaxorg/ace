@@ -473,5 +473,9 @@ p.highlight_note a {
 }
 
 #sidebarContainer {
-    margin: 0 20px 0 0;
+    margin: 3px 20px 0 15px;
+}
+
+#api {
+    padding: 0;
 }
