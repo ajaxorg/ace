@@ -14,7 +14,7 @@ $(function() {
             console.log($(this).find("a"));
             window.location = $(this).find("a").attr("href");
         }
-        else if (e.target.tagName === "P") {
+        else if (e.target.tagName === "P" || e.target.tagName === "IMG") {
             var anchor = $(e.target).siblings();
             window.location = anchor.attr("href");
         }
@@ -23,34 +23,12 @@ $(function() {
     // used when page is access directly
     function magicClickInterceptor(e) {
         e.preventDefault();
-            
+          
         var state = {};
         state.api = $(this).attr("href").substring(6, $(this).attr("href").length - 5);
         $.bbq.pushState(state);
         
-        $("#apiHolder").removeClass("apiIntro").removeClass("span8");
-        $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
-            ux();
-            setupClicker();
-        
-            // handles dropping in from new link
-            var section = $.bbq.getState("section");
-            if (section) {
-                $("li#dropdown_" + section.replace(/\./g, '\\.') + " a").triggerHandler('click');
-            }
-            
-            setupDisqus();
-        });
-    }
-    
-    $('.menu-item a').click(magicClickInterceptor);
-    $('a.argument').click(function (e) {
-        e.preventDefault();
-            
-        var state = {};
-        state.api = $(this).attr("href").substring(6, $(this).attr("href").length - 5);
-        $.bbq.pushState(state);
-        
+        var _self = $(this);
         $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
             $("#apiHolder").removeClass("apiIntro").removeClass("span8");
             ux();
@@ -62,9 +40,12 @@ $(function() {
                 $("li#dropdown_" + section.replace(/\./g, '\\.') + " a").triggerHandler('click');
             }
             
-            setupDisqus();
+            //setupDisqus(_self.attr("href"));
         });
-    });
+    }
+    
+    $('.menu-item a').click(magicClickInterceptor);
+    $('a.argument').click(magicClickInterceptor);
     
      var tabs = $("#tabnav"),
          tab_a_selector = "a";

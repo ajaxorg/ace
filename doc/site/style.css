@@ -463,3 +463,11 @@ p.highlight_note a {
     padding-left: 15px;
     padding-bottom: 10px;
 }
+
+.prod_no_image {
+    position: relative; left: -10px; top: -12px;
+}
+
+#sidebarContainer {
+    margin: 0 20px 0 0;
+}
