@@ -11,12 +11,10 @@ function setupDisqus() {
     var disqus_identifier = "api/" + (lochash.substr(lochash.indexOf('api=')).split('&')[0].split('=')[1] || "index") + ".html";
     
     (function() {
-        if (document.getElementById(dsqId))
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).removeChild(document.getElementById(dsqId));
-        
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-        dsq.id="disqusScript";
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        if (document.getElementById(dsqId) === null) {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);       
+        }
     })();
 }

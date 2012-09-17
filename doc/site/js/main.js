@@ -39,7 +39,7 @@ $(function() {
                 $("li#dropdown_" + section.replace(/\./g, '\\.') + " a").triggerHandler('click');
             }
             
-            setupDisqus();
+            // setupDisqus();
         });
     }
     
@@ -66,6 +66,10 @@ $(function() {
         });
     });
     
+    $('a.external').click(function(e) {         
+        e.preventDefault();
+    });
+
      var tabs = $("#tabnav"),
          tab_a_selector = "a";
 
@@ -118,7 +122,8 @@ $(function() {
      $(window).on("hashchange", function(e) {
          tabs.each(function() {
             var idx = $.bbq.getState("nav") || "about";
-            $(this).find(tab_a_selector + "[href='#" + idx + "']").triggerHandler('click');
+            var section = e.fragment.split("&")[1] || "";
+            $(this).find(tab_a_selector + "[href='#" + idx + "&" + section + "']").triggerHandler('click');
             
             // handles dropping in from new link
             var api = $.bbq.getState("api");
