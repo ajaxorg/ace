@@ -73,15 +73,9 @@
 }
 
 .ace-kr-theme .ace_constant,
+.ace-kr-theme .ace_constant.ace_character,
+.ace-kr-theme .ace_constant.ace_character.ace_escape,
 .ace-kr-theme .ace_constant.ace_other {
-  color: rgba(210, 117, 24, 0.76)
-}
-
-.ace-kr-theme .ace_constant.ace_character {
-  color: rgba(210, 117, 24, 0.76)
-}
-
-.ace-kr-theme .ace_constant.ace_character.ace_escape {
   color: rgba(210, 117, 24, 0.76)
 }
 

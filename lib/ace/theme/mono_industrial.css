@@ -72,25 +72,18 @@
   color: #A39E64
 }
 
-.ace-mono-industrial .ace_keyword.ace_operator {
-  color: #A8B3AB
-}
-
 .ace-mono-industrial .ace_constant,
+.ace-mono-industrial .ace_constant.ace_character,
+.ace-mono-industrial .ace_constant.ace_character.ace_escape,
+.ace-mono-industrial .ace_constant.ace_numeric,
 .ace-mono-industrial .ace_constant.ace_other {
   color: #E98800
 }
 
-.ace-mono-industrial .ace_constant.ace_character {
-  color: #E98800
-}
-
-.ace-mono-industrial .ace_constant.ace_character.ace_escape {
-  color: #E98800
-}
-
-.ace-mono-industrial .ace_constant.ace_numeric {
-  color: #E98800
+.ace-mono-industrial .ace_entity.ace_name.ace_function,
+.ace-mono-industrial .ace_keyword.ace_operator,
+.ace-mono-industrial .ace_variable {
+  color: #A8B3AB
 }
 
 .ace-mono-industrial .ace_invalid {
@@ -111,11 +104,9 @@
   color: #588E60
 }
 
+.ace-mono-industrial .ace_entity.ace_name,
+.ace-mono-industrial .ace_support.ace_class,
 .ace-mono-industrial .ace_support.ace_type {
-  color: #5778B6
-}
-
-.ace-mono-industrial .ace_support.ace_class {
   color: #5778B6
 }
 
@@ -123,10 +114,7 @@
   color: #C23B00
 }
 
-.ace-mono-industrial .ace_variable {
-  color: #A8B3AB
-}
-
+.ace-mono-industrial .ace_variable.ace_language,
 .ace-mono-industrial .ace_variable.ace_parameter {
   color: #648BD2
 }
@@ -136,20 +124,8 @@
   background-color: #151C19
 }
 
-.ace-mono-industrial .ace_variable.ace_language {
-  color: #648BD2
-}
-
 .ace-mono-industrial .ace_entity.ace_other.ace_attribute-name {
   color: #909993
-}
-
-.ace-mono-industrial .ace_entity.ace_name {
-  color: #5778B6
-}
-
-.ace-mono-industrial .ace_entity.ace_name.ace_function {
-  color: #A8B3AB
 }
 
 .ace-mono-industrial .ace_markup.ace_underline {

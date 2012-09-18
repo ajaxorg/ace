@@ -94,18 +94,11 @@
   border-color: #929292
 }
 
-.ace-clouds-midnight .ace_support.ace_function {
-  color: #E92E2E
-}
-
-.ace-clouds-midnight .ace_support.ace_function,
+.ace-clouds-midnight .ace_storage,
 .ace-clouds-midnight .ace_support.ace_class,
-.ace-clouds-midnight .ace_support.ace_type,
-.ace-clouds-midnight .ace_support.ace_other {
-  color: #E92E2E
-}
-
-.ace-clouds-midnight .ace_storage {
+.ace-clouds-midnight .ace_support.ace_function,
+.ace-clouds-midnight .ace_support.ace_other,
+.ace-clouds-midnight .ace_support.ace_type {
   color: #E92E2E
 }
 

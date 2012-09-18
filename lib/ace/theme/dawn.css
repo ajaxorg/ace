@@ -73,15 +73,9 @@
 }
 
 .ace-dawn .ace_constant,
+.ace-dawn .ace_constant.ace_character,
+.ace-dawn .ace_constant.ace_character.ace_escape,
 .ace-dawn .ace_constant.ace_other {
-  color: #811F24
-}
-
-.ace-dawn .ace_constant.ace_character {
-  color: #811F24
-}
-
-.ace-dawn .ace_constant.ace_character.ace_escape {
   color: #811F24
 }
 
@@ -111,6 +105,7 @@
   border-color: #080808
 }
 
+.ace-dawn .ace_markup.ace_list,
 .ace-dawn .ace_support.ace_function {
   color: #693A17
 }
@@ -143,10 +138,6 @@
 
 .ace-dawn .ace_markup.ace_heading {
   color: #19356D
-}
-
-.ace-dawn .ace_markup.ace_list {
-  color: #693A17
 }
 
 .ace-dawn .ace_indent-guide {

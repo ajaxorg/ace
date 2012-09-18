@@ -93,18 +93,11 @@
   border-color: #000000
 }
 
-.ace-clouds .ace_support.ace_function {
-  color: #C52727
-}
-
-.ace-clouds .ace_support.ace_function,
+.ace-clouds .ace_storage,
 .ace-clouds .ace_support.ace_class,
-.ace-clouds .ace_support.ace_type,
-.ace-clouds .ace_support.ace_other {
-  color: #C52727
-}
-
-.ace-clouds .ace_storage {
+.ace-clouds .ace_support.ace_function,
+.ace-clouds .ace_support.ace_other,
+.ace-clouds .ace_support.ace_type {
   color: #C52727
 }
 

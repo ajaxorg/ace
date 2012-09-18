@@ -73,15 +73,9 @@
 }
 
 .ace-cobalt .ace_constant,
+.ace-cobalt .ace_constant.ace_character,
+.ace-cobalt .ace_constant.ace_character.ace_escape,
 .ace-cobalt .ace_constant.ace_other {
-  color: #FF628C
-}
-
-.ace-cobalt .ace_constant.ace_character {
-  color: #FF628C
-}
-
-.ace-cobalt .ace_constant.ace_character.ace_escape {
   color: #FF628C
 }
 

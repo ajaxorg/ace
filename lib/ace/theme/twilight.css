@@ -73,15 +73,11 @@
 }
 
 .ace-twilight .ace_constant,
-.ace-twilight .ace_constant.ace_other {
-  color: #CF6A4C
-}
-
-.ace-twilight .ace_constant.ace_character {
-  color: #CF6A4C
-}
-
-.ace-twilight .ace_constant.ace_character.ace_escape {
+.ace-twilight .ace_constant.ace_character,
+.ace-twilight .ace_constant.ace_character.ace_escape,
+.ace-twilight .ace_constant.ace_other,
+.ace-twilight .ace_markup.ace_heading,
+.ace-twilight .ace_support.ace_constant {
   color: #CF6A4C
 }
 
@@ -100,10 +96,6 @@
   color: #9B859D
 }
 
-.ace-twilight .ace_support.ace_constant {
-  color: #CF6A4C
-}
-
 .ace-twilight .ace_fold {
   background-color: #AC885B;
   border-color: #F8F8F8
@@ -113,10 +105,13 @@
   color: #DAD085
 }
 
+.ace-twilight .ace_markup.ace_list,
 .ace-twilight .ace_storage {
   color: #F9EE98
 }
 
+.ace-twilight .ace_entity.ace_name.ace_function,
+.ace-twilight .ace_meta.ace_tag,
 .ace-twilight .ace_variable {
   color: #AC885B
 }
@@ -142,24 +137,8 @@
   color: #494949
 }
 
-.ace-twilight .ace_meta.ace_tag {
-  color: #AC885B
-}
-
-.ace-twilight .ace_entity.ace_name.ace_function {
-  color: #AC885B
-}
-
 .ace-twilight .ace_markup.ace_underline {
   text-decoration: underline
-}
-
-.ace-twilight .ace_markup.ace_heading {
-  color: #CF6A4C
-}
-
-.ace-twilight .ace_markup.ace_list {
-  color: #F9EE98
 }
 
 .ace-twilight .ace_indent-guide {

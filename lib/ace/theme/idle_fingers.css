@@ -73,25 +73,16 @@
 }
 
 .ace-idle-fingers .ace_constant,
-.ace-idle-fingers .ace_constant.ace_other {
-  color: #6C99BB
-}
-
-.ace-idle-fingers .ace_constant.ace_character {
-  color: #6C99BB
-}
-
-.ace-idle-fingers .ace_constant.ace_character.ace_escape {
+.ace-idle-fingers .ace_constant.ace_character,
+.ace-idle-fingers .ace_constant.ace_character.ace_escape,
+.ace-idle-fingers .ace_constant.ace_other,
+.ace-idle-fingers .ace_support.ace_constant {
   color: #6C99BB
 }
 
 .ace-idle-fingers .ace_invalid {
   color: #FFFFFF;
   background-color: #FF0000
-}
-
-.ace-idle-fingers .ace_support.ace_constant {
-  color: #6C99BB
 }
 
 .ace-idle-fingers .ace_fold {

@@ -68,7 +68,10 @@
 }
 
 .ace-tomorrow-night-bright .ace_keyword,
-.ace-tomorrow-night-bright .ace_meta {
+.ace-tomorrow-night-bright .ace_meta,
+.ace-tomorrow-night-bright .ace_storage,
+.ace-tomorrow-night-bright .ace_storage.ace_type,
+.ace-tomorrow-night-bright .ace_support.ace_type {
   color: #C397D8
 }
 
@@ -76,15 +79,11 @@
   color: #70C0B1
 }
 
-.ace-tomorrow-night-bright .ace_constant.ace_character {
-  color: #E78C45
-}
-
-.ace-tomorrow-night-bright .ace_constant.ace_language {
-  color: #E78C45
-}
-
-.ace-tomorrow-night-bright .ace_constant.ace_numeric {
+.ace-tomorrow-night-bright .ace_constant.ace_character,
+.ace-tomorrow-night-bright .ace_constant.ace_language,
+.ace-tomorrow-night-bright .ace_constant.ace_numeric,
+.ace-tomorrow-night-bright .ace_support.ace_constant,
+.ace-tomorrow-night-bright .ace_variable.ace_parameter {
   color: #E78C45
 }
 
@@ -102,49 +101,31 @@
   background-color: #B798BF
 }
 
-.ace-tomorrow-night-bright .ace_support.ace_constant {
-  color: #E78C45
-}
-
 .ace-tomorrow-night-bright .ace_fold {
   background-color: #7AA6DA;
   border-color: #DEDEDE
 }
 
-.ace-tomorrow-night-bright .ace_support.ace_function {
-  color: #7AA6DA
-}
-
-.ace-tomorrow-night-bright .ace_support.ace_type {
-  color: #E7C547
-}
-
-.ace-tomorrow-night-bright .ace_support.ace_class {
-  color: #E7C547
-}
-
-.ace-tomorrow-night-bright .ace_storage {
-  color: #C397D8
-}
-
-.ace-tomorrow-night-bright .ace_storage.ace_type,
-.ace-tomorrow-night-bright .ace_support.ace_type {
-  color: #C397D8
-}
-
+.ace-tomorrow-night-bright .ace_entity.ace_name.ace_function,
+.ace-tomorrow-night-bright .ace_support.ace_function,
 .ace-tomorrow-night-bright .ace_variable {
   color: #7AA6DA
 }
 
-.ace-tomorrow-night-bright .ace_variable.ace_parameter {
-  color: #E78C45
+.ace-tomorrow-night-bright .ace_support.ace_class,
+.ace-tomorrow-night-bright .ace_support.ace_type {
+  color: #E7C547
 }
 
+.ace-tomorrow-night-bright .ace_markup.ace_heading,
 .ace-tomorrow-night-bright .ace_string {
   color: #B9CA4A
 }
 
-.ace-tomorrow-night-bright .ace_string.ace_regexp {
+.ace-tomorrow-night-bright .ace_entity.ace_other.ace_attribute-name,
+.ace-tomorrow-night-bright .ace_meta.ace_tag,
+.ace-tomorrow-night-bright .ace_string.ace_regexp,
+.ace-tomorrow-night-bright .ace_variable {
   color: #D54E53
 }
 
@@ -152,28 +133,8 @@
   color: #969896
 }
 
-.ace-tomorrow-night-bright .ace_variable {
-  color: #D54E53
-}
-
-.ace-tomorrow-night-bright .ace_meta.ace_tag {
-  color: #D54E53
-}
-
-.ace-tomorrow-night-bright .ace_entity.ace_other.ace_attribute-name {
-  color: #D54E53
-}
-
-.ace-tomorrow-night-bright .ace_entity.ace_name.ace_function {
-  color: #7AA6DA
-}
-
 .ace-tomorrow-night-bright .ace_markup.ace_underline {
   text-decoration: underline
-}
-
-.ace-tomorrow-night-bright .ace_markup.ace_heading {
-  color: #B9CA4A
 }
 
 .ace-tomorrow-night-bright .ace_indent-guide {

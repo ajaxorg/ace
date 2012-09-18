@@ -72,25 +72,19 @@
   color: #757aD8
 }
 
-.ace-pastel-on-dark .ace_keyword.ace_operator {
-  color: #797878
-}
-
 .ace-pastel-on-dark .ace_constant,
+.ace-pastel-on-dark .ace_constant.ace_character,
+.ace-pastel-on-dark .ace_constant.ace_character.ace_escape,
 .ace-pastel-on-dark .ace_constant.ace_other {
   color: #4FB7C5
 }
 
+.ace-pastel-on-dark .ace_keyword.ace_operator {
+  color: #797878
+}
+
 .ace-pastel-on-dark .ace_constant.ace_character {
   color: #AFA472
-}
-
-.ace-pastel-on-dark .ace_constant.ace_character {
-  color: #4FB7C5
-}
-
-.ace-pastel-on-dark .ace_constant.ace_character.ace_escape {
-  color: #4FB7C5
 }
 
 .ace-pastel-on-dark .ace_constant.ace_language {
@@ -101,11 +95,7 @@
   color: #CCCCCC
 }
 
-.ace-pastel-on-dark .ace_invalid {
-  color: #F8F8F8;
-  background-color: rgba(86, 45, 86, 0.75)
-}
-
+.ace-pastel-on-dark .ace_invalid,
 .ace-pastel-on-dark .ace_invalid.ace_illegal {
   color: #F8F8F8;
   background-color: rgba(86, 45, 86, 0.75)

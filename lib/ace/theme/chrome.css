@@ -104,9 +104,6 @@
   color: #0000A2;
 }
 
-.ace-chrome .ace_markup.ace_underline {
-    text-decoration:underline;
-}
 
 .ace-chrome .ace_markup.ace_heading {
   color: rgb(12, 7, 255);

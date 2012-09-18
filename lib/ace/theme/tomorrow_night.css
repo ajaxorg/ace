@@ -68,7 +68,10 @@
 }
 
 .ace-tomorrow-night .ace_keyword,
-.ace-tomorrow-night .ace_meta {
+.ace-tomorrow-night .ace_meta,
+.ace-tomorrow-night .ace_storage,
+.ace-tomorrow-night .ace_storage.ace_type,
+.ace-tomorrow-night .ace_support.ace_type {
   color: #B294BB
 }
 
@@ -76,15 +79,11 @@
   color: #8ABEB7
 }
 
-.ace-tomorrow-night .ace_constant.ace_character {
-  color: #DE935F
-}
-
-.ace-tomorrow-night .ace_constant.ace_language {
-  color: #DE935F
-}
-
-.ace-tomorrow-night .ace_constant.ace_numeric {
+.ace-tomorrow-night .ace_constant.ace_character,
+.ace-tomorrow-night .ace_constant.ace_language,
+.ace-tomorrow-night .ace_constant.ace_numeric,
+.ace-tomorrow-night .ace_support.ace_constant,
+.ace-tomorrow-night .ace_variable.ace_parameter {
   color: #DE935F
 }
 
@@ -102,49 +101,31 @@
   background-color: #B798BF
 }
 
-.ace-tomorrow-night .ace_support.ace_constant {
-  color: #DE935F
-}
-
 .ace-tomorrow-night .ace_fold {
   background-color: #81A2BE;
   border-color: #C5C8C6
 }
 
-.ace-tomorrow-night .ace_support.ace_function {
-  color: #81A2BE
-}
-
-.ace-tomorrow-night .ace_support.ace_type {
-  color: #F0C674
-}
-
-.ace-tomorrow-night .ace_support.ace_class {
-  color: #F0C674
-}
-
-.ace-tomorrow-night .ace_storage {
-  color: #B294BB
-}
-
-.ace-tomorrow-night .ace_storage.ace_type,
-.ace-tomorrow-night .ace_support.ace_type {
-  color: #B294BB
-}
-
+.ace-tomorrow-night .ace_entity.ace_name.ace_function,
+.ace-tomorrow-night .ace_support.ace_function,
 .ace-tomorrow-night .ace_variable {
   color: #81A2BE
 }
 
-.ace-tomorrow-night .ace_variable.ace_parameter {
-  color: #DE935F
+.ace-tomorrow-night .ace_support.ace_class,
+.ace-tomorrow-night .ace_support.ace_type {
+  color: #F0C674
 }
 
+.ace-tomorrow-night .ace_markup.ace_heading,
 .ace-tomorrow-night .ace_string {
   color: #B5BD68
 }
 
-.ace-tomorrow-night .ace_string.ace_regexp {
+.ace-tomorrow-night .ace_entity.ace_other.ace_attribute-name,
+.ace-tomorrow-night .ace_meta.ace_tag,
+.ace-tomorrow-night .ace_string.ace_regexp,
+.ace-tomorrow-night .ace_variable {
   color: #CC6666
 }
 
@@ -152,28 +133,8 @@
   color: #969896
 }
 
-.ace-tomorrow-night .ace_variable {
-  color: #CC6666
-}
-
-.ace-tomorrow-night .ace_meta.ace_tag {
-  color: #CC6666
-}
-
-.ace-tomorrow-night .ace_entity.ace_other.ace_attribute-name {
-  color: #CC6666
-}
-
-.ace-tomorrow-night .ace_entity.ace_name.ace_function {
-  color: #81A2BE
-}
-
 .ace-tomorrow-night .ace_markup.ace_underline {
   text-decoration: underline
-}
-
-.ace-tomorrow-night .ace_markup.ace_heading {
-  color: #B5BD68
 }
 
 .ace-tomorrow-night .ace_indent-guide {

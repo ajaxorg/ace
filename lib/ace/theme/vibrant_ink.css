@@ -73,15 +73,9 @@
 }
 
 .ace-vibrant-ink .ace_constant,
+.ace-vibrant-ink .ace_constant.ace_character,
+.ace-vibrant-ink .ace_constant.ace_character.ace_escape,
 .ace-vibrant-ink .ace_constant.ace_other {
-  color: #339999
-}
-
-.ace-vibrant-ink .ace_constant.ace_character {
-  color: #339999
-}
-
-.ace-vibrant-ink .ace_constant.ace_character.ace_escape {
   color: #339999
 }
 
@@ -89,11 +83,7 @@
   color: #99CC99
 }
 
-.ace-vibrant-ink .ace_invalid {
-  color: #CCFF33;
-  background-color: #000000
-}
-
+.ace-vibrant-ink .ace_invalid,
 .ace-vibrant-ink .ace_invalid.ace_deprecated {
   color: #CCFF33;
   background-color: #000000
@@ -104,10 +94,8 @@
   border-color: #FFFFFF
 }
 
-.ace-vibrant-ink .ace_support.ace_function {
-  color: #FFCC00
-}
-
+.ace-vibrant-ink .ace_entity.ace_name.ace_function,
+.ace-vibrant-ink .ace_support.ace_function,
 .ace-vibrant-ink .ace_variable {
   color: #FFCC00
 }
@@ -131,14 +119,6 @@
 .ace-vibrant-ink .ace_entity.ace_other.ace_attribute-name {
   font-style: italic;
   color: #99CC99
-}
-
-.ace-vibrant-ink .ace_entity.ace_name.ace_function {
-  color: #FFCC00
-}
-
-.ace-vibrant-ink .ace_markup.ace_underline {
-  text-decoration: underline
 }
 
 .ace-vibrant-ink .ace_indent-guide {

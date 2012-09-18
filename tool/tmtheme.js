@@ -77,6 +77,12 @@ var supportedScopes = {
    "collab.user1": "collab.user1"
 };
 
+var fallbackScopes = {
+    "keyword": "meta",
+    "support.type": "storage.type",
+    "variable": "entity.name.function"
+};
+
 function extractStyles(theme) {
     var globalSettings = theme.settings[0].settings;
 
@@ -96,33 +102,34 @@ function extractStyles(theme) {
     };
 
     for (var i=1; i<theme.settings.length; i++) {
-      var element = theme.settings[i];
-      if (!element.scope)
-          continue;
-      var scopes = element.scope.split(/\s*[|,]\s*/g);
-      for (var j=0; j<scopes.length; j++) {
-        var scope = scopes[j];
-        var style = parseStyles(element.settings);
-
-        if (supportedScopes[scope]) {
-            colors[supportedScopes[scope]] = style;
-        } 
-        else if (style.length > 0) {
-          if (unsupportedScopes[scope] === undefined) {
-            unsupportedScopes[scope] = 1;
-          }
-          else {
-            unsupportedScopes[scope] = unsupportedScopes[scope] + 1;
-          }
-        }
-      }
+        var element = theme.settings[i];
+        if (!element.scope)
+            continue;
+        var scopes = element.scope.split(/\s*[|,]\s*/g);
+        for (var j = 0; j < scopes.length; j++) {
+            var scope = scopes[j];
+            var style = parseStyles(element.settings);
+        
+            var aceScope = supportedScopes[scope];
+            if (aceScope) {
+                colors[aceScope] = style;                
+            }
+            else if (style) {
+                unsupportedScopes[scope] = (unsupportedScopes[scope] || 0) + 1;
+            }
+        }        
+    }
+    
+    for (var i in fallbackScopes) {
+        if (!colors[i])
+            colors[i] = colors[fallbackScopes[i]];
     }
 
     if (!colors.fold) {
-      var foldSource = colors["entity.name.function"] || colors.keyword;
-      if (foldSource) {
-        colors.fold = foldSource.match(/\:([^;]+)/)[1];
-      }
+        var foldSource = colors["entity.name.function"] || colors.keyword;
+        if (foldSource) {
+            colors.fold = foldSource.match(/\:([^;]+)/)[1];
+        }
     }
 
     if (!colors.selected_word_highlight)
@@ -195,6 +202,28 @@ function quoteString(str) {
 var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
+function normalizeStylesheet(rules) {
+    for (var i = rules.length; i--; ) {
+        var s = JSON.stringify(rules[i].declarations);
+        for (var j = i; j --; ) {
+            if (s == JSON.stringify(rules[j].declarations)) {
+            console.log(rules[j].selectors, rules[i].selectors)
+            console.log(i, j)
+                rules[j].selectors = rules[i].selectors.concat(rules[j].selectors);
+                rules.splice(i, 1);
+                break;
+            }
+        }
+    }
+    for (var i = rules.length; i--; ) {
+        var s = rules[i].selectors.sort();
+        rules[i].selectors = s.filter(function(x, i) {
+            return x && x != s[i + 1];
+        });                
+    }
+    return rules;
+}
+
 var themes = {
     //"chrome": "Chrome DevTools",
     "clouds": "Clouds",
@@ -222,7 +251,7 @@ var themes = {
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "twilight": "Twilight",
     "vibrant_ink": "Vibrant Ink",
-    "xcode": "Xcode_default"
+    //"xcode": "Xcode_default"
 };
 
 function convertTheme(name) {
@@ -235,6 +264,13 @@ function convertTheme(name) {
         styles.uuid = theme.uuid;
         var css = fillTemplate(cssTemplate, styles);
         css = css.replace(/[^\{\}]+{\s*}/g, "");
+        
+        for (var i in supportedScopes) {
+            if (!styles[i])
+                continue;
+            css += "." + styles.cssClass + " " +
+                i.replace(/^|\./g, ".ace_") + "{" + styles[i] + "}";
+        }
 
         var js = fillTemplate(jsTemplate, {
             name: name,
@@ -248,31 +284,34 @@ function convertTheme(name) {
         // this way, we preserve all hand-modified rules in the <theme>.css rules,
         // (because some exist, for collab1 and ace_indentation_guide
         try {
-          var outThemeCss = fs.readFileSync(__dirname + "/../lib/ace/theme/" + name + ".css");
-          var parsedExistingFile = cssParse(outThemeCss);
-          var parsedPotentialFile = cssParse(css);
+            var outThemeCss = fs.readFileSync(__dirname + "/../lib/ace/theme/" + name + ".css");
+            var oldRules = cssParse(outThemeCss).stylesheet.rules;
+            var newRules = cssParse(css).stylesheet.rules;
 
 
-          for (var r = 0; r < parsedPotentialFile.stylesheet.rules.length; r++) {
-            var potentialSelectors = parsedPotentialFile.stylesheet.rules[r].selectors;
-            var found = false;
+            for (var i = 0; i < newRules.length; i++) {
+                var newSelectors = newRules[i].selectors;
 
-            for (var e = 0; e < parsedExistingFile.stylesheet.rules.length; e++) {
-              var existingSelectors = parsedExistingFile.stylesheet.rules[e].selectors;
-
-              if (existingSelectors.join(",") === potentialSelectors.join(",")) {
-                found = true;
-                break;
-              }
+                for (var j = 0; j < oldRules.length; j++) {
+                    var oldSelectors = oldRules[j].selectors;
+                    newSelectors = newSelectors.filter(function(s) {
+                        return oldSelectors.indexOf(s) == -1;
+                    })
+                    if (!newSelectors.length)
+                        break;
+                }
+                if (newSelectors.length) {
+                    newRules[i].selectors = newSelectors;
+                    console.log("Adding NEW rule: ", newRules[i])
+                    oldRules.splice(i, 0, newRules[i]);
+                }
             }
-            if (!found) {
-              console.log("Adding NEW rule: ", parsedPotentialFile.stylesheet.rules[r])
-              parsedExistingFile.stylesheet.rules.splice(r, 0, parsedPotentialFile.stylesheet.rules[r]);
-            }
-          }
-          css = cssStringify(parsedExistingFile, { compress: false });
+            
+            oldRules = normalizeStylesheet(oldRules);
+            
+            css = cssStringify({stylesheet: {rules: oldRules}}, { compress: false });
         } catch(e) {
-          console.log("Creating new file: " +  name + ".css")
+            console.log("Creating new file: " +  name + ".css")
         }
         
         fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
@@ -286,11 +325,11 @@ for (var name in themes) {
 
 var sortedUnsupportedScopes = {};
 for (var u in unsupportedScopes) {
-  var value = unsupportedScopes[u];
-  if (sortedUnsupportedScopes[value] === undefined) {
-    sortedUnsupportedScopes[value] = [];
-  }
-  sortedUnsupportedScopes[value].push(u);
+    var value = unsupportedScopes[u];
+    if (sortedUnsupportedScopes[value] === undefined) {
+        sortedUnsupportedScopes[value] = [];
+    }
+    sortedUnsupportedScopes[value].push(u);
 }
 
 console.log("I found these unsupported scopes:");
