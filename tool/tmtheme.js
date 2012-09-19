@@ -340,3 +340,32 @@ console.log("I found these unsupported scopes:");
 console.log(sortedUnsupportedScopes);
 console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
 console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
+
+
+/*** TODO: generate images for indent guides in node
+
+var indentGuideColor = "#2D2D2D"
+var canvas = document.createElement("canvas")
+canvas.width = 1; canvas.height = 2;
+var ctx = canvas.getContext("2d")
+imageData = ctx.getImageData(0,0,1,2)
+
+function getColor(color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(0,0,1,2);
+    return Array.slice(ctx.getImageData(0,0,1,2).data).slice(0,4)    
+}
+bgColor = getComputedStyle(ace.renderer.scroller).backgroundColor
+var a = [].concat(getColor(bgColor), getColor(indentGuideColor));
+a.forEach(function(val,i){imageData.data[i] = val})
+
+ctx.putImageData(imageData,0,0)
+image = canvas.toDataURL("png")
+
+var rule = "."+ace.renderer.$theme +" .ace_indent-guide {\n\
+  background: url(" + image +") right repeat-y;\n\
+}"
+console.log(rule)
+require("ace/lib/dom").importCssString(rule)
+
+*/
