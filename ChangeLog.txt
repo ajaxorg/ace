@@ -1,3 +1,47 @@
+2012.09.17, Version 0.1.0
+
+* New Features
+  - Multiple cursors and selections (https://c9.io/site/blog/2012/08/be-an-armenian-warrior-with-block-selection-on-steroids/)
+  - Fold buttons displayed in the gutter
+  - Indent Guides
+  - Completely reworked vim mode (Sergi Mansilla)
+  - Improved emacs keybindings
+  - Autoclosing of html tags (danyaPostfactum)
+
+* 20 New language modes
+  - Coldfusion (Russ)
+  - Diff
+  - GLSL (Ed Mackey)
+  - Go (Davide Saurino)
+  - Haxe (Jason O'Neil)
+  - Jade (Garen Torikyan)
+  - jsx (Syu Kato)
+  - LaTeX (James Allen)
+  - Less (John Roepke)
+  - Liquid (Bernie Telles)
+  - Lua (Lee Gao)
+  - LuaPage (Choonster)
+  - Markdown (Chris Spencer)
+  - PostgreSQL (John DeSoi)
+  - Powershell (John Kane)
+  - Sh (Richo Healey)
+  - SQL (Jonathan Camile)
+  - Tcl (Cristoph Hochreiner)
+  - XQuery (William Candillion)
+  - Yaml (Meg Sharkey)
+
+  * Live syntax checks
+  - for XQuery and JSON
+
+* New Themes
+  - Ambiance (Irakli Gozalishvili)
+  - Dreamweaver (Adam Jimenez)
+  - Github (bootstraponline)
+  - Tommorrow themes (https://github.com/chriskempson/tomorrow-theme)
+  - XCode
+
+* Many Small Enhancements and Bugfixes
+ 
 2011.08.02, Version 0.2.0
 
 * Split view (Julian Viereck)
