@@ -37,7 +37,7 @@
 
 .ace-solarized-dark .ace_marker-layer .ace_active_line,
 .ace-solarized-dark .ace_marker-layer .ace_selection {
-  background: #073642
+  background: rgba(255, 255, 255, 0.1)
 }
 
 .ace-solarized-dark.multiselect .ace_selection.start {
