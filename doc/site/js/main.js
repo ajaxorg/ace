@@ -89,7 +89,7 @@ $(function() {
             }
             else if ($("body").scrollTop() > 345) {
                 $("body").stop().animate({
-                    scrollTop: ($(el).offset().top - 15)
+                    scrollTop: ($(el).offset().top - 10)
                 }, 400);
             }
         }

@@ -515,7 +515,7 @@ header.filler {
 
 .centerpiece {
     min-height: 100%;
-    padding: 10px 0;
+    padding: 20px 0;
 }
 
 /*
@@ -532,7 +532,7 @@ header.filler {
 }
 
 #sidebar {
-    margin-top: 9px;
+    margin-top: 5px;
     /*background: url(../images/sidebar-border.png) repeat-y right 0;*/
     margin-left: 12px;
 /*    width: 280px;*/
