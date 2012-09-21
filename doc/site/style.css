@@ -375,7 +375,7 @@ UL.menu-footer LI A:hover {
     color: white;
     background-color: #555;
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
-    text-shadow: none;
+    text-shadow: 0px 0px 3px #000;
 }
 
 .nav-tabs > li > a, .nav-pills > li > a {
@@ -384,7 +384,7 @@ UL.menu-footer LI A:hover {
     border-right: 1px solid #bbb;
     border-radius: 0;
     margin: 0;
-    line-height: 24px;
+    line-height: 25px;
     font-size: 14px;
     color: #333;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
