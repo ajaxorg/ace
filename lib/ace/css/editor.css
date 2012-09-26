@@ -343,3 +343,15 @@
             transition: opacity 0.05s ease 0.05s;
     opacity:1;
 }
+
+.ace_underline {
+    text-decoration: underline;
+}
+
+.ace_bold {
+    font-weight: bold;
+}
+
+.ace_italic {
+    font-style: italic;
+}

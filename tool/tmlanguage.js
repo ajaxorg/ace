@@ -84,8 +84,12 @@ function checkForLookBehind(str) {
 
 function removeXFlag(str) {
   if (str.slice(0,4) == "(?x)") {
-    str = str.substr(4).replace(/\\[\s#]|\s+|(?:#[^\n]*)/g, function(s) {
-      return s[0] == "\\" ? s[1] : "";
+    str = str.replace(/\\.|\[([^\]\\]|\\.)*?\]|\s+|(?:#[^\n]*)/g, function(s) {
+      if (s[0] == "[")
+        return s;
+      if (s[0] == "\\")
+        return /[#\s]/.test(s[1]) ? s[1] : s;
+      return "";
     });
   }
   return str;

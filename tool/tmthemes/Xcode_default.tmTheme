@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>comment</key>
+	<string>Carmine Paolino</string>
+	<key>name</key>
+	<string>Xcode default</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#FFFFFF</string>
+				<key>caret</key>
+				<string>#000000</string>
+				<key>foreground</key>
+				<string>#000000</string>
+				<key>invisibles</key>
+				<string>#BFBFBF</string>
+				<key>lineHighlight</key>
+				<string>#00000012</string>
+				<key>selection</key>
+				<string>#B5D5FF</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment</string>
+			<key>scope</key>
+			<string>comment</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#008E00</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Preprocessor Statements</string>
+			<key>scope</key>
+			<string>meta.preprocessor, keyword.control.import</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#7D4726</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>String</string>
+			<key>scope</key>
+			<string>string</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#DF0002</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Number</string>
+			<key>scope</key>
+			<string>constant.numeric</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#3A00DC</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Built-in constant</string>
+			<key>scope</key>
+			<string>constant.language</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C800A4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>User-defined constant</string>
+			<key>scope</key>
+			<string>constant.character, constant.other</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#275A5E</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Variable</string>
+			<key>scope</key>
+			<string>variable.language, variable.other</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C800A4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C800A4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Storage</string>
+			<key>scope</key>
+			<string>storage</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#C900A4</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Class name</string>
+			<key>scope</key>
+			<string>entity.name.class</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#438288</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Inherited class</string>
+			<key>scope</key>
+			<string>entity.other.inherited-class</string>
+			<key>settings</key>
+			<dict/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Function name</string>
+			<key>scope</key>
+			<string>entity.name.function</string>
+			<key>settings</key>
+			<dict/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Function argument</string>
+			<key>scope</key>
+			<string>variable.parameter</string>
+			<key>settings</key>
+			<dict/>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Tag name</string>
+			<key>scope</key>
+			<string>entity.name.tag</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#790EAD</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Tag attribute</string>
+			<key>scope</key>
+			<string>entity.other.attribute-name</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#450084</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Library function</string>
+			<key>scope</key>
+			<string>support.function</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#450084</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Library constant</string>
+			<key>scope</key>
+			<string>support.constant</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#450084</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Library class/type</string>
+			<key>scope</key>
+			<string>support.type, support.class</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#790EAD</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Library variable</string>
+			<key>scope</key>
+			<string>support.other.variable</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#790EAD</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Invalid</string>
+			<key>scope</key>
+			<string>invalid</string>
+			<key>settings</key>
+			<dict/>
+		</dict>
+	</array>
+	<key>uuid</key>
+	<string>EE3AD170-2B7F-4DE1-B724-C75F13FE0085</string>
+</dict>
+</plist>
