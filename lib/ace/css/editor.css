@@ -157,7 +157,7 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     opacity: 0.6;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)"
 }
 
 .ace_cursor.ace_master{
@@ -165,22 +165,22 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 
-.ace_cursor.ace_faded {
+.ace_cursor.ace_hidden {
     opacity: 0.2;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)"
 }
 
-.ace_cursor.ace_hidden {
+.ace_cursor.ace_invisible {
     opacity: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 
-.ace_cursor.ace_blinking {
-       -moz-transition: opacity 0.2s;
-    -webkit-transition: opacity 0.2s;
-         -o-transition: opacity 0.2s;
-        -ms-transition: opacity 0.2s;
-            transition: opacity 0.2s;
+.ace_cursor.ace_smooth {
+       -moz-transition: opacity 0.18s;
+    -webkit-transition: opacity 0.18s;
+         -o-transition: opacity 0.18s;
+        -ms-transition: opacity 0.18s;
+            transition: opacity 0.18s;
 }
 
 
