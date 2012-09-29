@@ -176,8 +176,14 @@ module.exports = {
     ownSource: prepareDocList(ownSource),
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,
-    loadDoc: loadDoc
+    loadDoc: loadDoc,
+    
 };
-
+module.exports.all = {
+    "Mode Examples": module.exports.docs,
+    "Huge documents": module.exports.hugeDocs, 
+    "own source": module.exports.ownSource
+};
+    
 });
 

@@ -89,25 +89,25 @@ require("ace/multi_select").MultiSelect(env.editor);
 
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
-consoleEl.style.position="fixed"
-consoleEl.style.bottom = "1px"
-consoleEl.style.right = 0
-consoleEl.style.background = "white"
-consoleEl.style.border = "1px solid #baf"
-consoleEl.style.zIndex = "100"
+consoleEl.style.cssText = "position:fixed; bottom:1px; right:0;\
+border:1px solid #baf; zIndex:100";
+
 var cmdLine = new layout.singleLineEditor(consoleEl);
 cmdLine.editor = env.editor;
 env.editor.cmdLine = cmdLine;
 
+/**
+ * This demonstrates how you can define commands and bind shortcuts to them.
+ */
 env.editor.commands.addCommands([{
     name: "gotoline",
     bindKey: {win: "Ctrl-L", mac: "Command-L"},
     exec: function(editor, line) {
         if (typeof line == "object") {
             var arg = this.name + " " + editor.getCursorPosition().row;
-            editor.cmdLine.setValue(arg, 1)
-            editor.cmdLine.focus()
-            return
+            editor.cmdLine.setValue(arg, 1);
+            editor.cmdLine.focus();
+            return;
         }
         line = parseInt(line, 10);
         if (!isNaN(line))
@@ -119,10 +119,10 @@ env.editor.commands.addCommands([{
     bindKey: {win: "Ctrl-F", mac: "Command-F"},
     exec: function(editor, needle) {
         if (typeof needle == "object") {
-            var arg = this.name + " " + editor.getCopyText()
-            editor.cmdLine.setValue(arg, 1)
-            editor.cmdLine.focus()
-            return
+            var arg = this.name + " " + editor.getCopyText();
+            editor.cmdLine.setValue(arg, 1);
+            editor.cmdLine.focus();
+            return;
         }
         editor.find(needle);
     },
@@ -136,32 +136,28 @@ env.editor.commands.addCommands([{
     name: "execute",
     bindKey: "ctrl+enter",
     exec: function(editor) { 
-        try{
-            var r = eval(editor.getCopyText()||editor.getValue())
-        }catch(e){
-            r = e
+        try {
+            var r = eval(editor.getCopyText()||editor.getValue());
+        } catch(e) {
+            r = e;
         }
         editor.cmdLine.setValue(r + "")
     },
     readOnly: true
-}])
+}]);
 
 cmdLine.commands.bindKeys({
-    "Shift-Return|Ctrl-Return|Alt-Return": function(cmdLine) { cmdLine.insert("\n")},
+    "Shift-Return|Ctrl-Return|Alt-Return": function(cmdLine) { cmdLine.insert("\n"); },
     "Esc|Shift-Esc": function(cmdLine){ cmdLine.editor.focus(); },
     "Return": function(cmdLine){
         var command = cmdLine.getValue().split(/\s+/);
         var editor = cmdLine.editor;
         editor.commands.exec(command[0], editor, command[1]);
         editor.focus();
-    },
-})
+    }
+});
 
-cmdLine.commands.removeCommands(["find", "gotoline", "findall", "replace", "replaceall"])
-
-/**
- * This demonstrates how you can define commands and bind shortcuts to them.
- */
+cmdLine.commands.removeCommands(["find", "gotoline", "findall", "replace", "replaceall"]);
 
 var commands = env.editor.commands;
 commands.addCommand({
@@ -182,7 +178,7 @@ var keybindings = {
         "outdent":        "[",
         "gotolinestart":  "^",
         "gotolineend":    "$"
-     })
+    })
 };
 
 
@@ -197,13 +193,13 @@ function onResize() {
     env.split.resize();
 
     consoleEl.style.width = width + "px";
-    cmdLine.resize()
+    cmdLine.resize();
 }
 
 window.onresize = onResize;
 onResize();
 
-/*********** options pane ***************************/
+/*********** options panel ***************************/
 var docEl = document.getElementById("doc");
 var modeEl = document.getElementById("mode");
 var wrapModeEl = document.getElementById("soft_wrap");
@@ -220,19 +216,7 @@ var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
 
-var group = document.createElement("optgroup");
-group.setAttribute("label", "Mode Examples");
-fillDropdown(group, doclist.docs);
-docEl.appendChild(group);
-var group = document.createElement("optgroup");
-group.setAttribute("label", "Huge documents");
-fillDropdown(group, doclist.hugeDocs);
-docEl.appendChild(group);
-var group = document.createElement("optgroup");
-group.setAttribute("label", "own source");
-fillDropdown(group, doclist.ownSource);
-docEl.appendChild(group);
-
+fillDropdown(docEl, doclist.all);
 
 fillDropdown(modeEl, modelist.modes);
 var modesByName = modelist.modesByName;
@@ -245,7 +229,7 @@ bindDropdown("doc", function(name) {
     doclist.loadDoc(name, function(session) {
         if (!session)
             return;
-        var session = env.split.setSession(session);
+        session = env.split.setSession(session);
         updateUIEditorOptions();
         env.editor.focus();
     });
@@ -278,18 +262,18 @@ event.addListener(themeEl, "mouseover", function(e){
     this.desiredValue = e.target.value;
     if (!this.$timer)
         this.$timer = setTimeout(this.updateTheme);
-})
+});
 
 event.addListener(themeEl, "mouseout", function(e){
     this.desiredValue = null;
     if (!this.$timer)
         this.$timer = setTimeout(this.updateTheme, 20);
-})
+});
 
 themeEl.updateTheme = function(){
     env.split.setTheme(themeEl.desiredValue || themeEl.selectedValue);
     themeEl.$timer = null;
-}
+};
 
 bindDropdown("theme", function(value) {
     if (!value)
