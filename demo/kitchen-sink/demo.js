@@ -61,11 +61,11 @@ var MultiSelect = require("ace/multi_select").MultiSelect;
 var doclist = require("./doclist");
 var modelist = require("./modelist");
 var layout = require("./layout");
-var Autocompleter = require("./autocompleter").Autocompleter;
+var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
 var saveOption = util.saveOption;
 var fillDropdown = util.fillDropdown;
-var bindCheckbox = util.bindCheckbox
+var bindCheckbox = util.bindCheckbox;
 var bindDropdown = util.bindDropdown;
 
 /*********** create editor ***************************/
@@ -389,6 +389,15 @@ bindDropdown("split", function(value) {
     }
 });
 
+bindCheckbox("highlight_token", function(checked) {
+    var editor = env.editor;
+    if (editor.tokenTooltip && !checked) {
+        editor.tokenTooltip.destroy();
+        delete editor.tokenTooltip;
+    } else if (checked) {
+        editor.tokenTooltip = new TokenTooltip(editor);
+    }
+});
 
 /************** dragover ***************************/
 event.addListener(container, "dragover", function(e) {
