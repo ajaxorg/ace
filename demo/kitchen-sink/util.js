@@ -151,6 +151,12 @@ exports.saveOption = function(el, val) {
 }
 
 exports.bindCheckbox = function(id, callback, noInit) {
+    if (typeof id == "string")
+        var el = document.getElementById(id);
+    else {
+        var el = id;
+        id = el.id;
+    }
     var el = document.getElementById(id);
     if (localStorage && localStorage.getItem(id))
         el.checked = localStorage.getItem(id) == "1";
@@ -164,7 +170,12 @@ exports.bindCheckbox = function(id, callback, noInit) {
 }
 
 exports.bindDropdown = function(id, callback, noInit) {
-    var el = document.getElementById(id);
+    if (typeof id == "string")
+        var el = document.getElementById(id);
+    else {
+        var el = id;
+        id = el.id;
+    }
     if (localStorage && localStorage.getItem(id))
         el.value = localStorage.getItem(id);
 
@@ -190,7 +201,7 @@ function elt(tag, attributes, content) {
     var el = dom.createElement(tag);
     if (typeof content == "string") {
         el.textContent = content;
-    } else {
+    } else if (content) {
         content.forEach(function(ch) {
             el.appendChild(ch);
         });
@@ -203,6 +214,8 @@ function elt(tag, attributes, content) {
 
 function optgroup(values) {
     return values.map(function(item) {
+        if (typeof item == "string")
+            item = {name: item, desc: item};
         return elt("option", {value: item.name}, item.desc);
     });
 }
