@@ -156,31 +156,30 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.ace_cursor.ace_normal{
     opacity: 0.6;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)"
 }
 
 .ace_cursor.ace_master{
     opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 
-.ace_cursor.ace_hidden {
+.ace_cursor-layer.ace_hidden .ace_cursor{
     opacity: 0.2;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)"
 }
 
-.ace_cursor.ace_invisible {
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-}
-
-.ace_cursor.ace_smooth {
+.ace_cursor-layer.ace_smooth .ace_cursor {
        -moz-transition: opacity 0.18s;
     -webkit-transition: opacity 0.18s;
          -o-transition: opacity 0.18s;
         -ms-transition: opacity 0.18s;
             transition: opacity 0.18s;
+}
+
+.ace_cursor[style*="opacity: 0"]{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 
 
