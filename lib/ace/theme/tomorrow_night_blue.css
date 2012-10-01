@@ -11,7 +11,7 @@
   color: #7388b5
 }
 
-.ace-tomorrow-night-blue .ace_print_margin {
+.ace-tomorrow-night-blue .ace_print-margin {
   width: 1px;
   background: #00204b
 }
@@ -52,15 +52,15 @@
   border: 1px solid #404F7D
 }
 
-.ace-tomorrow-night-blue .ace_marker-layer .ace_active_line {
+.ace-tomorrow-night-blue .ace_marker-layer .ace_active-line {
   background: #00346E
 }
 
-.ace-tomorrow-night-blue .ace_gutter_active_line {
+.ace-tomorrow-night-blue .ace_gutter-active-line {
   background-color: #022040
 }
 
-.ace-tomorrow-night-blue .ace_marker-layer .ace_selected_word {
+.ace-tomorrow-night-blue .ace_marker-layer .ace_selected-word {
   border: 1px solid #003F8E
 }
 

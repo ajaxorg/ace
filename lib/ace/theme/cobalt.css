@@ -11,7 +11,7 @@
   color: #fff
 }
 
-.ace-cobalt .ace_print_margin {
+.ace-cobalt .ace_print-margin {
   width: 1px;
   background: #011e3a
 }
@@ -51,15 +51,15 @@
   border: 1px solid rgba(255, 255, 255, 0.15)
 }
 
-.ace-cobalt .ace_marker-layer .ace_active_line {
+.ace-cobalt .ace_marker-layer .ace_active-line {
   background: rgba(0, 0, 0, 0.35)
 }
 
-.ace-cobalt .ace_gutter_active_line {
+.ace-cobalt .ace_gutter-active-line {
   background-color: rgba(0, 0, 0, 0.35)
 }
 
-.ace-cobalt .ace_marker-layer .ace_selected_word {
+.ace-cobalt .ace_marker-layer .ace_selected-word {
   border: 1px solid rgba(179, 101, 57, 0.75)
 }
 

@@ -11,7 +11,7 @@
   color: #929292
 }
 
-.ace-clouds-midnight .ace_print_margin {
+.ace-clouds-midnight .ace_print-margin {
   width: 1px;
   background: #232323
 }
@@ -51,15 +51,15 @@
   border: 1px solid #BFBFBF
 }
 
-.ace-clouds-midnight .ace_marker-layer .ace_active_line {
+.ace-clouds-midnight .ace_marker-layer .ace_active-line {
   background: rgba(215, 215, 215, 0.031)
 }
 
-.ace-clouds-midnight .ace_gutter_active_line {
+.ace-clouds-midnight .ace_gutter-active-line {
   background-color: rgba(215, 215, 215, 0.031)
 }
 
-.ace-clouds-midnight .ace_marker-layer .ace_selected_word {
+.ace-clouds-midnight .ace_marker-layer .ace_selected-word {
   border: 1px solid #000000
 }
 

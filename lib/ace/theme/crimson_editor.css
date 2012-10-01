@@ -17,7 +17,7 @@
   text-align: right;
 }
 
-.ace-crimson-editor .ace_print_margin {
+.ace-crimson-editor .ace_print-margin {
   width: 1px;
   background: #e8e8e8;
 }
@@ -112,7 +112,7 @@
   color: rgb(0, 64, 128);
 }
 
-.ace-crimson-editor .ace_line .ace_xml_pe {
+.ace-crimson-editor .ace_line .ace_xml-pe {
   color: rgb(104, 104, 91);
 }
 
@@ -133,11 +133,11 @@
   border: 1px solid rgb(192, 192, 192);
 }
 
-.ace-crimson-editor .ace_marker-layer .ace_active_line {
+.ace-crimson-editor .ace_marker-layer .ace_active-line {
   background: rgb(232, 242, 254);
 }
 
-.ace-crimson-editor .ace_gutter_active_line {
+.ace-crimson-editor .ace_gutter-active-line {
     background-color : #dcdcdc;
 }
 
@@ -145,7 +145,7 @@
   color:rgb(28, 2, 255);
 }
 
-.ace-crimson-editor .ace_marker-layer .ace_selected_word {
+.ace-crimson-editor .ace_marker-layer .ace_selected-word {
   background: rgb(250, 250, 255);
   border: 1px solid rgb(200, 200, 250);
 }

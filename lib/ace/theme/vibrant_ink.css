@@ -11,7 +11,7 @@
   color: #BEBEBE
 }
 
-.ace-vibrant-ink .ace_print_margin {
+.ace-vibrant-ink .ace_print-margin {
   width: 1px;
   background: #1a1a1a
 }
@@ -51,15 +51,15 @@
   border: 1px solid #404040
 }
 
-.ace-vibrant-ink .ace_marker-layer .ace_active_line {
+.ace-vibrant-ink .ace_marker-layer .ace_active-line {
   background: #333333
 }
 
-.ace-vibrant-ink .ace_gutter_active_line {
+.ace-vibrant-ink .ace_gutter-active-line {
   background-color: #333333
 }
 
-.ace-vibrant-ink .ace_marker-layer .ace_selected_word {
+.ace-vibrant-ink .ace_marker-layer .ace_selected-word {
   border: 1px solid #6699CC
 }
 

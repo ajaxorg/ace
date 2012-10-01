@@ -11,7 +11,7 @@
   color: #333
 }
 
-.ace-solarized-light .ace_print_margin {
+.ace-solarized-light .ace_print-margin {
   width: 1px;
   background: #e8e8e8
 }
@@ -51,15 +51,15 @@
   border: 1px solid rgba(147, 161, 161, 0.50)
 }
 
-.ace-solarized-light .ace_marker-layer .ace_active_line {
+.ace-solarized-light .ace_marker-layer .ace_active-line {
   background: #EEE8D5
 }
 
-.ace-solarized-light .ace_gutter_active_line {
+.ace-solarized-light .ace_gutter-active-line {
   background-color : #dcdcdc
 }
 
-.ace-solarized-light .ace_marker-layer .ace_selected_word {
+.ace-solarized-light .ace_marker-layer .ace_selected-word {
   border: 1px solid #073642
 }
 

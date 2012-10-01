@@ -60,7 +60,7 @@
   content: '‣'
 }
 
-.ace-ambiance .ace_print_margin {
+.ace-ambiance .ace_print-margin {
   border-left: 1px dotted #2D2D2D;
   width: 100%;
   background: #262626;
@@ -97,7 +97,7 @@
   background: rgba(221, 240, 255, 0.20);
 }
 
-.ace-ambiance .ace_marker-layer .ace_selected_word {
+.ace-ambiance .ace_marker-layer .ace_selected-word {
   border-radius: 4px;
   border: 8px solid #3f475d;
   box-shadow: 0 0 4px black;
@@ -112,7 +112,7 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.ace-ambiance .ace_marker-layer .ace_active_line {
+.ace-ambiance .ace_marker-layer .ace_active-line {
   background: rgba(255, 255, 255, 0.031);
 }
 
@@ -223,7 +223,7 @@
   color: #9b859d;
 }
 
-.ace-ambiance .ace_xml_pe {
+.ace-ambiance .ace_xml-pe {
   color: #494949;
 }
 

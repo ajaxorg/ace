@@ -27,7 +27,7 @@
     z-index: 4;
 }
 
-.ace_gutter_active_line {
+.ace_gutter-active-line {
     position: absolute;
     left: 0;
     right: 0;
@@ -75,7 +75,7 @@
     left: 0;
 }
 
-.ace_editor .ace_print_margin_layer {
+.ace_editor .ace_print-margin-layer {
     z-index: 0;
     position: absolute;
     overflow: hidden;
@@ -85,7 +85,7 @@
     width: 100%;
 }
 
-.ace_editor .ace_print_margin {
+.ace_editor .ace_print-margin {
     position: absolute;
     height: 100%;
 }
@@ -182,12 +182,12 @@
     z-index: 6;
 }
 
-.ace_marker-layer .ace_active_line {
+.ace_marker-layer .ace_active-line {
     position: absolute;
     z-index: 2;
 }
 
-.ace_marker-layer .ace_selected_word {
+.ace_marker-layer .ace_selected-word {
     position: absolute;
     z-index: 4;
     box-sizing: border-box;
@@ -236,7 +236,7 @@
     cursor: move;
 }
 
-.ace_gutter_tooltip {
+.ace_gutter-tooltip {
     background-color: #FFFFD5;
     border: 1px solid gray;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);

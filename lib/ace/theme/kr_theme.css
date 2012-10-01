@@ -11,7 +11,7 @@
   color: #FCFFE0
 }
 
-.ace-kr-theme .ace_print_margin {
+.ace-kr-theme .ace_print-margin {
   width: 1px;
   background: #1c1917
 }
@@ -51,15 +51,15 @@
   border: 1px solid rgba(255, 177, 111, 0.32)
 }
 
-.ace-kr-theme .ace_marker-layer .ace_active_line {
+.ace-kr-theme .ace_marker-layer .ace_active-line {
   background: #38403D
 }
 
-.ace-kr-theme .ace_gutter_active_line {
+.ace-kr-theme .ace_gutter-active-line {
   background-color : #38403D
 }
 
-.ace-kr-theme .ace_marker-layer .ace_selected_word {
+.ace-kr-theme .ace_marker-layer .ace_selected-word {
   border: 1px solid rgba(170, 0, 255, 0.45)
 }
 

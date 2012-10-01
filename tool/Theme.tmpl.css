@@ -13,7 +13,7 @@
   color: #333;
 }
 
-.%cssClass% .ace_print_margin {
+.%cssClass% .ace_print-margin {
   width: 1px;
   background: %printMargin%;
 }
@@ -53,15 +53,15 @@
   border: 1px solid %bracket%;
 }
 
-.%cssClass% .ace_marker-layer .ace_active_line {
+.%cssClass% .ace_marker-layer .ace_active-line {
   background: %active_line%;
 }
 
-.%cssClass% .ace_gutter_active_line {
+.%cssClass% .ace_gutter-active-line {
   background-color: %active_line%;
 }
 
-.%cssClass% .ace_marker-layer .ace_selected_word {
+.%cssClass% .ace_marker-layer .ace_selected-word {
   %selected_word_highlight%
 }
 

@@ -16,7 +16,7 @@ index 23fc3fc..ed3b273 100644
  
 +    this.highlight = function(re) {
 +        if (!this.$searchHighlight) {
-+            var highlight = new SearchHighlight(null, "ace_selected_word", "text");
++            var highlight = new SearchHighlight(null, "ace_selected-word", "text");
 +            this.$searchHighlight = this.addDynamicMarker(highlight);
 +        }
 +        this.$searchHighlight.setRegexp(re);

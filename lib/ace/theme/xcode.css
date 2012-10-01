@@ -12,7 +12,7 @@
   color: #333
 }
 
-.ace-xcode .ace_print_margin {
+.ace-xcode .ace_print-margin {
   width: 1px;
   background: #e8e8e8
 }
@@ -52,15 +52,15 @@
   border: 1px solid #BFBFBF
 }
 
-.ace-xcode .ace_marker-layer .ace_active_line {
+.ace-xcode .ace_marker-layer .ace_active-line {
   background: rgba(0, 0, 0, 0.071)
 }
 
-.ace-xcode .ace_gutter_active_line {
+.ace-xcode .ace_gutter-active-line {
   background-color: rgba(0, 0, 0, 0.071)
 }
 
-.ace-xcode .ace_marker-layer .ace_selected_word {
+.ace-xcode .ace_marker-layer .ace_selected-word {
   border: 1px solid #B5D5FF
 }
 

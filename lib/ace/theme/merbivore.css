@@ -11,7 +11,7 @@
   color: #E6E1DC
 }
 
-.ace-merbivore .ace_print_margin {
+.ace-merbivore .ace_print-margin {
   width: 1px;
   background: #555651
 }
@@ -51,15 +51,15 @@
   border: 1px solid #404040
 }
 
-.ace-merbivore .ace_marker-layer .ace_active_line {
+.ace-merbivore .ace_marker-layer .ace_active-line {
   background: #333435
 }
 
-.ace-merbivore .ace_gutter_active_line {
+.ace-merbivore .ace_gutter-active-line {
   background-color: #333435
 }
 
-.ace-merbivore .ace_marker-layer .ace_selected_word {
+.ace-merbivore .ace_marker-layer .ace_selected-word {
   border: 1px solid #454545
 }
 

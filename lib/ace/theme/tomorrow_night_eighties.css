@@ -11,7 +11,7 @@
   color: #CCC
 }
 
-.ace-tomorrow-night-eighties .ace_print_margin {
+.ace-tomorrow-night-eighties .ace_print-margin {
   width: 1px;
   background: #272727
 }
@@ -52,15 +52,15 @@
   border: 1px solid #6A6A6A
 }
 
-.ace-tomorrow-night-eighties .ace_marker-layer .ace_active_line {
+.ace-tomorrow-night-eighties .ace_marker-layer .ace_active-line {
   background: #393939
 }
 
-.ace-tomorrow-night-eighties .ace_gutter_active_line {
+.ace-tomorrow-night-eighties .ace_gutter-active-line {
   background-color: #393939
 }
 
-.ace-tomorrow-night-eighties .ace_marker-layer .ace_selected_word {
+.ace-tomorrow-night-eighties .ace_marker-layer .ace_selected-word {
   border: 1px solid #515151
 }
 

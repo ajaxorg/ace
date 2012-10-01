@@ -11,7 +11,7 @@
   color: #DEDEDE
 }
 
-.ace-tomorrow-night-bright .ace_print_margin {
+.ace-tomorrow-night-bright .ace_print-margin {
   width: 1px;
   background: #1a1a1a
 }
@@ -51,15 +51,15 @@
   border: 1px solid #343434
 }
 
-.ace-tomorrow-night-bright .ace_marker-layer .ace_active_line {
+.ace-tomorrow-night-bright .ace_marker-layer .ace_active-line {
   background: #2A2A2A
 }
 
-.ace-tomorrow-night-bright .ace_gutter_active_line {
+.ace-tomorrow-night-bright .ace_gutter-active-line {
   background-color: #2A2A2A
 }
 
-.ace-tomorrow-night-bright .ace_marker-layer .ace_selected_word {
+.ace-tomorrow-night-bright .ace_marker-layer .ace_selected-word {
   border: 1px solid #424242
 }
 
