@@ -60,7 +60,7 @@ var supportedScopes = {
    "variable.parameter": "variable.parameter",
 
    "meta": "meta",
-   "meta.tag.sgml.doctype": "xml_pe",
+   "meta.tag.sgml.doctype": "xml-pe",
    "meta.tag": "meta.tag",
    "meta.selector": "meta.selector",
    
