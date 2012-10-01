@@ -100,7 +100,7 @@
 }
 /* bold keywords cause cursor issues for some fonts */
 /* this disables bold style for editor and keeps for static highlighter */
-.ace-github.ace_editor .ace_line > span {
+.ace-github.ace_nobold .ace_line > span {
     font-weight: normal !important;
 }
 
