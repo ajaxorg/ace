@@ -1,15 +1,3 @@
-.ace-ambiance {
-  background-color: #202020;
-}
-
-.ace-ambiance .ace_editor {
-  border: 2px solid rgb(159, 159, 159);
-}
-
-.ace-ambiance .ace_editor.ace_focus {
-  border: 2px solid #327fbd;
-}
-
 .ace-ambiance .ace_gutter {
   background-image: -moz-linear-gradient(left, #3D3D3D, #333);
   background-image: -ms-linear-gradient(left, #3D3D3D, #333);

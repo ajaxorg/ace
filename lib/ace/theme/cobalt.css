@@ -1,11 +1,3 @@
-.ace-cobalt .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-cobalt .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-cobalt .ace_gutter {
   background: #011e3a;
   color: #fff

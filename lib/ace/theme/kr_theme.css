@@ -1,11 +1,3 @@
-.ace-kr-theme .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-kr-theme .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-kr-theme .ace_gutter {
   background: #1c1917;
   color: #FCFFE0

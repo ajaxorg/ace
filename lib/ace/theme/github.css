@@ -1,18 +1,5 @@
 /* CSS style content from github's default pygments highlighter template.
    Cursor and selection styles from textmate.css. */
-.ace-github .ace_editor {
-  color: #333;
-  background-color: #F8F8F8;
-  border: 1px solid #CCC;
-  font: 13px 'Bitstream Vera Sans Mono', Courier, monospace !important;
-  line-height: 19px !important;
-  overflow: auto;
-  padding: 6px 10px;
-  border-radius: 3px;
-  position: relative;
-  margin-bottom: 15px;
-}
-
 .ace-github .ace_gutter {
   background: #e8e8e8;
   color: #AAA;

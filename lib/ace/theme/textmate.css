@@ -1,11 +1,3 @@
-.ace-tm .ace_editor {
-  border: 2px solid rgb(159, 159, 159);
-}
-
-.ace-tm .ace_editor.ace_focus {
-  border: 2px solid #327fbd;
-}
-
 .ace-tm .ace_gutter {
   background: #f0f0f0;
   color: #333;

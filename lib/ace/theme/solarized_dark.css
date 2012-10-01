@@ -1,11 +1,3 @@
-.ace-solarized-dark .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-solarized-dark .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-solarized-dark .ace_gutter {
   background: #01313f;
   color: #d0edf7

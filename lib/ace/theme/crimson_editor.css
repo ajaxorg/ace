@@ -1,11 +1,3 @@
-.ace-crimson-editor .ace_editor {
-  border: 2px solid rgb(159, 159, 159);
-}
-
-.ace-crimson-editor .ace_editor.ace_focus {
-  border: 2px solid #327fbd;
-}
-
 .ace-crimson-editor .ace_gutter {
   background: #ebebeb;
   color: #333;
