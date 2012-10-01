@@ -39,7 +39,7 @@
   background: %selection%;
 }
 
-.%cssClass%.ace_multiselect .ace_selection.start {
+.%cssClass%.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px %background%;
   border-radius: 2px;
 }
