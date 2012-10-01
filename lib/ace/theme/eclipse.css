@@ -1,18 +1,10 @@
-.ace-eclipse .ace_editor {
-  border: 2px solid rgb(159, 159, 159);
-}
-
-.ace-eclipse .ace_editor.ace_focus {
-  border: 2px solid #327fbd;
-}
-
 .ace-eclipse .ace_gutter {
   background: #ebebeb;
   border-right: 1px solid rgb(159, 159, 159);
   color: rgb(136, 136, 136);
 }
 
-.ace-eclipse .ace_print_margin {
+.ace-eclipse .ace_print-margin {
   width: 1px;
   background: #ebebeb;
 }
@@ -77,7 +69,7 @@
   color: rgb(127, 0, 127);
 }
 
-.ace-eclipse .ace_line .ace_xml_pe {
+.ace-eclipse .ace_line .ace_xml-pe {
   color: rgb(104, 104, 91);
 }
 
@@ -101,11 +93,11 @@
   background: rgb(255, 255, 0);
 }
 
-.ace-eclipse .ace_marker-layer .ace_active_line {
+.ace-eclipse .ace_marker-layer .ace_active-line {
   background: rgb(232, 242, 254);
 }
 
-.ace-eclipse .ace_marker-layer .ace_selected_word {
+.ace-eclipse .ace_marker-layer .ace_selected-word {
   border: 1px solid rgb(181, 213, 255);
 }
 
