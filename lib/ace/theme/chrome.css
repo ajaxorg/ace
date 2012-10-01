@@ -56,7 +56,7 @@
 
 .ace-chrome .ace_line .ace_support.ace_type,
 .ace-chrome .ace_line .ace_support.ace_class
-.ace-chrome .ace_line .ace_support.ace_other, {
+.ace-chrome .ace_line .ace_support.ace_other {
   color: rgb(109, 121, 222);
 }
 
