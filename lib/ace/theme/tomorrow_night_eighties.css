@@ -21,7 +21,7 @@
   border-left: 2px solid #CCCCCC
 }
 
-.ace-tomorrow-night-eighties .ace_cursor.ace_overwrite {
+.ace-tomorrow-night-eighties .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #CCCCCC
 }

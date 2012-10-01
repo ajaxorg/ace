@@ -66,7 +66,7 @@
   border-left: 1px solid #7991E8;
 }
 
-.ace-ambiance .ace_cursor.ace_overwrite {
+.ace-ambiance .ace_overwrite-cursors .ace_cursor {
   border: 1px solid #FFE300;
   background: #766B13;
 }

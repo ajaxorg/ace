@@ -20,7 +20,7 @@
   border-left: 2px solid #F8F8F0
 }
 
-.ace-monokai .ace_cursor.ace_overwrite {
+.ace-monokai .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #F8F8F0
 }

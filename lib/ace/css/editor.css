@@ -148,7 +148,7 @@
     box-sizing: border-box;
 }
 
-.ace_cursor.ace_hidden {
+.ace_hidden-cursors .ace_cursor {
     opacity: 0.2;
 }
 

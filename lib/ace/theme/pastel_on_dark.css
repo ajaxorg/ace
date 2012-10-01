@@ -20,7 +20,7 @@
   border-left: 2px solid #A7A7A7
 }
 
-.ace-pastel-on-dark .ace_cursor.ace_overwrite {
+.ace-pastel-on-dark .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #A7A7A7
 }
