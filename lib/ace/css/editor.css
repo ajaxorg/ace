@@ -75,16 +75,6 @@
     left: 0;
 }
 
-.ace_print-margin-layer {
-    z-index: 0;
-    position: absolute;
-    overflow: hidden;
-    margin: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-}
-
 .ace_print-margin {
     position: absolute;
     height: 100%;
