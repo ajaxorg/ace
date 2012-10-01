@@ -1,16 +1,5 @@
-.ace-ambiance {
-  background-color: #202020;
-}
-
-.ace-ambiance .ace_editor {
-  border: 2px solid rgb(159, 159, 159);
-}
-
-.ace-ambiance .ace_editor.ace_focus {
-  border: 2px solid #327fbd;
-}
-
 .ace-ambiance .ace_gutter {
+  background-color: #3d3d3d;
   background-image: -moz-linear-gradient(left, #3D3D3D, #333);
   background-image: -ms-linear-gradient(left, #3D3D3D, #333);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3D3D3D), to(#333));
@@ -18,51 +7,46 @@
   background-image: -o-linear-gradient(left, #3D3D3D, #333);
   background-image: linear-gradient(left, #3D3D3D, #333);
   background-repeat: repeat-x;
-
+  border-right: 1px solid #4d4d4d;
   text-shadow: 0px 1px 1px #4d4d4d;
   color: #222;
-  border-right: 1px solid #4d4d4d;
-  overflow : hidden;
 }
 
 .ace-ambiance .ace_gutter-layer {
   background: repeat left top;
-  width: 100%;
-  text-align: right;
 }
 
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget {
-  position: absolute;
-  right: 2px;
-  margin: 0;
-  vertical-align: middle;
-  height: inherit;
-  width: auto;
+.ace-ambiance .ace_fold-widget {
+  text-align: center;
+}
+
+.ace-ambiance .ace_fold-widget:hover {
+  color: #777;
+}
+
+.ace-ambiance .ace_fold-widget.ace_start,
+.ace-ambiance .ace_fold-widget.ace_end,
+.ace-ambiance .ace_fold-widget.ace_closed{
   background: none;
   border: none;
   box-shadow: none;
-  outline: none;
 }
 
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget:hover {
-  color: #777;
-}
-
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget:hover {
-  color: #777;
-}
-
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget.open:after {
+.ace-ambiance .ace_fold-widget.ace_start:after {
   content: '▾'
 }
 
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget.closed:after {
+.ace-ambiance .ace_fold-widget.ace_end:after {
+  content: '▴'
+}
+
+.ace-ambiance .ace_fold-widget.ace_closed:after {
   content: '‣'
 }
 
-.ace-ambiance .ace_print_margin {
+.ace-ambiance .ace_print-margin {
   border-left: 1px dotted #2D2D2D;
-  width: 100%;
+  right: 0;
   background: #262626;
 }
 
@@ -75,9 +59,7 @@
 }
 
 .ace-ambiance .ace_text-layer {
-  cursor: text;
   color: #E6E1DC;
-  background: url("noise.png") repeat left top;
 }
 
 .ace-ambiance .ace_cursor {
@@ -97,7 +79,7 @@
   background: rgba(221, 240, 255, 0.20);
 }
 
-.ace-ambiance .ace_marker-layer .ace_selected_word {
+.ace-ambiance .ace_marker-layer .ace_selected-word {
   border-radius: 4px;
   border: 8px solid #3f475d;
   box-shadow: 0 0 4px black;
@@ -112,11 +94,9 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.ace-ambiance .ace_marker-layer .ace_active_line {
+.ace-ambiance .ace_marker-layer .ace_active-line {
   background: rgba(255, 255, 255, 0.031);
 }
-
-
 
 .ace-ambiance .ace_invisible {
   color: #333;
@@ -223,7 +203,7 @@
   color: #9b859d;
 }
 
-.ace-ambiance .ace_xml_pe {
+.ace-ambiance .ace_xml-pe {
   color: #494949;
 }
 

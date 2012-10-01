@@ -1,17 +1,9 @@
-.ace-tomorrow-night-eighties .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-tomorrow-night-eighties .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-tomorrow-night-eighties .ace_gutter {
   background: #272727;
   color: #CCC
 }
 
-.ace-tomorrow-night-eighties .ace_print_margin {
+.ace-tomorrow-night-eighties .ace_print-margin {
   width: 1px;
   background: #272727
 }
@@ -38,7 +30,7 @@
   background: #515151
 }
 
-.ace-tomorrow-night-eighties.multiselect .ace_selection.start {
+.ace-tomorrow-night-eighties.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #2D2D2D;
   border-radius: 2px
 }
@@ -52,15 +44,15 @@
   border: 1px solid #6A6A6A
 }
 
-.ace-tomorrow-night-eighties .ace_marker-layer .ace_active_line {
+.ace-tomorrow-night-eighties .ace_marker-layer .ace_active-line {
   background: #393939
 }
 
-.ace-tomorrow-night-eighties .ace_gutter_active_line {
+.ace-tomorrow-night-eighties .ace_gutter-active-line {
   background-color: #393939
 }
 
-.ace-tomorrow-night-eighties .ace_marker-layer .ace_selected_word {
+.ace-tomorrow-night-eighties .ace_marker-layer .ace_selected-word {
   border: 1px solid #515151
 }
 
