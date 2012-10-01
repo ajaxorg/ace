@@ -38,7 +38,7 @@
   background: #515151
 }
 
-.ace-tomorrow-night-eighties.multiselect .ace_selection.start {
+.ace-tomorrow-night-eighties.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #2D2D2D;
   border-radius: 2px
 }

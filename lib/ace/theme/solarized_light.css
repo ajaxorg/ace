@@ -37,7 +37,7 @@
   background: #073642
 }
 
-.ace-solarized-light.multiselect .ace_selection.start {
+.ace-solarized-light.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #FDF6E3;
   border-radius: 2px
 }

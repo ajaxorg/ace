@@ -37,7 +37,7 @@
   background: rgba(170, 0, 255, 0.45)
 }
 
-.ace-kr-theme.multiselect .ace_selection.start {
+.ace-kr-theme.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #0B0A09;
   border-radius: 2px
 }

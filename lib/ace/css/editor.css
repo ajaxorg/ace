@@ -152,7 +152,7 @@
     opacity: 0.2;
 }
 
-.ace_editor.multiselect .ace_cursor {
+.ace_editor.ace_multiselect .ace_cursor {
     border-left-width: 1px;
 }
 

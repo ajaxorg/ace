@@ -37,7 +37,7 @@
   background: rgba(39, 95, 255, 0.30)
 }
 
-.ace-dawn.multiselect .ace_selection.start {
+.ace-dawn.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #F9F9F9;
   border-radius: 2px
 }

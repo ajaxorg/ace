@@ -38,7 +38,7 @@
   background: #003F8E
 }
 
-.ace-tomorrow-night-blue.multiselect .ace_selection.start {
+.ace-tomorrow-night-blue.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #002451;
   border-radius: 2px
 }

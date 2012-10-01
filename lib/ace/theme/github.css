@@ -94,7 +94,7 @@
 .ace-github .ace_marker-layer .ace_selection {
   background: rgb(181, 213, 255);
 }
-.ace-github.multiselect .ace_selection.start {
+.ace-github.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px white;
   border-radius: 2px;
 }

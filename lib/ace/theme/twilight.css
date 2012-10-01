@@ -37,7 +37,7 @@
   background: rgba(221, 240, 255, 0.20)
 }
 
-.ace-twilight.multiselect .ace_selection.start {
+.ace-twilight.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #141414;
   border-radius: 2px
 }

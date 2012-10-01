@@ -37,7 +37,7 @@
   background: #494949
 }
 
-.ace-merbivore-soft.multiselect .ace_selection.start {
+.ace-merbivore-soft.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #1C1C1C;
   border-radius: 2px
 }

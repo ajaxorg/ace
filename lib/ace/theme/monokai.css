@@ -37,7 +37,7 @@
   background: #49483E
 }
 
-.ace-monokai.multiselect .ace_selection.start {
+.ace-monokai.ace_multiselect .ace_selection.start {
   box-shadow: 0 0 3px 0px #272822;
   border-radius: 2px
 }
