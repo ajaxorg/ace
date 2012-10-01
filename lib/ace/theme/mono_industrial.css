@@ -20,7 +20,7 @@
   border-left: 2px solid #FFFFFF
 }
 
-.ace-mono-industrial .ace_cursor.ace_overwrite {
+.ace-mono-industrial .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #FFFFFF
 }

@@ -22,7 +22,7 @@
   border-left: 2px solid #D30102
 }
 
-.ace-solarized-dark .ace_cursor.ace_overwrite {
+.ace-solarized-dark .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #D30102
 }
