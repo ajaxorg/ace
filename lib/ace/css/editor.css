@@ -143,6 +143,9 @@
 .ace_cursor {
     z-index: 4;
     position: absolute;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .ace_cursor.ace_hidden {
