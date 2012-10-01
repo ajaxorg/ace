@@ -1,17 +1,9 @@
-.ace-mono-industrial .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-mono-industrial .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-mono-industrial .ace_gutter {
   background: #1d2521;
   color: #C5C9C9
 }
 
-.ace-mono-industrial .ace_print_margin {
+.ace-mono-industrial .ace_print-margin {
   width: 1px;
   background: #555651
 }
@@ -37,7 +29,7 @@
   background: rgba(145, 153, 148, 0.40)
 }
 
-.ace-mono-industrial.multiselect .ace_selection.start {
+.ace-mono-industrial.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #222C28;
   border-radius: 2px
 }
@@ -51,15 +43,15 @@
   border: 1px solid rgba(102, 108, 104, 0.50)
 }
 
-.ace-mono-industrial .ace_marker-layer .ace_active_line {
+.ace-mono-industrial .ace_marker-layer .ace_active-line {
   background: rgba(12, 13, 12, 0.25)
 }
 
-.ace-mono-industrial .ace_gutter_active_line {
+.ace-mono-industrial .ace_gutter-active-line {
   background-color: rgba(12, 13, 12, 0.25)
 }
 
-.ace-mono-industrial .ace_marker-layer .ace_selected_word {
+.ace-mono-industrial .ace_marker-layer .ace_selected-word {
   border: 1px solid rgba(145, 153, 148, 0.40)
 }
 

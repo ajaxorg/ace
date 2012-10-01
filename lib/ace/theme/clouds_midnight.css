@@ -1,17 +1,9 @@
-.ace-clouds-midnight .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-clouds-midnight .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-clouds-midnight .ace_gutter {
   background: #232323;
   color: #929292
 }
 
-.ace-clouds-midnight .ace_print_margin {
+.ace-clouds-midnight .ace_print-margin {
   width: 1px;
   background: #232323
 }
@@ -37,7 +29,7 @@
   background: #000000
 }
 
-.ace-clouds-midnight.multiselect .ace_selection.start {
+.ace-clouds-midnight.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #191919;
   border-radius: 2px
 }
@@ -51,15 +43,15 @@
   border: 1px solid #BFBFBF
 }
 
-.ace-clouds-midnight .ace_marker-layer .ace_active_line {
+.ace-clouds-midnight .ace_marker-layer .ace_active-line {
   background: rgba(215, 215, 215, 0.031)
 }
 
-.ace-clouds-midnight .ace_gutter_active_line {
+.ace-clouds-midnight .ace_gutter-active-line {
   background-color: rgba(215, 215, 215, 0.031)
 }
 
-.ace-clouds-midnight .ace_marker-layer .ace_selected_word {
+.ace-clouds-midnight .ace_marker-layer .ace_selected-word {
   border: 1px solid #000000
 }
 
