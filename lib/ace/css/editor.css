@@ -33,7 +33,7 @@
     right: 0;
 }
 
-.ace_scroller.horscroll {
+.ace_scroller.ace_scroll-left {
     box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;
 }
 
