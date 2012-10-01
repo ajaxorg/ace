@@ -55,7 +55,7 @@
   font-weight: normal;
 }
 
-.ace-github .ace_variable.ace_instancce {
+.ace-github .ace_variable.ace_instance {
   color: teal;
 }
 
@@ -78,17 +78,14 @@
 .ace-github .ace_marker-layer .ace_active-line {
   background: rgb(255, 255, 204);
 }
+
 .ace-github .ace_marker-layer .ace_selection {
   background: rgb(181, 213, 255);
 }
+
 .ace-github.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px white;
   border-radius: 2px;
-}
-/* bold keywords cause cursor issues for some fonts */
-/* this disables bold style for editor and keeps for static highlighter */
-.ace-github.ace_editor .ace_line > span {
-    font-weight: normal !important;
 }
 
 .ace-github .ace_marker-layer .ace_step {
