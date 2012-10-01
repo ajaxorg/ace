@@ -152,6 +152,18 @@
     opacity: 0.2;
 }
 
+.ace_smooth-blinking .ace_cursor {
+       -moz-transition: opacity 0.18s;
+    -webkit-transition: opacity 0.18s;
+         -o-transition: opacity 0.18s;
+        -ms-transition: opacity 0.18s;
+            transition: opacity 0.18s;
+}
+
+.ace_cursor[style*="opacity: 0"]{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+}
+
 .ace_editor.ace_multiselect .ace_cursor {
     border-left-width: 1px;
 }
