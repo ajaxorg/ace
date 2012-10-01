@@ -52,11 +52,11 @@
   color: #777;
 }
 
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget.open:after {
+.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget.ace_open:after {
   content: '▾'
 }
 
-.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget.closed:after {
+.ace-ambiance .ace_gutter-layer .ace_gutter-cell .ace_fold-widget.ace_closed:after {
   content: '‣'
 }
 
