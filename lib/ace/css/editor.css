@@ -12,9 +12,9 @@
 
 .ace_content {
     position: absolute;
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     cursor: text;
 }
 
@@ -97,8 +97,8 @@
     height: 1em;
     opacity: 0;
     background: transparent;
-    appearance: none;
     -moz-appearance: none;
+    appearance: none;
     border: none;
     resize: none;
     outline: none;
@@ -121,9 +121,9 @@
     white-space: nowrap;
     height: 100%;
     width: 100%;
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     /* setting pointer-events: auto; on node under the mouse, which changes
         during scroll, will break mouse wheel scrolling in Safari */
     pointer-events: none;
@@ -190,15 +190,15 @@
 .ace_marker-layer .ace_selected-word {
     position: absolute;
     z-index: 4;
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .ace_line .ace_fold {
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 
     display: inline-block;
     height: 11px;
@@ -245,9 +245,9 @@
     padding: 4px;
     position: absolute;
     z-index: 300;
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     cursor: default;
 }
 
@@ -256,9 +256,9 @@
 }
 
 .ace_fold-widget {
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 
     margin: 0 -12px 0 1px;
     display: inline-block;
