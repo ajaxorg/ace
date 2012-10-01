@@ -90,7 +90,7 @@
     height: 100%;
 }
 
-.ace_editor > textarea {
+.ace_text-input {
     position: absolute;
     z-index: 0;
     width: 0.5em;
@@ -105,7 +105,7 @@
     overflow: hidden;
 }
 
-.ace_editor > textarea.ace_composition {
+.ace_text-input.ace_composition {
     background: #fff;
     color: #000;
     z-index: 1000;
