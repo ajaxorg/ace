@@ -269,7 +269,7 @@ function buildAce(options) {
         copy.filter.moduleDefines,
         filterTextPlugin,
         removeUseStrict,
-        removeLicenceCmments
+        removeLicenceComments
     ];
 
     if (options.noconflict) {
@@ -370,7 +370,7 @@ function buildAce(options) {
         copy.filter.moduleDefines,
         filterTextPlugin,
         removeUseStrict,
-        removeLicenceCmments
+        removeLicenceComments
     ];
 
     options.workers.forEach(function(mode) {
@@ -466,7 +466,7 @@ function removeUseStrict(text) {
     return text.replace(/['"]use strict['"];/g, "");
 }
 
-function removeLicenceCmments(text) {
+function removeLicenceComments(text) {
     return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1");
 }
 
