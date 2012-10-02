@@ -478,7 +478,7 @@ function quoteString(str) {
 }
 
 function filterTextPlugin(text) {
-    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text!");
+    return text.replace(/(['"])(ace|[.\/]+?)\/requirejs\/text\!/g, "$1");
 }
 
 function removeUseStrict(text) {
