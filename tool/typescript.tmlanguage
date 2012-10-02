@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>comment</key>
+	<string>TypeScript Syntax: version 1.0</string>
+	<key>fileTypes</key>
+	<array>
+		<string>ts</string>
+		<string>str</string>
+	</array>
+	<key>name</key>
+	<string>TypeScript</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.ts</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable.parameter.function.ts</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Match stuff like: module name {...}</string>
+			<key>match</key>
+			<string>\b(module)\s*(\s*[a-zA-Z0-9_?.$][\w?.$]*)\s*</string>
+			<key>name</key>
+			<string>meta.function.ts</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Match variable type keywords</string>
+			<key>match</key>
+			<string>\b(string|bool|number)\b</string>
+			<key>name</key>
+			<string>storage.type.variable.ts</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.variable.ts</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Match this.</string>
+			<key>match</key>
+			<string>\b(this)\.</string>
+			<key>name</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>Match stuff like: constructor</string>
+			<key>match</key>
+			<string>\b(constructor|declare|interface|as|AS)\b</string>
+			<key>name</key>
+			<string>keyword.operator.ts</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.variable.ts</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Match stuff like: super(argument, list)</string>
+			<key>match</key>
+			<string>(super)\s*\(([a-zA-Z0-9,_?.$\s]+\s*)\)</string>
+			<key>name</key>
+			<string>keyword.other.ts</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.function.ts</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Match stuff like: function() {...}</string>
+			<key>match</key>
+			<string>([a-zA-Z_?.$][\w?.$]*)\(\) \{</string>
+			<key>name</key>
+			<string>meta.function.ts</string>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>variable.parameter.function.ts</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>variable.parameter.function.ts</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Match stuff like: (function: return type)</string>
+			<key>match</key>
+			<string>([a-zA-Z0-9_?.$][\w?.$]*)\s*:\s*([a-zA-Z0-9_?.$][\w?.$]*)</string>
+			<key>name</key>
+			<string>meta.function.ts</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>source.js</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.ts</string>
+	<key>uuid</key>
+	<string>21e323af-f665-4161-96e7-5087d262557e</string>
+</dict>
+</plist>

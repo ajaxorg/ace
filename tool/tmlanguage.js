@@ -270,11 +270,13 @@ function convertLanguage(name) {
         var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
               language: languageNameSanitized,
               languageTokens: patterns,
-              respositoryRules: "/*** START REPOSITORY RULES\n" + repository + "\nEND REPOSITORY RULES ***/",
+              respositoryRules: "/*** START REPOSITORY RULES\n" + (Object.keys(repository).length === 0 ?  "" : repository) + "\nEND REPOSITORY RULES ***/",
               uuid: language.uuid
         });
 
         if (devMode) {
+          console.log(languageMode)
+          console.log(languageHighlightRules)
           console.log("Not writing, 'cause we're in dev mode, baby.");
         }
         else {
