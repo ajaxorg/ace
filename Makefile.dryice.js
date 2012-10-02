@@ -336,7 +336,7 @@ function buildAce(options) {
             dest:   targetDir + "/theme-" + theme + ".js"
         });*/
         // use this instead, to not create separate modules for js and css
-        var themePath = ACE_HOME + "/lib/ace/theme/" + theme
+        var themePath = ACE_HOME + "/lib/ace/theme/" + theme;
         var js = fs.readFileSync(themePath + ".js", "utf8");
         js = js.replace("define(", "define('ace/theme/" + theme + "', ['require', 'exports', 'module', 'ace/lib/dom'], ");
         
