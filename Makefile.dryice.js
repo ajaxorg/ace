@@ -245,6 +245,10 @@ function buildAce(options) {
         themes: fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
                 return x.slice(-3) == ".js" && x.slice(0, -3);
             }).filter(function(x){ return !!x; }),
+        extensions: fs.readdirSync(ACE_HOME + "/lib/ace/ext").map(function(x){
+                if (x.slice(-3) == ".js" && !/_test/.test(x))
+                    return x.slice(0, -3);
+            }).filter(function(x){ return !!x; }),
         workers: ["javascript", "coffee", "css", "json", "xquery"],
         keybindings: ["vim", "emacs"]
     };
@@ -347,6 +351,21 @@ function buildAce(options) {
         filters.forEach(function(f) {js = f(js); });
         
         fs.writeFileSync(targetDir + "/theme-" + theme + ".js", js); 
+    });
+
+    console.log('# ace extensions ---------');
+
+    project.assumeAllFilesLoaded();
+    options.extensions.forEach(function(ext) {
+        console.log("extensions " + ext);
+        copy({
+            source: [{
+                project: cloneProject(project),
+                require: [ 'ace/ext/' + ext ]
+            }],
+            filter: filters,
+            dest:   targetDir + "/ext-" + ext + ".js"
+        });
     });
 
     console.log('# ace key bindings ---------');
