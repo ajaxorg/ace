@@ -124,6 +124,7 @@ var modesByName = {
     tcl:        ["Tcl"                , "tcl"],
     text:       ["Text"               , "txt"],
     textile:    ["Textile"            , "textile"],
+    typescript: ["Typescript"         , "typescript|ts|str"],
     xml:        ["XML"                , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"             , "xq"],
     yaml:       ["YAML"               , "yaml"]
@@ -205,6 +206,7 @@ var docs = {
     "docs/svg.svg": "SVG",
     "docs/tcl.tcl": "Tcl",
     "docs/textile.textile": {name: "Textile", wrapped: true},
+    "docs/typescript.ts": "Typescript",
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
