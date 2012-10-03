@@ -59,6 +59,11 @@
   color: rgba(102, 108, 104, 0.50)
 }
 
+.ace-mono-industrial .ace_string {
+  background-color: #151C19;
+  color: #FFFFFF
+}
+
 .ace-mono-industrial .ace_keyword,
 .ace-mono-industrial .ace_meta {
   color: #A39E64

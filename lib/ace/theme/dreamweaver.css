@@ -28,78 +28,78 @@
   border-bottom: 1px solid black;
 }
         
-.ace-dreamweaver .ace_line .ace_invisible {
+.ace-dreamweaver .ace_invisible {
   color: rgb(191, 191, 191);
 }
 
-.ace-dreamweaver .ace_line .ace_storage,
-.ace-dreamweaver .ace_line .ace_keyword {
+.ace-dreamweaver .ace_storage,
+.ace-dreamweaver .ace_keyword {
   color: blue;
 }
 
-.ace-dreamweaver .ace_line .ace_constant.ace_buildin {
+.ace-dreamweaver .ace_constant.ace_buildin {
   color: rgb(88, 72, 246);
 }
 
-.ace-dreamweaver .ace_line .ace_constant.ace_language {
+.ace-dreamweaver .ace_constant.ace_language {
   color: rgb(88, 92, 246);
 }
 
-.ace-dreamweaver .ace_line .ace_constant.ace_library {
+.ace-dreamweaver .ace_constant.ace_library {
   color: rgb(6, 150, 14);
 }
 
-.ace-dreamweaver .ace_line .ace_invalid {
+.ace-dreamweaver .ace_invalid {
   background-color: rgb(153, 0, 0);
   color: white;
 }
 
-.ace-dreamweaver .ace_line .ace_support.ace_function {
+.ace-dreamweaver .ace_support.ace_function {
   color: rgb(60, 76, 114);
 }
 
-.ace-dreamweaver .ace_line .ace_support.ace_constant {
+.ace-dreamweaver .ace_support.ace_constant {
   color: rgb(6, 150, 14);
 }
 
-.ace-dreamweaver .ace_line .ace_support.ace_type,
-.ace-dreamweaver .ace_line .ace_support.ace_class {
+.ace-dreamweaver .ace_support.ace_type,
+.ace-dreamweaver .ace_support.ace_class {
   color: #009;
 }
 
-.ace-dreamweaver .ace_line .ace_support.ace_php_tag {
+.ace-dreamweaver .ace_support.ace_php_tag {
   color: #f00;
 }
 
-.ace-dreamweaver .ace_line .ace_keyword.ace_operator {
+.ace-dreamweaver .ace_keyword.ace_operator {
   color: rgb(104, 118, 135);
 }
 
-.ace-dreamweaver .ace_line .ace_string {
+.ace-dreamweaver .ace_string {
   color: #00F;
 }
 
-.ace-dreamweaver .ace_line .ace_comment {
+.ace-dreamweaver .ace_comment {
   color: rgb(76, 136, 107);
 }
 
-.ace-dreamweaver .ace_line .ace_comment.ace_doc {
+.ace-dreamweaver .ace_comment.ace_doc {
   color: rgb(0, 102, 255);
 }
 
-.ace-dreamweaver .ace_line .ace_comment.ace_doc.ace_tag {
+.ace-dreamweaver .ace_comment.ace_doc.ace_tag {
   color: rgb(128, 159, 191);
 }
 
-.ace-dreamweaver .ace_line .ace_constant.ace_numeric {
+.ace-dreamweaver .ace_constant.ace_numeric {
   color: rgb(0, 0, 205);
 }
 
-.ace-dreamweaver .ace_line .ace_variable {
+.ace-dreamweaver .ace_variable {
   color: #06F
 }
 
-.ace-dreamweaver .ace_line .ace_xml-pe {
+.ace-dreamweaver .ace_xml-pe {
   color: rgb(104, 104, 91);
 }
 
