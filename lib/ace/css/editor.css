@@ -1,7 +1,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Droid Sans Mono', 'Consolas', monospace;
+    font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
 }
 
@@ -343,6 +343,10 @@
 
 .ace_bold {
     font-weight: bold;
+}
+
+.ace_nobold .ace_bold {
+    font-weight: normal;
 }
 
 .ace_italic {
