@@ -28,7 +28,8 @@
         "lib": "lib/ace"
     },
     "scripts": {
-        "test": "node lib/ace/test/all.js"
+        "test": "node lib/ace/test/all.js",
+        "postinstall": "node ./install.js"
     },
     "config": {
         "github.com/sourcemint/bundler-js/0/-meta/config/0": {
