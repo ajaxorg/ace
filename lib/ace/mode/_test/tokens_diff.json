@@ -193,7 +193,7 @@
   "state": "start",
   "data": [
    [ "support.constant", "+" ],
-   [ "text", "            var highlight = new SearchHighlight(null, \"ace_selected_word\", \"text\");" ]
+   [ "text", "            var highlight = new SearchHighlight(null, \"ace_selected-word\", \"text\");" ]
   ]
  },
  {

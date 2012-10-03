@@ -1,17 +1,9 @@
-.ace-tomorrow-night-bright .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-tomorrow-night-bright .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-tomorrow-night-bright .ace_gutter {
   background: #1a1a1a;
   color: #DEDEDE
 }
 
-.ace-tomorrow-night-bright .ace_print_margin {
+.ace-tomorrow-night-bright .ace_print-margin {
   width: 1px;
   background: #1a1a1a
 }
@@ -37,7 +29,7 @@
   background: #424242
 }
 
-.ace-tomorrow-night-bright.multiselect .ace_selection.start {
+.ace-tomorrow-night-bright.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #000000;
   border-radius: 2px
 }
@@ -51,15 +43,15 @@
   border: 1px solid #343434
 }
 
-.ace-tomorrow-night-bright .ace_marker-layer .ace_active_line {
+.ace-tomorrow-night-bright .ace_marker-layer .ace_active-line {
   background: #2A2A2A
 }
 
-.ace-tomorrow-night-bright .ace_gutter_active_line {
+.ace-tomorrow-night-bright .ace_gutter-active-line {
   background-color: #2A2A2A
 }
 
-.ace-tomorrow-night-bright .ace_marker-layer .ace_selected_word {
+.ace-tomorrow-night-bright .ace_marker-layer .ace_selected-word {
   border: 1px solid #424242
 }
 
