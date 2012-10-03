@@ -47,7 +47,7 @@
         setTimeout("ShowAndGrowElement()", timer_increment)
     }
     window.ShowAndGrowElement = ShowAndGrowElement
-  ]]</script>
+  ]]></script>
 
   <rect
     fill="#2e3436"

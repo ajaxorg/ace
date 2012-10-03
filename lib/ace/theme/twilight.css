@@ -1,17 +1,9 @@
-.ace-twilight .ace_editor {
-  border: 2px solid rgb(159, 159, 159)
-}
-
-.ace-twilight .ace_editor.ace_focus {
-  border: 2px solid #327fbd
-}
-
 .ace-twilight .ace_gutter {
   background: #232323;
   color: #E2E2E2
 }
 
-.ace-twilight .ace_print_margin {
+.ace-twilight .ace_print-margin {
   width: 1px;
   background: #232323
 }
@@ -37,7 +29,7 @@
   background: rgba(221, 240, 255, 0.20)
 }
 
-.ace-twilight.multiselect .ace_selection.start {
+.ace-twilight.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #141414;
   border-radius: 2px
 }
@@ -51,15 +43,15 @@
   border: 1px solid rgba(255, 255, 255, 0.25)
 }
 
-.ace-twilight .ace_marker-layer .ace_active_line {
+.ace-twilight .ace_marker-layer .ace_active-line {
   background: rgba(255, 255, 255, 0.031)
 }
 
-.ace-twilight .ace_gutter_active_line {
+.ace-twilight .ace_gutter-active-line {
   background-color: rgba(255, 255, 255, 0.031)
 }
 
-.ace-twilight .ace_marker-layer .ace_selected_word {
+.ace-twilight .ace_marker-layer .ace_selected-word {
   border: 1px solid rgba(221, 240, 255, 0.20)
 }
 
@@ -133,7 +125,7 @@
   color: #7587A6
 }
 
-.ace-twilight .ace_xml_pe {
+.ace-twilight .ace_xml-pe {
   color: #494949
 }
 
