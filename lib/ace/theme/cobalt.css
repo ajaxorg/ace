@@ -97,6 +97,14 @@
   color: #FFEE80
 }
 
+.ace-cobalt .ace_entity {
+  color: #FFDD00
+}
+
+.ace-cobalt .ace_string {
+  color: #3AD900
+}
+
 .ace-cobalt .ace_string.ace_regexp {
   color: #80FFC2
 }

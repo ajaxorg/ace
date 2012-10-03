@@ -22,41 +22,41 @@
   border-bottom: 1px solid black;
 }
 
-.ace-chrome .ace_line .ace_invisible {
+.ace-chrome .ace_invisible {
   color: rgb(191, 191, 191);
 }
 
-.ace-chrome .ace_line .ace_constant.ace_buildin {
+.ace-chrome .ace_constant.ace_buildin {
   color: rgb(88, 72, 246);
 }
 
-.ace-chrome .ace_line .ace_constant.ace_language {
+.ace-chrome .ace_constant.ace_language {
   color: rgb(88, 92, 246);
 }
 
-.ace-chrome .ace_line .ace_constant.ace_library {
+.ace-chrome .ace_constant.ace_library {
   color: rgb(6, 150, 14);
 }
 
-.ace-chrome .ace_line .ace_invalid {
+.ace-chrome .ace_invalid {
   background-color: rgb(153, 0, 0);
   color: white;
 }
 
-.ace-chrome .ace_line .ace_fold {
+.ace-chrome .ace_fold {
 }
 
-.ace-chrome .ace_line .ace_support.ace_function {
+.ace-chrome .ace_support.ace_function {
   color: rgb(60, 76, 114);
 }
 
-.ace-chrome .ace_line .ace_support.ace_constant {
+.ace-chrome .ace_support.ace_constant {
   color: rgb(6, 150, 14);
 }
 
-.ace-chrome .ace_line .ace_support.ace_type,
-.ace-chrome .ace_line .ace_support.ace_class
-.ace-chrome .ace_line .ace_support.ace_other {
+.ace-chrome .ace_support.ace_type,
+.ace-chrome .ace_support.ace_class
+.ace-chrome .ace_support.ace_other {
   color: rgb(109, 121, 222);
 }
 
@@ -64,31 +64,31 @@
   font-style:italic;
   color:#FD971F;
 }
-.ace-chrome .ace_line .ace_keyword.ace_operator {
+.ace-chrome .ace_keyword.ace_operator {
   color: rgb(104, 118, 135);
 }
 
-.ace-chrome .ace_line .ace_comment {
+.ace-chrome .ace_comment {
   color: #236e24;
 }
 
-.ace-chrome .ace_line .ace_comment.ace_doc {
+.ace-chrome .ace_comment.ace_doc {
   color: #236e24;
 }
 
-.ace-chrome .ace_line .ace_comment.ace_doc.ace_tag {
+.ace-chrome .ace_comment.ace_doc.ace_tag {
   color: #236e24;
 }
 
-.ace-chrome .ace_line .ace_constant.ace_numeric {
+.ace-chrome .ace_constant.ace_numeric {
   color: rgb(0, 0, 205);
 }
 
-.ace-chrome .ace_line .ace_variable {
+.ace-chrome .ace_variable {
   color: rgb(49, 132, 149);
 }
 
-.ace-chrome .ace_line .ace_xml-pe {
+.ace-chrome .ace_xml-pe {
   color: rgb(104, 104, 91);
 }
 
@@ -136,7 +136,7 @@
 }
 
 .ace-chrome .ace_storage,
-.ace-chrome .ace_line .ace_keyword,
+.ace-chrome .ace_keyword,
 .ace-chrome .ace_meta.ace_tag {
   color: rgb(147, 15, 128);
 }
@@ -145,7 +145,7 @@
   color: rgb(255, 0, 0)
 }
 
-.ace-chrome .ace_line .ace_string {
+.ace-chrome .ace_string {
   color: #1A1AA6;
 }
 
