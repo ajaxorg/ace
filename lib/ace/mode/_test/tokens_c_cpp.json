@@ -20,9 +20,9 @@
  {
   "state": "start",
   "data": [
-   [ "keyword", "using" ],
+   [ "keyword.control", "using" ],
    [ "text", " " ],
-   [ "keyword", "namespace" ],
+   [ "keyword.operator", "namespace" ],
    [ "text", " " ],
    [ "identifier", "std" ],
    [ "punctuation.operator", ";" ]
@@ -35,9 +35,9 @@
  {
   "state": "start",
   "data": [
-   [ "keyword", "int" ],
+   [ "storage.type", "int" ],
    [ "text", " " ],
-   [ "identifier", "main" ],
+   [ "entity.name.function", "main" ],
    [ "text", " " ],
    [ "paren.lparen", "(" ],
    [ "paren.rparen", ")" ]
@@ -53,7 +53,7 @@
   "state": "start",
   "data": [
    [ "text", "    " ],
-   [ "keyword", "int" ],
+   [ "storage.type", "int" ],
    [ "text", " " ],
    [ "identifier", "a" ],
    [ "punctuation.operator", "," ],
@@ -109,7 +109,7 @@
   "state": "start",
   "data": [
    [ "text", "    " ],
-   [ "keyword", "return" ],
+   [ "keyword.control", "return" ],
    [ "text", " " ],
    [ "constant.numeric", "0" ],
    [ "punctuation.operator", ";" ]

@@ -84,6 +84,24 @@
  {
   "state": "start",
   "data": [
+   [ "identifier", "regexp" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string.regexp", "/p" ],
+   [ "constant.language.escape", "|" ],
+   [ "string.regexp", "p/" ],
+   [ "text", " " ],
+   [ "comment", "// ends here" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
    [ "identifier", "r" ],
    [ "text", " " ],
    [ "keyword.operator", "=" ],
@@ -118,10 +136,13 @@
    [ "constant.language.escape", "$" ],
    [ "constant.language.escape", "^" ],
    [ "constant.language.escape", "(?:" ],
-   [ "string.regexp", "d|s" ],
+   [ "string.regexp", "d" ],
+   [ "constant.language.escape", "|" ],
+   [ "string.regexp", "s" ],
    [ "constant.language.escape", ")" ],
    [ "constant.language.escape", "(?=" ],
-   [ "string.regexp", "a|" ],
+   [ "string.regexp", "a" ],
+   [ "constant.language.escape", "|" ],
    [ "constant.language.escape", ")" ],
    [ "constant.language.escape", "(?!" ],
    [ "string.regexp", "y" ],
