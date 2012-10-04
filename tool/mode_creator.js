@@ -23,40 +23,43 @@ var editor2 = window.editor2 = splitEditor.editor1;
 new TokenTooltip(editor2);
 
 var timeout = null;
-schedule = function() {
-    if(timeout != null) {
+var schedule = function() {
+    if (timeout != null) {
         clearTimeout(timeout);
     }
     timeout = setTimeout(run, 800);
 };
 
 
-setAutorunEnabled = function(val) {
+var setAutorunEnabled = function(val) {
     if (val)
         editor1.on('change', schedule);
     else
         editor1.removeEventListener('change', schedule);
-}
+};
 
 util.bindCheckbox("autorunEl", setAutorunEnabled);
 
 
-docEl = document.getElementById("doc");
+var docEl = document.getElementById("doc");
 util.fillDropdown(docEl, doclist.docs);
 util.bindDropdown("doc", function(value) {
     doclist.loadDoc(value, function(session) {
         if (session) {
             editor2.setSession(session);
         }
-    })
+    });
 });
 
-modeEl = document.getElementById("modeEl");
+var modeEl = document.getElementById("modeEl");
 util.fillDropdown(modeEl, modelist.modes);
 var modeSessions = {};
 util.bindDropdown(modeEl, function(value) {
-    if (modeSessions[value])
+    if (modeSessions[value]) {
         editor1.setSession(modeSessions[value]);
+        schedule();
+        return;
+    }
     var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
         text = util.stripLeadingComments(text);
@@ -67,6 +70,7 @@ util.bindDropdown(modeEl, function(value) {
         session.setMode("ace/mode/javascript");
 
         editor1.setSession(modeSessions[value]);
+        schedule();
     });
 });
 
