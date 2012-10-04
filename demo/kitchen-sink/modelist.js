@@ -1,52 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
-  <style type="text/css" media="screen">
-    body {
-        overflow: hidden;
-		margin: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-    
-    #editor { 
-        
-    }
-  </style>
-</head>
-<body>
+define(function(require, exports, module) {
+"use strict";
 
-<div id="toolbar"></div>
-<pre id="editor"></pre>
-
-<script src="../build/src/ace.js" type="text/javascript"></script>
-<script src="../build/kitchen-sink/demo.js" type="text/javascript"></script>
-
-<script>
-var $ = document.getElementById.bind(document);
-function bindDropdown(el, callback) {
-    var onChange = function() {
-        callback(el.value);
-    };
-    el.onchange = onChange;
-    onChange();
-}
-
-function fillDropdown(list, el) {
-    list.forEach(function(item) {
-        var option = document.createElement("option");
-        option.setAttribute("value", item.name);
-        option.innerHTML = item.desc;
-        el.appendChild(option);
-    });
-}
-	
 /************** modes ***********************/
 var modes = [];
 function getModeFromPath(path) {
@@ -58,7 +12,7 @@ function getModeFromPath(path) {
         }
     }
     return mode;
-};
+}
 
 var Mode = function(name, desc, extensions) {
     this.name = name;
@@ -72,19 +26,23 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
+    asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
     css:        ["CSS"          , "css"],
     diff:       ["Diff"         , "diff|patch"],
+    glsl:       ["Glsl"         , "glsl|frag|vert"],
     golang:     ["Go"           , "go"],
     groovy:     ["Groovy"       , "groovy"],
     haxe:       ["haXe"         , "hx"],
     html:       ["HTML"         , "htm|html|xhtml"],
     c_cpp:      ["C/C++"        , "c|cc|cpp|cxx|h|hh|hpp"],
     clojure:    ["Clojure"      , "clj"],
+    jade:       ["Jade"         , "jade"],
     java:       ["Java"         , "java"],
+    jsp:        ["JSP"                , "jsp"],
     javascript: ["JavaScript"   , "js"],
     json:       ["JSON"         , "json"],
     jsx:        ["JSX"          , "jsx"],
@@ -107,8 +65,10 @@ var modesByName = {
     sh:         ["SH"           , "sh|bash|bat"],
     sql:        ["SQL"          , "sql"],
     svg:        ["SVG"          , "svg"],
+    tcl:        ["Tcl"          , "tcl"],
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
+    typescript: ["Typescript"   , "typescript|ts|str"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"       , "xq"],
     yaml:       ["YAML"         , "yaml"]
@@ -116,69 +76,16 @@ var modesByName = {
 
 for (var name in modesByName) {
     var mode = modesByName[name];
-    mode = new Mode(name, mode[0], mode[1])
+    mode = new Mode(name, mode[0], mode[1]);
     modesByName[name] = mode;
     modes.push(mode);
 }
 
+module.exports = {
+    getModeFromPath: getModeFromPath,
+    modes: modes,
+    modesByName: modesByName
+};
 
-
-var container = document.getElementById("editor");
-container.style.position = "absolute";
-// Splitting.
-var Split = require("ace/split").Split;
-var split = new Split(container, null, 1);
-split.setOrientation(split.BESIDE);
-split.setSplits(2);
-
-var editor1 = split.getEditor(0);
-var editor2 = split.getEditor(1);
-
-var toolbar = $("toolbar");
-var modeEl = document.createElement("select");
-fillDropdown(modes, modeEl);
-
-bindDropdown(modeEl, function(value) {
-    editor1.session.setMode((modesByName[value] || modesByName.text).mode);
 });
-toolbar.appendChild(modeEl);
-var button = document.createElement("input");
-button.setAttribute("type", "button");
-button.value = "generate test";
-toolbar.appendChild(button)
 
-function onResize() {
-    var top = toolbar.clientHeight;
-    var width = document.documentElement.clientWidth;
-    container.style.top = top + "px";
-    container.style.width = width + "px";
-    container.style.height = document.documentElement.clientHeight - top + "px";
-    split.resize();
-}
-
-window.onresize = onResize;
-onResize();
-
-
-
-
-button.onclick = function() {
-	var s = editor1.session
-	tok = s.bgTokenizer
-	var data = []
-	for (var i = 0; i < s.getLength(); i++) {
-		data.push({
-			text: s.getLine(i),
-			state: [tok.getState(i - 1), tok.getState(i)],
-			tokens: tok.getTokens(i)
-		})
-	}
-	data = JSON.stringify(data, null, 4);
-	data = data.replace(/(\n\s*)"(\w+)":/g, "$1$2:");
-	editor2.insert(data);
-}
-
-</script>
-
-</body>
-</html>
