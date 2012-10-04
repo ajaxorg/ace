@@ -47,32 +47,32 @@ exports.createSplitEditor = function(el) {
     var e0 = document.createElement("div");
     var s = document.createElement("splitter");
     var e1 = document.createElement("div");
-    el.appendChild(e0)
-    el.appendChild(e1)
-    el.appendChild(s)
+    el.appendChild(e0);
+    el.appendChild(e1);
+    el.appendChild(s);
     e0.style.position = e1.style.position = s.style.position = "absolute";
-    el.style.position = "relative"
+    el.style.position = "relative";
     var split = {$container: el};
 
     split.editor0 = split[0] = new Editor(new Renderer(e0, require("ace/theme/textmate")));
     split.editor1 = split[1] = new Editor(new Renderer(e1, require("ace/theme/textmate")));
-    split.splitter = s
+    split.splitter = s;
 
     MultiSelect(split.editor0);
     MultiSelect(split.editor1);
 
-    s.ratio = 0.5
+    s.ratio = 0.5;
 
     split.resize = function resize(){
         var height = el.parentNode.clientHeight - el.offsetTop;
         var total = el.clientWidth;
-        var w1 = total * s.ratio
-        var w2 = total * (1- s.ratio)
+        var w1 = total * s.ratio;
+        var w2 = total * (1- s.ratio);
         s.style.left = w1 - 1 + "px";
         s.style.height = el.style.height = height + "px";
 
-        var st0 = split[0].container.style
-        var st1 = split[1].container.style
+        var st0 = split[0].container.style;
+        var st1 = split[1].container.style;
         st0.width = w1 + "px";
         st1.width = w2 + "px";
         st0.left = 0 + "px";
@@ -83,10 +83,10 @@ exports.createSplitEditor = function(el) {
 
         split[0].resize();
         split[1].resize();
-    }
+    };
 
     split.onMouseDown = function(e) {
-        var rect = el.getBoundingClientRect()
+        var rect = el.getBoundingClientRect();
         var x = e.clientX;
         var y = e.clientY;
 
@@ -118,17 +118,17 @@ exports.createSplitEditor = function(el) {
 
     event.addListener(s, "mousedown", split.onMouseDown);
     event.addListener(window, "resize", split.resize);
-    split.resize()
+    split.resize();
     return split;
-}
+};
 
 /***************************/
 exports.stripLeadingComments = function(str) {
-    if(str.slice(0,2)=='/*'){
-        var j = str.indexOf('*/')+2
-        str = str.substr(j)
+    if(str.slice(0,2)=='/*') {
+        var j = str.indexOf('*/')+2;
+        str = str.substr(j);
     }
-    return str.trim() + "\n"
+    return str.trim() + "\n";
 };
 
 /***************************/
@@ -148,7 +148,7 @@ exports.saveOption = function(el, val) {
 
         localStorage && localStorage.setItem(el.id, el.value);
     }
-}
+};
 
 exports.bindCheckbox = function(id, callback, noInit) {
     if (typeof id == "string")
@@ -167,7 +167,7 @@ exports.bindCheckbox = function(id, callback, noInit) {
     };
     el.onclick = onCheck;
     noInit || onCheck();
-}
+};
 
 exports.bindDropdown = function(id, callback, noInit) {
     if (typeof id == "string")
@@ -209,7 +209,7 @@ function elt(tag, attributes, content) {
 
     for (var i in attributes)
         el.setAttribute(i, attributes[i]);
-    return el
+    return el;
 }
 
 function optgroup(values) {

@@ -24,7 +24,7 @@ var StatusBar = function(editor, parentNode) {
 	this.updateStatus = function(editor) {
 		var status = [];
 		function add(str, separator) {
-			str && status.push(str, separator || "|")
+			str && status.push(str, separator || "|");
 		}
 		
 		if (editor.$vimModeHandler)
@@ -35,14 +35,14 @@ var StatusBar = function(editor, parentNode) {
 		var c = editor.selection.lead;
 		add(c.row + ":" + c.column, " ");
 		if (!editor.selection.isEmpty()) {
-			var r = editor.getSelectionRange()
+			var r = editor.getSelectionRange();
 			add("(" + (r.end.row - r.start.row) + ":"  +(r.end.column - r.start.column) + ")");
 		}
 		status.pop();
 		this.element.textContent = status.join("");
-	}
-}).call(StatusBar.prototype)
+	};
+}).call(StatusBar.prototype);
 
 exports.StatusBar = StatusBar;
 
-})
+});

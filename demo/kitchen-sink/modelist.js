@@ -12,7 +12,7 @@ function getModeFromPath(path) {
         }
     }
     return mode;
-};
+}
 
 var Mode = function(name, desc, extensions) {
     this.name = name;
@@ -76,7 +76,7 @@ var modesByName = {
 
 for (var name in modesByName) {
     var mode = modesByName[name];
-    mode = new Mode(name, mode[0], mode[1])
+    mode = new Mode(name, mode[0], mode[1]);
     modesByName[name] = mode;
     modes.push(mode);
 }
@@ -85,7 +85,7 @@ module.exports = {
     getModeFromPath: getModeFromPath,
     modes: modes,
     modesByName: modesByName
-}
+};
 
 });
 

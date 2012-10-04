@@ -51,7 +51,7 @@ function initDoc(file, path, doc) {
         session.setUseWrapMode(true);
         session.setWrapLimitRange(80, 80);
     }
-    var mode = modelist.getModeFromPath(path)
+    var mode = modelist.getModeFromPath(path);
     session.modeName = mode.name;
     session.setMode(mode.mode);
 }
@@ -60,7 +60,7 @@ function initDoc(file, path, doc) {
 function makeHuge(txt) {
     for (var i = 0; i < 5; i++)
         txt += txt;
-    return txt
+    return txt;
 }
 
 var docs = {
@@ -110,7 +110,7 @@ var docs = {
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
     "docs/c9search.c9search_results": "C9 Search Results"
-}
+};
 
 var ownSource = {
     /* filled from require*/
@@ -127,12 +127,12 @@ if (window.require && window.require.s) try {
             path = path.split("!").pop();
         else
             path = path + ".js";
-        ownSource[path] = ""
+        ownSource[path] = "";
     }
 } catch(e) {}
 
 function prepareDocList(docs) {
-    var list = []
+    var list = [];
     for (var path in docs) {
         var doc = docs[path];
         if (typeof doc != "object")
@@ -141,11 +141,11 @@ function prepareDocList(docs) {
         doc.path = path;
         doc.desc = doc.name.replace(/^(ace|docs|demo|build)\//, "");
         if (doc.desc.length > 18)
-            doc.desc = doc.desc.slice(0, 7) + ".." + doc.desc.slice(-9)
+            doc.desc = doc.desc.slice(0, 7) + ".." + doc.desc.slice(-9);
 
         fileCache[doc.name] = doc;
         list.push(doc);
-    };
+    }
 
     return list;
 }
@@ -156,7 +156,7 @@ function loadDoc(name, callback) {
         return callback(null);
 
     if (doc.session)
-        return callback(doc.session)
+        return callback(doc.session);
 
     // TODO: show load screen while waiting
     var path = doc.path;
@@ -168,7 +168,7 @@ function loadDoc(name, callback) {
 
     net.get(path, function(x) {
         initDoc(x, path, doc);
-        callback(doc.session)
+        callback(doc.session);
     });
 }
 
@@ -178,8 +178,7 @@ module.exports = {
     ownSource: prepareDocList(ownSource),
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,
-    loadDoc: loadDoc,
-    
+    loadDoc: loadDoc    
 };
 module.exports.all = {
     "Mode Examples": module.exports.docs,

@@ -82,7 +82,7 @@ var TokenTooltip = function(editor) {
                 type: "",
                 value: "",
                 state: session.bgTokenizer.getState(0)
-            }
+            };
         }
         if (!token) {
             session.removeMarker(this.marker);
@@ -112,9 +112,9 @@ var TokenTooltip = function(editor) {
         
         this.updateTooltipPosition(this.x, this.y);
 
-        this.token = token
+        this.token = token;
         session.removeMarker(this.marker);
-        this.range = new Range(docPos.row, token.start, docPos.row, token.start + token.value.length)
+        this.range = new Range(docPos.row, token.start, docPos.row, token.start + token.value.length);
         this.marker = session.addMarker(this.range, "ace_bracket", "text");
     };
     
@@ -131,7 +131,7 @@ var TokenTooltip = function(editor) {
     
     this.onMouseOut = function(e) {
         var t = e && e.relatedTarget;
-        var ct = e &&  e.currentTarget
+        var ct = e &&  e.currentTarget;
         while(t && (t = t.parentNode)) {
             if (t == ct)
                 return;
@@ -146,7 +146,7 @@ var TokenTooltip = function(editor) {
         var st = tooltipNode.style;
         if (x + 10 + this.tooltipWidth > this.maxWidth)
             x = innerWidth - this.tooltipWidth - 10;
-        if (y > innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight)
+        if (y > innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight);
             y = y - this.tooltipHeight - 30;
         
         st.left = x + 10 + "px";
@@ -155,29 +155,29 @@ var TokenTooltip = function(editor) {
 
     this.$init = function() {
         tooltipNode = document.documentElement.appendChild(dom.createElement("div"));
-        var st = tooltipNode.style
-        st.position = "fixed"
-        st.display = "none"
-        st.background = "lightyellow"
-        st.borderRadius = ""
-        st.border = "1px solid gray"
-        st.padding = "1px"
+        var st = tooltipNode.style;
+        st.position = "fixed";
+        st.display = "none";
+        st.background = "lightyellow";
+        st.borderRadius = "";
+        st.border = "1px solid gray";
+        st.padding = "1px";
         st.zIndex = 1000;
         st.fontFamily = "monospace";
         st.whiteSpace = "pre-line";
-        return tooltipNode
-    }
+        return tooltipNode;
+    };
 
     this.destroy = function() {
         this.onMouseOut();
         event.removeListener(this.editor.renderer.scroller, "mousemove", this.onMouseMove);
         event.removeListener(this.editor.renderer.content, "mouseout", this.onMouseOut);
         delete this.editor.tokenTooltip;    
-    }
+    };
 
-}).call(TokenTooltip.prototype)
+}).call(TokenTooltip.prototype);
 
-exports.TokenTooltip = TokenTooltip
+exports.TokenTooltip = TokenTooltip;
 
 });
 

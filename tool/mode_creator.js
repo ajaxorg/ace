@@ -22,54 +22,52 @@ var editor1 = window.editor1 = splitEditor.editor0;
 var editor2 = window.editor2 = splitEditor.editor1;
 new TokenTooltip(editor2);
 
-timeout = null
+var timeout = null;
 schedule = function() {
     if(timeout != null) {
-        clearTimeout(timeout)
+        clearTimeout(timeout);
     }
-    timeout = setTimeout(run, 800)
-}
+    timeout = setTimeout(run, 800);
+};
 
 
 setAutorunEnabled = function(val) {
     if (val)
-        editor1.on('change', schedule)
+        editor1.on('change', schedule);
     else
-        editor1.removeEventListener('change', schedule)
+        editor1.removeEventListener('change', schedule);
 }
 
-util.bindCheckbox("autorunEl", setAutorunEnabled)
+util.bindCheckbox("autorunEl", setAutorunEnabled);
 
 
-docEl = document.getElementById("doc")
-util.fillDropdown(docEl, doclist.docs)
+docEl = document.getElementById("doc");
+util.fillDropdown(docEl, doclist.docs);
 util.bindDropdown("doc", function(value) {
     doclist.loadDoc(value, function(session) {
         if (session) {
-            editor2.setSession(session)
+            editor2.setSession(session);
         }
     })
 });
 
 modeEl = document.getElementById("modeEl");
-util.fillDropdown(modeEl, modelist.modes)
-var modeSessions = {}
+util.fillDropdown(modeEl, modelist.modes);
+var modeSessions = {};
 util.bindDropdown(modeEl, function(value) {
     if (modeSessions[value])
-        editor1.setSession(modeSessions[value])
-    var hp = "./lib/ace/mode/" + value + "_highlight_rules.js"
+        editor1.setSession(modeSessions[value]);
+    var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
-        text = util.stripLeadingComments(text)
-        var desc = value
-        modePath = "ace/mode/" + value
+        text = util.stripLeadingComments(text);
 
-        var session = new EditSession(text)
-        session.setUndoManager(new UndoManager())
+        var session = new EditSession(text);
+        session.setUndoManager(new UndoManager());
         modeSessions[value] = session;
-        session.setMode("ace/mode/javascript")
+        session.setMode("ace/mode/javascript");
 
-        editor1.setSession(modeSessions[value])
-    })
+        editor1.setSession(modeSessions[value]);
+    });
 });
 
 util.fillDropdown("themeEl", {
@@ -79,60 +77,60 @@ util.fillDropdown("themeEl", {
     dark: [ "clouds_midnight", "cobalt", "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
         "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",  "tomorrow_night",
         "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties", "twilight", "vibrant_ink"]
-})
+});
 
 util.bindDropdown("themeEl", function(value) {
     if (!value)
         return;
     editor1.setTheme("ace/theme/" + value);
     editor2.setTheme("ace/theme/" + value);
-})
+});
 
 
 function getDeps(src, path) {
-    var deps = []
+    var deps = [];
     src.replace(/require\((['"])(.*?)\1/g, function(a,b,c){
         if (c[0] == ".") {
-            var base = path.split("/")
+            var base = path.split("/");
             c.split("/").forEach(function(part) {
                 if (part == ".") {
-                    base.pop()
+                    base.pop();
                 } else if (part == "..") {
                     base.pop();
-                    base.pop()
+                    base.pop();
                 } else {
-                    base.push(part)
+                    base.push(part);
                 }
-            })
-            c = base.join("/")
+            });
+            c = base.join("/");
         }
-        deps.push('"' + c + '"')
-    })
+        deps.push('"' + c + '"');
+    });
 
-    return deps
+    return deps;
 }
 function run() {
     var src = editor1.getValue();
     var path = "ace/mode/new";
-    var deps = getDeps(src, path)
+    var deps = getDeps(src, path);
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
-    src += ';require(["ace/mode/new"], continueRun, function(e){console.log(e);require.undef("ace/mode/new")})'
+    src += ';require(["ace/mode/new"], continueRun, function(e){console.log(e);require.undef("ace/mode/new")})';
     try {
-        eval(src)
+        eval(src);
     } catch(e) {
-        console.log(e)
+        console.log(e);
     }
 }
 var continueRun = function(rules) {
-    rules = rules[Object.keys(rules)[0]]
-    var Tokenizer = DebugTokenizer
+    rules = rules[Object.keys(rules)[0]];
+    var Tokenizer = DebugTokenizer;
 
-    var tk = new Tokenizer(new rules().getRules())
-    editor2.session.bgTokenizer.setTokenizer(tk)
-    editor2.renderer.updateText()
-}
+    var tk = new Tokenizer(new rules().getRules());
+    editor2.session.bgTokenizer.setTokenizer(tk);
+    editor2.renderer.updateText();
+};
 
-editor1.commands.bindKey("ctrl-Return", run)
+editor1.commands.bindKey("ctrl-Return", run);
 
 });
 

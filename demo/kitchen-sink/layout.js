@@ -22,7 +22,7 @@ splitter:hover {\
     width:3px;\
     border-color: #B5B4E0;\
 }\
-", "splitEditor")
+", "splitEditor");
 
 exports.edit = function(el) {
     if (typeof(el) == "string")
@@ -40,12 +40,12 @@ exports.edit = function(el) {
 
 var SplitRoot = function(el, theme, position, getSize) {
     el.style.position = position || "relative";
-    this.container = el
-    this.getSize = getSize || this.getSize
-    this.resize = this.$resize.bind(this)
+    this.container = el;
+    this.getSize = getSize || this.getSize;
+    this.resize = this.$resize.bind(this);
 
     event.addListener(el.ownerDocument.defaultView, "resize", this.resize);
-    this.editor = this.createEditor()
+    this.editor = this.createEditor();
 };
 
 (function(){
@@ -71,12 +71,12 @@ var SplitRoot = function(el, theme, position, getSize) {
             x: size.left,
             y: size.top,
             w: size.width,
-            h: size.height,
-        }
-        this.item.resize(this.rect)
+            h: size.height
+        };
+        this.item.resize(this.rect);
     };
     this.getSize = function(el) {
-        return el.getBoundingClientRect()
+        return el.getBoundingClientRect();
     };
     this.destroy = function() {
         var win = this.container.ownerDocument.defaultView;
@@ -186,7 +186,7 @@ exports.singleLineEditor = function(el) {
     editor.$mouseHandler.$focusWaitTimout = 0;
 
     return editor;
-}
+};
 
 
 
