@@ -245,6 +245,10 @@ function buildAce(options) {
         themes: fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
                 return x.slice(-3) == ".js" && x.slice(0, -3);
             }).filter(function(x){ return !!x; }),
+        extensions: fs.readdirSync(ACE_HOME + "/lib/ace/ext").map(function(x){
+                if (x.slice(-3) == ".js" && !/_test/.test(x))
+                    return x.slice(0, -3);
+            }).filter(function(x){ return !!x; }),
         workers: ["javascript", "coffee", "css", "json", "xquery"],
         keybindings: ["vim", "emacs"]
     };
@@ -269,7 +273,7 @@ function buildAce(options) {
         copy.filter.moduleDefines,
         filterTextPlugin,
         removeUseStrict,
-        removeLicenceCmments
+        removeLicenceComments
     ];
 
     if (options.noconflict) {
@@ -336,7 +340,7 @@ function buildAce(options) {
             dest:   targetDir + "/theme-" + theme + ".js"
         });*/
         // use this instead, to not create separate modules for js and css
-        var themePath = ACE_HOME + "/lib/ace/theme/" + theme
+        var themePath = ACE_HOME + "/lib/ace/theme/" + theme;
         var js = fs.readFileSync(themePath + ".js", "utf8");
         js = js.replace("define(", "define('ace/theme/" + theme + "', ['require', 'exports', 'module', 'ace/lib/dom'], ");
         
@@ -347,6 +351,21 @@ function buildAce(options) {
         filters.forEach(function(f) {js = f(js); });
         
         fs.writeFileSync(targetDir + "/theme-" + theme + ".js", js); 
+    });
+
+    console.log('# ace extensions ---------');
+
+    project.assumeAllFilesLoaded();
+    options.extensions.forEach(function(ext) {
+        console.log("extensions " + ext);
+        copy({
+            source: [{
+                project: cloneProject(project),
+                require: [ 'ace/ext/' + ext ]
+            }],
+            filter: filters,
+            dest:   targetDir + "/ext-" + ext + ".js"
+        });
     });
 
     console.log('# ace key bindings ---------');
@@ -370,7 +389,7 @@ function buildAce(options) {
         copy.filter.moduleDefines,
         filterTextPlugin,
         removeUseStrict,
-        removeLicenceCmments
+        removeLicenceComments
     ];
 
     options.workers.forEach(function(mode) {
@@ -459,14 +478,14 @@ function quoteString(str) {
 }
 
 function filterTextPlugin(text) {
-    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text!");
+    return text.replace(/(['"])(ace|[.\/]+?)\/requirejs\/text\!/g, "$1");
 }
 
 function removeUseStrict(text) {
     return text.replace(/['"]use strict['"];/g, "");
 }
 
-function removeLicenceCmments(text) {
+function removeLicenceComments(text) {
     return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1");
 }
 
