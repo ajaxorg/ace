@@ -33,27 +33,36 @@
  * ***** END LICENSE BLOCK ***** */
 
 var buildAce = require("./Makefile.dryice").buildAce;
-
+var fs = require("fs");
 
 var ACE_HOME = __dirname;
 
+function getVersion(path) {
+    if (fs.existsSync(path + "/.git-ref"))
+        return fs.readFileSync(path + "/.git-ref", "utf8");
+    if (fs.existsSync(path + "/.git/ORIG_HEAD"))
+        return fs.readFileSync(path + "/.git/ORIG_HEAD", "utf8");
+}
+
+if (process.argv.indexOf("-c") > 0) try {
+    var version = getVersion(ACE_HOME);
+    var oldVersion = getVersion(ACE_HOME + "/build");
+    if (version && oldVersion == version) {
+        console.log("ace build is up to date");
+        process.exit(0);
+    }
+    fs.writeFileSync(ACE_HOME + "/build/.git-ref", version, "utf8");
+} catch (e) {}
+
 try {
-    var aceProject = {
-        roots: [
-            ACE_HOME + '/lib',
-            ACE_HOME + '/demo'
-        ],
-        textPluginPattern: /^ace\/requirejs\/text!/
-    };
-	buildAce(aceProject, {
-		compress: false,
-		noconflict: false,
-		suffix: "",
-		compat: true,
-		name: "ace"
-	});
+    buildAce({
+        compress: false,
+        noconflict: false,
+        suffix: "",
+        name: "ace"
+    });
 } catch (e) {
-	console.log("--- Ace Build error ---");
-	console.log(e);
-	process.exit(0);
+    console.log("--- Ace Build error ---");
+    console.log(e);
+    process.exit(0);
 }
