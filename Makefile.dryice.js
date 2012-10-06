@@ -429,15 +429,28 @@ var buildAce = function(options) {
     });
 
 
-    console.log('# combining files into one ---------');
-
     if (options.shrinkwrap) {
+        console.log('# combining files into one ---------');
         copy({
           source: { root:targetDir, exclude:/^worker\-/ },
           dest: BUILD_DIR + '/ace-min.js'
         });
     }
-}
+};
+
+// silence annoying messages from dryice
+var buildAce = function(fn) {
+    return function() {
+        var log = console.log
+        console.log = function() {
+            if (typeof arguments[0] == "string" && /Ignoring requirement/.test(arguments[0]))
+                return;
+            log.apply(console, arguments);
+        }
+        fn.apply(null, arguments);
+        console.log = log;
+    }
+}(buildAce);
 
 // TODO: replace with project.clone once it is fixed in dryice
 function cloneProject(project) {
