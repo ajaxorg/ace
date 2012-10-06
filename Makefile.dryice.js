@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2010, Ajax.org B.V.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -15,7 +15,7 @@
  *     * Neither the name of Ajax.org B.V. nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -44,7 +44,7 @@ function main(args) {
             return "-" + x;
         return x;
     });
-    
+
     if (args[2] && (args[2][0] != "-" || args[2].indexOf("h") != -1))
         type = args[2];
 
@@ -166,23 +166,26 @@ function demo() {
         ref = "";
         version = "";
     }
-    var changeComments = function(data) {
-            return (data
-                .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
-                .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
-                .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
-                .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
-                .replace("%version%", version)
-                .replace("%commit%", ref)
-            );
-        }
+
+    function changeComments(data) {
+        return (data
+            .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
+            .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
+            .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
+            .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
+            .replace("%version%", version)
+            .replace("%commit%", ref)
+        );
+    };
+
+    function fixDocPaths(data) {
+        return data.replace(/"(demo|build)\//g, "\"");
+    }
 
     copy({
         source: ACE_HOME + "/kitchen-sink.html",
         dest:   BUILD_DIR + "/kitchen-sink.html",
-        filter: [changeComments,  function(data) {
-            return data.replace(/"(demo|build)\//g, "\"");
-        }]
+        filter: [changeComments,  fixDocPaths]
     });
 
     copy({
@@ -202,9 +205,7 @@ function demo() {
     copy({
         source: ACE_HOME + "/demo/kitchen-sink/demo.js",
         dest: demo,
-        filter: [changeComments, function(data) {
-            return data.replace(/"(demo|build)\//g, "\"");
-        }, function(data) {
+        filter: [changeComments, fixDocPaths, function(data) {
             return data.replace("define(", "define('kitchen-sink/demo',");
         }]
     });
@@ -223,7 +224,27 @@ function demo() {
     copyFileSync(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
 }
 
-function buildAce(options) {
+function jsFileList(path, filter) {
+    path = ACE_HOME + "/" + path;
+    if (!filter)
+        filter = /_test/;
+
+    return fs.readdirSync(path).map(function(x) {
+        if (x.slice(-3) == ".js" && !filter.test(x))
+            return x.slice(0, -3);
+    }).filter(function(x){ return !!x });
+}
+
+function addSuffix(options) {
+    if (options.suffix == null) {
+        options.suffix = "";
+        if (options.compress)
+            options.suffix += "-min";
+        if (options.noconflict)
+            options.suffix += "-noconflict";
+    }
+}
+var buildAce = function(options) {
     var aceProject = {
         roots: [ACE_HOME + '/lib', ACE_HOME + '/demo'],
         textPluginPattern: /^ace\/requirejs\/text!/
@@ -238,33 +259,18 @@ function buildAce(options) {
         noconflict: false,
         suffix: null,
         name: "ace",
-        modes: fs.readdirSync(ACE_HOME + "/lib/ace/mode").map(function(x) {
-                if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/.test(x))
-                    return x.slice(0, -3);
-            }).filter(function(x) { return !!x; }),
-        themes: fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
-                return x.slice(-3) == ".js" && x.slice(0, -3);
-            }).filter(function(x){ return !!x; }),
-        extensions: fs.readdirSync(ACE_HOME + "/lib/ace/ext").map(function(x){
-                if (x.slice(-3) == ".js" && !/_test/.test(x))
-                    return x.slice(0, -3);
-            }).filter(function(x){ return !!x; }),
+        modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/),
+        themes: jsFileList("lib/ace/theme"),
+        extensions: jsFileList("lib/ace/ext"),
         workers: ["javascript", "coffee", "css", "json", "xquery"],
         keybindings: ["vim", "emacs"]
     };
-    
 
     for(var key in defaults)
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
 
-    if (options.suffix == null) {
-        options.suffix = "";
-        if (options.compress)
-            options.suffix += "-min";
-        if (options.noconflict)
-            options.suffix += "-noconflict";
-    }
+    addSuffix(options);
 
     if (!options.requires)
         options.requires = [options.exportModule];
