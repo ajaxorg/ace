@@ -244,6 +244,33 @@ function addSuffix(options) {
             options.suffix += "-noconflict";
     }
 }
+
+function getWriteFilters(options, projectType) {
+    var filters = [
+        copy.filter.moduleDefines,
+        inlineTextModules,
+        removeUseStrict,
+        removeLicenceComments
+    ];
+
+    if (projectType == "worker")
+        return filters;
+
+    if (options.noconflict)
+        filters.push(namespace(options.ns));
+
+    if (options.compress)
+        filters.push(copy.filter.uglifyjs);
+
+    if (options.exportModule && projectType == "main") {
+        if (options.noconflict)
+            filters.push(exportAce(options.ns, options.exportModule, options.ns));
+        else
+            filters.push(exportAce(options.ns, options.exportModule));
+    }
+    return filters;
+}
+
 var buildAce = function(options) {
     var aceProject = {
         roots: [ACE_HOME + '/lib', ACE_HOME + '/demo'],
@@ -275,24 +302,6 @@ var buildAce = function(options) {
     if (!options.requires)
         options.requires = [options.exportModule];
 
-    var filters = [
-        copy.filter.moduleDefines,
-        filterTextPlugin,
-        removeUseStrict,
-        removeLicenceComments
-    ];
-
-    if (options.noconflict) {
-        filters.push(namespace(options.ns));
-        if (options.exportModule)
-            var exportFilter = exportAce(options.ns, options.exportModule, options.ns);
-    } else if (options.exportModule) {
-        var exportFilter = exportAce(options.ns, options.exportModule);
-    }
-
-    if (options.compress)
-        filters.push(copy.filter.uglifyjs);
-
     var targetDir = options.targetDir + options.suffix;
     var name = options.name;
 
@@ -313,7 +322,7 @@ var buildAce = function(options) {
 
     copy({
         source: ace,
-        filter: exportFilter ? filters.concat(exportFilter) : filters,
+        filter: getWriteFilters(options, "main"),
         dest:   targetDir + '/' + name + ".js"
     });
 
@@ -327,7 +336,7 @@ var buildAce = function(options) {
                 project: cloneProject(project),
                 require: [ 'ace/mode/' + mode ]
             }],
-            filter: filters,
+            filter: getWriteFilters(options, "mode"),
             dest:   targetDir + "/mode-" + mode + ".js"
         });
     });
@@ -337,26 +346,14 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
-        /*copy({
+        copy({
             source: [{
                 project: cloneProject(project),
                 require: ["ace/theme/" + theme]
             }],
-            filter: filters,
-            dest:   targetDir + "/theme-" + theme + ".js"
-        });*/
-        // use this instead, to not create separate modules for js and css
-        var themePath = ACE_HOME + "/lib/ace/theme/" + theme;
-        var js = fs.readFileSync(themePath + ".js", "utf8");
-        js = js.replace("define(", "define('ace/theme/" + theme + "', ['require', 'exports', 'module', 'ace/lib/dom'], ");
-        
-        if (fs.existsSync(themePath + ".css", "utf8")) {
-            var css = fs.readFileSync(themePath + ".css", "utf8")
-            js = js.replace(/require\(.ace\/requirejs\/text!.*?\)/, quoteString(css))
-        }
-        filters.forEach(function(f) {js = f(js); });
-        
-        fs.writeFileSync(targetDir + "/theme-" + theme + ".js", js); 
+            filter: getWriteFilters(options, "theme"),
+            dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
+        });
     });
 
     console.log('# ace extensions ---------');
@@ -369,7 +366,7 @@ var buildAce = function(options) {
                 project: cloneProject(project),
                 require: [ 'ace/ext/' + ext ]
             }],
-            filter: filters,
+            filter: getWriteFilters(options, "ext"),
             dest:   targetDir + "/ext-" + ext + ".js"
         });
     });
@@ -384,19 +381,12 @@ var buildAce = function(options) {
                 project: cloneProject(project),
                 require: [ 'ace/keyboard/' + keybinding ]
             }],
-            filter: filters,
+            filter: getWriteFilters(options, "keybinding"),
             dest: targetDir + "/keybinding-" + keybinding + ".js"
         });
     });
 
     console.log('# ace worker ---------');
-    
-    filters = [
-        copy.filter.moduleDefines,
-        filterTextPlugin,
-        removeUseStrict,
-        removeLicenceComments
-    ];
 
     options.workers.forEach(function(mode) {
         console.log("worker for " + mode + " mode");
@@ -415,7 +405,7 @@ var buildAce = function(options) {
                     'ace/mode/' + mode + '_worker'
                 ]
             }],
-            filter: filters,
+            filter: getWriteFilters(options, "worker"),
             dest: worker
         });
         copy({
@@ -452,6 +442,45 @@ var buildAce = function(fn) {
     }
 }(buildAce);
 
+var textModules = {}
+var detectTextModules = function(input, source) {
+    if (!source)
+        throw new Error('Missing filename for text module');
+
+    if (typeof input !== 'string')
+        input = input.toString();
+
+    var module = source.isLocation ? source.path : source;
+
+    input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
+    textModules[module] = input;
+
+    return "";
+};
+detectTextModules.onRead = true;
+copy.filter.addDefines = detectTextModules;
+
+function inlineTextModules(text) {
+    var lastDep = "";
+    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]|= *require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
+        if (dep) {
+            if (!lastDep) {
+                lastDep = dep;
+                return "";
+            }
+        } else if (call) {
+            call = textModules[lastDep];
+            delete textModules[lastDep];
+            lastDep = "";
+            if (call)
+                return "= " + call;
+        }
+        console.log(dep, lastDep, call);
+        throw "inlining of multiple text modules is not supported";
+    });
+}
+
 // TODO: replace with project.clone once it is fixed in dryice
 function cloneProject(project) {
     var clone = copy.createCommonJsProject({
@@ -470,6 +499,7 @@ function cloneProject(project) {
 
     return clone;
 }
+
 function copyFileSync(srcFile, destFile) {
     var BUF_LENGTH = 64*1024,
         buf = new Buffer(BUF_LENGTH),
@@ -494,10 +524,6 @@ function copyFileSync(srcFile, destFile) {
 
 function quoteString(str) {
     return '"' + str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"';
-}
-
-function filterTextPlugin(text) {
-    return text.replace(/(['"])(ace|[.\/]+?)\/requirejs\/text\!/g, "$1");
 }
 
 function removeUseStrict(text) {
