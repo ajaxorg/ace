@@ -66,8 +66,7 @@ function main(args) {
         } else if (type == "bm") {
             bookmarklet();
         } else if (type == "full") {
-            ace();
-            demo();
+            demo(ace());
             bookmarklet();
         }
     }
@@ -120,7 +119,7 @@ function ace() {
     console.log('# ace ---------');
 
     // uncompressed
-    buildAce({
+    var project = buildAce({
         compress: false,
         noconflict: false
     });
@@ -153,9 +152,16 @@ function ace() {
         source: ACE_HOME + "/ChangeLog.txt",
         dest:   BUILD_DIR + "/ChangeLog.txt"
     });
+    
+    return project;
 }
 
-function demo() {
+function demo(project) {
+    project = project || buildAce({
+        compress: false,
+        noconflict: false,
+        coreOnly: true
+    });
     console.log('# kitchen sink ---------');
 
     var version, ref;
@@ -185,7 +191,7 @@ function demo() {
     copy({
         source: ACE_HOME + "/kitchen-sink.html",
         dest:   BUILD_DIR + "/kitchen-sink.html",
-        filter: [changeComments,  fixDocPaths]
+        filter: [changeComments, fixDocPaths]
     });
 
     copy({
@@ -202,20 +208,17 @@ function demo() {
     });
 
     var demo = copy.createDataObject();
+    
+    project.assumeAllFilesLoaded();
     copy({
-        source: ACE_HOME + "/demo/kitchen-sink/demo.js",
-        dest: demo,
-        filter: [changeComments, fixDocPaths, function(data) {
-            return data.replace("define(", "define('kitchen-sink/demo',");
-        }]
+        source: [{
+            project: cloneProject(project),
+            require: [ "kitchen-sink/demo" ]
+        }],
+        filter: getWriteFilters({filters:[fixDocPaths]}, "demo"),
+        dest: demo
     });
-    copy({
-        source: ACE_HOME + "/lib/ace/split.js",
-        dest: demo,
-        filter: [changeComments, function(data) {
-            return data.replace("define(", "define('ace/split',");
-        }]
-    });
+
     copy({
         source: demo,
         dest:   BUILD_DIR + "/kitchen-sink/demo.js",
@@ -252,6 +255,9 @@ function getWriteFilters(options, projectType) {
         removeUseStrict,
         removeLicenceComments
     ];
+
+    if (options.filters)
+        filters = filters.concat(options.filters);
 
     if (projectType == "worker")
         return filters;
@@ -319,6 +325,9 @@ var buildAce = function(options) {
         filter: [ copy.filter.moduleDefines ],
         dest: ace
     });
+    
+    if (options.coreOnly)
+        return project;
 
     copy({
         source: ace,
@@ -426,6 +435,8 @@ var buildAce = function(options) {
           dest: BUILD_DIR + '/ace-min.js'
         });
     }
+    
+    return project;
 };
 
 // silence annoying messages from dryice
@@ -437,8 +448,9 @@ var buildAce = function(fn) {
                 return;
             log.apply(console, arguments);
         }
-        fn.apply(null, arguments);
+        var ret = fn.apply(null, arguments);
         console.log = log;
+        return ret;
     }
 }(buildAce);
 
