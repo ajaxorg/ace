@@ -102,6 +102,7 @@ $(function() {
      });
 
      $(window).on("hashchange", function(e) {
+         _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
          tabs.each(function() {
             var idx = $.bbq.getState("nav") || "about";
             var section = e.fragment.split("&")[1] || "";
