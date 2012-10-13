@@ -251,9 +251,9 @@ function addSuffix(options) {
 function getWriteFilters(options, projectType) {
     var filters = [
         copy.filter.moduleDefines,
-        inlineTextModules,
         removeUseStrict,
-        removeLicenceComments
+        removeLicenceComments,
+        inlineTextModules
     ];
 
     if (options.filters)
@@ -465,7 +465,8 @@ var detectTextModules = function(input, source) {
     var module = source.isLocation ? source.path : source;
 
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
+    input = input.replace(/\n\s+/g, "\n");
+    input = '"' + input.replace(/\n/g, '\\\n') + '"';
     textModules[module] = input;
 
     return "";
@@ -543,7 +544,7 @@ function removeUseStrict(text) {
 }
 
 function removeLicenceComments(text) {
-    return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1");
+    return text.replace(/(?:(;)|\n)\s*\/\*[\d\D]*?\*\/|\n\s*\/\/.*/g, "$1");
 }
 
 function namespace(ns) {
