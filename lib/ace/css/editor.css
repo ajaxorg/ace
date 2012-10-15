@@ -242,6 +242,8 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     cursor: default;
+    white-space: pre-line;
+    word-wrap: break-word;
 }
 
 .ace_folding-enabled > .ace_gutter-cell {
