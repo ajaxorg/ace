@@ -20,7 +20,7 @@
   border-left: 2px solid #7DA5DC
 }
 
-.ace-clouds-midnight .ace_cursor.ace_overwrite {
+.ace-clouds-midnight .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #7DA5DC
 }

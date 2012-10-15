@@ -22,7 +22,7 @@
   border-left: 2px solid %cursor%;
 }
 
-.%cssClass% .ace_cursor.ace_overwrite {
+.%cssClass% .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid %overwrite%;
 }

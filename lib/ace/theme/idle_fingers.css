@@ -20,7 +20,7 @@
   border-left: 2px solid #91FF00
 }
 
-.ace-idle-fingers .ace_cursor.ace_overwrite {
+.ace-idle-fingers .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #91FF00
 }

@@ -20,7 +20,7 @@
   border-left: 2px solid #000000
 }
 
-.ace-solarized-light .ace_cursor.ace_overwrite {
+.ace-solarized-light .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #000000
 }
