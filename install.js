@@ -61,8 +61,9 @@ try {
         suffix: "",
         name: "ace"
     });
-} catch (e) {
-    console.log("--- Ace Build error ---");
-    console.log(e);
-    process.exit(0);
+
+} catch (err) {
+	console.error("--- Ace Build error ---");
+	console.error(err.stack);
+	process.exit(1);
 }
