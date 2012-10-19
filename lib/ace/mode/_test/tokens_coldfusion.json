@@ -1,0 +1,41 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "<!--" ],
+   [ "comment", "- hello world --->" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "cfset" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "welcome" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"Hello World!\"" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "cfoutput" ],
+   [ "meta.tag", ">" ],
+   [ "text", "#welcome#" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "cfoutput" ],
+   [ "meta.tag", ">" ]
+  ]
+ }
+]

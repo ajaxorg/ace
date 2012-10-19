@@ -1,0 +1,205 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "#!/usr/local/bin/python" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "import" ],
+   [ "text", " " ],
+   [ "identifier", "string" ],
+   [ "text", ", " ],
+   [ "identifier", "sys" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# If no arguments were given, print a helpful message" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "support.function", "len" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "sys" ],
+   [ "text", "." ],
+   [ "identifier", "argv" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", "==" ],
+   [ "constant.numeric", "1" ],
+   [ "text", ":" ]
+  ]
+ },
+ {
+  "state": "qstring",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "print" ],
+   [ "text", " " ],
+   [ "string", "'''Usage:" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string", "celsius temp1 temp2 ...'''" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "sys" ],
+   [ "text", "." ],
+   [ "identifier", "exit" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# Loop over the arguments" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "identifier", "i" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "sys" ],
+   [ "text", "." ],
+   [ "identifier", "argv" ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "1" ],
+   [ "text", ":" ],
+   [ "paren.rparen", "]" ],
+   [ "text", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "try" ],
+   [ "text", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "fahrenheit" ],
+   [ "keyword.operator", "=" ],
+   [ "support.function", "float" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "string" ],
+   [ "text", "." ],
+   [ "identifier", "atoi" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "i" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "except" ],
+   [ "text", " " ],
+   [ "identifier", "string" ],
+   [ "text", "." ],
+   [ "identifier", "atoi_error" ],
+   [ "text", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "print" ],
+   [ "text", " " ],
+   [ "support.function", "repr" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "i" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ", " ],
+   [ "string", "\"not a numeric value\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "else" ],
+   [ "text", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "celsius" ],
+   [ "keyword.operator", "=" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "fahrenheit" ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "32" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "5.0" ],
+   [ "keyword.operator", "/" ],
+   [ "constant.numeric", "9.0" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "print" ],
+   [ "text", " " ],
+   [ "string", "'%i\\260F = %i\\260C'" ],
+   [ "text", " " ],
+   [ "keyword.operator", "%" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "support.function", "int" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "fahrenheit" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ", " ],
+   [ "support.function", "int" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "celsius" ],
+   [ "keyword.operator", "+" ],
+   [ "constant.numeric", ".5" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ]
+  ]
+ }
+]

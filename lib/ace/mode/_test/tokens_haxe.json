@@ -1,0 +1,195 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Haxe" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "static" ],
+   [ "text", " " ],
+   [ "keyword", "function" ],
+   [ "text", " " ],
+   [ "identifier", "main" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// Say Hello!" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "greeting" ],
+   [ "punctuation.operator", ":" ],
+   [ "keyword", "String" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"Hello World\"" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "trace" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "greeting" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "targets" ],
+   [ "punctuation.operator", ":" ],
+   [ "keyword", "Array" ],
+   [ "keyword.operator", "<" ],
+   [ "keyword", "String" ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "paren.lparen", "[" ],
+   [ "string", "\"Flash\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"Javascript\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"PHP\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"Neko\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"C++\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"iOS\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"Android\"" ],
+   [ "punctuation.operator", "," ],
+   [ "string", "\"webOS\"" ],
+   [ "paren.rparen", "]" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "trace" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Haxe is a great language that can target:\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "target" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "targets" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "keyword", "trace" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\" - \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "identifier", "target" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "trace" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"And many more!\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ }
+]

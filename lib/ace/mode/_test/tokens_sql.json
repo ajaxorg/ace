@@ -1,0 +1,73 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "SELECT" ],
+   [ "text", " " ],
+   [ "identifier", "city" ],
+   [ "text", ", " ],
+   [ "support.function", "COUNT" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "id" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "AS" ],
+   [ "text", " " ],
+   [ "identifier", "users_count" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "FROM" ],
+   [ "text", " " ],
+   [ "identifier", "users" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "WHERE" ],
+   [ "text", " " ],
+   [ "identifier", "group_name" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "'salesman'" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "AND" ],
+   [ "text", " " ],
+   [ "identifier", "created" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "string", "'2011-05-21'" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "GROUP" ],
+   [ "text", " " ],
+   [ "keyword", "BY" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "ORDER" ],
+   [ "text", " " ],
+   [ "keyword", "BY" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "text", " " ],
+   [ "keyword", "DESC" ]
+  ]
+ }
+]

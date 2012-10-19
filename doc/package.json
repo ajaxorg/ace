@@ -1,0 +1,8 @@
+{
+    "name": "ace-api",
+    "version": "0.1.0",
+    "dependencies": {
+        "panino" : ">=2.0.8",
+        "asset-smasher": "0.2.0"
+    }
+}

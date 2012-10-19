@@ -1,0 +1,748 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "// http://www.scala-lang.org/node/54" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "package" ],
+   [ "text", " " ],
+   [ "identifier", "examples" ],
+   [ "text", "." ],
+   [ "identifier", "actors" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "import" ],
+   [ "text", " " ],
+   [ "identifier", "scala" ],
+   [ "text", "." ],
+   [ "identifier", "actors" ],
+   [ "text", "." ],
+   [ "identifier", "Actor" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "import" ],
+   [ "text", " " ],
+   [ "identifier", "scala" ],
+   [ "text", "." ],
+   [ "identifier", "actors" ],
+   [ "text", "." ],
+   [ "identifier", "Actor" ],
+   [ "text", "." ],
+   [ "identifier", "_" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "abstract" ],
+   [ "text", " " ],
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Start" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "SendPing" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PingMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "abstract" ],
+   [ "text", " " ],
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "PongMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PongMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "Stop" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "PongMessage" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "object" ],
+   [ "text", " " ],
+   [ "identifier", "pingpong" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Application" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "val" ],
+   [ "text", " " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "val" ],
+   [ "text", " " ],
+   [ "identifier", "ping" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "100000" ],
+   [ "text", ", " ],
+   [ "identifier", "pong" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "ping" ],
+   [ "text", "." ],
+   [ "identifier", "start" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "pong" ],
+   [ "text", "." ],
+   [ "identifier", "start" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "ping" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Start" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "count" ],
+   [ "text", ": " ],
+   [ "support.function", "Int" ],
+   [ "text", ", " ],
+   [ "identifier", "pong" ],
+   [ "text", ": " ],
+   [ "identifier", "Actor" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Actor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "def" ],
+   [ "text", " " ],
+   [ "identifier", "act" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: Initializing with count \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "count" ],
+   [ "keyword.operator", "+" ],
+   [ "string", "\": \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "pong" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "count" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "loop" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "identifier", "react" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Start" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: starting.\"" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "SendPing" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", "%" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1000" ],
+   [ "text", " " ],
+   [ "keyword.operator", "==" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: pong from: \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "sender" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "pingsLeft" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "self" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "SendPing" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Ping: Stop.\"" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "pong" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Stop" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "exit" ],
+   [ "paren.lparen", "(" ],
+   [ "symbol.constant", "'stop" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ],
+   [ "text", " " ],
+   [ "keyword", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Actor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "def" ],
+   [ "text", " " ],
+   [ "identifier", "act" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "var" ],
+   [ "text", " " ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "loop" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "identifier", "react" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Ping" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "%" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1000" ],
+   [ "text", " " ],
+   [ "keyword.operator", "==" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Pong: ping \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "pongCount" ],
+   [ "keyword.operator", "+" ],
+   [ "string", "\" from \"" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "sender" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "sender" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "identifier", "Pong" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "pongCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "Stop" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "println" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Pong: Stop.\"" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "identifier", "exit" ],
+   [ "paren.lparen", "(" ],
+   [ "symbol.constant", "'stop" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ }
+]

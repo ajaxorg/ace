@@ -1,0 +1,196 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\usepackage" ],
+   [ "lparen", "{" ],
+   [ "text", "amsmath" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\title" ],
+   [ "lparen", "{" ],
+   [ "keyword", "\\LaTeX" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\date" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\begin" ],
+   [ "lparen", "{" ],
+   [ "text", "document" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\maketitle" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\LaTeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ],
+   [ "text", " is a document preparation system for the " ],
+   [ "keyword", "\\TeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  typesetting program. It offers programmable desktop publishing" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  features and extensive facilities for automating most aspects of" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  typesetting and desktop publishing, including numbering and" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  cross-referencing, tables and figures, page layout, bibliographies," ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  and much more. " ],
+   [ "keyword", "\\LaTeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ],
+   [ "text", " was originally written in 1984 by Leslie" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  Lamport and has become the dominant method for using " ],
+   [ "keyword", "\\TeX" ],
+   [ "text", "; few" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  people write in plain " ],
+   [ "keyword", "\\TeX" ],
+   [ "lparen", "{" ],
+   [ "rparen", "}" ],
+   [ "text", " anymore. The current version  is" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\LaTeXe" ],
+   [ "text", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "% This is a comment; it will not be shown in the final output." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "% The following shows a little of the typesetting power of LaTeX:" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\begin" ],
+   [ "lparen", "{" ],
+   [ "text", "align" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    E &= mc^2                              " ],
+   [ "keyword", "\\\\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    m &= " ],
+   [ "keyword", "\\frac" ],
+   [ "lparen", "{" ],
+   [ "text", "m_0" ],
+   [ "rparen", "}" ],
+   [ "lparen", "{" ],
+   [ "keyword", "\\sqrt" ],
+   [ "lparen", "{" ],
+   [ "text", "1-" ],
+   [ "keyword", "\\frac" ],
+   [ "lparen", "{" ],
+   [ "text", "v^2" ],
+   [ "rparen", "}" ],
+   [ "lparen", "{" ],
+   [ "text", "c^2" ],
+   [ "rparen", "}" ],
+   [ "rparen", "}" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\end" ],
+   [ "lparen", "{" ],
+   [ "text", "align" ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\end" ],
+   [ "lparen", "{" ],
+   [ "text", "document" ],
+   [ "rparen", "}" ]
+  ]
+ }
+]

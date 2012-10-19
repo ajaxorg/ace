@@ -1,0 +1,185 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "uniform" ],
+   [ "text", " " ],
+   [ "keyword", "float" ],
+   [ "text", " " ],
+   [ "identifier", "amplitude" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "attribute" ],
+   [ "text", " " ],
+   [ "keyword", "float" ],
+   [ "text", " " ],
+   [ "identifier", "displacement" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "varying" ],
+   [ "text", " " ],
+   [ "keyword", "vec3" ],
+   [ "text", " " ],
+   [ "identifier", "vNormal" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "void" ],
+   [ "text", " " ],
+   [ "entity.name.function", "main" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "vNormal" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "normal" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "// multiply our displacement by the" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "// amplitude. The amp will get animated" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "// so we'll have animated displacement" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "vec3" ],
+   [ "text", " " ],
+   [ "identifier", "newPosition" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "position" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "                       " ],
+   [ "identifier", "normal" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "                       " ],
+   [ "keyword", "vec3" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "displacement" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "                            " ],
+   [ "identifier", "amplitude" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "constant.language", "gl_Position" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "projectionMatrix" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "                  " ],
+   [ "identifier", "modelViewMatrix" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "                  " ],
+   [ "keyword", "vec4" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "newPosition" ],
+   [ "punctuation.operator", "," ],
+   [ "constant.numeric", "1.0" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ }
+]

@@ -1,3 +1,47 @@
+2012.09.17, Version 0.1.0
+
+* New Features
+  - Multiple cursors and selections (https://c9.io/site/blog/2012/08/be-an-armenian-warrior-with-block-selection-on-steroids/)
+  - Fold buttons displayed in the gutter
+  - Indent Guides
+  - Completely reworked vim mode (Sergi Mansilla)
+  - Improved emacs keybindings
+  - Autoclosing of html tags (danyaPostfactum)
+
+* 20 New language modes
+  - Coldfusion (Russ)
+  - Diff
+  - GLSL (Ed Mackey)
+  - Go (Davide Saurino)
+  - Haxe (Jason O'Neil)
+  - Jade (Garen Torikian)
+  - jsx (Syu Kato)
+  - LaTeX (James Allen)
+  - Less (John Roepke)
+  - Liquid (Bernie Telles)
+  - Lua (Lee Gao)
+  - LuaPage (Choonster)
+  - Markdown (Chris Spencer)
+  - PostgreSQL (John DeSoi)
+  - Powershell (John Kane)
+  - Sh (Richo Healey)
+  - SQL (Jonathan Camile)
+  - Tcl (Cristoph Hochreiner)
+  - XQuery (William Candillion)
+  - Yaml (Meg Sharkey)
+
+  * Live syntax checks
+  - for XQuery and JSON
+
+* New Themes
+  - Ambiance (Irakli Gozalishvili)
+  - Dreamweaver (Adam Jimenez)
+  - Github (bootstraponline)
+  - Tommorrow themes (https://github.com/chriskempson/tomorrow-theme)
+  - XCode
+
+* Many Small Enhancements and Bugfixes
+ 
 2011.08.02, Version 0.2.0
 
 * Split view (Julian Viereck)
@@ -27,15 +71,14 @@
   - SCAD (Jacob Hansson)
   
 * Live syntax checks
-  - Lint for Css using CSS Lint <http://csslint.net/>
+  - Lint for CSS using CSS Lint <http://csslint.net/>
   - CoffeeScript
 
 * New Themes
   - Crimson Editor (iebuggy)
   - Merbivore (Michael Schwartz)
   - Merbivore soft (Michael Schwartz)
-  - Solarized dark/light <http://ethanschoonover.com/solarized> (David Alan
-    Hjelle)
+  - Solarized dark/light <http://ethanschoonover.com/solarized> (David Alan Hjelle)
   - Vibrant Ink (Michael Schwartz)
 
 * Small Features/Enhancements
@@ -48,10 +91,8 @@
     highlight are not affected (Irakli Gozalishvili)
   - Added setFontSize method
   - Improved vi keybindings (Trent Ogren)
-  - When unfocused make cursor transparent instead of removing it (Harutyun
-    Amirjanyan)
-  - Support for matching groups in tokenizer with arrays of tokens (Chris
-    Spencer)
+  - When unfocused make cursor transparent instead of removing it (Harutyun Amirjanyan)
+  - Support for matching groups in tokenizer with arrays of tokens (Chris Spencer)
 
 * Bug fixes
   - Add support for the new OSX scroll bars
@@ -59,8 +100,7 @@
   - Proper handling of unicode characters in JavaScript identifiers
   - Fix remove lines command on last line (Harutyun Amirjanyan)
   - Fix scroll wheel sluggishness in Safari
-  - Make keyboard infrastructure route keys like []^$ the right way (Julian
-    Viereck)
+  - Make keyboard infrastructure route keys like []^$ the right way (Julian Viereck)
 
 2011.02.14, Version 0.1.6
 
