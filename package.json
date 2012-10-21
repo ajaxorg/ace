@@ -29,7 +29,7 @@
     },
     "scripts": {
         "test": "node lib/ace/test/all.js",
-        "postinstall": "node ./install.js"
+        "postinstall": "node ./install.js -c"
     },
     "config": {
         "github.com/sourcemint/bundler-js/0/-meta/config/0": {
