@@ -1,10 +1,15 @@
 $(function () {
     'use strict';
 
-    var baseTitle = document.title,
-        // base (general) part of title
-        pathName = window.location.pathname,
-        fileName = pathName.substring(window.location.pathname.lastIndexOf("/") + 1);
+   var pagePath = document.location.pathname.substring(document.location.pathname.lastIndexOf("/") + 1);
+
+   // select current page in sidenav and set up prev/next links if they exist
+   var $selNavLink = $('#sidebar').find('a[href="' + pagePath + '"]');
+   if ($selNavLink.length) {
+      //$selListItem = $selNavLink.closest('li');
+
+      $selNavLink.addClass('currentItem');
+   }
 
     if (window.addEventListener) window.addEventListener('load', loadCallback, true);
     else window.attachEvent('load', loadCallback, true);
@@ -17,7 +22,6 @@ $(function () {
             if (query) {
                 input.value = "";
                 input.blur();
-                var currentVersion = $('#currentVersion').text();
                 var url = "https://www.google.com/search?q=" + encodeURIComponent("site:ace.ajax.org/api" + " " + query);
                 window.open(url);
             }
@@ -25,28 +29,15 @@ $(function () {
         };
     }
 
-    var fileNameRE = new RegExp("^" + fileName, "i");
-
-    $('a.menuLink').each(function (index) {
-        if ($(this).attr("href").match(fileNameRE)) {
-            $(this).addClass("currentItem");
-            return false;
-        }
-    });
-
     // init search
     $('#search')
     // prevent from form submit
     .on('submit', function () {
         return false;
     }).find('input');
-
-    // init prettyprint
-    $('pre > code').addClass('prettyprint');
-    prettyPrint();
 });
 
-$(document).ready(function () {
+function ux() {
     var d = 'a.menu, .dropdown-toggle'
 
     function clearMenus() {
@@ -78,12 +69,11 @@ $(document).ready(function () {
     else sx = 0;
 
     $('.members').each(function (i) {
-        var position = $(this).position();
         var $classContent = $(this).closest('.classContent');
         
         $(this).scrollspy({
-            min: $classContent.position().top - 35,
-            max: $classContent.position().top + $classContent.height(),
+            min: $classContent.position().top + 5,
+            max: $classContent.position().top + $classContent.height() - 35,
             onEnter: function (element, position) {
                 var $pagination = $(element);
                 var $paginationContent = $('.membersContent pos' + i);
@@ -93,8 +83,7 @@ $(document).ready(function () {
                 $paginationContent.css('top', 0);
 
                 $pagination.addClass('shadow').stop().css({
-                    height: 31,
-                    'top': 33
+                    height: 31
                 }).closest('.classContent').addClass('srolled');
 
                 $tabs.addClass('tabsSansBorder');
@@ -132,7 +121,7 @@ $(document).ready(function () {
         });
     });
     
-    $('span.methodClicker, article.article, h3.methodClicker').each(function () {
+    $('span.methodClicker, article.article, i.methodClicker').each(function () {
         var a = $(this);
         var constructorPos = a.attr("id").indexOf("new ");
 
@@ -144,27 +133,16 @@ $(document).ready(function () {
 
         a.attr("id", objName);
     });
-
-    $('.brand').parent('.dropdown').hover(
-
-    function () {
-        $(this).addClass('open');
-    }, function () {
-        clearMenus();
-    });
-
-    $('.versions').hover(
-
-    function () {
-        $(this).addClass('open');
-    }, function () {
-        clearMenus();
-    });
-
+    
     function showMethodContent() {
-        if (!location.hash) return;
-
-        var $clickerEl = $('span#' + location.hash.replace(/^#/, '').replace(/\./g, '\\.'));
+        var locationHash = location.hash.replace(/^#/, '').replace(/\./g, '\\.');
+        var equalsPos = location.hash.indexOf("=");
+        
+        if (equalsPos >=0) {
+            locationHash = locationHash.substring(0, location.hash.indexOf("="));
+        }
+        
+        var $clickerEl = $('span#' + locationHash);
         if ($clickerEl.length > 0 && $clickerEl.hasClass('methodClicker')) {
             var p = $clickerEl.parent();
             p[0].force = true;
@@ -173,7 +151,7 @@ $(document).ready(function () {
         }
     }
 
-    if (location.hash) {
+    if (location.hash.indexOf("section") >= 1) {
         showMethodContent();
         var data = location.hash;
         scrollTo(null, data.substr(1));
@@ -182,12 +160,12 @@ $(document).ready(function () {
     window.onhashchange = function () {
         showMethodContent();
     }
-});
+};
 
 function scrollTo(el, data) {
     if (!data) {
         data = el.getAttribute("data-id");
-        location.hash = data;
+        //location.hash = data;
     }
     var el = $("span#" + data.replace(/\./g, "\\."))[0];
     if (!el) return;

@@ -1,0 +1,434 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "#!/bin/sh" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# Script to open a browser to current branch" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# Repo formats:" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# ssh   git@github.com:richoH/gh_pr.git" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# http  https://richoH@github.com/richoH/gh_pr.git" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "# git   git://github.com/richoH/gh_pr.git" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "variable", "username=" ],
+   [ "text", "`" ],
+   [ "identifier", "git" ],
+   [ "text", " " ],
+   [ "identifier", "config" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "get" ],
+   [ "text", " " ],
+   [ "identifier", "github" ],
+   [ "text", "." ],
+   [ "identifier", "user" ],
+   [ "text", "`" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "support.function", "get_repo()" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "git" ],
+   [ "text", " " ],
+   [ "identifier", "remote" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "v" ],
+   [ "text", " | " ],
+   [ "identifier", "grep" ],
+   [ "text", " $" ],
+   [ "paren.lparen", "{" ],
+   [ "text", "@:" ],
+   [ "keyword.operator", "-" ],
+   [ "variable", "$username" ],
+   [ "paren.rparen", "}" ],
+   [ "text", " | " ],
+   [ "keyword", "while" ],
+   [ "text", " " ],
+   [ "keyword", "read" ],
+   [ "text", " " ],
+   [ "identifier", "remote" ],
+   [ "text", "; " ],
+   [ "keyword", "do" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "variable", "repo=" ],
+   [ "text", "`" ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "variable", "$remote" ],
+   [ "text", " | " ],
+   [ "identifier", "grep" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "E" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "o" ],
+   [ "text", " " ],
+   [ "string", "\"git@github.com:[^ ]*\"" ],
+   [ "text", "`; " ],
+   [ "keyword", "then" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "variable", "$repo" ],
+   [ "text", " | " ],
+   [ "identifier", "sed" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s/^git@github\\.com://\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s/\\.git$//\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "constant.language", "exit" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "fi" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "variable", "repo=" ],
+   [ "text", "`" ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "variable", "$remote" ],
+   [ "text", " | " ],
+   [ "identifier", "grep" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "E" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "o" ],
+   [ "text", " " ],
+   [ "string", "\"https?://([^@]*@)?github.com/[^ ]*\\.git\"" ],
+   [ "text", "`; " ],
+   [ "keyword", "then" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "variable", "$repo" ],
+   [ "text", " | " ],
+   [ "identifier", "sed" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s|^https?://||\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s/^.*github\\.com\\///\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s/\\.git$//\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "constant.language", "exit" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "fi" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "variable", "repo=" ],
+   [ "text", "`" ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "variable", "$remote" ],
+   [ "text", " | " ],
+   [ "identifier", "grep" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "E" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "o" ],
+   [ "text", " " ],
+   [ "string", "\"git://github.com/[^ ]*\\.git\"" ],
+   [ "text", "`; " ],
+   [ "keyword", "then" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "variable", "$repo" ],
+   [ "text", " | " ],
+   [ "identifier", "sed" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s|^git://github.com/||\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "e" ],
+   [ "text", " " ],
+   [ "string", "\"s/\\.git$//\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "          " ],
+   [ "constant.language", "exit" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "fi" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "done" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "[" ],
+   [ "text", " " ],
+   [ "variable.language", "$?" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "eq" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "paren.rparen", "]" ],
+   [ "text", "; " ],
+   [ "keyword", "then" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "string", "\"Couldn't find a valid remote\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "support.function", "&2" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "constant.language", "exit" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "fi" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "variable", "repo=" ],
+   [ "text", "`" ],
+   [ "identifier", "get_repo" ],
+   [ "text", " $@`; " ],
+   [ "keyword", "then" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "branch=" ],
+   [ "text", "`" ],
+   [ "identifier", "git" ],
+   [ "text", " " ],
+   [ "identifier", "symbolic" ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "ref" ],
+   [ "text", " " ],
+   [ "identifier", "HEAD" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "/" ],
+   [ "identifier", "dev" ],
+   [ "keyword.operator", "/" ],
+   [ "identifier", "null" ],
+   [ "text", "`" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "constant.language", "echo" ],
+   [ "text", " " ],
+   [ "string", "\"http://github.com/$repo/pull/new/${branch##refs/heads/}\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "else" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "constant.language", "exit" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "fi" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ }
+]

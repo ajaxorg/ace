@@ -1,0 +1,42 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "void" ],
+   [ "text", " " ],
+   [ "identifier", "HelloWorld" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "//Say Hello!" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "Console" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "WriteLine" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Hello World\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ }
+]

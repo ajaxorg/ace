@@ -1,0 +1,698 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "text", "The following examples can be found in full at http://liquidmarkup.org/" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "Liquid is an extraction from the e-commerce system Shopify." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "Shopify powers many thousands of e-commerce stores which all call for unique designs." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "For this we developed Liquid which allows our customers complete design freedom while" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "maintaining the integrity of our servers." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "Liquid has been in production use since June 2006 and is now used by many other" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "hosted web applications." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "It was developed for usage in Ruby on Rails web applications and integrates seamlessly" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "as a plugin but it also works excellently as a stand alone library." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "Here's what it looks like:" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "ul" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "id" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"products\"" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "products" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "li" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", "." ],
+   [ "identifier", "title" ],
+   [ "text", " " ],
+   [ "variable", "}}" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        Only {{ product.price | format_as_money }}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", "." ],
+   [ "identifier", "description" ],
+   [ "text", " | " ],
+   [ "identifier", "prettyprint" ],
+   [ "text", " | " ],
+   [ "support.function", "truncate" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "200" ],
+   [ "text", "  " ],
+   [ "variable", "}}" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "li" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endfor" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "ul" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "Some more features include:" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Filters" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", " The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", "The word \"tobi\" has {{ 'tobi' | size }} letters! " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ],
+   [ "text", "The date today is {{ 'now' | date: \"%Y %b %d\" }} " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "If" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "identifier", "user" ],
+   [ "text", "." ],
+   [ "identifier", "name" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "'tobi'" ],
+   [ "text", " " ],
+   [ "identifier", "or" ],
+   [ "text", " " ],
+   [ "identifier", "user" ],
+   [ "text", "." ],
+   [ "identifier", "name" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "'marc'" ],
+   [ "text", " " ],
+   [ "variable", "%}" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    hi marc or tobi" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endif" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Case" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "case" ],
+   [ "text", " " ],
+   [ "identifier", "template" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "when" ],
+   [ "text", " " ],
+   [ "string", "'index'" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "       Welcome" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "when" ],
+   [ "text", " " ],
+   [ "string", "'product'" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "       " ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "product" ],
+   [ "text", "." ],
+   [ "identifier", "vendor" ],
+   [ "text", " | " ],
+   [ "identifier", "link_to_vendor" ],
+   [ "text", " " ],
+   [ "variable", "}}" ],
+   [ "text", " / {{ product.title }}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "       " ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "page_title" ],
+   [ "text", " " ],
+   [ "variable", "}}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endcase" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "For Loops" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "identifier", "item" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "array" ],
+   [ "text", " " ],
+   [ "variable", "%}" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{{" ],
+   [ "text", " " ],
+   [ "identifier", "item" ],
+   [ "text", " " ],
+   [ "variable", "}}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endfor" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Tables" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "tablerow" ],
+   [ "text", " " ],
+   [ "identifier", "item" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "identifier", "items" ],
+   [ "text", " " ],
+   [ "identifier", "cols" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "3" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "variable.language", "tablerowloop" ],
+   [ "text", "." ],
+   [ "identifier", "col_first" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      First column: {{ item.variable }}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      Different column: {{ item.variable }}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endif" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "variable", "{%" ],
+   [ "text", " " ],
+   [ "keyword", "endtablerow" ],
+   [ "text", " " ],
+   [ "variable", "%}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ }
+]

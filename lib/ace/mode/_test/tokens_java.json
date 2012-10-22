@@ -1,0 +1,139 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "identifier", "InfiniteLoop" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "/*" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "     * This will cause the program to hang..." ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "     *" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "     * Taken from:" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "     */" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "public" ],
+   [ "text", " " ],
+   [ "keyword", "static" ],
+   [ "text", " " ],
+   [ "keyword", "void" ],
+   [ "text", " " ],
+   [ "identifier", "main" ],
+   [ "lparen", "(" ],
+   [ "support.function", "String" ],
+   [ "lparen", "[" ],
+   [ "rparen", "]" ],
+   [ "text", " " ],
+   [ "identifier", "args" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "double" ],
+   [ "text", " " ],
+   [ "identifier", "d" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "support.function", "Double" ],
+   [ "text", "." ],
+   [ "identifier", "parseDouble" ],
+   [ "lparen", "(" ],
+   [ "string", "\"2.2250738585072012e-308\"" ],
+   [ "rparen", ")" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "comment", "// unreachable code" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "support.function", "System" ],
+   [ "text", "." ],
+   [ "identifier", "out" ],
+   [ "text", "." ],
+   [ "identifier", "println" ],
+   [ "lparen", "(" ],
+   [ "string", "\"Value: \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "identifier", "d" ],
+   [ "rparen", ")" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "rparen", "}" ]
+  ]
+ }
+]

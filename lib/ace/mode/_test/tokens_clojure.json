@@ -1,0 +1,248 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "(" ],
+   [ "support.function", "defn" ],
+   [ "text", " " ],
+   [ "identifier", "parting" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "string", "\"returns a String parting in a given language" ],
+   [ "string", "\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "(" ],
+   [ "keyword", "[" ],
+   [ "keyword", "]" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "parting" ],
+   [ "text", " " ],
+   [ "string", "\"World" ],
+   [ "string", "\"" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "(" ],
+   [ "keyword", "[" ],
+   [ "support.function", "name" ],
+   [ "keyword", "]" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "parting" ],
+   [ "text", " " ],
+   [ "support.function", "name" ],
+   [ "text", " " ],
+   [ "string", "\"en" ],
+   [ "string", "\"" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "(" ],
+   [ "keyword", "[" ],
+   [ "support.function", "name" ],
+   [ "text", " " ],
+   [ "identifier", "language" ],
+   [ "keyword", "]" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "; condp is similar to a case statement in other languages." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "; It is described in more detail later." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "; It is used here to take different actions based on whether the" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "; parameter \"language\" is set to \"en\", \"es\" or something else." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "(" ],
+   [ "support.function", "condp" ],
+   [ "text", " " ],
+   [ "constant.language", "=" ],
+   [ "text", " " ],
+   [ "identifier", "language" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "string", "\"en" ],
+   [ "string", "\"" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "support.function", "str" ],
+   [ "text", " " ],
+   [ "string", "\"Goodbye, " ],
+   [ "string", "\"" ],
+   [ "text", " " ],
+   [ "support.function", "name" ],
+   [ "keyword", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "string", "\"es" ],
+   [ "string", "\"" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "support.function", "str" ],
+   [ "text", " " ],
+   [ "string", "\"Adios, " ],
+   [ "string", "\"" ],
+   [ "text", " " ],
+   [ "support.function", "name" ],
+   [ "keyword", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "keyword", "(" ],
+   [ "keyword", "throw" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "IllegalArgumentException" ],
+   [ "text", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "(" ],
+   [ "support.function", "str" ],
+   [ "text", " " ],
+   [ "string", "\"unsupported language " ],
+   [ "string", "\"" ],
+   [ "text", " " ],
+   [ "identifier", "language" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "(" ],
+   [ "support.function", "println" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "parting" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "text", " " ],
+   [ "comment", "; -> Goodbye, World" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "(" ],
+   [ "support.function", "println" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "parting" ],
+   [ "text", " " ],
+   [ "string", "\"Mark" ],
+   [ "string", "\"" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "text", " " ],
+   [ "comment", "; -> Goodbye, Mark" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "(" ],
+   [ "support.function", "println" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "parting" ],
+   [ "text", " " ],
+   [ "string", "\"Mark" ],
+   [ "string", "\"" ],
+   [ "text", " " ],
+   [ "string", "\"es" ],
+   [ "string", "\"" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "text", " " ],
+   [ "comment", "; -> Adios, Mark" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "(" ],
+   [ "support.function", "println" ],
+   [ "text", " " ],
+   [ "keyword", "(" ],
+   [ "identifier", "parting" ],
+   [ "text", " " ],
+   [ "string", "\"Mark" ],
+   [ "string", "\"" ],
+   [ "text", ", " ],
+   [ "string", "\"xy" ],
+   [ "string", "\"" ],
+   [ "keyword", ")" ],
+   [ "keyword", ")" ],
+   [ "text", " " ],
+   [ "comment", "; -> java.lang.IllegalArgumentException: unsupported language xy" ]
+  ]
+ }
+]

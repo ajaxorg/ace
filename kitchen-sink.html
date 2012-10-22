@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -7,25 +6,29 @@
     <title>Ace Kitchen Sink</title>
     <meta name="author" content="Fabian Jakobs">
     <!--
-
     Ace
       version %version%
       commit  %commit%
-
     -->
 
     <!--DEVEL-->
       <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+      <script src="http://use.edgefonts.net/source-code-pro.js"></script> 
     <!--DEVEL-->
 
     <!--PACKAGE
       <link rel="stylesheet" href="kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+      <script src="http://use.edgefonts.net/source-code-pro.js"></script> 
     PACKAGE-->
 </head>
 <body>
+<div id="optionsPanel" style="position:absolute;height:100%">
   <a href="http://ajaxorg.github.com/ace/" >
     <img id="logo" src="demo/kitchen-sink/logo.png">
   </a> 
+  <div style="position: absolute; overflow: hidden; top:80px; bottom:0">
+  <div style="width: 120%; height:100%; overflow-y: scroll">
+
   <table id="controls">
     <tr>
       <td>
@@ -70,8 +73,10 @@
             <option value="ace/theme/solarized_light">Solarized Light</option>
             <option value="ace/theme/textmate" selected="selected">TextMate</option>
             <option value="ace/theme/tomorrow">Tomorrow</option>
+            <option value="ace/theme/xcode">XCode</option>
           </optgroup>
           <optgroup label="Dark">
+            <option value="ace/theme/ambiance">Ambiance</option>
             <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
             <option value="ace/theme/cobalt">Cobalt</option>
             <option value="ace/theme/idle_fingers">idleFingers</option>
@@ -232,9 +237,20 @@
         <input type="checkbox" id="fade_fold_widgets">
       </td>
     </tr>
+    <tr>
+      <td >
+        <label for="highlight_token">Show token info</label>
+      </td>
+      <td>
+        <input type="checkbox" id="highlight_token">
+      </td>
+    </tr>
   </table>
   </td></tr>
   </table>
+  
+  </div>
+  </div>
 </div>
   <div id="editor"></div>
 

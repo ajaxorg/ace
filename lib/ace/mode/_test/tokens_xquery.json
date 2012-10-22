@@ -1,0 +1,64 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "xquery" ],
+   [ "text", " " ],
+   [ "keyword", "version" ],
+   [ "text", " " ],
+   [ "string", "\"1.0\"" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "let" ],
+   [ "text", " " ],
+   [ "variable", "$message" ],
+   [ "text", " :" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"Hello World!\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "return" ],
+   [ "text", " <" ],
+   [ "meta.tag", "results" ],
+   [ "text", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  <" ],
+   [ "meta.tag", "message" ],
+   [ "text", ">" ],
+   [ "lparen", "{" ],
+   [ "variable", "$message" ],
+   [ "rparen", "}" ],
+   [ "text", "</" ],
+   [ "meta.tag", "message" ],
+   [ "text", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "</" ],
+   [ "meta.tag", "results" ],
+   [ "text", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ }
+]

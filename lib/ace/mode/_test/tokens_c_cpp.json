@@ -1,0 +1,124 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "// compound assignment operators" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "#include" ],
+   [ "text", " " ],
+   [ "constant", "<iostream>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.control", "using" ],
+   [ "text", " " ],
+   [ "keyword.operator", "namespace" ],
+   [ "text", " " ],
+   [ "identifier", "std" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type", "int" ],
+   [ "text", " " ],
+   [ "entity.name.function", "main" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type", "int" ],
+   [ "text", " " ],
+   [ "identifier", "a" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "identifier", "b" ],
+   [ "keyword.operator", "=" ],
+   [ "constant.numeric", "3" ],
+   [ "punctuation.operator", ";" ],
+   [ "text", " " ],
+   [ "comment", "/*" ],
+   [ "comment", " foobar */" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "a" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "b" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "a" ],
+   [ "keyword.operator", "+" ],
+   [ "keyword.operator", "=" ],
+   [ "constant.numeric", "2" ],
+   [ "punctuation.operator", ";" ],
+   [ "text", " " ],
+   [ "comment", "// equivalent to a=a+2" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "cout" ],
+   [ "text", " " ],
+   [ "keyword.operator", "<" ],
+   [ "keyword.operator", "<" ],
+   [ "text", " " ],
+   [ "identifier", "a" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword.control", "return" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ }
+]

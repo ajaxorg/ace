@@ -1,0 +1,188 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "#!/usr/bin/env coffee" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "try" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "throw" ],
+   [ "text", " " ],
+   [ "language.support.class", "URIError" ],
+   [ "text", " " ],
+   [ "language.support.function", "decodeURI" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "0xC0ffee" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ],
+   [ "text", " " ],
+   [ "constant.numeric", "123456.7e-8" ],
+   [ "text", " " ],
+   [ "keyword.operator", "/" ],
+   [ "text", " " ],
+   [ "constant.numeric", ".9" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "catch" ],
+   [ "text", " " ],
+   [ "identifier", "e" ]
+  ]
+ },
+ {
+  "state": "qdoc",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "console" ],
+   [ "identifier", ".log" ],
+   [ "text", " " ],
+   [ "string", "'qstring'" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\"qqstring\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "'''" ]
+  ]
+ },
+ {
+  "state": "qdoc",
+  "data": [
+   [ "string", "        qdoc" ]
+  ]
+ },
+ {
+  "state": "qqdoc",
+  "data": [
+   [ "string", "    '''" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\"\"\"" ]
+  ]
+ },
+ {
+  "state": "qqdoc",
+  "data": [
+   [ "string", "        qqdoc" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string", "    \"\"\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "do" ],
+   [ "text", " " ],
+   [ "keyword.operator", "->" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "###" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "    herecomment" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "    ###" ]
+  ]
+ },
+ {
+  "state": "heregex",
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "re" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string.regex", "/regex/imgy" ],
+   [ "identifier", ".test" ],
+   [ "text", " " ],
+   [ "string.regex", "///" ]
+  ]
+ },
+ {
+  "state": "heregex",
+  "data": [
+   [ "comment.regex", "        " ],
+   [ "string.regex", "heregex" ],
+   [ "comment.regex", "  # comment" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string.regex", "    ///imgy" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "this" ],
+   [ "text", " " ],
+   [ "keyword", "isnt" ],
+   [ "punctuation.operator", ":" ],
+   [ "text", " " ],
+   [ "string", "`just JavaScript`" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "constant.language", "undefined" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "sentence" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"#{ 22 / 7 } is a decent approximation of π\"" ]
+  ]
+ }
+]
