@@ -1,7 +1,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Droid Sans Mono', 'Consolas', monospace;
+    font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
 }
 
@@ -242,6 +242,8 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     cursor: default;
+    white-space: pre-line;
+    word-wrap: break-word;
 }
 
 .ace_folding-enabled > .ace_gutter-cell {
@@ -343,6 +345,10 @@
 
 .ace_bold {
     font-weight: bold;
+}
+
+.ace_nobold .ace_bold {
+    font-weight: normal;
 }
 
 .ace_italic {

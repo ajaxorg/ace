@@ -87,6 +87,11 @@
   box-shadow: 0 0 3px 0px white;
   border-radius: 2px;
 }
+/* bold keywords cause cursor issues for some fonts */
+/* this disables bold style for editor and keeps for static highlighter */
+.ace-github.ace_nobold .ace_line > span {
+    font-weight: normal !important;
+}
 
 .ace-github .ace_marker-layer .ace_step {
   background: rgb(252, 255, 0);

@@ -278,7 +278,7 @@ function convertTheme(name) {
 
         var js = fillTemplate(jsTemplate, {
             name: name,
-            css: "require('ace/requirejs/text!./" + name + ".css')", // quoteString(css), //
+            css: 'require("../requirejs/text!./' + name + '.css")', // quoteString(css), //
             cssClass: "ace-" + hyphenate(name),
             isDark: styles.isDark
         });
