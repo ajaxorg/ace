@@ -1,0 +1,65 @@
+{
+    "title": "Ace API",
+    "date": "Mon, 22 Oct 2012 19:03:39 GMT",
+    "tree": {
+        "children": [
+            {
+                "id": "Ace",
+                "type": "class",
+                "description": "The main class required to set up an Ace instance in the browser.",
+                "short_description": "The main class required to set up an Ace instance in the browser.",
+                "line": 31,
+                "author": [],
+                "aliases": [],
+                "children": [
+                    {
+                        "id": "Ace.edit",
+                        "type": "class method",
+                        "description": "Embeds the Ace editor into the DOM, at the element provided by `el`.",
+                        "short_description": "Embeds the Ace editor into the DOM, at the element provided by `el`.",
+                        "line": 57,
+                        "author": [],
+                        "signatures": [
+                            {
+                                "arguments": [
+                                    {
+                                        "name": "el",
+                                        "description": "Either the id of an element, or the element itself",
+                                        "types": [
+                                            "String",
+                                            "DOMElement"
+                                        ],
+                                        "optional": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "arguments": [
+                            {
+                                "name": "el",
+                                "description": "Either the id of an element, or the element itself",
+                                "types": [
+                                    "String",
+                                    "DOMElement"
+                                ],
+                                "optional": false
+                            }
+                        ],
+                        "aliases": [],
+                        "children": [],
+                        "file": "../lib/ace/ace.js",
+                        "name": "edit",
+                        "name_prefix": "Ace.",
+                        "path": "Ace.edit",
+                        "outFile": "ace.html#Ace.edit"
+                    }
+                ],
+                "file": "../lib/ace/ace.js",
+                "subclasses": [],
+                "name": "Ace",
+                "path": "Ace",
+                "outFile": "ace.html"
+            }
+        ]
+    }
+}
