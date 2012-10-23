@@ -7,7 +7,7 @@ var rootDir = __dirname + "/../lib/ace/"
 
 var deps = [{
 	path: "mode/javascript/jshint.js",
-	url: "https://raw.github.com/jshint/jshint/master/jshint.js",
+	url: "https://raw.github.com/jshint/jshint/master/src/stable/jshint.js",
 	needsFixup: true,
 	postProcess: function(t) {
 		return t.replace(
