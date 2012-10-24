@@ -1,7 +1,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-    font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
 }
 
