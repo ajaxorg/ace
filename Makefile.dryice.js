@@ -30,8 +30,11 @@
  * ***** END LICENSE BLOCK ***** */
 
 var fs = require("fs");
+var path = require("path");
 if (!fs.existsSync)
-    fs.existsSync = require("path").existsSync;
+    fs.existsSync = path.existsSync;
+else
+    path.existsSync = fs.existsSync;
 var copy = require('dryice').copy;
 
 var ACE_HOME = __dirname;
