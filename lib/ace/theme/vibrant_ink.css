@@ -20,7 +20,7 @@
   border-left: 2px solid #FFFFFF
 }
 
-.ace-vibrant-ink .ace_cursor.ace_overwrite {
+.ace-vibrant-ink .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #FFFFFF
 }
