@@ -42,6 +42,10 @@ function getVersion(path) {
         return fs.readFileSync(path + "/.git-ref", "utf8");
     if (fs.existsSync(path + "/.git/ORIG_HEAD"))
         return fs.readFileSync(path + "/.git/ORIG_HEAD", "utf8");
+    if (fs.existsSync(path + "/.sourcemint/source.json")) {
+        var json = fs.readFileSync(path + "/.sourcemint/source.json", "utf8");
+        return JSON.parse(json).url.split("/").pop();
+    }
 }
 
 if (process.argv.indexOf("-c") > 0) try {
