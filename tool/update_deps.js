@@ -19,6 +19,10 @@ var deps = [{
 	path: "mode/css/csslint.js",
 	url: "https://raw.github.com/stubbornella/csslint/master/release/csslint-node.js",
 	needsFixup: true
+}, {
+	path: "../../demo/kitchen-sink/require.js",
+	url: "https://raw.github.com/jrburke/requirejs/master/require.js",
+	needsFixup: false
 }]
 
 var download = function(href, callback) {
