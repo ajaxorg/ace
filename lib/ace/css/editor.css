@@ -1,7 +1,7 @@
 .ace_editor {
     position: absolute;
     overflow: hidden;
-    font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
 }
 
@@ -148,8 +148,20 @@
     box-sizing: border-box;
 }
 
-.ace_cursor.ace_hidden {
+.ace_hidden-cursors .ace_cursor {
     opacity: 0.2;
+}
+
+.ace_smooth-blinking .ace_cursor {
+       -moz-transition: opacity 0.18s;
+    -webkit-transition: opacity 0.18s;
+         -o-transition: opacity 0.18s;
+        -ms-transition: opacity 0.18s;
+            transition: opacity 0.18s;
+}
+
+.ace_cursor[style*="opacity: 0"]{
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 
 .ace_editor.ace_multiselect .ace_cursor {

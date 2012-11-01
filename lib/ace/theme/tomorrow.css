@@ -20,7 +20,7 @@
   border-left: 2px solid #AEAFAD
 }
 
-.ace-tomorrow .ace_cursor.ace_overwrite {
+.ace-tomorrow .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #AEAFAD
 }
