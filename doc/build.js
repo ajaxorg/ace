@@ -2,6 +2,7 @@ var fs = require("fs");
 var path = require("path");
 var panino = require("panino");
 var srcPath = __dirname + "/../lib/ace";
+var buildType = process.argv.splice(2)[0];buildType
 
 var options = {
   title       : "Ace API",
@@ -46,7 +47,7 @@ panino.parse(files, options, function (err, ast) {
     process.exit(1);
   }
   
-  panino.render('json', ast, options, function (err) {
+  panino.render(buildType || 'html', ast, options, function (err) {
     if (err) {
       console.error(err);
       process.exit(1);
