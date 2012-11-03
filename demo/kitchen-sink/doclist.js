@@ -89,6 +89,7 @@ var docs = {
     "docs/lua.lua": "Lua",
     "docs/luapage.lp": "LuaPage",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
+    "docs/objectivec.m": {name: "Objective-C"},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
     "docs/perl.pl": "Perl",

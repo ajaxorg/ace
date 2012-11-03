@@ -52,6 +52,7 @@ var modesByName = {
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     markdown:   ["Markdown"     , "md|markdown"],
+    objectivec:      ["Objective-C"        , "m"],
     ocaml:      ["OCaml"        , "ml|mli"],
     perl:       ["Perl"         , "pl|pm"],
     pgsql:      ["pgSQL"        , "pgsql"],
