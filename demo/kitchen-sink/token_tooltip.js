@@ -146,7 +146,7 @@ var TokenTooltip = function(editor) {
         var st = tooltipNode.style;
         if (x + 10 + this.tooltipWidth > this.maxWidth)
             x = innerWidth - this.tooltipWidth - 10;
-        if (y > innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight);
+        if (y > innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight)
             y = y - this.tooltipHeight - 30;
         
         st.left = x + 10 + "px";
