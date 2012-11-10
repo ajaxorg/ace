@@ -86,6 +86,12 @@ plugins-client/lib.ace/www/worker/worker-language.js plugins-client/lib.ace/www/
 	node Makefile.dryice.js worker
 	cp node_modules/ace/build/src/worker* plugins-client/lib.ace/www/worker
 
+define 
+
+ifeq
+
+override
+
 # copies built ace modes
 mode:
 	mkdir -p plugins-client/lib.ace/www/mode
