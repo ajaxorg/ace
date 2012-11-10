@@ -5,7 +5,8 @@ var http = require("http")
   , mime = require("mime")
   , url = require("url")
   , fs = require("fs")
-  , port = process.env.PORT || 8888;
+  , port = process.env.PORT || 8888
+  , ip = process.env.IP || "0.0.0.0";
 
 // compatibility with node 0.6
 if (!fs.exists)
@@ -40,6 +41,6 @@ http.createServer(function(request, response) {
       response.end();
     });
   });
-}).listen(port, "0.0.0.0");
+}).listen(port, ip);
 
 console.log("http://localhost:" + port);
