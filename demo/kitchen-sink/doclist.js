@@ -88,6 +88,7 @@ var docs = {
     "docs/liquid.liquid": "Liquid",
     "docs/lua.lua": "Lua",
     "docs/luapage.lp": "LuaPage",
+    "docs/Makefile": "Makefile",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
