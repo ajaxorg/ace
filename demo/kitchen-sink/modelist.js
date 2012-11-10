@@ -5,8 +5,9 @@ define(function(require, exports, module) {
 var modes = [];
 function getModeFromPath(path) {
     var mode = modesByName.text;
+    var fileName = path.split(/[\/\\]/).pop();
     for (var i = 0; i < modes.length; i++) {
-        if (modes[i].supportsFile(path)) {
+        if (modes[i].supportsFile(fileName)) {
             mode = modes[i];
             break;
         }
@@ -18,7 +19,15 @@ var Mode = function(name, desc, extensions) {
     this.name = name;
     this.desc = desc;
     this.mode = "ace/mode/" + name;
-    this.extRe = new RegExp("^.*\\.(" + extensions + ")$", "g");
+    if (/\^/.test(extensions)) {
+        var re = extensions.replace(/\|(\^)?/g, function(a, b){
+            return "$|" + (b ? "^" : "^.*\\.");
+        }) + "$";
+    } else {
+        var re = "^.*\\.(" + extensions + ")$";
+    }   
+
+    this.extRe = new RegExp(re, "g");
 };
 
 Mode.prototype.supportsFile = function(filename) {
@@ -28,7 +37,7 @@ Mode.prototype.supportsFile = function(filename) {
 var modesByName = {
     asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
-    coffee:     ["CoffeeScript" , "coffee|^Cakefile"],
+    coffee:     ["CoffeeScript" , "^Cakefile|coffee|cf"],
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
     css:        ["CSS"          , "css"],
@@ -42,7 +51,7 @@ var modesByName = {
     clojure:    ["Clojure"      , "clj"],
     jade:       ["Jade"         , "jade"],
     java:       ["Java"         , "java"],
-    jsp:        ["JSP"                , "jsp"],
+    jsp:        ["JSP"          , "jsp"],
     javascript: ["JavaScript"   , "js"],
     json:       ["JSON"         , "json"],
     jsx:        ["JSX"          , "jsx"],
@@ -51,6 +60,7 @@ var modesByName = {
     liquid:     ["Liquid"       , "liquid"],
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
+    makefile:   ["Makefile"     , "^GNUmakefile|^makefile|^Makefile|^OCamlMakefile|make"],
     markdown:   ["Markdown"     , "md|markdown"],
     ocaml:      ["OCaml"        , "ml|mli"],
     perl:       ["Perl"         , "pl|pm"],
