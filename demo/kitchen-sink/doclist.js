@@ -85,6 +85,7 @@ var docs = {
     "docs/jsx.jsx": "JSX",
     "docs/latex.tex": {name: "LaTeX", wrapped: true},
     "docs/less.less": "LESS",
+    "docs/lisp.lisp": "Lisp",
     "docs/liquid.liquid": "Liquid",
     "docs/lua.lua": "Lua",
     "docs/luapage.lp": "LuaPage",
