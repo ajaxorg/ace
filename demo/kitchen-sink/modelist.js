@@ -75,6 +75,7 @@ var modesByName = {
     scss:       ["SCSS"         , "scss|sass"],
     sh:         ["SH"           , "sh|bash|bat"],
     sql:        ["SQL"          , "sql"],
+    stylus:     ["Stylus"       , "styl|stylus"],
     svg:        ["SVG"          , "svg"],
     tcl:        ["Tcl"          , "tcl"],
     text:       ["Text"         , "txt"],
