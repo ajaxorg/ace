@@ -76,6 +76,7 @@ var docs = {
     "docs/glsl.glsl": "Glsl",
     "docs/golang.go": "Go",
     "docs/groovy.groovy": "Groovy",
+    "docs/haml.haml": "Haml",
     "docs/Haxe.hx": "haXe",
     "docs/html.html": "HTML",
     "docs/jade.jade": "Jade",

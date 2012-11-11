@@ -46,6 +46,7 @@ var modesByName = {
     golang:     ["Go"           , "go"],
     groovy:     ["Groovy"       , "groovy"],
     haxe:       ["haXe"         , "hx"],
+    haml:       ["HAML"         , "haml"],
     html:       ["HTML"         , "htm|html|xhtml"],
     c_cpp:      ["C/C++"        , "c|cc|cpp|cxx|h|hh|hpp"],
     clojure:    ["Clojure"      , "clj"],
