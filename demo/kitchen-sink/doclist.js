@@ -72,6 +72,7 @@ var docs = {
     "docs/cpp.cpp": "C/C++",
     "docs/csharp.cs": "C#",
     "docs/css.css": "CSS",
+    "docs/dart.dart": "Dart",
     "docs/diff.diff": "Diff",
     "docs/glsl.glsl": "Glsl",
     "docs/golang.go": "Go",
