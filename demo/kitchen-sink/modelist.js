@@ -41,6 +41,7 @@ var modesByName = {
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
     css:        ["CSS"          , "css"],
+    dart:       ["Dart"         , "dart"],
     diff:       ["Diff"         , "diff|patch"],
     glsl:       ["Glsl"         , "glsl|frag|vert"],
     golang:     ["Go"           , "go"],
