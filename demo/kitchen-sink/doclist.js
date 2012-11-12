@@ -104,6 +104,7 @@ var docs = {
     "docs/scala.scala": "Scala",
     "docs/scss.scss": "SCSS",
     "docs/sh.sh": "SH",
+    "docs/stylus.styl": "Stylus",
     "docs/sql.sql": {name: "SQL", wrapped: true},
     "docs/svg.svg": "SVG",
     "docs/tcl.tcl": "Tcl",
