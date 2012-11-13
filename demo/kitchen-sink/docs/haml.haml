@@ -1,21 +1,21 @@
 !!!5
 
--# <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
--# <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
--# <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
--# <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+# <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+# <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+# <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+# <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
 
 /adasdasdad
-%div{:id => "#{@item.type}_#{@item.number}", :class => "#{@item.type} #{@item.urgency}"}
--# file: app/views/movies/index.html.haml
+%div{:id => "#{@item.type}_#{@item.number}", :class => '#{@item.type} #{@item.urgency}', :phoney => `asdasdasd`}
+/ file: app/views/movies/index.html.haml
 \d
-%ads:
+%ads:{:bleh => 33}
 %p==ddd==
   Date/Time:
   - now = DateTime.now 
   %strong= now
-  - if now > DateTime.parse("December 31, 2006")
+   = if now  DateTime.parse("December 31, 2006")
     = "Happy new " + "year!"
 %sfd.dfdfg
 #content
@@ -33,4 +33,4 @@
 
 %div[@user, :greeting]
   %bar[290]/
-  Hello!
+  ==Hello!==
