@@ -10,3 +10,14 @@ def fact(n)
 end
 
 puts fact(ARGV[0].to_i)
+
+class Range
+  def to_json(*a)
+    {
+      'json_class'   => self.class.name, # = 'Range'
+      'data'         => [ first, last, exclude_end? ]
+    }.to_json(*a)
+  end
+end
+
+{:id => 34, :sdfasdfasdf => "asdasdads"}
