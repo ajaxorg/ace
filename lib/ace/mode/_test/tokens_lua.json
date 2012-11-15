@@ -1,789 +1,451 @@
 [
  {
   "state": "qcomment",
-  "values": [
-   "--[[--"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "--[[--" ]
   ]
  },
  {
   "state": "qcomment",
-  "values": [
-   "num_args takes in 5.1 byte code and extracts the number of arguments"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "num_args takes in 5.1 byte code and extracts the number of arguments" ]
   ]
  },
  {
   "state": "qcomment",
-  "values": [
-   "from its function header."
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "from its function header." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "--]]",
-   "--"
-  ],
-  "types": [
-   "comment",
-   "comment"
+  "data": [
+   [ "comment", "--]]" ],
+   [ "comment", "--" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "function",
-   " ",
-   "int",
-   "(",
-   "t",
-   ")"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "keyword", "function" ],
+   [ "text", " " ],
+   [ "identifier", "int" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "t" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "return",
-   " ",
-   "t",
-   ":",
-   "byte",
-   "(",
-   "1",
-   ")",
-   "+",
-   "t",
-   ":",
-   "byte",
-   "(",
-   "2",
-   ")",
-   "*",
-   "0x100",
-   "+",
-   "t",
-   ":",
-   "byte",
-   "(",
-   "3",
-   ")",
-   "*",
-   "0x10000",
-   "+",
-   "t",
-   ":",
-   "byte",
-   "(",
-   "4",
-   ")",
-   "*",
-   "0x1000000"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "constant.numeric",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "constant.numeric",
-   "keyword.operator",
-   "identifier",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "constant.numeric"
+  "data": [
+   [ "text", "\t" ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "identifier", "t" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "byte" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "1" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "t" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "byte" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "2" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "0x100" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "t" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "byte" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "3" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "0x10000" ],
+   [ "keyword.operator", "+" ],
+   [ "identifier", "t" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "byte" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "4" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", "*" ],
+   [ "constant.numeric", "0x1000000" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "end"
-  ],
-  "types": [
-   "keyword"
+  "data": [
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "function",
-   " ",
-   "num_args",
-   "(",
-   "func",
-   ")"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "keyword", "function" ],
+   [ "text", " " ],
+   [ "identifier", "num_args" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "func" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "local",
-   " ",
-   "dump",
-   " ",
-   "=",
-   " ",
-   "string",
-   ".",
-   "dump",
-   "(",
-   "func",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "support.function",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.library",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "text", "\t" ],
+   [ "keyword", "local" ],
+   [ "text", " " ],
+   [ "support.function", "dump" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.library", "string" ],
+   [ "text", "." ],
+   [ "support.function", "dump" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "func" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "local",
-   " ",
-   "offset",
-   ", ",
-   "cursor",
-   " ",
-   "=",
-   " ",
-   "int",
-   "(",
-   "dump",
-   ":",
-   "sub",
-   "(",
-   "13",
-   ")",
-   ")",
-   ", ",
-   "offset",
-   " ",
-   "+",
-   " ",
-   "26"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "support.function",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "paren.rparen",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "\t" ],
+   [ "keyword", "local" ],
+   [ "text", " " ],
+   [ "identifier", "offset" ],
+   [ "text", ", " ],
+   [ "identifier", "cursor" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "int" ],
+   [ "paren.lparen", "(" ],
+   [ "support.function", "dump" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "sub" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "13" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ", " ],
+   [ "identifier", "offset" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "constant.numeric", "26" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "--Get the params and var flag (whether there's a ... in the param)"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "\t" ],
+   [ "comment", "--Get the params and var flag (whether there's a ... in the param)" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "\t",
-   "return",
-   " ",
-   "dump",
-   ":",
-   "sub",
-   "(",
-   "cursor",
-   ")",
-   ":",
-   "byte",
-   "(",
-   ")",
-   ", ",
-   "dump",
-   ":",
-   "sub",
-   "(",
-   "cursor",
-   "+",
-   "1",
-   ")",
-   ":",
-   "byte",
-   "(",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "support.function",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "paren.rparen",
-   "text",
-   "support.function",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "keyword.operator",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "paren.rparen"
+  "data": [
+   [ "text", "\t" ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "support.function", "dump" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "sub" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "cursor" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "byte" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ", " ],
+   [ "support.function", "dump" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "sub" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "cursor" ],
+   [ "keyword.operator", "+" ],
+   [ "constant.numeric", "1" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "byte" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "end"
-  ],
-  "types": [
-   "keyword"
+  "data": [
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "-- Usage:"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "-- Usage:" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "num_args",
-   "(",
-   "function",
-   "(",
-   "a",
-   ",",
-   "b",
-   ",",
-   "c",
-   ",",
-   "d",
-   ", ",
-   "...",
-   ")",
-   " ",
-   "end",
-   ")",
-   " ",
-   "-- return 4, 7"
-  ],
-  "types": [
-   "identifier",
-   "paren.lparen",
-   "keyword",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "paren.rparen",
-   "text",
-   "keyword",
-   "paren.rparen",
-   "text",
-   "comment"
+  "data": [
+   [ "identifier", "num_args" ],
+   [ "paren.lparen", "(" ],
+   [ "keyword", "function" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "a" ],
+   [ "text", "," ],
+   [ "identifier", "b" ],
+   [ "text", "," ],
+   [ "identifier", "c" ],
+   [ "text", "," ],
+   [ "identifier", "d" ],
+   [ "text", ", " ],
+   [ "keyword.operator", "..." ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "end" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "comment", "-- return 4, 7" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "-- Python styled string format operator"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "-- Python styled string format operator" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "local",
-   " ",
-   "gm",
-   " ",
-   "=",
-   " ",
-   "debug",
-   ".",
-   "getmetatable",
-   "(",
-   "\"\"",
-   ")"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.library",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "string",
-   "paren.rparen"
+  "data": [
+   [ "keyword", "local" ],
+   [ "text", " " ],
+   [ "identifier", "gm" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.library", "debug" ],
+   [ "text", "." ],
+   [ "support.function", "getmetatable" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"\"" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "gm",
-   ".",
-   "__mod",
-   "=",
-   "function",
-   "(",
-   "self",
-   ", ",
-   "other",
-   ")"
-  ],
-  "types": [
-   "identifier",
-   "text",
-   "support.function",
-   "keyword.operator",
-   "keyword",
-   "paren.lparen",
-   "identifier",
-   "text",
-   "identifier",
-   "paren.rparen"
+  "data": [
+   [ "identifier", "gm" ],
+   [ "text", "." ],
+   [ "support.function", "__mod" ],
+   [ "keyword.operator", "=" ],
+   [ "keyword", "function" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "self" ],
+   [ "text", ", " ],
+   [ "identifier", "other" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "if",
-   " ",
-   "type",
-   "(",
-   "other",
-   ")",
-   " ",
-   "~",
-   "=",
-   " ",
-   "\"table\"",
-   " ",
-   "then",
-   " ",
-   "other",
-   " ",
-   "=",
-   " ",
-   "{",
-   "other",
-   "}",
-   " ",
-   "end"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword.operator",
-   "keyword.operator",
-   "text",
-   "string",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "support.function", "type" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "other" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword.operator", "~" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"table\"" ],
+   [ "text", " " ],
+   [ "keyword", "then" ],
+   [ "text", " " ],
+   [ "identifier", "other" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ],
+   [ "identifier", "other" ],
+   [ "paren.rparen", "}" ],
+   [ "text", " " ],
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "for",
-   " ",
-   "i",
-   ",",
-   "v",
-   " ",
-   "in",
-   " ",
-   "ipairs",
-   "(",
-   "other",
-   ")",
-   " ",
-   "do",
-   " ",
-   "other",
-   "[",
-   "i",
-   "]",
-   " ",
-   "=",
-   " ",
-   "tostring",
-   "(",
-   "v",
-   ")",
-   " ",
-   "end"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "keyword",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "text",
-   "keyword"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "identifier", "i" ],
+   [ "text", "," ],
+   [ "identifier", "v" ],
+   [ "text", " " ],
+   [ "keyword", "in" ],
+   [ "text", " " ],
+   [ "support.function", "ipairs" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "other" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "do" ],
+   [ "text", " " ],
+   [ "identifier", "other" ],
+   [ "paren.lparen", "[" ],
+   [ "identifier", "i" ],
+   [ "paren.rparen", "]" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "support.function", "tostring" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "v" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "return",
-   " ",
-   "self",
-   ":",
-   "format",
-   "(",
-   "unpack",
-   "(",
-   "other",
-   ")",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "keyword.operator",
-   "support.function",
-   "paren.lparen",
-   "support.function",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "identifier", "self" ],
+   [ "keyword.operator", ":" ],
+   [ "support.function", "format" ],
+   [ "paren.lparen", "(" ],
+   [ "support.function", "unpack" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "other" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "end"
-  ],
-  "types": [
-   "keyword"
+  "data": [
+   [ "keyword", "end" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "qstring3",
-  "values": [
-   "print",
-   "(",
-   "[===["
-  ],
-  "types": [
-   "support.function",
-   "paren.lparen",
-   "string"
+  "data": [
+   [ "support.function", "print" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "[===[" ]
   ]
  },
  {
   "state": "qstring3",
-  "values": [
-   "    blah blah %s, (%d %d)"
-  ],
-  "types": [
-   "string"
+  "data": [
+   [ "string", "    blah blah %s, (%d %d)" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "]===]",
-   "%",
-   "{",
-   "\"blah\"",
-   ", ",
-   "num_args",
-   "(",
-   "int",
-   ")",
-   "}",
-   ")"
-  ],
-  "types": [
-   "string",
-   "keyword.operator",
-   "paren.lparen",
-   "string",
-   "text",
-   "identifier",
-   "paren.lparen",
-   "identifier",
-   "paren.rparen",
-   "paren.rparen",
-   "paren.rparen"
+  "data": [
+   [ "string", "]===]" ],
+   [ "keyword.operator", "%" ],
+   [ "paren.lparen", "{" ],
+   [ "string", "\"blah\"" ],
+   [ "text", ", " ],
+   [ "identifier", "num_args" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "int" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "}" ],
+   [ "paren.rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "qcomment1",
-  "values": [
-   "--[=[--"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "--[=[--" ]
   ]
  },
  {
   "state": "qcomment1",
-  "values": [
-   "table.maxn is deprecated, use # instead."
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "table.maxn is deprecated, use # instead." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "--]=]",
-   "--"
-  ],
-  "types": [
-   "comment",
-   "comment"
+  "data": [
+   [ "comment", "--]=]" ],
+   [ "comment", "--" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "print",
-   "(",
-   "table",
-   ".",
-   "maxn",
-   "{",
-   "1",
-   ",",
-   "2",
-   ",",
-   "[",
-   "4",
-   "]",
-   "=",
-   "4",
-   ",",
-   "[",
-   "8",
-   "]",
-   "=",
-   "8",
-   ")",
-   " ",
-   "-- outputs 8 instead of 2"
-  ],
-  "types": [
-   "support.function",
-   "paren.lparen",
-   "constant.library",
-   "text",
-   "invalid.deprecated",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "constant.numeric",
-   "text",
-   "paren.lparen",
-   "constant.numeric",
-   "paren.rparen",
-   "keyword.operator",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "comment"
+  "data": [
+   [ "support.function", "print" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.library", "table" ],
+   [ "text", "." ],
+   [ "invalid.deprecated", "maxn" ],
+   [ "paren.lparen", "{" ],
+   [ "constant.numeric", "1" ],
+   [ "text", "," ],
+   [ "constant.numeric", "2" ],
+   [ "text", "," ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "4" ],
+   [ "paren.rparen", "]" ],
+   [ "keyword.operator", "=" ],
+   [ "constant.numeric", "4" ],
+   [ "text", "," ],
+   [ "paren.lparen", "[" ],
+   [ "constant.numeric", "8" ],
+   [ "paren.rparen", "]" ],
+   [ "keyword.operator", "=" ],
+   [ "constant.numeric", "8" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "comment", "-- outputs 8 instead of 2" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  }
 ]

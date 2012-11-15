@@ -16,6 +16,10 @@
   background: #e8e8e8;
 }
 
+.ace-dreamweaver .ace_scroller {
+  background-color: #FFFFFF;
+}
+
 .ace-dreamweaver .ace_fold {
     background-color: #757AD8;
 }
@@ -111,7 +115,7 @@
   color: #00F;
 }
 
-.ace-dreamweaver .ace_markup.ace_markupine {
+.ace-dreamweaver .ace_markup.ace_underline {
     text-decoration:underline;
 }
 

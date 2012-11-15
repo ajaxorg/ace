@@ -1,521 +1,311 @@
 [
  {
   "state": "start",
-  "values": [
-   "#!/usr/bin/perl"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "#!/usr/bin/perl" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "use",
-   " ",
-   "strict",
-   ";"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text"
+  "data": [
+   [ "keyword", "use" ],
+   [ "text", " " ],
+   [ "identifier", "strict" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "use",
-   " ",
-   "warnings",
-   ";"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text"
+  "data": [
+   [ "keyword", "use" ],
+   [ "text", " " ],
+   [ "identifier", "warnings" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "my",
-   " ",
-   "$num_primes",
-   " ",
-   "=",
-   " ",
-   "0",
-   ";"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "keyword", "my" ],
+   [ "text", " " ],
+   [ "identifier", "$num_primes" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "my",
-   " @",
-   "primes",
-   ";"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "text"
+  "data": [
+   [ "keyword", "my" ],
+   [ "text", " @" ],
+   [ "identifier", "primes" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "# Put 2 as the first prime so we won't have an empty array"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "# Put 2 as the first prime so we won't have an empty array" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "$primes",
-   "[",
-   "$num_primes",
-   "]",
-   " ",
-   "=",
-   " ",
-   "2",
-   ";"
-  ],
-  "types": [
-   "identifier",
-   "lparen",
-   "identifier",
-   "rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "identifier", "$primes" ],
+   [ "lparen", "[" ],
+   [ "identifier", "$num_primes" ],
+   [ "rparen", "]" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "$num_primes",
-   "++",
-   ";"
-  ],
-  "types": [
-   "identifier",
-   "keyword.operator",
-   "text"
+  "data": [
+   [ "identifier", "$num_primes" ],
+   [ "keyword.operator", "++" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "MAIN_LOOP",
-   ":"
-  ],
-  "types": [
-   "identifier",
-   "text"
+  "data": [
+   [ "identifier", "MAIN_LOOP" ],
+   [ "text", ":" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "for",
-   " ",
-   "my",
-   " ",
-   "$number_to_check",
-   " ",
-   "(",
-   "3",
-   " ",
-   "..",
-   " ",
-   "200",
-   ")"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "lparen",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "rparen"
+  "data": [
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "keyword", "my" ],
+   [ "text", " " ],
+   [ "identifier", "$number_to_check" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "constant.numeric", "3" ],
+   [ "text", " " ],
+   [ "keyword.operator", ".." ],
+   [ "text", " " ],
+   [ "constant.numeric", "200" ],
+   [ "rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "{"
-  ],
-  "types": [
-   "lparen"
+  "data": [
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "for",
-   " ",
-   "my",
-   " ",
-   "$p",
-   " ",
-   "(",
-   "0",
-   " ",
-   "..",
-   " ",
-   "(",
-   "$num_primes",
-   "-1",
-   ")",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "lparen",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "lparen",
-   "identifier",
-   "constant.numeric",
-   "rparen",
-   "rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "keyword", "my" ],
+   [ "text", " " ],
+   [ "identifier", "$p" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "keyword.operator", ".." ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "identifier", "$num_primes" ],
+   [ "constant.numeric", "-1" ],
+   [ "rparen", ")" ],
+   [ "rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "if",
-   " ",
-   "(",
-   "$number_to_check",
-   " ",
-   "%",
-   " ",
-   "$primes",
-   "[",
-   "$p",
-   "]",
-   " ",
-   "==",
-   " ",
-   "0",
-   ")"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "lparen",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "lparen",
-   "identifier",
-   "rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "identifier", "$number_to_check" ],
+   [ "text", " " ],
+   [ "keyword.operator", "%" ],
+   [ "text", " " ],
+   [ "identifier", "$primes" ],
+   [ "lparen", "[" ],
+   [ "identifier", "$p" ],
+   [ "rparen", "]" ],
+   [ "text", " " ],
+   [ "keyword.operator", "==" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "lparen"
+  "data": [
+   [ "text", "        " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "next",
-   " ",
-   "MAIN_LOOP",
-   ";"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text"
+  "data": [
+   [ "text", "            " ],
+   [ "keyword", "next" ],
+   [ "text", " " ],
+   [ "identifier", "MAIN_LOOP" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "# If we reached this point it means $number_to_check is not"
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "# If we reached this point it means $number_to_check is not" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "# divisable by any prime number that came before it."
-  ],
-  "types": [
-   "text",
-   "comment"
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "# divisable by any prime number that came before it." ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "$primes",
-   "[",
-   "$num_primes",
-   "]",
-   " ",
-   "=",
-   " ",
-   "$number_to_check",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "lparen",
-   "identifier",
-   "rparen",
-   "text",
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "$primes" ],
+   [ "lparen", "[" ],
+   [ "identifier", "$num_primes" ],
+   [ "rparen", "]" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "$number_to_check" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "$num_primes",
-   "++",
-   ";"
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "keyword.operator",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "identifier", "$num_primes" ],
+   [ "keyword.operator", "++" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "rparen"
+  "data": [
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "for",
-   " ",
-   "my",
-   " ",
-   "$p",
-   " ",
-   "(",
-   "0",
-   " ",
-   "..",
-   " ",
-   "(",
-   "$num_primes",
-   "-1",
-   ")",
-   ")"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "keyword",
-   "text",
-   "identifier",
-   "text",
-   "lparen",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "lparen",
-   "identifier",
-   "constant.numeric",
-   "rparen",
-   "rparen"
+  "data": [
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "keyword", "my" ],
+   [ "text", " " ],
+   [ "identifier", "$p" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "keyword.operator", ".." ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "identifier", "$num_primes" ],
+   [ "constant.numeric", "-1" ],
+   [ "rparen", ")" ],
+   [ "rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "{"
-  ],
-  "types": [
-   "lparen"
+  "data": [
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "print",
-   " ",
-   "$primes",
-   "[",
-   "$p",
-   "]",
-   ",",
-   " ",
-   "\", \"",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.function",
-   "text",
-   "identifier",
-   "lparen",
-   "identifier",
-   "rparen",
-   "keyword.operator",
-   "text",
-   "string",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "support.function", "print" ],
+   [ "text", " " ],
+   [ "identifier", "$primes" ],
+   [ "lparen", "[" ],
+   [ "identifier", "$p" ],
+   [ "rparen", "]" ],
+   [ "keyword.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\", \"" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "rparen"
+  "data": [
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "print",
-   " ",
-   "\"\\n\"",
-   ";"
-  ],
-  "types": [
-   "support.function",
-   "text",
-   "string",
-   "text"
+  "data": [
+   [ "support.function", "print" ],
+   [ "text", " " ],
+   [ "string", "\"\\n\"" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  }
 ]

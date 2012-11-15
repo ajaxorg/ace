@@ -1,495 +1,292 @@
 [
  {
   "state": "start",
-  "values": [
-   "/*",
-   " styles.less */"
-  ],
-  "types": [
-   "comment",
-   "comment"
+  "data": [
+   [ "comment", "/*" ],
+   [ "comment", " styles.less */" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "@base",
-   ": ",
-   "#f938ab",
-   ";"
-  ],
-  "types": [
-   "variable",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "variable", "@base" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "#f938ab" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   ".box-shadow",
-   "(",
-   "@style",
-   ", ",
-   "@c",
-   ")",
-   " ",
-   "when",
-   " ",
-   "(",
-   "iscolor",
-   "(",
-   "@c",
-   ")",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "variable.language",
-   "paren.lparen",
-   "variable",
-   "text",
-   "variable",
-   "paren.rparen",
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "paren.rparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "variable.language", ".box-shadow" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@style" ],
+   [ "text", ", " ],
+   [ "variable", "@c" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "when" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "support.function", "iscolor" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@c" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    box-shadow:         ",
-   "@style",
-   " ",
-   "@c",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "    box-shadow:         " ],
+   [ "variable", "@style" ],
+   [ "text", " " ],
+   [ "variable", "@c" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    -webkit-box-shadow: ",
-   "@style",
-   " ",
-   "@c",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "    -webkit-box-shadow: " ],
+   [ "variable", "@style" ],
+   [ "text", " " ],
+   [ "variable", "@c" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    -moz-box-shadow:    ",
-   "@style",
-   " ",
-   "@c",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "    -moz-box-shadow:    " ],
+   [ "variable", "@style" ],
+   [ "text", " " ],
+   [ "variable", "@c" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   ".box-shadow",
-   "(",
-   "@style",
-   ", ",
-   "@alpha",
-   ": ",
-   "50%",
-   ")",
-   " ",
-   "when",
-   " ",
-   "(",
-   "isnumber",
-   "(",
-   "@alpha",
-   ")",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "variable.language",
-   "paren.lparen",
-   "variable",
-   "text",
-   "variable",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "keyword",
-   "text",
-   "paren.lparen",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "paren.rparen",
-   "paren.rparen",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "variable.language", ".box-shadow" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@style" ],
+   [ "text", ", " ],
+   [ "variable", "@alpha" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "50%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword", "when" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "support.function", "isnumber" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@alpha" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   ".box-shadow",
-   "(",
-   "@style",
-   ", ",
-   "rgba",
-   "(",
-   "0",
-   ", ",
-   "0",
-   ", ",
-   "0",
-   ", ",
-   "@alpha",
-   ")",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "paren.lparen",
-   "variable",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "variable",
-   "paren.rparen",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "variable.language", ".box-shadow" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@style" ],
+   [ "text", ", " ],
+   [ "support.function", "rgba" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "0" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "0" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "0" ],
+   [ "text", ", " ],
+   [ "variable", "@alpha" ],
+   [ "paren.rparen", ")" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "// Box styles"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "// Box styles" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   ".box",
-   " ",
-   "{",
-   " "
-  ],
-  "types": [
-   "variable.language",
-   "text",
-   "paren.lparen",
-   "text"
+  "data": [
+   [ "variable.language", ".box" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ],
+   [ "text", " " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "color",
-   ": ",
-   "saturate",
-   "(",
-   "@base",
-   ", ",
-   "5%",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "color" ],
+   [ "text", ": " ],
+   [ "support.function", "saturate" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@base" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "5%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "border-color",
-   ": ",
-   "lighten",
-   "(",
-   "@base",
-   ", ",
-   "30%",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "border-color" ],
+   [ "text", ": " ],
+   [ "support.function", "lighten" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@base" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "30%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    "
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "    " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "div",
-   " ",
-   "{",
-   " ",
-   ".box-shadow",
-   "(",
-   "0",
-   " ",
-   "0",
-   " ",
-   "5px",
-   ", ",
-   "30%",
-   ")",
-   " ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "text",
-   "paren.lparen",
-   "text",
-   "variable.language",
-   "paren.lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "variable.language", "div" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ],
+   [ "text", " " ],
+   [ "variable.language", ".box-shadow" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "constant.numeric", "5px" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "30%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  "
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "  " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "a",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "variable.language", "a" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "color",
-   ": ",
-   "@base",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "color" ],
+   [ "text", ": " ],
+   [ "variable", "@base" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        "
-  ],
-  "types": [
-   "text"
+  "data": [
+   [ "text", "        " ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        &",
-   ":hover",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        &" ],
+   [ "variable.language", ":hover" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "color",
-   ": ",
-   "lighten",
-   "(",
-   "@base",
-   ", ",
-   "50%",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "            " ],
+   [ "support.type", "color" ],
+   [ "text", ": " ],
+   [ "support.function", "lighten" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "@base" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "50%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  }
 ]

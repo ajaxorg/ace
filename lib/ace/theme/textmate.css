@@ -20,7 +20,8 @@
     background-color: #6B72E6;
 }
 
-.ace-tm .ace_text-layer {
+.ace-tm .ace_scroller {
+  background-color: #FFFFFF;
 }
 
 .ace-tm .ace_cursor {
@@ -111,7 +112,7 @@
   color: #0000A2;
 }
 
-.ace-tm .ace_markup.ace_markupine {
+.ace-tm .ace_markup.ace_underline {
     text-decoration:underline;
 }
 
@@ -121,6 +122,14 @@
 
 .ace-tm .ace_markup.ace_list {
   color:rgb(185, 6, 144);
+}
+
+.ace-tm .ace_meta.ace_tag {
+  color:rgb(0, 22, 142);
+}
+
+.ace-tm .ace_string.ace_regex {
+  color: rgb(255, 0, 0)
 }
 
 .ace-tm .ace_marker-layer .ace_selection {
@@ -154,14 +163,6 @@
 .ace-tm .ace_marker-layer .ace_selected_word {
   background: rgb(250, 250, 255);
   border: 1px solid rgb(200, 200, 250);
-}
-
-.ace-tm .ace_meta.ace_tag {
-  color:rgb(0, 22, 142);
-}
-
-.ace-tm .ace_string.ace_regex {
-  color: rgb(255, 0, 0)
 }
 
 .ace-tm .ace_indent-guide {

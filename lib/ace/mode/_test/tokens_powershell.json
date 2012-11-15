@@ -1,433 +1,255 @@
 [
  {
   "state": "start",
-  "values": [
-   "# This is a simple comment"
-  ],
-  "types": [
-   "comment"
+  "data": [
+   [ "comment", "# This is a simple comment" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "function",
-   " ",
-   "Hello",
-   "(",
-   "$name",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "lparen",
-   "variable.instance",
-   "rparen",
-   "text",
-   "lparen"
+  "data": [
+   [ "keyword", "function" ],
+   [ "text", " " ],
+   [ "identifier", "Hello" ],
+   [ "lparen", "(" ],
+   [ "variable.instance", "$name" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "  ",
-   "Write-host",
-   " ",
-   "\"Hello $name\""
-  ],
-  "types": [
-   "text",
-   "identifier",
-   "text",
-   "string"
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "Write-host" ],
+   [ "text", " " ],
+   [ "string", "\"Hello $name\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "rparen"
+  "data": [
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "function",
-   " ",
-   "add",
-   "(",
-   "$left",
-   ", ",
-   "$right",
-   "=",
-   "4",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "keyword",
-   "text",
-   "identifier",
-   "lparen",
-   "variable.instance",
-   "text",
-   "variable.instance",
-   "keyword.operator",
-   "constant.numeric",
-   "rparen",
-   "text",
-   "lparen"
+  "data": [
+   [ "keyword", "function" ],
+   [ "text", " " ],
+   [ "identifier", "add" ],
+   [ "lparen", "(" ],
+   [ "variable.instance", "$left" ],
+   [ "text", ", " ],
+   [ "variable.instance", "$right" ],
+   [ "keyword.operator", "=" ],
+   [ "constant.numeric", "4" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "if",
-   " ",
-   "(",
-   "$right",
-   " ",
-   "-ne",
-   " ",
-   "4",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "lparen",
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "rparen",
-   "text",
-   "lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "variable.instance", "$right" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-ne" ],
+   [ "text", " " ],
+   [ "constant.numeric", "4" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "return",
-   " ",
-   "$left"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "variable.instance"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "variable.instance", "$left" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}",
-   " ",
-   "elseif",
-   " ",
-   "(",
-   "$left",
-   " ",
-   "-eq",
-   " ",
-   "$null",
-   " ",
-   "-and",
-   " ",
-   "$right",
-   " ",
-   "-eq",
-   " ",
-   "2",
-   ")",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "rparen",
-   "text",
-   "keyword",
-   "text",
-   "lparen",
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.language",
-   "text",
-   "keyword.operator",
-   "text",
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "rparen",
-   "text",
-   "lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ],
+   [ "text", " " ],
+   [ "keyword", "elseif" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "variable.instance", "$left" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-eq" ],
+   [ "text", " " ],
+   [ "constant.language", "$null" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-and" ],
+   [ "text", " " ],
+   [ "variable.instance", "$right" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-eq" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "return",
-   " ",
-   "3"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "constant.numeric", "3" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}",
-   " ",
-   "else",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "rparen",
-   "text",
-   "keyword",
-   "text",
-   "lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ],
+   [ "text", " " ],
+   [ "keyword", "else" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "return",
-   " ",
-   "2"
-  ],
-  "types": [
-   "text",
-   "keyword",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "rparen"
+  "data": [
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "$number",
-   " ",
-   "=",
-   " ",
-   "1",
-   " ",
-   "+",
-   " ",
-   "2",
-   ";"
-  ],
-  "types": [
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text",
-   "keyword.operator",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "variable.instance", "$number" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "$number",
-   " ",
-   "+",
-   "=",
-   " ",
-   "3"
-  ],
-  "types": [
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "keyword.operator",
-   "text",
-   "constant.numeric"
+  "data": [
+   [ "variable.instance", "$number" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "3" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "Write-Host",
-   " ",
-   "Hello",
-   " ",
-   "-",
-   "name",
-   " ",
-   "\"World\""
-  ],
-  "types": [
-   "support.function",
-   "text",
-   "identifier",
-   "text",
-   "keyword.operator",
-   "identifier",
-   "text",
-   "string"
+  "data": [
+   [ "support.function", "Write-Host" ],
+   [ "text", " " ],
+   [ "identifier", "Hello" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "name" ],
+   [ "text", " " ],
+   [ "string", "\"World\"" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "$an_array",
-   " ",
-   "=",
-   " @",
-   "(",
-   "1",
-   ", ",
-   "2",
-   ", ",
-   "3",
-   ")"
-  ],
-  "types": [
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "text",
-   "lparen",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.numeric",
-   "rparen"
+  "data": [
+   [ "variable.instance", "$an_array" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " @" ],
+   [ "lparen", "(" ],
+   [ "constant.numeric", "1" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "2" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "3" ],
+   [ "rparen", ")" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "$a_hash",
-   " ",
-   "=",
-   " @",
-   "{",
-   "\"something\"",
-   " ",
-   "=",
-   " ",
-   "\"something else\"",
-   "}"
-  ],
-  "types": [
-   "variable.instance",
-   "text",
-   "keyword.operator",
-   "text",
-   "lparen",
-   "string",
-   "text",
-   "keyword.operator",
-   "text",
-   "string",
-   "rparen"
+  "data": [
+   [ "variable.instance", "$a_hash" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " @" ],
+   [ "lparen", "{" ],
+   [ "string", "\"something\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"something else\"" ],
+   [ "rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "&",
-   " ",
-   "notepad",
-   " .\\",
-   "readme",
-   ".",
-   "md"
-  ],
-  "types": [
-   "keyword.operator",
-   "text",
-   "identifier",
-   "text",
-   "identifier",
-   "text",
-   "identifier"
+  "data": [
+   [ "keyword.operator", "&" ],
+   [ "text", " " ],
+   [ "identifier", "notepad" ],
+   [ "text", " .\\" ],
+   [ "identifier", "readme" ],
+   [ "text", "." ],
+   [ "identifier", "md" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  }
 ]

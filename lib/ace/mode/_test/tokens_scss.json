@@ -1,300 +1,181 @@
 [
  {
   "state": "start",
-  "values": [
-   "/*",
-   " style.scss */"
-  ],
-  "types": [
-   "comment",
-   "comment"
+  "data": [
+   [ "comment", "/*" ],
+   [ "comment", " style.scss */" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "#navbar",
-   " ",
-   "{"
-  ],
-  "types": [
-   "variable.language",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "variable.language", "#navbar" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "$navbar-width",
-   ": ",
-   "800px",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "$navbar-width" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "800px" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "$items",
-   ": ",
-   "5",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "$items" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "5" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "$navbar-color",
-   ": ",
-   "#ce4dd6",
-   ";"
-  ],
-  "types": [
-   "text",
-   "variable",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "variable", "$navbar-color" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "#ce4dd6" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "width",
-   ": ",
-   "$navbar-width",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "width" ],
+   [ "text", ": " ],
+   [ "variable", "$navbar-width" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "border-bottom",
-   ": ",
-   "2px",
-   " ",
-   "solid",
-   " ",
-   "$navbar-color",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "constant.numeric",
-   "text",
-   "constant.language",
-   "text",
-   "variable",
-   "text"
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "border-bottom" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "2px" ],
+   [ "text", " " ],
+   [ "constant.language", "solid" ],
+   [ "text", " " ],
+   [ "variable", "$navbar-color" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "li",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "    " ],
+   [ "variable.language", "li" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "float",
-   ": ",
-   "left",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.type",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "float" ],
+   [ "text", ": " ],
+   [ "support.type", "left" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "width",
-   ": ",
-   "$navbar-width",
-   "/",
-   "$items",
-   " ",
-   "-",
-   " ",
-   "10px",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "variable",
-   "text",
-   "variable",
-   "text",
-   "constant",
-   "text",
-   "constant.numeric",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "width" ],
+   [ "text", ": " ],
+   [ "variable", "$navbar-width" ],
+   [ "text", "/" ],
+   [ "variable", "$items" ],
+   [ "text", " " ],
+   [ "constant", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "10px" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [],
-  "types": []
+  "data": []
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "background-color",
-   ": ",
-   "lighten",
-   "(",
-   "$navbar-color",
-   ", ",
-   "20%",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "        " ],
+   [ "support.type", "background-color" ],
+   [ "text", ": " ],
+   [ "support.function", "lighten" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "$navbar-color" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "20%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        &",
-   ":hover",
-   " ",
-   "{"
-  ],
-  "types": [
-   "text",
-   "variable.language",
-   "text",
-   "paren.lparen"
+  "data": [
+   [ "text", "        &" ],
+   [ "variable.language", ":hover" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "            ",
-   "background-color",
-   ": ",
-   "lighten",
-   "(",
-   "$navbar-color",
-   ", ",
-   "10%",
-   ")",
-   ";"
-  ],
-  "types": [
-   "text",
-   "support.type",
-   "text",
-   "support.function",
-   "paren.lparen",
-   "variable",
-   "text",
-   "constant.numeric",
-   "paren.rparen",
-   "text"
+  "data": [
+   [ "text", "            " ],
+   [ "support.type", "background-color" ],
+   [ "text", ": " ],
+   [ "support.function", "lighten" ],
+   [ "paren.lparen", "(" ],
+   [ "variable", "$navbar-color" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "10%" ],
+   [ "paren.rparen", ")" ],
+   [ "text", ";" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "        ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "    ",
-   "}"
-  ],
-  "types": [
-   "text",
-   "paren.rparen"
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
   ]
  },
  {
   "state": "start",
-  "values": [
-   "}"
-  ],
-  "types": [
-   "paren.rparen"
+  "data": [
+   [ "paren.rparen", "}" ]
   ]
  }
 ]
