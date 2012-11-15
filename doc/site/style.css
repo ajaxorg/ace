@@ -5,6 +5,10 @@ body {
     font-family: Helvetica, Arial;
 }
 
+#embed_ace_wrapper {
+    height: 525px;
+}
+
 .ace_editor_wrapper {
     height: 275px;
     position: relative;
@@ -49,6 +53,7 @@ H3 {
 H4 {
     font-size:21px;
     color:#222222;
+    margin-bottom:8px;
 }
 
 P {
@@ -143,14 +148,15 @@ UL{
     float: left;
     font-weight: 100;
     font-family: Helvetica;
-    padding-top: 20px;
+    padding: 65px 0 0 14px;
     color: #333;
 }
 
 #top_container {
+    background: url(images/header-bg.png) 0 0;
     overflow: hidden;
-    padding: 15px 40px;
-    height: 280px;
+    padding: 11px 36px 19px 40px;
+    height: 267px;
     -webkit-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
     -moz-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
     opacity: 1;
@@ -165,12 +171,11 @@ UL{
 }
 
 #page_logo {
-    padding: 15px 0;
+    padding: 35px 0 15px 0;
     width: 350px;
     float: right;
     text-align: center;
     height: 220px;
-    padding-top: 45px;
 }
 
 .fork_on_github {
@@ -245,6 +250,14 @@ ul.menu-list li {
 														hsl(0,0%,90%) 47%, 
 														hsl(0,0%,78%) 53%,
 														hsl(0,0%,70%)100%);
+    background-image:     -moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),    				
+						-moz-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),					
+						-moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+						
+						-moz-linear-gradient(-90deg, hsl(0,0%,78%)  0%, 
+														hsl(0,0%,90%) 47%, 
+														hsl(0,0%,78%) 53%,
+														hsl(0,0%,70%)100%);
 }
 
 ul.menu-list li:hover {
@@ -276,7 +289,7 @@ li#add_your_site p {
     border: 3px solid #34A034;
     color: #34A034;
     border-radius: 34px;
-    padding: 3px 4px 4px 6px;
+    padding: 3px 4px 4px 5px;
     width: 20px;
     height: 22px;
     line-height: 18px;
@@ -351,7 +364,7 @@ UL.menu-footer LI A:hover {
 }
 
 .nav-pills.nav {
-    margin: 25px 0 25px 0;
+    margin: 10px 0 25px 0;
     padding: 0;
     border-radius: 5px;
     border: 1px solid #d7d7d7;
@@ -370,7 +383,7 @@ UL.menu-footer LI A:hover {
     color: white;
     background-color: #555;
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
-    text-shadow: none;
+    text-shadow: 0px 0px 3px #000;
 }
 
 .nav-tabs > li > a, .nav-pills > li > a {
@@ -379,7 +392,7 @@ UL.menu-footer LI A:hover {
     border-right: 1px solid #bbb;
     border-radius: 0;
     margin: 0;
-    line-height: 24px;
+    line-height: 25px;
     font-size: 14px;
     color: #333;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
@@ -413,10 +426,13 @@ UL.menu-footer LI A:hover {
 }
 
 #top_container, .tab-content > .active, .pill-content > .active {
-    background: rgba(255, 255, 255, 0.7);
     border: 1px solid #DDD;
     border-radius: 5px;
     -moz-border-radius: 5px;
+}
+
+.tab-content > .active, .pill-content > .active {
+    background: rgba(255, 255, 255, 0.7);
 }
 
 pre .xml .javascript, pre .xml .css {
@@ -462,4 +478,16 @@ p.highlight_note a {
 .apiIntro {
     padding-left: 15px;
     padding-bottom: 10px;
+}
+
+.prod_no_image {
+    position: relative; left: -10px; top: -12px;
+}
+
+#sidebarContainer {
+    margin: 0px 20px 0 15px;
+}
+
+#api {
+    padding: 0;
 }

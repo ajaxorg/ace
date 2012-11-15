@@ -4,17 +4,16 @@ $(function() {
     hljs.initHighlighting();
     editor = ace.edit("ace_editor_demo");
     embedded_editor = ace.edit("embedded_ace_code");
-    var javascriptMode = require("ace/mode/javascript").Mode;
-    var htmlMode = require("ace/mode/html").Mode;
-    editor.getSession().setMode(new javascriptMode());
-    embedded_editor.getSession().setMode(new htmlMode());
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode("ace/mode/javascript");
+    embedded_editor.getSession().setMode("ace/mode/html");
     
     $("ul.menu-list li").click(function(e) {
         if (e.target.tagName === "LI") {
             console.log($(this).find("a"));
             window.location = $(this).find("a").attr("href");
         }
-        else if (e.target.tagName === "P") {
+        else if (e.target.tagName === "P" || e.target.tagName === "IMG") {
             var anchor = $(e.target).siblings();
             window.location = anchor.attr("href");
         }
@@ -28,8 +27,9 @@ $(function() {
         state.api = $(this).attr("href").substring(6, $(this).attr("href").length - 5);
         $.bbq.pushState(state);
         
-        $("#apiHolder").removeClass("apiIntro").removeClass("span8");
+        var _self = $(this);
         $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
+        $("#apiHolder").removeClass("apiIntro").removeClass("span8");
             ux();
             setupClicker();
         
@@ -39,33 +39,17 @@ $(function() {
                 $("li#dropdown_" + section.replace(/\./g, '\\.') + " a").triggerHandler('click');
             }
             
-            setupDisqus();
+            //setupDisqus(_self.attr("href"));
         });
     }
     
     $('.menu-item a').click(magicClickInterceptor);
-    $('a.argument').click(function (e) {
-        e.preventDefault();
-            
-        var state = {};
-        state.api = $(this).attr("href").substring(6, $(this).attr("href").length - 5);
-        $.bbq.pushState(state);
-        
-        $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
-            $("#apiHolder").removeClass("apiIntro").removeClass("span8");
-            ux();
-            setupClicker();
-        
-            // handles dropping in from new link
-            var section = $.bbq.getState("section");
-            if (section) {
-                $("li#dropdown_" + section.replace(/\./g, '\\.') + " a").triggerHandler('click');
-            }
-            
-            setupDisqus();
-        });
-    });
+    $('a.argument').click(magicClickInterceptor);
     
+    $('a.external').click(function(e) {         
+        e.preventDefault();
+    });
+
      var tabs = $("#tabnav"),
          tab_a_selector = "a";
 
@@ -75,8 +59,10 @@ $(function() {
         e.preventDefault();
         embedded_editor.resize();
         editor.resize();
-        if ($(this).attr("href") === "/")
+        if ($(this).attr("href") === "/") {
+            window.location = "http://ace.ajax.org";
             return;
+        }
         if ($(this).attr("href").indexOf("#api") === 0) {
             $("#top_container").addClass("collapse");
             scrollIntoPosition(null, 0);
@@ -103,7 +89,7 @@ $(function() {
             }
             else if ($("body").scrollTop() > 345) {
                 $("body").stop().animate({
-                    scrollTop: ($(el).offset().top - 15)
+                    scrollTop: ($(el).offset().top - 10)
                 }, 400);
             }
         }
@@ -116,8 +102,10 @@ $(function() {
      });
 
      $(window).on("hashchange", function(e) {
+         _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
          tabs.each(function() {
             var idx = $.bbq.getState("nav") || "about";
+            var section = e.fragment.split("&")[1] || "";
             $(this).find(tab_a_selector + "[href='#" + idx + "']").triggerHandler('click');
             
             // handles dropping in from new link

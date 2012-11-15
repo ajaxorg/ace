@@ -84,8 +84,12 @@ function checkForLookBehind(str) {
 
 function removeXFlag(str) {
   if (str.slice(0,4) == "(?x)") {
-    str = str.substr(4).replace(/\\[\s#]|\s+|(?:#[^\n]*)/g, function(s) {
-      return s[0] == "\\" ? s[1] : "";
+    str = str.replace(/\\.|\[([^\]\\]|\\.)*?\]|\s+|(?:#[^\n]*)/g, function(s) {
+      if (s[0] == "[")
+        return s;
+      if (s[0] == "\\")
+        return /[#\s]/.test(s[1]) ? s[1] : s;
+      return "";
     });
   }
   return str;
@@ -266,11 +270,13 @@ function convertLanguage(name) {
         var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
               language: languageNameSanitized,
               languageTokens: patterns,
-              respositoryRules: "/*** START REPOSITORY RULES\n" + repository + "\nEND REPOSITORY RULES ***/",
+              respositoryRules: "/*** START REPOSITORY RULES\n" + (Object.keys(repository).length === 0 ?  "" : repository) + "\nEND REPOSITORY RULES ***/",
               uuid: language.uuid
         });
 
         if (devMode) {
+          console.log(languageMode)
+          console.log(languageHighlightRules)
           console.log("Not writing, 'cause we're in dev mode, baby.");
         }
         else {

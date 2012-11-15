@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <base href="../">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Ace Mode Creator</title>
+    <meta name="author" content="Harutyun Amirjanyan">
+    <style type="text/css" >
+        body, html {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            border-bottom: solid 1px;
+        }
+        .separator-h {
+            padding: 0 20px;            
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="header">
+    <label for="modeEl">mode</label>
+    <select id="modeEl" size="1"></select>
+    <span id="tablist"></span>
+    <span class="separator-h"></span>
+    <label for="autorunEl">live preview</label>
+    <input type="checkbox" label="autorun" id="autorunEl" checked>
+
+
+    <div style='float:right'>
+        <label for="themeEl">Theme</label>      
+        <select id="themeEl" size="1" value="textmate"></select>
+        <span class="separator-h"></span>
+        <label for="doc">Document</label>
+        <select id="doc" size="1"></select>
+    </div>
+</div>
+<div id="editor"></div>
+
+
+<script type="text/javascript">
+  var require = {
+      baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
+      paths: {
+          ace: "../lib/ace",
+          demo: "../demo",
+          tool: "../tool"
+      }
+  };
+</script>
+<script src="./demo/kitchen-sink/require.js" data-main="mode_creator"></script>
+
+
+
+</body>
+</html>

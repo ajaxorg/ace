@@ -1,17 +1,19 @@
 Ace (Ajax.org Cloud9 Editor)
 ============================
 
+_Note_: The new site at http://ace.ajax.org contains all the info below along with an embedding guide and all the other resources you need to get started with Ace.
+
 Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](http://www.cloud9ide.com/) and the successor of the Mozilla Skywriter (Bespin) Project.
 
 Features
 --------
 
-* Syntax highlighting
+* Syntax highlighting for over 40 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
+* Over 20 themes (TextMate/Sublime/_.tmtheme_ files can be imported)
 * Automatic indent and outdent
 * An optional command line
-* Handles huge documents (100,000 lines and more are no problem)
-* Fully customizable key bindings including VIM and Emacs modes
-* Themes (TextMate themes can be imported)
+* Handles huge documents (at last check, 4,000,000 lines is the upper limit)
+* Fully customizable key bindings including vim and Emacs modes
 * Search and replace with regular expressions
 * Highlight matching parentheses
 * Toggle between soft tabs and real tabs
@@ -19,8 +21,9 @@ Features
 * Drag and drop text using the mouse
 * Line wrapping
 * Code folding
-* Multiple selections
-* Live syntax checker (currently JavaScript/CoffeeScript/Css/XQuery)
+* Multiple cursors and selections
+* Live syntax checker (currently JavaScript/CoffeeScript/CSS/XQuery)
+* Cut, copy, and paste functionality
 
 Take Ace for a spin!
 --------------------
@@ -28,15 +31,6 @@ Take Ace for a spin!
 Check out the Ace live [demo](http://ajaxorg.github.com/ace/build/kitchen-sink.html) or get a [Cloud9 IDE account](http://c9.io) to experience Ace while editing one of your own GitHub projects.
 
 If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace/build/textarea/editor.html).
-
-Getting the code
-----------------
-
-Ace is a community project. We actively encourage and support contributions. The Ace source code is hosted on GitHub. It is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
-
-```bash
-    git clone git://github.com/ajaxorg/ace.git
-```
 
 Embedding Ace
 -------------
@@ -82,30 +76,28 @@ By default the editor only supports plain text mode; many other languages are av
     <script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 ```
 
-Then the mode can be used like this:
+The mode can then be used like this:
 
 ```javascript
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
 ```
 
-and take a look at the one of [included](https://github.com/ajaxorg/ace-builds/blob/master/editor.html) [demos](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js) of how to use Ace.
-
 Documentation
 -------------
 
-You can find api documentation at [http://ajaxorg.github.com/ace/api/index.html](http://ajaxorg.github.com/ace/api/index.html).
+Additional usage information, including events to listen to and extending syntax highlighters, can be found [on the main Ace website](http://ace.ajax.org).
 
-And a lot more sample code in the [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
+You can also find API documentation at [http://ajaxorg.github.com/ace/api/index.html](http://ajaxorg.github.com/ace/api/index.html).
 
-There is also some documentation on the [wiki page](https://github.com/ajaxorg/ace/wiki).
+Also check out the sample code for the kitchen sink [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
 
-If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss).
+If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss), or at `irc.freenode.net#ace`.
 
 Running Ace
 -----------
 
-After the checkout Ace works out of the box. No build step is required. To open editor with a file:/// URL see [wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-file:---). Or Simply start bundled mini HTTP server:
+After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server: 
 
 ```bash
     ./static.py
@@ -120,15 +112,30 @@ Or using Node.JS
 
 The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
 
-Package Ace
+To open the editor with a file:/// URL see [the wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-a-file:).
+
+Building Ace
 -----------
 
-To package Ace we use the dryice build tool developed by the Mozilla Skywriter team. (see the [wiki](https://github.com/ajaxorg/ace/wiki/Building-ace) for more details)
+You do not generally need to build ACE. The [ace-builds repository](https://github.com/ajaxorg/ace-builds/) endeavours to maintain the latest build, and you can just copy one of _src*_ subdirectories somewhere into your project.
+
+However, all you need is Node.js and npm installed to package ACE. Just run `npm install` in the ace folder to install dependencies:
 
 ```bash
     npm install
     node ./Makefile.dryice.js
 ```
+
+To package Ace, we use the dryice build tool developed by the Mozilla Skywriter team. Call `node Makefile.dryice.js` on the command-line to start the packing. This build script accepts the following options
+
+```bash
+-m                 minify build files with uglify-js          
+-nc                namespace require and define calls with "ace"
+-bm                builds the bookmarklet version
+--target ./path    specify relative path for output folder (default value is "./build")
+```
+
+To generate all the files in the ace-builds repository, run `node Makefile.dryice.js full --target ../ace-builds`
 
 Running the Unit Tests
 ----------------------
@@ -151,17 +158,20 @@ Continuous Integration status
 This project is tested with [Travis CI](http://travis-ci.org)
 [![Build Status](https://secure.travis-ci.org/ajaxorg/ace.png)](http://travis-ci.org/ajaxorg/ace)
 
+
 Contributing
 ------------
 
-Ace wouldn't be what it is without contributions! Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. To protect the interests of the Ace contributors and users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is the simplest of agreements, requiring that the contributions you make to an ajax.org project are only those you're allowed to make. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes ten minutes, and only needs to be completed once.  There are two versions of the agreement:
+Ace is a community project and wouldn't be what it is without contributions! We actively encourage and support contributions. The Ace source code is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
+
+Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. To protect the interests of the Ace contributors and users we require contributors to sign a Contributors License Agreement (CLA) before we pull the changes into the main repository. Our CLA is the simplest of agreements, requiring that the contributions you make to an ajax.org project are only those you're allowed to make. This helps us significantly reduce future legal risk for everyone involved. It is easy, helps everyone, takes ten minutes, and only needs to be completed once.  There are two versions of the agreement:
 
 1. [The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting.
 2. [The Corporate CLA](https://github.com/ajaxorg/ace/raw/master/doc/Corporate_Contributor_License_Agreement-v2.pdf): have your corporate lawyer review and submit this if your company is going to be contributing to ajax.org  projects
 
 If you want to contribute to an ajax.org project please print the CLA and fill it out and sign it. Then either send it by snail mail or fax to us or send it back scanned (or as a photo) by email.
 
-Email: fabian.jakobs@web.de
+Email: ace+cla@c9.io
 
 Fax: +31 (0) 206388953
 

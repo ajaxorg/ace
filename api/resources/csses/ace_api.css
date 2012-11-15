@@ -147,6 +147,19 @@ form.navbar-search {
 
 form.navbar-search  .search-query {
     background-color: #FFFFFF;
+    border-color: #999;
+    -webkit-transition: border 0.3s;
+    -moz-transition: border 0.3s;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+form.navbar-search  .search-query:focus, form.navbar-search  .search-query:active {
+    border: 1px solid #666;
+}
+
+.navbar-search .search-query:focus, .navbar-search .search-query.focused {
+    padding: 4px 9px;
 }
 
 h3.api_title {
@@ -154,24 +167,28 @@ h3.api_title {
 }
 
 ul.menu {
-    margin-left: 16px;
+    margin-left: 2px;
 }
 
 .menu li {
     list-style-image: url(../images/menu_disc.png);
-    margin-bottom: 3px;
-    font-weight : 700;
+    margin-bottom: 4px;
+    font-weight: 700;
+    padding-left: 10px;
+    margin-left: 0;
 }
 
 .menu li .menu-item a.menuLink, .menu li .menu-item span.menuLink {
-    color: #262626;
+    color: #3E7096;
+    font-weight: 100;
 }
 .menuTwo {
     margin-bottom: 5px;
     margin-top: 2px;
 }
 .menuTwo li .menu-item a.menuLink {
-    color: #262626;
+    color: #3E7096;
+    font-weight: 100;
 }
 
 /* need specificity to "beat" the above colors */
@@ -281,9 +298,14 @@ ul.menu {
 .srolled .membersContent {
     /*top : 0;*/
     width: 625px;
-    padding-left: 330px;
+    padding-left: 327px;
     margin : 0 auto 0 auto;
 }
+
+.srolled ul.nav {
+    padding-right: 10px;
+}
+
 .membersBackground {
 /*    background-color: white;
     position: fixed;
@@ -480,7 +502,6 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
     height: 100%;
 }
 .content .row {
-    width: 1060px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -492,8 +513,8 @@ header.filler {
 }
 
 .centerpiece {
-    background: url(../images/sidebar_border.png) repeat-y 230px 0;
     min-height: 100%;
+    padding: 20px 0;
 }
 
 /*
@@ -510,7 +531,7 @@ header.filler {
 }
 
 #sidebar {
-    margin-top: 9px;
+    margin-top: 5px;
     /*background: url(../images/sidebar-border.png) repeat-y right 0;*/
     margin-left: 12px;
 /*    width: 280px;*/
@@ -535,6 +556,9 @@ header.filler {
 #documentation article.article {
     border-top: 1px solid #e9e9e9;
     padding: 16px 10px 2px;
+    -webkit-transition: padding 0.2s;
+    -moz-transition: padding 0.2s;
+    -o-transition: padding 0.2s;
 }
 
 #documentation h3.sectionHeader + article.article {
@@ -781,7 +805,7 @@ li.signature {
 #documentation i.methodToggle {
     cursor: pointer;
     color: #9f9f9f;
-    padding-top: 5px;
+    padding-top: 2px;
     float: left;
 }
 #documentation i.methodToggle.methodToggleHover {
@@ -802,6 +826,7 @@ li.signature {
     
     /* Opera */
     -o-transform: rotate(45deg);
+    padding-top: 9px;
 }
 
 #documentation h3.sectionHeader {

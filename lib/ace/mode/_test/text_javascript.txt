@@ -4,6 +4,8 @@ function foo(items, nada) {
     }	// Real Tab.
 }
 
+regexp = /p|p/ // ends here
+
 r = /d{1,2}?f{e}++r*?\d+?[]r[^r-o\f\f[\f]?r{7}+r\{7}+rr--rr$^(?:d|s)(?=a|)(?!y)[]|$?|^*/ o
 a=/a/ jk = / / / / /
  /************************************/

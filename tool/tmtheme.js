@@ -1,4 +1,8 @@
 var fs = require("fs");
+var path = require("path");
+var util = require("util");
+var cssParse = require("css-parse");
+var cssStringify = require("css-stringify");
 
 var parseString = require("plist").parseString;
 function parseTheme(themeXml, callback) {
@@ -7,9 +11,12 @@ function parseTheme(themeXml, callback) {
     });
 }
 
+var unsupportedScopes = { };
+
 var supportedScopes = {
    "keyword": "keyword",
    "keyword.operator": "keyword.operator",
+   "keyword.other.unit": "keyword.other.unit",
 
    "constant": "constant",
    "constant.language": "constant.language",
@@ -17,6 +24,7 @@ var supportedScopes = {
    "constant.numeric": "constant.numeric",
    "constant.character" : "constant.character",
    "constant.character.escape" : "constant.character.escape",
+   "constant.character.entity": "constant.character.entity",
    "constant.other" : "constant.other",
 
    "support": "support",
@@ -25,6 +33,7 @@ var supportedScopes = {
    "support.function.firebug": "support.firebug",
    "support.function.constant": "support.function.constant",
    "support.constant": "support.constant",
+   "support.constant.property-value": "support.constant.property-value",
    "support.class": "support.class",
    "support.type": "support.type",
    "support.other": "support.other",
@@ -51,13 +60,14 @@ var supportedScopes = {
    "variable.parameter": "variable.parameter",
 
    "meta": "meta",
-   "meta.tag.sgml.doctype": "xml_pe",
+   "meta.tag.sgml.doctype": "xml-pe",
    "meta.tag": "meta.tag",
-   "meta.tag.form": "meta.tag.form",
+   "meta.selector": "meta.selector",
    
    "entity.other.attribute-name": "entity.other.attribute-name",
    "entity.name.function": "entity.name.function",
    "entity.name": "entity.name",
+   "entity.name.tag": "entity.name.tag",
 
    "markup.heading": "markup.heading",
    "markup.heading.1": "markup.heading.1",
@@ -69,6 +79,12 @@ var supportedScopes = {
    "markup.list": "markup.list",
 
    "collab.user1": "collab.user1"
+};
+
+var fallbackScopes = {
+    "keyword": "meta",
+    "support.type": "storage.type",
+    "variable": "entity.name.function"
 };
 
 function extractStyles(theme) {
@@ -94,18 +110,31 @@ function extractStyles(theme) {
         if (!element.scope)
             continue;
         var scopes = element.scope.split(/\s*[|,]\s*/g);
-        for (var j=0; j<scopes.length; j++) {
+        for (var j = 0; j < scopes.length; j++) {
             var scope = scopes[j];
-            if (supportedScopes[scope]) {
-                colors[supportedScopes[scope]] = parseStyles(element.settings);
-            } else {
-                //console.log(scope + " is not supported!");
+            var style = parseStyles(element.settings);
+        
+            var aceScope = supportedScopes[scope];
+            if (aceScope) {
+                colors[aceScope] = style;                
             }
-        }
+            else if (style) {
+                unsupportedScopes[scope] = (unsupportedScopes[scope] || 0) + 1;
+            }
+        }        
+    }
+    
+    for (var i in fallbackScopes) {
+        if (!colors[i])
+            colors[i] = colors[fallbackScopes[i]];
     }
 
-    if (!colors.fold)
-        colors.fold = ((colors["entity.name.function"] || colors.keyword).match(/\:([^;]+)/)||[])[1];
+    if (!colors.fold) {
+        var foldSource = colors["entity.name.function"] || colors.keyword;
+        if (foldSource) {
+            colors.fold = foldSource.match(/\:([^;]+)/)[1];
+        }
+    }
 
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
@@ -177,8 +206,30 @@ function quoteString(str) {
 var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
 var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
 
+function normalizeStylesheet(rules) {
+    for (var i = rules.length; i--; ) {
+        var s = JSON.stringify(rules[i].declarations);
+        for (var j = i; j --; ) {
+            if (s == JSON.stringify(rules[j].declarations)) {
+            console.log(rules[j].selectors, rules[i].selectors)
+            console.log(i, j)
+                rules[j].selectors = rules[i].selectors.concat(rules[j].selectors);
+                rules.splice(i, 1);
+                break;
+            }
+        }
+    }
+    for (var i = rules.length; i--; ) {
+        var s = rules[i].selectors.sort();
+        rules[i].selectors = s.filter(function(x, i) {
+            return x && x != s[i + 1];
+        });                
+    }
+    return rules;
+}
+
 var themes = {
-    //"chrome": "Chrome",
+    //"chrome": "Chrome DevTools",
     "clouds": "Clouds",
     "clouds_midnight": "Clouds Midnight",
     "cobalt": "Cobalt",
@@ -196,14 +247,15 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
-    //"textmate": "Textmate",
+    //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
     "tomorrow_night_blue": "Tomorrow-Night-Blue",
     "tomorrow_night_bright": "Tomorrow-Night-Bright",
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "twilight": "Twilight",
-    "vibrant_ink": "Vibrant Ink"
+    "vibrant_ink": "Vibrant Ink",
+    //"xcode": "Xcode_default"
 };
 
 function convertTheme(name) {
@@ -216,18 +268,104 @@ function convertTheme(name) {
         styles.uuid = theme.uuid;
         var css = fillTemplate(cssTemplate, styles);
         css = css.replace(/[^\{\}]+{\s*}/g, "");
+        
+        for (var i in supportedScopes) {
+            if (!styles[i])
+                continue;
+            css += "." + styles.cssClass + " " +
+                i.replace(/^|\./g, ".ace_") + "{" + styles[i] + "}";
+        }
 
         var js = fillTemplate(jsTemplate, {
             name: name,
-            css: "require('ace/requirejs/text!./" + name + ".css')", // quoteString(css), //
+            css: 'require("../requirejs/text!./' + name + '.css")', // quoteString(css), //
             cssClass: "ace-" + hyphenate(name),
             isDark: styles.isDark
         });
 
+        // we're going to look for NEW rules in the parsed content only
+        // if such a rule exists, add it to the destination file
+        // this way, we preserve all hand-modified rules in the <theme>.css rules,
+        // (because some exist, for collab1 and ace_indentation_guide
+        try {
+            var outThemeCss = fs.readFileSync(__dirname + "/../lib/ace/theme/" + name + ".css");
+            var oldRules = cssParse(outThemeCss).stylesheet.rules;
+            var newRules = cssParse(css).stylesheet.rules;
+
+
+            for (var i = 0; i < newRules.length; i++) {
+                var newSelectors = newRules[i].selectors;
+
+                for (var j = 0; j < oldRules.length; j++) {
+                    var oldSelectors = oldRules[j].selectors;
+                    newSelectors = newSelectors.filter(function(s) {
+                        return oldSelectors.indexOf(s) == -1;
+                    })
+                    if (!newSelectors.length)
+                        break;
+                }
+                if (newSelectors.length) {
+                    newRules[i].selectors = newSelectors;
+                    console.log("Adding NEW rule: ", newRules[i])
+                    oldRules.splice(i, 0, newRules[i]);
+                }
+            }
+            
+            oldRules = normalizeStylesheet(oldRules);
+            
+            css = cssStringify({stylesheet: {rules: oldRules}}, { compress: false });
+        } catch(e) {
+            console.log("Creating new file: " +  name + ".css")
+        }
+        
         fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
         fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".css", css);
     })
 }
 
-for (var name in themes)
+for (var name in themes) {
     convertTheme(name);
+}
+
+var sortedUnsupportedScopes = {};
+for (var u in unsupportedScopes) {
+    var value = unsupportedScopes[u];
+    if (sortedUnsupportedScopes[value] === undefined) {
+        sortedUnsupportedScopes[value] = [];
+    }
+    sortedUnsupportedScopes[value].push(u);
+}
+
+console.log("I found these unsupported scopes:");
+console.log(sortedUnsupportedScopes);
+console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
+console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
+
+
+/*** TODO: generate images for indent guides in node
+
+var indentGuideColor = "#2D2D2D"
+var canvas = document.createElement("canvas")
+canvas.width = 1; canvas.height = 2;
+var ctx = canvas.getContext("2d")
+imageData = ctx.getImageData(0,0,1,2)
+
+function getColor(color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(0,0,1,2);
+    return Array.slice(ctx.getImageData(0,0,1,2).data).slice(0,4)    
+}
+bgColor = getComputedStyle(ace.renderer.scroller).backgroundColor
+var a = [].concat(getColor(bgColor), getColor(indentGuideColor));
+a.forEach(function(val,i){imageData.data[i] = val})
+
+ctx.putImageData(imageData,0,0)
+image = canvas.toDataURL("png")
+
+var rule = "."+ace.renderer.$theme +" .ace_indent-guide {\n\
+  background: url(" + image +") right repeat-y;\n\
+}"
+console.log(rule)
+require("ace/lib/dom").importCssString(rule)
+
+*/

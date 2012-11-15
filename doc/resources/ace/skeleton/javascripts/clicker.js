@@ -28,7 +28,10 @@ function setupClicker() {
       if (!$article.hasClass('methodToggleOpen') || this.force) {
           $article.addClass('methodToggleOpen');
           $arrow.removeClass('inactive').addClass('active');
-          
+
+          if (!$arrow[0])
+            return;
+
           var data = $arrow[0].id.replace(/^js_/, "");
           //var state = {};
           //state.section = data;
@@ -58,7 +61,7 @@ function setupClicker() {
   // for the top dropdown
   $('li.memberLink a').click(transformHash);
   
-  $('a[href^="#"]').click(transformHash);
+  //$('a[href^="#"]').click(transformHash);
   
   $('.related-to', '.metaInfo').click(function(){
       location.hash = $(this).find('a').attr('href').split('#')[1];

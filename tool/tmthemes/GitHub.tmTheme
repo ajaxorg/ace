@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>author</key>
+	<string>Martin Kühl</string>
+	<key>comment</key>
+	<string>A theme based on the GitHub code stylesheet.</string>
+	<key>name</key>
+	<string>GitHub</string>
+	<key>settings</key>
+	<array>
+		<dict>
+			<key>comment</key>
+			<string>
+background              #files .file .data background-color
+caret                   #files .file .meta color
+invisibles              .syntax .w
+lineHighlight   #FFFEEB #files .file .private background-color
+    alt:        #FFFFCC colour that gets added via javascript
+selection       #B4D5FE handmade :-)
+    alt:        #FFFFCC colour that gets added via javascript
+                #EAF2F5 #header .userbox background-color
+                #EAEAEA #files .file background-color
+                #DEDEDE #files .file border-color
+                #F9EA86 Mac OS X system selection colour “Gold”
+			</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#F8F8FF</string>
+				<key>caret</key>
+				<string>#666666</string>
+				<key>foreground</key>
+				<string>#000000</string>
+				<key>invisibles</key>
+				<string>#BBBBBB</string>
+				<key>lineHighlight</key>
+				<string>#FFFEEB</string>
+				<key>selection</key>
+				<string>#B4D5FE</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>.syntax .c, .syntax .c[ml]</string>
+			<key>name</key>
+			<string>Comment</string>
+			<key>scope</key>
+			<string>comment</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>italic</string>
+				<key>foreground</key>
+				<string>#999988</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment.Preproc</string>
+			<key>scope</key>
+			<string>comment.block.preprocessor</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .cp</string>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Comment.Special</string>
+			<key>scope</key>
+			<string>comment.documentation, comment.block.documentation</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .cs</string>
+				<key>fontStyle</key>
+				<string>bold italic</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Error</string>
+			<key>scope</key>
+			<string>invalid.illegal</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#E3D2D2</string>
+				<key>comment</key>
+				<string>.syntax .err</string>
+				<key>foreground</key>
+				<string>#A61717</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>.syntax .k, .syntax .k[dpr]</string>
+			<key>name</key>
+			<string>Keyword</string>
+			<key>scope</key>
+			<string>keyword, storage</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>.syntax .o, .syntax .ow</string>
+			<key>name</key>
+			<string>Operator</string>
+			<key>scope</key>
+			<string>keyword.operator</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword.Constant</string>
+			<key>scope</key>
+			<string>constant.language, support.constant</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .kc</string>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Keyword.Type</string>
+			<key>scope</key>
+			<string>storage.type, support.type</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .kt</string>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#445588</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Attribute</string>
+			<key>scope</key>
+			<string>entity.other.attribute-name</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .na</string>
+				<key>foreground</key>
+				<string>#008080</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Builtin</string>
+			<key>scope</key>
+			<string>variable.other</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .nb</string>
+				<key>foreground</key>
+				<string>#0086B3</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Builtin.Pseudo</string>
+			<key>scope</key>
+			<string>variable.language</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .bp</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>TODO: support.class is styled as Name.Constant on GitHub.</string>
+			<key>name</key>
+			<string>Name.Class</string>
+			<key>scope</key>
+			<string>entity.name.type, entity.other.inherited-class, support.class</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .nc</string>
+				<key>fontStyle</key>
+				<string>bold</string>
+				<key>foreground</key>
+				<string>#445588</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Constant</string>
+			<key>scope</key>
+			<string>variable.other.constant</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .no</string>
+				<key>foreground</key>
+				<string>#008080</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Entity</string>
+			<key>scope</key>
+			<string>constant.character.entity</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .ni</string>
+				<key>foreground</key>
+				<string>#800080</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Exception</string>
+			<key>scope</key>
+			<string>entity.name.exception</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .ne</string>
+				<key>foreground</key>
+				<string>#990000</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Function</string>
+			<key>scope</key>
+			<string>entity.name.function, support.function, keyword.other.name-of-parameter</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .nf</string>
+				<key>foreground</key>
+				<string>#990000</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Namespace</string>
+			<key>scope</key>
+			<string>entity.name.section</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .nn</string>
+				<key>foreground</key>
+				<string>#555555</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Tag</string>
+			<key>scope</key>
+			<string>entity.name.tag</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .nt</string>
+				<key>foreground</key>
+				<string>#000080</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Name.Variable</string>
+			<key>scope</key>
+			<string>variable.parameter, support.variable</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .nv, .style .v[cgi]</string>
+				<key>foreground</key>
+				<string>#008080</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Literal.Number</string>
+			<key>scope</key>
+			<string>constant.numeric, constant.other</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .m, .style .m[fhio], .style .il</string>
+				<key>foreground</key>
+				<string>#009999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Literal.String</string>
+			<key>scope</key>
+			<string>string - string source, constant.character</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .s[bcd2ehixl]</string>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#DD1144</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Literal.String.Regex</string>
+			<key>scope</key>
+			<string>string.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .sr</string>
+				<key>foreground</key>
+				<string>#009926</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Literal.String.Symbol</string>
+			<key>scope</key>
+			<string>constant.other.symbol</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.style .ss</string>
+				<key>foreground</key>
+				<string>#990073</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Punctuation</string>
+			<key>scope</key>
+			<string>punctuation</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Deleted</string>
+			<key>scope</key>
+			<string>markup.deleted</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#FFDDDD</string>
+				<key>comment</key>
+				<string>.syntax .gd</string>
+				<key>foreground</key>
+				<string>#000000</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Emph</string>
+			<key>scope</key>
+			<string>markup.italic</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .ge</string>
+				<key>fontStyle</key>
+				<string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Error</string>
+			<key>scope</key>
+			<string>markup.error</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .gr</string>
+				<key>foreground</key>
+				<string>#AA0000</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Heading</string>
+			<key>scope</key>
+			<string>markup.heading.1</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .gh</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Inserted</string>
+			<key>scope</key>
+			<string>markup.inserted</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#DDFFDD</string>
+				<key>comment</key>
+				<string>.syntax .gi</string>
+				<key>foreground</key>
+				<string>#000000</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Output</string>
+			<key>scope</key>
+			<string>markup.output, markup.raw</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .go</string>
+				<key>foreground</key>
+				<string>#888888</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Prompt</string>
+			<key>scope</key>
+			<string>markup.prompt</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .gp</string>
+				<key>foreground</key>
+				<string>#555555</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Strong</string>
+			<key>scope</key>
+			<string>markup.bold</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .gs</string>
+				<key>fontStyle</key>
+				<string>bold</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Subheading</string>
+			<key>scope</key>
+			<string>markup.heading</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .gu</string>
+				<key>foreground</key>
+				<string>#AAAAAA</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Traceback</string>
+			<key>scope</key>
+			<string>markup.traceback</string>
+			<key>settings</key>
+			<dict>
+				<key>comment</key>
+				<string>.syntax .gt</string>
+				<key>foreground</key>
+				<string>#AA0000</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Generic.Underline</string>
+			<key>scope</key>
+			<string>markup.underline</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string>underline</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Extra: Diff Range</string>
+			<key>scope</key>
+			<string>meta.diff.range, meta.diff.index, meta.separator</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#EAF2F5</string>
+				<key>comment</key>
+				<string>.syntax .gc</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Extra: Diff From</string>
+			<key>scope</key>
+			<string>meta.diff.header.from-file</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#FFDDDD</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Extra: Diff To</string>
+			<key>scope</key>
+			<string>meta.diff.header.to-file</string>
+			<key>settings</key>
+			<dict>
+				<key>background</key>
+				<string>#DDFFDD</string>
+				<key>foreground</key>
+				<string>#999999</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Extra: Link</string>
+			<key>scope</key>
+			<string>meta.link</string>
+			<key>settings</key>
+			<dict>
+				<key>fontStyle</key>
+				<string></string>
+				<key>foreground</key>
+				<string>#4183C4</string>
+			</dict>
+		</dict>
+	</array>
+	<key>uuid</key>
+	<string>FDD6F02A-74F7-4B6C-97F1-857D792EC90E</string>
+</dict>
+</plist>
