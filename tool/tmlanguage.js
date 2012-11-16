@@ -82,6 +82,10 @@ function checkForLookBehind(str) {
   return lookbehindRegExp.test(str) ? str + " // ERROR: This contains a lookbehind, which JS does not support :(" : str;
 }
 
+function checkForInvariantRegex(str) {
+    return str.replace(/\?i\:/, "?:");
+}
+
 function removeXFlag(str) {
   if (str.slice(0,4) == "(?x)") {
     str = str.replace(/\\.|\[([^\]\\]|\\.)*?\]|\s+|(?:#[^\n]*)/g, function(s) {
@@ -98,6 +102,7 @@ function removeXFlag(str) {
 function transformRegExp(str) {
   str = removeXFlag(str);
   str = checkForLookBehind(str);
+  str = checkForInvariantRegex(str);
   return str;
 }
 
@@ -121,19 +126,19 @@ function assembleStateObjs(strState, pattern) {
     }
 
     stateObj = {};
-    stateObj.token = "TODO";
+    stateObj.token = [];
     stateObj.regex = transformRegExp(pattern.end);
     stateObj.next = "start";
   }
   else {
-    stateObj.token = "TODO";
+    stateObj.token = [];
     stateObj.regex = transformRegExp(pattern.end);
     stateObj.next = "start";
 
     statesObj[strState].push(stateObj);
 
     stateObj = {};
-    stateObj.token = "TODO";
+    stateObj.token = [];
     stateObj.regex = ".+";
     stateObj.next = strState;
   }
@@ -141,14 +146,32 @@ function assembleStateObjs(strState, pattern) {
   return stateObj;
 }
 
+function extractCaptures (captures) {
+  if (typeof captures === "object") {
+    var token = [];
+    
+    Object.keys(captures).forEach(function (k) {
+      if (captures[k].name) {
+        token.push(captures[k].name);
+      }
+      else {
+        token.push(captures[k]);
+      }
+    });
+    
+    return token;
+  }
+  else {
+    return captures;
+  }
+}
+
 function extractPatterns(patterns) {
   var state = 0;
   patterns.forEach(function(pattern) {
     state++;
     var i = 1;
-    var tokenArray = [];
     var tokenObj = { token: [] };
-    var stateObj = {};
 
     if (pattern.comment) {
       startState.start.push("          // " + pattern.comment.trim());
@@ -158,13 +181,13 @@ function extractPatterns(patterns) {
     if (pattern.begin && pattern.end) {
       var strState = "state_" + state;
       if ( pattern.beginCaptures === undefined && pattern.endCaptures === undefined) {
-        tokenObj.token.push(pattern.captures);
+        tokenObj.token = tokenObj.token.concat(extractCaptures(pattern.captures));
       }
       else if (pattern.beginCaptures) {
-        tokenObj.token.push(pattern.beginCaptures);
+        tokenObj.token = tokenObj.token.concat(extractCaptures(pattern.beginCaptures));
       }
       else if (pattern.endCaptures) {
-        tokenObj.token.push(pattern.endCaptures);
+        tokenObj.token = tokenObj.token.concat(extractCaptures(pattern.endCaptures));
       }
 
       if (tokenObj.token === undefined) {
@@ -189,8 +212,7 @@ function extractPatterns(patterns) {
     }
 
     else if (pattern.captures) {
-      tokenObj.token.push([]);
-      tokenObj.token.push(pattern.captures);
+      tokenObj.token = tokenObj.token.concat(extractCaptures(pattern.captures));
       tokenObj.regex = transformRegExp(pattern.match);
     }
 
@@ -211,9 +233,9 @@ function extractPatterns(patterns) {
     }
 
     // sometimes captures have names--not sure when or why
-    if (pattern.name) {
-      tokenObj.token.push(pattern.name);
-    }
+//    if (pattern.name && tokenObj.token.indexOf(pattern.name) === -1) {
+//      tokenObj.token.push(pattern.name);
+//    }
 
     startState.start.push(tokenObj);
   });
@@ -266,7 +288,11 @@ function convertLanguage(name) {
           }
           repository = restoreComments(JSON.stringify(repository, null, "    "));
         }
-
+        
+        if (typeof repository === "string") {
+            repository = JSON.parse(repository);
+        }
+        
         var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
               language: languageNameSanitized,
               languageTokens: patterns,
