@@ -1,4 +1,4 @@
-2012.09.17, Version 0.1.0
+2012.09.17, Version 1.0.0
 
 * New Features
   - Multiple cursors and selections (https://c9.io/site/blog/2012/08/be-an-armenian-warrior-with-block-selection-on-steroids/)
