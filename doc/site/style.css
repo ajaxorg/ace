@@ -387,8 +387,8 @@ UL.menu-footer LI A:hover {
 }
 
 .nav-tabs > li > a, .nav-pills > li > a {
-    padding-right: 30px;
-    padding-left: 30px;
+    padding-right: 17px;
+    padding-left: 17px;
     border-right: 1px solid #bbb;
     border-radius: 0;
     margin: 0;
@@ -403,8 +403,8 @@ UL.menu-footer LI A:hover {
 }
 
 .nav.nav-pills li:first-child > a {
-    padding-left: 29px;
-    padding-right: 29px;
+    padding-left: 28px;
+    padding-right: 28px;
 }
 
 .nav.nav-pills li:first-child > a > img {
