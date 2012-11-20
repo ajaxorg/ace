@@ -131,7 +131,7 @@ env.editor.commands.addCommands([{
 }, {
     name: "execute",
     bindKey: "ctrl+enter",
-    exec: function(editor) { 
+    exec: function(editor) {
         try {
             var r = eval(editor.getCopyText()||editor.getValue());
         } catch(e) {
