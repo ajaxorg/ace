@@ -103,13 +103,14 @@ function transformRegExp(str) {
   str = removeXFlag(str);
   str = checkForLookBehind(str);
   str = checkForInvariantRegex(str);
+  str = str.replace(/\\n(?!\?).?/, '$'); // replace newlines by $ except if its postfixed by ?
   return str;
 }
 
 function assembleStateObjs(strState, pattern) {
+    console.log("assembleStateObjs", strState, pattern);
   var patterns = pattern.patterns;
   var stateObj = {};
-  var tokenElem = [];
   
   if (patterns) {
     for (var p in patterns) {
@@ -119,27 +120,41 @@ function assembleStateObjs(strState, pattern) {
         stateObj.include = patterns[p].include;
       }
       else {
-        stateObj.token = patterns[p].name;
+        if (patterns[p].captures)
+            stateObj.token = extractCaptures(patterns[p].captures);
+        else
+            stateObj.token = patterns[p].name;
+            
         stateObj.regex = transformRegExp(patterns[p].match);
       }
       statesObj[strState].push(stateObj);
     }
+    
+    statesObj[strState].push({
+        token: pattern.name,
+        regex: transformRegExp(pattern.end),
+        merge: true,
+        next: "start"
+    });
 
     stateObj = {};
-    stateObj.token = [];
-    stateObj.regex = transformRegExp(pattern.end);
-    stateObj.next = "start";
+    stateObj.token = pattern.name;
+    stateObj.regex = ".";
+    stateObj.merge = true;
+    stateObj.next = strState;
   }
   else {
-    stateObj.token = [];
-    stateObj.regex = transformRegExp(pattern.end);
-    stateObj.next = "start";
-
-    statesObj[strState].push(stateObj);
-
+    statesObj[strState].push({
+        token: pattern.name,
+        regex: transformRegExp(pattern.end),
+        merge: true,
+        next: "start"
+    });
+      
     stateObj = {};
-    stateObj.token = [];
-    stateObj.regex = ".+";
+    stateObj.token = pattern.name;
+    stateObj.regex = ".";
+    stateObj.merge = true;
     stateObj.next = strState;
   }
 
@@ -222,8 +237,8 @@ function extractPatterns(patterns) {
     }
 
     else if (pattern.include) {
-      tokenObj.token.push(pattern.include);
-      tokenObj.regex = "";
+        // f*ck it
+        return;
     }
 
     else {

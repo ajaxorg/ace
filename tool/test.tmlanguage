@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>comment</key>
+    <string>Modified from the original ASP bundle. Originally modified by Thomas Aylott subtleGradient.com</string>
+	<key>fileTypes</key>
+	<array>
+		<string>vbs</string>
+		<string>vbe</string>
+		<string>wsf</string>
+		<string>wsc</string>
+	</array>
+	<key>foldingStartMarker</key>
+	<string>(&lt;(?i:(head|table|div|style|script|ul|ol|form|dl))\b.*?&gt;|\{|^\s*&lt;?%?\s*'?\s*(?i:(sub|private\s+Sub|public\s+Sub|function|if|while|For))\s*.*$)</string>
+	<key>foldingStopMarker</key>
+	<string>(&lt;/(?i:(head|table|div|style|script|ul|ol|form|dl))&gt;?|\}|^\s*&lt;?%?\s*\s*'?\s*(?i:(end|Next))\s*.*$)</string>
+	<key>keyEquivalent</key>
+	<string>^~A</string>
+	<key>name</key>
+	<string>VBScript</string>
+	<key>patterns</key>
+	<array>
+    	<dict>
+			<key>begin</key>
+			<string>^(?=\t)</string>
+			<key>end</key>
+			<string>(?=[^\t])</string>
+			<key>name</key>
+			<string>meta.leading-space</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>meta.odd-tab.tabs</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>meta.even-tab.tabs</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(\t)(\t)?</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.vbs</string>
+	<key>uuid</key>
+	<string>7F9C9343-D48E-4E7D-BFE8-F680714DCD3E</string>
+</dict>
+</plist>
