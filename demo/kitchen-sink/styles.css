@@ -41,3 +41,18 @@ body {
 #controls td + td {
     text-align: left;
 }
+
+#scrolldiv_container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 9999;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+    pointer-events: none;
+}
+
+#scrolldiv_child {
+    -webkit-transform: translateZ(0px);
+    pointer-events: none;
+}

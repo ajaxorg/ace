@@ -177,8 +177,6 @@ var keybindings = {
     })
 };
 
-
-
 /*********** manage layout ***************************/
 var consoleHeight = 20;
 function onResize() {
@@ -392,6 +390,79 @@ bindCheckbox("highlight_token", function(checked) {
         delete editor.tokenTooltip;
     } else if (checked) {
         editor.tokenTooltip = new TokenTooltip(editor);
+    }
+});
+
+bindCheckbox("mobile_mode", function(checked) {
+    //var editor = env.editor;
+    /** Mobile test **/
+    if (checked) {
+        var editorElement = document.getElementById("editor");
+        var editorElementChild = editorElement.childNodes[0];
+
+        var left = editorElement.offsetLeft;
+        var height = editorElement.style.height;
+        var totalHeight = env.editor.session.getLength() * env.editor.renderer.lineHeight;
+        var width = document.documentElement.clientWidth - left;
+
+        var mobileScrollDiv = document.createElement("div");
+        mobileScrollDiv.id = "scrolldiv_container";
+        mobileScrollDiv.style.width = width + "px";
+        //mobileScrollDiv.style.left = left + "px";
+        mobileScrollDiv.style.height = height;
+
+        var mobileScrollDivChild = document.createElement("div");
+        mobileScrollDivChild.id = "scrolldiv_child";
+        mobileScrollDivChild.style.height = totalHeight + "px";
+        mobileScrollDiv.appendChild(mobileScrollDivChild);
+        editorElement.appendChild(mobileScrollDiv);
+
+        var movementDiff = 0, lastMovementPos = 0;
+        var timeDiff = 0, lastTime = 0;
+        document.addEventListener("touchmove", function(e) {
+            //console.log("     TOUCHMOVE", e, mobileScrollDiv.scrollTop);
+            movementDiff = mobileScrollDiv.scrollTop - lastMovementPos;
+            lastMovementPos = mobileScrollDiv.scrollTop;
+
+            timeDiff = e.timeStamp - lastTime;
+            lastTime = e.timeStamp;
+        });
+        var movingTimer;
+        document.addEventListener("touchstart", function(e) {
+            if (e.target.className.split(" ").indexOf("ace_content") !== -1) {
+                if (movingTimer)
+                    clearInterval(movingTimer);
+
+                //console.log("touchstart", e);
+            }
+        }, false);
+        document.addEventListener("touchend", function(e) {
+            if (e.target.className.split(" ").indexOf("ace_content") !== -1) {
+                //console.log("TOUCH END", e);
+                //console.log(movementDiff, timeDiff);
+                var position = mobileScrollDiv.scrollTop;
+                //var velocity = (movementDiff/timeDiff) * 4;
+                var velocity = movementDiff;
+                movingTimer = setInterval(function() {
+                    position += velocity;
+                    velocity *= 0.94;
+                    //console.log(velocity);
+                    env.editor.session.setScrollTop(position);
+                    if (Math.abs(velocity) < 4)
+                        clearInterval(movingTimer);
+                }, 5);
+            }
+        }, false);
+
+        mobileScrollDiv.onscroll = function(e) {
+            //console.log("Scrolling", e, mobileScrollDiv.scrollTop);
+            env.editor.session.setScrollTop(mobileScrollDiv.scrollTop);
+        };
+    }
+    else {
+        var mobileScrollDiv = document.getElementById("scrolldiv_container");
+        if (mobileScrollDiv)
+            mobileScrollDiv.parentNode.removeChild(mobileScrollDiv);
     }
 });
 
