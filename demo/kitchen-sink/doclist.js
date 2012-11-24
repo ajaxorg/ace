@@ -104,6 +104,7 @@ var docs = {
     "docs/powershell.ps1": "Powershell",
     "docs/python.py": "Python",
     "docs/ruby.rb": "Ruby",
+    "docs/abap.abap": "SAP - ABAP",
     "docs/scala.scala": "Scala",
     "docs/scss.scss": "SCSS",
     "docs/sh.sh": "SH",
