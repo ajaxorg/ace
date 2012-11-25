@@ -27,7 +27,7 @@ var Mode = function(name, desc, extensions) {
         var re = "^.*\\.(" + extensions + ")$";
     }   
 
-    this.extRe = new RegExp(re, "g");
+    this.extRe = new RegExp(re, "gi");
 };
 
 Mode.prototype.supportsFile = function(filename) {
@@ -35,6 +35,7 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
+    abap:       ["ABAP"         , "abap"],
     asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "^Cakefile|coffee|cf"],

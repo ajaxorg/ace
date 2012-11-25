@@ -44,10 +44,12 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var Tokenizer = require("../tokenizer").Tokenizer;
 var %language%HighlightRules = require("./%languageHighlightFilename%_highlight_rules").%language%HighlightRules;
+// TODO: pick appropriate fold mode
+var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     var highlighter = new %language%HighlightRules();
-    
+    this.foldingRules = new FoldMode();
     this.$tokenizer = new Tokenizer(highlighter.getRules());
 };
 oop.inherits(Mode, TextMode);
