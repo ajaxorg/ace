@@ -12,149 +12,110 @@ mixin article(obj, parents)
   if typeof obj === 'string'
     obj = list[obj]
 
-  title = obj.path + (obj.type ? ' (' + obj.type + ')' : '')
-  article.article(id=obj.path, data-title=title)
-    if obj.type === 'section' || obj.type === 'namespace' || obj.type === 'class' || obj.type === 'mixin'
+  if (obj.private !== true && obj.name.charAt(0) !== "$")
+    title = obj.path + (obj.type ? ' (' + obj.type + ')' : '')
+    article.article(id=obj.path, data-title=title)
+      if obj.type === 'section' || obj.type === 'namespace' || obj.type === 'class' || obj.type === 'mixin'
 
-      if obj.stability
-        mixin markdown(">" + obj.stability)
+        if obj.stability
+          mixin markdown(">" + obj.stability)
 
-      if obj.description
-        .section.description
-          .memberContent
-            mixin markdown(obj.description)
-
-      collection = obj.children.filter(function(x){return x.type === 'namespace'});
-      if collection.length
-        .section.namespaces
-          // 
-            h3 Namespaces
+        if obj.description
+          .section.description
             .memberContent
-              mixin short_description_list(collection)
-
-      collection = obj.children.filter(function(x){return x.type === 'mixin'});
-      if collection.length
-        .section.mixins
-          // 
-            h3 Mixins
-            .memberContent
-              mixin short_description_list(collection)
-
-      if obj.type === 'class'
-
-        if obj.superclass
-          .section.superclass
-            // h3 
-              Superclass
-              .memberContent
-                mixin link(obj.superclass)
-
-        if obj.subclasses.length
-          .section.subclasses
-            // h3 
-              Subclasses
-              .memberContent
-                mixin links(obj.subclasses)
-
-      if obj.included_mixins
-        .section.mixins
-          // h3 
-            Includes
-            .memberContent
-              mixin links(obj.included_mixins)
-
-      collection = obj.children.filter(function(x){return x.type === 'utility'})
-      if collection.length
-        .section.utilities
-          // h3 
-            Utilities
-            .memberContent
-              mixin links(collection)
-    
-    else
-
-      .section.method
-        .memberContent
-          if obj.signatures
-            div.title
-              i(id='#{obj.path}', class='methodToggle methodClicker inactive icon-caret-right')
-              ul.signatures
-                -var loops = 0;
-                for sig in obj.signatures
-                  li.signature
-                    ul
-                      li.signature-call!= signature(obj, sig, ["methodClicker"])
-                        if sig.returns
-                          li.signature-returns
-                            ul.argument-types
-                              for ret in sig.returns
-                                li.argument-type!= returnLink(obj, ret, [])
-                    -if (loops == 0)
-                      -loops = 1 // ensure that we only print ONE meta info UL per signature (some methods have multiple signatures)
-                      ul.metaInfo
-                          if obj.readonly
-                            li
-                              span.label.read-only Read-Only
-                          if obj.chainable
-                            li
-                              span.label.chainable Chainable
-                          if obj.internal
-                            li
-                              span.label.internal Internal
-                          if obj.deprecated
-                            li
-                              span.label.deprecated
-                                | Deprecated
-                                if obj.deprecated.from
-                                  | &nbsp; (since #{obj.deprecated.from})
-                                  if obj.deprecated.off
-                                    | &nbsp;and will be removed on #{obj.deprecated.off}
-                          if obj.alias_of
-                            li
-                              span.label.alias.single
-                                | Aliased as: 
-                                != link(obj.alias_of)
-                          else if obj.aliases.length
-                            li
-                              span.label.alias.multiple
-                                | Aliased as:&nbsp;
-                                for alias in obj.aliases
-                                    mixin link(alias)&nbsp;
-
-                          if obj.related_to
-                            li
-                              span.label.related-to
-                                | Related to: 
-                                obj.related_to 
-                                  
-          div.sideToggler
-
-            div(id='ellipsis_#{obj.path}', class='ellipsis_description')
-              mixin markdown(obj.short_description)
-
-
-            div.description
-
               mixin markdown(obj.description)
+      
+      else
+        .section.method
+          .memberContent
+            if obj.signatures
+              div.title
+                i(id='#{obj.path}', class='methodToggle methodClicker inactive icon-caret-right')
+                ul.signatures
+                  -var loops = 0;
+                  for sig in obj.signatures
+                    li.signature
+                      ul
+                        li.signature-call!= signature(obj, sig, ["methodClicker"])
+                          if sig.returns
+                            li.signature-returns
+                              ul.argument-types
+                                for ret in sig.returns
+                                  li.argument-type!= returnLink(obj, ret, [])
+                      -if (loops == 0)
+                        -loops = 1 // ensure that we only print ONE meta info UL per signature (some methods have multiple signatures)
+                        ul.metaInfo
+                            if obj.incomplete
+                              li
+                                span.label.incomplete Incomplete
+                            if obj.experimental
+                              li
+                                span.label.experimental Experimental
+                            if obj.readonly
+                              li
+                                span.label.read-only Read-Only
+                            if obj.chainable
+                              li
+                                span.label.chainable Chainable
+                            if obj.internal
+                              li
+                                span.label.internal Internal
+                            if obj.deprecated
+                              li
+                                span.label.deprecated
+                                  | Deprecated
+                                  if obj.deprecated.from
+                                    | &nbsp; (since #{obj.deprecated.from})
+                                    if obj.deprecated.off
+                                      | &nbsp;and will be removed on #{obj.deprecated.off}
+                            if obj.alias_of
+                              li
+                                span.label.alias.single
+                                  | Aliased as: 
+                                  != link(obj.alias_of)
+                            else if obj.aliases.length
+                              li
+                                span.label.alias.multiple
+                                  | Aliased as:
+                                  ul.alias
+                                    for alias in obj.aliases
+                                      li
+                                        mixin link(alias)
 
-              if obj.bound && ~obj.bound.indexOf('#')
-                p.note.methodized
-                  | This method can be called <em>either</em> as an 
-                  != link(obj.bound, ['link-short'], 'instance method')
-                  |  <em>or</em> as a generic method. If calling as generic, pass the instance in as the first argument.
-              else if obj.bound && !~obj.bound.indexOf('#')
-                p.note.functionalized
-                  | This method can be called <em>either</em> as an instance method <em>or</em> as a 
-                  != link(obj.bound, ['link-short'], 'generic method')
-                  |. If calling as generic, pass the instance in as the first argument.
+                            if obj.related_to
+                              li
+                                span.label.related-to
+                                  | Related to 
+                                  mixin link(obj.related_to, ["relatedToLink"])  
+                                    
+            div.sideToggler
 
-              if obj.arguments
-                h4 Arguments
-                != argumentTable(obj.arguments, ["argument-list", "table", "table-striped", "table-bordered"])
+              div(id='ellipsis_#{obj.path}', class='ellipsis_description')
+                mixin markdown(obj.short_description)
 
-              if obj.returns
-                h4 Returns
-                != returnTable(obj.returns, ["return-list", "table", "table-striped", "table-bordered"])
+
+              div.description
+
+                mixin markdown(obj.description)
+
+                if obj.bound && ~obj.bound.indexOf('#')
+                  p.note.methodized
+                    | This method can be called <em>either</em> as an 
+                    != link(obj.bound, ['link-short'], 'instance method')
+                    |  <em>or</em> as a generic method. If calling as generic, pass the instance in as the first argument.
+                else if obj.bound && !~obj.bound.indexOf('#')
+                  p.note.functionalized
+                    | This method can be called <em>either</em> as an instance method <em>or</em> as a 
+                    != link(obj.bound, ['link-short'], 'generic method')
+                    |. If calling as generic, pass the instance in as the first argument.
+
+                if obj.arguments
+                  h4 Arguments
+                  != argumentTable(obj.arguments, ["argument-list", "table", "table-striped", "table-bordered"])
+
+                if obj.returns
+                  h4 Returns
+                  != returnTable(obj.returns, ["return-list", "table", "table-striped", "table-bordered"])
 
   //- children
   for child in obj.children.filter(function(x){return x.type === 'section'})

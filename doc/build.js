@@ -2,7 +2,7 @@ var fs = require("fs");
 var path = require("path");
 var panino = require("panino");
 var srcPath = __dirname + "/../lib/ace";
-var buildType = process.argv.splice(2)[0];buildType
+var buildType = process.argv.splice(2)[0];
 
 var options = {
   title       : "Ace API",
@@ -35,8 +35,7 @@ var options = {
   assets      : "./resources/ace/skeleton",
   additionalObjs : "./additionalObjs.json",
   exclude     : ["**/*_test.js", "**/mode/**", "default_commands.js", "multi_select_commands.js", "**/test/**", "**/theme/**", "**/worker/**"],
-  index       : "./index.md",
-  disableTests: true
+  index       : "./index.md"
 };
 
 files = [srcPath];
