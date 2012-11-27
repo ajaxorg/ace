@@ -20,7 +20,7 @@
   border-left: 2px solid #A7A7A7
 }
 
-.ace-twilight .ace_cursor.ace_overwrite {
+.ace-twilight .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #A7A7A7
 }

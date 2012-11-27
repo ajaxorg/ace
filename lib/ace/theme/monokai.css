@@ -20,7 +20,7 @@
   border-left: 2px solid #F8F8F0
 }
 
-.ace-monokai .ace_cursor.ace_overwrite {
+.ace-monokai .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #F8F8F0
 }
@@ -101,7 +101,7 @@
 }
 
 .ace-monokai .ace_entity.ace_name.ace_function,
-.ace-monokai .ace_entity.ace_other.ace_attribute-name,
+.ace-monokai .ace_entity.ace_other,
 .ace-monokai .ace_variable {
   color: #A6E22E
 }

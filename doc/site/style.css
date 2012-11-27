@@ -250,6 +250,14 @@ ul.menu-list li {
 														hsl(0,0%,90%) 47%, 
 														hsl(0,0%,78%) 53%,
 														hsl(0,0%,70%)100%);
+    background-image:     -moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),    				
+						-moz-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),					
+						-moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+						
+						-moz-linear-gradient(-90deg, hsl(0,0%,78%)  0%, 
+														hsl(0,0%,90%) 47%, 
+														hsl(0,0%,78%) 53%,
+														hsl(0,0%,70%)100%);
 }
 
 ul.menu-list li:hover {
@@ -379,8 +387,8 @@ UL.menu-footer LI A:hover {
 }
 
 .nav-tabs > li > a, .nav-pills > li > a {
-    padding-right: 30px;
-    padding-left: 30px;
+    padding-right: 17px;
+    padding-left: 17px;
     border-right: 1px solid #bbb;
     border-radius: 0;
     margin: 0;
@@ -395,8 +403,8 @@ UL.menu-footer LI A:hover {
 }
 
 .nav.nav-pills li:first-child > a {
-    padding-left: 29px;
-    padding-right: 29px;
+    padding-left: 28px;
+    padding-right: 28px;
 }
 
 .nav.nav-pills li:first-child > a > img {

@@ -7,7 +7,7 @@ var rootDir = __dirname + "/../lib/ace/"
 
 var deps = [{
 	path: "mode/javascript/jshint.js",
-	url: "https://raw.github.com/jshint/jshint/master/jshint.js",
+	url: "https://raw.github.com/jshint/jshint/master/src/stable/jshint.js",
 	needsFixup: true,
 	postProcess: function(t) {
 		return t.replace(
@@ -19,6 +19,10 @@ var deps = [{
 	path: "mode/css/csslint.js",
 	url: "https://raw.github.com/stubbornella/csslint/master/release/csslint-node.js",
 	needsFixup: true
+}, {
+	path: "../../demo/kitchen-sink/require.js",
+	url: "https://raw.github.com/jrburke/requirejs/master/require.js",
+	needsFixup: false
 }]
 
 var download = function(href, callback) {

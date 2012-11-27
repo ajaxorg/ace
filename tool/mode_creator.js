@@ -130,6 +130,7 @@ var continueRun = function(rules) {
     var Tokenizer = DebugTokenizer;
 
     var tk = new Tokenizer(new rules().getRules());
+    editor2.session.$mode.$tokenizer = tk;
     editor2.session.bgTokenizer.setTokenizer(tk);
     editor2.renderer.updateText();
 };

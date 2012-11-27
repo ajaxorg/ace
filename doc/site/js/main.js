@@ -2,6 +2,7 @@ var editor;
 var embedded_editor;
 $(function() {
     hljs.initHighlighting();
+    ace.config.set("workerPath", "build/src-min");
     editor = ace.edit("ace_editor_demo");
     embedded_editor = ace.edit("embedded_ace_code");
     editor.getSession().setMode("ace/mode/javascript");

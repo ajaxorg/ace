@@ -15,7 +15,7 @@
         "asyncjs": "0.0.x",
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
-        "dryice": ""
+        "dryice": "0.4.10"
     },
     "mappings": {
         "ace": "."

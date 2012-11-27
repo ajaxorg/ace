@@ -20,7 +20,7 @@
   border-left: 2px solid #FF9900
 }
 
-.ace-kr-theme .ace_cursor.ace_overwrite {
+.ace-kr-theme .ace_overwrite-cursors .ace_cursor {
   border-left: 0px;
   border-bottom: 1px solid #FF9900
 }
