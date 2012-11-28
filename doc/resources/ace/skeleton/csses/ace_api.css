@@ -707,7 +707,7 @@ li.signature {
 .eventObjName {
     font-style: italic;
 }
-.eventListenerStart, .eventFunctionOpen, .eventFunctionClose {
+.eventListenerStart, .eventListenerClose, .eventFunctionOpen, .eventFunctionClose {
     color: #999999;
 }
 .eventMember {
