@@ -407,10 +407,12 @@
     color: #656565;
 }
 .ace_search input {
-    background: white;
+    background-color: white;
     border-right: 1px solid #cbcbcb;
     border: 0 none;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
     display: block;
     float: left;
     height: 22px;
@@ -436,39 +438,23 @@
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
-.ace_searchbtn {
-    width: 27px;
-}
-.ace_searchbtn:after {
-    border: 2px solid #656565;
-    content: "";
-    display: block;
-    height: 4px;
-    position: absolute;
-    width: 4px;
-    -webkit-transform: rotateZ(45deg);
-}
-.ace_searchbtn.prev:after {
-    border-right: 0 none;
-    border-bottom: 0 none;
-    left: 10px;
-    top: 9px;
-}
-.ace_searchbtn.next:after {
-    border-left: 0 none;
-    border-top: 0 none;
-    left: 10px;
-    top: 7px;
-}
 .ace_searchbtn:disabled {
     background: none;
     cursor: default;
 }
-.ace_searchbtn:disabled:after {
-    border-color: #ccc;
+.ace_searchbtn {
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    width: 27px;
+}
+.ace_searchbtn.prev {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAYAAAB4ka1VAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADFJREFUeNpiSU1NZUAC/6E0I0yACYskCpsJiySKIiY0SUZk40FyTEgCjGgKwTRAgAEAQJUIPCE+qfkAAAAASUVORK5CYII=);    
+}
+.ace_searchbtn.next {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAYAAAB4ka1VAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADRJREFUeNpiTE1NZQCC/0DMyIAKwGJMUAYDEo3M/s+EpvM/mkKwCQxYjIeLMaELoLMBAgwAU7UJObTKsvAAAAAASUVORK5CYII=);    
 }
 .ace_searchbtn_close {
-    background: none;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAcCAYAAABRVo5BAAAAZ0lEQVR42u2SUQrAMAhDvazn8OjZBilCkYVVxiis8H4CT0VrAJb4WHT3C5xU2a2IQZXJjiQIRMdkEoJ5Q2yMqpfDIo+XY4k6h+YXOyKqTIj5REaxloNAd0xiKmAtsTHqW8sR2W5f7gCu5nWFUpVjZwAAAABJRU5ErkJggg==) no-repeat 50% 0;
     border-radius: 50%;
     border: 0 none;
     color: #656565;
@@ -485,10 +471,9 @@
     width: 14px;
 }
 .ace_searchbtn_close:hover {
-    background: #656565;
+    background-color: #656565;
+    background-position: 50% 100%;
     color: white;
-}
-.ace_replacebtn {
 }
 .ace_replacebtn.prev {
     width: 54px
