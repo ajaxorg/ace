@@ -192,8 +192,9 @@ mixin render_starting_tabs(obj, pos)
                           b.caret
                       ul.dropdown-menu
                         for m in members
-                          li(id='dropdown_#{m.path}', data-id='#{m.path}', class='memberLink')
-                            mixin link(m, [], true)
+                          if (m.private !== true && m.name.charAt(0) !== "$")
+                            li(id='dropdown_#{m.path}', data-id='#{m.path}', class='memberLink')
+                              mixin link(m, [], true)
      -methodSection = constructorSection = propertySection = eventSection = false;
      mixin article(obj, [])
 
