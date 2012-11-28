@@ -366,3 +366,133 @@
 .ace_italic {
     font-style: italic;
 }
+
+
+/* ------------------------------------------------------------------------------------------
+ * Editor Search Form
+ * --------------------------------------------------------------------------------------- */
+ .ace_search {
+    background-color: #ddd;
+    border: 1px solid #cbcbcb;
+    border-top: 0 none;
+    max-width: 297px;
+    overflow: hidden;
+    padding: 4px;
+    padding-right: 6px;
+    padding-bottom: 0;
+    position: absolute;
+    top: 0px;
+    z-index: 99;
+}
+.ace_search.left {
+    border-left: 0 none;
+    border-radius: 0px 0px 5px 0px;
+    left: 0;
+}
+.ace_search.right {
+    border-radius: 0px 0px 0px 5px;
+    border-right: 0 none;
+    right: 0;
+}
+
+.ace_search_form {
+    border-radius: 3px;
+    border: 1px solid #cbcbcb;
+    float: left;
+    margin-bottom: 4px;
+    overflow: hidden;
+}
+.ace_search label {
+    float: left;
+    color: #656565;
+}
+.ace_search input {
+    background: white;
+    border-right: 1px solid #cbcbcb;
+    border: 0 none;
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    height: 22px;
+    outline: 0;
+    padding: 0 7px;
+    width: 214px;
+}
+.ace_searchbtn,
+.ace_replacebtn {
+    background: #fff;
+    border: 0 none;
+    border-left: 1px solid #dcdcdc;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+.ace_searchbtn:last-child,
+.ace_replacebtn:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.ace_searchbtn {
+    width: 27px;
+}
+.ace_searchbtn:after {
+    border: 2px solid #656565;
+    content: "";
+    display: block;
+    height: 4px;
+    position: absolute;
+    width: 4px;
+    -webkit-transform: rotateZ(45deg);
+}
+.ace_searchbtn.prev:after {
+    border-right: 0 none;
+    border-bottom: 0 none;
+    left: 10px;
+    top: 9px;
+}
+.ace_searchbtn.next:after {
+    border-left: 0 none;
+    border-top: 0 none;
+    left: 10px;
+    top: 7px;
+}
+.ace_searchbtn:disabled {
+    background: none;
+    cursor: default;
+}
+.ace_searchbtn:disabled:after {
+    border-color: #ccc;
+}
+.ace_searchbtn_close {
+    background: none;
+    border-radius: 50%;
+    border: 0 none;
+    color: #656565;
+    cursor: pointer;
+    display: block;
+    float: right;
+    font-family: Arial;
+    font-size: 16px;
+    height: 14px;
+    line-height: 16px;
+    margin: 5px 1px 9px 5px;
+    padding: 0;
+    text-align: center;
+    width: 14px;
+}
+.ace_searchbtn_close:hover {
+    background: #656565;
+    color: white;
+}
+.ace_replacebtn {
+}
+.ace_replacebtn.prev {
+    width: 54px
+}
+.ace_replacebtn.next {
+    width: 27px
+}
