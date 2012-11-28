@@ -2,9 +2,11 @@ var fs = require("fs");
 var path = require("path");
 var panino = require("panino");
 var srcPath = __dirname + "/../lib/ace";
+var buildType = process.argv.splice(2)[0];
 
 var options = {
   title       : "Ace API",
+  parseType   : "jsd",
   linkFormat  : function(linkHtml) {
       var href = linkHtml.href;
       var o = href.match(/(.+)\.html(#.+)/);
@@ -32,9 +34,8 @@ var options = {
   skin        : "./resources/ace/templates/layout.jade",
   assets      : "./resources/ace/skeleton",
   additionalObjs : "./additionalObjs.json",
-  exclude     : ["**/*_test.js", "**/mode/**", "**/test/**", "**/theme/**", "**/worker/**"],
-  index       : "./index.md",
-  disableTests: true
+  exclude     : ["**/*_test.js", "**/mode/**", "default_commands.js", "multi_select_commands.js", "**/test/**", "**/theme/**", "**/worker/**"],
+  index       : "./index.md"
 };
 
 files = [srcPath];
@@ -45,7 +46,7 @@ panino.parse(files, options, function (err, ast) {
     process.exit(1);
   }
   
-  panino.render('html', ast, options, function (err) {
+  panino.render(buildType || 'html', ast, options, function (err) {
     if (err) {
       console.error(err);
       process.exit(1);
