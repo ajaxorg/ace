@@ -198,9 +198,6 @@ mixin render_starting_tabs(obj, pos)
      -methodSection = constructorSection = propertySection = eventSection = false;
      mixin article(obj, [])
 
-mixin rewriteLink(text)
-    != text.replace('a', 'bbbb')
-
 mixin short_description_list(collection)
   ul.method-details-list
     for obj in collection
