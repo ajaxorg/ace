@@ -21,13 +21,17 @@
               </li>
             </ul>
           </li>
-          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (50)</span><b class="caret"></b></a>
+          <li data-dropdown="dropdown" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span>Functions (58)</span><b class="caret"></b></a>
             <ul class="dropdown-menu">
+              <li id="dropdown_Selection.addRange" data-id="Selection.addRange" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.addRange (class method)" data-id="Selection.addRange">addRange</a>
+              </li>
               <li id="dropdown_Selection.clearSelection" data-id="Selection.clearSelection" class="memberLink"><a href="#Selection.clearSelection" class="" title="Selection.clearSelection (class method)" data-id="Selection.clearSelection">clearSelection</a>
               </li>
               <li id="dropdown_Selection.detach" data-id="Selection.detach" class="memberLink"><a href="#Selection.detach" class="" title="Selection.detach (class method)" data-id="Selection.detach">detach</a>
               </li>
               <li id="dropdown_Selection.fromOrientedRange" data-id="Selection.fromOrientedRange" class="memberLink"><a href="#Selection.fromOrientedRange" class="" title="Selection.fromOrientedRange (class method)" data-id="Selection.fromOrientedRange">fromOrientedRange</a>
+              </li>
+              <li id="dropdown_Selection.getAllRanges" data-id="Selection.getAllRanges" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.getAllRanges (class method)" data-id="Selection.getAllRanges">getAllRanges</a>
               </li>
               <li id="dropdown_Selection.getCursor" data-id="Selection.getCursor" class="memberLink"><a href="#Selection.getCursor" class="" title="Selection.getCursor (class method)" data-id="Selection.getCursor">getCursor</a>
               </li>
@@ -46,6 +50,8 @@
               <li id="dropdown_Selection.isEmpty" data-id="Selection.isEmpty" class="memberLink"><a href="#Selection.isEmpty" class="" title="Selection.isEmpty (class method)" data-id="Selection.isEmpty">isEmpty</a>
               </li>
               <li id="dropdown_Selection.isMultiLine" data-id="Selection.isMultiLine" class="memberLink"><a href="#Selection.isMultiLine" class="" title="Selection.isMultiLine (class method)" data-id="Selection.isMultiLine">isMultiLine</a>
+              </li>
+              <li id="dropdown_Selection.mergeOverlappingRanges" data-id="Selection.mergeOverlappingRanges" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.mergeOverlappingRanges (class method)" data-id="Selection.mergeOverlappingRanges">mergeOverlappingRanges</a>
               </li>
               <li id="dropdown_Selection.moveCursorBy" data-id="Selection.moveCursorBy" class="memberLink"><a href="#Selection.moveCursorBy" class="" title="Selection.moveCursorBy (class method)" data-id="Selection.moveCursorBy">moveCursorBy</a>
               </li>
@@ -82,6 +88,8 @@
               <li id="dropdown_Selection.moveCursorWordLeft" data-id="Selection.moveCursorWordLeft" class="memberLink"><a href="#Selection.moveCursorWordLeft" class="" title="Selection.moveCursorWordLeft (class method)" data-id="Selection.moveCursorWordLeft">moveCursorWordLeft</a>
               </li>
               <li id="dropdown_Selection.moveCursorWordRight" data-id="Selection.moveCursorWordRight" class="memberLink"><a href="#Selection.moveCursorWordRight" class="" title="Selection.moveCursorWordRight (class method)" data-id="Selection.moveCursorWordRight">moveCursorWordRight</a>
+              </li>
+              <li id="dropdown_Selection.rectangularRangeBlock" data-id="Selection.rectangularRangeBlock" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.rectangularRangeBlock (class method)" data-id="Selection.rectangularRangeBlock">rectangularRangeBlock</a>
               </li>
               <li id="dropdown_Selection.selectAll" data-id="Selection.selectAll" class="memberLink"><a href="#Selection.selectAll" class="" title="Selection.selectAll (class method)" data-id="Selection.selectAll">selectAll</a>
               </li>
@@ -121,7 +129,15 @@
               </li>
               <li id="dropdown_Selection.shiftSelection" data-id="Selection.shiftSelection" class="memberLink"><a href="#Selection.shiftSelection" class="" title="Selection.shiftSelection (class method)" data-id="Selection.shiftSelection">shiftSelection</a>
               </li>
+              <li id="dropdown_Selection.splitIntoLines" data-id="Selection.splitIntoLines" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.splitIntoLines (class method)" data-id="Selection.splitIntoLines">splitIntoLines</a>
+              </li>
+              <li id="dropdown_Selection.substractPoint" data-id="Selection.substractPoint" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.substractPoint (class method)" data-id="Selection.substractPoint">substractPoint</a>
+              </li>
+              <li id="dropdown_Selection.toggleBlockSelection" data-id="Selection.toggleBlockSelection" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.toggleBlockSelection (class method)" data-id="Selection.toggleBlockSelection">toggleBlockSelection</a>
+              </li>
               <li id="dropdown_Selection.toOrientedRange" data-id="Selection.toOrientedRange" class="memberLink"><a href="#Selection.toOrientedRange" class="" title="Selection.toOrientedRange (class method)" data-id="Selection.toOrientedRange">toOrientedRange</a>
+              </li>
+              <li id="dropdown_Selection.toSingleRange" data-id="Selection.toSingleRange" class="memberLink"><a href="#nav=api&api=multi_select" class="" title="Selection.toSingleRange (class method)" data-id="Selection.toSingleRange">toSingleRange</a>
               </li>
             </ul>
           </li>
@@ -234,6 +250,34 @@
       </div>
     </article>
     <h3 class="sectionHeader">Methods</h3>
+    <article id="Selection.addRange" data-title="Selection.addRange (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.addRange" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.addRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">addRange</span></span>(<span class="sigArgList"><a href="range.html" class="argument methodClicker" title="Range (class)" data-id="Range">Range</a> range, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> $blockChangeEvents</span>)</li>
+                </ul>
+                <ul class="metaInfo">
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.addRange" class="ellipsis_description"><p>Adds a range to a selection by entering multiselect mode, if necessary.</p>
+
+            </div>
+            <div class="description"><p>Adds a range to a selection by entering multiselect mode, if necessary.</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">range</td><td class="argType" "><a href="range.html" class="" title="Range (class)" data-id="Range">Range</a></td><td class="argDescription "><p>Required. The new range to add</p>
+</td></tr><tr class="argumentRow "><td class="argName ">$blockChangeEvents</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. Whether or not to block changing events</p>
+</td></tr></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
     <article id="Selection.clearSelection" data-title="Selection.clearSelection (class method)" class="article">
       <div class="section method">
         <div class="memberContent">
@@ -270,7 +314,7 @@
                   <li class="signature-call"><span id="Selection.detach" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">detach</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -294,7 +338,7 @@
                   <li class="signature-call"><span id="Selection.fromOrientedRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">fromOrientedRange</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -303,6 +347,32 @@
             <div id="ellipsis_Selection.fromOrientedRange" class="ellipsis_description">
             </div>
             <div class="description">
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="Selection.getAllRanges" data-title="Selection.getAllRanges (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.getAllRanges" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.getAllRanges" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">getAllRanges</span></span></li>
+                </ul>
+                <ul class="metaInfo">
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.getAllRanges" class="ellipsis_description"><p>Returns a concatenation of all the ranges.</p>
+
+            </div>
+            <div class="description"><p>Returns a concatenation of all the ranges.</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
             </div>
           </div>
         </div>
@@ -349,7 +419,7 @@
                   <li class="signature-call"><span id="Selection.getLineRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">getLineRange</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -565,6 +635,32 @@
 
             </div>
             <div class="description"><p>Returns <code>true</code> if the selection is a multi-line.</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="Selection.mergeOverlappingRanges" data-title="Selection.mergeOverlappingRanges (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.mergeOverlappingRanges" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.mergeOverlappingRanges" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">mergeOverlappingRanges</span></span></li>
+                </ul>
+                <ul class="metaInfo">
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.mergeOverlappingRanges" class="ellipsis_description"><p>Merges overlapping ranges ensuring consistency after changes</p>
+
+            </div>
+            <div class="description"><p>Merges overlapping ranges ensuring consistency after changes</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
             </div>
@@ -844,7 +940,7 @@
                   <li class="signature-call"><span id="Selection.moveCursorShortWordLeft" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorShortWordLeft</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -868,7 +964,7 @@
                   <li class="signature-call"><span id="Selection.moveCursorShortWordRight" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorShortWordRight</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -1003,7 +1099,7 @@
                   <li class="signature-call"><span id="Selection.moveCursorWordLeft" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorWordLeft</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -1027,7 +1123,7 @@
                   <li class="signature-call"><span id="Selection.moveCursorWordRight" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">moveCursorWordRight</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -1036,6 +1132,35 @@
             <div id="ellipsis_Selection.moveCursorWordRight" class="ellipsis_description">
             </div>
             <div class="description">
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="Selection.rectangularRangeBlock" data-title="Selection.rectangularRangeBlock (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.rectangularRangeBlock" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.rectangularRangeBlock" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">rectangularRangeBlock</span></span>(<span class="sigArgList"><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/layer/cursor.js" class="argument methodClicker" title="Cursor" data-id="Cursor">Cursor</a> screenCursor, <a href="anchor.html" class="argument methodClicker" title="Anchor (class)" data-id="Anchor">Anchor</a> screenAnchor, <a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> includeEmptyLines</span>)</li>
+                </ul>
+                <ul class="metaInfo">
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.rectangularRangeBlock" class="ellipsis_description"><p>Gets list of ranges composing rectangular block on the screen</p>
+
+            </div>
+            <div class="description"><p>Gets list of ranges composing rectangular block on the screen</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">screenCursor</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/layer/cursor.js" class="" title="Cursor" data-id="Cursor">Cursor</a></td><td class="argDescription "><p>Required. The cursor to use</p>
+</td></tr><tr class="argumentRow "><td class="argName ">screenAnchor</td><td class="argType" "><a href="anchor.html" class="" title="Anchor (class)" data-id="Anchor">Anchor</a></td><td class="argDescription "><p>Required. The anchor to use</p>
+</td></tr><tr class="argumentRow "><td class="argName ">includeEmptyLines</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. If true, this includes ranges inside the block which are empty due to clipping</p>
+</td></tr></table>
             </div>
           </div>
         </div>
@@ -1543,6 +1668,84 @@
         </div>
       </div>
     </article>
+    <article id="Selection.splitIntoLines" data-title="Selection.splitIntoLines (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.splitIntoLines" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.splitIntoLines" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">splitIntoLines</span></span></li>
+                </ul>
+                <ul class="metaInfo">
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.splitIntoLines" class="ellipsis_description"><p>Splits all the ranges into lines.</p>
+
+            </div>
+            <div class="description"><p>Splits all the ranges into lines.</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="Selection.substractPoint" data-title="Selection.substractPoint (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.substractPoint" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.substractPoint" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">substractPoint</span></span>(<span class="sigArgList"><a href="range.html" class="argument methodClicker" title="Range (class)" data-id="Range">Range</a> pos</span>)</li>
+                </ul>
+                <ul class="metaInfo">
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.substractPoint" class="ellipsis_description"><p>Removes a Range containing pos (if it exists).</p>
+
+            </div>
+            <div class="description"><p>Removes a Range containing pos (if it exists).</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">pos</td><td class="argType" "><a href="range.html" class="" title="Range (class)" data-id="Range">Range</a></td><td class="argDescription "><p>Required. The position to remove, as a <code>{row, column}</code> object</p>
+</td></tr></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="Selection.toggleBlockSelection" data-title="Selection.toggleBlockSelection (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.toggleBlockSelection" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.toggleBlockSelection" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">toggleBlockSelection</span></span></li>
+                </ul>
+                <ul class="metaInfo">
+                  <li><span class="label undocumented">Undocumented</span></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.toggleBlockSelection" class="ellipsis_description">
+            </div>
+            <div class="description">
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
     <article id="Selection.toOrientedRange" data-title="Selection.toOrientedRange (class method)" class="article">
       <div class="section method">
         <div class="memberContent">
@@ -1553,7 +1756,7 @@
                   <li class="signature-call"><span id="Selection.toOrientedRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">toOrientedRange</span></span></li>
                 </ul>
                 <ul class="metaInfo">
-                  <li><span class="label incomplete">Incomplete</span></li>
+                  <li><span class="label undocumented">Undocumented</span></li>
                 </ul>
               </li>
             </ul>
@@ -1562,6 +1765,31 @@
             <div id="ellipsis_Selection.toOrientedRange" class="ellipsis_description">
             </div>
             <div class="description">
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="Selection.toSingleRange" data-title="Selection.toSingleRange (class method)" class="article">
+      <div class="section method">
+        <div class="memberContent">
+          <div class="title"><i id="Selection.toSingleRange" class="methodToggle methodClicker inactive icon-caret-right"></i>
+            <ul class="signatures">
+              <li class="signature">
+                <ul>
+                  <li class="signature-call"><span id="Selection.toSingleRange" class="member-name methodClicker"><span class="sigClassName">Selection.</span><span class="sigMemberName">toSingleRange</span></span></li>
+                </ul>
+                <ul class="metaInfo">
+                  <li><span class="label undocumented">Undocumented</span></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="sideToggler">
+            <div id="ellipsis_Selection.toSingleRange" class="ellipsis_description">
+            </div>
+            <div class="description">
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
             </div>
           </div>
         </div>

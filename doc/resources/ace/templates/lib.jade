@@ -45,9 +45,9 @@ mixin article(obj, parents)
                       -if (loops == 0)
                         -loops = 1 // ensure that we only print ONE meta info UL per signature (some methods have multiple signatures)
                         ul.metaInfo
-                            if obj.incomplete
+                            if obj.undocumented
                               li
-                                span.label.incomplete Incomplete
+                                span.label.undocumented Undocumented
                             if obj.experimental
                               li
                                 span.label.experimental Experimental
@@ -197,9 +197,6 @@ mixin render_starting_tabs(obj, pos)
                               mixin link(m, [], true)
      -methodSection = constructorSection = propertySection = eventSection = false;
      mixin article(obj, [])
-
-mixin rewriteLink(text)
-    != text.replace('a', 'bbbb')
 
 mixin short_description_list(collection)
   ul.method-details-list
