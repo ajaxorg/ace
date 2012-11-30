@@ -366,3 +366,19 @@
 .ace_italic {
     font-style: italic;
 }
+
+.ace_mobile_scroll-layer {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+}
+
+.ace_mobile_scroll-layer div {
+    z-index: 1;
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    pointer-events: none;
+}

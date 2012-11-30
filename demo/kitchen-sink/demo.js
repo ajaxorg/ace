@@ -394,11 +394,9 @@ bindCheckbox("highlight_token", function(checked) {
 });
 
 bindCheckbox("mobile_mode", function(checked) {
-    //var editor = env.editor;
     /** Mobile test **/
     if (checked) {
         var editorElement = document.getElementById("editor");
-        var editorElementChild = editorElement.childNodes[0];
 
         var left = editorElement.offsetLeft;
         var height = editorElement.style.height;
@@ -407,7 +405,7 @@ bindCheckbox("mobile_mode", function(checked) {
 
         var mobileScrollDiv = document.createElement("div");
         mobileScrollDiv.id = "scrolldiv_container";
-        mobileScrollDiv.style.width = width + "px";
+        mobileScrollDiv.style.width = (width+30) + "px";
         //mobileScrollDiv.style.left = left + "px";
         mobileScrollDiv.style.height = height;
 
@@ -419,6 +417,8 @@ bindCheckbox("mobile_mode", function(checked) {
 
         var movementDiff = 0, lastMovementPos = 0;
         var timeDiff = 0, lastTime = 0;
+        var waitingForLastScroll = false;
+
         document.addEventListener("touchmove", function(e) {
             //console.log("     TOUCHMOVE", e, mobileScrollDiv.scrollTop);
             movementDiff = mobileScrollDiv.scrollTop - lastMovementPos;
@@ -430,24 +430,30 @@ bindCheckbox("mobile_mode", function(checked) {
         var movingTimer;
         document.addEventListener("touchstart", function(e) {
             if (e.target.className.split(" ").indexOf("ace_content") !== -1) {
-                if (movingTimer)
-                    clearInterval(movingTimer);
+                clearInterval(movingTimer);
 
+                waitingForLastScroll = false;
+                movementDiff = 0, lastMovementPos = 0;
+                timeDiff = 0, lastTime = 0;
                 //console.log("touchstart", e);
             }
         }, false);
         document.addEventListener("touchend", function(e) {
             if (e.target.className.split(" ").indexOf("ace_content") !== -1) {
+                waitingForLastScroll = true;
+
                 //console.log("TOUCH END", e);
                 //console.log(movementDiff, timeDiff);
                 var position = mobileScrollDiv.scrollTop;
                 //var velocity = (movementDiff/timeDiff) * 4;
                 var velocity = movementDiff;
+
                 movingTimer = setInterval(function() {
                     position += velocity;
-                    velocity *= 0.94;
+                    velocity *= 0.949;
                     //console.log(velocity);
                     env.editor.session.setScrollTop(position);
+                    mobileScrollDiv.scrollTop = position;
                     if (Math.abs(velocity) < 4)
                         clearInterval(movingTimer);
                 }, 5);
@@ -456,7 +462,13 @@ bindCheckbox("mobile_mode", function(checked) {
 
         mobileScrollDiv.onscroll = function(e) {
             //console.log("Scrolling", e, mobileScrollDiv.scrollTop);
-            env.editor.session.setScrollTop(mobileScrollDiv.scrollTop);
+            if (waitingForLastScroll === false) {
+                env.editor.session.setScrollTop(mobileScrollDiv.scrollTop);
+            }
+            // Set the top of the scrolldiv to what the editor scrolltop is
+            /*else {
+                mobileScrollDiv.scrollTop = env.editor.session.getScrollTop();
+            }*/
         };
     }
     else {
