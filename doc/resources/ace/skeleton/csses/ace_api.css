@@ -743,6 +743,11 @@ li.signature {
     text-transform: capitalize;
 }
 
+.undocumented {
+    background-color: #B94A48;
+    color: #ffffff;
+}
+
 #documentation .alias a, #documentation .related-to a {
     color: #ffffff;
     /* text-decoration: underline; */ 
