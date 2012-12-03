@@ -270,8 +270,9 @@ function convertLanguage(name) {
         var languageHighlightRules = fillTemplate(modeHighlightTemplate, {
               language: languageNameSanitized,
               languageTokens: patterns,
-              respositoryRules: "/*** START REPOSITORY RULES\n" + (Object.keys(repository).length === 0 ?  "" : repository) + "\nEND REPOSITORY RULES ***/",
-              uuid: language.uuid
+              respositoryRules: "/*** START REPOSITORY RULES\n" + repository + "\nEND REPOSITORY RULES ***/",
+              uuid: language.uuid,
+              name: name
         });
 
         if (devMode) {

@@ -54,10 +54,6 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
-// workers do not work for file:
-/* if (location.protocol == "file:")
-    EditSession.prototype.$useWorker = false; */
-
 var doclist = require("./doclist");
 var modelist = require("./modelist");
 var layout = require("./layout");
@@ -135,7 +131,7 @@ env.editor.commands.addCommands([{
 }, {
     name: "execute",
     bindKey: "ctrl+enter",
-    exec: function(editor) { 
+    exec: function(editor) {
         try {
             var r = eval(editor.getCopyText()||editor.getValue());
         } catch(e) {

@@ -707,7 +707,7 @@ li.signature {
 .eventObjName {
     font-style: italic;
 }
-.eventListenerStart, .eventFunctionOpen, .eventFunctionClose {
+.eventListenerStart, .eventListenerClose, .eventFunctionOpen, .eventFunctionClose {
     color: #999999;
 }
 .eventMember {
@@ -741,6 +741,11 @@ li.signature {
     font-size: 10px;
     padding: 2px 5px 3px;
     text-transform: capitalize;
+}
+
+.undocumented {
+    background-color: #B94A48;
+    color: #ffffff;
 }
 
 #documentation .alias a, #documentation .related-to a {
