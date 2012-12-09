@@ -46,7 +46,7 @@
   "state": "regex_allowed",
   "data": [
    [ "text", "        " ],
-   [ "identifier", "alert" ],
+   [ "support.function", "alert" ],
    [ "paren.lparen", "(" ],
    [ "identifier", "items" ],
    [ "paren.lparen", "[" ],
@@ -148,8 +148,7 @@
    [ "string.regexp", "y" ],
    [ "constant.language.escape", ")[]" ],
    [ "constant.language.escape", "|" ],
-   [ "constant.language.escape", "$" ],
-   [ "constant.language.escape", "?" ],
+   [ "invalid", "$?" ],
    [ "constant.language.escape", "|" ],
    [ "invalid", "^*" ],
    [ "string.regexp", "/" ],

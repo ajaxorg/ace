@@ -637,6 +637,7 @@
    [ "text", "  " ],
    [ "paren.rparen", "]" ],
    [ "paren.rparen", "]" ],
+   [ "keyword.operator", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "script" ],
    [ "meta.tag", ">" ]

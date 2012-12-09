@@ -92,13 +92,129 @@
    [ "text", " " ],
    [ "identifier", "fact" ],
    [ "paren.lparen", "(" ],
-   [ "variable.class", "ARGV" ],
+   [ "support.class", "ARGV" ],
    [ "paren.lparen", "[" ],
    [ "constant.numeric", "0" ],
    [ "paren.rparen", "]" ],
    [ "text", "." ],
    [ "identifier", "to_i" ],
    [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "class" ],
+   [ "text", " " ],
+   [ "support.class", "Range" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "def" ],
+   [ "text", " " ],
+   [ "identifier", "to_json" ],
+   [ "paren.lparen", "(" ],
+   [ "keyword.operator", "*" ],
+   [ "identifier", "a" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "string", "'json_class'" ],
+   [ "text", "   " ],
+   [ "punctuation.separator.key-value", "=>" ],
+   [ "text", " " ],
+   [ "variable.language", "self" ],
+   [ "text", "." ],
+   [ "keyword", "class" ],
+   [ "text", "." ],
+   [ "identifier", "name" ],
+   [ "text", ", " ],
+   [ "comment", "# = 'Range'" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      " ],
+   [ "string", "'data'" ],
+   [ "text", "         " ],
+   [ "punctuation.separator.key-value", "=>" ],
+   [ "text", " " ],
+   [ "paren.lparen", "[" ],
+   [ "text", " " ],
+   [ "identifier", "first" ],
+   [ "text", ", " ],
+   [ "identifier", "last" ],
+   [ "text", ", " ],
+   [ "identifier", "exclude_end" ],
+   [ "text", "? " ],
+   [ "paren.rparen", "]" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ],
+   [ "text", "." ],
+   [ "identifier", "to_json" ],
+   [ "paren.lparen", "(" ],
+   [ "keyword.operator", "*" ],
+   [ "identifier", "a" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "end" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "end" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.lparen", "{" ],
+   [ "constant.other.symbol.ruby", ":id" ],
+   [ "text", " " ],
+   [ "punctuation.separator.key-value", "=>" ],
+   [ "text", " " ],
+   [ "constant.numeric", "34" ],
+   [ "text", ", " ],
+   [ "constant.other.symbol.ruby", ":sdfasdfasdf" ],
+   [ "text", " " ],
+   [ "punctuation.separator.key-value", "=>" ],
+   [ "text", " " ],
+   [ "string", "\"asdasdads\"" ],
+   [ "paren.rparen", "}" ]
   ]
  }
 ]

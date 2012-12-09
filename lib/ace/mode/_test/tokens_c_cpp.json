@@ -37,7 +37,7 @@
   "data": [
    [ "storage.type", "int" ],
    [ "text", " " ],
-   [ "entity.name.function", "main" ],
+   [ "identifier", "main" ],
    [ "text", " " ],
    [ "paren.lparen", "(" ],
    [ "paren.rparen", ")" ]

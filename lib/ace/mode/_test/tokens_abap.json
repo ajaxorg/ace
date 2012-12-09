@@ -1,0 +1,294 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "***************************************" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "** Program: EXAMPLE                  **" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "** Author: Joe Byte, 07-Jul-2007     **" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "***************************************" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "REPORT" ],
+   [ "text", " BOOKINGS" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "* Read flight bookings from the database" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "SELECT" ],
+   [ "keyword.operator", " * " ],
+   [ "keyword", "FROM" ],
+   [ "text", " FLIGHTINFO" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "WHERE" ],
+   [ "text", " " ],
+   [ "keyword", "CLASS" ],
+   [ "keyword.operator", " = " ],
+   [ "string", "'Y'" ],
+   [ "text", "       " ],
+   [ "comment", "\"Y = economy" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "OR" ],
+   [ "text", "    " ],
+   [ "keyword", "CLASS" ],
+   [ "keyword.operator", " = " ],
+   [ "string", "'C'" ],
+   [ "keyword.operator", "." ],
+   [ "text", "      " ],
+   [ "comment", "\"C = business" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.lparen", "(" ],
+   [ "invalid", "..." ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "REPORT" ],
+   [ "text", " TEST" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "WRITE" ],
+   [ "text", " " ],
+   [ "string", "'Hello World'" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "USERPROMPT" ],
+   [ "keyword.operator", " = " ],
+   [ "string", "'Please double-click on a line in the output list '" ],
+   [ "text", " " ],
+   [ "keyword.operator", "&" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "             " ],
+   [ "string", "'to see the complete details of the transaction.'" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "DATA" ],
+   [ "text", " LAST_EOM    " ],
+   [ "keyword", "TYPE" ],
+   [ "text", " " ],
+   [ "support.type", "D" ],
+   [ "keyword.operator", "." ],
+   [ "text", "  " ],
+   [ "comment", "\"last end-of-month date" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "* Start from today's date" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  LAST_EOM" ],
+   [ "keyword.operator", " = " ],
+   [ "variable.parameter", "SY" ],
+   [ "keyword.operator", "-" ],
+   [ "text", "DATUM" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "* Set characters 6 and 7 (0-relative) of the YYYYMMDD string to \"01\"," ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "* giving the first day of the current month" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  LAST_EOM" ],
+   [ "constant.numeric", "+6" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "2" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword.operator", " = " ],
+   [ "string", "'01'" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "doc.comment", "* Subtract one day" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  LAST_EOM" ],
+   [ "keyword.operator", " = " ],
+   [ "text", "LAST_EOM" ],
+   [ "keyword.operator", " - " ],
+   [ "constant.numeric", "1" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "WRITE" ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "string", "'Last day of previous month was'" ],
+   [ "keyword.operator", "," ],
+   [ "text", " LAST_EOM" ],
+   [ "keyword.operator", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "DATA" ],
+   [ "text", " " ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "keyword", "BEGIN OF" ],
+   [ "text", " I_VBRK " ],
+   [ "keyword", "OCCURS" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "keyword.operator", "," ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "         VBELN " ],
+   [ "keyword", "LIKE" ],
+   [ "text", " " ],
+   [ "variable.parameter", "VBRK-VBELN" ],
+   [ "keyword.operator", "," ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "         ZUONR " ],
+   [ "keyword", "LIKE" ],
+   [ "text", " " ],
+   [ "variable.parameter", "VBRK-ZUONR" ],
+   [ "keyword.operator", "," ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword", "END OF" ],
+   [ "text", " I_VBRK" ],
+   [ "keyword.operator", "." ]
+  ]
+ }
+]

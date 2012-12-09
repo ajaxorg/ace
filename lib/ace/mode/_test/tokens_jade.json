@@ -1,0 +1,309 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.other.doctype.jade", "!!!doctype" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.other.doctype.jade", "!!!5" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.other.doctype.jade", "!!!" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.control.import.include.jade", "include" ],
+   [ "text", " something" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.control.import.include.jade", "         include" ],
+   [ "text", " another_thing" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "  // let's talk about it" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "comment_block",
+  "data": [
+   [ "punctuation.section.comment", "//" ]
+  ]
+ },
+ {
+  "state": "comment_block",
+  "data": [
+   [ "comment.block.jade", "  here it is. a block comment!" ]
+  ]
+ },
+ {
+  "state": "comment_block",
+  "data": [
+   [ "comment.block.jade", " and another row!" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "but not here." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "comment_block",
+  "data": [
+   [ "punctuation.section.comment", "     //     " ]
+  ]
+ },
+ {
+  "state": "comment_block",
+  "data": [
+   [ "comment.block.jade", "        a far spaced" ]
+  ]
+ },
+ {
+  "state": "comment_block",
+  "data": [
+   [ "comment.block.jade", "    should be lack of block" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "   // also not a comment" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag.any.jade", "     div" ],
+   [ "entity.other.attribute-name.class.jade", ".attemptAtBlock" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag.any.jade", "  span" ],
+   [ "entity.other.attribute-name.id.jade", "#myName" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "string.interpolated.jade", "#{implicit}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "     " ],
+   [ "string.interpolated.jade", "!{more_explicit}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "suport.type.attribute.id.jade", "#idDiv" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "suport.type.attribute.class.jade", ".idDiv" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag.any.jade", "    test" ],
+   [ "punctuation", "(" ],
+   [ "entity.other.attribute-name.jade", "id" ],
+   [ "text", "=" ],
+   [ "string", "\"tag\"" ],
+   [ "punctuation", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag.any.jade", "    header" ],
+   [ "punctuation", "(" ],
+   [ "entity.other.attribute-name.jade", "id" ],
+   [ "text", "=" ],
+   [ "string", "\"tag\"" ],
+   [ "text", ", " ],
+   [ "entity.other.attribute-name.jade", "blah" ],
+   [ "text", "=" ],
+   [ "string", "\"foo\"" ],
+   [ "text", ", " ],
+   [ "entity.other.attribute-name.jade", "meh" ],
+   [ "text", "=" ],
+   [ "string", "\"aads\"" ],
+   [ "punctuation", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.function.jade", "mixin" ],
+   [ "entity.name.function.jade", " article" ],
+   [ "punctuation.definition.parameters.begin.jade", "(" ],
+   [ "variable.parameter.function.jade", "obj, parents" ],
+   [ "punctuation.definition.parameters.end.jade", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.function.jade", "  mixin" ],
+   [ "entity.name.function.jade", " bleh" ],
+   [ "punctuation.definition.parameters.begin.jade", "(" ],
+   [ "punctuation.definition.parameters.end.jade", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.function.jade", "    mixin" ],
+   [ "entity.name.function.jade", " clever-name" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "source.js.embedded.jade", " -" ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"0\"" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "source.js.embedded.jade", " -" ],
+   [ "text", " " ],
+   [ "identifier", "y" ],
+   [ "text", " " ],
+   [ "identifier", "each" ],
+   [ "text", " z" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "source.js.embedded.jade", " -" ],
+   [ "text", " " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "items" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "paren.lparen", "[" ],
+   [ "string", "\"one\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"two\"" ],
+   [ "punctuation.operator", "," ],
+   [ "text", " " ],
+   [ "string", "\"three\"" ],
+   [ "text", "]" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag.any.jade", "   each" ],
+   [ "text", " item in items" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag.any.jade", "    li" ],
+   [ "text", "= item" ]
+  ]
+ }
+]

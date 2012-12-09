@@ -14,21 +14,22 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "---" ]
+   [ "list.markup", "---" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "identifier", "receipt:" ],
-   [ "text", "     Oz-Ware Purchase Invoice" ]
+   [ "meta.tag", "receipt" ],
+   [ "keyword", ":     " ],
+   [ "text", "Oz-Ware Purchase Invoice" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "identifier", "date:" ],
-   [ "text", "        " ],
+   [ "meta.tag", "date" ],
+   [ "keyword", ":        " ],
    [ "constant.numeric", "2007" ],
    [ "constant.numeric", "-08" ],
    [ "constant.numeric", "-06" ]
@@ -37,23 +38,24 @@
  {
   "state": "start",
   "data": [
-   [ "identifier", "customer:" ]
+   [ "meta.tag", "customer" ],
+   [ "keyword", ":" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "    " ],
-   [ "identifier", "given:" ],
-   [ "text", "   Dorothy" ]
+   [ "meta.tag", "    given" ],
+   [ "keyword", ":   " ],
+   [ "text", "Dorothy" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "    " ],
-   [ "identifier", "family:" ],
-   [ "text", "  Gale" ]
+   [ "meta.tag", "    family" ],
+   [ "keyword", ":  " ],
+   [ "text", "Gale" ]
   ]
  },
  {
@@ -63,24 +65,25 @@
  {
   "state": "start",
   "data": [
-   [ "identifier", "items:" ]
+   [ "meta.tag", "items" ],
+   [ "keyword", ":" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "    - " ],
-   [ "identifier", "part_no:" ],
-   [ "text", "   " ],
+   [ "list.markup", "    - " ],
+   [ "meta.tag", "part_no" ],
+   [ "keyword", ":   " ],
    [ "string", "'A4786'" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "descrip:" ],
-   [ "text", "   Water Bucket " ],
+   [ "meta.tag", "      descrip" ],
+   [ "keyword", ":   " ],
+   [ "text", "Water Bucket " ],
    [ "paren.lparen", "(" ],
    [ "text", "Filled" ],
    [ "paren.rparen", ")" ]
@@ -89,18 +92,16 @@
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "price:" ],
-   [ "text", "     " ],
+   [ "meta.tag", "      price" ],
+   [ "keyword", ":     " ],
    [ "constant.numeric", "1.47" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "quantity:" ],
-   [ "text", "  " ],
+   [ "meta.tag", "      quantity" ],
+   [ "keyword", ":  " ],
    [ "constant.numeric", "4" ]
   ]
  },
@@ -111,18 +112,18 @@
  {
   "state": "start",
   "data": [
-   [ "text", "    - " ],
-   [ "identifier", "part_no:" ],
-   [ "text", "   " ],
+   [ "list.markup", "    - " ],
+   [ "meta.tag", "part_no" ],
+   [ "keyword", ":   " ],
    [ "string", "'E1628'" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "descrip:" ],
-   [ "text", "   High Heeled " ],
+   [ "meta.tag", "      descrip" ],
+   [ "keyword", ":   " ],
+   [ "text", "High Heeled " ],
    [ "string", "\"Ruby\"" ],
    [ "text", " Slippers" ]
   ]
@@ -130,27 +131,24 @@
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "size:" ],
-   [ "text", "      " ],
+   [ "meta.tag", "      size" ],
+   [ "keyword", ":      " ],
    [ "constant.numeric", "8" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "price:" ],
-   [ "text", "     " ],
+   [ "meta.tag", "      price" ],
+   [ "keyword", ":     " ],
    [ "constant.numeric", "100.27" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "      " ],
-   [ "identifier", "quantity:" ],
-   [ "text", "  " ],
+   [ "meta.tag", "      quantity" ],
+   [ "keyword", ":  " ],
    [ "constant.numeric", "1" ]
   ]
  },
@@ -161,18 +159,16 @@
  {
   "state": "start",
   "data": [
-   [ "text", "bill-" ],
-   [ "identifier", "to:" ],
-   [ "text", "  " ],
-   [ "variable", "&id001" ]
+   [ "meta.tag", "bill-to" ],
+   [ "keyword", ":  " ],
+   [ "constant.language", "&id001" ]
   ]
  },
  {
   "state": "qqstring",
   "data": [
-   [ "text", "    " ],
-   [ "identifier", "street:" ],
-   [ "text", " " ],
+   [ "meta.tag", "    street" ],
+   [ "keyword", ": " ],
    [ "string", "|" ]
   ]
  },
@@ -191,17 +187,17 @@
  {
   "state": "start",
   "data": [
-   [ "text", "    " ],
-   [ "identifier", "city:" ],
-   [ "text", "   East Centerville" ]
+   [ "meta.tag", "    city" ],
+   [ "keyword", ":   " ],
+   [ "text", "East Centerville" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "text", "    " ],
-   [ "identifier", "state:" ],
-   [ "text", "  KS" ]
+   [ "meta.tag", "    state" ],
+   [ "keyword", ":  " ],
+   [ "text", "KS" ]
   ]
  },
  {
@@ -211,10 +207,9 @@
  {
   "state": "start",
   "data": [
-   [ "text", "ship-" ],
-   [ "identifier", "to:" ],
-   [ "text", "  " ],
-   [ "variable", "*id001" ]
+   [ "meta.tag", "ship-to" ],
+   [ "keyword", ":  " ],
+   [ "constant.language", "*id001" ]
   ]
  },
  {
@@ -224,8 +219,8 @@
  {
   "state": "qqstring",
   "data": [
-   [ "identifier", "specialDelivery:" ],
-   [ "text", "  " ],
+   [ "meta.tag", "specialDelivery" ],
+   [ "keyword", ":  " ],
    [ "string", ">" ]
   ]
  },

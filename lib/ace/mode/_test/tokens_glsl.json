@@ -41,7 +41,7 @@
   "data": [
    [ "keyword", "void" ],
    [ "text", " " ],
-   [ "entity.name.function", "main" ],
+   [ "identifier", "main" ],
    [ "paren.lparen", "(" ],
    [ "paren.rparen", ")" ],
    [ "text", " " ],

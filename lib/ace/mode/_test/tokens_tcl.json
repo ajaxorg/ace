@@ -41,7 +41,7 @@
    [ "paren.rparen", "}" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "graph" ],
+   [ "variable.instance", "graph" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -57,7 +57,7 @@
    [ "identifier", "dist" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "vertex" ],
+   [ "variable.instance", "vertex" ],
    [ "text", " " ],
    [ "identifier", "Inf" ]
   ]
@@ -73,7 +73,7 @@
    [ "identifier", "path" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "vertex" ],
+   [ "variable.instance", "vertex" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ],
    [ "text", "}" ]
@@ -96,7 +96,7 @@
    [ "identifier", "dist" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "origin" ],
+   [ "variable.instance", "origin" ],
    [ "text", " 0" ]
   ]
  },
@@ -111,13 +111,13 @@
    [ "identifier", "path" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "origin" ],
+   [ "variable.instance", "origin" ],
    [ "text", " " ],
    [ "paren.lparen", "[" ],
    [ "keyword", "list" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "origin" ],
+   [ "variable.instance", "origin" ],
    [ "paren.rparen", "]" ]
   ]
  },
@@ -140,7 +140,7 @@
    [ "identifier", "size" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "graph" ],
+   [ "variable.instance", "graph" ],
    [ "paren.rparen", "]" ],
    [ "paren.rparen", "}" ],
    [ "text", " " ],
@@ -180,7 +180,7 @@
    [ "paren.rparen", "}" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "graph" ],
+   [ "variable.instance", "graph" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -193,7 +193,7 @@
    [ "text", " " ],
    [ "paren.lparen", "{" ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "d" ],
+   [ "variable.instance", "d" ],
    [ "text", " " ],
    [ "support.function", ">" ],
    [ "text", " " ],
@@ -208,10 +208,10 @@
    [ "identifier", "get" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "dist" ],
+   [ "variable.instance", "dist" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "uu" ],
+   [ "variable.instance", "uu" ],
    [ "paren.rparen", "]" ],
    [ "paren.rparen", "]" ],
    [ "paren.rparen", "}" ],
@@ -228,7 +228,7 @@
    [ "identifier", "u" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "uu" ]
+   [ "variable.instance", "uu" ]
   ]
  },
  {
@@ -240,7 +240,7 @@
    [ "identifier", "d" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "dd" ]
+   [ "variable.instance", "dd" ]
   ]
  },
  {
@@ -276,7 +276,7 @@
    [ "text", " " ],
    [ "paren.lparen", "{" ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "d" ],
+   [ "variable.instance", "d" ],
    [ "text", " " ],
    [ "support.function", "==" ],
    [ "text", " " ],
@@ -325,10 +325,10 @@
    [ "identifier", "get" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "graph" ],
+   [ "variable.instance", "graph" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "u" ],
+   [ "variable.instance", "u" ],
    [ "paren.rparen", "]" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
@@ -347,10 +347,10 @@
    [ "identifier", "exists" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "graph" ],
+   [ "variable.instance", "graph" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "v" ],
+   [ "variable.instance", "v" ],
    [ "paren.rparen", "]" ],
    [ "paren.rparen", "}" ],
    [ "text", " " ],
@@ -370,12 +370,12 @@
    [ "text", " " ],
    [ "paren.lparen", "{" ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "d" ],
+   [ "variable.instance", "d" ],
    [ "text", " " ],
    [ "support.function", "+" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "dd" ],
+   [ "variable.instance", "dd" ],
    [ "paren.rparen", "}" ],
    [ "paren.rparen", "]" ]
   ]
@@ -388,7 +388,7 @@
    [ "text", " " ],
    [ "paren.lparen", "{" ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "alt" ],
+   [ "variable.instance", "alt" ],
    [ "text", " " ],
    [ "support.function", "<" ],
    [ "text", " " ],
@@ -398,10 +398,10 @@
    [ "identifier", "get" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "dist" ],
+   [ "variable.instance", "dist" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "v" ],
+   [ "variable.instance", "v" ],
    [ "paren.rparen", "]" ],
    [ "paren.rparen", "}" ],
    [ "text", " " ],
@@ -419,10 +419,10 @@
    [ "identifier", "dist" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "v" ],
+   [ "variable.instance", "v" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "alt" ]
+   [ "variable.instance", "alt" ]
   ]
  },
  {
@@ -436,7 +436,7 @@
    [ "identifier", "path" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "v" ],
+   [ "variable.instance", "v" ],
    [ "text", " " ],
    [ "paren.lparen", "[" ],
    [ "keyword", "list" ],
@@ -448,14 +448,14 @@
    [ "identifier", "get" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "path" ],
+   [ "variable.instance", "path" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "u" ],
+   [ "variable.instance", "u" ],
    [ "paren.rparen", "]" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "v" ],
+   [ "variable.instance", "v" ],
    [ "paren.rparen", "]" ]
   ]
  },
@@ -501,7 +501,7 @@
    [ "identifier", "graph" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "u" ]
+   [ "variable.instance", "u" ]
   ]
  },
  {
@@ -520,10 +520,10 @@
    [ "keyword", "list" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "dist" ],
+   [ "variable.instance", "dist" ],
    [ "text", " " ],
    [ "variable.instancce", "$" ],
-   [ "variable.instancce", "path" ],
+   [ "variable.instance", "path" ],
    [ "paren.rparen", "]" ]
   ]
  },

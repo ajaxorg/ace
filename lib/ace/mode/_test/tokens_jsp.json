@@ -1,0 +1,575 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "html" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "body" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "js-start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "data": [
+   [ "text", "        " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"abc\"" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "js-regex_allowed",
+  "data": [
+   [ "text", "        " ],
+   [ "storage.type", "function" ],
+   [ "text", " " ],
+   [ "identifier", "y" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "js-start",
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.script", "script" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "css-start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.style", "style" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "css-ruleset",
+  "data": [
+   [ "text", "        " ],
+   [ "variable", ".class" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "css-ruleset",
+  "data": [
+   [ "text", "            " ],
+   [ "support.type", "background" ],
+   [ "text", ": " ],
+   [ "constant.numeric", "#124356" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "css-start",
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.style", "style" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        Today's date: " ],
+   [ "meta.tag", "<%" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "java" ],
+   [ "text", "." ],
+   [ "identifier", "util" ],
+   [ "text", "." ],
+   [ "identifier", "Date" ],
+   [ "lparen", "(" ],
+   [ "rparen", ")" ],
+   [ "rparen", ")" ],
+   [ "text", "." ],
+   [ "identifier", "toLocaleString" ],
+   [ "lparen", "(" ],
+   [ "rparen", ")" ],
+   [ "meta.tag", "%>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "p" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<%" ],
+   [ "keyword.operator", "!" ],
+   [ "text", " " ],
+   [ "keyword", "int" ],
+   [ "text", " " ],
+   [ "identifier", "i" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", "; " ],
+   [ "meta.tag", "%>" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<jsp:declaration>" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword", "int" ],
+   [ "text", " " ],
+   [ "identifier", "j" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "10" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</jsp:declaration>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "comment", "<%--" ],
+   [ "comment", " This is JSP comment --%>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<%@" ],
+   [ "text", " " ],
+   [ "identifier", "directive" ],
+   [ "text", " " ],
+   [ "identifier", "attribute" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"value\"" ],
+   [ "text", " " ],
+   [ "meta.tag", "%>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ],
+   [ "text", "Select Languages:" ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "h2" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "form" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "ACTION" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"jspCheckBox.jsp\"" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "input" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"checkbox\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "name" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"id\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "value" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"Java\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", " Java" ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "BR" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "input" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"checkbox\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "name" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"id\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "value" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\".NET\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", " .NET" ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "BR" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "input" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"checkbox\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "name" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"id\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "value" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"PHP\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", " PHP" ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "BR" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "input" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"checkbox\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "name" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"id\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "value" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"C/C++\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", " C/C++" ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "BR" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "input" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"checkbox\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "name" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"id\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "value" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"PERL\"" ],
+   [ "meta.tag", ">" ],
+   [ "text", " PERL " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name", "BR" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "meta.tag", "<" ],
+   [ "meta.tag.tag-name.form", "input" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "type" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"submit\"" ],
+   [ "text", " " ],
+   [ "entity.other.attribute-name", "value" ],
+   [ "keyword.operator", "=" ],
+   [ "string", "\"Submit\"" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name.form", "form" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "<%" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "    " ],
+   [ "support.function", "String" ],
+   [ "text", " " ],
+   [ "identifier", "select" ],
+   [ "lparen", "[" ],
+   [ "rparen", "]" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "variable.language", "request" ],
+   [ "text", "." ],
+   [ "identifier", "getParameterValues" ],
+   [ "lparen", "(" ],
+   [ "string", "\"id\"" ],
+   [ "rparen", ")" ],
+   [ "text", "; " ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "identifier", "select" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.language", "null" ],
+   [ "text", " " ],
+   [ "keyword.operator", "&" ],
+   [ "keyword.operator", "&" ],
+   [ "text", " " ],
+   [ "identifier", "select" ],
+   [ "text", "." ],
+   [ "identifier", "length" ],
+   [ "text", " " ],
+   [ "keyword.operator", "!" ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "        " ],
+   [ "variable.language", "out" ],
+   [ "text", "." ],
+   [ "identifier", "println" ],
+   [ "lparen", "(" ],
+   [ "string", "\"You have selected: \"" ],
+   [ "rparen", ")" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword", "for" ],
+   [ "text", " " ],
+   [ "lparen", "(" ],
+   [ "keyword", "int" ],
+   [ "text", " " ],
+   [ "identifier", "i" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", "; " ],
+   [ "identifier", "i" ],
+   [ "text", " " ],
+   [ "keyword.operator", "<" ],
+   [ "text", " " ],
+   [ "identifier", "select" ],
+   [ "text", "." ],
+   [ "identifier", "length" ],
+   [ "text", "; " ],
+   [ "identifier", "i" ],
+   [ "keyword.operator", "++" ],
+   [ "rparen", ")" ],
+   [ "text", " " ],
+   [ "lparen", "{" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "           " ],
+   [ "variable.language", "out" ],
+   [ "text", "." ],
+   [ "identifier", "println" ],
+   [ "lparen", "(" ],
+   [ "identifier", "select" ],
+   [ "lparen", "[" ],
+   [ "identifier", "i" ],
+   [ "rparen", "]" ],
+   [ "rparen", ")" ],
+   [ "text", "; " ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "        " ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "jsp-start",
+  "data": [
+   [ "text", "    " ],
+   [ "rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "meta.tag", "%>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "body" ],
+   [ "meta.tag", ">" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "html" ],
+   [ "meta.tag", ">" ]
+  ]
+ }
+]
