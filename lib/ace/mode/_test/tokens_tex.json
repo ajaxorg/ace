@@ -37,8 +37,7 @@
    [ "keyword", "\\newcommand" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\be" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ],
+   [ "paren.keyword.operator", "}{" ],
    [ "comment", "%" ]
   ]
  },
@@ -72,9 +71,7 @@
    [ "text", "ifstar" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\nonumber" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ],
-   [ "paren.keyword.operator", "}" ],
+   [ "paren.keyword.operator", "}{}" ],
    [ "comment", "%" ]
   ]
  },
@@ -92,8 +89,7 @@
    [ "keyword", "\\newcommand" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\ee" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ],
+   [ "paren.keyword.operator", "}{" ],
    [ "keyword", "\\endeqnarray\\endgroup" ],
    [ "paren.keyword.operator", "}" ]
   ]
@@ -129,8 +125,7 @@
    [ "keyword", "\\begin" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "array" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ],
+   [ "paren.keyword.operator", "}{" ],
    [ "text", "cl" ],
    [ "paren.keyword.operator", "}" ]
   ]

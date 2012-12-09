@@ -218,8 +218,7 @@
   "state": "start",
   "data": [
    [ "entity.name.tag.haml", "    %div" ],
-   [ "entity.other.attribute-name.class.haml", ".article" ],
-   [ "entity.other.attribute-name.class.haml", ".title" ],
+   [ "entity.other.attribute-name.class.haml", ".article.title" ],
    [ "text", " Blah" ]
   ]
  },
@@ -227,20 +226,16 @@
   "state": "start",
   "data": [
    [ "entity.name.tag.haml", "    %div" ],
-   [ "entity.other.attribute-name.class.haml", ".article" ],
-   [ "entity.other.attribute-name.class.haml", ".date" ],
+   [ "entity.other.attribute-name.class.haml", ".article.date" ],
    [ "text", " " ],
-   [ "constant.numeric", "2006" ],
-   [ "constant.numeric", "-11" ],
-   [ "constant.numeric", "-05" ]
+   [ "constant.numeric", "2006-11-05" ]
   ]
  },
  {
   "state": "start",
   "data": [
    [ "entity.name.tag.haml", "    %div" ],
-   [ "entity.other.attribute-name.class.haml", ".article" ],
-   [ "entity.other.attribute-name.class.haml", ".entry" ]
+   [ "entity.other.attribute-name.class.haml", ".article.entry" ]
   ]
  },
  {

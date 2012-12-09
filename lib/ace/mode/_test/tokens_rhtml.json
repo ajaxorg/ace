@@ -4,7 +4,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -16,7 +16,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -24,11 +24,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Title" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -36,7 +36,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -48,7 +48,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -60,19 +60,19 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "This is an R HTML document. When you click the " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "b" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Knit HTML" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "b" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -109,11 +109,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "You can also embed plots, for example:" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -150,7 +150,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -158,7 +158,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {

@@ -35,7 +35,7 @@
    [ "entity.other.attribute-name", "onload" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"StartAnimation(evt)\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -48,11 +48,11 @@
    [ "text", "  " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Test Tube Progress Bar" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -61,11 +61,11 @@
    [ "text", "  " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "desc" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Created for the Web Directions SVG competition" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "desc" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -82,9 +82,8 @@
    [ "entity.other.attribute-name", "type" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"text/ecmascript\"" ],
-   [ "meta.tag", ">" ],
-   [ "keyword.operator", "<" ],
-   [ "keyword.operator", "!" ],
+   [ "meta.tag.r", ">" ],
+   [ "keyword.operator", "<!" ],
    [ "paren.lparen", "[" ],
    [ "identifier", "CDATA" ],
    [ "paren.lparen", "[" ]
@@ -449,8 +448,7 @@
    [ "text", " " ],
    [ "constant.numeric", "30" ],
    [ "text", " " ],
-   [ "keyword.operator", "&" ],
-   [ "keyword.operator", "&" ],
+   [ "keyword.operator", "&&" ],
    [ "text", " " ],
    [ "identifier", "timevalue" ],
    [ "text", " " ],
@@ -635,12 +633,11 @@
   "state": "start",
   "data": [
    [ "text", "  " ],
-   [ "paren.rparen", "]" ],
-   [ "paren.rparen", "]" ],
+   [ "paren.rparen", "]]" ],
    [ "keyword.operator", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "script" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -725,7 +722,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"rect3590\"" ],
-   [ "meta.tag", "/>" ]
+   [ "meta.tag.r", "/>" ]
   ]
  },
  {
@@ -783,7 +780,7 @@
    [ "entity.other.attribute-name", "display" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"none\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -792,7 +789,7 @@
    [ "text", "        Hickory," ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "text" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -846,7 +843,7 @@
    [ "entity.other.attribute-name", "display" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"none\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -855,7 +852,7 @@
    [ "text", "        dickory," ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "text" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -909,7 +906,7 @@
    [ "entity.other.attribute-name", "display" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"none\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -918,7 +915,7 @@
    [ "text", "        dock!" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "text" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -926,7 +923,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "svg" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  }
 ]

@@ -62,19 +62,13 @@
    [ "nospell.text", "picker" ],
    [ "paren.keyword.operator", "(" ],
    [ "text", "...," ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "initial" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", " initial " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "NULL" ],
+   [ "nospell.text", " NULL" ],
    [ "text", "," ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "label" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", " label " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "NULL" ],
+   [ "nospell.text", " NULL" ],
    [ "paren.keyword.operator", ")" ]
   ]
  },
@@ -106,8 +100,7 @@
    [ "keyword", "\\item" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\dots" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ]
+   [ "paren.keyword.operator", "}{" ]
   ]
  },
  {
@@ -125,8 +118,7 @@
    [ "nospell.text", "as" ],
    [ "text", "." ],
    [ "nospell.text", "character" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "}" ],
+   [ "paren.keyword.operator", "}}" ],
    [ "text", ". " ]
   ]
  },
@@ -143,8 +135,7 @@
    [ "keyword", "\\item" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "initial" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ]
+   [ "paren.keyword.operator", "}{" ]
   ]
  },
  {
@@ -166,8 +157,7 @@
    [ "keyword", "\\item" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "label" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "{" ]
+   [ "paren.keyword.operator", "}{" ]
   ]
  },
  {
@@ -208,8 +198,7 @@
    [ "keyword", "\\link" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "manipulate" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "}" ],
+   [ "paren.keyword.operator", "}}" ],
    [ "text", " function." ]
   ]
  },
@@ -238,32 +227,28 @@
    [ "keyword", "\\link" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "manipulate" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "}" ],
+   [ "paren.keyword.operator", "}}" ],
    [ "text", ", " ],
    [ "keyword", "\\code" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\link" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "slider" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "}" ],
+   [ "paren.keyword.operator", "}}" ],
    [ "text", ", " ],
    [ "keyword", "\\code" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\link" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "checkbox" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "}" ],
+   [ "paren.keyword.operator", "}}" ],
    [ "text", ", " ],
    [ "keyword", "\\code" ],
    [ "paren.keyword.operator", "{" ],
    [ "keyword", "\\link" ],
    [ "paren.keyword.operator", "{" ],
    [ "nospell.text", "button" ],
-   [ "paren.keyword.operator", "}" ],
-   [ "paren.keyword.operator", "}" ]
+   [ "paren.keyword.operator", "}}" ]
   ]
  },
  {
@@ -302,16 +287,7 @@
   "state": "nospell",
   "data": [
    [ "text", "##" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "Filtering" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "data" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "with" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "a" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ]
+   [ "nospell.text", " Filtering data with a picker" ]
   ]
  },
  {
@@ -324,8 +300,7 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "barplot" ],
+   [ "nospell.text", "  barplot" ],
    [ "paren.keyword.operator", "(" ],
    [ "nospell.text", "as" ],
    [ "text", "." ],
@@ -335,8 +310,7 @@
    [ "paren.keyword.operator", "[" ],
    [ "text", "," ],
    [ "nospell.text", "factor" ],
-   [ "paren.keyword.operator", "]" ],
-   [ "paren.keyword.operator", ")" ],
+   [ "paren.keyword.operator", "])" ],
    [ "text", "," ],
    [ "nospell.text", " " ]
   ]
@@ -344,19 +318,13 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "          " ],
-   [ "nospell.text", "beside" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", "          beside " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "TRUE" ],
+   [ "nospell.text", " TRUE" ],
    [ "text", "," ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "main" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", " main " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "factor" ],
+   [ "nospell.text", " factor" ],
    [ "paren.keyword.operator", ")" ],
    [ "text", "," ]
   ]
@@ -364,12 +332,9 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "factor" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", "  factor " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ],
+   [ "nospell.text", " picker" ],
    [ "paren.keyword.operator", "(" ],
    [ "text", "\"" ],
    [ "nospell.text", "GNP" ],
@@ -382,8 +347,7 @@
    [ "text", "\"" ],
    [ "nospell.text", "Employed" ],
    [ "text", "\"" ],
-   [ "paren.keyword.operator", ")" ],
-   [ "paren.keyword.operator", ")" ]
+   [ "paren.keyword.operator", "))" ]
   ]
  },
  {
@@ -394,16 +358,7 @@
   "state": "nospell",
   "data": [
    [ "text", "##" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "Create" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "a" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "with" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "labels" ]
+   [ "nospell.text", " Create a picker with labels" ]
   ]
  },
  {
@@ -416,17 +371,13 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "plot" ],
+   [ "nospell.text", "  plot" ],
    [ "paren.keyword.operator", "(" ],
    [ "nospell.text", "pressure" ],
    [ "text", "," ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "type" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", " type " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "type" ],
+   [ "nospell.text", " type" ],
    [ "paren.keyword.operator", ")" ],
    [ "text", "," ],
    [ "nospell.text", " " ]
@@ -435,12 +386,9 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "type" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", "  type " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ],
+   [ "nospell.text", " picker" ],
    [ "paren.keyword.operator", "(" ],
    [ "text", "\"" ],
    [ "nospell.text", "points" ],
@@ -471,8 +419,7 @@
    [ "text", "\"" ],
    [ "nospell.text", "s" ],
    [ "text", "\"" ],
-   [ "paren.keyword.operator", ")" ],
-   [ "paren.keyword.operator", ")" ]
+   [ "paren.keyword.operator", "))" ]
   ]
  },
  {
@@ -485,12 +432,7 @@
   "state": "nospell",
   "data": [
    [ "text", "##" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "Picker" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "with" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "groups" ]
+   [ "nospell.text", " Picker with groups" ]
   ]
  },
  {
@@ -503,8 +445,7 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "barplot" ],
+   [ "nospell.text", "  barplot" ],
    [ "paren.keyword.operator", "(" ],
    [ "nospell.text", "as" ],
    [ "text", "." ],
@@ -516,11 +457,9 @@
    [ "text", ",\"" ],
    [ "nospell.text", "mpg" ],
    [ "text", "\"" ],
-   [ "paren.keyword.operator", "]" ],
-   [ "paren.keyword.operator", ")" ],
+   [ "paren.keyword.operator", "])" ],
    [ "text", "," ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "beside" ],
+   [ "nospell.text", " beside" ],
    [ "text", "=" ],
    [ "nospell.text", "TRUE" ],
    [ "paren.keyword.operator", ")" ],
@@ -530,22 +469,16 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "group" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", "  group " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ],
+   [ "nospell.text", " picker" ],
    [ "paren.keyword.operator", "(" ],
    [ "text", "\"" ],
-   [ "nospell.text", "Group" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "1" ],
+   [ "nospell.text", "Group 1" ],
    [ "text", "\"" ],
    [ "nospell.text", " " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "1" ],
+   [ "nospell.text", " 1" ],
    [ "text", ":" ],
    [ "nospell.text", "11" ],
    [ "text", "," ],
@@ -557,14 +490,11 @@
   "data": [
    [ "nospell.text", "                 " ],
    [ "text", "\"" ],
-   [ "nospell.text", "Group" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "2" ],
+   [ "nospell.text", "Group 2" ],
    [ "text", "\"" ],
    [ "nospell.text", " " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "12" ],
+   [ "nospell.text", " 12" ],
    [ "text", ":" ],
    [ "nospell.text", "22" ],
    [ "text", "," ],
@@ -576,18 +506,14 @@
   "data": [
    [ "nospell.text", "                 " ],
    [ "text", "\"" ],
-   [ "nospell.text", "Group" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "3" ],
+   [ "nospell.text", "Group 3" ],
    [ "text", "\"" ],
    [ "nospell.text", " " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "23" ],
+   [ "nospell.text", " 23" ],
    [ "text", ":" ],
    [ "nospell.text", "32" ],
-   [ "paren.keyword.operator", ")" ],
-   [ "paren.keyword.operator", ")" ]
+   [ "paren.keyword.operator", "))" ]
   ]
  },
  {
@@ -598,19 +524,9 @@
   "state": "nospell",
   "data": [
    [ "text", "##" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "Histogram" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "w" ],
+   [ "nospell.text", " Histogram w" ],
    [ "text", "/" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "to" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "select" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "type" ]
+   [ "nospell.text", " picker to select type" ]
   ]
  },
  {
@@ -641,16 +557,12 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "histogram" ],
+   [ "nospell.text", "  histogram" ],
    [ "paren.keyword.operator", "(" ],
    [ "text", "~" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "height" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", " height " ],
    [ "text", "|" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "voice" ],
+   [ "nospell.text", " voice" ],
    [ "text", "." ],
    [ "nospell.text", "part" ],
    [ "text", "," ],
@@ -660,19 +572,13 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "            " ],
-   [ "nospell.text", "data" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", "            data " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "singer" ],
+   [ "nospell.text", " singer" ],
    [ "text", "," ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "type" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", " type " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "type" ],
+   [ "nospell.text", " type" ],
    [ "paren.keyword.operator", ")" ],
    [ "text", "," ]
   ]
@@ -680,12 +586,9 @@
  {
   "state": "nospell",
   "data": [
-   [ "nospell.text", "  " ],
-   [ "nospell.text", "type" ],
-   [ "nospell.text", " " ],
+   [ "nospell.text", "  type " ],
    [ "text", "=" ],
-   [ "nospell.text", " " ],
-   [ "nospell.text", "picker" ],
+   [ "nospell.text", " picker" ],
    [ "paren.keyword.operator", "(" ],
    [ "text", "\"" ],
    [ "nospell.text", "percent" ],
@@ -698,8 +601,7 @@
    [ "text", "\"" ],
    [ "nospell.text", "density" ],
    [ "text", "\"" ],
-   [ "paren.keyword.operator", ")" ],
-   [ "paren.keyword.operator", ")" ]
+   [ "paren.keyword.operator", "))" ]
   ]
  },
  {

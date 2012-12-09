@@ -173,8 +173,7 @@
    [ "paren.lparen", "(" ],
    [ "entity.name.function.ts", "greeter.greet" ],
    [ "paren.lparen", "(" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  },
  {
@@ -652,8 +651,7 @@
    [ "text", "               " ],
    [ "identifier", "stringBuilder" ],
    [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "text", " " ],
    [ "string", "\" turn continues,\"" ],
    [ "punctuation.operator", ";" ]
@@ -672,8 +670,7 @@
    [ "text", "           " ],
    [ "identifier", "stringBuilder" ],
    [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "text", " " ],
    [ "string", "\" stores \"" ],
    [ "text", " " ],
@@ -708,8 +705,7 @@
    [ "text", "               " ],
    [ "identifier", "stringBuilder" ],
    [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "text", " " ],
    [ "string", "\" captures \"" ],
    [ "text", " " ],

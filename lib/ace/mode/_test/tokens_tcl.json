@@ -141,8 +141,7 @@
    [ "text", " " ],
    [ "variable.instancce", "$" ],
    [ "variable.instance", "graph" ],
-   [ "paren.rparen", "]" ],
-   [ "paren.rparen", "}" ],
+   [ "paren.rparen", "]}" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -212,9 +211,7 @@
    [ "text", " " ],
    [ "variable.instancce", "$" ],
    [ "variable.instance", "uu" ],
-   [ "paren.rparen", "]" ],
-   [ "paren.rparen", "]" ],
-   [ "paren.rparen", "}" ],
+   [ "paren.rparen", "]]}" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -351,8 +348,7 @@
    [ "text", " " ],
    [ "variable.instancce", "$" ],
    [ "variable.instance", "v" ],
-   [ "paren.rparen", "]" ],
-   [ "paren.rparen", "}" ],
+   [ "paren.rparen", "]}" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -376,8 +372,7 @@
    [ "text", " " ],
    [ "variable.instancce", "$" ],
    [ "variable.instance", "dd" ],
-   [ "paren.rparen", "}" ],
-   [ "paren.rparen", "]" ]
+   [ "paren.rparen", "}]" ]
   ]
  },
  {
@@ -402,8 +397,7 @@
    [ "text", " " ],
    [ "variable.instancce", "$" ],
    [ "variable.instance", "v" ],
-   [ "paren.rparen", "]" ],
-   [ "paren.rparen", "}" ],
+   [ "paren.rparen", "]}" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]

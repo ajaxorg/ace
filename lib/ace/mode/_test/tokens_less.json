@@ -2,8 +2,7 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "/*" ],
-   [ "comment", " styles.less */" ]
+   [ "comment", "/* styles.less */" ]
   ]
  },
  {
@@ -39,8 +38,7 @@
    [ "support.function", "iscolor" ],
    [ "paren.lparen", "(" ],
    [ "variable", "@c" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "))" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -99,8 +97,7 @@
    [ "support.function", "isnumber" ],
    [ "paren.lparen", "(" ],
    [ "variable", "@alpha" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "))" ],
    [ "text", " " ],
    [ "paren.lparen", "{" ]
   ]
@@ -122,8 +119,7 @@
    [ "constant.numeric", "0" ],
    [ "text", ", " ],
    [ "variable", "@alpha" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "))" ],
    [ "text", ";" ]
   ]
  },

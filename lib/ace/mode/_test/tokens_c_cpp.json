@@ -147,8 +147,7 @@
    [ "constant.numeric", "3" ],
    [ "punctuation.operator", ";" ],
    [ "text", " " ],
-   [ "comment", "/*" ],
-   [ "comment", " foobar */" ]
+   [ "comment", "/* foobar */" ]
   ]
  },
  {
@@ -168,8 +167,7 @@
   "data": [
    [ "text", "    " ],
    [ "identifier", "a" ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "constant.numeric", "2" ],
    [ "punctuation.operator", ";" ],
    [ "text", " " ],
@@ -182,8 +180,7 @@
    [ "text", "    " ],
    [ "identifier", "cout" ],
    [ "text", " " ],
-   [ "keyword.operator", "<" ],
-   [ "keyword.operator", "<" ],
+   [ "keyword.operator", "<<" ],
    [ "text", " " ],
    [ "identifier", "a" ],
    [ "punctuation.operator", ";" ]
@@ -238,8 +235,7 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "/*" ],
-   [ "comment", " Print an error message and get out */" ]
+   [ "comment", "/* Print an error message and get out */" ]
   ]
  },
  {
@@ -271,8 +267,7 @@
   "state": "start",
   "data": [
    [ "constant.other", "} while (0)                      " ],
-   [ "comment", "/*" ],
-   [ "comment", " Note: No semicolon */" ]
+   [ "comment", "/* Note: No semicolon */" ]
   ]
  }
 ]

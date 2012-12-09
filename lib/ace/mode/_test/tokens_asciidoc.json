@@ -397,8 +397,7 @@
    [ "text", " " ],
    [ "constant.language.escape", "->" ],
    [ "text", "--" ],
-   [ "constant.language.escape", "<=" ],
-   [ "constant.language.escape", " --" ],
+   [ "constant.language.escape", "<= --" ],
    [ "text", " replacements" ]
   ]
  },

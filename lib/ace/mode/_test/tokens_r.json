@@ -101,8 +101,7 @@
    [ "text", " " ],
    [ "identifier", "Pr" ],
    [ "paren.keyword.operator", "(" ],
-   [ "keyword.operator", ">" ],
-   [ "keyword.operator", "|" ],
+   [ "keyword.operator", ">|" ],
    [ "identifier", "t" ],
    [ "keyword.operator", "|" ],
    [ "paren.keyword.operator", ")" ]
@@ -141,17 +140,13 @@
    [ "text", " " ],
    [ "constant.numeric", "0.000662" ],
    [ "text", " " ],
-   [ "keyword.operator", "*" ],
-   [ "keyword.operator", "*" ],
-   [ "keyword.operator", "*" ]
+   [ "keyword.operator", "***" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", "-" ]
+   [ "keyword.operator", "---" ]
   ]
  },
  {
@@ -164,14 +159,11 @@
    [ "text", "  " ],
    [ "constant.numeric", "0" ],
    [ "text", " ‘" ],
-   [ "keyword.operator", "*" ],
-   [ "keyword.operator", "*" ],
-   [ "keyword.operator", "*" ],
+   [ "keyword.operator", "***" ],
    [ "text", "’ " ],
    [ "constant.numeric", "0.001" ],
    [ "text", " ‘" ],
-   [ "keyword.operator", "*" ],
-   [ "keyword.operator", "*" ],
+   [ "keyword.operator", "**" ],
    [ "text", "’ " ],
    [ "constant.numeric", "0.01" ],
    [ "text", " ‘" ],
@@ -283,8 +275,7 @@
    [ "constant.numeric", "2" ],
    [ "text", ", " ],
    [ "constant.numeric", "2" ],
-   [ "paren.keyword.operator", ")" ],
-   [ "paren.keyword.operator", ")" ],
+   [ "paren.keyword.operator", "))" ],
    [ "text", "     " ],
    [ "comment", "# Request 2x2 plot layout" ]
   ]

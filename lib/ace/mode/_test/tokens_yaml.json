@@ -30,9 +30,7 @@
   "data": [
    [ "meta.tag", "date" ],
    [ "keyword", ":        " ],
-   [ "constant.numeric", "2007" ],
-   [ "constant.numeric", "-08" ],
-   [ "constant.numeric", "-06" ]
+   [ "constant.numeric", "2007-08-06" ]
   ]
  },
  {

@@ -89,7 +89,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"products\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -115,7 +115,7 @@
    [ "text", "      " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "li" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -124,7 +124,7 @@
    [ "text", "        " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "variable", "{{" ],
    [ "text", " " ],
    [ "identifier", "product" ],
@@ -134,7 +134,7 @@
    [ "variable", "}}" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -153,7 +153,7 @@
    [ "text", "        " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "variable", "{{" ],
    [ "text", " " ],
    [ "identifier", "product" ],
@@ -169,7 +169,7 @@
    [ "variable", "}}" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -182,7 +182,7 @@
    [ "text", "      " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "li" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -202,7 +202,7 @@
    [ "text", "  " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "ul" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -228,11 +228,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Filters" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -240,11 +240,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -252,11 +252,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "The word \"tobi\" has {{ 'tobi' | size }} letters! " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -264,11 +264,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -276,11 +276,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "The date today is {{ 'now' | date: \"%Y %b %d\" }} " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -296,11 +296,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "If" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -308,7 +308,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -323,8 +323,7 @@
    [ "text", "." ],
    [ "identifier", "name" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "==" ],
    [ "text", " " ],
    [ "string", "'tobi'" ],
    [ "text", " " ],
@@ -334,8 +333,7 @@
    [ "text", "." ],
    [ "identifier", "name" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "==" ],
    [ "text", " " ],
    [ "string", "'marc'" ],
    [ "text", " " ],
@@ -365,7 +363,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -381,11 +379,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Case" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -393,7 +391,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -495,7 +493,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -511,11 +509,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "For Loops" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -523,7 +521,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -571,7 +569,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -587,11 +585,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Tables" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -599,7 +597,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -688,7 +686,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
