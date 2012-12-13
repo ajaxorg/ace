@@ -241,6 +241,13 @@ function jsFileList(path, filter) {
     }).filter(function(x){ return !!x });
 }
 
+function workers(path) {
+  return jsFileList(path).map(function(x) {
+    if (x.slice(-7) == "_worker")
+      return x.slice(0, -7);
+  }).filter(function(x) { return !!x; });
+}
+
 function addSuffix(options) {
     if (options.suffix == null) {
         options.suffix = "";
@@ -298,7 +305,7 @@ var buildAce = function(options) {
         modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/),
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
-        workers: ["javascript", "coffee", "css", "json", "xquery"],
+        workers: workers("lib/ace/mode"),
         keybindings: ["vim", "emacs"]
     };
 
