@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Ace Kitchen Sink</title>
     <meta name="author" content="Fabian Jakobs">
-    <meta name="viewport" content="user-scalable=no">
     <!--
     Ace
       version %version%
@@ -17,18 +16,19 @@
       <script src="http://use.edgefonts.net/source-code-pro.js"></script> 
     <!--DEVEL-->
 
+    <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
     <!--PACKAGE
       <link rel="stylesheet" href="kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
       <script src="http://use.edgefonts.net/source-code-pro.js"></script> 
     PACKAGE-->
 </head>
 <body>
-<div id="optionsPanel" style="position:absolute;height:100%">
+<div id="optionsPanel" style="position:absolute;height:100%;width:260px">
   <a href="http://ajaxorg.github.com/ace/" >
     <img id="logo" src="demo/kitchen-sink/logo.png">
   </a> 
   <div style="position: absolute; overflow: hidden; top:80px; bottom:0">
-  <div style="width: 120%; height:100%; overflow-y: scroll; -webkit-overflow-scrolling: touch">
+  <div style="width: 120%; height:100%; overflow-y: scroll">
 
   <table id="controls">
     <tr>
@@ -245,14 +245,6 @@
       </td>
       <td>
         <input type="checkbox" id="highlight_token">
-      </td>
-    </tr>
-    <tr>
-      <td >
-        <label for="mobile_mode">Mobile Mode</label>
-      </td>
-      <td>
-        <input type="checkbox" id="mobile_mode">
       </td>
     </tr>
   </table>
