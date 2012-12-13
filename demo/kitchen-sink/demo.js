@@ -362,7 +362,7 @@ bindCheckbox("read_only", function(checked) {
 
 bindDropdown("split", function(value) {
     var sp = env.split;
-    if (value == "none") {        
+    if (value == "none") {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
@@ -376,6 +376,12 @@ bindDropdown("split", function(value) {
         }
     }
 });
+
+
+bindCheckbox("elastic_tabstops", function(checked) {
+    env.editor.setUseElasticTabstops(checked);
+});
+
 
 function synchroniseScrolling() {
     var s1 = env.split.$editors[0].session;
