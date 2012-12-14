@@ -18,9 +18,10 @@
   padding-left: 0;
   color: #000;
 }
-.ace-chaos .ace_print_margin {
-  width: 1px;
-  background: #e8e8e8;
+.ace-chaos .ace_print-margin {
+  border-left: 1px solid #555;
+  right: 0;
+  background: #1D1D1D;
 }
 .ace-chaos .ace_scroller {
   background-color: #161616;
@@ -37,7 +38,7 @@
   border-bottom: 1px solid #FFFFFF;
 }
 .ace-chaos .ace_marker-layer .ace_selection {
-  background: rgba(90, 90, 90, 0.3);
+  background: #494836;
 }
 .ace-chaos .ace_marker-layer .ace_step {
   background: rgb(198, 219, 174);
@@ -110,17 +111,30 @@
 .ace-chaos .ace_markup.ace_underline {
   text-decoration: underline;
 }
-.ace-chaos .ace_fold {
-  background: #222;
-  border-radius: 3px;
-  color: #7AF;
+.ace-chaos .ace_fold-widget {
+  text-align: center;
+}
+
+.ace-chaos .ace_fold-widget:hover {
+  color: #777;
+}
+
+.ace-chaos .ace_fold-widget.ace_start,
+.ace-chaos .ace_fold-widget.ace_end,
+.ace-chaos .ace_fold-widget.ace_closed{
+  background: none;
   border: none;
+  box-shadow: none;
 }
-.ace-chaos .ace_fold:hover {
-  background: #CCC !important;
-  color: #000 !important;
+
+.ace-chaos .ace_fold-widget.ace_start:after {
+  content: '▾'
 }
-.ace_fold-widget {
-  height: 10px;
-  background-position: 3px 3px;
+
+.ace-chaos .ace_fold-widget.ace_end:after {
+  content: '▴'
+}
+
+.ace-chaos .ace_fold-widget.ace_closed:after {
+  content: '‣'
 }
