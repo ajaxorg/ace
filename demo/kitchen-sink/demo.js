@@ -427,5 +427,10 @@ event.addListener(container, "drop", function(e) {
 var StatusBar = require("./statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
+var initEmmet = require("./ace_emmet").initEmmet;
+initEmmet(env.editor)
+
+var Autocompleter = require("./autocompleter").Autocompleter;
+Autocompleter.addTo(env.editor)
 });
 
