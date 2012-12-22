@@ -196,7 +196,7 @@ commands.addCommand({
     exec: function() {alert("Fake Save File");}
 });
 
-var keybindings = {
+var keybindings = {    
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -431,7 +431,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
         sp.setSplits(2);
 
         if (newEditor) {
@@ -558,5 +558,8 @@ ace.commands.bindKey("Tab", function(editor) {
     if (!success)
         editor.execCommand("indent");
 })
+
+var Autocompleter = require("./autocompleter").Autocompleter;
+Autocompleter.addTo(env.editor)
 
 });
