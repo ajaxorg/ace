@@ -386,12 +386,3 @@
 .ace_italic {
     font-style: italic;
 }
-
-.ace_autocomplete {
-    position: fixed;
-    z-index: 9999;
-}
-
-.ace_autocomplete li {
-    color: #000000;
-}
