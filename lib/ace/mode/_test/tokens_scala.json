@@ -330,8 +330,7 @@
    [ "text", " " ],
    [ "identifier", "Start" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "=>" ]
   ]
  },
  {
@@ -378,8 +377,7 @@
    [ "text", " " ],
    [ "identifier", "SendPing" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "=>" ]
   ]
  },
  {
@@ -416,8 +414,7 @@
    [ "text", " " ],
    [ "identifier", "Pong" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "=>" ]
   ]
  },
  {
@@ -621,8 +618,7 @@
    [ "text", " " ],
    [ "identifier", "Ping" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "=>" ]
   ]
  },
  {
@@ -694,8 +690,7 @@
    [ "text", " " ],
    [ "identifier", "Stop" ],
    [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "=>" ]
   ]
  },
  {

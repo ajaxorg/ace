@@ -50,7 +50,8 @@
   "data": [
    [ "text", "    " ],
    [ "identifier", "console" ],
-   [ "identifier", ".log" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "log" ],
    [ "text", " " ],
    [ "string", "'qstring'" ],
    [ "text", " " ],
@@ -100,7 +101,7 @@
   "data": [
    [ "keyword", "do" ],
    [ "text", " " ],
-   [ "keyword.operator", "->" ]
+   [ "storage.type", "->" ]
   ]
  },
  {
@@ -131,7 +132,8 @@
    [ "keyword.operator", "=" ],
    [ "text", " " ],
    [ "string.regex", "/regex/imgy" ],
-   [ "identifier", ".test" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "test" ],
    [ "text", " " ],
    [ "string.regex", "///" ]
   ]

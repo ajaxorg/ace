@@ -2,8 +2,7 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "/*" ],
-   [ "comment", " style.scss */" ]
+   [ "comment", "/* style.scss */" ]
   ]
  },
  {

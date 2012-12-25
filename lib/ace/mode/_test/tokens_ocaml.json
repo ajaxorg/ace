@@ -45,8 +45,7 @@
    [ "text", " : " ],
    [ "identifier", "_" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "identifier", "t" ],
    [ "paren.rparen", ")" ],
@@ -112,8 +111,7 @@
    [ "text", " " ],
    [ "identifier", "x" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "support.function", "raise" ],
    [ "text", " " ],
@@ -123,8 +121,7 @@
    [ "identifier", "Return" ],
    [ "text", " " ],
    [ "identifier", "x" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "))" ],
    [ "text", "; " ],
    [ "paren.rparen", "}" ],
    [ "text", " " ],
@@ -149,8 +146,7 @@
    [ "text", " " ],
    [ "identifier", "x" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "identifier", "x" ]
   ]
@@ -192,8 +188,7 @@
    [ "text", " " ],
    [ "identifier", "r" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "->" ]
   ]
  },
  {
@@ -221,8 +216,7 @@
    [ "text", " " ],
    [ "identifier", "x" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ]
+   [ "keyword.operator", "->" ]
   ]
  },
  {
@@ -233,8 +227,7 @@
    [ "text", " " ],
    [ "identifier", "x" ],
    [ "text", " " ],
-   [ "keyword.operator", ">" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", ">=" ],
    [ "text", " " ],
    [ "constant.numeric", "0" ],
    [ "text", " " ],
@@ -253,8 +246,7 @@
    [ "identifier", "return" ],
    [ "text", " " ],
    [ "identifier", "acc" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  }
 ]

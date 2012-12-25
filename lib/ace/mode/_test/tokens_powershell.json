@@ -173,8 +173,7 @@
   "data": [
    [ "variable.instance", "$number" ],
    [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "text", " " ],
    [ "constant.numeric", "3" ]
   ]

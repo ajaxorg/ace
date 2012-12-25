@@ -13,9 +13,93 @@
   "state": "start",
   "data": [
    [ "keyword", "#include" ],
-   [ "text", " " ],
-   [ "constant", "<iostream>" ]
+   [ "constant.other", " <iostream>" ]
   ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "keyword", "#include" ],
+   [ "constant.other.multiline", " \\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.other", "   <iostream>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "keyword", "#include" ],
+   [ "constant.other.multiline", " \\" ]
+  ]
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "constant.other.multiline", "   \\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.other", "   <iostream>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "keyword", "#include" ],
+   [ "constant.other.multiline", " \\" ]
+  ]
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "constant.other.multiline", "   \\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.other", "   \"iostream\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "#include" ],
+   [ "constant.other", " <boost/asio/io_service.hpp>" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "#include" ],
+   [ "constant.other", " \"boost/asio/io_service.hpp\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
  },
  {
   "state": "start",
@@ -37,7 +121,7 @@
   "data": [
    [ "storage.type", "int" ],
    [ "text", " " ],
-   [ "entity.name.function", "main" ],
+   [ "identifier", "main" ],
    [ "text", " " ],
    [ "paren.lparen", "(" ],
    [ "paren.rparen", ")" ]
@@ -63,8 +147,7 @@
    [ "constant.numeric", "3" ],
    [ "punctuation.operator", ";" ],
    [ "text", " " ],
-   [ "comment", "/*" ],
-   [ "comment", " foobar */" ]
+   [ "comment", "/* foobar */" ]
   ]
  },
  {
@@ -84,8 +167,7 @@
   "data": [
    [ "text", "    " ],
    [ "identifier", "a" ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "constant.numeric", "2" ],
    [ "punctuation.operator", ";" ],
    [ "text", " " ],
@@ -98,11 +180,36 @@
    [ "text", "    " ],
    [ "identifier", "cout" ],
    [ "text", " " ],
-   [ "keyword.operator", "<" ],
-   [ "keyword.operator", "<" ],
+   [ "keyword.operator", "<<" ],
    [ "text", " " ],
    [ "identifier", "a" ],
    [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "#if" ],
+   [ "constant.other", " VERBOSE >= 2" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "identifier", "prints" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"trace message\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword", "#endif" ]
   ]
  },
  {
@@ -119,6 +226,48 @@
   "state": "start",
   "data": [
    [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "/* Print an error message and get out */" ]
+  ]
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "keyword", "#define" ],
+   [ "constant.other.multiline", " ABORT                             \\" ]
+  ]
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "constant.other.multiline", "    do {                                  \\" ]
+  ]
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "constant.other.multiline", "        print( \"Abort\\n\" );                \\" ]
+  ]
+ },
+ {
+  "state": "directive",
+  "data": [
+   [ "constant.other.multiline", "        exit(8);                          \\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.other", "} while (0)                      " ],
+   [ "comment", "/* Note: No semicolon */" ]
   ]
  }
 ]
