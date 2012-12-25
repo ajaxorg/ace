@@ -207,8 +207,8 @@
    [ "constant.numeric", "1" ],
    [ "keyword", "px" ],
    [ "text", " " ],
-   [ "keyword", "s" ],
-   [ "text", "olid grayLighter" ]
+   [ "support.constant", "solid" ],
+   [ "text", " grayLighter" ]
   ]
  },
  {
@@ -295,8 +295,7 @@
    [ "text", "  " ],
    [ "support.type", "display" ],
    [ "text", ": " ],
-   [ "keyword", "in" ],
-   [ "support.constant", "line" ]
+   [ "support.constant", "inline" ]
   ]
  },
  {
@@ -323,8 +322,7 @@
    [ "text", "    " ],
    [ "support.type", "display" ],
    [ "text", " " ],
-   [ "keyword", "in" ],
-   [ "support.constant", "line" ]
+   [ "support.constant", "inline" ]
   ]
  },
  {
@@ -356,8 +354,7 @@
    [ "text", "  " ],
    [ "support.type", "display" ],
    [ "text", " " ],
-   [ "keyword", "in" ],
-   [ "support.constant", "line" ]
+   [ "support.constant", "inline" ]
   ]
  },
  {
@@ -410,7 +407,7 @@
  {
   "state": "start",
   "data": [
-   [ "text", " " ],
+   [ "text", "  " ],
    [ "keyword.control.stylus", "!important" ]
   ]
  },
@@ -421,7 +418,7 @@
  {
   "state": "start",
   "data": [
-   [ "text", " " ],
+   [ "text", "  " ],
    [ "keyword.control.stylus", "unless" ]
   ]
  }

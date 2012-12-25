@@ -618,8 +618,7 @@
   "state": "start",
   "data": [
    [ "keyword", "#import" ],
-   [ "text", " " ],
-   [ "constant", "<stdio.h>" ]
+   [ "constant.other", " <stdio.h>" ]
   ]
  },
  {
@@ -991,19 +990,14 @@
   "state": "start",
   "data": [
    [ "keyword", "#ifndef" ],
-   [ "text", " " ],
-   [ "constant.language.objc", "Nil" ]
+   [ "constant.other", " Nil" ]
   ]
  },
  {
   "state": "start",
   "data": [
    [ "keyword", "#define" ],
-   [ "text", " " ],
-   [ "constant.language.objc", "Nil" ],
-   [ "text", " " ],
-   [ "identifier", "__DARWIN_NULL" ],
-   [ "text", "   " ],
+   [ "constant.other", " Nil __DARWIN_NULL   " ],
    [ "comment", "/*" ],
    [ "comment", " id of Nil class */" ]
   ]
