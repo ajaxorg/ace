@@ -65,7 +65,7 @@ var bindCheckbox = util.bindCheckbox;
 var bindDropdown = util.bindDropdown;
 
 /*********** create editor ***************************/
-var container = document.getElementById("editor");
+var container = document.getElementById("editor-container");
 
 // Splitting.
 var Split = require("ace/split").Split;

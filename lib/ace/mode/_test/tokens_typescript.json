@@ -1,0 +1,765 @@
+[
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "keyword.operator.ts", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Greeter" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "\t" ],
+   [ "variable.parameter.function.ts", "greeting" ],
+   [ "text", ": " ],
+   [ "variable.parameter.function.ts", "string" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "\t" ],
+   [ "keyword.operator.ts", "constructor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "variable.parameter.function.ts", "message" ],
+   [ "text", ": " ],
+   [ "variable.parameter.function.ts", "string" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "\t\t" ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "greeting" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "message" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "\t" ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "\t" ],
+   [ "entity.name.function.ts", "greet" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "\t\t" ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "string", "\"Hello, \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "greeting" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "\t" ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ],
+   [ "text", "   " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "greeter" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "keyword", "new" ],
+   [ "text", " " ],
+   [ "identifier", "Greeter" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"world\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "button" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "variable.language", "document" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "createElement" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "'button'" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "button" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "innerText" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"Say Hello\"" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "storage.type", "button" ],
+   [ "punctuation.operator", "." ],
+   [ "entity.name.function", "onclick" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "storage.type", "function" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "\t" ],
+   [ "support.function", "alert" ],
+   [ "paren.lparen", "(" ],
+   [ "entity.name.function.ts", "greeter.greet" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", "))" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "variable.language", "document" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "body" ],
+   [ "punctuation.operator", "." ],
+   [ "support.function.dom", "appendChild" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "button" ],
+   [ "paren.rparen", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "keyword.operator.ts", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Snake" ],
+   [ "text", " " ],
+   [ "keyword.operator.ts", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Animal" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "   " ],
+   [ "entity.name.function.ts", "move" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "support.function", "alert" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Slithering...\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "storage.type.variable.ts", "super" ],
+   [ "text", "(" ],
+   [ "keyword.other.ts", "5" ],
+   [ "text", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "   " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "keyword.operator.ts", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Horse" ],
+   [ "text", " " ],
+   [ "keyword.operator.ts", "extends" ],
+   [ "text", " " ],
+   [ "identifier", "Animal" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "   " ],
+   [ "entity.name.function.ts", "move" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "support.function", "alert" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"Galloping...\"" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "super" ],
+   [ "punctuation.operator", "." ],
+   [ "identifier", "move" ],
+   [ "paren.lparen", "(" ],
+   [ "constant.numeric", "45" ],
+   [ "paren.rparen", ")" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "   " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.operator.ts", "module" ],
+   [ "text", " " ],
+   [ "variable.parameter.function.ts", "Sayings" ],
+   [ "text", " {" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword.operator.ts", "export" ],
+   [ "text", " " ],
+   [ "keyword.operator.ts", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Greeter" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "        " ],
+   [ "variable.parameter.function.ts", "greeting" ],
+   [ "text", ": " ],
+   [ "variable.parameter.function.ts", "string" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "        " ],
+   [ "keyword.operator.ts", "constructor" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "variable.parameter.function.ts", "message" ],
+   [ "text", ": " ],
+   [ "variable.parameter.function.ts", "string" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "            " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "greeting" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "message" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "        " ],
+   [ "entity.name.function.ts", "greet" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "            " ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "string", "\"Hello, \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "greeting" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "        " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.operator.ts", "module" ],
+   [ "text", " " ],
+   [ "variable.parameter.function.ts", "Mankala" ],
+   [ "text", " {" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "   " ],
+   [ "keyword.operator.ts", "export" ],
+   [ "text", " " ],
+   [ "keyword.operator.ts", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Features" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "public" ],
+   [ "text", " " ],
+   [ "identifier", "turnContinues" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.language.boolean", "false" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "public" ],
+   [ "text", " " ],
+   [ "identifier", "seedStoredCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "public" ],
+   [ "text", " " ],
+   [ "identifier", "capturedCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "public" ],
+   [ "text", " " ],
+   [ "identifier", "spaceCaptured" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "NoSpace" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "public" ],
+   [ "text", " " ],
+   [ "entity.name.function.ts", "clear" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "turnContinues" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.language.boolean", "false" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "seedStoredCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "capturedCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "spaceCaptured" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "NoSpace" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "       " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "       " ],
+   [ "keyword.operator.ts", "public" ],
+   [ "text", " " ],
+   [ "entity.name.function.ts", "toString" ],
+   [ "paren.lparen", "(" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "storage.type", "var" ],
+   [ "text", " " ],
+   [ "identifier", "stringBuilder" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "string", "\"\"" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "turnContinues" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "               " ],
+   [ "identifier", "stringBuilder" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+=" ],
+   [ "text", " " ],
+   [ "string", "\" turn continues,\"" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "           " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "identifier", "stringBuilder" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+=" ],
+   [ "text", " " ],
+   [ "string", "\" stores \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "seedStoredCount" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "paren.lparen", "(" ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "capturedCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "paren.lparen", "{" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "               " ],
+   [ "identifier", "stringBuilder" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+=" ],
+   [ "text", " " ],
+   [ "string", "\" captures \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "capturedCount" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "string", "\" from space \"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "+" ],
+   [ "text", " " ],
+   [ "storage.type.variable.ts", "this." ],
+   [ "identifier", "spaceCaptured" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "           " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "regex_allowed",
+  "data": [
+   [ "text", "           " ],
+   [ "keyword", "return" ],
+   [ "text", " " ],
+   [ "identifier", "stringBuilder" ],
+   [ "punctuation.operator", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "       " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "   " ],
+   [ "paren.rparen", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.rparen", "}" ]
+  ]
+ }
+]

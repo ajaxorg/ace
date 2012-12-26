@@ -21,7 +21,7 @@ body {
     margin-left: 70px;
 }
 
-#editor {
+#editor-container {
     position: absolute;
     top:  0px;
     left: 280px;

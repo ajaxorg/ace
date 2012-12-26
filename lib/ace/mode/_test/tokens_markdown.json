@@ -48,8 +48,7 @@
  {
   "state": "listblock",
   "data": [
-   [ "markup.list", "* " ],
-   [ "markup.list", "Syntax highlighting" ]
+   [ "markup.list", "* Syntax highlighting" ]
   ]
  },
  {
@@ -288,17 +287,13 @@
   "state": "start",
   "data": [
    [ "text", "Ace can be easily embedded into any existing web page. The Ace git repository ships with a pre-packaged version of Ace inside of the " ],
-   [ "support.function", "`" ],
-   [ "support.function", "build" ],
-   [ "support.function", "`" ],
+   [ "support.function", "`build`" ],
    [ "text", " directory. The same packaged files are also available as a separate [" ],
    [ "string", "download" ],
    [ "text", "](" ],
    [ "markup.underline", "https://github.com/ajaxorg/ace/downloads" ],
    [ "text", "). Simply copy the contents of the " ],
-   [ "support.function", "`" ],
-   [ "support.function", "src" ],
-   [ "support.function", "`" ],
+   [ "support.function", "`src`" ],
    [ "text", " subdirectory somewhere into your project and take a look at the included demos of how to use Ace." ]
   ]
  },
@@ -332,11 +327,11 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"editor\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "some text" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -357,10 +352,10 @@
    [ "entity.other.attribute-name", "charset" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"utf-8\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.script", "script" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -369,7 +364,7 @@
    [ "text", "    " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.script", "script" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -422,7 +417,7 @@
    [ "text", "    " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.script", "script" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -439,13 +434,9 @@
   "state": "start",
   "data": [
    [ "text", "With \"editor\" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned " ],
-   [ "support.function", "`" ],
-   [ "support.function", "absolute" ],
-   [ "support.function", "`" ],
+   [ "support.function", "`absolute`" ],
    [ "text", " or " ],
-   [ "support.function", "`" ],
-   [ "support.function", "relative" ],
-   [ "support.function", "`" ],
+   [ "support.function", "`relative`" ],
    [ "text", " for Ace to work. e.g." ]
   ]
  },
@@ -551,10 +542,10 @@
    [ "entity.other.attribute-name", "charset" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"utf-8\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.script", "script" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -640,10 +631,10 @@
    [ "entity.other.attribute-name", "charset" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"utf-8\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.script", "script" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -707,8 +698,7 @@
    [ "text", " " ],
    [ "identifier", "JavaScriptMode" ],
    [ "paren.lparen", "(" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "))" ],
    [ "punctuation.operator", ";" ]
   ]
  },
@@ -1131,8 +1121,7 @@
  {
   "state": "listblock",
   "data": [
-   [ "markup.list", "1. " ],
-   [ "markup.list", "[The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting." ]
+   [ "markup.list", "1. [The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting." ]
   ]
  },
  {

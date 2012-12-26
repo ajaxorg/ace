@@ -1,0 +1,189 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "text", "The quadratic formula is $$-b " ],
+   [ "keyword", "\\pm" ],
+   [ "text", " " ],
+   [ "keyword", "\\sqrt" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "text", "b^2 - 4ac" ],
+   [ "paren.keyword.operator", "}" ],
+   [ "text", " " ],
+   [ "keyword", "\\over" ],
+   [ "text", " 2a$$" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\bye" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "\\makeatletter" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "keyword", "\\newcommand" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "keyword", "\\be" ],
+   [ "paren.keyword.operator", "}{" ],
+   [ "comment", "%" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "keyword", "\\begingroup" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "comment", "% \\setlength{\\arraycolsep}{2pt}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "keyword", "\\eqnarray" ],
+   [ "comment", "%" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "keyword", "\\@" ],
+   [ "text", "ifstar" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "keyword", "\\nonumber" ],
+   [ "paren.keyword.operator", "}{}" ],
+   [ "comment", "%" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "paren.keyword.operator", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\newcommand" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "keyword", "\\ee" ],
+   [ "paren.keyword.operator", "}{" ],
+   [ "keyword", "\\endeqnarray\\endgroup" ],
+   [ "paren.keyword.operator", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword", "\\makeatother" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "keyword", "\\begin" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "nospell.text", "equation" ],
+   [ "paren.keyword.operator", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " x=" ],
+   [ "keyword", "\\left\\" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "text", " " ],
+   [ "keyword", "\\begin" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "nospell.text", "array" ],
+   [ "paren.keyword.operator", "}{" ],
+   [ "text", "cl" ],
+   [ "paren.keyword.operator", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " 0 & " ],
+   [ "keyword", "\\textrm" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "text", "if " ],
+   [ "paren.keyword.operator", "}" ],
+   [ "text", "A=" ],
+   [ "keyword", "\\ldots\\\\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " 1 & " ],
+   [ "keyword", "\\textrm" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "text", "if " ],
+   [ "paren.keyword.operator", "}" ],
+   [ "text", "B=" ],
+   [ "keyword", "\\ldots\\\\" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " x & " ],
+   [ "keyword", "\\textrm" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "text", "this runs with as much text as you like, but without an raggeright text" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "." ],
+   [ "paren.keyword.operator", "}" ],
+   [ "keyword", "\\end" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "nospell.text", "array" ],
+   [ "paren.keyword.operator", "}" ],
+   [ "keyword", "\\right" ],
+   [ "text", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "keyword", "\\end" ],
+   [ "paren.keyword.operator", "{" ],
+   [ "nospell.text", "equation" ],
+   [ "paren.keyword.operator", "}" ]
+  ]
+ }
+]

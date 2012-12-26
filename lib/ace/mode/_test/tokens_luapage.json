@@ -19,7 +19,7 @@
   "data": [
    [ "text", "   " ],
    [ "string", "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -27,7 +27,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -63,7 +63,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -72,11 +72,11 @@
    [ "text", "    " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Reference" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -92,25 +92,27 @@
    [ "text", " " ],
    [ "entity.other.attribute-name", "href" ],
    [ "keyword.operator", "=" ],
-   [ "string", "\"<%=luadoc.doclet.html.link(\"" ],
-   [ "entity.other.attribute-name", "luadoc" ],
+   [ "string", "\"" ],
+   [ "keyword", "<%=" ],
+   [ "identifier", "luadoc" ],
    [ "text", "." ],
-   [ "entity.other.attribute-name", "css" ],
-   [ "string", "\")%>\"" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "type" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"text/css\"" ],
-   [ "text", " " ],
-   [ "meta.tag", "/>" ]
+   [ "identifier", "doclet" ],
+   [ "text", "." ],
+   [ "identifier", "html" ],
+   [ "text", "." ],
+   [ "identifier", "link" ],
+   [ "paren.lparen", "(" ],
+   [ "string", "\"luadoc.css\"" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword", "%>" ],
+   [ "text", "\" type=\"text/css\" />" ]
   ]
  },
  {
   "state": "start",
   "data": [
    [ "text", "\t" ],
-   [ "comment", "<!--" ],
-   [ "comment", "meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/-->" ]
+   [ "comment", "<!--meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/-->" ]
   ]
  },
  {
@@ -118,7 +120,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -130,7 +132,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -142,7 +144,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"container\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -158,7 +160,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"product\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -171,10 +173,10 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"product_logo\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -187,22 +189,22 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"product_name\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "big" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "b" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "b" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "big" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -215,10 +217,10 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"product_description\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -226,10 +228,9 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " " ],
-   [ "comment", "<!--" ],
-   [ "comment", " id=\"product\" -->" ]
+   [ "comment", "<!-- id=\"product\" -->" ]
   ]
  },
  {
@@ -245,7 +246,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"main\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -261,7 +262,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"navigation\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -284,8 +285,7 @@
    [ "keyword.operator", "=" ],
    [ "identifier", "doc" ],
    [ "text", " " ],
-   [ "paren.rparen", "}" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "})" ],
    [ "keyword", "%>" ]
   ]
  },
@@ -298,10 +298,9 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " " ],
-   [ "comment", "<!--" ],
-   [ "comment", " id=\"navigation\" -->" ]
+   [ "comment", "<!-- id=\"navigation\" -->" ]
   ]
  },
  {
@@ -317,7 +316,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"content\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -331,8 +330,7 @@
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "if" ],
+   [ "keyword", "<%if" ],
    [ "text", " " ],
    [ "keyword", "not" ],
    [ "text", " " ],
@@ -351,8 +349,7 @@
    [ "text", " " ],
    [ "constant.numeric", "0" ],
    [ "text", " " ],
-   [ "keyword", "then" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "then%>" ]
   ]
  },
  {
@@ -360,11 +357,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Modules" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -376,21 +373,19 @@
    [ "entity.other.attribute-name", "class" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"module_list\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "comment", "<!--" ],
-   [ "comment", "<tr><td colspan=\"2\">Modules</td></tr>-->" ]
+   [ "comment", "<!--<tr><td colspan=\"2\">Modules</td></tr>-->" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "for" ],
+   [ "keyword", "<%for" ],
    [ "text", " " ],
    [ "identifier", "_" ],
    [ "text", ", " ],
@@ -405,8 +400,7 @@
    [ "identifier", "modules" ],
    [ "paren.rparen", ")" ],
    [ "text", " " ],
-   [ "keyword", "do" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "do%>" ]
   ]
  },
  {
@@ -415,7 +409,7 @@
    [ "text", "\t" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -428,23 +422,37 @@
    [ "entity.other.attribute-name", "class" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"name\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.anchor", "a" ],
    [ "text", " " ],
    [ "entity.other.attribute-name", "href" ],
    [ "keyword.operator", "=" ],
-   [ "string", "\"<%=luadoc.doclet.html.module_link(modulename, doc)%>\"" ],
-   [ "meta.tag", ">" ],
+   [ "string", "\"" ],
+   [ "keyword", "<%=" ],
+   [ "identifier", "luadoc" ],
+   [ "text", "." ],
+   [ "identifier", "doclet" ],
+   [ "text", "." ],
+   [ "identifier", "html" ],
+   [ "text", "." ],
+   [ "identifier", "module_link" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "modulename" ],
+   [ "text", ", " ],
+   [ "identifier", "doc" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword", "%>" ],
+   [ "text", "\">" ],
    [ "keyword", "<%=" ],
    [ "identifier", "modulename" ],
    [ "keyword", "%>" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.anchor", "a" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -457,7 +465,7 @@
    [ "entity.other.attribute-name", "class" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"summary\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "keyword", "<%=" ],
    [ "identifier", "doc" ],
    [ "text", "." ],
@@ -470,7 +478,7 @@
    [ "keyword", "%>" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -479,15 +487,13 @@
    [ "text", "\t" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "end" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "<%end%>" ]
   ]
  },
  {
@@ -495,15 +501,13 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "table" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "end" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "<%end%>" ]
   ]
  },
  {
@@ -521,8 +525,7 @@
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "if" ],
+   [ "keyword", "<%if" ],
    [ "text", " " ],
    [ "keyword", "not" ],
    [ "text", " " ],
@@ -541,8 +544,7 @@
    [ "text", " " ],
    [ "constant.numeric", "0" ],
    [ "text", " " ],
-   [ "keyword", "then" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "then%>" ]
   ]
  },
  {
@@ -550,11 +552,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Files" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -566,21 +568,19 @@
    [ "entity.other.attribute-name", "class" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"file_list\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "comment", "<!--" ],
-   [ "comment", "<tr><td colspan=\"2\">Files</td></tr>-->" ]
+   [ "comment", "<!--<tr><td colspan=\"2\">Files</td></tr>-->" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "for" ],
+   [ "keyword", "<%for" ],
    [ "text", " " ],
    [ "identifier", "_" ],
    [ "text", ", " ],
@@ -595,8 +595,7 @@
    [ "identifier", "files" ],
    [ "paren.rparen", ")" ],
    [ "text", " " ],
-   [ "keyword", "do" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "do%>" ]
   ]
  },
  {
@@ -605,7 +604,7 @@
    [ "text", "\t" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -618,23 +617,35 @@
    [ "entity.other.attribute-name", "class" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"name\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.anchor", "a" ],
    [ "text", " " ],
    [ "entity.other.attribute-name", "href" ],
    [ "keyword.operator", "=" ],
-   [ "string", "\"<%=luadoc.doclet.html.file_link(filepath)%>\"" ],
-   [ "meta.tag", ">" ],
+   [ "string", "\"" ],
+   [ "keyword", "<%=" ],
+   [ "identifier", "luadoc" ],
+   [ "text", "." ],
+   [ "identifier", "doclet" ],
+   [ "text", "." ],
+   [ "identifier", "html" ],
+   [ "text", "." ],
+   [ "identifier", "file_link" ],
+   [ "paren.lparen", "(" ],
+   [ "identifier", "filepath" ],
+   [ "paren.rparen", ")" ],
+   [ "keyword", "%>" ],
+   [ "text", "\">" ],
    [ "keyword", "<%=" ],
    [ "identifier", "filepath" ],
    [ "keyword", "%>" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.anchor", "a" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -647,10 +658,10 @@
    [ "entity.other.attribute-name", "class" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"summary\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -659,15 +670,13 @@
    [ "text", "\t" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "end" ],
-   [ "keyword", "%>" ]
+   [ "keyword", "<%end%>" ]
   ]
  },
  {
@@ -675,30 +684,13 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.table", "table" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
   "state": "start",
   "data": [
-   [ "keyword", "<%" ],
-   [ "keyword", "end" ],
-   [ "keyword", "%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!--" ],
-   [ "comment", " id=\"content\" -->" ]
+   [ "keyword", "<%end%>" ]
   ]
  },
  {
@@ -710,10 +702,23 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " " ],
-   [ "comment", "<!--" ],
-   [ "comment", " id=\"main\" -->" ]
+   [ "comment", "<!-- id=\"content\" -->" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.tag", "</" ],
+   [ "meta.tag.tag-name", "div" ],
+   [ "meta.tag.r", ">" ],
+   [ "text", " " ],
+   [ "comment", "<!-- id=\"main\" -->" ]
   ]
  },
  {
@@ -729,7 +734,7 @@
    [ "entity.other.attribute-name", "id" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"about\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -738,14 +743,14 @@
    [ "text", "\t" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.anchor", "a" ],
    [ "text", " " ],
    [ "entity.other.attribute-name", "href" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://validator.w3.org/check?uri=referer\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name.image", "img" ],
    [ "text", " " ],
@@ -765,13 +770,13 @@
    [ "keyword.operator", "=" ],
    [ "string", "\"88\"" ],
    [ "text", " " ],
-   [ "meta.tag", "/>" ],
+   [ "meta.tag.r", "/>" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.anchor", "a" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -779,10 +784,9 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " " ],
-   [ "comment", "<!--" ],
-   [ "comment", " id=\"about\" -->" ]
+   [ "comment", "<!-- id=\"about\" -->" ]
   ]
  },
  {
@@ -794,10 +798,9 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " " ],
-   [ "comment", "<!--" ],
-   [ "comment", " id=\"container\" -->" ],
+   [ "comment", "<!-- id=\"container\" -->" ],
    [ "text", "\t" ]
   ]
  },
@@ -806,7 +809,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -814,7 +817,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {

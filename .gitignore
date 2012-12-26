@@ -16,7 +16,8 @@
 # A handy place to put stuff that git should ignore:
 /ignore/
 node_modules/
-tool/node_modules/
+jam/
+* *
 
 .git-ref
 npm-debug.log

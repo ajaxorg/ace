@@ -44,6 +44,7 @@ var modesByName = {
     css:        ["CSS"          , "css"],
     dart:       ["Dart"         , "dart"],
     diff:       ["Diff"         , "diff|patch"],
+    dot:        ["Dot"          , "dot"],
     glsl:       ["Glsl"         , "glsl|frag|vert"],
     golang:     ["Go"           , "go"],
     groovy:     ["Groovy"       , "groovy"],

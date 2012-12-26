@@ -130,8 +130,7 @@
    [ "lparen", "(" ],
    [ "identifier", "$num_primes" ],
    [ "constant.numeric", "-1" ],
-   [ "rparen", ")" ],
-   [ "rparen", ")" ]
+   [ "rparen", "))" ]
   ]
  },
  {
@@ -263,8 +262,7 @@
    [ "lparen", "(" ],
    [ "identifier", "$num_primes" ],
    [ "constant.numeric", "-1" ],
-   [ "rparen", ")" ],
-   [ "rparen", ")" ]
+   [ "rparen", "))" ]
   ]
  },
  {

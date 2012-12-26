@@ -31,7 +31,7 @@
    [ "entity.other.attribute-name", "yahoo:lang" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"en-US\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -40,7 +40,7 @@
    [ "text", "    " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "diagnostics" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -49,11 +49,11 @@
    [ "text", "        " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "publiclyCallable" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "true" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "publiclyCallable" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -74,11 +74,11 @@
    [ "entity.other.attribute-name", "execution-time" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"25\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "<![CDATA[http://where.yahooapis.com/v1/continents;start=0;count=10]]>" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "url" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -87,11 +87,11 @@
    [ "text", "        " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "user-time" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "26" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "user-time" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -100,11 +100,11 @@
    [ "text", "        " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "service-time" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "25" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "service-time" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -113,11 +113,11 @@
    [ "text", "        " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "build-version" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "21978" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "build-version" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -126,7 +126,7 @@
    [ "text", "    " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "diagnostics" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", " " ]
   ]
  },
@@ -136,7 +136,7 @@
    [ "text", "    " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "results" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -162,7 +162,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/24865670\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -171,11 +171,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "24865670" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -188,11 +188,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -201,11 +201,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Africa" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -214,7 +214,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -240,7 +240,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/24865675\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -249,11 +249,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "24865675" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -266,11 +266,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -279,11 +279,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Europe" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -292,7 +292,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -318,7 +318,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/24865673\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -327,11 +327,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "24865673" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -344,11 +344,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -357,11 +357,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "South America" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -370,7 +370,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -396,7 +396,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/28289421\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -405,11 +405,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "28289421" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -422,11 +422,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -435,11 +435,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Antarctic" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -448,7 +448,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -474,7 +474,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/24865671\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -483,11 +483,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "24865671" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -500,11 +500,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -513,11 +513,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Asia" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -526,7 +526,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -552,7 +552,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/24865672\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -561,11 +561,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "24865672" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -578,11 +578,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -591,11 +591,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "North America" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -604,7 +604,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -630,7 +630,7 @@
    [ "entity.other.attribute-name", "yahoo:uri" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"http://where.yahooapis.com/v1/place/55949070\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -639,11 +639,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "55949070" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "woeid" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -656,11 +656,11 @@
    [ "entity.other.attribute-name", "code" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"29\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Continent" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "placeTypeName" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -669,11 +669,11 @@
    [ "text", "            " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Australia" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "name" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -682,7 +682,7 @@
    [ "text", "        " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "place" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -691,7 +691,7 @@
    [ "text", "    " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "results" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -699,7 +699,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "query" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  }
 ]
