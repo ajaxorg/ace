@@ -122,8 +122,7 @@
    [ "identifier", "atoi" ],
    [ "paren.lparen", "(" ],
    [ "identifier", "i" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  },
  {
@@ -198,8 +197,7 @@
    [ "identifier", "celsius" ],
    [ "keyword.operator", "+" ],
    [ "constant.numeric", ".5" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  }
 ]
