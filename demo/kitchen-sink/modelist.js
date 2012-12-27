@@ -91,6 +91,7 @@ var modesByName = {
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
     typescript: ["Typescript"   , "typescript|ts|str"],
+    vbscript:   ["VBScript"     , "vbs"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"       , "xq"],
     yaml:       ["YAML"         , "yaml"]
