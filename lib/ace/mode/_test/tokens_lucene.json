@@ -1,0 +1,21 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "paren.lparen", "(" ],
+   [ "keyword", "title:" ],
+   [ "string", "\"foo bar\"" ],
+   [ "text", " " ],
+   [ "keyword.operator", "AND" ],
+   [ "text", " " ],
+   [ "keyword", "body:" ],
+   [ "string", "\"quick fox\"" ],
+   [ "paren.rparen", ")" ],
+   [ "text", " " ],
+   [ "keyword.operator", "OR" ],
+   [ "text", " " ],
+   [ "keyword", "title:" ],
+   [ "text", "fox" ]
+  ]
+ }
+]

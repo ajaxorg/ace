@@ -20,8 +20,7 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "--]]" ],
-   [ "comment", "--" ]
+   [ "comment", "--]]--" ]
   ]
  },
  {
@@ -138,8 +137,7 @@
    [ "support.function", "sub" ],
    [ "paren.lparen", "(" ],
    [ "constant.numeric", "13" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ],
+   [ "paren.rparen", "))" ],
    [ "text", ", " ],
    [ "identifier", "offset" ],
    [ "text", " " ],
@@ -283,8 +281,7 @@
    [ "identifier", "other" ],
    [ "paren.rparen", ")" ],
    [ "text", " " ],
-   [ "keyword.operator", "~" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "~=" ],
    [ "text", " " ],
    [ "string", "\"table\"" ],
    [ "text", " " ],
@@ -348,8 +345,7 @@
    [ "support.function", "unpack" ],
    [ "paren.lparen", "(" ],
    [ "identifier", "other" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  },
  {
@@ -387,9 +383,7 @@
    [ "identifier", "num_args" ],
    [ "paren.lparen", "(" ],
    [ "identifier", "int" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", "}" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", ")})" ]
   ]
  },
  {
@@ -411,8 +405,7 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "--]=]" ],
-   [ "comment", "--" ]
+   [ "comment", "--]=]--" ]
   ]
  },
  {

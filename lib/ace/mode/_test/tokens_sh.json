@@ -52,8 +52,7 @@
    [ "text", " " ],
    [ "identifier", "config" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", "-" ],
+   [ "keyword.operator", "--" ],
    [ "identifier", "get" ],
    [ "text", " " ],
    [ "identifier", "github" ],
@@ -110,7 +109,7 @@
    [ "text", " " ],
    [ "variable", "repo=" ],
    [ "text", "`" ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "variable", "$remote" ],
    [ "text", " | " ],
@@ -131,7 +130,7 @@
   "state": "start",
   "data": [
    [ "text", "          " ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "variable", "$repo" ],
    [ "text", " | " ],
@@ -152,7 +151,7 @@
   "state": "start",
   "data": [
    [ "text", "          " ],
-   [ "constant.language", "exit" ],
+   [ "support.function.builtin", "exit" ],
    [ "text", " " ],
    [ "constant.numeric", "1" ]
   ]
@@ -172,7 +171,7 @@
    [ "text", " " ],
    [ "variable", "repo=" ],
    [ "text", "`" ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "variable", "$remote" ],
    [ "text", " | " ],
@@ -193,7 +192,7 @@
   "state": "start",
   "data": [
    [ "text", "          " ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "variable", "$repo" ],
    [ "text", " | " ],
@@ -219,7 +218,7 @@
   "state": "start",
   "data": [
    [ "text", "          " ],
-   [ "constant.language", "exit" ],
+   [ "support.function.builtin", "exit" ],
    [ "text", " " ],
    [ "constant.numeric", "1" ]
   ]
@@ -239,7 +238,7 @@
    [ "text", " " ],
    [ "variable", "repo=" ],
    [ "text", "`" ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "variable", "$remote" ],
    [ "text", " | " ],
@@ -260,7 +259,7 @@
   "state": "start",
   "data": [
    [ "text", "          " ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "variable", "$repo" ],
    [ "text", " | " ],
@@ -281,7 +280,7 @@
   "state": "start",
   "data": [
    [ "text", "          " ],
-   [ "constant.language", "exit" ],
+   [ "support.function.builtin", "exit" ],
    [ "text", " " ],
    [ "constant.numeric", "1" ]
   ]
@@ -328,7 +327,7 @@
   "state": "start",
   "data": [
    [ "text", "        " ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "string", "\"Couldn't find a valid remote\"" ],
    [ "text", " " ],
@@ -340,7 +339,7 @@
   "state": "start",
   "data": [
    [ "text", "        " ],
-   [ "constant.language", "exit" ],
+   [ "support.function.builtin", "exit" ],
    [ "text", " " ],
    [ "constant.numeric", "1" ]
   ]
@@ -389,8 +388,7 @@
    [ "identifier", "HEAD" ],
    [ "text", " " ],
    [ "constant.numeric", "2" ],
-   [ "keyword.operator", ">" ],
-   [ "keyword.operator", "/" ],
+   [ "keyword.operator", ">/" ],
    [ "identifier", "dev" ],
    [ "keyword.operator", "/" ],
    [ "identifier", "null" ],
@@ -401,7 +399,7 @@
   "state": "start",
   "data": [
    [ "text", "    " ],
-   [ "constant.language", "echo" ],
+   [ "support.function.builtin", "echo" ],
    [ "text", " " ],
    [ "string", "\"http://github.com/$repo/pull/new/${branch##refs/heads/}\"" ]
   ]
@@ -416,7 +414,7 @@
   "state": "start",
   "data": [
    [ "text", "    " ],
-   [ "constant.language", "exit" ],
+   [ "support.function.builtin", "exit" ],
    [ "text", " " ],
    [ "constant.numeric", "1" ]
   ]

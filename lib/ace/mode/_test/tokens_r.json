@@ -1,0 +1,296 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "Call" ],
+   [ "keyword.operator", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "lm" ],
+   [ "paren.keyword.operator", "(" ],
+   [ "identifier", "formula" ],
+   [ "text", " " ],
+   [ "keyword.operator", "=" ],
+   [ "text", " " ],
+   [ "identifier", "y" ],
+   [ "text", " " ],
+   [ "keyword.operator", "~" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "paren.keyword.operator", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "Residuals" ],
+   [ "keyword.operator", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", "1" ],
+   [ "text", "       " ],
+   [ "constant.numeric", "2" ],
+   [ "text", "       " ],
+   [ "constant.numeric", "3" ],
+   [ "text", "       " ],
+   [ "constant.numeric", "4" ],
+   [ "text", "       " ],
+   [ "constant.numeric", "5" ],
+   [ "text", "       " ],
+   [ "constant.numeric", "6" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", "3.3333" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "0.6667" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "2.6667" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "2.6667" ],
+   [ "text", " " ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "0.6667" ],
+   [ "text", "  " ],
+   [ "constant.numeric", "3.3333" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "Coefficients" ],
+   [ "keyword.operator", ":" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "            " ],
+   [ "identifier", "Estimate" ],
+   [ "text", " " ],
+   [ "identifier", "Std" ],
+   [ "text", ". " ],
+   [ "identifier", "Error" ],
+   [ "text", " " ],
+   [ "identifier", "t" ],
+   [ "text", " " ],
+   [ "identifier", "value" ],
+   [ "text", " " ],
+   [ "identifier", "Pr" ],
+   [ "paren.keyword.operator", "(" ],
+   [ "keyword.operator", ">|" ],
+   [ "identifier", "t" ],
+   [ "keyword.operator", "|" ],
+   [ "paren.keyword.operator", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "paren.keyword.operator", "(" ],
+   [ "identifier", "Intercept" ],
+   [ "paren.keyword.operator", ")" ],
+   [ "text", "  " ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "9.3333" ],
+   [ "text", "     " ],
+   [ "constant.numeric", "2.8441" ],
+   [ "text", "  " ],
+   [ "keyword.operator", "-" ],
+   [ "constant.numeric", "3.282" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0.030453" ],
+   [ "text", " " ],
+   [ "keyword.operator", "*" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "x" ],
+   [ "text", "             " ],
+   [ "constant.numeric", "7.0000" ],
+   [ "text", "     " ],
+   [ "constant.numeric", "0.7303" ],
+   [ "text", "   " ],
+   [ "constant.numeric", "9.585" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0.000662" ],
+   [ "text", " " ],
+   [ "keyword.operator", "***" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.operator", "---" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "Signif" ],
+   [ "text", ". " ],
+   [ "identifier", "codes" ],
+   [ "keyword.operator", ":" ],
+   [ "text", "  " ],
+   [ "constant.numeric", "0" ],
+   [ "text", " ‘" ],
+   [ "keyword.operator", "***" ],
+   [ "text", "’ " ],
+   [ "constant.numeric", "0.001" ],
+   [ "text", " ‘" ],
+   [ "keyword.operator", "**" ],
+   [ "text", "’ " ],
+   [ "constant.numeric", "0.01" ],
+   [ "text", " ‘" ],
+   [ "keyword.operator", "*" ],
+   [ "text", "’ " ],
+   [ "constant.numeric", "0.05" ],
+   [ "text", " ‘.’ " ],
+   [ "constant.numeric", "0.1" ],
+   [ "text", " ‘ ’ " ],
+   [ "constant.numeric", "1" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "Residual" ],
+   [ "text", " " ],
+   [ "identifier", "standard" ],
+   [ "text", " " ],
+   [ "identifier", "error" ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "constant.numeric", "3.055" ],
+   [ "text", " " ],
+   [ "identifier", "on" ],
+   [ "text", " " ],
+   [ "constant.numeric", "4" ],
+   [ "text", " " ],
+   [ "identifier", "degrees" ],
+   [ "text", " " ],
+   [ "identifier", "of" ],
+   [ "text", " " ],
+   [ "identifier", "freedom" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "Multiple" ],
+   [ "text", " " ],
+   [ "identifier", "R" ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "squared" ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0.9583" ],
+   [ "text", ",     " ],
+   [ "identifier", "Adjusted" ],
+   [ "text", " " ],
+   [ "identifier", "R" ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "squared" ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0.9478" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.language.boolean", "F" ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "statistic" ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "constant.numeric", "91.88" ],
+   [ "text", " " ],
+   [ "identifier", "on" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ],
+   [ "text", " " ],
+   [ "identifier", "and" ],
+   [ "text", " " ],
+   [ "constant.numeric", "4" ],
+   [ "text", " " ],
+   [ "identifier", "DF" ],
+   [ "text", ",  " ],
+   [ "identifier", "p" ],
+   [ "keyword.operator", "-" ],
+   [ "identifier", "value" ],
+   [ "keyword.operator", ":" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0.000662" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "identifier", "par" ],
+   [ "paren.keyword.operator", "(" ],
+   [ "identifier", "mfrow" ],
+   [ "keyword.operator", "=" ],
+   [ "identifier", "c" ],
+   [ "paren.keyword.operator", "(" ],
+   [ "constant.numeric", "2" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "2" ],
+   [ "paren.keyword.operator", "))" ],
+   [ "text", "     " ],
+   [ "comment", "# Request 2x2 plot layout" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.operator", ">" ],
+   [ "text", " " ],
+   [ "identifier", "plot" ],
+   [ "paren.keyword.operator", "(" ],
+   [ "identifier", "lm_1" ],
+   [ "paren.keyword.operator", ")" ],
+   [ "text", "             " ],
+   [ "comment", "# Diagnostic plot of regression model" ]
+  ]
+ }
+]

@@ -1,0 +1,537 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "main" ],
+   [ "text", "() {" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "print" ],
+   [ "text", "(" ],
+   [ "string", "'Hello World!'" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.primitive.dart", "int" ],
+   [ "text", " " ],
+   [ "identifier", "fib" ],
+   [ "text", "(" ],
+   [ "storage.type.primitive.dart", "int" ],
+   [ "text", " " ],
+   [ "identifier", "n" ],
+   [ "text", ") " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "keyword.operator.comparison.dart", ">" ],
+   [ "text", " (" ],
+   [ "identifier", "n" ],
+   [ "text", " " ],
+   [ "keyword.operator.comparison.dart", ">" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ],
+   [ "text", ") " ],
+   [ "keyword.control.ternary.dart", "?" ],
+   [ "text", " (" ],
+   [ "identifier", "fib" ],
+   [ "text", "(" ],
+   [ "identifier", "n" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ],
+   [ "text", ") " ],
+   [ "keyword.operator.arithmetic.dart", "+" ],
+   [ "text", " " ],
+   [ "identifier", "fib" ],
+   [ "text", "(" ],
+   [ "identifier", "n" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "-" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2" ],
+   [ "text", ")) " ],
+   [ "keyword.control.ternary.dart", ":" ],
+   [ "text", " " ],
+   [ "identifier", "n" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "main" ],
+   [ "text", "() {" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "print" ],
+   [ "text", "(" ],
+   [ "string", "'fib(20) = ${fib(20)}'" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "}" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "/*asd" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "asdad" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "*/" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", "0.67" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", "77" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "." ],
+   [ "constant.numeric", "86" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.other.import.dart", "#import" ],
+   [ "text", "(" ],
+   [ "string", "\"http://dartwatch.com/myOtherLibrary.dart\"" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.other.import.dart", "#import" ],
+   [ "text", "(" ],
+   [ "string", "\"myOtherLibrary.dart\"" ],
+   [ "text", ", " ],
+   [ "keyword.other.import.dart", "prefix" ],
+   [ "text", ":" ],
+   [ "string", "\"lib1\"" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "qqdoc",
+  "data": [
+   [ "string", "\"\"\"asdasdads" ]
+  ]
+ },
+ {
+  "state": "qqdoc",
+  "data": [
+   [ "string", "asdadsadsasd" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string", "asdasdasdad\"\"\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string", "'23424'" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", "0x234" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "foo" ],
+   [ "text", " " ],
+   [ "keyword.operator.dart", "is" ],
+   [ "text", " " ],
+   [ "identifier", "bar" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.primitive.dart", "int" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "text", " " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "4" ],
+   [ "text", " " ],
+   [ "keyword.operator.bitwise.dart", "<<" ],
+   [ "text", " " ],
+   [ "constant.numeric", "10" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "// Create a class for Point." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.declaration.dart", "class" ],
+   [ "text", " " ],
+   [ "identifier", "Point" ],
+   [ "text", " {" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "// Final variables cannot be changed once they are assigned." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "// Create two instance variables." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "storage.modifier.dart", "final" ],
+   [ "text", " " ],
+   [ "storage.type.primitive.dart", "num" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "text", ", " ],
+   [ "identifier", "y" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "// A constructor, with syntactic sugar for setting instance variables." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "Point" ],
+   [ "text", "(" ],
+   [ "variable.language.dart", "this" ],
+   [ "text", "." ],
+   [ "identifier", "x" ],
+   [ "text", ", " ],
+   [ "variable.language.dart", "this" ],
+   [ "text", "." ],
+   [ "identifier", "y" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "// A named constructor with an initializer list." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "identifier", "Point" ],
+   [ "text", "." ],
+   [ "identifier", "origin" ],
+   [ "text", "() " ],
+   [ "keyword.control.ternary.dart", ":" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "text", " " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", ", " ],
+   [ "identifier", "y" ],
+   [ "text", " " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "comment", "// A method." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "storage.type.primitive.dart", "num" ],
+   [ "text", " " ],
+   [ "identifier", "distanceTo" ],
+   [ "text", "(" ],
+   [ "identifier", "Point" ],
+   [ "text", " " ],
+   [ "identifier", "other" ],
+   [ "text", ") {" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type.primitive.dart", "var" ],
+   [ "text", " " ],
+   [ "identifier", "dx" ],
+   [ "text", " " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "text", " " ],
+   [ "identifier", "x" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "-" ],
+   [ "text", " " ],
+   [ "identifier", "other" ],
+   [ "text", "." ],
+   [ "identifier", "x" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "storage.type.primitive.dart", "var" ],
+   [ "text", " " ],
+   [ "identifier", "dy" ],
+   [ "text", " " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "text", " " ],
+   [ "identifier", "y" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "-" ],
+   [ "text", " " ],
+   [ "identifier", "other" ],
+   [ "text", "." ],
+   [ "identifier", "y" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword.control.dart", "return" ],
+   [ "text", " " ],
+   [ "identifier", "sqrt" ],
+   [ "text", "(" ],
+   [ "identifier", "dx" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "*" ],
+   [ "text", " " ],
+   [ "identifier", "dx" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "+" ],
+   [ "text", " " ],
+   [ "identifier", "dy" ],
+   [ "text", " " ],
+   [ "keyword.operator.arithmetic.dart", "*" ],
+   [ "text", " " ],
+   [ "identifier", "dy" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  }" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "comment", "// Check for null." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.primitive.dart", "var" ],
+   [ "text", " " ],
+   [ "identifier", "unicorn" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "assert" ],
+   [ "text", "(" ],
+   [ "identifier", "unicorn" ],
+   [ "text", " " ],
+   [ "keyword.operator.comparison.dart", "==" ],
+   [ "text", " " ],
+   [ "constant.language.dart", "null" ],
+   [ "text", ");" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "// Check for NaN." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "storage.type.primitive.dart", "var" ],
+   [ "text", " " ],
+   [ "identifier", "iMeantToDoThis" ],
+   [ "text", " " ],
+   [ "keyword.operator.assignment.dart", "=" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "keyword.operator.arithmetic.dart", "/" ],
+   [ "constant.numeric", "0" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "identifier", "assert" ],
+   [ "text", "(" ],
+   [ "identifier", "iMeantToDoThis" ],
+   [ "text", "." ],
+   [ "identifier", "isNaN" ],
+   [ "text", "());" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ }
+]

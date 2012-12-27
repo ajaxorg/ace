@@ -1,0 +1,280 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.other.doctype", "!!!5" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "# <!--[if lt IE 7]> <html class=\"no-js lt-ie9 lt-ie8 lt-ie7\" lang=\"en\"> <![endif]-->" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "# <!--[if IE 7]>    <html class=\"no-js lt-ie9 lt-ie8\" lang=\"en\"> <![endif]-->" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "# <!--[if IE 8]>    <html class=\"no-js lt-ie9\" lang=\"en\"> <![endif]-->" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "# <!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en\"> <!--<![endif]-->" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "/adasdasdad" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "%div" ],
+   [ "punctuation.section", "{" ],
+   [ "constant.other.symbol.ruby", ":id" ],
+   [ "text", " => " ],
+   [ "string", "\"#{@item.type}_#{@item.number}\"" ],
+   [ "text", ", " ],
+   [ "constant.other.symbol.ruby", ":class" ],
+   [ "text", " => " ],
+   [ "string", "'#{@item.type} #{@item.urgency}'" ],
+   [ "text", ", " ],
+   [ "constant.other.symbol.ruby", ":phoney" ],
+   [ "text", " => " ],
+   [ "string", "`asdasdasd`" ],
+   [ "punctuation.section", "}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "/ file: app/views/movies/index.html.haml" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "meta.escape.haml", "\\d" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "%ads:" ],
+   [ "punctuation.section", "{" ],
+   [ "constant.other.symbol.ruby", ":bleh" ],
+   [ "text", " => " ],
+   [ "constant.numeric", "33" ],
+   [ "punctuation.section", "}" ]
+  ]
+ },
+ {
+  "state": "embedded_ruby",
+  "data": [
+   [ "entity.name.tag.haml", "%p" ],
+   [ "text", "==ddd==" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  Date/Time:" ]
+  ]
+ },
+ {
+  "state": "embedded_ruby",
+  "data": [
+   [ "text", "  - " ],
+   [ "identifier", "now" ],
+   [ "text", " = " ],
+   [ "support.class", "DateTime" ],
+   [ "text", "." ],
+   [ "identifier", "now" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "  %strong" ],
+   [ "text", "= now" ]
+  ]
+ },
+ {
+  "state": "embedded_ruby",
+  "data": [
+   [ "text", "   = " ],
+   [ "keyword", "if" ],
+   [ "text", " " ],
+   [ "identifier", "now" ],
+   [ "text", "  " ],
+   [ "support.class", "DateTime" ],
+   [ "text", "." ],
+   [ "identifier", "parse" ],
+   [ "text", "(\"" ],
+   [ "support.class", "December" ],
+   [ "text", " " ],
+   [ "constant.numeric", "31" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "2006" ],
+   [ "text", "\")" ]
+  ]
+ },
+ {
+  "state": "embedded_ruby",
+  "data": [
+   [ "text", "    = \"" ],
+   [ "support.class", "Happy" ],
+   [ "text", " " ],
+   [ "identifier", "new" ],
+   [ "text", " \" + \"" ],
+   [ "identifier", "year" ],
+   [ "text", "!\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "%sfd" ],
+   [ "entity.other.attribute-name.class.haml", ".dfdfg" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "#content" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " .title" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "   %h1" ],
+   [ "text", "= @title" ]
+  ]
+ },
+ {
+  "state": "embedded_ruby",
+  "data": [
+   [ "text", "   = " ],
+   [ "support.function", "link_to" ],
+   [ "text", " '" ],
+   [ "support.class", "Home" ],
+   [ "text", "', " ],
+   [ "identifier", "home_url" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "punctuation.section.comment", "   #contents" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "%div" ],
+   [ "entity.other.attribute-name.id.haml", "#content" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "  %div" ],
+   [ "entity.other.attribute-name.class.haml", ".articles" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "    %div" ],
+   [ "entity.other.attribute-name.class.haml", ".article.title" ],
+   [ "text", " Blah" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "    %div" ],
+   [ "entity.other.attribute-name.class.haml", ".article.date" ],
+   [ "text", " " ],
+   [ "constant.numeric", "2006-11-05" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "    %div" ],
+   [ "entity.other.attribute-name.class.haml", ".article.entry" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "      Neil Patrick Harris " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "%div" ],
+   [ "text", "[@user, " ],
+   [ "constant.other.symbol.ruby", ":greeting" ],
+   [ "text", "]" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.tag.haml", "  %bar" ],
+   [ "text", "[" ],
+   [ "constant.numeric", "290" ],
+   [ "text", "]/" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "string.quoted.double", "==Hello!==" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ }
+]

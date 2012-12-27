@@ -91,8 +91,7 @@
    [ "string", "two" ],
    [ "text", " " ],
    [ "string", "three" ],
-   [ "keyword", ")" ],
-   [ "keyword", ". " ],
+   [ "keyword", "). " ],
    [ "text", "This is a paragraph with classes" ]
   ]
  },
@@ -104,11 +103,9 @@
   "state": "start",
   "data": [
    [ "markup.heading", "p" ],
-   [ "keyword", "(" ],
-   [ "keyword", "#" ],
+   [ "keyword", "(#" ],
    [ "string", "id" ],
-   [ "keyword", ")" ],
-   [ "keyword", ". " ],
+   [ "keyword", "). " ],
    [ "text", "(one with an id)" ]
   ]
  },
@@ -128,8 +125,7 @@
    [ "string", "three" ],
    [ "keyword", "#" ],
    [ "string", "my_id" ],
-   [ "keyword", ")" ],
-   [ "keyword", ". " ],
+   [ "keyword", "). " ],
    [ "text", "..classes + id" ]
   ]
  },

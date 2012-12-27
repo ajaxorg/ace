@@ -2,8 +2,7 @@
  {
   "state": "start",
   "data": [
-   [ "comment", "<!--" ],
-   [ "comment", "- hello world --->" ]
+   [ "comment", "<!--- hello world --->" ]
   ]
  },
  {
@@ -19,7 +18,7 @@
    [ "entity.other.attribute-name", "welcome" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"Hello World!\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -31,11 +30,11 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "cfoutput" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "#welcome#" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "cfoutput" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  }
 ]

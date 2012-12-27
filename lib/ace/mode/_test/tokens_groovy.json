@@ -162,8 +162,7 @@
    [ "identifier", "salary" ],
    [ "text", ":" ],
    [ "constant.numeric", "50" ],
-   [ "rparen", ")" ],
-   [ "rparen", "]" ]
+   [ "rparen", ")]" ]
   ]
  },
  {
@@ -195,8 +194,7 @@
    [ "text", " " ],
    [ "identifier", "e" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "identifier", "e" ],
    [ "text", "." ],
@@ -279,8 +277,7 @@
    [ "text", " " ],
    [ "identifier", "e" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "identifier", "e" ],
    [ "text", "." ],
@@ -350,8 +347,7 @@
    [ "text", " " ],
    [ "identifier", "e" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "identifier", "e" ],
    [ "text", "." ],
@@ -398,8 +394,7 @@
    [ "identifier", "emps" ],
    [ "lparen", "[" ],
    [ "constant.numeric", "0" ],
-   [ "rparen", "]" ],
-   [ "rparen", ")" ],
+   [ "rparen", "])" ],
    [ "text", " " ],
    [ "comment", "// true" ]
   ]
@@ -457,8 +452,7 @@
    [ "text", " " ],
    [ "identifier", "reader" ],
    [ "text", " " ],
-   [ "keyword.operator", "-" ],
-   [ "keyword.operator", ">" ],
+   [ "keyword.operator", "->" ],
    [ "text", " " ],
    [ "identifier", "doSomethingWith" ],
    [ "lparen", "(" ],

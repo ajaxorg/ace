@@ -932,11 +932,9 @@
   "data": [
    [ "keyword.statementBegin", "select" ],
    [ "text", " " ],
-   [ "string", "'don'" ],
-   [ "string", "'t do it now;'" ],
+   [ "string", "'don''t do it now;'" ],
    [ "text", " " ],
-   [ "keyword.operator", "|" ],
-   [ "keyword.operator", "|" ],
+   [ "keyword.operator", "||" ],
    [ "text", " " ],
    [ "string", "'maybe later'" ],
    [ "statementEnd", ";" ]
@@ -959,14 +957,11 @@
    [ "text", " " ],
    [ "support.function", "length" ],
    [ "paren.lparen", "(" ],
-   [ "string", "'some other'" ],
-   [ "string", "'s stuff'" ],
+   [ "string", "'some other''s stuff'" ],
    [ "text", " " ],
-   [ "keyword.operator", "|" ],
-   [ "keyword.operator", "|" ],
+   [ "keyword.operator", "||" ],
    [ "text", " " ],
-   [ "string", "$$" ],
-   [ "string", "cat in hat's stuff $$" ],
+   [ "string", "$$cat in hat's stuff $$" ],
    [ "paren.rparen", ")" ],
    [ "statementEnd", ";" ]
   ]

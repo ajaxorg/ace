@@ -1,0 +1,729 @@
+[
+ {
+  "state": "literalBlock",
+  "data": [
+   [ "support.function", "------------------------------------" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "support.function", "-----------------------------------" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "string.italic", "_ita_lic_" ],
+   [ "text", ", " ],
+   [ "keyword.bold", "*bo*ld*" ],
+   [ "text", ", " ],
+   [ "support.function", "+mo+no+" ],
+   [ "text", ", normal. " ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "keyword", "``" ],
+   [ "text", "double quoted" ],
+   [ "keyword", "''" ],
+   [ "text", ", `single quoted'." ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "  normal, ^super^, " ],
+   [ "keyword", "~sub~" ],
+   [ "text", "." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "''''" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "Escaped:" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "constant.language.escape", "\\_" ],
+   [ "text", "italic_, " ],
+   [ "support.function", "+++" ],
+   [ "text", "_italic_" ],
+   [ "support.function", "+++" ],
+   [ "text", "," ]
+  ]
+ },
+ {
+  "state": "smallPassthrough",
+  "data": [
+   [ "text", "t" ],
+   [ "constant.language.escape", "\\_" ],
+   [ "text", "_e" ],
+   [ "string.italic", "__st, +++t__" ],
+   [ "text", "e__st" ],
+   [ "support.function", "+++" ],
+   [ "text", "," ]
+  ]
+ },
+ {
+  "state": "smallPassthrough",
+  "data": [
+   [ "support.function", "+++" ],
+   [ "text", "<b>bold</b>" ],
+   [ "support.function", "+++" ],
+   [ "text", ", $$<" ],
+   [ "support.function", "b" ],
+   [ "text", ">" ],
+   [ "support.function", "normal" ],
+   [ "text", "</" ],
+   [ "support.function", "b" ],
+   [ "text", ">$$" ]
+  ]
+ },
+ {
+  "state": "smallPassthrough",
+  "data": [
+   [ "text", "\\&#" ],
+   [ "support.function", "182" ],
+   [ "text", "; &#" ],
+   [ "support.function", "182" ],
+   [ "text", ";" ]
+  ]
+ },
+ {
+  "state": "smallPassthrough",
+  "data": [
+   [ "text", "\\`" ],
+   [ "support.function", "not" ],
+   [ "text", " " ],
+   [ "support.function", "single" ],
+   [ "text", " " ],
+   [ "support.function", "quoted" ],
+   [ "text", "'" ]
+  ]
+ },
+ {
+  "state": "smallPassthrough",
+  "data": [
+   [ "text", "\\`\\`" ],
+   [ "support.function", "not" ],
+   [ "text", " " ],
+   [ "support.function", "double" ],
+   [ "text", " " ],
+   [ "support.function", "quoted" ],
+   [ "text", "''" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string.regexp", "[fffff]" ]
+  ]
+ },
+ {
+  "state": "passthroughBlock",
+  "data": [
+   [ "string", "+++++++++++++++++++++++++++++++++++++" ]
+  ]
+ },
+ {
+  "state": "passthroughBlock",
+  "data": [
+   [ "support.function", "(C) " ],
+   [ "constant.character", "{ss}" ],
+   [ "support.function", " ss" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "support.function", "+++++++++++++++++++++++++++++++++++++" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "listingBlock",
+  "data": [
+   [ "support.function", "............." ]
+  ]
+ },
+ {
+  "state": "listingBlock",
+  "data": [
+   [ "support.function", "callout " ],
+   [ "constant.numeric", "<1>" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "support.function", ".............." ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "> 1" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "1> 2" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "<2> 3" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "Escaped:" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "constant.language.escape", "\\_" ],
+   [ "text", "italic_," ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "t" ],
+   [ "constant.language.escape", "\\_" ],
+   [ "text", "_e" ],
+   [ "string.italic", "__st, o__" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", ".optional title" ]
+  ]
+ },
+ {
+  "state": "listingBlock",
+  "data": [
+   [ "support.function", "............." ]
+  ]
+ },
+ {
+  "state": "listingBlock",
+  "data": [
+   [ "support.function", "callout " ],
+   [ "constant.numeric", "<1>" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "support.function", ".............." ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "keyword", ":macro:" ],
+   [ "text", " dddd" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", ".lists" ]
+  ]
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", ". " ],
+   [ "text", "1" ]
+  ]
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", ".. " ],
+   [ "text", "2" ]
+  ]
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", "... " ],
+   [ "text", "d" ]
+  ]
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", "..... " ],
+   [ "text", "big" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "+" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "continue" ],
+   [ "keyword", " +" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "next line" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "xi) no " ],
+   [ "support.function", "++la+tin++" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", "xi) " ],
+   [ "text", "la" ],
+   [ "support.function", "++tin++" ]
+  ]
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", "2. " ],
+   [ "text", "num" ],
+   [ "string.italic", "__ber__" ],
+   [ "text", "  [red]" ],
+   [ "keyword", "#" ],
+   [ "text", "red" ],
+   [ "keyword", "#" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "--" ]
+  ]
+ },
+ {
+  "state": "listText",
+  "data": [
+   [ "keyword", "  5. " ],
+   [ "text", "f " ],
+   [ "keyword", "<<x6," ],
+   [ "string", "ssss" ],
+   [ "keyword", ">>" ],
+   [ "text", " " ],
+   [ "constant.character", "{macro}" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "--" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "markup.list.macro", "image::" ],
+   [ "keyword", "path" ],
+   [ "string", "[beauty]" ],
+   [ "text", " " ],
+   [ "constant.language.escape", "->" ],
+   [ "text", "--" ],
+   [ "constant.language.escape", "<= --" ],
+   [ "text", " replacements" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "indentedBlock",
+  "data": [
+   [ "support.function", " image::s" ]
+  ]
+ },
+ {
+  "state": "indentedBlock",
+  "data": [
+   [ "support.function", "sssss" ]
+  ]
+ },
+ {
+  "state": "indentedBlock",
+  "data": [
+   [ "support.function", "sss " ]
+  ]
+ },
+ {
+  "state": "indentedBlock",
+  "data": [
+   [ "support.function", "sssss" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "markup.heading", "== 1" ]
+  ]
+ },
+ {
+  "state": "indentedBlock",
+  "data": [
+   [ "support.function", "  heading" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "markup.heading", "=== not a heading" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "====================================" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword", "==================================" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "====4 " ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "NOTE: above" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "keyword", "NOTE:" ],
+   [ "text", " above" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string.regexp", "[[x6]]" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "keyword", "WARNING:" ],
+   [ "text", " " ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string.regexp", "[options[]]" ]
+  ]
+ },
+ {
+  "state": "literalBlock",
+  "data": [
+   [ "support.function", "---------------------------" ]
+  ]
+ },
+ {
+  "state": "literalBlock",
+  "data": [
+   [ "support.function", "literal" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "support.function", "---------------------------" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "markup.heading", "= Tables" ]
+  ]
+ },
+ {
+  "state": "tableBlock",
+  "data": [
+   [ "doc.comment", "|====================================" ]
+  ]
+ },
+ {
+  "state": "tableBlock",
+  "data": [
+   [ "doc.comment", "|" ],
+   [ "text", " " ],
+   [ "string.italic", "_italic_" ],
+   [ "text", " " ],
+   [ "doc.comment", "|" ],
+   [ "text", "  " ],
+   [ "keyword.bold", "*bold*" ],
+   [ "text", " " ],
+   [ "doc.comment", "|" ],
+   [ "text", " text " ],
+   [ "doc.comment", "|" ],
+   [ "text", " " ],
+   [ "constant.language.escape", "(R)" ]
+  ]
+ },
+ {
+  "state": "tableBlock",
+  "data": []
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "doc.comment", "|====================================" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "string.regexp", "[more, options]" ]
+  ]
+ },
+ {
+  "state": "commentBlock",
+  "data": [
+   [ "doc.comment", "///////////" ]
+  ]
+ },
+ {
+  "state": "commentBlock",
+  "data": [
+   [ "doc.comment", "comment" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "doc.comment", "///////////" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "comment", "// one line comment" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "[red]" ],
+   [ "keyword", "#" ],
+   [ "text", "red text" ],
+   [ "keyword", "#" ],
+   [ "text", " [yellow-background]" ],
+   [ "keyword", "#" ],
+   [ "text", "on yellow" ],
+   [ "keyword", "#" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "[big]" ],
+   [ "keyword", "#" ],
+   [ "text", "large" ],
+   [ "keyword", "#" ],
+   [ "text", " [red yellow-background big]" ],
+   [ "keyword.bold", "*all bold*" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "\t" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "markup.underline.list", "https://site" ],
+   [ "text", " text <" ],
+   [ "markup.underline.list", "mail@i.am" ],
+   [ "text", "> " ],
+   [ "markup.underline.list", "callto:ace" ],
+   [ "text", " " ],
+   [ "link", "http://ace.ajaxorg.com" ],
+   [ "variable.language", "[awesome]" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": [
+   [ "text", "  .still normal text" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "constant.numeric", ".break out thoug should not" ]
+  ]
+ },
+ {
+  "state": "literalBlock",
+  "data": [
+   [ "support.function", "---------------------------" ]
+  ]
+ },
+ {
+  "state": "literalBlock",
+  "data": [
+   [ "support.function", "///////////////////////////" ]
+  ]
+ },
+ {
+  "state": "dissallowDelimitedBlock",
+  "data": [
+   [ "support.function", "---------------------------" ]
+  ]
+ },
+ {
+  "state": "text",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ }
+]

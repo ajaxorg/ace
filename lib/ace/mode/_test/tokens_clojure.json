@@ -12,33 +12,27 @@
   "state": "start",
   "data": [
    [ "text", "  " ],
-   [ "string", "\"returns a String parting in a given language" ],
-   [ "string", "\"" ]
+   [ "string", "\"returns a String parting in a given language\"" ]
   ]
  },
  {
   "state": "start",
   "data": [
    [ "text", "  " ],
-   [ "keyword", "(" ],
-   [ "keyword", "[" ],
-   [ "keyword", "]" ],
+   [ "keyword", "([]" ],
    [ "text", " " ],
    [ "keyword", "(" ],
    [ "identifier", "parting" ],
    [ "text", " " ],
-   [ "string", "\"World" ],
-   [ "string", "\"" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ]
+   [ "string", "\"World\"" ],
+   [ "keyword", "))" ]
   ]
  },
  {
   "state": "start",
   "data": [
    [ "text", "  " ],
-   [ "keyword", "(" ],
-   [ "keyword", "[" ],
+   [ "keyword", "([" ],
    [ "support.function", "name" ],
    [ "keyword", "]" ],
    [ "text", " " ],
@@ -47,18 +41,15 @@
    [ "text", " " ],
    [ "support.function", "name" ],
    [ "text", " " ],
-   [ "string", "\"en" ],
-   [ "string", "\"" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ]
+   [ "string", "\"en\"" ],
+   [ "keyword", "))" ]
   ]
  },
  {
   "state": "start",
   "data": [
    [ "text", "  " ],
-   [ "keyword", "(" ],
-   [ "keyword", "[" ],
+   [ "keyword", "([" ],
    [ "support.function", "name" ],
    [ "text", " " ],
    [ "identifier", "language" ],
@@ -109,14 +100,12 @@
   "state": "start",
   "data": [
    [ "text", "      " ],
-   [ "string", "\"en" ],
-   [ "string", "\"" ],
+   [ "string", "\"en\"" ],
    [ "text", " " ],
    [ "keyword", "(" ],
    [ "support.function", "str" ],
    [ "text", " " ],
-   [ "string", "\"Goodbye, " ],
-   [ "string", "\"" ],
+   [ "string", "\"Goodbye, \"" ],
    [ "text", " " ],
    [ "support.function", "name" ],
    [ "keyword", ")" ]
@@ -126,14 +115,12 @@
   "state": "start",
   "data": [
    [ "text", "      " ],
-   [ "string", "\"es" ],
-   [ "string", "\"" ],
+   [ "string", "\"es\"" ],
    [ "text", " " ],
    [ "keyword", "(" ],
    [ "support.function", "str" ],
    [ "text", " " ],
-   [ "string", "\"Adios, " ],
-   [ "string", "\"" ],
+   [ "string", "\"Adios, \"" ],
    [ "text", " " ],
    [ "support.function", "name" ],
    [ "keyword", ")" ]
@@ -143,8 +130,7 @@
   "state": "start",
   "data": [
    [ "text", "      " ],
-   [ "keyword", "(" ],
-   [ "keyword", "throw" ],
+   [ "keyword", "(throw" ],
    [ "text", " " ],
    [ "keyword", "(" ],
    [ "identifier", "IllegalArgumentException" ],
@@ -158,16 +144,10 @@
    [ "keyword", "(" ],
    [ "support.function", "str" ],
    [ "text", " " ],
-   [ "string", "\"unsupported language " ],
-   [ "string", "\"" ],
+   [ "string", "\"unsupported language \"" ],
    [ "text", " " ],
    [ "identifier", "language" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ]
+   [ "keyword", "))))))" ]
   ]
  },
  {
@@ -182,8 +162,7 @@
    [ "text", " " ],
    [ "keyword", "(" ],
    [ "identifier", "parting" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
+   [ "keyword", "))" ],
    [ "text", " " ],
    [ "comment", "; -> Goodbye, World" ]
   ]
@@ -197,10 +176,8 @@
    [ "keyword", "(" ],
    [ "identifier", "parting" ],
    [ "text", " " ],
-   [ "string", "\"Mark" ],
-   [ "string", "\"" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
+   [ "string", "\"Mark\"" ],
+   [ "keyword", "))" ],
    [ "text", " " ],
    [ "comment", "; -> Goodbye, Mark" ]
   ]
@@ -214,13 +191,10 @@
    [ "keyword", "(" ],
    [ "identifier", "parting" ],
    [ "text", " " ],
-   [ "string", "\"Mark" ],
-   [ "string", "\"" ],
+   [ "string", "\"Mark\"" ],
    [ "text", " " ],
-   [ "string", "\"es" ],
-   [ "string", "\"" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
+   [ "string", "\"es\"" ],
+   [ "keyword", "))" ],
    [ "text", " " ],
    [ "comment", "; -> Adios, Mark" ]
   ]
@@ -234,13 +208,10 @@
    [ "keyword", "(" ],
    [ "identifier", "parting" ],
    [ "text", " " ],
-   [ "string", "\"Mark" ],
-   [ "string", "\"" ],
+   [ "string", "\"Mark\"" ],
    [ "text", ", " ],
-   [ "string", "\"xy" ],
-   [ "string", "\"" ],
-   [ "keyword", ")" ],
-   [ "keyword", ")" ],
+   [ "string", "\"xy\"" ],
+   [ "keyword", "))" ],
    [ "text", " " ],
    [ "comment", "; -> java.lang.IllegalArgumentException: unsupported language xy" ]
   ]
