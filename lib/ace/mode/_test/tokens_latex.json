@@ -169,9 +169,7 @@
    [ "rparen", "}" ],
    [ "lparen", "{" ],
    [ "text", "c^2" ],
-   [ "rparen", "}" ],
-   [ "rparen", "}" ],
-   [ "rparen", "}" ]
+   [ "rparen", "}}}" ]
   ]
  },
  {

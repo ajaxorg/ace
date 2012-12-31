@@ -1,0 +1,425 @@
+[
+ {
+  "state": "start",
+  "data": [
+   [ "comment", "// I'm a comment!" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "/*" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", " * Adds the given numbers together." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", " */" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", "/*!" ]
+  ]
+ },
+ {
+  "state": "comment",
+  "data": [
+   [ "comment", " * Adds the given numbers together." ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "comment", " */" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.function.stylus", "asdasdasdad" ],
+   [ "text", "(df, ad" ],
+   [ "keyword.operator.stylus", "=" ],
+   [ "constant.numeric", "23" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.function.stylus", "add" ],
+   [ "text", "(" ],
+   [ "entity.name.tag.stylus", "a" ],
+   [ "text", ", " ],
+   [ "entity.name.tag.stylus", "b" ],
+   [ "text", " " ],
+   [ "keyword.operator.stylus", "=" ],
+   [ "text", " " ],
+   [ "entity.name.tag.stylus", "a" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "   " ],
+   [ "entity.name.tag.stylus", "a" ],
+   [ "text", " " ],
+   [ "keyword.operator.stylus", "+" ],
+   [ "text", " " ],
+   [ "entity.name.tag.stylus", "b" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.name.function.stylus", "green" ],
+   [ "text", "(" ],
+   [ "constant.numeric", "#0c0" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " add(" ],
+   [ "constant.numeric", "10" ],
+   [ "text", ", " ],
+   [ "constant.numeric", "5" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " " ],
+   [ "comment", "// => 15" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " add(" ],
+   [ "constant.numeric", "10" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", " add(" ],
+   [ "entity.name.tag.stylus", "a" ],
+   [ "text", ", " ],
+   [ "entity.name.tag.stylus", "b" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.language.stylus", "    &" ],
+   [ "text", "asdasd" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    (" ],
+   [ "variable.language.stylus", "arguments" ],
+   [ "text", ")" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "keyword.stylus", "@sdfsdf" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.other.attribute-name.class.stylus", ".signatures" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "background-color" ],
+   [ "text", " " ],
+   [ "constant.numeric", "#e0e8e0" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "border" ],
+   [ "text", " " ],
+   [ "constant.numeric", "1" ],
+   [ "keyword", "px" ],
+   [ "text", " " ],
+   [ "support.constant", "solid" ],
+   [ "text", " grayLighter" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "box-shadow" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "constant.numeric", "3" ],
+   [ "keyword", "px" ],
+   [ "text", " grayLightest" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "border-radius" ],
+   [ "text", " " ],
+   [ "constant.numeric", "3" ],
+   [ "keyword", "px" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "padding" ],
+   [ "text", " " ],
+   [ "constant.numeric", "3" ],
+   [ "keyword", "px" ],
+   [ "text", " " ],
+   [ "constant.numeric", "5" ],
+   [ "keyword", "px" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "string", "\"adsads\"" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "margin-left" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "list-style" ],
+   [ "text", " " ],
+   [ "support.constant", "none" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.other.attribute-name.class.stylus", ".signature" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "list-style" ],
+   [ "text", " " ],
+   [ "support.constant", "none" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "display" ],
+   [ "text", ": " ],
+   [ "support.constant", "inline" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "margin-left" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword.operator.stylus", ">" ],
+   [ "text", " " ],
+   [ "entity.name.tag.stylus", "li" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "display" ],
+   [ "text", " " ],
+   [ "support.constant", "inline" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "keyword.operator.stylus", "is" ],
+   [ "text", " " ],
+   [ "keyword.operator.stylus", "not" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.other.attribute-name.class.stylus", ".signature-values" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "list-style" ],
+   [ "text", " " ],
+   [ "support.constant", "none" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "display" ],
+   [ "text", " " ],
+   [ "support.constant", "inline" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "support.type", "margin-left" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "entity.language.stylus", "  &" ],
+   [ "punctuation", ":" ],
+   [ "entity.other.attribute-name.pseudo-element.css", "before" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "content" ],
+   [ "text", " " ],
+   [ "string", "'→'" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "    " ],
+   [ "support.type", "margin" ],
+   [ "text", " " ],
+   [ "constant.numeric", "0" ],
+   [ "text", " " ],
+   [ "constant.numeric", "5" ],
+   [ "keyword", "px" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword.operator.stylus", ">" ],
+   [ "text", " " ],
+   [ "entity.name.tag.stylus", "li" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword.control.stylus", "!important" ]
+  ]
+ },
+ {
+  "state": "start",
+  "data": []
+ },
+ {
+  "state": "start",
+  "data": [
+   [ "text", "  " ],
+   [ "keyword.control.stylus", "unless" ]
+  ]
+ }
+]

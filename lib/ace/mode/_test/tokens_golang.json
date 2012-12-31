@@ -102,8 +102,7 @@
    [ "identifier", "pi" ],
    [ "paren.lparen", "(" ],
    [ "constant.numeric", "5000" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  },
  {
@@ -203,8 +202,7 @@
    [ "identifier", "float64" ],
    [ "paren.lparen", "(" ],
    [ "identifier", "k" ],
-   [ "paren.rparen", ")" ],
-   [ "paren.rparen", ")" ]
+   [ "paren.rparen", "))" ]
   ]
  },
  {
@@ -259,11 +257,9 @@
    [ "text", "        " ],
    [ "identifier", "f" ],
    [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "keyword.operator", "=" ],
+   [ "keyword.operator", "+=" ],
    [ "text", " " ],
-   [ "keyword.operator", "<" ],
-   [ "keyword.operator", "-" ],
+   [ "keyword.operator", "<-" ],
    [ "identifier", "ch" ]
   ]
  },
@@ -321,8 +317,7 @@
    [ "text", "    " ],
    [ "identifier", "ch" ],
    [ "text", " " ],
-   [ "keyword.operator", "<" ],
-   [ "keyword.operator", "-" ],
+   [ "keyword.operator", "<-" ],
    [ "text", " " ],
    [ "constant.numeric", "4" ],
    [ "text", " " ],

@@ -4,7 +4,7 @@
   "data": [
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -13,7 +13,7 @@
    [ "text", "    " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -30,7 +30,7 @@
    [ "entity.other.attribute-name", "type" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"text/css\"" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -88,7 +88,7 @@
    [ "text", "    " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name.style", "style" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -101,7 +101,7 @@
    [ "text", "    " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -110,7 +110,7 @@
    [ "text", "    " ],
    [ "meta.tag", "<" ],
    [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -123,11 +123,11 @@
    [ "entity.other.attribute-name", "style" ],
    [ "keyword.operator", "=" ],
    [ "string", "\"color:red\"" ],
-   [ "meta.tag", ">" ],
+   [ "meta.tag.r", ">" ],
    [ "text", "Juhu Kinners" ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "h1" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -136,7 +136,7 @@
    [ "text", "    " ],
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  },
  {
@@ -144,7 +144,7 @@
   "data": [
    [ "meta.tag", "</" ],
    [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag", ">" ]
+   [ "meta.tag.r", ">" ]
   ]
  }
 ]

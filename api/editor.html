@@ -1652,10 +1652,10 @@
             </ul>
           </div>
           <div class="sideToggler">
-            <div id="ellipsis_Editor.getScrollSpeed" class="ellipsis_description"><p>Returns the value indicating how fast the mouse scroll speed is.</p>
+            <div id="ellipsis_Editor.getScrollSpeed" class="ellipsis_description"><p>Returns the value indicating how fast the mouse scroll speed is (in milliseconds).</p>
 
             </div>
-            <div class="description"><p>Returns the value indicating how fast the mouse scroll speed is.</p>
+            <div class="description"><p>Returns the value indicating how fast the mouse scroll speed is (in milliseconds).</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
             </div>
@@ -4179,7 +4179,7 @@
             </div>
             <div class="description"><p>Sets how fast the mouse scrolling should do.</p>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">speed</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription "><p>Required. A value indicating the new speed</p>
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">speed</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Number.html" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription "><p>Required. A value indicating the new speed (in milliseconds)</p>
 </td></tr></table>
             </div>
           </div>
@@ -4205,7 +4205,9 @@
 
             </div>
             <div class="description"><p>Indicates how selections should occur.  </p>
-<p>By default, selections are set to &quot;line&quot;. This function also emits the <code>&#39;changeSelectionStyle&#39;</code> event.</p>
+<p>By default, selections are set to &quot;line&quot;. There are no other styles at the moment,
+although this code change in the future.</p>
+<p>This function also emits the <code>&#39;changeSelectionStyle&#39;</code> event.</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">style</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription "><p>Required. The new selection style</p>
 </td></tr></table>
@@ -4416,7 +4418,7 @@
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span id="Editor.setWrapBehavioursEnabled" class="member-name methodClicker"><span class="sigClassName">Editor.</span><span class="sigMemberName">setWrapBehavioursEnabled</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> enabled</span>)</li>
+                  <li class="signature-call"><span id="Editor.setWrapBehavioursEnabled" class="member-name methodClicker"><span class="sigClassName">Editor.</span><span class="sigMemberName">setWrapBehavioursEnabled</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="argument methodClicker" title="Boolean" data-id="Boolean">Boolean</a> enabled</span>)</li>
                 </ul>
                 <ul class="metaInfo">
                 </ul>
@@ -4424,20 +4426,14 @@
             </ul>
           </div>
           <div class="sideToggler">
-            <div id="ellipsis_Editor.setWrapBehavioursEnabled" class="ellipsis_description"><p>Editor.setWrapBehavioursEnabled(enabled) </p>
-<ul>
-<li>enabled (Boolean): Enables or disables wrapping behaviors</li>
-</ul>
-
-            </div>
-            <div class="description"><p>Editor.setWrapBehavioursEnabled(enabled) </p>
-<ul>
-<li>enabled (Boolean): Enables or disables wrapping behaviors</li>
-</ul>
-<p>Specifies whether to use wrapping behaviors or not, i.e. automatically wrapping the selection with characters such as brackets
+            <div id="ellipsis_Editor.setWrapBehavioursEnabled" class="ellipsis_description"><p>Specifies whether to use wrapping behaviors or not, i.e. automatically wrapping the selection with characters such as brackets
 when such a character is typed in.</p>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">enabled</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription "><p>Required. </p>
+            </div>
+            <div class="description"><p>Specifies whether to use wrapping behaviors or not, i.e. automatically wrapping the selection with characters such as brackets
+when such a character is typed in.</p>
+
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">enabled</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Boolean.html" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. Enables or disables wrapping behaviors</p>
 </td></tr></table>
             </div>
           </div>
