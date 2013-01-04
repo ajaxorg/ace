@@ -51,6 +51,7 @@ var Mode = function() {
     var highlighter = new %language%HighlightRules();
     this.foldingRules = new FoldMode();
     this.$tokenizer = new Tokenizer(highlighter.getRules());
+    this.$keywordList = highlighter.$keywordList;
 };
 oop.inherits(Mode, TextMode);
 
