@@ -1,9 +1,10 @@
+<?xqlint
 /* ***** BEGIN LICENSE BLOCK *****
  * Distributed under the BSD license:
  *
  * Copyright (c) 2010, Ajax.org B.V.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -14,7 +15,7 @@
  *     * Neither the name of Ajax.org B.V. nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,55 +28,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ***** END LICENSE BLOCK ***** */
- 
-define(function(require, exports, module) {
-"use strict";
-    
-var oop = require("../lib/oop");
-var Mirror = require("../worker/mirror").Mirror;
-var JSONParseTreeHandler  = require("./xquery/JSONParseTreeHandler").JSONParseTreeHandler;
-var XQueryParser  = require("./xquery/XQueryParser").XQueryParser;
-var SyntaxHighlighter = require("./xquery/visitors/SyntaxHighlighter").SyntaxHighlighter;
 
-var XQueryWorker = exports.XQueryWorker = function(sender) {
-    Mirror.call(this, sender);
-    this.setTimeout(200);
-};
+define(function(require, exports, module){
+var CommentParser = exports.CommentParser = function CommentParser(string, parsingEventHandler)
+{
+  init(string, parsingEventHandler);
+?>
 
-oop.inherits(XQueryWorker, Mirror);
 
-(function() {
-    
-  this.onUpdate = function() {
-    this.sender.emit("start");
-    var value = this.doc.getValue();    
-    var h = new JSONParseTreeHandler(value);
-    var parser = new XQueryParser(value, h);
-    try {
-      parser.parse_XQuery();
-      this.sender.emit("ok");
-      var ast = h.getParseTree();
-      var highlighter = new SyntaxHighlighter(ast);
-      var tokens = highlighter.getTokens();
-      this.sender.emit("highlight", tokens);
-    } catch(e) {
-      if(e instanceof parser.ParseException) {
-        var prefix = value.substring(0, e.getBegin());
-        var line = prefix.split("\n").length;
-        var column = e.getBegin() - prefix.lastIndexOf("\n");
-        var message = parser.getErrorMessage(e);
-        this.sender.emit("error", {
-          row: line - 1,
-          column: column,
-          text: message,
-          type: "error"
-        });
-      } else {
-        throw e;
-      }
-    }
- };
-    
-}).call(XQueryWorker.prototype);
+Comments ::= (S^WS | Comment)* EOF
 
+Comment  ::= '(:' ( CommentContents | Comment )* ':)'
+
+<?TOKENS?>
+S        ::= [#x0009#x000A#x000D#x0020]+
+Char     ::= [#x0009#x000A#x000D#x0020-#xD7FF#xE000-#xFFFD#x10000-#x10FFFF]
+CommentContents
+         ::= ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) &':'
+           |   ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) )                   &'('
+
+EOF      ::= $
+<?ENCORE?>
+
+<?xqlint
 });
+?>

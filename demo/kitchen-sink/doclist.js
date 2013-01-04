@@ -119,6 +119,7 @@ var docs = {
     "docs/tex.tex": "Tex",
     "docs/textile.textile": {name: "Textile", wrapped: true},
     "docs/typescript.ts": "Typescript",
+    "docs/vbscript.vbs": "VBScript",
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
