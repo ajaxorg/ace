@@ -109,11 +109,11 @@ mixin article(obj, parents)
                     != link(obj.bound, ['link-short'], 'generic method')
                     |. If calling as generic, pass the instance in as the first argument.
 
-                if obj.arguments
+                if obj.arguments && obj.arguments.length
                   h4 Arguments
                   != argumentTable(obj.arguments, ["argument-list", "table", "table-striped", "table-bordered"])
 
-                if obj.returns
+                if obj.returns && obj.returns.length
                   h4 Returns
                   != returnTable(obj.returns, ["return-list", "table", "table-striped", "table-bordered"])
 
