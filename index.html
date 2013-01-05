@@ -2,22 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"> 
     <head profile="http://www.w3.org/2005/10/profile"> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-        <title>ACE - The High Performance Code Editor for the Web</title> 
-        <script src="./doc/resources/ace/skeleton/javascripts/jquery.js"></script>
-        <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
-        <script src="./api/resources/javascripts/bootstrap.js"></script>
-        <script src="./build/src/ace.js"></script>
-        <script>
-            ace = require("ace/ace")
-        </script>
-        <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
-        <script src="doc/site/js/main.js"></script>
-        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
-        <link rel="stylesheet" href="./api/resources/csses/bootstrap.min.css">
-        <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
-        <link href="api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" /> 
-        <link rel="stylesheet" href="./api/resources/csses/font-awesome.css">
-        <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
+        <title>Ace - The High Performance Code Editor for the Web</title> 
+
+        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/xcode.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css">
+        <link href="./api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" /> 
+        <link href="./doc/site/style.css" rel="stylesheet" type="text/css" /> 
+        <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
     </head> 
     <body> 
         <a href="http://github.com/ajaxorg/ace">
@@ -57,31 +49,31 @@
                             <a href="#api">API Reference</a>
                         </li>
                         <li>
-                            <a href="#production" data-toggle="tab">ACE in Production</a>
+                            <a href="#production" data-toggle="tab">Ace in the Wild</a>
                         </li>
                         <li>
-                            <a href="#support" data-toggle="tab">Support</a>
+                            <a href="#support" data-toggle="tab">Find Help</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade" id="about">
                             <h1>Built for Code</h1>
-                            <p id="first">ACE is an embeddable code editor written in JavaScript.
+                            <p id="first">Ace is an embeddable code editor written in JavaScript.
                                 It matches the features and performance of native
                                 editors such as Sublime, Vim and TextMate. It can be easily embedded
-                                in any web page and JavaScript application. ACE is maintained as the
+                                in any web page and JavaScript application. Ace is maintained as the
                                 primary editor for <a href="http://c9.io">Cloud9 IDE</a>
                                 and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
                             
                                 <div id="ace_editor_demo">/**
- * In fact, you're looking at ACE right now. Go ahead and play with it!
+ * In fact, you're looking at Ace right now. Go ahead and play with it!
  *
- * We are currently showing off the JavaScript mode. ACE has support for 45
+ * We are currently showing off the JavaScript mode. Ace supports over 60
  * language modes and 24 color themes!
  */
 
 function add(x, y) {
-    var resultString = "Hello, ACE! The result of your math is: ";
+    var resultString = "Hello, Ace! The result of your math is: ";
     var result = x + y;
     return resultString + result;
 }
@@ -93,11 +85,11 @@ console.log(addResult);</div>
                                 <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.</p>
                             <h2>Features</h2> 
                             <ul class="content-list"> 
-                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 40 languages (TextMate/Sublime/<em>.tmlanguage</em> files can be imported)</li>
-                                <li>Over 20 themes (TextMate/Sublime/<em>.tmtheme</em> files can be imported)</li>
+                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 60 languages (TextMate/Sublime <em>.tmlanguage</em> files can be imported)</li>
+                                <li>Over 20 themes (TextMate/Sublime Text <em>.tmtheme</em> files can be imported)</li>
                                 <li>Automatic indent and outdent</li>
                                 <li>An optional command line</li>
-                                <li>Handles huge documents (at last check, 4,000,000 lines is the upper limit)</li>
+                                <li>Handles huge documents (four million lines seems to be the limit!)</li>
                                 <li>Fully customizable key bindings including vim and Emacs modes</li>
                                 <li>Search and replace with regular expressions</li>
                                 <li>Highlight matching parentheses</li>
@@ -111,43 +103,43 @@ console.log(addResult);</div>
                                 <li>Cut, copy, and paste functionality</li>
                             </ul>
                             <h2>Get the Open-Source Code</h2> 
-                            <p>ACE is a community project. We actively encourage and support
-                                contributions! The ACE source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>
+                            <p>Ace is a community project. We actively encourage and support
+                                contributions! The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>
                                 and released under the BSD license &dash; 
                                 very simple and friendly to all kinds of projects, whether open-source
                                 or not. Take charge of your editor and add your favorite language
                                 highlighting and keybindings!</p>
                             <pre>git clone git://github.com/ajaxorg/ace.git</pre>
                             <h2>History</h2> 
-                            <p>Skywriter/Bespin and ACE started
+                            <p>Skywriter/Bespin and Ace started
                                 as two independent projects both aiming to build a no compromise
                                 code editor component for the web. Bespin started as part of
-                                Mozilla Labs and was based on the &lt;canvas> tag, while ACE is
+                                Mozilla Labs and was based on the &lt;canvas> tag, while Ace is
                                 the editor component of <a href="http://c9.io">Cloud9 IDE</a>
-                                and uses the DOM for rendering. After the release of ACE at
+                                and uses the DOM for rendering. After the release of Ace at
                                 <a href="http://jsconf.eu/2010/speaker/kick_ass_code_editing_and_end.html">JSConf.eu 2010</a>
-                                in Berlin the Skywriter team decided to merge ACE with a simplified 
+                                in Berlin the Skywriter team decided to merge Ace with a simplified 
                                 version of Skywriter's plugin system and some of Skywriter&apos;s
-                                extensibility points. All these changes have been merged back to ACE
+                                extensibility points. All these changes have been merged back to Ace
                                 now, which supersedes Skywriter. Both <a href="http://c9.io">Cloud9 IDE</a>
                                 and <a href="http://mozilla.org">Mozilla</a> are actively developing and
-                                maintaining ACE.</p> 
+                                maintaining Ace.</p> 
                             <h2>Related Projects</h2>
                             <ul class="content-list"> 
                                 <li><a href="https://github.com/joewalker/gcli">GCLI</a></li> 
                                 <li><a href="https://github.com/mozilla/dryice">DryIce</a></li>
-                                <li><a href="https://github.com/cadorn/ace-extjs">ACE wrapper for ExtJS</a></li>
-                                <li><a href="https://github.com/daveho/AceGWT">ACE wrapper for GWT</a></li>
+                                <li><a href="https://github.com/cadorn/ace-extjs">Ace wrapper for ExtJS</a></li>
+                                <li><a href="https://github.com/daveho/AceGWT">Ace wrapper for GWT</a></li>
                             </ul> 
                         </div>
                         <div class="tab-pane fade active in" id="embedding">
-                            <h1>Embedding ACE in Your Site</h1>
-                            <p>ACE can be easily embedded into a web page. Just copy the code below:</p>
+                            <h1>Embedding Ace in Your Site</h1>
+                            <p>Ace can be easily embedded into a web page. Just copy the code below:</p>
 
-                            <div id="embedded_ace_code">&lt;!DOCTYPE html>
+                                <div id="embedded_ace_code">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
-&lt;title>ACE in Action&lt;/title>
+&lt;title>Ace in Action&lt;/title>
 &lt;style type="text/css" media="screen">
     #editor { 
         position: absolute;
@@ -176,19 +168,19 @@ console.log(addResult);</div>
                             <p>Now check out the <a href="#nav=howto">How-To Guide</a> for instructions on
                                 common operations, such as setting a different language mode or
                                 getting the contents from the editor.</p>
-                            <h2>Loading ACE from a Local URL</h2>
-                            <p>The above code is all you need to embed ACE in your site (including setting language modes
+                            <h2>Loading Ace from a Local URL</h2>
+                            <p>The above code is all you need to embed Ace in your site (including setting language modes
                             and themes). Plus it's super fast because it's on Amazon's distributed content network.
                             </p>
-                            <p>But, if you want to clone host ACE locally you can
+                            <p>But, if you want to clone host Ace locally you can
                             use one of the <a href="https://github.com/ajaxorg/ace-builds/">pre-packaged versions</a>. Just copy
                             one of <code>src*</code> subdirectories somewhere into your project, or use RequireJS to load the
                             contents of <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace">lib/ace</a> as <code>ace</code>:</p>
                             <pre><code class="javascript">var ace = require("lib/ace");</code></pre>
                         </div>
                         <div class="tab-pane fade" id="howto">
-                            <h1>Working with ACE</h1>
-                            <p><em>In all of these examples ACE has been invoked 
+                            <h1>Working with Ace</h1>
+                            <p><em>In all of these examples Ace has been invoked 
                                 as shown in the <a href="#nav=embedding">embedding guide</a>.</em></p>
                             <h2>Setting Themes</h2>
                             <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
@@ -202,7 +194,7 @@ console.log(addResult);</div>
                             <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");</pre></code>
 
                             <!--h2>One Editor, Multiple Sessions</h2>
-                            <p>ACE keeps everything about the state of the editor (selection, scroll position, etc.)
+                            <p>Ace keeps everything about the state of the editor (selection, scroll position, etc.)
                                 in <code class="javascript">editor.session</code>. This means you can grab the
                                 session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
                             <p>You might accomplish this like so:</p>
@@ -269,7 +261,7 @@ editor.getValue(); // or session.getValue</code></pre>
                             
                             <h3>Triggering Resizes</h3>
                             
-                            <p>ACE only resizes itself on window events. If you resize the editor div in another manner, and need ACE to resize, use the following:</p>
+                            <p>Ace only resizes itself on window events. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
                             
                             <pre><code class="javascript">editor.resize()</code></pre>
                             
@@ -751,7 +743,7 @@ module.exports = {
 </div>
                         <div class="tab-pane fade" id="api">
                             <div class="row centerpiece">
-    <div id="sidebarContainer" class="span3">
+    <div id="sidebarContainer" class="span2">
         <div id="sidebar">
                 <div id="well">
                 <form id="searchbox" action="" class="navbar-search">   <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3"></form>
@@ -774,8 +766,7 @@ module.exports = {
             </div>
         </div>
     </div>
-    <div class="span8">
-        <div id="apiHolder" class="span8 apiIntro">
+        <div id="apiHolder" class="span7 apiIntro">
         <h1>Ace API Reference</h1>
         <p>Welcome to the Ace API Reference!</p>
         <p>On the left, you'll find a list of all of our currently documented classes. 
@@ -784,28 +775,28 @@ module.exports = {
         </p>
         <p>Below is an ERD diagram describing some fundamentals about how the internals of Ace works:</p>
 
-            <img src="doc/resources/ace/skeleton/images/Ace_ERD.png" style="max-width:100%; max-height:100%"/>
+            <img src="doc/template/resources/images/Ace_ERD.png" style="max-width:100%; max-height:100%"/>
     </div>
-    </div></div>
+</div>
                         </div>
                         <div class="tab-pane fade" id="production">
-                            <h1>Projects Using ACE</h1>
-                            <p>ACE is used all over the web in all kinds of production applications. Here is
+                            <h1>Projects Using Ace</h1>
+                            <p>Ace is used all over the web in all kinds of production applications. Here is
                                 just a small sampling:</a>
                             <ul class="menu-list">
                                 <li>
                                     <img src="doc/site/images/github-logo.png"
-                                        style="position: relative; left: -15px; top: -9px;" />
+                                        style="position: relative; left: 0px; top: 8px;" />
                                     <a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/khan-logo.png"
-                                        style="position: relative; left: -10px; top: -27px; width: 120px" />
+                                        style="position: relative; left: 0px; top: -13px; width: 120px" />
                                     <a href="http://ejohn.org/blog/introducing-khan-cs/">Khan Academy</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/cloud9-logo.png"
-                                        style="position: relative;left: -11px;top:-12px; width:122px" />
+                                        style="position: relative;left: 0px;top:0px; width:122px" />
                                     <a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a>
                                 </li>
                                 
@@ -816,7 +807,7 @@ module.exports = {
                                 </li>
                                 <li>
                                     <img src="doc/site/images/codecademy-logo.png"
-                                        style="position: relative; left: -5px; top: 10px;" />
+                                        style="position: relative; left: 0px; top: 10px;" />
                                     <a href="http://www.codecademy.com/">Codecademy</a>
                                 </li>
                                 <li>
@@ -887,7 +878,7 @@ module.exports = {
                                 </li>
                                 <li>
                                     <img src="doc/site/images/shiftedit-logo.png"
-                                        style="position: relative; left: -10px; top: -20px; width: 120px" />
+                                        style="position: relative; left: 0px; top: -10px; width: 120px" />
                                     <a href="http://shiftedit.net/">ShiftEdit</a>
                                 </li> 
                                 <li>
@@ -980,15 +971,15 @@ module.exports = {
                                 </li>
                                 <li id="add_your_site">
                                     <p>+</p>
-                                    <a href="mailto:ace@c9.io?subject=Put me on the ACE site!">Your Site Here</a>
+                                    <a href="mailto:ace@c9.io?subject=Put me on the Ace site!">Your Site Here</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="support">
                             <h1>Support and User Resources</h1>
                             <ul class="content-list">
-                                <li><a href="http://groups.google.com/group/ace-discuss">ACE Google Group</a></li> 
-                                <li><a href="http://groups.google.com/group/ace-internals">ACE Core Google Group</a></li> 
+                                <li><a href="http://groups.google.com/group/ace-discuss">Ace Google Group</a></li> 
+                                <li><a href="http://groups.google.com/group/ace-internals">Ace Core Google Group</a></li> 
                                 <li><a href="irc://irc.freenode.net/%23ace">irc.freenode.net #ace</a></li> 
                             </ul>
                             
@@ -997,10 +988,15 @@ module.exports = {
                 </div> 
             </div> 
         </div> 
-        <script src="./api/resources/javascripts/ux.js"></script>
-        <script src="./api/resources/javascripts/clicker.js"></script>
-        <script src="./api/resources/javascripts/jquery-scrollspy.js"></script>
-        <script defer src="./api/resources/javascripts/disqus-ext.js"></script>
-        <script defer src="./api/resources/javascripts/ga.js"></script>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+        <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+        <script src="//yandex.st/highlightjs/7.2/highlight.min.js"></script>
+
+        <script src="./doc/template/resources/javascripts/bbq.js"></script>
+        <script src="./doc/site/js/main.js"></script>
+
+        <script defer src="./doc/site/js/ga.js"></script>
     </body> 
 </html>

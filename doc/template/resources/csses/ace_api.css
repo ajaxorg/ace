@@ -14,13 +14,16 @@
     color: black;
 }
 
-#documentation code {
+pre {
+    background-color: #FFFFFF;
+}
+
+code {
     font-size: 12px;
     line-height: 16px;
     font-family: 'Ubuntu Mono',Monaco,Consolas,monospace !important;
     background-color: #F9F9F9;
     border-radius: 3px 3px 3px 3px;
-    box-shadow: 0 0 2px #888888;
     display: inline-block;
     padding: 0 4px;
     margin: 2px 1px;
