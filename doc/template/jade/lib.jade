@@ -177,9 +177,6 @@ mixin render_starting_tabs(obj, pos)
           h1.memberHeader
             -var heading = obj.path
             span.name #{heading}
-              -if (pos >= 0)
-                    span.editInC9 
-                      mixin formatGHHref(obj.file)
                   
           -if (true || obj.filename.indexOf("index") < 0)
             ul(class='nav tabs pos#{pos}', data-tabs='tabs')
@@ -218,9 +215,3 @@ mixin links(collection)
     for obj in collection
       li
         mixin link(obj)
-
-mixin formatGHHref(url)
-  url = url.substring(url.indexOf("ace/lib"))
-
-  -url = url.replace(/\/{2,}/g, "/").replace(/\//g,"%2F")
-  <a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a>
