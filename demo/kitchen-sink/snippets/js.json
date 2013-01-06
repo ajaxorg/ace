@@ -1,0 +1,72 @@
+{"snippets":[{
+    "content": "var ${1:class} = function(${20}) {\n\t$40$0\n};\n\n(function() {\n\t${60:this.prop = \"\"}\n}).call(${1:class}.prototype);",
+    "name": "class",
+    "scope": "js",
+    "tabTrigger": "class"
+}, {
+    "content": "for (var ${20:i} = ${1:Things}.length; ${20:i} --; ) {\n\t${100:${1:Things}[${20:i}]}$0\n};",
+    "name": "backwards for loop",
+    "scope": "js",
+    "tabTrigger": "for-"
+}, {
+    "content": "for (var ${20:i} = ${1:Things}.length - 1; ${20:i} >= 0; ${20:i}--) {\n\t${100:${1:Things}[${20:i}]}$0\n};",
+    "name": "for (…) {…} (Improved Native For-Loop)",
+    "scope": "js",
+    "tabTrigger": "for"
+}, {
+    "content": "for (var ${20:i}=0; ${20:i} < ${1:Things}.length; ${20:i}++) {\n\t${100:${1:Things}[${20:i}]}$0\n};",
+    "name": "for (…) {…}",
+    "scope": "js",
+    "tabTrigger": "for"
+}, {
+    "content":"function ${1:function_name} (${2:argument}) {\n\t${0:// body...}\n}",
+    "name": "Function",
+    "scope": "js",
+    "tabTrigger": "fun"
+}, {
+    "content": "function($1) {${0:$TM_SELECTED_TEXT}};",
+    "name": "Anonymous Function",
+    "scope": "js",
+    "tabTrigger": "f"
+}, {
+    "content": "getElement${1/(T)|.*/(?1:s)/}By${1:T}${1/(T)|(I)|.*/(?1:agName)(?2:d)/}('$2')",
+    "name": "Get Elements",
+    "scope": "js",
+    "tabTrigger": "get"
+}, {
+    "content": "if (${1:true}) {\n\t${0:$TM_SELECTED_TEXT}\n} else {\n\t\n}",
+    "name": "if … else",
+    "scope": "js",
+    "tabTrigger": "ife"
+}, {
+    "content": "if (${1:true}) {${0:$TM_SELECTED_TEXT}}",
+    "name": "if",
+    "scope": "js",
+    "tabTrigger": "if"
+}, {
+    "content": "'${1:${2:#thing}:${3:click}}': function(element){\n\t$0\n}${10:,}",
+    "name": "Object Method String",
+    "scope": "js",
+    "tabTrigger": "'':f"
+}, {
+    "content": "${1:method_name}: function(${3:attribute}){\n\t$0\n}${10:,}",
+    "name": "Object Method",
+    "scope": "js",
+    "tabTrigger": ":f"
+}, {
+    "content": "${1:value_name}:${0:value},",
+    "name": "Object Value JS",
+    "scope": "js",
+    "tabTrigger": ":,"
+}, {
+    "content": "${1:class_name}.prototype.${2:method_name} = function(${3:first_argument}) {\n\t${0:// body...}\n};\n",
+    "name": "Prototype",
+    "scope": "js",
+    "tabTrigger": "proto"
+}, {
+    "content": "setTimeout(function() {$0}${2:}, ${1:10});",
+    "name": "setTimeout function",
+    "scope": "js",
+    "tabTrigger": "timeout"
+}]
+}

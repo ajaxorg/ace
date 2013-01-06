@@ -444,5 +444,30 @@ event.addListener(container, "drop", function(e) {
 var StatusBar = require("./statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
+require("ace/placeholder").PlaceHolder;
+
+var SnippetManager = require("ace/snippets").SnippetManager
+var jsSnippets = require("ace/requirejs/text!./snippets/js.json")
+var testSnippet = "\
+\\begin{${1:document}}\n\
+    ${2:$TM_SELECTED_TEXT:some ${3:latex}}\n\
+    ${3:$TM_SELECTED_TEXT/a/b/c}\n\
+    ${4:${TM_SELECTED_TEXT/(.)/\\u$1/c:7}}\n\
+\\end{$1}\n\
+$0";
+SnippetManager.register({
+    content: testSnippet,
+    tabTrigger: "t",
+    name: "testSnippet"
+})
+SnippetManager.register(JSON.parse(jsSnippets).snippets)
+
+
+ace.commands.bindKey("Tab", function(editor) {
+    var success = SnippetManager.expandWithTab(editor);
+    if (!success)
+        editor.execCommand("indent");
+})
+
 });
 
