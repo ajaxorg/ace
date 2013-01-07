@@ -366,7 +366,3 @@
 .ace_italic {
     font-style: italic;
 }
-
-.ace_autocomplete.ace-tm .ace_marker-layer .ace_active-line {
-    background-color: #abbffe;
-}
