@@ -46,8 +46,6 @@ var theme = require("ace/theme/textmate");
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
-var vim = require("ace/keyboard/vim").handler;
-var emacs = require("ace/keyboard/emacs").handler;
 var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
@@ -162,11 +160,10 @@ commands.addCommand({
     exec: function() {alert("Fake Save File");}
 });
 
-var keybindings = {
-    // Null = use "default" keymapping
-    ace: null,
-    vim: vim,
-    emacs: emacs,
+var keybindings = {    
+    ace: null, // Null = use "default" keymapping
+    vim: require("ace/keyboard/vim").handler,
+    emacs: "ace/keyboard/emacs",
     // This is a way to define simple keyboard remappings
     custom: new HashHandler({
         "gotoright":      "Tab",
