@@ -108,7 +108,7 @@ env.editor.commands.addCommands([{
             editor.gotoLine(line);
     },
     readOnly: true
-}, {
+}/*, {
     name: "find",
     bindKey: {win: "Ctrl-F", mac: "Command-F"},
     exec: function(editor, needle) {
@@ -121,7 +121,7 @@ env.editor.commands.addCommands([{
         editor.find(needle);
     },
     readOnly: true
-}, {
+}*/, {
     name: "focusCommandLine",
     bindKey: "shift-esc",
     exec: function(editor, needle) { editor.cmdLine.focus(); },
