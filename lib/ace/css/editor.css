@@ -2,7 +2,6 @@
     position: absolute;
     overflow: hidden;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-    font-size: 12px;
 }
 
 .ace_scroller {
