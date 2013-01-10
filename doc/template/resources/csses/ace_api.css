@@ -142,26 +142,6 @@ code {
   Menu venue
 */
 
-form.navbar-search {
-    float: none;
-}
-
-form.navbar-search  .search-query {
-    background-color: #FFFFFF;
-    border-color: #999;
-    -webkit-transition: border 0.3s;
-    -moz-transition: border 0.3s;
-    font-size: 14px;
-    line-height: 16px;
-}
-
-form.navbar-search  .search-query:focus, form.navbar-search  .search-query:active {
-    border: 1px solid #666;
-}
-
-.navbar-search .search-query:focus, .navbar-search .search-query.focused {
-    padding: 4px 9px;
-}
 
 h3.api_title {
     padding-top: 10px;
