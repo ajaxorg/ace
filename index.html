@@ -46,10 +46,10 @@
                             <a href="#api">API Reference</a>
                         </li>
                         <li>
-                            <a href="#production" data-toggle="tab">Ace in the Wild</a>
+                            <a href="#production" data-toggle="tab">Real World Users</a>
                         </li>
-                        <li>
-                            <a href="#support" data-toggle="tab">Find Help</a>
+                        <li class="last-tab">
+                            <a href="#support" data-toggle="tab">Support</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -192,8 +192,8 @@ console.log(addResult);
                             <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank">See all themes</a></p>
                             <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
-                            <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");</pre>
-                            </code>
+                            <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");
+                            </code></pre>
                             <!--h2>One Editor, Multiple Sessions</h2>
                                 <p>Ace keeps everything about the state of the editor (selection, scroll position, etc.)
                                     in <code class="javascript">editor.session</code>. This means you can grab the
@@ -702,10 +702,10 @@ module.exports = {
                         </div>
                         <div class="tab-pane fade" id="api">
                             <div class="row centerpiece">
-                                <div id="sidebarContainer" class="span2">
+                                <div id="sidebarContainer" class="span3">
                                     <div id="sidebar">
                                         <div id="well">
-                                            <form id="searchbox" action="" class="navbar-search">   <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span2" /></form>
+                                            <form id="searchbox"  class="navbar-search">   <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3" /></form>
                                             <ul class="menu">
                                                 <li>
                                                     <div class="menu-item"><a href="./api/ace.html" class="menuLink namespace">Ace</a></div>
@@ -753,7 +753,7 @@ module.exports = {
                                         </div>
                                     </div>
                                 </div>
-                                <div id="apiHolder" class="span7 apiIntro">
+                                <div id="apiHolder" class="span9 apiIntro">
                                     <h1>Ace API Reference</h1>
                                     <p>Welcome to the Ace API Reference!</p>
                                     <p>On the left, you'll find a list of all of our currently documented classes. 
@@ -768,7 +768,7 @@ module.exports = {
                         <div class="tab-pane fade" id="production">
                             <h1>Projects Using Ace</h1>
                             <p>Ace is used all over the web in all kinds of production applications. Here is
-                                just a small sampling:</a>
+                                just a small sampling:</p>
                             <ul class="menu-list">
                                 <li>
                                     <img src="doc/site/images/github-logo.png" style="position: relative; left: 0px; top: 8px;" />
@@ -930,12 +930,13 @@ module.exports = {
                                 </li>
                                 <li id="add_your_site">
                                     <p>+</p>
-                                    <a href="mailto:ace@c9.io?subject=Put me on the Ace site!">Your Site Here</a>
+                                    <a href="mailto:ace@c9.io?subject=Put%20me%20on%20the%20Ace%20site!">Your Site Here</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="support">
                             <h1>Support and User Resources</h1>
+                            <p>Aside from our GitHub page, here's a list of places you can find help for Ace:</p>
                             <ul class="content-list">
                                 <li><a href="http://groups.google.com/group/ace-discuss">Ace Google Group</a></li>
                                 <li><a href="http://groups.google.com/group/ace-internals">Ace Core Google Group</a></li>

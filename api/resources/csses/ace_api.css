@@ -64,8 +64,6 @@ code {
 }
 #documentation p {
     font-size: 13px;
-    line-height : 20px;
-    margin-bottom : 13px;
 }
 #documentation li p:last-child {
     margin-bottom : 5px;
@@ -504,20 +502,11 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
 .content {
     height: 100%;
 }
-.content .row {
-    margin-left: auto;
-    margin-right: auto;
-}
 
 header.filler {
     position: relative;
     height: 40px;
     width: 100%;
-}
-
-.centerpiece {
-    min-height: 100%;
-    padding: 20px 0;
 }
 
 /*
@@ -806,10 +795,6 @@ li.signature {
   Everyday I'm togglin'
 */
 
-#documentation h3 {
-    font-size: 24px;
-    margin-top: 5px; 
-}
 #documentation i.methodToggle {
     cursor: pointer;
     color: #9f9f9f;
@@ -838,7 +823,6 @@ li.signature {
 }
 
 #documentation h3.sectionHeader {
-    margin: 10px 0 17px 0;
     line-height : 24px;
 }
 

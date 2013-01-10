@@ -468,18 +468,10 @@ p.highlight_note a {
     color: #537CC7;
 }
 
-.apiIntro {
-    padding-left: 15px;
-    padding-bottom: 10px;
-}
-
 .prod_no_image {
     position: relative; left: -10px; top: -12px;
 }
 
-#sidebarContainer {
-    margin: 0px 20px 0 15px;
-}
 
 #api {
     padding: 0;

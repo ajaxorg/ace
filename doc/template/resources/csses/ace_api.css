@@ -502,20 +502,11 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
 .content {
     height: 100%;
 }
-.content .row {
-    margin-left: auto;
-    margin-right: auto;
-}
 
 header.filler {
     position: relative;
     height: 40px;
     width: 100%;
-}
-
-.centerpiece {
-    min-height: 100%;
-    padding: 20px 0;
 }
 
 /*
