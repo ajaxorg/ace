@@ -16,17 +16,20 @@ $(function () {
 
     function loadCallback(evt) {
         var form = document.getElementById("searchbox");
-        var input = form.query;
-        form.onsubmit = function (evt) {
-            var query = input.value;
-            if (query) {
-                input.value = "";
-                input.blur();
-                var url = "https://www.google.com/search?q=" + encodeURIComponent("site:ace.ajax.org" + " " + query);
-                window.open(url);
-            }
-            return false;
-        };
+
+        if (form) {
+            var input = form.query;
+            form.onsubmit = function (evt) {
+                var query = input.value;
+                if (query) {
+                    input.value = "";
+                    input.blur();
+                    var url = "https://www.google.com/search?q=" + encodeURIComponent("site:ace.ajax.org" + " " + query);
+                    window.open(url);
+                }
+                return false;
+            };
+        }
     }
 
     // init search
@@ -68,59 +71,6 @@ function ux() {
     }
     else sx = 0;
 
-    $('.members').each(function (i) {
-        var $classContent = $(this).closest('.classContent');
-        
-        $(this).scrollspy({
-            min: $classContent.position().top + 5,
-            max: $classContent.position().top + $classContent.height() - 35,
-            onEnter: function (element, position) {
-                var $pagination = $(element);
-                var $paginationContent = $('.membersContent pos' + i);
-                var $tabs = $('.tabs pos' + i);
-
-                $paginationContent.css('left', -1 * sx);
-                $paginationContent.css('top', 0);
-
-                $pagination.addClass('shadow').stop().css({
-                    height: 31
-                }).closest('.classContent').addClass('srolled');
-
-                $tabs.addClass('tabsSansBorder');
-            },
-            onLeave: function (element, position) {
-                var $pagination = $(element);
-                var $paginationContent = $('.membersContent pos' + i);
-                var $tabs = $('.tabs pos' + i);
-
-                $paginationContent.stop().css({
-                    top: 11
-                }); 
-                $pagination.css({
-                    'position': 'absolute',
-                    'top': 193
-                });
-                $pagination.stop().removeClass('shadow').css({
-                    height: 42
-                });
-
-                $paginationContent.css('left', 0);
-               // setTimeout(function () {
-                    $paginationContent.css({
-                        'top': ''
-                    });
-                    $pagination.css({
-                        'position': '',
-                        'top': ''
-                    });
-                    $paginationContent.css('left', 0);
-                    $pagination.closest('.classContent').removeClass('srolled')
-                    $tabs.removeClass('tabsSansBorder');
-               // }, 300);
-            }
-        });
-    });
-    
     $('span.methodClicker, article.article, i.methodClicker').each(function () {
         var a = $(this);
         var constructorPos = a.attr("id").indexOf("new ");
