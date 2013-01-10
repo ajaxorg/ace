@@ -536,7 +536,6 @@ div#documentation article:last-child {
 }
 #documentation article.article.methodToggleOpen {
     background: rgba(255, 255, 255, 0.5);
-    padding: 20px;
     font-size: 13px;
     line-height: 24px;
     margin: 0 0 10px 0;
