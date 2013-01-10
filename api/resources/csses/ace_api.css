@@ -324,9 +324,10 @@ ul.menu {
     margin-top: 22px;
 }
 
-.dropdown .caret {
-    margin-top: 14px;
-    color: #6D8CA0;
+.nav .dropdown-toggle .caret  {
+    margin-top: 12px;
+    border-top-color: #6D8CA0;
+    border-bottom-color: #6D8CA0;
 }
 
 li.dropdown {
@@ -502,15 +503,6 @@ header.filler {
     margin-bottom: 3px;
 }
 
-#sidebar {
-    margin-top: 5px;
-    /*background: url(../images/sidebar-border.png) repeat-y right 0;*/
-    margin-left: 12px;
-/*    width: 280px;*/
-/*    overflow: auto;*/
-    padding-right : 10px;
-}
-
 #sidebar h3 a,
 #sidebar h3 a:hover {
     color: #404040;
@@ -521,6 +513,7 @@ header.filler {
 }
 
 #documentation {
+    padding-top: 15px;
     padding-left: 15px;
     padding-bottom: 10px;
 }
