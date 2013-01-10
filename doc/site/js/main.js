@@ -30,7 +30,7 @@ $(function() {
         
         var _self = $(this);
         $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
-        $("#apiHolder").removeClass("apiIntro").removeClass("span8");
+        $("#apiHolder").removeClass("apiIntro").removeClass("span9");
             ux();
             setupClicker();
         

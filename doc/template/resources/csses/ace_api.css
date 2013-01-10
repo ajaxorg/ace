@@ -743,8 +743,8 @@ li.signature {
     color: #ffffff;
 }
 .description h4 {
+    padding-top: 10px;
     font-size: 18px;
-    margin: 20px 0 10px;
     line-height : 18px;
 }
 
