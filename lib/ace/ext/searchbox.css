@@ -9,6 +9,7 @@
     border-top: 0 none;
     max-width: 297px;
     overflow: hidden;
+    margin: 0;
     padding: 4px;
     padding-right: 6px;
     padding-bottom: 0;
@@ -34,11 +35,8 @@
     margin-bottom: 4px;
     overflow: hidden;
 }
-.ace_search label {
-    float: left;
-    color: #656565;
-}
-.ace_search input {
+
+.ace_search_field {
     background-color: white;
     border-right: 1px solid #cbcbcb;
     border: 0 none;
@@ -51,6 +49,7 @@
     outline: 0;
     padding: 0 7px;
     width: 214px;
+    margin: 0;
 }
 .ace_searchbtn,
 .ace_replacebtn {

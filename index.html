@@ -6,7 +6,10 @@
         <script src="./doc/resources/ace/skeleton/javascripts/jquery.js"></script>
         <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
         <script src="./api/resources/javascripts/bootstrap.js"></script>
-        <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+        <script src="./build/src/ace.js"></script>
+        <script>
+            ace = require("ace/ace")
+        </script>
         <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
         <script src="doc/site/js/main.js"></script>
         <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
@@ -69,7 +72,7 @@
                                 in any web page and JavaScript application. ACE is maintained as the
                                 primary editor for <a href="http://c9.io">Cloud9 IDE</a>
                                 and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
-                            <div class="ace_editor_wrapper">
+                            
                                 <div id="ace_editor_demo">/**
  * In fact, you're looking at ACE right now. Go ahead and play with it!
  *
@@ -85,7 +88,6 @@ function add(x, y) {
 
 var addResult = add(3, 2);
 console.log(addResult);</div>
-                            </div>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
                                 <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.</p>
@@ -142,8 +144,7 @@ console.log(addResult);</div>
                             <h1>Embedding ACE in Your Site</h1>
                             <p>ACE can be easily embedded into a web page. Just copy the code below:</p>
 
-                            <div id="embed_ace_wrapper" class="ace_editor_wrapper">
-                                <div id="embedded_ace_code">&lt;!DOCTYPE html>
+                            <div id="embedded_ace_code">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
 &lt;title>ACE in Action&lt;/title>
@@ -171,7 +172,7 @@ console.log(addResult);</div>
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
-&lt;/html></div></div>
+&lt;/html></div>
                             <p>Now check out the <a href="#nav=howto">How-To Guide</a> for instructions on
                                 common operations, such as setting a different language mode or
                                 getting the contents from the editor.</p>

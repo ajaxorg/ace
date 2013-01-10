@@ -5,25 +5,18 @@ body {
     font-family: Helvetica, Arial;
 }
 
-#embed_ace_wrapper {
-    height: 525px;
-}
 
-.ace_editor_wrapper {
+
+#ace_editor_demo, #embedded_ace_code {
     height: 275px;
-    position: relative;
     border: 1px solid #DDD;
     border-radius: 4px;
     border-bottom-right-radius: 0px;
     margin-top: 5px;
 }
 
-#ace_editor_demo, #embedded_ace_code {
-    left: 0px;
-    top: 0px;
-    bottom: 1px;
-    right: 1px;
-    background: #fff;
+#embedded_ace_code {
+    height: 525px;
 }
 
 h1, h2, h3, h4, h5, h6 {
