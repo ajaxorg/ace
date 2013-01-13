@@ -1,8 +1,7 @@
 .ace_editor {
-    position: absolute;
+    position: relative;
     overflow: hidden;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-    font-size: 12px;
 }
 
 .ace_scroller {
