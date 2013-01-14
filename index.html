@@ -10,7 +10,7 @@
         <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
 
-        <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+        <script src="./build/src-min-noconflict/ace.js"></script>
     </head>
     <body>
         <a href="http://github.com/ajaxorg/ace">
@@ -65,7 +65,7 @@
                                 and is the successor of the Mozilla Skywriter (Bespin) project.
                             </p>
                             
-                                <div id="ace_editor_demo">/**
+                                <div id="ace_editor_demo" style="opacity:0">/**
  * In fact, you're looking at ACE right now. Go ahead and play with it!
  *
  * We are currently showing off the JavaScript mode. ACE has support for 45
@@ -139,7 +139,7 @@ console.log(addResult);
                         <div class="tab-pane fade active in" id="embedding">
                             <h1>Embedding Ace in Your Site</h1>
                             <p>Ace can be easily embedded into a web page. Just copy the code below:</p>
-                                <div id="embedded_ace_code">&lt;!DOCTYPE html>
+                                <div id="embedded_ace_code" style="opacity:0">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
 &lt;title>ACE in Action&lt;/title>
@@ -704,7 +704,7 @@ module.exports = {
                         </div>
                         <div class="tab-pane fade" id="api">
                             <div class="row centerpiece">
-                                <div id="sidebarContainer" class="span3">
+                                <div id="sidebarContainer" class="span2">
                                     <div id="sidebar">
                                         <div id="well">
                                             
@@ -756,7 +756,7 @@ module.exports = {
                                     </div>
                                 </div>
                                 <div id="apiHolder">
-                                    <div id="documentation" class="span9">
+                                    <div id="documentation" class="span7">
                                     <h1>Ace API Reference</h1>
                                     <p>Welcome to the Ace API Reference!</p>
                                     <p>On the left, you'll find a list of all of our currently documented classes. 
@@ -775,114 +775,149 @@ module.exports = {
                                 just a small sampling:</p>
                             <ul class="menu-list">
                                 <li>
-                                    <img src="doc/site/images/github-logo.png" style="position: relative; left: 0px; top: 8px;" />
+                                    <img src="doc/site/images/github-logo.png"
+                                        style="position: relative; left: -15px; top: -9px;" />
                                     <a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/khan-logo.png" style="position: relative; left: 0px; top: -13px; width: 120px" />
+                                    <img src="doc/site/images/khan-logo.png"
+                                        style="position: relative; left: -10px; top: -27px; width: 120px" />
                                     <a href="http://ejohn.org/blog/introducing-khan-cs/">Khan Academy</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/cloud9-logo.png" style="position: relative;left: 0px;top:0px; width:122px" />
+                                    <img src="doc/site/images/cloud9-logo.png"
+                                        style="position: relative;left: -11px;top:-12px; width:122px" />
                                     <a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a>
                                 </li>
+                                
                                 <li>
-                                    <img src="doc/site/images/firefox-logo.png" style="position: relative;left:10px;top:-5px;width:80px" />
+                                    <img src="doc/site/images/firefox-logo.png"
+                                        style="position: relative;left:10px;top:-5px;width:80px" />
                                     <a href="https://builder.addons.mozilla.org/">Firefox Add-on Builder</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/codecademy-logo.png" style="position: relative; left: 0px; top: 10px;" />
+                                    <img src="doc/site/images/codecademy-logo.png"
+                                        style="position: relative; left: -5px; top: 10px;" />
                                     <a href="http://www.codecademy.com/">Codecademy</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/rstudio_logo_64.png" style="position: relative; left: 19px; top: 2px;" />
+                                    <img src="doc/site/images/rstudio_logo_64.png"
+                                        style="position: relative; left: 19px; top: 2px;" />
                                     <a href="http://rstudio.org/">RStudio</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/ac-logo.png" style="position: relative; left: 4px; top: 25px;" />
+                                    <img src="doc/site/images/ac-logo.png"
+                                        style="position: relative; left: 4px; top: 25px;" />
                                     <a href="http://www.applicationcraft.com/">Application Craft</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/wolf_3d_logo_trans.png" style="position: relative; left: 10px; top: -4px; width:80px" />
+                                    <img src="doc/site/images/wolf_3d_logo_trans.png"
+                                        style="position: relative; left: 10px; top: -4px; width:80px" />
                                     <a href="http://www.wolfcms.org/repository/133">Wolf CMS</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/codiad.png" style="position: relative; left: 10px; top: -4px; width:80px" />
+                                    <img src="doc/site/images/codiad.png"
+                                        style="position: relative; left: 10px; top: -4px; width:80px" />
                                     <a href="http://codiad.com/">Codiad</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/FineCut_small_logo.png" style="position: relative; left: 12px; top: -4px" />
+                                    <img src="doc/site/images/FineCut_small_logo.png"
+                                        style="position: relative; left: 12px; top: -4px" />
                                     <a href="http://finecut.info/">Fine Cut Engine</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/zorba-logo.png" style="position: relative; left: -5px; top: 16px;
+                                    <img src="doc/site/images/zorba-logo.png"
+                                        style="position: relative; left: -5px; top: 16px;
                                                 padding: 6px 4px 6px 6px; width: 100px" />
                                     <a href="http://www.zorba-xquery.com/html/demo">Zorba XQuery</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/plunker.png" style="position: relative; left: 13px; top: -4px; width: 75px" />
+                                    <img src="doc/site/images/plunker.png"
+                                        style="position: relative; left: 13px; top: -4px; width: 75px" />
                                     <a href="http://plnkr.co/edit/">Plunker</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/KERA-med-web.png" style="position: relative; left: 3px;top: 23px;width: 97px;" />
+                                    <img src="doc/site/images/KERA-med-web.png"
+                                        style="position: relative; left: 3px;top: 23px;width: 97px;" />
                                     <a href="http://kera.io/">Kera.io</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/sassmeister-logo.png" style="position: relative; left: 10px;top: -5px;width: 80px;" />
+                                    <img src="doc/site/images/sassmeister-logo.png"
+                                        style="position: relative; left: 10px;top: -5px;width: 80px;" />
                                     <a href="http://sassmeister.com/">SassMeister</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/spandexio-logo.png" style="position: relative; left: 10px;top: -5px;width: 80px;" />
+                                    <img src="doc/site/images/spandexio-logo.png"
+                                        style="position: relative; left: 10px;top: -5px;width: 80px;" />
                                     <a href="http://SpanDeX.io/">SpanDeX.io</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/ideone-logo.png" style="position: relative; left: -5px; top: 20px;" />
+                                    <img src="doc/site/images/ideone-logo.png"
+                                        style="position: relative; left: -5px; top: 20px;">
                                     <a href="http://ideone.com">Ideone.com</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/pixie-logo.png" style="position: relative; left: 0px; top: 10px;" />
+                                    <img src="doc/site/images/pixie-logo.png"
+                                        style="position: relative; left: 0px; top: 10px;">
                                     <a href="http://pixieengine.com/projects/demo/ide">Pixie</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/modx-logo-4.png" style="position: relative; left: 18px; top: 6px;" />
+                                    <img src="doc/site/images/modx-logo-4.png"
+                                        style="position: relative; left: 18px; top: 6px;">
                                     <a href="http://modx.com/extras/package/ace">MODX</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/shiftedit-logo.png" style="position: relative; left: 0px; top: -10px; width: 120px" />
+                                    <img src="doc/site/images/shiftedit-logo.png"
+                                        style="position: relative; left: -10px; top: -20px; width: 120px" />
                                     <a href="http://shiftedit.net/">ShiftEdit</a>
-                                </li>
+                                </li> 
                                 <li>
-                                    <img src="doc/site/images/acebug-logo.png" style="position: relative; left: 20px; top: 5px;" />
+                                    <img src="doc/site/images/acebug-logo.png"
+                                        style="position: relative; left: 20px; top: 5px;">
                                     <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/weecod-logo.png" style="position: relative; left: 0px; top: 0px; width: 100px" />
+                                    <img src="doc/site/images/weecod-logo.png"
+                                        style="position: relative; left: 0px; top: 0px; width: 100px" />
                                     <a href="http://www.weecod.com">Weecod</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/lws-logo.png" style="position: relative; left: 0px; top: 0px; width: 100px" />
+                                    <img src="doc/site/images/lws-logo.png"
+                                        style="position: relative; left: 0px; top: 0px; width: 100px" />
                                     <a href="http://liveworkspace.org">Live Workspace</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/processwire-logo.svg" style="position: relative; left: 0px; top: 25px; width: 102px" />
+                                    <img src="doc/site/images/processwire-logo.svg"
+                                        style="position: relative; left: 0px; top: 25px; width: 102px" />
                                     <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/stypi-logo.png" style="position: relative; left: 9px; top: -5px; width: 84px" />
+                                    <img src="doc/site/images/stypi-logo.png"
+                                        style="position: relative; left: 9px; top: -5px; width: 84px" />
                                     <a href="https://code.stypi.com/">Stypi</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/repl.it-logo.png" style="position: relative; left: 0px; top: 17px; width: 100px" />
+                                    <img src="doc/site/images/repl.it-logo.png"
+                                        style="position: relative; left: 0px; top: 17px; width: 100px" />
                                     <a href="http://repl.it/">Repl.it</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/crunchapp-logo.png" style="position: relative; left: 9px; top: -5px; width: 84px" />
+                                    <img src="doc/site/images/crunchapp-logo.png"
+                                        style="position: relative; left: 9px; top: -5px; width: 84px" />
                                     <a href="http://crunchapp.net/">Crunch</a>
                                 </li>
                                 <li>
                                     <img src="https://googledrive.com/host/0B3cR-oSmQsB5aUhWQ2N4RDNmYzA/h/img/icon-128.png" 
                                         style="position: relative; left: 9px; top: -5px; width: 84px">
                                     <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
+                                </li>
+                                <li>
+                                    <img src="http://phpassist.com/images/logo.png" 
+                                        style="position: relative; left: -9px; top: 19px; width: 118px">
+                                    <a href="http://phpassist.com/">PHP Assist</a>
+                                </li>
+                                <li>
+                                    <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
                                 </li>
                                 <li>
                                     <a href="https://github.com/Gozala/sky-edit">Sky Edit</a>
