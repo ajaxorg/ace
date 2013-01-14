@@ -23,13 +23,11 @@ mixin head
     meta(name="description", content="Ace API documentation for the online code editor")
     meta(name="author", content="Garen J. Torikian")
 
-    script(src="#{dirPrefix}resources/javascripts/jquery.js")
     script(src='#{sitePrefix}/js/main.js')
     link(rel='stylesheet', media='all and (max-device-width: 480px)', href='doc/site/iphone.css')
     link(rel='stylesheet', media='all and (min-device-width: 481px) and (max-device-width: 1024px)', href='doc/site/iphone.css')
     link(href='#{dirPrefix}resources/ace/skeleton/images/favicon.ico', rel='icon', type='image/x-icon')
 
-    link(rel="stylesheet", href="#{dirPrefix}resources/csses/bootstrap.min.css")
     link(href='#{sitePrefix}/style.css', rel='stylesheet', type='text/css')
     link(rel="stylesheet", href="#{dirPrefix}resources/csses/ace_api.css")
     link(rel="stylesheet", href="#{dirPrefix}resources/csses/font-awesome.css")
