@@ -14,13 +14,16 @@
     color: black;
 }
 
-#documentation code {
+pre {
+    background-color: #FFFFFF;
+}
+
+code {
     font-size: 12px;
     line-height: 16px;
     font-family: 'Ubuntu Mono',Monaco,Consolas,monospace !important;
     background-color: #F9F9F9;
     border-radius: 3px 3px 3px 3px;
-    box-shadow: 0 0 2px #888888;
     display: inline-block;
     padding: 0 4px;
     margin: 2px 1px;
@@ -61,8 +64,6 @@
 }
 #documentation p {
     font-size: 13px;
-    line-height : 20px;
-    margin-bottom : 13px;
 }
 #documentation li p:last-child {
     margin-bottom : 5px;
@@ -141,26 +142,6 @@
   Menu venue
 */
 
-form.navbar-search {
-    float: none;
-}
-
-form.navbar-search  .search-query {
-    background-color: #FFFFFF;
-    border-color: #999;
-    -webkit-transition: border 0.3s;
-    -moz-transition: border 0.3s;
-    font-size: 14px;
-    line-height: 16px;
-}
-
-form.navbar-search  .search-query:focus, form.navbar-search  .search-query:active {
-    border: 1px solid #666;
-}
-
-.navbar-search .search-query:focus, .navbar-search .search-query.focused {
-    padding: 4px 9px;
-}
 
 h3.api_title {
     padding-top: 10px;
@@ -200,50 +181,6 @@ ul.menu {
   Members and the tabs that represent them
 */
 
-.members {
-/*    width: 800px;  */
-    /*width: 700px;*/
-/*    margin: 0 10px;*/
-    
-  height: 42px;
-  left: 0;
-/*  position: fixed;*/
-  top: 0;
-/*  transition-duration: 300ms, 300ms;
-  transition-property: box-shadow, height;
-  transition-timing-function: ease-out, ease-out;
-  -moz-transition-duration: 300ms, 300ms;
-  -moz-transition-property: -moz-box-shadow, height;
-  -moz-transition-timing-function: ease-out, ease-out;
-  -o-transition-duration: 300ms, 300ms;
-  -o-transition-property: -o-box-shadow, height;
-  -o-transition-timing-function: ease-out, ease-out;
-  -webkit-transition-duration: 300ms, 300ms;
-  -webkit-transition-property: -webkit-box-shadow, height;
-  -webkit-transition-timing-function: ease-out, ease-out;*/
-/*  width: 100%;*/
-  /*transition-duration: 300ms;
-  transition-property: box-shadow;
-  transition-timing-function: ease-out;
-  -moz-transition-duration: 300ms, 300ms;
-  -moz-transition-property: -moz-box-shadow, height;
-  -moz-transition-timing-function: ease-out, ease-out;
-  -o-transition-duration: 300ms;
-  -o-transition-property: -o-box-shadow;
-  -o-transition-timing-function: ease-out;*/
-  -webkit-transition-duration: 400ms, 0ms;
-  -webkit-transition-property: -webkit-box-shadow, background;
-  -webkit-transition-timing-function: ease-out, ease-out;
-  z-index: 100;
-  padding-bottom : 5px;
-  overflow: visible !important;
-  
-/*  background: #FFF;
-  width: 100%;
-  padding-bottom: 13px;
-  top: 40px;
-  position: fixed;*/
-}
 .srolled .members {
     width: 100%;
 /*    -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.35);
@@ -339,13 +276,18 @@ ul.menu {
 
 }
 
+ul.tabs li:first-child ul{
+    left: -63px;
+}
+
 .tabs a.menu:after, .tabs .dropdown-toggle:after {
     margin-top: 22px;
 }
 
-.dropdown .caret {
-    margin-top: 14px;
-    color: #6D8CA0;
+.nav .dropdown-toggle .caret  {
+    margin-top: 12px;
+    border-top-color: #6D8CA0;
+    border-bottom-color: #6D8CA0;
 }
 
 li.dropdown {
@@ -393,14 +335,10 @@ li.dropdown {
     margin-left: 6px;
 }
 
-.members .tabs ul li {
-    font-weight: bold;
-}
-
 .memberLink a {
     margin-left: 0 !important;
 }
-.menu-dropdown, .dropdown-menu {
+.menu-dropdown {
     min-width : 105px;
     max-height: 350px;
     overflow: auto;
@@ -412,9 +350,6 @@ li.dropdown {
 .nav .dropdown-menu li a:hover {
     background-color: #ffffff;
     color: #000000;
-}
-.dropdown-menu {
-    border-top: none;
 }
 
 .tabs a.menu:after, .tabs .dropdown-toggle:after {
@@ -463,9 +398,8 @@ li.dropdown {
 }
 .tabs .menu-dropdown, .tabs .dropdown-menu {
     border-radius: 0 0 6px 6px;
-    top: 32px;
-    right: 0px;
-    width: 150px;
+    left: 10px;
+    width: 160px;
 }
 .srolled .tabs .menu-dropdown, .srolled .tabs .dropdown-menu {
     top: 32px;
@@ -501,20 +435,11 @@ ul.tabs .double ul, ul.tabs .triple ul, ul.tabs .quad ul{
 .content {
     height: 100%;
 }
-.content .row {
-    margin-left: auto;
-    margin-right: auto;
-}
 
 header.filler {
     position: relative;
     height: 40px;
     width: 100%;
-}
-
-.centerpiece {
-    min-height: 100%;
-    padding: 20px 0;
 }
 
 /*
@@ -530,18 +455,13 @@ header.filler {
     margin-bottom: 3px;
 }
 
-#sidebar {
-    margin-top: 5px;
-    /*background: url(../images/sidebar-border.png) repeat-y right 0;*/
-    margin-left: 12px;
-/*    width: 280px;*/
-/*    overflow: auto;*/
-    padding-right : 10px;
-}
-
 #sidebar h3 a,
 #sidebar h3 a:hover {
     color: #404040;
+}
+
+#sidebarContainer {
+    padding-top: 20px;
 }
 
 #mainContent {
@@ -549,7 +469,7 @@ header.filler {
 }
 
 #documentation {
-    padding-left: 15px;
+    padding-top: 35px;
     padding-bottom: 10px;
 }
 
@@ -571,7 +491,6 @@ div#documentation article:last-child {
 }
 #documentation article.article.methodToggleOpen {
     background: rgba(255, 255, 255, 0.5);
-    padding: 20px;
     font-size: 13px;
     line-height: 24px;
     margin: 0 0 10px 0;
@@ -779,8 +698,8 @@ li.signature {
     color: #ffffff;
 }
 .description h4 {
+    padding-top: 10px;
     font-size: 18px;
-    margin: 20px 0 10px;
     line-height : 18px;
 }
 
@@ -803,10 +722,6 @@ li.signature {
   Everyday I'm togglin'
 */
 
-#documentation h3 {
-    font-size: 24px;
-    margin-top: 5px; 
-}
 #documentation i.methodToggle {
     cursor: pointer;
     color: #9f9f9f;
@@ -835,7 +750,6 @@ li.signature {
 }
 
 #documentation h3.sectionHeader {
-    margin: 10px 0 17px 0;
     line-height : 24px;
 }
 
