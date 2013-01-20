@@ -42,6 +42,7 @@ var modesByName = {
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
     css:        ["CSS"          , "css"],
+    curly:      ["Curly"        , "curly"],
     dart:       ["Dart"         , "dart"],
     diff:       ["Diff"         , "diff|patch"],
     dot:        ["Dot"          , "dot"],
