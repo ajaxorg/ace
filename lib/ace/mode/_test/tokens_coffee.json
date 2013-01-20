@@ -1,190 +1,483 @@
-[
- {
-  "state": "start",
-  "data": [
-   [ "comment", "#!/usr/bin/env coffee" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "try" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "throw" ],
-   [ "text", " " ],
-   [ "language.support.class", "URIError" ],
-   [ "text", " " ],
-   [ "language.support.function", "decodeURI" ],
-   [ "paren.lparen", "(" ],
-   [ "constant.numeric", "0xC0ffee" ],
-   [ "text", " " ],
-   [ "keyword.operator", "*" ],
-   [ "text", " " ],
-   [ "constant.numeric", "123456.7e-8" ],
-   [ "text", " " ],
-   [ "keyword.operator", "/" ],
-   [ "text", " " ],
-   [ "constant.numeric", ".9" ],
-   [ "paren.rparen", ")" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "catch" ],
-   [ "text", " " ],
-   [ "identifier", "e" ]
-  ]
- },
- {
-  "state": "qdoc",
-  "data": [
-   [ "text", "    " ],
-   [ "identifier", "console" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "log" ],
-   [ "text", " " ],
-   [ "string", "'qstring'" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "string", "\"qqstring\"" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "string", "'''" ]
-  ]
- },
- {
-  "state": "qdoc",
-  "data": [
-   [ "string", "        qdoc" ]
-  ]
- },
- {
-  "state": "qqdoc",
-  "data": [
-   [ "string", "    '''" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "string", "\"\"\"" ]
-  ]
- },
- {
-  "state": "qqdoc",
-  "data": [
-   [ "string", "        qqdoc" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "string", "    \"\"\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "do" ],
-   [ "text", " " ],
-   [ "storage.type", "->" ]
-  ]
- },
- {
-  "state": "comment",
-  "data": [
-   [ "text", "    " ],
-   [ "comment", "###" ]
-  ]
- },
- {
-  "state": "comment",
-  "data": [
-   [ "comment", "    herecomment" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "comment", "    ###" ]
-  ]
- },
- {
-  "state": "heregex",
-  "data": [
-   [ "text", "    " ],
-   [ "identifier", "re" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "string.regex", "/regex/imgy" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "test" ],
-   [ "text", " " ],
-   [ "string.regex", "///" ]
-  ]
- },
- {
-  "state": "heregex",
-  "data": [
-   [ "comment.regex", "        " ],
-   [ "string.regex", "heregex" ],
-   [ "comment.regex", "  # comment" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "string.regex", "    ///imgy" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "this" ],
-   [ "text", " " ],
-   [ "keyword", "isnt" ],
-   [ "punctuation.operator", ":" ],
-   [ "text", " " ],
-   [ "string", "`just JavaScript`" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "constant.language", "undefined" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "identifier", "sentence" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "string", "\"#{ 22 / 7 } is a decent approximation of π\"" ]
-  ]
- }
-]
+[[
+   "start",
+  ["comment","#test: tokenize keyword"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator","."],
+  ["constant.numeric",".2"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["comment","#test: tokenize regexp"]
+],[
+   "start",
+  ["string.regex","/\"[a]/"]
+],[
+   "start",
+  ["comment","#test: tokenize functions"]
+],[
+   "start",
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["variable.parameter","args"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["variable.parameter","a1, a2"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["variable.parameter","@a1, a2"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["variable.parameter","args"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["variable.parameter","args"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["constant.numeric","0"],
+  ["identifier","abc"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["keyword.operator","/"],
+  ["identifier","abc"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","=>"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["identifier","abc"],
+  ["keyword.operator","/"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["comment","#abc}) ->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["identifier","abc"],
+  ["comment","#}) ->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["paren.rparen",")"],
+  ["identifier","abc"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["identifier","abc"],
+  ["paren.rparen",")})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["identifier","a"],
+  ["paren.lparen","{"],
+  ["identifier","bc"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["text"," "],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["paren.lparen","({"],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","args"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","arg1, arg2"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","arg1 = 1, arg2 = 'name'"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","@arg1 = /abc/, arg2 = 'name'"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","#test: tokenize function: invalid case:"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["keyword.operator","="],
+  ["paren.lparen","("],
+  ["keyword.operator","/"],
+  ["identifier","args"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language","window"],
+  ["punctuation.operator","."],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","args"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","#test: tokenize callback function"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["identifier","bar"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","args"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","foo"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","x"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "start",
+  ["comment","#test: tokenize class"]
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["language.support.class","Foo"]
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["language.support.class","Foo"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["language.support.class","Bar"]
+],[
+   "start",
+  ["comment","#test: tokenize illegal name property"]
+],[
+   "start",
+  ["identifier","foo"],
+  ["punctuation.operator","."],
+  ["identifier","static"],
+  ["punctuation.operator","."],
+  ["identifier","function"]
+],[
+   "start",
+  ["comment","#!test tokenize string with interpolation"]
+],[
+   "start",
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"#{ 22 / 7 + {x: \""],
+  ["comment","#{a + b}\"} + 2}\""]
+],[
+   "qqdoc",
+  ["string","\"\"\"heredoc"]
+],[
+   "start",
+  ["string","   \"\"\""]
+],[
+   "start",
+  ["keyword","do"],
+  ["text"," "],
+  ["storage.type","->"]
+],[
+   "comment",
+  ["text","    "],
+  ["comment","###"]
+],[
+   "comment",
+  ["comment","    herecomment"]
+],[
+   "start",
+  ["comment","    ###"]
+],[
+   "heregex",
+  ["text","    "],
+  ["identifier","re"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regex","/regex/imgy"],
+  ["punctuation.operator","."],
+  ["identifier","test"],
+  ["text"," "],
+  ["string.regex","///"]
+],[
+   "heregex",
+  ["comment.regex","        "],
+  ["string.regex","heregex"],
+  ["comment.regex","  # comment"]
+],[
+   "start",
+  ["string.regex","    ///imgy"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","this"],
+  ["text"," "],
+  ["keyword","isnt"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["string","`just JavaScript`"]
+],[
+   "start",
+  ["text","    "],
+  ["constant.language","undefined"]
+],[
+   "start"
+]]

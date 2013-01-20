@@ -1,530 +1,410 @@
-[
- {
-  "state": "commandItem",
-  "data": []
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "keyword", "proc" ],
-   [ "text", " " ],
-   [ "identifier", "dijkstra" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "keyword", "graph" ],
-   [ "text", " " ],
-   [ "identifier", "origin" ],
-   [ "paren.rparen", "}" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "comment", "# Initialize" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "for" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "keyword", "vertex" ],
-   [ "text", " " ],
-   [ "identifier", "distmap" ],
-   [ "paren.rparen", "}" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "graph" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "set" ],
-   [ "text", " " ],
-   [ "identifier", "dist" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "vertex" ],
-   [ "text", " " ],
-   [ "identifier", "Inf" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "set" ],
-   [ "text", " " ],
-   [ "identifier", "path" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "vertex" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "text", "}" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "    }" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "set" ],
-   [ "text", " " ],
-   [ "identifier", "dist" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "origin" ],
-   [ "text", " 0" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "set" ],
-   [ "text", " " ],
-   [ "identifier", "path" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "origin" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "list" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "origin" ],
-   [ "paren.rparen", "]" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", " " ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "while" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "text", "[" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "size" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "graph" ],
-   [ "paren.rparen", "]}" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "comment", "# Find unhandled node with least weight" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "set" ],
-   [ "text", " " ],
-   [ "identifier", "d" ],
-   [ "text", " " ],
-   [ "identifier", "Inf" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "for" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "keyword", "uu" ],
-   [ "text", " " ],
-   [ "support.function", "-" ],
-   [ "paren.rparen", "}" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "graph" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t    " ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "d" ],
-   [ "text", " " ],
-   [ "support.function", ">" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "set" ],
-   [ "text", " " ],
-   [ "identifier", "dd" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "get" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "dist" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "uu" ],
-   [ "paren.rparen", "]]}" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "keyword", "set" ],
-   [ "text", " " ],
-   [ "identifier", "u" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "uu" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "keyword", "set" ],
-   [ "text", " " ],
-   [ "identifier", "d" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "dd" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t    }" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t}" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", " " ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "comment", "# No such node; graph must be disconnected" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "d" ],
-   [ "text", " " ],
-   [ "support.function", "==" ],
-   [ "text", " " ],
-   [ "identifier", "Inf" ],
-   [ "paren.rparen", "}" ],
-   [ "text", " " ],
-   [ "identifier", "break" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", " " ]
-  ]
- },
- {
-  "state": "commentfollow",
-  "data": [
-   [ "text", "\t" ],
-   [ "comment", "# Update the weights for nodes\\" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "comment", "\t lead to by the node we've picked" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "for" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "keyword", "v" ],
-   [ "text", " " ],
-   [ "identifier", "dd" ],
-   [ "paren.rparen", "}" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "get" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "graph" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "u" ],
-   [ "paren.rparen", "]" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t    " ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "text", "[" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "exists" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "graph" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "v" ],
-   [ "paren.rparen", "]}" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "keyword", "set" ],
-   [ "text", " " ],
-   [ "identifier", "alt" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "expr" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "d" ],
-   [ "text", " " ],
-   [ "support.function", "+" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "dd" ],
-   [ "paren.rparen", "}]" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "alt" ],
-   [ "text", " " ],
-   [ "support.function", "<" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "get" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "dist" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "v" ],
-   [ "paren.rparen", "]}" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t    " ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "set" ],
-   [ "text", " " ],
-   [ "identifier", "dist" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "v" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "alt" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t    " ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "set" ],
-   [ "text", " " ],
-   [ "identifier", "path" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "v" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "list" ],
-   [ "text", " " ],
-   [ "support.function", "{*}" ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "get" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "path" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "u" ],
-   [ "paren.rparen", "]" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "v" ],
-   [ "paren.rparen", "]" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t\t}" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t    }" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "\t}" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", " " ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "comment", "# Remove chosen node from graph still to be handled" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "keyword", "dict" ],
-   [ "text", " " ],
-   [ "identifier", "unset" ],
-   [ "text", " " ],
-   [ "identifier", "graph" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "u" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "    }" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "keyword", "return" ],
-   [ "text", " " ],
-   [ "paren.lparen", "[" ],
-   [ "keyword", "list" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "dist" ],
-   [ "text", " " ],
-   [ "variable.instancce", "$" ],
-   [ "variable.instance", "path" ],
-   [ "paren.rparen", "]" ]
-  ]
- },
- {
-  "state": "commandItem",
-  "data": [
-   [ "text", "}" ]
-  ]
- }
-]
+[[
+   "commandItem"
+],[
+   "commandItem",
+  ["keyword","proc"],
+  ["text"," "],
+  ["identifier","dijkstra"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["keyword","graph"],
+  ["text"," "],
+  ["identifier","origin"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","# Initialize"]
+],[
+   "commandItem",
+  ["text","    "],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","for"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["keyword","vertex"],
+  ["text"," "],
+  ["identifier","distmap"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","graph"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","set"],
+  ["text"," "],
+  ["identifier","dist"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","vertex"],
+  ["text"," "],
+  ["identifier","Inf"]
+],[
+   "commandItem",
+  ["text","\t"],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","set"],
+  ["text"," "],
+  ["identifier","path"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","vertex"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text","}"]
+],[
+   "commandItem",
+  ["text","    }"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","set"],
+  ["text"," "],
+  ["identifier","dist"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","origin"],
+  ["text"," 0"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","set"],
+  ["text"," "],
+  ["identifier","path"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","origin"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","list"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","origin"],
+  ["paren.rparen","]"]
+],[
+   "commandItem",
+  ["text"," "]
+],[
+   "commandItem",
+  ["text","    "],
+  ["keyword","while"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text","["],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","graph"],
+  ["paren.rparen","]}"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Find unhandled node with least weight"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","d"],
+  ["text"," "],
+  ["identifier","Inf"]
+],[
+   "commandItem",
+  ["text","\t"],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","for"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["keyword","uu"],
+  ["text"," "],
+  ["support.function","-"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","graph"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "commandItem",
+  ["text","\t    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable.instancce","$"],
+  ["variable.instance","d"],
+  ["text"," "],
+  ["support.function",">"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","dd"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","get"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","dist"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","uu"],
+  ["paren.rparen","]]}"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","uu"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","d"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","dd"]
+],[
+   "commandItem",
+  ["text","\t    }"]
+],[
+   "commandItem",
+  ["text","\t}"]
+],[
+   "commandItem",
+  ["text"," "]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# No such node; graph must be disconnected"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable.instancce","$"],
+  ["variable.instance","d"],
+  ["text"," "],
+  ["support.function","=="],
+  ["text"," "],
+  ["identifier","Inf"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["identifier","break"]
+],[
+   "commandItem",
+  ["text"," "]
+],[
+   "commentfollow",
+  ["text","\t"],
+  ["comment","# Update the weights for nodes\\"]
+],[
+   "start",
+  ["comment","\t lead to by the node we've picked"]
+],[
+   "commandItem",
+  ["text","\t"],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","for"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["keyword","v"],
+  ["text"," "],
+  ["identifier","dd"],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","get"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","graph"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","u"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "commandItem",
+  ["text","\t    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text","["],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","exists"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","graph"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","v"],
+  ["paren.rparen","]}"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","set"],
+  ["text"," "],
+  ["identifier","alt"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","expr"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable.instancce","$"],
+  ["variable.instance","d"],
+  ["text"," "],
+  ["support.function","+"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","dd"],
+  ["paren.rparen","}]"]
+],[
+   "commandItem",
+  ["text","\t\t"],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable.instancce","$"],
+  ["variable.instance","alt"],
+  ["text"," "],
+  ["support.function","<"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","get"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","dist"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","v"],
+  ["paren.rparen","]}"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t    "],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","set"],
+  ["text"," "],
+  ["identifier","dist"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","v"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","alt"]
+],[
+   "start",
+  ["text","\t\t    "],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","set"],
+  ["text"," "],
+  ["identifier","path"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","v"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","list"],
+  ["text"," "],
+  ["support.function","{*}"],
+  ["paren.lparen","["],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","get"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","path"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","u"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","v"],
+  ["paren.rparen","]"]
+],[
+   "commandItem",
+  ["text","\t\t}"]
+],[
+   "commandItem",
+  ["text","\t    }"]
+],[
+   "commandItem",
+  ["text","\t}"]
+],[
+   "commandItem",
+  ["text"," "]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Remove chosen node from graph still to be handled"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","dict"],
+  ["text"," "],
+  ["identifier","unset"],
+  ["text"," "],
+  ["identifier","graph"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","u"]
+],[
+   "commandItem",
+  ["text","    }"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["keyword","list"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","dist"],
+  ["text"," "],
+  ["variable.instancce","$"],
+  ["variable.instance","path"],
+  ["paren.rparen","]"]
+],[
+   "commandItem",
+  ["text","}"]
+]]

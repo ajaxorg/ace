@@ -1,929 +1,688 @@
-[
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "svg" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "  " ],
-   [ "entity.other.attribute-name", "width" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"800\"" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "height" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"600\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "  " ],
-   [ "entity.other.attribute-name", "xmlns" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"http://www.w3.org/2000/svg\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "  " ],
-   [ "entity.other.attribute-name", "onload" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"StartAnimation(evt)\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "  " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", "Test Tube Progress Bar" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "  " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "desc" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", "Created for the Web Directions SVG competition" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "desc" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "  " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "script" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "type" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"text/ecmascript\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "keyword.operator", "<!" ],
-   [ "paren.lparen", "[" ],
-   [ "identifier", "CDATA" ],
-   [ "paren.lparen", "[" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "constant.numeric", "0" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "timer_increment" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "constant.numeric", "1" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "max_time" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "constant.numeric", "100" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "hickory" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "dickory" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "dock" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "var" ],
-   [ "text", " " ],
-   [ "identifier", "i" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": []
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "function" ],
-   [ "text", " " ],
-   [ "entity.name.function", "StartAnimation" ],
-   [ "paren.lparen", "(" ],
-   [ "variable.parameter", "evt" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "hickory" ],
-   [ "text", "  " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "identifier", "evt" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "target" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "ownerDocument" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "getElementById" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"hickory\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "dickory" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "identifier", "evt" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "target" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "ownerDocument" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "getElementById" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"dickory\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "dock" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "identifier", "evt" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "target" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "ownerDocument" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "getElementById" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"dock\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": []
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "ShowAndGrowElement" ],
-   [ "paren.lparen", "(" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "    " ],
-   [ "paren.rparen", "}" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "    " ],
-   [ "storage.type", "function" ],
-   [ "text", " " ],
-   [ "entity.name.function", "ShowAndGrowElement" ],
-   [ "paren.lparen", "(" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "identifier", "timer_increment" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", ">" ],
-   [ "text", " " ],
-   [ "identifier", "max_time" ],
-   [ "paren.rparen", ")" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "keyword", "return" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "comment", "// Scale the text string gradually until it is 20 times larger" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "scalefactor" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", "*" ],
-   [ "text", " " ],
-   [ "constant.numeric", "650" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "keyword.operator", "/" ],
-   [ "text", " " ],
-   [ "identifier", "max_time" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": []
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", "<" ],
-   [ "text", " " ],
-   [ "constant.numeric", "30" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "identifier", "hickory" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "setAttribute" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"display\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "string", "\"\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "identifier", "hickory" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "setAttribute" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"transform\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "string", "\"translate(\"" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "constant.numeric", "600" ],
-   [ "keyword.operator", "+" ],
-   [ "identifier", "scalefactor" ],
-   [ "keyword.operator", "*" ],
-   [ "constant.numeric", "3" ],
-   [ "keyword.operator", "*" ],
-   [ "constant.numeric", "-1" ],
-   [ "text", " " ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "string", "\", -144 )\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "paren.rparen", "}" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": []
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", ">" ],
-   [ "text", " " ],
-   [ "constant.numeric", "30" ],
-   [ "text", " " ],
-   [ "keyword.operator", "&&" ],
-   [ "text", " " ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", "<" ],
-   [ "text", " " ],
-   [ "constant.numeric", "66" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "identifier", "dickory" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "setAttribute" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"display\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "string", "\"\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "identifier", "dickory" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "setAttribute" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"transform\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "string", "\"translate(\"" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "constant.numeric", "-795" ],
-   [ "keyword.operator", "+" ],
-   [ "identifier", "scalefactor" ],
-   [ "keyword.operator", "*" ],
-   [ "constant.numeric", "2" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "string", "\", 0 )\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "paren.rparen", "}" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "        " ],
-   [ "keyword", "if" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "timevalue" ],
-   [ "text", " " ],
-   [ "keyword.operator", ">" ],
-   [ "text", " " ],
-   [ "constant.numeric", "66" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "paren.lparen", "{" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "identifier", "dock" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "setAttribute" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"display\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "string", "\"\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-regex_allowed",
-  "data": [
-   [ "text", "            " ],
-   [ "identifier", "dock" ],
-   [ "punctuation.operator", "." ],
-   [ "support.function.dom", "setAttribute" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"transform\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "string", "\"translate(\"" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "paren.lparen", "(" ],
-   [ "constant.numeric", "1450" ],
-   [ "keyword.operator", "+" ],
-   [ "identifier", "scalefactor" ],
-   [ "keyword.operator", "*" ],
-   [ "constant.numeric", "2" ],
-   [ "keyword.operator", "*" ],
-   [ "constant.numeric", "-1" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "keyword.operator", "+" ],
-   [ "text", " " ],
-   [ "string", "\", 144 )\"" ],
-   [ "paren.rparen", ")" ],
-   [ "punctuation.operator", ";" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "paren.rparen", "}" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": []
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "comment", "// Call ShowAndGrowElement again <timer_increment> milliseconds later." ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "        " ],
-   [ "identifier", "setTimeout" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"ShowAndGrowElement()\"" ],
-   [ "punctuation.operator", "," ],
-   [ "text", " " ],
-   [ "identifier", "timer_increment" ],
-   [ "paren.rparen", ")" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "    " ],
-   [ "paren.rparen", "}" ]
-  ]
- },
- {
-  "state": "js-start",
-  "data": [
-   [ "text", "    " ],
-   [ "variable.language", "window" ],
-   [ "punctuation.operator", "." ],
-   [ "identifier", "ShowAndGrowElement" ],
-   [ "text", " " ],
-   [ "keyword.operator", "=" ],
-   [ "text", " " ],
-   [ "identifier", "ShowAndGrowElement" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "  " ],
-   [ "paren.rparen", "]]" ],
-   [ "keyword.operator", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "script" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "  " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "rect" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "fill" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"#2e3436\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "fill-rule" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"nonzero\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "stroke-width" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"3\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "y" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"0\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "x" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"0\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "height" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"600\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "width" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"800\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"rect3590\"" ],
-   [ "meta.tag.r", "/>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "text" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "style" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "x" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"50\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "y" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"350\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"hickory\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "display" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"none\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "        Hickory," ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "text" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "text" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "style" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "x" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"50\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "y" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"350\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"dickory\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "display" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"none\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "        dickory," ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "text" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "    " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "text" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "style" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "x" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"50\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "y" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"350\"" ]
-  ]
- },
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"dock\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "       " ],
-   [ "entity.other.attribute-name", "display" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"none\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "        dock!" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "text" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "svg" ],
-   [ "meta.tag.r", ">" ]
-  ]
- }
-]
+[[
+   "tag_embed_attribute_list",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","svg"]
+],[
+   "tag_embed_attribute_list",
+  ["text","  "],
+  ["entity.other.attribute-name","width"],
+  ["keyword.operator","="],
+  ["string","\"800\""],
+  ["text"," "],
+  ["entity.other.attribute-name","height"],
+  ["keyword.operator","="],
+  ["string","\"600\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","  "],
+  ["entity.other.attribute-name","xmlns"],
+  ["keyword.operator","="],
+  ["string","\"http://www.w3.org/2000/svg\""]
+],[
+   "start",
+  ["text","  "],
+  ["entity.other.attribute-name","onload"],
+  ["keyword.operator","="],
+  ["string","\"StartAnimation(evt)\""],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","title"],
+  ["meta.tag.r",">"],
+  ["text","Test Tube Progress Bar"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","title"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","desc"],
+  ["meta.tag.r",">"],
+  ["text","Created for the Web Directions SVG competition"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","desc"],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "js-regex_allowed",
+  ["text","  "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","script"],
+  ["text"," "],
+  ["entity.other.attribute-name","type"],
+  ["keyword.operator","="],
+  ["string","\"text/ecmascript\""],
+  ["meta.tag.r",">"],
+  ["keyword.operator","<!"],
+  ["paren.lparen","["],
+  ["identifier","CDATA"],
+  ["paren.lparen","["]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","timer_increment"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","max_time"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","hickory"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","dickory"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","dock"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","i"],
+  ["punctuation.operator",";"]
+],[
+   "js-start"
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","function"],
+  ["text"," "],
+  ["entity.name.function","StartAnimation"],
+  ["paren.lparen","("],
+  ["variable.parameter","evt"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["identifier","hickory"],
+  ["text","  "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","evt"],
+  ["punctuation.operator","."],
+  ["identifier","target"],
+  ["punctuation.operator","."],
+  ["identifier","ownerDocument"],
+  ["punctuation.operator","."],
+  ["support.function.dom","getElementById"],
+  ["paren.lparen","("],
+  ["string","\"hickory\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["identifier","dickory"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","evt"],
+  ["punctuation.operator","."],
+  ["identifier","target"],
+  ["punctuation.operator","."],
+  ["identifier","ownerDocument"],
+  ["punctuation.operator","."],
+  ["support.function.dom","getElementById"],
+  ["paren.lparen","("],
+  ["string","\"dickory\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["identifier","dock"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","evt"],
+  ["punctuation.operator","."],
+  ["identifier","target"],
+  ["punctuation.operator","."],
+  ["identifier","ownerDocument"],
+  ["punctuation.operator","."],
+  ["support.function.dom","getElementById"],
+  ["paren.lparen","("],
+  ["string","\"dock\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-start"
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["identifier","ShowAndGrowElement"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "js-regex_allowed",
+  ["text","    "],
+  ["storage.type","function"],
+  ["text"," "],
+  ["entity.name.function","ShowAndGrowElement"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","timer_increment"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["identifier","max_time"],
+  ["paren.rparen",")"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["keyword","return"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","        "],
+  ["comment","// Scale the text string gradually until it is 20 times larger"]
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["identifier","scalefactor"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.numeric","650"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["identifier","max_time"],
+  ["punctuation.operator",";"]
+],[
+   "js-start"
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["constant.numeric","30"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["identifier","hickory"],
+  ["punctuation.operator","."],
+  ["support.function.dom","setAttribute"],
+  ["paren.lparen","("],
+  ["string","\"display\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["identifier","hickory"],
+  ["punctuation.operator","."],
+  ["support.function.dom","setAttribute"],
+  ["paren.lparen","("],
+  ["string","\"transform\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"translate(\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","600"],
+  ["keyword.operator","+"],
+  ["identifier","scalefactor"],
+  ["keyword.operator","*"],
+  ["constant.numeric","3"],
+  ["keyword.operator","*"],
+  ["constant.numeric","-1"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\", -144 )\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "js-start"
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","30"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["constant.numeric","66"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["identifier","dickory"],
+  ["punctuation.operator","."],
+  ["support.function.dom","setAttribute"],
+  ["paren.lparen","("],
+  ["string","\"display\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["identifier","dickory"],
+  ["punctuation.operator","."],
+  ["support.function.dom","setAttribute"],
+  ["paren.lparen","("],
+  ["string","\"transform\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"translate(\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","-795"],
+  ["keyword.operator","+"],
+  ["identifier","scalefactor"],
+  ["keyword.operator","*"],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\", 0 )\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "js-regex_allowed",
+  ["text","        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","timevalue"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","66"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["identifier","dock"],
+  ["punctuation.operator","."],
+  ["support.function.dom","setAttribute"],
+  ["paren.lparen","("],
+  ["string","\"display\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-regex_allowed",
+  ["text","            "],
+  ["identifier","dock"],
+  ["punctuation.operator","."],
+  ["support.function.dom","setAttribute"],
+  ["paren.lparen","("],
+  ["string","\"transform\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"translate(\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","1450"],
+  ["keyword.operator","+"],
+  ["identifier","scalefactor"],
+  ["keyword.operator","*"],
+  ["constant.numeric","2"],
+  ["keyword.operator","*"],
+  ["constant.numeric","-1"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string","\", 144 )\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "js-start"
+],[
+   "js-start",
+  ["text","        "],
+  ["comment","// Call ShowAndGrowElement again <timer_increment> milliseconds later."]
+],[
+   "js-start",
+  ["text","        "],
+  ["identifier","setTimeout"],
+  ["paren.lparen","("],
+  ["string","\"ShowAndGrowElement()\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","timer_increment"],
+  ["paren.rparen",")"]
+],[
+   "js-start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "js-start",
+  ["text","    "],
+  ["variable.language","window"],
+  ["punctuation.operator","."],
+  ["identifier","ShowAndGrowElement"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","ShowAndGrowElement"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","]]"],
+  ["keyword.operator",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","script"],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "tag_embed_attribute_list",
+  ["text","  "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","rect"]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","fill"],
+  ["keyword.operator","="],
+  ["string","\"#2e3436\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","fill-rule"],
+  ["keyword.operator","="],
+  ["string","\"nonzero\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","stroke-width"],
+  ["keyword.operator","="],
+  ["string","\"3\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","y"],
+  ["keyword.operator","="],
+  ["string","\"0\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","x"],
+  ["keyword.operator","="],
+  ["string","\"0\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","height"],
+  ["keyword.operator","="],
+  ["string","\"600\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["entity.other.attribute-name","width"],
+  ["keyword.operator","="],
+  ["string","\"800\""]
+],[
+   "start",
+  ["text","    "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"rect3590\""],
+  ["meta.tag.r","/>"]
+],[
+   "start"
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","text"]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","style"],
+  ["keyword.operator","="],
+  ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","x"],
+  ["keyword.operator","="],
+  ["string","\"50\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","y"],
+  ["keyword.operator","="],
+  ["string","\"350\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"hickory\""]
+],[
+   "start",
+  ["text","       "],
+  ["entity.other.attribute-name","display"],
+  ["keyword.operator","="],
+  ["string","\"none\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","        Hickory,"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","text"],
+  ["meta.tag.r",">"]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","text"]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","style"],
+  ["keyword.operator","="],
+  ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","x"],
+  ["keyword.operator","="],
+  ["string","\"50\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","y"],
+  ["keyword.operator","="],
+  ["string","\"350\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"dickory\""]
+],[
+   "start",
+  ["text","       "],
+  ["entity.other.attribute-name","display"],
+  ["keyword.operator","="],
+  ["string","\"none\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","        dickory,"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","text"],
+  ["meta.tag.r",">"]
+],[
+   "tag_embed_attribute_list",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","text"]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","style"],
+  ["keyword.operator","="],
+  ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","x"],
+  ["keyword.operator","="],
+  ["string","\"50\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","y"],
+  ["keyword.operator","="],
+  ["string","\"350\""]
+],[
+   "tag_embed_attribute_list",
+  ["text","       "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"dock\""]
+],[
+   "start",
+  ["text","       "],
+  ["entity.other.attribute-name","display"],
+  ["keyword.operator","="],
+  ["string","\"none\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","        dock!"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","text"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","svg"],
+  ["meta.tag.r",">"]
+]]
