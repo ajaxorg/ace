@@ -1,3 +1,37 @@
+//test: tokenize 'standard' functions
+string.charCodeAt(23); document.getElementById('test'); console.log('Here it is');";
+test: /**tokenize doc*/ comment
+/**tokenize doc comment with @tag {}*/
+//test: tokenize parens
+    var line = "[{( )}]";
+//test tokenize arithmetic expression which looks like a regexp
+a/b/c
+a/=b/c
+//test tokenize reg exps
+a=/b/g
+a+/b/g
+a = 1 + /2 + 1/b
+a=/a/ / /a/
+case /a/.test(c)
+//test tokenize multi-line comment containing a single line comment
+noRegex
+/* foo // bar */
+canBeRegex;
+/* foo // bar */
+// test tokenize identifier with umlauts
+fu?e
+// test // is not a regexp
+{ // 123
+//test skipping escaped chars
+'Meh\\nNeh'
+console.log('\\u1232Feh'
+"test multiline\
+ strings"
+a='
+b="\
+still a string
+ 
+ 
 function foo(items, nada) {
     for (var i=0; i<items.length; i++) {
         alert(items[i] + "juhu\n");
