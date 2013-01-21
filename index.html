@@ -657,50 +657,14 @@ oop.inherits(FoldMode, BaseFoldMode);
                             </ol>
                             <p>Once you set this up, you should see be able to witness a live demonstration of your new highlighter.</p>
                             <h3 id="adding-automated-tests"><a class="heading_anchor" href="#adding-automated-tests"><i class="headerLinkIcon"></i></a>Adding Automated Tests</h3>
-                            <p>It&#39;s also suggested that you go one step further and define some automated tests to test your syntax highlighter. A basic test looks something like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">if</span> (<span class="keyword">typeof</span> process !== <span class="string">"undefined"</span>) {
-    require(<span class="string">"amd-loader"</span>);
-}
-
-define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
-
-<span class="keyword">var</span> MyNewLanguage = require(<span class="string">"./mynewlanguage"</span>).Mode;
-<span class="keyword">var</span> assert = require(<span class="string">"../test/assertions"</span>);
-
-module.exports = {
-
-    name: <span class="string">"MyNewLanguage Tokenizer"</span>,
-
-    setUp : <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.tokenizer = <span class="keyword">new</span> MyNewLanguage().getTokenizer();
-    },
-
-    <span class="string">"test: my random description"</span> : <span class="keyword">function</span>() {
-        <span class="keyword">var</span> line = <span class="string">"-12px"</span>;
-        <span class="keyword">var</span> tokens = <span class="keyword">this</span>.tokenizer.getLineTokens(line, <span class="string">"ruleset"</span>).tokens;
-
-        assert.equal(<span class="number">2</span>, tokens.length);
-        assert.equal(<span class="string">"constant.numeric"</span>, tokens[<span class="number">0</span>].type);
-    },
-
-    <span class="string">"test: tokenize more than one thing"</span> : <span class="keyword">function</span>() {
-        <span class="keyword">var</span> tokens = <span class="keyword">this</span>.tokenizer.getLineTokens(<span class="string">"{()}"</span>, <span class="string">"start"</span>).tokens;
-
-        assert.equal(<span class="number">3</span>, tokens.length);
-        assert.equal(<span class="string">"paren.lparen"</span>, tokens[<span class="number">0</span>].type);
-        assert.equal(<span class="string">"text"</span>, tokens[<span class="number">1</span>].type);
-        assert.equal(<span class="string">"paren.rparen"</span>, tokens[<span class="number">2</span>].type);
-    },
-};
-
-});
-
-<span class="keyword">if</span> (<span class="keyword">typeof</span> module !== <span class="string">"undefined"</span> &amp;&amp; module === require.main) {
-    require(<span class="string">"asyncjs"</span>).test.testcase(module.exports).exec()
-}</code></pre>
-                            <p>All tests contain a string describing what the test is doing. Then, you define an arbitrary line that you want your tokenizer to check. It&#39;s recommended that you test both the number of tokens found, as well as the values of those tokens.</p>
-                            <p>Any file ending with the <em>_test.js</em> suffix are automatically run by Ace&#39;s <a href="http://travis-ci.org/#!/ajaxorg/ace">Travis CI</a> server.</p>
+                            <p>Adding automated tests for a highlighter is trivial so you are not required to do it, but it can help during development.</p>
+                            <p>In <code>lib/ace/mode/_test</code> create a file named <code><pre>text_<span style="color:#AA0D91">&lt;modeName&gt;</span>.txt</pre></code> with some example code. (You can skip this if the document you have added in <code>demo/docs</code> both looks good and covers various edge cases in your language syntax).
+                            </p>
+                            <p> Run <code><span style="color:#AA0D91">node</span> <span style="color:#008800">highlight_rules_test.js</span> <span style="color:#000088">-gen</span></code> to preserve current output of your tokenizer in <code>tokens_<span style="color:#AA0D91">&lt;modeName&gt;</span>.json</code>
+                            </p>
+                            <p>After this running <code><span style="color:#008800">highlight_rules_test.js</span> <span cstyle="color:#000088">optionalLanguageName</span></code> will compare output of your tokenizer with the correct output you've created.
+                            </p>
+                            <p>Any files ending with the <em>_test.js</em> suffix are automatically run by Ace&#39;s <a href="http://travis-ci.org/#!/ajaxorg/ace">Travis CI</a> server.</p>
                         </div>
                         <div class="tab-pane fade" id="api">
                             <div class="row centerpiece">
@@ -912,9 +876,21 @@ module.exports = {
                                     <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
                                 </li>
                                 <li>
-                                    <img src="http://phpassist.com/images/logo.png" 
-                                        style="position: relative; left: -9px; top: 19px; width: 118px">
+                                    <img src="http://phpassist.com/images/logo-large.png" 
+                                        style="position: relative; left: 3px; top: -10px; width: 95px">
                                     <a href="http://phpassist.com/">PHP Assist</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Dillinger</div>
+                                    <a href="http://dillinger.io/">Dillinger</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Evaluzio</div>
+                                    <a href="http://www.evaluzio.net/editor">Evaluzio</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Edicy</div>
+                                    <a href="http://www.edicy.com/blog/new-code-editor-for-creating-unique-website-designs">Edicy</a>
                                 </li>
                                 <li>
                                     <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
@@ -941,6 +917,7 @@ module.exports = {
                                     <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
                                 </li>
                                 <li>
+                                    <div class="text-logo">ShareJS</div>
                                     <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
                                 </li>
                                 <li>
@@ -953,6 +930,7 @@ module.exports = {
                                     <a href="http://neutronide.com/">Neutron IDE</a>
                                 </li>
                                 <li>
+                                    <div class="text-logo">tmpltr</div>
                                     <a href="http://rocktronica.github.com/tmpltr/">tmpltr</a>
                                 </li>
                                 <li>

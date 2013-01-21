@@ -2,7 +2,7 @@
 They are generated from `text_<modeName>.txt` or `demo/kitchen-sink/doc/*` with
 
 ```sh
-node highlight_rules_test.js gen
+node highlight_rules_test.js -gen
 ```
 
 command.

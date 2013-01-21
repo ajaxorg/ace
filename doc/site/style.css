@@ -481,3 +481,12 @@ p.highlight_note a {
 img {
     max-width: none;
 }
+
+.text-logo{
+    color: black;
+    font-size: 24px;
+    font-weight: lighter;
+    margin-top: 23px;
+    text-align: center;
+    text-shadow: 1px 17px 2px gray, 1px 1px 2px gray;
+}
