@@ -1,40 +1,26 @@
-[
- {
-  "state": "start",
-  "data": [
-   [ "comment", "<!--- hello world --->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "cfset" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "welcome" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"Hello World!\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "cfoutput" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", "#welcome#" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "cfoutput" ],
-   [ "meta.tag.r", ">" ]
-  ]
- }
-]
+[[
+   "start",
+  ["comment","<!--- hello world --->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","cfset"],
+  ["text"," "],
+  ["entity.other.attribute-name","welcome"],
+  ["keyword.operator","="],
+  ["string","\"Hello World!\""],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","cfoutput"],
+  ["meta.tag.r",">"],
+  ["text","#welcome#"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","cfoutput"],
+  ["meta.tag.r",">"]
+]]

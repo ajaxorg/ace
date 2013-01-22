@@ -1,0 +1,249 @@
+[[
+   "start",
+  ["text","myfilename "],
+  ["keyword.operator.asp","="],
+  ["text"," "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","C:\\Wikipedia - VBScript - Example - Hello World.txt\""]
+],[
+   "start"
+],[
+   "start",
+  ["text","MakeHelloWorldFile myfilename"]
+],[
+   "start"
+],[
+   "state_4",
+  ["meta.leading-space"," "]
+],[
+   "state_4"
+],[
+   "start",
+  ["storage.type.function.asp","Sub"],
+  ["text"," "],
+  ["entity.name.function.asp","MakeHelloWorldFile"],
+  ["text"," "],
+  ["punctuation.definition.parameters.asp","("],
+  ["variable.parameter.function.asp","FileName"],
+  ["punctuation.definition.parameters.asp",")"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.asp","'"],
+  ["comment.line.apostrophe.asp","Create a new file in C: drive or overwrite existing file"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["storage.type.asp","Set"],
+  ["text"," FSO "],
+  ["keyword.operator.asp","="],
+  ["text"," "],
+  ["support.function.asp","CreateObject"],
+  ["text","("],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","Scripting.FileSystemObject\""],
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["keyword.control.asp","If"],
+  ["text"," FSO."],
+  ["entity.name.function.asp","FileExists"],
+  ["text","(FileName) "],
+  ["keyword.control.asp","Then"],
+  ["text"," "]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["text","Answer "],
+  ["keyword.operator.asp","="],
+  ["text"," "],
+  ["support.function.vb.asp","MsgBox"],
+  ["text"," ("],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","File \""],
+  ["text"," "],
+  ["keyword.operator.asp","&"],
+  ["text"," FileName "],
+  ["keyword.operator.asp","&"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp"," exists ... OK to overwrite?\""],
+  ["text",", vbOKCancel)"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["punctuation.definition.comment.asp","'"],
+  ["comment.line.apostrophe.asp","If button selected is not OK, then quit now"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["punctuation.definition.comment.asp","'"],
+  ["comment.line.apostrophe.asp","vbOK is a language constant"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["keyword.control.asp","If"],
+  ["text"," Answer "],
+  ["keyword.operator.asp","<>"],
+  ["text"," vbOK "],
+  ["keyword.control.asp","Then"],
+  ["text"," "],
+  ["keyword.control.asp","Exit Sub"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["keyword.control.asp","Else"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["punctuation.definition.comment.asp","'"],
+  ["comment.line.apostrophe.asp","Confirm OK to create"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["text","Answer "],
+  ["keyword.operator.asp","="],
+  ["text"," "],
+  ["support.function.vb.asp","MsgBox"],
+  ["text"," ("],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","File \""],
+  ["text"," "],
+  ["keyword.operator.asp","&"],
+  ["text"," FileName "],
+  ["keyword.operator.asp","&"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp"," ... OK to create?\""],
+  ["text",", vbOKCancel)"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.even-tab.spaces","  "],
+  ["meta.odd-tab.spaces","  "],
+  ["keyword.control.asp","If"],
+  ["text"," Answer "],
+  ["keyword.operator.asp","<>"],
+  ["text"," vbOK "],
+  ["keyword.control.asp","Then"],
+  ["text"," "],
+  ["keyword.control.asp","Exit Sub"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["keyword.control.asp","End If"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["punctuation.definition.comment.asp","'"],
+  ["comment.line.apostrophe.asp","Create new file (or replace an existing file)"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["storage.type.asp","Set"],
+  ["text"," FileObject "],
+  ["keyword.operator.asp","="],
+  ["text"," FSO.CreateTextFile (FileName)"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["text","FileObject.WriteLine "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","Time ... \""],
+  ["text"," "],
+  ["keyword.operator.asp","&"],
+  ["text"," "],
+  ["support.function.vb.asp","Now"],
+  ["text","()"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["text","FileObject.WriteLine "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","Hello World\""]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["text","FileObject."],
+  ["entity.name.function.asp","Close"],
+  ["text","()"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.odd-tab.spaces","  "],
+  ["meta.leading-space"," "],
+  ["support.function.vb.asp","MsgBox"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp","File \""],
+  ["text"," "],
+  ["keyword.operator.asp","&"],
+  ["text"," FileName "],
+  ["keyword.operator.asp","&"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.asp","\""],
+  ["string.quoted.double.asp"," ... updated.\""]
+],[
+   "start"
+],[
+   "start",
+  ["support.function.asp","End"],
+  ["text"," "],
+  ["storage.type.asp","Sub"]
+]]

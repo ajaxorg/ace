@@ -85,7 +85,9 @@
   ["keyword.operator","="],
   ["string","\"color:red\""],
   ["meta.tag.r",">"],
-  ["text","Juhu Kinners"],
+  ["variable","{{"],
+  ["text","author_name"],
+  ["variable","}}"],
   ["meta.tag","</"],
   ["meta.tag.tag-name","h1"],
   ["meta.tag.r",">"]
@@ -100,4 +102,6 @@
   ["meta.tag","</"],
   ["meta.tag.tag-name","html"],
   ["meta.tag.r",">"]
+],[
+   "start"
 ]]
