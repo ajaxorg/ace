@@ -476,7 +476,7 @@ var detectTextModules = function(input, source) {
 
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
     input = input.replace(/\n\s+/g, "\n");
-    input = '"' + input.replace(/\n/g, '\\\n') + '"';
+    input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
     textModules[module] = input;
 
     return "";
