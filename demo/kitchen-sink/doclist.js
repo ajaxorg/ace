@@ -67,7 +67,7 @@ var docs = {
     "docs/AsciiDoc.asciidoc": "AsciiDoc",
     "docs/javascript.js": "JavaScript",
     "docs/clojure.clj": "Clojure",
-    "docs/coffeescript.coffee": "Coffeescript",
+    "docs/coffeescript.coffee": "CoffeeScript",
     "docs/coldfusion.cfm": "ColdFusion",
     "docs/cpp.cpp": "C/C++",
     "docs/csharp.cs": "C#",
