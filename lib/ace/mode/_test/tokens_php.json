@@ -8,25 +8,25 @@
   ["keyword","function"],
   ["text"," "],
   ["identifier","nfact"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["variable","$n"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["lparen","{"]
+  ["paren.lparen","{"]
 ],[
    "php-start",
   ["text","    "],
   ["keyword","if"],
   ["text"," "],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["variable","$n"],
   ["text"," "],
   ["keyword.operator","=="],
   ["text"," "],
   ["constant.numeric","0"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["lparen","{"]
+  ["paren.lparen","{"]
 ],[
    "php-start",
   ["text","        "],
@@ -37,13 +37,13 @@
 ],[
    "php-start",
   ["text","    "],
-  ["rparen","}"]
+  ["paren.rparen","}"]
 ],[
    "php-start",
   ["text","    "],
   ["keyword","else"],
   ["text"," "],
-  ["lparen","{"]
+  ["paren.lparen","{"]
 ],[
    "php-start",
   ["text","        "],
@@ -54,21 +54,21 @@
   ["keyword.operator","*"],
   ["text"," "],
   ["identifier","nfact"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["variable","$n"],
   ["text"," "],
   ["keyword.operator","-"],
   ["text"," "],
   ["constant.numeric","1"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text",";"]
 ],[
    "php-start",
   ["text","    "],
-  ["rparen","}"]
+  ["paren.rparen","}"]
 ],[
    "php-start",
-  ["rparen","}"]
+  ["paren.rparen","}"]
 ],[
    "php-start"
 ],[
@@ -86,11 +86,11 @@
   ["keyword.operator","="],
   ["text"," "],
   ["support.function","trim"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["support.function","fgets"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["constant.language","STDIN"],
-  ["rparen","))"],
+  ["paren.rparen","))"],
   ["text",";"]
 ],[
    "php-start"
@@ -112,9 +112,9 @@
   ["string","\" = \""],
   ["text"," . "],
   ["identifier","nfact"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["variable","$num"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," . "],
   ["string","\""],
   ["constant.language.escape","\\n\\n"],
