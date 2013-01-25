@@ -1,729 +1,390 @@
-[
- {
-  "state": "start",
-  "data": [
-   [ "variable", "diff --git" ],
-   [ "keyword", " a/lib/ace/edit_session.js" ],
-   [ "variable", " b/lib/ace/edit_session.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "variable", "index 23fc3fc..ed3b273 100644" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant.numeric", "---" ],
-   [ "meta.tag", " a/lib/ace/edit_session.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant.numeric", "+++" ],
-   [ "meta.tag", " b/lib/ace/edit_session.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant", "@@" ],
-   [ "constant.numeric", " -51,6 +51,7 " ],
-   [ "constant", "@@" ],
-   [ "comment.doc.tag", " var TextMode = require(\"./mode/text\").Mode;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", " var Range = require(\"./range\").Range;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", " var Document = require(\"./document\").Document;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", " var BackgroundTokenizer = require(\"./background_tokenizer\").BackgroundTokenizer;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "var SearchHighlight = require(\"./search_highlight\").SearchHighlight;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", " /**" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "  * class EditSession" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant", "@@" ],
-   [ "constant.numeric", " -307,6 +308,13 " ],
-   [ "constant", "@@" ],
-   [ "comment.doc.tag", " var EditSession = function(text, mode) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "         return token;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "     };" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "    this.highlight = function(re) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "        if (!this.$searchHighlight) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "            var highlight = new SearchHighlight(null, \"ace_selected-word\", \"text\");" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "            this.$searchHighlight = this.addDynamicMarker(highlight);" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "        }" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "        this.$searchHighlight.setRegexp(re);" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "    }" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "     /**" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "     * EditSession.setUndoManager(undoManager)" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "     * - undoManager (UndoManager): The new undo manager" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant", "@@" ],
-   [ "constant.numeric", " -556,7 +564,8 " ],
-   [ "constant", "@@" ],
-   [ "comment.doc.tag", " var EditSession = function(text, mode) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "             type : type || \"line\"," ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "             renderer: typeof type == \"function\" ? type : null," ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "             clazz : clazz," ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "            inFront: !!inFront" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "            inFront: !!inFront," ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "            id: id" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "         }" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "         if (inFront) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "variable", "diff --git" ],
-   [ "keyword", " a/lib/ace/editor.js" ],
-   [ "variable", " b/lib/ace/editor.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "variable", "index 834e603..b27ec73 100644" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant.numeric", "---" ],
-   [ "meta.tag", " a/lib/ace/editor.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant.numeric", "+++" ],
-   [ "meta.tag", " b/lib/ace/editor.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant", "@@" ],
-   [ "constant.numeric", " -494,7 +494,7 " ],
-   [ "constant", "@@" ],
-   [ "comment.doc.tag", " var Editor = function(renderer, session) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "      * Emitted when a selection has changed." ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "      **/" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "     this.onSelectionChange = function(e) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "        var session = this.getSession();" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "        var session = this.session;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "         if (session.$selectionMarker) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "             session.removeMarker(session.$selectionMarker);" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant", "@@" ],
-   [ "constant.numeric", " -509,12 +509,40 " ],
-   [ "constant", "@@" ],
-   [ "comment.doc.tag", " var Editor = function(renderer, session) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "             this.$updateHighlightActiveLine();" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "         }" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "        var self = this;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "        if (this.$highlightSelectedWord && !this.$wordHighlightTimer)" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "            this.$wordHighlightTimer = setTimeout(function() {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "                self.session.$mode.highlightSelection(self);" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "                self.$wordHighlightTimer = null;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.function", "-" ],
-   [ "string", "            }, 30, this);" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "        var re = this.$highlightSelectedWord && this.$getSelectionHighLightRegexp()" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "     };" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "variable", "diff --git" ],
-   [ "keyword", " a/lib/ace/search_highlight.js" ],
-   [ "variable", " b/lib/ace/search_highlight.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "invisible", "new file mode 100644" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "variable", "index 0000000..b2df779" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant.numeric", "---" ],
-   [ "meta.tag", " /dev/null" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant.numeric", "+++" ],
-   [ "meta.tag", " b/lib/ace/search_highlight.js" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "constant", "@@" ],
-   [ "constant.numeric", " -0,0 +1,3 " ],
-   [ "constant", "@@" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "new" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "support.constant", "+" ],
-   [ "text", "empty file" ]
-  ]
- }
-]
+[[
+   "start",
+  ["variable","diff --git"],
+  ["keyword"," a/lib/ace/edit_session.js"],
+  ["variable"," b/lib/ace/edit_session.js"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","index 23fc3fc..ed3b273 100644"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","---"],
+  ["meta.tag"," a/lib/ace/edit_session.js"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","+++"],
+  ["meta.tag"," b/lib/ace/edit_session.js"]
+],[
+   "start"
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -51,6 +51,7 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var TextMode = require(\"./mode/text\").Mode;"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible"," var Range = require(\"./range\").Range;"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible"," var Document = require(\"./document\").Document;"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible"," var BackgroundTokenizer = require(\"./background_tokenizer\").BackgroundTokenizer;"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","var SearchHighlight = require(\"./search_highlight\").SearchHighlight;"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["invisible"," /**"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","  * class EditSession"]
+],[
+   "start"
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -307,6 +308,13 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var EditSession = function(text, mode) {"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","         return token;"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","     };"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","    this.highlight = function(re) {"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        if (!this.$searchHighlight) {"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            var highlight = new SearchHighlight(null, \"ace_selected-word\", \"text\");"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            this.$searchHighlight = this.addDynamicMarker(highlight);"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        }"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        this.$searchHighlight.setRegexp(re);"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","    }"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","     /**"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","     * EditSession.setUndoManager(undoManager)"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","     * - undoManager (UndoManager): The new undo manager"]
+],[
+   "start"
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -556,7 +564,8 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var EditSession = function(text, mode) {"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","             type : type || \"line\","]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","             renderer: typeof type == \"function\" ? type : null,"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","             clazz : clazz,"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","            inFront: !!inFront"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            inFront: !!inFront,"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","            id: id"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","         }"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["invisible","         if (inFront) {"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","diff --git"],
+  ["keyword"," a/lib/ace/editor.js"],
+  ["variable"," b/lib/ace/editor.js"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","index 834e603..b27ec73 100644"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","---"],
+  ["meta.tag"," a/lib/ace/editor.js"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","+++"],
+  ["meta.tag"," b/lib/ace/editor.js"]
+],[
+   "start"
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -494,7 +494,7 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var Editor = function(renderer, session) {"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","      * Emitted when a selection has changed."]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","      **/"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","     this.onSelectionChange = function(e) {"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","        var session = this.getSession();"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        var session = this.session;"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["invisible","         if (session.$selectionMarker) {"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","             session.removeMarker(session.$selectionMarker);"]
+],[
+   "start"
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -509,12 +509,40 "],
+  ["constant","@@"],
+  ["comment.doc.tag"," var Editor = function(renderer, session) {"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","             this.$updateHighlightActiveLine();"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","         }"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","        var self = this;"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","        if (this.$highlightSelectedWord && !this.$wordHighlightTimer)"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","            this.$wordHighlightTimer = setTimeout(function() {"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","                self.session.$mode.highlightSelection(self);"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","                self.$wordHighlightTimer = null;"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","-"],
+  ["string","            }, 30, this);"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","        var re = this.$highlightSelectedWord && this.$getSelectionHighLightRegexp()"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","     };"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","diff --git"],
+  ["keyword"," a/lib/ace/search_highlight.js"],
+  ["variable"," b/lib/ace/search_highlight.js"]
+],[
+   "start"
+],[
+   "start",
+  ["invisible","new file mode 100644"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","index 0000000..b2df779"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","---"],
+  ["meta.tag"," /dev/null"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric","+++"],
+  ["meta.tag"," b/lib/ace/search_highlight.js"]
+],[
+   "start"
+],[
+   "start",
+  ["constant","@@"],
+  ["constant.numeric"," -0,0 +1,3 "],
+  ["constant","@@"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","new"]
+],[
+   "start"
+],[
+   "start",
+  ["support.constant","+"],
+  ["text","empty file"]
+]]

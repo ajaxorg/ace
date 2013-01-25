@@ -1,160 +1,89 @@
-[
- {
-  "state": "start",
-  "data": [
-   [ "text", "Searching for 'var' in /workspace/configs" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "string", "configs/default.js" ],
-   [ "text", ":" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "    1" ],
-   [ "c9searchresults.text", ": var fs = require(\"fs\");" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t2" ],
-   [ "c9searchresults.text", ": var argv = require('optimist').argv;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t3" ],
-   [ "c9searchresults.text", ": var path = require(\"path\");" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t5" ],
-   [ "c9searchresults.text", ": var clientExtensions = {};" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t6" ],
-   [ "c9searchresults.text", ": var clientDirs = fs.readdirSync(__dirname + \"/../plugins-client\");" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t7" ],
-   [ "c9searchresults.text", ": for (var i = 0; i < clientDirs.length; i++) {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t8" ],
-   [ "c9searchresults.text", ":     var dir = clientDirs[i];" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t12" ],
-   [ "c9searchresults.text", ":     var name = dir.split(\".\")[1];" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t16" ],
-   [ "c9searchresults.text", ": var projectDir = (argv.w && path.resolve(process.cwd(), argv.w)) || process.cwd();" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t17" ],
-   [ "c9searchresults.text", ": var fsUrl = \"/workspace\";" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t19" ],
-   [ "c9searchresults.text", ": var port = argv.p || process.env.PORT || 3131;" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t20" ],
-   [ "c9searchresults.text", ": var host = argv.l || \"localhost\";" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t22" ],
-   [ "c9searchresults.text", ": var config = {" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "string", "configs/local.js" ],
-   [ "text", ":" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t2" ],
-   [ "c9searchresults.text", ": var config = require(\"./default\");" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "string", "configs/packed.js" ],
-   [ "text", ":" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "c9searchresults.constant.numeric", "\t1" ],
-   [ "c9searchresults.text", ": var config = require(\"./default\");" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "Found 15 matches in 3 files" ]
-  ]
- }
-]
+[[
+   "start",
+  ["text","Searching for 'var' in /workspace/configs"]
+],[
+   "start"
+],[
+   "start",
+  ["string","configs/default.js"],
+  ["text",":"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","    1"],
+  ["c9searchresults.text",": var fs = require(\"fs\");"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t2"],
+  ["c9searchresults.text",": var argv = require('optimist').argv;"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t3"],
+  ["c9searchresults.text",": var path = require(\"path\");"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t5"],
+  ["c9searchresults.text",": var clientExtensions = {};"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t6"],
+  ["c9searchresults.text",": var clientDirs = fs.readdirSync(__dirname + \"/../plugins-client\");"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t7"],
+  ["c9searchresults.text",": for (var i = 0; i < clientDirs.length; i++) {"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t8"],
+  ["c9searchresults.text",":     var dir = clientDirs[i];"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t12"],
+  ["c9searchresults.text",":     var name = dir.split(\".\")[1];"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t16"],
+  ["c9searchresults.text",": var projectDir = (argv.w && path.resolve(process.cwd(), argv.w)) || process.cwd();"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t17"],
+  ["c9searchresults.text",": var fsUrl = \"/workspace\";"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t19"],
+  ["c9searchresults.text",": var port = argv.p || process.env.PORT || 3131;"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t20"],
+  ["c9searchresults.text",": var host = argv.l || \"localhost\";"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t22"],
+  ["c9searchresults.text",": var config = {"]
+],[
+   "start"
+],[
+   "start",
+  ["string","configs/local.js"],
+  ["text",":"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t2"],
+  ["c9searchresults.text",": var config = require(\"./default\");"]
+],[
+   "start"
+],[
+   "start",
+  ["string","configs/packed.js"],
+  ["text",":"]
+],[
+   "start",
+  ["c9searchresults.constant.numeric","\t1"],
+  ["c9searchresults.text",": var config = require(\"./default\");"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","Found 15 matches in 3 files"]
+]]

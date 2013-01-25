@@ -1,0 +1,217 @@
+- var methodSection, constructorSection, propertySection, eventSection;
+
+-function renameMemberTitle(title, count)
+  if title.indexOf("ethods") >= 0
+    span Functions (#{count})
+  else if title.indexOf("ropert") >= 0
+    span Properties (#{count})   
+  else
+    span #{title} (#{count})
+
+mixin article(obj, parents)
+  if typeof obj === 'string'
+    obj = list[obj]
+
+  if (obj.private !== true && obj.name.charAt(0) !== "$")
+    title = obj.path + (obj.type ? ' (' + obj.type + ')' : '')
+    article.article(id=obj.path, data-title=title)
+      if obj.type === 'section' || obj.type === 'namespace' || obj.type === 'class' || obj.type === 'mixin'
+
+        if obj.stability
+          mixin markdown(">" + obj.stability)
+
+        if obj.description
+          .section.description
+            .memberContent
+              mixin markdown(obj.description)
+      
+      else
+        .section.method
+          .memberContent
+            if obj.signatures
+              div.title
+                i(id='#{obj.path}', class='methodToggle methodClicker inactive icon-caret-right')
+                ul.signatures
+                  -var loops = 0;
+                  for sig in obj.signatures
+                    li.signature
+                      ul
+                        li.signature-call!= signature(obj, sig, ["methodClicker"])
+                          if sig.returns
+                            li.signature-returns
+                              ul.argument-types
+                                for ret in sig.returns
+                                  li.argument-type!= returnLink(obj, ret, [])
+                      -if (loops == 0)
+                        -loops = 1 // ensure that we only print ONE meta info UL per signature (some methods have multiple signatures)
+                        ul.metaInfo
+                            if obj.undocumented
+                              li
+                                span.label.undocumented Undocumented
+                            if obj.experimental
+                              li
+                                span.label.experimental Experimental
+                            if obj.readonly
+                              li
+                                span.label.read-only Read-Only
+                            if obj.chainable
+                              li
+                                span.label.chainable Chainable
+                            if obj.internal
+                              li
+                                span.label.internal Internal
+                            if obj.deprecated
+                              li
+                                span.label.deprecated
+                                  | Deprecated
+                                  if obj.deprecated.from
+                                    | &nbsp; (since #{obj.deprecated.from})
+                                    if obj.deprecated.off
+                                      | &nbsp;and will be removed on #{obj.deprecated.off}
+                            if obj.alias_of
+                              li
+                                span.label.alias.single
+                                  | Aliased as: 
+                                  != link(obj.alias_of)
+                            else if obj.aliases.length
+                              li
+                                span.label.alias.multiple
+                                  | Aliased as:
+                                  ul.alias
+                                    for alias in obj.aliases
+                                      li
+                                        mixin link(alias)
+
+                            if obj.related_to
+                              li
+                                span.label.related-to
+                                  | Related to 
+                                  mixin link(obj.related_to, ["relatedToLink"])  
+                                    
+            div.sideToggler
+
+              div(id='ellipsis_#{obj.path}', class='ellipsis_description')
+                mixin markdown(obj.short_description)
+
+
+              div.description
+
+                mixin markdown(obj.description)
+
+                if obj.bound && ~obj.bound.indexOf('#')
+                  p.note.methodized
+                    | This method can be called <em>either</em> as an 
+                    != link(obj.bound, ['link-short'], 'instance method')
+                    |  <em>or</em> as a generic method. If calling as generic, pass the instance in as the first argument.
+                else if obj.bound && !~obj.bound.indexOf('#')
+                  p.note.functionalized
+                    | This method can be called <em>either</em> as an instance method <em>or</em> as a 
+                    != link(obj.bound, ['link-short'], 'generic method')
+                    |. If calling as generic, pass the instance in as the first argument.
+
+                if obj.arguments && obj.arguments.length
+                  h4 Arguments
+                  != argumentTable(obj.arguments, ["argument-list", "table", "table-striped", "table-bordered"])
+
+                if obj.returns && obj.returns.length
+                  h4 Returns
+                  != returnTable(obj.returns, ["return-list", "table", "table-striped", "table-bordered"])
+
+  //- children
+  for child in obj.children.filter(function(x){return x.type === 'section'})
+    mixin article(child, parents.concat(obj))
+  for child in obj.children.filter(function(x){return x.type === 'utility'})
+    mixin article(child, parents.concat(obj))
+
+  for child in obj.children.filter(function(x){return x.type === 'constructor'})
+    - if (!constructorSection)
+      - constructorSection = true
+      h3.sectionHeader Constructors
+    mixin article(child, parents.concat(obj))
+
+  for child in obj.children.filter(function(x){return x.type === 'event'})
+    - if (!eventSection)
+      - eventSection = true
+      h3.sectionHeader Events
+    mixin article(child, parents.concat(obj), 'event')
+
+  for child in obj.children.filter(function(x){return x.type === 'class method'})  
+    - if (!methodSection)
+      - methodSection = true
+      h3.sectionHeader Methods
+    mixin article(child, parents.concat(obj))
+
+  for child in obj.children.filter(function(x){return x.type === 'class property'})
+    - if (!propertySection)
+      - propertySection = true
+      h3.sectionHeader Properties
+    mixin article(child, parents.concat(obj))
+
+  for child in obj.children.filter(function(x){return x.type === 'instance method'})
+    mixin article(child, parents.concat(obj))
+  for child in obj.children.filter(function(x){return x.type === 'instance property'})
+    mixin article(child, parents.concat(obj))
+  for child in obj.children.filter(function(x){return x.type === 'constant'})
+    mixin article(child, parents.concat(obj))
+
+
+
+mixin api()
+  -pos = 0
+  for obj in tree.children
+    -if (obj.subclasses.length == 0)
+      mixin render_starting_tabs(obj, pos)
+    -else
+      mixin render_starting_tabs(obj, pos)
+      for child in obj.children.filter(function(x){return x.type === 'namespace' || x.type === 'class' || x.type === 'mixin'})
+        -pos++
+        mixin render_starting_tabs(child, pos)
+
+
+mixin render_starting_tabs(obj, pos)
+  .classContent
+    .membersBackground
+
+    div(class=' members pos#{pos}')
+      div(class=' membersContent pos#{pos}')
+          h1.memberHeader
+            -var heading = obj.path
+            span.name #{heading}
+                  
+          -if (true || obj.filename.indexOf("index") < 0)
+            ul(class='nav tabs pos#{pos}', data-tabs='tabs')
+              for selector, title in {'Events': ['event', 'events'], 'Constructors': ['constructor', 'constructors'], 'Class methods': ['class method', 'class_methods'], 'Class properties': ['class property', 'class_properties'], 'Instance methods': ['instance method', 'instance_methods'], 'Instance properties': ['instance property', 'instance_properties'], 'Constants': ['constant', 'constants']}
+                members = obj.children.filter(function(x){return x.type === selector[0]})
+                  li(class="dropdown", data-dropdown="dropdown")
+                    if members.length
+                       a(href="\#", class="dropdown-toggle", data-toggle="dropdown")
+                          != renameMemberTitle(title, members.length)
+                          b.caret
+                      ul.dropdown-menu
+                        for m in members
+                          if (m.private !== true && m.name.charAt(0) !== "$")
+                            li(id='dropdown_#{m.path}', data-id='#{m.path}', class='memberLink')
+                              mixin link(m, [], true)
+     -methodSection = constructorSection = propertySection = eventSection = false;
+     mixin article(obj, [])
+
+mixin short_description_list(collection)
+  ul.method-details-list
+    for obj in collection
+      if typeof obj === 'string'
+        obj = list[obj]
+      li.method-description
+        h4
+          mixin link(obj)
+        if obj.short_description
+          mixin markdown(obj.short_description)
+
+mixin link(obj, classes, short)
+  l = link(obj, classes, short)
+  != l
+
+mixin links(collection)
+  ul.method-list
+    for obj in collection
+      li
+        mixin link(obj)
