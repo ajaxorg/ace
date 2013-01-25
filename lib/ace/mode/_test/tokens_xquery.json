@@ -1,44 +1,139 @@
-[[
-   "start",
-  ["keyword","xquery"],
-  ["text"," "],
-  ["keyword","version"],
-  ["text"," "],
-  ["string","\"1.0\""],
-  ["text",";"]
-],[
-   "start"
-],[
-   "start",
-  ["keyword","let"],
-  ["text"," "],
-  ["variable","$message"],
-  ["text"," "],
-  ["keyword.operator",":="],
-  ["text"," "],
-  ["string","\"Hello World!\""]
-],[
-   "start",
-  ["keyword","return"],
-  ["text"," <"],
-  ["meta.tag","results"],
-  ["text",">"]
-],[
-   "start",
-  ["text","  <"],
-  ["meta.tag","message"],
-  ["text",">"],
-  ["lparen","{"],
-  ["variable","$message"],
-  ["rparen","}"],
-  ["text","</"],
-  ["meta.tag","message"],
-  ["text",">"]
-],[
-   "start",
-  ["text","</"],
-  ["meta.tag","results"],
-  ["text",">"]
-],[
-   "start"
-]]
+[
+  [
+    "[\"start\"]",
+    [
+      "keyword",
+      "xquery"
+    ],
+    [
+      "text",
+      " "
+    ],
+    [
+      "keyword",
+      "version"
+    ],
+    [
+      "text",
+      " "
+    ],
+    [
+      "string",
+      "\""
+    ],
+    [
+      "string",
+      "1.0"
+    ],
+    [
+      "string",
+      "\""
+    ],
+    [
+      "text",
+      ";"
+    ]
+  ],
+  [
+    "[\"start\"]"
+  ],
+  [
+    "[\"start\"]",
+    [
+      "keyword",
+      "let"
+    ],
+    [
+      "text",
+      " "
+    ],
+    [
+      "variable",
+      "$message"
+    ],
+    [
+      "text",
+      " "
+    ],
+    [
+      "keyword.operator",
+      ":="
+    ],
+    [
+      "text",
+      " "
+    ],
+    [
+      "string",
+      "\""
+    ],
+    [
+      "string",
+      "Hello World!"
+    ],
+    [
+      "string",
+      "\""
+    ]
+  ],
+  [
+    "[\"start\",\"StartTag\",\"TagContent\"]",
+    [
+      "keyword",
+      "return"
+    ],
+    [
+      "text",
+      " "
+    ],
+    [
+      "meta.tag",
+      "<results"
+    ],
+    [
+      "meta.tag",
+      ">"
+    ]
+  ],
+  [
+    "[\"start\",\"StartTag\",\"TagContent\"]",
+    [
+      "text",
+      "  "
+    ],
+    [
+      "meta.tag",
+      "<message"
+    ],
+    [
+      "meta.tag",
+      ">"
+    ],
+    [
+      "text",
+      "{"
+    ],
+    [
+      "variable",
+      "$message"
+    ],
+    [
+      "text",
+      "}"
+    ],
+    [
+      "meta.tag",
+      "</message>"
+    ]
+  ],
+  [
+    "[\"start\"]",
+    [
+      "meta.tag",
+      "</results>"
+    ]
+  ],
+  [
+    "[\"start\"]"
+  ]
+]
