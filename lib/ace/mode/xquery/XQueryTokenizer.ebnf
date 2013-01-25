@@ -47,6 +47,15 @@ start   ::= '<![CDATA['
           | "{"
           | "("
           | ")"
+          | "/"
+          | "["
+          | "]"
+          | ","
+          | "."
+          | Annotation
+          | ModuleDecl
+          | OptionDecl
+          | AttrTest
           | Wildcard
           | IntegerLiteral
           | DecimalLiteral
@@ -58,6 +67,7 @@ start   ::= '<![CDATA['
           | EOF
 
 StartTag  ::= '>' | '/>' | QName | "=" | '"' | "'" | EOF
+
 
 TagContent
          ::= ElementContentChar | Tag | EndTag | '<![CDATA[' | '<!--' | PredefinedEntityRef | CharRef | '{{' | '}}' | '{' | EOF
@@ -84,7 +94,8 @@ PI       ::= DirPIContents | '?>' | EOF
 Pragma   ::= PragmaContents | '#)' | EOF
           /* ws: explicit */
 
-Comment  ::= CommentContents | ':)' | '(:' | EOF
+Comment  ::= ':)' | '(:' | CommentContents | EOF
+          /* ws: explicit */
 
 CommentDoc
          ::= DocTag | DocCommentContents | ':)' | '(:' | EOF
@@ -97,6 +108,10 @@ QuotString
 AposString
          ::= PredefinedEntityRef | CharRef | EscapeApos | AposChar | "'" | EOF
           /* ws: explicit */
+
+Prefix  ::= NCName
+
+_EQName ::= EQName
 
 Whitespace
          ::= S^WS
@@ -364,7 +379,17 @@ NCName   ::= NCName^Token
            | 'returning'
 <?TOKENS?>
 
-Operator ::= ':=' | '=' | '<' | '>' | '-' | '+' | 'div'
+ModuleDecl
+         ::= ('import' S)? ('module' | 'schema') S 'namespace'
+
+Annotation
+         ::= '%' EQName ?
+
+OptionDecl
+         ::= 'declare' S ( ( 'decimal-format' | 'option' ) 
+           |  ('default' S 'decimal-format') ) 
+
+Operator ::= '!=' | ':=' | '>=' | '<=' | '=' | '<' | '>' | '-' | '+' | 'div' | '||' | '?'
 
 Variable ::= '$' EQName
 
@@ -378,12 +403,10 @@ DirCommentContents
          ::= ( ( Char - '-' ) | '-' ( Char - '-' ) )+
 DirPIContents
          ::= ( Char* - ( Char* '?' Char* ) ) 
-/*
-CDataSection
-         ::= '<![CDATA[' CDataSectionContents ']]>'
-*/
 CDataSectionContents
-         ::= Char* - ( Char* ']]>' Char* )
+         ::= ( Char+ - ( Char* ']]>' Char* ) ) & ']]'
+           | ( Char+ - ( Char* ']]>' Char* ) ) & $ 
+AttrTest  ::= "@" ( Wildcard | QName )
 Wildcard ::= "*"
          | (NCName ":" "*")
          | ("*" ":" NCName)
@@ -442,14 +465,15 @@ CharRef  ::= '&#' [0-9]+ ';'
            | '&#x' [0-9A-Fa-f]+ ';'
 Digits   ::= [0-9]+
 CommentContents
-         ::= ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) &':'
-           |   ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) )                   &'('
-DocTag   ::= ' @' NCName
+         ::= ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & '('
+           | ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & $
+           | ( ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) - ( Char* '(' ) ) & ':'
+DocTag   ::= ' @' NCName?
 DocCommentContents
-         ::= ( ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) - ( Char* '(' ) ) &':'
-           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   &'('
+         ::= ( ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) - ( Char* '(' ) ) & ':'
+           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & '('
            |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & ' @'
-           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) 
+           | ( Char+ - ( Char* ( '(:' | ':)' | ' @') Char* ) ) & $
 EOF      ::= $
 NonNCNameChar
           ::= $
