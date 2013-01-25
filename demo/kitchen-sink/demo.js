@@ -356,6 +356,9 @@ bindCheckbox("enable_behaviours", function(checked) {
 bindCheckbox("fade_fold_widgets", function(checked) {
     env.editor.setFadeFoldWidgets(checked);
 });
+bindCheckbox("read_only", function(checked) {
+    env.editor.setReadOnly(checked);
+});
 
 var secondSession = null;
 bindDropdown("split", function(value) {

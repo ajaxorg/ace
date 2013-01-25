@@ -7,6 +7,8 @@
 .ace_scroller {
     position: absolute;
     overflow: hidden;
+    top: 0;
+    bottom: 0;
 }
 
 .ace_content {
@@ -20,8 +22,10 @@
 .ace_gutter {
     position: absolute;
     overflow : hidden;
-    height: 100%;
     width: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
     cursor: default;
     z-index: 4;
 }
@@ -66,6 +70,8 @@
     overflow-x: hidden;
     overflow-y: scroll;
     right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 .ace_scrollbar-inner {
@@ -241,13 +247,17 @@
 }
 
 .ace_gutter-tooltip {
-    background-color: #FFFFD5;
+    background-color: #FFF;
+    background-image: -webkit-linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
     border: 1px solid gray;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    border-radius: 1px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
     display: inline-block;
+    max-width: 500px;
     padding: 4px;
-    position: absolute;
+    position: fixed;
     z-index: 300;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -255,6 +265,10 @@
     cursor: default;
     white-space: pre-line;
     word-wrap: break-word;
+    line-height: normal;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
 }
 
 .ace_folding-enabled > .ace_gutter-cell {
