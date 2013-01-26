@@ -1,36 +1,30 @@
 <!DOCTYPE html> 
-<html xmlns="http://www.w3.org/1999/xhtml"> 
-    <head profile="http://www.w3.org/2005/10/profile"> 
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-        <title>ACE - The High Performance Code Editor for the Web</title> 
-        <script src="./doc/resources/ace/skeleton/javascripts/jquery.js"></script>
-        <script src="./doc/resources/ace/skeleton/javascripts/bbq.js"></script>
-        <script src="./api/resources/javascripts/bootstrap.js"></script>
-        <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-        <script src="https://yandex.st/highlightjs/7.2/highlight.min.js"></script>
-        <script src="doc/site/js/main.js"></script>
-        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/default.min.css">
-        <link rel="stylesheet" href="./api/resources/csses/bootstrap.min.css">
-        <link href="doc/site/style.css" rel="stylesheet" type="text/css" /> 
-        <link href="api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" /> 
-        <link rel="stylesheet" href="./api/resources/csses/font-awesome.css">
-        <link href="./doc/resources/ace/skeleton/images/favicon.ico" rel="icon" type="image/x-icon">
-    </head> 
-    <body> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://www.w3.org/2005/10/profile">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Ace - The High Performance Code Editor for the Web</title>
+        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/xcode.min.css" />
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" />
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" />
+        <link href="./api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" />
+        <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
+        <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
+
+        <script src="./build/src-min-noconflict/ace.js"></script>
+    </head>
+    <body>
         <a href="http://github.com/ajaxorg/ace">
-            <img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
-                alt="Fork me on GitHub">
+        <img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0; width: 125px; height: 125px" src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" />
         </a>
-        <div id="wrapper"> 
-            <div class="content"> 
+        <div id="wrapper">
+            <div class="content">
                 <div class="column2">
                     <div id="top_container" class="collapse">
-                        <h1><img src="https://d1n0x3qji82z53.cloudfront.net/textimage.png" 
-                            alt="The high performance code editor for the web." /></h1>
+                        <h1><img src="https://d1n0x3qji82z53.cloudfront.net/textimage.png" alt="The high performance code editor for the web." /></h1>
                         <div id="page_logo">
                             <img src="https://d1n0x3qji82z53.cloudfront.net/ace-logo.png" />
-                            <iframe style="padding-top:5px" src="http://ghbtns.com/github-btn.html?user=ajaxorg&repo=ace&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
-                            <iframe src="http://ghbtns.com/github-btn.html?user=ajaxorg&repo=ace&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95px" height="20px"></iframe>
+                            <iframe style="padding-top:5px" src="http://ghbtns.com/github-btn.html?user=ajaxorg&amp;repo=ace&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
+                            <iframe src="http://ghbtns.com/github-btn.html?user=ajaxorg&amp;repo=ace&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95px" height="20px"></iframe>
                         </div>
                     </div>
                     <div style="clear: both"></div>
@@ -54,23 +48,24 @@
                             <a href="#api">API Reference</a>
                         </li>
                         <li>
-                            <a href="#production" data-toggle="tab">ACE in Production</a>
+                            <a href="#production" data-toggle="tab">Real World Users</a>
                         </li>
-                        <li>
+                        <li class="last-tab">
                             <a href="#support" data-toggle="tab">Support</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade" id="about">
                             <h1>Built for Code</h1>
-                            <p id="first">ACE is an embeddable code editor written in JavaScript.
+                            <p id="first">Ace is an embeddable code editor written in JavaScript.
                                 It matches the features and performance of native
                                 editors such as Sublime, Vim and TextMate. It can be easily embedded
-                                in any web page and JavaScript application. ACE is maintained as the
+                                in any web page and JavaScript application. Ace is maintained as the
                                 primary editor for <a href="http://c9.io">Cloud9 IDE</a>
-                                and is the successor of the Mozilla Skywriter (Bespin) project.</p> 
-                            <div class="ace_editor_wrapper">
-                                <div id="ace_editor_demo">/**
+                                and is the successor of the Mozilla Skywriter (Bespin) project.
+                            </p>
+                            
+                                <div id="ace_editor_demo" style="opacity:0">/**
  * In fact, you're looking at ACE right now. Go ahead and play with it!
  *
  * We are currently showing off the JavaScript mode. ACE has support for 45
@@ -84,18 +79,19 @@ function add(x, y) {
 }
 
 var addResult = add(3, 2);
-console.log(addResult);</div>
-                            </div>
+console.log(addResult);
+                                </div>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
-                                <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.</p>
-                            <h2>Features</h2> 
-                            <ul class="content-list"> 
-                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 40 languages (TextMate/Sublime/<em>.tmlanguage</em> files can be imported)</li>
-                                <li>Over 20 themes (TextMate/Sublime/<em>.tmtheme</em> files can be imported)</li>
+                                <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.
+                            </p>
+                            <h2>Features</h2>
+                            <ul class="content-list">
+                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 60 languages (TextMate/Sublime Text<em>.tmlanguage</em> files can be imported)</li>
+                                <li>Over 20 themes (TextMate/Sublime Text <em>.tmtheme</em> files can be imported)</li>
                                 <li>Automatic indent and outdent</li>
                                 <li>An optional command line</li>
-                                <li>Handles huge documents (at last check, 4,000,000 lines is the upper limit)</li>
+                                <li>Handles huge documents (four million lines seems to be the limit!)</li>
                                 <li>Fully customizable key bindings including vim and Emacs modes</li>
                                 <li>Search and replace with regular expressions</li>
                                 <li>Highlight matching parentheses</li>
@@ -108,42 +104,42 @@ console.log(addResult);</div>
                                 <li>Live syntax checker (currently JavaScript/CoffeeScript/CSS/XQuery)</li>
                                 <li>Cut, copy, and paste functionality</li>
                             </ul>
-                            <h2>Get the Open-Source Code</h2> 
-                            <p>ACE is a community project. We actively encourage and support
-                                contributions! The ACE source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>
+                            <h2>Get the Open-Source Code</h2>
+                            <p>Ace is a community project. We actively encourage and support
+                                contributions! The Ace source code is <a href="http://github.com/ajaxorg/ace">hosted on GitHub</a>
                                 and released under the BSD license &dash; 
                                 very simple and friendly to all kinds of projects, whether open-source
                                 or not. Take charge of your editor and add your favorite language
-                                highlighting and keybindings!</p>
+                                highlighting and keybindings!
+                            </p>
                             <pre>git clone git://github.com/ajaxorg/ace.git</pre>
-                            <h2>History</h2> 
-                            <p>Skywriter/Bespin and ACE started
+                            <h2>History</h2>
+                            <p>Skywriter/Bespin and Ace started
                                 as two independent projects both aiming to build a no compromise
                                 code editor component for the web. Bespin started as part of
-                                Mozilla Labs and was based on the &lt;canvas> tag, while ACE is
+                                Mozilla Labs and was based on the &lt;canvas> tag, while Ace is
                                 the editor component of <a href="http://c9.io">Cloud9 IDE</a>
-                                and uses the DOM for rendering. After the release of ACE at
+                                and uses the DOM for rendering. After the release of Ace at
                                 <a href="http://jsconf.eu/2010/speaker/kick_ass_code_editing_and_end.html">JSConf.eu 2010</a>
-                                in Berlin the Skywriter team decided to merge ACE with a simplified 
+                                in Berlin the Skywriter team decided to merge Ace with a simplified 
                                 version of Skywriter's plugin system and some of Skywriter&apos;s
-                                extensibility points. All these changes have been merged back to ACE
+                                extensibility points. All these changes have been merged back to Ace
                                 now, which supersedes Skywriter. Both <a href="http://c9.io">Cloud9 IDE</a>
                                 and <a href="http://mozilla.org">Mozilla</a> are actively developing and
-                                maintaining ACE.</p> 
+                                maintaining Ace.
+                            </p>
                             <h2>Related Projects</h2>
-                            <ul class="content-list"> 
-                                <li><a href="https://github.com/joewalker/gcli">GCLI</a></li> 
+                            <ul class="content-list">
+                                <li><a href="https://github.com/joewalker/gcli">GCLI</a></li>
                                 <li><a href="https://github.com/mozilla/dryice">DryIce</a></li>
-                                <li><a href="https://github.com/cadorn/ace-extjs">ACE wrapper for ExtJS</a></li>
-                                <li><a href="https://github.com/daveho/AceGWT">ACE wrapper for GWT</a></li>
-                            </ul> 
+                                <li><a href="https://github.com/cadorn/ace-extjs">Ace wrapper for ExtJS</a></li>
+                                <li><a href="https://github.com/daveho/AceGWT">Ace wrapper for GWT</a></li>
+                            </ul>
                         </div>
                         <div class="tab-pane fade active in" id="embedding">
-                            <h1>Embedding ACE in Your Site</h1>
-                            <p>ACE can be easily embedded into a web page. Just copy the code below:</p>
-
-                            <div id="embed_ace_wrapper" class="ace_editor_wrapper">
-                                <div id="embedded_ace_code">&lt;!DOCTYPE html>
+                            <h1>Embedding Ace in Your Site</h1>
+                            <p>Ace can be easily embedded into a web page. Just copy the code below:</p>
+                                <div id="embedded_ace_code" style="opacity:0">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
 &lt;title>ACE in Action&lt;/title>
@@ -171,107 +167,77 @@ console.log(addResult);</div>
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
-&lt;/html></div></div>
+&lt;/html></div>
                             <p>Now check out the <a href="#nav=howto">How-To Guide</a> for instructions on
                                 common operations, such as setting a different language mode or
-                                getting the contents from the editor.</p>
-                            <h2>Loading ACE from a Local URL</h2>
-                            <p>The above code is all you need to embed ACE in your site (including setting language modes
-                            and themes). Plus it's super fast because it's on Amazon's distributed content network.
+                                getting the contents from the editor.
                             </p>
-                            <p>But, if you want to clone host ACE locally you can
-                            use one of the <a href="https://github.com/ajaxorg/ace-builds/">pre-packaged versions</a>. Just copy
-                            one of <code>src*</code> subdirectories somewhere into your project, or use RequireJS to load the
-                            contents of <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace">lib/ace</a> as <code>ace</code>:</p>
+                            <h2>Loading Ace from a Local URL</h2>
+                            <p>The above code is all you need to embed Ace in your site (including setting language modes
+                                and themes). Plus it's super fast because it's on Amazon's distributed content network.
+                            </p>
+                            <p>But, if you want to clone host Ace locally you can
+                                use one of the <a href="https://github.com/ajaxorg/ace-builds/">pre-packaged versions</a>. Just copy
+                                one of <code>src*</code> subdirectories somewhere into your project, or use RequireJS to load the
+                                contents of <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace">lib/ace</a> as <code>ace</code>:
+                            </p>
                             <pre><code class="javascript">var ace = require("lib/ace");</code></pre>
                         </div>
                         <div class="tab-pane fade" id="howto">
-                            <h1>Working with ACE</h1>
-                            <p><em>In all of these examples ACE has been invoked 
-                                as shown in the <a href="#nav=embedding">embedding guide</a>.</em></p>
+                            <h1>Working with Ace</h1>
+                            <p><em>In all of these examples Ace has been invoked 
+                                as shown in the <a href="#nav=embedding">embedding guide</a>.</em>
+                            </p>
                             <h2>Setting Themes</h2>
                             <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
-                            
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
-                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme"
-                                target="_blank">See all themes</a></p>
-
+                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank">See all themes</a></p>
                             <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
-                            <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");</pre></code>
-
+                            <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");
+                            </code></pre>
                             <!--h2>One Editor, Multiple Sessions</h2>
-                            <p>ACE keeps everything about the state of the editor (selection, scroll position, etc.)
-                                in <code class="javascript">editor.session</code>. This means you can grab the
-                                session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
-                            <p>You might accomplish this like so:</p>
-
-                            <pre><code class="javascript">var EditSession = require("ace/edit_session").EditSession;
-var js = new EditSession("some js code");
-var css = new EditSession(["some", "css", "code here"]);
-// and then to load document into editor, just call
-editor.setSession(js);</code></pre-->
-                            
+                                <p>Ace keeps everything about the state of the editor (selection, scroll position, etc.)
+                                    in <code class="javascript">editor.session</code>. This means you can grab the
+                                    session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
+                                <p>You might accomplish this like so:</p>
+                                
+                                <pre><code class="javascript">var EditSession = require("ace/edit_session").EditSession;
+                                var js = new EditSession("some js code");
+                                var css = new EditSession(["some", "css", "code here"]);
+                                // and then to load document into editor, just call
+                                editor.setSession(js);</code></pre-->
                             <h2>Common Operations</h2>
                             <p>Set and get content:</p>
-
                             <pre><code class="javascript">editor.setValue("the new text here"); // or session.setValue
 editor.getValue(); // or session.getValue</code></pre>
-                            
                             <p>Get selected text:</p>
-                            
                             <pre><code class="javascript">editor.session.getTextRange(editor.getSelectionRange());</code></pre>
-                            
                             <p>Insert at cursor:</p>
-                            
                             <pre><code class="javascript">editor.insert("Something cool");</code></pre>
-                            
                             <p>Get the current cursor line and column:</p>
-                            
                             <pre><code class="javascript">editor.selection.getCursor();</code></pre>
-                            
                             <p>Go to a line:</p>
-                            
                             <pre><code class="javascript">editor.gotoLine(lineNumber);</code></pre>
-                            
                             <p>Get total number of lines:</p>
-                            
                             <pre><code class="javascript">editor.session.getLength();</code></pre>
-                            
                             <p>Set the default tab size:</p>
-                            
                             <pre><code class="javascript">editor.getSession().setTabSize(4);</code></pre>
-                            
                             <p>Use soft tabs:</p>
-                            
                             <pre><code class="javascript">editor.getSession().setUseSoftTabs(true);</code></pre>
-                            
                             <p>Set the font size:</p>
-                            
                             <pre><code class="javascript">document.getElementById('editor').style.fontSize='12px';</code></pre>
-                            
                             <p>Toggle word wrapping:</p>
-                            
                             <pre><code class="javascript">editor.getSession().setUseWrapMode(true);</code></pre>
-                            
                             <p>Set line highlighting:</p>
-                            
                             <pre><code class="javascript">editor.setHighlightActiveLine(false);</code></pre>
-                            
                             <p>Set the print margin visibility:</p>
-                            
                             <pre><code class="javascript">editor.setShowPrintMargin(false);</code></pre>
-                            
                             <p>Set the editor to read-only:</p>
-                            
                             <pre><code class="javascript">editor.setReadOnly(true);  // false to make it editable</code></pre>
-                            
                             <h3>Triggering Resizes</h3>
-                            
-                            <p>ACE only resizes itself on window events. If you resize the editor div in another manner, and need ACE to resize, use the following:</p>
-                            
+                            <p>Ace only resizes itself on window events. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
                             <pre><code class="javascript">editor.resize()</code></pre>
-                            
                             <h3>Searching</h3>
                             <pre><code>editor.find('needle',{
     backwards: false,
@@ -283,61 +249,54 @@ editor.getValue(); // or session.getValue</code></pre>
 editor.findNext();
 editor.findPrevious();</code></pre>
                             <p>The following options are available to you for your search parameters:</p>
-                            
                             <ul>
-                            <li>
-                            <code>needle</code>: The string or regular expression you're looking for</li>
-                            <li>
-                            <code>backwards</code>: Whether to search backwards from where cursor currently is. Defaults to <code>false</code>.</li>
-                            <li>
-                            <code>wrap</code>: Whether to wrap the search back to the beginning when it hits the end. Defaults to <code>false</code>.</li>
-                            <li>
-                            <code>caseSensitive</code>: Whether the search ought to be case-sensitive. Defaults to <code>false</code>.</li>
-                            <li>
-                            <code>wholeWord</code>: Whether the search matches only on whole words. Defaults to <code>false</code>.</li>
-                            <li>
-                            <code>range</code>: The <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> to search within. Set this to <code>null</code> for the whole document</li>
-                            <li>
-                            <code>regExp</code>: Whether the search is a regular expression or not. Defaults to <code>false</code>.</li>
-                            <li>
-                            <code>start</code>: The starting <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> or cursor position to begin the search</li>
-                            <li>
-                            <code>skipCurrent</code>: Whether or not to include the current line in the search. Default to <code>false</code>.</li>
+                                <li>
+                                    <code>needle</code>: The string or regular expression you're looking for
+                                </li>
+                                <li>
+                                    <code>backwards</code>: Whether to search backwards from where cursor currently is. Defaults to <code>false</code>.
+                                </li>
+                                <li>
+                                    <code>wrap</code>: Whether to wrap the search back to the beginning when it hits the end. Defaults to <code>false</code>.
+                                </li>
+                                <li>
+                                    <code>caseSensitive</code>: Whether the search ought to be case-sensitive. Defaults to <code>false</code>.
+                                </li>
+                                <li>
+                                    <code>wholeWord</code>: Whether the search matches only on whole words. Defaults to <code>false</code>.
+                                </li>
+                                <li>
+                                    <code>range</code>: The <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> to search within. Set this to <code>null</code> for the whole document
+                                </li>
+                                <li>
+                                    <code>regExp</code>: Whether the search is a regular expression or not. Defaults to <code>false</code>.
+                                </li>
+                                <li>
+                                    <code>start</code>: The starting <a class="internal absent" href="/ajaxorg/ace/wiki/Range">Range</a> or cursor position to begin the search
+                                </li>
+                                <li>
+                                    <code>skipCurrent</code>: Whether or not to include the current line in the search. Default to <code>false</code>.
+                                </li>
                             </ul>
-                            
                             <p>Here's how you can perform a replace:</p>
-                            
                             <pre><code>editor.find('foo');
 editor.replace('bar');</code></pre>
-                            
                             <p>And here's a replace all: </p>
-                            
                             <pre><code>editor.replaceAll('bar');</code></pre>
-                            
                             <p>(<code>editor.replaceAll</code> uses the needle set earlier by <code>editor.find('needle', ...</code>)</p>
-                            
                             <h3>Listening to Events</h3>
-                            
                             <p>To listen for an <code>onchange</code>:</p>
-                            
                             <pre><code>editor.getSession().on('change', function(e) {
     // e.type, etc
 });</code></pre>
-                            
                             <p>To listen for an <code>selection</code> change:</p>
-                            
                             <pre><code>editor.getSession().selection.on('changeSelection', function(e) {
 });</code></pre>
-                            
                             <p>To listen for a <code>cursor</code> change:</p>
-                            
                             <pre><code>editor.getSession().selection.on('changeCursor', function(e) {
 });</code></pre>
-                            
                             <h3>Adding New Commands and Keybindings</h3>
-                            
                             <p>To assign key bindings to a custom function:</p>
-                            
                             <pre><code>editor.commands.addCommand({
     name: 'myCommand',
     bindKey: {win: 'Ctrl-M',  mac: 'Command-M'},
@@ -347,15 +306,15 @@ editor.replace('bar');</code></pre>
     readOnly: true // false if this command should not apply in readOnly mode
 });</code></pre>
                         </div>
-
-<div class="tab-pane fade" id="higlighter">
-   <h1>Creating a Syntax Highlighter for Ace</h1><p>Creating a new syntax highlighter for Ace is extremly simple. You'll need to define two pieces of code: a new mode, and a new set of highlighting rules.</p>
-<h2 id='where-to-start'><a class='heading_anchor' href='#where-to-start'><i class='headerLinkIcon'></i></a>Where to Start</h2>
-<p>We recommend using the the <a href="http://ace.ajax.org/tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
-<h2 id='defining-a-mode'><a class='heading_anchor' href='#defining-a-mode'><i class='headerLinkIcon'></i></a>Defining a Mode</h2>
-<p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
-<p>Here is the starter template we'll use to create a new mode:</p>
-<pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
+                        <div class="tab-pane fade" id="higlighter">
+                            <h1>Creating a Syntax Highlighter for Ace</h1>
+                            <p>Creating a new syntax highlighter for Ace is extremly simple. You'll need to define two pieces of code: a new mode, and a new set of highlighting rules.</p>
+                            <h2 id="where-to-start"><a class="heading_anchor" href="#where-to-start"><i class="headerLinkIcon"></i></a>Where to Start</h2>
+                            <p>We recommend using the the <a href="http://ace.ajax.org/tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
+                            <h2 id="defining-a-mode"><a class="heading_anchor" href="#defining-a-mode"><i class="headerLinkIcon"></i></a>Defining a Mode</h2>
+                            <p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
+                            <p>Here is the starter template we'll use to create a new mode:</p>
+                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
 <span class="string">"use strict"</span>;
 
 <span class="keyword">var</span> oop = require(<span class="string">"../lib/oop"</span>);
@@ -406,13 +365,13 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });</code></pre>
-<p>What's going on here? First, you're defining the path to <code>TextMode</code> (more on this later). Then you're pointing the mode to your definitions for the highlighting rules, as well as your rules for code folding. Finally, you're setting everything up to find those rules, and exporting the Mode so that it can be consumed. That's it!</p>
-<p>Regarding <code>TextMode</code>, you'll notice that it's only being used once: <code>oop.inherits(Mode, TextMode);</code>. If your new language depends on the rules of another language, you can choose to inherit the same rules, while expanding on it with your language's own requirements. For example, PHP inherits from HTML, since it can be embedded directly inside <em>.html</em> pages. You can either inherit from <code>TextMode</code>, or any other existing mode, if it already relates to your language.</p>
-<p>All Ace modes can be found in the <em>lib/ace/mode</em> folder.</p>
-<h2 id='defining-syntax-highlighting-rules'><a class='heading_anchor' href='#defining-syntax-highlighting-rules'><i class='headerLinkIcon'></i></a>Defining Syntax Highlighting Rules</h2>
-<p>The Ace highlighter can be considered to be a state machine. Regular expressions define the tokens for the current state, as well as the transitions into another state. Let's define <em>mynew_highlight_rules.js</em>, which our mode above uses.</p>
-<p>All syntax highlighters start off looking something like this:</p>
-<pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
+                            <p>What's going on here? First, you're defining the path to <code>TextMode</code> (more on this later). Then you're pointing the mode to your definitions for the highlighting rules, as well as your rules for code folding. Finally, you're setting everything up to find those rules, and exporting the Mode so that it can be consumed. That's it!</p>
+                            <p>Regarding <code>TextMode</code>, you'll notice that it's only being used once: <code>oop.inherits(Mode, TextMode);</code>. If your new language depends on the rules of another language, you can choose to inherit the same rules, while expanding on it with your language's own requirements. For example, PHP inherits from HTML, since it can be embedded directly inside <em>.html</em> pages. You can either inherit from <code>TextMode</code>, or any other existing mode, if it already relates to your language.</p>
+                            <p>All Ace modes can be found in the <em>lib/ace/mode</em> folder.</p>
+                            <h2 id="defining-syntax-highlighting-rules"><a class="heading_anchor" href="#defining-syntax-highlighting-rules"><i class="headerLinkIcon"></i></a>Defining Syntax Highlighting Rules</h2>
+                            <p>The Ace highlighter can be considered to be a state machine. Regular expressions define the tokens for the current state, as well as the transitions into another state. Let's define <em>mynew_highlight_rules.js</em>, which our mode above uses.</p>
+                            <p>All syntax highlighters start off looking something like this:</p>
+                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
 <span class="string">"use strict"</span>;
 
 <span class="keyword">var</span> oop = require(<span class="string">"../lib/oop"</span>);
@@ -438,31 +397,31 @@ oop.inherits(MyNewHighlightRules, TextHighlightRules);
 exports.MyNewHighlightRules = MyNewHighlightRules;
 
 });</span></code></pre>
-<p>The token state machine operates on whatever is defined in <code>this.$rules</code>. The highlighter always begins at the <code>start</code> state, and progresses down the list, looking for a matching <code>regex</code>. When one is found, the resulting text is wrapped within a <code>&lt;span class=&quot;ace_&lt;token&gt;&quot;&gt;</code> tag, where <code>&lt;token&gt;</code> is defined as the <code>token</code> property. Note that all tokens are preceded by the <code>ace_</code> prefix when they're rendered on the page.</p>
-<p>Once again, we're inheriting from <code>TextHighlightRules</code> here. We could choose to make this any other language set we want, if our new language requires previously defined syntaxes. For more information on extending languages, see &quot;<a href="#extending-highlighters">extending Highlighters</a>&quot; below.</p>
-<h3 id='defining-tokens'><a class='heading_anchor' href='#defining-tokens'><i class='headerLinkIcon'></i></a>Defining Tokens</h3>
-<p>The Ace highlighting system is heavily inspired by the <a href="http://manual.macromates.com/en/language_grammars">TextMate language grammar</a>. Most tokens will follow the conventions of TextMate when naming grammars. A thorough (albeit incomplete) list of tokens can be found <a href="https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-commonTokens">on the Ace Wiki</a>.</p>
-<p>For the complete list of tokens, see <em><a href="https://github.com/ajaxorg/ace/blob/master/tool/tmtheme.js">tool/tmtheme.js</a></em>. It is possible to add new token names, but the scope of that knowledge is outside of this document.</p>
-<p>Multiple tokens can be applied to the same text by adding dots in the token, <em>e.g.</em> <code>token: support.function</code> wraps the text in a <code>&lt;span class=&quot;ace_support ace_function&quot;&gt;</code> tag.</p>
-<h3 id='defining-regular-expressions'><a class='heading_anchor' href='#defining-regular-expressions'><i class='headerLinkIcon'></i></a>Defining Regular Expressions</h3>
-<p>Regular expressions can either be a RegExp or String definition</p>
-<p>If you're using a regular expression, remember to start and end the line with the <code>/</code> character, like this:</p>
-<pre><code class="language-javascript">{
+                            <p>The token state machine operates on whatever is defined in <code>this.$rules</code>. The highlighter always begins at the <code>start</code> state, and progresses down the list, looking for a matching <code>regex</code>. When one is found, the resulting text is wrapped within a <code>&lt;span class=&quot;ace_&lt;token&gt;&quot;&gt;</code> tag, where <code>&lt;token&gt;</code> is defined as the <code>token</code> property. Note that all tokens are preceded by the <code>ace_</code> prefix when they're rendered on the page.</p>
+                            <p>Once again, we're inheriting from <code>TextHighlightRules</code> here. We could choose to make this any other language set we want, if our new language requires previously defined syntaxes. For more information on extending languages, see &quot;<a href="#extending-highlighters">extending Highlighters</a>&quot; below.</p>
+                            <h3 id="defining-tokens"><a class="heading_anchor" href="#defining-tokens"><i class="headerLinkIcon"></i></a>Defining Tokens</h3>
+                            <p>The Ace highlighting system is heavily inspired by the <a href="http://manual.macromates.com/en/language_grammars">TextMate language grammar</a>. Most tokens will follow the conventions of TextMate when naming grammars. A thorough (albeit incomplete) list of tokens can be found <a href="https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-commonTokens">on the Ace Wiki</a>.</p>
+                            <p>For the complete list of tokens, see <em><a href="https://github.com/ajaxorg/ace/blob/master/tool/tmtheme.js">tool/tmtheme.js</a></em>. It is possible to add new token names, but the scope of that knowledge is outside of this document.</p>
+                            <p>Multiple tokens can be applied to the same text by adding dots in the token, <em>e.g.</em> <code>token: support.function</code> wraps the text in a <code>&lt;span class=&quot;ace_support ace_function&quot;&gt;</code> tag.</p>
+                            <h3 id="defining-regular-expressions"><a class="heading_anchor" href="#defining-regular-expressions"><i class="headerLinkIcon"></i></a>Defining Regular Expressions</h3>
+                            <p>Regular expressions can either be a RegExp or String definition</p>
+                            <p>If you're using a regular expression, remember to start and end the line with the <code>/</code> character, like this:</p>
+                            <pre><code class="language-javascript">{
     token : <span class="string">"constant.language.escape"</span>,
     regex : <span class="regexp">/\$[\w\d]+/</span>
 }</code></pre>
-<p>A caveat of using stringed regular expressions is that any <code>\</code> character must be escaped. That means that even an innocuous regular expression like this:</p>
-<pre><code class="language-javascript">regex: <span class="string">"function\s*\(\w+\)"</span></code></pre>
-<p>Must actually be written like this:</p>
-<pre><code class="language-javascript">regex: <span class="string">"function\\s*\(\\w+\)"</span></code></pre>
-<h4 id='groupings'><a class='heading_anchor' href='#groupings'><i class='headerLinkIcon'></i></a>Groupings</h4>
-<p>You can also include flat regexps--<code>(var)</code>--or have matching groups--<code>((a+)(b+))</code>. There is a strict requirement whereby matching groups <strong>must</strong> cover the entire matched string; thus, <code>(hel)lo</code> is invalid. If you want to create a non-matching group, simply start the group with the <code>?:</code> predicate; thus, <code>(hel)(?:lo)</code> is okay. You can, of course, create longer non-matching groups. For example:</p>
-<pre><code class="language-javascript">{
+                            <p>A caveat of using stringed regular expressions is that any <code>\</code> character must be escaped. That means that even an innocuous regular expression like this:</p>
+                            <pre><code class="language-javascript">regex: <span class="string">"function\s*\(\w+\)"</span></code></pre>
+                            <p>Must actually be written like this:</p>
+                            <pre><code class="language-javascript">regex: <span class="string">"function\\s*\(\\w+\)"</span></code></pre>
+                            <h4 id="groupings"><a class="heading_anchor" href="#groupings"><i class="headerLinkIcon"></i></a>Groupings</h4>
+                            <p>You can also include flat regexps--<code>(var)</code>--or have matching groups--<code>((a+)(b+))</code>. There is a strict requirement whereby matching groups <strong>must</strong> cover the entire matched string; thus, <code>(hel)lo</code> is invalid. If you want to create a non-matching group, simply start the group with the <code>?:</code> predicate; thus, <code>(hel)(?:lo)</code> is okay. You can, of course, create longer non-matching groups. For example:</p>
+                            <pre><code class="language-javascript">{
     token : <span class="string">"constant.language.boolean"</span>,
     regex : <span class="regexp">/(?:true|false)\b/</span>
 },</code></pre>
-<p>For flat regular expression matches, <code>token</code> can be a String, or a Function that takes a single argument (the match) and returns a string token. For example, using a function might look like this:</p>
-<pre><code class="language-javascript"><span class="keyword">var</span> colors = lang.arrayToMap(
+                            <p>For flat regular expression matches, <code>token</code> can be a String, or a Function that takes a single argument (the match) and returns a string token. For example, using a function might look like this:</p>
+                            <pre><code class="language-javascript"><span class="keyword">var</span> colors = lang.arrayToMap(
     (<span class="string">"aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|"</span> +
     <span class="string">"purple|red|silver|teal|white|yellow"</span>).split(<span class="string">"|"</span>)
 );
@@ -489,21 +448,21 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
     },
     regex: <span class="string">"\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"</span>
 }</code></pre>
-<p>If <code>token</code> is a function,it should take the same number of arguments as there are groups, and return an array of tokens.</p>
-<p>For grouped regular expressions, <code>token</code> can be a String, in which case all matched groups are given that same token, like this:</p>
-<pre><code class="language-javascript">{
+                            <p>If <code>token</code> is a function,it should take the same number of arguments as there are groups, and return an array of tokens.</p>
+                            <p>For grouped regular expressions, <code>token</code> can be a String, in which case all matched groups are given that same token, like this:</p>
+                            <pre><code class="language-javascript">{
     token: <span class="string">"identifier"</span>,
     regex: <span class="string">"(\\w+\\s*:)(\\w*)"</span>
 }</code></pre>
-<p>More commonly, though, <code>token</code> is an Array (of the same length as the number of groups), whereby matches are given the token of the same alignment as in the match. For a complicated regular expression, like defining a function, that might look something like this:</p>
-<pre><code class="language-javascript">{
+                            <p>More commonly, though, <code>token</code> is an Array (of the same length as the number of groups), whereby matches are given the token of the same alignment as in the match. For a complicated regular expression, like defining a function, that might look something like this:</p>
+                            <pre><code class="language-javascript">{
     token : [<span class="string">"storage.type"</span>, <span class="string">"text"</span>, <span class="string">"entity.name.function"</span>],
     regex : <span class="string">"(function)(\\s+)([a-zA-Z_][a-zA-Z0-9_]*\\b)"</span>
 }</code></pre>
-<h2 id='defining-states'><a class='heading_anchor' href='#defining-states'><i class='headerLinkIcon'></i></a>Defining States</h2>
-<p>The syntax highlighting state machine stays in the <code>start</code> state, until you define a <code>next</code> state for it to advance to. At that point, the tokenizer stays in that new <code>state</code>, until it advances to another state. Afterwards, you should return to the original <code>start</code> state.</p>
-<p>Here's an example:</p>
-<pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
+                            <h2 id="defining-states"><a class="heading_anchor" href="#defining-states"><i class="headerLinkIcon"></i></a>Defining States</h2>
+                            <p>The syntax highlighting state machine stays in the <code>start</code> state, until you define a <code>next</code> state for it to advance to. At that point, the tokenizer stays in that new <code>state</code>, until it advances to another state. Afterwards, you should return to the original <code>start</code> state.</p>
+                            <p>Here's an example:</p>
+                            <pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
     <span class="string">"start"</span> : [ {
         token : <span class="string">"text"</span>,
         merge : <span class="literal">true</span>,
@@ -525,51 +484,49 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
         regex : <span class="string">".+"</span>
     } ]
 };</code></pre>
-<p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
-
-<h2>Using the TMLanguage Tool</h2>
-<p>There is a tool that 
-will take an existing <em>tmlanguage</em> file and do its best to convert it into Javascript for Ace to consume. Here's what you need to get started:</p>
-<ol>
-<li>In the Ace repository, navigate to the <em><a href="https://github.com/ajaxorg/ace/tree/master/tool">tools</a></em> folder.</li>
-<li>Run <code>npm install</code>  to install required dependencies.</li>
-<li>Run <code>node tmlanguage.js &lt;path_to_tmlanguage_file&gt;</code>; for example, <code>node &lt;path_to_tmlanguage_file&gt; /Users/Elrond/elven.tmLanguage</code></li>
-</ol>
-<p>Two files are created and placed in <em>lib/ace/mode</em>: one for the language mode, and one for the set of highlight rules. You will still need to add the code into <em>kitchen_sink.html</em> and <em>demo.js</em>, as well as write any tests for the highlighting.</p>
-<h3 id='a-note-on-accuracy'><a class='heading_anchor' href='#a-note-on-accuracy'><i class='headerLinkIcon'></i></a>A Note on Accuracy</h3>
-<p>Your <em>.tmlanguage</em> file will then be converted to the best of the converter’s ability. It is an understatement to say that the tool is imperfect. Probably, language mode creation will never be able to be fully autogenerated. There's a list of non-determinable items; for example:</p>
-<ul>
-<li>The use of regular expression lookbehinds<br>This is a concept that JavaScript simply does not have and needs to be faked</li>
-<li>Deciding which state to transition to<br>While the tool does create new states correctly, it labels them with generic terms like <code>state_2</code>, <code>state_10</code>, <em>e.t.c.</em></li>
-<li>Extending modes<br>Many modes say something like <code>include source.c</code>, to mean, “add all the rules in C highlighting.” That syntax does not make sense to Ace or this tool (though of course you can <a href="/extension-development-resources/guides/extending_highlighters.html">extending existing highlighters</a>).</li>
-<li>Rule preference order</li>
-<li>Gathering keywords<br>Most likely, you’ll need to take keywords from your language file and run them through <code>createKeywordMapper()</code></li>
-</ul>
-<p>However, the tool is an excellent way to get a quick start, if you already possess a <em>tmlanguage</em> file for you language.</p>
-                        
-<h2>Extending Highlighters</h2>
-
-<p>Suppose you&#39;re working on a LuaPage, PHP embedded in HTML, or a Django template. You&#39;ll need to create a syntax highlighter that takes all the rules from the original language (Lua, PHP, or Python) and extends it with some additional identifiers (<code>&lt;?lua</code>, <code>&lt;?php</code>, <code>{%</code>, for example). Ace allows you to easily extend a highlighter using a few helper functions.</p>
-<h3 id='getting-existing-rules'><a class='heading_anchor' href='#getting-existing-rules'><i class='headerLinkIcon'></i></a>Getting Existing Rules</h3>
-<p>To get the existing syntax highlighting rules for a particular language, use the <code>getRules()</code> function. For example:</p>
-<pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
+                            <p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
+                            <h2>Using the TMLanguage Tool</h2>
+                            <p>There is a tool that 
+                                will take an existing <em>tmlanguage</em> file and do its best to convert it into Javascript for Ace to consume. Here's what you need to get started:
+                            </p>
+                            <ol>
+                                <li>In the Ace repository, navigate to the <em><a href="https://github.com/ajaxorg/ace/tree/master/tool">tools</a></em> folder.</li>
+                                <li>Run <code>npm install</code>  to install required dependencies.</li>
+                                <li>Run <code>node tmlanguage.js &lt;path_to_tmlanguage_file&gt;</code>; for example, <code>node &lt;path_to_tmlanguage_file&gt; /Users/Elrond/elven.tmLanguage</code></li>
+                            </ol>
+                            <p>Two files are created and placed in <em>lib/ace/mode</em>: one for the language mode, and one for the set of highlight rules. You will still need to add the code into <em>kitchen_sink.html</em> and <em>demo.js</em>, as well as write any tests for the highlighting.</p>
+                            <h3 id="a-note-on-accuracy"><a class="heading_anchor" href="#a-note-on-accuracy"><i class="headerLinkIcon"></i></a>A Note on Accuracy</h3>
+                            <p>Your <em>.tmlanguage</em> file will then be converted to the best of the converter’s ability. It is an understatement to say that the tool is imperfect. Probably, language mode creation will never be able to be fully autogenerated. There's a list of non-determinable items; for example:</p>
+                            <ul>
+                                <li>The use of regular expression lookbehinds<br />This is a concept that JavaScript simply does not have and needs to be faked</li>
+                                <li>Deciding which state to transition to<br />While the tool does create new states correctly, it labels them with generic terms like <code>state_2</code>, <code>state_10</code>, <em>e.t.c.</em></li>
+                                <li>Extending modes<br />Many modes say something like <code>include source.c</code>, to mean, “add all the rules in C highlighting.” That syntax does not make sense to Ace or this tool (though of course you can <a href="/extension-development-resources/guides/extending_highlighters.html">extending existing highlighters</a>).</li>
+                                <li>Rule preference order</li>
+                                <li>Gathering keywords<br />Most likely, you’ll need to take keywords from your language file and run them through <code>createKeywordMapper()</code></li>
+                            </ul>
+                            <p>However, the tool is an excellent way to get a quick start, if you already possess a <em>tmlanguage</em> file for you language.</p>
+                            <h2>Extending Highlighters</h2>
+                            <p>Suppose you&#39;re working on a LuaPage, PHP embedded in HTML, or a Django template. You&#39;ll need to create a syntax highlighter that takes all the rules from the original language (Lua, PHP, or Python) and extends it with some additional identifiers (<code>&lt;?lua</code>, <code>&lt;?php</code>, <code>{%</code>, for example). Ace allows you to easily extend a highlighter using a few helper functions.</p>
+                            <h3 id="getting-existing-rules"><a class="heading_anchor" href="#getting-existing-rules"><i class="headerLinkIcon"></i></a>Getting Existing Rules</h3>
+                            <p>To get the existing syntax highlighting rules for a particular language, use the <code>getRules()</code> function. For example:</p>
+                            <pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
 
 <span class="keyword">this</span>.$rules = <span class="keyword">new</span> HtmlHighlightRules().getRules();
 
 <span class="comment">/*
     this.$rules == Same this.$rules as HTML highlighting
 */</span></code></pre>
-<h3 id='extending-a-highlighter'><a class='heading_anchor' href='#extending-a-highlighter'><i class='headerLinkIcon'></i></a>Extending a Highlighter</h3>
-<p>The <code>addRules</code> method does one thing, and it does one thing well: it adds new rules to an existing rule set, and prefixes any state with a given tag. For example, let&#39;s say you&#39;ve got two sets of rules, defined like this:</p>
-<pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
+                            <h3 id="extending-a-highlighter"><a class="heading_anchor" href="#extending-a-highlighter"><i class="headerLinkIcon"></i></a>Extending a Highlighter</h3>
+                            <p>The <code>addRules</code> method does one thing, and it does one thing well: it adds new rules to an existing rule set, and prefixes any state with a given tag. For example, let&#39;s say you&#39;ve got two sets of rules, defined like this:</p>
+                            <pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
     <span class="string">"start"</span>: [ <span class="comment">/* ... */</span> ]
 };
 
 <span class="keyword">var</span> newRules = {
     <span class="string">"start"</span>: [ <span class="comment">/* ... */</span> ]
 }</code></pre>
-<p>If you want to incorporate <code>newRules</code> into <code>this.$rules</code>, you&#39;d do something like this:</p>
-<pre><code class="language-javascript"><span class="keyword">this</span>.addRules(newRules, <span class="string">"new-"</span>);
+                            <p>If you want to incorporate <code>newRules</code> into <code>this.$rules</code>, you&#39;d do something like this:</p>
+                            <pre><code class="language-javascript"><span class="keyword">this</span>.addRules(newRules, <span class="string">"new-"</span>);
 
 <span class="comment">/*
     this.$rules = {
@@ -577,16 +534,16 @@ will take an existing <em>tmlanguage</em> file and do its best to convert it int
         "new-start": [ ... ]
     };
 */</span></code></pre>
-<h3 id='extending-two-highlighters'><a class='heading_anchor' href='#extending-two-highlighters'><i class='headerLinkIcon'></i></a>Extending Two Highlighters</h3>
-<p>The last function available to you combines both of these concepts, and it&#39;s called <code>embedRules</code>. It takes three parameters:</p>
-<ol>
-<li>An existing rule set to embed with</li>
-<li>A prefix to apply for each state in the existing rule set</li>
-<li>A set of new states to add</li>
-</ol>
-<p>Like <code>addRules</code>, <code>embedRules</code> adds on to the existing <code>this.$rules</code> object. </p>
-<p>To explain this visually, let&#39;s take a look at the syntax highlighter for Lua pages, which combines all of these concepts:</p>
-<pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
+                            <h3 id="extending-two-highlighters"><a class="heading_anchor" href="#extending-two-highlighters"><i class="headerLinkIcon"></i></a>Extending Two Highlighters</h3>
+                            <p>The last function available to you combines both of these concepts, and it&#39;s called <code>embedRules</code>. It takes three parameters:</p>
+                            <ol>
+                                <li>An existing rule set to embed with</li>
+                                <li>A prefix to apply for each state in the existing rule set</li>
+                                <li>A set of new states to add</li>
+                            </ol>
+                            <p>Like <code>addRules</code>, <code>embedRules</code> adds on to the existing <code>this.$rules</code> object. </p>
+                            <p>To explain this visually, let&#39;s take a look at the syntax highlighter for Lua pages, which combines all of these concepts:</p>
+                            <pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
 <span class="keyword">var</span> LuaHighlightRules = require(<span class="string">"./lua_highlight_rules"</span>).LuaHighlightRules;
 
 <span class="keyword">var</span> LuaPageHighlightRules = <span class="keyword">function</span>() {
@@ -616,12 +573,10 @@ will take an existing <em>tmlanguage</em> file and do its best to convert it int
         }
     ]);
 };</code></pre>
-<p>Here, <code>this.$rules</code> starts off as a set of HTML highlighting rules. To this set, we add two new checks for <code>&lt;%=</code> and <code>&lt;?lua=</code>. We also delegate that if one of these rules are matched, we should move onto the <code>lua-start</code> state. Next, <code>embedRules</code> takes the already existing set of <code>LuaHighlightRules</code> and applies the <code>lua-</code> prefix to each state there. Finally, it adds two new checks for <code>%&gt;</code> and <code>?&gt;</code>, allowing the state machine to return to <code>start</code>.</p>
-
-<h3>Code Folding</h3>
-
-<p>Adding new folding rules to your mode can be a little tricky. First, insert the following lines of code into your mode definition:</p>
-<pre><code class="language-javascript"><span class="keyword">var</span> MyFoldMode = require(<span class="string">"./folding/newrules"</span>).FoldMode;
+                            <p>Here, <code>this.$rules</code> starts off as a set of HTML highlighting rules. To this set, we add two new checks for <code>&lt;%=</code> and <code>&lt;?lua=</code>. We also delegate that if one of these rules are matched, we should move onto the <code>lua-start</code> state. Next, <code>embedRules</code> takes the already existing set of <code>LuaHighlightRules</code> and applies the <code>lua-</code> prefix to each state there. Finally, it adds two new checks for <code>%&gt;</code> and <code>?&gt;</code>, allowing the state machine to return to <code>start</code>.</p>
+                            <h3>Code Folding</h3>
+                            <p>Adding new folding rules to your mode can be a little tricky. First, insert the following lines of code into your mode definition:</p>
+                            <pre><code class="language-javascript"><span class="keyword">var</span> MyFoldMode = require(<span class="string">"./folding/newrules"</span>).FoldMode;
 
 ...
 <span class="keyword">var</span> MyMode = <span class="keyword">function</span>() {
@@ -630,8 +585,8 @@ will take an existing <em>tmlanguage</em> file and do its best to convert it int
 
     <span class="keyword">this</span>.foldingRules = <span class="keyword">new</span> MyFoldMode();
 };</code></pre>
-<p>You&#39;ll be defining your code folding rules into the <em>lib/ace/mode/folding</em> folder. Here&#39;s a template that you can use to get started:</p>
-<pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
+                            <p>You&#39;ll be defining your code folding rules into the <em>lib/ace/mode/folding</em> folder. Here&#39;s a template that you can use to get started:</p>
+                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
 <span class="string">"use strict"</span>;
 
 <span class="keyword">var</span> oop = require(<span class="string">"../../lib/oop"</span>);
@@ -656,12 +611,12 @@ oop.inherits(FoldMode, BaseFoldMode);
 }).call(FoldMode.prototype);
 
 });</code></pre>
-<p>Just like with <code>TextMode</code> for syntax highlighting, <code>BaseFoldMode</code> contains the starting point for code folding logic. <code>foldingStartMarker</code> defines your opening folding point, while <code>foldingStopMarker</code> defines the stopping point. For example, for a C-style folding system, these values might look like this:</p>
-<pre><code class="language-javascript"><span class="keyword">this</span>.foldingStartMarker = <span class="regexp">/(\{|\[)[^\}\]]*$|^\s*(\/\*)/</span>;
+                            <p>Just like with <code>TextMode</code> for syntax highlighting, <code>BaseFoldMode</code> contains the starting point for code folding logic. <code>foldingStartMarker</code> defines your opening folding point, while <code>foldingStopMarker</code> defines the stopping point. For example, for a C-style folding system, these values might look like this:</p>
+                            <pre><code class="language-javascript"><span class="keyword">this</span>.foldingStartMarker = <span class="regexp">/(\{|\[)[^\}\]]*$|^\s*(\/\*)/</span>;
 <span class="keyword">this</span>.foldingStopMarker = <span class="regexp">/^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/</span>;</code></pre>
-<p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="http://ace.ajax.org/#nav=api&api=range">the Ace API documentation</a>.</p>
-<p>Again, for a C-style folding mechanism, a range to return for the starting fold might look like this:</p>
-<pre><code class="language-javascript"><span class="keyword">var</span> line = session.getLine(row);
+                            <p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="http://ace.ajax.org/#nav=api&amp;api=range">the Ace API documentation</a>.</p>
+                            <p>Again, for a C-style folding mechanism, a range to return for the starting fold might look like this:</p>
+                            <pre><code class="language-javascript"><span class="keyword">var</span> line = session.getLine(row);
 <span class="keyword">var</span> match = line.match(<span class="keyword">this</span>.foldingStartMarker);
 <span class="keyword">if</span> (match) {
     <span class="keyword">var</span> i = match.index;
@@ -673,121 +628,115 @@ oop.inherits(FoldMode, BaseFoldMode);
     range.end.column -= <span class="number">2</span>;
     <span class="keyword">return</span> range;
 }</code></pre>
-<p>Let&#39;s say we stumble across the code block <code>hello_world() {</code>. Our range object here becomes:</p>
-<pre><code class="language-json">{
+                            <p>Let&#39;s say we stumble across the code block <code>hello_world() {</code>. Our range object here becomes:</p>
+                            <pre><code class="language-json">{
   startRow: 0,
   endRow: 0,
   startColumn: 0,
   endColumn: 13
 }</code></pre>
-
-<h2>Testing Your Highlighter</h2>
-
-<p>The best way to test your tokenizer is to see it live, right? To do that, you&#39;ll want to modify the <a href="http://ace.ajax.org/build/kitchen-sink.html">live Ace demo</a> to preview your changes. You can find this file in the root Ace directory with the name <em>kitchen-sink.html</em>.</p>
-<p>The file that defines the behavior for this live demo is defined in <em>demo/kitchen-sink/demo.js</em>. You&#39;ll want to add lines to two separate objects:</p>
-<ol>
-<li><p><code>modesByName</code> needs a new entry that defines all the rules regarding your new mode. Entries looks like <code>propertyName: [dropdownName, arrayOfExtensions]</code>, where:</p>
-<ul>
-<li><code>propertyName</code> is the name of the new language you&#39;re highlighting</li>
-<li><code>dropdownName</code> is an arbitrary string that lists your language in the live demo&#39;s <strong>Mode</strong> dropdown menu</li>
-<li><code>arrayOfExtensions</code> is an array of strings (seperated by <code>|</code>) that defines valid extensions to use for the new language.  </li>
-</ul>
-</li>
-<li><p><code>docs</code> also needs a new entry, which defines the location of your sample document showing all the power of your new language. Entries look like <code>filenamePath: modeToUse</code>, where:</p>
-<ul>
-<li><code>filenamePath</code> is the path to your example document. This should just be in <em>docs/</em>.</li>
-<li><code>modeToUse</code> is the same arbitrary string as <code>dropdownName</code></li>
-</ul>
-</li>
-</ol>
-<p>Once you set this up, you should see be able to witness a live demonstration of your new highlighter.</p>
-<h3 id='adding-automated-tests'><a class='heading_anchor' href='#adding-automated-tests'><i class='headerLinkIcon'></i></a>Adding Automated Tests</h3>
-<p>It&#39;s also suggested that you go one step further and define some automated tests to test your syntax highlighter. A basic test looks something like this:</p>
-<pre><code class="language-javascript"><span class="keyword">if</span> (<span class="keyword">typeof</span> process !== <span class="string">"undefined"</span>) {
-    require(<span class="string">"amd-loader"</span>);
-}
-
-define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
-
-<span class="keyword">var</span> MyNewLanguage = require(<span class="string">"./mynewlanguage"</span>).Mode;
-<span class="keyword">var</span> assert = require(<span class="string">"../test/assertions"</span>);
-
-module.exports = {
-
-    name: <span class="string">"MyNewLanguage Tokenizer"</span>,
-
-    setUp : <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.tokenizer = <span class="keyword">new</span> MyNewLanguage().getTokenizer();
-    },
-
-    <span class="string">"test: my random description"</span> : <span class="keyword">function</span>() {
-        <span class="keyword">var</span> line = <span class="string">"-12px"</span>;
-        <span class="keyword">var</span> tokens = <span class="keyword">this</span>.tokenizer.getLineTokens(line, <span class="string">"ruleset"</span>).tokens;
-
-        assert.equal(<span class="number">2</span>, tokens.length);
-        assert.equal(<span class="string">"constant.numeric"</span>, tokens[<span class="number">0</span>].type);
-    },
-
-    <span class="string">"test: tokenize more than one thing"</span> : <span class="keyword">function</span>() {
-        <span class="keyword">var</span> tokens = <span class="keyword">this</span>.tokenizer.getLineTokens(<span class="string">"{()}"</span>, <span class="string">"start"</span>).tokens;
-
-        assert.equal(<span class="number">3</span>, tokens.length);
-        assert.equal(<span class="string">"paren.lparen"</span>, tokens[<span class="number">0</span>].type);
-        assert.equal(<span class="string">"text"</span>, tokens[<span class="number">1</span>].type);
-        assert.equal(<span class="string">"paren.rparen"</span>, tokens[<span class="number">2</span>].type);
-    },
-};
-
-});
-
-<span class="keyword">if</span> (<span class="keyword">typeof</span> module !== <span class="string">"undefined"</span> &amp;&amp; module === require.main) {
-    require(<span class="string">"asyncjs"</span>).test.testcase(module.exports).exec()
-}</code></pre>
-<p>All tests contain a string describing what the test is doing. Then, you define an arbitrary line that you want your tokenizer to check. It&#39;s recommended that you test both the number of tokens found, as well as the values of those tokens.</p>
-<p>Any file ending with the <em>_test.js</em> suffix are automatically run by Ace&#39;s <a href="http://travis-ci.org/#!/ajaxorg/ace">Travis CI</a> server.</p>
-
-</div>
+                            <h2>Testing Your Highlighter</h2>
+                            <p>The best way to test your tokenizer is to see it live, right? To do that, you&#39;ll want to modify the <a href="http://ace.ajax.org/build/kitchen-sink.html">live Ace demo</a> to preview your changes. You can find this file in the root Ace directory with the name <em>kitchen-sink.html</em>.</p>
+                            <p>The file that defines the behavior for this live demo is defined in <em>demo/kitchen-sink/demo.js</em>. You&#39;ll want to add lines to two separate objects:</p>
+                            <ol>
+                                <li>
+                                    <p><code>modesByName</code> needs a new entry that defines all the rules regarding your new mode. Entries looks like <code>propertyName: [dropdownName, arrayOfExtensions]</code>, where:</p>
+                                    <ul>
+                                        <li><code>propertyName</code> is the name of the new language you&#39;re highlighting</li>
+                                        <li><code>dropdownName</code> is an arbitrary string that lists your language in the live demo&#39;s <strong>Mode</strong> dropdown menu</li>
+                                        <li><code>arrayOfExtensions</code> is an array of strings (seperated by <code>|</code>) that defines valid extensions to use for the new language.  </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <p><code>docs</code> also needs a new entry, which defines the location of your sample document showing all the power of your new language. Entries look like <code>filenamePath: modeToUse</code>, where:</p>
+                                    <ul>
+                                        <li><code>filenamePath</code> is the path to your example document. This should just be in <em>docs/</em>.</li>
+                                        <li><code>modeToUse</code> is the same arbitrary string as <code>dropdownName</code></li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            <p>Once you set this up, you should see be able to witness a live demonstration of your new highlighter.</p>
+                            <h3 id="adding-automated-tests"><a class="heading_anchor" href="#adding-automated-tests"><i class="headerLinkIcon"></i></a>Adding Automated Tests</h3>
+                            <p>Adding automated tests for a highlighter is trivial so you are not required to do it, but it can help during development.</p>
+                            <p>In <code>lib/ace/mode/_test</code> create a file named <code><pre>text_<span style="color:#AA0D91">&lt;modeName&gt;</span>.txt</pre></code> with some example code. (You can skip this if the document you have added in <code>demo/docs</code> both looks good and covers various edge cases in your language syntax).
+                            </p>
+                            <p> Run <code><span style="color:#AA0D91">node</span> <span style="color:#008800">highlight_rules_test.js</span> <span style="color:#000088">-gen</span></code> to preserve current output of your tokenizer in <code>tokens_<span style="color:#AA0D91">&lt;modeName&gt;</span>.json</code>
+                            </p>
+                            <p>After this running <code><span style="color:#008800">highlight_rules_test.js</span> <span cstyle="color:#000088">optionalLanguageName</span></code> will compare output of your tokenizer with the correct output you've created.
+                            </p>
+                            <p>Any files ending with the <em>_test.js</em> suffix are automatically run by Ace&#39;s <a href="http://travis-ci.org/#!/ajaxorg/ace">Travis CI</a> server.</p>
+                        </div>
                         <div class="tab-pane fade" id="api">
                             <div class="row centerpiece">
-    <div id="sidebarContainer" class="span3">
-        <div id="sidebar">
-                <div id="well">
-                <form id="searchbox" action="" class="navbar-search">   <input name="query" type="text" placeholder="Search the API" title="Search across all the documentation" class="search-query span3"></form>
-                <ul class="menu">
-                <li><div class="menu-item"><a href="./api/ace.html" class="menuLink namespace">Ace</a></div></li>
-                <li><div class="menu-item"><a href="./api/anchor.html" class="menuLink namespace">Anchor</a></div></li>
-                <li><div class="menu-item"><a href="./api/background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div></li>
-                <li><div class="menu-item"><a href="./api/document.html" class="menuLink namespace">Document    </a></div></li>
-                <li><div class="menu-item"><a href="./api/edit_session.html" class="menuLink namespace">EditSession</a></div></li>
-                <li><div class="menu-item"><a href="./api/editor.html" class="menuLink namespace">Editor</a></div></li>
-                <li><div class="menu-item"><a href="./api/range.html" class="menuLink namespace">Range</a></div></li>
-                <li><div class="menu-item"><a href="./api/scrollbar.html" class="menuLink namespace">Scrollbar</a></div></li>
-                <li><div class="menu-item"><a href="./api/search.html" class="menuLink namespace">Search                     </a></div></li>
-                <li><div class="menu-item"><a href="./api/selection.html" class="menuLink namespace">Selection   </a></div></li>
-                <li><div class="menu-item"><a href="./api/token_iterator.html" class="menuLink namespace">TokenIterator</a></div></li>
-                <li><div class="menu-item"><a href="./api/tokenizer.html" class="menuLink namespace">Tokenizer</a></div></li>
-                <li><div class="menu-item"><a href="./api/undomanager.html" class="menuLink namespace">UndoManager</a></div></li>
-                <li><div class="menu-item"><a href="./api/virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="span8">
-        <div id="apiHolder" class="span8 apiIntro">
-        <h1>Ace API Reference</h1>
-        <p>Welcome to the Ace API Reference!</p>
-        <p>On the left, you'll find a list of all of our currently documented classes. 
-            There are plenty more to do, but these represent the "core" set. For more 
-            information on how to work with Ace, check out the <a href="#nav=embedding">embedding guide</a>.
-        </p>
-    </div>
-    </div></div>
+                                <div id="sidebarContainer" class="span2">
+                                    <div id="sidebar">
+                                        <div id="well">
+                                            
+                                            <ul class="menu">
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/ace.html" class="menuLink namespace">Ace</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/anchor.html" class="menuLink namespace">Anchor</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/background_tokenizer.html" class="menuLink namespace">BackgroundTokenizer     </a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/document.html" class="menuLink namespace">Document    </a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/edit_session.html" class="menuLink namespace">EditSession</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/editor.html" class="menuLink namespace">Editor</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/range.html" class="menuLink namespace">Range</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/scrollbar.html" class="menuLink namespace">Scrollbar</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/search.html" class="menuLink namespace">Search                     </a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/selection.html" class="menuLink namespace">Selection   </a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/token_iterator.html" class="menuLink namespace">TokenIterator</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/tokenizer.html" class="menuLink namespace">Tokenizer</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/undomanager.html" class="menuLink namespace">UndoManager</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="menu-item"><a href="./api/virtual_renderer.html" class="menuLink namespace">VirtualRenderer</a></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="apiHolder">
+                                    <div id="documentation" class="span7">
+                                    <h1>Ace API Reference</h1>
+                                    <p>Welcome to the Ace API Reference!</p>
+                                    <p>On the left, you'll find a list of all of our currently documented classes. 
+                                        These is not a complete set of classes, but rather, the "core" set. For more 
+                                        information on how to work with Ace, check out the <a href="#nav=embedding">embedding guide</a>.
+                                    </p>
+                                    <p>Below is an ERD diagram describing some fundamentals about how the internals of Ace works:</p>
+                                    <img src="doc/template/resources/images/Ace_ERD.png" style="max-width:100%; max-height:100%" />
+                                </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="production">
-                            <h1>Projects Using ACE</h1>
-                            <p>ACE is used all over the web in all kinds of production applications. Here is
-                                just a small sampling:</a>
+                            <h1>Projects Using Ace</h1>
+                            <p>Ace is used all over the web in all kinds of production applications. Here is
+                                just a small sampling:</p>
                             <ul class="menu-list">
                                 <li>
                                     <img src="doc/site/images/github-logo.png"
@@ -887,9 +836,9 @@ module.exports = {
                                     <a href="http://shiftedit.net/">ShiftEdit</a>
                                 </li> 
                                 <li>
-                                    <img src="doc/site/images/acebug-logo.png"
-                                        style="position: relative; left: 20px; top: 5px;">
-                                    <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
+                                    <img src="doc/site/images/sx-logo.png"
+                                        style="position: relative; left: -11px; top: -12px;">
+                                    <a href="http://www.scroipe.com">Scroipe</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/weecod-logo.png"
@@ -922,6 +871,42 @@ module.exports = {
                                     <a href="http://crunchapp.net/">Crunch</a>
                                 </li>
                                 <li>
+                                    <img src="https://googledrive.com/host/0B3cR-oSmQsB5aUhWQ2N4RDNmYzA/h/img/icon-128.png" 
+                                        style="position: relative; left: 9px; top: -5px; width: 84px">
+                                    <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
+                                </li>
+                                <li>
+                                    <img src="http://phpassist.com/images/logo-large.png" 
+                                        style="position: relative; left: 3px; top: -10px; width: 95px">
+                                    <a href="http://phpassist.com/">PHP Assist</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Dillinger</div>
+                                    <a href="http://dillinger.io/">Dillinger</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Evaluzio</div>
+                                    <a href="http://www.evaluzio.net/editor">Evaluzio</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Edicy</div>
+                                    <a href="http://www.edicy.com/blog/new-code-editor-for-creating-unique-website-designs">Edicy</a>
+                                </li>
+                                <li>
+                                    <img src="http://www.pixeljet.net/images/logo.png"
+                                        style="position: relative; width: 108px; top: 20px; left: -3px;">
+                                    <a href="http://www.pixeljet.net/index.html">pixelJET</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Orbit</div>
+                                    <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/acebug-logo.png"
+                                        style="position: relative; left: 20px; top: 5px;">
+                                    <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
+                                </li>
+                                <li>
                                     <a href="https://github.com/Gozala/sky-edit">Sky Edit</a>
                                 </li>
                                 <li>
@@ -943,6 +928,7 @@ module.exports = {
                                     <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
                                 </li>
                                 <li>
+                                    <div class="text-logo">ShareJS</div>
                                     <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
                                 </li>
                                 <li>
@@ -955,13 +941,14 @@ module.exports = {
                                     <a href="http://neutronide.com/">Neutron IDE</a>
                                 </li>
                                 <li>
-                                    <a href='http://rocktronica.github.com/tmpltr/'>tmpltr</a>
+                                    <div class="text-logo">tmpltr</div>
+                                    <a href="http://rocktronica.github.com/tmpltr/">tmpltr</a>
                                 </li>
                                 <li>
-                                    <a href='http://dev.cmsmadesimple.org/projects/aceeditor'>CMS Made Simple</a>
+                                    <a href="http://dev.cmsmadesimple.org/projects/aceeditor">CMS Made Simple</a>
                                 </li>
                                 <li>
-                                    <a href='http://tryjasmine.com/'>Try Jasmine</a>
+                                    <a href="http://tryjasmine.com/">Try Jasmine</a>
                                 </li>
                                 <li>
                                     <a href="http://codebender.cc/">Codebender</a>
@@ -971,27 +958,30 @@ module.exports = {
                                 </li>
                                 <li id="add_your_site">
                                     <p>+</p>
-                                    <a href="mailto:ace@c9.io?subject=Put me on the ACE site!">Your Site Here</a>
+                                    <a href="mailto:ace@c9.io?subject=Put%20me%20on%20the%20Ace%20site!">Your Site Here</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="support">
                             <h1>Support and User Resources</h1>
+                            <p>Aside from our GitHub page, here's a list of places you can find help for Ace:</p>
                             <ul class="content-list">
-                                <li><a href="http://groups.google.com/group/ace-discuss">ACE Google Group</a></li> 
-                                <li><a href="http://groups.google.com/group/ace-internals">ACE Core Google Group</a></li> 
-                                <li><a href="irc://irc.freenode.net/%23ace">irc.freenode.net #ace</a></li> 
+                                <li><a href="http://groups.google.com/group/ace-discuss">Ace Google Group</a></li>
+                                <li><a href="http://groups.google.com/group/ace-internals">Ace Core Google Group</a></li>
+                                <li><a href="irc://irc.freenode.net/%23ace">irc.freenode.net #ace</a></li>
                             </ul>
-                            
                         </div>
                     </div>
-                </div> 
-            </div> 
-        </div> 
+                </div>
+            </div>
+        </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+        <script defer src="//yandex.st/highlightjs/7.2/highlight.min.js"></script>
+        <script src="./doc/template/resources/javascripts/bbq.js"></script>
         <script src="./api/resources/javascripts/ux.js"></script>
-        <script src="./api/resources/javascripts/clicker.js"></script>
-        <script src="./api/resources/javascripts/jquery-scrollspy.js"></script>
-        <script defer src="./api/resources/javascripts/disqus-ext.js"></script>
-        <script defer src="./api/resources/javascripts/ga.js"></script>
-    </body> 
+        <script src="./doc/site/js/main.js"></script>
+        <script defer src="./api/resources/javascripts/clicker.js"></script>
+        <script defer src="./doc/site/js/ga.js"></script>
+    </body>
 </html>

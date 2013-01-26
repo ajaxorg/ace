@@ -15,24 +15,15 @@ var options = {
       if ( o !== null ) {
           href = href.replace(href, '#nav=api&api=' + o[1]);// + '&section=' + o[2]);
       }
-      /*else if (c != null) {
-          var fileLoc =  path.basename(linkHtml.originalFile, path.extname(linkHtml.originalFile));
-          var sectionLoc = c[1];
-          if (fileLoc.toUpperCase() !== sectionLoc.toUpperCase()) {
-              href = href.replace(href, '#nav=api&api=' + fileLoc + '&section=' + sectionLoc);
-          }
-          else {
-              //href = href.replace(href, '#nav=api&api=' + fileLoc);
-          }
-      }*/
+      
       linkHtml.href = href;
       
       return linkHtml;
   },
   output      : "../api/",
   outputAssets : "../api/resources",
-  skin        : "./resources/ace/templates/layout.jade",
-  assets      : "./resources/ace/skeleton",
+  skin        : "./template/jade/layout.jade",
+  assets      : "./template/resources",
   additionalObjs : "./additionalObjs.json",
   exclude     : ["**/*_test.js", "**/mode/**", "default_commands.js", "multi_select_commands.js", "**/test/**", "**/theme/**", "**/worker/**"],
   index       : "./index.md"

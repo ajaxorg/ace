@@ -157,12 +157,12 @@ Contributing
 
 Ace is a community project and wouldn't be what it is without contributions! We actively encourage and support contributions. The Ace source code is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
 
-Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. For more information on our contributing guidelines, see [CONTRIBUTING.md](https://github.com/ajaxorg/ace/blob/master/CONTRIBUTING.md).
+Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. 
 
 Continuous Integration status
 -----------------------------
 
 This project is tested with [Travis CI](http://travis-ci.org)
-[![Build Status](https://secure.travis-ci.org/ajaxorg/ace.png)](http://travis-ci.org/ajaxorg/ace)
+[![Build Status](https://secure.travis-ci.org/ajaxorg/ace.png?branch=master)](http://travis-ci.org/ajaxorg/ace)
 
 

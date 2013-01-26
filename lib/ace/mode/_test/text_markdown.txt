@@ -1,0 +1,13 @@
+test: header 1 
+#f
+test: header 2
+## foo
+test: header ends with ' #'
+# # # 
+test: header ends with '#'
+#foo# 
+test: 6+ #s is not a valid header
+####### foo
+test: # followed be only space is not a valid header
+test: only space between #s is not a valid header
+#  #

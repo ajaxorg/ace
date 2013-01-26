@@ -1,827 +1,626 @@
-[
- {
-  "state": "tag_embed_attribute_list",
-  "data": [
-   [ "text", "﻿" ],
-   [ "meta.tag", "<" ],
-   [ "text", "!" ],
-   [ "entity.other.attribute-name", "DOCTYPE" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "html" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "PUBLIC" ],
-   [ "text", " " ],
-   [ "string", "\"-//W3C//DTD XHTML 1.0 Strict//EN\"" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "   " ],
-   [ "string", "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "lua-qcomment",
-  "data": [
-   [ "keyword", "<%" ],
-   [ "text", " " ],
-   [ "comment", "--[[--" ]
-  ]
- },
- {
-  "state": "lua-qcomment",
-  "data": [
-   [ "comment", "    index.lp from the Kepler Project's LuaDoc HTML doclet." ]
-  ]
- },
- {
-  "state": "lua-qcomment",
-  "data": [
-   [ "comment", "    http://keplerproject.github.com/luadoc/" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "comment", "--]]" ],
-   [ "text", " " ],
-   [ "keyword", "%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", "Reference" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "title" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "    " ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "link" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "rel" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"stylesheet\"" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "href" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"" ],
-   [ "keyword", "<%=" ],
-   [ "identifier", "luadoc" ],
-   [ "text", "." ],
-   [ "identifier", "doclet" ],
-   [ "text", "." ],
-   [ "identifier", "html" ],
-   [ "text", "." ],
-   [ "identifier", "link" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"luadoc.css\"" ],
-   [ "paren.rparen", ")" ],
-   [ "keyword", "%>" ],
-   [ "text", "\" type=\"text/css\" />" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "comment", "<!--meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/-->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "head" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"container\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"product\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"product_logo\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"product_name\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "big" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "b" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "b" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "big" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"product_description\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!-- id=\"product\" -->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"main\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"navigation\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%=" ],
-   [ "identifier", "luadoc" ],
-   [ "text", "." ],
-   [ "identifier", "doclet" ],
-   [ "text", "." ],
-   [ "identifier", "html" ],
-   [ "text", "." ],
-   [ "identifier", "include" ],
-   [ "paren.lparen", "(" ],
-   [ "string", "\"menu.lp\"" ],
-   [ "text", ", " ],
-   [ "paren.lparen", "{" ],
-   [ "text", " " ],
-   [ "identifier", "doc" ],
-   [ "keyword.operator", "=" ],
-   [ "identifier", "doc" ],
-   [ "text", " " ],
-   [ "paren.rparen", "})" ],
-   [ "keyword", "%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!-- id=\"navigation\" -->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"content\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%if" ],
-   [ "text", " " ],
-   [ "keyword", "not" ],
-   [ "text", " " ],
-   [ "identifier", "options" ],
-   [ "text", "." ],
-   [ "identifier", "nomodules" ],
-   [ "text", " " ],
-   [ "keyword", "and" ],
-   [ "text", " " ],
-   [ "keyword.operator", "#" ],
-   [ "identifier", "doc" ],
-   [ "text", "." ],
-   [ "identifier", "modules" ],
-   [ "text", " " ],
-   [ "keyword.operator", ">" ],
-   [ "text", " " ],
-   [ "constant.numeric", "0" ],
-   [ "text", " " ],
-   [ "keyword", "then%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", "Modules" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "table" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "class" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"module_list\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "comment", "<!--<tr><td colspan=\"2\">Modules</td></tr>-->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%for" ],
-   [ "text", " " ],
-   [ "identifier", "_" ],
-   [ "text", ", " ],
-   [ "identifier", "modulename" ],
-   [ "text", " " ],
-   [ "keyword", "in" ],
-   [ "text", " " ],
-   [ "support.function", "ipairs" ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "doc" ],
-   [ "text", "." ],
-   [ "identifier", "modules" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "keyword", "do%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "class" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"name\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.anchor", "a" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "href" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"" ],
-   [ "keyword", "<%=" ],
-   [ "identifier", "luadoc" ],
-   [ "text", "." ],
-   [ "identifier", "doclet" ],
-   [ "text", "." ],
-   [ "identifier", "html" ],
-   [ "text", "." ],
-   [ "identifier", "module_link" ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "modulename" ],
-   [ "text", ", " ],
-   [ "identifier", "doc" ],
-   [ "paren.rparen", ")" ],
-   [ "keyword", "%>" ],
-   [ "text", "\">" ],
-   [ "keyword", "<%=" ],
-   [ "identifier", "modulename" ],
-   [ "keyword", "%>" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.anchor", "a" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "class" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"summary\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "keyword", "<%=" ],
-   [ "identifier", "doc" ],
-   [ "text", "." ],
-   [ "identifier", "modules" ],
-   [ "paren.lparen", "[" ],
-   [ "identifier", "modulename" ],
-   [ "paren.rparen", "]" ],
-   [ "text", "." ],
-   [ "identifier", "summary" ],
-   [ "keyword", "%>" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%end%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "table" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%end%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%if" ],
-   [ "text", " " ],
-   [ "keyword", "not" ],
-   [ "text", " " ],
-   [ "identifier", "options" ],
-   [ "text", "." ],
-   [ "identifier", "nofiles" ],
-   [ "text", " " ],
-   [ "keyword", "and" ],
-   [ "text", " " ],
-   [ "keyword.operator", "#" ],
-   [ "identifier", "doc" ],
-   [ "text", "." ],
-   [ "identifier", "files" ],
-   [ "text", " " ],
-   [ "keyword.operator", ">" ],
-   [ "text", " " ],
-   [ "constant.numeric", "0" ],
-   [ "text", " " ],
-   [ "keyword", "then%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", "Files" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "h2" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "table" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "class" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"file_list\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "comment", "<!--<tr><td colspan=\"2\">Files</td></tr>-->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%for" ],
-   [ "text", " " ],
-   [ "identifier", "_" ],
-   [ "text", ", " ],
-   [ "identifier", "filepath" ],
-   [ "text", " " ],
-   [ "keyword", "in" ],
-   [ "text", " " ],
-   [ "support.function", "ipairs" ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "doc" ],
-   [ "text", "." ],
-   [ "identifier", "files" ],
-   [ "paren.rparen", ")" ],
-   [ "text", " " ],
-   [ "keyword", "do%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "class" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"name\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.anchor", "a" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "href" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"" ],
-   [ "keyword", "<%=" ],
-   [ "identifier", "luadoc" ],
-   [ "text", "." ],
-   [ "identifier", "doclet" ],
-   [ "text", "." ],
-   [ "identifier", "html" ],
-   [ "text", "." ],
-   [ "identifier", "file_link" ],
-   [ "paren.lparen", "(" ],
-   [ "identifier", "filepath" ],
-   [ "paren.rparen", ")" ],
-   [ "keyword", "%>" ],
-   [ "text", "\">" ],
-   [ "keyword", "<%=" ],
-   [ "identifier", "filepath" ],
-   [ "keyword", "%>" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.anchor", "a" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "class" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"summary\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "td" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "tr" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%end%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.table", "table" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "keyword", "<%end%>" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!-- id=\"content\" -->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!-- id=\"main\" -->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "id" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"about\"" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "text", "\t" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.anchor", "a" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "href" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"http://validator.w3.org/check?uri=referer\"" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name.image", "img" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "src" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"http://www.w3.org/Icons/valid-xhtml10\"" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "alt" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"Valid XHTML 1.0!\"" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "height" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"31\"" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "width" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"88\"" ],
-   [ "text", " " ],
-   [ "meta.tag.r", "/>" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name.anchor", "a" ],
-   [ "meta.tag.r", ">" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "p" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!-- id=\"about\" -->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "div" ],
-   [ "meta.tag.r", ">" ],
-   [ "text", " " ],
-   [ "comment", "<!-- id=\"container\" -->" ],
-   [ "text", "\t" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "body" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "html" ],
-   [ "meta.tag.r", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- }
-]
+[[
+   "tag_embed_attribute_list",
+  ["text","﻿"],
+  ["meta.tag","<"],
+  ["text","!"],
+  ["entity.other.attribute-name","DOCTYPE"],
+  ["text"," "],
+  ["entity.other.attribute-name","html"],
+  ["text"," "],
+  ["entity.other.attribute-name","PUBLIC"],
+  ["text"," "],
+  ["string","\"-//W3C//DTD XHTML 1.0 Strict//EN\""]
+],[
+   "start",
+  ["text","   "],
+  ["string","\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","html"],
+  ["meta.tag.r",">"]
+],[
+   "lua-qcomment",
+  ["keyword","<%"],
+  ["text"," "],
+  ["comment","--[[--"]
+],[
+   "lua-qcomment",
+  ["comment","    index.lp from the Kepler Project's LuaDoc HTML doclet."]
+],[
+   "lua-qcomment",
+  ["comment","    http://keplerproject.github.com/luadoc/"]
+],[
+   "start",
+  ["comment","--]]"],
+  ["text"," "],
+  ["keyword","%>"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","head"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","title"],
+  ["meta.tag.r",">"],
+  ["text","Reference"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","title"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","link"],
+  ["text"," "],
+  ["entity.other.attribute-name","rel"],
+  ["keyword.operator","="],
+  ["string","\"stylesheet\""],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","\""],
+  ["keyword","<%="],
+  ["identifier","luadoc"],
+  ["text","."],
+  ["identifier","doclet"],
+  ["text","."],
+  ["identifier","html"],
+  ["text","."],
+  ["identifier","link"],
+  ["paren.lparen","("],
+  ["string","\"luadoc.css\""],
+  ["paren.rparen",")"],
+  ["keyword","%>"],
+  ["text","\" type=\"text/css\" />"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","<!--meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/-->"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","head"],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","body"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"container\""],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"product\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"product_logo\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"product_name\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","big"],
+  ["meta.tag.r",">"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","b"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","b"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","big"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"product_description\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"],
+  ["text"," "],
+  ["comment","<!-- id=\"product\" -->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"main\""],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"navigation\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["keyword","<%="],
+  ["identifier","luadoc"],
+  ["text","."],
+  ["identifier","doclet"],
+  ["text","."],
+  ["identifier","html"],
+  ["text","."],
+  ["identifier","include"],
+  ["paren.lparen","("],
+  ["string","\"menu.lp\""],
+  ["text",", "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","doc"],
+  ["keyword.operator","="],
+  ["identifier","doc"],
+  ["text"," "],
+  ["paren.rparen","})"],
+  ["keyword","%>"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"],
+  ["text"," "],
+  ["comment","<!-- id=\"navigation\" -->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"content\""],
+  ["meta.tag.r",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","<%if"],
+  ["text"," "],
+  ["keyword","not"],
+  ["text"," "],
+  ["identifier","options"],
+  ["text","."],
+  ["identifier","nomodules"],
+  ["text"," "],
+  ["keyword","and"],
+  ["text"," "],
+  ["keyword.operator","#"],
+  ["identifier","doc"],
+  ["text","."],
+  ["identifier","modules"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword","then%>"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","h2"],
+  ["meta.tag.r",">"],
+  ["text","Modules"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","h2"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","table"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator","="],
+  ["string","\"module_list\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["comment","<!--<tr><td colspan=\"2\">Modules</td></tr>-->"]
+],[
+   "start",
+  ["keyword","<%for"],
+  ["text"," "],
+  ["identifier","_"],
+  ["text",", "],
+  ["identifier","modulename"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["support.function","ipairs"],
+  ["paren.lparen","("],
+  ["identifier","doc"],
+  ["text","."],
+  ["identifier","modules"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","do%>"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator","="],
+  ["string","\"name\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","\""],
+  ["keyword","<%="],
+  ["identifier","luadoc"],
+  ["text","."],
+  ["identifier","doclet"],
+  ["text","."],
+  ["identifier","html"],
+  ["text","."],
+  ["identifier","module_link"],
+  ["paren.lparen","("],
+  ["identifier","modulename"],
+  ["text",", "],
+  ["identifier","doc"],
+  ["paren.rparen",")"],
+  ["keyword","%>"],
+  ["text","\">"],
+  ["keyword","<%="],
+  ["identifier","modulename"],
+  ["keyword","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator","="],
+  ["string","\"summary\""],
+  ["meta.tag.r",">"],
+  ["keyword","<%="],
+  ["identifier","doc"],
+  ["text","."],
+  ["identifier","modules"],
+  ["paren.lparen","["],
+  ["identifier","modulename"],
+  ["paren.rparen","]"],
+  ["text","."],
+  ["identifier","summary"],
+  ["keyword","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["keyword","<%end%>"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","table"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["keyword","<%end%>"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","<%if"],
+  ["text"," "],
+  ["keyword","not"],
+  ["text"," "],
+  ["identifier","options"],
+  ["text","."],
+  ["identifier","nofiles"],
+  ["text"," "],
+  ["keyword","and"],
+  ["text"," "],
+  ["keyword.operator","#"],
+  ["identifier","doc"],
+  ["text","."],
+  ["identifier","files"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword","then%>"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","h2"],
+  ["meta.tag.r",">"],
+  ["text","Files"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","h2"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","table"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator","="],
+  ["string","\"file_list\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["comment","<!--<tr><td colspan=\"2\">Files</td></tr>-->"]
+],[
+   "start",
+  ["keyword","<%for"],
+  ["text"," "],
+  ["identifier","_"],
+  ["text",", "],
+  ["identifier","filepath"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["support.function","ipairs"],
+  ["paren.lparen","("],
+  ["identifier","doc"],
+  ["text","."],
+  ["identifier","files"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","do%>"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator","="],
+  ["string","\"name\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","\""],
+  ["keyword","<%="],
+  ["identifier","luadoc"],
+  ["text","."],
+  ["identifier","doclet"],
+  ["text","."],
+  ["identifier","html"],
+  ["text","."],
+  ["identifier","file_link"],
+  ["paren.lparen","("],
+  ["identifier","filepath"],
+  ["paren.rparen",")"],
+  ["keyword","%>"],
+  ["text","\">"],
+  ["keyword","<%="],
+  ["identifier","filepath"],
+  ["keyword","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator","="],
+  ["string","\"summary\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["keyword","<%end%>"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","table"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["keyword","<%end%>"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"],
+  ["text"," "],
+  ["comment","<!-- id=\"content\" -->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"],
+  ["text"," "],
+  ["comment","<!-- id=\"main\" -->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator","="],
+  ["string","\"about\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","\t"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","p"],
+  ["meta.tag.r",">"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","\"http://validator.w3.org/check?uri=referer\""],
+  ["meta.tag.r",">"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.image","img"],
+  ["text"," "],
+  ["entity.other.attribute-name","src"],
+  ["keyword.operator","="],
+  ["string","\"http://www.w3.org/Icons/valid-xhtml10\""],
+  ["text"," "],
+  ["entity.other.attribute-name","alt"],
+  ["keyword.operator","="],
+  ["string","\"Valid XHTML 1.0!\""],
+  ["text"," "],
+  ["entity.other.attribute-name","height"],
+  ["keyword.operator","="],
+  ["string","\"31\""],
+  ["text"," "],
+  ["entity.other.attribute-name","width"],
+  ["keyword.operator","="],
+  ["string","\"88\""],
+  ["text"," "],
+  ["meta.tag.r","/>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","p"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"],
+  ["text"," "],
+  ["comment","<!-- id=\"about\" -->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","div"],
+  ["meta.tag.r",">"],
+  ["text"," "],
+  ["comment","<!-- id=\"container\" -->"],
+  ["text","\t"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","body"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","html"],
+  ["meta.tag.r",">"]
+],[
+   "start"
+]]

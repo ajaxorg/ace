@@ -4,7 +4,9 @@ $(function() {
     hljs.initHighlighting();
     ace.config.set("workerPath", "build/src-min");
     editor = ace.edit("ace_editor_demo");
+    editor.container.style.opacity = "";
     embedded_editor = ace.edit("embedded_ace_code");
+    embedded_editor.container.style.opacity = "";
     editor.getSession().setMode("ace/mode/javascript");
     editor.getSession().setMode("ace/mode/javascript");
     embedded_editor.getSession().setMode("ace/mode/html");
@@ -30,7 +32,8 @@ $(function() {
         
         var _self = $(this);
         $("#apiHolder").load($(this).attr("href") + " #documentation", function(){
-        $("#apiHolder").removeClass("apiIntro").removeClass("span8");
+        $("#apiHolder").removeClass("apiIntro").removeClass("span9");
+        $("#documentation").removeClass("span9").addClass("span7");
             ux();
             setupClicker();
         
