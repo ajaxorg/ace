@@ -98,15 +98,17 @@
     resize: none;
     outline: none;
     overflow: hidden;
+    font: inherit;
 }
 
 .ace_text-input.ace_composition {
-    background: #fff;
-    color: #000;
+    background: #f8f8f8;
+    color: #111;
     z-index: 1000;
     opacity: 1;
     border: solid lightgray 1px;
-    margin: -1px
+    margin: -1px;
+    padding: 0 1px;
 }
 
 .ace_layer {
