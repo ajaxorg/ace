@@ -69,6 +69,8 @@ var modesByName = {
     lucene:     ["Lucene"       , "lucene"],
     makefile:   ["Makefile"     , "^GNUmakefile|^makefile|^Makefile|^OCamlMakefile|make"],
     markdown:   ["Markdown"     , "md|markdown"],
+    moocode:    ["MOOcode"      , "moo"],
+    mustache:   ["Mustache"     , "mustache"],
     objectivec: ["Objective-C"  , "m"],
     ocaml:      ["OCaml"        , "ml|mli"],
     perl:       ["Perl"         , "pl|pm"],
