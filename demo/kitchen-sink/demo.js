@@ -407,7 +407,7 @@ event.addListener(container, "drop", function(e) {
         if (window.FileReader) {
             var reader = new FileReader();
             reader.onload = function() {
-                var mode = getModeFromPath(file.name);
+                var mode = modelist.getModeFromPath(file.name);
 
                 env.editor.session.doc.setValue(reader.result);
                 modeEl.value = mode.name;
