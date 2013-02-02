@@ -8,7 +8,7 @@
   ) 
   ;; second line comment
   '(+ 1 2)
-  (define-sytax get-line
+  (define-syntax get-line
     (syntax-rules ()
       ((_ x) x)))                ; nonsense, just a highlight test
   (position-if-not char-set:whitespace line #:start beg))
