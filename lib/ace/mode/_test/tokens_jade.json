@@ -28,7 +28,7 @@
    "start"
 ],[
    "comment_block",
-  ["punctuation.section.comment","//"]
+  ["punctuation.section.comment","// "]
 ],[
    "comment_block",
   ["comment.block.jade","  here it is. a block comment!"]
@@ -42,7 +42,7 @@
    "start"
 ],[
    "comment_block",
-  ["punctuation.section.comment","     //     "]
+  ["punctuation.section.comment","     // "]
 ],[
    "comment_block",
   ["comment.block.jade","        a far spaced"]

@@ -11,3 +11,9 @@ test: 6+ #s is not a valid header
 test: # followed be only space is not a valid header
 test: only space between #s is not a valid header
 #  #
+
+test links  [Cloud9 IDE](http://www.c9.io/) 
+* [demo](http://ajaxorg.github.com/ace/) 
+in lists
+
+in plain text <b>http://ace.ajaxorg.com<b>

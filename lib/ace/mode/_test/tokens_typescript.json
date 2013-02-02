@@ -128,7 +128,8 @@
   ["paren.lparen","("],
   ["entity.name.function.ts","greeter.greet"],
   ["paren.lparen","("],
-  ["paren.rparen","))"]
+  ["paren.rparen",")"],
+  ["paren.rparen",")"]
 ],[
    "start",
   ["paren.rparen","}"]
