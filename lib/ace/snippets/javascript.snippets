@@ -11,12 +11,13 @@ snippet fun
 	}
 # Anonymous Function
 snippet f
-	function (${1}) {
+	function(${1}) {
 		${3}
 	}${2:;}
 # Immediate function
-snippet (f
-	(function (${1}) {
+regex //f\(/\)?/
+snippet f(
+	(function(${1}) {
 		${3:/* code */}
 	}(${2}));
 # if
@@ -50,16 +51,7 @@ snippet case
 		${2:// code}
 		break;
 	${3}
-# for (...) {...}
-snippet for
-	for (var ${2:i} = 0; $2 < ${1:Things}.length; $2${3: += 1}) {
-		${4:$1[$2]}
-	}
-# for (...) {...} (Improved Native For-Loop)
-snippet forr
-	for (var ${2:i} = ${1:Things}.length - 1; $2 >= 0; $2${3: -= 1}) {
-		${4:$1[$2]}
-	}
+
 # while (...) {...}
 snippet wh
 	while (${1:/* condition */}) {
@@ -79,17 +71,17 @@ snippet do
 	} while (${1:/* condition */});
 # Object Method
 snippet :f
-	${1:method_name}: function (${2:attribute}) {
+	${1:method_name}: function(${2:attribute}) {
 		${4}
 	}${3:,}
 # setTimeout function
 snippet timeout
-	setTimeout(function () {${3}}${2}, ${1:10});
+	setTimeout(function() {${3}}${2}, ${1:10});
 # Get Elements
-snippet get
+snippet gett
 	getElementsBy${1:TagName}('${2}')${3}
 # Get Element
-snippet gett
+snippet get
 	getElementBy${1:Id}('${2}')${3}
 # console.log (Firebug)
 snippet cl
@@ -123,10 +115,10 @@ snippet jsons
 	JSON.stringify(${1:object});
 # self-defining function
 snippet sdf
-	var ${1:function_name} = function (${2:argument}) {
+	var ${1:function_name} = function(${2:argument}) {
 		${3:// initial code ...}
 
-		$1 = function ($2) {
+		$1 = function($2) {
 			${4:// main code}
 		};
 	}
@@ -154,3 +146,33 @@ snippet sing
 
 		return instance;
 	}
+# class
+regex /^\s*/clas{0,2}/
+	var ${1:class} = function(${20}) {
+		$40$0\n
+	};
+	
+	(function() {
+		${60:this.prop = ""}
+	}).call(${1:class}.prototype);
+# 
+snippet for-
+	for (var ${20:i} = ${1:Things}.length; ${20:i}--; ) {
+		${100:${1:Things}[${20:i}];
+	}
+	$0
+
+
+# for (...) {...}
+snippet for
+	for (var ${2:i} = 0; $2 < ${1:Things}.length; $2${3:++}) {
+		${4:$1[$2]}
+	}
+# for (...) {...} (Improved Native For-Loop)
+snippet forr
+	for (var ${2:i} = ${1:Things}.length - 1; $2 >= 0; $2${3:--}) {
+		${4:$1[$2]}
+	}
+snippet for-
+
+snippet for ?in

@@ -447,7 +447,7 @@ new StatusBar(env.editor, cmdLine.container);
 require("ace/placeholder").PlaceHolder;
 
 var SnippetManager = require("ace/snippets").SnippetManager
-var jsSnippets = require("ace/requirejs/text!./snippets/js.json")
+var jsSnippets = require("ace/snippets/javascript");
 var testSnippet = "\
 \\begin{${1:document}}\n\
     ${2:$TM_SELECTED_TEXT:some ${3:latex}}\n\
@@ -460,7 +460,8 @@ SnippetManager.register({
     tabTrigger: "t",
     name: "testSnippet"
 })
-SnippetManager.register(JSON.parse(jsSnippets).snippets)
+jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText)
+SnippetManager.register(jsSnippets.snippets)
 
 
 ace.commands.bindKey("Tab", function(editor) {

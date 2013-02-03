@@ -6,7 +6,8 @@ var path = process.argv[2] || process.cwd();
 function readSnippet(path, name) {
     if (name)
         path += name
-    if (!/\.tmSnippet$/i.test(path))
+    console.log(name)
+    if (!/\.(tmSnippet|sublime-snippet|plist)$/i.test(path))
         return
     console.log(name)
     var plistString = fs.readFileSync(path, "utf8");
@@ -16,15 +17,29 @@ function readSnippet(path, name) {
 }
 
 // read
-if (fs.statSync(path).isDirectory()) {
-    path += "/"
-    fs.readdirSync(path).forEach(function(name) {
-        readSnippet(path, name)
-    })
-} else {
-    readSnippet(path)
+function readDir(path) {
+    if (fs.statSync(path).isDirectory()) {
+        path += "/"
+        fs.readdirSync(path).forEach(function(name) {        
+            if (/snippets/i.test(name))
+                readSnippetsInDir(path + name)
+            else
+                readDir(path + name)
+        })
+    }
 }
-
+function readSnippetsInDir(path) {
+    if (fs.statSync(path).isDirectory()) {
+        path += "/"
+        snippets.push(path)
+        fs.readdirSync(path).forEach(function(name) {
+            readSnippet(path, name)
+        })
+    } else {
+        readSnippet(path)
+    }
+}
+readDir(path) 
 // transform
 snippets = snippets.map(function(s) {
     if (s.length == 1)
@@ -62,6 +77,6 @@ var text = JSON.stringify(snippets, null, 1)
             return "\\n"+"\\" + "\n"
     })
 
-fs.writeFileSync(path += "./ace.snippets.js", text)
+fs.writeFileSync(path += "/./ace.snippets.js", text)
 
 console.log(path)
