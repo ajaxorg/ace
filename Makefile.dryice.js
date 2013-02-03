@@ -441,7 +441,7 @@ var buildAce = function(options) {
     if (options.shrinkwrap) {
         console.log('# combining files into one ---------');
         copy({
-          source: { root:targetDir, exclude:/^worker\-/ },
+          source: { root:targetDir, exclude:/(^|\\|\/)worker\-[^\\\/]*\.js$/ },
           dest: BUILD_DIR + '/ace-min.js'
         });
     }

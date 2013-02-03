@@ -88,7 +88,7 @@ inject(function () {
     var ace = window.__ace_shadowed__;
     var t = document.querySelector("textarea");
     textAce = ace.transformTextarea(t, window.__ace_loader__);
-    textAce.setDisplaySettings(true);
+    setTimeout(function(){textAce.setDisplaySettings(true)});
 });
 
 
