@@ -1,10 +1,10 @@
-[
+[[
    "start",
   ["text","("],
   ["storage.type.function-type.scheme","define"],
-  ["text"," "],
-  ["entity.name.function.scheme","prompt-for-cd"],
-  ["text"," ()"]
+  ["text"," ("],
+  ["identifier","prompt-for-cd"],
+  ["text",")"]
 ],[
    "start",
   ["text","   "],
@@ -19,9 +19,7 @@
 ],[
    "start",
   ["text","   ("],
-  ["identifier","prompt"],
-  ["text","-"],
-  ["identifier","read"],
+  ["identifier","prompt-read"],
   ["text"," "],
   ["string","\"Title\""],
   ["text"," "],
@@ -43,23 +41,19 @@
   ["text"," "],
   ["constant.numeric","-7"],
   ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","b001"],
+  ["constant.numeric","#b001"],
   ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","b001/100"],
+  ["constant.numeric","#b001"],
+  ["text","/"],
+  ["constant.numeric","100"],
   ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","o777"],
+  ["constant.numeric","#o777"],
   ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","O777"],
+  ["constant.numeric","#O777"],
   ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","xabc55"],
+  ["constant.numeric","#xabc55"],
   ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","c"],
+  ["identifier","#c"],
   ["text","("],
   ["constant.numeric","0"],
   ["text"," "],
@@ -68,34 +62,24 @@
 ],[
    "start",
   ["text","   ("],
-  ["identifier","prompt"],
-  ["text","-"],
-  ["identifier","read"],
+  ["identifier","prompt-read"],
   ["text"," "],
   ["string","\"Artist\""],
-  ["text"," &"],
-  ["identifier","rest"],
   ["text",")"]
 ],[
    "start",
   ["text","   ("],
   ["keyword.operator","or"],
   ["text"," ("],
-  ["identifier","parse"],
-  ["text","-"],
-  ["identifier","integer"],
+  ["identifier","parse-integer"],
   ["text"," ("],
-  ["identifier","prompt"],
-  ["text","-"],
-  ["identifier","read"],
+  ["identifier","prompt-read"],
   ["text"," "],
   ["string","\"Rating\""],
-  ["text",") :"],
-  ["identifier","junk"],
-  ["text","-"],
-  ["identifier","allowed"],
+  ["text",") "],
+  ["punctuation.definition.constant.character.scheme","#:junk-allowed"],
   ["text"," "],
-  ["support.function","t"],
+  ["constant.language","#t"],
   ["text",") "],
   ["constant.numeric","0"],
   ["text",")"]
@@ -108,25 +92,20 @@
   ["text"," ("],
   ["support.function","format"],
   ["text"," "],
-  ["support.function","#t"],
+  ["constant.language","#t"],
   ["text"," "],
   ["string","\"yes\""],
   ["text",") ("],
   ["support.function","format"],
   ["text"," "],
-  ["support.function","#t"],
+  ["constant.language","#f"],
   ["text"," "],
   ["string","\"no\""],
-  ["text"," "],
-  ["constant.language","#f"],
   ["text",") "],
   ["comment",";and here comment"]
 ],[
    "start",
-  ["text","  ) "],
-  ["constant.numeric","0xFFLL"],
-  ["text"," "],
-  ["constant.numeric","-23ull"]
+  ["text","  ) "]
 ],[
    "start",
   ["text","  "],
@@ -141,28 +120,15 @@
 ],[
    "start",
   ["text","  ("],
-  ["identifier","define"],
+  ["identifier","position-if-not"],
   ["text"," "],
-  ["punctuation.definition.variable.scheme","*"],
-  ["variable.other.global.scheme","lines"],
-  ["punctuation.definition.variable.scheme","*"],
-  ["text",")                "],
-  ["comment","; list of all lines"]
-],[
-   "start",
-  ["text","  ("],
-  ["identifier","position"],
-  ["text","-"],
-  ["keyword.control","if"],
-  ["text","-"],
-  ["identifier","not"],
-  ["text"," "],
-  ["punctuation.definition.constant.character.scheme","#"],
-  ["constant.character.scheme","'sys::whitespacep"],
+  ["identifier","char-set"],
+  ["text",":"],
+  ["identifier","whitespace"],
   ["text"," "],
   ["identifier","line"],
-  ["text"," :"],
-  ["identifier","start"],
+  ["text"," "],
+  ["punctuation.definition.constant.character.scheme","#:start"],
   ["text"," "],
   ["identifier","beg"],
   ["text","))"]
@@ -206,8 +172,8 @@
   ["text",")"]
 ],[
    "start",
-  ["text","  (:"],
-  ["identifier","use"],
+  ["text","  ("],
+  ["punctuation.definition.constant.character.scheme","#:use"],
   ["text"," "],
   ["string","\"aaaa\""],
   ["text",")"]
@@ -235,8 +201,7 @@
   ["text","))"]
 ],[
    "start",
-  ["text","  ) "],
-  ["support.function","LAmbDa"]
+  ["text","  ) "]
 ],[
    "start"
 ],[
@@ -245,4 +210,6 @@
   ["string","\"asdad"],
   ["constant.character.escape.scheme","\\0"],
   ["string","eqweqe\""]
+],[
+   "start"
 ]]
