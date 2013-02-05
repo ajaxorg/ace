@@ -30,6 +30,9 @@ get_repo() {
     fi
 }
 
+x=(1 2 3)
+echo ${#x[@]}
+
 if repo=`get_repo $@`; then
     branch=`git symbolic-ref HEAD 2>/dev/null`
     echo "http://github.com/$repo/pull/new/${branch##refs/heads/}"
