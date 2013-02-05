@@ -1,23 +1,89 @@
 [[
    "start",
-  ["comment","#!/bin/sh"]
+  ["text","#!"],
+  ["keyword.operator","/"],
+  ["identifier","bin"],
+  ["keyword.operator","/"],
+  ["identifier","sh"]
 ],[
    "start"
 ],[
    "start",
-  ["comment","# Script to open a browser to current branch"]
+  ["text","# "],
+  ["identifier","Script"],
+  ["text"," "],
+  ["identifier","to"],
+  ["text"," "],
+  ["identifier","open"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text"," "],
+  ["identifier","browser"],
+  ["text"," "],
+  ["identifier","to"],
+  ["text"," "],
+  ["identifier","current"],
+  ["text"," "],
+  ["identifier","branch"]
 ],[
    "start",
-  ["comment","# Repo formats:"]
+  ["text","# "],
+  ["identifier","Repo"],
+  ["text"," "],
+  ["identifier","formats"],
+  ["text",":"]
 ],[
    "start",
-  ["comment","# ssh   git@github.com:richoH/gh_pr.git"]
+  ["text","# "],
+  ["identifier","ssh"],
+  ["text","   "],
+  ["identifier","git"],
+  ["text","@"],
+  ["identifier","github"],
+  ["text","."],
+  ["identifier","com"],
+  ["text",":"],
+  ["identifier","richoH"],
+  ["keyword.operator","/"],
+  ["identifier","gh_pr"],
+  ["text","."],
+  ["identifier","git"]
 ],[
    "start",
-  ["comment","# http  https://richoH@github.com/richoH/gh_pr.git"]
+  ["text","# "],
+  ["identifier","http"],
+  ["text","  "],
+  ["identifier","https"],
+  ["text",":"],
+  ["keyword.operator","//"],
+  ["identifier","richoH"],
+  ["text","@"],
+  ["identifier","github"],
+  ["text","."],
+  ["identifier","com"],
+  ["keyword.operator","/"],
+  ["identifier","richoH"],
+  ["keyword.operator","/"],
+  ["identifier","gh_pr"],
+  ["text","."],
+  ["identifier","git"]
 ],[
    "start",
-  ["comment","# git   git://github.com/richoH/gh_pr.git"]
+  ["text","# "],
+  ["identifier","git"],
+  ["text","   "],
+  ["identifier","git"],
+  ["text",":"],
+  ["keyword.operator","//"],
+  ["identifier","github"],
+  ["text","."],
+  ["identifier","com"],
+  ["keyword.operator","/"],
+  ["identifier","richoH"],
+  ["keyword.operator","/"],
+  ["identifier","gh_pr"],
+  ["text","."],
+  ["identifier","git"]
 ],[
    "start"
 ],[
@@ -267,6 +333,28 @@
 ],[
    "start",
   ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","x="],
+  ["paren.lparen","("],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["support.function.builtin","echo"],
+  ["text"," $"],
+  ["paren.lparen","{"],
+  ["text","#"],
+  ["identifier","x"],
+  ["paren.lparen","["],
+  ["text","@"],
+  ["paren.rparen","]}"]
 ],[
    "start"
 ],[

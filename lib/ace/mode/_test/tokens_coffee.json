@@ -466,14 +466,17 @@
    "start",
   ["string.regex","    ///imgy"]
 ],[
-   "start",
+   "js",
   ["text","    "],
   ["keyword","this"],
   ["text"," "],
   ["keyword","isnt"],
   ["punctuation.operator",":"],
   ["text"," "],
-  ["string","`just JavaScript`"]
+  ["string","`just "]
+],[
+   "start",
+  ["string","       JavaScript`"]
 ],[
    "start",
   ["text","    "],

@@ -1,4 +1,196 @@
 [[
+   "start",
+  ["comment","//test: tokenize 'standard' functions"]
+],[
+   "start",
+  ["identifier","string"],
+  ["punctuation.operator","."],
+  ["support.function","charCodeAt"],
+  ["paren.lparen","("],
+  ["constant.numeric","23"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["variable.language","document"],
+  ["punctuation.operator","."],
+  ["support.function.dom","getElementById"],
+  ["paren.lparen","("],
+  ["string","'test'"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","'Here it is'"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["string","\";"]
+],[
+   "start",
+  ["identifier","test"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["comment.doc","/**tokenize doc*/"],
+  ["text"," "],
+  ["identifier","comment"]
+],[
+   "start",
+  ["comment.doc","/**tokenize doc comment with "],
+  ["comment.doc.tag","@tag"],
+  ["comment.doc"," {}*/"]
+],[
+   "start",
+  ["comment","//test: tokenize parens"]
+],[
+   "regex_allowed",
+  ["text","    "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","line"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"[{( )}]\""],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["comment","//test tokenize arithmetic expression which looks like a regexp"]
+],[
+   "start",
+  ["identifier","a"],
+  ["keyword.operator","/"],
+  ["identifier","b"],
+  ["keyword.operator","/"],
+  ["identifier","c"]
+],[
+   "start",
+  ["identifier","a"],
+  ["keyword.operator","/="],
+  ["identifier","b"],
+  ["keyword.operator","/"],
+  ["identifier","c"]
+],[
+   "start",
+  ["comment","//test tokenize reg exps"]
+],[
+   "start",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["string.regexp","/b/g"]
+],[
+   "start",
+  ["identifier","a"],
+  ["keyword.operator","+"],
+  ["string.regexp","/b/g"]
+],[
+   "start",
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["string.regexp","/2 "],
+  ["constant.language.escape","+"],
+  ["string.regexp"," 1/b"]
+],[
+   "start",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["string.regexp","/a/"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["string.regexp","/a/"]
+],[
+   "start",
+  ["keyword","case"],
+  ["text"," "],
+  ["string.regexp","/a/"],
+  ["punctuation.operator","."],
+  ["support.function","test"],
+  ["paren.lparen","("],
+  ["identifier","c"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["comment","//test tokenize multi-line comment containing a single line comment"]
+],[
+   "start",
+  ["identifier","noRegex"]
+],[
+   "start",
+  ["comment","/* foo // bar */"]
+],[
+   "regex_allowed",
+  ["identifier","canBeRegex"],
+  ["punctuation.operator",";"]
+],[
+   "regex_allowed",
+  ["comment","/* foo // bar */"]
+],[
+   "start",
+  ["comment","// test tokenize identifier with umlauts"]
+],[
+   "start",
+  ["identifier","fu"],
+  ["punctuation.operator","?"],
+  ["identifier","e"]
+],[
+   "start",
+  ["comment","// test // is not a regexp"]
+],[
+   "start",
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["comment","// 123"]
+],[
+   "start",
+  ["comment","//test skipping escaped chars"]
+],[
+   "start",
+  ["string","'Meh"],
+  ["constant.language.escape","\\\\"],
+  ["string","nNeh'"]
+],[
+   "start",
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","'"],
+  ["constant.language.escape","\\\\"],
+  ["string","u1232Feh'"]
+],[
+   "qqstring",
+  ["string","\"test multiline\\"]
+],[
+   "start",
+  ["string"," strings\""]
+],[
+   "start",
+  ["identifier","a"],
+  ["keyword.operator","="],
+  ["text","'"]
+],[
+   "qqstring",
+  ["identifier","b"],
+  ["keyword.operator","="],
+  ["string","\"\\"]
+],[
+   "start",
+  ["string","still a string"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
    "regex_allowed",
   ["storage.type","function"],
   ["text"," "],
