@@ -1,106 +1,55 @@
 [[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","html"],
-  ["meta.tag.r",">"]
-],[
-   "start",
-  ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","head"],
-  ["meta.tag.r",">"]
-],[
-   "start"
-],[
-   "css-start",
-  ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.style","style"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
-  ["string","\"text/css\""],
-  ["meta.tag.r",">"]
-],[
-   "css-ruleset",
-  ["text","        "],
-  ["variable",".text-layer"],
-  ["text"," "],
-  ["paren.lparen","{"]
-],[
-   "css-ruleset",
-  ["text","            "],
-  ["support.type","font-family"],
-  ["text",": Monaco, "],
-  ["string","\"Courier New\""],
-  ["text",", "],
-  ["support.constant.fonts","monospace"],
-  ["text",";"]
-],[
-   "css-ruleset",
-  ["text","            "],
-  ["support.type","font-size"],
-  ["text",": "],
-  ["constant.numeric","12"],
-  ["keyword","px"],
-  ["text",";"]
-],[
-   "css-ruleset",
-  ["text","            "],
-  ["support.type","cursor"],
-  ["text",": "],
-  ["support.constant","text"],
-  ["text",";"]
-],[
-   "css-start",
-  ["text","        "],
-  ["paren.rparen","}"]
-],[
-   "start",
-  ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.style","style"],
-  ["meta.tag.r",">"]
-],[
-   "start"
-],[
-   "start",
-  ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","head"],
-  ["meta.tag.r",">"]
-],[
-   "start",
-  ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","body"],
-  ["meta.tag.r",">"]
-],[
-   "start",
-  ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h1"],
-  ["text"," "],
-  ["entity.other.attribute-name","style"],
-  ["keyword.operator","="],
-  ["string","\"color:red\""],
-  ["meta.tag.r",">"],
+  ["text","tokenize Curly template"],
   ["variable","{{"],
-  ["text","author_name"],
-  ["variable","}}"],
+  ["text","test"],
+  ["variable","}}"]
+],[
+   "start",
+  ["text","tokenize embedded script"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.script","script"],
+  ["text"," "],
+  ["entity.other.attribute-name","a"],
+  ["keyword.operator","="],
+  ["string","'a'"],
+  ["meta.tag.r",">"],
+  ["storage.type","var"],
   ["meta.tag","</"],
-  ["meta.tag.tag-name","h1"],
+  ["meta.tag.tag-name.script","script"],
+  ["meta.tag.r",">"],
+  ["text","'123'"]
+],[
+   "start",
+  ["text","tokenize multiline attribute value with double quotes"]
+],[
+   "tag_qqstring",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","\"abc{{xyz}}"]
+],[
+   "start",
+  ["string","def\""],
   ["meta.tag.r",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","body"],
-  ["meta.tag.r",">"]
+  ["text","tokenize multiline attribute value with single quotes"]
+],[
+   "tag_qstring",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","'abc"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","html"],
+  ["string","def\\\"'"],
   ["meta.tag.r",">"]
 ],[
    "start"

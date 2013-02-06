@@ -118,7 +118,7 @@ function run() {
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
-    src += ';require(["ace/mode/new"], continueRun, function(e){console.log(e);require.undef("ace/mode/new")})';
+    src += ';require(["ace/mode/new"], continueRun, function(e){console.log(e);window.require.undef("ace/mode/new")})';
     try {
         eval(src);
     } catch(e) {

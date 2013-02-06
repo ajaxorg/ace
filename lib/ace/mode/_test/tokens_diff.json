@@ -1,6 +1,7 @@
 [[
    "start",
-  ["variable","diff --git"],
+  ["variable","diff"],
+  ["variable"," --git"],
   ["keyword"," a/lib/ace/edit_session.js"],
   ["variable"," b/lib/ace/edit_session.js"]
 ],[
@@ -52,7 +53,8 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["invalid"," "]
 ],[
    "start"
 ],[
@@ -84,7 +86,8 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["invalid"," "]
 ],[
    "start"
 ],[
@@ -191,7 +194,8 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["invalid"," "]
 ],[
    "start"
 ],[
@@ -201,7 +205,8 @@
    "start"
 ],[
    "start",
-  ["variable","diff --git"],
+  ["variable","diff"],
+  ["variable"," --git"],
   ["keyword"," a/lib/ace/editor.js"],
   ["variable"," b/lib/ace/editor.js"]
 ],[
@@ -259,7 +264,8 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["invalid"," "]
 ],[
    "start"
 ],[
@@ -291,7 +297,8 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["invalid"," "]
 ],[
    "start"
 ],[
@@ -343,7 +350,8 @@
    "start"
 ],[
    "start",
-  ["variable","diff --git"],
+  ["variable","diff"],
+  ["variable"," --git"],
   ["keyword"," a/lib/ace/search_highlight.js"],
   ["variable"," b/lib/ace/search_highlight.js"]
 ],[

@@ -1,11 +1,11 @@
 [[
-   "qcomment",
+   ["bracketedComment",4,"start"],
   ["comment","--[[--"]
 ],[
-   "qcomment",
+   ["bracketedComment",4,"start"],
   ["comment","num_args takes in 5.1 byte code and extracts the number of arguments"]
 ],[
-   "qcomment",
+   ["bracketedComment",4,"start"],
   ["comment","from its function header."]
 ],[
    "start",
@@ -280,16 +280,16 @@
 ],[
    "start"
 ],[
-   "qstring3",
+   ["bracketedString",5,"start"],
   ["support.function","print"],
   ["paren.lparen","("],
-  ["string","[===["]
+  ["comment","[===["]
 ],[
-   "qstring3",
-  ["string","    blah blah %s, (%d %d)"]
+   ["bracketedString",5,"start"],
+  ["comment","    blah blah %s, (%d %d)"]
 ],[
    "start",
-  ["string","]===]"],
+  ["comment","]===]"],
   ["keyword.operator","%"],
   ["paren.lparen","{"],
   ["string","\"blah\""],
@@ -301,10 +301,10 @@
 ],[
    "start"
 ],[
-   "qcomment1",
+   ["bracketedComment",5,"start"],
   ["comment","--[=[--"]
 ],[
-   "qcomment1",
+   ["bracketedComment",5,"start"],
   ["comment","table.maxn is deprecated, use # instead."]
 ],[
    "start",

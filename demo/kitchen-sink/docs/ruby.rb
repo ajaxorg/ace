@@ -20,4 +20,16 @@ class Range
   end
 end
 
-{:id => 34, :sdfasdfasdf => "asdasdads"}
+{:id => 34, :key => "value"}
+
+
+    herDocs = [<<'FOO', <<BAR, <<-BAZ, <<-`EXEC`] #comment
+  FOO #{literal}
+FOO
+  BAR #{fact(10)}
+BAR
+  BAZ indented
+    BAZ
+        echo hi
+    EXEC
+puts herDocs
