@@ -90,6 +90,7 @@ var docs = {
     "docs/latex.tex": {name: "LaTeX", wrapped: true},
     "docs/less.less": "LESS",
     "docs/lisp.lisp": "Lisp",
+    "docs/scheme.scm": "Scheme",
     "docs/liquid.liquid": "Liquid",
     "docs/lua.lua": "Lua",
     "docs/lucene.lucene": "Lucene",
