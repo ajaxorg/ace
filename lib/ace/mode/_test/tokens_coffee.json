@@ -28,9 +28,9 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["variable.parameter","args"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{args}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -40,9 +40,9 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["variable.parameter","a1, a2"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{a1, a2}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -52,9 +52,9 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["variable.parameter","@a1, a2"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{@a1, a2}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -62,11 +62,11 @@
   ["text","    "],
   ["entity.name.function","foo"],
   ["text"," "],
-  ["punctuation.operator",":"],
+  ["keyword.operator",":"],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["variable.parameter","args"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{args}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -76,22 +76,21 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["variable.parameter","args"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{args}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
    "start",
   ["text","    "],
-  ["identifier","foo"],
+  ["entity.name.function","foo"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["constant.numeric","0"],
-  ["identifier","abc"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{0abc}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -123,22 +122,27 @@
 ],[
    "start",
   ["text","    "],
-  ["identifier","foo"],
+  ["entity.name.function","foo"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["comment","#abc}) ->"]
+  ["paren.lparen","("],
+  ["variable.parameter","{#abc}"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
 ],[
    "start",
   ["text","    "],
-  ["identifier","foo"],
+  ["entity.name.function","foo"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["identifier","abc"],
-  ["comment","#}) ->"]
+  ["paren.lparen","("],
+  ["variable.parameter","{abc#}"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","->"]
 ],[
    "start",
   ["text","    "],
@@ -167,15 +171,13 @@
 ],[
    "start",
   ["text","    "],
-  ["identifier","foo"],
+  ["entity.name.function","foo"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["identifier","a"],
-  ["paren.lparen","{"],
-  ["identifier","bc"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{a{bc}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -185,8 +187,9 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -196,9 +199,9 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["text"," "],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{ }"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -206,10 +209,11 @@
   ["text","    "],
   ["entity.name.function","foo"],
   ["text"," "],
-  ["punctuation.operator",":"],
+  ["keyword.operator",":"],
   ["text"," "],
-  ["paren.lparen","({"],
-  ["paren.rparen","})"],
+  ["paren.lparen","("],
+  ["variable.parameter","{}"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -294,7 +298,7 @@
   ["keyword.operator","="],
   ["text"," "],
   ["paren.lparen","("],
-  ["text"," "],
+  ["variable.parameter"," "],
   ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
@@ -303,10 +307,10 @@
   ["text","    "],
   ["entity.name.function","foo"],
   ["text"," "],
-  ["punctuation.operator",":"],
+  ["keyword.operator",":"],
   ["text"," "],
   ["paren.lparen","("],
-  ["text"," "],
+  ["variable.parameter"," "],
   ["paren.rparen",")"],
   ["text"," "],
   ["storage.type","->"]
@@ -345,7 +349,7 @@
   ["text","    "],
   ["entity.name.function","foo"],
   ["text"," "],
-  ["punctuation.operator",":"],
+  ["keyword.operator",":"],
   ["text"," "],
   ["storage.type","->"]
 ],[
@@ -358,7 +362,7 @@
   ["identifier","foo"],
   ["text"," "],
   ["identifier","bar"],
-  ["punctuation.operator",":"],
+  ["keyword.operator",":"],
   ["text"," "],
   ["constant.numeric","1"],
   ["punctuation.operator",","],
@@ -422,7 +426,9 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["string","\"#{ 22 / 7 + {x: \""],
+  ["string.start","\""],
+  ["string","#{ 22 / 7 + {x: "],
+  ["string.end","\""],
   ["comment","#{a + b}\"} + 2}\""]
 ],[
    "qqdoc",
@@ -471,7 +477,7 @@
   ["keyword","this"],
   ["text"," "],
   ["keyword","isnt"],
-  ["punctuation.operator",":"],
+  ["keyword.operator",":"],
   ["text"," "],
   ["string","`just "]
 ],[

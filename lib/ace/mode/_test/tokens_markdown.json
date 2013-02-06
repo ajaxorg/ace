@@ -38,5 +38,38 @@
    "start",
   ["text","#  #"]
 ],[
+   "allowBlock"
+],[
+   "start",
+  ["text","test links  "],
+  ["text","["],
+  ["string","Cloud9 IDE"],
+  ["text","]("],
+  ["markup.underline","http://www.c9.io/"],
+  ["text",")"],
+  ["text"," "]
+],[
+   "listblock",
+  ["markup.list","* "],
+  ["text","["],
+  ["string","demo"],
+  ["text","]("],
+  ["markup.underline","http://ajaxorg.github.com/ace/"],
+  ["text",")"],
+  ["markup.list"," "]
+],[
+   "listblock",
+  ["markup.list","in lists"]
+],[
    "start"
+],[
+   "start",
+  ["text","in plain text "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","b"],
+  ["meta.tag.r",">"],
+  ["text","http://ace.ajaxorg.com"],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","b"],
+  ["meta.tag.r",">"]
 ]]

@@ -30,8 +30,7 @@
   ["identifier","distmap"],
   ["paren.rparen","}"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","graph"],
+  ["variable.instance","$graph"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
@@ -43,8 +42,7 @@
   ["text"," "],
   ["identifier","dist"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","vertex"],
+  ["variable.instance","$vertex"],
   ["text"," "],
   ["identifier","Inf"]
 ],[
@@ -56,14 +54,14 @@
   ["text"," "],
   ["identifier","path"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","vertex"],
+  ["variable.instance","$vertex"],
   ["text"," "],
   ["paren.lparen","{"],
-  ["text","}"]
+  ["paren.rparen","}"]
 ],[
    "commandItem",
-  ["text","    }"]
+  ["text","    "],
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","    "],
@@ -73,8 +71,7 @@
   ["text"," "],
   ["identifier","dist"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","origin"],
+  ["variable.instance","$origin"],
   ["text"," 0"]
 ],[
    "start",
@@ -85,14 +82,12 @@
   ["text"," "],
   ["identifier","path"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","origin"],
+  ["variable.instance","$origin"],
   ["text"," "],
   ["paren.lparen","["],
   ["keyword","list"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","origin"],
+  ["variable.instance","$origin"],
   ["paren.rparen","]"]
 ],[
    "commandItem",
@@ -108,8 +103,7 @@
   ["text"," "],
   ["identifier","size"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","graph"],
+  ["variable.instance","$graph"],
   ["paren.rparen","]}"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -138,8 +132,7 @@
   ["support.function","-"],
   ["paren.rparen","}"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","graph"],
+  ["variable.instance","$graph"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
@@ -148,8 +141,7 @@
   ["keyword","if"],
   ["text"," "],
   ["paren.lparen","{"],
-  ["variable.instancce","$"],
-  ["variable.instance","d"],
+  ["variable.instance","$d"],
   ["text"," "],
   ["support.function",">"],
   ["text"," "],
@@ -163,11 +155,9 @@
   ["text"," "],
   ["identifier","get"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","dist"],
+  ["variable.instance","$dist"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","uu"],
+  ["variable.instance","$uu"],
   ["paren.rparen","]]}"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -178,8 +168,7 @@
   ["text"," "],
   ["identifier","u"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","uu"]
+  ["variable.instance","$uu"]
 ],[
    "start",
   ["text","\t\t"],
@@ -187,14 +176,15 @@
   ["text"," "],
   ["identifier","d"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","dd"]
+  ["variable.instance","$dd"]
 ],[
    "commandItem",
-  ["text","\t    }"]
+  ["text","\t    "],
+  ["paren.rparen","}"]
 ],[
    "commandItem",
-  ["text","\t}"]
+  ["text","\t"],
+  ["paren.rparen","}"]
 ],[
    "commandItem",
   ["text"," "]
@@ -208,8 +198,7 @@
   ["keyword","if"],
   ["text"," "],
   ["paren.lparen","{"],
-  ["variable.instancce","$"],
-  ["variable.instance","d"],
+  ["variable.instance","$d"],
   ["text"," "],
   ["support.function","=="],
   ["text"," "],
@@ -245,11 +234,9 @@
   ["text"," "],
   ["identifier","get"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","graph"],
+  ["variable.instance","$graph"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","u"],
+  ["variable.instance","$u"],
   ["paren.rparen","]"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -264,11 +251,9 @@
   ["text"," "],
   ["identifier","exists"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","graph"],
+  ["variable.instance","$graph"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","v"],
+  ["variable.instance","$v"],
   ["paren.rparen","]}"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -283,13 +268,11 @@
   ["keyword","expr"],
   ["text"," "],
   ["paren.lparen","{"],
-  ["variable.instancce","$"],
-  ["variable.instance","d"],
+  ["variable.instance","$d"],
   ["text"," "],
   ["support.function","+"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","dd"],
+  ["variable.instance","$dd"],
   ["paren.rparen","}]"]
 ],[
    "commandItem",
@@ -297,8 +280,7 @@
   ["keyword","if"],
   ["text"," "],
   ["paren.lparen","{"],
-  ["variable.instancce","$"],
-  ["variable.instance","alt"],
+  ["variable.instance","$alt"],
   ["text"," "],
   ["support.function","<"],
   ["text"," "],
@@ -307,11 +289,9 @@
   ["text"," "],
   ["identifier","get"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","dist"],
+  ["variable.instance","$dist"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","v"],
+  ["variable.instance","$v"],
   ["paren.rparen","]}"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -324,11 +304,9 @@
   ["text"," "],
   ["identifier","dist"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","v"],
+  ["variable.instance","$v"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","alt"]
+  ["variable.instance","$alt"]
 ],[
    "start",
   ["text","\t\t    "],
@@ -338,8 +316,7 @@
   ["text"," "],
   ["identifier","path"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","v"],
+  ["variable.instance","$v"],
   ["text"," "],
   ["paren.lparen","["],
   ["keyword","list"],
@@ -350,25 +327,25 @@
   ["text"," "],
   ["identifier","get"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","path"],
+  ["variable.instance","$path"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","u"],
+  ["variable.instance","$u"],
   ["paren.rparen","]"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","v"],
+  ["variable.instance","$v"],
   ["paren.rparen","]"]
 ],[
    "commandItem",
-  ["text","\t\t}"]
+  ["text","\t\t"],
+  ["paren.rparen","}"]
 ],[
    "commandItem",
-  ["text","\t    }"]
+  ["text","\t    "],
+  ["paren.rparen","}"]
 ],[
    "commandItem",
-  ["text","\t}"]
+  ["text","\t"],
+  ["paren.rparen","}"]
 ],[
    "commandItem",
   ["text"," "]
@@ -385,11 +362,11 @@
   ["text"," "],
   ["identifier","graph"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","u"]
+  ["variable.instance","$u"]
 ],[
    "commandItem",
-  ["text","    }"]
+  ["text","    "],
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","    "],
@@ -398,13 +375,11 @@
   ["paren.lparen","["],
   ["keyword","list"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","dist"],
+  ["variable.instance","$dist"],
   ["text"," "],
-  ["variable.instancce","$"],
-  ["variable.instance","path"],
+  ["variable.instance","$path"],
   ["paren.rparen","]"]
 ],[
    "commandItem",
-  ["text","}"]
+  ["paren.rparen","}"]
 ]]

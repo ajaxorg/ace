@@ -62,7 +62,8 @@ var modesByName = {
     jsx:        ["JSX"          , "jsx"],
     latex:      ["LaTeX"        , "latex|tex|ltx|bib"],
     less:       ["LESS"         , "less"],
-    lisp:       ["Lisp"         , "lisp|scm|rkt"],
+    lisp:       ["Lisp"         , "lisp"],
+    scheme:     ["Scheme"       , "scm|rkt"],
     liquid:     ["Liquid"       , "liquid"],
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
@@ -91,6 +92,7 @@ var modesByName = {
     tex:        ["Tex"          , "tex"],
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
+    tm_snippet: ["tmSnippet"    , "tmSnippet"],
     typescript: ["Typescript"   , "typescript|ts|str"],
     vbscript:   ["VBScript"     , "vbs"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],

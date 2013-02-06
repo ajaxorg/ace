@@ -1,6 +1,9 @@
 [[
    "start",
-  ["text","tokenize Curly template{{test}}"]
+  ["text","tokenize Curly template"],
+  ["variable","{{"],
+  ["text","test"],
+  ["variable","}}"]
 ],[
    "start",
   ["text","tokenize embedded script"]
