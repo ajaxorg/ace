@@ -2,7 +2,8 @@
    "start",
   ["text","("],
   ["storage.type.function-type.scheme","define"],
-  ["text"," ("],
+  ["text"," "],
+  ["text","("],
   ["identifier","prompt-for-cd"],
   ["text",")"]
 ],[
