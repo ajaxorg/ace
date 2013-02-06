@@ -20,12 +20,14 @@
 ],[
    "start",
   ["keyword","return"],
-  ["text"," <"],
+  ["text"," "],
+  ["text","<"],
   ["meta.tag","results"],
   ["text",">"]
 ],[
    "start",
-  ["text","  <"],
+  ["text","  "],
+  ["text","<"],
   ["meta.tag","message"],
   ["text",">"],
   ["lparen","{"],

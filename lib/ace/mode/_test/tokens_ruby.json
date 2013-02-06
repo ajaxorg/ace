@@ -1,154 +1,135 @@
 [[
    "start",
-  ["comment","#!/usr/bin/ruby"]
-],[
-   "start"
-],[
-   "start",
-  ["comment","# Program to find the factorial of a number"]
-],[
-   "start",
-  ["keyword","def"],
   ["text"," "],
-  ["identifier","fact"],
-  ["paren.lparen","("],
-  ["identifier","n"],
-  ["paren.rparen",")"]
-],[
-   "start",
-  ["text","    "],
-  ["keyword","if"],
-  ["text"," "],
-  ["identifier","n"],
-  ["text"," "],
-  ["keyword.operator","=="],
-  ["text"," "],
-  ["constant.numeric","0"]
-],[
-   "start",
-  ["text","        "],
-  ["constant.numeric","1"]
-],[
-   "start",
-  ["text","    "],
-  ["keyword","else"]
-],[
-   "start",
-  ["text","        "],
-  ["identifier","n"],
-  ["text"," "],
-  ["keyword.operator","*"],
-  ["text"," "],
-  ["identifier","fact"],
-  ["paren.lparen","("],
-  ["identifier","n"],
-  ["constant.numeric","-1"],
-  ["paren.rparen",")"]
-],[
-   "start",
-  ["text","    "],
-  ["keyword","end"]
-],[
-   "start",
-  ["keyword","end"]
-],[
-   "start"
-],[
-   "start",
-  ["support.function","puts"],
-  ["text"," "],
-  ["identifier","fact"],
-  ["paren.lparen","("],
-  ["support.class","ARGV"],
-  ["paren.lparen","["],
-  ["constant.numeric","0"],
-  ["paren.rparen","]"],
-  ["text","."],
-  ["identifier","to_i"],
-  ["paren.rparen",")"]
-],[
-   "start"
-],[
-   "start",
-  ["keyword","class"],
-  ["text"," "],
-  ["support.class","Range"]
+  ["comment","#test: symbol tokenizer"]
 ],[
    "start",
   ["text","  "],
-  ["keyword","def"],
-  ["text"," "],
-  ["identifier","to_json"],
-  ["paren.lparen","("],
-  ["keyword.operator","*"],
-  ["identifier","a"],
-  ["paren.rparen",")"]
+  ["paren.lparen","["],
+  ["constant.other.symbol.ruby",":@thing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":$thing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":_thing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":Thing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing1"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing_a"],
+  ["text",","]
+],[
+   "start",
+  ["text","              "],
+  ["constant.other.symbol.ruby",":THING"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing!"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing="],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing?"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":t?"],
+  ["text",","]
+],[
+   "start",
+  ["text","              :, :@, :"],
+  ["keyword.operator","$"],
+  ["text",", :"],
+  ["constant.numeric","1"],
+  ["text",", :1"],
+  ["identifier","thing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":th?"],
+  ["identifier","ing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thi="],
+  ["identifier","ng"],
+  ["text",", :1"],
+  ["identifier","thing"],
+  ["text",","]
+],[
+   "start",
+  ["text","            "],
+  ["constant.other.symbol.ruby",":th!"],
+  ["identifier","ing"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":thing"],
+  ["comment","#"]
 ],[
    "start",
   ["text","    "],
-  ["paren.lparen","{"]
-],[
-   "start",
-  ["text","      "],
-  ["string","'json_class'"],
-  ["text","   "],
-  ["punctuation.separator.key-value","=>"],
-  ["text"," "],
-  ["variable.language","self"],
-  ["text","."],
-  ["keyword","class"],
-  ["text","."],
-  ["identifier","name"],
-  ["text",", "],
-  ["comment","# = 'Range'"]
-],[
-   "start",
-  ["text","      "],
-  ["string","'data'"],
-  ["text","         "],
-  ["punctuation.separator.key-value","=>"],
-  ["text"," "],
-  ["paren.lparen","["],
-  ["text"," "],
-  ["identifier","first"],
-  ["text",", "],
-  ["identifier","last"],
-  ["text",", "],
-  ["identifier","exclude_end"],
-  ["text","? "],
   ["paren.rparen","]"]
 ],[
-   "start",
-  ["text","    "],
-  ["paren.rparen","}"],
-  ["text","."],
-  ["identifier","to_json"],
-  ["paren.lparen","("],
-  ["keyword.operator","*"],
-  ["identifier","a"],
-  ["paren.rparen",")"]
-],[
-   "start",
-  ["text","  "],
-  ["keyword","end"]
-],[
-   "start",
-  ["keyword","end"]
-],[
    "start"
 ],[
    "start",
-  ["paren.lparen","{"],
-  ["constant.other.symbol.ruby",":id"],
   ["text"," "],
-  ["punctuation.separator.key-value","=>"],
+  ["comment","#test: namespaces aren't symbols\" : function() {"]
+],[
+   "start",
+  ["text","   "],
+  ["support.class","Namespaced"],
+  ["text","::"],
+  ["support.class","Class"]
+],[
+   "start",
   ["text"," "],
-  ["constant.numeric","34"],
+  ["comment","#test: hex tokenizer "]
+],[
+   "start",
+  ["text","    "],
+  ["constant.numeric","0x9a"],
   ["text",", "],
-  ["constant.other.symbol.ruby",":sdfasdfasdf"],
+  ["constant.numeric","0XA1"],
+  ["text",", "],
+  ["constant.numeric","0x9_a"],
+  ["text",", 0"],
+  ["identifier","x"],
+  ["text",", 0"],
+  ["identifier","x_9a"],
+  ["text",", 0"],
+  ["identifier","x9a_"],
+  ["text",","]
+],[
+   "start",
   ["text"," "],
-  ["punctuation.separator.key-value","=>"],
-  ["text"," "],
-  ["string","\"asdasdads\""],
-  ["paren.rparen","}"]
+  ["comment","#test: float tokenizer"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["text",", "],
+  ["constant.numeric","+1"],
+  ["text",", "],
+  ["constant.numeric","-1"],
+  ["text",", "],
+  ["constant.numeric","12_345"],
+  ["text",", "],
+  ["constant.numeric","0.000_1"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","_"],
+  ["text",", "],
+  ["constant.numeric","3_1"],
+  ["text",", "],
+  ["constant.numeric","1_2"],
+  ["text",", 1"],
+  ["identifier","_"],
+  ["text","."],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text","."],
+  ["identifier","_1"],
+  ["paren.rparen","]"],
+  ["text",";"]
+],[
+   "start",
+  ["text"," "]
 ]]
