@@ -397,7 +397,9 @@ bindCheckbox("highlight_token", function(checked) {
 
 /************** dragover ***************************/
 event.addListener(container, "dragover", function(e) {
-    return event.preventDefault(e);
+    var types = e.dataTransfer.types;
+    if (types && Array.prototype.indexOf.call(types, 'Files') !== -1)
+        return event.preventDefault(e);
 });
 
 event.addListener(container, "drop", function(e) {
