@@ -53,6 +53,25 @@
 ],[
    "start"
 ],[
+   "directive",
+  ["keyword","#include"],
+  ["constant.other.multiline"," \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \"iostream\" \\"]
+],[
+   "directive",
+  ["constant.other.multiline","   \"string\" \\"]
+],[
+   "start",
+  ["constant.other","   <vector>"]
+],[
+   "start",
+  ["text","   "]
+],[
    "start",
   ["keyword.control","using"],
   ["text"," "],
