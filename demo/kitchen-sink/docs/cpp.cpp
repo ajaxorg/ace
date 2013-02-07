@@ -16,6 +16,12 @@
 #include <boost/asio/io_service.hpp>
 #include "boost/asio/io_service.hpp"
 
+#include \
+   \
+   "iostream" \
+   "string" \
+   <vector>
+   
 using namespace std;
 
 int main ()
