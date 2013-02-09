@@ -113,6 +113,7 @@ var docs = {
     "docs/abap.abap": "SAP - ABAP",
     "docs/scala.scala": "Scala",
     "docs/scss.scss": "SCSS",
+    "docs/sass.sass": "SASS",
     "docs/sh.sh": "SH",
     "docs/stylus.styl": "Stylus",
     "docs/sql.sql": {name: "SQL", wrapped: true},
