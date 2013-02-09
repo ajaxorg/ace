@@ -19,7 +19,35 @@
             border-bottom: solid 1px;
         }
         .separator-h {
-            padding: 0 20px;            
+            padding: 0 20px;
+        }
+        #closeBtn {
+            background: rgba(245, 146, 146, 0.5);
+            border: 1px solid #F48A8A;
+            border-radius: 50%;
+            padding: 7px;
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            z-index: 1000;
+        }
+        #closeBtn:hover {
+            background: rgba(245, 146, 146, 0.9);
+        }
+        #console{
+            /border: 1px solid lightblue;
+            bottom: 0;
+            height: 80px;
+            margin: 0 4%;
+            position: absolute;
+            width: 92%;
+            z-index: 1000;
+            box-shadow: 0 0 1px 2px gray
+        }
+        #consoleEditor{
+            height: 100%;
+            position: relative;
+            width: 100%;
         }
     </style>
     <link href="../doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
@@ -29,14 +57,17 @@
 <div id="header">
     <label for="modeEl">mode</label>
     <select id="modeEl" size="1"></select>
+    <input type="button" value="&#10227;" title="sync" id="syncToMode"></select>
     <span id="tablist"></span>
     <span class="separator-h"></span>
     <label for="autorunEl">live preview</label>
     <input type="checkbox" label="autorun" id="autorunEl" checked>
+    <span class="separator-h"></span>
+    <input type="button" value="measure speed" id="perfTest"></select>
 
 
     <div style='float:right'>
-        <label for="themeEl">Theme</label>      
+        <label for="themeEl">Theme</label>
         <select id="themeEl" size="1" value="textmate"></select>
         <span class="separator-h"></span>
         <label for="doc">Document</label>
@@ -44,6 +75,10 @@
     </div>
 </div>
 <div id="editor"></div>
+<div id="console" style="display:none">
+    <span id="closeBtn" onclick="this.parentNode.style.display='none'"></span>
+    <div id="consoleEditor"></div>
+</div>
 
 
 <script type="text/javascript">
