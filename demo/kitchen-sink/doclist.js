@@ -100,6 +100,7 @@ var docs = {
     "docs/objectivec.m": {name: "Objective-C"},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
+    "docs/pascal.pas": "Pascal",
     "docs/perl.pl": "Perl",
     "docs/pgsql.pgsql": {name: "pgSQL", wrapped: true},
     "docs/php.php": "PHP",
