@@ -70,7 +70,7 @@ var %language%HighlightRules = function() {
     this.$rules = 
         %languageTokens%
 
-    %respositoryRules%
+    %repositoryRules%
 };
 
 oop.inherits(%language%HighlightRules, TextHighlightRules);
