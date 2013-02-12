@@ -1,19 +1,19 @@
 [[
-   "regex_allowed",
+   "start",
   ["keyword.operator.ts","class"],
   ["text"," "],
   ["identifier","Greeter"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","\t"],
   ["variable.parameter.function.ts","greeting"],
   ["text",": "],
   ["variable.parameter.function.ts","string"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","\t"],
   ["keyword.operator.ts","constructor"],
   ["text"," "],
@@ -25,7 +25,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","\t\t"],
   ["storage.type.variable.ts","this."],
   ["identifier","greeting"],
@@ -35,19 +35,19 @@
   ["identifier","message"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","\t"],
   ["paren.rparen","}"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","\t"],
-  ["entity.name.function.ts","greet"],
+  ["identifier","greet"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","\t\t"],
   ["keyword","return"],
   ["text"," "],
@@ -59,17 +59,17 @@
   ["identifier","greeting"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","\t"],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"],
   ["text","   "]
 ],[
-   "start"
+   "no_regex"
 ],[
-   "regex_allowed",
+   "start",
   ["storage.type","var"],
   ["text"," "],
   ["identifier","greeter"],
@@ -86,7 +86,7 @@
 ],[
    "start"
 ],[
-   "start",
+   "no_regex",
   ["storage.type","var"],
   ["text"," "],
   ["identifier","button"],
@@ -100,7 +100,7 @@
   ["string","'button'"],
   ["paren.rparen",")"]
 ],[
-   "start",
+   "no_regex",
   ["identifier","button"],
   ["punctuation.operator","."],
   ["identifier","innerText"],
@@ -109,7 +109,7 @@
   ["text"," "],
   ["string","\"Say Hello\""]
 ],[
-   "regex_allowed",
+   "start",
   ["storage.type","button"],
   ["punctuation.operator","."],
   ["entity.name.function","onclick"],
@@ -122,7 +122,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "start",
+   "no_regex",
   ["text","\t"],
   ["support.function","alert"],
   ["paren.lparen","("],
@@ -131,12 +131,12 @@
   ["paren.rparen",")"],
   ["paren.rparen",")"]
 ],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"]
 ],[
-   "start"
+   "no_regex"
 ],[
-   "start",
+   "no_regex",
   ["variable.language","document"],
   ["punctuation.operator","."],
   ["identifier","body"],
@@ -146,20 +146,20 @@
   ["identifier","button"],
   ["paren.rparen",")"]
 ],[
-   "start"
+   "no_regex"
 ],[
-   "regex_allowed",
-  ["keyword.operator.ts","class"],
+   "start",
+  ["keyword","class"],
   ["text"," "],
   ["identifier","Snake"],
   ["text"," "],
-  ["keyword.operator.ts","extends"],
+  ["keyword","extends"],
   ["text"," "],
   ["identifier","Animal"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","   "],
   ["entity.name.function.ts","move"],
   ["paren.lparen","("],
@@ -167,7 +167,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["support.function","alert"],
   ["paren.lparen","("],
@@ -175,7 +175,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["storage.type.variable.ts","super"],
   ["text","("],
@@ -183,27 +183,27 @@
   ["text",")"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","   "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"]
 ],[
-   "start"
+   "no_regex"
 ],[
-   "regex_allowed",
-  ["keyword.operator.ts","class"],
+   "start",
+  ["keyword","class"],
   ["text"," "],
   ["identifier","Horse"],
   ["text"," "],
-  ["keyword.operator.ts","extends"],
+  ["keyword","extends"],
   ["text"," "],
   ["identifier","Animal"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","   "],
   ["entity.name.function.ts","move"],
   ["paren.lparen","("],
@@ -211,7 +211,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["support.function","alert"],
   ["paren.lparen","("],
@@ -219,7 +219,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["keyword.operator.ts","super"],
   ["punctuation.operator","."],
@@ -229,22 +229,23 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","   "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"]
 ],[
-   "start"
+   "no_regex"
 ],[
    "start",
-  ["keyword.operator.ts","module"],
+  ["identifier","module"],
   ["text"," "],
-  ["variable.parameter.function.ts","Sayings"],
-  ["text"," {"]
+  ["identifier","Sayings"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","    "],
   ["keyword.operator.ts","export"],
   ["text"," "],
@@ -254,14 +255,14 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","        "],
   ["variable.parameter.function.ts","greeting"],
   ["text",": "],
   ["variable.parameter.function.ts","string"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","        "],
   ["keyword.operator.ts","constructor"],
   ["text"," "],
@@ -273,7 +274,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","            "],
   ["storage.type.variable.ts","this."],
   ["identifier","greeting"],
@@ -283,19 +284,19 @@
   ["identifier","message"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","        "],
-  ["entity.name.function.ts","greet"],
+  ["identifier","greet"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","            "],
   ["keyword","return"],
   ["text"," "],
@@ -307,24 +308,25 @@
   ["identifier","greeting"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"]
 ],[
    "start",
-  ["keyword.operator.ts","module"],
+  ["identifier","module"],
   ["text"," "],
-  ["variable.parameter.function.ts","Mankala"],
-  ["text"," {"]
+  ["identifier","Mankala"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","   "],
   ["keyword.operator.ts","export"],
   ["text"," "],
@@ -334,7 +336,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["keyword.operator.ts","public"],
   ["text"," "],
@@ -345,7 +347,7 @@
   ["constant.language.boolean","false"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["keyword.operator.ts","public"],
   ["text"," "],
@@ -356,7 +358,7 @@
   ["constant.numeric","0"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["keyword.operator.ts","public"],
   ["text"," "],
@@ -367,7 +369,7 @@
   ["constant.numeric","0"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["keyword.operator.ts","public"],
   ["text"," "],
@@ -380,7 +382,7 @@
 ],[
    "start"
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
   ["keyword.operator.ts","public"],
   ["text"," "],
@@ -390,7 +392,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["storage.type.variable.ts","this."],
   ["identifier","turnContinues"],
@@ -400,7 +402,7 @@
   ["constant.language.boolean","false"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["storage.type.variable.ts","this."],
   ["identifier","seedStoredCount"],
@@ -410,7 +412,7 @@
   ["constant.numeric","0"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["storage.type.variable.ts","this."],
   ["identifier","capturedCount"],
@@ -420,7 +422,7 @@
   ["constant.numeric","0"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["storage.type.variable.ts","this."],
   ["identifier","spaceCaptured"],
@@ -430,23 +432,23 @@
   ["identifier","NoSpace"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","       "],
   ["paren.rparen","}"]
 ],[
-   "start"
+   "no_regex"
 ],[
-   "regex_allowed",
+   "start",
   ["text","       "],
-  ["keyword.operator.ts","public"],
+  ["keyword","public"],
   ["text"," "],
-  ["entity.name.function.ts","toString"],
+  ["identifier","toString"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["storage.type","var"],
   ["text"," "],
@@ -457,7 +459,7 @@
   ["string","\"\""],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["keyword","if"],
   ["text"," "],
@@ -468,7 +470,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","               "],
   ["identifier","stringBuilder"],
   ["text"," "],
@@ -477,11 +479,11 @@
   ["string","\" turn continues,\""],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","           "],
   ["paren.rparen","}"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["identifier","stringBuilder"],
   ["text"," "],
@@ -495,7 +497,7 @@
   ["identifier","seedStoredCount"],
   ["punctuation.operator",";"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["keyword","if"],
   ["text"," "],
@@ -510,7 +512,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","               "],
   ["identifier","stringBuilder"],
   ["text"," "],
@@ -533,25 +535,25 @@
   ["identifier","spaceCaptured"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","           "],
   ["paren.rparen","}"]
 ],[
-   "regex_allowed",
+   "start",
   ["text","           "],
   ["keyword","return"],
   ["text"," "],
   ["identifier","stringBuilder"],
   ["punctuation.operator",";"]
 ],[
-   "start",
+   "no_regex",
   ["text","       "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["text","   "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"]
 ]]
