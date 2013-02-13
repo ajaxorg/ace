@@ -269,9 +269,6 @@ function getWriteFilters(options, projectType) {
     if (options.filters)
         filters = filters.concat(options.filters);
 
-    if (projectType == "worker")
-        return filters;
-
     if (options.noconflict)
         filters.push(namespace(options.ns));
 
