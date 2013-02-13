@@ -5,25 +5,18 @@ body {
     font-family: Helvetica, Arial;
 }
 
-#embed_ace_wrapper {
-    height: 525px;
-}
 
-.ace_editor_wrapper {
+
+#ace_editor_demo, #embedded_ace_code {
     height: 275px;
-    position: relative;
     border: 1px solid #DDD;
     border-radius: 4px;
     border-bottom-right-radius: 0px;
     margin-top: 5px;
 }
 
-#ace_editor_demo, #embedded_ace_code {
-    left: 0px;
-    top: 0px;
-    bottom: 1px;
-    right: 1px;
-    background: #fff;
+#embedded_ace_code {
+    height: 525px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -199,7 +192,7 @@ UL{
 }
 
 .menu, .site-menu {
-    padding:23px 0 0 24px;
+    padding: 25px 0 0 35px;
 }
 
 UL.content-list {
@@ -213,8 +206,8 @@ UL.content-list li {
 }
 
 ul.menu-list {
-    padding: 0;
-    margin: 15px 0 20px 0;
+    padding: 15px 0;
+    margin: 0 0 20px 0;
     list-style-type: none;
     line-height: 16px;
     overflow: auto;
@@ -242,7 +235,7 @@ ul.menu-list li {
     -webkit-transition: box-shadow 0.4s;
     -moz-transition: box-shadow 0.4s;
     border: 1px solid #999;
-    background-image:     -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),					
+    background-image:   -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),					
 						-webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),					
 						-webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
 						
@@ -250,7 +243,7 @@ ul.menu-list li {
 														hsl(0,0%,90%) 47%, 
 														hsl(0,0%,78%) 53%,
 														hsl(0,0%,70%)100%);
-    background-image:     -moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),    				
+    background-image:   -moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),    				
 						-moz-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),					
 						-moz-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
 						
@@ -475,19 +468,25 @@ p.highlight_note a {
     color: #537CC7;
 }
 
-.apiIntro {
-    padding-left: 15px;
-    padding-bottom: 10px;
-}
-
 .prod_no_image {
     position: relative; left: -10px; top: -12px;
 }
 
-#sidebarContainer {
-    margin: 0px 20px 0 15px;
-}
 
 #api {
     padding: 0;
+}
+
+/*https://github.com/twitter/bootstrap/issues/5262*/
+img {
+    max-width: none;
+}
+
+.text-logo{
+    color: black;
+    font-size: 24px;
+    font-weight: lighter;
+    margin-top: 23px;
+    text-align: center;
+    text-shadow: 1px 17px 2px gray, 1px 1px 2px gray;
 }

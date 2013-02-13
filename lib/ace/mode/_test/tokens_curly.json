@@ -1,0 +1,56 @@
+[[
+   "start",
+  ["text","tokenize Curly template"],
+  ["variable","{{"],
+  ["text","test"],
+  ["variable","}}"]
+],[
+   "start",
+  ["text","tokenize embedded script"]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.script","script"],
+  ["text"," "],
+  ["entity.other.attribute-name","a"],
+  ["keyword.operator","="],
+  ["string","'a'"],
+  ["meta.tag.r",">"],
+  ["storage.type","var"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.script","script"],
+  ["meta.tag.r",">"],
+  ["text","'123'"]
+],[
+   "start",
+  ["text","tokenize multiline attribute value with double quotes"]
+],[
+   "tag_qqstring",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","\"abc{{xyz}}"]
+],[
+   "start",
+  ["string","def\""],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","tokenize multiline attribute value with single quotes"]
+],[
+   "tag_qstring",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator","="],
+  ["string","'abc"]
+],[
+   "start",
+  ["string","def\\\"'"],
+  ["meta.tag.r",">"]
+],[
+   "start"
+]]

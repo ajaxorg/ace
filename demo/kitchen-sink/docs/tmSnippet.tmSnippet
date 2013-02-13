@@ -1,0 +1,19 @@
+$$------------------------------------
+tabTrigger: t
+name: Heading 3
+scope: language
+content: -----------------------------
+\begin{${1:documnet}}
+    ${2:$TM_SELECTED_TEXT:some latex}
+    ${3:$TM_SELECTED_TEXT/a/b/c}
+    ${4:${TM_SELECTED_TEXT/(.)/\\u$1/g:7}}
+\end{$1}
+$0\\$$
+$$------------------------------------
+tabTrigger: ^3
+name: Heading 3
+scope: language
+content: -----------------------------
+
+${TM_CURRENT_LINE/./^/g}
+$$------------------------------------
