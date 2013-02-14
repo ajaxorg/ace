@@ -1,10 +1,10 @@
 
-<div id="documentation" class="span8">
+<div id="documentation" class="span9">
   <div class="classContent">
     <div class="membersBackground"></div>
     <div class=" members pos0">
       <div class=" membersContent pos0">
-        <h1 class="memberHeader"><span class="name">Search<span class="editInC9"> <a href='http://c9.io/open/git/?url=git%3A%2F%2Fgithub.com%2Fajaxorg%2Face.git' title='Edit in Cloud9 IDE'>[edit]</a></span></span>
+        <h1 class="memberHeader"><span class="name">Search</span>
         </h1>
         <ul data-tabs="tabs" class="nav tabs pos0">
           <li data-dropdown="dropdown" class="dropdown">
@@ -67,7 +67,7 @@
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="Search.new" class="member-name methodClicker">Search</span></li>
+                  <li class="signature-call"><span class="constructorIdentifier">new </span><span id="Search.new" class="member-name methodClicker">Search</span><span class="emptyArgumentList">()</span></li>
                 </ul>
                 <ul class="metaInfo">
                 </ul>
@@ -91,7 +91,6 @@
 <li><code>skipCurrent</code>: Whether or not to include the current line in the search. Default to <code>false</code>.</li>
 </ul>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
             </div>
           </div>
         </div>
@@ -137,7 +136,12 @@
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span id="Search.findAll" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">findAll</span></span>(<span class="sigArgList"><a href="edit_session.html" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session</span>)</li>
+                  <li class="signature-call"><span id="Search.findAll" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">findAll</span></span>(<span class="sigArgList"><a href="edit_session.html" class="argument methodClicker" title="EditSession (class)" data-id="EditSession">EditSession</a> session</span>)
+                    <li class="signature-returns">
+                      <ul class="argument-types">
+                        <li class="argument-type"><a href="range.html" class="returnType " title="Range (class)" data-id="Range">Range</a></li>
+                      </ul>
+                    </li></li>
                 </ul>
                 <ul class="metaInfo">
                 </ul>
@@ -164,10 +168,10 @@
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span id="Search.getOptions" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">getOptions</span></span>
+                  <li class="signature-call"><span id="Search.getOptions" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">getOptions</span></span><span class="emptyArgumentList">()</span>
                     <li class="signature-returns">
                       <ul class="argument-types">
-                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="returnType " title="Object" data-id="Object">Object</a></li>
+                        <li class="argument-type"><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object" class="returnType " title="Object" data-id="Object">Object</a></li>
                       </ul>
                     </li></li>
                 </ul>
@@ -182,7 +186,6 @@
             </div>
             <div class="description"><p>Returns an object containing all the search options.</p>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"></table>
             </div>
           </div>
         </div>
@@ -195,10 +198,10 @@
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span id="Search.replace" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">replace</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> input, <a href="http://www.nodemanual.org/latest/js_doc/String.html" class="argument methodClicker" title="String" data-id="String">String</a> replacement</span>)
+                  <li class="signature-call"><span id="Search.replace" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">replace</span></span>(<span class="sigArgList"><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String" class="argument methodClicker" title="String" data-id="String">String</a> input, <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String" class="argument methodClicker" title="String" data-id="String">String</a> replacement</span>)
                     <li class="signature-returns">
                       <ul class="argument-types">
-                        <li class="argument-type"><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="returnType " title="String" data-id="String">String</a></li>
+                        <li class="argument-type"><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String" class="returnType " title="String" data-id="String">String</a></li>
                       </ul>
                     </li></li>
                 </ul>
@@ -213,8 +216,8 @@
             </div>
             <div class="description"><p>Searches for <code>options.needle</code> in <code>input</code>, and, if found, replaces it with <code>replacement</code>.</p>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">input</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription "><p>Required. The text to search in</p>
-</td></tr><tr class="argumentRow "><td class="argName ">replacement</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/String.html" class="" title="String" data-id="String">String</a></td><td class="argDescription "><p>Required. The replacing text</p>
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">input</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String" class="" title="String" data-id="String">String</a></td><td class="argDescription "><p>Required. The text to search in</p>
+</td></tr><tr class="argumentRow "><td class="argName ">replacement</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String" class="" title="String" data-id="String">String</a></td><td class="argDescription "><p>Required. The replacing text</p>
 <ul>
 <li>(String): If <code>options.regExp</code> is <code>true</code>, this function returns <code>input</code> with the replacement already made. Otherwise, this function just returns <code>replacement</code>.<br/>
 If <code>options.needle</code> was not found, this function returns <code>null</code>.</li>
@@ -232,7 +235,7 @@ If <code>options.needle</code> was not found, this function returns <code>null</
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span id="Search.set" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">set</span></span>(<span class="sigArgList"><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="argument methodClicker" title="Object" data-id="Object">Object</a> options</span>)
+                  <li class="signature-call"><span id="Search.set" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">set</span></span>(<span class="sigArgList"><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object" class="argument methodClicker" title="Object" data-id="Object">Object</a> options</span>)
                     <li class="signature-returns">
                       <ul class="argument-types">
                         <li class="argument-type"><a href="search.html" class="returnType " title="Search (class)" data-id="Search">Search</a></li>
@@ -251,7 +254,7 @@ If <code>options.needle</code> was not found, this function returns <code>null</
             </div>
             <div class="description"><p>Sets the search options via the <code>options</code> parameter.</p>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">options</td><td class="argType" "><a href="http://www.nodemanual.org/latest/js_doc/Object.html" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription "><p>Required. An object containing all the new search properties</p>
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">options</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription "><p>Required. An object containing all the new search properties</p>
 </td></tr></table>
             </div>
           </div>
@@ -265,7 +268,7 @@ If <code>options.needle</code> was not found, this function returns <code>null</
             <ul class="signatures">
               <li class="signature">
                 <ul>
-                  <li class="signature-call"><span id="Search.setOptions" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">setOptions</span></span></li>
+                  <li class="signature-call"><span id="Search.setOptions" class="member-name methodClicker"><span class="sigClassName">Search.</span><span class="sigMemberName">setOptions</span></span><span class="emptyArgumentList">()</span></li>
                 </ul>
                 <ul class="metaInfo">
                   <li><span class="label undocumented">Undocumented</span></li>
